@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 
@@ -11,6 +12,15 @@ namespace JosephM.Core.Test
         public const string TestObjectClassDisplayName = "Object For Testing";
         public const string Enum1Description = "I Enum One";
         public const string TestFolder = @"C:\\Testing";
+
+        public static string TestSettingsFolder
+        {
+            get
+            {
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "JosephM Xrm", "Test Settings");
+            }
+        }
         public const string TestingString = "TestingString";
     }
 
