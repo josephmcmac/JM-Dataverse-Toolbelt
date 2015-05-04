@@ -1,0 +1,209 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+                    xmlns:applicationOptions="clr-namespace:JosephM.Record.Application.ApplicationOptions;assembly=JosephM.Record.Application"
+                    xmlns:controls="clr-namespace:JosephM.Wpf.Controls"
+                    xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
+                    xmlns:application="clr-namespace:JosephM.Wpf.Application"
+                    xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+                    xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+                    xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
+                    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector"
+                    xmlns:html="clr-namespace:JosephM.Wpf.Html">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/modernui.light.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="applicationMenuViewTemplate">
+        <application:ApplicationOptionsView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="applicationHeadingTemplate">
+        <application:ApplicationHeadingView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="recordEntryViewTemplate">
+        <Grid>
+            <recordEntry:RecordEntryView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="dialogTemplate">
+        <Grid>
+            <application:DialogForm DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="navigationErrorTemplate">
+        <application:NavigationErrorView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="htmlFileTemplate">
+        <Grid>
+            <html:HtmlFileView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <templateSelector:MainTabRegionDataTemplateSelector
+        RecordEntryViewTemplate="{StaticResource recordEntryViewTemplate}"
+        DialogTemplate="{StaticResource dialogTemplate}"
+        NavigationErrorTemplate="{StaticResource navigationErrorTemplate}"
+        HtmlFileTemplate="{StaticResource htmlFileTemplate}"
+        x:Key="viewTemplateSelector" />
+    <DataTemplate x:Key="TabItemTemplate">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ContentControl
+                Content="{Binding}"
+                ContentTemplateSelector="{StaticResource viewTemplateSelector}" />
+        </ScrollViewer>
+    </DataTemplate>
+    <DataTemplate x:Key="TabItemHeaderTemplate">
+        <DockPanel>
+            <TextBlock Style="{StaticResource TabLabelStyle}" Text="{Binding TabLabel}" />
+            <Button Style="{StaticResource CloseTabButtonStyle}" Command="{Binding TabCloseCommand}" />
+        </DockPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="OptionTemplate">
+        <Button Style="{StaticResource MainMenuButton}" Content="{Binding Label}" Command="{Binding DelegateCommand}" />
+    </DataTemplate>
+    <DataTemplate x:Key="ButtonDropdownTemplate" DataType="applicationOptions:ApplicationOption">
+        <Button Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
+                Command="{Binding DelegateCommand}" />
+    </DataTemplate>
+    <DataTemplate x:Key="HeadingTemplate">
+        <shared:HeadingView
+            DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="ObjectGridTemplate">
+        <grid:ObjectsGridSectionView
+            DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="XrmButtonTemplate">
+        <Grid>
+            <shared:XrmButton DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <templateSelector:CompletionItemTemplateSelector
+        ObjectsGridSectionTemplate="{StaticResource ObjectGridTemplate}"
+        HeadingTemplate="{StaticResource HeadingTemplate}"
+        XrmButtonTemplate="{StaticResource XrmButtonTemplate}"
+        x:Key="CompletionItemTemplateSelector" />
+    <DataTemplate x:Key="RecordEntryTemplate">
+        <Grid>
+            <recordEntry:RecordEntryView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="ProgressControlTemplate">
+        <Grid>
+            <shared:ProgressControl DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="CompletionTemplate">
+        <application:CompletionScreen
+            DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="SearchResultTemplate">
+        <Grid>
+            <recordEntry:SearchResultView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="LoadingTemplate">
+        <Grid>
+            <shared:LoadingView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <templateSelector:DialogTemplateSelector
+        RecordEntryTemplate="{StaticResource RecordEntryTemplate}"
+        ProgressTemplate="{StaticResource ProgressControlTemplate}"
+        CompletionTemplate="{StaticResource CompletionTemplate}"
+        SearchResultTemplate="{StaticResource SearchResultTemplate}"
+        LoadingTemplate="{StaticResource LoadingTemplate}"
+        x:Key="DialogTemplateSelector" />
+    <DataTemplate x:Key="booleanFieldTemplate">
+        <field:BooleanFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="comboBoxFieldTemplate">
+        <field:PicklistFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="dateFieldTemplate">
+        <field:DateFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="stringFieldTemplate">
+        <field:StringFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="passwordFieldTemplate">
+        <field:PasswordFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="integerFieldTemplate">
+        <field:IntegerFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="excelFileFieldTemplate">
+        <field:ExcelFileFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="folderFieldTemplate">
+        <field:FolderFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="stringEnumerableFieldTemplate">
+        <field:StringEnumerableFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="LookupFieldTemplate">
+        <field:LookupView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="RecordTypeFieldTemplate">
+        <field:RecordTypeFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="RecordFieldFieldTemplate">
+        <field:RecordFieldFieldView DataContext="{Binding}" />
+    </DataTemplate>
+    <templateSelector:FieldTemplateSelector
+        BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
+        ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
+        DateFieldTemplate="{StaticResource dateFieldTemplate}"
+        StringFieldTemplate="{StaticResource stringFieldTemplate}"
+        IntegerFieldTemplate="{StaticResource integerFieldTemplate}"
+        ExcelFileFieldTemplate="{StaticResource excelFileFieldTemplate}"
+        LookupFieldTemplate="{StaticResource LookupFieldTemplate}"
+        PasswordFieldTemplate="{StaticResource passwordFieldTemplate}"
+        FolderFieldTemplate="{StaticResource folderFieldTemplate}"
+        StringEnumerableFieldTemplate="{StaticResource stringEnumerableFieldTemplate}"
+        RecordTypeFieldTemplate="{StaticResource RecordTypeFieldTemplate}"
+        RecordFieldFieldTemplate="{StaticResource RecordFieldFieldTemplate}"
+        x:Key="fieldTemplateSelector" />
+    <DataTemplate x:Key="labelledFieldTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <field:FieldLabelView DataContext="{Binding}" />
+            </Grid>
+            <Grid Grid.Column="1" Grid.ColumnSpan="3">
+                <ContentControl
+                    Content="{Binding}"
+                    ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
+            </Grid>
+        </Grid>
+    </DataTemplate>
+    <templateSelector:LabelledFieldTemplateSelector
+        LabelledFieldTemplate="{StaticResource labelledFieldTemplate}"
+        x:Key="labelledFieldTemplateSelector" />
+    <DataTemplate x:Key="GridSectionTemplate">
+        <Grid>
+            <recordEntry:GridSectionView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="FieldSectionTemplate">
+        <Grid Grid.Row="1">
+            <recordEntry:FieldSectionView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <templateSelector:FormSectionTemplateSelector
+        GridSectionTemplate="{StaticResource GridSectionTemplate}"
+        FieldSectionTemplate="{StaticResource FieldSectionTemplate}"
+        x:Key="FormSectionTemplateSelector" />
+    <DataTemplate x:Key="IntegerCellTemplate">
+        <controls:IntegerTextBox
+            Name="EntryControl"
+            Text="{Binding ValueObject, Mode=TwoWay}"
+            IsEnabled="{Binding IsEditable}" />
+    </DataTemplate>
+</ResourceDictionary>

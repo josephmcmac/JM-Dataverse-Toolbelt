@@ -1,0 +1,26 @@
+﻿<field:FieldControlBase x:Class="JosephM.Wpf.RecordEntry.Field.BooleanFieldView"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+                        mc:Ignorable="d"
+                        d:DesignHeight="40" d:DesignWidth="300">
+    <field:FieldControlBase.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </field:FieldControlBase.Resources>
+    <Grid>
+        <CheckBox
+            TabIndex="1"
+            Name="CheckBox"
+            Style="{StaticResource FieldEntryStyle}"
+            IsChecked="{Binding ValueObject, Mode=TwoWay}"
+            IsEnabled="{Binding IsEditable}"
+            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+    </Grid>
+</field:FieldControlBase>

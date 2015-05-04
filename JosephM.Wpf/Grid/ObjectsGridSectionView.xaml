@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="JosephM.Wpf.Grid.ObjectsGridSectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+             xmlns:fakes="clr-namespace:JosephM.Record.Application.Fakes;assembly=JosephM.Record.Application"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=fakes:FakeObjectsGridSectionViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical">
+        <shared:HeadingView DataContext="{Binding HeadingViewModel}" />
+        <DockPanel Visibility="{Binding CsvForExtraction, Converter={StaticResource BoolToVis}}">
+            <Button Click="CsvButtonClick" Content="Download To CSV" />
+        </DockPanel>
+        <DockPanel Visibility="{Binding CsvExtracting, Converter={StaticResource BoolToVis}}">
+            <shared:ProgressControl DataContext="{Binding CsvExtractingProgress}" />
+        </DockPanel>
+        <DockPanel Visibility="{Binding CsvExtracted, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="CSV Downloaded" />
+            <WrapPanel Orientation="Horizontal">
+                <shared:XrmButton DataContext="{Binding OpenCsvFolderButton}" />
+                <shared:XrmButton DataContext="{Binding OpenCsvButton}" />
+            </WrapPanel>
+        </DockPanel>
+        <DockPanel>
+            <DataGrid
+                ClipboardCopyMode="IncludeHeader"
+                IsReadOnly="True"
+                ItemsSource="{Binding Items}" />
+        </DockPanel>
+    </StackPanel>
+</UserControl>

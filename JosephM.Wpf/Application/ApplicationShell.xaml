@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="JosephM.Wpf.Application.ApplicationShell"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://www.codeplex.com/prism"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:constants="clr-namespace:JosephM.Record.Application.Constants;assembly=JosephM.Record.Application"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.Light.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <ContentControl
+                prism:RegionManager.RegionName="{x:Static constants:RegionNames.Heading}"
+                ContentTemplate="{StaticResource applicationHeadingTemplate}" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <ContentControl
+                prism:RegionManager.RegionName="{x:Static constants:RegionNames.ApplicationOptions}"
+                ContentTemplate="{StaticResource applicationMenuViewTemplate}" />
+        </Grid>
+        <Grid Grid.Row="2">
+            <TabControl
+                prism:RegionManager.RegionName="{x:Static constants:RegionNames.MainTabRegion}"
+                ContentTemplate="{StaticResource TabItemTemplate}">
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="HeaderTemplate" Value="{StaticResource TabItemHeaderTemplate}" />
+                    </Style>
+                </TabControl.ItemContainerStyle>
+            </TabControl>
+        </Grid>
+    </Grid>
+</UserControl>

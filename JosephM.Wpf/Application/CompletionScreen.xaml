@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="JosephM.Wpf.Application.CompletionScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
+             xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+             xmlns:fakes="clr-namespace:JosephM.Record.Application.Fakes;assembly=JosephM.Record.Application"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="600"
+             d:DataContext="{d:DesignInstance Type=fakes:FakeCompletionScreenViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical">
+        <shared:HeadingView DataContext="{Binding Heading}" />
+        <ItemsControl
+            ItemsSource="{Binding CompletionOptions}"
+            ItemTemplate="{StaticResource XrmButtonTemplate}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <StackPanel Visibility="{Binding ShowCompletionDetails, Converter={StaticResource BoolToVis}}">
+            <grid:ObjectsGridSectionView
+                DataContext="{Binding CompletionDetails}" />
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right">
+            <shared:XrmButton
+                DataContext="{Binding CloseButton}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

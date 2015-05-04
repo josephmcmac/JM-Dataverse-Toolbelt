@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:JosephM.Wpf.Converters">
+
+    <converters:BooleanToFalseConverter x:Key="BooleanToFalseConverter" />
+    <converters:BooleanToFontWeightConverter x:Key="BooleanToFontWeightConverter" />
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <converters:NullOrEmptyStringToVisibilityConverter x:Key="NullOrEmptyStringToVisibilityConverter" />
+    <converters:ToUpperConverter x:Key="ToUpperConverter" />
+    <converters:ToLowerConverter x:Key="ToLowerConverter" />
+    <converters:WidthConverter x:Key="WidthConverter" />
+
+</ResourceDictionary>

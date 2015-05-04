@@ -1,0 +1,40 @@
+﻿#region
+
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using JosephM.Record.Application.Dialog;
+using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Record.Application.Search;
+using JosephM.Record.Application.Shared;
+
+#endregion
+
+namespace JosephM.Wpf.TemplateSelector
+{
+    public class DialogTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate RecordEntryTemplate { get; set; }
+        public DataTemplate ProgressTemplate { get; set; }
+        public DataTemplate CompletionTemplate { get; set; }
+        public DataTemplate SearchResultTemplate { get; set; }
+        public DataTemplate LoadingTemplate { get; set; }
+
+        public override DataTemplate SelectTemplate(object item,
+            DependencyObject container)
+        {
+            if (item is ProgressControlViewModel)
+                return ProgressTemplate;
+            if (item is RecordEntryFormViewModel)
+                return RecordEntryTemplate;
+            if (item is CompletionScreenViewModel)
+                return CompletionTemplate;
+            if (item is SearchResultViewModel)
+                return SearchResultTemplate;
+            if (item is LoadingViewModel)
+                return LoadingTemplate;
+            throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
+                item == null ? "null" : item.GetType().FullName));
+        }
+    }
+}

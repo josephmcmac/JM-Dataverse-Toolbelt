@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="JosephM.Wpf.RecordEntry.RecordEntryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
+             xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+             xmlns:fakes="clr-namespace:JosephM.Record.Application.Fakes;assembly=JosephM.Record.Application"
+             xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="2000"
+             d:DataContext="{d:DesignInstance Type=fakes:FakeRecordEntryViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
+        </Grid>
+        <Grid Grid.Row="1"
+              Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <StackPanel
+                        Orientation="Horizontal"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right">
+                        <shared:XrmButton
+                            DataContext="{Binding SaveButtonViewModel}" />
+                        <shared:XrmButton
+                            DataContext="{Binding CancelButtonViewModel}" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <ItemsControl
+                        ItemsSource="{Binding FormSectionsAsync}"
+                        ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
+                </Grid>
+                <Grid Grid.Row="3">
+                    <StackPanel
+                        Orientation="Horizontal"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right">
+                        <shared:XrmButton
+                            DataContext="{Binding SaveButtonViewModel}" />
+                        <shared:XrmButton
+                            DataContext="{Binding CancelButtonViewModel}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2" >
+            <ItemsControl
+                Name="DialogPanel"
+                ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
+                ItemsSource="{Binding ChildForms}" />
+        </Grid>
+    </Grid>
+</UserControl>

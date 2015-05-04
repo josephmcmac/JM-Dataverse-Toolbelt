@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="JosephM.Wpf.Shared.LoadingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+             xmlns:fakes="clr-namespace:JosephM.Record.Application.Fakes;assembly=JosephM.Record.Application"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="400"
+             d:DataContext="{d:DesignInstance Type=fakes:FakeLoadingViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Height="Auto" HorizontalAlignment="Center"
+          Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}, Mode=OneWay}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Row="0">
+            <TextBlock Text="{Binding LoadingMessage}" />
+        </Grid>
+        <Grid Row="1">
+            <shared:ModernProgressRing IsActive="{Binding IsLoading}"
+                                       Style="{StaticResource CircleProgressRingStyle}" />
+        </Grid>
+
+    </Grid>
+</UserControl>

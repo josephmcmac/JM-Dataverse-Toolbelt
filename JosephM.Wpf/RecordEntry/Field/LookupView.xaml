@@ -1,0 +1,58 @@
+﻿<field:FieldControlBase
+    x:Class="JosephM.Wpf.RecordEntry.Field.LookupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+    xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+    xmlns:fakes="clr-namespace:JosephM.Record.Application.Fakes;assembly=JosephM.Record.Application"
+    mc:Ignorable="d" d:DesignHeight="100" d:DesignWidth="500"
+    d:DataContext="{d:DesignInstance Type=fakes:FakeLookupViewModel, IsDesignTimeCreatable=True}">
+    <field:FieldControlBase.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Assets/Converters.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </field:FieldControlBase.Resources>
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Row="0">
+            <TextBox
+                TabIndex="1"
+                DataContext="{Binding NotifyOnValidationError=True}"
+                Text="{Binding Path=EnteredText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Name="EnteredTextBox"
+                Style="{StaticResource FieldEntryStyle}"
+                IsEnabled="{Binding IsEditable}"
+                PreviewKeyDown="OnPreviewKeyDown" />
+        </Grid>
+        <Grid Grid.Column="1" Row="0" Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}">
+            <shared:XrmButton
+                TabIndex="1"
+                DataContext="{Binding XrmButton}" />
+        </Grid>
+        <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="2" Row="1">
+            <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding Searching}">
+                <TextBlock Text="Searching..." />
+            </Popup>
+            <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding LookupGridVisible}">
+                <field:LookupGridView
+                    Background="WhiteSmoke"
+                    DataContext="{Binding LookupGridViewModel}"
+                    Width="{Binding ActualWidth, ElementName=EnteredTextBox}" />
+
+            </Popup>
+        </Grid>
+    </Grid>
+</field:FieldControlBase>

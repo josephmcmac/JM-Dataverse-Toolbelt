@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{59CAC082-C1A8-474C-B73C-BC79267C9B51}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JosephM.Record</RootNamespace>
+    <AssemblyName>JosephM.Record</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\LazyWeb\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\LazyWeb\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extentions\RecordExtentions.cs" />
+    <Compile Include="Metadata\AnyFieldMetadata.cs" />
+    <Compile Include="Metadata\BigIntFieldMetadata.cs" />
+    <Compile Include="Metadata\StateFieldMetadata.cs" />
+    <Compile Include="Metadata\UniqueidentifierFieldMetadata.cs" />
+    <Compile Include="Metadata\DoubleFieldMetadata.cs" />
+    <Compile Include="Metadata\StatusFieldMetadata.cs" />
+    <Compile Include="Metadata\MemoFieldMetadata.cs" />
+    <Compile Include="Query\Condition.cs" />
+    <Compile Include="Query\ConditionType.cs" />
+    <Compile Include="Query\Filter.cs" />
+    <Compile Include="Query\FilterOperator.cs" />
+    <Compile Include="Service\Record.cs" />
+    <Compile Include="Query\SortExpression.cs" />
+    <Compile Include="Cache\IRecordCacheConfig.cs" />
+    <Compile Include="Cache\RecordCacheConfig.cs" />
+    <Compile Include="Cache\RecordCacheProvider.cs" />
+    <Compile Include="Query\SortType.cs" />
+    <Compile Include="Metadata\ComboBoxFieldMetadata.cs" />
+    <Compile Include="Metadata\ActivityPartyFieldMetadata.cs" />
+    <Compile Include="Metadata\RecordFieldFieldMetadata.cs" />
+    <Compile Include="Metadata\EnumerableFieldMetadata.cs" />
+    <Compile Include="Metadata\ViewType.cs" />
+    <Compile Include="Metadata\RecordTypeFieldMetadata.cs" />
+    <Compile Include="Metadata\Many2ManyRelationshipMetadata.cs" />
+    <Compile Include="Metadata\One2ManyRelationshipMetadata.cs" />
+    <Compile Include="Metadata\IntegerFormat.cs" />
+    <Compile Include="Metadata\StringEnumerableFieldMetadata.cs" />
+    <Compile Include="Metadata\FolderFieldMetadata.cs" />
+    <Compile Include="Metadata\PasswordFieldMetadata.cs" />
+    <Compile Include="Metadata\PicklistOptionSet.cs" />
+    <Compile Include="Metadata\ViewField.cs" />
+    <Compile Include="Metadata\ViewMetadata.cs" />
+    <Compile Include="Metadata\TextFormat.cs" />
+    <Compile Include="Metadata\MoneyFieldMetadata.cs" />
+    <Compile Include="Metadata\PicklistFieldMetadata.cs" />
+    <Compile Include="Metadata\DateFieldMetadata.cs" />
+    <Compile Include="Metadata\DecimalFieldMetadata.cs" />
+    <Compile Include="Metadata\LookuplFieldMetadata.cs" />
+    <Compile Include="Metadata\RecordMetadata.cs" />
+    <Compile Include="Metadata\RelationshipMetadata.cs" />
+    <Compile Include="Metadata\StringFieldMetadata.cs" />
+    <Compile Include="Metadata\ExcelFileFieldMetadata.cs" />
+    <Compile Include="Metadata\IntegerFieldMetadata.cs" />
+    <Compile Include="Metadata\BooleanFieldMetadata.cs" />
+    <Compile Include="IService\ParseFieldRequest.cs" />
+    <Compile Include="IService\ParseFieldResponse.cs" />
+    <Compile Include="Service\RecordServiceBase.cs" />
+    <Compile Include="Service\ObjectRecord.cs" />
+    <Compile Include="Service\ObjectRecordService.cs" />
+    <Compile Include="Metadata\RecordMetadataFactory.cs" />
+    <Compile Include="Service\RecordBase.cs" />
+    <Compile Include="Service\RecordService.cs" />
+    <Compile Include="Metadata\FieldMetadata.cs" />
+    <Compile Include="Metadata\FieldType.cs" />
+    <Compile Include="IService\IRecordService.cs" />
+    <Compile Include="IService\IRecord.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
+      <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
+      <Name>JosephM.ObjectMapping</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="JosephM.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

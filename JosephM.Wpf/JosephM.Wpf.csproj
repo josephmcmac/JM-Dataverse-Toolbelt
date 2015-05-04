@@ -1,0 +1,548 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ED23E8EF-1623-491E-A30F-BA55C8F65CE7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JosephM.Wpf</RootNamespace>
+    <AssemblyName>JosephM.Wpf</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|AnyCPU'">
+    <OutputPath>bin\Stage\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\JosephM.RecordEntryUi.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Live|AnyCPU'">
+    <OutputPath>bin\Live\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\JosephM.RecordEntryUi.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Stage\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Live|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Live\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\LazyWeb\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\LazyWeb\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\Lib\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application\ApplicationHelpView.xaml.cs">
+      <DependentUpon>ApplicationHelpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\ApplicationHeadingView.xaml.cs">
+      <DependentUpon>ApplicationHeadingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
+    <Compile Include="Converters\BooleanToFalseConverter.cs" />
+    <Compile Include="Grid\GridPasswordColumn.cs" />
+    <Compile Include="Grid\GridPasswordFieldView.xaml.cs">
+      <DependentUpon>GridPasswordFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\DeleteRowColumn.cs" />
+    <Compile Include="Grid\DeleteRowView.xaml.cs">
+      <DependentUpon>DeleteRowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridBooleanColumn.cs" />
+    <Compile Include="Grid\GridBooleanFieldView.xaml.cs">
+      <DependentUpon>GridBooleanFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridStringColumn.cs" />
+    <Compile Include="Grid\GridStringFieldView.xaml.cs">
+      <DependentUpon>GridStringFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridPicklistColumn.cs" />
+    <Compile Include="Grid\GridPicklistFieldView.xaml.cs">
+      <DependentUpon>GridPicklistFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridLookupFieldView.xaml.cs">
+      <DependentUpon>GridLookupFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Html\HtmlFileView.xaml.cs">
+      <DependentUpon>HtmlFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\RecordFieldView.xaml.cs">
+      <DependentUpon>RecordFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\FieldControlBase.cs" />
+    <Compile Include="RecordEntry\Field\FolderFieldView.xaml.cs">
+      <DependentUpon>FolderFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\LookupGridView.xaml.cs">
+      <DependentUpon>LookupGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\LookupView.xaml.cs">
+      <DependentUpon>LookupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\PasswordBinder.cs" />
+    <Compile Include="RecordEntry\Field\PasswordFieldView.xaml.cs">
+      <DependentUpon>PasswordFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\RecordTypeView.xaml.cs">
+      <DependentUpon>RecordTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\StringEnumerableFieldView.xaml.cs">
+      <DependentUpon>StringEnumerableFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IntegerTextBox.cs" />
+    <Compile Include="Controls\MaskedTextField.cs" />
+    <Compile Include="Converters\BooleanToFontWeightConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\ExcelToStringConverter.cs" />
+    <Compile Include="Converters\FolderToStringConverter.cs" />
+    <Compile Include="Converters\NullOrEmptyStringToVisibilityConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Converters\PasswordToStringConverter.cs" />
+    <Compile Include="Converters\StringToEnumerableStringConverter.cs" />
+    <Compile Include="Converters\ToLowerConverter.cs" />
+    <Compile Include="Converters\ToUpperConverter.cs" />
+    <Compile Include="Converters\WidthConverter.cs" />
+    <Compile Include="ControlExtentions\FocusExtension.cs" />
+    <Compile Include="Grid\GridLookupColumn.cs" />
+    <Compile Include="Grid\DynamicGrid.cs" />
+    <Compile Include="Search\SearchResultView.xaml.cs">
+      <DependentUpon>SearchResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\LoadingView.xaml.cs">
+      <DependentUpon>LoadingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\ExcelFileFieldView.xaml.cs">
+      <DependentUpon>ExcelFileFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\BooleanFieldView.xaml.cs">
+      <DependentUpon>BooleanFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\PicklistFieldView.xaml.cs">
+      <DependentUpon>PicklistFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\DateFieldView.xaml.cs">
+      <DependentUpon>DateFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\FieldLabelView.xaml.cs">
+      <DependentUpon>FieldLabelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\StringFieldView.xaml.cs">
+      <DependentUpon>StringFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\HeadingView.xaml.cs">
+      <DependentUpon>HeadingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\ObjectsGridSectionView.xaml.cs">
+      <DependentUpon>ObjectsGridSectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\CompletionScreen.xaml.cs">
+      <DependentUpon>CompletionScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\XrmButtonView.xaml.cs">
+      <DependentUpon>XrmButtonView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\IntegerFieldView.xaml.cs">
+      <DependentUpon>IntegerFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\DialogForm.xaml.cs">
+      <DependentUpon>DialogForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\ModernProgressRing.cs" />
+    <Compile Include="Application\ApplicationOptionsView.xaml.cs">
+      <DependentUpon>ApplicationOptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\ApplicationSettingsView.xaml.cs">
+      <DependentUpon>ApplicationSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\ApplicationShell.xaml.cs">
+      <DependentUpon>ApplicationShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\NavigationErrorView.xaml.cs">
+      <DependentUpon>NavigationErrorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\FieldSectionView.xaml.cs">
+      <DependentUpon>FieldSectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\GridSectionView.xaml.cs">
+      <DependentUpon>GridSectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\RecordEntryView.xaml.cs">
+      <DependentUpon>RecordEntryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateSelector\CompletionItemTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\DialogTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\FieldTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\FormSectionTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\LabelledFieldTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\MainTabRegionDataTemplateSelector.cs" />
+    <Page Include="Application\ApplicationHelpView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Application\ApplicationHeadingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridPasswordFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\DeleteRowView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridBooleanFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridStringFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridPicklistFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridLookupFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Html\HtmlFileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\RecordFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\FolderFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\LookupGridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\LookupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\PasswordFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\RecordTypeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\StringEnumerableFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Search\SearchResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shared\LoadingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\BooleanFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\PicklistFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\DateFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\ExcelFileFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\FieldLabelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RecordEntry\Field\StringFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shared\HeadingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Grid\ObjectsGridSectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Application\CompletionScreen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shared\ProgressControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Shared\ProgressControl.xaml.cs">
+      <DependentUpon>ProgressControl.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Application\ApplicationOptionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Application\ApplicationSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Application\Shell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Assets\Button.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Assets\Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Assets\DataGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Assets\ModernProgressRing.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Application\DialogForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Application\ApplicationShell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Application\NavigationErrorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\FieldSectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\GridSectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\RecordEntryView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ModernUI.Light.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ModernUI.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shared\XrmButtonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RecordEntry\Field\IntegerFieldView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="JosephM.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ErrorIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\CloseButton.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
+      <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
+      <Name>JosephM.Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
+      <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
+      <Name>JosephM.Record.Application</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DeleteIcon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\AddIcon.jpg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
