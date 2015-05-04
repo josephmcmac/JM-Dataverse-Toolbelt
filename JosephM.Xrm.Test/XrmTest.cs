@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
@@ -17,6 +19,11 @@ namespace JosephM.Xrm.Test
 {
     public abstract class XrmTest : CoreTest
     {
+        public static string TestXrmConnectionFileName
+        {
+            get { return Path.Combine(TestConstants.TestSettingsFolder, "TestXrmConnection.xml"); }
+        }
+
         protected XrmTest()
         {
             XrmService = new XrmService(XrmConfiguration, Controller);
@@ -35,7 +42,26 @@ namespace JosephM.Xrm.Test
 
         public virtual IXrmConfiguration XrmConfiguration
         {
-            get { return new TestXrmConfiguration(); }
+            get
+            {
+                EncryptedXrmConfiguration settingsObject = null;
+                var serializer = new DataContractSerializer(typeof(EncryptedXrmConfiguration));
+                if (!File.Exists(TestXrmConnectionFileName))
+                    throw new NullReferenceException(string.Format("Error The Xrm Test Settings File Was Noy Found At {0}. Create It Using The Save Xrm Connection Option In The Test Prism Application", TestXrmConnectionFileName));
+                using (var fileStream = new FileStream(TestXrmConnectionFileName, FileMode.Open))
+                {
+                    settingsObject = (EncryptedXrmConfiguration)serializer.ReadObject(fileStream);
+                }
+                return new XrmConfiguration()
+                {
+                    AuthenticationProviderType = settingsObject.AuthenticationProviderType,
+                    DiscoveryServiceAddress = settingsObject.DiscoveryServiceAddress,
+                    OrganizationUniqueName = settingsObject.OrganizationUniqueName,
+                    Domain = settingsObject.Domain,
+                    Username = settingsObject.Username,
+                    Password = settingsObject.Password == null ? null : settingsObject.Password.GetRawPassword()
+                };
+            }
         }
 
         public string ExecutionPath

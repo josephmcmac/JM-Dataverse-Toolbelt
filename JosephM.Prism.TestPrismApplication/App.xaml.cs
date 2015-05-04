@@ -5,6 +5,7 @@ using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.TestModule.Prism.TestDialog;
 using JosephM.Prism.TestModule.SearchModule;
 using JosephM.Prism.XrmModule.Xrm;
+using JosephM.Prism.XrmTestModule.TestXrmSettingsDialog;
 using JosephM.Xrm.RecordExtract.Test.TextSearch;
 
 #endregion
@@ -27,6 +28,7 @@ namespace JosephM.Prism.TestPrismApplication
             prism.AddModule<TestTextSearchModule>();
             prism.AddModule<TestDialogModule>();
             prism.AddModule<SearchModule>();
+            prism.AddModule<XrmSettingsModule>();
             prism.Run();
         }
     }

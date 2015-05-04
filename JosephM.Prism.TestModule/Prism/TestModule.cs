@@ -12,8 +12,7 @@ namespace JosephM.Prism.TestModule.Prism
     {
         public override void InitialiseModule()
         {
-            ApplicationOptions.AddOption("Create Test Record", MenuNames.Crm, CreateCommand);
-            ApplicationOptions.AddOption("Open Test Record", MenuNames.Test, CreateCommand);
+            ApplicationOptions.AddOption("Create Test Record", MenuNames.Test, CreateCommand);
         }
 
         public override void RegisterTypes()
