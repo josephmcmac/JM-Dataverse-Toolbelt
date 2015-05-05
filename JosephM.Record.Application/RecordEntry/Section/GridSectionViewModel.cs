@@ -35,15 +35,18 @@ namespace JosephM.Record.Application.RecordEntry.Section
 
         public void AddRow()
         {
-            var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, FormController, (record) =>
+            ApplicationController.DoOnAsyncThread(() =>
             {
-                InsertRecord(record);
-                RecordForm.ClearChildForm();
-            }, () => RecordForm.ClearChildForm());
-            if (viewModel == null)
-                InsertRecord(RecordService.NewRecord(RecordType));
-            else
-                RecordForm.LoadChildForm(viewModel);
+                var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, FormController, (record) =>
+                {
+                    InsertRecord(record);
+                    RecordForm.ClearChildForm();
+                }, () => RecordForm.ClearChildForm());
+                if (viewModel == null)
+                    InsertRecord(RecordService.NewRecord(RecordType));
+                else
+                    RecordForm.LoadChildForm(viewModel);
+            });
         }
 
         private void RemoveRow(GridRowViewModel row)

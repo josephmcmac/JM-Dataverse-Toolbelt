@@ -362,14 +362,20 @@ namespace JosephM.Record.Application.RecordEntry.Form
 
         internal void LoadChildForm(RecordEntryFormViewModel viewModel)
         {
-            ChildForms.Add(viewModel);
-            OnPropertyChanged("MainFormInContext");
+            ApplicationController.DoOnMainThread(() =>
+            {
+                ChildForms.Add(viewModel);
+                OnPropertyChanged("MainFormInContext");
+            });
         }
 
         internal void ClearChildForm()
         {
-            ChildForms.Clear();
-            OnPropertyChanged("MainFormInContext");
+            ApplicationController.DoOnMainThread(() =>
+            {
+                ChildForms.Clear();
+                OnPropertyChanged("MainFormInContext");
+            });
         }
 
         private ObservableCollection<RecordEntryFormViewModel> _childForms = new ObservableCollection<RecordEntryFormViewModel>();
