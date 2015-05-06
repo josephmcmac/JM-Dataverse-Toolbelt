@@ -501,7 +501,14 @@ namespace JosephM.Xrm.ImportExporter.Service
 
                 foreach (var entity in entities)
                 {
-                    var fileName = string.Format(@"{0}\{1}_{2}.xml", folder, entity.LogicalName, entity.Id);
+                    var namesToUse = entity.GetStringField(XrmService.GetPrimaryNameField(entity.LogicalName).Left(15));
+                    if (!namesToUse.IsNullOrWhiteSpace())
+                    {
+                        var invalidChars = Path.GetInvalidFileNameChars();
+                        foreach (var character in invalidChars)
+                            namesToUse = namesToUse.Replace(character, '_');
+                    }
+                    var fileName = string.Format(@"{0}\{1}_{2}_{3}.xml", folder, entity.LogicalName, entity.Id, namesToUse);
                     using (var fileStream = new FileStream(fileName, FileMode.Create))
                     {
                         lateBoundSerializer.WriteObject(fileStream, entity);
