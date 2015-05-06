@@ -120,15 +120,21 @@ namespace JosephM.Record.Application.RecordEntry.Section
 
         private void InsertRecord(IRecord record)
         {
-            var rowItem = new GridRowViewModel(record, this);
-            GridRecords.Insert(0, rowItem);
+            DoOnMainThread(() =>
+            {
+                var rowItem = new GridRowViewModel(record, this);
+                GridRecords.Insert(0, rowItem);
+            });
         }
 
         private void AddRecord(IRecord record)
         {
-            var rowItem = new GridRowViewModel(record, this);
-            rowItem.RefreshVisibility();
-            GridRecords.Add(rowItem);
+            DoOnMainThread(() =>
+            {
+                var rowItem = new GridRowViewModel(record, this);
+                rowItem.RefreshVisibility();
+                GridRecords.Add(rowItem);
+            });
         }
 
         public override string RecordType

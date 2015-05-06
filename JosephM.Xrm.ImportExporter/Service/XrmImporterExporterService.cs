@@ -361,6 +361,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                             }
                             else
                             {
+                                CheckThrowValidForCreate(thisEntity, fieldsToSet);
                                 thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
                             }
                         }
@@ -442,6 +443,23 @@ namespace JosephM.Xrm.ImportExporter.Service
                             ex));
                 }
             }
+        }
+
+        private void CheckThrowValidForCreate(Entity thisEntity, List<string> fieldsToSet)
+        {
+            if (thisEntity != null)
+            {
+                switch (thisEntity.LogicalName)
+                {
+                    case "annotation" :
+                        if(!fieldsToSet.Contains("objectid"))
+                            throw new NullReferenceException(string.Format("Cannot create {0} {1} as its parent {2} does not exist"
+                                , XrmService.GetEntityLabel(thisEntity.LogicalName), thisEntity.GetStringField(XrmService.GetPrimaryNameField(thisEntity.LogicalName))
+                                , thisEntity.GetStringField("objecttypecode") != null ? XrmService.GetEntityLabel(thisEntity.GetStringField("objecttypecode")) : "Unknown Type"));
+                        break;
+                }
+            }
+            return;
         }
 
         private IEnumerable<string> GetFieldsToImport(List<Entity> thisTypeEntities, string type)
