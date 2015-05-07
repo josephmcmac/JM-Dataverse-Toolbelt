@@ -24,7 +24,7 @@
                 Text="{Binding Path=ValueObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FolderToString}}"
                 Name="FileNameTextBox"
                 Style="{StaticResource FieldEntryStyle}"
-                IsReadOnly="True" />
+                IsReadOnly="False" />
         </Grid>
         <Grid Grid.Column="1">
             <Button

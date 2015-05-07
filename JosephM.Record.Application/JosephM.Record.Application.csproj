@@ -139,6 +139,7 @@
     <Compile Include="RecordEntry\Form\RecordEntryViewModelBase.cs" />
     <Compile Include="RecordEntry\Form\ReadViewModel.cs" />
     <Compile Include="RecordEntry\Form\OpenViewModel.cs" />
+    <Compile Include="Validation\IValidatableObjectValidationRule.cs" />
     <Compile Include="Validation\IValidatable.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="RecordEntry\Form\CreateViewModel.cs" />

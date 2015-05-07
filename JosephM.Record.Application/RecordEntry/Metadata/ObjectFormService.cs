@@ -118,15 +118,23 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
 
         public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
-            return
-                ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.Name)
-                    .Select(va => new PropertyAttributeValidationRule(va));
+            var validators = new List<ValidationRuleBase>();
+            var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.Name);
+            var isValidatable = type.IsTypeOf(typeof (IValidatableObject));
+
+            if(isValidatable)
+                validators.Add(new IValidatableObjectValidationRule());
+            validators.AddRange(ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.Name)
+                    .Select(va => new PropertyAttributeValidationRule(va)));
+            return validators;
         }
 
         public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string subGridRecordType)
         {
             return ObjectRecordService.GetValidatorAttributes(fieldName, subGridRecordType)
                 .Select(va => new PropertyAttributeValidationRule(va));
+
+
         }
 
         public override IEnumerable<ValidationRuleBase> GetSectionValidationRules(string sectionIdentifier)

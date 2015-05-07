@@ -21,11 +21,6 @@ namespace JosephM.Wpf.RecordEntry.Field
             InitializeComponent();
         }
 
-        public string FileMask
-        {
-            get { return FileMasks.ExcelFile; }
-        }
-
         private void selectButtonClick(object sender, RoutedEventArgs e)
         {
             var selectFolderDialog = new FolderBrowserDialog {ShowNewFolderButton = true};
