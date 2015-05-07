@@ -35,7 +35,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
 
         public void AddRow()
         {
-            ApplicationController.DoOnAsyncThread(() =>
+            try
             {
                 var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, FormController, (record) =>
                 {
@@ -46,7 +46,11 @@ namespace JosephM.Record.Application.RecordEntry.Section
                     InsertRecord(RecordService.NewRecord(RecordType));
                 else
                     RecordForm.LoadChildForm(viewModel);
-            });
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.UserMessage(string.Format("Error Adding Row: {0}", ex.DisplayString()));
+            }
         }
 
         private void RemoveRow(GridRowViewModel row)
@@ -120,21 +124,21 @@ namespace JosephM.Record.Application.RecordEntry.Section
 
         private void InsertRecord(IRecord record)
         {
-            DoOnMainThread(() =>
-            {
+            //DoOnMainThread(() =>
+            //{
                 var rowItem = new GridRowViewModel(record, this);
                 GridRecords.Insert(0, rowItem);
-            });
+            //});
         }
 
         private void AddRecord(IRecord record)
         {
-            DoOnMainThread(() =>
-            {
+           // DoOnMainThread(() =>
+            //{
                 var rowItem = new GridRowViewModel(record, this);
                 rowItem.RefreshVisibility();
                 GridRecords.Add(rowItem);
-            });
+            //});
         }
 
         public override string RecordType
