@@ -341,18 +341,14 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>ISX_DEFAULTCOMPONENT</td><td>{F4CE783B-D78B-4382-BFF9-BC120D33DBCF}</td><td>HELPFILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{A8E58A9E-69B5-4D6F-AC2B-E58597DBBEE7}</td><td>CODE_GENERATOR_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT10</td><td>{FD1CF01D-CA77-4F08-90A8-B15BB83E9BBC}</td><td>CONTENTFILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT2</td><td>{E53B1F7E-0E01-4C01-AF20-065FA03294F4}</td><td>CONNECT_TO_CRM_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT3</td><td>{BC0C4973-9216-45C7-9C7E-A15FF6DE052B}</td><td>CUSTOMISATION_EXPORTER_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT4</td><td>{F1EE1A62-124B-4BDB-AE30-ADE8FDD6287E}</td><td>CUSTOMISATION_IMPORTER_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT5</td><td>{46E4EBEA-0EA4-4470-9DB7-CAC4507EE6E7}</td><td>ORGANISATION_SETTINGS_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT6</td><td>{8C5B46C1-BA39-4A81-B91F-89B99058E4B0}</td><td>RECORD_EXTRACT_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT7</td><td>{BA87E2A2-A7D1-427E-A581-FF5CB84B63A3}</td><td>SAVED_CRM_CONNECTIONS_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT8</td><td>{D006739F-4C04-4205-8B86-DA6AEC8FC149}</td><td>TEXT_SEARCH_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT9</td><td>{7D8E1FAC-43C5-4D07-A21B-11449D9981C7}</td><td>XRM_IMPORTER_EXPORTER_HELP_FILES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.CustomisationImporter.Content_Files1</td><td>{95EA8E66-CB75-44FF-9099-4F79A8D72936}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.customisationimporte1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>{F10D9203-4D10-4FB7-8267-7B6DA63C8C20}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmdeveloperto</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.Prism.XrmModule.Content_Files</td><td>{C012E0D3-1BD4-44B5-8BD3-D7485C6AD95B}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmmodule.cont</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.Xrm.CustomisationExporter.Content_Files</td><td>{30C3EFA1-A775-4446-8EED-4A055FBF4AE8}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.customisationexp</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.Xrm.ImporterExporter.Content_Files</td><td>{F756D74C-2B17-44A5-8920-D819EEF353F8}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.importerexporter</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.Xrm.OrganisationSettings.Content_Files</td><td>{2FF23F7F-EC19-41BB-AEDA-18918188477E}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.organisationsett</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.Xrm.RecordExtract.Content_Files</td><td>{BA99061A-D185-46E5-98DE-1986900D13AB}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.recordextract.co</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephMXrm.CodeGenerator.Content_Files</td><td>{8A696340-B461-4EE5-B83F-E933D47AA38C}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephmxrm.codegenerator.con</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1144,11 +1140,6 @@
 		<row><td>ALLUSERSPROFILE</td><td>TARGETDIR</td><td>.:ALLUSE~1|All Users</td><td/><td>0</td><td/></row>
 		<row><td>AdminToolsFolder</td><td>TARGETDIR</td><td>.:Admint~1|AdminTools</td><td/><td>0</td><td/></row>
 		<row><td>AppDataFolder</td><td>TARGETDIR</td><td>.:APPLIC~1|Application Data</td><td/><td>0</td><td/></row>
-		<row><td>CODE_GENERATOR_HELP_FILES</td><td>HELPFILES</td><td>CODEGE~1|Code Generator Help_files</td><td/><td>0</td><td/></row>
-		<row><td>CONNECT_TO_CRM_HELP_FILES</td><td>HELPFILES</td><td>CONNEC~1|Connect To CRM Help_files</td><td/><td>0</td><td/></row>
-		<row><td>CONTENTFILES</td><td>INSTALLDIR</td><td>CONTEN~1|ContentFiles</td><td/><td>0</td><td/></row>
-		<row><td>CUSTOMISATION_EXPORTER_HELP_FILES</td><td>HELPFILES</td><td>CUSTOM~1|Customisation Exporter Help_files</td><td/><td>0</td><td/></row>
-		<row><td>CUSTOMISATION_IMPORTER_HELP_FILES</td><td>HELPFILES</td><td>CUSTOM~1|Customisation Importer Help_files</td><td/><td>0</td><td/></row>
 		<row><td>CommonAppDataFolder</td><td>TARGETDIR</td><td>.:Common~1|CommonAppData</td><td/><td>0</td><td/></row>
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
@@ -1157,7 +1148,6 @@
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
 		<row><td>GlobalAssemblyCache</td><td>TARGETDIR</td><td>.:Global~1|GlobalAssemblyCache</td><td/><td>0</td><td/></row>
-		<row><td>HELPFILES</td><td>INSTALLDIR</td><td>HELPFI~1|HelpFiles</td><td/><td>0</td><td/></row>
 		<row><td>INSTALLDIR</td><td>MY_PRODUCT_NAME1</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>ISCommonFilesFolder</td><td>CommonFilesFolder</td><td>Instal~1|InstallShield</td><td/><td>0</td><td/></row>
 		<row><td>ISMyCompanyDir</td><td>ProgramFilesFolder</td><td>MYCOMP~1|My Company Name</td><td/><td>0</td><td/></row>
@@ -1169,16 +1159,13 @@
 		<row><td>MY_PRODUCT_NAME1</td><td>ProgramFilesFolder</td><td>JOSEPH~1|JosephM XRM Developer Tool</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
 		<row><td>NetHoodFolder</td><td>TARGETDIR</td><td>.:NetHood</td><td/><td>0</td><td/></row>
-		<row><td>ORGANISATION_SETTINGS_HELP_FILES</td><td>HELPFILES</td><td>ORGANI~1|Organisation Settings Help_files</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>PrintHoodFolder</td><td>TARGETDIR</td><td>.:PRINTH~1|PrintHood</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFiles64Folder</td><td>TARGETDIR</td><td>.:Prog64~1|Program Files 64</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFilesFolder</td><td>TARGETDIR</td><td>.:PROGRA~1|program files</td><td/><td>0</td><td/></row>
 		<row><td>ProgramMenuFolder</td><td>TARGETDIR</td><td>.:Programs</td><td/><td>3</td><td/></row>
-		<row><td>RECORD_EXTRACT_HELP_FILES</td><td>HELPFILES</td><td>RECORD~1|Record Extract Help_files</td><td/><td>0</td><td/></row>
 		<row><td>RecentFolder</td><td>TARGETDIR</td><td>.:Recent</td><td/><td>0</td><td/></row>
-		<row><td>SAVED_CRM_CONNECTIONS_HELP_FILES</td><td>HELPFILES</td><td>SAVEDC~1|Saved CRM Connections Help_files</td><td/><td>0</td><td/></row>
 		<row><td>SendToFolder</td><td>TARGETDIR</td><td>.:SendTo</td><td/><td>3</td><td/></row>
 		<row><td>StartMenuFolder</td><td>TARGETDIR</td><td>.:STARTM~1|Start Menu</td><td/><td>3</td><td/></row>
 		<row><td>StartupFolder</td><td>TARGETDIR</td><td>.:StartUp</td><td/><td>3</td><td/></row>
@@ -1186,13 +1173,11 @@
 		<row><td>System64Folder</td><td>TARGETDIR</td><td>.:System64</td><td/><td>0</td><td/></row>
 		<row><td>SystemFolder</td><td>TARGETDIR</td><td>.:System32</td><td/><td>0</td><td/></row>
 		<row><td>TARGETDIR</td><td/><td>SourceDir</td><td/><td>0</td><td/></row>
-		<row><td>TEXT_SEARCH_HELP_FILES</td><td>HELPFILES</td><td>TEXTSE~1|Text Search Help_files</td><td/><td>0</td><td/></row>
 		<row><td>TempFolder</td><td>TARGETDIR</td><td>.:Temp</td><td/><td>0</td><td/></row>
 		<row><td>TemplateFolder</td><td>TARGETDIR</td><td>.:ShellNew</td><td/><td>0</td><td/></row>
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
-		<row><td>XRM_IMPORTER_EXPORTER_HELP_FILES</td><td>HELPFILES</td><td>XRMIMP~1|Xrm Importer Exporter Help_files</td><td/><td>0</td><td/></row>
 		<row><td>joseph_1.ins_josephm.prism.xrmdevelopertool.install</td><td>josephm</td><td>JOSEPH~1.INS|JosephM.Prism.XrmDeveloperTool.Install</td><td/><td>1</td><td/></row>
 		<row><td>josephm</td><td>ProgramMenuFolder</td><td>JosephM</td><td/><td>1</td><td/></row>
 	</table>
@@ -1886,18 +1871,14 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT1</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT10</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT2</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT3</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT4</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT5</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT6</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT7</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT8</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT9</td></row>
+		<row><td>AlwaysInstall</td><td>JosephM.CustomisationImporter.Content_Files1</td></row>
 		<row><td>AlwaysInstall</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td></row>
+		<row><td>AlwaysInstall</td><td>JosephM.Prism.XrmModule.Content_Files</td></row>
+		<row><td>AlwaysInstall</td><td>JosephM.Xrm.CustomisationExporter.Content_Files</td></row>
+		<row><td>AlwaysInstall</td><td>JosephM.Xrm.ImporterExporter.Content_Files</td></row>
+		<row><td>AlwaysInstall</td><td>JosephM.Xrm.OrganisationSettings.Content_Files</td></row>
+		<row><td>AlwaysInstall</td><td>JosephM.Xrm.RecordExtract.Content_Files</td></row>
+		<row><td>AlwaysInstall</td><td>JosephMXrm.CodeGenerator.Content_Files</td></row>
 	</table>
 
 	<table name="File">
@@ -1912,177 +1893,14 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>code_generator_help.htm</td><td>ISX_DEFAULTCOMPONENT</td><td>CODEGE~1.HTM|Code Generator Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help.htm</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>colorschememapping.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>COLORS~1.XML|colorschememapping.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\colorschememapping.xml</td><td>1</td><td/></row>
-		<row><td>connect_to_crm_help.htm</td><td>ISX_DEFAULTCOMPONENT</td><td>CONNEC~1.HTM|Connect To CRM Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help.htm</td><td>1</td><td/></row>
-		<row><td>customisation_exporter_help.</td><td>ISX_DEFAULTCOMPONENT</td><td>CUSTOM~1.HTM|Customisation Exporter Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help.htm</td><td>1</td><td/></row>
-		<row><td>customisation_importer_help.</td><td>ISX_DEFAULTCOMPONENT</td><td>CUSTOM~1.HTM|Customisation Importer Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help.htm</td><td>1</td><td/></row>
-		<row><td>customisations_import_templa</td><td>ISX_DEFAULTCOMPONENT10</td><td>CUSTOM~1.XLS|Customisations Import Template.xls</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\ContentFiles\Customisations Import Template.xls</td><td>1</td><td/></row>
-		<row><td>filelist.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>filelist.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>filelist.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>filelist.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>filelist.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>filelist.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>filelist.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>filelist.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>filelist.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>filelist.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\filelist.xml</td><td>1</td><td/></row>
-		<row><td>header.htm</td><td>ISX_DEFAULTCOMPONENT1</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>header.htm1</td><td>ISX_DEFAULTCOMPONENT2</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>header.htm2</td><td>ISX_DEFAULTCOMPONENT3</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>header.htm3</td><td>ISX_DEFAULTCOMPONENT4</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>header.htm4</td><td>ISX_DEFAULTCOMPONENT5</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>header.htm5</td><td>ISX_DEFAULTCOMPONENT6</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>header.htm6</td><td>ISX_DEFAULTCOMPONENT7</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>header.htm7</td><td>ISX_DEFAULTCOMPONENT8</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>header.htm8</td><td>ISX_DEFAULTCOMPONENT9</td><td>header.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\header.htm</td><td>1</td><td/></row>
-		<row><td>image001.png</td><td>ISX_DEFAULTCOMPONENT1</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image001.png1</td><td>ISX_DEFAULTCOMPONENT2</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image001.png2</td><td>ISX_DEFAULTCOMPONENT3</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image001.png3</td><td>ISX_DEFAULTCOMPONENT4</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image001.png4</td><td>ISX_DEFAULTCOMPONENT5</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image001.png5</td><td>ISX_DEFAULTCOMPONENT6</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image001.png6</td><td>ISX_DEFAULTCOMPONENT7</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image001.png7</td><td>ISX_DEFAULTCOMPONENT8</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image001.png8</td><td>ISX_DEFAULTCOMPONENT9</td><td>image001.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\image001.png</td><td>1</td><td/></row>
-		<row><td>image002.png</td><td>ISX_DEFAULTCOMPONENT2</td><td>image002.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\image002.png</td><td>1</td><td/></row>
-		<row><td>image002.png1</td><td>ISX_DEFAULTCOMPONENT3</td><td>image002.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\image002.png</td><td>1</td><td/></row>
-		<row><td>image002.png2</td><td>ISX_DEFAULTCOMPONENT4</td><td>image002.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\image002.png</td><td>1</td><td/></row>
-		<row><td>image002.png3</td><td>ISX_DEFAULTCOMPONENT5</td><td>image002.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\image002.png</td><td>1</td><td/></row>
-		<row><td>image002.png4</td><td>ISX_DEFAULTCOMPONENT6</td><td>image002.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\image002.png</td><td>1</td><td/></row>
-		<row><td>image002.png5</td><td>ISX_DEFAULTCOMPONENT7</td><td>image002.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\image002.png</td><td>1</td><td/></row>
-		<row><td>image002.png6</td><td>ISX_DEFAULTCOMPONENT8</td><td>image002.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\image002.png</td><td>1</td><td/></row>
-		<row><td>image003.png</td><td>ISX_DEFAULTCOMPONENT2</td><td>image003.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\image003.png</td><td>1</td><td/></row>
-		<row><td>image003.png1</td><td>ISX_DEFAULTCOMPONENT4</td><td>image003.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\image003.png</td><td>1</td><td/></row>
-		<row><td>image003.png2</td><td>ISX_DEFAULTCOMPONENT6</td><td>image003.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\image003.png</td><td>1</td><td/></row>
-		<row><td>image003.png3</td><td>ISX_DEFAULTCOMPONENT7</td><td>image003.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\image003.png</td><td>1</td><td/></row>
-		<row><td>image003.png4</td><td>ISX_DEFAULTCOMPONENT8</td><td>image003.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\image003.png</td><td>1</td><td/></row>
-		<row><td>image004.png</td><td>ISX_DEFAULTCOMPONENT2</td><td>image004.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\image004.png</td><td>1</td><td/></row>
-		<row><td>image004.png1</td><td>ISX_DEFAULTCOMPONENT4</td><td>image004.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\image004.png</td><td>1</td><td/></row>
-		<row><td>image004.png2</td><td>ISX_DEFAULTCOMPONENT6</td><td>image004.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\image004.png</td><td>1</td><td/></row>
-		<row><td>image004.png3</td><td>ISX_DEFAULTCOMPONENT7</td><td>image004.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\image004.png</td><td>1</td><td/></row>
-		<row><td>image004.png4</td><td>ISX_DEFAULTCOMPONENT8</td><td>image004.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\image004.png</td><td>1</td><td/></row>
-		<row><td>image005.png</td><td>ISX_DEFAULTCOMPONENT4</td><td>image005.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\image005.png</td><td>1</td><td/></row>
-		<row><td>image005.png1</td><td>ISX_DEFAULTCOMPONENT6</td><td>image005.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\image005.png</td><td>1</td><td/></row>
-		<row><td>image005.png2</td><td>ISX_DEFAULTCOMPONENT7</td><td>image005.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\image005.png</td><td>1</td><td/></row>
-		<row><td>image005.png3</td><td>ISX_DEFAULTCOMPONENT8</td><td>image005.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\image005.png</td><td>1</td><td/></row>
-		<row><td>image006.png</td><td>ISX_DEFAULTCOMPONENT4</td><td>image006.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\image006.png</td><td>1</td><td/></row>
-		<row><td>image006.png1</td><td>ISX_DEFAULTCOMPONENT7</td><td>image006.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\image006.png</td><td>1</td><td/></row>
-		<row><td>image007.png</td><td>ISX_DEFAULTCOMPONENT4</td><td>image007.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\image007.png</td><td>1</td><td/></row>
-		<row><td>image008.png</td><td>ISX_DEFAULTCOMPONENT4</td><td>image008.png</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\image008.png</td><td>1</td><td/></row>
-		<row><td>item0001.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0001.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0001.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0001.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0001.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0001.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0001.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0001.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0001.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>item0001.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\item0001.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0003.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>item0003.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\item0003.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0005.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>item0005.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\item0005.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0007.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>item0007.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\item0007.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\item0009.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\item0009.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\item0009.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\item0009.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\item0009.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\item0009.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\item0009.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\item0009.xml</td><td>1</td><td/></row>
-		<row><td>item0009.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>item0009.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\item0009.xml</td><td>1</td><td/></row>
+		<row><td>josephm.customisationimporte1</td><td>JosephM.CustomisationImporter.Content_Files1</td><td>JosephM.CustomisationImporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.CustomisationImporter&gt;|ContentFiles</td><td>3</td><td/></row>
 		<row><td>josephm.prism.xrmdeveloperto</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>JosephM.Prism.XrmDeveloperTool.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Prism.XrmDeveloperTool&gt;|Built</td><td>3</td><td/></row>
-		<row><td>organisation_settings_help.h</td><td>ISX_DEFAULTCOMPONENT</td><td>ORGANI~1.HTM|Organisation Settings Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help.htm</td><td>1</td><td/></row>
-		<row><td>props002.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props002.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props002.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props002.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props002.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props002.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props002.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props002.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props002.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>props002.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\props002.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props004.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>props004.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\props004.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props006.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>props006.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\props006.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props008.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>props008.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\props008.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml</td><td>ISX_DEFAULTCOMPONENT1</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml1</td><td>ISX_DEFAULTCOMPONENT2</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml2</td><td>ISX_DEFAULTCOMPONENT3</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml3</td><td>ISX_DEFAULTCOMPONENT4</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml4</td><td>ISX_DEFAULTCOMPONENT5</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml5</td><td>ISX_DEFAULTCOMPONENT6</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml6</td><td>ISX_DEFAULTCOMPONENT7</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml7</td><td>ISX_DEFAULTCOMPONENT8</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>props010.xml8</td><td>ISX_DEFAULTCOMPONENT9</td><td>props010.xml</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\props010.xml</td><td>1</td><td/></row>
-		<row><td>record_extract_help.htm</td><td>ISX_DEFAULTCOMPONENT</td><td>RECORD~1.HTM|Record Extract Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help.htm</td><td>1</td><td/></row>
-		<row><td>saved_crm_connections_help.h</td><td>ISX_DEFAULTCOMPONENT</td><td>SAVEDC~1.HTM|Saved CRM Connections Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help.htm</td><td>1</td><td/></row>
-		<row><td>text_search_help.htm</td><td>ISX_DEFAULTCOMPONENT</td><td>TEXTSE~1.HTM|Text Search Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help.htm</td><td>1</td><td/></row>
-		<row><td>themedata.thmx</td><td>ISX_DEFAULTCOMPONENT1</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Code Generator Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>themedata.thmx1</td><td>ISX_DEFAULTCOMPONENT2</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Connect To CRM Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>themedata.thmx2</td><td>ISX_DEFAULTCOMPONENT3</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Exporter Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>themedata.thmx3</td><td>ISX_DEFAULTCOMPONENT4</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Customisation Importer Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>themedata.thmx4</td><td>ISX_DEFAULTCOMPONENT5</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Organisation Settings Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>themedata.thmx5</td><td>ISX_DEFAULTCOMPONENT6</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Record Extract Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>themedata.thmx6</td><td>ISX_DEFAULTCOMPONENT7</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Saved CRM Connections Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>themedata.thmx7</td><td>ISX_DEFAULTCOMPONENT8</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Text Search Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>themedata.thmx8</td><td>ISX_DEFAULTCOMPONENT9</td><td>THEMED~1.THM|themedata.thmx</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help_files\themedata.thmx</td><td>1</td><td/></row>
-		<row><td>xrm_importer_exporter_help.h</td><td>ISX_DEFAULTCOMPONENT</td><td>XRMIMP~1.HTM|Xrm Importer Exporter Help.htm</td><td>0</td><td/><td/><td/><td>1</td><td>D:\JosephM\TFS\JosephM\JosephM-2013-branch\JosephM.Prism.XrmDeveloperTool\bin\Debug\HelpFiles\Xrm Importer Exporter Help.htm</td><td>1</td><td/></row>
+		<row><td>josephm.prism.xrmmodule.cont</td><td>JosephM.Prism.XrmModule.Content_Files</td><td>JosephM.Prism.XrmModule.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Prism.XrmModule&gt;|ContentFiles</td><td>3</td><td/></row>
+		<row><td>josephm.xrm.customisationexp</td><td>JosephM.Xrm.CustomisationExporter.Content_Files</td><td>JosephM.Xrm.CustomisationExporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.CustomisationExporter&gt;|ContentFiles</td><td>3</td><td/></row>
+		<row><td>josephm.xrm.importerexporter</td><td>JosephM.Xrm.ImporterExporter.Content_Files</td><td>JosephM.Xrm.ImporterExporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.ImporterExporter&gt;|ContentFiles</td><td>3</td><td/></row>
+		<row><td>josephm.xrm.organisationsett</td><td>JosephM.Xrm.OrganisationSettings.Content_Files</td><td>JosephM.Xrm.OrganisationSettings.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.OrganisationSettings&gt;|ContentFiles</td><td>3</td><td/></row>
+		<row><td>josephm.xrm.recordextract.co</td><td>JosephM.Xrm.RecordExtract.Content_Files</td><td>JosephM.Xrm.RecordExtract.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.RecordExtract&gt;|ContentFiles</td><td>3</td><td/></row>
+		<row><td>josephmxrm.codegenerator.con</td><td>JosephMXrm.CodeGenerator.Content_Files</td><td>JosephMXrm.CodeGenerator.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephMXrm.CodeGenerator&gt;|ContentFiles</td><td>3</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2226,18 +2044,14 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_30EB985F_BD40_49EC_AEB6_0D740D816D24_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT1</td><td/><td/><td>_B41BE650_2454_4EC9_9A23_538AA09084B6_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT10</td><td/><td/><td>_8F0096B5_8705_48E8_BA16_4575B040120E_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT2</td><td/><td/><td>_99E0B257_5D33_44CB_87BC_FE499F265A76_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT3</td><td/><td/><td>_3526B441_42B6_49B9_876F_6D6A445C15BF_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT4</td><td/><td/><td>_9A1ED39B_3CD6_42E5_A379_2A563ADD8147_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT5</td><td/><td/><td>_3A4B4D12_8EEB_4F13_8425_87715F58BE87_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT6</td><td/><td/><td>_ABFBAF21_0903_40AC_B7CC_77031BE2509B_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT7</td><td/><td/><td>_407C7A20_ECF5_435A_97B2_17133F854EE3_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT8</td><td/><td/><td>_039F2EFB_74BE_4805_831F_35DD9E501966_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT9</td><td/><td/><td>_F475E2D5_4F60_4BBF_A27D_A754C755C71C_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.CustomisationImporter.Content_Files1</td><td/><td/><td>_B7F78BA0_94BC_45F3_B319_F2B04B3A75CB_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td/><td>_B54159B7_47D2_4962_95CF_162BD6252B35_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.Prism.XrmModule.Content_Files</td><td/><td/><td>_ABEAAF95_C3F4_4B52_8CE7_C61CA94097EF_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.Xrm.CustomisationExporter.Content_Files</td><td/><td/><td>_602F9DE5_E602_4E28_801F_A73EF28EBA43_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.Xrm.ImporterExporter.Content_Files</td><td/><td/><td>_377E6DFF_3C41_4F13_ACA8_89FF89B9C906_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.Xrm.OrganisationSettings.Content_Files</td><td/><td/><td>_29BDBD79_7429_4F36_A154_D2E6E3A84BC4_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.Xrm.RecordExtract.Content_Files</td><td/><td/><td>_06DA501C_FC95_4E77_9252_7FC23314AE62_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephMXrm.CodeGenerator.Content_Files</td><td/><td/><td>_97C3666D_263A_42CE_A3F1_2BEB5C91DB11_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -2543,7 +2357,14 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
+		<row><td>JosephM.CustomisationImporter</td><td>JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj</td><td/><td>2</td></row>
 		<row><td>JosephM.Prism.XrmDeveloperTool</td><td>JosephM.Prism.XrmDeveloperTool\JosephM.Prism.XrmDeveloperTool.csproj</td><td/><td>2</td></row>
+		<row><td>JosephM.Prism.XrmModule</td><td>JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj</td><td/><td>2</td></row>
+		<row><td>JosephM.Xrm.CustomisationExporter</td><td>JosephM.Xrm.CustomisationExporter\JosephM.Xrm.CustomisationExporter.csproj</td><td/><td>2</td></row>
+		<row><td>JosephM.Xrm.ImporterExporter</td><td>JosephM.Xrm.ImportExporter\JosephM.Xrm.ImporterExporter.csproj</td><td/><td>2</td></row>
+		<row><td>JosephM.Xrm.OrganisationSettings</td><td>JosephM.Xrm.OrganisationSettings\JosephM.Xrm.OrganisationSettings.csproj</td><td/><td>2</td></row>
+		<row><td>JosephM.Xrm.RecordExtract</td><td>JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj</td><td/><td>2</td></row>
+		<row><td>JosephMXrm.CodeGenerator</td><td>JosephM.Xrm.CodeGenerator\JosephMXrm.CodeGenerator.csproj</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
@@ -2855,7 +2676,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>JosephM</td><td>0</td><td/><td>581140944</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>JosephM</td><td>0</td><td/><td>983805621</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION45FULL</td><td>1033</td><td>Microsoft .NET Framework 4.5 Full package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>581126703</td></row>
@@ -3957,8 +3778,8 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>581155311</td></row>
-		<row><td>ID_STRING1</td><td>1033</td><td>http://www.JosephM.com</td><td>0</td><td/><td>581140944</td></row>
-		<row><td>ID_STRING2</td><td>1033</td><td>JosephM</td><td>0</td><td/><td>581140944</td></row>
+		<row><td>ID_STRING1</td><td>1033</td><td>http://www.JosephM.com</td><td>0</td><td/><td>983805621</td></row>
+		<row><td>ID_STRING2</td><td>1033</td><td>JosephM</td><td>0</td><td/><td>983805621</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>581155311</td></row>
 	</table>
 
@@ -4199,7 +4020,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{1C33C7B9-475F-4DE4-83E3-C5479E7A4641}</td></row>
 		<row><td>ISUSSignature</td><td>{9AC8E5E4-DDB1-4C9A-B795-48942CF75201}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewProject,viewRealSetupDesign</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewProject,viewRealSetupDesign,viewISToday,viewAppFiles,viewFeatureFiles</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
