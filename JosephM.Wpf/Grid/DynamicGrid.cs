@@ -89,6 +89,12 @@ namespace JosephM.Wpf.Grid
                                 deleteColumn.Binding = new Binding("DeleteRowViewModel");
                                 dynamicDataGrid.Columns.Add(deleteColumn);
                             }
+                            if (gridSectionViewModel.DynamicGridViewModelItems.CanEdit)
+                            {
+                                var editColumn = new EditRowColumn();
+                                editColumn.Binding = new Binding("EditRowViewModel");
+                                dynamicDataGrid.Columns.Add(editColumn);
+                            }
                             foreach (var column in columnMetadata)
                             {
                                 var cellBinding = new Binding

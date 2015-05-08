@@ -21,13 +21,22 @@ namespace JosephM.Record.Application.Grid
                         "The Delete Action Has Not Been Populated. The DeleteRow Property Requires Setting On The " +
                         typeof (DynamicGridViewModelItems).Name);
                 };
+            EditRow =
+                r =>
+                {
+                    throw new NullReferenceException(
+                        "The Edit Action Has Not Been Populated. The Edit Property Requires Setting On The " +
+                        typeof(DynamicGridViewModelItems).Name);
+                };
             OnDoubleClick = () => { };
             OnKeyDown = () => { };
         }
 
         public bool CanDelete { get; set; }
-        public Action<GridRowViewModel> DeleteRow;
-        public Action OnDoubleClick;
-        public Action OnKeyDown;
+        public bool CanEdit { get; set; }
+        public Action<GridRowViewModel> DeleteRow { get; set; }
+        public Action<GridRowViewModel> EditRow { get; set; }
+        public Action OnDoubleClick { get; set; }
+        public Action OnKeyDown { get; set; }
     }
 }

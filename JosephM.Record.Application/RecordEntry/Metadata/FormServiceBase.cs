@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using JosephM.Record.Application.Grid;
 using JosephM.Record.Application.RecordEntry.Form;
 using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Validation;
@@ -68,6 +69,11 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         }
 
         internal virtual RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel)
+        {
+            return null;
+        }
+
+        internal virtual RecordEntryFormViewModel GetEditRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
         {
             return null;
         }

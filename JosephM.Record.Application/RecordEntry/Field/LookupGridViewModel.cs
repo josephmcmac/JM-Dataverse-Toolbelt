@@ -30,6 +30,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
             DynamicGridViewModelItems = new DynamicGridViewModelItems()
             {
                 CanDelete = false,
+                CanEdit = false,
                 OnDoubleClick = OnDoubleClick
             };
         }

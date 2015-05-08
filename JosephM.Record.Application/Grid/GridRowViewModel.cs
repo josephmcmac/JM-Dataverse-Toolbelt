@@ -27,6 +27,7 @@ namespace JosephM.Record.Application.Grid
             GridViewModel = gridViewModel;
             LoadFields();
             DeleteRowViewModel = new XrmButtonViewModel("Delete", DeleteRow, ApplicationController);
+            EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController);
         }
 
         public IDynamicGridViewModel GridViewModel { get; private set; }
@@ -47,12 +48,19 @@ namespace JosephM.Record.Application.Grid
             RunOnChanges();
         }
 
+        public void EditRow()
+        {
+            GridViewModel.DynamicGridViewModelItems.EditRow(this);
+        }
+
         public void DeleteRow()
         {
             GridViewModel.DynamicGridViewModelItems.DeleteRow(this);
         }
 
         public XrmButtonViewModel DeleteRowViewModel { get; set; }
+
+        public XrmButtonViewModel EditRowViewModel { get; set; }
 
         public IRecord Record { get; set; }
 

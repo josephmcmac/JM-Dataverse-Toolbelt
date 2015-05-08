@@ -153,6 +153,10 @@
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\BooleanToFalseConverter.cs" />
+    <Compile Include="Grid\EditRowView.xaml.cs">
+      <DependentUpon>EditRowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\EditRowColumn.cs" />
     <Compile Include="Grid\GridPasswordColumn.cs" />
     <Compile Include="Grid\GridPasswordFieldView.xaml.cs">
       <DependentUpon>GridPasswordFieldView.xaml</DependentUpon>
@@ -296,6 +300,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Application\ApplicationHeadingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\EditRowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -536,6 +544,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\AddIcon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\EditIcon.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

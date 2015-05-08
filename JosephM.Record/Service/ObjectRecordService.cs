@@ -66,7 +66,7 @@ namespace JosephM.Record.Service
             }
         }
 
-        private IDictionary<string, IEnumerable<string>> OptionSetLimitedValues { get; set; }
+        public IDictionary<string, IEnumerable<string>> OptionSetLimitedValues { get; private set; }
 
         public object ObjectToEnter { get; private set; }
 

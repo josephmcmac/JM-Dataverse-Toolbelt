@@ -27,7 +27,9 @@ namespace JosephM.Record.Application.RecordEntry.Section
             DynamicGridViewModelItems = new DynamicGridViewModelItems()
             {
                 CanDelete = true,
-                DeleteRow = RemoveRow
+                CanEdit = true,
+                DeleteRow = RemoveRow,
+                EditRow = EditRow
             };
         }
 
@@ -39,13 +41,15 @@ namespace JosephM.Record.Application.RecordEntry.Section
             {
                 var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, FormController, (record) =>
                 {
-                    InsertRecord(record);
+                    InsertRecord(record, 0);
                     RecordForm.ClearChildForm();
                 }, () => RecordForm.ClearChildForm());
                 if (viewModel == null)
-                    InsertRecord(RecordService.NewRecord(RecordType));
+                    InsertRecord(RecordService.NewRecord(RecordType), 0);
                 else
+                {
                     RecordForm.LoadChildForm(viewModel);
+                }
             }
             catch (Exception ex)
             {
@@ -56,6 +60,31 @@ namespace JosephM.Record.Application.RecordEntry.Section
         private void RemoveRow(GridRowViewModel row)
         {
             GridRecords.Remove(row);
+        }
+
+        private void EditRow(GridRowViewModel row)
+        {
+            try
+            {
+                var viewModel = FormService.GetEditRowViewModel(SectionIdentifier, FormController, (record) =>
+                {
+                    RecordForm.ClearChildForm();
+                    var index = GridRecords.IndexOf(row);
+                    GridRecords.Remove(row);
+                    InsertRecord(record, index);
+                }, () => RecordForm.ClearChildForm(), row);
+                if (viewModel == null)
+                {
+                    //todo error message
+                    throw new NotImplementedException("No Form For Type");
+                }
+                else
+                    RecordForm.LoadChildForm(viewModel);
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.UserMessage(string.Format("Error Adding Row: {0}", ex.DisplayString()));
+            }
         }
 
         private SubGridSection SubGridSection
@@ -122,12 +151,12 @@ namespace JosephM.Record.Application.RecordEntry.Section
             }
         }
 
-        private void InsertRecord(IRecord record)
+        private void InsertRecord(IRecord record, int index)
         {
             //DoOnMainThread(() =>
             //{
                 var rowItem = new GridRowViewModel(record, this);
-                GridRecords.Insert(0, rowItem);
+                GridRecords.Insert(index, rowItem);
             //});
         }
 

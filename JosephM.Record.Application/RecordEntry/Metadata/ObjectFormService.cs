@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
+using JosephM.ObjectMapping;
 using JosephM.Record.Application.Dialog;
 using JosephM.Record.Application.Grid;
 using JosephM.Record.Application.RecordEntry.Field;
@@ -274,6 +275,24 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 //if the object specifies use a form then use the form/dialog
             else
                 return null;
+        }
+
+        internal override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        {
+            var record = gridRow.GetRecord();
+            if(!(record is ObjectRecord))
+                throw new NotSupportedException(string.Format("Error Expected Object Of Type {0}", typeof(ObjectRecord).Name));
+            var newRecord = (ObjectRecord) record;
+            //need to load the exitsing row to this
+            //lets start a dialog to add it on complete
+            var mapper = new ClassSelfMapper();
+            var newObject = mapper.Map(newRecord.Instance);
+            var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues);
+            var viewModel = new ObjectEntryViewModel(
+                () => onSave(new ObjectRecord(newObject)),
+                onCancel,
+                newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), formController.ApplicationController));
+            return viewModel;
         }
     }
 }
