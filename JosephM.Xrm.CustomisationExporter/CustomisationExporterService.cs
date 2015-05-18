@@ -64,7 +64,7 @@ namespace JosephM.Xrm.CustomisationExporter
                                     allRelationship.Add(new RelationshipExport(relationship.SchemaName,
                                         relationship.Entity1LogicalName, relationship.Entity2LogicalName,
                                         Service.IsCustomRelationship(relationship.SchemaName), Service.IsDisplayRelated(relationship, false), Service.IsDisplayRelated(relationship, true)
-                                        , null, RelationshipExport.RelationshipType.ManyToMany, Service.IsCustomLabel(relationship, false), Service.IsCustomLabel(relationship, true), Service.GetRelationshipLabel(relationship, false), Service.GetRelationshipLabel(relationship, true)
+                                        , relationship.Entity1IntersectAttribute, relationship.Entity2IntersectAttribute, RelationshipExport.RelationshipType.ManyToMany, Service.IsCustomLabel(relationship, false), Service.IsCustomLabel(relationship, true), Service.GetRelationshipLabel(relationship, false), Service.GetRelationshipLabel(relationship, true)
                                         , Service.GetDisplayOrder(relationship, false), Service.GetDisplayOrder(relationship, true)));
                                     manyToManyDone.Add(relationship.SchemaName);
                                 }
@@ -75,7 +75,7 @@ namespace JosephM.Xrm.CustomisationExporter
                                     allRelationship.Add(new RelationshipExport(relationship.SchemaName,
                                         relationship.Entity2LogicalName, relationship.Entity1LogicalName,
                                         Service.IsCustomRelationship(relationship.SchemaName), Service.IsDisplayRelated(relationship, true), Service.IsDisplayRelated(relationship, false)
-                                        , null, RelationshipExport.RelationshipType.ManyToMany, Service.IsCustomLabel(relationship, true), Service.IsCustomLabel(relationship, false), Service.GetRelationshipLabel(relationship, true), Service.GetRelationshipLabel(relationship, false)
+                                        , relationship.Entity2IntersectAttribute, relationship.Entity1IntersectAttribute, RelationshipExport.RelationshipType.ManyToMany, Service.IsCustomLabel(relationship, true), Service.IsCustomLabel(relationship, false), Service.GetRelationshipLabel(relationship, true), Service.GetRelationshipLabel(relationship, false)
                                         , Service.GetDisplayOrder(relationship, true), Service.GetDisplayOrder(relationship, false)));
                                     manyToManyDone.Add(relationship.SchemaName);
                                 }
@@ -99,7 +99,7 @@ namespace JosephM.Xrm.CustomisationExporter
                                         Service.IsCustomField(relationship.ReferencingAttribute,
                                             relationship.ReferencingEntity), false,
                                         Service.IsDisplayRelated(relationship)
-                                        , relationship.ReferencingAttribute,
+                                        ,null, relationship.ReferencingAttribute,
                                         RelationshipExport.RelationshipType.OneToMany, false, Service.IsCustomLabel(relationship), null, Service.GetRelationshipLabel(relationship)
                                         , 0, Service.GetDisplayOrder(relationship)));
                                 }

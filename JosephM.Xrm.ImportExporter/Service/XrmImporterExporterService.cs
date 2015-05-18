@@ -104,7 +104,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                             if (request.MatchByName)
                             {
                                 var columnValue = row.GetFieldAsString(primaryFieldColumn);
-                                var matchingEntity = GetMatchingEntities(XrmService, type, primaryField, columnValue);
+                                var matchingEntity = GetMatchingEntities(type, primaryField, columnValue);
                                 if (matchingEntity.Count() > 1)
                                     throw new Exception(string.Format("Specified Match By Name But More Than One {0} Record Matched To Name Of {1}", type, columnValue));
                                 if (matchingEntity.Count() == 1)
@@ -161,21 +161,21 @@ namespace JosephM.Xrm.ImportExporter.Service
             return organisation.GetLookupId("basecurrencyid");
         }
 
-        private static IEnumerable<Entity> GetMatchingEntities(XrmService service, string type, string field, string value)
+        private IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
         {
             var conditions = new List<ConditionExpression>
             {
                 new ConditionExpression(field, ConditionOperator.Equal,
-                    service.ParseField(field, type, value)),
+                    XrmService.ParseField(field, type, value)),
             };
             if(type == "workflow")
                 conditions.Add(new ConditionExpression("type", ConditionOperator.Equal, XrmPicklists.WorkflowType.Definition));
-            return service.RetrieveAllAndClauses(type, conditions, new String[0]);
+            return XrmService.RetrieveAllAndClauses(type, conditions, new String[0]);
         }
 
-        private static Entity GetUniqueMatchingEntity(XrmService service, string type, string field, string value)
+        private Entity GetUniqueMatchingEntity(string type, string field, string value)
         {
-            var matchingRecords = GetMatchingEntities(service, type, field, value);
+            var matchingRecords = GetMatchingEntities(type, field, value);
             if (!matchingRecords.Any())
                 throw new NullReferenceException(string.Format("No Record Matched To The {0} Of {1} When Matching The Name",
                         "Name", value));
@@ -311,7 +311,13 @@ namespace JosephM.Xrm.ImportExporter.Service
                         try
                         {
                             controller.UpdateLevel2Progress(countRecordsImported++, countRecordsToImport, string.Format("Importing {0} Records", recordType));
-                            var existingMatchingIds = existingEntities.Where(e => e.Id == thisEntity.Id);
+                            var existingMatchingIds = GetMatchForExistingRecord(existingEntities, thisEntity);
+                            if (existingMatchingIds.Any())
+                            {
+                                var matchRecord = existingMatchingIds.First();
+                                thisEntity.Id = matchRecord.Id;
+                                thisEntity.SetField(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), thisEntity.Id);
+                            }
                             var isUpdate = existingMatchingIds.Any();
                             foreach (var field in thisEntity.GetFieldsInEntity().ToArray())
                             {
@@ -334,7 +340,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                                         {
                                             var matchRecords = name.IsNullOrWhiteSpace() ?
                                                 new Entity[0] :
-                                                GetMatchingEntities(XrmService, lookupEntity,
+                                                GetMatchingEntities(lookupEntity,
                                                 targetPrimaryField,
                                                 name);
                                             if (matchRecords.Count() != 1)
@@ -413,7 +419,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                                     {
                                         if(name.IsNullOrWhiteSpace())
                                             throw new NullReferenceException(string.Format("No Record Matched By Id and Name Is Empty"));
-                                        matchRecord = GetUniqueMatchingEntity(XrmService, lookupEntity,
+                                        matchRecord = GetUniqueMatchingEntity(lookupEntity,
                                             primaryField,
                                             name);
                                         thisEntity.SetLookupField(field, matchRecord);
@@ -445,6 +451,33 @@ namespace JosephM.Xrm.ImportExporter.Service
             }
         }
 
+        private IEnumerable<Entity> GetMatchForExistingRecord(IEnumerable<Entity> existingEntitiesWithIdMatches, Entity thisEntity)
+        {
+            //this a bit messy
+            var existingMatches = existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
+            if (!existingMatches.Any())
+            {
+                var matchByNameEntities = new[] {"businessunit", "team"};
+                if (thisEntity.LogicalName == "businessunit" && thisEntity.GetField("parentbusinessunitid") == null)
+                {
+                    existingMatches = XrmService.RetrieveAllAndClauses("businessunit",
+                        new[] {new ConditionExpression("parentbusinessunitid", ConditionOperator.Null)});
+                }
+                else if (matchByNameEntities.Contains(thisEntity.LogicalName))
+                {
+                    var primaryField = XrmService.GetPrimaryNameField(thisEntity.LogicalName);
+                    var name = thisEntity.GetStringField(primaryField);
+                    if(name.IsNullOrWhiteSpace())
+                        throw new NullReferenceException(string.Format("{0} Is Required On The {1}", XrmService.GetFieldLabel(primaryField, thisEntity.LogicalName), XrmService.GetEntityLabel(thisEntity.LogicalName)));
+                    existingMatches = GetMatchingEntities(thisEntity.LogicalName, primaryField, name);
+                    if(existingMatches.Count() > 1)
+                        throw new Exception(string.Format("More Than One Record Match To The {0} Of {1} When Matching The Name",
+                            "Name", name));
+                }
+            }
+            return existingMatches;
+        }
+
         private void CheckThrowValidForCreate(Entity thisEntity, List<string> fieldsToSet)
         {
             if (thisEntity != null)
@@ -468,16 +501,22 @@ namespace JosephM.Xrm.ImportExporter.Service
             return fields;
         }
 
-        public bool IsIncludeField(string fieldName, string recordType)
+        public bool IsIncludeField(string fieldName, string entityType)
         {
             var hardcodeInvalidFields = new[]
             {
-                "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
+                "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
                 "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "myr_currentnumberposition"
             };
             if (hardcodeInvalidFields.Contains(fieldName))
                 return false;
-            return Service.IsWritable(fieldName, recordType);
+            if (fieldName == "parentbusinessunitid")
+                return true;
+            if (fieldName == "businessunitid")
+                return true;
+            return
+                Service.IsWritable(fieldName, entityType);
+               
         }
 
         private void Export(XrmImporterExporterRequest request, LogController controller,
@@ -501,20 +540,33 @@ namespace JosephM.Xrm.ImportExporter.Service
 
                 foreach (var entity in entities)
                 {
-                    var namesToUse = entity.GetStringField(XrmService.GetPrimaryNameField(entity.LogicalName).Left(15));
-                    if (!namesToUse.IsNullOrWhiteSpace())
+                    if (!CheckIgnoreForExport(request, entity))
                     {
-                        var invalidChars = Path.GetInvalidFileNameChars();
-                        foreach (var character in invalidChars)
-                            namesToUse = namesToUse.Replace(character, '_');
-                    }
-                    var fileName = string.Format(@"{0}\{1}_{2}_{3}.xml", folder, entity.LogicalName, entity.Id, namesToUse);
-                    using (var fileStream = new FileStream(fileName, FileMode.Create))
-                    {
-                        lateBoundSerializer.WriteObject(fileStream, entity);
+                        var namesToUse =
+                            entity.GetStringField(XrmService.GetPrimaryNameField(entity.LogicalName).Left(15));
+                        if (!namesToUse.IsNullOrWhiteSpace())
+                        {
+                            var invalidChars = Path.GetInvalidFileNameChars();
+                            foreach (var character in invalidChars)
+                                namesToUse = namesToUse.Replace(character, '_');
+                        }
+                        var fileName = string.Format(@"{0}\{1}_{2}_{3}.xml", folder, entity.LogicalName, entity.Id,
+                            namesToUse);
+                        using (var fileStream = new FileStream(fileName, FileMode.Create))
+                        {
+                            lateBoundSerializer.WriteObject(fileStream, entity);
+                        }
                     }
                 }
             }
+        }
+
+        private bool CheckIgnoreForExport(XrmImporterExporterRequest request, Entity entity)
+        {
+            //exlcude 1 = public
+            if (entity.LogicalName == "queue" && entity.GetOptionSetValue("queueviewtype") == 1)
+                return true;
+            return false;
         }
     }
 }

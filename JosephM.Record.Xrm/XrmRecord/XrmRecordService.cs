@@ -1292,6 +1292,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             return _xrmService.IsWritable(fieldName, recordType);
         }
 
+        public bool IsCreateable(string fieldName, string recordType)
+        {
+            return _xrmService.IsCreateable(fieldName, recordType);
+        }
+
         public bool IsReadable(string fieldName, string recordType)
         {
             return _xrmService.IsReadable(fieldName, recordType);

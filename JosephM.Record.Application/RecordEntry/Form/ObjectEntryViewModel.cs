@@ -1,10 +1,14 @@
 ﻿#region
 
 using System;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
+using JosephM.Core.Utility;
+using JosephM.Record.Application.RecordEntry.Metadata;
 using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Validation;
 using JosephM.Record.IService;
@@ -16,7 +20,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
 {
     public class ObjectEntryViewModel : RecordEntryFormViewModel
     {
-        private readonly ObjectRecord _objectRecord;
+        private ObjectRecord _objectRecord;
         private readonly Action _onCancel;
         private readonly Action _onSave;
 
@@ -48,6 +52,15 @@ namespace JosephM.Record.Application.RecordEntry.Form
             return ((ObjectRecordService) service);
         }
 
+        public ObjectFormService GetObjectFormService()
+        {
+            var service = FormService;
+            if (!(service is ObjectFormService))
+                throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(FormServiceBase).Name,
+                    typeof(ObjectFormService).Name));
+            return ((ObjectFormService)service);
+        }
+
         public override string SaveButtonLabel
         {
             get { return "Next"; }
@@ -57,13 +70,18 @@ namespace JosephM.Record.Application.RecordEntry.Form
         {
             //unload the ienumerable grids into the property
             //should be dynamic if possible set to enumerable query then toarray it when save
+            LoadSubgridsToObject();
+        }
+
+        private void LoadSubgridsToObject()
+        {
             foreach (var grid in SubGrids)
             {
                 var typedEnumerable = MapGridToEnumerableValue(grid);
                 GetObject().GetType()
                     .GetProperty(grid.ReferenceName)
                     .GetSetMethod()
-                    .Invoke(GetObject(), new[] { typedEnumerable });
+                    .Invoke(GetObject(), new[] {typedEnumerable});
             }
         }
 
@@ -97,6 +115,66 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 return ((IValidatableObject) theObject).Validate();
             }
             return new IsValidResponse();
+        }
+
+        public override void LoadObject(string fileName)
+        {
+            try
+            {
+                //read from serializer
+                var theObjectType = GetObject().GetType();
+                var serializer = new DataContractSerializer(theObjectType);
+                object newOne = null;
+                using (var fileStream = new FileStream(fileName, FileMode.Open))
+                {
+                    newOne = serializer.ReadObject(fileStream);
+                }
+                _objectRecord = new ObjectRecord(newOne);
+                //need to reload the recordservice and formservice and trigger reload methods
+                //todo is there cleaner way to do this
+                GetObjectRecordService().ObjectToEnter = newOne;
+                GetObjectRecordService().ObjectToEnter = newOne;
+                Reload();
+                foreach (var grid in SubGrids)
+                {
+                    grid.LoadRowsAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.UserMessage(string.Format("Error Saving Object\n{0}", ex.DisplayString()));
+            }
+        }
+
+        public override void SaveObject(string folder)
+        {
+            try
+            {
+                //subgrids don't map directly to object so need to unload them to object
+                //todo have them map directly
+                LoadSubgridsToObject();
+                
+                var theObject = GetObject();
+                var serializer = new DataContractSerializer(theObject.GetType());
+
+                FileUtility.CheckCreateFolder(folder);
+
+                using (
+                    var fileStream = new FileStream(Path.Combine(folder, theObject.GetType().Name + ".xml"),
+                        FileMode.Create))
+                {
+                    serializer.WriteObject(fileStream, theObject);
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.UserMessage(string.Format("Error Saving Object\n{0}", ex.DisplayString()));
+            }
+        }
+
+        protected override bool AllowSaveAndLoad
+        {
+            get { return GetObject().GetType().GetCustomAttributes(typeof(AllowSaveAndLoad), false).Any(); }
         }
     }
 }

@@ -678,6 +678,11 @@ namespace JosephM.Record.Service
             return true;
         }
 
+        public bool IsCreateable(string fieldName, string recordType)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual bool IsReadable(string fieldName, string recordType)
         {
             return true;

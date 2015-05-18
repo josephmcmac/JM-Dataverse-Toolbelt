@@ -68,7 +68,7 @@ namespace JosephM.Record.Service
 
         public IDictionary<string, IEnumerable<string>> OptionSetLimitedValues { get; private set; }
 
-        public object ObjectToEnter { get; private set; }
+        public object ObjectToEnter { get; set; }
 
         private readonly Dictionary<string, IEnumerable<FieldMetadata>> _fieldMetadata =
             new Dictionary<string, IEnumerable<FieldMetadata>>();

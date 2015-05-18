@@ -37,7 +37,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             get { return null; }
         }
 
-        private object ObjectToEnter { get; set; }
+        public object ObjectToEnter { get; set; }
 
         private Type ObjectType
         {

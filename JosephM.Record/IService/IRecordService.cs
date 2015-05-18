@@ -468,9 +468,14 @@ namespace JosephM.Record.IService
         IEnumerable<string> GetActivityTypes();
 
         /// <summary>
-        /// Returns All if The Field Is Writable
+        /// Returns All if The Field Is Updateable
         /// </summary>
         bool IsWritable(string fieldName, string recordType);
+
+        /// <summary>
+        /// Returns All if The Field Is Valid For Create
+        /// </summary>
+        bool IsCreateable(string fieldName, string recordType);
 
         bool IsReadable(string fieldName, string recordType);
 

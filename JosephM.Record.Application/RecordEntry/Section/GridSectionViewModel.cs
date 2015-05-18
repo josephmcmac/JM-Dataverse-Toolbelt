@@ -131,7 +131,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
             get { return false; }
         }
 
-        private void LoadRowsAsync()
+        public void LoadRowsAsync()
         {
             var records = RecordService.GetLinkedRecords(
                 SubGridSection.LinkedRecordType,

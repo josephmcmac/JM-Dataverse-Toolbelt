@@ -3144,6 +3144,11 @@ string recordType)
             return GetFieldMetadata(fieldName, recordType).IsValidForUpdate ?? false;
         }
 
+        public bool IsCreateable(string fieldName, string recordType)
+        {
+            return GetFieldMetadata(fieldName, recordType).IsValidForCreate ?? false;
+        }
+
         public IEnumerable<string> GetFields(string recordType)
         {
             return GetEntityFieldMetadata(recordType).Select(a => a.LogicalName).ToArray();

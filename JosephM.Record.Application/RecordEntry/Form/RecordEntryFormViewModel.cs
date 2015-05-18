@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Record.Application.Constants;
@@ -14,6 +16,7 @@ using JosephM.Record.Application.RecordEntry.Metadata;
 using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Shared;
 using JosephM.Record.Application.Validation;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 #endregion
 
@@ -34,6 +37,14 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 IsVisible = false
             };
             CancelButtonViewModel = new XrmButtonViewModel(CancelButtonLabel, OnCancel, ApplicationController)
+            {
+                IsVisible = false
+            };
+            LoadRequestButtonViewModel = new XrmButtonViewModel("Load Object", LoadObject, ApplicationController)
+            {
+                IsVisible = false
+            };
+            SaveRequestButtonViewModel = new XrmButtonViewModel("Save Object", SaveObject, ApplicationController)
             {
                 IsVisible = false
             };
@@ -60,9 +71,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     //Note this return an empty collection and spawns a new thread to load the sections
                     //this is to free up the ui
                     //once loaded it raises the property updated event
-                    _formSections = new ObservableCollection<SectionViewModelBase>();
-
-                    StartNewAction(LoadFormSections);
+                    Reload();
                 }
                 return _formSections;
             }
@@ -77,9 +86,20 @@ namespace JosephM.Record.Application.RecordEntry.Form
             }
         }
 
+        protected void Reload()
+        {
+            _formSections = new ObservableCollection<SectionViewModelBase>();
+            StartNewAction(LoadFormSections);
+        }
+
         public XrmButtonViewModel SaveButtonViewModel { get; private set; }
 
         public XrmButtonViewModel CancelButtonViewModel { get; private set; }
+
+        //todo rename property
+        public XrmButtonViewModel SaveRequestButtonViewModel { get; private set; }
+
+        public XrmButtonViewModel LoadRequestButtonViewModel { get; private set; }
 
         public string RecordIdName { get; set; }
 
@@ -150,6 +170,37 @@ namespace JosephM.Record.Application.RecordEntry.Form
             {
                 OnCanceEntension();
             }
+        }
+
+        public virtual void SaveObject()
+        {
+            //todo put in application controller
+            var selectFolderDialog = new FolderBrowserDialog { ShowNewFolderButton = true };
+            var result = selectFolderDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                SaveObject(selectFolderDialog.SelectedPath);
+            }
+        }
+
+        public virtual void SaveObject(string folder)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void LoadObject()
+        {
+            var selectFileDialog = new OpenFileDialog { Filter = FileMasks.XmlFile };
+            var selected = selectFileDialog.ShowDialog();
+            if (selected ?? false)
+            {
+                LoadObject(selectFileDialog.FileName);
+            }
+        }
+
+        public virtual void LoadObject(string fileName)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual void OnCanceEntension()
@@ -287,7 +338,16 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     SaveButtonViewModel.IsVisible = true;
                 if (ShowCancelButton)
                     CancelButtonViewModel.IsVisible = true;
+                if (AllowSaveAndLoad)
+                    SaveRequestButtonViewModel.IsVisible = true;
+                if (AllowSaveAndLoad)
+                    LoadRequestButtonViewModel.IsVisible = true;
             });
+        }
+
+        protected virtual bool AllowSaveAndLoad
+        {
+            get { return false; }
         }
 
         protected override bool ConfirmTabClose()

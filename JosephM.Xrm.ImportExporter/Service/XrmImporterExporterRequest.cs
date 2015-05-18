@@ -10,6 +10,8 @@ using JosephM.Record.Application.SettingTypes;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
+    //todo script verify save and load
+    [AllowSaveAndLoad]
     public class XrmImporterExporterRequest : ServiceRequestBase
     {
         [RequiredProperty]
