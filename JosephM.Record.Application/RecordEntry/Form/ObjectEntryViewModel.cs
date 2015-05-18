@@ -8,6 +8,7 @@ using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
+using JosephM.ObjectMapping;
 using JosephM.Record.Application.RecordEntry.Metadata;
 using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Validation;
@@ -122,19 +123,18 @@ namespace JosephM.Record.Application.RecordEntry.Form
             try
             {
                 //read from serializer
-                var theObjectType = GetObject().GetType();
+                var theObject = GetObject();
+                var theObjectType = theObject.GetType();
                 var serializer = new DataContractSerializer(theObjectType);
                 object newOne = null;
                 using (var fileStream = new FileStream(fileName, FileMode.Open))
                 {
                     newOne = serializer.ReadObject(fileStream);
                 }
-                _objectRecord = new ObjectRecord(newOne);
-                //need to reload the recordservice and formservice and trigger reload methods
-                //todo is there cleaner way to do this
-                GetObjectRecordService().ObjectToEnter = newOne;
-                GetObjectRecordService().ObjectToEnter = newOne;
+                var mapper = new ClassSelfMapper();
+                mapper.Map(newOne, theObject);
                 Reload();
+                //todo show loading screen
                 foreach (var grid in SubGrids)
                 {
                     grid.LoadRowsAsync();

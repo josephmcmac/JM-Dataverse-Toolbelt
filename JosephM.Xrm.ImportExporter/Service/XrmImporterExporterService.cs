@@ -506,7 +506,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             var hardcodeInvalidFields = new[]
             {
                 "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
-                "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "myr_currentnumberposition"
+                "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "myr_currentnumberposition", "calendarrules"
             };
             if (hardcodeInvalidFields.Contains(fieldName))
                 return false;
@@ -565,6 +565,9 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             //exlcude 1 = public
             if (entity.LogicalName == "queue" && entity.GetOptionSetValue("queueviewtype") == 1)
+                return true;
+            //exlcude 1 = customer service 2 = holiday schedule
+            if (entity.LogicalName == "calendar" && !new [] { 1,2,}.Contains(entity.GetOptionSetValue("type")))
                 return true;
             return false;
         }

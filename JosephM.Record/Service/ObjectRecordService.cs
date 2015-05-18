@@ -60,8 +60,6 @@ namespace JosephM.Record.Service
         {
             get
             {
-                if (_lookupService == null)
-                    throw new NullReferenceException("Error Lookup Service Is Empty. Ensure To Set It In The Dialog Constructor");
                 return _lookupService;
             }
         }
