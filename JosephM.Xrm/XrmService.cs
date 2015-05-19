@@ -1179,6 +1179,18 @@ namespace JosephM.Xrm
             Execute(setStateReq);
         }
 
+        public void SetState(Entity entity, int state, int status)
+        {
+            var setStateReq = new SetStateRequest
+            {
+                EntityMoniker = new EntityReference(entity.LogicalName, entity.Id),
+                State = new OptionSetValue(state),
+                Status = new OptionSetValue(status)
+            };
+
+            Execute(setStateReq);
+        }
+
         public void SetState(Entity entity, int state)
         {
             SetState(entity.LogicalName, entity.Id, state);

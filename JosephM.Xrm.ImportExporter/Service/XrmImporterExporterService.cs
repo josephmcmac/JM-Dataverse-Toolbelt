@@ -242,17 +242,23 @@ namespace JosephM.Xrm.ImportExporter.Service
 
             foreach (var type in typesToImport)
             {
-                var thisTypeEntities = entities.Where(e => e.LogicalName == type).ToList();
-                var fields = GetFieldsToImport(thisTypeEntities, type);
                 foreach (var type2 in orderedTypes)
                 {
-                    if (
-                        fields.Any(
-                            f => XrmService.IsLookup(f, type) && XrmService.GetLookupTargetEntity(f, type) == type2))
+                    var thatType = type2;
+                    var thatTypeEntities = entities.Where(e => e.LogicalName == thatType).ToList();
+                    var fields = GetFieldsToImport(thatTypeEntities, thatType)
+                        .Where(f => XrmService.IsLookup(f, thatType));
+
+                    foreach (var field in fields)
                     {
-                        type.Insert(orderedTypes.IndexOf(type2), type);
+                        if (thatTypeEntities.Any(e => e.GetLookupType(field) == type))
+                        {
+                            orderedTypes.Insert(orderedTypes.IndexOf(type2), type);
+                            break;
+                        }
                     }
-                    break;
+                    if (orderedTypes.Contains(type))
+                        break;
                 }
                 if (!orderedTypes.Contains(type))
                     orderedTypes.Add(type);
@@ -287,7 +293,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                             .Where(
                                 f =>
                                     XrmService.IsLookup(f, recordType) &&
-                                    XrmService.GetLookupTargetEntity(f, recordType) == recordType);
+                                    XrmService.GetLookupTargetEntity(f, recordType) == recordType).ToArray();
                     foreach (var entity in thisTypeEntities)
                     {
                         foreach (var entity2 in orderedEntities)
@@ -369,6 +375,19 @@ namespace JosephM.Xrm.ImportExporter.Service
                             {
                                 CheckThrowValidForCreate(thisEntity, fieldsToSet);
                                 thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
+                            }
+                            if(!isUpdate && thisEntity.GetOptionSetValue("statecode") == XrmPicklists.State.Inactive)
+                                XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
+                            else if (isUpdate && existingMatchingIds.Any())
+                            {
+                                var matchRecord = existingMatchingIds.First();
+                                if (matchRecord.GetOptionSetValue("statecode") !=
+                                    thisEntity.GetOptionSetValue("statecode") ||
+                                    matchRecord.GetOptionSetValue("statuscode") !=
+                                    thisEntity.GetOptionSetValue("statuscode"))
+                                {
+                                    XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
+                                }
                             }
                         }
                         catch (Exception ex)
@@ -535,34 +554,55 @@ namespace JosephM.Xrm.ImportExporter.Service
                 var conditions = new List<ConditionExpression>();
                 if (type == "list")
                     conditions.Add(new ConditionExpression("type", ConditionOperator.Equal, XrmPicklists.ListType.Dynamic));
-                var entities = XrmService.RetrieveAllAndClauses(type, conditions);
-                var lateBoundSerializer = new DataContractSerializer(typeof(Entity));
+                //doesn't work for too many notes
+                //should have option on each or all entities for notes maybe
+                var entities = XrmService.RetrieveAllAndClauses(type, conditions)
+                    .Where(e => !CheckIgnoreForExport(request, e))
+                    .ToArray();
 
                 foreach (var entity in entities)
                 {
-                    if (!CheckIgnoreForExport(request, entity))
+                    WriteToXml(entity, folder);
+                }
+                if (request.IncludeNotes)
+                {
+                    var notes = XrmService
+                        .RetrieveAllAndClauses("annotation",
+                            new[] {new ConditionExpression("objecttypecode", ConditionOperator.Equal, type)});
+                    foreach (var note in notes)
                     {
-                        var namesToUse =
-                            entity.GetStringField(XrmService.GetPrimaryNameField(entity.LogicalName).Left(15));
-                        if (!namesToUse.IsNullOrWhiteSpace())
+                        var objectId = note.GetLookupGuid("objectid");
+                        if (objectId.HasValue && entities.Select(e => e.Id).Contains(objectId.Value))
                         {
-                            var invalidChars = Path.GetInvalidFileNameChars();
-                            foreach (var character in invalidChars)
-                                namesToUse = namesToUse.Replace(character, '_');
-                        }
-                        var fileName = string.Format(@"{0}\{1}_{2}_{3}.xml", folder, entity.LogicalName, entity.Id,
-                            namesToUse);
-                        using (var fileStream = new FileStream(fileName, FileMode.Create))
-                        {
-                            lateBoundSerializer.WriteObject(fileStream, entity);
+                            WriteToXml(note, folder);
                         }
                     }
                 }
             }
         }
 
+        private void WriteToXml(Entity entity, string folder)
+        {
+            var lateBoundSerializer = new DataContractSerializer(typeof (Entity));
+            var namesToUse =
+                entity.GetStringField(XrmService.GetPrimaryNameField(entity.LogicalName).Left(15));
+            if (!namesToUse.IsNullOrWhiteSpace())
+            {
+                var invalidChars = Path.GetInvalidFileNameChars();
+                foreach (var character in invalidChars)
+                    namesToUse = namesToUse.Replace(character, '_');
+            }
+            var fileName = string.Format(@"{0}\{1}_{2}_{3}.xml", folder, entity.LogicalName, entity.Id,
+                namesToUse);
+            using (var fileStream = new FileStream(fileName, FileMode.Create))
+            {
+                lateBoundSerializer.WriteObject(fileStream, entity);
+            }
+        }
+
         private bool CheckIgnoreForExport(XrmImporterExporterRequest request, Entity entity)
         {
+            //todo generate options
             //exlcude 1 = public
             if (entity.LogicalName == "queue" && entity.GetOptionSetValue("queueviewtype") == 1)
                 return true;

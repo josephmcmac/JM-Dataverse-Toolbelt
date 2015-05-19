@@ -1,9 +1,10 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace JosephM.Core.FieldType
 {
     [DataContract]
-    public class PicklistOption
+    public class PicklistOption : IComparable
     {
         protected bool Equals(PicklistOption other)
         {
@@ -24,6 +25,18 @@ namespace JosephM.Core.FieldType
         {
             return !Equals(left, right);
         }
+
+        public int CompareTo(object obj)
+        {
+            if (Value == null)
+                return -1;
+            if (obj is PicklistOption)
+            {
+                return String.Compare(this.Value, ((PicklistOption)obj).Value, StringComparison.Ordinal);
+            }
+            return 0;
+        }
+
 
         public PicklistOption()
         {
