@@ -32,6 +32,10 @@ namespace JosephM.Xrm.ImportExporter.Service
         [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ExportXml)]
         public bool IncludeNotes { get; set; }
 
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ExportXml)]
+        public bool IncludeNNRelationshipsBetweenEntities { get; set; }
+
         //[RequiredProperty]
         //[InitialiseFor("ImportExportTask", Service.ImportExportTask.ImportCsvs, true)]
         //[PropertyInContextByPropertyValue("AllRecordTypes", false)]

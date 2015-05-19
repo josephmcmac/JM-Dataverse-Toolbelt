@@ -180,20 +180,30 @@ namespace JosephM.Xrm
             return result;
         }
 
-        public virtual ManyToManyRelationshipMetadata GetRelationshipMetadata(string relationship)
+        public virtual ManyToManyRelationshipMetadata GetRelationshipMetadata(string relationshipName)
         {
             lock (LockObject)
             {
-                if (RelationshipMetadata.All(rm => rm.SchemaName != relationship))
+                if (RelationshipMetadata.All(rm => rm.SchemaName != relationshipName))
                 {
                     var request = new RetrieveRelationshipRequest
                     {
-                        Name = relationship
+                        Name = relationshipName
                     };
                     var response = (RetrieveRelationshipResponse) Execute(request);
                     RelationshipMetadata.Add((ManyToManyRelationshipMetadata) response.RelationshipMetadata);
                 }
-                return RelationshipMetadata.Single(rm => rm.SchemaName == relationship);
+                return RelationshipMetadata.First(rm => rm.SchemaName == relationshipName);
+            }
+        }
+
+        public virtual ManyToManyRelationshipMetadata GetRelationshipMetadataForEntityName(string relationshipEntityName)
+        {
+            lock (LockObject)
+            {
+                if(AllRelationshipMetadata.All(r => r.IntersectEntityName != relationshipEntityName))
+                    throw new NullReferenceException(string.Format("Couldn;t Find Relationship With Entity Name {0}", (relationshipEntityName)));
+                return AllRelationshipMetadata.First(r => r.IntersectEntityName == relationshipEntityName);
             }
         }
 
@@ -450,13 +460,7 @@ namespace JosephM.Xrm
 
         public string GetRelationshipEntityName(string relationshipName)
         {
-            //This is in case any of the relationships had their entity name cut off
-            if (relationshipName == "systemuserroles_association")
-                return "systemuserroles";
-            else if (relationshipName.Length > 47)
-                return relationshipName.Substring(0, 47);
-            else
-                return relationshipName;
+            return GetRelationshipMetadata(relationshipName).IntersectEntityName;
         }
 
         public string GetPrimaryKeyName(string entityTo)
@@ -2894,7 +2898,7 @@ string recordType)
                .ToArray();
         }
 
-        public IEnumerable<string> GetAllNnRelationships()
+        public IEnumerable<string> GetAllNnRelationshipEntityNames()
         {
             return GetAllEntityMetadata()
                 .Where(m => m.IsIntersect ?? false)

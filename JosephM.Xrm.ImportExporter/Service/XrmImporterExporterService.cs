@@ -234,9 +234,20 @@ namespace JosephM.Xrm.ImportExporter.Service
         private void DoImport(XrmImporterExporterResponse response, List<Entity> entities, LogController controller)
         {
             controller.LogLiteral("Preparing Import");
+
             var fieldsToRetry = new Dictionary<Entity, List<string>>();
             var typesToImport = entities.Select(e => e.LogicalName).Distinct();
+
+            var allNNRelationships = XrmService.GetAllNnRelationshipEntityNames();
+            var associationTypes = typesToImport.Where(allNNRelationships.Contains).ToArray();
+
+            typesToImport = typesToImport.Where(t => !associationTypes.Contains(t)).ToArray();
+
             var orderedTypes = new List<string>();
+
+            var idSwitches = new Dictionary<string, Dictionary<Guid, Guid>>();
+            foreach (var item in typesToImport)
+                idSwitches.Add(item, new Dictionary<Guid, Guid>());
 
             #region tryordertypes
 
@@ -247,7 +258,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var thatType = type2;
                     var thatTypeEntities = entities.Where(e => e.LogicalName == thatType).ToList();
                     var fields = GetFieldsToImport(thatTypeEntities, thatType)
-                        .Where(f => XrmService.IsLookup(f, thatType));
+                        .Where(f => XrmService.FieldExists(f, thatType) && XrmService.IsLookup(f, thatType));
 
                     foreach (var field in fields)
                     {
@@ -272,6 +283,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             {
                 try
                 {
+                    var thisRecordType = recordType;
                     controller.UpdateProgress(countImported++, countToImport, string.Format("Importing {0} Records", recordType));
                     var primaryField = XrmService.GetPrimaryNameField(recordType);
                     var thisTypeEntities = entities.Where(e => e.LogicalName == recordType).ToList();
@@ -288,12 +300,24 @@ namespace JosephM.Xrm.ImportExporter.Service
 
                     #region tryorderentities
 
-                    var selfReferenceFields =
-                        GetFieldsToImport(thisTypeEntities, recordType)
-                            .Where(
+                    var importFieldsForEntity = GetFieldsToImport(thisTypeEntities, recordType).ToArray();
+                    var fieldsDontExist = GetFieldsInEntities(thisTypeEntities)
+                        .Where(f => !XrmService.FieldExists(f, thisRecordType))
+                        .Distinct()
+                        .ToArray();
+                    foreach (var field in fieldsDontExist)
+                    {
+                        response.AddResponseItem(
+                            new XrmImporterExporterResponseItem(
+                                string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType),
+                                new NullReferenceException(string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType))));
+                    }
+
+                    var selfReferenceFields = importFieldsForEntity.Where(
                                 f =>
                                     XrmService.IsLookup(f, recordType) &&
                                     XrmService.GetLookupTargetEntity(f, recordType) == recordType).ToArray();
+                        
                     foreach (var entity in thisTypeEntities)
                     {
                         foreach (var entity2 in orderedEntities)
@@ -321,13 +345,14 @@ namespace JosephM.Xrm.ImportExporter.Service
                             if (existingMatchingIds.Any())
                             {
                                 var matchRecord = existingMatchingIds.First();
+                                idSwitches[recordType].Add(thisEntity.Id, matchRecord.Id);
                                 thisEntity.Id = matchRecord.Id;
                                 thisEntity.SetField(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), thisEntity.Id);
                             }
                             var isUpdate = existingMatchingIds.Any();
                             foreach (var field in thisEntity.GetFieldsInEntity().ToArray())
                             {
-                                if (IsIncludeField(field, recordType) &&
+                                if (importFieldsForEntity.Contains(field) &&
                                     XrmService.IsLookup(field, thisEntity.LogicalName) &&
                                     thisEntity.GetField(field) != null)
                                 {
@@ -363,7 +388,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                             }
                             var fieldsToSet = new List<string>();
                             fieldsToSet.AddRange(thisEntity.GetFieldsInEntity()
-                                .Where(f => IsIncludeField(f, recordType)));
+                                .Where(importFieldsForEntity.Contains));
                             if (fieldsToRetry.ContainsKey(thisEntity))
                                 fieldsToSet.RemoveAll(f => fieldsToRetry[thisEntity].Contains(f));
                             if (isUpdate)
@@ -468,6 +493,43 @@ namespace JosephM.Xrm.ImportExporter.Service
                             ex));
                 }
             }
+            countToImport = associationTypes.Count();
+            countImported = 0;
+            foreach (var relationshipEntityName in associationTypes)
+            {
+                var thisEntityName = relationshipEntityName;
+                controller.UpdateProgress(countImported++, countToImport, string.Format("Associating {0} Records", thisEntityName));
+                var thisTypeEntities = entities.Where(e => e.LogicalName == thisEntityName).ToList();
+                var countRecordsToImport = thisTypeEntities.Count;
+                var countRecordsImported = 0;
+                foreach (var thisEntity in thisTypeEntities)
+                {
+                    try
+                    {
+                        controller.UpdateLevel2Progress(countRecordsImported++, countRecordsToImport, string.Format("Associating {0} Records", thisEntityName));
+                        var relationship = XrmService.GetRelationshipMetadataForEntityName(thisEntityName);
+                        var type1 = relationship.Entity1LogicalName;
+                        var field1 = relationship.Entity1IntersectAttribute;
+                        var type2 = relationship.Entity2LogicalName;
+                        var field2 = relationship.Entity2IntersectAttribute;
+                        var id1 = thisEntity.GetGuidField(relationship.Entity1IntersectAttribute);
+                        var id2 = thisEntity.GetGuidField(relationship.Entity2IntersectAttribute);
+                        if (idSwitches.ContainsKey(type1) && idSwitches[type1].ContainsKey(id1))
+                            id1 = idSwitches[type1][id1];
+                        if (idSwitches.ContainsKey(type2) && idSwitches[type2].ContainsKey(id2))
+                            id2 = idSwitches[type2][id2];
+                        XrmService.AssociateSafe(relationship.SchemaName, type1, field1, id1, type2, field2, new [] { id2});
+                    }
+                    catch (Exception ex)
+                    {
+                        response.AddResponseItem(
+                            new XrmImporterExporterResponseItem(
+                                string.Format("Error Associating Record Of Type {0} Id {1}", thisEntity.LogicalName,
+                                    thisEntity.Id),
+                                ex));
+                    }   
+                }
+            }
         }
 
         private IEnumerable<Entity> GetMatchForExistingRecord(IEnumerable<Entity> existingEntitiesWithIdMatches, Entity thisEntity)
@@ -476,7 +538,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             var existingMatches = existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
             if (!existingMatches.Any())
             {
-                var matchByNameEntities = new[] {"businessunit", "team"};
+                var matchByNameEntities = new[] {"businessunit", "team", "pricelevel", "uomschedule", "uom"};
                 if (thisEntity.LogicalName == "businessunit" && thisEntity.GetField("parentbusinessunitid") == null)
                 {
                     existingMatches = XrmService.RetrieveAllAndClauses("businessunit",
@@ -509,14 +571,27 @@ namespace JosephM.Xrm.ImportExporter.Service
                                 , XrmService.GetEntityLabel(thisEntity.LogicalName), thisEntity.GetStringField(XrmService.GetPrimaryNameField(thisEntity.LogicalName))
                                 , thisEntity.GetStringField("objecttypecode") != null ? XrmService.GetEntityLabel(thisEntity.GetStringField("objecttypecode")) : "Unknown Type"));
                         break;
+                    case "productpricelevel":
+                        if (!fieldsToSet.Contains("pricelevelid"))
+                            throw new NullReferenceException(string.Format("Cannot create {0} {1} as its parent {2} is empty"
+                                , XrmService.GetEntityLabel(thisEntity.LogicalName), thisEntity.GetStringField(XrmService.GetPrimaryNameField(thisEntity.LogicalName))
+                                , XrmService.GetEntityLabel("pricelevel")));
+                        break;
                 }
             }
             return;
         }
 
-        private IEnumerable<string> GetFieldsToImport(List<Entity> thisTypeEntities, string type)
+        private IEnumerable<string> GetFieldsInEntities(IEnumerable<Entity> thisTypeEntities)
         {
-            var fields = thisTypeEntities.SelectMany(e => e.GetFieldsInEntity().Where(f => IsIncludeField(f, type)));
+            return thisTypeEntities.SelectMany(e => e.GetFieldsInEntity());
+        }
+
+        private IEnumerable<string> GetFieldsToImport(IEnumerable<Entity> thisTypeEntities, string type)
+        {
+            var fields = GetFieldsInEntities(thisTypeEntities)
+                .Where(f => IsIncludeField(f, type))
+                .Distinct();
             return fields;
         }
 
@@ -529,12 +604,15 @@ namespace JosephM.Xrm.ImportExporter.Service
             };
             if (hardcodeInvalidFields.Contains(fieldName))
                 return false;
+            //these are just hack since they are not updateable fields (IsWriteable)
             if (fieldName == "parentbusinessunitid")
                 return true;
             if (fieldName == "businessunitid")
                 return true;
+            if (fieldName == "pricelevelid")
+                return true;
             return
-                Service.IsWritable(fieldName, entityType);
+                Service.FieldExists(fieldName, entityType) && Service.IsWritable(fieldName, entityType);
                
         }
 
@@ -548,7 +626,11 @@ namespace JosephM.Xrm.ImportExporter.Service
                 throw new Exception("Error no Record Types To Export");
             var countToExport = request.RecordTypes.Count();
             var countsExported = 0;
-            foreach (var type in request.RecordTypes.Select(r => r.RecordType.Key))
+            var exported = new Dictionary<string, IEnumerable<Entity>>();
+
+            var recordTypes = request.RecordTypes.Select(r => r.RecordType.Key).Distinct().ToArray();
+
+            foreach (var type in recordTypes)
             {
                 controller.UpdateProgress(countsExported++, countToExport, string.Format("Exporting {0} Records", type));
                 var conditions = new List<ConditionExpression>();
@@ -562,8 +644,9 @@ namespace JosephM.Xrm.ImportExporter.Service
 
                 foreach (var entity in entities)
                 {
-                    WriteToXml(entity, folder);
+                    WriteToXml(entity, folder, false);
                 }
+                exported.Add(type, entities);
                 if (request.IncludeNotes)
                 {
                     var notes = XrmService
@@ -574,18 +657,45 @@ namespace JosephM.Xrm.ImportExporter.Service
                         var objectId = note.GetLookupGuid("objectid");
                         if (objectId.HasValue && entities.Select(e => e.Id).Contains(objectId.Value))
                         {
-                            WriteToXml(note, folder);
+                            WriteToXml(note, folder, false);
+                        }
+                    }
+                }
+            }
+            var relationshipsDone = new List<string>();
+            if (request.IncludeNNRelationshipsBetweenEntities)
+            {
+                foreach (var type in recordTypes)
+                {
+                    var nnRelationships = XrmService.GetEntityManyToManyRelationships(type)
+                        .Where(
+                            r =>
+                                recordTypes.Contains(r.Entity1LogicalName) && recordTypes.Contains(r.Entity2LogicalName));
+                    foreach (var item in nnRelationships)
+                    {
+                        var type1 = item.Entity1LogicalName;
+                        var type2 = item.Entity2LogicalName;
+                        if (!relationshipsDone.Contains(item.SchemaName))
+                        {
+                            var associations = XrmService.RetrieveAllEntityType(item.IntersectEntityName);
+                            foreach (var association in associations)
+                            {
+                                if(exported[type1].Any(e => e.Id == association.GetGuidField(item.Entity1IntersectAttribute))
+                                    && exported[type2].Any(e => e.Id == association.GetGuidField(item.Entity2IntersectAttribute)))
+                                    WriteToXml(association, folder, true);
+                            }
+                            relationshipsDone.Add(item.SchemaName);
                         }
                     }
                 }
             }
         }
 
-        private void WriteToXml(Entity entity, string folder)
+        private void WriteToXml(Entity entity, string folder, bool association)
         {
             var lateBoundSerializer = new DataContractSerializer(typeof (Entity));
-            var namesToUse =
-                entity.GetStringField(XrmService.GetPrimaryNameField(entity.LogicalName).Left(15));
+            //todo warning the association string required for import
+            var namesToUse = association ? "association" : entity.GetStringField(XrmService.GetPrimaryNameField(entity.LogicalName).Left(15));
             if (!namesToUse.IsNullOrWhiteSpace())
             {
                 var invalidChars = Path.GetInvalidFileNameChars();

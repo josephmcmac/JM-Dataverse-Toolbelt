@@ -132,6 +132,17 @@ namespace JosephM.Xrm
                 return null;
         }
 
+        /// <summary>
+        ///     null if fieldValue is null
+        /// </summary>
+        public static Guid GetGuidField(this Entity entity,string fieldName)
+        {
+            var fieldValue = GetField(entity, fieldName);
+            if (fieldValue != null)
+                return (Guid)fieldValue;
+            else
+                return Guid.Empty;
+        }
 
         public static string GetLookupName(object fieldValue)
         {
