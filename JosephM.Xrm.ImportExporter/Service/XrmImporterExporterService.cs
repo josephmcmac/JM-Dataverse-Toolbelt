@@ -538,7 +538,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             var existingMatches = existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
             if (!existingMatches.Any())
             {
-                var matchByNameEntities = new[] {"businessunit", "team", "pricelevel", "uomschedule", "uom"};
+                var matchByNameEntities = new[] { "businessunit", "team", "pricelevel", "uomschedule", "uom", "entitlementtemplate" };
                 if (thisEntity.LogicalName == "businessunit" && thisEntity.GetField("parentbusinessunitid") == null)
                 {
                     existingMatches = XrmService.RetrieveAllAndClauses("businessunit",
@@ -704,6 +704,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             }
             var fileName = string.Format(@"{0}\{1}_{2}_{3}.xml", folder, entity.LogicalName, entity.Id,
                 namesToUse);
+            fileName = fileName.Replace('-', '_');
             using (var fileStream = new FileStream(fileName, FileMode.Create))
             {
                 lateBoundSerializer.WriteObject(fileStream, entity);
