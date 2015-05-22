@@ -43,6 +43,6 @@ namespace JosephM.Xrm.ImportExporter.Service
 
         [RequiredProperty]
         [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ExportXml)]
-        public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
+        public IEnumerable<ImportExportRecordType> RecordTypes { get; set; }
     }
 }

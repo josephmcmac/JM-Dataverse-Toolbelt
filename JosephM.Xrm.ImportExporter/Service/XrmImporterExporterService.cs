@@ -694,7 +694,6 @@ namespace JosephM.Xrm.ImportExporter.Service
         private void WriteToXml(Entity entity, string folder, bool association)
         {
             var lateBoundSerializer = new DataContractSerializer(typeof (Entity));
-            //todo warning the association string required for import
             var namesToUse = association ? "association" : entity.GetStringField(XrmService.GetPrimaryNameField(entity.LogicalName).Left(15));
             if (!namesToUse.IsNullOrWhiteSpace())
             {
@@ -713,6 +712,15 @@ namespace JosephM.Xrm.ImportExporter.Service
 
         private bool CheckIgnoreForExport(XrmImporterExporterRequest request, Entity entity)
         {
+            if (XrmService.FieldExists("statecode", entity.LogicalName))
+            {
+                var thisOnes = request.RecordTypes.Where(r => r.RecordType.Key == entity.LogicalName);
+                if (thisOnes.Any() && !thisOnes.First().IncludeInactive)
+                {
+                    if (entity.GetOptionSetValue("statecode") != XrmPicklists.State.Active)
+                        return true;
+                }
+            }
             //todo generate options
             //exlcude 1 = public
             if (entity.LogicalName == "queue" && entity.GetOptionSetValue("queueviewtype") == 1)
