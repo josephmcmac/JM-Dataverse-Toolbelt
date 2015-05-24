@@ -322,7 +322,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     {
                         foreach (var entity2 in orderedEntities)
                         {
-                            if (selfReferenceFields.Any(f => entity.GetLookupGuid(f) == entity2.Id || (entity.GetLookupGuid(f) == Guid.Empty && entity.GetLookupName(f) == entity.GetStringField(primaryField))))
+                            if (selfReferenceFields.Any(f => entity2.GetLookupGuid(f) == entity.Id || (entity2.GetLookupGuid(f) == Guid.Empty && entity2.GetLookupName(f) == entity.GetStringField(primaryField))))
                             {
                                 orderedEntities.Insert(orderedEntities.IndexOf(entity2), entity);
                                 break;
