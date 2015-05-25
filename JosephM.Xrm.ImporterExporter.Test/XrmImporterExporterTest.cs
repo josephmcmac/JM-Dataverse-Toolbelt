@@ -62,7 +62,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             {
                 FolderPath = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ExportXml,
-                RecordTypes = types.Select(t => new RecordTypeSetting(t, t))
+                RecordTypes = types.Select(t => new ImportExportRecordType() { RecordType = new RecordType(t, t) })
             };
             var response = importerExporterService.Execute(request, Controller);
             Assert.IsFalse(response.HasError);
@@ -74,7 +74,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             {
                 FolderPath = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportXml,
-                RecordTypes = types.Select(t => new RecordTypeSetting(t, t))
+                RecordTypes = types.Select(t => new ImportExportRecordType() { RecordType = new RecordType(t, t) })
             };
             response = importerExporterService.Execute(request, Controller);
             Assert.IsFalse(response.HasError);
@@ -99,7 +99,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             {
                 FolderPath = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ExportXml,
-                RecordTypes = new[] { new RecordTypeSetting(TestEntityType, TestEntityType) }
+                RecordTypes = new [] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
             };
             var response = importerExporterService.Execute(request, Controller);
             Assert.IsTrue(response.Success);
@@ -110,7 +110,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             {
                 FolderPath = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportXml,
-                RecordTypes = new[] { new RecordTypeSetting(TestEntityType, TestEntityType) }
+                RecordTypes = new[] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
             };
 
             response = importerExporterService.Execute(request, Controller);
@@ -129,20 +129,23 @@ namespace JosephM.Xrm.ImporterExporter.Test
             XrmService.Update(record);
             record = XrmService.Retrieve(record.LogicalName, record.Id);
 
-            request = new XrmImporterExporterRequest
-            {
-                FolderPath = new Folder(workFolder),
-                ImportExportTask = ImportExportTask.ExportXml,
-                RecordTypes = new[] { new RecordTypeSetting(TestEntityType, TestEntityType) }
-            };
-            response = importerExporterService.Execute(request, Controller);
-            Assert.IsTrue(response.Success);
+            //workFolder = WorkFolder;
+            //FileUtility.DeleteFiles(workFolder);
+
+            //request = new XrmImporterExporterRequest
+            //{
+            //    FolderPath = new Folder(workFolder),
+            //    ImportExportTask = ImportExportTask.ExportXml,
+            //    RecordTypes = new[] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
+            //};
+            //response = importerExporterService.Execute(request, Controller);
+            //Assert.IsTrue(response.Success);
 
             request = new XrmImporterExporterRequest
             {
                 FolderPath = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportXml,
-                RecordTypes = new[] { new RecordTypeSetting(TestEntityType, TestEntityType) }
+                RecordTypes = new[] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
             };
 
             response = importerExporterService.Execute(request, Controller);
@@ -150,7 +153,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var updatedRecord = XrmService.Retrieve(type, record.Id);
 
             foreach (var updateField in updateFields)
-                Assert.IsTrue(XrmEntity.FieldsEqual(record.GetField(updateField),
+                Assert.IsTrue(XrmEntity.FieldsEqual(createdEntity.GetField(updateField),
                     updatedRecord.GetField(updateField)));
         }
 

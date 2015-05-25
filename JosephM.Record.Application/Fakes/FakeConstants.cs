@@ -14,6 +14,7 @@ namespace JosephM.Record.Application.Fakes
         public const string PrimaryField = "PrimaryField";
         public const string IntegerField = "IntegerField";
         public const string StringField = "StringField";
+        public const string EnumerableField = "EnumerableField";
         public const string BooleanField = "BooleanField";
         public const string HtmlField = "HtmlField";
         public const string ComboField = "ComboField";
@@ -61,7 +62,8 @@ namespace JosephM.Record.Application.Fakes
                     new GridFieldMetadata(Id),
                     new GridFieldMetadata(StringField) {WidthPart = 3, IsEditable = true},
                     new GridFieldMetadata(IntegerField),
-                    new GridFieldMetadata(BooleanField)
+                    new GridFieldMetadata(BooleanField),
+                    new GridFieldMetadata(EnumerableField)
                 };
             }
         }

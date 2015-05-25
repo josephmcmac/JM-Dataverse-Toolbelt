@@ -101,8 +101,10 @@
     <Compile Include="Fakes\FakeObjectsGridViewModelcs.cs" />
     <Compile Include="Fakes\FakeProgressControlViewModel.cs" />
     <Compile Include="HTML\HtmlFileModel.cs" />
+    <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />
     <Compile Include="Search\SearchResultViewModel.cs" />
+    <Compile Include="SettingTypes\FieldSetting.cs" />
     <Compile Include="SettingTypes\RecordFieldSetting.cs" />
     <Compile Include="SettingTypes\RecordTypeSetting.cs" />
     <Compile Include="Shared\ProgressControlViewModel.cs" />

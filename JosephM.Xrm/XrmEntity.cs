@@ -640,5 +640,20 @@ namespace JosephM.Xrm
             var parties = entity.GetActivityParties(fieldName);
             return parties.Select(p => (EntityReference)p.GetField("partyid"));
         }
+
+        /// <summary>
+        ///     If entity is not null and contains the field returns the field value else returns null
+        /// </summary>
+        public static void RemoveFields(this Entity entity, IEnumerable<string> fieldNames)
+        {
+            if (fieldNames != null)
+            {
+                foreach (var field in fieldNames)
+                {
+                    if (entity.Contains(field))
+                        entity.Attributes.Remove(field);
+                }
+            }
+        }
     }
 }

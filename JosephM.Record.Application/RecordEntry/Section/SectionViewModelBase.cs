@@ -25,7 +25,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
         }
 
         public FormSection FormSection { get; private set; }
-        protected RecordEntryFormViewModel RecordForm { get; private set; }
+        public RecordEntryFormViewModel RecordForm { get; private set; }
 
         public virtual string SectionIdentifier
         {

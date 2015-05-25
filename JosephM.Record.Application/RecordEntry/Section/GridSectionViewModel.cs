@@ -66,13 +66,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
         {
             try
             {
-                var viewModel = FormService.GetEditRowViewModel(SectionIdentifier, FormController, (record) =>
-                {
-                    RecordForm.ClearChildForm();
-                    var index = GridRecords.IndexOf(row);
-                    GridRecords.Remove(row);
-                    InsertRecord(record, index);
-                }, () => RecordForm.ClearChildForm(), row);
+                var viewModel = GetEditRowViewModel(row);
                 if (viewModel == null)
                 {
                     //todo error message
@@ -85,6 +79,18 @@ namespace JosephM.Record.Application.RecordEntry.Section
             {
                 ApplicationController.UserMessage(string.Format("Error Adding Row: {0}", ex.DisplayString()));
             }
+        }
+
+        public RecordEntryFormViewModel GetEditRowViewModel(GridRowViewModel row)
+        {
+            var viewModel = FormService.GetEditRowViewModel(SectionIdentifier, FormController, (record) =>
+            {
+                RecordForm.ClearChildForm();
+                var index = GridRecords.IndexOf(row);
+                GridRecords.Remove(row);
+                InsertRecord(record, index);
+            }, () => RecordForm.ClearChildForm(), row);
+            return viewModel;
         }
 
         private SubGridSection SubGridSection
@@ -237,6 +243,11 @@ namespace JosephM.Record.Application.RecordEntry.Section
         public RecordEntryViewModelBase GetRecordForm()
         {
             return RecordForm;
+        }
+
+        public void ClearRows()
+        {
+            ApplicationController.DoOnMainThread(() => GridRecords.Clear());
         }
     }
 }

@@ -628,6 +628,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             var countsExported = 0;
             var exported = new Dictionary<string, IEnumerable<Entity>>();
 
+            //this distinct is a bit inconsistent with actually allowing duplicates
             var recordTypes = request.RecordTypes.Select(r => r.RecordType.Key).Distinct().ToArray();
 
             foreach (var type in recordTypes)
@@ -642,8 +643,14 @@ namespace JosephM.Xrm.ImportExporter.Service
                     .Where(e => !CheckIgnoreForExport(request, e))
                     .ToArray();
 
+                var thisOne = request.RecordTypes.First(r => r.RecordType.Key == type);
+                var excludeFields = thisOne.ExcludeFields == null
+                    ? new string[0]
+                    : thisOne.ExcludeFields.Select(f => f.RecordField.Key).Distinct().ToArray();
+
                 foreach (var entity in entities)
                 {
+                    entity.RemoveFields(excludeFields);
                     WriteToXml(entity, folder, false);
                 }
                 exported.Add(type, entities);

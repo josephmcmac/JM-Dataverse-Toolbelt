@@ -72,7 +72,25 @@ namespace JosephM.Record.Application.RecordEntry.Form
             {
                 return FieldViewModels.First(f => f.FieldName == fieldName);
             }
-            throw new ArgumentOutOfRangeException(fieldName, "No Field In Has The Name: " + fieldName);
+            throw new ArgumentOutOfRangeException(fieldName, string.Format("No Field In {0} Object Has The Name {1}", GetRecord().Type, fieldName));
+        }
+
+        public RecordTypeFieldViewModel GetRecordTypeFieldViewModel(string fieldName)
+        {
+            var viewModel = GetFieldViewModel(fieldName) as RecordTypeFieldViewModel;
+            if (viewModel == null)
+                throw new Exception("Expected On Change For Field Of Type Field Of Type: " +
+                                    typeof(LookupFieldViewModel).Name);
+            return viewModel;
+        }
+
+        public RecordFieldFieldViewModel GetRecordFieldFieldViewModel(string fieldName)
+        {
+            var viewModel = GetFieldViewModel(fieldName) as RecordFieldFieldViewModel;
+            if (viewModel == null)
+                throw new Exception("Expected On Change For Field Of Type Field Of Type: " +
+                                    typeof(LookupFieldViewModel).Name);
+            return viewModel;
         }
 
         public abstract IEnumerable<FieldViewModelBase> FieldViewModels { get; }

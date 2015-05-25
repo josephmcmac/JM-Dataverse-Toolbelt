@@ -34,7 +34,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
             RecordType = _objectRecord.Type;
         }
 
-        protected object GetObject()
+        public object GetObject()
         {
             return _objectRecord.Instance;
         }

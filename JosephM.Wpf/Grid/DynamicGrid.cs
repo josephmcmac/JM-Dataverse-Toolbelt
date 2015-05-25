@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -133,6 +134,13 @@ namespace JosephM.Wpf.Grid
                                 else if (column.FieldType == RecordFieldType.Password)
                                 {
                                     dataGridField = new GridPasswordColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else if (column.FieldType == RecordFieldType.Enumerable)
+                                {
+                                    dataGridField = new GridEnumerableColumn()
                                     {
                                         Binding = cellBinding
                                     };

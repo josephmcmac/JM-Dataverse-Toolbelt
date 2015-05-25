@@ -3,8 +3,10 @@ using System.Linq;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.Application.Controller;
+using JosephM.Record.Application.Grid;
 using JosephM.Record.Application.RecordEntry.Field;
 using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 
@@ -157,14 +159,24 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 }
                 case RecordFieldType.RecordField:
                 {
+                    var dependantValue = recordForm.FormService.GetDependantValue(field, recordType, recordForm);
+
                     fieldVm = new RecordFieldFieldViewModel(field, label, recordForm)
                     {
                         IsRecordServiceField = isRecordServiceField,
-                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType)
+                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType, dependantValue)
                             .Select(p => new RecordField(p.Key, p.Value))
                             .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                             .OrderBy(rt => rt.Value)
                             .ToArray()
+                    };
+                    break;
+                }
+                case RecordFieldType.Enumerable:
+                {
+                    fieldVm = new EnumerableFieldViewModel(field, label, recordForm)
+                    {
+                        IsRecordServiceField = isRecordServiceField
                     };
                     break;
                 }

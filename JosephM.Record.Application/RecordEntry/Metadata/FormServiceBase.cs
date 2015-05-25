@@ -77,5 +77,10 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         {
             return null;
         }
+
+        internal virtual string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
+        {
+            return null;
+        }
     }
 }

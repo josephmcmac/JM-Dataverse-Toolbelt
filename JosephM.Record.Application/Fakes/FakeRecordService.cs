@@ -369,6 +369,7 @@ namespace JosephM.Record.Application.Fakes
                 fields.Add(FakeConstants.DateOfBirthField, new DateTime(1980, 11, 15));
                 fields.Add(FakeConstants.IntegerField, i);
                 fields.Add(FakeConstants.StringField, "A String");
+                //fields.Add(FakeConstants.EnumerableField, new List<string>() { { "One" }, { "Two" }});
                 //fields.Add(FakeConstants.HtmlField, SampleHtml);
                 fields.Add(FakeConstants.LookupField,
                     new Lookup(referencedRecord.Type, referencedRecord.Id, "Should Never See This"));

@@ -229,30 +229,76 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 onChanges.Add(
                     re => re.StartNewAction(() =>
                     {
-                        var recordTypeViewModel = re.GetFieldViewModel(fieldName) as RecordTypeFieldViewModel;
-                        if (recordTypeViewModel == null)
-                            throw new Exception("Expected On Change For Field Of Type Field Of Type: " +
-                                                typeof (LookupFieldViewModel).Name);
-                        var fieldViewModel = re.GetFieldViewModel(attribute.LookupProperty);
-                        if (fieldViewModel is LookupFieldViewModel)
+                        var recordTypeViewModel = re.GetRecordTypeFieldViewModel(fieldName);
+                        var matchingFields = re.FieldViewModels.Where(f => f.FieldName == attribute.PropertyPaths.First());
+                        if (matchingFields.Any())
                         {
-                            var typedViewModel = (LookupFieldViewModel) fieldViewModel;
-                            var selectedRecordType = recordTypeViewModel.Value == null
-                                ? null
-                                : recordTypeViewModel.Value.Key;
-                            typedViewModel.RecordTypeToLookup = selectedRecordType;
-                            typedViewModel.Value = null;
+                            var fieldViewModel = matchingFields.First();
+                            if (fieldViewModel is LookupFieldViewModel)
+                            {
+                                var typedViewModel = (LookupFieldViewModel) fieldViewModel;
+                                var selectedRecordType = recordTypeViewModel.Value == null
+                                    ? null
+                                    : recordTypeViewModel.Value.Key;
+                                typedViewModel.RecordTypeToLookup = selectedRecordType;
+                                typedViewModel.Value = null;
+                            }
+                            else if (fieldViewModel is RecordFieldFieldViewModel)
+                            {
+                                var typedViewModel = (RecordFieldFieldViewModel) fieldViewModel;
+                                var selectedRecordType = recordTypeViewModel.Value == null
+                                    ? null
+                                    : recordTypeViewModel.Value.Key;
+                                typedViewModel.RecordTypeForField = selectedRecordType;
+                            }
                         }
-                        else if (fieldViewModel is RecordFieldFieldViewModel)
+                        else
                         {
-                            var typedViewModel = (RecordFieldFieldViewModel) fieldViewModel;
-                            var selectedRecordType = recordTypeViewModel.Value == null
-                                ? null
-                                : recordTypeViewModel.Value.Key;
-                            typedViewModel.RecordTypeForField = selectedRecordType;
+                            if (re is ObjectEntryViewModel)
+                            {
+                                if(attribute.PropertyPaths.Count() < 2)
+                                    throw new NullReferenceException(string.Format("The {0} Attribute References an Enumerable Property But Does Not Specify The Property On The Enumerated Type. The Value Is {1} And Should Be Of Form Property1.Property2", typeof(RecordTypeFor).Name, attribute.LookupProperty));
+                                var oevm = (ObjectEntryViewModel) re;
+                                var matchingGrids = oevm.SubGrids.Where(sg => sg.ReferenceName == attribute.PropertyPaths.First());
+                                if (matchingGrids.Any())
+                                {
+                                    //clear the rows as they are no longer relevant for the change in type
+                                    matchingGrids.First().ClearRows();
+                                }
+                            }
                         }
                     }));
             }
+        }
+
+        internal override string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
+        {
+             if (viewModel is GridRowViewModel)
+            {
+                var gridSection = ((GridRowViewModel) viewModel).GridViewModel;
+                if (gridSection is GridSectionViewModel)
+                {
+                    var gridSectionVM = (GridSectionViewModel) gridSection;
+                    var parentForm = gridSectionVM.RecordForm as ObjectEntryViewModel;
+                    if (parentForm != null)
+                    {
+                        foreach (var parentField in parentForm.GetObject().GetType().GetProperties())
+                        {
+                            var lookupForAttributes = parentField.GetCustomAttributes(typeof (RecordTypeFor), true).Cast<RecordTypeFor>();
+                            foreach (var lookupForAttribute in lookupForAttributes)
+                            {
+                                if (lookupForAttribute.PropertyPaths.Count() == 2 && lookupForAttribute.PropertyPaths.First() == gridSectionVM.ReferenceName && lookupForAttribute.PropertyPaths.Last() == field)
+                                {
+                                    var parentsFieldViewmOdel = parentForm.GetRecordTypeFieldViewModel(parentField.Name);
+                                    if (parentsFieldViewmOdel.Value != null)
+                                        return parentsFieldViewmOdel.Value.Key;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         internal override RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel)
@@ -267,7 +313,6 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
-
                     newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), formController.ApplicationController));
                 return viewModel;
                 //ideally could hide the parent dialog temporarily and load this one

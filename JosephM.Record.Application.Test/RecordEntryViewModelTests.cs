@@ -14,6 +14,12 @@ namespace JosephM.Record.Application.Test
     public class RecordEntryViewModelTests : RecordApplicationTests
     {
         [TestMethod]
+        public void FakeRecordEntryViewModelTest()
+        {
+            var blah = new FakeRecordEntryViewModel();
+        }
+
+        [TestMethod]
         public void RecordEntryViewModelRequiredPropertiesTests()
         {
             var objectToEnter = new TestViewModelValidationObject();

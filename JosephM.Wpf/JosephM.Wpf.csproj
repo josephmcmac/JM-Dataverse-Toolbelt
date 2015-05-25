@@ -153,6 +153,10 @@
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\BooleanToFalseConverter.cs" />
+    <Compile Include="Grid\GridEnumerableFieldView.xaml.cs">
+      <DependentUpon>GridEnumerableFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridEnumerableColumn.cs" />
     <Compile Include="Grid\EditRowView.xaml.cs">
       <DependentUpon>EditRowView.xaml</DependentUpon>
     </Compile>
@@ -300,6 +304,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Application\ApplicationHeadingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridEnumerableFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
