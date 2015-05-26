@@ -2,10 +2,12 @@
 
 using System;
 using System.Windows;
+using System.Windows.Forms;
 using Microsoft.Practices.Prism.Regions;
 using JosephM.Record.Application.Constants;
 using JosephM.Record.Application.Controller;
 using JosephM.Record.Application.Navigation;
+using MessageBox = System.Windows.MessageBox;
 
 #endregion
 
@@ -92,6 +94,17 @@ namespace JosephM.Prism.Infrastructure.Prism
             }
             var uri = new Uri(type.FullName + prismQuery, UriKind.Relative);
             RequestNavigate(RegionNames.MainTabRegion, uri);
+        }
+
+        public override string GetSaveFileName(string initialFileName, string extention)
+        {
+            var selectFolderDialog = new SaveFileDialog() { DefaultExt = extention, FileName = initialFileName, Filter = string.Format("{0} files |*{0}", extention) };
+            var result = selectFolderDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                return selectFolderDialog.FileName;
+            }
+            return null;
         }
     }
 }

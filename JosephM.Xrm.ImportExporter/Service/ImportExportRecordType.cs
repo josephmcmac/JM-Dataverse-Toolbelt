@@ -15,9 +15,9 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RequiredProperty]
         [RecordTypeFor("ExcludeFields.RecordField")]
         public RecordType RecordType { get; set; }
+
         public bool IncludeInactive { get; set; }
 
-        [RequiredProperty]
         [PropertyInContextByPropertyNotNull("RecordType")]
         public IEnumerable<FieldSetting> ExcludeFields { get; set; }
     }

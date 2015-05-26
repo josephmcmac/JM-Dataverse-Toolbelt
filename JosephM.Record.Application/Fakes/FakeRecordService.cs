@@ -333,7 +333,9 @@ namespace JosephM.Record.Application.Fakes
                 new DateFieldMetadata(FakeConstants.DateOfBirthField,
                     "Date of Birth"),
                 new StringFieldMetadata(FakeConstants.HtmlField,
-                    "Html")
+                    "Html"),
+                    new DateFieldMetadata(FakeConstants.EnumerableField,
+                    "Enumerable"),
             };
         }
 

@@ -146,30 +146,12 @@ namespace JosephM.Record.Application.RecordEntry.Form
             }
         }
 
-        public override void SaveObject(string folder)
+        public override void SaveObject(string fileName)
         {
-            try
-            {
-                //subgrids don't map directly to object so need to unload them to object
-                //todo have them map directly
-                LoadSubgridsToObject();
-                
-                var theObject = GetObject();
-                var serializer = new DataContractSerializer(theObject.GetType());
-
-                FileUtility.CheckCreateFolder(folder);
-
-                using (
-                    var fileStream = new FileStream(Path.Combine(folder, theObject.GetType().Name + ".xml"),
-                        FileMode.Create))
-                {
-                    serializer.WriteObject(fileStream, theObject);
-                }
-            }
-            catch (Exception ex)
-            {
-                ApplicationController.UserMessage(string.Format("Error Saving Object\n{0}", ex.DisplayString()));
-            }
+            //subgrids don't map directly to object so need to unload them to object
+            LoadSubgridsToObject();
+            var theObject = GetObject();
+            ApplicationController.SeralializeObjectToFile(theObject, fileName);
         }
 
         protected override bool AllowSaveAndLoad

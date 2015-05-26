@@ -116,10 +116,8 @@ namespace JosephM.Record.Application.Grid
             {
                 if (FormService != null)
                 {
-                    //AddChangedField(f);
                     foreach (var action in FormService.GetOnChanges(f.FieldName, RecordType))
                         action(this);
-                    //FormInstance.OnChange(f.FieldName, gri);
                 }
             };
         }

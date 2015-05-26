@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
@@ -74,6 +76,11 @@ namespace JosephM.Prism.Infrastructure.Dialog
             {
                 CompletionItems.Add(responseItem);
             }
+            if (Request.GetType().GetCustomAttributes(typeof (AllowSaveAndLoad), false).Any())
+            {
+                AddCompletionOption("Save Request", SaveRequest);
+            }
+
             if (Response.Success)
                 ProcessCompletionExtention();
 
@@ -83,6 +90,13 @@ namespace JosephM.Prism.Infrastructure.Dialog
                 ProcessError(Response.Exception);
             else
                 CompletionMessage = "Process Finished";
+        }
+
+        private void SaveRequest()
+        {
+            var fileName = ApplicationController.GetSaveFileName("*", ".xml");
+            if (!fileName.IsNullOrWhiteSpace())
+                ApplicationController.SeralializeObjectToFile(Request, fileName);
         }
 
         protected virtual void ProcessCompletionExtention()

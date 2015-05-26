@@ -65,5 +65,10 @@ namespace JosephM.Record.Application.Fakes
         {
             throw new ApplicationException("Unexpected Error throw By Application", ex);
         }
+
+        public override string GetSaveFileName(string initialFileName, string extention)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

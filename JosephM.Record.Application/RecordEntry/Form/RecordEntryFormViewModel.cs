@@ -175,15 +175,12 @@ namespace JosephM.Record.Application.RecordEntry.Form
         public virtual void SaveObject()
         {
             //todo put in application controller
-            var selectFolderDialog = new FolderBrowserDialog { ShowNewFolderButton = true };
-            var result = selectFolderDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                SaveObject(selectFolderDialog.SelectedPath);
-            }
+            var fileName = ApplicationController.GetSaveFileName("*", ".xml");
+            if (!fileName.IsNullOrWhiteSpace())
+                SaveObject(fileName);
         }
 
-        public virtual void SaveObject(string folder)
+        public virtual void SaveObject(string fileName)
         {
             throw new NotImplementedException();
         }
