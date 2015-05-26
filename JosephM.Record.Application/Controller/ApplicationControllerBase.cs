@@ -98,21 +98,14 @@ namespace JosephM.Record.Application.Controller
 
         public abstract string GetSaveFileName(string initialFileName, string extention);
 
-        public void SeralializeObjectToFile(object theObject, string fileName)
+        public virtual void SeralializeObjectToFile(object theObject, string fileName)
         {
-            try
-            {
                 var serializer = new DataContractSerializer(theObject.GetType());
                 FileUtility.CheckCreateFolder(Path.GetDirectoryName(fileName));
-                using (
-                    var fileStream = new FileStream(fileName, FileMode.Create))
-                {
-                    serializer.WriteObject(fileStream, theObject);
-                }
-            }
-            catch (Exception ex)
+            using (
+                var fileStream = new FileStream(fileName, FileMode.Create))
             {
-                UserMessage(string.Format("Error Saving Object\n{0}", ex.DisplayString()));
+                serializer.WriteObject(fileStream, theObject);
             }
         }
     }

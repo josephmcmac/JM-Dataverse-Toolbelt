@@ -3,6 +3,7 @@
 using System;
 using System.Windows;
 using System.Windows.Forms;
+using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Regions;
 using JosephM.Record.Application.Constants;
 using JosephM.Record.Application.Controller;
@@ -105,6 +106,18 @@ namespace JosephM.Prism.Infrastructure.Prism
                 return selectFolderDialog.FileName;
             }
             return null;
+        }
+
+        public override void SeralializeObjectToFile(object theObject, string fileName)
+        {
+            try
+            {
+                base.SeralializeObjectToFile(theObject, fileName);
+            }
+            catch (Exception ex)
+            {
+                UserMessage(string.Format("Error Saving Object\n{0}", ex.DisplayString()));
+            }
         }
     }
 }

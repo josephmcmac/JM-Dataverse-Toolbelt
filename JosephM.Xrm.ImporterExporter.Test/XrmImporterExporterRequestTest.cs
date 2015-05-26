@@ -22,6 +22,21 @@ namespace JosephM.Xrm.ImporterExporter.Test
     public class XrmImporterExporterRequestTest : XrmRecordTest
     {
         [TestMethod]
+        public void XrmImporterExporterRequestCheckSerialise()
+        {
+            var me = new XrmImporterExporterRequest();
+            var fileName = Path.Combine(TestingFolder, "testobject.xml");
+            if(File.Exists(fileName))
+                File.Delete(fileName);
+            Assert.IsFalse(File.Exists(fileName));
+            PopulateObject(me);
+            var controller = new FakeApplicationController();
+            controller.SeralializeObjectToFile(me, fileName);
+
+            Assert.IsTrue(File.Exists(fileName));
+        }
+
+        [TestMethod]
         public void XrmImporterExporterRequest()
         {
             PrepareTests();

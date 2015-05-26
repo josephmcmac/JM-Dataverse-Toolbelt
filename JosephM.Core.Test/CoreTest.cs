@@ -65,6 +65,9 @@ namespace JosephM.Core.Test
 
         private object InstantiatePopulated(Type type)
         {
+            if (type.Name == "Nullable`1")
+                type = type.GetGenericArguments()[0];
+
             object value = null;
             if (type == typeof (string))
                 value = Guid.NewGuid().ToString(); //required when mapping to Guid
@@ -76,6 +79,8 @@ namespace JosephM.Core.Test
                 value = new RecordType("type", "type");
             else if (type == typeof (RecordField))
                 value = new RecordField("field", "field");
+            else if (type == typeof(Folder))
+                value = new Folder(TestingFolder);
             else if (type == typeof (Password))
                 value = new Password("FakePassword", false, true);
             else if (type.IsEnum)
