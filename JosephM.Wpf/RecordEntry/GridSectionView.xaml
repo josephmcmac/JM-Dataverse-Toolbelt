@@ -43,7 +43,13 @@
                 </WrapPanel>
             </Grid>
             <Grid Grid.Row="3" MaxHeight="350">
-                <DataGrid Style="{StaticResource SectionDataGrid}" Name="DataGrid" CanUserAddRows="True" />
+                <DataGrid Style="{StaticResource SectionDataGrid}" Name="DataGrid" CanUserAddRows="True" >
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <EventSetter Event="Click" Handler="columnHeader_Click" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                </DataGrid>
             </Grid>
         </Grid>
     </Border>
