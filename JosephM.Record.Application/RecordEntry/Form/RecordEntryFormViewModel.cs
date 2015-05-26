@@ -327,7 +327,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 //now set the section view model property in the ui thread which will notify the ui with the sections
                 SendToDispatcher(
                     () => { FormSectionsAsync = new ObservableCollection<SectionViewModelBase>(sectionViewModels); });
-                RefreshVisibility();
+                OnLoad();
                 //need to somehow refresh grid visibilities
 
                 FormInstance.OnLoad(this);

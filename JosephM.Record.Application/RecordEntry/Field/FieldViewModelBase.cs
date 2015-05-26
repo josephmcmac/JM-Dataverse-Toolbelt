@@ -230,6 +230,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         public void OnChangeBase()
         {
+            //this should just defer these onloads to the on changes
             RecordEntryViewModel.RefreshVisibility();
             OnPropertyChanged("ValueObject");
             Validate();

@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="AppConfig\CustomConfigurationSectiion.cs" />
     <Compile Include="Attributes\AllowSaveAndLoad.cs" />
+    <Compile Include="Attributes\ReadOnlyWhenSet.cs" />
     <Compile Include="Attributes\GridWidth.cs" />
     <Compile Include="Attributes\UniqueOn.cs" />
     <Compile Include="Attributes\FormEntry.cs" />

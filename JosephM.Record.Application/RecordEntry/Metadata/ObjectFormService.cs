@@ -162,14 +162,39 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             AppendLookupForChanges(fieldName, recordType, onChanges);
             AppendInitialiseAttributes(fieldName, recordType, onChanges);
             AppendUniqueOnAttributes(fieldName, recordType, onChanges);
-
+            AppendReadOnlyWhenSetAttributes(fieldName, recordType, onChanges);
             return base.GetOnChanges(fieldName, recordType).Union(onChanges);
+        }
+
+        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
+        {
+            var methods = new List<Action<RecordEntryViewModelBase>>();
+            AppendReadOnlyWhenSetAttributes(fieldName, recordType, methods);
+            return methods;
+        }
+
+        private void AppendReadOnlyWhenSetAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            var attributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType).GetCustomAttribute<ReadOnlyWhenSet>();
+            if (attributes != null)
+            {
+                onChanges.Add(
+                    re => re.StartNewAction(() =>
+                    {
+                        //just need to if this in a grid then set all others off
+                        var fieldViewModel = re.GetFieldViewModel(fieldName);
+                        if (fieldViewModel != null)
+                        {
+                            fieldViewModel.IsEditable = fieldViewModel.ValueObject == null;
+                        }
+                    }));
+            }
         }
 
         private void AppendUniqueOnAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
         {
-            var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UniqueOn>();
-            if(lookupForAttributes != null)
+            var attributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UniqueOn>();
+            if(attributes != null)
             {
                 onChanges.Add(
                     re => re.StartNewAction(() =>

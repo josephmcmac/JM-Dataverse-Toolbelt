@@ -163,7 +163,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
             //{
                 var rowItem = new GridRowViewModel(record, this);
                 GridRecords.Insert(index, rowItem);
-            rowItem.RefreshVisibility();
+            rowItem.OnLoad();
             //});
         }
 
@@ -172,7 +172,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
            // DoOnMainThread(() =>
             //{
                 var rowItem = new GridRowViewModel(record, this);
-                rowItem.RefreshVisibility();
+                rowItem.OnLoad();
                 GridRecords.Add(rowItem);
             //});
         }

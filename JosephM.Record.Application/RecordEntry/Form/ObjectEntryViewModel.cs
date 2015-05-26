@@ -158,5 +158,20 @@ namespace JosephM.Record.Application.RecordEntry.Form
         {
             get { return GetObject().GetType().GetCustomAttributes(typeof(AllowSaveAndLoad), false).Any(); }
         }
+
+        internal override void RefreshEditabilityExtention()
+        {
+            if (FieldViewModels != null)
+            {
+                foreach (var field in FieldViewModels)
+                {
+                    var methods = FormService.GetOnLoadTriggers(field.FieldName, RecordType);
+                    foreach (var method in methods)
+                    {
+                        method(this);
+                    }
+                }
+            }
+        }
     }
 }

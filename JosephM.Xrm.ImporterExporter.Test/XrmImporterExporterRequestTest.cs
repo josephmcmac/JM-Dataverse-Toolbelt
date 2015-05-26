@@ -66,6 +66,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
             recordTypeGrid = mainViewModel.SubGrids.First(r => r.ReferenceName == "RecordTypes");
             recordType = recordTypeGrid.GridRecords.First();
             var fieldViewModel = (EnumerableFieldViewModel)recordType.GetFieldViewModel("ExcludeFields");
+
+
         }
     }
 }

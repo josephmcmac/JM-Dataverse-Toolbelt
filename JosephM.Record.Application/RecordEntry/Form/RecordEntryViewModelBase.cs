@@ -106,6 +106,12 @@ namespace JosephM.Record.Application.RecordEntry.Form
             }
         }
 
+        internal void OnLoad()
+        {
+            RefreshVisibility();
+            RefreshEditabilityExtention();
+        }
+
         internal void RefreshVisibility()
         {
             if (FieldViewModels != null)
@@ -119,6 +125,10 @@ namespace JosephM.Record.Application.RecordEntry.Form
         }
 
         protected virtual void RefreshVisibilityExtention()
+        {
+        }
+
+        internal virtual void RefreshEditabilityExtention()
         {
         }
     }

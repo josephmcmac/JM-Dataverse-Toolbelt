@@ -82,5 +82,10 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         {
             return null;
         }
+
+        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
+        {
+            return new Action<RecordEntryViewModelBase>[0];
+        }
     }
 }

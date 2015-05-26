@@ -13,6 +13,7 @@ namespace JosephM.Xrm.ImportExporter.Service
     public class ImportExportRecordType
     {
         [RequiredProperty]
+        [ReadOnlyWhenSet]
         [RecordTypeFor("ExcludeFields.RecordField")]
         public RecordType RecordType { get; set; }
 
