@@ -641,7 +641,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     case ExportType.AllRecords:
                     {
                         entities = XrmService.RetrieveAllAndClauses(type, conditions)
-                            .Where(e => !CheckIgnoreForExport(request, e))
+                            .Where(e => !CheckIgnoreForExport(exportType, e))
                             .ToArray();
                         break;
                     }
@@ -746,12 +746,11 @@ namespace JosephM.Xrm.ImportExporter.Service
             }
         }
 
-        private bool CheckIgnoreForExport(XrmImporterExporterRequest request, Entity entity)
+        private bool CheckIgnoreForExport(ImportExportRecordType exportType, Entity entity)
         {
             if (XrmService.FieldExists("statecode", entity.LogicalName))
             {
-                var thisOnes = request.RecordTypes.Where(r => r.RecordType.Key == entity.LogicalName);
-                if (thisOnes.Any() && !thisOnes.First().IncludeInactive)
+                if (exportType.IncludeInactive)
                 {
                     if (entity.GetOptionSetValue("statecode") != XrmPicklists.State.Active)
                         return true;
