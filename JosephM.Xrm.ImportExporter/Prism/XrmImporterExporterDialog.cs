@@ -21,5 +21,17 @@ namespace JosephM.Xrm.ImportExporter.Prism
             : base(service, dialogController, lookupService)
         {
         }
+
+        protected override void CompleteDialogExtention()
+        {
+            base.CompleteDialogExtention();
+            if (Response.Success)
+            {
+                if (Request.ImportExportTask == ImportExportTask.ExportXml && Request.FolderPath != null)
+                    AddCompletionOption("Open Folder", () => OpenFolder(Request.FolderPath.FolderPath));
+            }
+        }
+
+
     }
 }

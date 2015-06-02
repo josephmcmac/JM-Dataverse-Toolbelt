@@ -387,7 +387,7 @@ namespace JosephM.Record.Application.Fakes
         public override IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom,
             string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
         {
-            //todo couldn't bother doing yet
+            //todo not necessary yet
             return new RecordObject[0];
         }
     }

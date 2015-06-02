@@ -1397,5 +1397,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             return ToIRecords(_xrmService.GetLinkedRecordsThroughBridge(linkedRecordType, recordTypeThrough, recordTypeFrom, linkedThroughLookupFrom, linkedThroughLookupTo, new Guid(recordFromId)));
         }
+
+
     }
 }

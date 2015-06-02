@@ -16,9 +16,8 @@ namespace JosephM.Record.Application.RecordEntry.Field
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
             string referencedRecordType)
-            : base(fieldName, fieldLabel, recordForm)
+            : this(fieldName, fieldLabel, recordForm, referencedRecordType, null)
         {
-            RecordTypeToLookup = referencedRecordType;
         }
 
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
@@ -26,12 +25,15 @@ namespace JosephM.Record.Application.RecordEntry.Field
             : base(fieldName, fieldLabel, recordForm)
         {
             RecordTypeToLookup = referencedRecordType;
-            LookupService = lookupService;
-
-            LookupGridViewModel = new LookupGridViewModel(LookupService, RecordTypeToLookup, RecordEntryViewModel,
-                OnRecordSelected);
-
-            XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
+            if (lookupService != null)
+            {
+                LookupService = lookupService;
+                LookupGridViewModel = new LookupGridViewModel(LookupService, RecordTypeToLookup, RecordEntryViewModel,
+                    OnRecordSelected);
+                XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
+            }
+            if(Value != null)
+                SetEnteredTestWithoutClearingValue(Value.Name);
         }
 
         public void Search()
@@ -46,9 +48,14 @@ namespace JosephM.Record.Application.RecordEntry.Field
                 var recordName = selectedRecord.GetStringField(LookupService.GetPrimaryField(selectedRecord.Type));
                 Value = new Lookup(RecordTypeToLookup, selectedRecord.Id, recordName);
                 LookupGridVisible = false;
-                _enteredText = recordName;
-                OnPropertyChanged("EnteredText");
+                SetEnteredTestWithoutClearingValue(recordName);
             }
+        }
+
+        private void SetEnteredTestWithoutClearingValue(string recordName)
+        {
+            _enteredText = recordName;
+            OnPropertyChanged("EnteredText");
         }
 
         private IRecordService LookupService { get; set; }

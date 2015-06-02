@@ -7,6 +7,7 @@ using System.Linq;
 using JosephM.Record.Application.RecordEntry.Field;
 using JosephM.Record.Application.RecordEntry.Form;
 using JosephM.Record.Application.RecordEntry.Metadata;
+using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Shared;
 using JosephM.Record.Application.Validation;
 using JosephM.Record.IService;
@@ -90,6 +91,26 @@ namespace JosephM.Record.Application.Grid
         public override IEnumerable<FieldViewModelBase> FieldViewModels
         {
             get { return _gridFields; }
+        }
+
+        internal override RecordEntryViewModelBase ParentForm
+        {
+            get
+            {
+                if (GridViewModel is GridSectionViewModel)
+                    return ((GridSectionViewModel) GridViewModel).GetRecordForm();
+                return null;
+            }
+        }
+
+        internal override string ParentFormReference
+        {
+            get
+            {
+                if (GridViewModel is GridSectionViewModel)
+                    return ((GridSectionViewModel) GridViewModel).ReferenceName;
+                return null;
+            }
         }
 
         public static ObservableCollection<GridRowViewModel> LoadRows(IEnumerable<IRecord> records,

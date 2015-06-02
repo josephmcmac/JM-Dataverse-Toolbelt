@@ -166,7 +166,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         private IEnumerable<string> ValidationPropertyNames
         {
-            get { return new[] {"ValueObject", "Value"}; }
+            get { return new[] {"ValueObject", "Value", "StringDisplay"}; }
         }
 
         public IEnumerable GetErrors(string propertyName)

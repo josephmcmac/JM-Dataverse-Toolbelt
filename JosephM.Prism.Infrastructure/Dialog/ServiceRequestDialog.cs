@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
@@ -48,7 +50,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
         protected TService Service { get; set; }
 
-        private TRequest Request { get; set; }
+        protected TRequest Request { get; set; }
 
         protected TResponse Response { get; set; }
 
@@ -106,6 +108,18 @@ namespace JosephM.Prism.Infrastructure.Dialog
         public override string TabLabel
         {
             get { return typeof (TRequest).GetDisplayName(); }
+        }
+
+        public void OpenFolder(string folder)
+        {
+            try
+            {
+                Process.Start(folder);
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.UserMessage(ex.DisplayString());
+            }
         }
     }
 }

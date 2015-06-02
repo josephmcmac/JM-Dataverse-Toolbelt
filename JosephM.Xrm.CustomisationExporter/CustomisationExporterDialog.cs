@@ -27,7 +27,7 @@ namespace JosephM.Xrm.CustomisationExporter
                 AddCompletionOption("Open Relationships", OpenRelationshipsFile);
             if (!Response.OptionSetsFileName.IsNullOrWhiteSpace())
                 AddCompletionOption("Open Options", OpenOptionsFile);
-            AddCompletionOption("Open Folder", OpenFolder);
+            AddCompletionOption("Open Folder", () => OpenFolder(Response.Folder));
             CompletionMessage = "Document Successfully Generated";
         }
 
@@ -72,18 +72,6 @@ namespace JosephM.Xrm.CustomisationExporter
             try
             {
                 Process.Start(Response.RelationshipsFileNameQualified);
-            }
-            catch (Exception ex)
-            {
-                ApplicationController.UserMessage(ex.DisplayString());
-            }
-        }
-
-        public void OpenFolder()
-        {
-            try
-            {
-                Process.Start(Response.Folder);
             }
             catch (Exception ex)
             {

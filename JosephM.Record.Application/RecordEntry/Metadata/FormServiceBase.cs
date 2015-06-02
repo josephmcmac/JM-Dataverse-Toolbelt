@@ -68,12 +68,12 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             return new Action<RecordEntryViewModelBase>[] {};
         }
 
-        internal virtual RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel)
+        internal virtual RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel)
         {
             return null;
         }
 
-        internal virtual RecordEntryFormViewModel GetEditRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        internal virtual RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
         {
             return null;
         }
@@ -86,6 +86,11 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
         {
             return new Action<RecordEntryViewModelBase>[0];
+        }
+
+        internal virtual string GetLookupTargetType(string field, string recordType, RecordEntryViewModelBase recordForm)
+        {
+            return recordForm.RecordService.GetLookupTargetType(field, recordType);
         }
     }
 }

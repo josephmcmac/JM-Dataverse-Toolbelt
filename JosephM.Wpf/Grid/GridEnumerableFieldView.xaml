@@ -18,5 +18,5 @@
     </UserControl.Resources>
     <TextBlock
         Style="{StaticResource GridEnumerableField}"
-        Text="{Binding StringDisplay}" />
+        Text="{Binding StringDisplay, NotifyOnValidationError=True}" />
 </UserControl>

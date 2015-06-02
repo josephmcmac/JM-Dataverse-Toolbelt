@@ -26,7 +26,12 @@ namespace JosephM.Record.Application.RecordEntry.Form
         private readonly Action _onSave;
 
         public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController)
-            : base(formController)
+            : this(onSave, onCancel, objectToEnter, formController, null, null)
+        {
+        }
+
+        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference)
+            : base(formController, parentForm, parentFormReference)
         {
             _objectRecord = new ObjectRecord(objectToEnter);
             _onSave = onSave;

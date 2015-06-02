@@ -298,27 +298,27 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
 
         internal override string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
         {
-             if (viewModel is GridRowViewModel)
+            return GetRecordTypeFor(field, viewModel);
+        }
+
+        private static string GetRecordTypeFor(string field, RecordEntryViewModelBase viewModel)
+        {
+            var parentForm = viewModel.ParentForm;
+            if (parentForm is ObjectEntryViewModel)
             {
-                var gridSection = ((GridRowViewModel) viewModel).GridViewModel;
-                if (gridSection is GridSectionViewModel)
+                foreach (var parentField in ((ObjectEntryViewModel)parentForm).GetObject().GetType().GetProperties())
                 {
-                    var gridSectionVM = (GridSectionViewModel) gridSection;
-                    var parentForm = gridSectionVM.RecordForm as ObjectEntryViewModel;
-                    if (parentForm != null)
+                    var lookupForAttributes =
+                        parentField.GetCustomAttributes(typeof (RecordTypeFor), true).Cast<RecordTypeFor>();
+                    foreach (var lookupForAttribute in lookupForAttributes)
                     {
-                        foreach (var parentField in parentForm.GetObject().GetType().GetProperties())
+                        if (lookupForAttribute.PropertyPaths.Count() == 2 &&
+                            lookupForAttribute.PropertyPaths.First() == viewModel.ParentFormReference &&
+                            lookupForAttribute.PropertyPaths.Last() == field)
                         {
-                            var lookupForAttributes = parentField.GetCustomAttributes(typeof (RecordTypeFor), true).Cast<RecordTypeFor>();
-                            foreach (var lookupForAttribute in lookupForAttributes)
-                            {
-                                if (lookupForAttribute.PropertyPaths.Count() == 2 && lookupForAttribute.PropertyPaths.First() == gridSectionVM.ReferenceName && lookupForAttribute.PropertyPaths.Last() == field)
-                                {
-                                    var parentsFieldViewmOdel = parentForm.GetRecordTypeFieldViewModel(parentField.Name);
-                                    if (parentsFieldViewmOdel.Value != null)
-                                        return parentsFieldViewmOdel.Value.Key;
-                                }
-                            }
+                            var parentsFieldViewmOdel = parentForm.GetRecordTypeFieldViewModel(parentField.Name);
+                            if (parentsFieldViewmOdel.Value != null)
+                                return parentsFieldViewmOdel.Value.Key;
                         }
                     }
                 }
@@ -326,7 +326,12 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             return null;
         }
 
-        internal override RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel)
+        internal override string GetLookupTargetType(string field, string recordType, RecordEntryViewModelBase recordForm)
+        {
+            return GetRecordTypeFor(field, recordForm);
+        }
+
+        internal override RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel)
         {
             var propertyInfo = ObjectToEnter.GetType().GetProperty(subGridName);
             if (propertyInfo.GetCustomAttribute<FormEntry>() != null)
@@ -338,7 +343,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
-                    newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), formController.ApplicationController));
+                    newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName);
                 return viewModel;
                 //ideally could hide the parent dialog temporarily and load this one
             }
@@ -347,7 +352,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 return null;
         }
 
-        internal override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        internal override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
         {
             var record = gridRow.GetRecord();
             if(!(record is ObjectRecord))
@@ -361,7 +366,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             var viewModel = new ObjectEntryViewModel(
                 () => onSave(new ObjectRecord(newObject)),
                 onCancel,
-                newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), formController.ApplicationController));
+                newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName);
             return viewModel;
         }
     }

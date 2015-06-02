@@ -162,9 +162,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Customisation Importer Help.docx" />
-    <None Include="ContentFiles\Customisations Import Template.xls">
+    <Content Include="ContentFiles\Customisations Import Template.xls">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="JosephM.snk" />
   </ItemGroup>
   <ItemGroup>

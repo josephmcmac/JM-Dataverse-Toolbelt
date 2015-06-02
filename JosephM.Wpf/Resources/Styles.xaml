@@ -50,9 +50,11 @@
     <Style x:Key="GridEnumerableField" TargetType="{x:Type TextBlock}">
         <Setter Property="Margin" Value="0" />
         <Setter Property="Height" Value="20" />
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
     </Style>
     <Style x:Key="IconButton" TargetType="{x:Type Button}">
         <Setter Property="Margin" Value="1,1,1,1" />
+        <Setter Property="Height" Value="20" />
     </Style>
     <Style x:Key="DeleteRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource DeleteButtonImageKey}" />

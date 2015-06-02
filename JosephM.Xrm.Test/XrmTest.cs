@@ -287,11 +287,55 @@ namespace JosephM.Xrm.Test
             get { return XrmService.WhoAmI(); }
         }
 
-        protected virtual Entity CreateAccount()
+        protected Entity CreateAccount()
         {
             var entity = new Entity("account");
-            entity.SetField("name", "Test Account");
-            return CreateAndRetrieve(entity);
+            entity.SetField("name", "Test Account - X");
+            entity.SetField("fax", "0999999999fax");
+            entity.SetField("telephone1", "0999999999phone");
+            entity.SetField("emailaddress1", "testemail@ntaadev.com");
+            if (entity.GetField("address1_line1") == null)
+            {
+                entity.SetField("address1_line1", "9/455 Bourke St");
+                entity.SetField("address1_city", "Melbourne");
+                entity.SetField("address1_stateorprovince", "victoria");
+                entity.SetField("address1_postalcode", "3000");
+            }
+            Entity contact = null;
+            if (entity.GetField("primarycontactid") == null)
+            {
+                contact = CreateContact();
+                entity.SetLookupField("primarycontactid", contact);
+            }
+
+            var account = CreateAndRetrieve(entity);
+            if (contact != null)
+            {
+                contact.SetLookupField("parentcustomerid", account);
+                UpdateFieldsAndRetreive(contact, new[] { "parentcustomerid", "ntaa_usecustomerprimaryaddress" });
+            }
+            return account;
+        }
+
+        public Entity CreateContact()
+        {
+            var contact = new Entity("contact");
+            contact.SetField("firstname", "TESTSCRIPT");
+            contact.SetField("lastname", "CONTACT - X");
+            return CreateAndRetrieve(contact);
+        }
+
+
+        public Entity UpdateFieldsAndRetreive(Entity entity, IEnumerable<string> fieldsToUpdate)
+        {
+            XrmService.Update(entity, fieldsToUpdate);
+            return XrmService.Retrieve(entity.LogicalName, entity.Id);
+        }
+
+        public Entity UpdateFieldsAndRetreive(Entity entity, params string[] fieldsToUpdate)
+        {
+            XrmService.Update(entity, fieldsToUpdate);
+            return XrmService.Retrieve(entity.LogicalName, entity.Id);
         }
 
         public void DeleteMyToday()
@@ -434,6 +478,42 @@ namespace JosephM.Xrm.Test
                     {
                         throw new ArgumentOutOfRangeException("Unmatched field type " + fieldType);
                     }
+            }
+        }
+
+        private Entity _testAccount;
+
+        public Entity TestAccount
+        {
+            get
+            {
+                if (_testAccount == null)
+                {
+                    _testAccount = XrmService.GetFirst("account", "name", "TESTSCRIPTACCOUNT");
+                    if (_testAccount == null)
+                    {
+                        _testAccount = CreateAccount();
+                        _testAccount.SetField("name", "TESTSCRIPTACCOUNT");
+                        _testAccount = UpdateFieldsAndRetreive(_testAccount, "name");
+                    }
+                }
+                return _testAccount;
+            }
+        }
+
+        private Entity _testAccountContact;
+        public Entity TestAccountContact
+        {
+            get
+            {
+                if (_testAccountContact == null)
+                {
+                    var contactId = TestAccount.GetLookupGuid("primarycontactid");
+                    if (!contactId.HasValue)
+                        throw new NullReferenceException("Test Account Doesn't Have Primary Contact");
+                    _testAccountContact = XrmService.Retrieve("contact", contactId.Value);
+                }
+                return _testAccountContact;
             }
         }
     }

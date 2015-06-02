@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using JosephM.Record.Application.RecordEntry.Field;
 using JosephM.Record.Application.RecordEntry.Metadata;
 using JosephM.Record.Application.TabArea;
@@ -75,22 +76,39 @@ namespace JosephM.Record.Application.RecordEntry.Form
             throw new ArgumentOutOfRangeException(fieldName, string.Format("No Field In {0} Object Has The Name {1}", GetRecord().Type, fieldName));
         }
 
+        public T GetFieldViewModel<T>(string fieldName)
+            where T : FieldViewModelBase
+        {
+            var viewModel = GetFieldViewModel(fieldName);
+            var typedViewModel = viewModel as T;
+            if (typedViewModel == null)
+            {
+                var type = viewModel == null ? "null" : viewModel.GetType().Name;
+                throw new Exception(
+                    string.Format("Expected Field Of Type {0} For {1}. Actual Type Is {2}", typeof (T).Name, fieldName,
+                        type));
+            }
+            return typedViewModel;
+        }
+
         public RecordTypeFieldViewModel GetRecordTypeFieldViewModel(string fieldName)
         {
-            var viewModel = GetFieldViewModel(fieldName) as RecordTypeFieldViewModel;
-            if (viewModel == null)
-                throw new Exception("Expected On Change For Field Of Type Field Of Type: " +
-                                    typeof(LookupFieldViewModel).Name);
-            return viewModel;
+            return GetFieldViewModel<RecordTypeFieldViewModel>(fieldName);
         }
 
         public RecordFieldFieldViewModel GetRecordFieldFieldViewModel(string fieldName)
         {
-            var viewModel = GetFieldViewModel(fieldName) as RecordFieldFieldViewModel;
-            if (viewModel == null)
-                throw new Exception("Expected On Change For Field Of Type Field Of Type: " +
-                                    typeof(LookupFieldViewModel).Name);
-            return viewModel;
+            return GetFieldViewModel<RecordFieldFieldViewModel>(fieldName);
+        }
+
+        public LookupFieldViewModel GetLookupFieldFieldViewModel(string fieldName)
+        {
+            return GetFieldViewModel<LookupFieldViewModel>(fieldName);
+        }
+
+        public PicklistFieldViewModel GetPicklistFieldFieldViewModel(string fieldName)
+        {
+            return GetFieldViewModel<PicklistFieldViewModel>(fieldName);
         }
 
         public abstract IEnumerable<FieldViewModelBase> FieldViewModels { get; }
@@ -131,5 +149,9 @@ namespace JosephM.Record.Application.RecordEntry.Form
         internal virtual void RefreshEditabilityExtention()
         {
         }
+
+        internal abstract RecordEntryViewModelBase ParentForm { get; }
+
+        internal abstract string ParentFormReference { get; }
     }
 }

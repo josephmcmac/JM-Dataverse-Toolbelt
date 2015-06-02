@@ -532,5 +532,7 @@ namespace JosephM.Record.IService
         IEnumerable<string> GetSharedOptionSetNames();
 
         IEnumerable<KeyValuePair<string,string>> GetSharedOptionSetKeyValues(string optionSetName);
+
+        void ClearCache();
     }
 }

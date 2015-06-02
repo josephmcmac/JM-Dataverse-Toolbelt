@@ -113,8 +113,12 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 }
                 case RecordFieldType.Lookup:
                 {
-                    fieldVm = new LookupFieldViewModel(field, label, recordForm,
-                        recordService.GetLookupTargetType(field, recordType), recordService.LookupService)
+                    //the check for null here was when loading a lookup grid the rows in the lookup do not require a form
+                    var targetType = recordForm.FormService == null
+                        ? null
+                        : recordForm.FormService.GetLookupTargetType(field, recordType, recordForm);
+                    fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType
+                        , recordService.LookupService)
                     {
                         IsRecordServiceField = isRecordServiceField
                     };
@@ -182,8 +186,10 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 }
             }
             if (fieldVm == null)
-                throw new ArgumentNullException(
-                    string.Concat("No data entry control and vm created for field type ", fieldType));
+                fieldVm = new UnmatchedFieldViewModel(field, label, recordForm)
+                {
+                    IsRecordServiceField = isRecordServiceField
+                };
             fieldVm.IsEditable = isEditable;
             return fieldVm;
         }

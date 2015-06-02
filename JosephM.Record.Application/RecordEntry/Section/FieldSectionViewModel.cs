@@ -15,11 +15,10 @@ namespace JosephM.Record.Application.RecordEntry.Section
         private ObservableCollection<FieldViewModelBase> _fields;
 
         public FieldSectionViewModel(
-            FormController formController,
             FormFieldSection formSection,
             RecordEntryFormViewModel recordForm
             )
-            : base(formController, formSection, recordForm)
+            : base(formSection, recordForm)
         {
         }
 

@@ -95,7 +95,6 @@
     <Compile Include="Attributes\RequiredProperty.cs" />
     <Compile Include="Attributes\PropertyInContextByPropertyValue.cs" />
     <Compile Include="Attributes\PropertyInContextByPropertyValues.cs" />
-    <Compile Include="Concurrency\StringLocker.cs" />
     <Compile Include="Constants\RegularExpressions.cs" />
     <Compile Include="Extentions\DateTimeExtentions.cs" />
     <Compile Include="Extentions\StreamExtentions.cs" />
@@ -138,7 +137,9 @@
   <ItemGroup>
     <None Include="JosephM.snk" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Concurrency\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

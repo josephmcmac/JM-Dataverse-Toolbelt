@@ -33,7 +33,7 @@ namespace JosephM.Record.Application.Test
             var requiredGridFieldViewModel = gridRow1.GetFieldViewModel("RequiredString");
             requiredGridFieldViewModel.ValueObject = "Something";
 
-            viewModel.SaveObject(TestingFolder);
+            viewModel.SaveObject(Path.Combine(TestingFolder, objectToEnter.GetType().Name + ".xml"));
 
             objectToEnter = new TestViewModelValidationObject();
             viewModel = LoadToObjectEntryViewModel(objectToEnter);

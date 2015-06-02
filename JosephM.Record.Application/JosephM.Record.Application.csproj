@@ -101,9 +101,11 @@
     <Compile Include="Fakes\FakeObjectsGridViewModelcs.cs" />
     <Compile Include="Fakes\FakeProgressControlViewModel.cs" />
     <Compile Include="HTML\HtmlFileModel.cs" />
+    <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />
     <Compile Include="Search\SearchResultViewModel.cs" />
+    <Compile Include="SettingTypes\LookupSetting.cs" />
     <Compile Include="SettingTypes\FieldSetting.cs" />
     <Compile Include="SettingTypes\RecordFieldSetting.cs" />
     <Compile Include="SettingTypes\RecordTypeSetting.cs" />
@@ -124,7 +126,7 @@
     <Compile Include="Shared\LoadingViewModel.cs" />
     <Compile Include="Navigation\INavigationProvider.cs" />
     <Compile Include="Navigation\PrismNavigationProvider.cs" />
-    <Compile Include="RecordEntry\Field\BooleanFieldViewModell.cs" />
+    <Compile Include="RecordEntry\Field\BooleanFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DateFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\ExcelFileFieldViewModell.cs" />
     <Compile Include="RecordEntry\Field\FieldViewModel.cs" />

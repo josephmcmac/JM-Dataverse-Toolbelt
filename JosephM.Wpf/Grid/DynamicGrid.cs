@@ -65,7 +65,7 @@ namespace JosephM.Wpf.Grid
             {
                 gridSectionViewModel.DoOnAsynchThread(() =>
                 {
-                    gridSectionViewModel.DoWhileLoading("Loading Lookup", () =>
+                    gridSectionViewModel.DoWhileLoading("Loading Grid", () =>
                     {
                         var columnMetadata = new List<ColumnMetadata>();
                         foreach (var gridField in gridSectionViewModel.RecordFields.OrderBy(gf => gf.Order))

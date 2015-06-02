@@ -29,6 +29,13 @@ namespace JosephM.Record.Application.RecordEntry.Form
         private List<FieldViewModelBase> _recordFields;
         private string _recordType;
 
+        protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference)
+            : this(formController)
+        {
+            _parentForm = parentForm;
+            _parentFormReference = parentFormReference;
+        }
+
         protected RecordEntryFormViewModel(FormController formController)
             : base(formController)
         {
@@ -96,7 +103,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
 
         public XrmButtonViewModel CancelButtonViewModel { get; private set; }
 
-        //todo rename property
         public XrmButtonViewModel SaveRequestButtonViewModel { get; private set; }
 
         public XrmButtonViewModel LoadRequestButtonViewModel { get; private set; }
@@ -174,7 +180,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
 
         public virtual void SaveObject()
         {
-            //todo put in application controller
             var fileName = ApplicationController.GetSaveFileName("*", ".xml");
             if (!fileName.IsNullOrWhiteSpace())
                 SaveObject(fileName);
@@ -301,7 +306,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     if (section is FormFieldSection)
                     {
                         sectionViewModels.Add(new FieldSectionViewModel(
-                            FormController,
                             (FormFieldSection) section,
                             this
                             ));
@@ -309,7 +313,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     else if (section is SubGridSection)
                     {
                         sectionViewModels.Add(new GridSectionViewModel(
-                            FormController,
                             (SubGridSection) section,
                             this
                             ));
@@ -354,7 +357,12 @@ namespace JosephM.Record.Application.RecordEntry.Form
 
         public override IEnumerable<FieldViewModelBase> FieldViewModels
         {
-            get { return _recordFields; }
+            get
+            {
+                if (_recordFields == null)
+                    throw new NullReferenceException("The Field Sections Are Not Loaded Yet. The Reload Method Needs To Have Been Called And Completed To Initialise It");
+                return _recordFields;
+            }
         }
 
         protected internal override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
@@ -457,6 +465,18 @@ namespace JosephM.Record.Application.RecordEntry.Form
             {
                 return !LoadingViewModel.IsLoading && !ChildForms.Any();
             }
+        }
+
+        private readonly RecordEntryViewModelBase _parentForm;
+        internal override RecordEntryViewModelBase ParentForm
+        {
+            get { return _parentForm; }
+        }
+
+        private readonly string _parentFormReference;
+        internal override string ParentFormReference
+        {
+            get { return _parentFormReference; }
         }
     }
 }

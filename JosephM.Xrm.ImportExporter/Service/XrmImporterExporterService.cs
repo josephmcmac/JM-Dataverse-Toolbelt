@@ -308,7 +308,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     foreach (var field in fieldsDontExist)
                     {
                         response.AddResponseItem(
-                            new XrmImporterExporterResponseItem(
+                            new XrmImporterExporterResponseItem(recordType, field, null,
                                 string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType),
                                 new NullReferenceException(string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType))));
                     }
@@ -420,9 +420,8 @@ namespace JosephM.Xrm.ImportExporter.Service
                             if (fieldsToRetry.ContainsKey(thisEntity))
                                 fieldsToRetry.Remove(thisEntity);
                             response.AddResponseItem(
-                                new XrmImporterExporterResponseItem(
-                                    string.Format("Error Importing Record Of Type {0} Id {1}", entity.LogicalName,
-                                        entity.Id),
+                                new XrmImporterExporterResponseItem(recordType, null, entity.GetStringField(primaryField),
+                                    string.Format("Error Importing Record Id={0}",entity.Id),
                                     ex));
                         }
                     }
@@ -430,7 +429,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                 catch (Exception ex)
                 {
                     response.AddResponseItem(
-                        new XrmImporterExporterResponseItem(string.Format("Error Importing Type {0}", recordType), ex));
+                        new XrmImporterExporterResponseItem(recordType, null, null, string.Format("Error Importing Type {0}", recordType), ex));
                 }
             }
             controller.TurnOffLevel2();
@@ -439,9 +438,10 @@ namespace JosephM.Xrm.ImportExporter.Service
             foreach (var item in fieldsToRetry)
             {
                 var thisEntity = item.Key;
+                controller.UpdateProgress(countImported++, countToImport, string.Format("Retrying Unresolved Fields {0}", thisEntity.LogicalName));
+                var thisPrimaryField = XrmService.GetPrimaryNameField(thisEntity.LogicalName);
                 try
                 {
-                    controller.UpdateProgress(countImported++, countToImport, string.Format("Retrying Unresolved Fields {0}", thisEntity.LogicalName));
                     foreach (var field in item.Value)
                     {
                         if (XrmService.IsLookup(field, thisEntity.LogicalName) && thisEntity.GetField(field) != null)
@@ -475,10 +475,8 @@ namespace JosephM.Xrm.ImportExporter.Service
                                 if (thisEntity.Contains(field))
                                     thisEntity.Attributes.Remove(field);
                                 response.AddResponseItem(
-                                    new XrmImporterExporterResponseItem(
-                                        string.Format(
-                                            "Warning Error Setting Lookup Field {0} Record Of Type {1} Id {2}", field,
-                                            thisEntity.LogicalName, thisEntity.Id), ex));
+                                    new XrmImporterExporterResponseItem(thisEntity.LogicalName, field, thisEntity.GetStringField(thisPrimaryField),
+                                        string.Format("Error Setting Lookup Field Id={0}",  thisEntity.Id), ex));
                             }
                         }
                     }
@@ -487,9 +485,8 @@ namespace JosephM.Xrm.ImportExporter.Service
                 catch (Exception ex)
                 {
                     response.AddResponseItem(
-                        new XrmImporterExporterResponseItem(
-                            string.Format("Error Importing Record Of Type {0} Id {1}", thisEntity.LogicalName,
-                                thisEntity.Id),
+                        new XrmImporterExporterResponseItem(thisEntity.LogicalName, null, thisEntity.GetStringField(thisPrimaryField),
+                            string.Format("Error Importing Record Id={0}",  thisEntity.Id),
                             ex));
                 }
             }
@@ -626,39 +623,70 @@ namespace JosephM.Xrm.ImportExporter.Service
                 throw new Exception("Error no Record Types To Export");
             var countToExport = request.RecordTypes.Count();
             var countsExported = 0;
-            var exported = new Dictionary<string, IEnumerable<Entity>>();
+            var exported = new Dictionary<string, List<Entity>>();
 
             //this distinct is a bit inconsistent with actually allowing duplicates
-            var recordTypes = request.RecordTypes.Select(r => r.RecordType.Key).Distinct().ToArray();
-
-            foreach (var type in recordTypes)
+            foreach (var exportType in request.RecordTypes)
             {
+                var type = exportType.RecordType == null ? null : exportType.RecordType.Key;
                 controller.UpdateProgress(countsExported++, countToExport, string.Format("Exporting {0} Records", type));
                 var conditions = new List<ConditionExpression>();
                 if (type == "list")
                     conditions.Add(new ConditionExpression("type", ConditionOperator.Equal, XrmPicklists.ListType.Dynamic));
                 //doesn't work for too many notes
                 //should have option on each or all entities for notes maybe
-                var entities = XrmService.RetrieveAllAndClauses(type, conditions)
-                    .Where(e => !CheckIgnoreForExport(request, e))
-                    .ToArray();
+                IEnumerable<Entity> entities;
+                switch (exportType.Type)
+                {
+                    case ExportType.AllRecords:
+                    {
+                        entities = XrmService.RetrieveAllAndClauses(type, conditions)
+                            .Where(e => !CheckIgnoreForExport(request, e))
+                            .ToArray();
+                        break;
+                    }
+                    case ExportType.SpecificRecords:
+                    {
+                        var primaryKey = XrmService.GetPrimaryKeyField(type);
+                        var ids = exportType.OnlyExportSpecificRecords == null
+                            ? new string[0]
+                            : exportType.OnlyExportSpecificRecords
+                                .Select(r => r.Record == null ? null : r.Record.Id)
+                                .Where(s => !s.IsNullOrWhiteSpace()).Distinct().ToArray();
+                        entities = ids.Any()
+                            ? XrmService.RetrieveAllOrClauses(type,
+                                ids.Select(
+                                    i => new ConditionExpression(primaryKey, ConditionOperator.Equal, new Guid(i))))
+                            : new Entity[0];
+                        break;
+                    }
+                    default:
+                    {
+                        throw new NotImplementedException(string.Format("No Export Implemented For {0} {1} For {2} Records", typeof(ExportType).Name, exportType.Type, type));
+                    }
+                }
 
-                var thisOne = request.RecordTypes.First(r => r.RecordType.Key == type);
-                var excludeFields = thisOne.ExcludeFields == null
+                var excludeFields = exportType.ExcludeFields == null
                     ? new string[0]
-                    : thisOne.ExcludeFields.Select(f => f.RecordField.Key).Distinct().ToArray();
+                    : exportType.ExcludeFields.Select(f => f.RecordField  == null ? null : f.RecordField.Key).Distinct().ToArray();
+
+                var fieldsAlwaysExclude = new[] {"calendarrules"};
+                excludeFields = excludeFields.Union(fieldsAlwaysExclude).ToArray();
 
                 foreach (var entity in entities)
                 {
                     entity.RemoveFields(excludeFields);
                     WriteToXml(entity, folder, false);
                 }
-                exported.Add(type, entities);
+                if (!exported.ContainsKey(type))
+                    exported.Add(type, new List<Entity>());
+                exported[type].AddRange(entities);
                 if (request.IncludeNotes)
                 {
                     var notes = XrmService
                         .RetrieveAllAndClauses("annotation",
                             new[] {new ConditionExpression("objecttypecode", ConditionOperator.Equal, type)});
+                    //todo could optimise this - limit query to those exported
                     foreach (var note in notes)
                     {
                         var objectId = note.GetLookupGuid("objectid");
@@ -669,15 +697,16 @@ namespace JosephM.Xrm.ImportExporter.Service
                     }
                 }
             }
+            //todo could optimise this - limit query to those exported
             var relationshipsDone = new List<string>();
             if (request.IncludeNNRelationshipsBetweenEntities)
             {
-                foreach (var type in recordTypes)
+                foreach (var type in exported.Keys)
                 {
                     var nnRelationships = XrmService.GetEntityManyToManyRelationships(type)
                         .Where(
                             r =>
-                                recordTypes.Contains(r.Entity1LogicalName) && recordTypes.Contains(r.Entity2LogicalName));
+                                exported.Keys.Contains(r.Entity1LogicalName) && exported.Keys.Contains(r.Entity2LogicalName));
                     foreach (var item in nnRelationships)
                     {
                         var type1 = item.Entity1LogicalName;
@@ -728,7 +757,6 @@ namespace JosephM.Xrm.ImportExporter.Service
                         return true;
                 }
             }
-            //todo generate options
             //exlcude 1 = public
             if (entity.LogicalName == "queue" && entity.GetOptionSetValue("queueviewtype") == 1)
                 return true;

@@ -239,7 +239,7 @@ namespace JosephM.Record.Service
         }
 
 
-        public string GetLookupTargetType(string field, string recordType)
+        public virtual string GetLookupTargetType(string field, string recordType)
         {
             return ((LookupFieldMetadata) GetFieldMetadata(field, recordType)).ReferencedRecordType;
         }
@@ -821,6 +821,10 @@ namespace JosephM.Record.Service
         public IEnumerable<KeyValuePair<string, string>> GetSharedOptionSetKeyValues(string optionSetName)
         {
             throw new NotImplementedException();
+        }
+
+        public void ClearCache()
+        {
         }
 
         public virtual IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)

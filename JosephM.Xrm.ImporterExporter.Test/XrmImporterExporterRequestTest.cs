@@ -24,6 +24,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
         [TestMethod]
         public void XrmImporterExporterRequestCheckSerialise()
         {
+            //to do refactor this generic and could use to validate all types
+
             var me = new XrmImporterExporterRequest();
             var fileName = Path.Combine(TestingFolder, "testobject.xml");
             if(File.Exists(fileName))
@@ -40,6 +42,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
         public void XrmImporterExporterRequest()
         {
             PrepareTests();
+
+            Assert.IsNotNull(TestAccount);
+
 
             var req = new XrmImporterExporterRequest();
             req.FolderPath = new Folder(TestingFolder);
@@ -60,8 +65,13 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var row = excludeFieldsGrid.GridRecords.First();
             Assert.IsTrue(row.GetRecordFieldFieldViewModel("RecordField").ItemsSource.Any());
 
+            //todo comment some of this and check if tidy up
+            //this bit validates creating child forms
+            //including the dpendant lookup types etc. cascade to childr forms
             var recordTypeViewModel = recordTypeEditViewModel.GetRecordTypeFieldViewModel("RecordType");
             recordTypeViewModel.Value = new RecordType("account", "Account");
+            var exportTypeViewModel = recordTypeEditViewModel.GetPicklistFieldFieldViewModel("Type");
+            exportTypeViewModel.ValueObject = ExportType.SpecificRecords;
             Assert.IsFalse(excludeFieldsGrid.GridRecords.Any());
 
             excludeFieldsGrid.AddRow();
@@ -75,13 +85,31 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var option2 = field2.ItemsSource.ElementAt(1);
             field2.Value = new RecordField(option2.Key, option2.Value);
 
+            var specificRecordsViewModel = recordTypeEditViewModel.GetSubGridViewModel("OnlyExportSpecificRecords");
+            specificRecordsViewModel.AddRow();
+            var specifcRow = specificRecordsViewModel.GridRecords.First();
+            var specificRowRecordLookup = specifcRow.GetLookupFieldFieldViewModel("Record");
+            //so above we set the forms type to account so the record lookup in the grid should have target type of account (due to lookupfor attribute)
+            Assert.AreEqual("account", specificRowRecordLookup.RecordTypeToLookup);
+            //when open an edit row it should retain that record type
+            var editSpecifcRow = specificRecordsViewModel.GetEditRowViewModel(specifcRow);
+            var sections = editSpecifcRow.FormSectionsAsync;
+            var editSpecificRowRecordLookup = editSpecifcRow.GetLookupFieldFieldViewModel("Record");
+            Assert.AreEqual("account", editSpecificRowRecordLookup.RecordTypeToLookup);
+            editSpecificRowRecordLookup.EnteredText = TestAccount.GetStringField("name");
+            editSpecificRowRecordLookup.Search();
+            Assert.IsTrue(editSpecificRowRecordLookup.LookupGridViewModel.GridRecords.Any());
+            editSpecificRowRecordLookup.OnRecordSelected(editSpecificRowRecordLookup.LookupGridViewModel.GridRecords.First().Record);
+            editSpecifcRow.OnSave();
+            specifcRow = specificRecordsViewModel.GridRecords.First();
+            specificRowRecordLookup = specifcRow.GetLookupFieldFieldViewModel("Record");
+            Assert.IsNotNull(specificRowRecordLookup.EnteredText);
+
             Assert.IsTrue(recordTypeEditViewModel.Validate());
             recordTypeEditViewModel.OnSave();
 
             recordTypeGrid = mainViewModel.SubGrids.First(r => r.ReferenceName == "RecordTypes");
             recordType = recordTypeGrid.GridRecords.First();
-            var fieldViewModel = (EnumerableFieldViewModel)recordType.GetFieldViewModel("ExcludeFields");
-
 
         }
     }

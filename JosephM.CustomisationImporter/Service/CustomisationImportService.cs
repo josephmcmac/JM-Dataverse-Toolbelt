@@ -59,6 +59,7 @@ namespace JosephM.CustomisationImporter.Service
                 ImportRelationships(relationshipMetadataToImport, controller, response);
             controller.LogLiteral("Publishing Changes");
             RecordService.PublishAll();
+            RecordService.ClearCache();
         }
 
         public static IEnumerable<FieldMetadata> ExtractFieldMetadataFromExcel(string excelFile,

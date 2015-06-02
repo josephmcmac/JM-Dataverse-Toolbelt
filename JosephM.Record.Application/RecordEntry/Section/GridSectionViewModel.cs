@@ -19,9 +19,9 @@ namespace JosephM.Record.Application.RecordEntry.Section
     {
         private ObservableCollection<GridRowViewModel> _records;
 
-        public GridSectionViewModel(FormController formController, SubGridSection subGridSection,
+        public GridSectionViewModel(SubGridSection subGridSection,
             RecordEntryFormViewModel recordForm)
-            : base(formController, subGridSection, recordForm)
+            : base(subGridSection, recordForm)
         {
             AddRowButton = new XrmButtonViewModel("Add", AddRow, ApplicationController);
             DynamicGridViewModelItems = new DynamicGridViewModelItems()
@@ -39,7 +39,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
         {
             try
             {
-                var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, FormController, (record) =>
+                var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, RecordForm, (record) =>
                 {
                     InsertRecord(record, 0);
                     RecordForm.ClearChildForm();
@@ -69,7 +69,6 @@ namespace JosephM.Record.Application.RecordEntry.Section
                 var viewModel = GetEditRowViewModel(row);
                 if (viewModel == null)
                 {
-                    //todo error message
                     throw new NotImplementedException("No Form For Type");
                 }
                 else
@@ -83,7 +82,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
 
         public RecordEntryFormViewModel GetEditRowViewModel(GridRowViewModel row)
         {
-            var viewModel = FormService.GetEditRowViewModel(SectionIdentifier, FormController, (record) =>
+            var viewModel = FormService.GetEditRowViewModel(SectionIdentifier, RecordForm, (record) =>
             {
                 RecordForm.ClearChildForm();
                 var index = GridRecords.IndexOf(row);
@@ -144,7 +143,6 @@ namespace JosephM.Record.Application.RecordEntry.Section
                 RecordForm.RecordType,
                 SubGridSection.LinkedRecordLookup,
                 RecordForm.RecordId);
-
             SendToDispatcher(() => LoadRows(records));
         }
 
