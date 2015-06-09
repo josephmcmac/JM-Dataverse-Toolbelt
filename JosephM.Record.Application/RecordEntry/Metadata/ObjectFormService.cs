@@ -232,6 +232,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         {
             var methods = new List<Action<RecordEntryViewModelBase>>();
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, methods);
+            AppendConnectionForChanges(fieldName, recordType, methods);
             return methods;
         }
 

@@ -10,9 +10,12 @@ namespace JosephM.Prism.XrmModule.SavedXrmConnections
         [GridWidth(60)]
         public bool Active { get; set; }
 
+        [DisplayOrder(2)]
+        public string Name { get; set; }
+
         public override string ToString()
         {
-            return OrganizationUniqueName;
+            return Name ?? OrganizationUniqueName;
         }
     }
 }

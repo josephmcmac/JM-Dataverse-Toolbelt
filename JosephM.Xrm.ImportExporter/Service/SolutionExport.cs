@@ -15,6 +15,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         [GridWidth(400)]
         [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
         [ConnectionFor("Solution")]
+        [ReadOnlyWhenSet]
         public SavedXrmRecordConfiguration Connection { get; set; }
 
         [RequiredProperty]
@@ -22,6 +23,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         [ReferencedType("solution")]
         [LookupCondition("ismanaged", false)]
         [LookupCondition("isvisible", true)]
+        [PropertyInContextByPropertyNotNull("Connection")]
         public Lookup Solution { get; set; }
 
         [RequiredProperty]
