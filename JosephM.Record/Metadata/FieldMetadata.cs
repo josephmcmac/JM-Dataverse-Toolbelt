@@ -52,7 +52,7 @@ namespace JosephM.Record.Metadata
             var internalName = propertyInfo.Name;
             var label = propertyInfo.GetDisplayName();
 
-            FieldMetadata fm;
+            FieldMetadata fm = null;
             if (type == typeof (ExcelFile))
                 fm = new ExcelFileFieldMetadata(recordType, internalName, label);
             else if (type == typeof (bool))
@@ -83,6 +83,8 @@ namespace JosephM.Record.Metadata
             else if (type.IsIEnumerableOfT())
                 fm = new EnumerableFieldMetadata(internalName, label, type.GetGenericArguments()[0].Name);
             else
+                fm = new ObjectFieldMetadata(recordType, internalName, label, propertyInfo.ReflectedType);
+            if(fm == null)
                 throw new ArgumentOutOfRangeException(type + " not implemented");
             fm.IsMandatory = true;
             fm.Readable = propertyInfo.GetSetMethod() != null;

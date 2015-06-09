@@ -43,5 +43,9 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RequiredProperty]
         [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ExportXml)]
         public IEnumerable<ImportExportRecordType> RecordTypes { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ExportSolution)]
+        public IEnumerable<SolutionExport> SolutionExports { get; set; }
     }
 }

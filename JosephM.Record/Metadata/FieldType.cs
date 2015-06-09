@@ -31,6 +31,7 @@
         Image,
         EntityName,
         BigInt,
-        ManagedProperty
+        ManagedProperty,
+        Object
     }
 }

@@ -118,6 +118,8 @@ namespace JosephM.Record.Service
                 throw new NullReferenceException(string.Format("Could Not Resolve Class Of Type {0}", recordType));
             return type;
         }
+        
+
 
         public override string Create(IRecord record)
         {
@@ -168,7 +170,7 @@ namespace JosephM.Record.Service
 
         public override string GetPrimaryField(string recordType)
         {
-            throw new NotImplementedException();
+            return "ToString";
         }
 
         public override IEnumerable<string> GetFields(string recordType)
@@ -291,6 +293,29 @@ namespace JosephM.Record.Service
         public override bool IsWritable(string fieldName, string recordType)
         {
             return GetPropertyInfo(fieldName, recordType).GetSetMethod() != null;
+        }
+
+        public override IEnumerable<ViewMetadata> GetViews(string recordType)
+        {
+            //very similar logic in form get grid metadata
+            var viewFields = new List<ViewField>();
+            var type = GetClassType(recordType);
+            foreach (var propertyInfo in type.GetProperties())
+            {
+                if (propertyInfo.CanRead)
+                {
+                    //these initial values repeated
+                    var viewField = new ViewField(propertyInfo.Name, int.MaxValue, 200);
+                    var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
+                    if (orderAttribute != null)
+                        viewField.Order = orderAttribute.Order;
+                    var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
+                    if (widthAttribute != null)
+                        viewField.Width = widthAttribute.Width;
+                    viewFields.Add(viewField);
+                }
+            }
+            return new [] { new ViewMetadata(viewFields) { ViewType = ViewType.LookupView} };
         }
     }
 }

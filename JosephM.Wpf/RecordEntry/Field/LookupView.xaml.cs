@@ -15,15 +15,15 @@ namespace JosephM.Wpf.RecordEntry.Field
             InitializeComponent();
         }
 
-        public LookupFieldViewModel ViewModel
+        public IReferenceFieldViewModel ViewModel
         {
-            get { return DataContext as LookupFieldViewModel; }
+            get { return DataContext as IReferenceFieldViewModel; }
             set { DataContext = value; }
         }
 
         protected override Binding GetValidationBinding()
         {
-            return null; // BindingOperations.GetBinding(TextBox, TextBox.TextProperty);
+            return null;
         }
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)

@@ -47,6 +47,12 @@ namespace JosephM.Record.Application.RecordEntry.Form
 
         public abstract IRecord GetRecord();
 
+        public string GetRecordType()
+        {
+            var record = GetRecord();
+            return record == null ? null : record.Type;
+        }
+
         public abstract Action<FieldViewModelBase> GetOnFieldChangeDelegate();
 
 
@@ -99,6 +105,11 @@ namespace JosephM.Record.Application.RecordEntry.Form
         public RecordFieldFieldViewModel GetRecordFieldFieldViewModel(string fieldName)
         {
             return GetFieldViewModel<RecordFieldFieldViewModel>(fieldName);
+        }
+
+        public ObjectFieldViewModel GetObjectFieldFieldViewModel(string fieldName)
+        {
+            return GetFieldViewModel<ObjectFieldViewModel>(fieldName);
         }
 
         public LookupFieldViewModel GetLookupFieldFieldViewModel(string fieldName)

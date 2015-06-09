@@ -81,6 +81,10 @@
   <ItemGroup>
     <Compile Include="AppConfig\CustomConfigurationSectiion.cs" />
     <Compile Include="Attributes\AllowSaveAndLoad.cs" />
+    <Compile Include="Attributes\ConnectionFor.cs" />
+    <Compile Include="Attributes\LookupCondition.cs" />
+    <Compile Include="Attributes\ReferencedType.cs" />
+    <Compile Include="Attributes\SettingsLookup.cs" />
     <Compile Include="Attributes\ReadOnlyWhenSet.cs" />
     <Compile Include="Attributes\GridWidth.cs" />
     <Compile Include="Attributes\UniqueOn.cs" />
@@ -96,6 +100,7 @@
     <Compile Include="Attributes\PropertyInContextByPropertyValue.cs" />
     <Compile Include="Attributes\PropertyInContextByPropertyValues.cs" />
     <Compile Include="Constants\RegularExpressions.cs" />
+    <Compile Include="Extentions\ByteExtentions.cs" />
     <Compile Include="Extentions\DateTimeExtentions.cs" />
     <Compile Include="Extentions\StreamExtentions.cs" />
     <Compile Include="FieldType\Lookup.cs" />

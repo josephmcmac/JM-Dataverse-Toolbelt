@@ -9,5 +9,10 @@ namespace JosephM.Prism.XrmModule.SavedXrmConnections
         [UniqueOn]
         [GridWidth(60)]
         public bool Active { get; set; }
+
+        public override string ToString()
+        {
+            return OrganizationUniqueName;
+        }
     }
 }

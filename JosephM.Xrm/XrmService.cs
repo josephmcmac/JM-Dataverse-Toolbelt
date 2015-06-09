@@ -3233,6 +3233,7 @@ string recordType)
 
         public string GetDescription(string recordType)
         {
+
             var mt = GetEntityMetadata(recordType);
             return mt.Description != null ? GetLabelDisplay(mt.Description) : null;
         }

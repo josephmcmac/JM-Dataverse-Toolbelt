@@ -44,14 +44,7 @@ namespace JosephM.Xrm.Test
         {
             get
             {
-                EncryptedXrmConfiguration settingsObject = null;
-                var serializer = new DataContractSerializer(typeof(EncryptedXrmConfiguration));
-                if (!File.Exists(TestXrmConnectionFileName))
-                    throw new NullReferenceException(string.Format("Error The Xrm Test Settings File Was Noy Found At {0}. Create It Using The Save Xrm Connection Option In The Test Prism Application", TestXrmConnectionFileName));
-                using (var fileStream = new FileStream(TestXrmConnectionFileName, FileMode.Open))
-                {
-                    settingsObject = (EncryptedXrmConfiguration)serializer.ReadObject(fileStream);
-                }
+                var settingsObject = GetSavedTestEncryptedXrmConfiguration();
                 return new XrmConfiguration()
                 {
                     AuthenticationProviderType = settingsObject.AuthenticationProviderType,
@@ -62,6 +55,22 @@ namespace JosephM.Xrm.Test
                     Password = settingsObject.Password == null ? null : settingsObject.Password.GetRawPassword()
                 };
             }
+        }
+
+        protected static EncryptedXrmConfiguration GetSavedTestEncryptedXrmConfiguration()
+        {
+            EncryptedXrmConfiguration settingsObject = null;
+            var serializer = new DataContractSerializer(typeof (EncryptedXrmConfiguration));
+            if (!File.Exists(TestXrmConnectionFileName))
+                throw new NullReferenceException(
+                    string.Format(
+                        "Error The Xrm Test Settings File Was Not Found At {0}. Create It Using The Save Xrm Connection Option In The Test Prism Application",
+                        TestXrmConnectionFileName));
+            using (var fileStream = new FileStream(TestXrmConnectionFileName, FileMode.Open))
+            {
+                settingsObject = (EncryptedXrmConfiguration) serializer.ReadObject(fileStream);
+            }
+            return settingsObject;
         }
 
         public string ExecutionPath

@@ -1,7 +1,9 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
 using JosephM.Record.Application.Controller;
+using Microsoft.Practices.Unity;
 
 #endregion
 
@@ -15,8 +17,10 @@ namespace JosephM.Record.Application.Fakes
         public FakeApplicationController()
             : base("Test Script Application")
         {
-            
+             Container = new UnityContainer();
         }
+
+        protected override IUnityContainer Container { get; set; }
 
         public override void Remove(string regionName, object item)
         {

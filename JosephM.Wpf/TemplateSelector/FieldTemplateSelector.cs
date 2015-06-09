@@ -51,6 +51,9 @@ namespace JosephM.Wpf.TemplateSelector
                 return RecordTypeFieldTemplate;
             if (item is RecordFieldFieldViewModel)
                 return RecordFieldFieldTemplate;
+            if (item is ObjectFieldViewModel)
+                return LookupFieldTemplate;
+
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }

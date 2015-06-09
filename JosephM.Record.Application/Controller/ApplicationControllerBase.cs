@@ -8,6 +8,7 @@ using System.Windows.Threading;
 using JosephM.Core.Extentions;
 using JosephM.Core.Utility;
 using JosephM.Record.Application.Navigation;
+using Microsoft.Practices.Unity;
 
 #endregion
 
@@ -107,6 +108,13 @@ namespace JosephM.Record.Application.Controller
             {
                 serializer.WriteObject(fileStream, theObject);
             }
+        }
+
+        protected abstract IUnityContainer Container { get; set; }
+
+        public object ResolveType(Type type)
+        {
+            return Container.Resolve(type);
         }
     }
 }

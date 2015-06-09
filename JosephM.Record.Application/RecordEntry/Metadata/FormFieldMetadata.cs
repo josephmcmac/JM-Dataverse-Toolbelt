@@ -184,6 +184,14 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     };
                     break;
                 }
+                case RecordFieldType.Object:
+                {
+                    var targetType = recordForm.FormService == null
+                        ? null
+                        : recordForm.FormService.GetLookupTargetType(field, recordType, recordForm);
+                    fieldVm = new ObjectFieldViewModel(field, label, recordForm);
+                    break;
+                }
             }
             if (fieldVm == null)
                 fieldVm = new UnmatchedFieldViewModel(field, label, recordForm)

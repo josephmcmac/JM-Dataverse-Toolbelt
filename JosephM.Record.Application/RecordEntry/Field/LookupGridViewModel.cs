@@ -51,7 +51,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
             {
                 if (_recordFields == null)
                 {
-                    if (RecordType.IsNullOrWhiteSpace())
+                    if (RecordType.IsNullOrWhiteSpace() || RecordService == null)
                         _recordFields = new GridFieldMetadata[] {};
                     else
                     {

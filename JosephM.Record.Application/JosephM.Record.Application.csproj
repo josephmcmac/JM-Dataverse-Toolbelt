@@ -70,6 +70,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -85,6 +89,9 @@
   <ItemGroup>
     <Compile Include="ApplicationOptions\ApplicationViewModel.cs" />
     <Compile Include="Dialog\IDialogController.cs" />
+    <Compile Include="Fakes\FakeObjectEntryViewModel.cs" />
+    <Compile Include="Fakes\FakeObjectFormController.cs" />
+    <Compile Include="Fakes\FakeObjectEntryClass.cs" />
     <Compile Include="Fakes\FakeApplication.cs" />
     <Compile Include="Fakes\FakeHtmlFileModel.cs" />
     <Compile Include="Fakes\FakeDialogController.cs" />
@@ -101,6 +108,9 @@
     <Compile Include="Fakes\FakeObjectsGridViewModelcs.cs" />
     <Compile Include="Fakes\FakeProgressControlViewModel.cs" />
     <Compile Include="HTML\HtmlFileModel.cs" />
+    <Compile Include="RecordEntry\Field\IReferenceFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\ObjectFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\ReferenceFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />
@@ -198,6 +208,10 @@
     <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
       <Name>JosephM.ObjectMapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>

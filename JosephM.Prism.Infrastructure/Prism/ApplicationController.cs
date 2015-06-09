@@ -8,6 +8,7 @@ using Microsoft.Practices.Prism.Regions;
 using JosephM.Record.Application.Constants;
 using JosephM.Record.Application.Controller;
 using JosephM.Record.Application.Navigation;
+using Microsoft.Practices.Unity;
 using MessageBox = System.Windows.MessageBox;
 
 #endregion
@@ -19,11 +20,14 @@ namespace JosephM.Prism.Infrastructure.Prism
     /// </summary>
     internal class ApplicationController : ApplicationControllerBase
     {
-        public ApplicationController(IRegionManager regionManager, string applicationName)
+        public ApplicationController(IRegionManager regionManager, string applicationName, IUnityContainer container)
             : base(applicationName)
         {
+            Container = container;
             RegionManager = regionManager;
         }
+
+        protected override IUnityContainer Container { get; set; }
 
         private IRegionManager RegionManager { get; set; }
 

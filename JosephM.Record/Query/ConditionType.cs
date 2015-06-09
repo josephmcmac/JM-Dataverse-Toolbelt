@@ -7,6 +7,7 @@
         LessEqual,
         GreaterEqual,
         NotNull,
-        GreaterThan
+        GreaterThan,
+        BeginsWith
     }
 }

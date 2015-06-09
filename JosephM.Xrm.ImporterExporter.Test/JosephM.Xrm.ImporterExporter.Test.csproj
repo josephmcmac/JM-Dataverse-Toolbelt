@@ -93,6 +93,10 @@
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.Prism.XrmModule.Test.csproj">
+      <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
+      <Name>JosephM.Prism.XrmModule.Test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
       <Name>JosephM.Record.Application</Name>

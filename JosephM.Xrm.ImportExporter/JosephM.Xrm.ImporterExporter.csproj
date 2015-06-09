@@ -88,6 +88,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism">
       <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
@@ -110,6 +114,7 @@
     <Compile Include="Service\ImportExportRecordType.cs" />
     <Compile Include="Service\DateFormat.cs" />
     <Compile Include="Service\ImportExportTask.cs" />
+    <Compile Include="Service\SolutionExport.cs" />
     <Compile Include="Service\XrmImporterExporterError.cs" />
     <Compile Include="Service\XrmImporterExporterResponse.cs" />
     <Compile Include="Service\XrmImporterExporterRequest.cs" />
@@ -131,6 +136,10 @@
     <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Prism.Infrastructure.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Prism.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+      <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
+      <Name>JosephM.Prism.XrmModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using JosephM.Core.Extentions;
@@ -66,6 +67,32 @@ namespace JosephM.Xrm.ImportExporter.Service
                     Export(request, controller, response);
                     break;
                 }
+                case ImportExportTask.ExportSolution:
+                {
+                    ExportSolutions(request, controller, response);
+                    break;
+                }
+            }
+        }
+
+        private void ExportSolutions(XrmImporterExporterRequest request, LogController controller, XrmImporterExporterResponse response)
+        {
+            var countToDo = request.SolutionExports.Count();
+            var countRecordsImported = 0;
+            foreach (var export in request.SolutionExports)
+            {
+                controller.UpdateProgress(++countRecordsImported, countToDo + 1, "Exporting Solution " + export.Solution.Name);
+                var service = new XrmRecordService(export.Connection, controller).XrmService;
+                var solution = service.Retrieve("solution", new Guid(export.Solution.Id));
+                var uniqueName = (string)solution.GetStringField("uniquename");
+                var req = new ExportSolutionRequest();
+                req.Managed = export.Managed;
+                req.SolutionName = uniqueName;
+                var version = solution.GetStringField("version");
+                var versionText = version == null ? null : version.Replace(".", "_");
+                var exportResponse = (ExportSolutionResponse)service.Execute(req);
+                var fileName = string.Format("{0}_{1}{2}.zip", uniqueName, versionText, export.Managed ? "_managed": null);
+                FileUtility.WriteToFile(request.FolderPath.FolderPath, fileName, exportResponse.ExportSolutionFile);
             }
         }
 

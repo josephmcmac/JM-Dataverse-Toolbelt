@@ -145,6 +145,13 @@ namespace JosephM.Wpf.Grid
                                         Binding = cellBinding
                                     };
                                 }
+                                else if (column.FieldType == RecordFieldType.Object)
+                                {
+                                    dataGridField = new GridLookupColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
                                 else
                                     dataGridField = new GridStringColumn()
                                     {

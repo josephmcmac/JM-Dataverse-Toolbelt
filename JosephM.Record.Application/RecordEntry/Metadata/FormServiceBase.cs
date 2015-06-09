@@ -7,6 +7,7 @@ using JosephM.Record.Application.RecordEntry.Form;
 using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Validation;
 using JosephM.Record.IService;
+using JosephM.Record.Query;
 
 #endregion
 
@@ -91,6 +92,11 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         internal virtual string GetLookupTargetType(string field, string recordType, RecordEntryViewModelBase recordForm)
         {
             return recordForm.RecordService.GetLookupTargetType(field, recordType);
+        }
+
+        internal virtual IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType)
+        {
+            return new Condition[0];
         }
     }
 }

@@ -21,6 +21,8 @@ namespace JosephM.Record.Application.RecordEntry.Form
 {
     public class ObjectEntryViewModel : RecordEntryFormViewModel
     {
+        //todo revierw and clean this just getting it to work for start
+
         private ObjectRecord _objectRecord;
         private readonly Action _onCancel;
         private readonly Action _onSave;

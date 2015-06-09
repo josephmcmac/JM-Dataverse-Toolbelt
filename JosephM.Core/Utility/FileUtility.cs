@@ -29,6 +29,12 @@ namespace JosephM.Core.Utility
             File.WriteAllText(folder + @"\" + name, text);
         }
 
+        public static void WriteToFile(string folder, string name, byte[] bytes)
+        {
+            CheckCreateFolder(folder);
+            File.WriteAllBytes(folder + @"\" + name, bytes);
+        }
+
         public static void AppendToFile(string folder, string name, string text)
         {
             CheckCreateFolder(folder);

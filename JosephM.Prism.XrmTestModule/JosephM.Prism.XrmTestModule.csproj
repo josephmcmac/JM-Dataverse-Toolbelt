@@ -73,6 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DebugModule\DebugDialog.cs" />
+    <Compile Include="DebugModule\DebugDialogModule.cs" />
+    <Compile Include="DebugModule\DebugDialogRequest.cs" />
+    <Compile Include="DebugModule\DebugDialogResponse.cs" />
+    <Compile Include="DebugModule\DebugDialogResponseItem.cs" />
+    <Compile Include="DebugModule\DebugDialogService.cs" />
     <Compile Include="TestXrmSettingsDialog\XrmSettingsDialog.cs" />
     <Compile Include="TestXrmSettingsDialog\XrmSettingsModule.cs" />
     <Compile Include="ThemedViewViewModel.cs" />

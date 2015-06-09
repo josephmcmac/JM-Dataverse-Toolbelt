@@ -74,5 +74,7 @@ namespace JosephM.Record.Application.Controller
         string GetSaveFileName(string initialFileName, string extention);
 
         void SeralializeObjectToFile(object theObject, string fileName);
+
+        object ResolveType(Type type);
     }
 }
