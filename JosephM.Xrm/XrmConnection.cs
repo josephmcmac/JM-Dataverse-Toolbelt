@@ -63,7 +63,6 @@ namespace JosephM.Xrm
                     organizationProxy = GetProxy<IOrganizationService, OrganizationServiceProxy>(orgServiceManagement,
                         credentials);
                 }
-
                 return organizationProxy;
             }
             catch (Exception ex)

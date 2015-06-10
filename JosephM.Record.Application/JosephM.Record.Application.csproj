@@ -108,6 +108,7 @@
     <Compile Include="Fakes\FakeObjectsGridViewModelcs.cs" />
     <Compile Include="Fakes\FakeProgressControlViewModel.cs" />
     <Compile Include="HTML\HtmlFileModel.cs" />
+    <Compile Include="RecordEntry\Field\FileRefFieldViewModell.cs" />
     <Compile Include="RecordEntry\Field\IReferenceFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\ObjectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\ReferenceFieldViewModel.cs" />

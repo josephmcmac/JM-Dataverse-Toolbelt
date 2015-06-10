@@ -174,7 +174,7 @@ namespace JosephM.Xrm
         /// <summary>
         ///     0 if the entity is null, does not contain the field or the field is null
         /// </summary>
-        public static decimal GetDecimalValue(Entity entity, string fieldName)
+        public static decimal GetDecimalValue(this Entity entity, string fieldName)
         {
             return GetDecimalValue(GetField(entity, fieldName));
         }
@@ -188,6 +188,25 @@ namespace JosephM.Xrm
                 return (Decimal) fieldValue;
             else
                 return new Decimal(0);
+        }
+
+        /// <summary>
+        ///     0 if the entity is null, does not contain the field or the field is null
+        /// </summary>
+        public static double GetDoubleValue(this Entity entity, string fieldName)
+        {
+            return GetDoubleValue(GetField(entity, fieldName));
+        }
+
+        /// <summary>
+        ///     0 if fieldValue is null
+        /// </summary>
+        public static double GetDoubleValue(object fieldValue)
+        {
+            if (fieldValue != null)
+                return (double)fieldValue;
+            else
+                return (double)0;
         }
 
         /// <summary>

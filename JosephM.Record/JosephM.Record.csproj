@@ -85,6 +85,7 @@
     <Compile Include="Extentions\RecordExtentions.cs" />
     <Compile Include="Metadata\AnyFieldMetadata.cs" />
     <Compile Include="Metadata\BigIntFieldMetadata.cs" />
+    <Compile Include="Metadata\FileRefFieldMetadata.cs" />
     <Compile Include="Metadata\ObjectFieldMetadata.cs" />
     <Compile Include="Metadata\StateFieldMetadata.cs" />
     <Compile Include="Metadata\UniqueidentifierFieldMetadata.cs" />

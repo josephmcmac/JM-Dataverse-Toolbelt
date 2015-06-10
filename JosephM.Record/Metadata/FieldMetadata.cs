@@ -31,6 +31,7 @@ namespace JosephM.Record.Metadata
             Writeable = true;
         }
 
+        public bool NotNullable = true;
 
         public string Description { get; set; }
         public string RecordType { get; private set; }
@@ -47,7 +48,8 @@ namespace JosephM.Record.Metadata
         {
             var recordType = propertyInfo.ReflectedType != null ? propertyInfo.ReflectedType.Name : null;
             var type = propertyInfo.PropertyType;
-            if (type.Name == "Nullable`1")
+            var isNullableType = type.Name == "Nullable`1";
+            if (isNullableType)
                 type = type.GetGenericArguments()[0];
             var internalName = propertyInfo.Name;
             var label = propertyInfo.GetDisplayName();
@@ -73,13 +75,17 @@ namespace JosephM.Record.Metadata
             else if (type == typeof (IEnumerable<string>))
                 fm = new StringEnumerableFieldMetadata(recordType, internalName, label);
             else if (type == typeof (int))
-                fm = new IntegerFieldMetadata(recordType, internalName, label);
+            {
+                fm = new IntegerFieldMetadata(recordType, internalName, label) {NotNullable = !isNullableType};
+            }
             else if (type == typeof (Lookup))
                 fm = new LookupFieldMetadata(recordType, internalName, label, null);
             else if (type == typeof (RecordType))
                 fm = new RecordTypeFieldMetadata(internalName, label);
             else if (type == typeof (RecordField))
                 fm = new RecordFieldFieldMetadata(internalName, label);
+            else if (type == typeof (FileReference))
+                fm = new FileRefFieldMetadata(internalName, label);
             else if (type.IsIEnumerableOfT())
                 fm = new EnumerableFieldMetadata(internalName, label, type.GetGenericArguments()[0].Name);
             else

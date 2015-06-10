@@ -32,6 +32,7 @@
         EntityName,
         BigInt,
         ManagedProperty,
-        Object
+        Object,
+        FileRef
     }
 }

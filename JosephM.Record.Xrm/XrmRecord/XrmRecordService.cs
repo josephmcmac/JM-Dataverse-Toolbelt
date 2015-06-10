@@ -173,6 +173,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService.ClearCache();
         }
 
+        public bool IsNotNullable(string fieldName, string recordType)
+        {
+            return false;
+        }
+
         public bool IsMultilineText(string fieldName, string recordType)
         {
             return _xrmService.IsMultilineText(fieldName, recordType);
@@ -1397,7 +1402,6 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             return ToIRecords(_xrmService.GetLinkedRecordsThroughBridge(linkedRecordType, recordTypeThrough, recordTypeFrom, linkedThroughLookupFrom, linkedThroughLookupTo, new Guid(recordFromId)));
         }
-
 
     }
 }

@@ -122,7 +122,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             var req = new XrmImporterExporterRequest();
             req.FolderPath = new Folder(TestingFolder);
-            req.ImportExportTask = ImportExportTask.ExportSolution;
+            req.ImportExportTask = ImportExportTask.ExportSolutions;
 
             var mainViewModel = new ObjectEntryViewModel(() => { }, () => { }, req, FormController.CreateForObject(req, CreateFakeApplicationController(), XrmRecordService));
             var solutionGrid = mainViewModel.SubGrids.First(r => r.ReferenceName == "SolutionExports");

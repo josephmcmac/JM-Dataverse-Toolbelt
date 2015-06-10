@@ -82,6 +82,7 @@
     <Compile Include="AppConfig\CustomConfigurationSectiion.cs" />
     <Compile Include="Attributes\AllowSaveAndLoad.cs" />
     <Compile Include="Attributes\ConnectionFor.cs" />
+    <Compile Include="Attributes\FileMask.cs" />
     <Compile Include="Attributes\LookupCondition.cs" />
     <Compile Include="Attributes\ReferencedType.cs" />
     <Compile Include="Attributes\SettingsLookup.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Extentions\ByteExtentions.cs" />
     <Compile Include="Extentions\DateTimeExtentions.cs" />
     <Compile Include="Extentions\StreamExtentions.cs" />
+    <Compile Include="FieldType\FileReference.cs" />
     <Compile Include="FieldType\Lookup.cs" />
     <Compile Include="FieldType\RecordField.cs" />
     <Compile Include="FieldType\PicklistOption.cs" />

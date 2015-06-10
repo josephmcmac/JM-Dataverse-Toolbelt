@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
@@ -67,14 +68,92 @@ namespace JosephM.Xrm.ImportExporter.Service
                     Export(request, controller, response);
                     break;
                 }
-                case ImportExportTask.ExportSolution:
+                case ImportExportTask.ExportSolutions:
                 {
                     ExportSolutions(request, controller, response);
+                    break;
+                }
+                case ImportExportTask.ImportSolutions:
+                {
+                    ImportSolutions(request, controller, response);
                     break;
                 }
             }
         }
 
+        private object _lockObject = new object();
+
+        private void ImportSolutions(XrmImporterExporterRequest request, LogController controller, XrmImporterExporterResponse response)
+        {
+            var countToDo = request.SolutionExports.Count();
+            var countRecordsImported = 0;
+            foreach (var import in request.SolutionImports.OrderBy(s => s.ImportOrder))
+            {
+                controller.UpdateProgress(++countRecordsImported, countToDo + 1,
+                    "Importing Solution " + import.SolutionFile);
+                var importId = Guid.NewGuid();
+                var req = new ImportSolutionRequest();
+                req.ImportJobId = importId;
+                req.CustomizationFile = File.ReadAllBytes(import.SolutionFile.FileName);
+                req.PublishWorkflows = import.PublishWorkflows;
+                req.OverwriteUnmanagedCustomizations = import.OverwriteCustomisations;
+
+                var finished = new Processor();
+                var extraService = new XrmService(XrmService.XrmConfiguration);
+                new Thread(() => DoProgress(importId, controller.GetLevel2Controller(), finished, extraService)).Start();
+                try
+                {
+                    XrmService.Execute(req);
+                }
+                finally
+                {
+                    lock (_lockObject)
+                        finished.Completed = true;
+                }
+            }
+            controller.TurnOffLevel2();
+        }
+
+        public class Processor
+        {
+            public bool Completed { get; set; }
+        }
+
+        public void DoProgress(Guid importId, LogController controller, Processor finished, XrmService xrmService)
+        {
+            lock (_lockObject)
+            {
+                if (!finished.Completed)
+                    controller.UpdateProgress(0, 100, "Import Progress");
+            }
+            while (true)
+            {
+                Thread.Sleep(5000);
+                // connect to crm again, don't reuse the connection that's used to import
+                lock (_lockObject)
+                {
+                    if (finished.Completed)
+                        return;
+                }
+                try
+                {
+                    var job = xrmService.Retrieve("importjob", importId);
+                    var progress = job.GetDoubleValue("progress");
+                    lock (_lockObject)
+                    {
+                        if (finished.Completed)
+                            return;
+                        controller.UpdateProgress(Convert.ToInt32(progress/1), 100, "Import Progress");
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    controller.LogLiteral("Unexpected Error " + ex.Message);
+                }
+
+            }
+        }
         private void ExportSolutions(XrmImporterExporterRequest request, LogController controller, XrmImporterExporterResponse response)
         {
             var countToDo = request.SolutionExports.Count();

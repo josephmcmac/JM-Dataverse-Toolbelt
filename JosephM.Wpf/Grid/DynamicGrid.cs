@@ -152,6 +152,20 @@ namespace JosephM.Wpf.Grid
                                         Binding = cellBinding
                                     };
                                 }
+                                else if (column.FieldType == RecordFieldType.FileRef)
+                                {
+                                    dataGridField = new GridFileRefColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else if (column.FieldType == RecordFieldType.Integer)
+                                {
+                                    dataGridField = new GridIntColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
                                 else
                                     dataGridField = new GridStringColumn()
                                     {

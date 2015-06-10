@@ -154,6 +154,15 @@
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\BooleanToFalseConverter.cs" />
+    <Compile Include="Converters\FileRefToStringConverter.cs" />
+    <Compile Include="Grid\GridIntFieldView.xaml.cs">
+      <DependentUpon>GridIntFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridIntColumn.cs" />
+    <Compile Include="Grid\GridFileRefColumn.cs" />
+    <Compile Include="Grid\GridFileRefFieldView.xaml.cs">
+      <DependentUpon>GridFileRefFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\GridEnumerableFieldView.xaml.cs">
       <DependentUpon>GridEnumerableFieldView.xaml</DependentUpon>
     </Compile>
@@ -187,6 +196,9 @@
     </Compile>
     <Compile Include="Html\HtmlFileView.xaml.cs">
       <DependentUpon>HtmlFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\FileRefView.xaml.cs">
+      <DependentUpon>FileRefView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\RecordFieldView.xaml.cs">
       <DependentUpon>RecordFieldView.xaml</DependentUpon>
@@ -308,6 +320,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\GridIntFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridFileRefFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\GridEnumerableFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -341,6 +361,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Html\HtmlFileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\FileRefView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

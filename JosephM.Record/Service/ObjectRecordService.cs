@@ -270,8 +270,17 @@ namespace JosephM.Record.Service
                             ((PicklistOption) parseFieldRequest.Value).Key);
                 return new ParseFieldResponse(parsedValue);
             }
-            else
-                return base.ParseFieldRequest(parseFieldRequest);
+            if (fieldType == RecordFieldType.Integer && parseFieldRequest.Value is string)
+            {
+                if (((string) parseFieldRequest.Value).IsNullOrWhiteSpace())
+                    return
+                        new ParseFieldResponse(IsNotNullable(parseFieldRequest.FieldName, parseFieldRequest.RecordType)
+                            ? 0
+                            : (int?) null);
+                else
+                    return new ParseFieldResponse(int.Parse((string) parseFieldRequest.Value));
+            }
+            return base.ParseFieldRequest(parseFieldRequest);
         }
 
         public override string GetOptionLabel(string optionKey, string field, string recordType)
@@ -316,6 +325,15 @@ namespace JosephM.Record.Service
                 }
             }
             return new [] { new ViewMetadata(viewFields) { ViewType = ViewType.LookupView} };
+        }
+
+        public override bool IsNotNullable(string fieldName, string recordType)
+        {
+            var propertyInfo = GetPropertyInfo(fieldName, recordType);
+            var type = propertyInfo.PropertyType;
+            if (type == typeof (int))
+                return true;
+            return false;
         }
     }
 }

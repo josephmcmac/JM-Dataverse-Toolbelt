@@ -29,7 +29,7 @@ namespace JosephM.Xrm.ImportExporter.Prism
             {
                 if (
                     (Request.ImportExportTask == ImportExportTask.ExportXml
-                     || Request.ImportExportTask == ImportExportTask.ExportSolution)
+                     || Request.ImportExportTask == ImportExportTask.ExportSolutions)
                     && Request.FolderPath != null)
                     AddCompletionOption("Open Folder", () => OpenFolder(Request.FolderPath.FolderPath));
             }

@@ -31,6 +31,8 @@ namespace JosephM.Record.Application.RecordEntry.Field
             IsRecordServiceField = true;
         }
 
+        public bool IsNotNullable { get; set; }
+
         private object DeltaValue { get; set; }
 
         private IRecord Record

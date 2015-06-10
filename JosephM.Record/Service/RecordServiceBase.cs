@@ -827,6 +827,11 @@ namespace JosephM.Record.Service
         {
         }
 
+        public virtual bool IsNotNullable(string fieldName, string recordType)
+        {
+            return false;
+        }
+
         public virtual IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
         {
             throw new NotImplementedException();

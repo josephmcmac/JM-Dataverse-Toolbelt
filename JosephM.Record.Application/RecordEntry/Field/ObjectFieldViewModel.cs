@@ -62,7 +62,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
         {
             var records = LookupService.GetLinkedRecords(null, null, GetSettingLookupAttribute().PropertyName, null);
             if (!EnteredText.IsNullOrWhiteSpace())
-                records = records.Where(r => r.GetStringField("ToString").StartsWith(EnteredText));
+                records = records.Where(r => r.GetStringField("ToString") != null && r.GetStringField("ToString").ToLower().StartsWith(EnteredText.ToLower()));
             return records;
         }
 

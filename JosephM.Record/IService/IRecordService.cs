@@ -534,5 +534,7 @@ namespace JosephM.Record.IService
         IEnumerable<KeyValuePair<string,string>> GetSharedOptionSetKeyValues(string optionSetName);
 
         void ClearCache();
+
+        bool IsNotNullable(string fieldName, string recordType);
     }
 }

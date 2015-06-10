@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
+using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.ObjectMapping;
 using JosephM.Record.Application.Dialog;
@@ -361,7 +362,13 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
 
         internal override string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
         {
-            return GetRecordTypeFor(field, viewModel);
+            var propertyInfo = GetPropertyInfo(field, viewModel.GetRecord().Type);
+            if (propertyInfo.PropertyType == typeof (FileReference))
+            {
+                var attr = propertyInfo.GetCustomAttribute<FileMask>();
+                return attr == null ? null : attr.Mask;
+            }
+            else return GetRecordTypeFor(field, viewModel);
         }
 
         private string GetRecordTypeFor(string field, RecordEntryViewModelBase viewModel)

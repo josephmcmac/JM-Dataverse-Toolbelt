@@ -28,7 +28,8 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             RecordFieldType fieldType;
             string label;
             var isEditable = true;
-            var isRecordServiceField = this is PersistentFormField;
+            //todo this aint right
+            var isRecordServiceField = this is PersistentFormField || this is GridFieldMetadata;
             if (this is NonPersistentFormField)
             {
                 fieldType = ((NonPersistentFormField) this).RecordFieldType;
@@ -64,6 +65,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                             recordType);
                         ((IntegerFieldViewModel) fieldVm).MaxValue = recordService.GetMaxIntValue(field,
                             recordType);
+                        fieldVm.IsNotNullable = recordService.IsNotNullable(field, recordType);
                     }
                     break;
                 }
@@ -190,6 +192,14 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                         ? null
                         : recordForm.FormService.GetLookupTargetType(field, recordType, recordForm);
                     fieldVm = new ObjectFieldViewModel(field, label, recordForm);
+                    break;
+                }
+                case RecordFieldType.FileRef:
+                {
+                    var mask = recordForm.FormService == null
+                        ? null
+                        : recordForm.FormService.GetDependantValue(field, recordType, recordForm);
+                    fieldVm = new FileRefFieldViewModel(field, label, recordForm, mask);
                     break;
                 }
             }

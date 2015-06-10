@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Prism\XrmImporterExporterDialog.cs" />
     <Compile Include="Prism\XrmImporterExporterModule.cs" />
+    <Compile Include="Service\SolutionImport.cs" />
     <Compile Include="Service\ExportType.cs" />
     <Compile Include="Service\ImportExportRecordType.cs" />
     <Compile Include="Service\DateFormat.cs" />

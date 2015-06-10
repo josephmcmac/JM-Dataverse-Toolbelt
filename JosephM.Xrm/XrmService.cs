@@ -24,7 +24,7 @@ namespace JosephM.Xrm
 {
     public class XrmService : IOrganizationService
     {
-        private int _timeoutSeconds = 120;
+        private int _timeoutSeconds = 600;
 
         public int TimeoutSeconds
         {
@@ -32,9 +32,14 @@ namespace JosephM.Xrm
             set
             {
                 _timeoutSeconds = value;
-                if (_service != null)
-                    _service.Timeout = new TimeSpan(0, 0, value);
+                SetServiceTimeout();
             }
+        }
+
+        private void SetServiceTimeout()
+        {
+            if (_service != null)
+                _service.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
         }
 
         public static DateTime MinCrmDateTime = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc);
@@ -111,7 +116,7 @@ namespace JosephM.Xrm
             set { Controller = value; }
         }
 
-        internal IXrmConfiguration XrmConfiguration { get; set; }
+        public IXrmConfiguration XrmConfiguration { get; set; }
 
         /// <summary>
         ///     DON'T USE CALL THE EXECUTE METHOD
@@ -123,7 +128,10 @@ namespace JosephM.Xrm
                 lock (_lockObject)
                 {
                     if (_service == null)
+                    {
                         _service = new XrmConnection(XrmConfiguration).GetOrgServiceProxy();
+                        SetServiceTimeout();
+                    }
                 }
                 return _service;
             }
