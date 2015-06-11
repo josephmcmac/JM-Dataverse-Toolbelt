@@ -4,7 +4,7 @@ using JosephM.Core.FieldType;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
-    public class SolutionImport
+    public class SolutionImport : ISolutionImport
     {
         public SolutionImport()
         {

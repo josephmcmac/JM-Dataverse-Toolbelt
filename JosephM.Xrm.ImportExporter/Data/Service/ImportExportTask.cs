@@ -4,8 +4,6 @@
     {
         ImportCsvs,
         ImportXml,
-        ExportXml,
-        ExportSolutions,
-        ImportSolutions
+        ExportXml
     }
 }

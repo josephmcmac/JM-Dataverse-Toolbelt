@@ -168,7 +168,8 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         private IEnumerable<string> ValidationPropertyNames
         {
-            get { return new[] {"ValueObject", "Value", "StringDisplay"}; }
+            //todo this aint right
+            get { return new[] { "ValueObject", "Value", "StringDisplay", "EnteredText" }; }
         }
 
         public IEnumerable GetErrors(string propertyName)

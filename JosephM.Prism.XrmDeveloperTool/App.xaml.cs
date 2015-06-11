@@ -25,6 +25,7 @@ namespace JosephM.Xrm.DeveloperTool
             prism.AddModule<XrmModuleModule>();
             prism.AddModule<SavedXrmConnectionsModule>();
             prism.AddModule<XrmImporterExporterModule>();
+            prism.AddModule<XrmSolutionImporterExporterModule>();
             prism.AddModule<XrmCodeGeneratorModule>();
             prism.AddModule<XrmOrganisationSettingsModule>();
             prism.AddModule<XrmTextSearchModule>();

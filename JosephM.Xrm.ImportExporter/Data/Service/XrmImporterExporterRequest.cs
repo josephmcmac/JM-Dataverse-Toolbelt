@@ -17,7 +17,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         public ImportExportTask? ImportExportTask { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValues("ImportExportTask", new object[] { Service.ImportExportTask.ImportCsvs, Service.ImportExportTask.ExportXml, Service.ImportExportTask.ImportXml, Service.ImportExportTask.ExportSolutions })]
+        [PropertyInContextByPropertyValues("ImportExportTask", new object[] { Service.ImportExportTask.ImportCsvs, Service.ImportExportTask.ExportXml, Service.ImportExportTask.ImportXml })]
         public Folder FolderPath { get; set; }
 
         [RequiredProperty]
@@ -39,13 +39,5 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RequiredProperty]
         [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ExportXml)]
         public IEnumerable<ImportExportRecordType> RecordTypes { get; set; }
-
-        [RequiredProperty]
-        [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ExportSolutions)]
-        public IEnumerable<SolutionExport> SolutionExports { get; set; }
-
-        [RequiredProperty]
-        [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ImportSolutions)]
-        public IEnumerable<SolutionImport> SolutionImports { get; set; }
     }
 }
