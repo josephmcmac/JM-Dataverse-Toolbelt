@@ -445,7 +445,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             //lets start a dialog to add it on complete
             var mapper = new ClassSelfMapper();
             var newObject = mapper.Map(newRecord.Instance);
-            var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues);
+            var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName);
             var viewModel = new ObjectEntryViewModel(
                 () => onSave(new ObjectRecord(newObject)),
                 onCancel,

@@ -29,5 +29,10 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", ExportType.SpecificRecords)]
         public IEnumerable<LookupSetting> OnlyExportSpecificRecords { get; set; }
+
+        public override string ToString()
+        {
+            return RecordType == null ? "Null" : RecordType.Value;
+        }
     }
 }

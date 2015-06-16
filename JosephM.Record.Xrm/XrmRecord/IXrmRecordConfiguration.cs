@@ -1,4 +1,5 @@
-﻿using JosephM.Core.FieldType;
+﻿using JosephM.Core.Attributes;
+using JosephM.Core.FieldType;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {

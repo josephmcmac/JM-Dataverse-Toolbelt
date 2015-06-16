@@ -13,6 +13,24 @@ namespace JosephM.Core.Extentions
 {
     public static class TypeExtentions
     {
+        public static bool HasConstructorFor(this Type type, Type constructorInjectionType)
+        {
+            var matchingCOnstructors = GetMatchingConstructors(type, constructorInjectionType);
+            return matchingCOnstructors.Any();
+        }
+
+        private static IEnumerable<ConstructorInfo> GetMatchingConstructors(Type type, Type constructorInjectionType)
+        {
+            var matchingCOnstructors = type.GetConstructors().Where(
+                c => c.GetParameters().Count() == 1 && constructorInjectionType.IsTypeOf(c.GetParameters()[0].ParameterType));
+            return matchingCOnstructors;
+        }
+
+        public static object CreateFromConstructorFor(this Type type, object constructorInjection)
+        {
+            return GetMatchingConstructors(type, constructorInjection.GetType()).First().Invoke(new object[] { constructorInjection });
+        }
+
         public static bool HasStringConstructor(this Type type)
         {
             return

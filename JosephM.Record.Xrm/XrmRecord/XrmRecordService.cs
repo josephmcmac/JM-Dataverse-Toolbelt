@@ -43,6 +43,12 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService = new XrmService(xrmConfiguration, controller);
         }
 
+        //DON'T REMOVE THIS CONSTRUCTOR - REQUIRED BY ServiceConnection Attribute
+        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration)
+            : this(iXrmRecordConfiguration, new LogController())
+        {
+        }
+
         public XrmService XrmService
         {
             get { return _xrmService; }

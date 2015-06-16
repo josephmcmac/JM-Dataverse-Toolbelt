@@ -22,6 +22,31 @@ namespace JosephM.Xrm.ImporterExporter.Test
     [TestClass]
     public class XrmSolutionImporterExporterRequestTest : XrmModuleTest
     {
+        [TestMethod]
+        public void DebugExportConnections()
+        {
+            var fileName = @"C:\Users\josephm\Desktop\Export Temp\exportconfig.xml";
+            var req = new XrmSolutionImporterExporterRequest();
+            req.FolderPath = new Folder(TestingFolder);
+            req.ImportExportTask = SolutionImportExportTask.ExportSolutions;
+
+            var mainViewModel = new ObjectEntryViewModel(() => { }, () => { }, req, FormController.CreateForObject(req, CreateFakeApplicationController(), XrmRecordService));
+            mainViewModel.LoadObject(fileName);
+
+            var solutionGrid = mainViewModel.SubGrids.First(g => g.ReferenceName == "SolutionExports");
+            var solutionRow = solutionGrid.GridRecords.First();
+            var editViewModel = solutionGrid.GetEditRowViewModel(solutionRow);
+
+            var exportGrid = editViewModel.SubGrids.First(g => g.ReferenceName == "DataToExport");
+            exportGrid.AddRow();
+            var firstExportRow = exportGrid.GridRecords.First();
+
+            var recordTypeField = firstExportRow.GetRecordTypeFieldViewModel("RecordType");
+
+            var editRow = exportGrid.GetEditRowViewModel(firstExportRow);
+            editRow.LoadFormSections();
+            var editRowRecordType = editRow.GetRecordTypeFieldViewModel("RecordType");
+        }
 
         [TestMethod]
         public void XrmImporterExporterRequestForSolutionExport()

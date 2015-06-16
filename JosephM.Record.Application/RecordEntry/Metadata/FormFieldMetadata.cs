@@ -155,7 +155,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     fieldVm = new RecordTypeFieldViewModel(field, label, recordForm)
                     {
                         IsRecordServiceField = isRecordServiceField,
-                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType)
+                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference)
                             .Select(p => new RecordType(p.Key, p.Value))
                             .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                             .OrderBy(rt => rt.Value)

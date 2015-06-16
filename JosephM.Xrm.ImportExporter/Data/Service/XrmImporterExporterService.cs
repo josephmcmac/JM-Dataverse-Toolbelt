@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
+using JosephM.Core.FieldType;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
@@ -24,9 +25,8 @@ using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
-    public class XrmImporterExporterService<TRecord, TService> :
+    public class XrmImporterExporterService<TService> :
         ServiceBase<XrmImporterExporterRequest, XrmImporterExporterResponse, XrmImporterExporterResponseItem>
-        where TRecord : IRecord
         where TService : IRecordService
     {
         public XrmImporterExporterService(TService service)
@@ -60,12 +60,12 @@ namespace JosephM.Xrm.ImportExporter.Service
                 }
                 case ImportExportTask.ImportXml:
                 {
-                    Import(request, controller, response);
+                    ImportXml(request.FolderPath.FolderPath, controller, response);
                     break;
                 }
                 case ImportExportTask.ExportXml:
                 {
-                    Export(request, controller, response);
+                    ExportXml(request.RecordTypes, request.FolderPath, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller);
                     break;
                 }
             }
@@ -215,10 +215,9 @@ namespace JosephM.Xrm.ImportExporter.Service
             throw new NullReferenceException(string.Format("No Unique Record Type Matched (Label Or Name) For CSV Name Of {0}", name));
         }
 
-        private void Import(XrmImporterExporterRequest request, LogController controller,
+        public void ImportXml(string folder, LogController controller,
             XrmImporterExporterResponse response)
         {
-            var folder = request.FolderPath.FolderPath;
             var lateBoundSerializer = new DataContractSerializer(typeof(Entity));
 
             var entities = new List<Entity>();
@@ -615,20 +614,18 @@ namespace JosephM.Xrm.ImportExporter.Service
                
         }
 
-        private void Export(XrmImporterExporterRequest request, LogController controller,
-            XrmImporterExporterResponse response)
+        public void ExportXml(IEnumerable<ImportExportRecordType> exports, Folder folder, bool includeNotes, bool incoldeNNBetweenEntities, LogController controller)
         {
-            var folder = request.FolderPath.FolderPath;
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-            if (request.RecordTypes == null || !request.RecordTypes.Any())
-                throw new Exception("Error no Record Types To Export");
-            var countToExport = request.RecordTypes.Count();
+            if (!Directory.Exists(folder.FolderPath))
+                Directory.CreateDirectory(folder.FolderPath);
+            if (exports == null || !exports.Any())
+                throw new Exception("Error No Record Types To Export");
+            var countToExport = exports.Count();
             var countsExported = 0;
             var exported = new Dictionary<string, List<Entity>>();
 
             //this distinct is a bit inconsistent with actually allowing duplicates
-            foreach (var exportType in request.RecordTypes)
+            foreach (var exportType in exports)
             {
                 var type = exportType.RecordType == null ? null : exportType.RecordType.Key;
                 controller.UpdateProgress(countsExported++, countToExport, string.Format("Exporting {0} Records", type));
@@ -678,12 +675,12 @@ namespace JosephM.Xrm.ImportExporter.Service
                 foreach (var entity in entities)
                 {
                     entity.RemoveFields(excludeFields);
-                    WriteToXml(entity, folder, false);
+                    WriteToXml(entity, folder.FolderPath, false);
                 }
                 if (!exported.ContainsKey(type))
                     exported.Add(type, new List<Entity>());
                 exported[type].AddRange(entities);
-                if (request.IncludeNotes)
+                if (includeNotes)
                 {
                     var notes = XrmService
                         .RetrieveAllAndClauses("annotation",
@@ -694,14 +691,14 @@ namespace JosephM.Xrm.ImportExporter.Service
                         var objectId = note.GetLookupGuid("objectid");
                         if (objectId.HasValue && entities.Select(e => e.Id).Contains(objectId.Value))
                         {
-                            WriteToXml(note, folder, false);
+                            WriteToXml(note, folder.FolderPath, false);
                         }
                     }
                 }
             }
             //todo could optimise this - limit query to those exported
             var relationshipsDone = new List<string>();
-            if (request.IncludeNNRelationshipsBetweenEntities)
+            if (incoldeNNBetweenEntities)
             {
                 foreach (var type in exported.Keys)
                 {
@@ -720,7 +717,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                             {
                                 if(exported[type1].Any(e => e.Id == association.GetGuidField(item.Entity1IntersectAttribute))
                                     && exported[type2].Any(e => e.Id == association.GetGuidField(item.Entity2IntersectAttribute)))
-                                    WriteToXml(association, folder, true);
+                                    WriteToXml(association, folder.FolderPath, true);
                             }
                             relationshipsDone.Add(item.SchemaName);
                         }

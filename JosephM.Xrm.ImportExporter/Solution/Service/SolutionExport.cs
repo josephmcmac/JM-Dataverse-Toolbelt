@@ -16,7 +16,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         [GridWidth(400)]
         [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
         [ConnectionFor("Solution")]
-        //[ConnectionFor("DataToExport.RecordType")]
+        [ConnectionFor("DataToExport.RecordType")]
         [ReadOnlyWhenSet]
         public SavedXrmRecordConfiguration Connection { get; set; }
 
@@ -33,9 +33,18 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RequiredProperty]
         public bool Managed { get; set; }
 
-        //[DisplayOrder(200)]
-        //[RequiredProperty]
-        //[GridWidth(400)]
-        //public IEnumerable<ImportExportRecordType> DataToExport  { get; set; }
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull("Connection")]
+        public bool IncludeNotes { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyNotNull("Connection")]
+        public bool IncludeNNRelationshipsBetweenEntities { get; set; }
+
+        [DisplayOrder(200)]
+        [RequiredProperty]
+        [GridWidth(400)]
+        [PropertyInContextByPropertyNotNull("Connection")]
+        public IEnumerable<ImportExportRecordType> DataToExport { get; set; }
     }
 }

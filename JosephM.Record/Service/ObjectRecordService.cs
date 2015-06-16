@@ -27,7 +27,15 @@ namespace JosephM.Record.Service
 
         public ObjectRecordService(object objectToEnter, IRecordService lookupService,
             IDictionary<string, IEnumerable<string>> optionSetLimitedValues)
+            : this(objectToEnter, lookupService, optionSetLimitedValues, null, null)
         {
+        }
+
+        public ObjectRecordService(object objectToEnter, IRecordService lookupService,
+            IDictionary<string, IEnumerable<string>> optionSetLimitedValues, ObjectRecordService parentService, string parentServiceReference)
+        {
+            ParentServiceReference = parentServiceReference;
+            ParentService = parentService;
             ObjectToEnter = objectToEnter;
             _lookupService = lookupService;
             OptionSetLimitedValues = optionSetLimitedValues;
@@ -70,6 +78,10 @@ namespace JosephM.Record.Service
 
         private readonly Dictionary<string, IEnumerable<FieldMetadata>> _fieldMetadata =
             new Dictionary<string, IEnumerable<FieldMetadata>>();
+
+        //DON'T HAVE THIS REFERENCE ITSELF OR WILL HAVE INFINITE LOOP!!
+        private ObjectRecordService ParentService { get; set; }
+        private string ParentServiceReference { get; set; }
 
         private Dictionary<string, IEnumerable<FieldMetadata>> FieldMetadata
         {
@@ -188,6 +200,11 @@ namespace JosephM.Record.Service
             return GetClassType(recordType).GetProperty(fieldName);
         }
 
+        public IEnumerable<PropertyInfo> GetPropertyInfos(string recordType)
+        {
+            return GetClassType(recordType).GetProperties();
+        }
+
         /// <summary>
         /// If Nullable Return The Nullable Type
         /// </summary>
@@ -207,6 +224,14 @@ namespace JosephM.Record.Service
             return GetPicklistKeyValues(fieldName, recordType, null);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="recordType"></param>
+        /// <param name="dependantValue">Various uses...</param>
+        /// <returns></returns>
         public override IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType,
             string dependantValue)
         {
@@ -217,6 +242,8 @@ namespace JosephM.Record.Service
             {
                 case RecordFieldType.RecordType:
                 {
+                    var lookupService = (IRecordService)GetConnectionFor(fieldName, recordType, dependantValue);
+
                     if (OptionSetLimitedValues != null
                         && OptionSetLimitedValues.ContainsKey(fieldName)
                         && OptionSetLimitedValues[fieldName].Any())
@@ -226,9 +253,9 @@ namespace JosephM.Record.Service
                             .ToArray();
                     else
                     {
-                        return LookupService
+                        return lookupService
                             .GetAllRecordTypes()
-                            .Select(r => new RecordType(r, LookupService.GetDisplayName(r)))
+                            .Select(r => new RecordType(r, lookupService.GetDisplayName(r)))
                             .ToArray();
                     }
                 }
@@ -255,6 +282,38 @@ namespace JosephM.Record.Service
             throw new ArgumentOutOfRangeException(
                 string.Format("GetPicklistOptions Not Implemented For Fiel Of Type {0} Field: {1} Type {2}", fieldType,
                     fieldName, recordType));
+        }
+
+        private object GetConnectionFor(string fieldName, string recordType, string reference)
+        {
+            //todo could improve performance by cache
+            var props = GetPropertyInfos(ObjectType.Name);
+            foreach (var prop in props)
+            {
+                var connectionFor = prop.GetCustomAttributes<ConnectionFor>()
+                    .Where(c => c.PropertyPaths.Count() > 1 && c.PropertyPath1 == reference && c.PropertyPath2 == fieldName);
+                if (connectionFor.Any())
+                {
+                    var value = ObjectToEnter.GetPropertyValue(prop.Name);
+                    if (value != null)
+                    {
+                        //todo improve error messages
+                        var connectionFieldType = value.GetType();
+                        var serviceConnectionAttr = connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
+                        if(serviceConnectionAttr == null)
+                            throw new NullReferenceException(string.Format("Type {0} Does Not Have {1} Attribute", connectionFieldType.Name, typeof(ServiceConnection).Name));
+                        if (!serviceConnectionAttr.ServiceType.HasConstructorFor(connectionFieldType))
+                            throw new NullReferenceException(string.Format("Type {0} Does Not Have Constructor For Type {1}", serviceConnectionAttr.ServiceType.Name, value.GetType().Name));
+                        var service = serviceConnectionAttr.ServiceType.CreateFromConstructorFor(value);
+                        return service;
+                    }
+                }
+            }
+            if (ParentService != null)
+            {
+                return ParentService.GetConnectionFor(fieldName, recordType, reference);
+            }
+            return LookupService;
         }
 
         public override ParseFieldResponse ParseFieldRequest(ParseFieldRequest parseFieldRequest)

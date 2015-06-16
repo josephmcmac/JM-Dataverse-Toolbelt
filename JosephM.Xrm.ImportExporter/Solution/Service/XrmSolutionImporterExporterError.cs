@@ -41,6 +41,11 @@ namespace JosephM.Xrm.ImportExporter.Service
             Name = name;
         }
 
+        public XrmSolutionImporterExporterResponseItem(XrmImporterExporterResponseItem mapResponseItem)
+            : this(mapResponseItem.Entity, mapResponseItem.Field, mapResponseItem.Name, mapResponseItem.Message, mapResponseItem.Exception)
+        {
+        }
+
         public XrmSolutionImporterExporterResponseItem(string message, Exception ex)
         {
             Message = message;
