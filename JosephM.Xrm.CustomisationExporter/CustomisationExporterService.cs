@@ -260,15 +260,18 @@ namespace JosephM.Xrm.CustomisationExporter
                                 var includeTime = thisFieldType == RecordFieldType.Date && Service.IsDateIncludeTime(field, thisType);
                                 var minValue = "-1";
                                 var maxValue = "-1";
+                                var precision = "-1";
                                 if (thisFieldType == RecordFieldType.Decimal)
                                 {
                                     minValue = Service.GetMinDecimalValue(field, thisType).ToString(CultureInfo.InvariantCulture);
                                     maxValue = Service.GetMaxDecimalValue(field, thisType).ToString(CultureInfo.InvariantCulture);
+                                    precision = Service.GetDecimalPrecision(field, thisType).ToString(CultureInfo.InvariantCulture);
                                 }
                                 if (thisFieldType == RecordFieldType.Double)
                                 {
                                     minValue = Service.GetMinDoubleValue(field, thisType).ToString(CultureInfo.InvariantCulture);
                                     maxValue = Service.GetMaxDoubleValue(field, thisType).ToString(CultureInfo.InvariantCulture);
+                                    precision = Service.GetDecimalPrecision(field, thisType).ToString(CultureInfo.InvariantCulture);
                                 }
                                 if (thisFieldType == RecordFieldType.Integer)
                                 {
@@ -284,11 +287,9 @@ namespace JosephM.Xrm.CustomisationExporter
                                 var fieldExport = new FieldExport(thisTypeLabel, thisType,
                                     fieldLabel, field, Service.GetFieldType(field, thisType),
                                     Service.IsCustomField(field, thisType), Service.IsMandatory(field, thisType), Service.GetFieldDescription(field, thisType), primaryField == field, Service.IsFieldAuditOn(field, thisType), Service.IsFieldSearchable(field, thisType)
-                                    , displayRelated, referencedType, maxLength, textFormat, includeTime, minValue, maxValue, picklist);
+                                    , displayRelated, referencedType, maxLength, textFormat, includeTime, minValue, maxValue, precision, picklist);
                                 if (Service.IsString(field, thisType))
-
-                                    fieldExport.MaxLength = Service.GetMaxLength(field, thisType);                                {
-                                }
+                                    fieldExport.MaxLength = Service.GetMaxLength(field, thisType);
                                 allFields.Add(fieldExport);
                             }
                             catch (Exception ex)

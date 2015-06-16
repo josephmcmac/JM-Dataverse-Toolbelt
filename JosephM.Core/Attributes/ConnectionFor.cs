@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Core.Attributes
 {
@@ -24,6 +25,22 @@ namespace JosephM.Core.Attributes
             get
             {
                 return LookupProperty.Split('.');
+            }
+        }
+
+        public string PropertyPath1
+        {
+            get
+            {
+                return PropertyPaths.ElementAt(0);
+            }
+        }
+
+        public string PropertyPath2
+        {
+            get
+            {
+                return PropertyPaths.ElementAt(1);
             }
         }
     }

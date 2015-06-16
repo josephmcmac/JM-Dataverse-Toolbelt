@@ -11,8 +11,9 @@ namespace JosephM.Xrm.CustomisationExporter
 {
     public class FieldExport
     {
-        public FieldExport(string recordTypeLabel, string recordTypeSchemaName, string fieldLabel, string fieldSchemaName, RecordFieldType fieldType, bool isCustomField, bool isMandatory, string description, bool isPrimaryField, bool audit, bool searchable, bool displayInRelated, string referencedType, int maxLength, string textFormat, bool includeTime, string minValue, string maxValue, string picklistOptions)
+        public FieldExport(string recordTypeLabel, string recordTypeSchemaName, string fieldLabel, string fieldSchemaName, RecordFieldType fieldType, bool isCustomField, bool isMandatory, string description, bool isPrimaryField, bool audit, bool searchable, bool displayInRelated, string referencedType, int maxLength, string textFormat, bool includeTime, string minValue, string maxValue, string decimalPrecision, string picklistOptions)
         {
+            DecimalPrecision = decimalPrecision;
             RecordTypeSchemaName = recordTypeSchemaName;
             FieldSchemaName = fieldSchemaName;
             FieldLabel = fieldLabel;
@@ -73,6 +74,8 @@ namespace JosephM.Xrm.CustomisationExporter
         public string MinValue { get; set; }
         [DisplayName(Headings.Fields.Maximum)]
         public string MaxValue { get; set; }
+        [DisplayName(Headings.Fields.DecimalPrecision)]
+        private string DecimalPrecision { get; set; }
         [DisplayName(Headings.Fields.PicklistOptions)]
         public string PicklistOptions { get; set; }
         public string RecordTypeLabel { get; set; }

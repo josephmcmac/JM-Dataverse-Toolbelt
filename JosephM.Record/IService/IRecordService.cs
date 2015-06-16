@@ -169,6 +169,11 @@ namespace JosephM.Record.IService
         decimal GetMaxDecimalValue(string fieldName, string recordType);
 
         /// <summary>
+        ///     Return The Maximum Value Of An Decimal Field From The Data Stores Metadata
+        /// </summary>
+        int GetDecimalPrecision(string fieldName, string recordType);
+
+        /// <summary>
         ///     Return If A Date Field Is Defined To Include A Time Compponent
         /// </summary>
         bool IsDateIncludeTime(string fieldName, string recordType);

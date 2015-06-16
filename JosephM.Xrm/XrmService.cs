@@ -487,7 +487,7 @@ namespace JosephM.Xrm
             return fieldType == AttributeTypeCode.Double || fieldType == AttributeTypeCode.Decimal;
         }
 
-        public int GetDecimalPrecision(string field, string entity)
+        public int GetPrecision(string field, string entity)
         {
             int? temp = null;
             var internalType = GetFieldType(field, entity);
@@ -502,6 +502,11 @@ namespace JosephM.Xrm
                 {
                     temp = ((DoubleAttributeMetadata) GetFieldMetadata(field, entity)).Precision;
                     break;
+                }
+                default:
+                {
+                    throw new NotImplementedException(string.Format("Get Precision Not Implemented For Field Of Type {0} ({1}.{2})"
+                        , internalType, entity, field));
                 }
             }
             if (!temp.HasValue)
@@ -796,7 +801,7 @@ namespace JosephM.Xrm
                             newValue = (decimal) value;
                         else
                             newValue = decimal.Parse(value.ToString().Replace(",", ""));
-                        newValue = decimal.Round(newValue, GetDecimalPrecision(fieldName, entityType));
+                        newValue = decimal.Round(newValue, GetPrecision(fieldName, entityType));
                         if (!DecimalInRange(fieldName, entityType, newValue))
                             throw new ArgumentOutOfRangeException("Field " + fieldName +
                                                                   " outside permitted range of " +
@@ -1168,7 +1173,7 @@ namespace JosephM.Xrm
                 return "";
             else if (IsRealNumber(fieldName, entityType))
             {
-                var format = "#." + (new string('#', GetDecimalPrecision(fieldName, entityType)));
+                var format = "#." + (new string('#', GetPrecision(fieldName, entityType)));
                 return (decimal.Parse(fieldValue.ToString())).ToString(format);
             }
             else if (IsLookup(fieldName, entityType))
@@ -2300,7 +2305,7 @@ namespace JosephM.Xrm
 
         public void CreateOrUpdateDecimalAttribute(string schemaName, string displayName, string description,
             bool isRequired, bool audit, bool searchable, string recordType,
-            decimal minimum, decimal maximum)
+            decimal minimum, decimal maximum, int decimalPrecision)
         {
             DecimalAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
@@ -2312,13 +2317,15 @@ namespace JosephM.Xrm
 
             metadata.MinValue = minimum;
             metadata.MaxValue = maximum;
+            if (decimalPrecision >= 0)
+                metadata.Precision = decimalPrecision;
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
         }
 
         public void CreateOrUpdateDoubleAttribute(string schemaName, string displayName, string description,
             bool isRequired, bool audit, bool searchable, string recordType,
-            double minimum, double maximum)
+            double minimum, double maximum, int decimalPrecision)
         {
             DoubleAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
@@ -2330,6 +2337,8 @@ namespace JosephM.Xrm
 
             metadata.MinValue = minimum;
             metadata.MaxValue = maximum;
+            if (decimalPrecision >= 0)
+                metadata.Precision = decimalPrecision;
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
         }

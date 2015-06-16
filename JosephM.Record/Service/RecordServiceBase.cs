@@ -344,6 +344,11 @@ namespace JosephM.Record.Service
             throw new NotImplementedException();
         }
 
+        public int GetDecimalPrecision(string fieldName, string recordType)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsDateIncludeTime(string p1, string p2)
         {
             throw new NotImplementedException();

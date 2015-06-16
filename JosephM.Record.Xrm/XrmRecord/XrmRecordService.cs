@@ -189,6 +189,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             return value ?? decimal.MaxValue;
         }
 
+        public int GetDecimalPrecision(string fieldName, string recordType)
+        {
+            return _xrmService.GetPrecision(fieldName, recordType);
+        }
+
         public decimal GetMinDecimalValue(string fieldName, string recordType)
         {
             var value = _xrmService.GetMinDecimalValue(fieldName, recordType);
@@ -645,7 +650,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                         typedField.Audit,
                         typedField.Searchable,
                         recordType,
-                        typedField.Minimum, typedField.Maximum);
+                        typedField.Minimum, typedField.Maximum, typedField.DecimalPrecision);
                     break;
                 }
                 case (RecordFieldType.Integer):
@@ -768,7 +773,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                             typedField.IsMandatory,
                             typedField.Audit,
                             typedField.Searchable,
-                            recordType, typedField.Minimum, typedField.Maximum);
+                            recordType, typedField.Minimum, typedField.Maximum, typedField.DecimalPrecision);
                     break;
                 }
                 case (RecordFieldType.State):

@@ -31,7 +31,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             File.Copy(@"Test Entity Two.csv", Path.Combine(workFolder, @"Test Entity Two.csv"));
             File.Copy(@"Test Entity Three.csv", Path.Combine(workFolder, @"Test Entity Three.csv"));
 
-            var importerExporterService = new XrmDataImporterExporterService<XrmRecord, XrmRecordService>(XrmRecordService);
+            var importerExporterService = new XrmImporterExporterService<XrmRecord, XrmRecordService>(XrmRecordService);
 
             var request = new XrmImporterExporterRequest
             {
@@ -51,7 +51,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var types = new[] {"new_testentitytwo", "new_testentitythree", "new_testentity"};
             var workFolder = ClearFilesAndData(types);
 
-            var importerExporterService = new XrmDataImporterExporterService<XrmRecord, XrmRecordService>(XrmRecordService);
+            var importerExporterService = new XrmImporterExporterService<XrmRecord, XrmRecordService>(XrmRecordService);
 
             var createRecords = new List<Entity>();
             foreach (var type in types)
@@ -87,7 +87,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             PrepareTests();
             var workFolder = ClearFilesAndData(type);
 
-            var importerExporterService = new XrmDataImporterExporterService<XrmRecord, XrmRecordService>(XrmRecordService);
+            var importerExporterService = new XrmImporterExporterService<XrmRecord, XrmRecordService>(XrmRecordService);
 
             var fields = GetFields(type, importerExporterService);
             var updateFields = GetUpdateFields(type, importerExporterService);
@@ -157,7 +157,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
                     updatedRecord.GetField(updateField)));
         }
 
-        private Entity CreateTestRecord(string type, XrmDataImporterExporterService<XrmRecord, XrmRecordService> importerExporterService)
+        private Entity CreateTestRecord(string type, XrmImporterExporterService<XrmRecord, XrmRecordService> importerExporterService)
         {
             var record = new Entity(type);
             var fields1 = GetFields(type, importerExporterService);
@@ -169,13 +169,13 @@ namespace JosephM.Xrm.ImporterExporter.Test
             return record;
         }
 
-        private IEnumerable<string> GetFields(string type, XrmDataImporterExporterService<XrmRecord, XrmRecordService> importerExporterService)
+        private IEnumerable<string> GetFields(string type, XrmImporterExporterService<XrmRecord, XrmRecordService> importerExporterService)
         {
             var fields = XrmService.GetFields(type).Where(f => importerExporterService.IsIncludeField(f, type));
             return fields;
         }
 
-        private IEnumerable<string> GetUpdateFields(string type, XrmDataImporterExporterService<XrmRecord, XrmRecordService> importerExporterService)
+        private IEnumerable<string> GetUpdateFields(string type, XrmImporterExporterService<XrmRecord, XrmRecordService> importerExporterService)
         {
             var updateFields = XrmService.GetFields(type).Where(f => importerExporterService.IsIncludeField(f, type));
             return updateFields;

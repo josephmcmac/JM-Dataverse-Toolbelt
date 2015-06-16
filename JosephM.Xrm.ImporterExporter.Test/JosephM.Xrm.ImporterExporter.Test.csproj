@@ -68,6 +68,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="XrmSolutionImporterExporterRequestTest.cs" />
     <Compile Include="XrmImporterExporterRequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XrmImporterExporterTest.cs" />
