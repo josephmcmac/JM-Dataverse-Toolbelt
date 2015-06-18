@@ -683,9 +683,8 @@ namespace JosephM.Xrm.ImportExporter.Service
                 if (includeNotes)
                 {
                     var notes = XrmService
-                        .RetrieveAllAndClauses("annotation",
+                        .RetrieveAllOrClauses("annotation",
                             new[] {new ConditionExpression("objecttypecode", ConditionOperator.Equal, type)});
-                    //todo could optimise this - limit query to those exported
                     foreach (var note in notes)
                     {
                         var objectId = note.GetLookupGuid("objectid");
@@ -696,7 +695,6 @@ namespace JosephM.Xrm.ImportExporter.Service
                     }
                 }
             }
-            //todo could optimise this - limit query to those exported
             var relationshipsDone = new List<string>();
             if (incoldeNNBetweenEntities)
             {

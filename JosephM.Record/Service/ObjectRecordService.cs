@@ -284,6 +284,7 @@ namespace JosephM.Record.Service
                     fieldName, recordType));
         }
 
+        private object _lockObject = new object();
         private Dictionary<string, IRecordService> _serviceConnections = new Dictionary<string, IRecordService>();
         private object GetConnectionFor(string fieldName, string recordType, string reference)
         {
@@ -295,21 +296,31 @@ namespace JosephM.Record.Service
                 if (connectionFor.Any())
                 {
                     var value = ObjectToEnter.GetPropertyValue(prop.Name);
-                    if (_serviceConnections.ContainsKey(prop.Name))
-                        return _serviceConnections[prop.Name];
-                    if (value != null)
+                    lock (_lockObject)
                     {
-                        var connectionFieldType = value.GetType();
-                        var serviceConnectionAttr = connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
-                        if(serviceConnectionAttr == null)
-                            throw new NullReferenceException(string.Format("The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
-                                prop.Name, typeof(ConnectionFor).Name, connectionFieldType.Name, typeof(ServiceConnection).Name, typeof(IRecordService).Name));
-                        if (!serviceConnectionAttr.ServiceType.HasConstructorFor(connectionFieldType))
-                            throw new NullReferenceException(string.Format("The Property {0} Is Specified With A {1} Attribute However The Type {2} Referenced By The {3} Types {4} Attribute Does Not Have A Constructor For Type {3}",
-                                prop.Name, typeof(ConnectionFor).Name, serviceConnectionAttr.ServiceType.Name, connectionFieldType.Name, typeof(ServiceConnection).Name));
-                        var service = (IRecordService)serviceConnectionAttr.ServiceType.CreateFromConstructorFor(value);
-                        _serviceConnections.Add(prop.Name, service);
-                        return service;
+                        if (_serviceConnections.ContainsKey(prop.Name))
+                            return _serviceConnections[prop.Name];
+                        if (value != null)
+                        {
+                            var connectionFieldType = value.GetType();
+                            var serviceConnectionAttr = connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
+                            if (serviceConnectionAttr == null)
+                                throw new NullReferenceException(
+                                    string.Format(
+                                        "The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
+                                        prop.Name, typeof (ConnectionFor).Name, connectionFieldType.Name,
+                                        typeof (ServiceConnection).Name, typeof (IRecordService).Name));
+                            if (!serviceConnectionAttr.ServiceType.HasConstructorFor(connectionFieldType))
+                                throw new NullReferenceException(
+                                    string.Format(
+                                        "The Property {0} Is Specified With A {1} Attribute However The Type {2} Referenced By The {3} Types {4} Attribute Does Not Have A Constructor For Type {3}",
+                                        prop.Name, typeof (ConnectionFor).Name, serviceConnectionAttr.ServiceType.Name,
+                                        connectionFieldType.Name, typeof (ServiceConnection).Name));
+                            var service =
+                                (IRecordService) serviceConnectionAttr.ServiceType.CreateFromConstructorFor(value);
+                            _serviceConnections.Add(prop.Name, service);
+                            return service;
+                        }
                     }
                 }
             }

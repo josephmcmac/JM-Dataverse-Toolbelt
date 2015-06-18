@@ -75,7 +75,7 @@ namespace JosephM.Xrm.CustomisationExporter
         [DisplayName(Headings.Fields.Maximum)]
         public string MaxValue { get; set; }
         [DisplayName(Headings.Fields.DecimalPrecision)]
-        private string DecimalPrecision { get; set; }
+        public string DecimalPrecision { get; set; }
         [DisplayName(Headings.Fields.PicklistOptions)]
         public string PicklistOptions { get; set; }
         public string RecordTypeLabel { get; set; }

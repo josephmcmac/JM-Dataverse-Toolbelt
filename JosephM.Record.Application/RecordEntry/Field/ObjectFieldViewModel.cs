@@ -37,8 +37,6 @@ namespace JosephM.Record.Application.RecordEntry.Field
             {
                 var settingsObject = ApplicationController.ResolveType(settingsAttribute.SettingsType);
                 SetLookupService(new ObjectRecordService(settingsObject));
-                //todo better to delay object resolution until lookup in case new one added or something
-                //could maybe map when chnage settings
             }
         }
 
