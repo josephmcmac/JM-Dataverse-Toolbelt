@@ -2,6 +2,10 @@
 
 namespace JosephM.Record.Application.RecordEntry.Metadata
 {
+    /// <summary>
+    /// class initially written to support implementing a derived field
+    /// never actually used and could probably be removed or rewritten
+    /// </summary>
     public class NonPersistentFormField : FormFieldMetadata
     {
         public NonPersistentFormField(string fieldName, string label, RecordFieldType recordFieldType)

@@ -39,14 +39,18 @@ namespace JosephM.Xrm.ImporterExporter.Test
             Assert.IsTrue(File.Exists(fileName));
         }
 
+        /// <summary>
+        /// Runs through loading object into view model, adding rows and editing child forms
+        /// </summary>
         [TestMethod]
         public void XrmImporterExporterRequestForXmlExport()
         {
             PrepareTests();
 
+            //ensure a record for lookup
             Assert.IsNotNull(TestAccount);
 
-
+            //Create the objetc and load into view model
             var req = new XrmImporterExporterRequest();
             req.FolderPath = new Folder(TestingFolder);
             req.ImportExportTask = ImportExportTask.ExportXml;
@@ -55,20 +59,20 @@ namespace JosephM.Xrm.ImporterExporter.Test
             exportType.RecordType = new RecordType("activitypointer", "Activity");
             req.RecordTypes = new[] {exportType};
 
+            //get record types grid and check get edit row works
             var mainViewModel = new ObjectEntryViewModel(() => { }, () => { }, req, FormController.CreateForObject(req, new FakeApplicationController(), XrmRecordService));
             var recordTypeGrid = mainViewModel.SubGrids.First(r => r.ReferenceName == "RecordTypes");
             var recordType = recordTypeGrid.GridRecords.First();
             var recordTypeEditViewModel = recordTypeGrid.GetEditRowViewModel(recordType);
 
+            //get exclude fiields grid and check add row works
             var excludeFieldsGrid = recordTypeEditViewModel.SubGrids.First(sg => sg.ReferenceName == "ExcludeFields");
             excludeFieldsGrid.AddRow();
-
             var row = excludeFieldsGrid.GridRecords.First();
             Assert.IsTrue(row.GetRecordFieldFieldViewModel("RecordField").ItemsSource.Any());
 
-            //todo comment some of this and check if tidy up
             //this bit validates creating child forms
-            //including the dpendant lookup types etc. cascade to childr forms
+            //including the dependant lookup types etc. cascade to child forms
             var recordTypeViewModel = recordTypeEditViewModel.GetRecordTypeFieldViewModel("RecordType");
             recordTypeViewModel.Value = new RecordType("account", "Account");
             var exportTypeViewModel = recordTypeEditViewModel.GetPicklistFieldFieldViewModel("Type");

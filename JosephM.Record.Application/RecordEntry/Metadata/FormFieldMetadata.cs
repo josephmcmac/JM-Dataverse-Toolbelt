@@ -14,6 +14,11 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
 {
     public abstract class FormFieldMetadata
     {
+        public virtual bool IsNonPersistentField
+        {
+            get { return false; }
+        }
+
         protected FormFieldMetadata(string fieldName)
         {
             FieldName = fieldName;
@@ -28,9 +33,10 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             RecordFieldType fieldType;
             string label;
             var isEditable = true;
-            //todo this aint right
-            var isRecordServiceField = this is PersistentFormField || this is GridFieldMetadata;
-            if (this is NonPersistentFormField)
+            //this not quite right haven't needed to change yet though
+            var isNonPersistent = this is NonPersistentFormField;
+            var isRecordServiceField = !isNonPersistent;
+            if (isNonPersistent)
             {
                 fieldType = ((NonPersistentFormField) this).RecordFieldType;
                 label = ((NonPersistentFormField) this).Label;

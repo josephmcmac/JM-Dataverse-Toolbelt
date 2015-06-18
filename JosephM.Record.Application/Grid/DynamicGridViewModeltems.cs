@@ -54,8 +54,7 @@ namespace JosephM.Record.Application.Grid
         /// <param name="sortField"></param>
         public void SortIt(IDynamicGridViewModel theGridViewModel, string sortField)
         {
-            //todo never added any validation script for this
-
+            //todo no validation script for this
             //just copy all into a new list (sorting as go), clear the collection then add each sorted item
             if (theGridViewModel.GridRecords.Any())
             {

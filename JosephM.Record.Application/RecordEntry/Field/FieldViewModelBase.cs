@@ -168,7 +168,8 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         private IEnumerable<string> ValidationPropertyNames
         {
-            //todo this aint right
+            //could be in extended classes - is used to notify the ui of validation error
+            //as sometimes it is a different property displayed in ui for different view model types
             get { return new[] { "ValueObject", "Value", "StringDisplay", "EnteredText" }; }
         }
 

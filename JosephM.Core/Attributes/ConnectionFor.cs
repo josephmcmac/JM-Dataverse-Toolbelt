@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace JosephM.Core.Attributes
 {
+    //todo logic for this a bit scattered in form and object record service - should consolidate in object record service
     /// <summary>
     ///     Attribute To Define A Property As Cascading The Record Type To Another Property
     ///     Initally Used For Cacading A selected Record Type To A Record Field Or Lookup Property

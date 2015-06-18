@@ -28,7 +28,6 @@ namespace JosephM.Prism.XrmTestModule.TestXrmSettingsDialog
 
         protected override void CompleteDialogExtention()
         {
-            //todo could validate this
             var type = SettingsObject.GetType();
             var serializer = new DataContractSerializer(type);
 

@@ -13,10 +13,10 @@ namespace JosephM.Xrm.ImportExporter.Prism
 {
     public class XrmSolutionImporterExporterDialog :
         ServiceRequestDialog
-            <XrmSolutionImporterExporterService<XrmRecord, XrmRecordService>, XrmSolutionImporterExporterRequest,
+            <XrmSolutionImporterExporterService<XrmRecordService>, XrmSolutionImporterExporterRequest,
                 XrmSolutionImporterExporterResponse, XrmSolutionImporterExporterResponseItem>
     {
-        public XrmSolutionImporterExporterDialog(XrmSolutionImporterExporterService<XrmRecord, XrmRecordService> service,
+        public XrmSolutionImporterExporterDialog(XrmSolutionImporterExporterService<XrmRecordService> service,
             IDialogController dialogController, XrmRecordService lookupService)
             : base(service, dialogController, lookupService)
         {
