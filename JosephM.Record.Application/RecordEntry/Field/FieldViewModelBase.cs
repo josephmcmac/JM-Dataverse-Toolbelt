@@ -212,12 +212,12 @@ namespace JosephM.Record.Application.RecordEntry.Field
                 {
                     _errors.Add(validationResponse.ErrorContent);
                     foreach (var validationPropertyName in ValidationPropertyNames)
-                    {
                         NotifyErrorsChanged(validationPropertyName);
-                    }
                     return false;
                 }
             }
+            foreach (var validationPropertyName in ValidationPropertyNames)
+                NotifyErrorsChanged(validationPropertyName);
             return true;
         }
 
@@ -237,7 +237,10 @@ namespace JosephM.Record.Application.RecordEntry.Field
             //this should just defer these onloads to the on changes
             RecordEntryViewModel.RefreshVisibility();
             OnPropertyChanged("ValueObject");
-            Validate();
+            //Removed On Change Validation Because Some Do Service Connections (XrmRecordConfiguration) To Validate
+            //And Caused Selection To Delay
+            //So Just Validate On Save
+            //Validate();
             OnChange();
             OnChangeDelegate(this);
         }

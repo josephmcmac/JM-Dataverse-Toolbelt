@@ -16,12 +16,13 @@ namespace JosephM.Record.Application.Test
 {
     public class RecordApplicationTests : CoreTest
     {
-        public ObjectEntryViewModel LoadToObjectEntryViewModel(TestViewModelValidationObject objectToEnter)
+        public ObjectEntryViewModel LoadToObjectEntryViewModel(object objectToEnter)
         {
             var recordService = new ObjectRecordService(objectToEnter);
             var formService = new ObjectFormService(objectToEnter, recordService);
             var viewModel = new ObjectEntryViewModel(EmptyMethod, EmptyMethod, objectToEnter,
                 new FormController(recordService, formService, new FakeApplicationController()));
+            viewModel.LoadFormSections();
             Assert.IsNotNull(viewModel.FormSectionsAsync);
             return viewModel;
         }

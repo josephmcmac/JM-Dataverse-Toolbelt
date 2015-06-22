@@ -27,7 +27,6 @@ namespace JosephM.Xrm.CustomisationExporter
             CustomisationExporterResponse response,
             LogController controller)
         {
-            //todo no validation script for this
             response.Folder = request.SaveToFolder.FolderPath;
             controller.LogLiteral("Loading Metadata");
             ProcessForEntities(request, response, controller);

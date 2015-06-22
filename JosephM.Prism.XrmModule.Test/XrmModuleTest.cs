@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using JosephM.ObjectMapping;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Application.Controller;
+using JosephM.Record.Application.Fakes;
+using JosephM.Record.Application.RecordEntry;
+using JosephM.Record.Application.RecordEntry.Form;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Xrm.Sdk.Client;
@@ -33,6 +36,14 @@ namespace JosephM.Prism.XrmModule.Test
                 Connections = new[] {savedConfig}
             };
             return new FakeXrmApplicationController(savedConfigs);
+        }
+
+        public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject)
+        {
+            var viewModel = new ObjectEntryViewModel(() => { }, () => { }, viewModelObject,
+                FormController.CreateForObject(viewModelObject, new FakeApplicationController(), XrmRecordService));
+            viewModel.LoadFormSections();
+            return viewModel;
         }
     }
 }

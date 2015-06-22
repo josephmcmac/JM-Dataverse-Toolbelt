@@ -146,8 +146,6 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         {
             return ObjectRecordService.GetValidatorAttributes(fieldName, subGridRecordType)
                 .Select(va => new PropertyAttributeValidationRule(va));
-
-
         }
 
         public override IEnumerable<ValidationRuleBase> GetSectionValidationRules(string sectionIdentifier)

@@ -60,7 +60,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             req.RecordTypes = new[] {exportType};
 
             //get record types grid and check get edit row works
-            var mainViewModel = new ObjectEntryViewModel(() => { }, () => { }, req, FormController.CreateForObject(req, new FakeApplicationController(), XrmRecordService));
+            var mainViewModel = CreateObjectEntryViewModel(req);
             var recordTypeGrid = mainViewModel.SubGrids.First(r => r.ReferenceName == "RecordTypes");
             var recordType = recordTypeGrid.GridRecords.First();
             var recordTypeEditViewModel = recordTypeGrid.GetEditRowViewModel(recordType);

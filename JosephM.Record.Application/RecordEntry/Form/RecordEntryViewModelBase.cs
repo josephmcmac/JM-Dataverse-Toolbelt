@@ -122,6 +122,21 @@ namespace JosephM.Record.Application.RecordEntry.Form
             return GetFieldViewModel<PicklistFieldViewModel>(fieldName);
         }
 
+        public BooleanFieldViewModel GetBooleanFieldFieldViewModel(string fieldName)
+        {
+            return GetFieldViewModel<BooleanFieldViewModel>(fieldName);
+        }
+
+        public IntegerFieldViewModel GetIntegerFieldFieldViewModel(string fieldName)
+        {
+            return GetFieldViewModel<IntegerFieldViewModel>(fieldName);
+        }
+
+        public StringFieldViewModel GetStringFieldFieldViewModel(string fieldName)
+        {
+            return GetFieldViewModel<StringFieldViewModel>(fieldName);
+        }
+
         public abstract IEnumerable<FieldViewModelBase> FieldViewModels { get; }
 
         internal void RunOnChanges()
