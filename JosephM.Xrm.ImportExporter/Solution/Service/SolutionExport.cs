@@ -33,10 +33,12 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RequiredProperty]
         public bool Managed { get; set; }
 
+        [DisplayOrder(1050)]
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull("Connection")]
         public bool IncludeNotes { get; set; }
 
+        [DisplayOrder(1060)]
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull("Connection")]
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }

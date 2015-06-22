@@ -134,6 +134,10 @@
     <Compile Include="Solution\Service\XrmSolutionImporterExporterService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\themedata.thmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Solution Importer Exporter Help.docx" />
     <None Include="HelpFiles\Xrm Importer Exporter Help_files\themedata.thmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -171,6 +175,63 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="HelpFiles\Solution Importer Exporter Help.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\colorschememapping.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\filelist.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\header.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\image001.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\image002.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\image003.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\image004.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\image005.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\item0001.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\item0003.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\item0005.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\item0007.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\item0009.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\props002.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\props004.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\props006.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\props008.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HelpFiles\Solution Importer Exporter Help_files\props010.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="HelpFiles\Xrm Importer Exporter Help.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

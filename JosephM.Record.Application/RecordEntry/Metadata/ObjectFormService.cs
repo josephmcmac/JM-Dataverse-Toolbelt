@@ -72,7 +72,9 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     }
                     else
                     {
-                        primaryFieldSection.Add(new PersistentFormField(property.SchemaName));
+                        var fieldMetadata = new PersistentFormField(property.SchemaName);
+                        fieldMetadata.Order = property.Order;
+                        primaryFieldSection.Add(fieldMetadata);
                     }
                 }
 
@@ -189,7 +191,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                         if (changedViewModel.Value != null)
                         {
                             var value = changedViewModel.Value;
-                            if(!(value is IXrmRecordConfiguration))
+                            if (!(value is IXrmRecordConfiguration))
                                 throw new NotImplementedException(string.Format("{0} Attribute Only Implemented For Type {1} But Is Set On Property {2}", typeof(ConnectionFor).Name, typeof(IXrmRecordConfiguration).Name, fieldName));
                             var matchingFields =
                                 re.FieldViewModels.Where(f => f.FieldName == attribute.PropertyPaths.First());
@@ -200,28 +202,9 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                                 {
                                     var typedViewModel = (LookupFieldViewModel)fieldViewModel;
                                     typedViewModel.SetLookupService(new XrmRecordService(
-                                        (IXrmRecordConfiguration) value, new LogController()));
+                                        (IXrmRecordConfiguration)value, new LogController()));
                                 }
                             }
-                            //else
-                            //{
-                            //    if (re is ObjectEntryViewModel)
-                            //    {
-                            //        if (attribute.PropertyPaths.Count() < 2)
-                            //            throw new NullReferenceException(
-                            //                string.Format(
-                            //                    "The {0} Attribute References an Enumerable Property But Does Not Specify The Property On The Enumerated Type. The Value Is {1} And Should Be Of Form Property1.Property2",
-                            //                    typeof (RecordTypeFor).Name, attribute.LookupProperty));
-                            //        var oevm = (ObjectEntryViewModel) re;
-                            //        var matchingGrids =
-                            //            oevm.SubGrids.Where(sg => sg.ReferenceName == attribute.PropertyPaths.First());
-                            //        if (matchingGrids.Any())
-                            //        {
-                            //            //clear the rows as they are no longer relevant for the change in type
-                            //            matchingGrids.First().ClearRows();
-                            //        }
-                            //    }
-                            //}
                         }
                     }));
             }

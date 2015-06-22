@@ -22,7 +22,10 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         protected FormFieldMetadata(string fieldName)
         {
             FieldName = fieldName;
+            Order = int.MaxValue;
         }
+
+        public int Order { get; set; }
 
         public string FieldName { get; private set; }
 

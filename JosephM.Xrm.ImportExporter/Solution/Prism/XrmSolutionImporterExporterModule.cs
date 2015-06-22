@@ -17,7 +17,7 @@ namespace JosephM.Xrm.ImportExporter.Prism
         public override void InitialiseModule()
         {
             ApplicationOptions.AddOption("Solution Import / Export", MenuNames.Crm, XrmImporterExporterCommand);
-            //ApplicationOptions.AddHelp("Data Import / Export", "Xrm Importer Exporter Help.htm");
+            ApplicationOptions.AddHelp("Solution Import / Export", "Solution Importer Exporter Help.htm");
         }
 
         private void XrmImporterExporterCommand()

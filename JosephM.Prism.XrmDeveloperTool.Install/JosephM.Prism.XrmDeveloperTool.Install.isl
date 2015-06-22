@@ -4403,7 +4403,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]JosephM.Prism.XrmDeveloperTool.Primary output</td><td/></row>
 		<row><td>ProductCode</td><td>{1654C006-FC0A-4A2C-9171-B9B8FB40FE5B}</td><td/></row>
 		<row><td>ProductName</td><td>JosephM.Prism.XrmDeveloperTool.Install</td><td/></row>
-		<row><td>ProductVersion</td><td>1.02.0000</td><td/></row>
+		<row><td>ProductVersion</td><td>1.03.0000</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>

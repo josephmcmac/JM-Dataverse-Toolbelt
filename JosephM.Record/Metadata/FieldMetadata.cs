@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 
@@ -31,6 +32,7 @@ namespace JosephM.Record.Metadata
             Writeable = true;
         }
 
+        public int Order { get; set; }
         public bool NotNullable = true;
 
         public string Description { get; set; }
@@ -95,6 +97,9 @@ namespace JosephM.Record.Metadata
             fm.IsMandatory = true;
             fm.Readable = propertyInfo.GetSetMethod() != null;
             fm.Writeable = propertyInfo.GetGetMethod() != null;
+            var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
+            if (orderAttribute != null)
+                fm.Order = orderAttribute.Order;
             return fm;
         }
     }

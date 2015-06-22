@@ -242,7 +242,7 @@ namespace JosephM.Record.Service
             {
                 case RecordFieldType.RecordType:
                 {
-                    var lookupService = (IRecordService)GetConnectionFor(fieldName, recordType, dependantValue);
+                    var lookupService = (IRecordService)GetLookupService(fieldName, recordType, dependantValue);
 
                     if (OptionSetLimitedValues != null
                         && OptionSetLimitedValues.ContainsKey(fieldName)
@@ -286,7 +286,7 @@ namespace JosephM.Record.Service
 
         private object _lockObject = new object();
         private Dictionary<string, IRecordService> _serviceConnections = new Dictionary<string, IRecordService>();
-        private object GetConnectionFor(string fieldName, string recordType, string reference)
+        public IRecordService GetLookupService(string fieldName, string recordType, string reference)
         {
             var props = GetPropertyInfos(ObjectType.Name);
             foreach (var prop in props)
@@ -326,7 +326,7 @@ namespace JosephM.Record.Service
             }
             if (ParentService != null)
             {
-                return ParentService.GetConnectionFor(fieldName, recordType, reference);
+                return ParentService.GetLookupService(fieldName, recordType, reference);
             }
             return LookupService;
         }
