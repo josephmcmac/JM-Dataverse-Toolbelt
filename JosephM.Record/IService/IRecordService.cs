@@ -541,5 +541,7 @@ namespace JosephM.Record.IService
         void ClearCache();
 
         bool IsNotNullable(string fieldName, string recordType);
+
+        bool IsMultiline(string field, string recordType);
     }
 }

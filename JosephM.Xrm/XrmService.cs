@@ -1985,7 +1985,7 @@ namespace JosephM.Xrm
             return RetrieveFirstX(query, x);
         }
 
-        private IEnumerable<Entity> RetrieveFirstX(QueryExpression query, int x)
+        public IEnumerable<Entity> RetrieveFirstX(QueryExpression query, int x)
         {
             query.PageInfo.PageNumber = 1;
             query.PageInfo.Count = x;
@@ -3253,6 +3253,17 @@ string recordType)
 
             var mt = GetEntityMetadata(recordType);
             return mt.Description != null ? GetLabelDisplay(mt.Description) : null;
+        }
+
+        public QueryExpression ConvertFetchToQueryExpression(string fetchXml)
+        {
+
+            var req = new FetchXmlToQueryExpressionRequest()
+            {
+                FetchXml = fetchXml
+            };
+            var response = (FetchXmlToQueryExpressionResponse) Execute(req);
+            return response.Query;
         }
     }
 }

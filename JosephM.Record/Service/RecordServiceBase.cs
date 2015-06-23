@@ -838,5 +838,10 @@ namespace JosephM.Record.Service
         {
             throw new NotImplementedException();
         }
+
+        public virtual bool IsMultiline(string field, string recordType)
+        {
+            return false;
+        }
     }
 }

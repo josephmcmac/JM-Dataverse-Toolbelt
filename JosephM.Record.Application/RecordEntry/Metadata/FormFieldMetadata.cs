@@ -83,7 +83,8 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     fieldVm = new StringFieldViewModel(field, label, recordForm)
                     {
                         MaxLength = recordService.GetMaxLength(field, recordType),
-                        IsRecordServiceField = isRecordServiceField
+                        IsRecordServiceField = isRecordServiceField,
+                        IsMultiline = recordService.IsMultiline(field, recordType)
                     };
                     break;
                 }

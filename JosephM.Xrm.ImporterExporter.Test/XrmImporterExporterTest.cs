@@ -11,6 +11,7 @@ using JosephM.Record.Application.SettingTypes;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.ImportExporter.Service;
+using Microsoft.Xrm.Sdk.Query;
 
 namespace JosephM.Xrm.ImporterExporter.Test
 {
@@ -155,6 +156,72 @@ namespace JosephM.Xrm.ImporterExporter.Test
             foreach (var updateField in updateFields)
                 Assert.IsTrue(XrmEntity.FieldsEqual(createdEntity.GetField(updateField),
                     updatedRecord.GetField(updateField)));
+        }
+
+        /// <summary>
+        /// Test just verifies that an export xml for the various different types executes
+        /// </summary>
+        [TestMethod]
+        public void ExportXmlTypesTest()
+        {
+            //todo don't have any validation of notes and relationships
+            var query = new QueryExpression();
+
+            PrepareTests();
+            var types = new[] { "new_testentitytwo", "new_testentitythree", "new_testentity" };
+            var workFolder = ClearFilesAndData(types);
+
+            var importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
+
+            var t1_1 = CreateTestRecord("new_testentity", importerExporterService);
+            var t1_2 = CreateTestRecord("new_testentity", importerExporterService);
+            var t1_3 = CreateTestRecord("new_testentity", importerExporterService);
+
+            var t2_1 = CreateTestRecord("new_testentitytwo", importerExporterService);
+            var t2_2 = CreateTestRecord("new_testentitytwo", importerExporterService);
+            var t2_3 = CreateTestRecord("new_testentitytwo", importerExporterService);
+
+            var t3_1 = CreateTestRecord("new_testentitythree", importerExporterService);
+            var t3_2 = CreateTestRecord("new_testentitythree", importerExporterService);
+            var t3_3 = CreateTestRecord("new_testentitythree", importerExporterService);
+
+            var t1RequestAll = new ImportExportRecordType()
+            {
+                Type = ExportType.AllRecords,
+                RecordType = new RecordType("new_testentity", "new_testentity")
+            };
+            var t2RequestFetch = new ImportExportRecordType()
+            {
+                Type = ExportType.FetchXml,
+                RecordType = new RecordType("new_testentitytwo", "new_testentitytwo"),
+                FetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' count='2' >
+                      <entity name='new_testentitytwo'>
+                      </entity>
+                    </fetch>"
+            };
+            var t3RequestSpecific = new ImportExportRecordType()
+            {
+                Type = ExportType.SpecificRecords,
+                RecordType = new RecordType("new_testentitythree", "new_testentitythree"),
+                OnlyExportSpecificRecords = new[]
+                {
+                    new LookupSetting() { Record = new Lookup("new_testentitythree", t3_1.Id.ToString(), "t3_1") },
+                    new LookupSetting() { Record = new Lookup("new_testentitythree", t3_2.Id.ToString(), "t3_2") },
+                }
+            };
+
+            var request = new XrmImporterExporterRequest
+            {
+                FolderPath = new Folder(workFolder),
+                ImportExportTask = ImportExportTask.ExportXml,
+                RecordTypes = new [] { t1RequestAll, t2RequestFetch, t3RequestSpecific}
+            };
+            var response = importerExporterService.Execute(request, Controller);
+            Assert.IsFalse(response.HasError);
+
+            var entities = importerExporterService.LoadEntitiesFromXmlFiles(workFolder);
+
+            Assert.AreEqual(7, entities.Count());
         }
 
         private Entity CreateTestRecord(string type, XrmImporterExporterService<XrmRecordService> importerExporterService)

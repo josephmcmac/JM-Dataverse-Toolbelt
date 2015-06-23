@@ -409,5 +409,10 @@ namespace JosephM.Record.Service
                 return true;
             return false;
         }
+
+        public override bool IsMultiline(string field, string recordType)
+        {
+            return GetPropertyInfo(field, recordType).GetCustomAttribute<Multiline>() != null;
+        }
     }
 }

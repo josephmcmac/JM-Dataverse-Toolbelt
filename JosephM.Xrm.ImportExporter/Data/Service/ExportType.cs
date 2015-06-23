@@ -3,6 +3,7 @@
     public enum ExportType
     {
         AllRecords,
-        SpecificRecords
+        SpecificRecords,
+        FetchXml
     }
 }

@@ -1414,5 +1414,9 @@ namespace JosephM.Record.Xrm.XrmRecord
             return ToIRecords(_xrmService.GetLinkedRecordsThroughBridge(linkedRecordType, recordTypeThrough, recordTypeFrom, linkedThroughLookupFrom, linkedThroughLookupTo, new Guid(recordFromId)));
         }
 
+        public bool IsMultiline(string field, string recordType)
+        {
+            return _xrmService.IsMultilineText(field, recordType);
+        }
     }
 }

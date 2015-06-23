@@ -30,6 +30,13 @@ namespace JosephM.Xrm.ImportExporter.Service
         [PropertyInContextByPropertyValue("Type", ExportType.SpecificRecords)]
         public IEnumerable<LookupSetting> OnlyExportSpecificRecords { get; set; }
 
+        //todo no validation of fetch query in ui
+        [DisplayName("Fetch XML (Attributes Ignored)")]
+        [Multiline]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("Type", ExportType.FetchXml)]
+        public string FetchXml { get; set; }
+
         public override string ToString()
         {
             return RecordType == null ? "Null" : RecordType.Value;

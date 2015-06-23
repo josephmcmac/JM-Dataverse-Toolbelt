@@ -18,6 +18,9 @@
     </field:FieldControlBase.Resources>
     <Grid>
         <TextBox
+            AcceptsReturn="{Binding IsMultiline}"
+            MinLines ="{Binding NumberOfLines}"
+            MaxLines ="{Binding NumberOfLines}"
             TabIndex="1"
             Name="TextBox"
             DataContext="{Binding NotifyOnValidationError=True}"

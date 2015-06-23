@@ -218,21 +218,27 @@ namespace JosephM.Xrm.ImportExporter.Service
         public void ImportXml(string folder, LogController controller,
             XrmImporterExporterResponse response)
         {
-            var lateBoundSerializer = new DataContractSerializer(typeof(Entity));
+            var entities = LoadEntitiesFromXmlFiles(folder);
+
+            DoImport(response, entities, controller);
+        }
+
+        public IEnumerable<Entity> LoadEntitiesFromXmlFiles(string folder)
+        {
+            var lateBoundSerializer = new DataContractSerializer(typeof (Entity));
 
             var entities = new List<Entity>();
             foreach (var file in Directory.GetFiles(folder, "*.xml"))
             {
                 using (var fileStream = new FileStream(file, FileMode.Open))
                 {
-                    entities.Add((Entity)lateBoundSerializer.ReadObject(fileStream));
+                    entities.Add((Entity) lateBoundSerializer.ReadObject(fileStream));
                 }
             }
-
-            DoImport(response, entities, controller);
+            return entities;
         }
 
-        private void DoImport(XrmImporterExporterResponse response, List<Entity> entities, LogController controller)
+        private void DoImport(XrmImporterExporterResponse response, IEnumerable<Entity> entities, LogController controller)
         {
             controller.LogLiteral("Preparing Import");
 
@@ -640,6 +646,18 @@ namespace JosephM.Xrm.ImportExporter.Service
                     case ExportType.AllRecords:
                     {
                         entities = XrmService.RetrieveAllAndClauses(type, conditions)
+                            .Where(e => !CheckIgnoreForExport(exportType, e))
+                            .ToArray();
+                        break;
+                    }
+                    case ExportType.FetchXml:
+                    {
+                        var queryExpression = XrmService.ConvertFetchToQueryExpression(exportType.FetchXml);
+                        queryExpression.ColumnSet = new ColumnSet(true);
+                        entities = queryExpression.PageInfo != null && queryExpression.PageInfo.Count > 0
+                            ? XrmService.RetrieveFirstX(queryExpression, queryExpression.PageInfo.Count)
+                            : XrmService.RetrieveAll(queryExpression);
+                        entities = entities
                             .Where(e => !CheckIgnoreForExport(exportType, e))
                             .ToArray();
                         break;

@@ -20,7 +20,7 @@ namespace JosephM.CustomisationImporter.Test
         [DeploymentItem("TestCustomisationsUpdate.xls")]
         public void CustomisationImportTestImport()
         {
-            Assert.Inconclusive("Comment Out As Slow");
+            //Assert.Inconclusive("Comment Out As Slow");
 
             PrepareTests();
 
