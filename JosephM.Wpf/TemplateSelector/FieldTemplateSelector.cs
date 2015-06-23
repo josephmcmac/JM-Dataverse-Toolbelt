@@ -16,7 +16,6 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate DateFieldTemplate { get; set; }
         public DataTemplate StringFieldTemplate { get; set; }
         public DataTemplate IntegerFieldTemplate { get; set; }
-        public DataTemplate ExcelFileFieldTemplate { get; set; }
         public DataTemplate LookupFieldTemplate { get; set; }
         public DataTemplate PasswordFieldTemplate { get; set; }
         public DataTemplate FolderFieldTemplate { get; set; }
@@ -38,8 +37,6 @@ namespace JosephM.Wpf.TemplateSelector
                 return StringFieldTemplate;
             if (item is IntegerFieldViewModel)
                 return IntegerFieldTemplate;
-            if (item is ExcelFileFieldViewModel)
-                return ExcelFileFieldTemplate;
             if (item is LookupFieldViewModel)
                 return LookupFieldTemplate;
             if (item is PasswordFieldViewModel)

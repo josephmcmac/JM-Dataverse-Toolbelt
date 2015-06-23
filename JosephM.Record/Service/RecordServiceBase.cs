@@ -157,14 +157,6 @@ namespace JosephM.Record.Service
                             return new ParseFieldResponse("value not of boolean type");
                         break;
                     }
-                    case RecordFieldType.ExcelFile:
-                    {
-                        if (value is ExcelFile)
-                            parsedValue = value;
-                        else
-                            return new ParseFieldResponse("value not of excelfile type");
-                        break;
-                    }
                     case RecordFieldType.Folder:
                     {
                         if (value is Folder)

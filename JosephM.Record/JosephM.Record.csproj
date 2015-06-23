@@ -126,7 +126,6 @@
     <Compile Include="Metadata\RecordMetadata.cs" />
     <Compile Include="Metadata\RelationshipMetadata.cs" />
     <Compile Include="Metadata\StringFieldMetadata.cs" />
-    <Compile Include="Metadata\ExcelFileFieldMetadata.cs" />
     <Compile Include="Metadata\IntegerFieldMetadata.cs" />
     <Compile Include="Metadata\BooleanFieldMetadata.cs" />
     <Compile Include="IService\ParseFieldRequest.cs" />

@@ -15,9 +15,8 @@ namespace JosephM.CustomisationImporter.Test
         {
             var excelFiles = new[]
             {
-                new ExcelFile(path + @"TestCustomisations.xls")
-                ,
-                new ExcelFile(path + @"TestCustomisationsUpdate.xls")
+                new FileReference(path + @"TestCustomisations.xls"),
+                new FileReference(path + @"TestCustomisationsUpdate.xls")
             };
 
             return excelFiles

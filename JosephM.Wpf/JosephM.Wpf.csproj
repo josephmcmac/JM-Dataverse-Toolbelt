@@ -227,7 +227,6 @@
     <Compile Include="Controls\MaskedTextField.cs" />
     <Compile Include="Converters\BooleanToFontWeightConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\ExcelToStringConverter.cs" />
     <Compile Include="Converters\FolderToStringConverter.cs" />
     <Compile Include="Converters\NullOrEmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
@@ -244,9 +243,6 @@
     </Compile>
     <Compile Include="Shared\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="RecordEntry\Field\ExcelFileFieldView.xaml.cs">
-      <DependentUpon>ExcelFileFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\BooleanFieldView.xaml.cs">
       <DependentUpon>BooleanFieldView.xaml</DependentUpon>
@@ -413,10 +409,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\DateFieldView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="RecordEntry\Field\ExcelFileFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

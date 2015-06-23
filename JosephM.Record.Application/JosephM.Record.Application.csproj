@@ -139,7 +139,6 @@
     <Compile Include="Navigation\PrismNavigationProvider.cs" />
     <Compile Include="RecordEntry\Field\BooleanFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DateFieldViewModel.cs" />
-    <Compile Include="RecordEntry\Field\ExcelFileFieldViewModell.cs" />
     <Compile Include="RecordEntry\Field\FieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\FieldViewModelBase.cs" />
     <Compile Include="RecordEntry\Field\FolderFieldViewModell.cs" />

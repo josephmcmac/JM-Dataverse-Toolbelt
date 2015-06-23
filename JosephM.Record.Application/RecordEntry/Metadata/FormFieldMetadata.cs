@@ -114,14 +114,6 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     };
                     break;
                 }
-                case RecordFieldType.ExcelFile:
-                {
-                    fieldVm = new ExcelFileFieldViewModel(field, label, recordForm)
-                    {
-                        IsRecordServiceField = isRecordServiceField
-                    };
-                    break;
-                }
                 case RecordFieldType.Lookup:
                 {
                     //the check for null here was when loading a lookup grid the rows in the lookup do not require a form

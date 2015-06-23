@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using JosephM.Core.Attributes;
+using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 
 namespace JosephM.Core.Test
@@ -73,7 +74,8 @@ namespace JosephM.Core.Test
 
         public int IntField { get; set; }
         public IEnumerable<string> EnumerableStringField { get; set; }
-        public ExcelFile ExcelFileField { get; set; }
+        [FileMask(FileMasks.ExcelFile)]
+        public FileReference ExcelFileField { get; set; }
         public string NoInContextAttributes { get; set; }
 
         private string _getSetField;

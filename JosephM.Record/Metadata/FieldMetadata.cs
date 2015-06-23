@@ -57,9 +57,7 @@ namespace JosephM.Record.Metadata
             var label = propertyInfo.GetDisplayName();
 
             FieldMetadata fm = null;
-            if (type == typeof (ExcelFile))
-                fm = new ExcelFileFieldMetadata(recordType, internalName, label);
-            else if (type == typeof (bool))
+            if (type == typeof (bool))
                 fm = new BooleanFieldMetadata(recordType, internalName, label);
             else if (type.IsEnum)
             {
