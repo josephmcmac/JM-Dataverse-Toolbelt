@@ -38,12 +38,18 @@ namespace JosephM.Prism.XrmModule.Test
             return new FakeXrmApplicationController(savedConfigs);
         }
 
-        public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject)
+
+        public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject, IApplicationController applicationController)
         {
             var viewModel = new ObjectEntryViewModel(() => { }, () => { }, viewModelObject,
-                FormController.CreateForObject(viewModelObject, new FakeApplicationController(), XrmRecordService));
+                FormController.CreateForObject(viewModelObject, applicationController, XrmRecordService));
             viewModel.LoadFormSections();
             return viewModel;
+        }
+
+        public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject)
+        {
+            return CreateObjectEntryViewModel(viewModelObject, new FakeApplicationController());
         }
     }
 }

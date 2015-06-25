@@ -16,7 +16,9 @@ namespace JosephM.Xrm.ImportExporter.Service
         [GridWidth(400)]
         [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
         [ConnectionFor("Solution")]
-        [ConnectionFor("DataToExport.RecordType")]
+        //[ConnectionFor("DataToExport.RecordType")]
+        //[ConnectionFor("DataToExport.OnlyExportSpecificRecords.Record")]
+        [ConnectionFor("DataToExport")]
         [ReadOnlyWhenSet]
         public SavedXrmRecordConfiguration Connection { get; set; }
 
@@ -44,7 +46,6 @@ namespace JosephM.Xrm.ImportExporter.Service
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }
 
         [DisplayOrder(200)]
-        [RequiredProperty]
         [GridWidth(400)]
         [PropertyInContextByPropertyNotNull("Connection")]
         public IEnumerable<ImportExportRecordType> DataToExport { get; set; }

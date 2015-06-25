@@ -194,15 +194,14 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                             if (!(value is IXrmRecordConfiguration))
                                 throw new NotImplementedException(string.Format("{0} Attribute Only Implemented For Type {1} But Is Set On Property {2}", typeof(ConnectionFor).Name, typeof(IXrmRecordConfiguration).Name, fieldName));
                             var matchingFields =
-                                re.FieldViewModels.Where(f => f.FieldName == attribute.PropertyPaths.First());
+                                re.FieldViewModels.Where(f => f.FieldName == attribute.Property);
                             if (matchingFields.Any())
                             {
                                 var fieldViewModel = matchingFields.First();
                                 if (fieldViewModel is LookupFieldViewModel)
                                 {
                                     var typedViewModel = (LookupFieldViewModel)fieldViewModel;
-                                    typedViewModel.SetLookupService(new XrmRecordService(
-                                        (IXrmRecordConfiguration)value, new LogController()));
+                                    typedViewModel.LoadLookupGrid();
                                 }
                             }
                         }

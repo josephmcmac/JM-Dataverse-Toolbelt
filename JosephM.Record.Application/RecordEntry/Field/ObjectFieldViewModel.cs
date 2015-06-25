@@ -28,7 +28,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
         }
         
         public ObjectFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm, IRecordService lookupService)
-            : base(fieldName, fieldLabel, recordForm, lookupService)
+            : base(fieldName, fieldLabel, recordForm)
         {
             //okay i need to identify that this is getting the lookups from the settings
             var settingsAttribute = GetSettingLookupAttribute();
@@ -36,8 +36,16 @@ namespace JosephM.Record.Application.RecordEntry.Field
                 throw new NotImplementedException(string.Format("The {0} Type Has Only Been Implemented For Object Properties With {1} Attribute. You Will Need To Review Instantiating a Different Type Of View Model For The {2} Type Of You Property {3} Or Extending It For Your Needs", typeof(ObjectFieldViewModel).Name, typeof(SettingsLookup).Name, RecordTypeToLookup, FieldName));
             {
                 var settingsObject = ApplicationController.ResolveType(settingsAttribute.SettingsType);
-                SetLookupService(new ObjectRecordService(settingsObject));
+                XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
+                _lookupService = new ObjectRecordService(settingsObject);
+                LoadLookupGrid();
             }
+        }
+
+        private IRecordService _lookupService;
+        public override IRecordService LookupService
+        {
+            get { return _lookupService; }
         }
 
         private SettingsLookup GetSettingLookupAttribute()

@@ -664,7 +664,7 @@ namespace JosephM.Record.Service
 
 
         public virtual IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType,
-            string dependentValue)
+            string dependentValue, IRecord record)
         {
             throw new NotImplementedException();
         }
@@ -842,6 +842,11 @@ namespace JosephM.Record.Service
         public virtual bool IsMultiline(string field, string recordType)
         {
             return false;
+        }
+
+        public virtual IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)
+        {
+            return LookupService;
         }
     }
 }

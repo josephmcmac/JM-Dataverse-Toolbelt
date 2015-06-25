@@ -1297,7 +1297,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         }
 
 
-        public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue)
+        public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
             throw new NotImplementedException();
         }
@@ -1417,6 +1417,11 @@ namespace JosephM.Record.Xrm.XrmRecord
         public bool IsMultiline(string field, string recordType)
         {
             return _xrmService.IsMultilineText(field, recordType);
+        }
+
+        public IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)
+        {
+            return LookupService;
         }
     }
 }

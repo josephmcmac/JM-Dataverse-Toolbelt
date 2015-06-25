@@ -45,7 +45,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
             set
             {
                 _recordTypeForField = value;
-                ItemsSource = GetRecordService().GetPicklistKeyValues(FieldName, GetRecordType(), _recordTypeForField);
+                ItemsSource = GetRecordService().GetPicklistKeyValues(FieldName, GetRecordType(), _recordTypeForField, RecordEntryViewModel.GetRecord());
             }
         }
     }

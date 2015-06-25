@@ -121,8 +121,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     var targetType = recordForm.FormService == null
                         ? null
                         : recordForm.FormService.GetLookupTargetType(field, recordType, recordForm);
-                    fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType
-                        , recordService.LookupService)
+                    fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType)
                     {
                         IsRecordServiceField = isRecordServiceField
                     };
@@ -157,7 +156,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     fieldVm = new RecordTypeFieldViewModel(field, label, recordForm)
                     {
                         IsRecordServiceField = isRecordServiceField,
-                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference)
+                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference, recordForm.GetRecord())
                             .Select(p => new RecordType(p.Key, p.Value))
                             .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                             .OrderBy(rt => rt.Value)
@@ -172,7 +171,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     fieldVm = new RecordFieldFieldViewModel(field, label, recordForm)
                     {
                         IsRecordServiceField = isRecordServiceField,
-                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType, dependantValue)
+                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType, dependantValue, recordForm.GetRecord())
                             .Select(p => new RecordField(p.Key, p.Value))
                             .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                             .OrderBy(rt => rt.Value)

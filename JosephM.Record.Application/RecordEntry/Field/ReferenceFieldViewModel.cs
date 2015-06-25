@@ -17,27 +17,16 @@ namespace JosephM.Record.Application.RecordEntry.Field
     public abstract class ReferenceFieldViewModel<T> : FieldViewModel<T>, IReferenceFieldViewModel
     {
         protected ReferenceFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm)
-            : this(fieldName, fieldLabel, recordForm, null)
-        {
-        }
-
-        protected ReferenceFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm, IRecordService lookupService)
             : base(fieldName, fieldLabel, recordForm)
         {
-            SetLookupService(lookupService);
             if(Value != null)
                 SetEnteredTestWithoutClearingValue(GetValueName());
         }
 
-        public void SetLookupService(IRecordService lookupService)
+        public void LoadLookupGrid()
         {
-            if (lookupService != null)
-            {
-                LookupService = lookupService;
-                LookupGridViewModel = new LookupGridViewModel(LookupService, RecordTypeToLookup, RecordEntryViewModel,
-                    OnRecordSelected);
-                XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
-            }
+            LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
+            XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
         }
 
         public abstract string RecordTypeToLookup { get; set; }
@@ -68,7 +57,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
             OnPropertyChanged("EnteredText");
         }
 
-        protected IRecordService LookupService { get; set; }
+        public abstract IRecordService LookupService { get; }
 
         private string _enteredText;
 
@@ -83,7 +72,17 @@ namespace JosephM.Record.Application.RecordEntry.Field
             }
         }
 
-        public XrmButtonViewModel XrmButton { get; set; }
+        private XrmButtonViewModel _xrmButton;
+
+        public XrmButtonViewModel XrmButton
+        {
+            get { return _xrmButton; }
+            set
+            {
+                _xrmButton = value;
+                OnPropertyChanged("XrmButton");
+            }
+        }
 
         private bool _lookupGridVisible;
 

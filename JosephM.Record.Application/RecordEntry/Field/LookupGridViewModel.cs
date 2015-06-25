@@ -17,16 +17,13 @@ namespace JosephM.Record.Application.RecordEntry.Field
 {
     public class LookupGridViewModel : ViewModelBase, IDynamicGridViewModel
     {
-        public LookupGridViewModel(IRecordService recordService, string recordType,
-            RecordEntryViewModelBase recordEntryViewModel,
+        public LookupGridViewModel(IReferenceFieldViewModel referenceField,
             Action<IRecord> onRecordSelected)
-            : base(recordEntryViewModel.ApplicationController)
+            : base(referenceField.RecordEntryViewModel.ApplicationController)
         {
-            RecordType = recordType;
-            RecordService = recordService;
+            ReferenceField = referenceField;
             OnRecordSelected = onRecordSelected;
-            RecordEntryViewModel = recordEntryViewModel;
-            FormController = new FormController(RecordService, null, recordEntryViewModel.ApplicationController);
+            FormController = new FormController(RecordService, null, referenceField.RecordEntryViewModel.ApplicationController);
             DynamicGridViewModelItems = new DynamicGridViewModelItems()
             {
                 CanDelete = false,
@@ -43,7 +40,11 @@ namespace JosephM.Record.Application.RecordEntry.Field
         }
 
         private IEnumerable<GridFieldMetadata> _recordFields;
-        private RecordEntryViewModelBase RecordEntryViewModel { get; set; }
+
+        private RecordEntryViewModelBase RecordEntryViewModel
+        {
+            get { return ReferenceField.RecordEntryViewModel; }
+        }
 
         public IEnumerable<GridFieldMetadata> RecordFields
         {
@@ -75,8 +76,16 @@ namespace JosephM.Record.Application.RecordEntry.Field
             }
         }
 
-        public IRecordService RecordService { get; private set; }
-        public string RecordType { get; set; }
+        public IRecordService RecordService
+        {
+            get { return ReferenceField.LookupService; }
+        }
+
+        public string RecordType
+        {
+            get { return ReferenceField.RecordTypeToLookup; }
+        }
+
         private Action<IRecord> OnRecordSelected { get; set; }
 
         private ObservableCollection<GridRowViewModel> _records;
@@ -119,6 +128,9 @@ namespace JosephM.Record.Application.RecordEntry.Field
         }
 
         private bool _isFocused;
+
+        //circular but has to be done
+        private IReferenceFieldViewModel ReferenceField { get; set; }
 
         public bool IsFocused
         {

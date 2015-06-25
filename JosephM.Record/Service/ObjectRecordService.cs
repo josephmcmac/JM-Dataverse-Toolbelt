@@ -221,7 +221,7 @@ namespace JosephM.Record.Service
 
         public override IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType)
         {
-            return GetPicklistKeyValues(fieldName, recordType, null);
+            return GetPicklistKeyValues(fieldName, recordType, null, null);
         }
 
 
@@ -232,8 +232,7 @@ namespace JosephM.Record.Service
         /// <param name="recordType"></param>
         /// <param name="dependantValue">Various uses...</param>
         /// <returns></returns>
-        public override IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType,
-            string dependantValue)
+        public override IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType, string dependantValue, IRecord record)
         {
             //if the property is type RecordType
             //then get the record types from the lookup service
@@ -242,7 +241,7 @@ namespace JosephM.Record.Service
             {
                 case RecordFieldType.RecordType:
                 {
-                    var lookupService = (IRecordService)GetLookupService(fieldName, recordType, dependantValue);
+                    var lookupService = GetLookupService(fieldName, recordType, dependantValue, record);
 
                     if (OptionSetLimitedValues != null
                         && OptionSetLimitedValues.ContainsKey(fieldName)
@@ -263,9 +262,10 @@ namespace JosephM.Record.Service
                 {
                     if (dependantValue == null)
                         return new RecordField[0];
-                    return LookupService
+                    var lookupService = GetLookupService(fieldName, recordType, dependantValue, record);
+                    return lookupService
                         .GetFields(dependantValue)
-                        .Select(f => new RecordField(f, LookupService.GetFieldLabel(f, dependantValue)))
+                        .Select(f => new RecordField(f, lookupService.GetFieldLabel(f, dependantValue)))
                         .Where(f => !f.Value.IsNullOrWhiteSpace())
                         .OrderBy(f => f.Value)
                         .ToArray();
@@ -285,50 +285,78 @@ namespace JosephM.Record.Service
         }
 
         private object _lockObject = new object();
-        private Dictionary<string, IRecordService> _serviceConnections = new Dictionary<string, IRecordService>();
-        public IRecordService GetLookupService(string fieldName, string recordType, string reference)
+        private Dictionary<object, IRecordService> _serviceConnections = new Dictionary<object, IRecordService>();
+        
+        public override IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)
         {
-            var props = GetPropertyInfos(ObjectType.Name);
+            //okay this is particularly confusing
+            //needed to implement several inspections to get service connections for other properties with ConnectionFor attributes
+
+            //may be object in a grid where have to check other properties for object in that row
+            //or property of object in main form
+            //or property of object in a parent form (accessed through the parent service)
+            if (record != null && (!(record is ObjectRecord)))
+                throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name, typeof(ObjectRecord).Name));
+            IRecordService lookupService = null;
+            if (record != null)
+            {
+                //todo don't check twice if main object
+                lookupService = GetLookupServiceForConnectionFor(fieldName, ((ObjectRecord) record).Instance);
+                if (lookupService != null)
+                    return lookupService;
+            }
+            lookupService = GetLookupServiceForConnectionFor(reference, ObjectToEnter);
+            if (lookupService != null)
+                return lookupService;
+            lookupService = GetLookupServiceForConnectionFor(fieldName, ObjectToEnter);
+            if (lookupService != null)
+                return lookupService;
+            if (ParentService != null)
+            {
+                return ParentService.GetLookupService(ParentServiceReference, ObjectType.Name, ParentServiceReference, new ObjectRecord(ObjectToEnter));
+            }
+            return LookupService;
+        }
+
+        private IRecordService GetLookupServiceForConnectionFor(string fieldName, object objectToEnter)
+        {
+            var props = GetPropertyInfos(objectToEnter.GetType().Name);
             foreach (var prop in props)
             {
                 var connectionFor = prop.GetCustomAttributes<ConnectionFor>()
-                    .Where(c => c.PropertyPaths.Count() > 1 && c.PropertyPath1 == reference && c.PropertyPath2 == fieldName);
+                    .Where(c => c.Property == fieldName);
                 if (connectionFor.Any())
                 {
-                    var value = ObjectToEnter.GetPropertyValue(prop.Name);
+                    var value = objectToEnter.GetPropertyValue(prop.Name);
                     lock (_lockObject)
                     {
-                        if (_serviceConnections.ContainsKey(prop.Name))
-                            return _serviceConnections[prop.Name];
                         if (value != null)
                         {
+                            if (_serviceConnections.ContainsKey(value))
+                                return _serviceConnections[value];
                             var connectionFieldType = value.GetType();
                             var serviceConnectionAttr = connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
                             if (serviceConnectionAttr == null)
                                 throw new NullReferenceException(
                                     string.Format(
                                         "The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
-                                        prop.Name, typeof (ConnectionFor).Name, connectionFieldType.Name,
-                                        typeof (ServiceConnection).Name, typeof (IRecordService).Name));
+                                        prop.Name, typeof(ConnectionFor).Name, connectionFieldType.Name,
+                                        typeof(ServiceConnection).Name, typeof(IRecordService).Name));
                             if (!serviceConnectionAttr.ServiceType.HasConstructorFor(connectionFieldType))
                                 throw new NullReferenceException(
                                     string.Format(
                                         "The Property {0} Is Specified With A {1} Attribute However The Type {2} Referenced By The {3} Types {4} Attribute Does Not Have A Constructor For Type {3}",
-                                        prop.Name, typeof (ConnectionFor).Name, serviceConnectionAttr.ServiceType.Name,
-                                        connectionFieldType.Name, typeof (ServiceConnection).Name));
+                                        prop.Name, typeof(ConnectionFor).Name, serviceConnectionAttr.ServiceType.Name,
+                                        connectionFieldType.Name, typeof(ServiceConnection).Name));
                             var service =
-                                (IRecordService) serviceConnectionAttr.ServiceType.CreateFromConstructorFor(value);
-                            _serviceConnections.Add(prop.Name, service);
+                                (IRecordService)serviceConnectionAttr.ServiceType.CreateFromConstructorFor(value);
+                            _serviceConnections.Add(value, service);
                             return service;
                         }
                     }
                 }
             }
-            if (ParentService != null)
-            {
-                return ParentService.GetLookupService(fieldName, recordType, reference);
-            }
-            return LookupService;
+            return null;
         }
 
         public override ParseFieldResponse ParseFieldRequest(ParseFieldRequest parseFieldRequest)

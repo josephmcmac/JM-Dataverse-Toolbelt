@@ -38,7 +38,7 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Gets The Picklist Options For A Picklist Field Filtered By The Depenedant Values
         /// </summary>
-        IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType, string dependentValue);
+        IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType, string dependentValue, IRecord record);
 
         /// <summary>
         ///     Return If The Field Is Defined As Required From The Data Stores Metadata
@@ -543,5 +543,7 @@ namespace JosephM.Record.IService
         bool IsNotNullable(string fieldName, string recordType);
 
         bool IsMultiline(string field, string recordType);
+
+        IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record);
     }
 }

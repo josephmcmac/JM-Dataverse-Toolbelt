@@ -28,6 +28,7 @@ namespace JosephM.Xrm.ImportExporter.Service
 
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", ExportType.SpecificRecords)]
+        [PropertyInContextByPropertyNotNull("RecordType")]
         public IEnumerable<LookupSetting> OnlyExportSpecificRecords { get; set; }
 
         //todo no validation of fetch query in ui

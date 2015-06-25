@@ -65,7 +65,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
             get { return RecordEntryViewModel.GetValidationRules(FieldName); }
         }
 
-        internal RecordEntryViewModelBase RecordEntryViewModel { get; set; }
+        public RecordEntryViewModelBase RecordEntryViewModel { get; set; }
 
         public RecordEntryViewModelBase GetRecordForm()
         {

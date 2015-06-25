@@ -18,15 +18,10 @@ namespace JosephM.Record.Application.RecordEntry.Field
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
             string referencedRecordType)
-            : this(fieldName, fieldLabel, recordForm, referencedRecordType, null)
-        {
-        }
-
-        public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
-            string referencedRecordType, IRecordService lookupService)
-            : base(fieldName, fieldLabel, recordForm, lookupService)
+            : base(fieldName, fieldLabel, recordForm)
         {
             RecordTypeToLookup = referencedRecordType;
+            LoadLookupGrid();
         }
 
         private string _referencedRecordType;
@@ -36,8 +31,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
             set
             {
                 _referencedRecordType = value;
-                LookupGridViewModel = new LookupGridViewModel(LookupService, RecordTypeToLookup, RecordEntryViewModel,
-                    OnRecordSelected);
+                LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
             }
         }
 
@@ -52,6 +46,11 @@ namespace JosephM.Record.Application.RecordEntry.Field
             }
         }
 
+        public override IRecordService LookupService
+        {
+            get { return RecordEntryViewModel.RecordService.GetLookupService(FieldName, RecordEntryViewModel.GetRecordType(), RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord()); }
+        }
+
         protected override string GetValueName()
         {
             if (Value == null)
@@ -62,6 +61,10 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         protected override IEnumerable<IRecord> GetSearchResults()
         {
+            var service = RecordEntryViewModel.RecordService.GetLookupService(FieldName,
+                RecordEntryViewModel.GetRecordType(), RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord());
+
+
             var primaryField = LookupService.GetPrimaryField(RecordTypeToLookup);
             var conditions = GetConditions();
             if (!EnteredText.IsNullOrWhiteSpace())

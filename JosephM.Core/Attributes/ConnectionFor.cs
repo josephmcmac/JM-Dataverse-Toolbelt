@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace JosephM.Core.Attributes
 {
-    //todo logic for this a bit scattered in form and object record service - should consolidate in object record service
     /// <summary>
     ///     Attribute To Define A Property As Cascading The Record Type To Another Property
     ///     Initally Used For Cacading A selected Record Type To A Record Field Or Lookup Property
@@ -14,35 +13,11 @@ namespace JosephM.Core.Attributes
         AllowMultiple = true)]
     public class ConnectionFor : Attribute
     {
-        public string LookupProperty { get; private set; }
+        public string Property { get; private set; }
 
-        public ConnectionFor(string lookupProperty)
+        public ConnectionFor(string property)
         {
-            LookupProperty = lookupProperty;
-        }
-
-        public IEnumerable<string> PropertyPaths
-        {
-            get
-            {
-                return LookupProperty.Split('.');
-            }
-        }
-
-        public string PropertyPath1
-        {
-            get
-            {
-                return PropertyPaths.ElementAt(0);
-            }
-        }
-
-        public string PropertyPath2
-        {
-            get
-            {
-                return PropertyPaths.ElementAt(1);
-            }
+            Property = property;
         }
     }
 }
