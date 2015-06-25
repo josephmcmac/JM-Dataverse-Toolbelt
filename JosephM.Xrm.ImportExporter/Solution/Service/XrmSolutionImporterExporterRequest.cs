@@ -21,21 +21,24 @@ namespace JosephM.Xrm.ImportExporter.Service
         [PropertyInContextByPropertyValues("ImportExportTask", new object[] { SolutionImportExportTask.ExportSolutions, SolutionImportExportTask.MigrateSolutions })]
         public Folder FolderPath { get; set; }
 
+        [PropertyInContextByPropertyValues("ImportExportTask", new object[] { SolutionImportExportTask.ExportSolutions, SolutionImportExportTask.ImportSolutions })]
+        public Folder IncludeImportDataInFolder { get; set; }
+
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
-        [PropertyInContextByPropertyValue("ImportExportTask", Service.SolutionImportExportTask.MigrateSolutions)]
+        [PropertyInContextByPropertyValues("ImportExportTask", new object[] { SolutionImportExportTask.MigrateSolutions, SolutionImportExportTask.ImportSolutions })]
         public SavedXrmRecordConfiguration ImportToConnection { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("ImportExportTask", Service.SolutionImportExportTask.ExportSolutions)]
+        [PropertyInContextByPropertyValue("ImportExportTask", SolutionImportExportTask.ExportSolutions)]
         public IEnumerable<SolutionExport> SolutionExports { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("ImportExportTask", Service.SolutionImportExportTask.ImportSolutions)]
+        [PropertyInContextByPropertyValue("ImportExportTask", SolutionImportExportTask.ImportSolutions)]
         public IEnumerable<SolutionImport> SolutionImports { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("ImportExportTask", Service.SolutionImportExportTask.MigrateSolutions)]
+        [PropertyInContextByPropertyValue("ImportExportTask", SolutionImportExportTask.MigrateSolutions)]
         public IEnumerable<SolutionMigration> SolutionMigrations { get; set; }
 
     }

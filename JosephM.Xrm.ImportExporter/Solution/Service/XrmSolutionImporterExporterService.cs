@@ -26,29 +26,9 @@ using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
-    public class XrmSolutionImporterExporterService<TService> :
+    public class XrmSolutionImporterExporterService:
         ServiceBase<XrmSolutionImporterExporterRequest, XrmSolutionImporterExporterResponse, XrmSolutionImporterExporterResponseItem>
-        where TService : IRecordService
     {
-        public XrmSolutionImporterExporterService(TService service)
-        {
-            Service = service;
-        }
-
-        private IRecordService Service { get; set; }
-
-        //as the module structure uses Service
-        //where want to use Xrm directly have this property
-        private XrmService XrmService
-        {
-            get
-            {
-                if (Service is XrmRecordService)
-                    return ((XrmRecordService)Service).XrmService;
-                else throw new NotSupportedException(string.Format("Only Implemented Where {0} Of Type {1}", "Service", typeof(XrmRecordService).Name));
-            }
-        }
-
         public override void ExecuteExtention(XrmSolutionImporterExporterRequest request, XrmSolutionImporterExporterResponse response,
             LogController controller)
         {
@@ -61,8 +41,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                 }
                 case SolutionImportExportTask.ImportSolutions:
                 {
-                    //todo add include data folder
-                    ImportSolutions(request.SolutionImports, controller, response, XrmService);
+                    ImportSolutions(request, controller, response);
                     break;
                 }
                 case SolutionImportExportTask.MigrateSolutions:
@@ -102,6 +81,23 @@ namespace JosephM.Xrm.ImportExporter.Service
         }
 
         private object _lockObject = new object();
+
+        private void ImportSolutions(XrmSolutionImporterExporterRequest request, LogController controller,
+            XrmSolutionImporterExporterResponse response)
+        {
+            var xrmRecordService = new XrmRecordService(request.ImportToConnection);
+            ImportSolutions(request.SolutionImports, controller, response, xrmRecordService.XrmService);
+            if (request.IncludeImportDataInFolder != null && Directory.Exists(request.IncludeImportDataInFolder.FolderPath))
+            {
+                var dataImportService = new XrmImporterExporterService<XrmRecordService>(xrmRecordService);
+                var importResponse = new XrmImporterExporterResponse();
+                dataImportService.ImportXml(request.IncludeImportDataInFolder.FolderPath, controller, importResponse);
+                if (importResponse.Exception != null)
+                    response.AddResponseItem(new XrmSolutionImporterExporterResponseItem("Fatal Data Import Error", importResponse.Exception));
+                foreach (var item in importResponse.ResponseItems)
+                    response.AddResponseItem(new XrmSolutionImporterExporterResponseItem(item));
+            }
+        }
 
         private void ImportSolutions(IEnumerable<ISolutionImport> imports, LogController controller, XrmSolutionImporterExporterResponse response, XrmService xrmService)
         {
