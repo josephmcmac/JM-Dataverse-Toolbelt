@@ -413,10 +413,14 @@ namespace JosephM.Xrm.ImportExporter.Service
                             else if (isUpdate && existingMatchingIds.Any())
                             {
                                 var matchRecord = existingMatchingIds.First();
-                                if (matchRecord.GetOptionSetValue("statecode") !=
-                                    thisEntity.GetOptionSetValue("statecode") ||
+                                if (
+                                    thisEntity.GetOptionSetValue("statecode") != -1
+                                    && thisEntity.GetOptionSetValue("statuscode") != -1
+                                        &&
+                                        (matchRecord.GetOptionSetValue("statecode") != thisEntity.GetOptionSetValue("statecode")
+                                        ||
                                     matchRecord.GetOptionSetValue("statuscode") !=
-                                    thisEntity.GetOptionSetValue("statuscode"))
+                                    thisEntity.GetOptionSetValue("statuscode")))
                                 {
                                     XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
                                 }
