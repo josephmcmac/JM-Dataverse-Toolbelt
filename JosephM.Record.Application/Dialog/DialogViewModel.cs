@@ -133,12 +133,13 @@ namespace JosephM.Record.Application.Dialog
 
         protected void ProcessError(Exception ex)
         {
+            //note also used in CompleteDialog determining not to continue to next action
             FatalException = ex;
             if (ParentDialog != null)
                 ParentDialog.ProcessError(ex);
             else
             {
-                CompletionMessage = string.Format("Fatal error during import\n{0}", ex.DisplayString());
+                CompletionMessage = string.Format("Fatal error:\n{0}", ex.DisplayString());
                 Controller.ShowCompletionScreen(this);
             }
         }
@@ -153,7 +154,8 @@ namespace JosephM.Record.Application.Dialog
                     try
                     {
                         CompleteDialogExtention();
-                        StartNextAction();
+                        if (FatalException == null)
+                            StartNextAction();
                     }
                     catch (Exception ex)
                     {

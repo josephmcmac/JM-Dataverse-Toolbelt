@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.ServiceModel;
 using System.Text.RegularExpressions;
 using System.Threading;
 using JosephM.Core.FieldType;
@@ -130,6 +131,16 @@ namespace JosephM.Xrm.ImportExporter.Service
                             finished.Completed = true;
                     }
                 }
+                catch (FaultException<OrganizationServiceFault> ex)
+                {
+                    if (ex.Detail != null && ex.Detail.InnerFault != null && ex.Detail.InnerFault.InnerFault != null)
+                    {
+                        throw new Exception(string.Format("Error Importing Solution {0}\n{1}\n{2}", import.SolutionFile.FileName, ex.Message, ex.Detail.InnerFault.InnerFault.Message), ex);
+                    }
+                    else
+                        throw new Exception(
+                            string.Format("Error Importing Solution {0}\n{1}", import.SolutionFile.FileName, ex.Message), ex);
+                }
                 catch (Exception ex)
                 {
                     throw new Exception(string.Format("Error Importing Solution {0}", import.SolutionFile.FileName), ex);
@@ -161,13 +172,16 @@ namespace JosephM.Xrm.ImportExporter.Service
                 }
                 try
                 {
-                    var job = xrmService.Retrieve("importjob", importId);
-                    var progress = job.GetDoubleValue("progress");
-                    lock (_lockObject)
+                    var job = xrmService.GetFirst("importjob", "importjobid", importId);
+                    if (job != null)
                     {
-                        if (finished.Completed)
-                            return;
-                        controller.UpdateProgress(Convert.ToInt32(progress/1), 100, "Import Progress");
+                        var progress = job.GetDoubleValue("progress");
+                        lock (_lockObject)
+                        {
+                            if (finished.Completed)
+                                return;
+                            controller.UpdateProgress(Convert.ToInt32(progress/1), 100, "Import Progress");
+                        }
                     }
                 }
 

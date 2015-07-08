@@ -150,6 +150,8 @@ namespace JosephM.Xrm
             }
             catch (FaultException<OrganizationServiceFault> ex)
             {
+                if (request is ImportSolutionRequest)
+                    throw;
                 lock (_lockObject)
                 {
                     //I have seen this error thrown when the sand box server is busy, and subsequent calls are successful. Going to add a retry
@@ -171,6 +173,7 @@ namespace JosephM.Xrm
                     {
                         Controller.LogLiteral("Crm config found attempting to reconnect..");
                         Service = new XrmConnection(XrmConfiguration).GetOrgServiceProxy();
+                        SetServiceTimeout();
                         result = Service.Execute(request);
                         Controller.LogLiteral("Reconnected..");
                     }
