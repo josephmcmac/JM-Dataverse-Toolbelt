@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JosephM.Core.Extentions;
@@ -132,15 +133,31 @@ namespace JosephM.Record.Application.RecordEntry.Field
             {
                 LookupGridVisible = false;
                 Searching = true;
-                var records = GetSearchResults();
-
-                SendToDispatcher(() =>
+                try
                 {
-                    LookupGridViewModel.GridRecords = GridRowViewModel.LoadRows(records, LookupGridViewModel);
-                    OnPropertyChanged("LookupGridViewModel");
+                    var records = GetSearchResults();
+
+                    DoOnMainThread(() =>
+                    {
+                        try
+                        {
+                            LookupGridViewModel.GridRecords = GridRowViewModel.LoadRows(records, LookupGridViewModel);
+                            OnPropertyChanged("LookupGridViewModel");
+                            Searching = false;
+                            LookupGridVisible = LookupGridViewModel.GridRecords.Any();
+                        }
+                        catch (Exception)
+                        {
+                            Searching = false;
+                            throw;
+                        }
+                    });
+                }
+                catch (Exception)
+                {
                     Searching = false;
-                    LookupGridVisible = LookupGridViewModel.GridRecords.Any();
-                });
+                    throw;
+                }
             }
         }
 

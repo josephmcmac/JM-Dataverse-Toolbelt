@@ -13,5 +13,5 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <field:LookupView></field:LookupView>
+    <field:LookupView  ></field:LookupView>
 </UserControl>

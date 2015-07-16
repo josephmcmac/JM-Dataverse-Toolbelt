@@ -55,7 +55,6 @@ namespace JosephM.Xrm.ImportExporter.Service
             {
                 case ImportExportTask.ImportCsvs:
                 {
-                    //todo don't have test script for this and it broke highlighting it
                     ImportCsvs(request, controller, response);
                     break;
                 }
@@ -86,17 +85,13 @@ namespace JosephM.Xrm.ImportExporter.Service
             {
                 try
                 {
+                    //todo not so great for matching relationship names and fields
+                    //try think if better way
                     controller.UpdateProgress(countImported++, countToImport, string.Format("Reading {0}", csvFile));
-                    var type = GetTargetType(XrmService, csvFile);
+                    var getTypeResponse = GetTargetType(XrmService, csvFile);
+                    var type = getTypeResponse.LogicalName;
                     var primaryField = XrmService.GetPrimaryNameField(type);
                     var rows = CsvUtility.SelectPropertyBagsFromCsv(csvFile);
-                    var primaryFieldColumns =
-                            rows.First()
-                            .GetColumnNames()
-                            .Where(c => MapColumnToFieldSchemaName(XrmService, type, c) == primaryField).ToArray();
-                    var primaryFieldColumn = primaryFieldColumns.Any() ? primaryFieldColumns.First() : null;
-                    if (request.MatchByName && primaryFieldColumn.IsNullOrWhiteSpace())
-                        throw new NullReferenceException(string.Format("Match By Name Was Specified But No Column In The CSV Matched To The Primary Field {0} ({1})", XrmService.GetFieldLabel(primaryField, type), primaryField));
                     var rowNumber = 0;
                     foreach (var row in rows)
                     {
@@ -104,8 +99,16 @@ namespace JosephM.Xrm.ImportExporter.Service
                         try
                         {
                             var entity = new Entity(type);
-                            if (request.MatchByName)
+                            if (request.MatchByName && !getTypeResponse.IsRelationship)
                             {
+                                var primaryFieldColumns =
+                                    rows.First()
+                                    .GetColumnNames()
+                                    .Where(c => MapColumnToFieldSchemaName(XrmService, type, c) == primaryField).ToArray();
+                                var primaryFieldColumn = primaryFieldColumns.Any() ? primaryFieldColumns.First() : null;
+                                if (request.MatchByName && primaryFieldColumn.IsNullOrWhiteSpace())
+                                    throw new NullReferenceException(string.Format("Match By Name Was Specified But No Column In The CSV Matched To The Primary Field {0} ({1})", XrmService.GetFieldLabel(primaryField, type), primaryField));
+                    
                                 var columnValue = row.GetFieldAsString(primaryFieldColumn);
                                 var matchingEntity = GetMatchingEntities(type, primaryField, columnValue);
                                 if (matchingEntity.Count() > 1)
@@ -116,10 +119,17 @@ namespace JosephM.Xrm.ImportExporter.Service
                             foreach (var column in row.GetColumnNames())
                             {
                                 var field = MapColumnToFieldSchemaName(XrmService, type, column);
-                                if (IsIncludeField(field, type))
+                                if (getTypeResponse.IsRelationship || IsIncludeField(field, type))
                                 {
                                     var stringValue = row.GetFieldAsString(column);
-                                    if (XrmService.IsLookup(field, type))
+                                    if (getTypeResponse.IsRelationship)
+                                    {
+                                        //bit of hack
+                                        //for csv relationships just set to a string and map it later
+                                        //as the referenced record may not be created yet
+                                        entity.SetField(field, stringValue);
+                                    }
+                                    else if (XrmService.IsLookup(field, type))
                                     {
                                         //for lookups am going to set to a empty guid and allow the import part to replace with a correct guid
                                         if (!stringValue.IsNullOrWhiteSpace())
@@ -194,13 +204,25 @@ namespace JosephM.Xrm.ImportExporter.Service
             var fieldsForLabel = fields.Where(f => service.GetFieldLabel(f, type) == column);
             if (fieldsForLabel.Count() == 1)
                 return fieldsForLabel.First();
-            var fieldsForName = fields.Where(t => t == column);
+            var fieldsForName = fields.Where(t => t.ToLower() == column.ToLower());
             if (fieldsForName.Any())
                 return fieldsForName.First();
             throw new NullReferenceException(string.Format("No Unique Field Found On Record Type {0} Matched (Label Or Name) For Column Of {1}", type, column));
         }
 
-        private string GetTargetType(XrmService service, string csvName)
+        private class GetTargetTypeResponse
+        {
+            public GetTargetTypeResponse(string logicalName, bool isRelationship)
+            {
+                LogicalName = logicalName;
+                IsRelationship = isRelationship;
+            }
+
+            public bool IsRelationship { get; set; }
+            public string LogicalName { get; set; }
+        }
+
+        private GetTargetTypeResponse GetTargetType(XrmService service, string csvName)
         {
             var name = csvName;
             if(name.EndsWith(".csv"))
@@ -209,11 +231,17 @@ namespace JosephM.Xrm.ImportExporter.Service
             var recordTypes = service.GetAllEntityTypes();
             var typesForLabel = recordTypes.Where(t => service.GetEntityDisplayName(t) == name || service.GetEntityCollectionName(t) == name);
             if (typesForLabel.Count() == 1)
-                return typesForLabel.First();
+                return new GetTargetTypeResponse(typesForLabel.First(), false);
             var typesForName = recordTypes.Where(t => t == name);
             if (typesForName.Any())
-                return typesForName.First();
-            throw new NullReferenceException(string.Format("No Unique Record Type Matched (Label Or Name) For CSV Name Of {0}", name));
+                return new GetTargetTypeResponse(typesForName.First(), false);
+
+            var relationshipEntities = service.GetAllNnRelationshipEntityNames();
+            var matchingRelationships = relationshipEntities.Where(r => r == name);
+            if (matchingRelationships.Count() == 1)
+                return new GetTargetTypeResponse(matchingRelationships.First(), true);
+
+            throw new NullReferenceException(string.Format("No Unique Record Type Or Relationship Matched (Label Or Name) For CSV Name Of {0}", name));
         }
 
         public void ImportXml(string folder, LogController controller,
@@ -521,8 +549,21 @@ namespace JosephM.Xrm.ImportExporter.Service
                         var field1 = relationship.Entity1IntersectAttribute;
                         var type2 = relationship.Entity2LogicalName;
                         var field2 = relationship.Entity2IntersectAttribute;
-                        var id1 = thisEntity.GetGuidField(relationship.Entity1IntersectAttribute);
-                        var id2 = thisEntity.GetGuidField(relationship.Entity2IntersectAttribute);
+
+                        //bit of hack
+                        //when importing from csv just set the fields to the string name of the referenced record
+                        //so either string when csv or guid when xml import/export
+                        var value1 = thisEntity.GetField(relationship.Entity1IntersectAttribute);
+                        var id1 = value1 is string
+                            ? GetUniqueMatchingEntity(type1, Service.GetPrimaryField(type1), (string) value1).Id
+                            : thisEntity.GetGuidField(relationship.Entity1IntersectAttribute);
+
+                        var value2 = thisEntity.GetField(relationship.Entity2IntersectAttribute);
+                        var id2 = value2 is string
+                            ? GetUniqueMatchingEntity(type2, Service.GetPrimaryField(type2), (string)value2).Id
+                            : thisEntity.GetGuidField(relationship.Entity2IntersectAttribute);
+
+                        //add a where field lookup reference then look it up
                         if (idSwitches.ContainsKey(type1) && idSwitches[type1].ContainsKey(id1))
                             id1 = idSwitches[type1][id1];
                         if (idSwitches.ContainsKey(type2) && idSwitches[type2].ContainsKey(id2))

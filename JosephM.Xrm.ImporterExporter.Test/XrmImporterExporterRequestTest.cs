@@ -23,6 +23,82 @@ namespace JosephM.Xrm.ImporterExporter.Test
     public class XrmImporterExporterRequestTest : XrmModuleTest
     {
         [TestMethod]
+        public void Debug()
+        {
+            var types = new[]
+            {
+                "adx_accesscontrolrule_publishingstate",
+                "adx_accountaccess",
+                "adx_autonumberingdefinition",
+                "adx_brand",
+                "adx_caseaccess",
+                "adx_contactaccess",
+                "adx_contentsnippet",
+                "adx_entityform",
+                "adx_entityformmetadata",
+                "adx_entitylist",
+                "adx_entitypermission",
+                "adx_forum_activityalert",
+                "adx_forumthreadtype",
+                "adx_pagealert",
+                "adx_pagecomment",
+                "adx_pagecommentrating",
+                "adx_pagenotification",
+                "adx_pagetag",
+                "adx_pagetag_webpage",
+                "adx_pagetemplate",
+                "adx_publishingstate",
+                "adx_publishingstatetransitionrule",
+                "adx_rating",
+                "adx_redirect",
+                "adx_review",
+                "adx_setting",
+                "adx_shortcut",
+                "adx_sitemarker",
+                "adx_sitesetting",
+                "adx_store",
+                "adx_tag",
+                "adx_webfile",
+                "adx_webform",
+                "adx_webformmetadata",
+                "adx_webformsession",
+                "adx_webformstep",
+                "adx_weblink",
+                "adx_weblinkset",
+                "adx_webnotificationurl",
+                "adx_webpage",
+                "adx_webpage_tag",
+                "adx_webpageaccesscontrolrule",
+                "adx_webrole",
+                "adx_website",
+                "adx_websiteaccess",
+                "adx_websitebinding",
+                "adx_webtemplate",
+                "myr_autonumber",
+                "myr_bankresponsecodemapping",
+                "myr_charitablefundtype",
+                "myr_contacttypeoption",
+                "myr_donationtype",
+                "myr_financialyear",
+                "myr_impactarea",
+                "myr_lmcfsettings",
+                "myr_mypaymentresponsemapping",
+                "myr_mypaymentsettings",
+                "myr_organisationtypeoption",
+                "myr_scheduledworkflow",
+                "myr_securepaystatuscodemapping",
+                "myr_taxgroup",
+                "pricelevel"
+            };
+
+            var req = new XrmImporterExporterRequest();
+            req.ImportExportTask = ImportExportTask.ExportXml;
+            req.RecordTypes = types.Select(t => new ImportExportRecordType() {RecordType = new RecordType(t, t)});
+            var controller = new FakeApplicationController();
+            controller.SeralializeObjectToFile(req, @"C:\Users\josephm\Documents\objects.xml");
+        }
+
+        [TestMethod]
         public void XrmImporterExporterRequestCheckSerialise()
         {
             //to do refactor this generic and could use to validate all types

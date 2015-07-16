@@ -328,7 +328,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     _recordFields.AddRange(formSection.Fields);
                 }
                 //now set the section view model property in the ui thread which will notify the ui with the sections
-                SendToDispatcher(
+                DoOnMainThread(
                     () => { FormSectionsAsync = new ObservableCollection<SectionViewModelBase>(sectionViewModels); });
                 OnLoad();
                 //need to somehow refresh grid visibilities

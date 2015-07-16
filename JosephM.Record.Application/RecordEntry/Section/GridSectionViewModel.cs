@@ -143,7 +143,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
                 RecordForm.RecordType,
                 SubGridSection.LinkedRecordLookup,
                 RecordForm.RecordId);
-            SendToDispatcher(() => LoadRows(records));
+            DoOnMainThread(() => LoadRows(records));
         }
 
         private void LoadRows(IEnumerable<IRecord> records)

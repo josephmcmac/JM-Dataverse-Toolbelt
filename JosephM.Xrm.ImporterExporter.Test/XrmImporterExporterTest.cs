@@ -18,6 +18,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
     [TestClass]
     public class XrmImporterExporterTest : XrmRecordTest
     {
+        [DeploymentItem(@"Files\Account.csv")]
+        [DeploymentItem(@"Files\new_testentity_account.csv")]
         [DeploymentItem(@"Files\Test Entity.csv")]
         [DeploymentItem(@"Files\Test Entity Two.csv")]
         [DeploymentItem(@"Files\Test Entity Three.csv")]
@@ -25,9 +27,11 @@ namespace JosephM.Xrm.ImporterExporter.Test
         public void ExportImportCsvMultipleTest()
         {
             PrepareTests();
-            var types = new[] { "new_testentitytwo", "new_testentitythree", "new_testentity" };
+            var types = new[] { "new_testentitytwo", "new_testentitythree", "new_testentity", "account" };
             var workFolder = ClearFilesAndData(types);
 
+            File.Copy(@"Account.csv", Path.Combine(workFolder, @"Account.csv"));
+            File.Copy(@"new_testentity_account.csv", Path.Combine(workFolder, @"new_testentity_account.csv"));
             File.Copy(@"Test Entity.csv", Path.Combine(workFolder, @"Test Entity.csv"));
             File.Copy(@"Test Entity Two.csv", Path.Combine(workFolder, @"Test Entity Two.csv"));
             File.Copy(@"Test Entity Three.csv", Path.Combine(workFolder, @"Test Entity Three.csv"));
@@ -164,7 +168,6 @@ namespace JosephM.Xrm.ImporterExporter.Test
         [TestMethod]
         public void ExportXmlTypesTest()
         {
-            //todo don't have any validation of notes and relationships
             var query = new QueryExpression();
 
             PrepareTests();

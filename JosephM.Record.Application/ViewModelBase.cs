@@ -31,11 +31,6 @@ namespace JosephM.Record.Application
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void SendToDispatcher(Action action)
-        {
-            ApplicationController.DoOnMainThread(action);
-        }
-
         public void DoOnMainThread(Action action)
         {
             ApplicationController.DoOnMainThread(action);

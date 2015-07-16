@@ -1,8 +1,10 @@
 ﻿#region
 
-using System.Windows.Data;
+using System.Windows.Forms;
 using System.Windows.Input;
 using JosephM.Record.Application.RecordEntry.Field;
+using Binding = System.Windows.Data.Binding;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 #endregion
 
@@ -35,6 +37,14 @@ namespace JosephM.Wpf.RecordEntry.Field
             else if (e.Key == Key.K &&
                      (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)))
                 ViewModel.Search();
+        }
+
+        private void EnteredTextBox_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {//todo this a bit risky where error thrown o
+            //for some strange reason when enter pressed to search the textbox loses focus
+            //so just put this in there to force focus into textbox again
+            if (ViewModel.Searching)
+                ((System.Windows.Controls.TextBox)sender).Focus();
         }
     }
 }

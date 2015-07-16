@@ -300,7 +300,6 @@ namespace JosephM.Record.Service
             IRecordService lookupService = null;
             if (record != null)
             {
-                //todo don't check twice if main object
                 lookupService = GetLookupServiceForConnectionFor(fieldName, ((ObjectRecord) record).Instance);
                 if (lookupService != null)
                     return lookupService;

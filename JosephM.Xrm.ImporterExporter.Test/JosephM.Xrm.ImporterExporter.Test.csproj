@@ -74,6 +74,12 @@
     <Compile Include="XrmImporterExporterTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Files\Account.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Files\new_testentity_account.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Files\Test Entity Three.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

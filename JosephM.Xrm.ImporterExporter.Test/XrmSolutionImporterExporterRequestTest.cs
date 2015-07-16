@@ -78,8 +78,6 @@ namespace JosephM.Xrm.ImporterExporter.Test
         [TestMethod]
         public void XrmImporterExporterLookupConnectionTest()
         {
-            //todo just works without errors - does not verify the connection correctly cascade
-
             PrepareTests();
 
             Assert.IsNotNull(TestAccount);
