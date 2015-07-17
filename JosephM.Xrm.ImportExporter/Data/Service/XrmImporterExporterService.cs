@@ -91,6 +91,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var getTypeResponse = GetTargetType(XrmService, csvFile);
                     var type = getTypeResponse.LogicalName;
                     var primaryField = XrmService.GetPrimaryNameField(type);
+                    CsvUtility.ConstructTextSchema(request.FolderPath.FolderPath, Path.GetFileName(csvFile));
                     var rows = CsvUtility.SelectPropertyBagsFromCsv(csvFile);
                     var rowNumber = 0;
                     foreach (var row in rows)

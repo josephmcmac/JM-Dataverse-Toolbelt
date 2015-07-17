@@ -71,6 +71,46 @@ namespace JosephM.Core.Utility
             return name.ToLower().EndsWith(".csv") ? name : name + ".csv";
         }
 
+        public static void ConstructTextSchema(string folder, string fileName)
+        {
+            if (folder.IsNullOrWhiteSpace())
+                folder = AppDomain.CurrentDomain.BaseDirectory;
+            var schema = new StringBuilder();
+            var data = LoadCSV(folder, fileName);
+            schema.AppendLine("[" + fileName + "]");
+            schema.AppendLine("ColNameHeader=True");
+            for (var i = 0; i < data.Columns.Count; i++)
+            {
+                schema.AppendLine("col" + (i + 1).ToString() + "=\"" + data.Columns[i].ColumnName + "\" Text");
+            }
+            var schemaFileName = folder + @"\Schema.ini";
+            TextWriter tw = new StreamWriter(schemaFileName);
+            tw.WriteLine(schema.ToString());
+            tw.Close();
+        }
+
+        public static DataTable LoadCSV(string folder, string fileName)
+        {
+            if (folder.IsNullOrWhiteSpace())
+                folder = AppDomain.CurrentDomain.BaseDirectory;
+            var sqlString = "Select * FROM [" + fileName + "];";
+            var conStr = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source="
+                         + folder + ";" + "Extended Properties='text;HDR=YES;'";
+            var theCSV = new DataTable();
+
+            using (var conn = new OleDbConnection(conStr))
+            {
+                using (var comm = new OleDbCommand(sqlString, conn))
+                {
+                    using (var adapter = new OleDbDataAdapter(comm))
+                    {
+                        adapter.Fill(theCSV);
+                    }
+                }
+            }
+            return theCSV;
+        }
+
         public static DataTable SelectFromExcelTabName(string folder, string fileName)
         {
             OleDbDataAdapter dAdapter = null;
