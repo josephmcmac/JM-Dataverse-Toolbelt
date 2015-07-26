@@ -33,6 +33,7 @@
                 DataContext="{Binding NotifyOnValidationError=True}"
                 Text="{Binding Path=EnteredText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Name="EnteredTextBox"
+                LostKeyboardFocus="EnteredTextBox_OnLostKeyboardFocus"
                 Style="{StaticResource FieldEntryStyle}"
                 IsEnabled="{Binding IsEditable}"
                 PreviewKeyDown="OnPreviewKeyDown" />

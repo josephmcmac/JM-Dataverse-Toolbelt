@@ -219,8 +219,12 @@ namespace JosephM.Xrm.CodeGenerator.Service
         private void AppendJavaScriptOptionSets(StringBuilder stringBuilder, CodeGeneratorRequest request,
             LogController controller)
         {
+            var types = GetRecordTypesToImport(request);
+            var countToDo = types.Count();
+            var countDone = 0;
             foreach (var recordType in GetRecordTypesToImport(request))
             {
+                controller.UpdateProgress(countDone, countToDo, string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
                 if (IsValidForCode(recordType))
                 {
                     var recordTypeCodeLabel = CreateCodeLabel(Service.GetDisplayName(recordType));
@@ -252,6 +256,7 @@ namespace JosephM.Xrm.CodeGenerator.Service
                         }
                     }
                 }
+                countDone++;
             }
         }
 
@@ -274,8 +279,12 @@ namespace JosephM.Xrm.CodeGenerator.Service
         private void AppendCSharpOptionSets(StringBuilder stringBuilder, CodeGeneratorRequest request,
             LogController controller)
         {
-            foreach (var recordType in GetRecordTypesToImport(request))
+            var types = GetRecordTypesToImport(request);
+            var countToDo = types.Count();
+            var countDone = 0;
+            foreach (var recordType in types)
             {
+                controller.UpdateProgress(countDone, countToDo, string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
                 if (IsValidForCode(recordType))
                 {
                     var recordTypeCodeLabel = CreateCodeLabel(Service.GetDisplayName(recordType));
@@ -308,6 +317,7 @@ namespace JosephM.Xrm.CodeGenerator.Service
                     }
                     stringBuilder.AppendLine("\t\t}");
                 }
+                countDone++;
             }
         }
 

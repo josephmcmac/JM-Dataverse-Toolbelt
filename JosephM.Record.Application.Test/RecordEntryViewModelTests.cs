@@ -11,8 +11,14 @@ using JosephM.Record.Service;
 namespace JosephM.Record.Application.Test
 {
     [TestClass]
-    public class RecordEntryViewModelTests
+    public class RecordEntryViewModelTests : RecordApplicationTests
     {
+        [TestMethod]
+        public void FakeRecordEntryViewModelTest()
+        {
+            var blah = new FakeRecordEntryViewModel();
+        }
+
         [TestMethod]
         public void RecordEntryViewModelRequiredPropertiesTests()
         {
@@ -52,21 +58,6 @@ namespace JosephM.Record.Application.Test
 
             requiredGridFieldViewModel.ValueObject = "Something";
             Assert.IsTrue(viewModel.Validate());
-        }
-
-        private ObjectEntryViewModel LoadToObjectEntryViewModel(TestViewModelValidationObject objectToEnter)
-        {
-            var recordService = new ObjectRecordService(objectToEnter);
-            var formService = new ObjectFormService(objectToEnter, recordService);
-            var viewModel = new ObjectEntryViewModel(EmptyMethod, EmptyMethod, objectToEnter,
-                new FormController(recordService, formService, new FakeApplicationController()));
-            Assert.IsNotNull(viewModel.FormSectionsAsync);
-            return viewModel;
-        }
-
-        private void EmptyMethod()
-        {
-            
         }
     }
 }

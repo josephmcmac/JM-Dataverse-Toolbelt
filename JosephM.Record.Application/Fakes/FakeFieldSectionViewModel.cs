@@ -10,7 +10,6 @@ namespace JosephM.Record.Application.Fakes
     {
         public FakeFieldSectionViewModel()
             : base(
-                new FakeFormController(),
                 FakeFormService.FakeSection1,
                 new FakeRecordEntryViewModel()
                 )

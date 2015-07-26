@@ -29,7 +29,7 @@ namespace JosephM.Prism.Infrastructure.Prism
         {
             var applicationController = new ApplicationController(
                 bootstrapper.Container.Resolve<IRegionManager>(),
-                applicationName);
+                applicationName, bootstrapper.Container);
 
             bootstrapper.Container.RegisterInfrastructure<DialogController>(applicationController);
         }

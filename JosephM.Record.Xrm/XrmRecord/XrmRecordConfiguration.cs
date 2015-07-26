@@ -6,6 +6,7 @@ using JosephM.Core.Service;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
+    [ServiceConnection(typeof(XrmRecordService))]
     public class XrmRecordConfiguration : IXrmRecordConfiguration, IValidatableObject
     {
         [DisplayOrder(20)]

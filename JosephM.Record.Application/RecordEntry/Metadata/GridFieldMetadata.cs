@@ -6,10 +6,7 @@
             : base(fieldName)
         {
             WidthPart = 200;
-            Order = int.MaxValue;
         }
-
-        public int Order { get; set; }
 
         public double WidthPart { get; set; }
 

@@ -13,19 +13,17 @@ namespace JosephM.Record.Application.RecordEntry.Section
         private bool _isVisible = true;
 
         protected SectionViewModelBase(
-            FormController formController,
             FormSection formSection,
             RecordEntryFormViewModel recordForm
             )
-            : base(formController.ApplicationController)
+            : base(recordForm.FormController.ApplicationController)
         {
             FormSection = formSection;
             RecordForm = recordForm;
-            FormController = formController;
         }
 
         public FormSection FormSection { get; private set; }
-        protected RecordEntryFormViewModel RecordForm { get; private set; }
+        public RecordEntryFormViewModel RecordForm { get; private set; }
 
         public virtual string SectionIdentifier
         {
@@ -47,7 +45,10 @@ namespace JosephM.Record.Application.RecordEntry.Section
             get { return FormController.FormService; }
         }
 
-        public FormController FormController { get; set; }
+        public FormController FormController
+        {
+            get { return RecordForm.FormController; }
+        }
 
         public FormMetadata FormMetadata
         {

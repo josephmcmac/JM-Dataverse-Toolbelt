@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using JosephM.Record.Application.RecordEntry.Field;
 using JosephM.Record.Application.RecordEntry.Form;
 using JosephM.Record.Application.RecordEntry.Metadata;
@@ -15,11 +16,10 @@ namespace JosephM.Record.Application.RecordEntry.Section
         private ObservableCollection<FieldViewModelBase> _fields;
 
         public FieldSectionViewModel(
-            FormController formController,
             FormFieldSection formSection,
             RecordEntryFormViewModel recordForm
             )
-            : base(formController, formSection, recordForm)
+            : base(formSection, recordForm)
         {
         }
 
@@ -43,7 +43,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
         private ObservableCollection<FieldViewModelBase> CreateFieldViewModels(IEnumerable<FormFieldMetadata> formFields)
         {
             var fieldViewModels = new ObservableCollection<FieldViewModelBase>();
-            foreach (var formField in formFields)
+            foreach (var formField in formFields.OrderBy(f => f.Order))
             {
                 var fieldVm = formField.CreateFieldViewModel(RecordType, RecordService, RecordForm,
                     ApplicationController);

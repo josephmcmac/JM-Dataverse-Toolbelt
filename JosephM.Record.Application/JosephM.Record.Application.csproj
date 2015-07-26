@@ -70,6 +70,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -78,12 +82,16 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationOptions\ApplicationViewModel.cs" />
     <Compile Include="Dialog\IDialogController.cs" />
+    <Compile Include="Fakes\FakeObjectEntryViewModel.cs" />
+    <Compile Include="Fakes\FakeObjectFormController.cs" />
+    <Compile Include="Fakes\FakeObjectEntryClass.cs" />
     <Compile Include="Fakes\FakeApplication.cs" />
     <Compile Include="Fakes\FakeHtmlFileModel.cs" />
     <Compile Include="Fakes\FakeDialogController.cs" />
@@ -100,8 +108,16 @@
     <Compile Include="Fakes\FakeObjectsGridViewModelcs.cs" />
     <Compile Include="Fakes\FakeProgressControlViewModel.cs" />
     <Compile Include="HTML\HtmlFileModel.cs" />
+    <Compile Include="RecordEntry\Field\FileRefFieldViewModell.cs" />
+    <Compile Include="RecordEntry\Field\IReferenceFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\ObjectFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\ReferenceFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />
     <Compile Include="Search\SearchResultViewModel.cs" />
+    <Compile Include="SettingTypes\LookupSetting.cs" />
+    <Compile Include="SettingTypes\FieldSetting.cs" />
     <Compile Include="SettingTypes\RecordFieldSetting.cs" />
     <Compile Include="SettingTypes\RecordTypeSetting.cs" />
     <Compile Include="Shared\ProgressControlViewModel.cs" />
@@ -121,9 +137,8 @@
     <Compile Include="Shared\LoadingViewModel.cs" />
     <Compile Include="Navigation\INavigationProvider.cs" />
     <Compile Include="Navigation\PrismNavigationProvider.cs" />
-    <Compile Include="RecordEntry\Field\BooleanFieldViewModell.cs" />
+    <Compile Include="RecordEntry\Field\BooleanFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DateFieldViewModel.cs" />
-    <Compile Include="RecordEntry\Field\ExcelFileFieldViewModell.cs" />
     <Compile Include="RecordEntry\Field\FieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\FieldViewModelBase.cs" />
     <Compile Include="RecordEntry\Field\FolderFieldViewModell.cs" />
@@ -139,6 +154,7 @@
     <Compile Include="RecordEntry\Form\RecordEntryViewModelBase.cs" />
     <Compile Include="RecordEntry\Form\ReadViewModel.cs" />
     <Compile Include="RecordEntry\Form\OpenViewModel.cs" />
+    <Compile Include="Validation\IValidatableObjectValidationRule.cs" />
     <Compile Include="Validation\IValidatable.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="RecordEntry\Form\CreateViewModel.cs" />
@@ -188,6 +204,14 @@
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
+      <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
+      <Name>JosephM.ObjectMapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>

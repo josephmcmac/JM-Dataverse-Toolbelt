@@ -132,6 +132,17 @@ namespace JosephM.Xrm
                 return null;
         }
 
+        /// <summary>
+        ///     null if fieldValue is null
+        /// </summary>
+        public static Guid GetGuidField(this Entity entity,string fieldName)
+        {
+            var fieldValue = GetField(entity, fieldName);
+            if (fieldValue != null)
+                return (Guid)fieldValue;
+            else
+                return Guid.Empty;
+        }
 
         public static string GetLookupName(object fieldValue)
         {
@@ -163,7 +174,7 @@ namespace JosephM.Xrm
         /// <summary>
         ///     0 if the entity is null, does not contain the field or the field is null
         /// </summary>
-        public static decimal GetDecimalValue(Entity entity, string fieldName)
+        public static decimal GetDecimalValue(this Entity entity, string fieldName)
         {
             return GetDecimalValue(GetField(entity, fieldName));
         }
@@ -177,6 +188,25 @@ namespace JosephM.Xrm
                 return (Decimal) fieldValue;
             else
                 return new Decimal(0);
+        }
+
+        /// <summary>
+        ///     0 if the entity is null, does not contain the field or the field is null
+        /// </summary>
+        public static double GetDoubleValue(this Entity entity, string fieldName)
+        {
+            return GetDoubleValue(GetField(entity, fieldName));
+        }
+
+        /// <summary>
+        ///     0 if fieldValue is null
+        /// </summary>
+        public static double GetDoubleValue(object fieldValue)
+        {
+            if (fieldValue != null)
+                return (double)fieldValue;
+            else
+                return (double)0;
         }
 
         /// <summary>
@@ -628,6 +658,21 @@ namespace JosephM.Xrm
         {
             var parties = entity.GetActivityParties(fieldName);
             return parties.Select(p => (EntityReference)p.GetField("partyid"));
+        }
+
+        /// <summary>
+        ///     If entity is not null and contains the field returns the field value else returns null
+        /// </summary>
+        public static void RemoveFields(this Entity entity, IEnumerable<string> fieldNames)
+        {
+            if (fieldNames != null)
+            {
+                foreach (var field in fieldNames)
+                {
+                    if (entity.Contains(field))
+                        entity.Attributes.Remove(field);
+                }
+            }
         }
     }
 }

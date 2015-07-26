@@ -7,9 +7,9 @@ namespace JosephM.Record.Application.RecordEntry
 {
     public class FormController
     {
-        public static FormController CreateForObject(object objectToEnter, IApplicationController applicationController)
+        public static FormController CreateForObject(object objectToEnter, IApplicationController applicationController, IRecordService lookupService)
         {
-            var recordService = new ObjectRecordService(objectToEnter);
+            var recordService = new ObjectRecordService(objectToEnter, lookupService, null);
             var formService = new ObjectFormService(objectToEnter, recordService);
             var formController = new FormController(recordService, formService, applicationController);
             return formController;

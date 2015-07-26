@@ -24,7 +24,7 @@ namespace JosephM.Xrm
 {
     public class XrmService : IOrganizationService
     {
-        private int _timeoutSeconds = 120;
+        private int _timeoutSeconds = 600;
 
         public int TimeoutSeconds
         {
@@ -32,9 +32,14 @@ namespace JosephM.Xrm
             set
             {
                 _timeoutSeconds = value;
-                if (_service != null)
-                    _service.Timeout = new TimeSpan(0, 0, value);
+                SetServiceTimeout();
             }
+        }
+
+        private void SetServiceTimeout()
+        {
+            if (_service != null)
+                _service.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
         }
 
         public static DateTime MinCrmDateTime = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc);
@@ -111,7 +116,7 @@ namespace JosephM.Xrm
             set { Controller = value; }
         }
 
-        internal IXrmConfiguration XrmConfiguration { get; set; }
+        public IXrmConfiguration XrmConfiguration { get; set; }
 
         /// <summary>
         ///     DON'T USE CALL THE EXECUTE METHOD
@@ -123,7 +128,10 @@ namespace JosephM.Xrm
                 lock (_lockObject)
                 {
                     if (_service == null)
+                    {
                         _service = new XrmConnection(XrmConfiguration).GetOrgServiceProxy();
+                        SetServiceTimeout();
+                    }
                 }
                 return _service;
             }
@@ -142,6 +150,8 @@ namespace JosephM.Xrm
             }
             catch (FaultException<OrganizationServiceFault> ex)
             {
+                if (request is ImportSolutionRequest)
+                    throw;
                 lock (_lockObject)
                 {
                     //I have seen this error thrown when the sand box server is busy, and subsequent calls are successful. Going to add a retry
@@ -163,6 +173,7 @@ namespace JosephM.Xrm
                     {
                         Controller.LogLiteral("Crm config found attempting to reconnect..");
                         Service = new XrmConnection(XrmConfiguration).GetOrgServiceProxy();
+                        SetServiceTimeout();
                         result = Service.Execute(request);
                         Controller.LogLiteral("Reconnected..");
                     }
@@ -180,20 +191,30 @@ namespace JosephM.Xrm
             return result;
         }
 
-        public virtual ManyToManyRelationshipMetadata GetRelationshipMetadata(string relationship)
+        public virtual ManyToManyRelationshipMetadata GetRelationshipMetadata(string relationshipName)
         {
             lock (LockObject)
             {
-                if (RelationshipMetadata.All(rm => rm.SchemaName != relationship))
+                if (RelationshipMetadata.All(rm => rm.SchemaName != relationshipName))
                 {
                     var request = new RetrieveRelationshipRequest
                     {
-                        Name = relationship
+                        Name = relationshipName
                     };
                     var response = (RetrieveRelationshipResponse) Execute(request);
                     RelationshipMetadata.Add((ManyToManyRelationshipMetadata) response.RelationshipMetadata);
                 }
-                return RelationshipMetadata.Single(rm => rm.SchemaName == relationship);
+                return RelationshipMetadata.First(rm => rm.SchemaName == relationshipName);
+            }
+        }
+
+        public virtual ManyToManyRelationshipMetadata GetRelationshipMetadataForEntityName(string relationshipEntityName)
+        {
+            lock (LockObject)
+            {
+                if(AllRelationshipMetadata.All(r => r.IntersectEntityName != relationshipEntityName))
+                    throw new NullReferenceException(string.Format("Couldn;t Find Relationship With Entity Name {0}", (relationshipEntityName)));
+                return AllRelationshipMetadata.First(r => r.IntersectEntityName == relationshipEntityName);
             }
         }
 
@@ -450,13 +471,7 @@ namespace JosephM.Xrm
 
         public string GetRelationshipEntityName(string relationshipName)
         {
-            //This is in case any of the relationships had their entity name cut off
-            if (relationshipName == "systemuserroles_association")
-                return "systemuserroles";
-            else if (relationshipName.Length > 47)
-                return relationshipName.Substring(0, 47);
-            else
-                return relationshipName;
+            return GetRelationshipMetadata(relationshipName).IntersectEntityName;
         }
 
         public string GetPrimaryKeyName(string entityTo)
@@ -475,7 +490,7 @@ namespace JosephM.Xrm
             return fieldType == AttributeTypeCode.Double || fieldType == AttributeTypeCode.Decimal;
         }
 
-        public int GetDecimalPrecision(string field, string entity)
+        public int GetPrecision(string field, string entity)
         {
             int? temp = null;
             var internalType = GetFieldType(field, entity);
@@ -490,6 +505,11 @@ namespace JosephM.Xrm
                 {
                     temp = ((DoubleAttributeMetadata) GetFieldMetadata(field, entity)).Precision;
                     break;
+                }
+                default:
+                {
+                    throw new NotImplementedException(string.Format("Get Precision Not Implemented For Field Of Type {0} ({1}.{2})"
+                        , internalType, entity, field));
                 }
             }
             if (!temp.HasValue)
@@ -784,7 +804,7 @@ namespace JosephM.Xrm
                             newValue = (decimal) value;
                         else
                             newValue = decimal.Parse(value.ToString().Replace(",", ""));
-                        newValue = decimal.Round(newValue, GetDecimalPrecision(fieldName, entityType));
+                        newValue = decimal.Round(newValue, GetPrecision(fieldName, entityType));
                         if (!DecimalInRange(fieldName, entityType, newValue))
                             throw new ArgumentOutOfRangeException("Field " + fieldName +
                                                                   " outside permitted range of " +
@@ -1156,7 +1176,7 @@ namespace JosephM.Xrm
                 return "";
             else if (IsRealNumber(fieldName, entityType))
             {
-                var format = "#." + (new string('#', GetDecimalPrecision(fieldName, entityType)));
+                var format = "#." + (new string('#', GetPrecision(fieldName, entityType)));
                 return (decimal.Parse(fieldValue.ToString())).ToString(format);
             }
             else if (IsLookup(fieldName, entityType))
@@ -1174,6 +1194,18 @@ namespace JosephM.Xrm
                 EntityMoniker = new EntityReference(entityType, id),
                 State = new OptionSetValue(state),
                 Status = new OptionSetValue(-1)
+            };
+
+            Execute(setStateReq);
+        }
+
+        public void SetState(Entity entity, int state, int status)
+        {
+            var setStateReq = new SetStateRequest
+            {
+                EntityMoniker = new EntityReference(entity.LogicalName, entity.Id),
+                State = new OptionSetValue(state),
+                Status = new OptionSetValue(status)
             };
 
             Execute(setStateReq);
@@ -1956,7 +1988,7 @@ namespace JosephM.Xrm
             return RetrieveFirstX(query, x);
         }
 
-        private IEnumerable<Entity> RetrieveFirstX(QueryExpression query, int x)
+        public IEnumerable<Entity> RetrieveFirstX(QueryExpression query, int x)
         {
             query.PageInfo.PageNumber = 1;
             query.PageInfo.Count = x;
@@ -2276,7 +2308,7 @@ namespace JosephM.Xrm
 
         public void CreateOrUpdateDecimalAttribute(string schemaName, string displayName, string description,
             bool isRequired, bool audit, bool searchable, string recordType,
-            decimal minimum, decimal maximum)
+            decimal minimum, decimal maximum, int decimalPrecision)
         {
             DecimalAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
@@ -2288,13 +2320,15 @@ namespace JosephM.Xrm
 
             metadata.MinValue = minimum;
             metadata.MaxValue = maximum;
+            if (decimalPrecision >= 0)
+                metadata.Precision = decimalPrecision;
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
         }
 
         public void CreateOrUpdateDoubleAttribute(string schemaName, string displayName, string description,
             bool isRequired, bool audit, bool searchable, string recordType,
-            double minimum, double maximum)
+            double minimum, double maximum, int decimalPrecision)
         {
             DoubleAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
@@ -2306,6 +2340,8 @@ namespace JosephM.Xrm
 
             metadata.MinValue = minimum;
             metadata.MaxValue = maximum;
+            if (decimalPrecision >= 0)
+                metadata.Precision = decimalPrecision;
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
         }
@@ -2882,7 +2918,7 @@ string recordType)
                .ToArray();
         }
 
-        public IEnumerable<string> GetAllNnRelationships()
+        public IEnumerable<string> GetAllNnRelationshipEntityNames()
         {
             return GetAllEntityMetadata()
                 .Where(m => m.IsIntersect ?? false)
@@ -3144,6 +3180,11 @@ string recordType)
             return GetFieldMetadata(fieldName, recordType).IsValidForUpdate ?? false;
         }
 
+        public bool IsCreateable(string fieldName, string recordType)
+        {
+            return GetFieldMetadata(fieldName, recordType).IsValidForCreate ?? false;
+        }
+
         public IEnumerable<string> GetFields(string recordType)
         {
             return GetEntityFieldMetadata(recordType).Select(a => a.LogicalName).ToArray();
@@ -3212,8 +3253,20 @@ string recordType)
 
         public string GetDescription(string recordType)
         {
+
             var mt = GetEntityMetadata(recordType);
             return mt.Description != null ? GetLabelDisplay(mt.Description) : null;
+        }
+
+        public QueryExpression ConvertFetchToQueryExpression(string fetchXml)
+        {
+
+            var req = new FetchXmlToQueryExpressionRequest()
+            {
+                FetchXml = fetchXml
+            };
+            var response = (FetchXmlToQueryExpressionResponse) Execute(req);
+            return response.Query;
         }
     }
 }

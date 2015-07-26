@@ -18,9 +18,9 @@ namespace JosephM.CustomisationImporter.Test
         [TestMethod]
         [DeploymentItem("TestCustomisations.xls")]
         [DeploymentItem("TestCustomisationsUpdate.xls")]
-        public void ExecuteTestImport()
+        public void CustomisationImportTestImport()
         {
-            return;
+            //Assert.Inconclusive("Comment Out As Slow");
 
             PrepareTests();
 
@@ -135,6 +135,8 @@ namespace JosephM.CustomisationImporter.Test
                                   ((DecimalFieldMetadata) field).Minimum);
                     Assert.IsTrue(XrmRecordService.GetMaxDecimalValue(field.SchemaName, field.RecordType) ==
                                   ((DecimalFieldMetadata) field).Maximum);
+                    Assert.IsTrue(XrmRecordService.GetDecimalPrecision(field.SchemaName, field.RecordType) ==
+              ((DecimalFieldMetadata)field).DecimalPrecision);
                 }
                 if (field.FieldType == RecordFieldType.Date)
                 {
@@ -154,6 +156,8 @@ namespace JosephM.CustomisationImporter.Test
                                   ((DoubleFieldMetadata)field).Minimum);
                     Assert.IsTrue(XrmRecordService.GetMaxDoubleValue(field.SchemaName, field.RecordType) ==
                                   ((DoubleFieldMetadata)field).Maximum);
+                    Assert.IsTrue(XrmRecordService.GetDecimalPrecision(field.SchemaName, field.RecordType) ==
+              ((DoubleFieldMetadata)field).DecimalPrecision);
                 }
             }
         }

@@ -18,6 +18,6 @@
         Style="{StaticResource GridFieldEntryStyle}"
         DisplayMemberPath="Value"
         ItemsSource="{Binding ItemsSource, Mode=TwoWay}"
-        IsReadOnly="{Binding IsReadOnly}"
+        IsEnabled="{Binding IsVisibleAndEditable}"
         SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}" />
 </field:FieldControlBase>

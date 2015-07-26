@@ -2,10 +2,13 @@
 
 using System;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Windows.Threading;
 using JosephM.Core.Extentions;
+using JosephM.Core.Utility;
 using JosephM.Record.Application.Navigation;
+using Microsoft.Practices.Unity;
 
 #endregion
 
@@ -92,6 +95,26 @@ namespace JosephM.Record.Application.Controller
         public virtual void NavigateTo(Type type, UriQuery uriQuery)
         {
             throw new NotImplementedException();
+        }
+
+        public abstract string GetSaveFileName(string initialFileName, string extention);
+
+        public virtual void SeralializeObjectToFile(object theObject, string fileName)
+        {
+                var serializer = new DataContractSerializer(theObject.GetType());
+                FileUtility.CheckCreateFolder(Path.GetDirectoryName(fileName));
+            using (
+                var fileStream = new FileStream(fileName, FileMode.Create))
+            {
+                serializer.WriteObject(fileStream, theObject);
+            }
+        }
+
+        protected abstract IUnityContainer Container { get; set; }
+
+        public object ResolveType(Type type)
+        {
+            return Container.Resolve(type);
         }
     }
 }

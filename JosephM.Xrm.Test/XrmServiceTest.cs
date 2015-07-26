@@ -15,7 +15,7 @@ using Microsoft.Xrm.Sdk.Query;
 namespace JosephM.Xrm.Test
 {
     [TestClass]
-    public class XrmServiceTest : TestXrmTest
+    public class XrmServiceTest : XrmTest
     {
         [TestMethod]
         public void ExecuteMultipleTest()

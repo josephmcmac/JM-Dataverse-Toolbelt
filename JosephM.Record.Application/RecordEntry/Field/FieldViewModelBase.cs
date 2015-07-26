@@ -31,6 +31,8 @@ namespace JosephM.Record.Application.RecordEntry.Field
             IsRecordServiceField = true;
         }
 
+        public bool IsNotNullable { get; set; }
+
         private object DeltaValue { get; set; }
 
         private IRecord Record
@@ -63,7 +65,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
             get { return RecordEntryViewModel.GetValidationRules(FieldName); }
         }
 
-        internal RecordEntryViewModelBase RecordEntryViewModel { get; set; }
+        public RecordEntryViewModelBase RecordEntryViewModel { get; set; }
 
         public RecordEntryViewModelBase GetRecordForm()
         {
@@ -166,7 +168,9 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         private IEnumerable<string> ValidationPropertyNames
         {
-            get { return new[] {"ValueObject", "Value"}; }
+            //could be in extended classes - is used to notify the ui of validation error
+            //as sometimes it is a different property displayed in ui for different view model types
+            get { return new[] { "ValueObject", "Value", "StringDisplay", "EnteredText" }; }
         }
 
         public IEnumerable GetErrors(string propertyName)
@@ -208,12 +212,12 @@ namespace JosephM.Record.Application.RecordEntry.Field
                 {
                     _errors.Add(validationResponse.ErrorContent);
                     foreach (var validationPropertyName in ValidationPropertyNames)
-                    {
                         NotifyErrorsChanged(validationPropertyName);
-                    }
                     return false;
                 }
             }
+            foreach (var validationPropertyName in ValidationPropertyNames)
+                NotifyErrorsChanged(validationPropertyName);
             return true;
         }
 
@@ -230,9 +234,13 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         public void OnChangeBase()
         {
+            //this should just defer these onloads to the on changes
             RecordEntryViewModel.RefreshVisibility();
             OnPropertyChanged("ValueObject");
-            Validate();
+            //Removed On Change Validation Because Some Do Service Connections (XrmRecordConfiguration) To Validate
+            //And Caused Selection To Delay
+            //So Just Validate On Save
+            //Validate();
             OnChange();
             OnChangeDelegate(this);
         }

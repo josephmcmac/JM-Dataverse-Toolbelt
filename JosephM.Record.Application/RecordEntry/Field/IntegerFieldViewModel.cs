@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Record.Application.RecordEntry.Form;
 
@@ -16,6 +17,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
             MinValue = Int32.MinValue;
             MaxValue = Int32.MaxValue;
         }
+
 
         public int MaxValue { get; set; }
         public int MinValue { get; set; }
@@ -36,6 +38,10 @@ namespace JosephM.Record.Application.RecordEntry.Field
                     response.AddInvalidReason(
                         string.Format("The entered value is less than the minimum of {0}", MinValue));
                 }
+            }
+            else if (IsNotNullable && (value == null || string.IsNullOrWhiteSpace(value.ToString())))
+            {
+                response.AddInvalidReason(string.Format("A Value Is Required"));
             }
             return response;
         }

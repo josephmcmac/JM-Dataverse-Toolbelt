@@ -38,7 +38,9 @@ namespace JosephM.Record.Service
 
         public override object GetField(string field)
         {
-            return Instance.GetType().GetProperty(field).GetGetMethod().Invoke(Instance, null);
+            return field == "ToString"
+                ? Instance.ToString()
+                : Instance.GetType().GetProperty(field).GetGetMethod().Invoke(Instance, null);
         }
 
         public override bool ContainsField(string field)

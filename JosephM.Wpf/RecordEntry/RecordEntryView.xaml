@@ -41,6 +41,15 @@
                     <StackPanel
                         Orientation="Horizontal"
                         VerticalAlignment="Top"
+                        HorizontalAlignment="Left">
+                        <shared:XrmButton
+                            DataContext="{Binding LoadRequestButtonViewModel}" />
+                        <shared:XrmButton
+                            DataContext="{Binding SaveRequestButtonViewModel}" />
+                    </StackPanel>
+                    <StackPanel
+                        Orientation="Horizontal"
+                        VerticalAlignment="Top"
                         HorizontalAlignment="Right">
                         <shared:XrmButton
                             DataContext="{Binding SaveButtonViewModel}" />

@@ -16,5 +16,12 @@ namespace JosephM.Record.Application.RecordEntry.Field
         }
 
         public int? MaxLength { get; set; }
+
+        public bool IsMultiline { get; set; }
+
+        public int NumberOfLines
+        {
+            get { return IsMultiline ? 10 : 1; }
+        }
     }
 }

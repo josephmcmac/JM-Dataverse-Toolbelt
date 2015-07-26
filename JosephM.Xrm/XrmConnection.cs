@@ -63,7 +63,6 @@ namespace JosephM.Xrm
                     organizationProxy = GetProxy<IOrganizationService, OrganizationServiceProxy>(orgServiceManagement,
                         credentials);
                 }
-
                 return organizationProxy;
             }
             catch (Exception ex)
@@ -167,6 +166,8 @@ namespace JosephM.Xrm
                     break;
                 }
             }
+            if(orgDetail == null)
+                throw new NullReferenceException("No Organisation Returned By The Discovery Service Matched The UniqueName Of " + orgUniqueName);
             return orgDetail;
         }
 
@@ -195,6 +196,10 @@ namespace JosephM.Xrm
                     serviceManagement.Authenticate(authCredentials);
                 // Obtain discovery/organization service proxy for Federated, LiveId and OnlineFederated environments. 
                 // Instantiate a new class of type using the 2 parameter constructor of type IServiceManagement and SecurityTokenResponse.
+
+                if (tokenCredentials.SecurityTokenResponse == null)
+                    throw new NullReferenceException("There was an error creating the service connection as the SecurityTokenResponse is null. Check you have the correct authentication type and connection details");
+
                 return (TProxy) classType
                     .GetConstructor(new[]
                     {

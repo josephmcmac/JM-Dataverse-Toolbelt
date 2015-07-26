@@ -58,12 +58,19 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DynamicsGridViewModelItemsTests.cs" />
+    <Compile Include="ObjectEntryViewModelTests.cs" />
+    <Compile Include="RecordApplicationTests.cs" />
     <Compile Include="RecordEntryViewModelTests.cs" />
     <Compile Include="FakeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestViewModelValidationObject.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Core.Test\JosephM.Core.Test.csproj">
+      <Project>{7A4CE94B-1F3B-46F0-9C7F-9F2CB5B3C5E8}</Project>
+      <Name>JosephM.Core.Test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
@@ -71,6 +78,10 @@
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
       <Name>JosephM.Record.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Test\JosephM.Record.Test.csproj">
+      <Project>{5BD2132A-20D5-4A81-9CD4-E8BE6BC43C4F}</Project>
+      <Name>JosephM.Record.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59CAC082-C1A8-474C-B73C-BC79267C9B51}</Project>

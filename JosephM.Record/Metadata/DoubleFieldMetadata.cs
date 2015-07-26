@@ -10,6 +10,7 @@
         {
             Minimum = double.MinValue;
             Maximum = double.MaxValue;
+            DecimalPrecision = 10;
         }
 
         public DoubleFieldMetadata(string recordType, string internalName, string label)
@@ -17,12 +18,15 @@
         {
             Minimum = double.MinValue;
             Maximum = double.MaxValue;
+            DecimalPrecision = 10;
         }
 
         public override RecordFieldType FieldType
         {
             get { return RecordFieldType.Double; }
         }
+
+        public int DecimalPrecision { get; set; }
 
         public double Minimum { get; set; }
 

@@ -72,6 +72,17 @@ namespace JosephM.Record.Query
                         return ((IComparable)fieldValue).CompareTo(Value) <= 0;
                     throw new NotSupportedException(string.Format("Type {0} Not Of {1} Type For {2} Operator", fieldValue.GetType(), typeof(IComparable), ConditionType));
                 }
+                case ConditionType.BeginsWith:
+                {
+                    if (Value == null)
+                        return true;
+                    var stringValue = (string) Value;
+                    if (fieldValue == null)
+                        return stringValue == "";
+                    if (fieldValue is string)
+                        return ((string) fieldValue).StartsWith(stringValue);
+                    throw new NotSupportedException(string.Format("Type {0} Not Of {1} Type For {2} Operator", fieldValue.GetType(), typeof(string), ConditionType));
+                }
                 case ConditionType.NotNull:
                 {
                     return fieldValue.IsEmpty();

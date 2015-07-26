@@ -133,8 +133,8 @@
     <DataTemplate x:Key="integerFieldTemplate">
         <field:IntegerFieldView DataContext="{Binding}" />
     </DataTemplate>
-    <DataTemplate x:Key="excelFileFieldTemplate">
-        <field:ExcelFileFieldView DataContext="{Binding}" />
+    <DataTemplate x:Key="fileRefFieldTemplate">
+        <field:FileRefFieldView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="folderFieldTemplate">
         <field:FolderFieldView DataContext="{Binding}" />
@@ -157,7 +157,7 @@
         DateFieldTemplate="{StaticResource dateFieldTemplate}"
         StringFieldTemplate="{StaticResource stringFieldTemplate}"
         IntegerFieldTemplate="{StaticResource integerFieldTemplate}"
-        ExcelFileFieldTemplate="{StaticResource excelFileFieldTemplate}"
+        FileRefFieldTemplate="{StaticResource fileRefFieldTemplate}"
         LookupFieldTemplate="{StaticResource LookupFieldTemplate}"
         PasswordFieldTemplate="{StaticResource passwordFieldTemplate}"
         FolderFieldTemplate="{StaticResource folderFieldTemplate}"

@@ -342,7 +342,7 @@
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>JosephM.CustomisationImporter.Content_Files1</td><td>{95EA8E66-CB75-44FF-9099-4F79A8D72936}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.customisationimporte1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>{F10D9203-4D10-4FB7-8267-7B6DA63C8C20}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmdeveloperto</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>{1F497FC5-38C7-48BF-A782-E08B8CAE12E4}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmdeveloperto</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>JosephM.Prism.XrmModule.Content_Files</td><td>{C012E0D3-1BD4-44B5-8BD3-D7485C6AD95B}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmmodule.cont</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>JosephM.Xrm.CustomisationExporter.Content_Files</td><td>{30C3EFA1-A775-4446-8EED-4A055FBF4AE8}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.customisationexp</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>JosephM.Xrm.ImporterExporter.Content_Files</td><td>{F756D74C-2B17-44A5-8920-D819EEF353F8}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.importerexporter</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -945,7 +945,7 @@
 		<row><td>InstallChangeFolder</td><td>Up</td><td>DirectoryListUp</td><td>0</td><td>1</td><td>0</td></row>
 		<row><td>InstallWelcome</td><td>Back</td><td>NewDialog</td><td>SplashBitmap</td><td>Display_IsBitmapDlg</td><td>0</td></row>
 		<row><td>InstallWelcome</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>InstallWelcome</td><td>Next</td><td>NewDialog</td><td>LicenseAgreement</td><td>1</td><td>0</td></row>
+		<row><td>InstallWelcome</td><td>Next</td><td>NewDialog</td><td>ReadyToInstall</td><td>1</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>1</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>ISPrintButton</td><td>DoAction</td><td>ISPrint</td><td>1</td><td>0</td></row>
@@ -980,7 +980,7 @@
 		<row><td>ReadmeInformation</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>1</td></row>
 		<row><td>ReadmeInformation</td><td>Next</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
 		<row><td>ReadyToInstall</td><td>Back</td><td>NewDialog</td><td>CustomSetup</td><td>Installed OR _IsSetupTypeMin = "Custom"</td><td>2</td></row>
-		<row><td>ReadyToInstall</td><td>Back</td><td>NewDialog</td><td>LicenseAgreement</td><td>NOT Installed</td><td>1</td></row>
+		<row><td>ReadyToInstall</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>NOT Installed</td><td>1</td></row>
 		<row><td>ReadyToInstall</td><td>Back</td><td>NewDialog</td><td>MaintenanceType</td><td>Installed AND _IsMaintenance = "Reinstall"</td><td>3</td></row>
 		<row><td>ReadyToInstall</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>EndDialog</td><td>Return</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>0</td></row>
@@ -2045,7 +2045,7 @@
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
 		<row><td>JosephM.CustomisationImporter.Content_Files1</td><td/><td/><td>_B7F78BA0_94BC_45F3_B319_F2B04B3A75CB_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td/><td>_B54159B7_47D2_4962_95CF_162BD6252B35_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td/><td>_DF3F000E_05CB_4722_ACF1_85272D9AEB48_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>JosephM.Prism.XrmModule.Content_Files</td><td/><td/><td>_ABEAAF95_C3F4_4B52_8CE7_C61CA94097EF_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>JosephM.Xrm.CustomisationExporter.Content_Files</td><td/><td/><td>_602F9DE5_E602_4E28_801F_A73EF28EBA43_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>JosephM.Xrm.ImporterExporter.Content_Files</td><td/><td/><td>_377E6DFF_3C41_4F13_ACA8_89FF89B9C906_FILTER</td><td/><td/><td/><td/></row>
@@ -3490,6 +3490,7 @@
 		<row><td>IDS_SETUPEXE_EXPIRE_MSG</td><td>1033</td><td>This setup works until %s. The setup will now exit.</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>IDS_SETUPEXE_LAUNCH_COND_E</td><td>1033</td><td>This setup was built with an evaluation version of InstallShield and can only be launched from setup.exe.</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>IDS_SHORTCUT_DISPLAY_NAME1</td><td>1033</td><td>JosephM XRM Developer Tool</td><td>0</td><td/><td>581137007</td></row>
+		<row><td>IDS_SHORTCUT_DISPLAY_NAME2</td><td>1033</td><td>JosephM Xrm Developer Tool</td><td>0</td><td/><td>1789088205</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO</td><td>1033</td><td>From the list of servers below, select the database server you would like to target.</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_DB</td><td>1033</td><td>From the list of catalog names below, select the database catalog you would like to target.</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_TEMPLATE</td><td>1033</td><td>[IS_SQLBROWSE_INTRO]</td><td>0</td><td/><td>581155311</td></row>
@@ -3780,6 +3781,7 @@
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>581155311</td></row>
 		<row><td>ID_STRING1</td><td>1033</td><td>http://www.JosephM.com</td><td>0</td><td/><td>983805621</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>JosephM</td><td>0</td><td/><td>983805621</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>JosephM Xrm Developer Tool</td><td>0</td><td/><td>1789090253</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>581155311</td></row>
 	</table>
 
@@ -4401,7 +4403,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]JosephM.Prism.XrmDeveloperTool.Primary output</td><td/></row>
 		<row><td>ProductCode</td><td>{1654C006-FC0A-4A2C-9171-B9B8FB40FE5B}</td><td/></row>
 		<row><td>ProductName</td><td>JosephM.Prism.XrmDeveloperTool.Install</td><td/></row>
-		<row><td>ProductVersion</td><td>1.00.0000</td><td/></row>
+		<row><td>ProductVersion</td><td>1.04.0000</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4478,8 +4480,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>FileKey1</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td>josephm</td><td>2</td></row>
-		<row><td>FileKey2</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td>joseph_1.ins_josephm.prism.xrmdevelopertool.install</td><td>2</td></row>
 		<row><td>_Built</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td>joseph_1.ins_josephm.prism.xrmdevelopertool.install</td><td>2</td></row>
 	</table>
 
@@ -4566,7 +4566,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>_Built</td><td>joseph_1.ins_josephm.prism.xrmdevelopertool.install</td><td>##IDS_SHORTCUT_DISPLAY_NAME1##</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>_Built</td><td>joseph_1.ins_josephm.prism.xrmdevelopertool.install</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>_Built1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">

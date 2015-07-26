@@ -43,6 +43,12 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService = new XrmService(xrmConfiguration, controller);
         }
 
+        //DON'T REMOVE THIS CONSTRUCTOR - REQUIRED BY ServiceConnection Attribute
+        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration)
+            : this(iXrmRecordConfiguration, new LogController())
+        {
+        }
+
         public XrmService XrmService
         {
             get { return _xrmService; }
@@ -173,6 +179,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService.ClearCache();
         }
 
+        public bool IsNotNullable(string fieldName, string recordType)
+        {
+            return false;
+        }
+
         public bool IsMultilineText(string fieldName, string recordType)
         {
             return _xrmService.IsMultilineText(fieldName, recordType);
@@ -182,6 +193,11 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             var value = _xrmService.GetMaxDecimalValue(fieldName, recordType);
             return value ?? decimal.MaxValue;
+        }
+
+        public int GetDecimalPrecision(string fieldName, string recordType)
+        {
+            return _xrmService.GetPrecision(fieldName, recordType);
         }
 
         public decimal GetMinDecimalValue(string fieldName, string recordType)
@@ -640,7 +656,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                         typedField.Audit,
                         typedField.Searchable,
                         recordType,
-                        typedField.Minimum, typedField.Maximum);
+                        typedField.Minimum, typedField.Maximum, typedField.DecimalPrecision);
                     break;
                 }
                 case (RecordFieldType.Integer):
@@ -763,7 +779,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                             typedField.IsMandatory,
                             typedField.Audit,
                             typedField.Searchable,
-                            recordType, typedField.Minimum, typedField.Maximum);
+                            recordType, typedField.Minimum, typedField.Maximum, typedField.DecimalPrecision);
                     break;
                 }
                 case (RecordFieldType.State):
@@ -1281,7 +1297,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         }
 
 
-        public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue)
+        public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
             throw new NotImplementedException();
         }
@@ -1290,6 +1306,11 @@ namespace JosephM.Record.Xrm.XrmRecord
         public bool IsWritable(string fieldName, string recordType)
         {
             return _xrmService.IsWritable(fieldName, recordType);
+        }
+
+        public bool IsCreateable(string fieldName, string recordType)
+        {
+            return _xrmService.IsCreateable(fieldName, recordType);
         }
 
         public bool IsReadable(string fieldName, string recordType)
@@ -1391,6 +1412,16 @@ namespace JosephM.Record.Xrm.XrmRecord
         public IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
         {
             return ToIRecords(_xrmService.GetLinkedRecordsThroughBridge(linkedRecordType, recordTypeThrough, recordTypeFrom, linkedThroughLookupFrom, linkedThroughLookupTo, new Guid(recordFromId)));
+        }
+
+        public bool IsMultiline(string field, string recordType)
+        {
+            return _xrmService.IsMultilineText(field, recordType);
+        }
+
+        public IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)
+        {
+            return LookupService;
         }
     }
 }

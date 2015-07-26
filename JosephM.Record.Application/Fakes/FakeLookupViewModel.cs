@@ -15,7 +15,7 @@ namespace JosephM.Record.Application.Fakes
         public FakeLookupViewModel()
             : base(
                 FakeConstants.LookupField, "Fake Lookup", new FakeRecordEntryViewModel(),
-                FakeConstants.RecordType, FakeRecordService.Get())
+                FakeConstants.RecordType)
         {
             new Thread(() =>
             {

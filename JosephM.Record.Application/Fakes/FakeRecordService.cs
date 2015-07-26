@@ -333,7 +333,9 @@ namespace JosephM.Record.Application.Fakes
                 new DateFieldMetadata(FakeConstants.DateOfBirthField,
                     "Date of Birth"),
                 new StringFieldMetadata(FakeConstants.HtmlField,
-                    "Html")
+                    "Html"),
+                    new DateFieldMetadata(FakeConstants.EnumerableField,
+                    "Enumerable"),
             };
         }
 
@@ -369,6 +371,7 @@ namespace JosephM.Record.Application.Fakes
                 fields.Add(FakeConstants.DateOfBirthField, new DateTime(1980, 11, 15));
                 fields.Add(FakeConstants.IntegerField, i);
                 fields.Add(FakeConstants.StringField, "A String");
+                //fields.Add(FakeConstants.EnumerableField, new List<string>() { { "One" }, { "Two" }});
                 //fields.Add(FakeConstants.HtmlField, SampleHtml);
                 fields.Add(FakeConstants.LookupField,
                     new Lookup(referencedRecord.Type, referencedRecord.Id, "Should Never See This"));
@@ -384,7 +387,7 @@ namespace JosephM.Record.Application.Fakes
         public override IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom,
             string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
         {
-            //todo couldn't bother doing yet
+            //todo not necessary yet
             return new RecordObject[0];
         }
     }

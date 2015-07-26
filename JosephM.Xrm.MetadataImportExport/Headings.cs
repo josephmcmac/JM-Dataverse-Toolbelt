@@ -25,6 +25,7 @@ namespace JosephM.Xrm.MetadataImportExport
             public const string Minimum = "Minimum";
             public const string Maximum = "Maximum";
             public const string PicklistOptions = "Picklist Options";
+            public const string DecimalPrecision = "Decimal Precision";
         }
 
         public static class RecordTypes

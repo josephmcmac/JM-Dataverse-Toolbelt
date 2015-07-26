@@ -17,6 +17,7 @@ namespace JosephM.Record.Application.Fakes
             RecordIdName = FakeConstants.Id;
             RecordType = record.Type;
             SetRecord(record);
+            Reload();
         }
 
         public override string SaveButtonLabel

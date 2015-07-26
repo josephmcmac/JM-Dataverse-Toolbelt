@@ -7,6 +7,11 @@
             FileName = fileName;
         }
 
+        protected XrmFile()
+        {
+            
+        }
+
         public string FileName { get; set; }
 
         public abstract string FileMask { get; }

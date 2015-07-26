@@ -85,6 +85,8 @@
     <Compile Include="Extentions\RecordExtentions.cs" />
     <Compile Include="Metadata\AnyFieldMetadata.cs" />
     <Compile Include="Metadata\BigIntFieldMetadata.cs" />
+    <Compile Include="Metadata\FileRefFieldMetadata.cs" />
+    <Compile Include="Metadata\ObjectFieldMetadata.cs" />
     <Compile Include="Metadata\StateFieldMetadata.cs" />
     <Compile Include="Metadata\UniqueidentifierFieldMetadata.cs" />
     <Compile Include="Metadata\DoubleFieldMetadata.cs" />
@@ -124,7 +126,6 @@
     <Compile Include="Metadata\RecordMetadata.cs" />
     <Compile Include="Metadata\RelationshipMetadata.cs" />
     <Compile Include="Metadata\StringFieldMetadata.cs" />
-    <Compile Include="Metadata\ExcelFileFieldMetadata.cs" />
     <Compile Include="Metadata\IntegerFieldMetadata.cs" />
     <Compile Include="Metadata\BooleanFieldMetadata.cs" />
     <Compile Include="IService\ParseFieldRequest.cs" />

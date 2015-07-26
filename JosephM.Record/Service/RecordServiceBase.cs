@@ -157,14 +157,6 @@ namespace JosephM.Record.Service
                             return new ParseFieldResponse("value not of boolean type");
                         break;
                     }
-                    case RecordFieldType.ExcelFile:
-                    {
-                        if (value is ExcelFile)
-                            parsedValue = value;
-                        else
-                            return new ParseFieldResponse("value not of excelfile type");
-                        break;
-                    }
                     case RecordFieldType.Folder:
                     {
                         if (value is Folder)
@@ -239,7 +231,7 @@ namespace JosephM.Record.Service
         }
 
 
-        public string GetLookupTargetType(string field, string recordType)
+        public virtual string GetLookupTargetType(string field, string recordType)
         {
             return ((LookupFieldMetadata) GetFieldMetadata(field, recordType)).ReferencedRecordType;
         }
@@ -340,6 +332,11 @@ namespace JosephM.Record.Service
         }
 
         public decimal GetMaxDecimalValue(string p1, string p2)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetDecimalPrecision(string fieldName, string recordType)
         {
             throw new NotImplementedException();
         }
@@ -667,7 +664,7 @@ namespace JosephM.Record.Service
 
 
         public virtual IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType,
-            string dependentValue)
+            string dependentValue, IRecord record)
         {
             throw new NotImplementedException();
         }
@@ -676,6 +673,11 @@ namespace JosephM.Record.Service
         public virtual bool IsWritable(string fieldName, string recordType)
         {
             return true;
+        }
+
+        public bool IsCreateable(string fieldName, string recordType)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual bool IsReadable(string fieldName, string recordType)
@@ -818,6 +820,15 @@ namespace JosephM.Record.Service
             throw new NotImplementedException();
         }
 
+        public void ClearCache()
+        {
+        }
+
+        public virtual bool IsNotNullable(string fieldName, string recordType)
+        {
+            return false;
+        }
+
         public virtual IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
         {
             throw new NotImplementedException();
@@ -826,6 +837,16 @@ namespace JosephM.Record.Service
         public bool IsCustomer(string recordType, string field)
         {
             throw new NotImplementedException();
+        }
+
+        public virtual bool IsMultiline(string field, string recordType)
+        {
+            return false;
+        }
+
+        public virtual IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)
+        {
+            return LookupService;
         }
     }
 }

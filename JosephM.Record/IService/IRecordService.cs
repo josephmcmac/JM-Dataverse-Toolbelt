@@ -38,7 +38,7 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Gets The Picklist Options For A Picklist Field Filtered By The Depenedant Values
         /// </summary>
-        IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType, string dependentValue);
+        IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType, string dependentValue, IRecord record);
 
         /// <summary>
         ///     Return If The Field Is Defined As Required From The Data Stores Metadata
@@ -167,6 +167,11 @@ namespace JosephM.Record.IService
         ///     Return The Maximum Value Of An Decimal Field From The Data Stores Metadata
         /// </summary>
         decimal GetMaxDecimalValue(string fieldName, string recordType);
+
+        /// <summary>
+        ///     Return The Maximum Value Of An Decimal Field From The Data Stores Metadata
+        /// </summary>
+        int GetDecimalPrecision(string fieldName, string recordType);
 
         /// <summary>
         ///     Return If A Date Field Is Defined To Include A Time Compponent
@@ -468,9 +473,14 @@ namespace JosephM.Record.IService
         IEnumerable<string> GetActivityTypes();
 
         /// <summary>
-        /// Returns All if The Field Is Writable
+        /// Returns All if The Field Is Updateable
         /// </summary>
         bool IsWritable(string fieldName, string recordType);
+
+        /// <summary>
+        /// Returns All if The Field Is Valid For Create
+        /// </summary>
+        bool IsCreateable(string fieldName, string recordType);
 
         bool IsReadable(string fieldName, string recordType);
 
@@ -527,5 +537,13 @@ namespace JosephM.Record.IService
         IEnumerable<string> GetSharedOptionSetNames();
 
         IEnumerable<KeyValuePair<string,string>> GetSharedOptionSetKeyValues(string optionSetName);
+
+        void ClearCache();
+
+        bool IsNotNullable(string fieldName, string recordType);
+
+        bool IsMultiline(string field, string recordType);
+
+        IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record);
     }
 }

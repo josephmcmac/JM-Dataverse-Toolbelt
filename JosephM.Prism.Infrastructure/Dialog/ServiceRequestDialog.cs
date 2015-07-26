@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
@@ -46,7 +50,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
         protected TService Service { get; set; }
 
-        private TRequest Request { get; set; }
+        protected TRequest Request { get; set; }
 
         protected TResponse Response { get; set; }
 
@@ -74,6 +78,11 @@ namespace JosephM.Prism.Infrastructure.Dialog
             {
                 CompletionItems.Add(responseItem);
             }
+            if (Request.GetType().GetCustomAttributes(typeof (AllowSaveAndLoad), false).Any())
+            {
+                AddCompletionOption("Save Request", SaveRequest);
+            }
+
             if (Response.Success)
                 ProcessCompletionExtention();
 
@@ -85,6 +94,13 @@ namespace JosephM.Prism.Infrastructure.Dialog
                 CompletionMessage = "Process Finished";
         }
 
+        private void SaveRequest()
+        {
+            var fileName = ApplicationController.GetSaveFileName("*", ".xml");
+            if (!fileName.IsNullOrWhiteSpace())
+                ApplicationController.SeralializeObjectToFile(Request, fileName);
+        }
+
         protected virtual void ProcessCompletionExtention()
         {
         }
@@ -92,6 +108,18 @@ namespace JosephM.Prism.Infrastructure.Dialog
         public override string TabLabel
         {
             get { return typeof (TRequest).GetDisplayName(); }
+        }
+
+        public void OpenFolder(string folder)
+        {
+            try
+            {
+                Process.Start(folder);
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.UserMessage(ex.DisplayString());
+            }
         }
     }
 }

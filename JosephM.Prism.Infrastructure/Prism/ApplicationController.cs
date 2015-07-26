@@ -2,10 +2,14 @@
 
 using System;
 using System.Windows;
+using System.Windows.Forms;
+using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Regions;
 using JosephM.Record.Application.Constants;
 using JosephM.Record.Application.Controller;
 using JosephM.Record.Application.Navigation;
+using Microsoft.Practices.Unity;
+using MessageBox = System.Windows.MessageBox;
 
 #endregion
 
@@ -16,11 +20,14 @@ namespace JosephM.Prism.Infrastructure.Prism
     /// </summary>
     internal class ApplicationController : ApplicationControllerBase
     {
-        public ApplicationController(IRegionManager regionManager, string applicationName)
+        public ApplicationController(IRegionManager regionManager, string applicationName, IUnityContainer container)
             : base(applicationName)
         {
+            Container = container;
             RegionManager = regionManager;
         }
+
+        protected override IUnityContainer Container { get; set; }
 
         private IRegionManager RegionManager { get; set; }
 
@@ -92,6 +99,29 @@ namespace JosephM.Prism.Infrastructure.Prism
             }
             var uri = new Uri(type.FullName + prismQuery, UriKind.Relative);
             RequestNavigate(RegionNames.MainTabRegion, uri);
+        }
+
+        public override string GetSaveFileName(string initialFileName, string extention)
+        {
+            var selectFolderDialog = new SaveFileDialog() { DefaultExt = extention, FileName = initialFileName, Filter = string.Format("{0} files |*{0}", extention) };
+            var result = selectFolderDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                return selectFolderDialog.FileName;
+            }
+            return null;
+        }
+
+        public override void SeralializeObjectToFile(object theObject, string fileName)
+        {
+            try
+            {
+                base.SeralializeObjectToFile(theObject, fileName);
+            }
+            catch (Exception ex)
+            {
+                UserMessage(string.Format("Error Saving Object\n{0}", ex.DisplayString()));
+            }
         }
     }
 }

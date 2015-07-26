@@ -9,7 +9,7 @@ namespace JosephM.Record.Application.Fakes
     public class FakeSubGridViewModel : GridSectionViewModel
     {
         public FakeSubGridViewModel()
-            : base(new FakeFormController(), FakeFormService.FakeSubGridSection, new FakeRecordEntryViewModel())
+            : base(FakeFormService.FakeSubGridSection, new FakeRecordEntryViewModel())
         {
         }
     }

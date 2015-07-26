@@ -6,6 +6,9 @@ using System.Linq;
 using System.Reflection;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
+using JosephM.Core.FieldType;
+using JosephM.Core.Log;
+using JosephM.ObjectMapping;
 using JosephM.Record.Application.Dialog;
 using JosephM.Record.Application.Grid;
 using JosephM.Record.Application.RecordEntry.Field;
@@ -14,7 +17,9 @@ using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Validation;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
+using JosephM.Record.Query;
 using JosephM.Record.Service;
+using JosephM.Record.Xrm.XrmRecord;
 
 #endregion
 
@@ -36,7 +41,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             get { return null; }
         }
 
-        private object ObjectToEnter { get; set; }
+        public object ObjectToEnter { get; set; }
 
         private Type ObjectType
         {
@@ -58,20 +63,8 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     if (property.FieldType == RecordFieldType.Enumerable)
                     {
                         var thisMetadata = (EnumerableFieldMetadata) property;
-                        var gridFields = new List<GridFieldMetadata>();
-                        foreach (var field in ObjectRecordService.GetFields(thisMetadata.EnumeratedType))
-                        {
-                            var propertyInfo = ObjectRecordService.GetPropertyInfo(field, thisMetadata.EnumeratedType);
-                            var gridField = new GridFieldMetadata(field);
-                            gridField.IsEditable = propertyInfo.CanWrite;
-                            var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
-                            if (orderAttribute != null)
-                                gridField.Order = orderAttribute.Order;
-                            var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
-                            if (widthAttribute != null)
-                                gridField.WidthPart = widthAttribute.Width;
-                            gridFields.Add(gridField);
-                        }
+                        var thisFieldType = thisMetadata.EnumeratedType;
+                        var gridFields = GetGridMetadata(thisFieldType);
                         var section = new SubGridSection(property.SchemaName.SplitCamelCase(),
                             thisMetadata.EnumeratedType,
                             property.SchemaName, gridFields);
@@ -79,13 +72,35 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     }
                     else
                     {
-                        primaryFieldSection.Add(new PersistentFormField(property.SchemaName));
+                        var fieldMetadata = new PersistentFormField(property.SchemaName);
+                        fieldMetadata.Order = property.Order;
+                        primaryFieldSection.Add(fieldMetadata);
                     }
                 }
 
                 _formMetadata = new FormMetadata(formSections);
             }
             return _formMetadata;
+        }
+
+        private IEnumerable<GridFieldMetadata> GetGridMetadata(string thisFieldType)
+        {
+            //very similar logic in get saved views
+            var gridFields = new List<GridFieldMetadata>();
+            foreach (var field in ObjectRecordService.GetFields(thisFieldType))
+            {
+                var propertyInfo = ObjectRecordService.GetPropertyInfo(field, thisFieldType);
+                var gridField = new GridFieldMetadata(field);
+                gridField.IsEditable = propertyInfo.CanWrite;
+                var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
+                if (orderAttribute != null)
+                    gridField.Order = orderAttribute.Order;
+                var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
+                if (widthAttribute != null)
+                    gridField.WidthPart = widthAttribute.Width;
+                gridFields.Add(gridField);
+            }
+            return gridFields;
         }
 
         protected override Type GetFormInstanceType(string recordType)
@@ -118,9 +133,15 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
 
         public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
-            return
-                ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.Name)
-                    .Select(va => new PropertyAttributeValidationRule(va));
+            var validators = new List<ValidationRuleBase>();
+            var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.Name);
+            var isValidatable = type.IsTypeOf(typeof (IValidatableObject));
+
+            if(isValidatable)
+                validators.Add(new IValidatableObjectValidationRule());
+            validators.AddRange(ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.Name)
+                    .Select(va => new PropertyAttributeValidationRule(va)));
+            return validators;
         }
 
         public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string subGridRecordType)
@@ -148,19 +169,76 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
 
         internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType)
         {
-
             var onChanges = new List<Action<RecordEntryViewModelBase>>();
             AppendLookupForChanges(fieldName, recordType, onChanges);
+            AppendConnectionForChanges(fieldName, recordType, onChanges);
             AppendInitialiseAttributes(fieldName, recordType, onChanges);
             AppendUniqueOnAttributes(fieldName, recordType, onChanges);
-
+            AppendReadOnlyWhenSetAttributes(fieldName, recordType, onChanges);
             return base.GetOnChanges(fieldName, recordType).Union(onChanges);
+        }
+
+        private void AppendConnectionForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType)
+                .GetCustomAttributes(typeof(ConnectionFor), true).Cast<ConnectionFor>();
+            foreach (var attribute in lookupForAttributes)
+            {
+                onChanges.Add(
+                    re => re.StartNewAction(() =>
+                    {
+                        var changedViewModel = re.GetObjectFieldFieldViewModel(fieldName);
+                        if (changedViewModel.Value != null)
+                        {
+                            var value = changedViewModel.Value;
+                            if (!(value is IXrmRecordConfiguration))
+                                throw new NotImplementedException(string.Format("{0} Attribute Only Implemented For Type {1} But Is Set On Property {2}", typeof(ConnectionFor).Name, typeof(IXrmRecordConfiguration).Name, fieldName));
+                            var matchingFields =
+                                re.FieldViewModels.Where(f => f.FieldName == attribute.Property);
+                            if (matchingFields.Any())
+                            {
+                                var fieldViewModel = matchingFields.First();
+                                if (fieldViewModel is LookupFieldViewModel)
+                                {
+                                    var typedViewModel = (LookupFieldViewModel)fieldViewModel;
+                                    typedViewModel.LoadLookupGrid();
+                                }
+                            }
+                        }
+                    }));
+            }
+        }
+
+        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
+        {
+            var methods = new List<Action<RecordEntryViewModelBase>>();
+            AppendReadOnlyWhenSetAttributes(fieldName, recordType, methods);
+            AppendConnectionForChanges(fieldName, recordType, methods);
+            return methods;
+        }
+
+        private void AppendReadOnlyWhenSetAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            var attributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType).GetCustomAttribute<ReadOnlyWhenSet>();
+            if (attributes != null)
+            {
+                onChanges.Add(
+                    re => re.StartNewAction(() =>
+                    {
+                        //just need to if this in a grid then set all others off
+                        var fieldViewModel = re.GetFieldViewModel(fieldName);
+                        if (fieldViewModel != null)
+                        {
+                            fieldViewModel.IsEditable = fieldViewModel.ValueObject == null;
+                        }
+                    }));
+            }
         }
 
         private void AppendUniqueOnAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
         {
-            var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UniqueOn>();
-            if(lookupForAttributes != null)
+            var attributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UniqueOn>();
+            if(attributes != null)
             {
                 onChanges.Add(
                     re => re.StartNewAction(() =>
@@ -220,33 +298,103 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 onChanges.Add(
                     re => re.StartNewAction(() =>
                     {
-                        var recordTypeViewModel = re.GetFieldViewModel(fieldName) as RecordTypeFieldViewModel;
-                        if (recordTypeViewModel == null)
-                            throw new Exception("Expected On Change For Field Of Type Field Of Type: " +
-                                                typeof (LookupFieldViewModel).Name);
-                        var fieldViewModel = re.GetFieldViewModel(attribute.LookupProperty);
-                        if (fieldViewModel is LookupFieldViewModel)
+                        var recordTypeViewModel = re.GetRecordTypeFieldViewModel(fieldName);
+                        var matchingFields = re.FieldViewModels.Where(f => f.FieldName == attribute.PropertyPaths.First());
+                        if (matchingFields.Any())
                         {
-                            var typedViewModel = (LookupFieldViewModel) fieldViewModel;
-                            var selectedRecordType = recordTypeViewModel.Value == null
-                                ? null
-                                : recordTypeViewModel.Value.Key;
-                            typedViewModel.RecordTypeToLookup = selectedRecordType;
-                            typedViewModel.Value = null;
+                            var fieldViewModel = matchingFields.First();
+                            if (fieldViewModel is LookupFieldViewModel)
+                            {
+                                var typedViewModel = (LookupFieldViewModel) fieldViewModel;
+                                var selectedRecordType = recordTypeViewModel.Value == null
+                                    ? null
+                                    : recordTypeViewModel.Value.Key;
+                                typedViewModel.RecordTypeToLookup = selectedRecordType;
+                                typedViewModel.Value = null;
+                            }
+                            else if (fieldViewModel is RecordFieldFieldViewModel)
+                            {
+                                var typedViewModel = (RecordFieldFieldViewModel) fieldViewModel;
+                                var selectedRecordType = recordTypeViewModel.Value == null
+                                    ? null
+                                    : recordTypeViewModel.Value.Key;
+                                typedViewModel.RecordTypeForField = selectedRecordType;
+                            }
                         }
-                        else if (fieldViewModel is RecordFieldFieldViewModel)
+                        else
                         {
-                            var typedViewModel = (RecordFieldFieldViewModel) fieldViewModel;
-                            var selectedRecordType = recordTypeViewModel.Value == null
-                                ? null
-                                : recordTypeViewModel.Value.Key;
-                            typedViewModel.RecordTypeForField = selectedRecordType;
+                            if (re is ObjectEntryViewModel)
+                            {
+                                if(attribute.PropertyPaths.Count() < 2)
+                                    throw new NullReferenceException(string.Format("The {0} Attribute References an Enumerable Property But Does Not Specify The Property On The Enumerated Type. The Value Is {1} And Should Be Of Form Property1.Property2", typeof(RecordTypeFor).Name, attribute.LookupProperty));
+                                var oevm = (ObjectEntryViewModel) re;
+                                var matchingGrids = oevm.SubGrids.Where(sg => sg.ReferenceName == attribute.PropertyPaths.First());
+                                if (matchingGrids.Any())
+                                {
+                                    //clear the rows as they are no longer relevant for the change in type
+                                    matchingGrids.First().ClearRows();
+                                }
+                            }
                         }
                     }));
             }
         }
 
-        internal override RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel)
+        internal override string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
+        {
+            var propertyInfo = GetPropertyInfo(field, viewModel.GetRecord().Type);
+            if (propertyInfo.PropertyType == typeof (FileReference))
+            {
+                var attr = propertyInfo.GetCustomAttribute<FileMask>();
+                return attr == null ? null : attr.Mask;
+            }
+            else return GetRecordTypeFor(field, viewModel);
+        }
+
+        private string GetRecordTypeFor(string field, RecordEntryViewModelBase viewModel)
+        {
+            var propertyInfo = GetPropertyInfo(field, viewModel.GetRecord().Type);
+            if (propertyInfo != null)
+            {
+                var attribute = propertyInfo.GetCustomAttribute<ReferencedType>();
+                if (attribute != null)
+                    return attribute.Type;
+            }
+            var parentForm = viewModel.ParentForm;
+            if (parentForm is ObjectEntryViewModel)
+            {
+                foreach (var parentField in ((ObjectEntryViewModel)parentForm).GetObject().GetType().GetProperties())
+                {
+                    var lookupForAttributes =
+                        parentField.GetCustomAttributes(typeof (RecordTypeFor), true).Cast<RecordTypeFor>();
+                    foreach (var lookupForAttribute in lookupForAttributes)
+                    {
+                        if (lookupForAttribute.PropertyPaths.Count() == 2 &&
+                            lookupForAttribute.PropertyPaths.First() == viewModel.ParentFormReference &&
+                            lookupForAttribute.PropertyPaths.Last() == field)
+                        {
+                            var parentsFieldViewmOdel = parentForm.GetRecordTypeFieldViewModel(parentField.Name);
+                            if (parentsFieldViewmOdel.Value != null)
+                                return parentsFieldViewmOdel.Value.Key;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private PropertyInfo GetPropertyInfo(string field, string type)
+        {
+            var propertyInfo = ObjectRecordService.GetPropertyInfo(field, type);
+            return propertyInfo;
+        }
+
+        internal override string GetLookupTargetType(string field, string recordType, RecordEntryViewModelBase recordForm)
+        {
+            return GetRecordTypeFor(field, recordForm);
+        }
+
+        internal override RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel)
         {
             var propertyInfo = ObjectToEnter.GetType().GetProperty(subGridName);
             if (propertyInfo.GetCustomAttribute<FormEntry>() != null)
@@ -258,14 +406,40 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
-
-                    newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), formController.ApplicationController));
+                    newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName);
                 return viewModel;
                 //ideally could hide the parent dialog temporarily and load this one
             }
                 //if the object specifies use a form then use the form/dialog
             else
                 return null;
+        }
+
+        internal override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        {
+            var record = gridRow.GetRecord();
+            if(!(record is ObjectRecord))
+                throw new NotSupportedException(string.Format("Error Expected Object Of Type {0}", typeof(ObjectRecord).Name));
+            var newRecord = (ObjectRecord) record;
+            //need to load the exitsing row to this
+            //lets start a dialog to add it on complete
+            var mapper = new ClassSelfMapper();
+            var newObject = mapper.Map(newRecord.Instance);
+            var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName);
+            var viewModel = new ObjectEntryViewModel(
+                () => onSave(new ObjectRecord(newObject)),
+                onCancel,
+                newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName);
+            return viewModel;
+        }
+
+        internal override IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType)
+        {
+            var propertyInfo = GetPropertyInfo(fieldName, recordType);
+            var attr = propertyInfo.GetCustomAttributes<LookupCondition>();
+            return attr == null
+                ? new Condition[0]
+                : attr.Select(a => new Condition(a.FieldName, ConditionType.Equal, a.Value));
         }
     }
 }

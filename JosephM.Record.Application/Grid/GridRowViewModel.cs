@@ -7,6 +7,7 @@ using System.Linq;
 using JosephM.Record.Application.RecordEntry.Field;
 using JosephM.Record.Application.RecordEntry.Form;
 using JosephM.Record.Application.RecordEntry.Metadata;
+using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Shared;
 using JosephM.Record.Application.Validation;
 using JosephM.Record.IService;
@@ -27,6 +28,7 @@ namespace JosephM.Record.Application.Grid
             GridViewModel = gridViewModel;
             LoadFields();
             DeleteRowViewModel = new XrmButtonViewModel("Delete", DeleteRow, ApplicationController);
+            EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController);
         }
 
         public IDynamicGridViewModel GridViewModel { get; private set; }
@@ -47,12 +49,19 @@ namespace JosephM.Record.Application.Grid
             RunOnChanges();
         }
 
+        public void EditRow()
+        {
+            GridViewModel.DynamicGridViewModelItems.EditRow(this);
+        }
+
         public void DeleteRow()
         {
             GridViewModel.DynamicGridViewModelItems.DeleteRow(this);
         }
 
         public XrmButtonViewModel DeleteRowViewModel { get; set; }
+
+        public XrmButtonViewModel EditRowViewModel { get; set; }
 
         public IRecord Record { get; set; }
 
@@ -84,6 +93,26 @@ namespace JosephM.Record.Application.Grid
             get { return _gridFields; }
         }
 
+        internal override RecordEntryViewModelBase ParentForm
+        {
+            get
+            {
+                if (GridViewModel is GridSectionViewModel)
+                    return ((GridSectionViewModel) GridViewModel).GetRecordForm();
+                return null;
+            }
+        }
+
+        internal override string ParentFormReference
+        {
+            get
+            {
+                if (GridViewModel is GridSectionViewModel)
+                    return ((GridSectionViewModel) GridViewModel).ReferenceName;
+                return null;
+            }
+        }
+
         public static ObservableCollection<GridRowViewModel> LoadRows(IEnumerable<IRecord> records,
             IDynamicGridViewModel gridVm)
         {
@@ -108,10 +137,8 @@ namespace JosephM.Record.Application.Grid
             {
                 if (FormService != null)
                 {
-                    //AddChangedField(f);
                     foreach (var action in FormService.GetOnChanges(f.FieldName, RecordType))
                         action(this);
-                    //FormInstance.OnChange(f.FieldName, gri);
                 }
             };
         }

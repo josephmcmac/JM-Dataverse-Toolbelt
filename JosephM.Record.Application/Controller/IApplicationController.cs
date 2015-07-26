@@ -70,5 +70,11 @@ namespace JosephM.Record.Application.Controller
         void ThrowException(Exception ex);
 
         void NavigateTo(Type type, UriQuery uriQuery);
+
+        string GetSaveFileName(string initialFileName, string extention);
+
+        void SeralializeObjectToFile(object theObject, string fileName);
+
+        object ResolveType(Type type);
     }
 }

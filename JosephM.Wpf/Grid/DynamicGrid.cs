@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -64,7 +65,7 @@ namespace JosephM.Wpf.Grid
             {
                 gridSectionViewModel.DoOnAsynchThread(() =>
                 {
-                    gridSectionViewModel.DoWhileLoading("Loading Lookup", () =>
+                    gridSectionViewModel.DoWhileLoading("Loading Grid", () =>
                     {
                         var columnMetadata = new List<ColumnMetadata>();
                         foreach (var gridField in gridSectionViewModel.RecordFields.OrderBy(gf => gf.Order))
@@ -88,6 +89,12 @@ namespace JosephM.Wpf.Grid
                                 var deleteColumn = new DeleteRowColumn();
                                 deleteColumn.Binding = new Binding("DeleteRowViewModel");
                                 dynamicDataGrid.Columns.Add(deleteColumn);
+                            }
+                            if (gridSectionViewModel.DynamicGridViewModelItems.CanEdit)
+                            {
+                                var editColumn = new EditRowColumn();
+                                editColumn.Binding = new Binding("EditRowViewModel");
+                                dynamicDataGrid.Columns.Add(editColumn);
                             }
                             foreach (var column in columnMetadata)
                             {
@@ -127,6 +134,34 @@ namespace JosephM.Wpf.Grid
                                 else if (column.FieldType == RecordFieldType.Password)
                                 {
                                     dataGridField = new GridPasswordColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else if (column.FieldType == RecordFieldType.Enumerable)
+                                {
+                                    dataGridField = new GridEnumerableColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else if (column.FieldType == RecordFieldType.Object)
+                                {
+                                    dataGridField = new GridLookupColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else if (column.FieldType == RecordFieldType.FileRef)
+                                {
+                                    dataGridField = new GridFileRefColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else if (column.FieldType == RecordFieldType.Integer)
+                                {
+                                    dataGridField = new GridIntColumn()
                                     {
                                         Binding = cellBinding
                                     };

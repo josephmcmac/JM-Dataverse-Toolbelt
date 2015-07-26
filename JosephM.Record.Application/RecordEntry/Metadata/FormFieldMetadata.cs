@@ -3,8 +3,10 @@ using System.Linq;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.Application.Controller;
+using JosephM.Record.Application.Grid;
 using JosephM.Record.Application.RecordEntry.Field;
 using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 
@@ -12,10 +14,18 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
 {
     public abstract class FormFieldMetadata
     {
+        public virtual bool IsNonPersistentField
+        {
+            get { return false; }
+        }
+
         protected FormFieldMetadata(string fieldName)
         {
             FieldName = fieldName;
+            Order = int.MaxValue;
         }
+
+        public int Order { get; set; }
 
         public string FieldName { get; private set; }
 
@@ -26,8 +36,10 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             RecordFieldType fieldType;
             string label;
             var isEditable = true;
-            var isRecordServiceField = this is PersistentFormField;
-            if (this is NonPersistentFormField)
+            //this not quite right haven't needed to change yet though
+            var isNonPersistent = this is NonPersistentFormField;
+            var isRecordServiceField = !isNonPersistent;
+            if (isNonPersistent)
             {
                 fieldType = ((NonPersistentFormField) this).RecordFieldType;
                 label = ((NonPersistentFormField) this).Label;
@@ -62,6 +74,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                             recordType);
                         ((IntegerFieldViewModel) fieldVm).MaxValue = recordService.GetMaxIntValue(field,
                             recordType);
+                        fieldVm.IsNotNullable = recordService.IsNotNullable(field, recordType);
                     }
                     break;
                 }
@@ -70,7 +83,8 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     fieldVm = new StringFieldViewModel(field, label, recordForm)
                     {
                         MaxLength = recordService.GetMaxLength(field, recordType),
-                        IsRecordServiceField = isRecordServiceField
+                        IsRecordServiceField = isRecordServiceField,
+                        IsMultiline = recordService.IsMultiline(field, recordType)
                     };
                     break;
                 }
@@ -101,18 +115,13 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     };
                     break;
                 }
-                case RecordFieldType.ExcelFile:
-                {
-                    fieldVm = new ExcelFileFieldViewModel(field, label, recordForm)
-                    {
-                        IsRecordServiceField = isRecordServiceField
-                    };
-                    break;
-                }
                 case RecordFieldType.Lookup:
                 {
-                    fieldVm = new LookupFieldViewModel(field, label, recordForm,
-                        recordService.GetLookupTargetType(field, recordType), recordService.LookupService)
+                    //the check for null here was when loading a lookup grid the rows in the lookup do not require a form
+                    var targetType = recordForm.FormService == null
+                        ? null
+                        : recordForm.FormService.GetLookupTargetType(field, recordType, recordForm);
+                    fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType)
                     {
                         IsRecordServiceField = isRecordServiceField
                     };
@@ -147,7 +156,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     fieldVm = new RecordTypeFieldViewModel(field, label, recordForm)
                     {
                         IsRecordServiceField = isRecordServiceField,
-                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType)
+                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference, recordForm.GetRecord())
                             .Select(p => new RecordType(p.Key, p.Value))
                             .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                             .OrderBy(rt => rt.Value)
@@ -157,10 +166,12 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 }
                 case RecordFieldType.RecordField:
                 {
+                    var dependantValue = recordForm.FormService.GetDependantValue(field, recordType, recordForm);
+
                     fieldVm = new RecordFieldFieldViewModel(field, label, recordForm)
                     {
                         IsRecordServiceField = isRecordServiceField,
-                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType)
+                        ItemsSource = recordService.GetPicklistKeyValues(field, recordType, dependantValue, recordForm.GetRecord())
                             .Select(p => new RecordField(p.Key, p.Value))
                             .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                             .OrderBy(rt => rt.Value)
@@ -168,10 +179,36 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                     };
                     break;
                 }
+                case RecordFieldType.Enumerable:
+                {
+                    fieldVm = new EnumerableFieldViewModel(field, label, recordForm)
+                    {
+                        IsRecordServiceField = isRecordServiceField
+                    };
+                    break;
+                }
+                case RecordFieldType.Object:
+                {
+                    var targetType = recordForm.FormService == null
+                        ? null
+                        : recordForm.FormService.GetLookupTargetType(field, recordType, recordForm);
+                    fieldVm = new ObjectFieldViewModel(field, label, recordForm);
+                    break;
+                }
+                case RecordFieldType.FileRef:
+                {
+                    var mask = recordForm.FormService == null
+                        ? null
+                        : recordForm.FormService.GetDependantValue(field, recordType, recordForm);
+                    fieldVm = new FileRefFieldViewModel(field, label, recordForm, mask);
+                    break;
+                }
             }
             if (fieldVm == null)
-                throw new ArgumentNullException(
-                    string.Concat("No data entry control and vm created for field type ", fieldType));
+                fieldVm = new UnmatchedFieldViewModel(field, label, recordForm)
+                {
+                    IsRecordServiceField = isRecordServiceField
+                };
             fieldVm.IsEditable = isEditable;
             return fieldVm;
         }

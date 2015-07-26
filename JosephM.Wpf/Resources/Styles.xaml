@@ -9,6 +9,7 @@
 
     <Image x:Key="AddButtonImageKey" Source="../Images/AddIcon.jpg" Height="15" Width="15" />
     <Image x:Key="DeleteButtonImageKey" Source="../Images/DeleteIcon.jpg" Height="15" Width="15" />
+    <Image x:Key="EditButtonImageKey" Source="../Images/EditIcon.jpg" Height="15" Width="15" />
     <Image x:Key="CloseButtonImageKey" Source="../Images/CloseButton.gif" />
     <ImageSource x:Key="ErrorIconImageSourceKey">
         ../Images/ErrorIcon.png
@@ -46,11 +47,20 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="GridEnumerableField" TargetType="{x:Type TextBlock}">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
+    </Style>
     <Style x:Key="IconButton" TargetType="{x:Type Button}">
         <Setter Property="Margin" Value="1,1,1,1" />
+        <Setter Property="Height" Value="20" />
     </Style>
     <Style x:Key="DeleteRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource DeleteButtonImageKey}" />
+    </Style>
+    <Style x:Key="EditRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Content" Value="{StaticResource EditButtonImageKey}" />
     </Style>
     <Style x:Key="AddRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource AddButtonImageKey}" />

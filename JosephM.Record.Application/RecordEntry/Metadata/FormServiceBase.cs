@@ -2,10 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using JosephM.Record.Application.Grid;
 using JosephM.Record.Application.RecordEntry.Form;
 using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Validation;
 using JosephM.Record.IService;
+using JosephM.Record.Query;
 
 #endregion
 
@@ -67,9 +69,34 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             return new Action<RecordEntryViewModelBase>[] {};
         }
 
-        internal virtual RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, FormController formController, Action<IRecord> onSave, Action onCancel)
+        internal virtual RecordEntryFormViewModel GetLoadRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel)
         {
             return null;
+        }
+
+        internal virtual RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        {
+            return null;
+        }
+
+        internal virtual string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
+        {
+            return null;
+        }
+
+        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
+        {
+            return new Action<RecordEntryViewModelBase>[0];
+        }
+
+        internal virtual string GetLookupTargetType(string field, string recordType, RecordEntryViewModelBase recordForm)
+        {
+            return recordForm.RecordService.GetLookupTargetType(field, recordType);
+        }
+
+        internal virtual IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType)
+        {
+            return new Condition[0];
         }
     }
 }

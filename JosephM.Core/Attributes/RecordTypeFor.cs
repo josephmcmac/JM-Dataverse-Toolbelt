@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace JosephM.Core.Attributes
 {
@@ -16,6 +17,14 @@ namespace JosephM.Core.Attributes
         public RecordTypeFor(string lookupProperty)
         {
             LookupProperty = lookupProperty;
+        }
+
+        public IEnumerable<string> PropertyPaths
+        {
+            get
+            {
+                return LookupProperty.Split('.');
+            }
         }
     }
 }

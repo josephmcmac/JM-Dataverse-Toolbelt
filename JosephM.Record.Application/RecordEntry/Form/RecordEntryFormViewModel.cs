@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Record.Application.Constants;
@@ -14,6 +16,7 @@ using JosephM.Record.Application.RecordEntry.Metadata;
 using JosephM.Record.Application.RecordEntry.Section;
 using JosephM.Record.Application.Shared;
 using JosephM.Record.Application.Validation;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 #endregion
 
@@ -26,6 +29,13 @@ namespace JosephM.Record.Application.RecordEntry.Form
         private List<FieldViewModelBase> _recordFields;
         private string _recordType;
 
+        protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference)
+            : this(formController)
+        {
+            _parentForm = parentForm;
+            _parentFormReference = parentFormReference;
+        }
+
         protected RecordEntryFormViewModel(FormController formController)
             : base(formController)
         {
@@ -34,6 +44,14 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 IsVisible = false
             };
             CancelButtonViewModel = new XrmButtonViewModel(CancelButtonLabel, OnCancel, ApplicationController)
+            {
+                IsVisible = false
+            };
+            LoadRequestButtonViewModel = new XrmButtonViewModel("Load Object", LoadObject, ApplicationController)
+            {
+                IsVisible = false
+            };
+            SaveRequestButtonViewModel = new XrmButtonViewModel("Save Object", SaveObject, ApplicationController)
             {
                 IsVisible = false
             };
@@ -60,9 +78,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     //Note this return an empty collection and spawns a new thread to load the sections
                     //this is to free up the ui
                     //once loaded it raises the property updated event
-                    _formSections = new ObservableCollection<SectionViewModelBase>();
-
-                    StartNewAction(LoadFormSections);
+                    Reload();
                 }
                 return _formSections;
             }
@@ -77,9 +93,19 @@ namespace JosephM.Record.Application.RecordEntry.Form
             }
         }
 
+        protected void Reload()
+        {
+            _formSections = new ObservableCollection<SectionViewModelBase>();
+            StartNewAction(LoadFormSections);
+        }
+
         public XrmButtonViewModel SaveButtonViewModel { get; private set; }
 
         public XrmButtonViewModel CancelButtonViewModel { get; private set; }
+
+        public XrmButtonViewModel SaveRequestButtonViewModel { get; private set; }
+
+        public XrmButtonViewModel LoadRequestButtonViewModel { get; private set; }
 
         public string RecordIdName { get; set; }
 
@@ -150,6 +176,33 @@ namespace JosephM.Record.Application.RecordEntry.Form
             {
                 OnCanceEntension();
             }
+        }
+
+        public virtual void SaveObject()
+        {
+            var fileName = ApplicationController.GetSaveFileName("*", ".xml");
+            if (!fileName.IsNullOrWhiteSpace())
+                SaveObject(fileName);
+        }
+
+        public virtual void SaveObject(string fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void LoadObject()
+        {
+            var selectFileDialog = new OpenFileDialog { Filter = FileMasks.XmlFile };
+            var selected = selectFileDialog.ShowDialog();
+            if (selected ?? false)
+            {
+                LoadObject(selectFileDialog.FileName);
+            }
+        }
+
+        public virtual void LoadObject(string fileName)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual void OnCanceEntension()
@@ -253,7 +306,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     if (section is FormFieldSection)
                     {
                         sectionViewModels.Add(new FieldSectionViewModel(
-                            FormController,
                             (FormFieldSection) section,
                             this
                             ));
@@ -261,7 +313,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     else if (section is SubGridSection)
                     {
                         sectionViewModels.Add(new GridSectionViewModel(
-                            FormController,
                             (SubGridSection) section,
                             this
                             ));
@@ -277,9 +328,9 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     _recordFields.AddRange(formSection.Fields);
                 }
                 //now set the section view model property in the ui thread which will notify the ui with the sections
-                SendToDispatcher(
+                DoOnMainThread(
                     () => { FormSectionsAsync = new ObservableCollection<SectionViewModelBase>(sectionViewModels); });
-                RefreshVisibility();
+                OnLoad();
                 //need to somehow refresh grid visibilities
 
                 FormInstance.OnLoad(this);
@@ -287,7 +338,16 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     SaveButtonViewModel.IsVisible = true;
                 if (ShowCancelButton)
                     CancelButtonViewModel.IsVisible = true;
+                if (AllowSaveAndLoad)
+                    SaveRequestButtonViewModel.IsVisible = true;
+                if (AllowSaveAndLoad)
+                    LoadRequestButtonViewModel.IsVisible = true;
             });
+        }
+
+        protected virtual bool AllowSaveAndLoad
+        {
+            get { return false; }
         }
 
         protected override bool ConfirmTabClose()
@@ -297,7 +357,12 @@ namespace JosephM.Record.Application.RecordEntry.Form
 
         public override IEnumerable<FieldViewModelBase> FieldViewModels
         {
-            get { return _recordFields; }
+            get
+            {
+                if (_recordFields == null)
+                    throw new NullReferenceException("The Field Sections Are Not Loaded Yet. The Reload Method Needs To Have Been Called And Completed To Initialise It");
+                return _recordFields;
+            }
         }
 
         protected internal override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
@@ -400,6 +465,18 @@ namespace JosephM.Record.Application.RecordEntry.Form
             {
                 return !LoadingViewModel.IsLoading && !ChildForms.Any();
             }
+        }
+
+        private readonly RecordEntryViewModelBase _parentForm;
+        internal override RecordEntryViewModelBase ParentForm
+        {
+            get { return _parentForm; }
+        }
+
+        private readonly string _parentFormReference;
+        internal override string ParentFormReference
+        {
+            get { return _parentFormReference; }
         }
     }
 }

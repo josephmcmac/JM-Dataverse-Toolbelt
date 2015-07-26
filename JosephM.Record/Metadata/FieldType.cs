@@ -11,7 +11,6 @@
         Picklist,
         Integer,
         Boolean,
-        ExcelFile,
         Date,
         Lookup,
         Decimal,
@@ -31,6 +30,8 @@
         Image,
         EntityName,
         BigInt,
-        ManagedProperty
+        ManagedProperty,
+        Object,
+        FileRef
     }
 }

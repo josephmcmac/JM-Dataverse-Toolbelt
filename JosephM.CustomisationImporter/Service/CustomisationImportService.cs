@@ -59,6 +59,7 @@ namespace JosephM.CustomisationImporter.Service
                 ImportRelationships(relationshipMetadataToImport, controller, response);
             controller.LogLiteral("Publishing Changes");
             RecordService.PublishAll();
+            RecordService.ClearCache();
         }
 
         public static IEnumerable<FieldMetadata> ExtractFieldMetadataFromExcel(string excelFile,
@@ -104,7 +105,8 @@ namespace JosephM.CustomisationImporter.Service
                                     displayName)
                                 {
                                     Minimum = row.GetFieldAsDecimal(Headings.Fields.Minimum),
-                                    Maximum = row.GetFieldAsDecimal(Headings.Fields.Maximum)
+                                    Maximum = row.GetFieldAsDecimal(Headings.Fields.Maximum),
+                                    DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision)
                                 };
                                 break;
                             }
@@ -185,7 +187,8 @@ namespace JosephM.CustomisationImporter.Service
                                     displayName)
                                 {
                                     Minimum = row.GetFieldAsDouble(Headings.Fields.Minimum),
-                                    Maximum = row.GetFieldAsDouble(Headings.Fields.Maximum)
+                                    Maximum = row.GetFieldAsDouble(Headings.Fields.Maximum),
+                                    DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision)
                                 };
                                 break;
                             }

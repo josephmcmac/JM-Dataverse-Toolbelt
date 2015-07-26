@@ -19,15 +19,17 @@ namespace JosephM.Record.Application.RecordEntry.Section
     {
         private ObservableCollection<GridRowViewModel> _records;
 
-        public GridSectionViewModel(FormController formController, SubGridSection subGridSection,
+        public GridSectionViewModel(SubGridSection subGridSection,
             RecordEntryFormViewModel recordForm)
-            : base(formController, subGridSection, recordForm)
+            : base(subGridSection, recordForm)
         {
             AddRowButton = new XrmButtonViewModel("Add", AddRow, ApplicationController);
             DynamicGridViewModelItems = new DynamicGridViewModelItems()
             {
                 CanDelete = true,
-                DeleteRow = RemoveRow
+                CanEdit = true,
+                DeleteRow = RemoveRow,
+                EditRow = EditRow
             };
         }
 
@@ -37,15 +39,17 @@ namespace JosephM.Record.Application.RecordEntry.Section
         {
             try
             {
-                var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, FormController, (record) =>
+                var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, RecordForm, (record) =>
                 {
-                    InsertRecord(record);
+                    InsertRecord(record, 0);
                     RecordForm.ClearChildForm();
                 }, () => RecordForm.ClearChildForm());
                 if (viewModel == null)
-                    InsertRecord(RecordService.NewRecord(RecordType));
+                    InsertRecord(RecordService.NewRecord(RecordType), 0);
                 else
+                {
                     RecordForm.LoadChildForm(viewModel);
+                }
             }
             catch (Exception ex)
             {
@@ -56,6 +60,36 @@ namespace JosephM.Record.Application.RecordEntry.Section
         private void RemoveRow(GridRowViewModel row)
         {
             GridRecords.Remove(row);
+        }
+
+        private void EditRow(GridRowViewModel row)
+        {
+            try
+            {
+                var viewModel = GetEditRowViewModel(row);
+                if (viewModel == null)
+                {
+                    throw new NotImplementedException("No Form For Type");
+                }
+                else
+                    RecordForm.LoadChildForm(viewModel);
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.UserMessage(string.Format("Error Adding Row: {0}", ex.DisplayString()));
+            }
+        }
+
+        public RecordEntryFormViewModel GetEditRowViewModel(GridRowViewModel row)
+        {
+            var viewModel = FormService.GetEditRowViewModel(SectionIdentifier, RecordForm, (record) =>
+            {
+                RecordForm.ClearChildForm();
+                var index = GridRecords.IndexOf(row);
+                GridRecords.Remove(row);
+                InsertRecord(record, index);
+            }, () => RecordForm.ClearChildForm(), row);
+            return viewModel;
         }
 
         private SubGridSection SubGridSection
@@ -102,15 +136,14 @@ namespace JosephM.Record.Application.RecordEntry.Section
             get { return false; }
         }
 
-        private void LoadRowsAsync()
+        public void LoadRowsAsync()
         {
             var records = RecordService.GetLinkedRecords(
                 SubGridSection.LinkedRecordType,
                 RecordForm.RecordType,
                 SubGridSection.LinkedRecordLookup,
                 RecordForm.RecordId);
-
-            SendToDispatcher(() => LoadRows(records));
+            DoOnMainThread(() => LoadRows(records));
         }
 
         private void LoadRows(IEnumerable<IRecord> records)
@@ -122,12 +155,13 @@ namespace JosephM.Record.Application.RecordEntry.Section
             }
         }
 
-        private void InsertRecord(IRecord record)
+        private void InsertRecord(IRecord record, int index)
         {
             //DoOnMainThread(() =>
             //{
                 var rowItem = new GridRowViewModel(record, this);
-                GridRecords.Insert(0, rowItem);
+                GridRecords.Insert(index, rowItem);
+            rowItem.OnLoad();
             //});
         }
 
@@ -136,7 +170,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
            // DoOnMainThread(() =>
             //{
                 var rowItem = new GridRowViewModel(record, this);
-                rowItem.RefreshVisibility();
+                rowItem.OnLoad();
                 GridRecords.Add(rowItem);
             //});
         }
@@ -208,6 +242,11 @@ namespace JosephM.Record.Application.RecordEntry.Section
         public RecordEntryViewModelBase GetRecordForm()
         {
             return RecordForm;
+        }
+
+        public void ClearRows()
+        {
+            ApplicationController.DoOnMainThread(() => GridRecords.Clear());
         }
     }
 }
