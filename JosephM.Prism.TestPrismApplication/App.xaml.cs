@@ -1,7 +1,12 @@
 ﻿#region
 
+using System;
 using System.Windows;
+using JosephM.Core.Test;
+using JosephM.ObjectEncryption;
 using JosephM.Prism.Infrastructure.Prism;
+using JosephM.Prism.TestModule.ObjectEncrypt;
+using JosephM.Prism.TestModule.Prism;
 using JosephM.Prism.TestModule.Prism.TestDialog;
 using JosephM.Prism.TestModule.SearchModule;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
@@ -32,6 +37,8 @@ namespace JosephM.Prism.TestPrismApplication
             prism.AddModule<SearchModule>();
             prism.AddModule<SavedXrmConnectionsModule>();
             prism.AddModule<DebugDialogModule>();
+            prism.AddModule<XrmSettingsModule>();
+            prism.AddModule<ObjectEncryptModule<TestObjectEncryptDialog, TestClassToEncrypt>>();
             prism.Run();
         }
     }

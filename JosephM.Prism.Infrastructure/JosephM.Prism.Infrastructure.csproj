@@ -123,10 +123,6 @@
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
       <Name>JosephM.ObjectMapping</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
-      <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
-      <Name>JosephM.Record.Xrm</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>

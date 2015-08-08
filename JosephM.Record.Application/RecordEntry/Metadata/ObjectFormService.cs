@@ -19,7 +19,6 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
-using JosephM.Record.Xrm.XrmRecord;
 
 #endregion
 
@@ -190,9 +189,6 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                         var changedViewModel = re.GetObjectFieldFieldViewModel(fieldName);
                         if (changedViewModel.Value != null)
                         {
-                            var value = changedViewModel.Value;
-                            if (!(value is IXrmRecordConfiguration))
-                                throw new NotImplementedException(string.Format("{0} Attribute Only Implemented For Type {1} But Is Set On Property {2}", typeof(ConnectionFor).Name, typeof(IXrmRecordConfiguration).Name, fieldName));
                             var matchingFields =
                                 re.FieldViewModels.Where(f => f.FieldName == attribute.Property);
                             if (matchingFields.Any())
