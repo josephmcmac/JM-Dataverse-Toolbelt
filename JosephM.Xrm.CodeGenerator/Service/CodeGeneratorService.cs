@@ -89,29 +89,41 @@ namespace JosephM.Xrm.CodeGenerator.Service
                 countDone++;
             }
             stringBuilder.AppendLine("\t}");
-            stringBuilder.AppendLine(string.Format("\tpublic class {0}", "Relationships"));
-            stringBuilder.AppendLine("\t{");
+            var relationshipsAdded = false;
             countDone = 0;
             foreach (var recordType in types)
             {
                 controller.UpdateProgress(countDone, countToDo, string.Format("Processing Relationships ({0})", Service.GetDisplayName(recordType)));
                 if (!recordType.IsNullOrWhiteSpace())
                 {
-                    stringBuilder.AppendLine(string.Format("\t\tpublic class {0}_", recordType));
-                    stringBuilder.AppendLine("\t\t{");
-                    foreach (var relationship in Service.GetManyToManyRelationships(recordType))
+                    var relationships = Service.GetManyToManyRelationships(recordType);
+                    if (relationships.Any())
                     {
-                        stringBuilder.AppendLine(string.Format("\t\t\tpublic class {0}", relationship.SchemaName));
-                        stringBuilder.AppendLine("\t\t\t{");
-                        stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string Name = \"{0}\";", CreateCodeLabel(relationship.SchemaName)));
-                        stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string EntityName = \"{0}\";", CreateCodeLabel(relationship.IntersectEntityName)));
-                        stringBuilder.AppendLine("\t\t\t}");
+                        if (!relationshipsAdded)
+                        {
+                            stringBuilder.AppendLine(string.Format("\tpublic class {0}", "Relationships"));
+                            stringBuilder.AppendLine("\t{");
+                            relationshipsAdded = true;
+                        }
+                        stringBuilder.AppendLine(string.Format("\t\tpublic class {0}_", recordType));
+                        stringBuilder.AppendLine("\t\t{");
+                        foreach (var relationship in relationships)
+                        {
+                            stringBuilder.AppendLine(string.Format("\t\t\tpublic class {0}", relationship.SchemaName));
+                            stringBuilder.AppendLine("\t\t\t{");
+                            stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string Name = \"{0}\";",
+                                relationship.SchemaName));
+                            stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string EntityName = \"{0}\";",
+                                relationship.IntersectEntityName));
+                            stringBuilder.AppendLine("\t\t\t}");
+                        }
+                        stringBuilder.AppendLine("\t\t}");
                     }
-                    stringBuilder.AppendLine("\t\t}");
                 }
                 countDone++;
             }
-            stringBuilder.AppendLine("\t}");
+            if (relationshipsAdded)
+                stringBuilder.AppendLine("\t}");
             stringBuilder.AppendLine(string.Format("\tpublic class {0}", "Fields"));
             stringBuilder.AppendLine("\t{");
             countDone = 0;
