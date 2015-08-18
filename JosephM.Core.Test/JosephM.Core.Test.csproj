@@ -63,6 +63,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DateTimeExtentionsTests.cs" />
+    <Compile Include="DebugUserInterface.cs" />
     <Compile Include="LogControllerTests.cs" />
     <Compile Include="RecordTypeForTests.cs" />
     <Compile Include="StringFormatTests.cs" />

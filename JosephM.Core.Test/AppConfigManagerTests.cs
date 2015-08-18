@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Linq;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
@@ -7,7 +8,7 @@ using JosephM.Core.Extentions;
 namespace JosephM.Core.Test
 {
     [TestClass]
-    public class AppConfigManagerTests
+    public class AppConfigManagerTests : CoreTest
     {
         [TestMethod]
         [DeploymentItem("app.config")]

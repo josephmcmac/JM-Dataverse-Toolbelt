@@ -125,7 +125,7 @@ namespace JosephM.Xrm.Test
             {
                 return new[]
                 {
-                    "new_testentity",
+                    Entities.jmcg_testentity,
                     "account",
                     "contact"
                 };
@@ -163,7 +163,7 @@ namespace JosephM.Xrm.Test
 
         public string TestEntityType
         {
-            get { return "new_testentity"; }
+            get { return Entities.jmcg_testentity; }
         }
 
         public Entity CreateRecordAllFieldsPopulated(string type)

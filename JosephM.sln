@@ -48,7 +48,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestModule", "TestModule", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{D0951EBD-01E1-465A-8CE4-4026FF36D400}"
 	ProjectSection(SolutionItems) = preProject
+		SolutionItems\Customisations.xls = SolutionItems\Customisations.xls
 		SolutionItems\JosephM.snk = SolutionItems\JosephM.snk
+		SolutionItems\TestComponents_unmanaged.zip = SolutionItems\TestComponents_unmanaged.zip
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Read Me", "Read Me", "{01799AFC-0BD6-4BBB-8ABC-A6517B402D70}"

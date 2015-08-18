@@ -89,6 +89,29 @@ namespace JosephM.Xrm.CodeGenerator.Service
                 countDone++;
             }
             stringBuilder.AppendLine("\t}");
+            stringBuilder.AppendLine(string.Format("\tpublic class {0}", "Relationships"));
+            stringBuilder.AppendLine("\t{");
+            countDone = 0;
+            foreach (var recordType in types)
+            {
+                controller.UpdateProgress(countDone, countToDo, string.Format("Processing Relationships ({0})", Service.GetDisplayName(recordType)));
+                if (!recordType.IsNullOrWhiteSpace())
+                {
+                    stringBuilder.AppendLine(string.Format("\t\tpublic class {0}_", recordType));
+                    stringBuilder.AppendLine("\t\t{");
+                    foreach (var relationship in Service.GetManyToManyRelationships(recordType))
+                    {
+                        stringBuilder.AppendLine(string.Format("\t\t\tpublic class {0}", relationship.SchemaName));
+                        stringBuilder.AppendLine("\t\t\t{");
+                        stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string Name = \"{0}\";", CreateCodeLabel(relationship.SchemaName)));
+                        stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string EntityName = \"{0}\";", CreateCodeLabel(relationship.IntersectEntityName)));
+                        stringBuilder.AppendLine("\t\t\t}");
+                    }
+                    stringBuilder.AppendLine("\t\t}");
+                }
+                countDone++;
+            }
+            stringBuilder.AppendLine("\t}");
             stringBuilder.AppendLine(string.Format("\tpublic class {0}", "Fields"));
             stringBuilder.AppendLine("\t{");
             countDone = 0;
@@ -96,14 +119,17 @@ namespace JosephM.Xrm.CodeGenerator.Service
             {
                 controller.UpdateProgress(countDone, countToDo, string.Format("Processing Fields ({0})", Service.GetDisplayName(recordType)));
                 if (!recordType.IsNullOrWhiteSpace())
-                    stringBuilder.AppendLine(string.Format("\t\tpublic class {0}_", recordType));
-                stringBuilder.AppendLine("\t\t{");
-                foreach (var field in Service.GetFields(recordType))
                 {
-                    if (!field.IsNullOrWhiteSpace())
-                        stringBuilder.AppendLine(string.Format("\t\t\tpublic const string {0} = \"{1}\";", CreateCodeLabel(field), field));
+                    stringBuilder.AppendLine(string.Format("\t\tpublic class {0}_", recordType));
+                    stringBuilder.AppendLine("\t\t{");
+                    foreach (var field in Service.GetFields(recordType))
+                    {
+                        if (!field.IsNullOrWhiteSpace())
+                            stringBuilder.AppendLine(string.Format("\t\t\tpublic const string {0} = \"{1}\";",
+                                CreateCodeLabel(field), field));
+                    }
+                    stringBuilder.AppendLine("\t\t}");
                 }
-                stringBuilder.AppendLine("\t\t}");
                 countDone++;
             }
             stringBuilder.AppendLine("\t}");

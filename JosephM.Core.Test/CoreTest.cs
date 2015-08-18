@@ -13,6 +13,7 @@ namespace JosephM.Core.Test
         public CoreTest()
         {
             Controller = new LogController();
+            Controller.AddUi(new DebugUserInterface());
         }
 
         protected LogController Controller { get; private set; }

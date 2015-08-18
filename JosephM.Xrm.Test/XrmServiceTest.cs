@@ -23,17 +23,17 @@ namespace JosephM.Xrm.Test
             Assert.Inconclusive("Costly test so escaping");
 
             PrepareTests();
-            //DeleteAll("new_testentity");
+            //DeleteAll(Entities.jmcg_testentity);
 
             //var multipleEntities = new List<Entity>();
             //for (var i = 0; i < 1100; i++)
             //{
-            //    var entity = new Entity("new_testentity");
+            //    var entity = new Entity(Entities.jmcg_testentity);
             //    entity.SetField("new_name","Execute Multiple " + i);
             //    multipleEntities.Add(entity);
             //}
             //var r = XrmService.CreateMultiple(multipleEntities);
-            //var createdEntities = XrmService.RetrieveAllOrClauses("new_testentity",
+            //var createdEntities = XrmService.RetrieveAllOrClauses(Entities.jmcg_testentity,
             //    r.Select(
             //            ri =>
             //            new ConditionExpression("new_testentityid", ConditionOperator.Equal,
@@ -71,27 +71,27 @@ namespace JosephM.Xrm.Test
 
             DeleteAllData();
 
-            var e1 = new Entity("new_testentity");
-            e1.SetField("new_teststring", "MATCH1");
+            var e1 = new Entity(Entities.jmcg_testentity);
+            e1.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCH1");
             e1 = XrmService.CreateAndRetreive(e1);
 
-            var e1x = new Entity("new_testentity");
-            e1x.SetField("new_teststring", "MATCH1");
+            var e1x = new Entity(Entities.jmcg_testentity);
+            e1x.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCH1");
             e1x = XrmService.CreateAndRetreive(e1x);
 
-            var e2 = new Entity("new_testentity");
-            e2.SetField("new_teststring", "MATCH2");
+            var e2 = new Entity(Entities.jmcg_testentity);
+            e2.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCH2");
             e2 = XrmService.CreateAndRetreive(e2);
 
-            var e3 = new Entity("new_testentity");
-            e3.SetField("new_teststring", "MATCH3");
+            var e3 = new Entity(Entities.jmcg_testentity);
+            e3.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCH3");
             e3 = XrmService.CreateAndRetreive(e3);
 
-            var eX = new Entity("new_testentity");
-            eX.SetField("new_teststring", "MATCHX");
+            var eX = new Entity(Entities.jmcg_testentity);
+            eX.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCHX");
             eX = XrmService.CreateAndRetreive(eX);
 
-            var indexed = XrmService.IndexMatchingGuids("new_testentity", "new_teststring",
+            var indexed = XrmService.IndexMatchingGuids(Entities.jmcg_testentity, Fields.jmcg_testentity_.jmcg_string,
                 new[]
                 {
                     "MATCH1", "MATCH2", "MATCH3"
@@ -115,16 +115,16 @@ namespace JosephM.Xrm.Test
             var orFilters = new List<FilterExpression>();
             for (var i = 0; i < 1000; i++)
             {
-                var entity = new Entity("new_testentity");
+                var entity = new Entity(Entities.jmcg_testentity);
                 entity.SetField("new_testentitycode", i + "Blah" + i);
-                entity.SetField("new_teststring", i + "Blah Blah" + i);
+                entity.SetField(Fields.jmcg_testentity_.jmcg_string, i + "Blah Blah" + i);
                 XrmService.Create(entity);
                 var filter = new FilterExpression();
                 filter.AddCondition("new_testentitycode", ConditionOperator.Equal, i + "Blah" + i);
-                filter.AddCondition("new_teststring", ConditionOperator.Equal, i + "Blah Blah" + i);
+                filter.AddCondition(Fields.jmcg_testentity_.jmcg_string, ConditionOperator.Equal, i + "Blah Blah" + i);
                 orFilters.Add(filter);
             }
-            var entities = XrmService.RetrieveAll("new_testentity", orFilters);
+            var entities = XrmService.RetrieveAll(Entities.jmcg_testentity, orFilters);
             Assert.IsTrue(entities.Count() == 1000);
         }
 
@@ -157,20 +157,20 @@ namespace JosephM.Xrm.Test
             * */
             //Valid values
             Assert.IsTrue(
-                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", "new_testentity", "Active")) ==
+                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", Entities.jmcg_testentity, "Active")) ==
                 TestEntityConstants.Statusses.TestStatus);
             Assert.IsTrue(
-                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", "new_testentity",
+                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", Entities.jmcg_testentity,
                     TestEntityConstants.Statusses.TestStatus)) ==
                 TestEntityConstants.Statusses.TestStatus);
             Assert.IsTrue(
-                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", "new_testentity",
+                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", Entities.jmcg_testentity,
                     XrmEntity.CreateOptionSet(
                         TestEntityConstants.Statusses.TestStatus))) ==
                 TestEntityConstants.Statusses.TestStatus);
             try
             {
-                var blah = XrmService.ParseField("statuscode", "new_testentity", "NOTASTATUS");
+                var blah = XrmService.ParseField("statuscode", Entities.jmcg_testentity, "NOTASTATUS");
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -184,19 +184,19 @@ namespace JosephM.Xrm.Test
             /*
              * Double field
              * */
-            var maxDoubleValue = (double) XrmService.GetMaxDoubleValue("new_testfloat", "new_testentity");
-            var minDoubleValue = (double) XrmService.GetMinDoubleValue("new_testfloat", "new_testentity");
+            var maxDoubleValue = (double) XrmService.GetMaxDoubleValue(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity);
+            var minDoubleValue = (double) XrmService.GetMinDoubleValue(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity);
             //Valid values
-            Assert.IsTrue((double) XrmService.ParseField("new_testfloat", "new_testentity", maxDoubleValue) ==
+            Assert.IsTrue((double) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity, maxDoubleValue) ==
                           maxDoubleValue);
-            Assert.IsTrue((double) XrmService.ParseField("new_testfloat", "new_testentity", minDoubleValue) ==
+            Assert.IsTrue((double) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity, minDoubleValue) ==
                           minDoubleValue);
-            Assert.IsTrue((double) XrmService.ParseField("new_testfloat", "new_testentity", (double) 5) == 5);
-            Assert.IsTrue((double) XrmService.ParseField("new_testfloat", "new_testentity", "20") == 20);
+            Assert.IsTrue((double) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity, (double) 5) == 5);
+            Assert.IsTrue((double) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity, "20") == 20);
             //Outside range values
             try
             {
-                var blah = XrmService.ParseField("new_testfloat", "new_testentity", maxDoubleValue + 1);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity, maxDoubleValue + 1);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -206,7 +206,7 @@ namespace JosephM.Xrm.Test
 
             try
             {
-                var blah = XrmService.ParseField("new_testfloat", "new_testentity", minDoubleValue - 1);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity, minDoubleValue - 1);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -222,7 +222,7 @@ namespace JosephM.Xrm.Test
             * */
             //Valid values
             var expectedLookup = XrmEntity.CreateLookup("account", Guid.Empty);
-            var actualLookup = XrmService.ParseField("new_account", "new_testentity", expectedLookup);
+            var actualLookup = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_account, Entities.jmcg_testentity, expectedLookup);
             Assert.IsTrue(XrmEntity.GetLookupGuid(expectedLookup) == Guid.Empty);
             Assert.IsTrue(XrmEntity.GetLookupType(expectedLookup) == "account");
         }
@@ -234,15 +234,15 @@ namespace JosephM.Xrm.Test
             * */
             //Valid values
             Assert.IsTrue(
-                XrmEntity.GetOptionSetValue(XrmService.ParseField("new_testpicklist", "new_testentity", "Option 1")) ==
+                XrmEntity.GetOptionSetValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_picklist, Entities.jmcg_testentity, "Option 1")) ==
                 TestEntityConstants.TestPicklist.Option1);
             Assert.IsTrue(
-                XrmEntity.GetOptionSetValue(XrmService.ParseField("new_testpicklist", "new_testentity",
+                XrmEntity.GetOptionSetValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_picklist, Entities.jmcg_testentity,
                     TestEntityConstants.TestPicklist.Option1)) ==
                 TestEntityConstants.TestPicklist.Option1);
             try
             {
-                var blah = XrmService.ParseField("new_testpicklist", "new_testentity", "NOTANOPTION");
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_picklist, Entities.jmcg_testentity, "NOTANOPTION");
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -257,8 +257,8 @@ namespace JosephM.Xrm.Test
             * Boolean field
             * */
             //Valid values
-            Assert.IsTrue((bool) XrmService.ParseField("new_testboolean", "new_testentity", true));
-            Assert.IsTrue((bool) XrmService.ParseField("new_testboolean", "new_testentity", false) == false);
+            Assert.IsTrue((bool) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_boolean, Entities.jmcg_testentity, true));
+            Assert.IsTrue((bool) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_boolean, Entities.jmcg_testentity, false) == false);
         }
 
         private void MoneyTest()
@@ -266,28 +266,28 @@ namespace JosephM.Xrm.Test
             /*
              * Money field
              * */
-            var maxMoneyValue = (double) XrmService.GetMaxMoneyValue("new_testmoney", "new_testentity");
-            var minMoneyValue = (double) XrmService.GetMinMoneyValue("new_testmoney", "new_testentity");
+            var maxMoneyValue = (double) XrmService.GetMaxMoneyValue(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity);
+            var minMoneyValue = (double) XrmService.GetMinMoneyValue(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity);
             //Valid values
             Assert.IsTrue(
-                XrmEntity.GetMoneyValue(XrmService.ParseField("new_testmoney", "new_testentity", maxMoneyValue)) ==
+                XrmEntity.GetMoneyValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity, maxMoneyValue)) ==
                 new decimal(maxMoneyValue));
             Assert.IsTrue(
-                XrmEntity.GetMoneyValue(XrmService.ParseField("new_testmoney", "new_testentity", minMoneyValue)) ==
+                XrmEntity.GetMoneyValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity, minMoneyValue)) ==
                 new decimal(minMoneyValue));
             Assert.IsTrue(
-                XrmEntity.GetMoneyValue(XrmService.ParseField("new_testmoney", "new_testentity",
+                XrmEntity.GetMoneyValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity,
                     new Money(new decimal(6)))) ==
                 new decimal(6));
             Assert.IsTrue(
-                XrmEntity.GetMoneyValue(XrmService.ParseField("new_testmoney", "new_testentity", new decimal(2))) ==
+                XrmEntity.GetMoneyValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity, new decimal(2))) ==
                 new decimal(2));
-            Assert.IsTrue(XrmEntity.GetMoneyValue(XrmService.ParseField("new_testmoney", "new_testentity", "4")) ==
+            Assert.IsTrue(XrmEntity.GetMoneyValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity, "4")) ==
                           new decimal(4));
             //Outside range values
             try
             {
-                var blah = XrmService.ParseField("new_testmoney", "new_testentity", maxMoneyValue + 1);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity, maxMoneyValue + 1);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -297,7 +297,7 @@ namespace JosephM.Xrm.Test
 
             try
             {
-                var blah = XrmService.ParseField("new_testmoney", "new_testentity", minMoneyValue - 1);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity, minMoneyValue - 1);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -311,18 +311,18 @@ namespace JosephM.Xrm.Test
             /*
              * Decimal field
              * */
-            var maxDecimalValue = (decimal) XrmService.GetMaxDecimalValue("new_testdecimal", "new_testentity");
-            var minDecimalValue = (decimal) XrmService.GetMinDecimalValue("new_testdecimal", "new_testentity");
+            var maxDecimalValue = (decimal) XrmService.GetMaxDecimalValue(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity);
+            var minDecimalValue = (decimal) XrmService.GetMinDecimalValue(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity);
             //Valid values
-            Assert.IsTrue((decimal) XrmService.ParseField("new_testdecimal", "new_testentity", maxDecimalValue) ==
+            Assert.IsTrue((decimal) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity, maxDecimalValue) ==
                           maxDecimalValue);
-            Assert.IsTrue((decimal) XrmService.ParseField("new_testdecimal", "new_testentity", minDecimalValue) ==
+            Assert.IsTrue((decimal) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity, minDecimalValue) ==
                           minDecimalValue);
-            Assert.IsTrue((decimal) XrmService.ParseField("new_testdecimal", "new_testentity", 5) == new decimal(5));
+            Assert.IsTrue((decimal) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity, 5) == new decimal(5));
             //Outside range values
             try
             {
-                var blah = XrmService.ParseField("new_testdecimal", "new_testentity", maxDecimalValue + 1);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity, maxDecimalValue + 1);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -332,7 +332,7 @@ namespace JosephM.Xrm.Test
 
             try
             {
-                var blah = XrmService.ParseField("new_testdecimal", "new_testentity", minDecimalValue - 1);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity, minDecimalValue - 1);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -346,16 +346,16 @@ namespace JosephM.Xrm.Test
             /*
              * Integer field
              * */
-            var maxIntValue = XrmService.GetMaxIntValue("new_testinteger", "new_testentity");
-            var minIntValue = XrmService.GetMinIntValue("new_testinteger", "new_testentity");
+            var maxIntValue = XrmService.GetMaxIntValue(Fields.jmcg_testentity_.jmcg_integer, Entities.jmcg_testentity);
+            var minIntValue = XrmService.GetMinIntValue(Fields.jmcg_testentity_.jmcg_integer, Entities.jmcg_testentity);
             //Valid values
-            Assert.IsTrue((int) XrmService.ParseField("new_testinteger", "new_testentity", maxIntValue) == maxIntValue);
-            Assert.IsTrue((int) XrmService.ParseField("new_testinteger", "new_testentity", minIntValue) == minIntValue);
-            Assert.IsTrue((int) XrmService.ParseField("new_testinteger", "new_testentity", "2") == 2);
+            Assert.IsTrue((int) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_integer, Entities.jmcg_testentity, maxIntValue) == maxIntValue);
+            Assert.IsTrue((int) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_integer, Entities.jmcg_testentity, minIntValue) == minIntValue);
+            Assert.IsTrue((int) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_integer, Entities.jmcg_testentity, "2") == 2);
             //Outside range values
             try
             {
-                var blah = XrmService.ParseField("new_testinteger", "new_testentity", maxIntValue + 1);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_integer, Entities.jmcg_testentity, maxIntValue + 1);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -365,7 +365,7 @@ namespace JosephM.Xrm.Test
 
             try
             {
-                var blah = XrmService.ParseField("new_testinteger", "new_testentity", minIntValue - 1);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_integer, Entities.jmcg_testentity, minIntValue - 1);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -380,17 +380,17 @@ namespace JosephM.Xrm.Test
              * Memo field
              * */
             //
-            var maxMemoLength = XrmService.GetMaxLength("new_teststringmultiline", "new_testentity");
+            var maxMemoLength = XrmService.GetMaxLength(Fields.jmcg_testentity_.jmcg_stringmultiline, Entities.jmcg_testentity);
             //Valid values
             var validMemo = ReplicateString("X", maxMemoLength);
-            Assert.IsTrue((string) XrmService.ParseField("new_teststringmultiline", "new_testentity", validMemo) ==
+            Assert.IsTrue((string) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_stringmultiline, Entities.jmcg_testentity, validMemo) ==
                           validMemo);
             //invalid value
             var exceedMemoLength = ReplicateString("X", maxMemoLength + 1);
 
             try
             {
-                var blah = XrmService.ParseField("new_teststringmultiline", "new_testentity", exceedMemoLength);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_stringmultiline, Entities.jmcg_testentity, exceedMemoLength);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -405,17 +405,16 @@ namespace JosephM.Xrm.Test
              * String field
              * */
             //
-            var maxTextLength = XrmService.GetMaxLength("new_teststring", "new_testentity");
-            Assert.IsTrue(maxTextLength == 100);
+            var maxTextLength = XrmService.GetMaxLength(Fields.jmcg_testentity_.jmcg_string, Entities.jmcg_testentity);
             //Valid values
             var validString = ReplicateString("X", maxTextLength);
-            Assert.IsTrue((string) XrmService.ParseField("new_teststring", "new_testentity", validString) == validString);
+            Assert.IsTrue((string) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_string, Entities.jmcg_testentity, validString) == validString);
             //invalid value
             var exceedLength = ReplicateString("X", maxTextLength + 1);
 
             try
             {
-                var blah = XrmService.ParseField("new_teststring", "new_testentity", exceedLength);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_string, Entities.jmcg_testentity, exceedLength);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -430,25 +429,25 @@ namespace JosephM.Xrm.Test
              * DateTime field
              * */
             //valid date
-            Assert.IsTrue(XrmService.ParseField("new_testdate", "new_testentity", null) == null);
+            Assert.IsTrue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, null) == null);
             var expectedDate = DateTime.Now;
-            var actualDate = (DateTime) XrmService.ParseField("new_testdate", "new_testentity", expectedDate);
+            var actualDate = (DateTime) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, expectedDate);
             Assert.IsTrue(expectedDate.Hour == actualDate.Hour && expectedDate.Minute == actualDate.Minute &&
                           expectedDate.Second == actualDate.Second && expectedDate.Day == actualDate.Day);
             //valid string value
             var expected = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
             var actual =
                 (DateTime)
-                    XrmService.ParseField("new_testdate", "new_testentity",
+                    XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity,
                         expected.ToString(DateTimeFormatInfo.CurrentInfo.UniversalSortableDateTimePattern));
             Assert.IsTrue(expected.Hour == actual.ToUniversalTime().Hour && expected.Minute == actual.ToUniversalTime().Minute &&
                           expected.Second == actual.ToUniversalTime().Second && expected.Day == actual.ToUniversalTime().Day);
             //empty string value
-            Assert.IsTrue(XrmService.ParseField("new_testdate", "new_testentity", "") == null);
+            Assert.IsTrue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, "") == null);
             //invalid string value
             try
             {
-                var blah = XrmService.ParseField("new_testdate", "new_testentity", "BLAH");
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, "BLAH");
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -457,7 +456,7 @@ namespace JosephM.Xrm.Test
             }
             try
             {
-                var blah = XrmService.ParseField("new_testdate", "new_testentity", "BLAH");
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, "BLAH");
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -468,7 +467,7 @@ namespace JosephM.Xrm.Test
             var belowMin = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc).AddMilliseconds(-1);
             try
             {
-                var blah = XrmService.ParseField("new_testdate", "new_testentity", belowMin);
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, belowMin);
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -489,17 +488,17 @@ namespace JosephM.Xrm.Test
         public void GetThisSideIdTest()
         {
             PrepareTests();
-
-            Assert.IsTrue(XrmService.GetThisSideId("new_testentity_new_testentity", "new_testentity", true) ==
-                          "new_testentityidone");
-            Assert.IsTrue(XrmService.GetThisSideId("new_testentity_new_testentity", "new_testentity", false) ==
-                          "new_testentityidtwo");
-            Assert.IsTrue(XrmService.GetThisSideId("new_testentity_account", "new_testentity", false) ==
-                          "new_testentityid");
-            Assert.IsTrue(XrmService.GetThisSideId("new_testentity_account", "new_testentity", true) ==
-                          "new_testentityid");
-            Assert.IsTrue(XrmService.GetThisSideId("new_testentity_account", "account", false) == "accountid");
-            Assert.IsTrue(XrmService.GetThisSideId("new_testentity_account", "account", true) == "accountid");
+            //todo jmm use constants
+            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_jmcg_testentity", Entities.jmcg_testentity, true) ==
+                          "jmcg_testentityidone");
+            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_jmcg_testentity", Entities.jmcg_testentity, false) ==
+                          "jmcg_testentityidtwo");
+            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_account", Entities.jmcg_testentity, false) ==
+                          "jmcg_testentityid");
+            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_account", Entities.jmcg_testentity, true) ==
+                          "jmcg_testentityid");
+            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_account", "account", false) == "accountid");
+            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_account", "account", true) == "accountid");
         }
     }
 }

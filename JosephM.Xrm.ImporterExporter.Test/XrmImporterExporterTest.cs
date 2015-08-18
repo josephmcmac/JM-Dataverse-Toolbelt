@@ -11,6 +11,7 @@ using JosephM.Record.Application.SettingTypes;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.ImportExporter.Service;
+using JosephM.Xrm.Test;
 using Microsoft.Xrm.Sdk.Query;
 
 namespace JosephM.Xrm.ImporterExporter.Test
@@ -19,7 +20,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
     public class XrmImporterExporterTest : XrmRecordTest
     {
         [DeploymentItem(@"Files\Account.csv")]
-        [DeploymentItem(@"Files\new_testentity_account.csv")]
+        [DeploymentItem(@"Files\jmcg_testentity_account.csv")]
         [DeploymentItem(@"Files\Test Entity.csv")]
         [DeploymentItem(@"Files\Test Entity Two.csv")]
         [DeploymentItem(@"Files\Test Entity Three.csv")]
@@ -27,11 +28,11 @@ namespace JosephM.Xrm.ImporterExporter.Test
         public void ExportImportCsvMultipleTest()
         {
             PrepareTests();
-            var types = new[] { "new_testentitytwo", "new_testentitythree", "new_testentity", "account" };
+            var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity, Entities.account };
             var workFolder = ClearFilesAndData(types);
 
             File.Copy(@"Account.csv", Path.Combine(workFolder, @"Account.csv"));
-            File.Copy(@"new_testentity_account.csv", Path.Combine(workFolder, @"new_testentity_account.csv"));
+            File.Copy(@"jmcg_testentity_account.csv", Path.Combine(workFolder, @"jmcg_testentity_account.csv"));
             File.Copy(@"Test Entity.csv", Path.Combine(workFolder, @"Test Entity.csv"));
             File.Copy(@"Test Entity Two.csv", Path.Combine(workFolder, @"Test Entity Two.csv"));
             File.Copy(@"Test Entity Three.csv", Path.Combine(workFolder, @"Test Entity Three.csv"));
@@ -53,7 +54,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
         public void ExportImportXmlMultipleTest()
         {
             PrepareTests();
-            var types = new[] {"new_testentitytwo", "new_testentitythree", "new_testentity"};
+            var types = new[] {Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity};
             var workFolder = ClearFilesAndData(types);
 
             var importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
@@ -171,45 +172,45 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var query = new QueryExpression();
 
             PrepareTests();
-            var types = new[] { "new_testentitytwo", "new_testentitythree", "new_testentity" };
+            var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity };
             var workFolder = ClearFilesAndData(types);
 
             var importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
 
-            var t1_1 = CreateTestRecord("new_testentity", importerExporterService);
-            var t1_2 = CreateTestRecord("new_testentity", importerExporterService);
-            var t1_3 = CreateTestRecord("new_testentity", importerExporterService);
+            var t1_1 = CreateTestRecord(Entities.jmcg_testentity, importerExporterService);
+            var t1_2 = CreateTestRecord(Entities.jmcg_testentity, importerExporterService);
+            var t1_3 = CreateTestRecord(Entities.jmcg_testentity, importerExporterService);
 
-            var t2_1 = CreateTestRecord("new_testentitytwo", importerExporterService);
-            var t2_2 = CreateTestRecord("new_testentitytwo", importerExporterService);
-            var t2_3 = CreateTestRecord("new_testentitytwo", importerExporterService);
+            var t2_1 = CreateTestRecord(Entities.jmcg_testentitytwo, importerExporterService);
+            var t2_2 = CreateTestRecord(Entities.jmcg_testentitytwo, importerExporterService);
+            var t2_3 = CreateTestRecord(Entities.jmcg_testentitytwo, importerExporterService);
 
-            var t3_1 = CreateTestRecord("new_testentitythree", importerExporterService);
-            var t3_2 = CreateTestRecord("new_testentitythree", importerExporterService);
-            var t3_3 = CreateTestRecord("new_testentitythree", importerExporterService);
+            var t3_1 = CreateTestRecord(Entities.jmcg_testentitythree, importerExporterService);
+            var t3_2 = CreateTestRecord(Entities.jmcg_testentitythree, importerExporterService);
+            var t3_3 = CreateTestRecord(Entities.jmcg_testentitythree, importerExporterService);
 
             var t1RequestAll = new ImportExportRecordType()
             {
                 Type = ExportType.AllRecords,
-                RecordType = new RecordType("new_testentity", "new_testentity")
+                RecordType = new RecordType(Entities.jmcg_testentity, Entities.jmcg_testentity)
             };
             var t2RequestFetch = new ImportExportRecordType()
             {
                 Type = ExportType.FetchXml,
-                RecordType = new RecordType("new_testentitytwo", "new_testentitytwo"),
+                RecordType = new RecordType(Entities.jmcg_testentitytwo, Entities.jmcg_testentitytwo),
                 FetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' count='2' >
-                      <entity name='new_testentitytwo'>
+                      <entity name='" + Entities.jmcg_testentitytwo + @"'>
                       </entity>
                     </fetch>"
             };
             var t3RequestSpecific = new ImportExportRecordType()
             {
                 Type = ExportType.SpecificRecords,
-                RecordType = new RecordType("new_testentitythree", "new_testentitythree"),
+                RecordType = new RecordType(Entities.jmcg_testentitythree, Entities.jmcg_testentitythree),
                 OnlyExportSpecificRecords = new[]
                 {
-                    new LookupSetting() { Record = new Lookup("new_testentitythree", t3_1.Id.ToString(), "t3_1") },
-                    new LookupSetting() { Record = new Lookup("new_testentitythree", t3_2.Id.ToString(), "t3_2") },
+                    new LookupSetting() { Record = new Lookup(Entities.jmcg_testentitythree, t3_1.Id.ToString(), "t3_1") },
+                    new LookupSetting() { Record = new Lookup(Entities.jmcg_testentitythree, t3_2.Id.ToString(), "t3_2") },
                 }
             };
 

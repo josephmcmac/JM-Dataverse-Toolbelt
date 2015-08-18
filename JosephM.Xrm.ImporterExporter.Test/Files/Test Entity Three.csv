@@ -1,3 +1,3 @@
-Name,Created On,Autonumber Current Position,Autonumber Prefix,Created By,Created By (Delegate),Modified By,Modified By (Delegate),Modified On,Owner,Record Created On,Status,Status Reason,Test Entity Two
-BLAH,3/24/2015 11:30 AM,111,BLAH,CRM Admin,,CRM Admin,,3/24/2015 11:38 AM,CRM Admin,,Active,Active,BLAH
-Test Lookup 130716305447038880,3/24/2015 11:30 AM,,,CRM Admin,,CRM Admin,,3/24/2015 11:38 AM,CRM Admin,,Active,Active,
+Name,Created On,Created By,Created By (Delegate),Modified By,Modified By (Delegate),Modified On,Owner,Record Created On,Status,Status Reason,Test Entity Two
+BLAH,3/24/2015 11:30 AM,CRM Admin,,CRM Admin,,3/24/2015 11:38 AM,CRM Admin,,Active,Active,BLAH
+Test Lookup 130716305447038880,3/24/2015 11:30 AM,CRM Admin,,CRM Admin,,3/24/2015 11:38 AM,CRM Admin,,Active,Active,
