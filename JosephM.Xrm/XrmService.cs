@@ -739,6 +739,9 @@ namespace JosephM.Xrm
                             throw new ArgumentOutOfRangeException("Field " + fieldName + " in entity " + entityType +
                                                                   " below lowest permitted value of " +
                                                                   MinCrmDateTime);
+                        //remove the second fractions as crm strips them out
+                        if (temp.HasValue)
+                            temp = temp.Value.AddMilliseconds(-1 * temp.Value.Millisecond);
                         return temp;
                     }
                     case AttributeTypeCode.Lookup:

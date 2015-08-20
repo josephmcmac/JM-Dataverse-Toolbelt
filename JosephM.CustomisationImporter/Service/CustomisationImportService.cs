@@ -548,12 +548,16 @@ namespace JosephM.CustomisationImporter.Service
                 var viewOrderString = row.GetFieldAsString("View Order");
                 if (!string.IsNullOrWhiteSpace(viewOrderString))
                 {
-                    var viewWidth = string.IsNullOrWhiteSpace(row.GetFieldAsString("View Width"))
-                        ? 100
-                        : row.GetFieldAsInteger("View Width");
-                    var viewField = new ViewField(row.GetFieldAsString("Schema Name"),
-                        row.GetFieldAsInteger("View Order"), viewWidth);
-                    viewFields.Add(viewField);
+                    var order = row.GetFieldAsInteger("View Order");
+                    if (order >= 0)
+                    {
+                        var viewWidth = string.IsNullOrWhiteSpace(row.GetFieldAsString("View Width"))
+                            ? 100
+                            : row.GetFieldAsInteger("View Width");
+                        var viewField = new ViewField(row.GetFieldAsString("Schema Name"), order
+                            , viewWidth);
+                        viewFields.Add(viewField);
+                    }
                 }
             }
 
