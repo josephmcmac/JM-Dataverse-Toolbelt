@@ -140,6 +140,11 @@ namespace JosephM.Xrm
 
         public virtual OrganizationResponse Execute(OrganizationRequest request)
         {
+            return Execute(request, true);
+        }
+
+        public virtual OrganizationResponse Execute(OrganizationRequest request, bool retry)
+        {
             var requestDescription = GetRequestDescription(request);
             Controller.LogDetail("Executing crm request - " + requestDescription);
 
@@ -150,6 +155,8 @@ namespace JosephM.Xrm
             }
             catch (FaultException<OrganizationServiceFault> ex)
             {
+                if (!retry)
+                    throw;
                 if (request is ImportSolutionRequest)
                     throw;
                 lock (_lockObject)
@@ -164,6 +171,8 @@ namespace JosephM.Xrm
             }
             catch (CommunicationException ex)
             {
+                if (!retry)
+                    throw;
                 lock (_lockObject)
                 {
                     //Error was being thrown after service running overnight with no activity
@@ -201,8 +210,8 @@ namespace JosephM.Xrm
                     {
                         Name = relationshipName
                     };
-                    var response = (RetrieveRelationshipResponse) Execute(request);
-                    RelationshipMetadata.Add((ManyToManyRelationshipMetadata) response.RelationshipMetadata);
+                    var response = (RetrieveRelationshipResponse)Execute(request);
+                    RelationshipMetadata.Add((ManyToManyRelationshipMetadata)response.RelationshipMetadata);
                 }
                 return RelationshipMetadata.First(rm => rm.SchemaName == relationshipName);
             }
@@ -212,7 +221,7 @@ namespace JosephM.Xrm
         {
             lock (LockObject)
             {
-                if(AllRelationshipMetadata.All(r => r.IntersectEntityName != relationshipEntityName))
+                if (AllRelationshipMetadata.All(r => r.IntersectEntityName != relationshipEntityName))
                     throw new NullReferenceException(string.Format("Couldn;t Find Relationship With Entity Name {0}", (relationshipEntityName)));
                 return AllRelationshipMetadata.First(r => r.IntersectEntityName == relationshipEntityName);
             }
@@ -230,7 +239,7 @@ namespace JosephM.Xrm
                         EntityFilters = EntityFilters.Default,
                         LogicalName = entity
                     };
-                    var response = (RetrieveEntityResponse) Execute(request);
+                    var response = (RetrieveEntityResponse)Execute(request);
                     Controller.LogLiteral("Retrieved " + entity + " entity metadata");
                     EntityMetadata.Add(response.EntityMetadata);
                 }
@@ -286,7 +295,7 @@ namespace JosephM.Xrm
             var fieldMetadata = GetFieldMetadata(field, entity);
             if (fieldMetadata.AttributeType == null)
                 throw new NullReferenceException("Error AttributeType Is Null");
-            return (AttributeTypeCode) fieldMetadata.AttributeType;
+            return (AttributeTypeCode)fieldMetadata.AttributeType;
         }
 
         protected IEnumerable<KeyValuePair<int, string>> OptionSetToKeyValues(IEnumerable<OptionMetadata> options)
@@ -307,17 +316,17 @@ namespace JosephM.Xrm
             switch (fieldType)
             {
                 case AttributeTypeCode.Picklist:
-                {
-                    var metadata = (PicklistAttributeMetadata) GetFieldMetadata(fieldName, entityType);
-                    return OptionSetToKeyValues(metadata.OptionSet.Options);
-                }
+                    {
+                        var metadata = (PicklistAttributeMetadata)GetFieldMetadata(fieldName, entityType);
+                        return OptionSetToKeyValues(metadata.OptionSet.Options);
+                    }
                 case AttributeTypeCode.Status:
-                {
-                    var metadata = (StatusAttributeMetadata) GetFieldMetadata(fieldName, entityType);
-                    return
-                        OptionSetToKeyValues(
-                            metadata.OptionSet.Options);
-                }
+                    {
+                        var metadata = (StatusAttributeMetadata)GetFieldMetadata(fieldName, entityType);
+                        return
+                            OptionSetToKeyValues(
+                                metadata.OptionSet.Options);
+                    }
             }
             throw new ArgumentException("Field type not implemented: " + fieldType);
         }
@@ -338,12 +347,12 @@ namespace JosephM.Xrm
             var metadata = GetFieldMetadata(fieldName, entityType);
             if (metadata is MemoAttributeMetadata)
             {
-                var length = ((MemoAttributeMetadata) GetFieldMetadata(fieldName, entityType)).MaxLength;
+                var length = ((MemoAttributeMetadata)GetFieldMetadata(fieldName, entityType)).MaxLength;
                 return length ?? int.MaxValue;
             }
             if (metadata is StringAttributeMetadata)
             {
-                var length = ((StringAttributeMetadata) GetFieldMetadata(fieldName, entityType)).MaxLength;
+                var length = ((StringAttributeMetadata)GetFieldMetadata(fieldName, entityType)).MaxLength;
                 return length ?? int.MaxValue;
             }
             throw new ArgumentException("The field " + fieldName + " in entity " + entityType + " is not of string type");
@@ -351,7 +360,7 @@ namespace JosephM.Xrm
 
         public decimal? GetMaxDecimalValue(string field, string entity)
         {
-            return ((DecimalAttributeMetadata) GetFieldMetadata(field, entity)).MaxValue;
+            return ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue;
         }
 
         public decimal? GetMinDecimalValue(string field, string entity)
@@ -361,17 +370,17 @@ namespace JosephM.Xrm
 
         public double? GetMaxMoneyValue(string field, string entity)
         {
-            return ((MoneyAttributeMetadata) GetFieldMetadata(field, entity)).MaxValue;
+            return ((MoneyAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue;
         }
 
         public double? GetMinMoneyValue(string field, string entity)
         {
-            return ((MoneyAttributeMetadata) GetFieldMetadata(field, entity)).MinValue;
+            return ((MoneyAttributeMetadata)GetFieldMetadata(field, entity)).MinValue;
         }
 
         public int? GetMaxIntValue(string fieldName, string entityType)
         {
-            return ((IntegerAttributeMetadata) GetFieldMetadata(fieldName, entityType)).MaxValue;
+            return ((IntegerAttributeMetadata)GetFieldMetadata(fieldName, entityType)).MaxValue;
         }
 
         public int? GetMinIntValue(string fieldName, string entityType)
@@ -381,12 +390,12 @@ namespace JosephM.Xrm
 
         public double? GetMaxDoubleValue(string field, string entity)
         {
-            return ((DoubleAttributeMetadata) GetFieldMetadata(field, entity)).MaxValue;
+            return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue;
         }
 
         public double? GetMinDoubleValue(string field, string entity)
         {
-            return ((DoubleAttributeMetadata) GetFieldMetadata(field, entity)).MinValue;
+            return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).MinValue;
         }
 
         public bool IsString(string fieldName, string entityType)
@@ -399,7 +408,7 @@ namespace JosephM.Xrm
         {
             var result = false;
             var type = GetFieldType(field, entity);
-            if (new[] {AttributeTypeCode.Customer, AttributeTypeCode.Lookup, AttributeTypeCode.Owner}.Contains(type))
+            if (new[] { AttributeTypeCode.Customer, AttributeTypeCode.Lookup, AttributeTypeCode.Owner }.Contains(type))
                 result = true;
             return result;
         }
@@ -407,13 +416,13 @@ namespace JosephM.Xrm
         public int GetMatchingOptionValue(string value, string field, string entity)
         {
             var metadata = GetFieldMetadata(field, entity);
-            foreach (var option in ((EnumAttributeMetadata) metadata).OptionSet.Options)
+            foreach (var option in ((EnumAttributeMetadata)metadata).OptionSet.Options)
             {
                 if (GetOptionLabel(option).ToLower() == value.ToLower() || option.Value.ToString() == value)
                 {
                     if (option.Value != null)
                     {
-                        return (int) option.Value;
+                        return (int)option.Value;
                     }
                 }
             }
@@ -426,7 +435,7 @@ namespace JosephM.Xrm
         public string GetOptionLabel(int optionValue, string field, string entity)
         {
             var metadata = GetFieldMetadata(field, entity);
-            foreach (var option in ((EnumAttributeMetadata) metadata).OptionSet.Options)
+            foreach (var option in ((EnumAttributeMetadata)metadata).OptionSet.Options)
             {
                 if (option.Value == optionValue)
                     return GetOptionLabel(option);
@@ -439,11 +448,11 @@ namespace JosephM.Xrm
         {
             var result = new SortedDictionary<int, string>();
 
-            var metadata = (PicklistAttributeMetadata) GetFieldMetadata(field, entity);
+            var metadata = (PicklistAttributeMetadata)GetFieldMetadata(field, entity);
             foreach (var option in metadata.OptionSet.Options)
             {
                 if (option.Value != null)
-                    result.Add((int) option.Value, GetOptionLabel(option));
+                    result.Add((int)option.Value, GetOptionLabel(option));
             }
             return result;
         }
@@ -454,7 +463,7 @@ namespace JosephM.Xrm
             var metadata = GetFieldMetadata(field, entity);
             if (metadata.AttributeType == AttributeTypeCode.Lookup)
             {
-                var targets = ((LookupAttributeMetadata) metadata).Targets;
+                var targets = ((LookupAttributeMetadata)metadata).Targets;
                 result = targets.Count() == 1 ? targets[0] : "ambiguous or not implemented";
             }
             else if (metadata.AttributeType == AttributeTypeCode.Owner)
@@ -497,20 +506,20 @@ namespace JosephM.Xrm
             switch (internalType)
             {
                 case AttributeTypeCode.Decimal:
-                {
-                    temp = ((DecimalAttributeMetadata) GetFieldMetadata(field, entity)).Precision;
-                    break;
-                }
+                    {
+                        temp = ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).Precision;
+                        break;
+                    }
                 case AttributeTypeCode.Double:
-                {
-                    temp = ((DoubleAttributeMetadata) GetFieldMetadata(field, entity)).Precision;
-                    break;
-                }
+                    {
+                        temp = ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).Precision;
+                        break;
+                    }
                 default:
-                {
-                    throw new NotImplementedException(string.Format("Get Precision Not Implemented For Field Of Type {0} ({1}.{2})"
-                        , internalType, entity, field));
-                }
+                    {
+                        throw new NotImplementedException(string.Format("Get Precision Not Implemented For Field Of Type {0} ({1}.{2})"
+                            , internalType, entity, field));
+                    }
             }
             if (!temp.HasValue)
                 throw new NullReferenceException("Precision Is Null");
@@ -541,13 +550,6 @@ namespace JosephM.Xrm
             return response;
         }
 
-        public bool IsMultilineText(string fieldName, string recordType)
-        {
-            var metadata = GetFieldMetadata(fieldName, recordType);
-            return metadata.AttributeType == AttributeTypeCode.String &&
-                   ((StringAttributeMetadata) metadata).Format == StringFormat.TextArea;
-        }
-
         public string GetEntityDisplayName(string recordType)
         {
             return GetLabelDisplay(GetEntityMetadata(recordType).DisplayName);
@@ -565,7 +567,7 @@ namespace JosephM.Xrm
 
         public Guid WhoAmI()
         {
-            return ((WhoAmIResponse) Execute(new WhoAmIRequest())).UserId;
+            return ((WhoAmIResponse)Execute(new WhoAmIRequest())).UserId;
         }
 
         public bool IsEntityAuditOn(string entityName)
@@ -585,18 +587,18 @@ namespace JosephM.Xrm
 
         public bool IsDateIncludeTime(string fieldName, string recordType)
         {
-            return ((DateTimeAttributeMetadata) GetFieldMetadata(fieldName, recordType)).Format ==
+            return ((DateTimeAttributeMetadata)GetFieldMetadata(fieldName, recordType)).Format ==
                    DateTimeFormat.DateAndTime;
         }
 
         public StringFormat? GetTextFormat(string fieldName, string recordType)
         {
-            return ((StringAttributeMetadata) GetFieldMetadata(fieldName, recordType)).Format;
+            return ((StringAttributeMetadata)GetFieldMetadata(fieldName, recordType)).Format;
         }
 
         public IntegerFormat GetIntegerFormat(string fieldName, string recordType)
         {
-            var field = ((IntegerAttributeMetadata) GetFieldMetadata(fieldName, recordType));
+            var field = ((IntegerAttributeMetadata)GetFieldMetadata(fieldName, recordType));
             if (!field.Format.HasValue)
                 throw new NullReferenceException("Format Is Null");
             return field.Format.Value;
@@ -625,6 +627,28 @@ namespace JosephM.Xrm
             }
             if (fields != null)
                 query.ColumnSet = new ColumnSet(fields);
+            else
+                query.ColumnSet = new ColumnSet(true);
+
+            return query;
+        }
+
+        public static QueryExpression BuildQuery(string entityType, IEnumerable<string> fields,
+IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
+        {
+            var query = new QueryExpression(entityType);
+            if (filters != null)
+            {
+                foreach (var condition in filters)
+                    query.Criteria.AddCondition(condition);
+            }
+            if (sortFields != null)
+            {
+                foreach (var sortField in sortFields)
+                    query.AddOrder(sortField, OrderType.Ascending);
+            }
+            if (fields != null)
+                query.ColumnSet = new ColumnSet(fields.ToArray());
             else
                 query.ColumnSet = new ColumnSet(true);
 
@@ -680,240 +704,259 @@ namespace JosephM.Xrm
                 switch (fieldType)
                 {
                     case AttributeTypeCode.String:
-                    {
-                        var maxLength = GetMaxLength(fieldName, entityType);
-                        var temp = value.ToString();
-                        if (temp.Length > maxLength)
-                            throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                  " exceeded maximum length of " + maxLength);
-                        return temp;
-                    }
-                    case AttributeTypeCode.Memo:
-                    {
-                        var maxLength = GetMaxLength(fieldName, entityType);
-                        var temp = value.ToString();
-                        if (temp.Length > maxLength)
-                            throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                  " exceeded maximum length of " + maxLength);
-                        return temp;
-                    }
-                    case AttributeTypeCode.Integer:
-                    {
-                        int temp;
-                        if (value is int)
-                            temp = (int) value;
-                        else if (value is string && value.ToString().IsNullOrWhiteSpace())
-                            return null;
-                        else
-                            temp = int.Parse(value.ToString().Replace(",", ""));
-                        if (!IntInRange(fieldName, entityType, temp))
-                            throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                  " outside permitted range of " +
-                                                                  ((IntegerAttributeMetadata)
-                                                                      GetFieldMetadata(fieldName, entityType)).MinValue +
-                                                                  " to " +
-                                                                  ((IntegerAttributeMetadata)
-                                                                      GetFieldMetadata(fieldName, entityType)).MaxValue);
-                        return temp;
-                    }
-                    case AttributeTypeCode.DateTime:
-                    {
-                        DateTime? temp = null;
-                        if (value is DateTime)
-                            temp = (DateTime) value;
-                        else
                         {
-                            if (!String.IsNullOrWhiteSpace(value.ToString()))
-                                try
-                                {
-                                    temp = DateTime.Parse(value.ToString(), new CultureInfo(datesAmericanFormat ? "en-US" : "en-GB"));
-                                }
-                                catch (Exception ex)
-                                {
-                                    throw new ArgumentException(
-                                        "Error Parsing Field " + fieldName + " in entity " + entityType + " value " +
-                                        value, ex);
-                                }
+                            var maxLength = GetMaxLength(fieldName, entityType);
+                            var temp = value.ToString();
+                            if (temp.Length > maxLength)
+                                throw new ArgumentOutOfRangeException("Field " + fieldName +
+                                                                      " exceeded maximum length of " + maxLength);
+                            return temp;
                         }
-                        if (temp != null && temp < MinCrmDateTime)
-                            throw new ArgumentOutOfRangeException("Field " + fieldName + " in entity " + entityType +
-                                                                  " below lowest permitted value of " +
-                                                                  MinCrmDateTime);
-                        //remove the second fractions as crm strips them out
-                        if (temp.HasValue)
-                            temp = temp.Value.AddMilliseconds(-1 * temp.Value.Millisecond);
-                        return temp;
-                    }
+                    case AttributeTypeCode.Memo:
+                        {
+                            var maxLength = GetMaxLength(fieldName, entityType);
+                            var temp = value.ToString();
+                            if (temp.Length > maxLength)
+                                throw new ArgumentOutOfRangeException("Field " + fieldName +
+                                                                      " exceeded maximum length of " + maxLength);
+                            return temp;
+                        }
+                    case AttributeTypeCode.Integer:
+                        {
+                            int temp;
+                            if (value is int)
+                                temp = (int)value;
+                            else if (value is string && value.ToString().IsNullOrWhiteSpace())
+                                return null;
+                            else
+                                temp = int.Parse(value.ToString().Replace(",", ""));
+                            if (!IntInRange(fieldName, entityType, temp))
+                                throw new ArgumentOutOfRangeException("Field " + fieldName +
+                                                                      " outside permitted range of " +
+                                                                      ((IntegerAttributeMetadata)
+                                                                          GetFieldMetadata(fieldName, entityType)).MinValue +
+                                                                      " to " +
+                                                                      ((IntegerAttributeMetadata)
+                                                                          GetFieldMetadata(fieldName, entityType)).MaxValue);
+                            return temp;
+                        }
+                    case AttributeTypeCode.DateTime:
+                        {
+                            DateTime? temp = null;
+                            if (value is DateTime)
+                                temp = (DateTime)value;
+                            else
+                            {
+                                if (!String.IsNullOrWhiteSpace(value.ToString()))
+                                    try
+                                    {
+                                        temp = DateTime.Parse(value.ToString(), new CultureInfo(datesAmericanFormat ? "en-US" : "en-GB"));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        throw new ArgumentException(
+                                            "Error Parsing Field " + fieldName + " in entity " + entityType + " value " +
+                                            value, ex);
+                                    }
+                            }
+                            if (temp != null && temp < MinCrmDateTime)
+                                throw new ArgumentOutOfRangeException("Field " + fieldName + " in entity " + entityType +
+                                                                      " below lowest permitted value of " +
+                                                                      MinCrmDateTime);
+                            //remove the second fractions as crm strips them out
+                            if (temp.HasValue)
+                                temp = temp.Value.AddMilliseconds(-1 * temp.Value.Millisecond).ToUniversalTime();
+                            return temp;
+                        }
                     case AttributeTypeCode.Lookup:
                     case AttributeTypeCode.Customer:
                     case AttributeTypeCode.Owner:
-                    {
-                        if (value is EntityReference)
-                            return value;
-                        if (value is Guid && fieldType == AttributeTypeCode.Lookup)
-                            return new EntityReference(GetLookupTargetEntity(fieldName, entityType), (Guid)value);
-                        else if (fieldType == AttributeTypeCode.Lookup && value is string)
                         {
-                            Guid tryGetGuid = Guid.Empty;
-                            if (Guid.TryParse(value.ToString(), out tryGetGuid))
+                            if (value is EntityReference)
+                                return value;
+                            if (value is Guid && fieldType == AttributeTypeCode.Lookup)
+                                return new EntityReference(GetLookupTargetEntity(fieldName, entityType), (Guid)value);
+                            else if (value is string)
                             {
-                                return CreateLookup(GetLookupTargetEntity(fieldName, entityType), tryGetGuid);
-                            }
-                            else
-                            {
-                                var target = GetLookupTargetEntity(fieldName, entityType);
-                                var matchingNames = RetrieveAllAndClauses(target,
-                                    new[]
+                                var types = new List<string>();
+                                if (fieldType == AttributeTypeCode.Lookup)
+                                    types.Add(GetLookupTargetEntity(fieldName, entityType));
+                                else if (fieldType == AttributeTypeCode.Owner)
+                                    types.AddRange(new[] { "team", "systemuser" });
+                                else if (fieldType == AttributeTypeCode.Customer)
+                                    types.AddRange(new[] { "account", "contact" });
+
+                                var matchingRecords = new List<EntityReference>();
+                                foreach (var type in types)
+                                {
+                                    Guid tryGetGuid = Guid.Empty;
+                                    if (Guid.TryParse(value.ToString(), out tryGetGuid))
+                                    {
+                                        if (types.Count() == 1)
+                                            matchingRecords.Add(CreateLookup(type, tryGetGuid));
+                                        else
                                         {
-                                            new ConditionExpression(GetPrimaryNameField(target), ConditionOperator.Equal,
+                                            var match = GetFirst(type, GetPrimaryKeyField(type), tryGetGuid);
+                                            if (match != null)
+                                                matchingRecords.Add(match.ToEntityReference());
+                                        }
+                                    }
+                                    else
+                                    {
+                                        matchingRecords.AddRange(RetrieveAllAndClauses(type,
+                                            new[]
+                                        {
+                                            new ConditionExpression(GetPrimaryNameField(type), ConditionOperator.Equal,
                                                 value.ToString())
-                                        }, new string[0]);
-                                if (matchingNames.Count() == 1)
-                                    return matchingNames.First().ToEntityReference();
+                                        }, new string[0]).Select(e => e.ToEntityReference()).ToArray());
+
+                                    }
+                                }
+                                if (matchingRecords.Count() == 1)
+                                    return matchingRecords.First();
                                 throw new ArgumentOutOfRangeException(
                                     string.Format(
                                         "Error Parsing Field {0}. The String Value Was Not A Guid And Did Not Match To A Unique {1} Records Name. The value was {2}",
-                                        fieldName, target, value));
+                                        fieldName, string.Join(",", types), value));
                             }
+                            else
+                                throw new ArgumentException(
+                                    string.Format("Parse {0} not implemented for argument type of {1} ", fieldType,
+                                        value.GetType().Name));
                         }
-                        else
-                            throw new ArgumentException(
-                                string.Format("Parse {0} not implemented for argument type of {1} ", fieldType,
-                                    value.GetType().Name));
-                    }
                     case AttributeTypeCode.Picklist:
-                    {
-                        if (value is OptionSetValue)
                         {
-                            return value;
+                            if (value is OptionSetValue)
+                            {
+                                return value;
+                            }
+                            if (value is string)
+                            {
+                                return
+                                    CreateOptionSetValue(GetMatchingOptionValue((string)value, fieldName, entityType));
+                            }
+                            else if (value is int)
+                            {
+                                return CreateOptionSetValue((int)value);
+                            }
+                            else
+                                throw new ArgumentException("Parse picklist not implemented for argument type: " +
+                                                            value.GetType().Name);
                         }
-                        if (value is string)
-                        {
-                            return
-                                CreateOptionSetValue(GetMatchingOptionValue((string) value, fieldName, entityType));
-                        }
-                        else if (value is int)
-                        {
-                            return CreateOptionSetValue((int) value);
-                        }
-                        else
-                            throw new ArgumentException("Parse picklist not implemented for argument type: " +
-                                                        value.GetType().Name);
-                    }
                     case AttributeTypeCode.Decimal:
-                    {
-                        decimal newValue = 0;
-                        if (value is decimal)
-                            newValue = (decimal) value;
-                        else
-                            newValue = decimal.Parse(value.ToString().Replace(",", ""));
-                        newValue = decimal.Round(newValue, GetPrecision(fieldName, entityType));
-                        if (!DecimalInRange(fieldName, entityType, newValue))
-                            throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                  " outside permitted range of " +
-                                                                  ((DecimalAttributeMetadata)
-                                                                      GetFieldMetadata(fieldName, entityType)).MinValue +
-                                                                  " to " +
-                                                                  ((DecimalAttributeMetadata)
-                                                                      GetFieldMetadata(fieldName, entityType)).MaxValue);
-                        return newValue;
-                    }
+                        {
+                            decimal newValue = 0;
+                            if (value is decimal)
+                                newValue = (decimal)value;
+                            else
+                                newValue = decimal.Parse(value.ToString().Replace(",", ""));
+                            newValue = decimal.Round(newValue, GetPrecision(fieldName, entityType));
+                            if (!DecimalInRange(fieldName, entityType, newValue))
+                                throw new ArgumentOutOfRangeException("Field " + fieldName +
+                                                                      " outside permitted range of " +
+                                                                      ((DecimalAttributeMetadata)
+                                                                          GetFieldMetadata(fieldName, entityType)).MinValue +
+                                                                      " to " +
+                                                                      ((DecimalAttributeMetadata)
+                                                                          GetFieldMetadata(fieldName, entityType)).MaxValue);
+                            return newValue;
+                        }
                     case AttributeTypeCode.Double:
-                    {
-                        double temp;
-                        if (value is double)
-                            temp = (double) value;
-                        else
-                            temp = double.Parse(value.ToString().Replace(",", ""));
-                        if (!DoubleInRange(fieldName, entityType, temp))
-                            throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                  " outside permitted range of " +
-                                                                  ((DoubleAttributeMetadata)
-                                                                      GetFieldMetadata(fieldName, entityType)).MinValue +
-                                                                  " to " +
-                                                                  ((DoubleAttributeMetadata)
-                                                                      GetFieldMetadata(fieldName, entityType)).MaxValue);
-                        return temp;
-                    }
+                        {
+                            double temp;
+                            if (value is double)
+                                temp = (double)value;
+                            else
+                                temp = double.Parse(value.ToString().Replace(",", ""));
+                            if (!DoubleInRange(fieldName, entityType, temp))
+                                throw new ArgumentOutOfRangeException("Field " + fieldName +
+                                                                      " outside permitted range of " +
+                                                                      ((DoubleAttributeMetadata)
+                                                                          GetFieldMetadata(fieldName, entityType)).MinValue +
+                                                                      " to " +
+                                                                      ((DoubleAttributeMetadata)
+                                                                          GetFieldMetadata(fieldName, entityType)).MaxValue);
+                            return temp;
+                        }
                     case AttributeTypeCode.Money:
-                    {
-                        Money temp;
-                        if (value is Money)
-                            temp = (Money) value;
-                        else if (value is Decimal)
-                            temp = new Money((decimal) value);
-                        else
-                            temp = new Money(decimal.Parse(value.ToString().Replace(",", "")));
-                        if (!MoneyInRange(fieldName, entityType, temp))
-                            throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                  " outside permitted range of " +
-                                                                  ((MoneyAttributeMetadata)
-                                                                      GetFieldMetadata(fieldName, entityType)).MinValue +
-                                                                  " to " +
-                                                                  ((MoneyAttributeMetadata)
-                                                                      GetFieldMetadata(fieldName, entityType)).MaxValue);
-                        return temp;
-                    }
+                        {
+                            Money temp;
+                            if (value is Money)
+                                temp = (Money)value;
+                            else if (value is Decimal)
+                                temp = new Money((decimal)value);
+                            else
+                                temp = new Money(decimal.Parse(value.ToString().Replace(",", "")));
+                            if (!MoneyInRange(fieldName, entityType, temp))
+                                throw new ArgumentOutOfRangeException("Field " + fieldName +
+                                                                      " outside permitted range of " +
+                                                                      ((MoneyAttributeMetadata)
+                                                                          GetFieldMetadata(fieldName, entityType)).MinValue +
+                                                                      " to " +
+                                                                      ((MoneyAttributeMetadata)
+                                                                          GetFieldMetadata(fieldName, entityType)).MaxValue);
+                            return temp;
+                        }
                     case AttributeTypeCode.Boolean:
-                    {
-                        if (value is bool)
-                            return value;
-                        else if (value is string)
-                            return new[] {"true", "yes", "1", "of course"}.Contains(((string) value).ToLower());
-                        else
-                            throw new ArgumentException("Parse bool not implemented for argument type: " +
-                                                        value.GetType().Name);
-                    }
+                        {
+                            if (value is bool)
+                                return value;
+                            else if (value is string)
+                                return new[] { "true", "yes", "1", "of course" }.Contains(((string)value).ToLower());
+                            else
+                                throw new ArgumentException("Parse bool not implemented for argument type: " +
+                                                            value.GetType().Name);
+                        }
                     case AttributeTypeCode.Status:
-                    {
-                        if (value is OptionSetValue)
-                            return value;
-                        else if (value is int)
-                            return CreateOptionSetValue((int) value);
-                        else if (value is string)
-                            return
-                                CreateOptionSetValue(GetMatchingOptionValue((string) value, fieldName, entityType));
-                        else
-                            throw new ArgumentException("Parse status not implemented for argument type: " +
-                                                        value.GetType().Name);
-                    }
+                        {
+                            if (value is OptionSetValue)
+                                return value;
+                            else if (value is int)
+                                return CreateOptionSetValue((int)value);
+                            else if (value is string)
+                                return
+                                    CreateOptionSetValue(GetMatchingOptionValue((string)value, fieldName, entityType));
+                            else
+                                throw new ArgumentException("Parse status not implemented for argument type: " +
+                                                            value.GetType().Name);
+                        }
                     case AttributeTypeCode.Uniqueidentifier:
-                    {
-                        if (value is Guid)
-                            return value;
-                        if (value is string)
-                            return new Guid((string) value);
-                        else
-                            throw new ArgumentException(
-                                "Parse UniqueIdentifier not implemented for argument type: " + value.GetType().Name);
-                    }
+                        {
+                            if (value is Guid)
+                                return value;
+                            if (value is string)
+                                return new Guid((string)value);
+                            else
+                                throw new ArgumentException(
+                                    "Parse UniqueIdentifier not implemented for argument type: " + value.GetType().Name);
+                        }
                     case AttributeTypeCode.State:
-                    {
-                        if (value is OptionSetValue)
-                            return value;
-                        else if (value is int)
-                            return CreateOptionSetValue((int) value);
-                        else if (value is string)
-                            return
-                                CreateOptionSetValue(GetMatchingOptionValue((string) value, fieldName, entityType));
-                        else
-                            throw new ArgumentException("Parse state not implemented for argument type: " +
-                                                        value.GetType().Name);
-                    }
+                        {
+                            if (value is OptionSetValue)
+                                return value;
+                            else if (value is int)
+                                return CreateOptionSetValue((int)value);
+                            else if (value is string)
+                                return
+                                    CreateOptionSetValue(GetMatchingOptionValue((string)value, fieldName, entityType));
+                            else
+                                throw new ArgumentException("Parse state not implemented for argument type: " +
+                                                            value.GetType().Name);
+                        }
                     case AttributeTypeCode.PartyList:
-                    {
-                        if (value is IEnumerable<EntityReference>)
                         {
-                            return ((IEnumerable<EntityReference>) value).Select(XrmEntity.CreatePartyEntity).ToArray();
+                            if (value is IEnumerable<EntityReference>)
+                            {
+                                return ((IEnumerable<EntityReference>)value).Select(XrmEntity.CreatePartyEntity).ToArray();
+                            }
+                            if (value is IEnumerable<Entity> || value is EntityCollection)
+                            {
+                                return value;
+                            }
+                            else
+                                throw new ArgumentException("Parse partylist not implemented for argument type: " +
+                                                            value.GetType().Name);
                         }
-                        if (value is IEnumerable<Entity> || value is EntityCollection)
-                        {
-                            return value;
-                        }
-                        else
-                            throw new ArgumentException("Parse partylist not implemented for argument type: " +
-                                                        value.GetType().Name);
-                    }
                 }
                 return value;
             }
@@ -934,8 +977,8 @@ namespace JosephM.Xrm
             {
                 var amount = XrmEntity.GetMoneyValue(value);
                 return
-                    (double) amount >= GetMinMoneyValue(field, entity)
-                    && (double) amount <= GetMaxMoneyValue(field, entity);
+                    (double)amount >= GetMinMoneyValue(field, entity)
+                    && (double)amount <= GetMaxMoneyValue(field, entity);
             }
             return true;
         }
@@ -1033,58 +1076,6 @@ namespace JosephM.Xrm
             return thisFieldIndexed;
         }
 
-        /// <summary>
-        ///     Warning! Unlimited results
-        /// </summary>
-        public SortedDictionary<string, Guid> IndexGuidsByValue(string entityType, string indexByField)
-        {
-            var query = new QueryExpression
-            {
-                EntityName = entityType,
-                ColumnSet = new ColumnSet(new[] {indexByField}),
-            };
-            return IndexIdsByField(indexByField, RetrieveAll(query));
-        }
-
-        public SortedDictionary<string, Guid> IndexIdsByField(string indexByField, IEnumerable<Entity> items)
-        {
-            var result = new SortedDictionary<string, Guid>();
-            foreach (var record in items)
-            {
-                var fieldValue = GetFieldAsMatchString(record.LogicalName, indexByField,
-                    record.GetField(indexByField));
-                if (!String.IsNullOrWhiteSpace(fieldValue) && !result.ContainsKey(fieldValue))
-                    result.Add(fieldValue, record.Id);
-            }
-            return result;
-        }
-
-        /// <summary>
-        ///     Warning! Unlimited results
-        /// </summary>
-        public SortedDictionary<string, Entity> IndexEntitiesByValue(string entityType, string indexByField,
-            string[] requiredFields)
-        {
-            var query = CreateQuery(entityType,
-                requiredFields == null ? null : requiredFields.Union(new[] {indexByField}).ToArray());
-
-
-            return IndexEntitiesByField(indexByField, RetrieveAll(query));
-        }
-
-        public SortedDictionary<string, Entity> IndexEntitiesByField(string indexByField, IEnumerable<Entity> items)
-        {
-            var result = new SortedDictionary<string, Entity>();
-            foreach (var record in items)
-            {
-                var fieldObject = record.GetField(indexByField);
-                var fieldString = fieldObject == null ? null : fieldObject.ToString();
-                if (!String.IsNullOrWhiteSpace(fieldString) && !result.ContainsKey(fieldString))
-                    result.Add(fieldString, record);
-            }
-            return result;
-        }
-
         public Entity GetFirst(string entityType, string fieldName, object fieldValue)
         {
             return GetFirst(entityType, fieldName, fieldValue, null);
@@ -1128,18 +1119,18 @@ namespace JosephM.Xrm
                 ? relationshipMetadata.Entity1IntersectAttribute
                 : relationshipMetadata.Entity2IntersectAttribute;
             var query = new QueryExpression(GetRelationshipEntityName(relationshipName));
-            query.ColumnSet = CreateColumnSet(new[] {otherSideId});
+            query.ColumnSet = CreateColumnSet(new[] { otherSideId });
             query.Criteria.AddCondition(thisSideId, ConditionOperator.Equal, thisId);
-            return RetrieveAll(query).Select(entity => (Guid) entity.GetField(otherSideId));
+            return RetrieveAll(query).Select(entity => (Guid)entity.GetField(otherSideId));
         }
 
         public IEnumerable<Guid> GetAssociatedIds(string relationshipName, string thisSideId, Guid thisId,
             string otherSideId)
         {
             var query = new QueryExpression(GetRelationshipEntityName(relationshipName));
-            query.ColumnSet = CreateColumnSet(new[] {otherSideId});
+            query.ColumnSet = CreateColumnSet(new[] { otherSideId });
             query.Criteria.AddCondition(thisSideId, ConditionOperator.Equal, thisId);
-            return RetrieveAll(query).Select(entity => (Guid) entity.GetField(otherSideId));
+            return RetrieveAll(query).Select(entity => (Guid)entity.GetField(otherSideId));
         }
 
         /// <summary>
@@ -1156,9 +1147,9 @@ namespace JosephM.Xrm
                 ? relationshipMetadata.Entity1IntersectAttribute
                 : relationshipMetadata.Entity2IntersectAttribute;
             var query = new QueryExpression(GetRelationshipEntityName(relationshipName));
-            query.ColumnSet = CreateColumnSet(new[] {thisSideId, otherSideId});
+            query.ColumnSet = CreateColumnSet(new[] { thisSideId, otherSideId });
             var allThiQuery = new QueryExpression(thisEntityType);
-            allThiQuery.ColumnSet = CreateColumnSet(new string[] {});
+            allThiQuery.ColumnSet = CreateColumnSet(new string[] { });
             var allThisItems = RetrieveAll(new QueryExpression(thisEntityType));
             foreach (var item in allThisItems)
                 result.Add(item.Id, new List<Guid>());
@@ -1166,9 +1157,9 @@ namespace JosephM.Xrm
             var allAssociations = RetrieveAll(query);
             foreach (var item in allAssociations)
             {
-                var thisId = (Guid) item.GetField(thisSideId);
+                var thisId = (Guid)item.GetField(thisSideId);
                 if (result.ContainsKey(thisId))
-                    ((List<Guid>) result[thisId]).Add((Guid) item.GetField(otherSideId));
+                    ((List<Guid>)result[thisId]).Add((Guid)item.GetField(otherSideId));
             }
             return result;
         }
@@ -1184,7 +1175,15 @@ namespace JosephM.Xrm
             }
             else if (IsLookup(fieldName, entityType))
             {
-                return ((EntityReference) fieldValue).Id.ToString();
+                return ((EntityReference)fieldValue).Id.ToString();
+            }
+            else if (IsMoney(fieldName, entityType))
+            {
+                return ((Money)fieldValue).Value.ToString("###################0.00");
+            }
+            else if (IsOptionSet(fieldName, entityType))
+            {
+                return ((OptionSetValue)fieldValue).Value.ToString();
             }
             else
                 return fieldValue.ToString();
@@ -1204,9 +1203,14 @@ namespace JosephM.Xrm
 
         public void SetState(Entity entity, int state, int status)
         {
+            SetState(entity.LogicalName, entity.Id, state, status);
+        }
+
+        public void SetState(string type, Guid id, int state, int status)
+        {
             var setStateReq = new SetStateRequest
             {
-                EntityMoniker = new EntityReference(entity.LogicalName, entity.Id),
+                EntityMoniker = new EntityReference(type, id),
                 State = new OptionSetValue(state),
                 Status = new OptionSetValue(status)
             };
@@ -1221,12 +1225,12 @@ namespace JosephM.Xrm
 
         public IEnumerable<Entity> RetrieveAllEntityType(string entityType)
         {
-            return RetrieveAll(new QueryExpression(entityType) {ColumnSet = CreateColumnSet(null)});
+            return RetrieveAll(new QueryExpression(entityType) { ColumnSet = CreateColumnSet(null) });
         }
 
         public IEnumerable<Entity> RetrieveAllEntityType(string entityType, IEnumerable<string> fields)
         {
-            return RetrieveAll(new QueryExpression(entityType) {ColumnSet = CreateColumnSet(fields)});
+            return RetrieveAll(new QueryExpression(entityType) { ColumnSet = CreateColumnSet(fields) });
         }
 
         public IEnumerable<Entity> GetUserRoles(Guid userId, string[] columns)
@@ -1298,7 +1302,7 @@ namespace JosephM.Xrm
 
         public void SetField(string entityType, Guid guid, string fieldName, object value)
         {
-            var entity = new Entity(entityType) {Id = guid};
+            var entity = new Entity(entityType) { Id = guid };
             entity.SetField(fieldName, value);
             Update(entity);
         }
@@ -1334,7 +1338,7 @@ namespace JosephM.Xrm
 
         internal void SetFieldIfChanging(string recordType, Guid id, string fieldName, object fieldValue)
         {
-            var record = Retrieve(recordType, id, new[] {fieldName});
+            var record = Retrieve(recordType, id, new[] { fieldName });
             var currentValue = record.GetField(fieldName);
             if (!XrmEntity.FieldsEqual(currentValue, fieldValue))
             {
@@ -1347,8 +1351,8 @@ namespace JosephM.Xrm
             SortedDictionary<Guid, object> idFieldSwitches)
         {
             var existingValues = new SortedDictionary<Guid, object>();
-            var ids = idFieldSwitches.Keys.Select(guid => (object) guid).ToArray();
-            var items = Retrieve(recordType, ids, new[] {fieldName});
+            var ids = idFieldSwitches.Keys.Select(guid => (object)guid).ToArray();
+            var items = Retrieve(recordType, ids, new[] { fieldName });
             foreach (var item in items)
             {
                 existingValues.Add(item.Id, item.GetField(fieldName));
@@ -1440,7 +1444,7 @@ namespace JosephM.Xrm
                 }
                 foreach (var entity in RetrieveAll(query))
                 {
-                    if(!results.ContainsKey(entity.Id))
+                    if (!results.ContainsKey(entity.Id))
                         results.Add(entity.Id, entity);
                 }
             }
@@ -1468,39 +1472,6 @@ namespace JosephM.Xrm
             return thisSideId;
         }
 
-        public SortedDictionary<string, Guid?> IndexMatchingGuids(string entityName, string matchField,
-            IEnumerable<string> matchValues)
-        {
-            var result = new SortedDictionary<string, Guid?>();
-            if (matchValues != null && matchValues.Any())
-            {
-                var filterExpressions = new List<FilterExpression>();
-                foreach (var matchValue in matchValues)
-                {
-                    var parseValue = ParseField(matchField, entityName, matchValue);
-                    var stringValue = GetFieldAsMatchString(entityName, matchField, parseValue);
-                    var filterExpression = new FilterExpression();
-                    filterExpression.AddCondition(new ConditionExpression(matchField, ConditionOperator.Equal,
-                        stringValue));
-                    filterExpressions.Add(filterExpression);
-                }
-                var entities = RetrieveAllOrClauses(entityName, filterExpressions, new[] {matchField});
-
-                foreach (var entity in entities)
-                {
-                    var matchValue = entity.GetStringField(GetFieldAsMatchString(entityName, matchField, matchField));
-                    if (!result.ContainsKey(matchValue))
-                        result.Add(matchValue, entity.Id);
-                }
-                foreach (var value in matchValues)
-                {
-                    if (!result.ContainsKey(value))
-                        result.Add(value, null);
-                }
-            }
-            return result;
-        }
-
         public void Assign(Entity entity, Guid userId)
         {
             var request = new AssignRequest
@@ -1518,9 +1489,11 @@ namespace JosephM.Xrm
 
         public Guid Create(Entity entity, IEnumerable<string> fieldsToSubmit)
         {
-            if (fieldsToSubmit != null && fieldsToSubmit.Any())
+            if (fieldsToSubmit == null)
+                return Create(entity);
+            if (fieldsToSubmit.Any())
             {
-                var submissionEntity = new Entity(entity.LogicalName) {Id = entity.Id};
+                var submissionEntity = new Entity(entity.LogicalName) { Id = entity.Id };
                 foreach (var field in fieldsToSubmit)
                 {
                     if (entity.Contains(field))
@@ -1529,7 +1502,7 @@ namespace JosephM.Xrm
                 return Create(submissionEntity);
             }
             else
-                throw new NullReferenceException("No Fields Passed To Set In New Record");
+                throw new NullReferenceException("fieldsToSubmit Passed To Set In New Record");
         }
 
         #region standard methods
@@ -1555,7 +1528,7 @@ namespace JosephM.Xrm
             {
                 Target = entity
             };
-            return ((CreateResponse) Execute(request)).id;
+            return ((CreateResponse)Execute(request)).id;
         }
 
         public void Delete(string entityName, Guid id)
@@ -1589,7 +1562,7 @@ namespace JosephM.Xrm
                 ColumnSet = columnSet,
                 Target = CreateLookup(entityName, id)
             };
-            return ((RetrieveResponse) Execute(request)).Entity;
+            return ((RetrieveResponse)Execute(request)).Entity;
         }
 
         public EntityCollection RetrieveMultiple(QueryBase query)
@@ -1598,7 +1571,7 @@ namespace JosephM.Xrm
             {
                 Query = query
             };
-            return ((RetrieveMultipleResponse) Execute(request)).EntityCollection;
+            return ((RetrieveMultipleResponse)Execute(request)).EntityCollection;
         }
 
         public void Update(Entity entity)
@@ -1644,13 +1617,13 @@ namespace JosephM.Xrm
                 ? rMetadata.Entity2IntersectAttribute
                 : rMetadata.Entity1IntersectAttribute;
 
-            Associate(relationshipName, thisSideId, id1, otherSideId, new[] {id2});
+            Associate(relationshipName, thisSideId, id1, otherSideId, new[] { id2 });
         }
 
         public void Associate(string relationshipName, string keyAttributeFrom, Guid entityFrom, string keyAttributeTo,
             Guid relatedEntity)
         {
-            Associate(relationshipName, keyAttributeFrom, entityFrom, keyAttributeTo, new[] {relatedEntity});
+            Associate(relationshipName, keyAttributeFrom, entityFrom, keyAttributeTo, new[] { relatedEntity });
         }
 
         public void Delete(Entity entity)
@@ -1675,7 +1648,7 @@ namespace JosephM.Xrm
 
         public object LookupField(string entityType, Guid id, string fieldName)
         {
-            return Retrieve(entityType, id, new[] {fieldName}).GetField(fieldName);
+            return Retrieve(entityType, id, new[] { fieldName }).GetField(fieldName);
         }
 
         /// <summary>
@@ -1715,7 +1688,7 @@ namespace JosephM.Xrm
                 ? rMetadata.Entity2IntersectAttribute
                 : rMetadata.Entity1IntersectAttribute;
 
-            Disassociate(relationshipName, thisSideId, id1, otherSideId, new[] {id2});
+            Disassociate(relationshipName, thisSideId, id1, otherSideId, new[] { id2 });
         }
 
         /// <summary>
@@ -1724,7 +1697,7 @@ namespace JosephM.Xrm
         public void Disassociate(string relationshipName, string keyAttributeFrom, Guid entityFrom,
             string keyAttributeTo, Guid relatedEntity)
         {
-            Disassociate(relationshipName, keyAttributeFrom, entityFrom, keyAttributeTo, new[] {relatedEntity});
+            Disassociate(relationshipName, keyAttributeFrom, entityFrom, keyAttributeTo, new[] { relatedEntity });
         }
 
         private static string GetRequestDescription(OrganizationRequest request)
@@ -1732,39 +1705,39 @@ namespace JosephM.Xrm
             var result = request.GetType().Name;
             if (request is CreateRequest)
             {
-                return result + " - Type = " + ((CreateRequest) request).Target.LogicalName;
+                return result + " - Type = " + ((CreateRequest)request).Target.LogicalName;
             }
             else if (request is UpdateRequest)
             {
-                var tRequest = ((UpdateRequest) request);
+                var tRequest = ((UpdateRequest)request);
                 return result + " Type = " + tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id;
             }
             else if (request is RetrieveRequest)
             {
-                var tRequest = ((RetrieveRequest) request);
+                var tRequest = ((RetrieveRequest)request);
                 return result + " Type = " + tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id;
             }
             else if (request is RetrieveMultipleRequest)
             {
-                var tRequest = ((RetrieveMultipleRequest) request);
+                var tRequest = ((RetrieveMultipleRequest)request);
                 if (tRequest.Query is QueryExpression)
-                    return result + " Type = " + ((QueryExpression) tRequest.Query).EntityName;
+                    return result + " Type = " + ((QueryExpression)tRequest.Query).EntityName;
             }
             else if (request is RetrieveEntityRequest)
             {
-                var tRequest = ((RetrieveEntityRequest) request);
+                var tRequest = ((RetrieveEntityRequest)request);
                 return result + " Type = " + tRequest.LogicalName + ", Filters = " + tRequest.EntityFilters;
             }
             else if (request is AssociateRequest)
             {
-                var tRequest = ((AssociateRequest) request);
+                var tRequest = ((AssociateRequest)request);
                 return result + " Relationship = " + tRequest.Relationship.SchemaName + ", Type = " +
                        tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id + ", Related = " +
                        String.Join(", ", tRequest.RelatedEntities.Select(XrmEntity.GetLookupGuid));
             }
             else if (request is DisassociateRequest)
             {
-                var tRequest = ((DisassociateRequest) request);
+                var tRequest = ((DisassociateRequest)request);
                 return result + " Relationship = " + tRequest.Relationship.SchemaName + ", Type = " +
                        tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id + ", Related = " +
                        String.Join(", ", tRequest.RelatedEntities.Select(XrmEntity.GetLookupGuid));
@@ -1781,9 +1754,9 @@ namespace JosephM.Xrm
             }
         }
 
-        private static Entity ReplicateWithFields(Entity entity, IEnumerable<string> fieldsToSubmit)
+        public static Entity ReplicateWithFields(Entity entity, IEnumerable<string> fieldsToSubmit)
         {
-            var submissionEntity = new Entity(entity.LogicalName) {Id = entity.Id};
+            var submissionEntity = new Entity(entity.LogicalName) { Id = entity.Id };
             if (fieldsToSubmit != null)
             {
                 foreach (var field in fieldsToSubmit)
@@ -1811,7 +1784,7 @@ namespace JosephM.Xrm
                         EntityFilters = EntityFilters.Relationships,
                         LogicalName = entity
                     };
-                    var response = (RetrieveEntityResponse) Execute(request);
+                    var response = (RetrieveEntityResponse)Execute(request);
                     Controller.LogLiteral("Retrieved " + entity + " relationship metadata");
                     EntityRelationships.Add(entity,
                         response.EntityMetadata.OneToManyRelationships
@@ -1853,95 +1826,6 @@ namespace JosephM.Xrm
                     .ToArray();
         }
 
-        public bool IsCustomRelationship(string relationshipName)
-        {
-            return GetRelationshipMetadata(relationshipName).IsCustomRelationship ?? false;
-        }
-
-        public bool IsManyToManyDisplayRelated(string referencedRecordType,string relationshipName, bool from1)
-        {
-            var relationship = GetManyToManyRelationship(referencedRecordType, relationshipName);
-            var menuConfiguration = GetAssociatedMenuConfiguration(from1, relationship);
-            return GetIsDisplayRelated(menuConfiguration);
-        }
-
-        public bool IsManyToManyCustomLabel(string referencedRecordType, string relationshipName, bool from1)
-        {
-            var relationship = GetManyToManyRelationship(referencedRecordType, relationshipName);
-            var menuConfiguration = GetAssociatedMenuConfiguration(from1, relationship);
-            return GetIsCustomLabel(menuConfiguration);
-        }
-
-        public int ManyToManyDisplayOrder(string referencedRecordType, string relationshipName, bool from1)
-        {
-            var relationship = GetManyToManyRelationship(referencedRecordType, relationshipName);
-            var menuConfiguration = GetAssociatedMenuConfiguration(from1, relationship);
-            return GetDisplayOrder(menuConfiguration);
-        }
-
-        private static bool GetDisplayRelated(AssociatedMenuConfiguration menuConfiguration)
-        {
-            if (!menuConfiguration.Behavior.HasValue ||
-                menuConfiguration.Behavior == AssociatedMenuBehavior.DoNotDisplay)
-                return false;
-            else
-                return true;
-        }
-
-        private static bool GetIsDisplayRelated(AssociatedMenuConfiguration menuConfiguration)
-        {
-            if (!menuConfiguration.Behavior.HasValue ||
-                menuConfiguration.Behavior == AssociatedMenuBehavior.DoNotDisplay)
-                return false;
-            else
-                return true;
-        }
-
-        private static bool GetIsCustomLabel(AssociatedMenuConfiguration menuConfiguration)
-        {
-            if (!menuConfiguration.Behavior.HasValue ||
-                menuConfiguration.Behavior != AssociatedMenuBehavior.UseLabel)
-                return false;
-            else
-                return true;
-        }
-
-        public int GetManyToManyDisplayOrder(string referencedRecordType, string relationshipName, bool from1)
-        {
-            var relationship = GetManyToManyRelationship(referencedRecordType, relationshipName);
-            var menuConfiguration = GetAssociatedMenuConfiguration(from1, relationship);
-            return GetDisplayOrder(menuConfiguration);
-        }
-
-        private static int GetDisplayOrder(AssociatedMenuConfiguration menuConfiguration)
-        {
-            if (!menuConfiguration.Order.HasValue)
-                return 0;
-            else
-                return menuConfiguration.Order.Value;
-        }
-
-        public bool IsOneToManyDisplayRelated(string referencedRecordType, string relationshipName)
-        {
-            var relationship = GetOneToManyRelationship(referencedRecordType, relationshipName);
-            var menuConfiguration = relationship.AssociatedMenuConfiguration;
-            return GetIsDisplayRelated(menuConfiguration);
-        }
-
-        public int GetOneToManyDisplayOrder(string referencedRecordType, string relationshipName)
-        {
-            var relationship = GetOneToManyRelationship(referencedRecordType, relationshipName);
-            var menuConfiguration = relationship.AssociatedMenuConfiguration;
-            return GetDisplayOrder(menuConfiguration);
-        }
-
-        public bool GetOneToManyIsCustomLabel(string referencedRecordType, string relationshipName)
-        {
-            var relationship = GetOneToManyRelationship(referencedRecordType, relationshipName);
-            var menuConfiguration = relationship.AssociatedMenuConfiguration;
-            return GetIsCustomLabel(menuConfiguration);
-        }
-
         public List<AttributeMetadata> GetEntityFieldMetadata(string entity)
         {
             lock (LockObject)
@@ -1955,9 +1839,18 @@ namespace JosephM.Xrm
                         EntityFilters = EntityFilters.Attributes,
                         LogicalName = entity
                     };
-                    var response = (RetrieveEntityResponse) Execute(request);
+                    var response = (RetrieveEntityResponse)Execute(request);
                     Controller.LogLiteral("Retrieved " + entity + " field metadata");
-                    EntityFieldMetadata.Add(entity, new List<AttributeMetadata>(response.EntityMetadata.Attributes));
+                    var fieldMetadata =
+                        response.EntityMetadata.Attributes.Where(f =>
+                        {
+                            if (!(f.IsValidForRead ?? false)
+                                || !f.AttributeOf.IsNullOrWhiteSpace())
+                                return false;
+                            return (!(f is StringAttributeMetadata) ||
+                                    ((StringAttributeMetadata)f).YomiOf.IsNullOrWhiteSpace());
+                        });
+                    EntityFieldMetadata.Add(entity, new List<AttributeMetadata>(fieldMetadata));
                 }
             }
             return EntityFieldMetadata[entity];
@@ -1988,7 +1881,9 @@ namespace JosephM.Xrm
             var query = CreateQuery(recordType, fields);
             AddAndConditions(query, conditions);
             AddOrderExpressions(query, orders);
-            return RetrieveFirstX(query, x);
+            return x > 0
+                ? RetrieveFirstX(query, x)
+                : RetrieveAll(query);
         }
 
         public IEnumerable<Entity> RetrieveFirstX(QueryExpression query, int x)
@@ -2034,7 +1929,7 @@ namespace JosephM.Xrm
                     {
                         EntityFilters = EntityFilters.Entity,
                     };
-                    var response = (RetrieveAllEntitiesResponse) Execute(request);
+                    var response = (RetrieveAllEntitiesResponse)Execute(request);
                     _entityMetadata.Clear();
                     _entityMetadata.AddRange(response.EntityMetadata);
                     _loadedAllEntities = true;
@@ -2052,7 +1947,7 @@ namespace JosephM.Xrm
                     if (_sharedOptionSets == null)
                     {
                         var request = new RetrieveAllOptionSetsRequest();
-                        var response = (RetrieveAllOptionSetsResponse) Execute(request);
+                        var response = (RetrieveAllOptionSetsResponse)Execute(request);
                         _sharedOptionSets =
                             new List<OptionSetMetadata>(
                                 response.OptionSetMetadata.Where(
@@ -2084,7 +1979,7 @@ namespace JosephM.Xrm
                         {
                             EntityFilters = EntityFilters.Relationships,
                         };
-                        var response = (RetrieveAllEntitiesResponse) Execute(request);
+                        var response = (RetrieveAllEntitiesResponse)Execute(request);
                         _allRelationshipMetadata = new List<ManyToManyRelationshipMetadata>();
                         foreach (
                             var relationship in
@@ -2178,7 +2073,7 @@ namespace JosephM.Xrm
                     EntityFilters = EntityFilters.Attributes,
                     LogicalName = schemaName
                 };
-                var response = (RetrieveEntityResponse) Execute(request);
+                var response = (RetrieveEntityResponse)Execute(request);
                 if (EntityExists(schemaName))
                     GetAllEntityMetadata().Remove(GetAllEntityMetadata().First(m => m.LogicalName == schemaName));
                 GetAllEntityMetadata().Add(response.EntityMetadata);
@@ -2216,7 +2111,7 @@ namespace JosephM.Xrm
                     LogicalName = schemaName,
                     RetrieveAsIfPublished = true
                 };
-                var response = (RetrieveAttributeResponse) Execute(request);
+                var response = (RetrieveAttributeResponse)Execute(request);
                 fieldMetadata.Add(response.AttributeMetadata);
             }
         }
@@ -2230,7 +2125,7 @@ namespace JosephM.Xrm
 
             BooleanAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
-                metadata = (BooleanAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                metadata = (BooleanAttributeMetadata)GetFieldMetadata(schemaName, recordType);
             else
                 metadata = new BooleanAttributeMetadata();
 
@@ -2298,7 +2193,7 @@ namespace JosephM.Xrm
         {
             DateTimeAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
-                metadata = (DateTimeAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                metadata = (DateTimeAttributeMetadata)GetFieldMetadata(schemaName, recordType);
             else
                 metadata = new DateTimeAttributeMetadata();
 
@@ -2315,7 +2210,7 @@ namespace JosephM.Xrm
         {
             DecimalAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
-                metadata = (DecimalAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                metadata = (DecimalAttributeMetadata)GetFieldMetadata(schemaName, recordType);
             else
                 metadata = new DecimalAttributeMetadata();
 
@@ -2369,7 +2264,7 @@ namespace JosephM.Xrm
         {
             MoneyAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
-                metadata = (MoneyAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                metadata = (MoneyAttributeMetadata)GetFieldMetadata(schemaName, recordType);
             else
                 metadata = new MoneyAttributeMetadata();
 
@@ -2387,7 +2282,7 @@ namespace JosephM.Xrm
         {
             IntegerAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
-                metadata = (IntegerAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                metadata = (IntegerAttributeMetadata)GetFieldMetadata(schemaName, recordType);
             else
                 metadata = new IntegerAttributeMetadata();
 
@@ -2407,7 +2302,7 @@ namespace JosephM.Xrm
             {
                 LookupAttributeMetadata metadata;
                 if (FieldExists(schemaName, recordType))
-                    metadata = (LookupAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                    metadata = (LookupAttributeMetadata)GetFieldMetadata(schemaName, recordType);
                 else
                     metadata = new LookupAttributeMetadata();
 
@@ -2483,13 +2378,13 @@ namespace JosephM.Xrm
                 PicklistAttributeMetadata metadata;
                 var exists = FieldExists(schemaName, recordType);
                 if (exists)
-                    metadata = (PicklistAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                    metadata = (PicklistAttributeMetadata)GetFieldMetadata(schemaName, recordType);
                 else
                     metadata = new PicklistAttributeMetadata();
 
                 SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
 
-                metadata.OptionSet = new OptionSetMetadata {Name = sharedOptionSetName, IsGlobal = true};
+                metadata.OptionSet = new OptionSetMetadata { Name = sharedOptionSetName, IsGlobal = true };
 
                 CreateOrUpdateAttribute(schemaName, recordType, metadata);
             }
@@ -2511,7 +2406,7 @@ namespace JosephM.Xrm
                 PicklistAttributeMetadata metadata;
                 var exists = FieldExists(schemaName, recordType);
                 if (exists)
-                    metadata = (PicklistAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                    metadata = (PicklistAttributeMetadata)GetFieldMetadata(schemaName, recordType);
                 else
                     metadata = new PicklistAttributeMetadata();
 
@@ -2583,7 +2478,7 @@ namespace JosephM.Xrm
         {
             StringAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
-                metadata = (StringAttributeMetadata) GetFieldMetadata(schemaName, recordType);
+                metadata = (StringAttributeMetadata)GetFieldMetadata(schemaName, recordType);
             else
                 metadata = new StringAttributeMetadata();
             SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
@@ -2662,7 +2557,7 @@ string recordType)
                     LogicalName = schemaName,
                     EntityFilters = EntityFilters.Relationships
                 };
-                var response = (RetrieveEntityResponse) Execute(tempRequest1);
+                var response = (RetrieveEntityResponse)Execute(tempRequest1);
                 foreach (var r in response.EntityMetadata.OneToManyRelationships)
                 {
                     if (r.IsCustomRelationship.HasValue && r.IsCustomRelationship.Value)
@@ -2722,11 +2617,11 @@ string recordType)
 
         private AssociatedMenuConfiguration SetMenuConfiguration(AssociatedMenuConfiguration associatedMenuConfiguration, bool displayRelated, bool useCustomLabel, string customLabel, int displayOrder)
         {
-            if(associatedMenuConfiguration == null)
+            if (associatedMenuConfiguration == null)
                 associatedMenuConfiguration = new AssociatedMenuConfiguration();
-            if(!displayRelated)
+            if (!displayRelated)
                 associatedMenuConfiguration.Behavior = AssociatedMenuBehavior.DoNotDisplay;
-            else if(useCustomLabel)
+            else if (useCustomLabel)
                 associatedMenuConfiguration.Behavior = AssociatedMenuBehavior.UseLabel;
             else
                 associatedMenuConfiguration.Behavior = AssociatedMenuBehavior.UseCollectionName;
@@ -2749,8 +2644,8 @@ string recordType)
                 {
                     Name = schemaName
                 };
-                var response = (RetrieveRelationshipResponse) Execute(request);
-                metadata.Add((ManyToManyRelationshipMetadata) response.RelationshipMetadata);
+                var response = (RetrieveRelationshipResponse)Execute(request);
+                metadata.Add((ManyToManyRelationshipMetadata)response.RelationshipMetadata);
             }
         }
 
@@ -2767,8 +2662,20 @@ string recordType)
             };
             Execute(request);
             var matches = AllRelationshipMetadata.Where(r => r.SchemaName == relationshipName).ToArray();
-            foreach(var match in matches)
+            foreach (var match in matches)
+            {
                 AllRelationshipMetadata.Remove(match);
+            }
+
+            var remove = RelationshipMetadata.Where(r => r.SchemaName == relationshipName).ToArray();
+            foreach (var item in remove)
+                RelationshipMetadata.Remove(item);
+
+            foreach (var item in EntityRelationships.ToArray())
+            {
+                if (item.Value.Any(r => r.SchemaName == relationshipName))
+                    EntityRelationships.Remove(item.Key);
+            }
         }
 
         //public void CreateLookupAttribute(string fieldName, string displayName, string recordType, string targetType)
@@ -2863,7 +2770,7 @@ string recordType)
                 optionSetMetadata.Options.AddRange(
                     options.Select(o => new OptionMetadata(new Label(o.Value, 1033), o.Key)).ToList());
 
-                var request = new CreateOptionSetRequest {OptionSet = optionSetMetadata};
+                var request = new CreateOptionSetRequest { OptionSet = optionSetMetadata };
                 Execute(request);
             }
             RefreshSharedOptionValues(schemaName);
@@ -2880,16 +2787,16 @@ string recordType)
                 {
                     Name = schemaName
                 };
-                var response = (RetrieveOptionSetResponse) Execute(request);
-                SharedOptionSets.Add((OptionSetMetadata) response.OptionSetMetadata);
+                var response = (RetrieveOptionSetResponse)Execute(request);
+                SharedOptionSets.Add((OptionSetMetadata)response.OptionSetMetadata);
             }
         }
 
         private OptionSetMetadata GetSharedOptionSet(string schemaName)
         {
-            if (!SharedOptionSets.Any(s => s.Name == schemaName))
+            if (SharedOptionSets.All(s => s.Name != schemaName))
                 throw new ArgumentException("Error getting option set: " + schemaName);
-            return SharedOptionSets.Single(s => s.Name == schemaName);
+            return SharedOptionSets.First(s => s.Name == schemaName);
         }
 
         public IEnumerable<string> GetSharedOptionSetNames()
@@ -2939,14 +2846,14 @@ string recordType)
         {
             var responses = ExecuteMultiple(entities
                 .Select(e => ReplicateWithFields(e, fields))
-                .Select(e => new UpdateRequest() {Target = e}));
+                .Select(e => new UpdateRequest() { Target = e }));
 
             return responses.ToArray();
         }
 
         public IEnumerable<ExecuteMultipleResponseItem> CreateMultiple(IEnumerable<Entity> entities)
         {
-            var response = ExecuteMultiple(entities.Where(e => e != null).Select(e => new CreateRequest() {Target = e}));
+            var response = ExecuteMultiple(entities.Where(e => e != null).Select(e => new CreateRequest() { Target = e }));
             return response.ToArray();
         }
 
@@ -2955,7 +2862,7 @@ string recordType)
             var response =
                 ExecuteMultiple(
                     entities.Where(e => e != null)
-                        .Select(e => new DeleteRequest() {Target = new EntityReference(e.LogicalName, e.Id)}));
+                        .Select(e => new DeleteRequest() { Target = new EntityReference(e.LogicalName, e.Id) }));
             return response.ToArray();
         }
 
@@ -2977,7 +2884,7 @@ string recordType)
                 currentSetSize++;
                 if (currentSetSize == 50 || i == requestsArrayCount - 1)
                 {
-                    var response = (ExecuteMultipleResponse) Execute(request);
+                    var response = (ExecuteMultipleResponse)Execute(request);
                     foreach (var r in response.Responses)
                         r.RequestIndex = i - currentSetSize + r.RequestIndex + 1;
                     responses.AddRange(response.Responses);
@@ -3009,7 +2916,7 @@ string recordType)
             if (value == null)
                 return "";
             else if (value is string)
-                return (string) value;
+                return (string)value;
             else if (IsLookup(fieldName, recordType))
             {
                 return XrmEntity.GetLookupName(value);
@@ -3024,7 +2931,7 @@ string recordType)
             else if (IsOptionSet(fieldName, recordType))
             {
                 if (value is OptionSetValue)
-                    return GetOptionLabel(((OptionSetValue) value).Value, fieldName, recordType);
+                    return GetOptionLabel(((OptionSetValue)value).Value, fieldName, recordType);
                 throw new Exception("Value Type Not Matched For OptionSetValue " + value.GetType().Name);
             }
             else if (IsMoney(fieldName, recordType))
@@ -3036,8 +2943,8 @@ string recordType)
                 if (value is DateTime)
                 {
                     if (GetDateFormat(fieldName, recordType) == DateTimeFormat.DateAndTime)
-                        return ((DateTime) value).ToLocalTime().ToString(StringFormats.DateTimeFormat);
-                    return ((DateTime) value).ToLocalTime().Date.ToString(StringFormats.DateFormat);
+                        return ((DateTime)value).ToLocalTime().ToString(StringFormats.DateTimeFormat);
+                    return ((DateTime)value).ToLocalTime().Date.ToString(StringFormats.DateFormat);
                 }
             }
             else if (IsActivityParty(fieldName, recordType))
@@ -3045,7 +2952,7 @@ string recordType)
                 if (value is Entity[])
                 {
                     var namesToOutput = new List<string>();
-                    foreach (var party in (Entity[]) value)
+                    foreach (var party in (Entity[])value)
                     {
                         namesToOutput.Add(party.GetLookupName("partyid"));
                     }
@@ -3063,7 +2970,7 @@ string recordType)
 
         private DateTimeFormat? GetDateFormat(string fieldName, string recordType)
         {
-            var metadata = (DateTimeAttributeMetadata) GetFieldMetadata(fieldName, recordType);
+            var metadata = (DateTimeAttributeMetadata)GetFieldMetadata(fieldName, recordType);
             return metadata.Format;
         }
 
@@ -3127,20 +3034,7 @@ string recordType)
             return GetEntityCollectionName(relationship.ReferencingEntity);
         }
 
-        public string GetManyToManyRelationshipLabel(string referencedRecordType, string relationshipName, bool from1)
-        {
-            var relationship = GetManyToManyRelationship(referencedRecordType, relationshipName);
-            var menuConfiguration = GetAssociatedMenuConfiguration(from1, relationship);
-            if (menuConfiguration.Behavior.HasValue && menuConfiguration.Behavior == AssociatedMenuBehavior.UseLabel)
-            {
-                var labelString = GetLabelDisplay(menuConfiguration.Label);
-                if (!labelString.IsNullOrWhiteSpace())
-                    return labelString;
-            }
-            return GetEntityCollectionName(from1 ? relationship.Entity2LogicalName : relationship.Entity1LogicalName);
-        }
-
-        private ManyToManyRelationshipMetadata GetManyToManyRelationship(string referencedRecordType, string relationshipName)
+        public ManyToManyRelationshipMetadata GetManyToManyRelationship(string referencedRecordType, string relationshipName)
         {
             var relationships = GetEntityManyToManyRelationships(referencedRecordType);
             if (!relationships.Any(r => r.SchemaName == relationshipName))
@@ -3150,16 +3044,6 @@ string recordType)
 
             var relationship = relationships.First(r => r.SchemaName == relationshipName);
             return relationship;
-        }
-
-        private static AssociatedMenuConfiguration GetAssociatedMenuConfiguration(bool from1,
-            ManyToManyRelationshipMetadata relationship)
-        {
-            var menuConfiguration =
-                from1
-                    ? relationship.Entity2AssociatedMenuConfiguration
-                    : relationship.Entity1AssociatedMenuConfiguration;
-            return menuConfiguration;
         }
 
         public bool IsActivityParty(string field, string recordType)
@@ -3196,20 +3080,6 @@ string recordType)
         public bool IsReadable(string fieldName, string recordType)
         {
             return GetFieldMetadata(fieldName, recordType).IsValidForRead ?? false;
-        }
-
-        public bool IsFieldDisplayRelated(string field, string recordType)
-        {
-            var relationships = GetEntityManyToOneRelationships(recordType);
-            var relationshipMatches = relationships.Where(r => r.ReferencingAttribute == field && r.ReferencingEntity == recordType).ToArray();
-            if (!relationshipMatches.Any())
-                return false;
-            return relationshipMatches.Any(r => r.AssociatedMenuConfiguration != null && GetIsDisplayRelated(r.AssociatedMenuConfiguration));
-        }
-
-        public bool IsSharedPicklist(string field, string recordType)
-        {
-            return ((PicklistAttributeMetadata) GetFieldMetadata(field, recordType)).OptionSet.IsGlobal ?? false;
         }
 
         public string GetSharedPicklistDisplayName(string field, string recordType)
@@ -3268,8 +3138,54 @@ string recordType)
             {
                 FetchXml = fetchXml
             };
-            var response = (FetchXmlToQueryExpressionResponse) Execute(req);
+            var response = (FetchXmlToQueryExpressionResponse)Execute(req);
             return response.Query;
+        }
+
+        public object ConvertToQueryValue(string fieldName, string entityType, object value)
+        {
+            var parsedValue = ParseField(fieldName, entityType, value);
+            if (parsedValue is EntityReference)
+                parsedValue = ((EntityReference)parsedValue).Id;
+            else if (parsedValue is OptionSetValue)
+                parsedValue = ((OptionSetValue)parsedValue).Value;
+            else if (parsedValue is Money)
+                parsedValue = ((Money)parsedValue).Value;
+            return parsedValue;
+        }
+
+        public SortedDictionary<string, Entity> IndexMatchingEntities(string entityName, string matchField,
+    IEnumerable<object> matchValues, IEnumerable<string> fields)
+        {
+            var result = new SortedDictionary<string, Entity>();
+            if (matchValues != null && matchValues.Any())
+            {
+                var filterExpressions = new List<FilterExpression>();
+                foreach (var matchValue in matchValues)
+                {
+                    var parseValue = ConvertToQueryValue(matchField, entityName, matchValue);
+                    var filterExpression = new FilterExpression();
+                    filterExpression.AddCondition(new ConditionExpression(matchField, ConditionOperator.Equal,
+                        parseValue));
+                    filterExpressions.Add(filterExpression);
+                }
+                var entities = RetrieveAllOrClauses(entityName, filterExpressions,
+                    fields == null ? null : new[] { matchField }.Union(fields));
+
+                foreach (var entity in entities)
+                {
+                    var matchValue = GetFieldAsMatchString(entityName, matchField, entity.GetField(matchField));
+                    if (!result.ContainsKey(matchValue))
+                        result.Add(matchValue, entity);
+                }
+                foreach (var value in matchValues)
+                {
+                    var matchString = GetFieldAsMatchString(entityName, matchField, value);
+                    if (!result.ContainsKey(matchString))
+                        result.Add(matchString, null);
+                }
+            }
+            return result;
         }
     }
 }

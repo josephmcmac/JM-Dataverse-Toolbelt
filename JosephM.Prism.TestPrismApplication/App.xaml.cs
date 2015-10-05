@@ -8,7 +8,6 @@ using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.TestModule.ObjectEncrypt;
 using JosephM.Prism.TestModule.Prism;
 using JosephM.Prism.TestModule.Prism.TestDialog;
-using JosephM.Prism.TestModule.SearchModule;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Prism.XrmTestModule.DebugModule;
@@ -22,7 +21,7 @@ namespace JosephM.Prism.TestPrismApplication
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -34,7 +33,6 @@ namespace JosephM.Prism.TestPrismApplication
             prism.AddModule<TestModule.Prism.TestModule>();
             prism.AddModule<TestTextSearchModule>();
             prism.AddModule<TestDialogModule>();
-            prism.AddModule<SearchModule>();
             prism.AddModule<SavedXrmConnectionsModule>();
             prism.AddModule<DebugDialogModule>();
             prism.AddModule<XrmSettingsModule>();

@@ -1,5 +1,7 @@
 ﻿#region
 
+using JosephM.Application.Modules;
+using JosephM.Application.ViewModel.Fakes;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Record.Application.Fakes;
 

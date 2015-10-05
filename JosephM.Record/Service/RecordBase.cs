@@ -21,6 +21,8 @@ namespace JosephM.Record.Service
             Type = entityType;
         }
 
+        public string IdTargetFieldOverride { get; set; }
+
         public object this[string fieldName]
         {
             get { return GetField(fieldName); }
@@ -46,7 +48,7 @@ namespace JosephM.Record.Service
 
         public abstract object GetField(string field);
 
-        public string GetStringField(string field)
+        public virtual string GetStringField(string field)
         {
             return (string) GetField(field);
         }
@@ -68,7 +70,7 @@ namespace JosephM.Record.Service
         public int? GetIntegerFieldNullable(string fieldName)
         {
             var value = GetField(fieldName);
-            return (int) value;
+            return (int?) value;
         }
 
         public int GetIntegerField(string fieldName)
@@ -87,13 +89,13 @@ namespace JosephM.Record.Service
             return lookup == null ? null : lookup.RecordType;
         }
 
-        public string GetLookupId(string fieldName)
+        public virtual string GetLookupId(string fieldName)
         {
             var lookup = GetLookupField(fieldName);
             return lookup == null ? null : lookup.Id;
         }
 
-        public Lookup GetLookupField(string fieldName)
+        public virtual Lookup GetLookupField(string fieldName)
         {
             var fieldValue = GetField(fieldName);
             if (fieldValue == null)
@@ -126,7 +128,7 @@ namespace JosephM.Record.Service
 
         public string GetName(IRecordService service)
         {
-            return GetStringField(service.GetPrimaryField(Type));
+            return GetStringField(service.GetRecordTypeMetadata(Type).PrimaryFieldSchemaName);
         }
 
         public virtual IEnumerable<IRecord> GetActivityParties(string field)

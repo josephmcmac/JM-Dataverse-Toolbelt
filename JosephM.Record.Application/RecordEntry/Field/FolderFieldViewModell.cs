@@ -1,9 +1,7 @@
-﻿using System.IO;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-using JosephM.Core.Service;
-using JosephM.Record.Application.RecordEntry.Form;
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public class FolderFieldViewModel : FieldViewModel<Folder>
     {

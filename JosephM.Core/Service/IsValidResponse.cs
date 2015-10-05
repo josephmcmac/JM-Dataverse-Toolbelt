@@ -25,6 +25,11 @@ namespace JosephM.Core.Service
             _invalidReasons.Add(reason);
         }
 
+        public void AddInvalidReasons(IEnumerable<string> reasons)
+        {
+            _invalidReasons.AddRange(reasons);
+        }
+
         public IEnumerable<string> InvalidReasons
         {
             get { return _invalidReasons; }

@@ -8,6 +8,7 @@
              DataContextChanged="OnDataContextChanged">
     <UserControl.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -16,12 +17,17 @@
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" >
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Visibility="{Binding ShowProgressControlViewModel, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
+            <shared:ProgressControl
+                DataContext="{Binding ProgressControlViewModel}" />
+        </Grid>
+        <Grid Grid.Row="2"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <ItemsControl
                 Name="DialogPanel"
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"

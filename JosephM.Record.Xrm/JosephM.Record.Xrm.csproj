@@ -98,8 +98,6 @@
     <Compile Include="Mappers\ConditionTypeMapper.cs" />
     <Compile Include="Mappers\XrmConfigurationMapper.cs" />
     <Compile Include="Mappers\LookupMapper.cs" />
-    <Compile Include="Mappers\ManyToManyRelationshipTypeMapper.cs" />
-    <Compile Include="Mappers\OneToManyRelationshipTypeMapper.cs" />
     <Compile Include="Mappers\SortTypeMapper.cs" />
     <Compile Include="Mappers\IntegerTypeMapper.cs" />
     <Compile Include="Mappers\FieldTypeMapper.cs" />
@@ -107,11 +105,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Mappers\StringFormatMapper.cs" />
     <Compile Include="XrmPicklists.cs" />
+    <Compile Include="XrmRecord\XrmFieldMetadata.cs" />
+    <Compile Include="XrmRecord\XrmManyToManyRelationshipMetadata.cs" />
+    <Compile Include="XrmRecord\XrmOne2ManyRelationship.cs" />
+    <Compile Include="XrmRecord\XrmPicklistSet.cs" />
     <Compile Include="XrmRecord\XrmRecordConfiguration.cs" />
     <Compile Include="XrmRecord\IXrmRecordConfiguration.cs" />
     <Compile Include="XrmRecord\XrmRecord.cs" />
     <Compile Include="XrmRecord\XrmRecordAuthenticationProviderType.cs" />
     <Compile Include="XrmRecord\XrmRecordService.cs" />
+    <Compile Include="XrmRecord\XrmRecordTypeMetadata.cs" />
+    <Compile Include="XrmRecord\XrmConfigurationBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">

@@ -2,7 +2,7 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using JosephM.Record.Application.Dialog;
+using JosephM.Application.ViewModel.Dialog;
 
 #endregion
 

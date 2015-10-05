@@ -1,6 +1,6 @@
 ﻿using JosephM.Record.Metadata;
 
-namespace JosephM.Record.Application.RecordEntry.Metadata
+namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     /// <summary>
     /// class initially written to support implementing a derived field

@@ -3,10 +3,6 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Core.Attributes;
-using JosephM.Record.Application.Fakes;
-using JosephM.Record.Application.RecordEntry;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
 using JosephM.Record.Service;
 
 namespace JosephM.Record.Application.Test

@@ -3,7 +3,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using JosephM.Record.Application.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using Microsoft.Win32;
 using JosephM.Core.Constants;
 

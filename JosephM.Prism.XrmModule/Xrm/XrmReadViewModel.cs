@@ -1,6 +1,6 @@
 ﻿#region
 
-using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
 #endregion
 

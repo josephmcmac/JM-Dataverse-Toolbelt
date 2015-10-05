@@ -1,6 +1,5 @@
 ﻿using System;
-using JosephM.Prism.Infrastructure.Attributes;
-using JosephM.Prism.Infrastructure.Constants;
+using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.Xrm;
@@ -8,9 +7,9 @@ using JosephM.Xrm.RecordExtract.RecordExtract;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {
-    [DependantModuleAttribute(typeof(XrmModuleModule))]
-    [DependantModuleAttribute(typeof(XrmRecordExtractModule))]
-    [DependantModuleAttribute(typeof(XrmTextSearchSettingsModule))]
+    [DependantModule(typeof(XrmModuleModule))]
+    [DependantModule(typeof(XrmRecordExtractModule))]
+    [DependantModule(typeof(XrmTextSearchSettingsModule))]
     public class XrmTextSearchModule :
         ServiceRequestModule
             <XrmTextSearchDialog, XrmTextSearchService, TextSearchRequest, TextSearchResponse, TextSearchResponseItem>
@@ -23,7 +22,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            ApplicationOptions.AddHelp("CRM Text Search", "Text Search Help.htm");
+            AddHelp("CRM Text Search", "Text Search Help.htm");
         }
     }
 }

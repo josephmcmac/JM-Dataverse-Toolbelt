@@ -1,5 +1,4 @@
-﻿using JosephM.Prism.Infrastructure.Attributes;
-using JosephM.Prism.Infrastructure.Constants;
+﻿using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.Infrastructure.Prism;
 
@@ -18,7 +17,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            ApplicationOptions.AddHelp("CRM Record Report", "Record Extract Help.htm");
+            AddHelp("CRM Record Report", "Record Extract Help.htm");
         }
     }
 }

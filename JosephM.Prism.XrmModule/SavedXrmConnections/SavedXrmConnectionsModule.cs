@@ -1,6 +1,6 @@
 ﻿#region
 
-using JosephM.Prism.Infrastructure.Attributes;
+using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.XrmConnection;
 
@@ -14,7 +14,7 @@ namespace JosephM.Prism.XrmModule.SavedXrmConnections
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            ApplicationOptions.AddHelp("Saved Connections", "Saved CRM Connections Help.htm");
+            AddHelp("Saved Connections", "Saved CRM Connections Help.htm");
         }
 
         public override void RegisterTypes()

@@ -1,5 +1,5 @@
-﻿using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Record.Application.Dialog;
+﻿using JosephM.Application.ViewModel.Dialog;
+using JosephM.Prism.Infrastructure.Dialog;
 
 namespace JosephM.Prism.TestModule.Prism.TestDialog
 {

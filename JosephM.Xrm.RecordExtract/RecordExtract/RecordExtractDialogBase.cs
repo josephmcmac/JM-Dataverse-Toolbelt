@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
 using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Record.Application.Dialog;
 using JosephM.Record.IService;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract

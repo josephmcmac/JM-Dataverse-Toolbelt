@@ -4,19 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using JosephM.Application.ViewModel.Shared;
+using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.Extentions;
-using JosephM.Record.Application.Shared;
-using JosephM.Record.Application.TabArea;
 
 #endregion
 
-namespace JosephM.Record.Application.Dialog
+namespace JosephM.Application.ViewModel.Dialog
 {
     /// <summary>
     ///     Base Class For Implementing A Process Within The Application Which May Or May Not Have Child Processes
     /// </summary>
     public abstract class DialogViewModel : TabAreaViewModelBase
     {
+        public Action OverideCompletionScreenMethod { get; set; }
+
         private readonly ObservableCollection<object> _completionItems =
             new ObservableCollection<object>();
 
@@ -24,11 +26,11 @@ namespace JosephM.Record.Application.Dialog
             new ObservableCollection<XrmButtonViewModel>();
 
         private int _currentSubDialogIndex;
-        private bool _dialogCompletionStarted;
+        protected bool DialogCompletionCommit { get; set; }
 
         private IEnumerable<DialogViewModel> _subDialogs = new DialogViewModel[0];
 
-        protected IEnumerable<DialogViewModel> SubDialogs
+        public IEnumerable<DialogViewModel> SubDialogs
         {
             get { return _subDialogs; }
             set { _subDialogs = value; }
@@ -37,8 +39,11 @@ namespace JosephM.Record.Application.Dialog
         protected DialogViewModel(DialogViewModel parentDialog)
             : base(parentDialog.ApplicationController)
         {
+            LoadingViewModel = parentDialog.LoadingViewModel;
             ParentDialog = parentDialog;
             Controller = parentDialog.Controller;
+            ProgressControlViewModel = new ProgressControlViewModel(ApplicationController);
+            OnCancel = Controller.Close;
         }
 
         protected DialogViewModel(IDialogController controller)
@@ -46,6 +51,8 @@ namespace JosephM.Record.Application.Dialog
         {
             Controller = controller;
             Controller.MainDialog = this;
+            ProgressControlViewModel = new ProgressControlViewModel(ApplicationController);
+            OnCancel = Controller.Close;
         }
 
         public override string TabLabel
@@ -79,10 +86,7 @@ namespace JosephM.Record.Application.Dialog
 
         public Exception FatalException { get; private set; }
 
-        public Action OnCancel
-        {
-            get { return Controller.Close; }
-        }
+        public Action OnCancel { get; set; }
 
         public IDialogController Controller { get; private set; }
 
@@ -96,9 +100,9 @@ namespace JosephM.Record.Application.Dialog
                 _currentSubDialogIndex++;
                 SubDialogs.ElementAt(_currentSubDialogIndex - 1).LoadDialog();
             }
-            else if (!_dialogCompletionStarted)
+            else if (!DialogCompletionCommit)
             {
-                _dialogCompletionStarted = true;
+                DialogCompletionCommit = true;
                 CompleteDialog();
             }
             else
@@ -106,7 +110,12 @@ namespace JosephM.Record.Application.Dialog
                 if (ParentDialog != null)
                     ParentDialog.StartNextAction();
                 else
-                    Controller.ShowCompletionScreen(this);
+                {
+                    if (OverideCompletionScreenMethod != null)
+                        OverideCompletionScreenMethod();
+                    else
+                        Controller.ShowCompletionScreen(this);
+                }
             }
         }
 
@@ -140,7 +149,13 @@ namespace JosephM.Record.Application.Dialog
             else
             {
                 CompletionMessage = string.Format("Fatal error:\n{0}", ex.DisplayString());
-                Controller.ShowCompletionScreen(this);
+                if (OverideCompletionScreenMethod != null)
+                {
+                    ApplicationController.UserMessage(CompletionMessage);
+                    OverideCompletionScreenMethod();
+                }
+                else
+                    Controller.ShowCompletionScreen(this);
             }
         }
 
@@ -151,16 +166,21 @@ namespace JosephM.Record.Application.Dialog
             ApplicationController.DoOnAsyncThread(
                 () =>
                 {
+                    LoadingViewModel.IsLoading = true;
                     try
                     {
                         CompleteDialogExtention();
-                        if (FatalException == null)
-                            StartNextAction();
+                        if (DialogCompletionCommit)
+                        {
+                            if (FatalException == null)
+                                StartNextAction();
+                        }
                     }
                     catch (Exception ex)
                     {
                         ProcessError(ex);
                     }
+                    LoadingViewModel.IsLoading = false;
                 }
                 );
         }
@@ -173,6 +193,20 @@ namespace JosephM.Record.Application.Dialog
                 return true;
 
             return false;
+        }
+
+        public ProgressControlViewModel ProgressControlViewModel { get; set; }
+
+        private bool _showProgressControlViewModel;
+
+        public bool ShowProgressControlViewModel
+        {
+            get { return _showProgressControlViewModel; }
+            set
+            {
+                _showProgressControlViewModel = value;
+                OnPropertyChanged("ShowProgressControlViewModel");
+            }
         }
     }
 }

@@ -1,15 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 
-                    xmlns:applicationOptions="clr-namespace:JosephM.Record.Application.ApplicationOptions;assembly=JosephM.Record.Application"
+                    xmlns:applicationOptions="clr-namespace:JosephM.Application.ViewModel.ApplicationOptions;assembly=JosephM.Application.ViewModel"
                     xmlns:controls="clr-namespace:JosephM.Wpf.Controls"
-                    xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
                     xmlns:application="clr-namespace:JosephM.Wpf.Application"
                     xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
                     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
                     xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
                     xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector"
-                    xmlns:html="clr-namespace:JosephM.Wpf.Html">
+                    xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
+                    xmlns:html="clr-namespace:JosephM.Wpf.Html"
+                    xmlns:grid1="clr-namespace:JosephM.Wpf.Grid">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
@@ -98,9 +99,9 @@
         <application:CompletionScreen
             DataContext="{Binding}" />
     </DataTemplate>
-    <DataTemplate x:Key="SearchResultTemplate">
+    <DataTemplate x:Key="ListViewTemplate">
         <Grid>
-            <recordEntry:SearchResultView DataContext="{Binding}" />
+            <grid1:GridListView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="LoadingTemplate">
@@ -112,8 +113,8 @@
         RecordEntryTemplate="{StaticResource RecordEntryTemplate}"
         ProgressTemplate="{StaticResource ProgressControlTemplate}"
         CompletionTemplate="{StaticResource CompletionTemplate}"
-        SearchResultTemplate="{StaticResource SearchResultTemplate}"
         LoadingTemplate="{StaticResource LoadingTemplate}"
+        ListViewTemplate="{StaticResource ListViewTemplate}"
         x:Key="DialogTemplateSelector" />
     <DataTemplate x:Key="booleanFieldTemplate">
         <field:BooleanFieldView DataContext="{Binding}" />

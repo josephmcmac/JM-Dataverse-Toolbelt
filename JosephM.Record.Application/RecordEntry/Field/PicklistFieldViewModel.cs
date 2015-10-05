@@ -1,16 +1,14 @@
 ﻿#region
 
 using System;
-using System.Collections.Generic;
-using JosephM.Core.Extentions;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-using JosephM.Record.Application.RecordEntry.Form;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    public class PicklistFieldViewModel : FieldViewModel<PicklistOption>
+    public class PicklistFieldViewModel : DropdownFieldViewModel<PicklistOption>
     {
         public PicklistFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
@@ -24,13 +22,11 @@ namespace JosephM.Record.Application.RecordEntry.Field
                 if (ValueObject is Enum)
                 {
                     var item = (Enum) ValueObject;
-                    return new PicklistOption(item.ToString(), item.GetDisplayString());
+                    return PicklistOption.EnumToPicklistOption(item);
                 }
                 return ValueObject as PicklistOption;
             }
             set { ValueObject = value; }
         }
-
-        public IEnumerable<PicklistOption> ItemsSource { get; set; }
     }
 }

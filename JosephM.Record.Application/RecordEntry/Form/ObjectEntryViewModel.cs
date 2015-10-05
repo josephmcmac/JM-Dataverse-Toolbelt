@@ -4,26 +4,26 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
 using JosephM.ObjectMapping;
-using JosephM.Record.Application.RecordEntry.Metadata;
-using JosephM.Record.Application.RecordEntry.Section;
-using JosephM.Record.Application.Validation;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Form
+namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public class ObjectEntryViewModel : RecordEntryFormViewModel
     {
         private ObjectRecord _objectRecord;
         private readonly Action _onCancel;
         private readonly Action _onSave;
+
+        public override int GridPageSize { get { return 0; } }
 
         public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController)
             : this(onSave, onCancel, objectToEnter, formController, null, null)
@@ -34,8 +34,8 @@ namespace JosephM.Record.Application.RecordEntry.Form
             : base(formController, parentForm, parentFormReference)
         {
             _objectRecord = new ObjectRecord(objectToEnter);
-            _onSave = onSave;
-            _onCancel = onCancel;
+            OnSave = onSave;
+            OnCancel = onCancel;
             RecordType = _objectRecord.Type;
         }
 
@@ -79,7 +79,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
             LoadSubgridsToObject();
         }
 
-        private void LoadSubgridsToObject()
+        internal void LoadSubgridsToObject()
         {
             foreach (var grid in SubGrids)
             {
@@ -91,26 +91,16 @@ namespace JosephM.Record.Application.RecordEntry.Form
             }
         }
 
-        public override void OnSaveExtention()
-        {
-            _onSave();
-        }
-
         private object MapGridToEnumerableValue(GridSectionViewModel grid)
         {
             var objectRecordService = GetObjectRecordService();
-            var records = grid.GridRecords.Select(g => g.Record);
+            var records = grid.DynamicGridViewModel.GridRecords.Select(g => g.Record);
             if (records.Any(r => !(r is ObjectRecord)))
                 throw new TypeLoadException(string.Format("Expected {0} Of Type {1} Created By {2}",
                     typeof (IRecord).Name, typeof (ObjectRecord).Name, typeof (ObjectRecordService).Name));
             var type = objectRecordService.GetClassType(grid.RecordType);
             var objectEnumerable = records.Cast<ObjectRecord>().Select(r => r.Instance);
             return type.ToNewTypedEnumerable(objectEnumerable);
-        }
-
-        public override void OnCanceEntension()
-        {
-            _onCancel();
         }
 
         public override IsValidResponse ValidateFinal()
@@ -141,7 +131,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 Reload();
                 foreach (var grid in SubGrids)
                 {
-                    grid.LoadRowsAsync();
+                    grid.DynamicGridViewModel.ReloadGrid();
                 }
             }
             catch (Exception ex)

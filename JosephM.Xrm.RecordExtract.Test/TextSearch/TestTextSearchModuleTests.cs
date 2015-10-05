@@ -7,7 +7,7 @@ using JosephM.Xrm.RecordExtract.TextSearch;
 namespace JosephM.Xrm.RecordExtract.Test.TextSearch
 {
     [TestClass]
-    public class TestTextSearchModuleTests : ServiceRequestModuleTest<TestTextSearchModule, TestTextSearchDialog, TestTextSearchService, TextSearchRequest, TextSearchResponse, TextSearchResponseItem>
+    public class TestTextSearchModuleTests : DialogModuleTest<TestTextSearchModule, TestTextSearchDialog>
     {
         protected override void PrepareTest()
         {
@@ -22,7 +22,7 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
         [TestMethod]
         public void TestTextSearchModuleTest()
         {
-            ExecuteTest();
+            ExecuteAutoEntryTest();
         }
     }
 }

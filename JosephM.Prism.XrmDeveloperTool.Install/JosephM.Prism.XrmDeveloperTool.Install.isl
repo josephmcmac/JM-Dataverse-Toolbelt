@@ -341,14 +341,8 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>JosephM.CustomisationImporter.Content_Files1</td><td>{95EA8E66-CB75-44FF-9099-4F79A8D72936}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.customisationimporte1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>{1F497FC5-38C7-48BF-A782-E08B8CAE12E4}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmdeveloperto</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Prism.XrmModule.Content_Files</td><td>{C012E0D3-1BD4-44B5-8BD3-D7485C6AD95B}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmmodule.cont</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Xrm.CustomisationExporter.Content_Files</td><td>{30C3EFA1-A775-4446-8EED-4A055FBF4AE8}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.customisationexp</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Xrm.ImporterExporter.Content_Files</td><td>{F756D74C-2B17-44A5-8920-D819EEF353F8}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.importerexporter</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Xrm.OrganisationSettings.Content_Files</td><td>{2FF23F7F-EC19-41BB-AEDA-18918188477E}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.organisationsett</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Xrm.RecordExtract.Content_Files</td><td>{BA99061A-D185-46E5-98DE-1986900D13AB}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.recordextract.co</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephMXrm.CodeGenerator.Content_Files</td><td>{8A696340-B461-4EE5-B83F-E933D47AA38C}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephmxrm.codegenerator.con</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.CustomisationImporter.Content_Files</td><td>{B92F1E81-7020-49D2-A363-2CAD8830BCB0}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.customisationimporte</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>{4F317228-DBCE-497A-B143-A498FD0F1D12}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmdeveloperto</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1871,14 +1865,8 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>AlwaysInstall</td><td>JosephM.CustomisationImporter.Content_Files1</td></row>
+		<row><td>AlwaysInstall</td><td>JosephM.CustomisationImporter.Content_Files</td></row>
 		<row><td>AlwaysInstall</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td></row>
-		<row><td>AlwaysInstall</td><td>JosephM.Prism.XrmModule.Content_Files</td></row>
-		<row><td>AlwaysInstall</td><td>JosephM.Xrm.CustomisationExporter.Content_Files</td></row>
-		<row><td>AlwaysInstall</td><td>JosephM.Xrm.ImporterExporter.Content_Files</td></row>
-		<row><td>AlwaysInstall</td><td>JosephM.Xrm.OrganisationSettings.Content_Files</td></row>
-		<row><td>AlwaysInstall</td><td>JosephM.Xrm.RecordExtract.Content_Files</td></row>
-		<row><td>AlwaysInstall</td><td>JosephMXrm.CodeGenerator.Content_Files</td></row>
 	</table>
 
 	<table name="File">
@@ -1893,14 +1881,8 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>josephm.customisationimporte1</td><td>JosephM.CustomisationImporter.Content_Files1</td><td>JosephM.CustomisationImporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.CustomisationImporter&gt;|ContentFiles</td><td>3</td><td/></row>
+		<row><td>josephm.customisationimporte</td><td>JosephM.CustomisationImporter.Content_Files</td><td>JosephM.CustomisationImporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.CustomisationImporter&gt;|ContentFiles</td><td>3</td><td/></row>
 		<row><td>josephm.prism.xrmdeveloperto</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>JosephM.Prism.XrmDeveloperTool.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Prism.XrmDeveloperTool&gt;|Built</td><td>3</td><td/></row>
-		<row><td>josephm.prism.xrmmodule.cont</td><td>JosephM.Prism.XrmModule.Content_Files</td><td>JosephM.Prism.XrmModule.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Prism.XrmModule&gt;|ContentFiles</td><td>3</td><td/></row>
-		<row><td>josephm.xrm.customisationexp</td><td>JosephM.Xrm.CustomisationExporter.Content_Files</td><td>JosephM.Xrm.CustomisationExporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.CustomisationExporter&gt;|ContentFiles</td><td>3</td><td/></row>
-		<row><td>josephm.xrm.importerexporter</td><td>JosephM.Xrm.ImporterExporter.Content_Files</td><td>JosephM.Xrm.ImporterExporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.ImporterExporter&gt;|ContentFiles</td><td>3</td><td/></row>
-		<row><td>josephm.xrm.organisationsett</td><td>JosephM.Xrm.OrganisationSettings.Content_Files</td><td>JosephM.Xrm.OrganisationSettings.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.OrganisationSettings&gt;|ContentFiles</td><td>3</td><td/></row>
-		<row><td>josephm.xrm.recordextract.co</td><td>JosephM.Xrm.RecordExtract.Content_Files</td><td>JosephM.Xrm.RecordExtract.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.RecordExtract&gt;|ContentFiles</td><td>3</td><td/></row>
-		<row><td>josephmxrm.codegenerator.con</td><td>JosephMXrm.CodeGenerator.Content_Files</td><td>JosephMXrm.CodeGenerator.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephMXrm.CodeGenerator&gt;|ContentFiles</td><td>3</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2044,14 +2026,8 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>JosephM.CustomisationImporter.Content_Files1</td><td/><td/><td>_B7F78BA0_94BC_45F3_B319_F2B04B3A75CB_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td/><td>_DF3F000E_05CB_4722_ACF1_85272D9AEB48_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Prism.XrmModule.Content_Files</td><td/><td/><td>_ABEAAF95_C3F4_4B52_8CE7_C61CA94097EF_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Xrm.CustomisationExporter.Content_Files</td><td/><td/><td>_602F9DE5_E602_4E28_801F_A73EF28EBA43_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Xrm.ImporterExporter.Content_Files</td><td/><td/><td>_377E6DFF_3C41_4F13_ACA8_89FF89B9C906_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Xrm.OrganisationSettings.Content_Files</td><td/><td/><td>_29BDBD79_7429_4F36_A154_D2E6E3A84BC4_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Xrm.RecordExtract.Content_Files</td><td/><td/><td>_06DA501C_FC95_4E77_9252_7FC23314AE62_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephMXrm.CodeGenerator.Content_Files</td><td/><td/><td>_97C3666D_263A_42CE_A3F1_2BEB5C91DB11_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.CustomisationImporter.Content_Files</td><td/><td/><td>_87650202_D559_4D88_86FD_F6BC861A3EF7_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td/><td>_AC8C6FCA_7939_4081_B144_5A9E804ACB37_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -2357,7 +2333,11 @@
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
+		<row><td>JosephM.CodeGenerator</td><td>JosephM.CodeGenerator\JosephM.CodeGenerator.csproj</td><td/><td>2</td></row>
+		<row><td>JosephM.CustomisationExporter</td><td>JosephM.CustomisationExporter\JosephM.CustomisationExporter.csproj</td><td/><td>2</td></row>
 		<row><td>JosephM.CustomisationImporter</td><td>JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj</td><td/><td>2</td></row>
+		<row><td>JosephM.Deployment</td><td>JosephM.Deployment\JosephM.Deployment.csproj</td><td/><td>2</td></row>
+		<row><td>JosephM.OrganisationSettings</td><td>JosephM.OrganisationSettings\JosephM.OrganisationSettings.csproj</td><td/><td>2</td></row>
 		<row><td>JosephM.Prism.XrmDeveloperTool</td><td>JosephM.Prism.XrmDeveloperTool\JosephM.Prism.XrmDeveloperTool.csproj</td><td/><td>2</td></row>
 		<row><td>JosephM.Prism.XrmModule</td><td>JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj</td><td/><td>2</td></row>
 		<row><td>JosephM.Xrm.CustomisationExporter</td><td>JosephM.Xrm.CustomisationExporter\JosephM.Xrm.CustomisationExporter.csproj</td><td/><td>2</td></row>
@@ -4022,7 +4002,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{1C33C7B9-475F-4DE4-83E3-C5479E7A4641}</td></row>
 		<row><td>ISUSSignature</td><td>{9AC8E5E4-DDB1-4C9A-B795-48942CF75201}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewProject,viewRealSetupDesign,viewISToday,viewAppFiles,viewFeatureFiles</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewProject,viewRealSetupDesign,viewISToday,viewAppFiles,viewFeatureFiles,viewUpgradePaths</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4403,7 +4383,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]JosephM.Prism.XrmDeveloperTool.Primary output</td><td/></row>
 		<row><td>ProductCode</td><td>{1654C006-FC0A-4A2C-9171-B9B8FB40FE5B}</td><td/></row>
 		<row><td>ProductName</td><td>JosephM.Prism.XrmDeveloperTool.Install</td><td/></row>
-		<row><td>ProductVersion</td><td>1.04.0000</td><td/></row>
+		<row><td>ProductVersion</td><td>1.05.0000</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4480,7 +4460,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>_Built</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td>joseph_1.ins_josephm.prism.xrmdevelopertool.install</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">
@@ -4566,8 +4545,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>_Built</td><td>joseph_1.ins_josephm.prism.xrmdevelopertool.install</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>_Built1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">

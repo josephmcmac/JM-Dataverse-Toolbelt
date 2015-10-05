@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
@@ -34,36 +35,46 @@ namespace JosephM.Core.Utility
                 var typeToOutput = objects.First(o => o != null).GetType();
 
                 var propertyNames = typeToOutput.GetReadableProperties().Select(s => s.Name).ToArray();
-                var propertyLabels = typeToOutput.GetReadableProperties().Select(s => s.GetDisplayName()).ToArray();
-                var propertyNamesText = String.Join(",", propertyLabels);
-                FileUtility.CheckCreateFile(path, name, propertyNamesText);
 
-                var stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine();
-
-                foreach (var o in objects)
+                CreateCsv(path, name, objects, propertyNames
+                    , delegate(string s)
                 {
-                    var thisObjectType = o.GetType();
-                    var valueStrings = new List<string>();
-                    foreach (var property in propertyNames)
-                    {
-                        object value = null;
-                        if (thisObjectType.GetProperty(property) != null)
-                            value = o.GetPropertyValue(property);
-                        if (value == null)
-                            valueStrings.Add("");
-                        else
-                        {
-                            var thisString = value.ToString();
-                            thisString = thisString.Replace("\n", CsvNewLine);
-                            thisString = thisString.Replace("\"", "\"\"");
-                            valueStrings.Add("\"" + thisString + "\"");
-                        }
-                    }
-                    stringBuilder.AppendLine(string.Join(",", valueStrings));
-                }
-                FileUtility.AppendToFile(path, name, stringBuilder.ToString());
+                    return typeToOutput.GetProperty(s).GetDisplayName();
+                }, delegate(object o, string s)
+                {
+                    return o.GetPropertyValue(s);
+                });
             }
+        }
+
+        public static void CreateCsv(string path, string name, IEnumerable objects, IEnumerable<string> propertyNames, Func<string, string> getLabel, Func<object, string, object> getField)
+        {
+            var propertyLabels = propertyNames.Select(getLabel).ToArray();
+            var propertyNamesText = String.Join(",", propertyLabels);
+            FileUtility.CheckCreateFile(path, name, propertyNamesText);
+
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine();
+
+            foreach (var o in objects)
+            {
+                var valueStrings = new List<string>();
+                foreach (var property in propertyNames)
+                {
+                    object value = getField(o, property);
+                    if (value == null)
+                        valueStrings.Add("");
+                    else
+                    {
+                        var thisString = value.ToString() ?? "";
+                        thisString = thisString.Replace("\n", CsvNewLine);
+                        thisString = thisString.Replace("\"", "\"\"");
+                        valueStrings.Add("\"" + thisString + "\"");
+                    }
+                }
+                stringBuilder.AppendLine(string.Join(",", valueStrings));
+            }
+            FileUtility.AppendToFile(path, name, stringBuilder.ToString());
         }
 
         private static string GetCsvFileName(string name)
@@ -71,17 +82,22 @@ namespace JosephM.Core.Utility
             return name.ToLower().EndsWith(".csv") ? name : name + ".csv";
         }
 
+        /// <summary>
+        /// Generates a Schema.ini fiel for the csv specifiying all columns as type text
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="fileName"></param>
         public static void ConstructTextSchema(string folder, string fileName)
         {
             if (folder.IsNullOrWhiteSpace())
                 folder = AppDomain.CurrentDomain.BaseDirectory;
             var schema = new StringBuilder();
-            var data = LoadCSV(folder, fileName);
+            var fields = GetColumns(Path.Combine(folder, fileName)).ToList();
             schema.AppendLine("[" + fileName + "]");
             schema.AppendLine("ColNameHeader=True");
-            for (var i = 0; i < data.Columns.Count; i++)
+            for (var i = 0; i < fields.Count(); i++)
             {
-                schema.AppendLine("col" + (i + 1).ToString() + "=\"" + data.Columns[i].ColumnName + "\" Text");
+                schema.AppendLine("col" + (i + 1) + "=\"" + fields[i] + "\" Text");
             }
             var schemaFileName = folder + @"\Schema.ini";
             TextWriter tw = new StreamWriter(schemaFileName);
@@ -89,29 +105,22 @@ namespace JosephM.Core.Utility
             tw.Close();
         }
 
-        public static DataTable LoadCSV(string folder, string fileName)
+        public static IEnumerable<string> GetColumns(string fileNameQualified)
         {
-            if (folder.IsNullOrWhiteSpace())
-                folder = AppDomain.CurrentDomain.BaseDirectory;
-            var sqlString = "Select * FROM [" + fileName + "];";
-            var conStr = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source="
-                         + folder + ";" + "Extended Properties='text;HDR=YES;'";
-            var theCSV = new DataTable();
-
-            using (var conn = new OleDbConnection(conStr))
-            {
-                using (var comm = new OleDbCommand(sqlString, conn))
-                {
-                    using (var adapter = new OleDbDataAdapter(comm))
-                    {
-                        adapter.Fill(theCSV);
-                    }
-                }
-            }
-            return theCSV;
+            var sql = string.Format("select top 1 * from [{0}]", GetTableName(fileNameQualified));
+            var result = SelectRows(fileNameQualified, sql);
+            if (!result.Any())
+                throw new NullReferenceException(string.Format("Error examining CSV. There were no rows returned in the csv {0}", fileNameQualified));
+            var row = result.First();
+            return row.GetColumnNames();
         }
 
-        public static DataTable SelectFromExcelTabName(string folder, string fileName)
+        public static IEnumerable<QueryRow> SelectRows(string fileNameQualified, string sql)
+        {
+            return SelectRows(GetFolder(fileNameQualified), GetFileName(fileNameQualified), sql);
+        }
+
+        public static IEnumerable<QueryRow> SelectRows(string folder, string fileName, string sql)
         {
             OleDbDataAdapter dAdapter = null;
             try
@@ -119,11 +128,15 @@ namespace JosephM.Core.Utility
                 if (folder.IsNullOrWhiteSpace())
                     folder = AppDomain.CurrentDomain.BaseDirectory;
                 var connString = GetConnectionString(folder);
-                var excelQuery = "select * from [" + fileName + "]";
                 var dTable = new DataTable();
-                dAdapter = new OleDbDataAdapter(excelQuery, connString);
+                dAdapter = new OleDbDataAdapter(sql, connString);
                 dAdapter.Fill(dTable);
-                return dTable;
+                var itemsToAdd = new List<DataRow>();
+                foreach (DataRow row in dTable.Rows)
+                {
+                    itemsToAdd.Add(row);
+                }
+                return itemsToAdd.Select(r => new QueryRow(r)).ToArray();
             }
             catch (Exception ex)
             {
@@ -147,25 +160,25 @@ namespace JosephM.Core.Utility
             return connectionString;
         }
 
-        public static IEnumerable<QueryRow> SelectPropertyBagsFromCsv(string fileNameQualified)
+        public static IEnumerable<QueryRow> SelectAllRows(string fileNameQualified)
         {
-            return SelectRowsFromCsvTabName(Path.GetDirectoryName(fileNameQualified), Path.GetFileName(fileNameQualified)).Select(r => new QueryRow(r));
+            return SelectRows(GetFolder(fileNameQualified), GetFileName(fileNameQualified),
+                "select * from [" + GetTableName(fileNameQualified) + "]");
         }
 
-        public static IEnumerable<QueryRow> SelectPropertyBagsFromCsv(string folder, string fileName)
+        private static string GetFolder(string fileNameQualified)
         {
-            return SelectRowsFromCsvTabName(folder, fileName).Select(r => new QueryRow(r)).ToArray();
+            return Path.GetDirectoryName(fileNameQualified);
         }
 
-        private static IEnumerable<DataRow> SelectRowsFromCsvTabName(string folder, string fileName)
+        private static string GetFileName(string fileNameQualified)
         {
-            var allData = SelectFromExcelTabName(folder, fileName);
-            var itemsToAdd = new List<DataRow>();
-            foreach (DataRow row in allData.Rows)
-            {
-                itemsToAdd.Add(row);
-            }
-            return itemsToAdd;
+            return Path.GetFileName(fileNameQualified);
+        }
+
+        public static string GetTableName(string fileNameQualified)
+        {
+            return Path.GetFileName(fileNameQualified);
         }
     }
 }

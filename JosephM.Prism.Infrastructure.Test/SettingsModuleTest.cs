@@ -1,4 +1,8 @@
 ﻿using System.Linq;
+using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Fakes;
+using JosephM.Core.AppConfig;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Core.Test;
 using JosephM.Core.Utility;
@@ -9,7 +13,7 @@ using JosephM.Record.Application.Fakes;
 
 namespace JosephM.Prism.Infrastructure.Test
 {
-    public class SettingsModuleTest<TSettingsModule, TDialog, TInterface, TClass> : PrismModuleTest<TSettingsModule>
+    public class SettingsModuleTest<TSettingsModule, TDialog, TInterface, TClass> : CoreTest
         where TSettingsModule : SettingsModule<TDialog, TInterface, TClass>, new()
         where TDialog : AppSettingsDialog<TInterface, TClass>
         where TClass : TInterface, new()
@@ -19,9 +23,12 @@ namespace JosephM.Prism.Infrastructure.Test
             var fakeApplicationController = new FakeApplicationController();
             FileUtility.DeleteFiles(fakeApplicationController.SettingsPath);
 
-            var dialog = Container.Resolve<TDialog>();
-            var dialogController = dialog.Controller;
-            dialogController.BeginDialog();
+            var testApplication = new TestApplication();
+            testApplication.Controller.RegisterType<IDialogController, AutoDialogController>();
+            testApplication.AddModule<TSettingsModule>();
+            var module = testApplication.GetModule<TSettingsModule>();
+            module.DialogCommand();
+            var dialog = testApplication.GetNavigatedDialog<TDialog>();
 
             var settingsFiles = FileUtility.GetFiles(fakeApplicationController.SettingsPath);
             Assert.AreEqual(1, settingsFiles.Count());
@@ -29,9 +36,8 @@ namespace JosephM.Prism.Infrastructure.Test
             var settings = prismSettingsManager.Resolve<TClass>();
             Assert.IsNotNull(settings);
 
-            dialog = Container.Resolve<TDialog>();
-            dialogController = dialog.Controller;
-            dialogController.BeginDialog();
+            module.DialogCommand();
+            dialog = testApplication.GetNavigatedDialog<TDialog>(1);
 
             settingsFiles = FileUtility.GetFiles(fakeApplicationController.SettingsPath);
             Assert.AreEqual(1, settingsFiles.Count());

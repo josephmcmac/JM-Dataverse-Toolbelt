@@ -1,12 +1,12 @@
 ﻿#region
 
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Record.IService;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Section
+namespace JosephM.Application.ViewModel.RecordEntry.Section
 {
     public abstract class SectionViewModelBase : ViewModelBase
     {
@@ -71,5 +71,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
                 OnPropertyChanged("IsVisible");
             }
         }
+
+        public bool IsLoaded { get; set; }
     }
 }

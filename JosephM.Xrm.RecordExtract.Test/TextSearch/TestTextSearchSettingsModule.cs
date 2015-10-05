@@ -1,5 +1,4 @@
-﻿using JosephM.Prism.Infrastructure.Attributes;
-using JosephM.Prism.Infrastructure.Constants;
+﻿using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.Infrastructure.Test;

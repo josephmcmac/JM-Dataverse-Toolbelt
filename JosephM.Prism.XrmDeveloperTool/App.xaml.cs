@@ -1,12 +1,12 @@
 ﻿using System.Windows;
+using JosephM.CodeGenerator.Xrm;
+using JosephM.CustomisationExporter.Exporter;
 using JosephM.CustomisationImporter.Prism;
+using JosephM.OrganisationSettings;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Xrm;
-using JosephM.Xrm.CodeGenerator.Prism;
-using JosephM.Xrm.CustomisationExporter;
 using JosephM.Xrm.ImportExporter.Prism;
-using JosephM.Xrm.OrganisationSettings.Prism;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.Xrm.RecordExtract.TextSearch;
 
@@ -15,7 +15,7 @@ namespace JosephM.Xrm.DeveloperTool
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -27,7 +27,7 @@ namespace JosephM.Xrm.DeveloperTool
             prism.AddModule<XrmImporterExporterModule>();
             prism.AddModule<XrmSolutionImporterExporterModule>();
             prism.AddModule<XrmCodeGeneratorModule>();
-            prism.AddModule<XrmOrganisationSettingsModule>();
+            prism.AddModule<MaintainOrganisationModule>();
             prism.AddModule<XrmTextSearchModule>();
             prism.AddModule<CustomisationExporterModule>();
             prism.AddModule<CustomisationImportModule>();

@@ -4,25 +4,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
-using JosephM.Core.Log;
 using JosephM.ObjectMapping;
-using JosephM.Record.Application.Dialog;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.RecordEntry.Field;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Section;
-using JosephM.Record.Application.Validation;
+using JosephM.Record.Attributes;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
+using JosephM.Record.Extentions;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Metadata
+namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     public class ObjectFormService : FormServiceBase
     {
@@ -33,11 +32,6 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         {
             ObjectToEnter = objectToEnter;
             ObjectRecordService = objectRecordService;
-        }
-
-        private Type FormInstanceType
-        {
-            get { return null; }
         }
 
         public object ObjectToEnter { get; set; }
@@ -61,7 +55,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 {
                     if (property.FieldType == RecordFieldType.Enumerable)
                     {
-                        var thisMetadata = (EnumerableFieldMetadata) property;
+                        var thisMetadata = (EnumerableFieldMetadata)property;
                         var thisFieldType = thisMetadata.EnumeratedType;
                         var gridFields = GetGridMetadata(thisFieldType);
                         var section = new SubGridSection(property.SchemaName.SplitCamelCase(),
@@ -89,30 +83,28 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             foreach (var field in ObjectRecordService.GetFields(thisFieldType))
             {
                 var propertyInfo = ObjectRecordService.GetPropertyInfo(field, thisFieldType);
-                var gridField = new GridFieldMetadata(field);
-                gridField.IsEditable = propertyInfo.CanWrite;
-                var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
-                if (orderAttribute != null)
-                    gridField.Order = orderAttribute.Order;
-                var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
-                if (widthAttribute != null)
-                    gridField.WidthPart = widthAttribute.Width;
-                gridFields.Add(gridField);
+                if (propertyInfo.GetCustomAttribute<HiddenAttribute>() == null)
+                {
+                    var gridField = new GridFieldMetadata(field);
+                    gridField.IsEditable = propertyInfo.CanWrite;
+                    var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
+                    if (orderAttribute != null)
+                        gridField.Order = orderAttribute.Order;
+                    var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
+                    if (widthAttribute != null)
+                        gridField.WidthPart = widthAttribute.Width;
+                    gridFields.Add(gridField);
+                }
             }
             return gridFields;
-        }
-
-        protected override Type GetFormInstanceType(string recordType)
-        {
-            return FormInstanceType;
         }
 
         public override bool IsFieldInContext(string fieldName, IRecord record)
         {
             if (record is ObjectRecord)
-                return ((ObjectRecord) record).Instance.IsInContext(fieldName);
-            throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof (IRecord).Name,
-                typeof (ObjectRecord).Name));
+                return ((ObjectRecord)record).Instance.IsInContext(fieldName);
+            throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name,
+                typeof(ObjectRecord).Name));
         }
 
         public override bool IsSectionInContext(string sectionIdentifier, IRecord record)
@@ -122,7 +114,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             if (record is ObjectRecord)
             {
                 if (ObjectType.GetProperty(sectionIdentifier) != null)
-                    return ((ObjectRecord) record).Instance.IsInContext(sectionIdentifier);
+                    return ((ObjectRecord)record).Instance.IsInContext(sectionIdentifier);
                 else
                     return true;
             }
@@ -134,9 +126,9 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         {
             var validators = new List<ValidationRuleBase>();
             var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.Name);
-            var isValidatable = type.IsTypeOf(typeof (IValidatableObject));
+            var isValidatable = type.IsTypeOf(typeof(IValidatableObject));
 
-            if(isValidatable)
+            if (isValidatable)
                 validators.Add(new IValidatableObjectValidationRule());
             validators.AddRange(ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.Name)
                     .Select(va => new PropertyAttributeValidationRule(va)));
@@ -184,10 +176,11 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             foreach (var attribute in lookupForAttributes)
             {
                 onChanges.Add(
-                    re => re.StartNewAction(() =>
+                    re => 
                     {
-                        var changedViewModel = re.GetObjectFieldFieldViewModel(fieldName);
-                        if (changedViewModel.Value != null)
+
+                        var changedViewModel = re.GetFieldViewModel(fieldName);
+                        if (changedViewModel.ValueObject != null)
                         {
                             var matchingFields =
                                 re.FieldViewModels.Where(f => f.FieldName == attribute.Property);
@@ -199,9 +192,19 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                                     var typedViewModel = (LookupFieldViewModel)fieldViewModel;
                                     typedViewModel.LoadLookupGrid();
                                 }
+                                if (fieldViewModel is RecordTypeFieldViewModel)
+                                {
+                                    var typedViewModel = (RecordTypeFieldViewModel)fieldViewModel;
+                                    typedViewModel.ItemsSource = ObjectRecordService
+                                        .GetPicklistKeyValues(fieldViewModel.FieldName, fieldViewModel.GetRecordType())
+                                        .Select(p => new RecordType(p.Key, p.Value))
+                                        .Where(rt => !rt.Value.IsNullOrWhiteSpace())
+                                        .OrderBy(rt => rt.Value)
+                                        .ToArray();
+                                }
                             }
                         }
-                    }));
+                    });
             }
         }
 
@@ -234,7 +237,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         private void AppendUniqueOnAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
         {
             var attributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UniqueOn>();
-            if(attributes != null)
+            if (attributes != null)
             {
                 onChanges.Add(
                     re => re.StartNewAction(() =>
@@ -242,7 +245,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                         //just need to if this in a grid then set all others off
                         if (re is GridRowViewModel)
                         {
-                            var gridRowViewModel = (GridRowViewModel) re;
+                            var gridRowViewModel = (GridRowViewModel)re;
                             var fieldViewModel = gridRowViewModel.GetFieldViewModel(fieldName) as BooleanFieldViewModel;
                             if (fieldViewModel != null && fieldViewModel.Value)
                             {
@@ -250,7 +253,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                                 {
                                     if (row != gridRowViewModel)
                                     {
-                                        ((BooleanFieldViewModel) row.GetFieldViewModel(fieldName)).Value = false;
+                                        ((BooleanFieldViewModel)row.GetFieldViewModel(fieldName)).Value = false;
                                     }
                                 }
                             }
@@ -288,7 +291,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         private void AppendLookupForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
         {
             var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType)
-                .GetCustomAttributes(typeof (RecordTypeFor), true).Cast<RecordTypeFor>();
+                .GetCustomAttributes(typeof(RecordTypeFor), true).Cast<RecordTypeFor>();
             foreach (var attribute in lookupForAttributes)
             {
                 onChanges.Add(
@@ -301,7 +304,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                             var fieldViewModel = matchingFields.First();
                             if (fieldViewModel is LookupFieldViewModel)
                             {
-                                var typedViewModel = (LookupFieldViewModel) fieldViewModel;
+                                var typedViewModel = (LookupFieldViewModel)fieldViewModel;
                                 var selectedRecordType = recordTypeViewModel.Value == null
                                     ? null
                                     : recordTypeViewModel.Value.Key;
@@ -310,7 +313,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                             }
                             else if (fieldViewModel is RecordFieldFieldViewModel)
                             {
-                                var typedViewModel = (RecordFieldFieldViewModel) fieldViewModel;
+                                var typedViewModel = (RecordFieldFieldViewModel)fieldViewModel;
                                 var selectedRecordType = recordTypeViewModel.Value == null
                                     ? null
                                     : recordTypeViewModel.Value.Key;
@@ -321,9 +324,9 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                         {
                             if (re is ObjectEntryViewModel)
                             {
-                                if(attribute.PropertyPaths.Count() < 2)
+                                if (attribute.PropertyPaths.Count() < 2)
                                     throw new NullReferenceException(string.Format("The {0} Attribute References an Enumerable Property But Does Not Specify The Property On The Enumerated Type. The Value Is {1} And Should Be Of Form Property1.Property2", typeof(RecordTypeFor).Name, attribute.LookupProperty));
-                                var oevm = (ObjectEntryViewModel) re;
+                                var oevm = (ObjectEntryViewModel)re;
                                 var matchingGrids = oevm.SubGrids.Where(sg => sg.ReferenceName == attribute.PropertyPaths.First());
                                 if (matchingGrids.Any())
                                 {
@@ -339,7 +342,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         internal override string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
         {
             var propertyInfo = GetPropertyInfo(field, viewModel.GetRecord().Type);
-            if (propertyInfo.PropertyType == typeof (FileReference))
+            if (propertyInfo.PropertyType == typeof(FileReference))
             {
                 var attr = propertyInfo.GetCustomAttribute<FileMask>();
                 return attr == null ? null : attr.Mask;
@@ -362,7 +365,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 foreach (var parentField in ((ObjectEntryViewModel)parentForm).GetObject().GetType().GetProperties())
                 {
                     var lookupForAttributes =
-                        parentField.GetCustomAttributes(typeof (RecordTypeFor), true).Cast<RecordTypeFor>();
+                        parentField.GetCustomAttributes(typeof(RecordTypeFor), true).Cast<RecordTypeFor>();
                     foreach (var lookupForAttribute in lookupForAttributes)
                     {
                         if (lookupForAttribute.PropertyPaths.Count() == 2 &&
@@ -398,7 +401,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 //lets start a dialog to add it on complete
                 var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(propertyInfo.PropertyType.GetGenericArguments()[0].Name);
                 var newObject = newRecord.Instance;
-                var recordService = new ObjectRecordService(newObject);
+                var recordService = new ObjectRecordService(newObject, parentForm.ApplicationController);
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
@@ -406,22 +409,22 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
                 return viewModel;
                 //ideally could hide the parent dialog temporarily and load this one
             }
-                //if the object specifies use a form then use the form/dialog
+            //if the object specifies use a form then use the form/dialog
             else
                 return null;
         }
 
-        internal override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        public override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
         {
             var record = gridRow.GetRecord();
-            if(!(record is ObjectRecord))
+            if (!(record is ObjectRecord))
                 throw new NotSupportedException(string.Format("Error Expected Object Of Type {0}", typeof(ObjectRecord).Name));
-            var newRecord = (ObjectRecord) record;
-            //need to load the exitsing row to this
+            var newRecord = (ObjectRecord)record;
+            //need to load the existing row to this
             //lets start a dialog to add it on complete
             var mapper = new ClassSelfMapper();
             var newObject = mapper.Map(newRecord.Instance);
-            var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName);
+            var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName, parentForm.ApplicationController);
             var viewModel = new ObjectEntryViewModel(
                 () => onSave(new ObjectRecord(newObject)),
                 onCancel,
@@ -436,6 +439,34 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             return attr == null
                 ? new Condition[0]
                 : attr.Select(a => new Condition(a.FieldName, ConditionType.Equal, a.Value));
+        }
+
+        internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)
+        {
+            var functions = new Dictionary<string, Action>();
+            var objectFormService = recordForm as ObjectEntryViewModel;
+            if (objectFormService != null)
+            {
+                var property = GetPropertyInfo(referenceName, ObjectType.Name);
+                var customFunctions = property.GetCustomAttributes<CustomFunction>();
+                if (customFunctions != null)
+                {
+                    foreach (var item in customFunctions)
+                    {
+                        var thisItem = item;
+                        var thisMethod = new Action(() => ObjectToEnter.InvokeMethod(thisItem.FunctionName, recordForm.ApplicationController));
+                        functions.Add(thisItem.FunctionName.SplitCamelCase(),
+                            () =>
+                            {
+                                objectFormService.LoadSubgridsToObject();
+                                thisMethod();
+                                var subGrid = objectFormService.GetSubGridViewModel(referenceName);
+                                subGrid.DynamicGridViewModel.ReloadGrid();
+                            });
+                    }
+                }
+            }
+            return functions.Select(kv => new CustomGridFunction(kv.Key, kv.Value)).ToArray();
         }
     }
 }

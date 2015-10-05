@@ -1,14 +1,15 @@
 ﻿#region
 
 using System;
-using Microsoft.Practices.Prism.Regions;
+using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.Extentions;
-using JosephM.Record.Application.Navigation;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using Microsoft.Practices.Prism.Regions;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Form
+namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public abstract class OpenViewModel : RecordEntryFormViewModel
     {
@@ -17,6 +18,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
         protected OpenViewModel(FormController formController)
             : base(formController)
         {
+            OnCancel = () => ApplicationController.Remove(RegionNames.MainTabRegion, this);
         }
 
         public override IRecord GetRecord()
@@ -30,6 +32,8 @@ namespace JosephM.Record.Application.RecordEntry.Form
         public void SetRecord(IRecord record)
         {
             _record = record;
+            RecordType = _record.Type;
+            RecordId = _record.Id;
         }
 
         protected virtual void LoadRecord()

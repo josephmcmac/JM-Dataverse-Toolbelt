@@ -8,7 +8,7 @@ namespace JosephM.Core.Attributes
     /// </summary>
     [AttributeUsage(
         AttributeTargets.Property,
-        AllowMultiple = false)]
+        AllowMultiple = true)]
     public class PropertyInContextByPropertyNotNull : PropertyInContext
     {
         public string PropertyDependency { get; set; }

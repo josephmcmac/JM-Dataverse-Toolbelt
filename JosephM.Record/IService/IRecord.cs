@@ -25,6 +25,11 @@ namespace JosephM.Record.IService
         string Id { get; set; }
 
         /// <summary>
+        ///     Used to determine an alternative field to use as the key when updating
+        /// </summary>
+        string IdTargetFieldOverride { get; set; }
+
+        /// <summary>
         ///     Get The Value Of The Field With The Given Name. Null If Not Loaded Or Empty
         /// </summary>
         object this[string fieldName] { get; set; }

@@ -1,14 +1,13 @@
 ﻿#region
 
-using System.Collections.Generic;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-using JosephM.Record.Application.RecordEntry.Form;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    public class RecordTypeFieldViewModel : FieldViewModel<RecordType>
+    public class RecordTypeFieldViewModel : DropdownFieldViewModel<RecordType>
     {
         public RecordTypeFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
@@ -22,18 +21,6 @@ namespace JosephM.Record.Application.RecordEntry.Field
             {
                 ValueObject = value;
                 OnPropertyChanged("Value");
-            }
-        }
-
-        private IEnumerable<RecordType> _itemsSource;
-
-        public IEnumerable<RecordType> ItemsSource
-        {
-            get { return _itemsSource; }
-            set
-            {
-                _itemsSource = value;
-                OnPropertyChanged("ItemsSource");
             }
         }
     }

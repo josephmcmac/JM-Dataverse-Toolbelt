@@ -3,13 +3,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.Shared;
+using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.Shared;
 
 #endregion
 
-namespace JosephM.Record.Application.Dialog
+namespace JosephM.Application.ViewModel.Dialog
 {
     /// <summary>
     ///     For Providing A Summary Of What Happened During A Dialog Process Which Has Completed

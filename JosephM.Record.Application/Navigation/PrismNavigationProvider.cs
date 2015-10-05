@@ -1,9 +1,8 @@
-﻿using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Text;
+﻿using JosephM.Core.Extentions;
+using JosephM.Core.Serialisation;
 using Microsoft.Practices.Prism.Regions;
 
-namespace JosephM.Record.Application.Navigation
+namespace JosephM.Application.ViewModel.Navigation
 {
     public class PrismNavigationProvider : INavigationProvider
     {
@@ -19,15 +18,16 @@ namespace JosephM.Record.Application.Navigation
             return NavigationContext.Parameters[key];
         }
 
+        public bool HasValue(string key)
+        {
+            return !GetValue(key).IsNullOrWhiteSpace();
+        }
+
         public T GetObject<T>(string key)
         {
             var json = GetValue(key);
-            var serializer = new DataContractJsonSerializer(typeof(T));
-            using (var stream = new MemoryStream(Encoding.Unicode.GetBytes(json)))
-            {
-                var tObject = (T)serializer.ReadObject(stream);
-                return tObject;
-            }
+            var type = typeof(T);
+            return (T)JsonHelper.JsonStringToObject(json, type);
         }
     }
 }

@@ -6,6 +6,7 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Test;
+using JosephM.Record.Extentions;
 
 #endregion
 
@@ -50,7 +51,7 @@ namespace JosephM.Record.Xrm.Test
                     }
                     else
                     {
-                        var rs = recordService.GetFirstX(lookupTargetType, 2);
+                        var rs = recordService.GetFirstX(lookupTargetType, 2, null, null, null);
                         if (rs.Any(r => r.Id != currentRecord.GetLookupId(fieldName)))
                             referenceRecord = rs.First(r => r.Id != currentRecord.GetLookupId(fieldName));
                     }
@@ -80,9 +81,9 @@ namespace JosephM.Record.Xrm.Test
                 }
                 case (RecordFieldType.Integer):
                 {
-                    if (XrmRecordService.GetIntegerType(fieldName, recordType) == IntegerType.TimeZone)
+                    if (XrmRecordService.GetFieldMetadata(fieldName, recordType).IntegerFormat == IntegerType.TimeZone)
                     {
-                        var timezoneRecords = XrmRecordService.GetFirstX("timezonedefinition", 2);
+                        var timezoneRecords = XrmRecordService.GetFirstX("timezonedefinition", 2, null, null);
                         if (timezoneRecords.Count() < 2)
                             throw new Exception("At least 2 Records Required");
                         var option1 = timezoneRecords.ElementAt(0).GetIntegerField("timezonecode");

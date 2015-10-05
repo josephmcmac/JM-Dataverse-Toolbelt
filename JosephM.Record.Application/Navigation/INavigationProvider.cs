@@ -1,4 +1,4 @@
-﻿namespace JosephM.Record.Application.Navigation
+﻿namespace JosephM.Application.ViewModel.Navigation
 {
     public interface INavigationProvider
     {

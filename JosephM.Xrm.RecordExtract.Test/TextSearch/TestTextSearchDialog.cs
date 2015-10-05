@@ -1,4 +1,5 @@
-﻿using JosephM.Record.Application.Dialog;
+﻿using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Fakes;
 using JosephM.Record.Application.Fakes;
 using JosephM.Xrm.RecordExtract.TextSearch;
 

@@ -170,25 +170,45 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.CodeGenerator\JosephM.CodeGenerator.csproj">
+      <Project>{0902CBF9-E77C-4B69-8021-3DA8E3999CCA}</Project>
+      <Name>JosephM.CodeGenerator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.CustomisationExporter\JosephM.CustomisationExporter.csproj">
+      <Project>{0A84403C-046E-48FF-967C-30CDDA6AF07A}</Project>
+      <Name>JosephM.CustomisationExporter</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj">
       <Project>{1a1cfba7-3bc0-4598-bdf0-cde9634c506e}</Project>
       <Name>JosephM.CustomisationImporter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Prism.Infrastructure.csproj">
+    <ProjectReference Include="..\JosephM.Deployment\JosephM.Deployment.csproj">
+      <Project>{82118987-FB76-4E70-81A0-06D0B062D89C}</Project>
+      <Name>JosephM.Deployment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.OrganisationSettings\JosephM.OrganisationSettings.csproj">
+      <Project>{ADCA7224-551A-4ACE-8C6B-1B667283F920}</Project>
+      <Name>JosephM.OrganisationSettings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
-      <Name>JosephM.Prism.Infrastructure</Name>
+      <Name>JosephM.Application.Prism</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
       <Name>JosephM.Prism.XrmModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
-      <Name>JosephM.Record.Application</Name>
+      <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
       <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
@@ -197,22 +217,6 @@
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.CodeGenerator\JosephMXrm.CodeGenerator.csproj">
-      <Project>{0902cbf9-e77c-4b69-8021-3da8e3999cca}</Project>
-      <Name>JosephMXrm.CodeGenerator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.CustomisationExporter\JosephM.Xrm.CustomisationExporter.csproj">
-      <Project>{0A84403C-046E-48FF-967C-30CDDA6AF07A}</Project>
-      <Name>JosephM.Xrm.CustomisationExporter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.ImportExporter\JosephM.Xrm.ImporterExporter.csproj">
-      <Project>{82118987-fb76-4e70-81a0-06d0b062d89c}</Project>
-      <Name>JosephM.Xrm.ImporterExporter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.OrganisationSettings\JosephM.Xrm.OrganisationSettings.csproj">
-      <Project>{adca7224-551a-4ace-8c6b-1b667283f920}</Project>
-      <Name>JosephM.Xrm.OrganisationSettings</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj">
       <Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>

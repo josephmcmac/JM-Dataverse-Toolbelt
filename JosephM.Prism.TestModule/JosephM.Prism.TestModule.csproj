@@ -105,11 +105,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Prism\TestModule.cs" />
-    <Compile Include="SearchModule\SearchDialog.cs" />
-    <Compile Include="SearchModule\SearchEntryViewModel.cs" />
-    <Compile Include="SearchModule\SearchModule.cs" />
-    <Compile Include="SearchModule\SearchRequest.cs" />
-    <Compile Include="SearchModule\SearchType.cs" />
     <Compile Include="TestViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -122,6 +117,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core.Test\JosephM.Core.Test.csproj">
       <Project>{7A4CE94B-1F3B-46F0-9C7F-9F2CB5B3C5E8}</Project>
       <Name>JosephM.Core.Test</Name>
@@ -134,9 +133,13 @@
       <Project>{2FE73DC9-7959-4944-B594-29E73AA79604}</Project>
       <Name>JosephM.ObjectEncryption</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Prism.Infrastructure.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
-      <Name>JosephM.Prism.Infrastructure</Name>
+      <Name>JosephM.Application.Prism</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
+      <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>
+      <Name>JosephM.Application.ViewModel.Fakes</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
@@ -146,9 +149,9 @@
       <Project>{7f69213d-3efb-4736-9962-0151f92fa7d4}</Project>
       <Name>JosephM.Xrm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
-      <Name>JosephM.Record.Application</Name>
+      <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

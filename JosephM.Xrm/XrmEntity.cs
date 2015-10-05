@@ -43,7 +43,7 @@ namespace JosephM.Xrm
             {
                 var fieldObject = entity[fieldName];
                 if (fieldObject is AliasedValue)
-                    return ((AliasedValue) fieldObject).Value;
+                    return ((AliasedValue)fieldObject).Value;
                 else
                     return fieldObject;
             }
@@ -53,7 +53,7 @@ namespace JosephM.Xrm
 
         public static string GetStringField(this Entity entity, string fieldName)
         {
-            return (string) GetField(entity, fieldName);
+            return (string)GetField(entity, fieldName);
         }
 
         public static IEnumerable<string> GetFieldsInEntity(this Entity entity)
@@ -83,7 +83,7 @@ namespace JosephM.Xrm
         public static int GetOptionSetValue(object fieldValue)
         {
             if (fieldValue != null)
-                return ((OptionSetValue) fieldValue).Value;
+                return ((OptionSetValue)fieldValue).Value;
             else
                 return -1;
         }
@@ -102,7 +102,7 @@ namespace JosephM.Xrm
         public static bool GetBoolean(object fieldValue)
         {
             if (fieldValue != null)
-                return (bool) fieldValue;
+                return (bool)fieldValue;
             else
                 return false;
         }
@@ -127,7 +127,7 @@ namespace JosephM.Xrm
         public static Guid? GetLookupGuid(object fieldValue)
         {
             if (fieldValue != null)
-                return ((EntityReference) fieldValue).Id;
+                return ((EntityReference)fieldValue).Id;
             else
                 return null;
         }
@@ -135,7 +135,7 @@ namespace JosephM.Xrm
         /// <summary>
         ///     null if fieldValue is null
         /// </summary>
-        public static Guid GetGuidField(this Entity entity,string fieldName)
+        public static Guid GetGuidField(this Entity entity, string fieldName)
         {
             var fieldValue = GetField(entity, fieldName);
             if (fieldValue != null)
@@ -147,7 +147,7 @@ namespace JosephM.Xrm
         public static string GetLookupName(object fieldValue)
         {
             if (fieldValue != null)
-                return ((EntityReference) fieldValue).Name;
+                return ((EntityReference)fieldValue).Name;
             else
                 return "";
         }
@@ -166,7 +166,7 @@ namespace JosephM.Xrm
         public static string GetLookupType(object fieldValue)
         {
             if (fieldValue != null)
-                return ((EntityReference) fieldValue).LogicalName;
+                return ((EntityReference)fieldValue).LogicalName;
             else
                 return "";
         }
@@ -185,7 +185,7 @@ namespace JosephM.Xrm
         public static decimal GetDecimalValue(object fieldValue)
         {
             if (fieldValue != null)
-                return (Decimal) fieldValue;
+                return (Decimal)fieldValue;
             else
                 return new Decimal(0);
         }
@@ -223,7 +223,7 @@ namespace JosephM.Xrm
         public static decimal GetMoneyValue(object fieldValue)
         {
             if (fieldValue != null)
-                return ((Money) fieldValue).Value;
+                return ((Money)fieldValue).Value;
             else
                 return new Decimal(0);
         }
@@ -242,7 +242,7 @@ namespace JosephM.Xrm
         public static int GetInt(object fieldValue)
         {
             if (fieldValue != null)
-                return ((int) fieldValue);
+                return ((int)fieldValue);
             else
                 return 0;
         }
@@ -331,15 +331,15 @@ namespace JosephM.Xrm
             else if (field1 == null || field2 == null)
             {
                 if (field1 is string || field2 is string)
-                    return String.IsNullOrEmpty((string) field1) && String.IsNullOrEmpty((string) field2);
+                    return String.IsNullOrEmpty((string)field1) && String.IsNullOrEmpty((string)field2);
                 else
                     return false;
             }
             else if (field1 is EntityReference && field2 is EntityReference)
-                return (((EntityReference) field1).Id).Equals(((EntityReference) field2).Id) &&
-                       (((EntityReference) field1).LogicalName).Equals(((EntityReference) field2).LogicalName);
+                return (((EntityReference)field1).Id).Equals(((EntityReference)field2).Id) &&
+                       (((EntityReference)field1).LogicalName).Equals(((EntityReference)field2).LogicalName);
             else if (field1 is DateTime && field2 is DateTime)
-                return ((DateTime) field1).Equals((DateTime) field2);
+                return ((DateTime)field1).Equals((DateTime)field2);
             else if (field1 is OptionSetValue)
             {
                 if (field2 is OptionSetValue)
@@ -352,24 +352,24 @@ namespace JosephM.Xrm
             else if (field1 is int)
             {
                 if (field2 is int)
-                    return ((int) field1).Equals(((int) field2));
+                    return ((int)field1).Equals(((int)field2));
                 else if (field2 is OptionSetValue)
-                    return ((int) field1).Equals(GetOptionSetValue(field2));
+                    return ((int)field1).Equals(GetOptionSetValue(field2));
                 else
                     throw new InvalidPluginExecutionException("Mismatched Types");
             }
             else if (field1 is bool && field2 is bool)
-                return ((bool) field1).Equals(((bool) field2));
+                return ((bool)field1).Equals(((bool)field2));
             else if (field1 is Guid && field2 is Guid)
-                return ((Guid) field1).Equals(((Guid) field2));
+                return ((Guid)field1).Equals(((Guid)field2));
             else if (field1 is Double && field2 is Double)
-                return ((Double) field1).Equals(((Double) field2));
+                return ((Double)field1).Equals(((Double)field2));
             else if (field1 is string && field2 is string)
-                return ((string) field1).Equals(((string) field2));
+                return ((string)field1).Equals(((string)field2));
             else if (field1 is Money && field2 is Money)
                 return (field1).Equals((field2));
             else if (field1 is Decimal && field2 is Decimal)
-                return ((Decimal) field1).Equals(((Decimal) field2));
+                return ((Decimal)field1).Equals(((Decimal)field2));
             else
                 throw new InvalidPluginExecutionException(
                     string.Concat("FieldsEqualCrmTarget type not implemented for types ", field1.GetType(), " and ",
@@ -408,9 +408,9 @@ namespace JosephM.Xrm
                 if (item != null)
                 {
                     if (result != null)
-                        result = Decimal.Add((Decimal) item, (Decimal) result);
+                        result = Decimal.Add((Decimal)item, (Decimal)result);
                     else
-                        result = (Decimal) item;
+                        result = (Decimal)item;
                 }
             }
             return result;
@@ -427,11 +427,11 @@ namespace JosephM.Xrm
                 {
                     //need to add the the result we are carrying based on the type
                     if (fieldValue is Decimal)
-                        result = Decimal.Add((Decimal) result, (Decimal) fieldValue);
+                        result = Decimal.Add((Decimal)result, (Decimal)fieldValue);
                     else if (fieldValue is Double)
-                        result = (Double) result + (Double) fieldValue;
+                        result = (Double)result + (Double)fieldValue;
                     else if (fieldValue is Money)
-                        result = new Money(((Money) result).Value + ((Money) fieldValue).Value);
+                        result = new Money(((Money)result).Value + ((Money)fieldValue).Value);
                     else
                         throw new InvalidPluginExecutionException("SumField function not implemented for field type " +
                                                                   result.GetType());
@@ -457,11 +457,11 @@ namespace JosephM.Xrm
                     {
                         //need to add the the result we are carrying based on the type
                         if (temp is Decimal)
-                            result = Decimal.Add((Decimal) result, (Decimal) temp);
+                            result = Decimal.Add((Decimal)result, (Decimal)temp);
                         else if (temp is Double)
-                            result = (Double) result + (Double) temp;
+                            result = (Double)result + (Double)temp;
                         else if (temp is Money)
-                            result = new Money(((Money) result).Value + ((Money) temp).Value);
+                            result = new Money(((Money)result).Value + ((Money)temp).Value);
                         else
                             throw new InvalidPluginExecutionException(
                                 "SumField function not implemented for field type " + result.GetType());
@@ -587,12 +587,12 @@ namespace JosephM.Xrm
 
         public static DateTime? GetDateTimeField(this Entity updatedEntity, string fieldName)
         {
-            return (DateTime?) GetField(updatedEntity, fieldName);
+            return (DateTime?)GetField(updatedEntity, fieldName);
         }
 
         public static Entity New(string entityType, Guid id)
         {
-            return new Entity(entityType) {Id = id};
+            return new Entity(entityType) { Id = id };
         }
 
         public static object CreateMoney(decimal value)
@@ -612,10 +612,10 @@ namespace JosephM.Xrm
         {
             var fieldValue = entity.GetField(fieldName);
             if (fieldValue == null)
-                return new Entity[] {};
+                return new Entity[] { };
             else
             {
-                return ((EntityCollection) fieldValue).Entities;
+                return ((EntityCollection)fieldValue).Entities;
             }
         }
 

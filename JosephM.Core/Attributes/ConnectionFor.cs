@@ -13,10 +13,17 @@ namespace JosephM.Core.Attributes
         AllowMultiple = true)]
     public class ConnectionFor : Attribute
     {
+        public Type ServiceType { get; private set; }
         public string Property { get; private set; }
 
         public ConnectionFor(string property)
         {
+            Property = property;
+        }
+
+        public ConnectionFor(string property, Type serviceType)
+        {
+            ServiceType = serviceType;
             Property = property;
         }
     }

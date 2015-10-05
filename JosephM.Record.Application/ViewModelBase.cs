@@ -2,13 +2,11 @@
 
 using System;
 using System.ComponentModel;
-using JosephM.Record.Application.Constants;
-using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.Navigation;
+using JosephM.Application.Application;
 
 #endregion
 
-namespace JosephM.Record.Application
+namespace JosephM.Application.ViewModel
 {
     /// <summary>
     ///     Base Class For All View Models Active In The Application With Access To The Application Controller Object And
@@ -20,6 +18,9 @@ namespace JosephM.Record.Application
         {
             ApplicationController = controller;
         }
+
+        public int StandardPageSize { get { return 20; } }
+
 
         public IApplicationController ApplicationController { get; set; }
 
@@ -43,14 +44,7 @@ namespace JosephM.Record.Application
 
         public void NavigateTo<T>(UriQuery uriQuery)
         {
-            var prismQuery = new Microsoft.Practices.Prism.UriQuery();
-            if (uriQuery != null)
-            {
-                foreach (var arg in uriQuery.Arguments)
-                    prismQuery.Add(arg.Key, arg.Value);
-            }
-            var uri = new Uri(typeof(T).FullName + prismQuery, UriKind.Relative);
-            ApplicationController.RequestNavigate(RegionNames.MainTabRegion, uri);
+            ApplicationController.RequestNavigate(RegionNames.MainTabRegion, typeof(T), uriQuery);
         }
     }
 }

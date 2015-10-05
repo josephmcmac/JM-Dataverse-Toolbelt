@@ -10,6 +10,11 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
+using JosephM.Record.Extentions;
+using JosephM.Core.AppConfig;
+using JosephM.Core.Service;
+using JosephM.Record.Attributes;
+using JosephM.Record.Query;
 
 #endregion
 
@@ -20,20 +25,21 @@ namespace JosephM.Record.Service
     /// </summary>
     public class ObjectRecordService : RecordServiceBase
     {
-        public ObjectRecordService(object objectToEnter)
-            : this(objectToEnter, null, null)
+        public ObjectRecordService(object objectToEnter, IResolveObject objectResolver)
+            : this(objectToEnter, null, null, objectResolver)
         {
         }
 
         public ObjectRecordService(object objectToEnter, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionSetLimitedValues)
-            : this(objectToEnter, lookupService, optionSetLimitedValues, null, null)
+            IDictionary<string, IEnumerable<string>> optionSetLimitedValues, IResolveObject objectResolver)
+            : this(objectToEnter, lookupService, optionSetLimitedValues, null, null, objectResolver)
         {
         }
 
         public ObjectRecordService(object objectToEnter, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionSetLimitedValues, ObjectRecordService parentService, string parentServiceReference)
+            IDictionary<string, IEnumerable<string>> optionSetLimitedValues, ObjectRecordService parentService, string parentServiceReference, IResolveObject objectResolver)
         {
+            ObjectResolver = objectResolver;
             ParentServiceReference = parentServiceReference;
             ParentService = parentService;
             ObjectToEnter = objectToEnter;
@@ -76,6 +82,8 @@ namespace JosephM.Record.Service
 
         public object ObjectToEnter { get; set; }
 
+        private IResolveObject ObjectResolver { get; set; }
+
         private readonly Dictionary<string, IEnumerable<FieldMetadata>> _fieldMetadata =
             new Dictionary<string, IEnumerable<FieldMetadata>>();
 
@@ -88,16 +96,6 @@ namespace JosephM.Record.Service
             get { return _fieldMetadata; }
         }
 
-        public override IRecord GetFirst(string entityType, string fieldName, object fieldValue)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update(IRecord record)
-        {
-            throw new NotImplementedException();
-        }
-
         public override IRecord NewRecord(string recordType)
         {
             //need to get the class constructor and instantiate
@@ -106,6 +104,11 @@ namespace JosephM.Record.Service
                 throw new NullReferenceException(
                     string.Format("Type {0} Does Not Have A Parameterless Constructor To Create The Object", recordType));
             return new ObjectRecord(type.CreateFromParameterlessConstructor());
+        }
+
+        public override IRecord Get(string recordType, string id)
+        {
+            throw new NotImplementedException();
         }
 
         public Type GetClassType(string recordType)
@@ -118,7 +121,7 @@ namespace JosephM.Record.Service
                 var fieldMetadata = GetFieldMetadata(ObjectType.Name);
                 foreach (var metadata in fieldMetadata.Where(m => m.FieldType == RecordFieldType.Enumerable))
                 {
-                    if (((EnumerableFieldMetadata) metadata).EnumeratedType == recordType)
+                    if (((EnumerableFieldMetadata)metadata).EnumeratedType == recordType)
                     {
                         var propertyName = metadata.SchemaName;
                         type = ObjectType.GetProperty(propertyName).PropertyType.GetGenericArguments()[0];
@@ -130,12 +133,30 @@ namespace JosephM.Record.Service
                 throw new NullReferenceException(string.Format("Could Not Resolve Class Of Type {0}", recordType));
             return type;
         }
-        
 
 
-        public override string Create(IRecord record)
+
+        public override string Create(IRecord record, IEnumerable<string> fields)
         {
             throw new NotImplementedException();
+        }
+
+        public override void Delete(string recordType, string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<IRecord> GetFirstX(string type, int x, IEnumerable<string> fields, IEnumerable<Condition> conditions, IEnumerable<SortExpression> sort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IsValidResponse VerifyConnection()
+        {
+            var response = new IsValidResponse();
+            if(ObjectToEnter == null)
+                response.AddInvalidReason("The object to enter is null");
+            return response;
         }
 
         public override IEnumerable<IRecord> GetLinkedRecords(string linkedEntityType, string entityTypeFrom,
@@ -144,7 +165,7 @@ namespace JosephM.Record.Service
             var propertyValue = ObjectToEnter.GetPropertyValue(linkedEntityLookup);
             if (propertyValue == null)
                 return new IRecord[0];
-            var enumerable = ((IEnumerable) propertyValue);
+            var enumerable = ((IEnumerable)propertyValue);
             var objectList = new List<ObjectRecord>();
             foreach (var item in enumerable)
             {
@@ -153,7 +174,7 @@ namespace JosephM.Record.Service
             return objectList;
         }
 
-        public IEnumerable<FieldMetadata> GetFieldMetadata(string recordType)
+        public override IEnumerable<IFieldMetadata> GetFieldMetadata(string recordType)
         {
             if (FieldMetadata.ContainsKey(recordType))
                 return FieldMetadata[recordType];
@@ -161,33 +182,20 @@ namespace JosephM.Record.Service
                 "No Field Metadata Has Been Created For Type " + recordType);
         }
 
-        public override FieldMetadata GetFieldMetadata(string field, string recordType)
-        {
-            var fieldMetadata = GetFieldMetadata(recordType);
-            if (fieldMetadata.Any(f => f.SchemaName == field))
-                return GetFieldMetadata(recordType).First(fm => fm.SchemaName == field);
-            throw new ArgumentOutOfRangeException("field",
-                string.Format("{0} Field Metadata Does Not Contain Field With Name {1}", recordType, field));
-        }
-
         public override void Update(IRecord record, IEnumerable<string> changedPersistentFields)
         {
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<IRecord> RetrieveMultiple(string recordType, string searchString, int count)
+        public override IRecordTypeMetadata GetRecordTypeMetadata(string recordType)
         {
-            throw new NotImplementedException();
-        }
-
-        public override string GetPrimaryField(string recordType)
-        {
-            return "ToString";
-        }
-
-        public override IEnumerable<string> GetFields(string recordType)
-        {
-            return GetFieldMetadata(recordType).Select(rm => rm.SchemaName);
+            var type = GetClassType(recordType);
+            return new ObjectRecordMetadata()
+            {
+                SchemaName = recordType,
+                DisplayName = type.GetDisplayName(),
+                CollectionName = type.GetDisplayName() + "s"
+            };
         }
 
         public bool HasSetAccess(string fieldName, string recordType)
@@ -219,12 +227,6 @@ namespace JosephM.Record.Service
             return type;
         }
 
-        public override IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType)
-        {
-            return GetPicklistKeyValues(fieldName, recordType, null, null);
-        }
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -236,46 +238,64 @@ namespace JosephM.Record.Service
         {
             //if the property is type RecordType
             //then get the record types from the lookup service
-            var fieldType = GetFieldType(fieldName, recordType);
+            var fieldType = this.GetFieldType(fieldName, recordType);
             switch (fieldType)
             {
                 case RecordFieldType.RecordType:
-                {
-                    var lookupService = GetLookupService(fieldName, recordType, dependantValue, record);
-
-                    if (OptionSetLimitedValues != null
-                        && OptionSetLimitedValues.ContainsKey(fieldName)
-                        && OptionSetLimitedValues[fieldName].Any())
-                        return OptionSetLimitedValues[fieldName]
-                            .Select(at => new RecordType(at, GetOptionLabel(at, fieldName, recordType)))
-                            .OrderBy(rt => rt.Value)
-                            .ToArray();
-                    else
                     {
-                        return lookupService
-                            .GetAllRecordTypes()
-                            .Select(r => new RecordType(r, lookupService.GetDisplayName(r)))
+                        var lookupService = GetLookupService(fieldName, recordType, dependantValue, record);
+
+                        if (OptionSetLimitedValues != null
+                            && OptionSetLimitedValues.ContainsKey(fieldName)
+                            && OptionSetLimitedValues[fieldName].Any())
+                            return OptionSetLimitedValues[fieldName]
+                                .Select(at => new RecordType(at, LookupService.GetRecordTypeMetadata(at).DisplayName))
+                                .OrderBy(rt => rt.Value)
+                                .ToArray();
+                        else
+                        {
+                            return lookupService == null
+                                ? new RecordType[0]
+                                : lookupService.GetAllRecordTypes()
+                                .Select(r => new RecordType(r, lookupService.GetRecordTypeMetadata(r).DisplayName))
+                                .ToArray();
+                        }
+                    }
+                case RecordFieldType.RecordField:
+                    {
+                        if (dependantValue == null)
+                            return new RecordField[0];
+                        var type = dependantValue;
+                        string parentReference = null;
+                        if (dependantValue != null && dependantValue.Contains(':'))
+                        {
+                            type = ((string)dependantValue).Split(':').ElementAt(0);
+                            parentReference = ((string)dependantValue).Split(':').ElementAt(1);
+                        }
+                        var lookupService = GetLookupService(fieldName, recordType, parentReference, record);
+
+                        return type.IsNullOrWhiteSpace()
+                        ? new RecordField[0]
+                        : lookupService
+                            .GetFields(type)
+                            .Select(f => new RecordField(f, lookupService.GetFieldMetadata(f, type).DisplayName))
+                            .Where(f => !f.Value.IsNullOrWhiteSpace())
+                            .OrderBy(f => f.Value)
                             .ToArray();
                     }
-                }
-                case RecordFieldType.RecordField:
-                {
-                    if (dependantValue == null)
-                        return new RecordField[0];
-                    var lookupService = GetLookupService(fieldName, recordType, dependantValue, record);
-                    return lookupService
-                        .GetFields(dependantValue)
-                        .Select(f => new RecordField(f, lookupService.GetFieldLabel(f, dependantValue)))
-                        .Where(f => !f.Value.IsNullOrWhiteSpace())
-                        .OrderBy(f => f.Value)
-                        .ToArray();
-                }
                 case RecordFieldType.Picklist:
                 {
                     var type = GetPropertyType(fieldName, recordType);
-                    var options = new List<PicklistOption>();
-                    foreach (Enum item in type.GetEnumValues())
-                        options.Add(new PicklistOption(item.ToString(), item.GetDisplayString()));
+                    var options = PicklistOption.GenerateEnumOptions(type);
+                    var propertyInfo = GetPropertyInfo(fieldName, recordType);
+                    var limitAttribute = propertyInfo.GetCustomAttribute<LimitPicklist>();
+                    if (limitAttribute != null)
+                        options =
+                            options.Where(
+                                o =>
+                                    limitAttribute.ToInclude.Select(kv => Convert.ToInt32(kv).ToString())
+                                        .Contains(o.Key))
+                                        .ToArray();
                     return options;
                 }
             }
@@ -286,10 +306,9 @@ namespace JosephM.Record.Service
 
         private object _lockObject = new object();
         private Dictionary<object, IRecordService> _serviceConnections = new Dictionary<object, IRecordService>();
-        
+
         public override IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)
         {
-            //okay this is particularly confusing
             //needed to implement several inspections to get service connections for other properties with ConnectionFor attributes
 
             //may be object in a grid where have to check other properties for object in that row
@@ -300,11 +319,15 @@ namespace JosephM.Record.Service
             IRecordService lookupService = null;
             if (record != null)
             {
-                lookupService = GetLookupServiceForConnectionFor(fieldName, ((ObjectRecord) record).Instance);
+                lookupService = GetLookupServiceForConnectionFor(fieldName, ((ObjectRecord)record).Instance);
                 if (lookupService != null)
                     return lookupService;
             }
+            //try all valid combinations of reference and field name
             lookupService = GetLookupServiceForConnectionFor(reference, ObjectToEnter);
+            if (lookupService != null)
+                return lookupService;
+            lookupService = GetLookupServiceForConnectionFor(reference + "." + fieldName, ObjectToEnter);
             if (lookupService != null)
                 return lookupService;
             lookupService = GetLookupServiceForConnectionFor(fieldName, ObjectToEnter);
@@ -312,7 +335,7 @@ namespace JosephM.Record.Service
                 return lookupService;
             if (ParentService != null)
             {
-                return ParentService.GetLookupService(ParentServiceReference, ObjectType.Name, ParentServiceReference, new ObjectRecord(ObjectToEnter));
+                return ParentService.GetLookupService(reference + "." + fieldName, ObjectType.Name, ParentServiceReference, new ObjectRecord(ObjectToEnter));
             }
             return LookupService;
         }
@@ -322,9 +345,9 @@ namespace JosephM.Record.Service
             var props = GetPropertyInfos(objectToEnter.GetType().Name);
             foreach (var prop in props)
             {
-                var connectionFor = prop.GetCustomAttributes<ConnectionFor>()
+                var connectionsFor = prop.GetCustomAttributes<ConnectionFor>(true)
                     .Where(c => c.Property == fieldName);
-                if (connectionFor.Any())
+                if (connectionsFor.Any())
                 {
                     var value = objectToEnter.GetPropertyValue(prop.Name);
                     lock (_lockObject)
@@ -333,22 +356,37 @@ namespace JosephM.Record.Service
                         {
                             if (_serviceConnections.ContainsKey(value))
                                 return _serviceConnections[value];
+
+                            var connectionFor = connectionsFor.First();
+                            if (connectionFor is LookupConnectionFor)
+                            {
+                                if (!(value is Lookup))
+                                    throw new Exception(string.Format("Value is required to be of type {0} for {1} attribute. Actual type is {2}. The property name is"
+                                        , typeof(Lookup).Name, value.GetType().Name, prop.Name));
+                                var lookup = (Lookup) value;
+                                var lookupLookupService = GetLookupService(prop.Name, objectToEnter.GetType().Name, null,
+                                    null);
+                                var lookupConnectionFor = (LookupConnectionFor)connectionFor;
+                                var parsedService = TypeLoader.LoadService(lookup, lookupLookupService, lookupConnectionFor, ObjectResolver);
+                                _serviceConnections.Add(value, parsedService);
+                                return parsedService;
+                            }
+                            
+                            var serviceType = connectionFor.ServiceType;
                             var connectionFieldType = value.GetType();
-                            var serviceConnectionAttr = connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
-                            if (serviceConnectionAttr == null)
-                                throw new NullReferenceException(
-                                    string.Format(
-                                        "The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
-                                        prop.Name, typeof(ConnectionFor).Name, connectionFieldType.Name,
-                                        typeof(ServiceConnection).Name, typeof(IRecordService).Name));
-                            if (!serviceConnectionAttr.ServiceType.HasConstructorFor(connectionFieldType))
-                                throw new NullReferenceException(
-                                    string.Format(
-                                        "The Property {0} Is Specified With A {1} Attribute However The Type {2} Referenced By The {3} Types {4} Attribute Does Not Have A Constructor For Type {3}",
-                                        prop.Name, typeof(ConnectionFor).Name, serviceConnectionAttr.ServiceType.Name,
-                                        connectionFieldType.Name, typeof(ServiceConnection).Name));
-                            var service =
-                                (IRecordService)serviceConnectionAttr.ServiceType.CreateFromConstructorFor(value);
+                            if (serviceType == null)
+                            {
+                                var serviceConnectionAttr =
+                                    connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
+                                if (serviceConnectionAttr == null)
+                                    throw new NullReferenceException(
+                                        string.Format(
+                                            "The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
+                                            prop.Name, typeof (ConnectionFor).Name, connectionFieldType.Name,
+                                            typeof (ServiceConnection).Name, typeof (IRecordService).Name));
+                                serviceType = serviceConnectionAttr.ServiceType;
+                            }
+                            var service = TypeLoader.LoadServiceForConnection(value, serviceType);
                             _serviceConnections.Add(value, service);
                             return service;
                         }
@@ -358,51 +396,34 @@ namespace JosephM.Record.Service
             return null;
         }
 
-        public override ParseFieldResponse ParseFieldRequest(ParseFieldRequest parseFieldRequest)
+        public override object ParseField(string fieldName, string recordType, object value)
         {
-            var fieldType = GetFieldType(parseFieldRequest.FieldName, parseFieldRequest.RecordType);
+            var fieldType = this.GetFieldType(fieldName, recordType);
             if (fieldType == RecordFieldType.Picklist)
             {
-                var parsedValue = parseFieldRequest.Value;
-                if (parseFieldRequest.Value is PicklistOption)
-                    parsedValue =
+                if (value is PicklistOption)
+                    value =
                         Enum.Parse(
-                            GetPropertyType(parseFieldRequest.FieldName, parseFieldRequest.RecordType),
-                            ((PicklistOption) parseFieldRequest.Value).Key);
-                return new ParseFieldResponse(parsedValue);
+                            GetPropertyType(fieldName, recordType),
+                            ((PicklistOption)value).Key);
+                return value;
             }
-            if (fieldType == RecordFieldType.Integer && parseFieldRequest.Value is string)
+            if (fieldType == RecordFieldType.Integer && value is string)
             {
-                if (((string) parseFieldRequest.Value).IsNullOrWhiteSpace())
+                if (((string)value).IsNullOrWhiteSpace())
                     return
-                        new ParseFieldResponse(IsNotNullable(parseFieldRequest.FieldName, parseFieldRequest.RecordType)
+                        this.GetFieldMetadata(fieldName, recordType).IsNonNullable
                             ? 0
-                            : (int?) null);
+                            : (int?)null;
                 else
-                    return new ParseFieldResponse(int.Parse((string) parseFieldRequest.Value));
+                    return int.Parse((string)value);
             }
-            return base.ParseFieldRequest(parseFieldRequest);
-        }
-
-        public override string GetOptionLabel(string optionKey, string field, string recordType)
-        {
-            //if the property is type RecordType
-            //then get the record types from the lookup service
-            if (ObjectType.GetProperty(field).PropertyType == typeof (RecordType))
-            {
-                return LookupService.GetDisplayName(optionKey);
-            }
-            return base.GetOptionLabel(optionKey, field, recordType);
+            return base.ParseField(fieldName, recordType, value);
         }
 
         public IEnumerable<PropertyValidator> GetValidatorAttributes(string fieldName, string recordType)
         {
             return GetClassType(recordType).GetValidatorAttributes(fieldName);
-        }
-
-        public override bool IsWritable(string fieldName, string recordType)
-        {
-            return GetPropertyInfo(fieldName, recordType).GetSetMethod() != null;
         }
 
         public override IEnumerable<ViewMetadata> GetViews(string recordType)
@@ -412,7 +433,8 @@ namespace JosephM.Record.Service
             var type = GetClassType(recordType);
             foreach (var propertyInfo in type.GetProperties())
             {
-                if (propertyInfo.CanRead)
+                var hiddenAttribute = propertyInfo.GetCustomAttribute<HiddenAttribute>();
+                if (propertyInfo.CanRead && hiddenAttribute == null)
                 {
                     //these initial values repeated
                     var viewField = new ViewField(propertyInfo.Name, int.MaxValue, 200);
@@ -425,21 +447,7 @@ namespace JosephM.Record.Service
                     viewFields.Add(viewField);
                 }
             }
-            return new [] { new ViewMetadata(viewFields) { ViewType = ViewType.LookupView} };
-        }
-
-        public override bool IsNotNullable(string fieldName, string recordType)
-        {
-            var propertyInfo = GetPropertyInfo(fieldName, recordType);
-            var type = propertyInfo.PropertyType;
-            if (type == typeof (int))
-                return true;
-            return false;
-        }
-
-        public override bool IsMultiline(string field, string recordType)
-        {
-            return GetPropertyInfo(field, recordType).GetCustomAttribute<Multiline>() != null;
+            return new[] { new ViewMetadata(viewFields) { ViewType = ViewType.LookupView } };
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿#region
 
 using System.Collections.ObjectModel;
-using JosephM.Record.Application.Constants;
-using JosephM.Record.Application.Controller;
+using JosephM.Application.Application;
 
 #endregion
 
-namespace JosephM.Record.Application.Dialog
+namespace JosephM.Application.ViewModel.Dialog
 {
     /// <summary>
     ///  Interfaces Between The Dialogs And The UI And Application Controller
@@ -28,6 +27,8 @@ namespace JosephM.Record.Application.Dialog
         public void Close()
         {
             ApplicationController.Remove(RegionNames.MainTabRegion, MainDialog);
+            if (MainDialog.OverideCompletionScreenMethod != null)
+                MainDialog.OverideCompletionScreenMethod();
         }
 
         public virtual void ShowCompletionScreen(DialogViewModel dialog)

@@ -2,20 +2,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.Shared;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
+using System.Linq;
+using JosephM.Core.AppConfig;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     //okay so i need to somehow get this type for a settings lookup
     //and have it load the grid objects from the settings
@@ -33,11 +32,17 @@ namespace JosephM.Record.Application.RecordEntry.Field
             //okay i need to identify that this is getting the lookups from the settings
             var settingsAttribute = GetSettingLookupAttribute();
             if (settingsAttribute == null)
-                throw new NotImplementedException(string.Format("The {0} Type Has Only Been Implemented For Object Properties With {1} Attribute. You Will Need To Review Instantiating a Different Type Of View Model For The {2} Type Of You Property {3} Or Extending It For Your Needs", typeof(ObjectFieldViewModel).Name, typeof(SettingsLookup).Name, RecordTypeToLookup, FieldName));
+            {
+                //throw new NotImplementedException(
+                //    string.Format(
+                //        "The {0} Type Has Only Been Implemented For Object Properties With {1} Attribute. You Will Need To Review Instantiating a Different Type Of View Model For The {2} Type Of You Property {3} Or Extending It For Your Needs",
+                //        typeof(ObjectFieldViewModel).Name, typeof(SettingsLookup).Name, RecordTypeToLookup, FieldName));
+            }
+            else
             {
                 var settingsObject = ApplicationController.ResolveType(settingsAttribute.SettingsType);
                 XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
-                _lookupService = new ObjectRecordService(settingsObject);
+                _lookupService = new ObjectRecordService(settingsObject, ApplicationController);
                 LoadLookupGrid();
             }
         }

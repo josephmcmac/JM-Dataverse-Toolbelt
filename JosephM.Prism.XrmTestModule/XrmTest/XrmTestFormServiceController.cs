@@ -1,5 +1,5 @@
-﻿using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.RecordEntry;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.Prism.XrmTestModule.XrmTest

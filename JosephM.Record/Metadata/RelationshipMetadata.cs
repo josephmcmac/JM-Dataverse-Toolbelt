@@ -1,10 +1,19 @@
 ﻿namespace JosephM.Record.Metadata
 {
-    public class RelationshipMetadata
+    public class Many2ManyRelationshipMetadata : IMany2ManyRelationshipMetadata
     {
+        public Many2ManyRelationshipMetadata()
+        {
+            RecordType1DisplayRelated = true;
+            RecordType2DisplayRelated = true;
+        }
+
+        public string IntersectEntityName { get; set; }
         public string SchemaName { get; set; }
 
+        public string Entity1IntersectAttribute { get; set; }
         public string RecordType1 { get; set; }
+        public string Entity2IntersectAttribute { get; set; }
 
         public string RecordType2 { get; set; }
 
@@ -23,5 +32,7 @@
         public int RecordType1DisplayOrder { get; set; }
 
         public int RecordType2DisplayOrder { get; set; }
+
+        public bool IsCustomRelationship { get; set; }
     }
 }

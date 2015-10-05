@@ -1,19 +1,11 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.Shared;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.IService;
-using JosephM.Record.Query;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public interface IReferenceFieldViewModel
     {
@@ -28,5 +20,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
         void SelectLookupGrid();
 
         bool Searching { get; }
+
+        string EnteredText { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 {
     public enum FilterOperator
     {
-        And
+        And,
+        Or
     }
 }

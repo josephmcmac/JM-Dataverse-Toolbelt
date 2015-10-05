@@ -3,15 +3,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Utility;
-using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.Shared;
 
 #endregion
 
-namespace JosephM.Record.Application.Grid
+namespace JosephM.Application.ViewModel.Grid
 {
     /// <summary>
     ///     For Displaying A Set Of CLR Objects In A DataGrid With The Standard .NET Runtime Auto-generated ColumnsStandard

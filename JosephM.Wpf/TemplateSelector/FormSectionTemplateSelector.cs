@@ -3,7 +3,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using JosephM.Record.Application.RecordEntry.Section;
+using JosephM.Application.ViewModel.RecordEntry.Section;
 
 #endregion
 

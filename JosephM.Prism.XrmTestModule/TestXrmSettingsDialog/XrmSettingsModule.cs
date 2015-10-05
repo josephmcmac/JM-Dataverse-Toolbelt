@@ -1,4 +1,5 @@
-﻿using JosephM.Prism.Infrastructure.Constants;
+﻿using JosephM.Application.Modules;
+using JosephM.Prism.Infrastructure.Constants;
 using JosephM.Prism.Infrastructure.Module;
 
 namespace JosephM.Prism.XrmTestModule.TestXrmSettingsDialog
@@ -12,7 +13,7 @@ namespace JosephM.Prism.XrmTestModule.TestXrmSettingsDialog
 
         public override void InitialiseModule()
         {
-            ApplicationOptions.AddOption("Save Xrm Test Connection", MenuNames.Crm, DialogCommand);
+            AddOption("Save Xrm Test Connection", DialogCommand);
         }
 
         private void DialogCommand()

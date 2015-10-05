@@ -3,19 +3,26 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using JosephM.Application.ViewModel.Extentions;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Extentions;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
-using JosephM.Record.Application.Shared;
-using JosephM.Record.Application.Validation;
+using JosephM.Core.Utility;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using JosephM.Record.Query;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Section
+namespace JosephM.Application.ViewModel.RecordEntry.Section
 {
-    public class GridSectionViewModel : SectionViewModelBase, IDynamicGridViewModel, IValidatable
+    public class GridSectionViewModel : SectionViewModelBase, IValidatable
     {
         private ObservableCollection<GridRowViewModel> _records;
 
@@ -23,17 +30,31 @@ namespace JosephM.Record.Application.RecordEntry.Section
             RecordEntryFormViewModel recordForm)
             : base(subGridSection, recordForm)
         {
-            AddRowButton = new XrmButtonViewModel("Add", AddRow, ApplicationController);
-            DynamicGridViewModelItems = new DynamicGridViewModelItems()
+            DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
             {
-                CanDelete = true,
-                CanEdit = true,
-                DeleteRow = RemoveRow,
-                EditRow = EditRow
+                RecordFields = SubGridSection.Fields,
+                PageSize = recordForm.GridPageSize,
+                DeleteRow = recordForm.IsReadOnly ? (Action<GridRowViewModel>)null : RemoveRow,
+                EditRow = EditRow,
+                AddRow = recordForm.IsReadOnly ? (Action)null : AddRow,
+                IsReadOnly = recordForm.IsReadOnly,
+                ParentForm = recordForm,
+                ReferenceName = ReferenceName,
+                RecordType = subGridSection.LinkedRecordType,
+                RecordService = RecordService,
+                GetGridRecords = GetGridRecords,
+                LoadRecordsAsync = true,
+                FormController = RecordForm.FormController,
+                LoadedCallback = () =>
+                {
+                    IsLoaded = true;
+                    RecordForm.OnSectionLoaded();
+                }
             };
+            var customFunctions = FormService.GetCustomFunctionsFor(ReferenceName, GetRecordForm()).ToList();
+            customFunctions.Add(new CustomGridFunction("Download CSV", DownloadCsv));
+            DynamicGridViewModel.LoadGridButtons(customFunctions);
         }
-
-        public XrmButtonViewModel AddRowButton { get; set; }
 
         public void AddRow()
         {
@@ -59,7 +80,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
 
         private void RemoveRow(GridRowViewModel row)
         {
-            GridRecords.Remove(row);
+            DynamicGridViewModel.GridRecords.Remove(row);
         }
 
         private void EditRow(GridRowViewModel row)
@@ -85,9 +106,13 @@ namespace JosephM.Record.Application.RecordEntry.Section
             var viewModel = FormService.GetEditRowViewModel(SectionIdentifier, RecordForm, (record) =>
             {
                 RecordForm.ClearChildForm();
-                var index = GridRecords.IndexOf(row);
-                GridRecords.Remove(row);
-                InsertRecord(record, index);
+                var index = DynamicGridViewModel.GridRecords.IndexOf(row);
+                DoOnMainThread(() =>
+                {
+                    DynamicGridViewModel.GridRecords.Remove(row);
+                    //todo this wouldn't match in test script couldn't figure out why
+                    InsertRecord(record, index == -1 ? 0 : index);
+                });
             }, () => RecordForm.ClearChildForm(), row);
             return viewModel;
         }
@@ -102,77 +127,29 @@ namespace JosephM.Record.Application.RecordEntry.Section
             get { return SubGridSection.LinkedRecordLookup; }
         }
 
-        public ObservableCollection<GridRowViewModel> GridRecords
-        {
-            get
-            {
-                if (_records == null)
-                {
-                    LoadRowsAsync();
-                }
-                return _records;
-            }
-            set
-            {
-                _records = value;
-                OnPropertyChanged("GridRecords");
-            }
-        }
-
         public IEnumerable<GridFieldMetadata> RecordFields
         {
             get { return SubGridSection.Fields; }
         }
 
-        public GridRowViewModel SelectedRow { get; set; }
-
-        public void DoWhileLoading(string message, Action action)
+        public GetGridRecordsResponse GetGridRecords(bool ignorePages)
         {
-            RecordForm.DoWhileLoading(message, action);
-        }
-
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
-
-        public void LoadRowsAsync()
-        {
-            var records = RecordService.GetLinkedRecords(
-                SubGridSection.LinkedRecordType,
-                RecordForm.RecordType,
-                SubGridSection.LinkedRecordLookup,
-                RecordForm.RecordId);
-            DoOnMainThread(() => LoadRows(records));
-        }
-
-        private void LoadRows(IEnumerable<IRecord> records)
-        {
-            GridRecords = new ObservableCollection<GridRowViewModel>();
-            foreach (var record in records)
+            if (DynamicGridViewModel.HasPaging && !ignorePages)
             {
-                AddRecord(record);
+                var conditions = new[]
+                {new Record.Query.Condition(SubGridSection.LinkedRecordLookup, ConditionType.Equal, RecordForm.RecordId)};
+                return DynamicGridViewModel.GetGridRecordPage(conditions, null);
             }
+            else
+                return new GetGridRecordsResponse(RecordService.GetLinkedRecords(SubGridSection.LinkedRecordType, RecordForm.RecordType,
+                    SubGridSection.LinkedRecordLookup, RecordForm.RecordId));
         }
 
         private void InsertRecord(IRecord record, int index)
         {
-            //DoOnMainThread(() =>
-            //{
-                var rowItem = new GridRowViewModel(record, this);
-                GridRecords.Insert(index, rowItem);
+            var rowItem = new GridRowViewModel(record, DynamicGridViewModel);
+            DynamicGridViewModel.GridRecords.Insert(index, rowItem);
             rowItem.OnLoad();
-            //});
-        }
-
-        private void AddRecord(IRecord record)
-        {
-           // DoOnMainThread(() =>
-            //{
-                var rowItem = new GridRowViewModel(record, this);
-                rowItem.OnLoad();
-                GridRecords.Add(rowItem);
-            //});
         }
 
         public override string RecordType
@@ -181,7 +158,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
         }
 
 
-        public DynamicGridViewModelItems DynamicGridViewModelItems { get; set; }
+        public DynamicGridViewModel DynamicGridViewModel { get; set; }
 
         internal override bool Validate()
         {
@@ -189,7 +166,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
             var isValid = true;
             if (IsVisible)
             {
-                foreach (var gridRowViewModel in GridRecords)
+                foreach (var gridRowViewModel in DynamicGridViewModel.GridRecords)
                 {
                     if (!gridRowViewModel.Validate())
                         isValid = false;
@@ -244,9 +221,52 @@ namespace JosephM.Record.Application.RecordEntry.Section
             return RecordForm;
         }
 
+        public ObservableCollection<GridRowViewModel> GridRecords
+        {
+            get { return DynamicGridViewModel.GridRecords; }
+        }
+
         public void ClearRows()
         {
-            ApplicationController.DoOnMainThread(() => GridRecords.Clear());
+            ApplicationController.DoOnMainThread(() => DynamicGridViewModel.GridRecords.Clear());
+        }
+
+        public void DownloadCsv()
+        {
+            try
+            {
+                var fileName = ApplicationController.GetSaveFileName(RecordType, ".csv");
+                if (!fileName.IsNullOrWhiteSpace())
+                {
+                    RecordForm.LoadingViewModel.IsLoading = true;
+                    DoOnAsynchThread(() =>
+                    {
+                        try
+                        {
+                            Thread.Sleep(5000);
+                            var records = GetGridRecords(true);
+                            CsvUtility.CreateCsv(Path.GetDirectoryName(fileName), Path.GetFileName(fileName),
+                                records.Records
+                                , RecordService.GetFields(RecordType),
+                                (f) => RecordService.GetFieldLabel(f, RecordType),
+                                (r, f) => RecordService.GetFieldAsDisplayString((IRecord) r, f));
+                            Process.Start(fileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            ApplicationController.ThrowException(ex);
+                        }
+                        finally
+                        {
+                            RecordForm.LoadingViewModel.IsLoading = false;
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.ThrowException(ex);
+            }
         }
     }
 }

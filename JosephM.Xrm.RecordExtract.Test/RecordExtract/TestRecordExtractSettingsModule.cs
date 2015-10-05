@@ -1,4 +1,4 @@
-﻿using JosephM.Prism.Infrastructure.Attributes;
+﻿using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.Infrastructure.Test;
 using JosephM.Xrm.RecordExtract.RecordExtract;

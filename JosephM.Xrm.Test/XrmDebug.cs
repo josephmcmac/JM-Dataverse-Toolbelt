@@ -13,6 +13,19 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+            //var lead = CreateTestRecord("lead");
+
+            //var anote = CreateTestRecord("annotation",
+            //    new System.Collections.Generic.Dictionary<string, object>()
+            //    {
+            //        { "objectid", lead.ToEntityReference() },
+            //        { "subject", "Note Subject"}
+            //    });
+
+            //var account = CreateAccount();
+
+            //anote.SetField("objectid", account.ToEntityReference());
+            //anote = UpdateFieldsAndRetreive(anote, "objectid");
         }
     }
 }

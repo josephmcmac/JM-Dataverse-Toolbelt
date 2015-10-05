@@ -1,16 +1,10 @@
 ﻿#region
 
-using System;
-using System.Globalization;
-using System.Windows.Controls;
-using System.Windows.Data;
-using JosephM.Core.Service;
-using JosephM.Record.Application.RecordEntry.Field;
-using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
 #endregion
 
-namespace JosephM.Record.Application.Validation
+namespace JosephM.Application.ViewModel.Validation
 {
     public interface IValidatable
     {

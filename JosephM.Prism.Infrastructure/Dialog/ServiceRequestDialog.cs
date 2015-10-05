@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Record.Application.Dialog;
-using JosephM.Record.Application.Shared;
 using JosephM.Record.IService;
 
 namespace JosephM.Prism.Infrastructure.Dialog
@@ -61,6 +61,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
         protected override void CompleteDialogExtention()
         {
+            LoadingViewModel.IsLoading = false;
             IsProcessing = true;
 
             var progressControlViewModel = new ProgressControlViewModel(ApplicationController);

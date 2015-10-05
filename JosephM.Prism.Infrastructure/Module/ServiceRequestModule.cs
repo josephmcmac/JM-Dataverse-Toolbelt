@@ -13,32 +13,16 @@ namespace JosephM.Prism.Infrastructure.Module
     /// <typeparam name="TResponse"></typeparam>
     /// <typeparam name="TDialog"></typeparam>
     /// <typeparam name="TResponseItem"></typeparam>
-    public class ServiceRequestModule<TDialog, TService, TRequest, TResponse, TResponseItem> : PrismModuleBase
+    public class ServiceRequestModule<TDialog, TService, TRequest, TResponse, TResponseItem> : DialogModule<TDialog>
         where TDialog : ServiceRequestDialog<TService, TRequest, TResponse, TResponseItem>
         where TService : ServiceBase<TRequest, TResponse, TResponseItem>
         where TRequest : ServiceRequestBase, new()
         where TResponse : ServiceResponseBase<TResponseItem>, new()
         where TResponseItem : ServiceResponseItem
     {
-        public override void RegisterTypes()
-        {
-            RegisterType<TService>();
-            RegisterTypeForNavigation<TDialog>();
-        }
-
-        public override void InitialiseModule()
-        {
-            ApplicationOptions.AddOption(MainOperationName, MenuNames.Crm, ServiceRequestDialogCommand);
-        }
-
-        protected virtual string MainOperationName
+        protected override string MainOperationName
         {
             get { return (typeof (TRequest)).GetDisplayName(); }
-        }
-
-        private void ServiceRequestDialogCommand()
-        {
-            NavigateTo<TDialog>();
         }
     }
 }

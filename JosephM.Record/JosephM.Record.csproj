@@ -80,54 +80,69 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\EnumerableRecordFieldMap.cs" />
+    <Compile Include="Attributes\LimitPicklist.cs" />
+    <Compile Include="Attributes\LookupCondition.cs" />
+    <Compile Include="Attributes\RecordPropertyMap.cs" />
+    <Compile Include="Attributes\RecordTypeMap.cs" />
+    <Compile Include="Attributes\RecordFieldMap.cs" />
+    <Compile Include="Connections\ConnectionConfigs.cs" />
+    <Compile Include="Extentions\IStoredObjectFields.cs" />
+    <Compile Include="Attributes\LookupConnectionFor.cs" />
     <Compile Include="Extentions\RecordExtentions.cs" />
-    <Compile Include="Metadata\AnyFieldMetadata.cs" />
-    <Compile Include="Metadata\BigIntFieldMetadata.cs" />
-    <Compile Include="Metadata\FileRefFieldMetadata.cs" />
-    <Compile Include="Metadata\ObjectFieldMetadata.cs" />
-    <Compile Include="Metadata\StateFieldMetadata.cs" />
-    <Compile Include="Metadata\UniqueidentifierFieldMetadata.cs" />
-    <Compile Include="Metadata\DoubleFieldMetadata.cs" />
-    <Compile Include="Metadata\StatusFieldMetadata.cs" />
-    <Compile Include="Metadata\MemoFieldMetadata.cs" />
+    <Compile Include="Extentions\TypeLoader.cs" />
+    <Compile Include="IService\IFieldMetadata.cs" />
+    <Compile Include="IService\IRecordTypeMetadata.cs" />
+    <Compile Include="Metadata\Fields\AggregateFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\AnyFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\BigIntFieldMetadata.cs" />
+    <Compile Include="Metadata\CascadeBehaviour.cs" />
+    <Compile Include="Metadata\Fields\FileRefFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\ObjectFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\StateFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\UniqueidentifierFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\DoubleFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\StatusFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\MemoFieldMetadata.cs" />
+    <Compile Include="Metadata\IPicklistSet.cs" />
+    <Compile Include="Metadata\IOne2ManyRelationshipMetadata.cs" />
+    <Compile Include="Metadata\IMany2ManyRelationshipMetadata.cs" />
     <Compile Include="Query\Condition.cs" />
     <Compile Include="Query\ConditionType.cs" />
     <Compile Include="Query\Filter.cs" />
     <Compile Include="Query\FilterOperator.cs" />
+    <Compile Include="Service\ObjectRecordMetadata.cs" />
     <Compile Include="Service\Record.cs" />
     <Compile Include="Query\SortExpression.cs" />
-    <Compile Include="Cache\IRecordCacheConfig.cs" />
-    <Compile Include="Cache\RecordCacheConfig.cs" />
-    <Compile Include="Cache\RecordCacheProvider.cs" />
     <Compile Include="Query\SortType.cs" />
-    <Compile Include="Metadata\ComboBoxFieldMetadata.cs" />
-    <Compile Include="Metadata\ActivityPartyFieldMetadata.cs" />
-    <Compile Include="Metadata\RecordFieldFieldMetadata.cs" />
-    <Compile Include="Metadata\EnumerableFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\ActivityPartyFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\RecordFieldFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\EnumerableFieldMetadata.cs" />
     <Compile Include="Metadata\ViewType.cs" />
-    <Compile Include="Metadata\RecordTypeFieldMetadata.cs" />
-    <Compile Include="Metadata\Many2ManyRelationshipMetadata.cs" />
+    <Compile Include="Metadata\Fields\RecordTypeFieldMetadata.cs" />
     <Compile Include="Metadata\One2ManyRelationshipMetadata.cs" />
-    <Compile Include="Metadata\IntegerFormat.cs" />
-    <Compile Include="Metadata\StringEnumerableFieldMetadata.cs" />
-    <Compile Include="Metadata\FolderFieldMetadata.cs" />
-    <Compile Include="Metadata\PasswordFieldMetadata.cs" />
+    <Compile Include="Metadata\Formats\IntegerFormat.cs" />
+    <Compile Include="Metadata\Fields\StringEnumerableFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\FolderFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\PasswordFieldMetadata.cs" />
     <Compile Include="Metadata\PicklistOptionSet.cs" />
     <Compile Include="Metadata\ViewField.cs" />
     <Compile Include="Metadata\ViewMetadata.cs" />
-    <Compile Include="Metadata\TextFormat.cs" />
-    <Compile Include="Metadata\MoneyFieldMetadata.cs" />
-    <Compile Include="Metadata\PicklistFieldMetadata.cs" />
-    <Compile Include="Metadata\DateFieldMetadata.cs" />
-    <Compile Include="Metadata\DecimalFieldMetadata.cs" />
-    <Compile Include="Metadata\LookuplFieldMetadata.cs" />
+    <Compile Include="Metadata\Formats\TextFormat.cs" />
+    <Compile Include="Metadata\Fields\MoneyFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\PicklistFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\DateFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\DecimalFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\LookuplFieldMetadata.cs" />
     <Compile Include="Metadata\RecordMetadata.cs" />
     <Compile Include="Metadata\RelationshipMetadata.cs" />
-    <Compile Include="Metadata\StringFieldMetadata.cs" />
-    <Compile Include="Metadata\IntegerFieldMetadata.cs" />
-    <Compile Include="Metadata\BooleanFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\StringFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\IntegerFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\BooleanFieldMetadata.cs" />
     <Compile Include="IService\ParseFieldRequest.cs" />
     <Compile Include="IService\ParseFieldResponse.cs" />
     <Compile Include="Service\RecordServiceBase.cs" />
@@ -136,7 +151,7 @@
     <Compile Include="Metadata\RecordMetadataFactory.cs" />
     <Compile Include="Service\RecordBase.cs" />
     <Compile Include="Service\RecordService.cs" />
-    <Compile Include="Metadata\FieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\FieldMetadata.cs" />
     <Compile Include="Metadata\FieldType.cs" />
     <Compile Include="IService\IRecordService.cs" />
     <Compile Include="IService\IRecord.cs" />
@@ -148,13 +163,14 @@
       <Name>JosephM.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
-      <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
+      <Project>{EB4443BD-DEAD-4546-9C8C-BFC2A807AF3A}</Project>
       <Name>JosephM.ObjectMapping</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="JosephM.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

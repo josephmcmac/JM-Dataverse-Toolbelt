@@ -1,12 +1,11 @@
-﻿using JosephM.Core.Extentions;
+﻿using JosephM.Application.Modules;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Extentions;
 using JosephM.Prism.Infrastructure.Constants;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
 
 namespace JosephM.Prism.Infrastructure.Module
 {
-    public abstract class MaintainRecordModule<TFormService, TMaintainRecordViewModel> : PrismModuleBase
-        where TFormService : FormServiceBase
+    public abstract class MaintainRecordModule<TMaintainRecordViewModel> : PrismModuleBase
         where TMaintainRecordViewModel : MaintainViewModel
     {
         protected abstract string Type { get; }
@@ -16,13 +15,12 @@ namespace JosephM.Prism.Infrastructure.Module
         public override void RegisterTypes()
         {
             RegisterTypeForNavigation<TMaintainRecordViewModel>();
-            RegisterType<TFormService>();
+            //RegisterType<TFormService>();
         }
 
         public override void InitialiseModule()
         {
-            ApplicationOptions.AddOption(typeof (TMaintainRecordViewModel).GetDisplayName(), MenuNames.Crm,
-                MaintainRecordCommand);
+            AddOption(typeof (TMaintainRecordViewModel).GetDisplayName(), MaintainRecordCommand);
         }
 
         private void MaintainRecordCommand()

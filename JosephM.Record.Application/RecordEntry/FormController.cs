@@ -1,15 +1,15 @@
-﻿using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.RecordEntry.Metadata;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
 
-namespace JosephM.Record.Application.RecordEntry
+namespace JosephM.Application.ViewModel.RecordEntry
 {
     public class FormController
     {
         public static FormController CreateForObject(object objectToEnter, IApplicationController applicationController, IRecordService lookupService)
         {
-            var recordService = new ObjectRecordService(objectToEnter, lookupService, null);
+            var recordService = new ObjectRecordService(objectToEnter, lookupService, null, applicationController);
             var formService = new ObjectFormService(objectToEnter, recordService);
             var formController = new FormController(recordService, formService, applicationController);
             return formController;

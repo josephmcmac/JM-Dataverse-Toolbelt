@@ -1,10 +1,11 @@
-﻿namespace JosephM.Record.Application.RecordEntry.Form
+﻿namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
-    public abstract class MaintainViewModel : OpenViewModel
+    public class MaintainViewModel : OpenViewModel
     {
-        protected MaintainViewModel(FormController formController)
+        public MaintainViewModel(FormController formController)
             : base(formController)
         {
+            OnSave = () => RecordService.Update(GetRecord(), ChangedPersistentFields);
         }
 
         public override string TabLabel
@@ -15,11 +16,6 @@
         public override string SaveButtonLabel
         {
             get { return "Save"; }
-        }
-
-        public override void OnSaveExtention()
-        {
-            RecordService.Update(GetRecord(), ChangedPersistentFields);
         }
     }
 }

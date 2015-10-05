@@ -3,8 +3,8 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.Shared;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.Shared;
 
 #endregion
 

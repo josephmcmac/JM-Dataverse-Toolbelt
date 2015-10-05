@@ -5,15 +5,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Service;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
-using JosephM.Record.Application.Validation;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public abstract class FieldViewModelBase : ViewModelBase, INotifyDataErrorInfo, IValidatable
     {
@@ -139,12 +140,18 @@ namespace JosephM.Record.Application.RecordEntry.Field
                 _isVisible = value;
                 OnPropertyChanged("IsVisible");
                 OnPropertyChanged("IsVisibleAndEditable");
+                OnPropertyChanged("IsVisibleAndReadonly");
             }
         }
 
         public bool IsVisibleAndEditable
         {
             get { return IsVisible && IsEditable; }
+        }
+
+        public bool IsVisibleAndReadonly
+        {
+            get { return IsVisible && IsReadOnly; }
         }
 
         public bool IsEditable
@@ -156,6 +163,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
                 OnPropertyChanged("IsEditable");
                 OnPropertyChanged("IsReadOnly");
                 OnPropertyChanged("IsVisibleAndEditable");
+                OnPropertyChanged("IsVisibleAndReadonly");
             }
         }
 
@@ -166,7 +174,7 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        private IEnumerable<string> ValidationPropertyNames
+        internal IEnumerable<string> ValidationPropertyNames
         {
             //could be in extended classes - is used to notify the ui of validation error
             //as sometimes it is a different property displayed in ui for different view model types

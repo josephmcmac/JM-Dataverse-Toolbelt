@@ -46,7 +46,7 @@ namespace JosephM.ObjectMapping
 
         public void MapPropertyValue(object to, PropertyInfo propertyTo, object from, PropertyInfo propertyFrom)
         {
-            if (propertyFrom != null && propertyFrom.CanRead)
+            if (propertyFrom != null && propertyFrom.CanRead && propertyTo.CanWrite)
             {
                 var fromValue = from.GetPropertyValue(propertyFrom.Name);
                 var mappedValue = fromValue;

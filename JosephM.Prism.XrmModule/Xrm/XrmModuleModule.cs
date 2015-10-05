@@ -1,6 +1,6 @@
 ﻿#region
 
-using JosephM.Prism.Infrastructure.Attributes;
+using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.XrmConnection;
 
@@ -15,8 +15,8 @@ namespace JosephM.Prism.XrmModule.Xrm
         {
             RegisterTypeForNavigation<XrmMaintainViewModel>();
             RegisterTypeForNavigation<XrmCreateViewModel>();
-            RegisterType<XrmFormController>();
-            RegisterType<XrmFormService>();
+            //RegisterType<XrmFormController>();
+            //RegisterType<XrmFormService>();
         }
 
         public override void InitialiseModule()

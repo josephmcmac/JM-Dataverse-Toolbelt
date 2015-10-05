@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
              xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
-             xmlns:fakes="clr-namespace:JosephM.Record.Application.Fakes;assembly=JosephM.Record.Application"
+             xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel"
              xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
              mc:Ignorable="d"
              d:DesignWidth="800"
@@ -23,12 +23,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
-            <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
         <Grid Grid.Row="1"
+              Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
               Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -78,11 +83,12 @@
                 </Grid>
             </Grid>
         </Grid>
-        <Grid Grid.Row="2" >
+        <Grid Grid.Row="1" >
             <ItemsControl
                 Name="DialogPanel"
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
                 ItemsSource="{Binding ChildForms}" />
+        </Grid>
         </Grid>
     </Grid>
 </UserControl>

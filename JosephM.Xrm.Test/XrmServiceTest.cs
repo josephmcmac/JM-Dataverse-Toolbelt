@@ -65,48 +65,6 @@ namespace JosephM.Xrm.Test
         //}
 
         [TestMethod]
-        public void IndexMatchingGuidsTest()
-        {
-            PrepareTests();
-
-            DeleteAllData();
-
-            var e1 = new Entity(Entities.jmcg_testentity);
-            e1.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCH1");
-            e1 = XrmService.CreateAndRetreive(e1);
-
-            var e1x = new Entity(Entities.jmcg_testentity);
-            e1x.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCH1");
-            e1x = XrmService.CreateAndRetreive(e1x);
-
-            var e2 = new Entity(Entities.jmcg_testentity);
-            e2.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCH2");
-            e2 = XrmService.CreateAndRetreive(e2);
-
-            var e3 = new Entity(Entities.jmcg_testentity);
-            e3.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCH3");
-            e3 = XrmService.CreateAndRetreive(e3);
-
-            var eX = new Entity(Entities.jmcg_testentity);
-            eX.SetField(Fields.jmcg_testentity_.jmcg_string, "MATCHX");
-            eX = XrmService.CreateAndRetreive(eX);
-
-            var indexed = XrmService.IndexMatchingGuids(Entities.jmcg_testentity, Fields.jmcg_testentity_.jmcg_string,
-                new[]
-                {
-                    "MATCH1", "MATCH2", "MATCH3"
-                    ,
-                    "NONMATCH"
-                });
-
-            Assert.IsTrue(indexed.Count() == 4);
-            Assert.IsTrue(indexed["MATCH1"].Value == e1.Id || indexed["MATCH1"].Value == e1x.Id);
-            Assert.IsTrue(indexed["MATCH2"].Value == e2.Id);
-            Assert.IsTrue(indexed["MATCH3"].Value == e3.Id);
-            Assert.IsFalse(indexed["NONMATCH"].HasValue);
-        }
-
-        [TestMethod]
         public void RetrieveAllOrClauseTest()
         {
             Assert.Inconclusive("Costly test so escaping");
@@ -431,15 +389,19 @@ namespace JosephM.Xrm.Test
             //valid date
             Assert.IsTrue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, null) == null);
             var expectedDate = DateTime.Now;
+            expectedDate = expectedDate.AddMilliseconds(-1*expectedDate.Millisecond);
             var actualDate = (DateTime) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, expectedDate);
+            expectedDate = expectedDate.ToUniversalTime();
             Assert.IsTrue(expectedDate.Hour == actualDate.Hour && expectedDate.Minute == actualDate.Minute &&
                           expectedDate.Second == actualDate.Second && expectedDate.Day == actualDate.Day);
             //valid string value
             var expected = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+            expected = expected.AddMilliseconds(-1 * expected.Millisecond);
             var actual =
                 (DateTime)
                     XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity,
                         expected.ToString(DateTimeFormatInfo.CurrentInfo.UniversalSortableDateTimePattern));
+            expected = expected.ToUniversalTime();
             Assert.IsTrue(expected.Hour == actual.ToUniversalTime().Hour && expected.Minute == actual.ToUniversalTime().Minute &&
                           expected.Second == actual.ToUniversalTime().Second && expected.Day == actual.ToUniversalTime().Day);
             //empty string value
@@ -488,17 +450,16 @@ namespace JosephM.Xrm.Test
         public void GetThisSideIdTest()
         {
             PrepareTests();
-            //todo jmm use constants
-            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_jmcg_testentity", Entities.jmcg_testentity, true) ==
+            Assert.IsTrue(XrmService.GetThisSideId(Relationships.jmcg_testentity_.jmcg_testentity_jmcg_testentity.Name, Entities.jmcg_testentity, true) ==
                           "jmcg_testentityidone");
-            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_jmcg_testentity", Entities.jmcg_testentity, false) ==
+            Assert.IsTrue(XrmService.GetThisSideId(Relationships.jmcg_testentity_.jmcg_testentity_jmcg_testentity.Name, Entities.jmcg_testentity, false) ==
                           "jmcg_testentityidtwo");
-            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_account", Entities.jmcg_testentity, false) ==
+            Assert.IsTrue(XrmService.GetThisSideId(Relationships.jmcg_testentity_.jmcg_testentity_account.Name, Entities.jmcg_testentity, false) ==
                           "jmcg_testentityid");
-            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_account", Entities.jmcg_testentity, true) ==
+            Assert.IsTrue(XrmService.GetThisSideId(Relationships.jmcg_testentity_.jmcg_testentity_account.Name, Entities.jmcg_testentity, true) ==
                           "jmcg_testentityid");
-            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_account", "account", false) == "accountid");
-            Assert.IsTrue(XrmService.GetThisSideId("jmcg_testentity_account", "account", true) == "accountid");
+            Assert.IsTrue(XrmService.GetThisSideId(Relationships.jmcg_testentity_.jmcg_testentity_account.Name, Entities.account, false) == Fields.account_.accountid);
+            Assert.IsTrue(XrmService.GetThisSideId(Relationships.jmcg_testentity_.jmcg_testentity_account.Name, Entities.account, true) == Fields.account_.accountid);
         }
     }
 }

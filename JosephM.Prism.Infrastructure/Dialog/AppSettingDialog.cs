@@ -1,8 +1,10 @@
 ﻿#region
 
+using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
+using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
 using JosephM.Prism.Infrastructure.Prism;
-using JosephM.Record.Application.Dialog;
 using JosephM.Record.IService;
 
 #endregion
@@ -19,27 +21,32 @@ namespace JosephM.Prism.Infrastructure.Dialog
         : DialogViewModel
         where TSettingsObject : TSettingsInterface, new()
     {
-        protected AppSettingsDialog(IDialogController dialogController, PrismContainer container)
-            : this(dialogController, container, null)
+        protected AppSettingsDialog(IDialogController dialogController)
+            : this(dialogController, null)
         {
         }
 
-        protected AppSettingsDialog(IDialogController dialogController, PrismContainer container,
+        protected AppSettingsDialog(IDialogController dialogController, 
             IRecordService lookupService)
             : base(dialogController)
         {
-            Container = container;
             //map the existing config to the new record
-            var settingsInterface = Container.Resolve<TSettingsInterface>();
+            var settingsInterface = ApplicationController.ResolveType<TSettingsInterface>();
             var configMapper = new InterfaceMapperFor<TSettingsInterface, TSettingsObject>();
             SettingsObject = configMapper.Map(settingsInterface);
+
+
+
             var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, lookupService,
-                null);
+                null, OnSave);
 
             SubDialogs = new DialogViewModel[] {configEntryDialog};
         }
 
-        protected PrismContainer Container { get; set; }
+        protected virtual void OnSave()
+        {
+            
+        }
 
         protected TSettingsObject SettingsObject { get; set; }
 
@@ -50,21 +57,10 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
         protected override void CompleteDialogExtention()
         {
-            DoWhileLoading("Verifying Your Data...", () =>
-            {
-                if (Validate())
-                {
-                    Container.Resolve<PrismSettingsManager>().SaveSettingsObject(SettingsObject);
-                    Container.RegisterInstance((TSettingsInterface) SettingsObject);
-                    if (CompletionMessage == null)
-                        CompletionMessage = "The Settings Have Been Saved";
-                }
-            });
-        }
-
-        protected virtual bool Validate()
-        {
-            return true;
+            ApplicationController.ResolveType<PrismSettingsManager>().SaveSettingsObject(SettingsObject);
+            ApplicationController.RegisterInstance((TSettingsInterface)SettingsObject);
+            if (CompletionMessage == null)
+                CompletionMessage = "The Settings Have Been Saved";
         }
     }
 }

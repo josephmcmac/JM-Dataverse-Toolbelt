@@ -2,12 +2,12 @@
 
 using System;
 using System.Windows.Input;
+using JosephM.Application.Application;
 using Microsoft.Practices.Prism.Commands;
-using JosephM.Record.Application.Controller;
 
 #endregion
 
-namespace JosephM.Record.Application.Shared
+namespace JosephM.Application.ViewModel.Shared
 {
     public class XrmButtonViewModel : ViewModelBase
     {
@@ -31,6 +31,22 @@ namespace JosephM.Record.Application.Shared
                 _saveButtonVisible = value;
                 OnPropertyChanged("IsVisible");
             }
+        }
+
+        private bool _enabled = true;
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set
+            {
+                _enabled = value;
+                OnPropertyChanged("Enabled");
+            }
+        }
+
+        public void Invoke()
+        {
+            Command.Execute(null);
         }
     }
 }

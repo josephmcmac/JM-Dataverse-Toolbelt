@@ -9,31 +9,11 @@ using JosephM.Prism.Infrastructure.Module;
 
 namespace JosephM.ObjectEncryption
 {
-    public class ObjectEncryptModule<TDialog,TTypeToEnter> : PrismModuleBase
+    public class ObjectEncryptModule<TDialog, TTypeToEnter> : DialogModule<TDialog>
         where TDialog : ObjectEncryptDialog<TTypeToEnter>
         where TTypeToEnter : new()
     {
-        public override void RegisterTypes()
-        {
-            //how to register generic type for navigation
-            RegisterTypeForNavigation<TDialog>();
-        }
-
-        public override void InitialiseModule()
-        {
-            //aah cant remember
-            //think need create dialog with
-            //enter object then encrypt and store on file
-            //and somehow enter the location
-            ApplicationOptions.AddOption(OptionLabel, MenuNames.Test, StartDialog);
-        }
-
-        private void StartDialog()
-        {
-            NavigateTo<TDialog>();
-        }
-
-        public virtual string OptionLabel
+        protected override string MainOperationName
         {
             get { return string.Format("Encrypt {0}", typeof(TTypeToEnter).Name); }
         }

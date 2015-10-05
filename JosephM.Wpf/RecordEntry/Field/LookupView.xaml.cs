@@ -2,7 +2,7 @@
 
 using System.Windows.Forms;
 using System.Windows.Input;
-using JosephM.Record.Application.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using Binding = System.Windows.Data.Binding;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
@@ -40,7 +40,7 @@ namespace JosephM.Wpf.RecordEntry.Field
         }
 
         private void EnteredTextBox_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {//todo this a bit risky where error thrown o
+        {
             //for some strange reason when enter pressed to search the textbox loses focus
             //so just put this in there to force focus into textbox again
             if (ViewModel.Searching)

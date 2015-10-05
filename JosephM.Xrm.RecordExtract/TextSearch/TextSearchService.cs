@@ -154,7 +154,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     if (fieldType == RecordFieldType.Uniqueidentifier)
                         fieldsToExclude.Add(field);
                     else if (Service.GetFieldType(field, recordType) == RecordFieldType.String &&
-                             Service.GetTextFormat(field, recordType) == TextFormat.PhoneticGuide)
+                             Service.GetFieldMetadata(field, recordType).TextFormat == TextFormat.PhoneticGuide)
                         fieldsToExclude.Add(field);
                     if (field.EndsWith("_base") && fieldType == RecordFieldType.Money)
                         fieldsToExclude.Add(field);
@@ -220,7 +220,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 string.Format("Searching String Fields In {0}", Service.GetCollectionName(recordType)));
             try
             {
-                var nonPrimaryStringFields = Service.GetStringFields(recordType)
+                var nonPrimaryStringFields = Service.GetFields(recordType)
+                    .Where(f => Service.IsString(f, recordType))
                     .Where(f => f != primaryField)
                     .Where(f => Service.IsString(f, thisRecordType))
                     .ToArray();
@@ -245,7 +246,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                         string.Format("%{0}%", container.Request.SearchText))
                                 };
                             var stringFieldMatches =
-                                Service.RetrieveAllOrClauses(recordType, conditions).ToArray();
+                                Service.RetrieveAllOrClauses(recordType, conditions, null).ToArray();
                             foreach (var stringFieldMatch in stringFieldMatches)
                             {
                                 if (!recordsToOutput.ContainsKey(stringFieldMatch.Id))
@@ -325,7 +326,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                         new Condition(field, ConditionType.Like,
                                             string.Format("%{0}%", container.Request.SearchText))
                                     };
-                                    var stringFieldMatches = Service.RetrieveAllAndClauses(recordType, conditions);
+                                    var stringFieldMatches = Service.RetrieveAllAndClauses(recordType, conditions, null);
                                     foreach (var stringFieldMatch in stringFieldMatches)
                                     {
                                         recordsToOutput.Add(stringFieldMatch.Id, stringFieldMatch);
@@ -368,13 +369,13 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 var level2Count = oneToManyRelationships.Count();
 
                 // get the activity party references
-                if (Service.IsActivityType(recordType))
+                if (Service.GetRecordTypeMetadata(recordType).IsActivityType)
                 {
                     var activityPartyReferences = new List<IRecord>();
                     //need to the activities which have an activity party match
                     foreach (var match in container.NameMatches)
                     {
-                        if (Service.IsActivityPartyParticipant(match.Type))
+                        if (Service.GetRecordTypeMetadata(match.Type).IsActivityParticipant)
                         {
                             var conditions = new[]
                             {
@@ -385,7 +386,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                             var activityParties = Service.RetrieveAllAndClauses(
                                 "activityparty",
                                 conditions
-                                );
+                                , null);
                             activityPartyReferences.AddRange(
                                 activityParties.Where(ap => ap.GetLookupType("partyid") == match.Type));
                         }
@@ -397,7 +398,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                 ap =>
                                     new Condition(Service.GetPrimaryKey(recordType), ConditionType.Equal,
                                         ap.GetLookupId("activityid")));
-                        var activities = Service.RetrieveAllOrClauses(recordType, conditions);
+                        var activities = Service.RetrieveAllOrClauses(recordType, conditions, null);
                         foreach (var activity in activities)
                         {
                             if (!recordsToOutput.ContainsKey(activity.Id))
@@ -429,7 +430,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                         new Condition(thisMetadata.ReferencingAttribute,
                                             ConditionType.Equal,
                                             m.Id));
-                            var relatedEntities = Service.RetrieveAllOrClauses(recordType, conditions);
+                            var relatedEntities = Service.RetrieveAllOrClauses(recordType, conditions, null);
                             foreach (var relatedEntity in relatedEntities)
                             {
                                 if (!recordsToOutput.ContainsKey(relatedEntity.Id))
@@ -518,7 +519,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         private IEnumerable<string> GetSearchRecordTypes()
         {
-            var recordTypes = Service.GetAllRecordTypesForSearch().OrderBy(n => Service.GetDisplayName(n));
+            var recordTypes = Service.GetAllRecordTypes().Where(r => Service.GetRecordTypeMetadata(r).Searchable).OrderBy(n => Service.GetDisplayName(n));
             return Settings.GetRecordTypesToExclude() != null
                 ? recordTypes.Except(Settings.GetRecordTypesToExclude())
                 : recordTypes;

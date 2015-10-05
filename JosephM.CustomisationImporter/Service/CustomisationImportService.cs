@@ -6,6 +6,7 @@ using System.Linq;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Spreadsheet;
@@ -104,8 +105,8 @@ namespace JosephM.CustomisationImporter.Service
                                 fieldMetadata = new DecimalFieldMetadata(recordTypeSchemaName, fieldSchemaName,
                                     displayName)
                                 {
-                                    Minimum = row.GetFieldAsDecimal(Headings.Fields.Minimum),
-                                    Maximum = row.GetFieldAsDecimal(Headings.Fields.Maximum),
+                                    MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
+                                    MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum),
                                     DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision)
                                 };
                                 break;
@@ -115,8 +116,8 @@ namespace JosephM.CustomisationImporter.Service
                                 fieldMetadata = new IntegerFieldMetadata(recordTypeSchemaName, fieldSchemaName,
                                     displayName)
                                 {
-                                    Minimum = row.GetFieldAsInteger(Headings.Fields.Minimum),
-                                    Maximum = row.GetFieldAsInteger(Headings.Fields.Maximum)
+                                    MinValue = row.GetFieldAsInteger(Headings.Fields.Minimum),
+                                    MaxValue = row.GetFieldAsInteger(Headings.Fields.Maximum)
                                 };
                                 break;
                             }
@@ -135,8 +136,8 @@ namespace JosephM.CustomisationImporter.Service
                                 fieldMetadata = new MoneyFieldMetadata(recordTypeSchemaName, fieldSchemaName,
                                     displayName)
                                 {
-                                    Minimum = row.GetFieldAsDouble(Headings.Fields.Minimum),
-                                    Maximum = row.GetFieldAsDouble(Headings.Fields.Maximum)
+                                    MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
+                                    MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum)
                                 };
                                 break;
                             }
@@ -186,8 +187,8 @@ namespace JosephM.CustomisationImporter.Service
                                 fieldMetadata = new DoubleFieldMetadata(recordTypeSchemaName, fieldSchemaName,
                                     displayName)
                                 {
-                                    Minimum = row.GetFieldAsDouble(Headings.Fields.Minimum),
-                                    Maximum = row.GetFieldAsDouble(Headings.Fields.Maximum),
+                                    MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
+                                    MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum),
                                     DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision)
                                 };
                                 break;
@@ -279,7 +280,7 @@ namespace JosephM.CustomisationImporter.Service
                 try
                 {
                     controller.UpdateProgress(numberCompleted++, numberToDo, "Importing Shared Option Sets");
-                    var isUpdate = RecordService.SharedOptionSetExists(sharedOptionSet.SchemaName);
+                    var isUpdate = RecordService.GetSharedPicklists().Any(p => p.SchemaName == sharedOptionSet.SchemaName);
                     RecordService.CreateOrUpdateSharedOptionSet(sharedOptionSet);
 
                     importResponse.AddResponseItem("Shared Option Set", sharedOptionSet.SchemaName, isUpdate);
@@ -322,7 +323,7 @@ namespace JosephM.CustomisationImporter.Service
             RecordService.VerifyConnection();
         }
 
-        private void ImportRelationships(IEnumerable<RelationshipMetadata> metadata, LogController controller,
+        private void ImportRelationships(IEnumerable<Many2ManyRelationshipMetadata> metadata, LogController controller,
             CustomisationImportResponse response)
         {
             var numberToDo = metadata.Count();
@@ -333,7 +334,7 @@ namespace JosephM.CustomisationImporter.Service
                 try
                 {
                     controller.UpdateProgress(numberCompleted++, numberToDo, "Importing relationships");
-                    var isUpdate = RecordService.RelationshipExists(recordMetadata.SchemaName);
+                    var isUpdate = RecordService.GetManyToManyRelationships(recordMetadata.RecordType1).Any(r => r.SchemaName == recordMetadata.SchemaName);
                     RecordService.CreateOrUpdate(recordMetadata);
                     response.AddResponseItem("Relationship", recordMetadata.SchemaName, isUpdate);
                 }
@@ -393,10 +394,10 @@ namespace JosephM.CustomisationImporter.Service
         /// <summary>
         ///     Reads a set of mappings from the Excel file which contains the entity and field mapping metadata
         /// </summary>
-        internal static IEnumerable<RelationshipMetadata> ExtractRelationshipMetadataFromExcel(string excelFile,
+        internal static IEnumerable<Many2ManyRelationshipMetadata> ExtractRelationshipMetadataFromExcel(string excelFile,
             LogController controller)
         {
-            var result = new List<RelationshipMetadata>();
+            var result = new List<Many2ManyRelationshipMetadata>();
 
             var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
                 RelationshipTabName);
@@ -409,7 +410,7 @@ namespace JosephM.CustomisationImporter.Service
                     try
                     {
                         //create the table to enitty mapping for the sheet
-                        var mapping = new RelationshipMetadata
+                        var mapping = new Many2ManyRelationshipMetadata
                         {
                             SchemaName = relationshipName,
                             RecordType1 = row.GetFieldAsString(Headings.Relationships.RecordType1),
@@ -459,7 +460,7 @@ namespace JosephM.CustomisationImporter.Service
                         {
                             SchemaName = schemaName,
                             DisplayName = row.GetFieldAsString(Headings.RecordTypes.DisplayName),
-                            DisplayCollectionName = row.GetFieldAsString(Headings.RecordTypes.DisplayCollectionName),
+                            CollectionName = row.GetFieldAsString(Headings.RecordTypes.DisplayCollectionName),
                             Description = row.GetFieldAsString(Headings.RecordTypes.Description),
                             Audit = row.GetFieldAsBoolean(Headings.RecordTypes.Audit),
                             IsActivityType = row.GetFieldAsBoolean(Headings.RecordTypes.IsActivityType),

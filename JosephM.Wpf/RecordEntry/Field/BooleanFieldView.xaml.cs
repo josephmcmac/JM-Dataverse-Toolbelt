@@ -2,7 +2,7 @@
 
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using JosephM.Record.Application.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 
 #endregion
 

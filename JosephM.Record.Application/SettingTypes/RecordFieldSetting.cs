@@ -1,7 +1,7 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 
-namespace JosephM.Record.Application.SettingTypes
+namespace JosephM.Application.ViewModel.SettingTypes
 {
     public class RecordFieldSetting
     {

@@ -35,7 +35,7 @@ namespace JosephM.Core.Extentions
         {
             return
                 type.GetConstructors().Any(
-                    c => c.GetParameters().Count() == 1 && c.GetParameters()[0].ParameterType == typeof (string));
+                    c => c.GetParameters().Count() == 1 && c.GetParameters()[0].ParameterType == typeof(string));
         }
 
         public static bool HasParameterlessConstructor(this Type type)
@@ -53,14 +53,14 @@ namespace JosephM.Core.Extentions
         public static object CreateFromParameterlessConstructor(this Type type)
         {
             var ctr = type.GetConstructors().First(c => !c.GetParameters().Any());
-            return ctr.Invoke(new object[] {});
+            return ctr.Invoke(new object[] { });
         }
 
         public static object CreateFromStringConstructor(this Type type, string stringArgument)
         {
             var ctr = type.GetConstructors().First(
-                c => c.GetParameters().Count() == 1 && c.GetParameters()[0].ParameterType == typeof (string));
-            return ctr.Invoke(new object[] {stringArgument});
+                c => c.GetParameters().Count() == 1 && c.GetParameters()[0].ParameterType == typeof(string));
+            return ctr.Invoke(new object[] { stringArgument });
         }
 
         public static string GetPropertyDisplayName(this Type type, string property)
@@ -81,7 +81,7 @@ namespace JosephM.Core.Extentions
         public static string GetDisplayName(this Type type)
         {
             var displayNameProperties =
-                type.GetCustomAttributes(typeof (DisplayNameAttribute), true).Cast<DisplayNameAttribute>();
+                type.GetCustomAttributes(typeof(DisplayNameAttribute), true).Cast<DisplayNameAttribute>();
             if (displayNameProperties.Any())
                 return displayNameProperties.First().Label;
             else
@@ -111,7 +111,7 @@ namespace JosephM.Core.Extentions
             var validatorAttributes =
                 type
                     .GetProperty(propertyName)
-                    .GetCustomAttributes(typeof (PropertyValidator), true)
+                    .GetCustomAttributes(typeof(PropertyValidator), true)
                     .Cast<PropertyValidator>();
             return validatorAttributes;
         }
@@ -123,14 +123,14 @@ namespace JosephM.Core.Extentions
 
         public static object ToNewTypedEnumerable(this Type genericType, IEnumerable<object> objectEnumerable)
         {
-            var typedEnumerable = typeof (Enumerable)
-                .GetMethod("Cast", new[] {typeof (IEnumerable)})
+            var typedEnumerable = typeof(Enumerable)
+                .GetMethod("Cast", new[] { typeof(IEnumerable) })
                 .MakeGenericMethod(genericType)
-                .Invoke(null, new object[] {objectEnumerable});
-            typedEnumerable = typeof (Enumerable)
+                .Invoke(null, new object[] { objectEnumerable });
+            typedEnumerable = typeof(Enumerable)
                 .GetMethod("ToArray")
                 .MakeGenericMethod(genericType)
-                .Invoke(null, new object[] {typedEnumerable});
+                .Invoke(null, new object[] { typedEnumerable });
             return typedEnumerable;
         }
     }

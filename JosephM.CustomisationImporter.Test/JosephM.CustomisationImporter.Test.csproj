@@ -45,6 +45,10 @@
     <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.Prism, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -60,7 +64,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestCustomisationImport.cs" />
+    <Compile Include="CustomisationImportTests.cs" />
     <Compile Include="TestCustomisationImportRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -74,6 +78,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core.Test\JosephM.Core.Test.csproj">
       <Project>{7a4ce94b-1f3b-46f0-9c7f-9f2cb5b3c5e8}</Project>
       <Name>JosephM.Core.Test</Name>
@@ -85,6 +93,22 @@
     <ProjectReference Include="..\JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj">
       <Project>{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}</Project>
       <Name>JosephM.CustomisationImporter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Prism.Test.csproj">
+      <Project>{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}</Project>
+      <Name>JosephM.Application.Prism.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+      <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
+      <Name>JosephM.Application.Prism</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.Prism.XrmModule.Test.csproj">
+      <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
+      <Name>JosephM.Prism.XrmModule.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+      <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
+      <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Xrm.Test\JosephM.Record.Xrm.Test.csproj">
       <Project>{9DCC0511-0B90-4A74-BB91-83CEAA45EAA5}</Project>

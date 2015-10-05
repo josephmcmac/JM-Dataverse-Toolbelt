@@ -8,6 +8,9 @@
         GreaterEqual,
         NotNull,
         GreaterThan,
-        BeginsWith
+        BeginsWith,
+        Null,
+        In,
+        NotEqual,
     }
 }

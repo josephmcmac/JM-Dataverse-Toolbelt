@@ -1,6 +1,6 @@
-﻿using JosephM.Record.Application.Controller;
+﻿using JosephM.Application.Application;
 
-namespace JosephM.Record.Application.Shared
+namespace JosephM.Application.ViewModel.Shared
 {
     public class HeadingViewModel : ViewModelBase
     {

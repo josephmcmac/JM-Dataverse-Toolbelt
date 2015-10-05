@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Runtime.Serialization;
+using JosephM.Core.Extentions;
 
 namespace JosephM.Core.FieldType
 {
@@ -32,7 +35,7 @@ namespace JosephM.Core.FieldType
                 return -1;
             if (obj is PicklistOption)
             {
-                return String.Compare(this.Value, ((PicklistOption)obj).Value, StringComparison.Ordinal);
+                return String.Compare(Value, ((PicklistOption)obj).Value, StringComparison.OrdinalIgnoreCase);
             }
             return 0;
         }
@@ -65,6 +68,19 @@ namespace JosephM.Core.FieldType
             if (ReferenceEquals(this, obj)) return true;
             var other = obj as PicklistOption;
             return other != null && Equals(other);
+        }
+
+        public static IEnumerable<PicklistOption> GenerateEnumOptions(Type enumType)
+        {
+            var options = new List<PicklistOption>();
+            foreach (Enum item in enumType.GetEnumValues())
+                options.Add(EnumToPicklistOption(item));
+            return options;
+        }
+
+        public static PicklistOption EnumToPicklistOption(Enum item)
+        {
+            return new PicklistOption(Convert.ToInt32(item).ToString(), item.GetDisplayString());
         }
     }
 }

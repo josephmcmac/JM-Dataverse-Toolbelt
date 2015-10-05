@@ -144,6 +144,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\Lib\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\ApplicationHelpView.xaml.cs">
@@ -155,6 +158,13 @@
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\BooleanToFalseConverter.cs" />
     <Compile Include="Converters\FileRefToStringConverter.cs" />
+    <Compile Include="Grid\DynamicGridView.xaml.cs">
+      <DependentUpon>DynamicGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridDateFieldView.xaml.cs">
+      <DependentUpon>GridDateFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridDateColumn.cs" />
     <Compile Include="Grid\GridIntFieldView.xaml.cs">
       <DependentUpon>GridIntFieldView.xaml</DependentUpon>
     </Compile>
@@ -237,9 +247,11 @@
     <Compile Include="Converters\WidthConverter.cs" />
     <Compile Include="ControlExtentions\FocusExtension.cs" />
     <Compile Include="Grid\GridLookupColumn.cs" />
-    <Compile Include="Grid\DynamicGrid.cs" />
-    <Compile Include="Search\SearchResultView.xaml.cs">
-      <DependentUpon>SearchResultView.xaml</DependentUpon>
+    <Compile Include="RecordEntry\Field\ConnectionView.xaml.cs">
+      <DependentUpon>ConnectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridListView.xaml.cs">
+      <DependentUpon>GridListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shared\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
@@ -313,6 +325,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Application\ApplicationHeadingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\DynamicGridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridDateFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -392,7 +412,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Search\SearchResultView.xaml">
+    <Page Include="RecordEntry\Field\ConnectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -548,17 +572,25 @@
     <Resource Include="Images\CloseButton.gif" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7bf3e622-67ca-4e67-a9ca-f3b334c954fd}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
+      <Project>{9d3eb2d4-ec55-4080-938f-ea409162171d}</Project>
+      <Name>JosephM.Application.ViewModel.Fakes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+      <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
+      <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
-      <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
-      <Name>JosephM.Record.Application</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -572,6 +604,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\EditIcon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Next.png" />
+    <Resource Include="Images\Previous.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

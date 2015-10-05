@@ -64,6 +64,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="RecordExtentionTests.cs" />
     <Compile Include="XrmRecordConfigurationInterfaceMapperTests.cs" />
     <Compile Include="XrmConfigurationMapperTests.cs" />
     <Compile Include="FieldTypeMapperTests.cs" />

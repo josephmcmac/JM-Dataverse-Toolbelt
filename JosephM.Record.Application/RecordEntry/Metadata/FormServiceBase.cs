@@ -2,37 +2,19 @@
 
 using System;
 using System.Collections.Generic;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Section;
-using JosephM.Record.Application.Validation;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Metadata
+namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     public abstract class FormServiceBase
     {
         public abstract FormMetadata GetFormMetadata(string recordType);
-
-        public FormInstanceBase CreateFormInstance(string recordType, RecordEntryFormViewModel recordForm,
-            IRecordService recordService)
-        {
-            return FormInstanceBase.Factory(GetFormInstanceTypeBase(recordType), recordService, recordForm);
-        }
-
-        private Type GetFormInstanceTypeBase(string recordType)
-        {
-            var type = GetFormInstanceType(recordType);
-            return type ?? typeof (FormInstanceBase);
-        }
-
-        protected virtual Type GetFormInstanceType(string recordType)
-        {
-            return typeof (FormInstanceBase);
-        }
 
         public virtual bool IsFieldInContext(string fieldName, IRecord record)
         {
@@ -74,7 +56,7 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
             return null;
         }
 
-        internal virtual RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        public virtual RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
         {
             return null;
         }
@@ -97,6 +79,11 @@ namespace JosephM.Record.Application.RecordEntry.Metadata
         internal virtual IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType)
         {
             return new Condition[0];
+        }
+
+        internal virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)
+        {
+            return new CustomGridFunction[0];
         }
     }
 }

@@ -1,116 +1,34 @@
 ﻿#region
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.Grid;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    public class LookupGridViewModel : ViewModelBase, IDynamicGridViewModel
+    public class LookupGridViewModel : ViewModelBase
     {
         public LookupGridViewModel(IReferenceFieldViewModel referenceField,
             Action<IRecord> onRecordSelected)
             : base(referenceField.RecordEntryViewModel.ApplicationController)
         {
-            ReferenceField = referenceField;
             OnRecordSelected = onRecordSelected;
-            FormController = new FormController(RecordService, null, referenceField.RecordEntryViewModel.ApplicationController);
-            DynamicGridViewModelItems = new DynamicGridViewModelItems()
+            DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
             {
-                CanDelete = false,
-                CanEdit = false,
-                OnDoubleClick = OnDoubleClick
+                OnDoubleClick = OnDoubleClick,
+                ViewType = ViewType.LookupView,
+                RecordService = referenceField.LookupService,
+                FormController = new FormController(referenceField.LookupService, null, referenceField.RecordEntryViewModel.ApplicationController),
+                RecordType = referenceField.RecordTypeToLookup,
+                IsReadOnly = true
             };
         }
 
-        public FormController FormController { get; private set; }
-
-        public bool IsReadOnly
-        {
-            get { return true; }
-        }
-
-        private IEnumerable<GridFieldMetadata> _recordFields;
-
-        private RecordEntryViewModelBase RecordEntryViewModel
-        {
-            get { return ReferenceField.RecordEntryViewModel; }
-        }
-
-        public IEnumerable<GridFieldMetadata> RecordFields
-        {
-            get
-            {
-                if (_recordFields == null)
-                {
-                    if (RecordType.IsNullOrWhiteSpace() || RecordService == null)
-                        _recordFields = new GridFieldMetadata[] {};
-                    else
-                    {
-                        var savedViews = RecordService.GetViews(RecordType);
-                        if (savedViews != null && savedViews.Any(v => v.ViewType == ViewType.LookupView))
-                        {
-                            var lookupView = savedViews.First(v => v.ViewType == ViewType.LookupView);
-                            _recordFields = lookupView
-                                .Fields
-                                .Select(f => new GridFieldMetadata(f.FieldName) {WidthPart = f.Width})
-                                .ToArray();
-                        }
-                        else
-                        {
-                            _recordFields = new[]
-                            {new GridFieldMetadata(RecordService.GetPrimaryField(RecordType)) {WidthPart = 200}};
-                        }
-                    }
-                }
-                return _recordFields;
-            }
-        }
-
-        public IRecordService RecordService
-        {
-            get { return ReferenceField.LookupService; }
-        }
-
-        public string RecordType
-        {
-            get { return ReferenceField.RecordTypeToLookup; }
-        }
-
         private Action<IRecord> OnRecordSelected { get; set; }
-
-        private ObservableCollection<GridRowViewModel> _records;
-
-        public ObservableCollection<GridRowViewModel> GridRecords
-        {
-            get { return _records; }
-            set
-            {
-                _records = value;
-                OnPropertyChanged("GridRecords");
-            }
-        }
-
-        private GridRowViewModel _selectedRow;
-
-        public GridRowViewModel SelectedRow
-        {
-            get { return _selectedRow; }
-            set
-            {
-                _selectedRow = value;
-                OnPropertyChanged("SelectedRow");
-            }
-        }
 
         public void OnKeyDown()
         {
@@ -123,38 +41,23 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         public void SetLookupToSelectedRow()
         {
-            if (SelectedRow != null)
-                OnRecordSelected(SelectedRow.Record);
-        }
-
-        private bool _isFocused;
-
-        //circular but has to be done
-        private IReferenceFieldViewModel ReferenceField { get; set; }
-
-        public bool IsFocused
-        {
-            get { return _isFocused; }
-            set
-            {
-                _isFocused = value;
-                OnPropertyChanged("IsFocused");
-            }
+            if (DynamicGridViewModel.SelectedRow != null)
+                OnRecordSelected(DynamicGridViewModel.SelectedRow.Record);
         }
 
         public void MoveDown()
         {
             try
             {
-                if (GridRecords != null && GridRecords.Any())
+                if (DynamicGridViewModel.GridRecords != null && DynamicGridViewModel.GridRecords.Any())
                 {
                     var index = -1;
-                    if (SelectedRow != null)
-                        index = GridRecords.IndexOf(SelectedRow);
+                    if (DynamicGridViewModel.SelectedRow != null)
+                        index = DynamicGridViewModel.GridRecords.IndexOf(DynamicGridViewModel.SelectedRow);
                     index++;
-                    if (index > GridRecords.Count - 1)
+                    if (index > DynamicGridViewModel.GridRecords.Count - 1)
                         index = 0;
-                    SelectedRow = GridRecords[index];
+                    DynamicGridViewModel.SelectedRow = DynamicGridViewModel.GridRecords[index];
                 }
             }
             catch
@@ -166,15 +69,15 @@ namespace JosephM.Record.Application.RecordEntry.Field
         {
             try
             {
-                if (GridRecords != null && GridRecords.Any())
+                if (DynamicGridViewModel.GridRecords != null && DynamicGridViewModel.GridRecords.Any())
                 {
-                    var index = GridRecords.Count;
-                    if (SelectedRow != null)
-                        index = GridRecords.IndexOf(SelectedRow);
+                    var index = DynamicGridViewModel.GridRecords.Count;
+                    if (DynamicGridViewModel.SelectedRow != null)
+                        index = DynamicGridViewModel.GridRecords.IndexOf(DynamicGridViewModel.SelectedRow);
                     index--;
                     if (index < 0)
-                        index = GridRecords.Count - 1;
-                    SelectedRow = GridRecords[index];
+                        index = DynamicGridViewModel.GridRecords.Count - 1;
+                    DynamicGridViewModel.SelectedRow = DynamicGridViewModel.GridRecords[index];
                 }
             }
             catch
@@ -182,12 +85,6 @@ namespace JosephM.Record.Application.RecordEntry.Field
             }
         }
 
-        public void DoWhileLoading(string message, Action action)
-        {
-            RecordEntryViewModel.DoWhileLoading(message, action);
-        }
-
-
-        public DynamicGridViewModelItems DynamicGridViewModelItems { get; set; }
+        public DynamicGridViewModel DynamicGridViewModel { get; set; }
     }
 }

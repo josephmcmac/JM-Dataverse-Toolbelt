@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Record.Application.Fakes;
+﻿using JosephM.Application.ViewModel.Fakes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JosephM.Record.Application.Test
 {

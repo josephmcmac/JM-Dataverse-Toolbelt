@@ -1,4 +1,4 @@
-﻿using JosephM.Record.Application.Dialog;
+﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch

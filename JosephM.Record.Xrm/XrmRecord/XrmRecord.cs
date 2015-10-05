@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
 

@@ -4,7 +4,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using JosephM.Core.Extentions;
-using JosephM.Record.Application.HTML;
+using JosephM.Application.ViewModel.HTML;
 
 #endregion
 

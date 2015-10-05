@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
+using JosephM.Core.Utility;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JosephM.Core.Test
 {
@@ -12,13 +15,14 @@ namespace JosephM.Core.Test
     {
         public CoreTest()
         {
+            FileUtility.DeleteFiles(TestingFolder);
             Controller = new LogController();
             Controller.AddUi(new DebugUserInterface());
         }
 
         protected LogController Controller { get; private set; }
 
-        public virtual string TestingFolder
+        public string TestingFolder
         {
             get { return TestConstants.TestFolder; }
         }
@@ -82,6 +86,8 @@ namespace JosephM.Core.Test
                 value = new RecordField("field", "field");
             else if (type == typeof(Folder))
                 value = new Folder(TestingFolder);
+            else if (type == typeof(int))
+                value = 1;
             else if (type == typeof (Password))
                 value = new Password("FakePassword", false, true);
             else if (type.IsEnum)
@@ -113,6 +119,26 @@ namespace JosephM.Core.Test
                 throw new Exception(string.Format("Type {0} Not Matched For Initialising Property",
                     type));
             return value;
+        }
+
+        public static string ReplicateString(string stringToReplicate, int times)
+        {
+            var stringer = new StringBuilder();
+            for (var i = 0; i < times; i++)
+                stringer.Append(stringToReplicate);
+            return stringer.ToString();
+        }
+
+        public void WaitTillTrue(Func<bool> assertInTime, int seconds)
+        {
+            var secondsWaited = 0;
+            while (!assertInTime())
+            {
+                secondsWaited++;
+                if (secondsWaited > seconds)
+                    Assert.Fail("Waited Too Long Without Meeting Test Criteria");
+                Thread.Sleep(1000);
+            }
         }
     }
 }

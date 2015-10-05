@@ -2,17 +2,16 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.Shared;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public class LookupFieldViewModel : ReferenceFieldViewModel<Lookup>
     {
@@ -21,7 +20,14 @@ namespace JosephM.Record.Application.RecordEntry.Field
             : base(fieldName, fieldLabel, recordForm)
         {
             RecordTypeToLookup = referencedRecordType;
+            if (Value != null)
+            {
+                if (Value.Name.IsNullOrWhiteSpace())
+                    Value.Name = "Record Name Not Set";
+                SetEnteredTestWithoutClearingValue(Value.Name);
+            }
             LoadLookupGrid();
+            
         }
 
         private string _referencedRecordType;
@@ -61,10 +67,6 @@ namespace JosephM.Record.Application.RecordEntry.Field
 
         protected override IEnumerable<IRecord> GetSearchResults()
         {
-            var service = RecordEntryViewModel.RecordService.GetLookupService(FieldName,
-                RecordEntryViewModel.GetRecordType(), RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord());
-
-
             var primaryField = LookupService.GetPrimaryField(RecordTypeToLookup);
             var conditions = GetConditions();
             if (!EnteredText.IsNullOrWhiteSpace())

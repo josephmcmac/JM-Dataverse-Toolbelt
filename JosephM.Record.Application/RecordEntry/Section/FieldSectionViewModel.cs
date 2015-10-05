@@ -3,13 +3,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using JosephM.Record.Application.RecordEntry.Field;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Section
+namespace JosephM.Application.ViewModel.RecordEntry.Section
 {
     public class FieldSectionViewModel : SectionViewModelBase
     {
@@ -47,8 +47,11 @@ namespace JosephM.Record.Application.RecordEntry.Section
             {
                 var fieldVm = formField.CreateFieldViewModel(RecordType, RecordService, RecordForm,
                     ApplicationController);
+                if (IsReadOnly)
+                    fieldVm.IsEditable = false;
                 fieldViewModels.Add(fieldVm);
             }
+            IsLoaded = true;
             return fieldViewModels;
         }
 
@@ -68,5 +71,7 @@ namespace JosephM.Record.Application.RecordEntry.Section
             }
             return isValid;
         }
+
+        public bool IsReadOnly { get { return RecordForm.IsReadOnly; } }
     }
 }

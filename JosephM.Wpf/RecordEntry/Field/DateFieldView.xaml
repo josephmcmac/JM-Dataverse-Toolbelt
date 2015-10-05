@@ -4,6 +4,7 @@
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+                        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
                         mc:Ignorable="d" d:DesignHeight="40" d:DesignWidth="300">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
@@ -14,12 +15,24 @@
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
     <Grid>
-        <DatePicker
+        <xctk:DateTimePicker
             TabIndex="1"
             Name="DatePicker"
-            SelectedDate="{Binding ValueObject, Mode=TwoWay}"
+            Value="{Binding ValueObject, Mode=TwoWay}"
+            Width="200"
+            HorizontalAlignment="Left"
             Style="{StaticResource FieldEntryStyle}"
+            Format="Custom"
+            FormatString="{Binding Format}"
             IsEnabled="{Binding IsEditable}"
-            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+            Visibility="{Binding IsVisibleAndEditable, Converter={StaticResource BoolToVis}}" ></xctk:DateTimePicker>
+        <TextBox
+            Name="TextBox"
+            TabIndex="1"
+            Text="{Binding ValueObject, StringFormat=dd/MM/yyyy hh:mm:ss tt}"
+            Style="{StaticResource FieldEntryStyle}"
+            IsEnabled="False"
+            Visibility="{Binding IsVisibleAndReadonly, Converter={StaticResource BoolToVis}}"
+             />
     </Grid>
 </field:FieldControlBase>

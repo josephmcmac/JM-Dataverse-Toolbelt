@@ -3,7 +3,8 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using JosephM.Record.Application.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Record.Service;
 
 #endregion
 
@@ -35,7 +36,7 @@ namespace JosephM.Wpf.TemplateSelector
                 return DateFieldTemplate;
             if (item is StringFieldViewModel)
                 return StringFieldTemplate;
-            if (item is IntegerFieldViewModel)
+            if (item is IntegerFieldViewModel || item is BigIntFieldViewModel)
                 return IntegerFieldTemplate;
             if (item is LookupFieldViewModel)
                 return LookupFieldTemplate;
@@ -50,7 +51,9 @@ namespace JosephM.Wpf.TemplateSelector
             if (item is RecordFieldFieldViewModel)
                 return RecordFieldFieldTemplate;
             if (item is ObjectFieldViewModel)
+            {
                 return LookupFieldTemplate;
+            }
             if (item is FileRefFieldViewModel)
                 return FileRefFieldTemplate;
 

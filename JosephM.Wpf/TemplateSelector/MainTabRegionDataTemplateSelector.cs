@@ -3,10 +3,10 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using JosephM.Record.Application.Dialog;
-using JosephM.Record.Application.HTML;
-using JosephM.Record.Application.Navigation;
-using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.HTML;
+using JosephM.Application.ViewModel.Navigation;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
 #endregion
 

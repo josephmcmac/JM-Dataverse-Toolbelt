@@ -1,7 +1,6 @@
-﻿
+﻿using JosephM.Application.ViewModel.Dialog;
+
 using JosephM.ObjectEncryption;
-using JosephM.Prism.TestModule.SearchModule;
-using JosephM.Record.Application.Dialog;
 
 namespace JosephM.Prism.TestModule.ObjectEncrypt
 {

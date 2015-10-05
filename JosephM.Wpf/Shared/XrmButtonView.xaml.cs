@@ -1,7 +1,7 @@
 ﻿#region
 
 using System.Windows.Controls;
-using JosephM.Record.Application.Shared;
+using JosephM.Application.ViewModel.Shared;
 
 #endregion
 

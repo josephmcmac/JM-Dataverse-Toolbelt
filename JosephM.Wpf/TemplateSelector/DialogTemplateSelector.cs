@@ -3,10 +3,10 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using JosephM.Record.Application.Dialog;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.Search;
-using JosephM.Record.Application.Shared;
+using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Shared;
 
 #endregion
 
@@ -17,8 +17,8 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate RecordEntryTemplate { get; set; }
         public DataTemplate ProgressTemplate { get; set; }
         public DataTemplate CompletionTemplate { get; set; }
-        public DataTemplate SearchResultTemplate { get; set; }
         public DataTemplate LoadingTemplate { get; set; }
+        public DataTemplate ListViewTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -29,8 +29,8 @@ namespace JosephM.Wpf.TemplateSelector
                 return RecordEntryTemplate;
             if (item is CompletionScreenViewModel)
                 return CompletionTemplate;
-            if (item is SearchResultViewModel)
-                return SearchResultTemplate;
+            if (item is ListViewModel)
+                return ListViewTemplate;
             if (item is LoadingViewModel)
                 return LoadingTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Runtime.Serialization;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Record.Application;
-using JosephM.Record.Application.SettingTypes;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {

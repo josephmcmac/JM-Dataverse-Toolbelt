@@ -3,11 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JosephM.Core.Attributes;
+using JosephM.Core.AppConfig;
 
 namespace JosephM.Core.Extentions
 {
     public static class ObjectExtentions
     {
+        public static object GetFieldValue(this object instance, string fieldName)
+        {
+            var type = instance.GetType();
+            var field = type.GetField(fieldName);
+            if (field == null)
+                throw new NullReferenceException(string.Format("Class {0} Does Not Have A Field Named {1}", type.Name,
+                    fieldName));
+            return field.GetValue(instance);
+        }
+
+        public static object GetPropertyOrFieldValue(this object instance, string propertyOrFieldName)
+        {
+            var type = instance.GetType();
+            var property = type.GetProperty(propertyOrFieldName);
+            if (property != null && property.CanRead)
+            {
+                return property
+                    .GetGetMethod()
+                    .Invoke(instance, new object[] { });
+            }
+            var field = type.GetField(propertyOrFieldName);
+            if (field != null)
+                return field.GetValue(instance);
+            throw new NullReferenceException(
+                string.Format("Class {0} Does Not Have A Readable Property Or Field Named {1}", type.Name,
+                    propertyOrFieldName));
+        }
+
         public static object GetPropertyValue(this object instance, string propertyName)
         {
             var type = instance.GetType();
@@ -64,6 +93,19 @@ namespace JosephM.Core.Extentions
                 return !any;
             }
             return instance == null;
+        }
+
+        public static void InvokeMethod(this object instance, string methodName, IResolveObject objectResolver)
+        {
+            var method = instance.GetType().GetMethod(methodName);
+            var parameters = method.GetParameters();
+            var arguments = new List<object>();
+            if (parameters != null && parameters.Any())
+            {
+                foreach (var item in parameters)
+                    arguments.Add(objectResolver.ResolveType(item.ParameterType));
+            }
+            method.Invoke(instance, arguments.ToArray());
         }
 
         public static bool IsNotEmpty(this object instance)

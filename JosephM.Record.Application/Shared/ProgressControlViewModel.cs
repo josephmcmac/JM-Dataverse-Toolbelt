@@ -1,11 +1,11 @@
 ﻿#region
 
+using JosephM.Application.Application;
 using JosephM.Core.Log;
-using JosephM.Record.Application.Controller;
 
 #endregion
 
-namespace JosephM.Record.Application.Shared
+namespace JosephM.Application.ViewModel.Shared
 {
     public class ProgressControlViewModel : ViewModelBase, IUserInterface
     {

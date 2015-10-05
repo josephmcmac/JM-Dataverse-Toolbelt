@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JosephM.Application.ViewModel.Fakes;
+using JosephM.Core.AppConfig;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Record.Application.Fakes;
-using JosephM.Record.Xrm.Mappers;
-using JosephM.Record.Xrm.XrmRecord;
-using Microsoft.Practices.Unity;
 
 namespace JosephM.Prism.XrmModule.Test
 {
@@ -15,7 +13,7 @@ namespace JosephM.Prism.XrmModule.Test
     {
         public FakeXrmApplicationController(SavedXrmConnections.SavedXrmConnections connections)
         {
-            Container.RegisterInstance<ISavedXrmConnections>(connections);
+            this.RegisterInstance<ISavedXrmConnections>(connections);
         }
     }
 }

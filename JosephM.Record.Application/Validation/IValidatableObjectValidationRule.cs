@@ -1,15 +1,13 @@
 ﻿#region
 
 using System;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Core.Attributes;
-using JosephM.Core.Extentions;
 using JosephM.Core.Service;
-using JosephM.Record.Application.RecordEntry.Field;
-using JosephM.Record.Service;
 
 #endregion
 
-namespace JosephM.Record.Application.Validation
+namespace JosephM.Application.ViewModel.Validation
 {
     /// <summary>
     ///     Encapsulates A Custom Validation Rule Derived From JosephM.Core.Attributes.ValidationRule In The Type Required By

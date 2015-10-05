@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Prism.Infrastructure.Attributes;
+using JosephM.Application.Modules;
+using JosephM.Core.Extentions;
 using JosephM.Prism.Infrastructure.Module;
-using JosephM.Record.Application.ApplicationOptions;
 
 #endregion
 
@@ -27,19 +27,22 @@ namespace JosephM.Prism.Infrastructure.Prism
         protected List<Type> Modules { get; set; }
 
         public void AddModule<T>()
-            where T : PrismModuleBase, new()
+            where T : new()
         {
             AddModule(typeof (T));
         }
 
         private void AddModule(Type moduleType)
         {
+            var prismModuleType = typeof(Module<>);
+            //if (!moduleType.IsTypeOf(prismModuleType))
+            //    throw new Exception(string.Format("Type {0} registered as a module is not of type {1}", moduleType.Name, prismModuleType.Name));
+
             var dependantModuleAttributes =
                 moduleType.GetCustomAttributes(typeof(DependantModuleAttribute), true)
                     .Cast<DependantModuleAttribute>();
             foreach (var dependantModule in dependantModuleAttributes)
                 AddModule(dependantModule.DependantModule);
-            var prismModuleType = typeof(Module<>);
             prismModuleType = prismModuleType.MakeGenericType(moduleType);
             if (Modules.All(m => m != prismModuleType))
                 Modules.Add(prismModuleType);

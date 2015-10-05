@@ -1,14 +1,14 @@
 ﻿#region
 
 using System;
-using Microsoft.Practices.Prism.Regions;
+using JosephM.Application.Application;
+using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.Extentions;
-using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.TabArea;
+using Microsoft.Practices.Prism.Regions;
 
 #endregion
 
-namespace JosephM.Record.Application.Navigation
+namespace JosephM.Application.ViewModel.Navigation
 {
     public class NavigationErrorViewModel : TabAreaViewModelBase, INavigationAware
     {

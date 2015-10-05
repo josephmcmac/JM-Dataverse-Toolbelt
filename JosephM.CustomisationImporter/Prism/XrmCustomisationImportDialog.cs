@@ -1,8 +1,8 @@
 ﻿#region
 
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.CustomisationImporter.Service;
 using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Record.Application.Dialog;
 
 #endregion
 

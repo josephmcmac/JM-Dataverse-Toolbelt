@@ -3,20 +3,19 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.Practices.Prism.Commands;
+using JosephM.Application.Application;
+using JosephM.Application.Options;
 using JosephM.Core.Extentions;
-using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.HTML;
-using JosephM.Record.Application.Navigation;
+using Microsoft.Practices.Prism.Commands;
 
 #endregion
 
-namespace JosephM.Record.Application.ApplicationOptions
+namespace JosephM.Application.ViewModel.ApplicationOptions
 {
     /// <summary>
     ///     The Active Menu Options In The Appplication
     /// </summary>
-    public class ApplicationOptionsViewModel : ViewModelBase
+    public class ApplicationOptionsViewModel : ViewModelBase, IApplicationOptions
     {
         public ApplicationOptionsViewModel(IApplicationController controller)
             : base(controller)
@@ -34,28 +33,17 @@ namespace JosephM.Record.Application.ApplicationOptions
 
         public ObservableCollection<ApplicationOption> Helps { get; private set; }
 
-        public void AddOption(string optionLabel, string menu, Action action)
+        public void AddOption(string optionLabel, Action action, ApplicationOptionType type)
         {
-            var option = new ApplicationOption(optionLabel, menu, action, ApplicationOptionType.Main);
-            AddToCollection(option, Options);
-        }
-
-        public void AddSetting(string optionLabel, string menu, Action action)
-        {
-            var option = new ApplicationOption(optionLabel, menu, action, ApplicationOptionType.Setting);
-            AddToCollection(option, Settings);
+            var option = new ApplicationOption(optionLabel, action, type);
+            if(type == ApplicationOptionType.Help)
+                AddToCollection(option, Helps);
+            else if (type == ApplicationOptionType.Setting)
+                AddToCollection(option, Settings);
+            else
+                AddToCollection(option, Options);
+           
             OnPropertyChanged("HasSettings");
-        }
-
-        /// <summary>
-        /// !!! YOU NEED TO HAVE THE HTML FILE IN A FOLDER NAMED "HelpFiles" INCLUDED IN THE PROJECT BUILD COPY TO OUTPUT
-        /// Then ensure the applications build folder is included in the installer folders
-        /// </summary>
-        public void AddHelp(string optionLabel, string htmlFileName)
-        {
-            var option = new ApplicationOption(optionLabel, "Help", () => HelpCommand(htmlFileName),
-                ApplicationOptionType.Help);
-            AddToCollection(option, Helps);
             OnPropertyChanged("HasHelp");
         }
 
@@ -77,13 +65,6 @@ namespace JosephM.Record.Application.ApplicationOptions
                 options.Insert(index, option);
             else
                 options.Add(option);
-        }
-
-        private void HelpCommand(string htmlFileName)
-        {
-            var query = new UriQuery();
-            query.Add("path", System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "HelpFiles", htmlFileName));
-            NavigateTo<HtmlFileModel>(query);
         }
 
         public DelegateCommand SettingsClick { get; set; }

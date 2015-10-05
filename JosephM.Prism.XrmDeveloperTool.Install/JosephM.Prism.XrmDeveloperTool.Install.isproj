@@ -37,29 +37,5 @@
 			<Name>JosephM.Prism.XrmDeveloperTool</Name>
 			<Project>{F303560E-2FD6-4198-BE27-3EAC2446103C}</Project>
 		</ProjectReference>
-		<ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
-			<Name>JosephM.Prism.XrmModule</Name>
-			<Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
-		</ProjectReference>
-		<ProjectReference Include="..\JosephM.Xrm.CustomisationExporter\JosephM.Xrm.CustomisationExporter.csproj">
-			<Name>JosephM.Xrm.CustomisationExporter</Name>
-			<Project>{0A84403C-046E-48FF-967C-30CDDA6AF07A}</Project>
-		</ProjectReference>
-		<ProjectReference Include="..\JosephM.Xrm.ImportExporter\JosephM.Xrm.ImporterExporter.csproj">
-			<Name>JosephM.Xrm.ImporterExporter</Name>
-			<Project>{82118987-FB76-4E70-81A0-06D0B062D89C}</Project>
-		</ProjectReference>
-		<ProjectReference Include="..\JosephM.Xrm.OrganisationSettings\JosephM.Xrm.OrganisationSettings.csproj">
-			<Name>JosephM.Xrm.OrganisationSettings</Name>
-			<Project>{ADCA7224-551A-4ACE-8C6B-1B667283F920}</Project>
-		</ProjectReference>
-		<ProjectReference Include="..\JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj">
-			<Name>JosephM.Xrm.RecordExtract</Name>
-			<Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>
-		</ProjectReference>
-		<ProjectReference Include="..\JosephM.Xrm.CodeGenerator\JosephMXrm.CodeGenerator.csproj">
-			<Name>JosephMXrm.CodeGenerator</Name>
-			<Project>{0902CBF9-E77C-4B69-8021-3DA8E3999CCA}</Project>
-		</ProjectReference>
 	</ItemGroup>
 </Project>

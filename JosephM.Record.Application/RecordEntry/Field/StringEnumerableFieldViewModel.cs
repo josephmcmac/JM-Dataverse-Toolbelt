@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public class StringEnumerableFieldViewModel : FieldViewModel<IEnumerable<string>>
     {

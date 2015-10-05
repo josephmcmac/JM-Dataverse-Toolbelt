@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://www.codeplex.com/prism"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:constants="clr-namespace:JosephM.Record.Application.Constants;assembly=JosephM.Record.Application"
+             xmlns:constants="clr-namespace:JosephM.Application;assembly=JosephM.Application"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300">

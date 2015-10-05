@@ -1,6 +1,6 @@
 ﻿#region
 
-using JosephM.Record.Application.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 
 #endregion
 

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
              xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
-             xmlns:fakes="clr-namespace:JosephM.Record.Application.Fakes;assembly=JosephM.Record.Application"
+             xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="600"

@@ -1,6 +1,9 @@
 ﻿#region
 
 using System.Configuration;
+using JosephM.Application.Application;
+using JosephM.Application.Modules;
+using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Prism.Infrastructure.Constants;
@@ -22,7 +25,7 @@ namespace JosephM.Prism.XrmModule.XrmConnection
             try
             {
                 var xrmConfiguration = configManager.Resolve<XrmRecordConfiguration>();
-                RefreshXrmServices(xrmConfiguration, Container);
+                RefreshXrmServices(xrmConfiguration, ApplicationController);
             }
             catch (ConfigurationErrorsException ex)
             {
@@ -34,20 +37,20 @@ namespace JosephM.Prism.XrmModule.XrmConnection
             RegisterTypeForNavigation<XrmMaintainViewModel>();
             RegisterTypeForNavigation<XrmCreateViewModel>();
             RegisterTypeForNavigation<XrmConnectionDialog>();
-            RegisterType<XrmFormController>();
-            RegisterType<XrmFormService>();
+            //RegisterType<XrmFormController>();
+            //RegisterType<XrmFormService>();
         }
 
-        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, PrismContainer container)
+        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller)
         {
-            container.RegisterInstance(xrmConfiguration);
-            container.RegisterInstance(new XrmRecordService(xrmConfiguration, container.Resolve<LogController>()));
+            controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
+            controller.RegisterInstance(new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>()));
         }
 
         public override void InitialiseModule()
         {
-            ApplicationOptions.AddSetting("Connect To Crm", MenuNames.Crm, ConnectToCrm);
-            ApplicationOptions.AddHelp("Connect To Crm", "Connect To CRM Help.htm");
+            AddSetting("Connect To Crm", ConnectToCrm);
+            AddHelp("Connect To Crm", "Connect To CRM Help.htm");
         }
 
         private void ConnectToCrm()

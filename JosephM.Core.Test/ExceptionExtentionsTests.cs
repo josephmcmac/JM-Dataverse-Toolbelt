@@ -12,7 +12,7 @@ namespace JosephM.Core.Test
     public class ExceptionExtentionsTests
     {
         [TestMethod]
-        public void EnumExtentionsGetDisplayStringTest()
+        public void ExceptionGetDisplayStringTest()
         {
             var exception3 = new NotSupportedException("Exception 3");
             var exception2 = new NotImplementedException("Exception 2", exception3);

@@ -80,12 +80,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig\CustomConfigurationSectiion.cs" />
+    <Compile Include="AppConfig\Extentions.cs" />
+    <Compile Include="AppConfig\IResolveObject.cs" />
+    <Compile Include="AppConfig\IDependencyResolver.cs" />
     <Compile Include="Attributes\AllowSaveAndLoad.cs" />
     <Compile Include="Attributes\ConnectionFor.cs" />
+    <Compile Include="Attributes\CustomFunction.cs" />
+    <Compile Include="Attributes\Hidden.cs" />
     <Compile Include="Attributes\Multiline.cs" />
     <Compile Include="Attributes\ServiceConnection.cs" />
     <Compile Include="Attributes\FileMask.cs" />
-    <Compile Include="Attributes\LookupCondition.cs" />
     <Compile Include="Attributes\ReferencedType.cs" />
     <Compile Include="Attributes\SettingsLookup.cs" />
     <Compile Include="Attributes\ReadOnlyWhenSet.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="FieldType\PicklistOption.cs" />
     <Compile Include="FieldType\RecordType.cs" />
     <Compile Include="Log\LogFileUserInterface.cs" />
+    <Compile Include="Serialisation\JsonHelper.cs" />
     <Compile Include="Service\ServiceResponseItem.cs" />
     <Compile Include="Service\IsValidResponse.cs" />
     <Compile Include="Service\ServiceResponseBase.cs" />
@@ -132,10 +137,14 @@
     <Compile Include="Security\StringEncryptor.cs" />
     <Compile Include="Service\ServiceRequestBase.cs" />
     <Compile Include="Service\ServiceBase.cs" />
+    <Compile Include="Sql\ISqlSettings.cs" />
     <Compile Include="Sql\SqlException.cs" />
+    <Compile Include="Sql\ITransaction.cs" />
     <Compile Include="Sql\SqlProvider.cs" />
     <Compile Include="Log\ConsoleUserInterface.cs" />
     <Compile Include="Log\IUserInterface.cs" />
+    <Compile Include="Sql\SqlServerAndDbSettings.cs" />
+    <Compile Include="Sql\SqlTransaction.cs" />
     <Compile Include="Utility\CsvUtility.cs" />
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Sql\QueryRow.cs" />
@@ -145,9 +154,7 @@
   <ItemGroup>
     <None Include="JosephM.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Concurrency\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

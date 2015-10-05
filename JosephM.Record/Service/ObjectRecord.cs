@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 
 #endregion

@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
-    xmlns:fakes="clr-namespace:JosephM.Record.Application.Fakes;assembly=JosephM.Record.Application"
+    xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel"
     mc:Ignorable="d" d:DesignHeight="100" d:DesignWidth="500"
     d:DataContext="{d:DesignInstance Type=fakes:FakeLookupViewModel, IsDesignTimeCreatable=True}">
     <field:FieldControlBase.Resources>

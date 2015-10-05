@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Test;
 using JosephM.Core.Utility;
-using JosephM.Record.Application.Dialog;
 using JosephM.Xrm.Test;
 
 namespace JosephM.Prism.XrmTestModule.TestXrmSettingsDialog

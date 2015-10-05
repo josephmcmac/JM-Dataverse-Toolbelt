@@ -1,12 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using JosephM.Core.FieldType;
-using JosephM.Core.Service;
-using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public class EnumerableFieldViewModel : FieldViewModel<IEnumerable>
     {

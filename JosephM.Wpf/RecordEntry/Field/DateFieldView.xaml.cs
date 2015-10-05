@@ -2,7 +2,8 @@
 
 using System.Windows.Controls;
 using System.Windows.Data;
-using JosephM.Record.Application.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Field;
+using Xceed.Wpf.Toolkit;
 
 #endregion
 
@@ -26,7 +27,7 @@ namespace JosephM.Wpf.RecordEntry.Field
 
         protected override Binding GetValidationBinding()
         {
-            return BindingOperations.GetBinding(DatePicker, DatePicker.SelectedDateProperty);
+            return BindingOperations.GetBinding(DatePicker, DateTimePicker.ValueProperty);
         }
     }
 }

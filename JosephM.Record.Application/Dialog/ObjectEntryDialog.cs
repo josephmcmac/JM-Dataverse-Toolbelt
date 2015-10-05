@@ -1,18 +1,15 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
-using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.RecordEntry;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
+using JosephM.Application.Application;
 using JosephM.Record.IService;
-using JosephM.Record.Service;
 
 #endregion
 
-namespace JosephM.Record.Application.Dialog
+namespace JosephM.Application.ViewModel.Dialog
 {
-    public class ObjectEntryDialog : DialogViewModel
+    public class ObjectEntryDialog : ObjectEntryDialogBase
     {
         /// <summary>
         ///     Implementation Of DialogViewModel For Entering Data Into A CLR Object
@@ -26,34 +23,25 @@ namespace JosephM.Record.Application.Dialog
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
             IApplicationController applicationController, IRecordService lookupService,
             IDictionary<string, IEnumerable<string>> optionsetLimitedValues)
-            : base(parentDialog)
+            : this(objectsToEnter, parentDialog, applicationController, lookupService, optionsetLimitedValues, null)
         {
-            ObjectToEnter = objectsToEnter;
-            ApplicationController = applicationController;
-            LookupService = lookupService;
-            OptionsetLimitedValues = optionsetLimitedValues;
+            _objectToEnter = objectsToEnter;
         }
 
-        private object ObjectToEnter { get; set; }
-
-        private ObjectEntryViewModel ViewModel { get; set; }
-
-        private IRecordService LookupService { get; set; }
-
-        private IDictionary<string, IEnumerable<string>> OptionsetLimitedValues { get; set; }
-
-        protected override void LoadDialogExtention()
+        public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
+    IApplicationController applicationController, IRecordService lookupService,
+    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave)
+            : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave)
         {
-            var recordService = new ObjectRecordService(ObjectToEnter, LookupService, OptionsetLimitedValues);
-            var formService = new ObjectFormService(ObjectToEnter, recordService);
-            ViewModel = new ObjectEntryViewModel(StartNextAction, OnCancel, ObjectToEnter,
-                new FormController(recordService, formService, ApplicationController));
-            Controller.LoadToUi(ViewModel);
+            _objectToEnter = objectsToEnter;
         }
 
-        protected override void CompleteDialogExtention()
+
+        private readonly object _objectToEnter;
+
+        protected override object ObjectToEnter
         {
-            Controller.RemoveFromUi(ViewModel);
+            get { return _objectToEnter; }
         }
     }
 }

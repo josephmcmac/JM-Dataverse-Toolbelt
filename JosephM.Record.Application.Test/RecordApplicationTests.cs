@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JosephM.Application.ViewModel.Fakes;
+using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Core.Test;
-using JosephM.Record.Application.Fakes;
-using JosephM.Record.Application.RecordEntry;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
 using JosephM.Record.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,10 +18,11 @@ namespace JosephM.Record.Application.Test
     {
         public ObjectEntryViewModel LoadToObjectEntryViewModel(object objectToEnter)
         {
-            var recordService = new ObjectRecordService(objectToEnter);
+            var applicationController = new FakeApplicationController();
+            var recordService = new ObjectRecordService(objectToEnter, applicationController);
             var formService = new ObjectFormService(objectToEnter, recordService);
             var viewModel = new ObjectEntryViewModel(EmptyMethod, EmptyMethod, objectToEnter,
-                new FormController(recordService, formService, new FakeApplicationController()));
+                new FormController(recordService, formService, applicationController));
             viewModel.LoadFormSections();
             Assert.IsNotNull(viewModel.FormSectionsAsync);
             return viewModel;

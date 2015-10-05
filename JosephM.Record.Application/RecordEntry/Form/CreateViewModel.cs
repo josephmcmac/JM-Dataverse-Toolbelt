@@ -1,14 +1,15 @@
 ﻿#region
 
 using System;
-using Microsoft.Practices.Prism.Regions;
+using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.Extentions;
-using JosephM.Record.Application.Navigation;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using Microsoft.Practices.Prism.Regions;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Form
+namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public abstract class CreateViewModel : RecordEntryFormViewModel, INavigationAware
     {
@@ -17,6 +18,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
         protected CreateViewModel(FormController formController)
             : base(formController)
         {
+            OnSave = () => RecordService.Create(GetRecord());
         }
 
         public override string TabLabel
@@ -38,11 +40,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 _record = RecordService.NewRecord(RecordType);
             }
             return _record;
-        }
-
-        public override void OnSaveExtention()
-        {
-            RecordService.Create(GetRecord());
         }
 
         #region INavigationAware Members

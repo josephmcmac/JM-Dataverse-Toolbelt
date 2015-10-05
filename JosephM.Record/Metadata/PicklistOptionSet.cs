@@ -7,7 +7,7 @@ using JosephM.Core.FieldType;
 
 namespace JosephM.Record.Metadata
 {
-    public class PicklistOptionSet
+    public class PicklistOptionSet : IPicklistSet
     {
         public PicklistOptionSet()
         {

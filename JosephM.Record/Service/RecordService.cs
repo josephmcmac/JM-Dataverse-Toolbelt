@@ -6,6 +6,7 @@ using System.Linq;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.ObjectMapping;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
@@ -34,12 +35,12 @@ namespace JosephM.Record.Service
         public IEnumerable<One2ManyRelationshipMetadata> One2ManyRelationships { get; private set; }
         public IEnumerable<Many2ManyRelationshipMetadata> Many2ManyRelationships { get; private set; }
 
-        public RecordMetadata GetRecordMetadata(string recordType)
+        public override IRecordTypeMetadata GetRecordTypeMetadata(string recordType)
         {
             if (RecordMetadata.Any(r => r.SchemaName == recordType))
                 return RecordMetadata.First(r => r.SchemaName == recordType);
             throw new ArgumentOutOfRangeException("recordType",
-                string.Format("There Is No {0} Defined For Record Type: {1}", typeof (RecordMetadata), recordType));
+                string.Format("There Is No {0} Defined For Record Type: {1}", typeof(RecordMetadata), recordType));
         }
 
         private IEnumerable<FieldMetadata> StandardFields
@@ -53,19 +54,9 @@ namespace JosephM.Record.Service
             }
         }
 
-        public IEnumerable<FieldMetadata> GetFieldMetadata(string recordType)
+        public override IEnumerable<IFieldMetadata> GetFieldMetadata(string recordType)
         {
-            return GetRecordMetadata(recordType).Fields.Union(StandardFields);
-        }
-
-        public override IRecord GetFirst(string recordType, string fieldName, object fieldValue)
-        {
-            foreach (var record in GetRecordsOfType(recordType))
-            {
-                if (FieldsEqual(record.GetField(fieldName), fieldValue))
-                    return Clone(record, null);
-            }
-            return null;
+            return ((RecordMetadata)GetRecordTypeMetadata(recordType)).Fields.Union(StandardFields);
         }
 
         private IEnumerable<IRecord> GetRecordsOfType(string recordType)
@@ -73,18 +64,12 @@ namespace JosephM.Record.Service
             return _records.Where(r => r.Type == recordType);
         }
 
-        public override void Update(IRecord record)
-        {
-            Update(record, null);
-        }
-
-
         public override IRecord NewRecord(string recordType)
         {
             return new RecordObject(recordType);
         }
 
-        public override void Associate(Many2ManyRelationshipMetadata relationship, IRecord record1, IRecord record2)
+        public void Associate(IMany2ManyRelationshipMetadata relationship, IRecord record1, IRecord record2)
         {
             var associationRecord = new RecordObject(relationship.IntersectEntityName);
             associationRecord.SetField(relationship.Entity1IntersectAttribute, record1.Id, this);
@@ -92,7 +77,7 @@ namespace JosephM.Record.Service
             _records.Add(associationRecord);
         }
 
-        public override string Create(IRecord record)
+        public override string Create(IRecord record, IEnumerable<string> fields)
         {
             string id;
             if (string.IsNullOrEmpty(record.Id))
@@ -104,19 +89,11 @@ namespace JosephM.Record.Service
             {
                 id = record.Id;
             }
-            var primaryKey = GetPrimaryKey(record.Type);
+            var primaryKey = GetRecordTypeMetadata(record.Type).PrimaryKeyName;
             record.SetField(primaryKey, id, this);
             record.SetField("createdon", DateTime.Now, this);
             _records.Add((RecordObject)Clone(record, null));
             return id;
-        }
-
-        public override FieldMetadata GetFieldMetadata(string field, string recordType)
-        {
-            var items = GetFieldMetadata(recordType).Where(mt => mt.SchemaName == field);
-            if (items.Any())
-                return items.ElementAt(0);
-            throw new ArgumentOutOfRangeException("No field of name " + field + " is defined in the metadata");
         }
 
         public override IEnumerable<IRecord> GetLinkedRecords(string linkedEntityType, string entityTypeFrom,
@@ -144,24 +121,10 @@ namespace JosephM.Record.Service
                     var id = lookup.Id;
                     var type = lookup.RecordType;
                     var referencedRecord = Get(type, id);
-                    var name = referencedRecord.GetStringField(GetPrimaryField(type));
+                    var name = referencedRecord.GetStringField(GetRecordTypeMetadata(type).PrimaryKeyName);
                     lookup.Name = name;
                 }
             }
-        }
-
-        public override IEnumerable<IRecord> RetrieveMultiple(string recordType, string searchString, int maxCount)
-        {
-            return Clone(GetRecordsOfType(recordType).Where(r =>
-            {
-                var stringValue = (string) r.GetField(GetPrimaryField(recordType));
-                return stringValue != null && stringValue.ToLower().StartsWith(searchString.ToLower());
-            }), null);
-        }
-
-        public override string GetPrimaryField(string recordType)
-        {
-            return GetRecordMetadata(recordType).GetPrimaryFieldMetadata().SchemaName;
         }
 
         public override IRecord Get(string recordType, string id)
@@ -173,20 +136,15 @@ namespace JosephM.Record.Service
             throw new Exception(string.Format("No Record Exists Of Type '{0}' With Id = '{1}'", recordType, id));
         }
 
-        public override string GetDisplayName(string recordType)
-        {
-            return GetRecordMetadata(recordType).DisplayName;
-        }
-
-        public override IEnumerable<Many2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType)
+        public override IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType)
         {
             return
                 Many2ManyRelationships.Where(
-                    r => r.Entity1LogicalName == recordType || r.Entity2LogicalName == recordType);
+                    r => r.RecordType1 == recordType || r.RecordType2 == recordType);
         }
 
         public override IEnumerable<IRecord> GetRelatedRecords(IRecord recordToExtract,
-            Many2ManyRelationshipMetadata many2ManyRelationshipMetadata,
+            IMany2ManyRelationshipMetadata many2ManyRelationshipMetadata,
             bool from1)
         {
             var intersects =
@@ -200,48 +158,15 @@ namespace JosephM.Record.Service
                 ? many2ManyRelationshipMetadata.Entity2IntersectAttribute
                 : many2ManyRelationshipMetadata.Entity1IntersectAttribute;
             var matchType = from1
-                ? many2ManyRelationshipMetadata.Entity2LogicalName
-                : many2ManyRelationshipMetadata.Entity1LogicalName;
+                ? many2ManyRelationshipMetadata.RecordType2
+                : many2ManyRelationshipMetadata.RecordType1;
             return
                 Clone(GetRecordsOfType(matchType).Where(r => intersects.Select(i => i.GetStringField(matchField)).Contains(r.Id)), null);
         }
 
-        public override string GetRelationshipLabel(Many2ManyRelationshipMetadata many2ManyRelationshipMetadata,
-            bool from1)
-        {
-            return from1
-                ? GetCollectionName(many2ManyRelationshipMetadata.Entity2LogicalName)
-                : GetCollectionName(many2ManyRelationshipMetadata.Entity1LogicalName);
-        }
-
-        public override IEnumerable<One2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType)
+        public override IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType)
         {
             return One2ManyRelationships.Where(r => r.ReferencedEntity == recordType);
-        }
-
-        public override IEnumerable<IRecord> GetRelatedRecords(IRecord recordToExtract,
-            One2ManyRelationshipMetadata one2ManyRelationshipMetadata)
-        {
-            return
-                _records.Where(
-                    r =>
-                        r.Type == one2ManyRelationshipMetadata.ReferencingEntity &&
-                        r.GetLookupId(one2ManyRelationshipMetadata.ReferencingAttribute) == recordToExtract.Id);
-        }
-
-        public override string GetRelationshipLabel(One2ManyRelationshipMetadata one2ManyRelationshipMetadata)
-        {
-            return GetCollectionName(one2ManyRelationshipMetadata.ReferencingEntity);
-        }
-
-        public override string GetCollectionName(string recordType)
-        {
-            return GetRecordMetadata(recordType).DisplayCollectionName;
-        }
-
-        public override string GetPrimaryKey(string recordType)
-        {
-            return GetRecordMetadata(recordType).PrimaryKeyName;
         }
 
         public override IEnumerable<string> GetAllRecordTypes()
@@ -249,20 +174,9 @@ namespace JosephM.Record.Service
             return RecordMetadata.Select(r => r.SchemaName);
         }
 
-        public override IEnumerable<IRecord> GetFirstX(string recordType, int x)
-        {
-            return GetRecordsOfType(recordType).Take(x);
-        }
-
         public override IEnumerable<ViewMetadata> GetViews(string recordType)
         {
-            return GetRecordMetadata(recordType).Views;
-        }
-
-        public override IEnumerable<IRecord> RetrieveAllAndClauses(string recordType,
-            IEnumerable<Condition> andConditions)
-        {
-            return RetrieveAllAndClauses(recordType, andConditions, null);
+            return ((RecordMetadata)GetRecordTypeMetadata(recordType)).Views;
         }
 
         public override IEnumerable<IRecord> RetrieveAllAndClauses(string recordType,
@@ -271,53 +185,10 @@ namespace JosephM.Record.Service
             return Clone(GetRecordsOfType(recordType).Where(r => andConditions.All(c => c.MeetsCondition(r))), fields);
         }
 
-        public override bool IsString(string fieldName, string recordType)
-        {
-            var fieldType = GetFieldType(fieldName, recordType);
-            return fieldType == RecordFieldType.String || fieldType == RecordFieldType.Memo;
-        }
-
         public override IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Condition> orConditions,
             IEnumerable<string> fields)
         {
             return Clone(GetRecordsOfType(recordType).Where(r => orConditions.Any(c => c.MeetsCondition(r))), fields);
-        }
-
-        public override IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Condition> orConditions)
-        {
-            return RetrieveAllOrClauses(recordType, orConditions, null);
-        }
-
-        public override IEnumerable<string> GetFields(string recordType)
-        {
-            return GetFieldMetadata(recordType).Select(m => m.SchemaName);
-        }
-
-        public override IEnumerable<string> GetAllRecordTypesForSearch()
-        {
-            return GetAllRecordTypes();
-        }
-
-        public override IEnumerable<string> GetStringFields(string recordType)
-        {
-            return GetFieldMetadata(recordType)
-                .Where(f => IsString(f.SchemaName, recordType))
-                .Select(f => f.SchemaName);
-        }
-
-        public override bool IsActivityType(string recordType)
-        {
-            return GetRecordMetadata(recordType).IsActivityType;
-        }
-
-        public override bool IsActivityPartyParticipant(string recordType)
-        {
-            return GetRecordMetadata(recordType).IsActivityParticipant;
-        }
-
-        public override IEnumerable<string> GetActivityTypes()
-        {
-            return RecordMetadata.Where(m => m.IsActivityType).Select(m => m.SchemaName);
         }
 
         public override string GetFieldAsDisplayString(IRecord record, string fieldName)
@@ -326,15 +197,15 @@ namespace JosephM.Record.Service
             if (fieldValue == null)
                 return null;
             if (fieldValue is string)
-                return (string) fieldValue;
+                return (string)fieldValue;
             if (fieldValue is Lookup)
-                return ((Lookup) fieldValue).Name;
-            if (IsActivityParty(fieldName, record.Type))
+                return ((Lookup)fieldValue).Name;
+            if (this.GetFieldMetadata(fieldName, record.Type).IsActivityParty())
             {
                 if (fieldValue is IRecord[])
                 {
                     var namesToOutput = new List<string>();
-                    foreach (var party in (IRecord[]) fieldValue)
+                    foreach (var party in (IRecord[])fieldValue)
                     {
                         namesToOutput.Add(party.GetLookupName("partyid"));
                     }
@@ -344,17 +215,12 @@ namespace JosephM.Record.Service
             return fieldValue.ToString();
         }
 
-        public override IRecord GetFirst(string recordType)
-        {
-            return
-                _records.Any(r => r.Type == recordType)
-                    ? Clone(_records.First(r => r.Type == recordType), null)
-                    : null;
-        }
-
         public override IEnumerable<IRecord> GetFirstX(string recordType, int x, IEnumerable<string> fields, IEnumerable<Condition> conditions, IEnumerable<SortExpression> sortExpressions)
         {
-            return Clone(GetRecordsOfType(recordType).Where(r => conditions.All(c => c.MeetsCondition(r))), fields);
+            var records = x > 0
+                ? GetRecordsOfType(recordType).Where(r => conditions.All(c => c.MeetsCondition(r))).Take(x)
+                : GetRecordsOfType(recordType).Where(r => conditions.All(c => c.MeetsCondition(r)));
+            return Clone(records, fields);
         }
 
         private IEnumerable<IRecord> Clone(IEnumerable<IRecord> records, IEnumerable<string> fields)
@@ -386,7 +252,7 @@ namespace JosephM.Record.Service
                     copyTo.SetField(field, value, this);
                 else if (value is IRecord[])
                 {
-                    var newValue = ((IRecord[]) value).Select(r => Clone(r, null)).ToArray();
+                    var newValue = ((IRecord[])value).Select(r => Clone(r, null)).ToArray();
                     copyTo.SetField(field, newValue, this);
                 }
                 else
@@ -395,6 +261,11 @@ namespace JosephM.Record.Service
                     copyTo.SetField(field, mapper.Map(copyFrom.GetField(field)), this);
                 }
             }
+        }
+
+        public override void Delete(string recordType, string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

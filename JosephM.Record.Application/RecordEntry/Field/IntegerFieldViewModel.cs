@@ -1,13 +1,12 @@
 ﻿#region
 
 using System;
-using JosephM.Core.Extentions;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Service;
-using JosephM.Record.Application.RecordEntry.Form;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public class IntegerFieldViewModel : FieldViewModel<int?>
     {
@@ -17,7 +16,6 @@ namespace JosephM.Record.Application.RecordEntry.Field
             MinValue = Int32.MinValue;
             MaxValue = Int32.MaxValue;
         }
-
 
         public int MaxValue { get; set; }
         public int MinValue { get; set; }

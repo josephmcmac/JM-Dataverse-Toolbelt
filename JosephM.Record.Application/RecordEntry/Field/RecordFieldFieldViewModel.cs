@@ -1,14 +1,15 @@
 ﻿#region
 
-using System.Collections.Generic;
+using System.Linq;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Record.Extentions;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    public class RecordFieldFieldViewModel : FieldViewModel<RecordField>
+    public class RecordFieldFieldViewModel : DropdownFieldViewModel<RecordField>
     {
         public RecordFieldFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
@@ -24,19 +25,6 @@ namespace JosephM.Record.Application.RecordEntry.Field
                 OnPropertyChanged("Value");
             }
         }
-
-        private IEnumerable<PicklistOption> _itemsSource;
-
-        public IEnumerable<PicklistOption> ItemsSource
-        {
-            get { return _itemsSource; }
-            set
-            {
-                _itemsSource = value;
-                OnPropertyChanged("ItemsSource");
-            }
-        }
-
         private string _recordTypeForField;
 
         public string RecordTypeForField
@@ -45,7 +33,12 @@ namespace JosephM.Record.Application.RecordEntry.Field
             set
             {
                 _recordTypeForField = value;
-                ItemsSource = GetRecordService().GetPicklistKeyValues(FieldName, GetRecordType(), _recordTypeForField, RecordEntryViewModel.GetRecord());
+                var reference = GetRecordForm().ParentFormReference == null
+                    ? _recordTypeForField
+                    : _recordTypeForField + ":" + GetRecordForm().ParentFormReference;
+                ItemsSource = GetRecordService()
+                    .GetPicklistKeyValues (FieldName, GetRecordType(), reference, RecordEntryViewModel.GetRecord())
+                    .Select(p => new RecordField(p.Key, p.Value));
             }
         }
     }

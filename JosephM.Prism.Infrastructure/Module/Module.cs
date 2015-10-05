@@ -1,5 +1,6 @@
 ﻿#region
 
+using JosephM.Application.Modules;
 using Microsoft.Practices.Prism.Modularity;
 using JosephM.Prism.Infrastructure.Prism;
 
@@ -14,7 +15,7 @@ namespace JosephM.Prism.Infrastructure.Module
     internal class Module<TModule> : IModule
         where TModule : PrismModuleBase, new()
     {
-        public Module(IPrismModuleController controller)
+        public Module(PrismModuleController controller)
         {
             PrismModuleBase = new TModule {Controller = controller};
         }

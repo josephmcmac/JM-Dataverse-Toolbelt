@@ -29,7 +29,6 @@ namespace JosephM.Record.Service
 
         public override object GetField(string field)
         {
-            //is there a safer way to do this
             if (_fields.ContainsKey(field))
                 return _fields[field];
             else

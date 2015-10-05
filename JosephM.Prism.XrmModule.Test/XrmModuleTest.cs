@@ -1,23 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Modules;
+using JosephM.Application.ViewModel.Fakes;
+using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
+using JosephM.Prism.Infrastructure.Module;
+using JosephM.Prism.Infrastructure.Test;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.Fakes;
-using JosephM.Record.Application.RecordEntry;
-using JosephM.Record.Application.RecordEntry.Form;
+using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Xrm.Sdk.Client;
+using JosephM.Record.IService;
 
 namespace JosephM.Prism.XrmModule.Test
 {
     public class XrmModuleTest : XrmRecordTest
     {
-        public IApplicationController CreateFakeApplicationController()
+        protected TestApplication CreateAndLoadTestApplication<TModule>()
+            where TModule : PrismModuleBase, new()
+        {
+            var testApplication = new TestApplication();
+            testApplication.AddModule<TModule>();
+            XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), testApplication.Controller);
+            testApplication.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections.SavedXrmConnections
+            {
+                Connections = new[] { GetSavedXrmRecordConfiguration() }
+            });
+            return testApplication;
+        }
+
+        public FakeXrmApplicationController CreateFakeApplicationController()
+        {
+            var savedConfig = GetSavedXrmRecordConfiguration();
+            var savedConfigs = new SavedXrmConnections.SavedXrmConnections()
+            {
+                Connections = new[] { savedConfig }
+            };
+            return new FakeXrmApplicationController(savedConfigs);
+        }
+
+        public SavedXrmRecordConfiguration GetSavedXrmRecordConfiguration()
         {
             var xrmConfig = GetSavedTestEncryptedXrmConfiguration();
             var enumMapper = new EnumMapper<XrmRecordAuthenticationProviderType, AuthenticationProviderType>();
@@ -27,22 +51,36 @@ namespace JosephM.Prism.XrmModule.Test
                 AuthenticationProviderType = enumMapper.Map(xrmConfig.AuthenticationProviderType),
                 DiscoveryServiceAddress = xrmConfig.DiscoveryServiceAddress,
                 Domain = xrmConfig.Domain,
-                OrganizationUniqueName = xrmConfig.OrganizationUniqueName,
+                OrganizationUniqueName = OverrideOrganisation ?? xrmConfig.OrganizationUniqueName,
                 Password = xrmConfig.Password,
                 Username = xrmConfig.Username
             };
-            var savedConfigs = new SavedXrmConnections.SavedXrmConnections()
-            {
-                Connections = new[] {savedConfig}
-            };
-            return new FakeXrmApplicationController(savedConfigs);
+            return savedConfig;
         }
 
+        public XrmRecordConfiguration GetXrmRecordConfiguration()
+        {
+            var saved = GetSavedXrmRecordConfiguration();
+            return new XrmRecordConfiguration()
+            {
+                AuthenticationProviderType = saved.AuthenticationProviderType,
+                DiscoveryServiceAddress = saved.DiscoveryServiceAddress,
+                Domain = saved.Domain,
+                OrganizationUniqueName = OverrideOrganisation ?? saved.OrganizationUniqueName,
+                Password = saved.Password,
+                Username = saved.Username
+            };
+        }
 
         public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject, IApplicationController applicationController)
         {
+            return CreateObjectEntryViewModel(viewModelObject, applicationController, XrmRecordService);
+        }
+
+        public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject, IApplicationController applicationController, IRecordService lookupService)
+        {
             var viewModel = new ObjectEntryViewModel(() => { }, () => { }, viewModelObject,
-                FormController.CreateForObject(viewModelObject, applicationController, XrmRecordService));
+                FormController.CreateForObject(viewModelObject, applicationController, lookupService));
             viewModel.LoadFormSections();
             return viewModel;
         }

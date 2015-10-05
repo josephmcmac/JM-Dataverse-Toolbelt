@@ -11,6 +11,8 @@
     <Image x:Key="DeleteButtonImageKey" Source="../Images/DeleteIcon.jpg" Height="15" Width="15" />
     <Image x:Key="EditButtonImageKey" Source="../Images/EditIcon.jpg" Height="15" Width="15" />
     <Image x:Key="CloseButtonImageKey" Source="../Images/CloseButton.gif" />
+    <Image x:Key="NextImageKey" Source="../Images/Next.png" Height="15" Width="15" />
+    <Image x:Key="PreviousImageKey" Source="../Images/Previous.png" />
     <ImageSource x:Key="ErrorIconImageSourceKey">
         ../Images/ErrorIcon.png
     </ImageSource>
@@ -66,6 +68,14 @@
         <Setter Property="Content" Value="{StaticResource AddButtonImageKey}" />
         <Setter Property="Margin" Value="16,0,0,0" />
     </Style>
+    <Style x:Key="PreviousButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Content" Value="{StaticResource PreviousImageKey}" />
+        <Setter Property="Margin" Value="16,0,0,0" />
+    </Style>
+    <Style x:Key="NextButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Content" Value="{StaticResource NextImageKey}" />
+        <Setter Property="Margin" Value="16,0,0,0" />
+    </Style>
     <Style TargetType="{x:Type ScrollViewer}">
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
     </Style>
@@ -96,6 +106,7 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style x:Key="FieldEntryStyle" TargetType="Control">
+        <!--<Setter Property="HorizontalAlignment" Value="Left" />-->
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Margin" Value="8,8,8,8" />
         <Setter Property="MinHeight" Value="25" />

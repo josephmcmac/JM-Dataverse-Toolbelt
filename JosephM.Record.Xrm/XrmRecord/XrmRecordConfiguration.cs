@@ -9,6 +9,15 @@ namespace JosephM.Record.Xrm.XrmRecord
     [ServiceConnection(typeof(XrmRecordService))]
     public class XrmRecordConfiguration : IXrmRecordConfiguration, IValidatableObject
     {
+
+        [DisplayOrder(2)]
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return Name ?? OrganizationUniqueName;
+        }
+
         [DisplayOrder(20)]
         [RequiredProperty]
         public XrmRecordAuthenticationProviderType AuthenticationProviderType { get; set; }

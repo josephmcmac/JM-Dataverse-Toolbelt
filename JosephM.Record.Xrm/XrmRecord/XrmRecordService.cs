@@ -54,90 +54,35 @@ namespace JosephM.Record.Xrm.XrmRecord
             get { return _xrmService; }
         }
 
-        public IEnumerable<IRecord> RetrieveAll(string recordType, IEnumerable<string> fields)
+        public IEnumerable<IFieldMetadata> GetFieldMetadata(string recordType)
         {
-            return ToIRecords(_xrmService.RetrieveAllEntityType(recordType, fields));
+            return _xrmService
+                .GetFields(recordType)
+                .Select(f => new XrmFieldMetadata(f, recordType, _xrmService))
+                .ToArray();
         }
 
-        public string GetFieldLabel(string field, string recordType)
+        public IRecordTypeMetadata GetRecordTypeMetadata(string recordType)
         {
-            return _xrmService.GetFieldLabel(field, recordType);
+            return new XrmRecordTypeMetadata(recordType, _xrmService);
         }
 
-        public int GetMaxLength(string field, string recordType)
+        public IEnumerable<IPicklistSet> GetSharedPicklists()
         {
-            return _xrmService.GetMaxLength(field, recordType);
+            return _xrmService.GetAllSharedOptionSets().Select(o => new XrmPicklistSet(o, _xrmService));
         }
 
-        public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType)
+        public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
             return _xrmService.GetPicklistKeyValues(recordType, field)
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value))
                 .ToArray();
         }
 
-        public bool IsMandatory(string field, string recordType)
-        {
-            return _xrmService.IsMandatory(field, recordType);
-        }
-
-        public RecordFieldType GetFieldType(string field, string recordType)
-        {
-            return new FieldTypeMapper().Map(_xrmService.GetFieldType(field, recordType));
-        }
-
-        public int GetMaxIntValue(string field, string recordType)
-        {
-            return _xrmService.GetMaxIntValue(field, recordType) ?? int.MaxValue;
-        }
-
-        public int GetMinIntValue(string field, string recordType)
-        {
-            return _xrmService.GetMinIntValue(field, recordType) ?? int.MinValue;
-        }
-
-
-        public IRecord GetFirst(string recordType, string fieldName, object fieldValue)
-        {
-            return ToIRecord(_xrmService.GetFirst(recordType, fieldName, fieldValue));
-        }
-
-
-        public void Update(IRecord record)
-        {
-            _xrmService.Update(ToEntity(record));
-        }
-
-
         public IRecord NewRecord(string recordType)
         {
             return new XrmRecord(recordType);
         }
-
-
-        public string Create(IRecord record)
-        {
-            return _xrmService.Create(ToEntity(record)).ToString();
-        }
-
-        public ParseFieldResponse ParseFieldRequest(ParseFieldRequest parseFieldRequest)
-        {
-            try
-            {
-                //PciklistOptions are only used by the generic records so for this case we just pass in the picklist index
-                var temp = ToEntityValue(parseFieldRequest.Value);
-                var parsedValue = _xrmService.ParseField(parseFieldRequest.FieldName,
-                    parseFieldRequest.RecordType,
-                    temp);
-                var newValue = ToRecordField(parsedValue, parseFieldRequest.FieldName, parseFieldRequest.RecordType);
-                return new ParseFieldResponse(newValue);
-            }
-            catch (Exception ex)
-            {
-                return new ParseFieldResponse(ex.Message);
-            }
-        }
-
 
         public IEnumerable<IRecord> GetLinkedRecords(string linkedrecordType, string recordTypeFrom,
             string linkedEntityLookup, string entityFromId)
@@ -158,132 +103,15 @@ namespace JosephM.Record.Xrm.XrmRecord
             return _xrmService.GetLookupTargetEntity(field, recordType);
         }
 
-        public IEnumerable<IRecord> RetrieveMultiple(string recordType, string searchString, int maxCount)
-        {
-            return ToEnumerableIRecord(_xrmService.RetrieveMultiple(recordType, searchString, maxCount));
-        }
-
-
-        public string GetPrimaryField(string recordType)
-        {
-            return _xrmService.GetPrimaryNameField(recordType);
-        }
-
-        public string GetFieldDescription(string fieldName, string recordType)
-        {
-            return _xrmService.GetFieldDescription(fieldName, recordType);
-        }
-
         public void ClearCache()
         {
             _xrmService.ClearCache();
-        }
-
-        public bool IsNotNullable(string fieldName, string recordType)
-        {
-            return false;
-        }
-
-        public bool IsMultilineText(string fieldName, string recordType)
-        {
-            return _xrmService.IsMultilineText(fieldName, recordType);
-        }
-
-        public decimal GetMaxDecimalValue(string fieldName, string recordType)
-        {
-            var value = _xrmService.GetMaxDecimalValue(fieldName, recordType);
-            return value ?? decimal.MaxValue;
-        }
-
-        public int GetDecimalPrecision(string fieldName, string recordType)
-        {
-            return _xrmService.GetPrecision(fieldName, recordType);
-        }
-
-        public decimal GetMinDecimalValue(string fieldName, string recordType)
-        {
-            var value = _xrmService.GetMinDecimalValue(fieldName, recordType);
-            return value ?? decimal.MinValue;
-        }
-
-        public string GetDisplayName(string recordType)
-        {
-            return _xrmService.GetEntityDisplayName(recordType);
-        }
-
-        public string GetCollectionName(string recordType)
-        {
-            return _xrmService.GetEntityCollectionName(recordType);
         }
 
         public IsValidResponse VerifyConnection()
         {
             return _xrmService.VerifyConnection();
         }
-
-        public bool IsAuditOn(string recordType)
-        {
-            return _xrmService.IsEntityAuditOn(recordType);
-        }
-
-        public bool IsFieldAuditOn(string fieldName, string recordType)
-        {
-            return _xrmService.IsFieldAuditOn(fieldName, recordType);
-        }
-
-        public bool IsFieldSearchable(string fieldName, string recordType)
-        {
-            return _xrmService.IsFieldSearchable(fieldName, recordType);
-        }
-
-        public TextFormat GetTextFormat(string fieldName, string recordType)
-        {
-            var format = _xrmService.GetTextFormat(fieldName, recordType);
-            return format == null
-                ? TextFormat.Text
-                : new StringFormatMapper().Map((StringFormat) format);
-        }
-
-        public bool IsDateIncludeTime(string fieldName, string recordType)
-        {
-            return _xrmService.IsDateIncludeTime(fieldName, recordType);
-        }
-
-        public IEnumerable<IRecord> GetWhere(string recordType, string field, string value)
-        {
-            return ToEnumerableIRecord(
-                _xrmService.RetrieveAllActive(recordType, null,
-                    new[]
-                    {
-                        new ConditionExpression(field,
-                            ConditionOperator.Equal,
-                            value)
-                    },
-                    null));
-        }
-
-        public IEnumerable<string> GetFields(string recordType)
-        {
-            return _xrmService.GetFields(recordType);
-        }
-
-        public IRecord GetFirst(string recordType)
-        {
-            return ToIRecord(_xrmService.GetFirst(recordType));
-        }
-
-
-        public IntegerType GetIntegerType(string fieldType, string recordType)
-        {
-            return new IntegerTypeMapper().Map(_xrmService.GetIntegerFormat(fieldType, recordType));
-        }
-
-
-        public string GetPrimaryKey(string recordType)
-        {
-            return _xrmService.GetPrimaryKeyField(recordType);
-        }
-
 
         public IRecord Get(string recordType, string id)
         {
@@ -293,119 +121,17 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public string GetFieldAsMatchString(string recordType, string fieldName, object fieldValue)
         {
-            return _xrmService.GetFieldAsMatchString(recordType, fieldName, fieldValue);
-        }
-
-        public IDictionary<string, IRecord> IndexRecordsByField(string recordType, string matchField)
-        {
-            return _xrmService.IndexEntitiesByValue(recordType, matchField, null)
-                .ToDictionary(kv => kv.Key, kv => ToIRecord(kv.Value));
+            return _xrmService.GetFieldAsMatchString(recordType, fieldName, ToEntityValue(fieldValue));
         }
 
         public object ParseField(string fieldName, string recordType, object value)
         {
-            return _xrmService.ParseField(fieldName, recordType, value);
-        }
-
-        public IDictionary<string, IEnumerable<string>> IndexAssociatedIds(string recordType, string relationshipName,
-            string otherSideId)
-        {
-            return _xrmService.IndexAssociatedIds(recordType, relationshipName, otherSideId)
-                .ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.Select(g => g.ToString()));
-        }
-
-        public IEnumerable<string> GetAssociatedIds(string recordType, string id, string relationshipName,
-            string otherSideId)
-        {
-            return _xrmService.GetAssociatedIds(recordType, new Guid(id), relationshipName, otherSideId)
-                .Select(g => g.ToString());
-        }
-
-
-        public IDictionary<string, string> IndexGuidsByValue(string recordType, string fieldName)
-        {
-            return _xrmService.IndexGuidsByValue(recordType, fieldName)
-                .ToDictionary(kv => kv.Key, kv => kv.Value.ToString());
-        }
-
-
-        public IDictionary<string, string> IndexMatchingGuids(string recordType, string fieldName,
-            IEnumerable<string> unmatchedStrings)
-        {
-            return _xrmService.IndexMatchingGuids(recordType, fieldName, unmatchedStrings)
-                .ToDictionary(kv => kv.Key, kv => kv.Value.ToString());
-        }
-
-
-        public bool IsLookup(string field, string recordType)
-        {
-            return _xrmService.IsLookup(field, recordType);
-        }
-
-        public bool IsFieldDisplayRelated(string field, string recordType)
-        {
-            return _xrmService.IsFieldDisplayRelated(field, recordType);
-        }
-
-        public bool IsSharedPicklist(string field, string recordType)
-        {
-            return _xrmService.IsSharedPicklist(field, recordType);
-        }
-
-        public string GetSharedPicklistDisplayName(string field, string recordType)
-        {
-            return _xrmService.GetSharedPicklistDisplayName(field, recordType);
-        }
-
-        public string GetSharedPicklistDisplayName(string optionSetName)
-        {
-            return _xrmService.GetSharedPicklistDisplayName(optionSetName);
-        }
-
-        public bool HasNotes(string recordType)
-        {
-            return _xrmService.HasNotes(recordType);
-        }
-
-        public bool HasActivities(string recordType)
-        {
-            return _xrmService.HasActivities(recordType);
-        }
-
-        public bool HasConnections(string recordType)
-        {
-            return _xrmService.HasConnections(recordType);
-        }
-
-        public bool HasMailMerge(string recordType)
-        {
-            return _xrmService.HasMailMerge(recordType);
-        }
-
-        public bool HasQueues(string recordType)
-        {
-            return _xrmService.HasQueues(recordType);
-        }
-
-        public string GetDescription(string recordType)
-        {
-            return _xrmService.GetDescription(recordType);
-        }
-
-        public IEnumerable<string> GetSharedOptionSetNames()
-        {
-            return _xrmService.GetSharedOptionSetNames();
-        }
-
-        public IEnumerable<KeyValuePair<string, string>> GetSharedOptionSetKeyValues(string optionSetName)
-        {
-            return _xrmService.GetSharedOptionSetKeyValues(optionSetName)
-                .Select(kv => new KeyValuePair<string, string>(kv.Key.ToString(CultureInfo.InvariantCulture), kv.Value)).ToArray();
-        }
-
-        public bool IsCustomer(string recordType, string field)
-        {
-            return _xrmService.GetFieldType(field, recordType) == AttributeTypeCode.Customer;
+            var temp = ToEntityValue(value);
+            var parsedValue = _xrmService.ParseField(fieldName,
+                recordType,
+                temp);
+            var newValue = ToRecordField(parsedValue, fieldName, recordType);
+            return newValue;
         }
 
         public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Condition> orConditions)
@@ -433,9 +159,9 @@ namespace JosephM.Record.Xrm.XrmRecord
                     fields));
         }
 
-        public void Create(IRecord iRecord, IEnumerable<string> fieldToSet)
+        public string Create(IRecord iRecord, IEnumerable<string> fieldToSet)
         {
-            _xrmService.Create(ToEntity(iRecord), fieldToSet);
+            return _xrmService.Create(ToEntity(iRecord), fieldToSet).ToString();
         }
 
         public void Delete(IRecord record)
@@ -446,11 +172,6 @@ namespace JosephM.Record.Xrm.XrmRecord
         public void Delete(string recordType, string id)
         {
             _xrmService.Delete(recordType, new Guid(id));
-        }
-
-        public IEnumerable<IRecord> GetFirstX(string recordType, int x)
-        {
-            return ToEnumerableIRecord(_xrmService.GetFirstX(recordType, x));
         }
 
         public IEnumerable<IRecord> GetFirstX(string recordType, int x, IEnumerable<Condition> conditions,
@@ -576,7 +297,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             if (!_xrmService.EntityExists(recordMetadata.SchemaName))
             {
                 _xrmService.CreateOrUpdateEntity(recordMetadata.SchemaName, recordMetadata.DisplayName,
-                    recordMetadata.DisplayCollectionName,
+                    recordMetadata.CollectionName,
                     recordMetadata.Description,
                     recordMetadata.Audit,
                     recordMetadata.PrimaryFieldSchemaName,
@@ -595,7 +316,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             else
             {
                 _xrmService.CreateOrUpdateEntity(recordMetadata.SchemaName, recordMetadata.DisplayName,
-                    recordMetadata.DisplayCollectionName,
+                    recordMetadata.CollectionName,
                     recordMetadata.Description,
                     recordMetadata.Audit,
                     null,
@@ -656,7 +377,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                         typedField.Audit,
                         typedField.Searchable,
                         recordType,
-                        typedField.Minimum, typedField.Maximum, typedField.DecimalPrecision);
+                        typedField.MinValue, typedField.MaxValue, typedField.DecimalPrecision);
                     break;
                 }
                 case (RecordFieldType.Integer):
@@ -669,7 +390,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                         typedField.Audit,
                         typedField.Searchable,
                         recordType,
-                        typedField.Minimum, typedField.Maximum);
+                        Convert.ToInt32(typedField.MinValue), Convert.ToInt32(typedField.MaxValue));
                     break;
                 }
                 case (RecordFieldType.Lookup):
@@ -742,7 +463,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                         typedField.Audit,
                         typedField.Searchable,
                         recordType,
-                        typedField.Minimum, typedField.Maximum);
+                        Convert.ToDouble(typedField.MinValue), Convert.ToDouble(typedField.MaxValue));
                     break;
                 }
                 case (RecordFieldType.Memo):
@@ -779,7 +500,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                             typedField.IsMandatory,
                             typedField.Audit,
                             typedField.Searchable,
-                            recordType, typedField.Minimum, typedField.Maximum, typedField.DecimalPrecision);
+                            recordType, Convert.ToDouble(typedField.MinValue), Convert.ToDouble(typedField.MaxValue), typedField.DecimalPrecision);
                     break;
                 }
                 case (RecordFieldType.State):
@@ -820,13 +541,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
-        public bool RecordTypeExists(string recordType)
-        {
-            return _xrmService.EntityExists(recordType);
-        }
-
-
-        public void CreateOrUpdate(RelationshipMetadata relationshipMetadata)
+        public void CreateOrUpdate(IMany2ManyRelationshipMetadata relationshipMetadata)
         {
             _xrmService.CreateOrUpdateRelationship(relationshipMetadata.SchemaName,
                 relationshipMetadata.RecordType1,
@@ -841,26 +556,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                 relationshipMetadata.RecordType2DisplayOrder);
         }
 
-        public IEnumerable<One2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType)
+        public IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType)
         {
             var relationships = _xrmService.GetEntityOneToManyRelationships(recordType);
-            //var real = relationships.First();
-
-            var mapper = new OneToManyRelationshipTypeMapper();
             return relationships
                 .Where(r => r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
-                .Select(mapper.Map)
+                .Select(r => new XrmOne2ManyRelationship(r.SchemaName, r.ReferencedEntity, _xrmService))
                 .ToArray();
-        }
-
-        public bool FieldExists(string fieldName, string recordType)
-        {
-            return _xrmService.FieldExists(fieldName, recordType);
-        }
-
-        public bool RelationshipExists(string relationship)
-        {
-            return _xrmService.RelationshipExists(relationship);
         }
 
         public void PublishAll()
@@ -1005,12 +707,6 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
-
-        public bool SharedOptionSetExists(string optionSetName)
-        {
-            return _xrmService.SharedOptionSetExists(optionSetName);
-        }
-
         public void CreateOrUpdateSharedOptionSet(PicklistOptionSet sharedOptionSet)
         {
             _xrmService.CreateOrUpdateSharedOptionSet(
@@ -1036,27 +732,9 @@ namespace JosephM.Record.Xrm.XrmRecord
             return _xrmService.GetAllEntityTypes();
         }
 
-        public IEnumerable<string> GetAllRecordTypesForSearch()
-        {
-            return
-                _xrmService.GetAllEntityMetadata()
-                    .Where(m => m.IsValidForAdvancedFind ?? false)
-                    .Select(m => m.LogicalName);
-        }
-
         public string GetFieldAsDisplayString(IRecord record, string fieldName)
         {
             return _xrmService.GetFieldAsDisplayString(record.Type, fieldName, ToEntityValue(record.GetField(fieldName)));
-        }
-
-        public string GetSqlViewName(string recordType)
-        {
-            return _xrmService.GetFilteredViewName(recordType);
-        }
-
-        public string GetDatabaseName()
-        {
-            return _xrmService.GetDatabaseName();
         }
 
         public IRecordService LookupService
@@ -1157,105 +835,37 @@ namespace JosephM.Record.Xrm.XrmRecord
             return _xrmService.RetrieveAllOrClauses(recordType, crmFilters, null).Select(ToIRecord);
         }
 
-        public int GetObjectTypeCode(string recordType)
-        {
-            return _xrmService.GetObjectTypeCode(recordType);
-        }
-
-
-        public IEnumerable<IRecord> GetRelatedRecords(IRecord record, One2ManyRelationshipMetadata relationship)
-        {
-            return
-                ToIRecords(_xrmService.GetLinkedRecords(relationship.ReferencedEntity,
-                    relationship.ReferencedAttribute, new Guid(record.Id), relationship.ReferencingEntity,
-                    relationship.ReferencingAttribute));
-        }
-
         public string GetRelationshipLabel(One2ManyRelationshipMetadata relationship)
         {
             return _xrmService.GetOneToManyRelationshipLabel(relationship.ReferencedEntity, relationship.SchemaName);
         }
 
-        public IEnumerable<Many2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType)
+        public IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType)
         {
             var relationships = _xrmService.GetEntityManyToManyRelationships(recordType);
             //var real = relationships.First();
-
-            var mapper = new ManyToManyRelationshipTypeMapper();
             return relationships
                 .Where(r => r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
-                .Select(mapper.Map)
+                .Select(r => new XrmManyToManyRelationshipMetadata(r.SchemaName, XrmService, recordType))
                 .ToArray();
         }
 
-        public IEnumerable<IRecord> GetRelatedRecords(IRecord record, Many2ManyRelationshipMetadata relationship,
+        public IEnumerable<IRecord> GetRelatedRecords(IRecord record, IMany2ManyRelationshipMetadata relationship,
             bool from1)
         {
             return
                 from1
-                    ? ToIRecords(_xrmService.GetAssociatedEntities(relationship.Entity1LogicalName,
-                        GetPrimaryKey(relationship.Entity1LogicalName),
+                    ? ToIRecords(_xrmService.GetAssociatedEntities(relationship.RecordType1,
+                        _xrmService.GetPrimaryKeyField(relationship.RecordType1),
                         relationship.Entity1IntersectAttribute, new Guid(record.Id), relationship.IntersectEntityName,
-                        relationship.Entity2LogicalName, relationship.Entity2IntersectAttribute,
-                        GetPrimaryKey(relationship.Entity2LogicalName)))
-                    : ToIRecords(_xrmService.GetAssociatedEntities(relationship.Entity2LogicalName,
-                        GetPrimaryKey(relationship.Entity2LogicalName),
+                        relationship.RecordType2, relationship.Entity2IntersectAttribute,
+                        _xrmService.GetPrimaryKeyField(relationship.RecordType2)))
+                    : ToIRecords(_xrmService.GetAssociatedEntities(relationship.RecordType2,
+                        _xrmService.GetPrimaryKeyField(relationship.RecordType2),
                         relationship.Entity2IntersectAttribute, new Guid(record.Id), relationship.IntersectEntityName,
-                        relationship.Entity1LogicalName, relationship.Entity1IntersectAttribute,
-                        GetPrimaryKey(relationship.Entity1LogicalName)));
+                        relationship.RecordType1, relationship.Entity1IntersectAttribute,
+                        _xrmService.GetPrimaryKeyField(relationship.RecordType1)));
         }
-
-        public string GetRelationshipLabel(Many2ManyRelationshipMetadata relationship, bool from1)
-        {
-            return _xrmService.GetManyToManyRelationshipLabel(relationship.Entity1LogicalName, relationship.SchemaName,
-                from1);
-        }
-
-        public bool IsActivityParty(string fieldName, string recordType)
-        {
-            return _xrmService.IsActivityParty(fieldName, recordType);
-        }
-
-        public void Associate(Many2ManyRelationshipMetadata relationship, IRecord record1, IRecord record2)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetOptionLabel(string optionKey, string field, string recordType)
-        {
-            if (optionKey.IsNullOrWhiteSpace() || optionKey == "-1")
-                return null;
-            var parsedInteger = 0;
-            if (int.TryParse(optionKey, out parsedInteger))
-            {
-                return _xrmService.GetOptionLabel(parsedInteger, field, recordType);
-            }
-            throw new ArgumentOutOfRangeException("optionKey", "Expected Integer String Actual Value Was: " + optionKey);
-        }
-
-
-        public bool IsString(string fieldName, string recordType)
-        {
-            return _xrmService.IsString(fieldName, recordType);
-        }
-
-        public IEnumerable<string> GetStringFields(string recordType)
-        {
-            var fieldMetadata = _xrmService.GetEntityFieldMetadata(recordType)
-                .Where(s => _xrmService.IsString(s.LogicalName, recordType));
-            return fieldMetadata
-                .Where(f =>
-                {
-                    if (!(f.IsValidForRead ?? false)
-                        || !f.AttributeOf.IsNullOrWhiteSpace())
-                        return false;
-                    var thisMetadata = _xrmService.GetFieldMetadata(f.LogicalName, recordType);
-                    return (!(thisMetadata is StringAttributeMetadata) ||
-                            ((StringAttributeMetadata) thisMetadata).YomiOf.IsNullOrWhiteSpace());
-                })
-                .Select(f => f.LogicalName);
-        }
-
 
         public IEnumerable<IRecord> RetrieveAllOrClauses(string entityType, IEnumerable<Condition> orConditions,
             IEnumerable<string> fields)
@@ -1296,132 +906,31 @@ namespace JosephM.Record.Xrm.XrmRecord
                     ToOrderExpressions(sort)));
         }
 
-
-        public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public bool IsWritable(string fieldName, string recordType)
-        {
-            return _xrmService.IsWritable(fieldName, recordType);
-        }
-
-        public bool IsCreateable(string fieldName, string recordType)
-        {
-            return _xrmService.IsCreateable(fieldName, recordType);
-        }
-
-        public bool IsReadable(string fieldName, string recordType)
-        {
-            return _xrmService.IsReadable(fieldName, recordType);
-        }
-
-        public bool IsCustomField(string fieldName, string recordType)
-        {
-            return _xrmService.GetFieldMetadata(fieldName, recordType).IsCustomAttribute ?? false;
-        }
-
-        public bool IsCustomType(string recordType)
-        {
-            return _xrmService.GetEntityMetadata(recordType).IsCustomEntity ?? false;
-        }
-
-        public bool IsCustomRelationship(string relationshipName)
-        {
-            return _xrmService.IsCustomRelationship(relationshipName);
-        }
-
-        public string GetRecordTypeCode(string thisType)
-        {
-            return _xrmService.GetObjectTypeCode(thisType).ToString();
-        }
-
-        public bool IsDisplayRelated(Many2ManyRelationshipMetadata relationship, bool from1)
-        {
-            return XrmService.IsManyToManyDisplayRelated(relationship.Entity1LogicalName, relationship.SchemaName, from1);
-        }
-
-        public bool IsCustomLabel(Many2ManyRelationshipMetadata relationship, bool from1)
-        {
-            return XrmService.IsManyToManyCustomLabel(relationship.Entity1LogicalName, relationship.SchemaName, from1);
-        }
-
-        public int DisplayOrder(Many2ManyRelationshipMetadata relationship, bool from1)
-        {
-            return XrmService.ManyToManyDisplayOrder(relationship.Entity1LogicalName, relationship.SchemaName, from1);
-        }
-
-        public int GetDisplayOrder(Many2ManyRelationshipMetadata relationship, bool from1)
-        {
-            return XrmService.GetManyToManyDisplayOrder(relationship.Entity1LogicalName, relationship.SchemaName, from1);
-        }
-
-        public bool IsDisplayRelated(One2ManyRelationshipMetadata relationship)
-        {
-            return XrmService.IsOneToManyDisplayRelated(relationship.ReferencedEntity, relationship.SchemaName);
-        }
-
-        public int GetDisplayOrder(One2ManyRelationshipMetadata relationship)
-        {
-            return XrmService.GetOneToManyDisplayOrder(relationship.ReferencedEntity, relationship.SchemaName);
-        }
-
-        public bool IsCustomLabel(One2ManyRelationshipMetadata relationship)
-        {
-            return XrmService.GetOneToManyIsCustomLabel(relationship.ReferencedEntity, relationship.SchemaName);
-        }
-
-        public double GetMinDoubleValue(string field, string thisType)
-        {
-            var value = _xrmService.GetMinDoubleValue(field, thisType);
-            if (value.HasValue)
-                return Convert.ToDouble(value.Value);
-            else
-                return double.MinValue;
-        }
-
-        public double GetMaxDoubleValue(string field, string thisType)
-        {
-            var value = _xrmService.GetMaxDoubleValue(field, thisType);
-            if (value.HasValue)
-                return Convert.ToDouble(value.Value);
-            else
-                return double.MaxValue;
-        }
-
-        public decimal GetMinMoneyValue(string field, string thisType)
-        {
-            var value = _xrmService.GetMinMoneyValue(field, thisType);
-            if (value.HasValue)
-                return Convert.ToDecimal(value.Value);
-            else
-                return decimal.MinValue;
-        }
-
-        public decimal GetMaxMoneyValue(string field, string thisType)
-        {
-            var value = _xrmService.GetMaxMoneyValue(field, thisType);
-            if (value.HasValue)
-                return Convert.ToDecimal(value.Value);
-            else
-                return decimal.MaxValue;
-        }
-
         public IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
         {
             return ToIRecords(_xrmService.GetLinkedRecordsThroughBridge(linkedRecordType, recordTypeThrough, recordTypeFrom, linkedThroughLookupFrom, linkedThroughLookupTo, new Guid(recordFromId)));
         }
 
-        public bool IsMultiline(string field, string recordType)
-        {
-            return _xrmService.IsMultilineText(field, recordType);
-        }
-
         public IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)
         {
             return LookupService;
+        }
+
+        public IsValidResponse IsValidForNewType(string typeName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object ConvertToQueryValue(string fieldName, string entityType, object value)
+        {
+            var parsedValue = ParseField(fieldName, entityType, value);
+            if (parsedValue is EntityReference)
+                parsedValue = ((EntityReference)parsedValue).Id;
+            else if (parsedValue is OptionSetValue)
+                parsedValue = ((OptionSetValue)parsedValue).Value;
+            else if (parsedValue is Money)
+                parsedValue = ((Money)parsedValue).Value;
+            return parsedValue;
         }
     }
 }

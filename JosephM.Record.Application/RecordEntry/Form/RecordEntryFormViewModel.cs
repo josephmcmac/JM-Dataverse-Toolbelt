@@ -5,25 +5,25 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
+using JosephM.Application.ViewModel.Navigation;
+using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.RecordEntry.Section;
+using JosephM.Application.ViewModel.Shared;
+using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
-using JosephM.Record.Application.Constants;
-using JosephM.Record.Application.Navigation;
-using JosephM.Record.Application.RecordEntry.Field;
-using JosephM.Record.Application.RecordEntry.Metadata;
-using JosephM.Record.Application.RecordEntry.Section;
-using JosephM.Record.Application.Shared;
-using JosephM.Record.Application.Validation;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Form
+namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public abstract class RecordEntryFormViewModel : RecordEntryViewModelBase
     {
+        public virtual int GridPageSize { get { return StandardPageSize; } }
+
         private ObservableCollection<SectionViewModelBase> _formSections;
 
         private List<FieldViewModelBase> _recordFields;
@@ -39,11 +39,11 @@ namespace JosephM.Record.Application.RecordEntry.Form
         protected RecordEntryFormViewModel(FormController formController)
             : base(formController)
         {
-            SaveButtonViewModel = new XrmButtonViewModel(SaveButtonLabel, OnSave, ApplicationController)
+            SaveButtonViewModel = new XrmButtonViewModel(SaveButtonLabel, DoOnSave, ApplicationController)
             {
                 IsVisible = false
             };
-            CancelButtonViewModel = new XrmButtonViewModel(CancelButtonLabel, OnCancel, ApplicationController)
+            CancelButtonViewModel = new XrmButtonViewModel(CancelButtonLabel, () => OnCancel(), ApplicationController)
             {
                 IsVisible = false
             };
@@ -56,15 +56,10 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 IsVisible = false
             };
             ChangedPersistentFields = new List<string>();
-
-            FormInstance = FormService.CreateFormInstance(RecordType, this, RecordService);
-
-            LoadingViewModel.AddTriggerMethod(() => OnPropertyChanged("MainFormInContext"));
+            LoadingViewModel.IsLoading = true;
         }
 
-        public FormInstanceBase FormInstance { get; private set; }
-
-        protected List<string> ChangedPersistentFields { get; private set; }
+        public List<string> ChangedPersistentFields { get; private set; }
 
         /// <summary>
         ///     WARNING!!! Populates itself asyncronously the first time its requested
@@ -148,10 +143,9 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 AddChangedField(f);
                 foreach (var action in FormService.GetOnChanges(f.FieldName))
                     action(this);
-                FormInstance.OnChange(f.FieldName);
             };
         }
-
+        //
         public IEnumerable<GridSectionViewModel> SubGrids
         {
             get { return FormSectionsAsync.Where(s => s is GridSectionViewModel).Cast<GridSectionViewModel>(); }
@@ -169,14 +163,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     ChangedPersistentFields.Add(fieldViewModel.FieldName);
         }
 
-        public void OnCancel()
-        {
-            var continueCancel = ConfirmClose();
-            if (continueCancel)
-            {
-                OnCanceEntension();
-            }
-        }
+        public Action OnCancel { get; set; }
 
         public virtual void SaveObject()
         {
@@ -205,11 +192,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
             throw new NotImplementedException();
         }
 
-        public virtual void OnCanceEntension()
-        {
-            ApplicationController.Remove(RegionNames.MainTabRegion, this);
-        }
-
         private bool ConfirmClose()
         {
             var continueCancel = true;
@@ -222,19 +204,16 @@ namespace JosephM.Record.Application.RecordEntry.Form
             return continueCancel;
         }
 
-        public void OnSave()
+        private void DoOnSave()
         {
-            DoWhileLoading(() =>
+            DoOnAsynchThread(() =>
             {
                 try
                 {
                     if (Validate())
                     {
-                        if (FormInstance.OnSaveConfirmation())
-                        {
-                            OnSaveExtention();
-                            ApplicationController.Remove(RegionNames.MainTabRegion, this);
-                        }
+                        OnSave();
+                        ApplicationController.Remove(RegionNames.MainTabRegion, this);
                     }
                 }
                 catch (Exception ex)
@@ -243,6 +222,8 @@ namespace JosephM.Record.Application.RecordEntry.Form
                 }
             });
         }
+
+        public Action OnSave { get; set; }
 
         protected virtual void PreValidateExtention()
         {
@@ -288,61 +269,46 @@ namespace JosephM.Record.Application.RecordEntry.Form
             }
         }
 
-        public virtual void OnSaveExtention()
-        {
-        }
-
         public void LoadFormSections()
         {
-            DoWhileLoading(() =>
+            //forcing enumeration up front
+            var sections = FormService.GetFormMetadata(RecordType).FormSections.ToArray();
+            var sectionViewModels = new List<SectionViewModelBase>();
+            //Create the section view models
+
+            foreach (var section in sections)
             {
-                //forcing enumeration up front
-                var sections = FormService.GetFormMetadata(RecordType).FormSections.ToArray();
-                var sectionViewModels = new List<SectionViewModelBase>();
-                //Create the section view models
-
-                foreach (var section in sections)
+                if (section is FormFieldSection)
                 {
-                    if (section is FormFieldSection)
-                    {
-                        sectionViewModels.Add(new FieldSectionViewModel(
-                            (FormFieldSection) section,
-                            this
-                            ));
-                    }
-                    else if (section is SubGridSection)
-                    {
-                        sectionViewModels.Add(new GridSectionViewModel(
-                            (SubGridSection) section,
-                            this
-                            ));
-                    }
+                    sectionViewModels.Add(new FieldSectionViewModel(
+                        (FormFieldSection) section,
+                        this
+                        ));
                 }
-                //we need to populate the RecordFields property with the generated field view models
-                _recordFields = new List<FieldViewModelBase>();
-                foreach (
-                    var formSection in
-                        sectionViewModels.Where(fs => fs is FieldSectionViewModel).Cast<FieldSectionViewModel>()
-                    )
+                else if (section is SubGridSection)
                 {
-                    _recordFields.AddRange(formSection.Fields);
+                    sectionViewModels.Add(new GridSectionViewModel(
+                        (SubGridSection) section,
+                        this
+                        ));
                 }
-                //now set the section view model property in the ui thread which will notify the ui with the sections
-                DoOnMainThread(
-                    () => { FormSectionsAsync = new ObservableCollection<SectionViewModelBase>(sectionViewModels); });
-                OnLoad();
-                //need to somehow refresh grid visibilities
-
-                FormInstance.OnLoad(this);
-                if (ShowSaveButton)
-                    SaveButtonViewModel.IsVisible = true;
-                if (ShowCancelButton)
-                    CancelButtonViewModel.IsVisible = true;
-                if (AllowSaveAndLoad)
-                    SaveRequestButtonViewModel.IsVisible = true;
-                if (AllowSaveAndLoad)
-                    LoadRequestButtonViewModel.IsVisible = true;
-            });
+            }
+            //we need to populate the RecordFields property with the generated field view models
+            _recordFields = new List<FieldViewModelBase>();
+            foreach (
+                var formSection in
+                    sectionViewModels.Where(fs => fs is FieldSectionViewModel).Cast<FieldSectionViewModel>()
+                )
+            {
+                _recordFields.AddRange(formSection.Fields);
+            }
+            //now set the section view model property in the ui thread which will notify the ui with the sections
+            DoOnMainThread(
+                () =>
+                {
+                    FormSectionsAsync = new ObservableCollection<SectionViewModelBase>(sectionViewModels);
+                    OnSectionLoaded();
+                });
         }
 
         protected virtual bool AllowSaveAndLoad
@@ -391,7 +357,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
             }
             foreach (var subGrid in SubGrids)
             {
-                foreach (var gridRecord in subGrid.GridRecords)
+                foreach (var gridRecord in subGrid.DynamicGridViewModel.GridRecords)
                 {
                     foreach (var fieldViewModelBase in gridRecord.FieldViewModels)
                     {
@@ -463,7 +429,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
         {
             get
             {
-                return !LoadingViewModel.IsLoading && !ChildForms.Any();
+                return !ChildForms.Any();
             }
         }
 
@@ -477,6 +443,29 @@ namespace JosephM.Record.Application.RecordEntry.Form
         internal override string ParentFormReference
         {
             get { return _parentFormReference; }
+        }
+
+        internal void OnSectionLoaded()
+        {
+            if (FormSectionsAsync.All(s => s.IsLoaded))
+            {
+                OnLoad();
+                foreach (var section in SubGrids)
+                {
+                    if (section.GridRecords != null)
+                        foreach (var record in section.GridRecords)
+                            record.OnLoad();
+                }
+
+                SaveButtonViewModel.IsVisible = OnSave != null;
+                CancelButtonViewModel.IsVisible = OnCancel != null;
+                if (AllowSaveAndLoad)
+                    SaveRequestButtonViewModel.IsVisible = true;
+                if (AllowSaveAndLoad)
+                    LoadRequestButtonViewModel.IsVisible = true;
+
+                LoadingViewModel.IsLoading = false;
+            }
         }
     }
 }

@@ -122,13 +122,13 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
 
             relatedTypes.AddRange(oneToManyRelationships.Select(r => r.ReferencingEntity));
             relatedTypes.AddRange(
-                manyToManyRelationships.Where(r => r.Entity1LogicalName == extractRecordType)
-                    .Select(r => r.Entity2LogicalName));
+                manyToManyRelationships.Where(r => r.RecordType1 == extractRecordType)
+                    .Select(r => r.RecordType2));
             relatedTypes.AddRange(
-                manyToManyRelationships.Where(r => r.Entity2LogicalName == extractRecordType)
-                    .Select(r => r.Entity1LogicalName));
-            if (Service.IsActivityPartyParticipant(container.RecordToExtractType))
-                relatedTypes.AddRange(Service.GetActivityTypes());
+                manyToManyRelationships.Where(r => r.RecordType2 == extractRecordType)
+                    .Select(r => r.RecordType1));
+            if (Service.GetRecordTypeMetadata(container.RecordToExtractType).IsActivityParticipant)
+                relatedTypes.AddRange(Service.GetAllRecordTypes().Where(r => Service.GetRecordTypeMetadata(r).IsActivityType));
             relatedTypes = relatedTypes.Distinct()
                 .Where(r => !Settings.GetRecordTypesToExclude().Contains(r))
                 //we exclude activity parties from this as we get the links when processing activity types
@@ -143,7 +143,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         {
             //if the extracted record could be an activity participant for this type
             //then get and append them
-            if (Service.IsActivityPartyParticipant(container.RecordToExtractType) && Service.IsActivityType(relatedType))
+            if (Service.GetRecordTypeMetadata(container.RecordToExtractType).IsActivityParticipant && Service.GetRecordTypeMetadata(relatedType).IsActivityType)
             {
                 var activities = Service.GetLinkedRecordsThroughBridge(relatedType, "activityparty",
                     container.RecordToExtractType, "partyid", "activityid", container.RecordToExtractId);
@@ -204,7 +204,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                     string.Format("Searching Many To Many Relationships To {0}", recordTypeCollectionLabel));
                 try
                 {
-                    if (manyToMany.Entity1LogicalName == relatedType)
+                    if (manyToMany.RecordType1 == relatedType)
                     {
                         var theseRelatedEntities = Service.GetRelatedRecords(container.RecordToExtract, manyToMany,
                             false);
@@ -214,7 +214,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                                 recordsToOutput.Add(relatedEntity.Id, relatedEntity);
                         }
                     }
-                    if (manyToMany.Entity2LogicalName == relatedType)
+                    if (manyToMany.RecordType2 == relatedType)
                     {
                         var theseRelatedEntities = Service.GetRelatedRecords(container.RecordToExtract, manyToMany,
                             true);
@@ -248,7 +248,12 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                     string.Format("Searching One To Many Relationships To {0}", recordTypeCollectionLabel));
                 try
                 {
-                    var theseRelatedEntities = Service.GetRelatedRecords(container.RecordToExtract, oneToMany);
+                    var theseRelatedEntities = Service.RetrieveAllAndClauses(oneToMany.ReferencingEntity,
+                        new[]
+                        {
+                            new Condition(oneToMany.ReferencingAttribute, ConditionType.Equal,
+                                container.RecordToExtract.Id)
+                        }, null);
                     foreach (var relatedEntity in theseRelatedEntities)
                     {
                         if (!recordsToOutput.ContainsKey(relatedEntity.Id))
@@ -264,28 +269,28 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             }
         }
 
-        internal IEnumerable<Many2ManyRelationshipMetadata> GetManyToManyRelationshipsForType(
+        internal IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationshipsForType(
             RecordExtractContainer container, string recordType)
         {
             return
                 GetManyToManyRelationships(container)
-                    .Where(r => r.Entity1LogicalName == recordType || r.Entity2LogicalName == recordType);
+                    .Where(r => r.RecordType1 == recordType || r.RecordType2 == recordType);
         }
 
-        private IEnumerable<One2ManyRelationshipMetadata> GetOneToManyRelationshipsForType(
+        private IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationshipsForType(
             RecordExtractContainer container, string recordType)
         {
             return GetOneToManyRelationships(container).Where(r => r.ReferencingEntity == recordType);
         }
 
-        private IEnumerable<Many2ManyRelationshipMetadata> GetManyToManyRelationships(RecordExtractContainer container)
+        private IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(RecordExtractContainer container)
         {
             return
                 Service.GetManyToManyRelationships(container.RecordToExtractType)
                     .Where(r => !Settings.GetRelationshipsToExclude().Contains(r.SchemaName));
         }
 
-        private IEnumerable<One2ManyRelationshipMetadata> GetOneToManyRelationships(RecordExtractContainer container)
+        private IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(RecordExtractContainer container)
         {
             return Service.GetOneToManyRelationships(container.RecordToExtractType)
                 .Where(r => !Settings.GetRelationshipsToExclude().Contains(r.SchemaName));
@@ -336,7 +341,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                         actualFieldsToExclude.Add(field);
                     else if (Service.GetFieldType(field, record.Type) == RecordFieldType.String &&
                              new[] {TextFormat.PhoneticGuide, TextFormat.VersionNumber}.Contains(
-                                 Service.GetTextFormat(field, record.Type)))
+                                 Service.GetFieldMetadata(field, record.Type).TextFormat))
                         actualFieldsToExclude.Add(field);
                     if (field.EndsWith("_base") && fields.Contains(field.Left(field.Length - 5)))
                         actualFieldsToExclude.Add(field);

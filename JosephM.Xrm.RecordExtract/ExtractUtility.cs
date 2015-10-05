@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.Application;
-using JosephM.Record.Application.SettingTypes;
 
 namespace JosephM.Xrm.RecordExtract
 {

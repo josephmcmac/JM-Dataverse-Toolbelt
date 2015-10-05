@@ -78,6 +78,10 @@
     <Compile Include="XrmRecordConfigurationMapperTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core.Test\JosephM.Core.Test.csproj">
       <Project>{7A4CE94B-1F3B-46F0-9C7F-9F2CB5B3C5E8}</Project>
       <Name>JosephM.Core.Test</Name>
@@ -90,13 +94,25 @@
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
       <Name>JosephM.ObjectMapping</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Prism.Test.csproj">
+      <Project>{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}</Project>
+      <Name>JosephM.Application.Prism.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+      <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
+      <Name>JosephM.Application.Prism</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
       <Name>JosephM.Prism.XrmModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
+    <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
+      <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>
+      <Name>JosephM.Application.ViewModel.Fakes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
-      <Name>JosephM.Record.Application</Name>
+      <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Xrm.Test\JosephM.Record.Xrm.Test.csproj">
       <Project>{9DCC0511-0B90-4A74-BB91-83CEAA45EAA5}</Project>

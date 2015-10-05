@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Navigation;
+using JosephM.Application.ViewModel.TabArea;
 using Microsoft.Practices.Prism.Regions;
-using JosephM.Record.Application.Controller;
-using JosephM.Record.Application.Navigation;
-using JosephM.Record.Application.TabArea;
 
-namespace JosephM.Record.Application.HTML
+namespace JosephM.Application.ViewModel.HTML
 {
     public class HtmlFileModel : TabAreaViewModelBase
     {

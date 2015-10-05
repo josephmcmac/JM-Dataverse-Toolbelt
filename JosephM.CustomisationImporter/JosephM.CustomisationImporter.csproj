@@ -120,21 +120,25 @@
     <Compile Include="Service\XrmCustomisationImportService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Prism.Infrastructure.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
-      <Name>JosephM.Prism.Infrastructure</Name>
+      <Name>JosephM.Application.Prism</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
       <Name>JosephM.Prism.XrmModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
-      <Name>JosephM.Record.Application</Name>
+      <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
       <Project>{850bb50c-d03d-4c6b-8fbb-6055936148c8}</Project>
@@ -158,82 +162,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HelpFiles\Customisation Importer Help_files\themedata.thmx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Customisation Importer Help.docx" />
     <Content Include="ContentFiles\Customisations Import Template.xls">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="JosephM.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="HelpFiles\Customisation Importer Help.htm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\colorschememapping.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\filelist.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\header.htm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\image001.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\image002.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\image003.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\image004.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\image005.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\image006.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\image007.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\image008.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\item0001.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\item0003.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\item0005.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\item0007.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\item0009.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\props002.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\props004.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\props006.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\props008.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HelpFiles\Customisation Importer Help_files\props010.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

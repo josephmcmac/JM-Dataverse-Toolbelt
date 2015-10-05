@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
-using JosephM.Record.Application.Controller;
+using JosephM.Application.Application;
 
-namespace JosephM.Record.Application.Dialog
+namespace JosephM.Application.ViewModel.Dialog
 {
     public interface IDialogController
     {

@@ -1,15 +1,13 @@
 ﻿#region
 
-using System;
-using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Record.Application.RecordEntry.Section;
+using System.ComponentModel;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
+using JosephM.Core.Extentions;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Form
+namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public class ObjectDisplayViewModel : RecordEntryFormViewModel
     {
@@ -18,8 +16,16 @@ namespace JosephM.Record.Application.RecordEntry.Form
         public ObjectDisplayViewModel(object objectToEnter, FormController formController)
             : base(formController)
         {
+            IsReadOnly = true;
+
             _objectRecord = new ObjectRecord(objectToEnter);
             RecordType = _objectRecord.Type;
+
+            if (objectToEnter.GetType().IsTypeOf(typeof(INotifyPropertyChanged)))
+            {
+                var iNotify = (INotifyPropertyChanged)objectToEnter;
+                iNotify.PropertyChanged += NotifyOnPropertyChanged;
+            }
         }
 
         protected object GetObject()
@@ -32,14 +38,13 @@ namespace JosephM.Record.Application.RecordEntry.Form
             return _objectRecord;
         }
 
-        public override bool ShowSaveButton
+        private void NotifyOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            get { return false; }
-        }
-
-        public override bool ShowCancelButton
-        {
-            get { return false; }
+            DoOnMainThread(() =>
+            {
+                var fieldViewModel = GetFieldViewModel(propertyChangedEventArgs.PropertyName);
+                fieldViewModel.OnChangeBase();
+            });
         }
     }
 }

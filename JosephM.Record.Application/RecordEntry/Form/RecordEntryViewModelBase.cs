@@ -3,16 +3,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using JosephM.Record.Application.RecordEntry.Field;
-using JosephM.Record.Application.RecordEntry.Metadata;
-using JosephM.Record.Application.TabArea;
-using JosephM.Record.Application.Validation;
+using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.TabArea;
+using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.IService;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Form
+namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public abstract class RecordEntryViewModelBase : TabAreaViewModelBase
     {
@@ -31,16 +30,6 @@ namespace JosephM.Record.Application.RecordEntry.Form
                     isValid = false;
             }
             return isValid;
-        }
-
-        public virtual bool ShowCancelButton
-        {
-            get { return true; }
-        }
-
-        public virtual bool ShowSaveButton
-        {
-            get { return true; }
         }
 
         protected internal FormController FormController { get; set; }
@@ -179,5 +168,7 @@ namespace JosephM.Record.Application.RecordEntry.Form
         internal abstract RecordEntryViewModelBase ParentForm { get; }
 
         internal abstract string ParentFormReference { get; }
+
+        public bool IsReadOnly { get; set; }
     }
 }

@@ -4,24 +4,23 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using JosephM.Record.Application.RecordEntry.Field;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.RecordEntry.Metadata;
-using JosephM.Record.Application.RecordEntry.Section;
-using JosephM.Record.Application.Shared;
-using JosephM.Record.Application.Validation;
+using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.Shared;
+using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.IService;
 
 #endregion
 
-namespace JosephM.Record.Application.Grid
+namespace JosephM.Application.ViewModel.Grid
 {
     /// <summary>
     ///     Row In A IDynamicGridViewModel Which May Also Interface To Have Data Entered Into A Record
     /// </summary>
     public class GridRowViewModel : RecordEntryViewModelBase
     {
-        public GridRowViewModel(IRecord record, IDynamicGridViewModel gridViewModel)
+        public GridRowViewModel(IRecord record, DynamicGridViewModel gridViewModel)
             : base(gridViewModel.FormController)
         {
             Record = record;
@@ -31,7 +30,7 @@ namespace JosephM.Record.Application.Grid
             EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController);
         }
 
-        public IDynamicGridViewModel GridViewModel { get; private set; }
+        public DynamicGridViewModel GridViewModel { get; private set; }
 
         private string RecordType
         {
@@ -46,17 +45,16 @@ namespace JosephM.Record.Application.Grid
                 viewModel.IsEditable = !GridViewModel.IsReadOnly;
                 AddField(viewModel);
             }
-            RunOnChanges();
         }
 
         public void EditRow()
         {
-            GridViewModel.DynamicGridViewModelItems.EditRow(this);
+            GridViewModel.EditRow(this);
         }
 
         public void DeleteRow()
         {
-            GridViewModel.DynamicGridViewModelItems.DeleteRow(this);
+            GridViewModel.DeleteRow(this);
         }
 
         public XrmButtonViewModel DeleteRowViewModel { get; set; }
@@ -97,9 +95,7 @@ namespace JosephM.Record.Application.Grid
         {
             get
             {
-                if (GridViewModel is GridSectionViewModel)
-                    return ((GridSectionViewModel) GridViewModel).GetRecordForm();
-                return null;
+                return GridViewModel.ParentForm;
             }
         }
 
@@ -107,14 +103,12 @@ namespace JosephM.Record.Application.Grid
         {
             get
             {
-                if (GridViewModel is GridSectionViewModel)
-                    return ((GridSectionViewModel) GridViewModel).ReferenceName;
-                return null;
+                return GridViewModel.ReferenceName;
             }
         }
 
         public static ObservableCollection<GridRowViewModel> LoadRows(IEnumerable<IRecord> records,
-            IDynamicGridViewModel gridVm)
+            DynamicGridViewModel gridVm)
         {
             var gridRows = new ObservableCollection<GridRowViewModel>();
 

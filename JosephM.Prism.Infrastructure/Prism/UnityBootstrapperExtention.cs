@@ -39,9 +39,9 @@ namespace JosephM.Prism.Infrastructure.Prism
 
             this.InitialiseLoadShell();
 
-            Application.Current.MainWindow = (Window) Shell;
-            Application.Current.MainWindow.DataContext = PrismApplication;
-            Application.Current.MainWindow.Show();
+            System.Windows.Application.Current.MainWindow = (Window)Shell;
+            System.Windows.Application.Current.MainWindow.DataContext = PrismApplication;
+            System.Windows.Application.Current.MainWindow.Show();
         }
 
         protected override void ConfigureModuleCatalog()

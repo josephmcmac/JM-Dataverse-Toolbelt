@@ -1,4 +1,4 @@
-﻿namespace JosephM.Record.Application.RecordEntry.Form
+﻿namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public abstract class ReadViewModel : OpenViewModel
     {

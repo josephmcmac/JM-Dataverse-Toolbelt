@@ -3,17 +3,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
-using JosephM.Record.Application.Grid;
-using JosephM.Record.Application.RecordEntry.Form;
-using JosephM.Record.Application.Shared;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 
 #endregion
 
-namespace JosephM.Record.Application.RecordEntry.Field
+namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public abstract class ReferenceFieldViewModel<T> : FieldViewModel<T>, IReferenceFieldViewModel
     {
@@ -141,10 +139,10 @@ namespace JosephM.Record.Application.RecordEntry.Field
                     {
                         try
                         {
-                            LookupGridViewModel.GridRecords = GridRowViewModel.LoadRows(records, LookupGridViewModel);
+                            LookupGridViewModel.DynamicGridViewModel.GridRecords = GridRowViewModel.LoadRows(records, LookupGridViewModel.DynamicGridViewModel);
                             OnPropertyChanged("LookupGridViewModel");
                             Searching = false;
-                            LookupGridVisible = LookupGridViewModel.GridRecords.Any();
+                            LookupGridVisible = LookupGridViewModel.DynamicGridViewModel.GridRecords.Any();
                         }
                         catch (Exception)
                         {
@@ -174,9 +172,9 @@ namespace JosephM.Record.Application.RecordEntry.Field
             {
                 //move logical and key foucs to the grid view
                 //have to add in the false focus first to ensire the ui properly processes the cvhange to focus on it
-                LookupGridViewModel.IsFocused = false;
+                LookupGridViewModel.DynamicGridViewModel.IsFocused = false;
                 LookupGridViewModel.MoveDown();
-                LookupGridViewModel.IsFocused = true;
+                LookupGridViewModel.DynamicGridViewModel.IsFocused = true;
             }
         }
     }

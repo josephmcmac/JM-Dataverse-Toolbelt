@@ -9,9 +9,12 @@ using System.Runtime.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
-using Microsoft.Xrm.Sdk.Query;
 using JosephM.Core.Log;
 using JosephM.Core.Test;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xrm.Sdk;
+using JosephM.Core.Test;
+using Microsoft.Xrm.Sdk.Query;
 
 #endregion
 
@@ -24,9 +27,12 @@ namespace JosephM.Xrm.Test
             get { return Path.Combine(TestConstants.TestSettingsFolder, "TestXrmConnection.xml"); }
         }
 
-        protected XrmTest()
+        protected virtual string OverrideOrganisation
         {
-            XrmService = new XrmService(XrmConfiguration, Controller);
+            get
+            {
+                return null;
+            }
         }
 
         public void PrepareTests()
@@ -37,7 +43,18 @@ namespace JosephM.Xrm.Test
                     verifyConnection.GetErrorString());
         }
 
-        public XrmService XrmService { get; private set; }
+        private XrmService _xrmService;
+
+        public XrmService XrmService
+        {
+            get
+            {
+                if(_xrmService == null)
+                    _xrmService = new XrmService(XrmConfiguration, Controller);
+                return _xrmService;
+            }
+        }
+
         protected IUserInterface UI { get; private set; }
 
         public virtual IXrmConfiguration XrmConfiguration
@@ -49,7 +66,7 @@ namespace JosephM.Xrm.Test
                 {
                     AuthenticationProviderType = settingsObject.AuthenticationProviderType,
                     DiscoveryServiceAddress = settingsObject.DiscoveryServiceAddress,
-                    OrganizationUniqueName = settingsObject.OrganizationUniqueName,
+                    OrganizationUniqueName = OverrideOrganisation ?? settingsObject.OrganizationUniqueName,
                     Domain = settingsObject.Domain,
                     Username = settingsObject.Username,
                     Password = settingsObject.Password == null ? null : settingsObject.Password.GetRawPassword()
@@ -302,10 +319,10 @@ namespace JosephM.Xrm.Test
             entity.SetField("name", "Test Account - X");
             entity.SetField("fax", "0999999999fax");
             entity.SetField("telephone1", "0999999999phone");
-            entity.SetField("emailaddress1", "testemail@ntaadev.com");
+            entity.SetField("emailaddress1", "testemail@dev.com");
             if (entity.GetField("address1_line1") == null)
             {
-                entity.SetField("address1_line1", "9/455 Bourke St");
+                entity.SetField("address1_line1", "1 Bourke St");
                 entity.SetField("address1_city", "Melbourne");
                 entity.SetField("address1_stateorprovince", "victoria");
                 entity.SetField("address1_postalcode", "3000");

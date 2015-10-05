@@ -163,6 +163,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core.Test\JosephM.Core.Test.csproj">
       <Project>{7A4CE94B-1F3B-46F0-9C7F-9F2CB5B3C5E8}</Project>
       <Name>JosephM.Core.Test</Name>
@@ -175,9 +179,9 @@
       <Project>{2FE73DC9-7959-4944-B594-29E73AA79604}</Project>
       <Name>JosephM.ObjectEncryption</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Prism.Infrastructure.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
-      <Name>JosephM.Prism.Infrastructure</Name>
+      <Name>JosephM.Application.Prism</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.TestModule\JosephM.Prism.TestModule.csproj">
       <Project>{4322b728-aaa7-45f0-9bde-8f227fa8c73d}</Project>
@@ -191,9 +195,9 @@
       <Project>{BB5BB40F-282B-4CF0-A165-533AB810D61D}</Project>
       <Name>JosephM.Prism.XrmTestModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Record.Application.csproj">
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
-      <Name>JosephM.Record.Application</Name>
+      <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.RecordExtract.Test\JosephM.Xrm.RecordExtract.Test.csproj">
       <Project>{75C8A29D-5745-42B4-B48F-15EA035CA1CF}</Project>

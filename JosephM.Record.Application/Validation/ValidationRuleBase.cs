@@ -4,13 +4,12 @@ using System;
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Service;
-using JosephM.Record.Application.RecordEntry.Field;
-using JosephM.Record.Application.RecordEntry.Form;
 
 #endregion
 
-namespace JosephM.Record.Application.Validation
+namespace JosephM.Application.ViewModel.Validation
 {
     /// <summary>
     ///     Extends The Standard .NET Validation Rule For Validation

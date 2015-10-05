@@ -2,7 +2,7 @@
 
 using System.Windows;
 using System.Windows.Forms;
-using JosephM.Record.Application.Grid;
+using JosephM.Application.ViewModel.Grid;
 using UserControl = System.Windows.Controls.UserControl;
 
 #endregion

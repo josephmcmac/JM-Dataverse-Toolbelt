@@ -1,4 +1,6 @@
-﻿namespace JosephM.Record.Application.RecordEntry.Metadata
+﻿using JosephM.Record.Metadata;
+
+namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     public class GridFieldMetadata : FormFieldMetadata
     {
@@ -6,6 +8,12 @@
             : base(fieldName)
         {
             WidthPart = 200;
+        }
+
+        public GridFieldMetadata(ViewField viewField)
+            : this(viewField.FieldName)
+        {
+            WidthPart = viewField.Width;
         }
 
         public double WidthPart { get; set; }

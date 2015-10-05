@@ -1,44 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using JosephM.Core.Sql;
+using JosephM.Record.Service;
 
 namespace JosephM.Record.Sql
 {
-    [Serializable]
-    public class SqlRecord : RecordBase
+    public class SqlRecord : RecordObject
     {
-        private readonly DataRow _row;
-
-        internal SqlRecord(DataRow row)
-            : base(row.Table.TableName)
+        public SqlRecord(string type, QueryRow queryRow)
+            : base(type)
         {
-            _row = row;
+            foreach(var column in queryRow.GetColumnNames())
+                SetField(column, queryRow.GetField(column));
         }
 
-        public override IEnumerable<string> GetFieldsInEntity()
+        public SqlRecord(string type)
+            : base(type)
         {
-            return (from DataColumn column in _row.Table.Columns select column.ColumnName).ToList();
         }
 
-        public override object GetField(string fieldName)
+        public override string GetStringField(string field)
         {
-            return !IsDbNull(fieldName) ? _row[fieldName] : null;
-        }
-
-        private bool IsDbNull(string fieldName)
-        {
-            return _row[fieldName] is DBNull;
-        }
-
-        public override void SetField(string field, object value, IRecordService service)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool ContainsField(string field)
-        {
-            throw new NotImplementedException();
+            var fieldValue = GetField(field);
+            return fieldValue == null ? null : fieldValue.ToString();
         }
     }
 }

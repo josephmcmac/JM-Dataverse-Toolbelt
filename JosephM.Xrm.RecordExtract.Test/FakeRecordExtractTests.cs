@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Test;
+﻿using JosephM.Application.ViewModel.Fakes;
+using JosephM.Core.Test;
 using JosephM.Record.Application.Fakes;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.Xrm.RecordExtract.Test.RecordExtract;
