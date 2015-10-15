@@ -231,27 +231,36 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override bool Validate()
         {
-            PreValidateExtention();
-            ValidationPrompt = null;
-            var isValid = base.Validate();
+            try
+            {
+                LoadingViewModel.IsLoading = true;
+                PreValidateExtention();
+                ValidationPrompt = null;
+                var isValid = base.Validate();
 
-            foreach (var section in FormSectionsAsync)
-            {
-                if (!section.Validate())
-                    isValid = false;
+                foreach (var section in FormSectionsAsync)
+                {
+                    if (!section.Validate())
+                        isValid = false;
+                }
+                if (!isValid)
+                {
+                    ValidationPrompt = "There Were Validation Errors - Please Review Your Input And Retry";
+                }
+                else
+                {
+                    var finalResponse = ValidateFinal();
+                    isValid = finalResponse.IsValid;
+                    if (!isValid)
+                        ValidationPrompt = finalResponse.GetErrorString();
+                }
+                return isValid;
             }
-            if (!isValid)
+            finally
             {
-                ValidationPrompt = "There Were Validation Errors - Please Review Your Input And Retry";
+                LoadingViewModel.IsLoading = false;
             }
-            else
-            {
-                var finalResponse = ValidateFinal();
-                isValid = finalResponse.IsValid;
-                if(!isValid)
-                    ValidationPrompt = finalResponse.GetErrorString();
-            }
-            return isValid;
+
         }
 
         public virtual IsValidResponse ValidateFinal()

@@ -61,10 +61,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             try
             {
                 var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, RecordForm, (record) =>
-                {
+                DoOnMainThread(() => {
                     InsertRecord(record, 0);
                     RecordForm.ClearChildForm();
-                }, () => RecordForm.ClearChildForm());
+                }), () => RecordForm.ClearChildForm());
                 if (viewModel == null)
                     InsertRecord(RecordService.NewRecord(RecordType), 0);
                 else
@@ -150,6 +150,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             var rowItem = new GridRowViewModel(record, DynamicGridViewModel);
             DynamicGridViewModel.GridRecords.Insert(index, rowItem);
             rowItem.OnLoad();
+            rowItem.RunOnChanges();
         }
 
         public override string RecordType
