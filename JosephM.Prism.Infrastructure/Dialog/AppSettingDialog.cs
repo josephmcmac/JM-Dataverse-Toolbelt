@@ -58,7 +58,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
         protected override void CompleteDialogExtention()
         {
             ApplicationController.ResolveType<PrismSettingsManager>().SaveSettingsObject(SettingsObject);
-            ApplicationController.RegisterInstance((TSettingsInterface)SettingsObject);
+            ApplicationController.RegisterInstance<TSettingsInterface>(SettingsObject);
             if (CompletionMessage == null)
                 CompletionMessage = "The Settings Have Been Saved";
         }
