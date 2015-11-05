@@ -11,7 +11,6 @@ using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Core.FieldType;
 using JosephM.Record.Attributes;
-using JosephM.Core.Extentions;
 using System.Collections;
 using System.IO;
 using System.Reflection;

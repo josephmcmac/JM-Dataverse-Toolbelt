@@ -20,8 +20,6 @@
         }
 
         public bool IsPrimaryField { get; set; }
-        public int MaxLength { get; set; }
-        public TextFormat TextFormat { get; set; }
 
         public override RecordFieldType FieldType
         {

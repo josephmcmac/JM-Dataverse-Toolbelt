@@ -519,7 +519,6 @@ namespace JosephM.Record.Xrm.XrmRecord
                 case (RecordFieldType.BigInt):
                 {
                     throw new NotSupportedException(string.Format("Updating {0} Attributes Not Supported. Field = {1}", field.FieldType, field.SchemaName));
-                    break;
                 }
                 case (RecordFieldType.Uniqueidentifier):
                 {
@@ -536,7 +535,6 @@ namespace JosephM.Record.Xrm.XrmRecord
                 default:
                 {
                     throw new NotImplementedException(string.Format("CreateOrUpdateField Not Implemented For Field {0} In Object {1} For Field Type {2}", field.SchemaName, field.GetType().Name, field.FieldType));
-                    break;
                 }
             }
         }
@@ -703,7 +701,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                                                "' />" + entityAttribute.InnerXml;
                     query.SetField("fetchxml", fetchXml.InnerXml);
                 }
-                _xrmService.Update(query);
+                _xrmService.Update(query, new[] { "layoutxml", "fetchxml" });
             }
         }
 
@@ -753,7 +751,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 //"Quick Find Active " + displayCollectionName,
                 displayName + " Advanced Find View",
                 "Active " + displayCollectionName,
-                "My " + displayCollectionName,
+                //"My " + displayCollectionName,
                 "Inactive " + displayCollectionName
             };
             return viewNamesToUpdate;

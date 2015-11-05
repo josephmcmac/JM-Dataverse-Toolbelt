@@ -438,14 +438,6 @@ namespace JosephM.Xrm.Test
             }
         }
 
-        private static string ReplicateString(string stringToReplicate, int times)
-        {
-            var stringer = new StringBuilder();
-            for (var i = 0; i < times; i++)
-                stringer.Append(stringToReplicate);
-            return stringer.ToString();
-        }
-
         [TestMethod]
         public void GetThisSideIdTest()
         {

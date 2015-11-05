@@ -20,8 +20,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
     public class ObjectEntryViewModel : RecordEntryFormViewModel
     {
         private ObjectRecord _objectRecord;
-        private readonly Action _onCancel;
-        private readonly Action _onSave;
 
         public override int GridPageSize { get { return 0; } }
 

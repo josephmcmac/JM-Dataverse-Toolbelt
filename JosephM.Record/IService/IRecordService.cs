@@ -1,13 +1,9 @@
 ﻿#region
 
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Core.Service;
-using JosephM.Record.IService;
 using JosephM.Record.Metadata;
-using JosephM.Record.Query;
 using JosephM.Record.Query;
 
 #endregion

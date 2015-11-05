@@ -24,8 +24,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 {
     public class GridSectionViewModel : SectionViewModelBase, IValidatable
     {
-        private ObservableCollection<GridRowViewModel> _records;
-
         public GridSectionViewModel(SubGridSection subGridSection,
             RecordEntryFormViewModel recordForm)
             : base(subGridSection, recordForm)

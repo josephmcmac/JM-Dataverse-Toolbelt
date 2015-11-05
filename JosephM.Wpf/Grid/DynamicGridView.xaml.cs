@@ -8,7 +8,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.Grid;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 

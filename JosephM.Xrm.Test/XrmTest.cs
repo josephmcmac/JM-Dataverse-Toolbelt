@@ -11,9 +11,6 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
 using JosephM.Core.Log;
 using JosephM.Core.Test;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Xrm.Sdk;
-using JosephM.Core.Test;
 using Microsoft.Xrm.Sdk.Query;
 
 #endregion

@@ -11,7 +11,6 @@
             MaxLength = 4000;
         }
 
-        public int MaxLength { get; set; }
         public override RecordFieldType FieldType
         {
             get { return RecordFieldType.Memo; }

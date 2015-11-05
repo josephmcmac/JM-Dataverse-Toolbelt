@@ -19,9 +19,6 @@
             TextFormat = TextFormat.Text;
         }
 
-        public int MaxLength { get; set; }
-        public TextFormat TextFormat { get; set; }
-
         public override RecordFieldType FieldType
         {
             get { return RecordFieldType.StringEnumerable; }
