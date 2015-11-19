@@ -64,7 +64,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                     RecordForm.ClearChildForm();
                 }), () => RecordForm.ClearChildForm());
                 if (viewModel == null)
+                {
+
                     InsertRecord(RecordService.NewRecord(RecordType), 0);
+                }
                 else
                 {
                     RecordForm.LoadChildForm(viewModel);
@@ -145,10 +148,36 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 
         private void InsertRecord(IRecord record, int index)
         {
-            var rowItem = new GridRowViewModel(record, DynamicGridViewModel);
-            DynamicGridViewModel.GridRecords.Insert(index, rowItem);
-            rowItem.OnLoad();
-            rowItem.RunOnChanges();
+            DoOnAsynchThread(() =>
+            {
+                RecordForm.LoadingViewModel.IsLoading = true;
+                try
+                {
+                    //this part may take a while to load/create (e.g. get record types for record type field)
+                    //so create on asynch thread while loading so doesn't freeze ui
+                    //then add to observable collection on main thread
+                    var rowItem = new GridRowViewModel(record, DynamicGridViewModel);
+                    DoOnMainThread(() =>
+                    {
+                        try
+                        {
+
+                            DynamicGridViewModel.GridRecords.Insert(index, rowItem);
+                            rowItem.OnLoad();
+                            rowItem.RunOnChanges();
+                        }
+                        finally
+                        {
+                            RecordForm.LoadingViewModel.IsLoading = false;
+                        }
+                    });
+                }
+                catch (Exception)
+                {
+                    RecordForm.LoadingViewModel.IsLoading = false;
+                    throw;
+                }
+            });
         }
 
         public override string RecordType
