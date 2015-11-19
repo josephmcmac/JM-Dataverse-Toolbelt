@@ -10,7 +10,7 @@ namespace JosephM.CustomisationExporter.Exporter
             , bool displayRelated, bool displayRelated2, string recordType1ReferenceField,
             string recordType2ReferenceField, RelationshipType type, bool recordType1UseCustomLabel,
             bool recordType2UseCustomLabel, string recordType1CustomLabel, string recordType2CustomLabel,
-            int recordType1DisplayOrder, int recordType2DisplayOrder)
+            int recordType1DisplayOrder, int recordType2DisplayOrder, string metadataId, string cascadeDeleteConfiguration)
         {
             RelationshipSchemaName = relationshipSchemaName;
             RecordTypeFrom = recordTypeFrom;
@@ -27,6 +27,8 @@ namespace JosephM.CustomisationExporter.Exporter
             RecordType2CustomLabel = recordType2CustomLabel;
             RecordType1DisplayOrder = recordType1DisplayOrder;
             RecordType2DisplayOrder = recordType2DisplayOrder;
+            MetadataId = metadataId;
+            CascadeDeleteConfiguration = cascadeDeleteConfiguration;
         }
 
         [DisplayName(Headings.Relationships.RelationshipName)]
@@ -66,6 +68,10 @@ namespace JosephM.CustomisationExporter.Exporter
         public string RecordType1ReferenceField { get; set; }
         public string RecordType2ReferenceField { get; set; }
         public RelationshipType Type { get; set; }
+
+        public string MetadataId { get; set; }
+
+        public string CascadeDeleteConfiguration { get; set; }
 
         public enum RelationshipType
         {

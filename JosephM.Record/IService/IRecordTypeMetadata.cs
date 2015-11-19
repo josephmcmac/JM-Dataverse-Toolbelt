@@ -34,5 +34,7 @@ namespace JosephM.Record.IService
         bool IsCustomType { get; }
 
         string RecordTypeCode { get; }
+
+        string MetadataId { get; }
     }
 }

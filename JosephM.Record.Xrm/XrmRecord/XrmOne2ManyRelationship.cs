@@ -52,5 +52,23 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return IsCustomLabel ? GetCustomLabel(mt.AssociatedMenuConfiguration) : XrmService.GetEntityCollectionName(mt.ReferencingEntity);
             }
         }
+
+        public string MetadataId
+        {
+            get
+            {
+                var id = GetMetadata().MetadataId;
+                return id?.ToString();
+            }
+        }
+
+        public string DeleteCascadeConfiguration
+        {
+            get
+            {
+                var id = GetMetadata().CascadeConfiguration.Delete;
+                return id?.ToString();
+            }
+        }
     }
 }

@@ -27,11 +27,10 @@ namespace JosephM.CodeGenerator.Test
             var request = new CodeGeneratorRequest()
             {
                 AllRecordTypes = true,
-                ClassName = "Schema",
                 FileName = "Schema",
                 Folder = new Folder(TestingFolder),
                 Namespace = "Schema",
-                Type = CodeGeneratorType.CSharpEntitiesAndFields
+                Type = CodeGeneratorType.CSharpMetadata
             };
 
             testApplication.NavigateAndProcessDialog<XrmCodeGeneratorModule, XrmCodeGeneratorDialog>(request);
@@ -43,7 +42,6 @@ namespace JosephM.CodeGenerator.Test
             request = new CodeGeneratorRequest()
             {
                 AllRecordTypes = true,
-                ClassName = "JS",
                 FileName = "JS",
                 Folder = new Folder(TestingFolder),
                 Namespace = "JS",
@@ -59,11 +57,10 @@ namespace JosephM.CodeGenerator.Test
             request = new CodeGeneratorRequest()
             {
                 AllRecordTypes = true,
-                ClassName = "OptionSets",
                 FileName = "OptionSets",
                 Folder = new Folder(TestingFolder),
                 Namespace = "OptionSets",
-                Type = CodeGeneratorType.CSharpOptionSets
+                Type = CodeGeneratorType.CSharpMetadata
             };
 
             testApplication.ClearTabs();
@@ -75,11 +72,10 @@ namespace JosephM.CodeGenerator.Test
             request = new CodeGeneratorRequest()
             {
                 AllRecordTypes = false,
-                ClassName = "Schema",
                 FileName = "Schema",
                 Folder = new Folder(TestingFolder),
                 Namespace = "Schema",
-                Type = CodeGeneratorType.CSharpEntitiesAndFields,
+                Type = CodeGeneratorType.CSharpMetadata,
                 RecordTypes = new[] {new RecordTypeSetting(Entities.account, Entities.account)}
             };
 

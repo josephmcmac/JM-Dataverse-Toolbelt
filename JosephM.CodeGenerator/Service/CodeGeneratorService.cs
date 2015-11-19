@@ -19,7 +19,7 @@ namespace JosephM.CodeGenerator.Service
     {
         private static IEnumerable<RecordFieldType> OptionSetTypes
         {
-            get { return new[] {RecordFieldType.Picklist, RecordFieldType.Status}; }
+            get { return new[] {RecordFieldType.Picklist, RecordFieldType.Status, RecordFieldType.State, }; }
         }
 
         public CodeGeneratorService(TService service)
@@ -34,14 +34,9 @@ namespace JosephM.CodeGenerator.Service
         {
             switch (request.Type)
             {
-                case CodeGeneratorType.CSharpEntitiesAndFields:
+                case CodeGeneratorType.CSharpMetadata:
                 {
-                    WriteCSharpEntitiesAndFields(request, controller);
-                    break;
-                }
-                case CodeGeneratorType.CSharpOptionSets:
-                {
-                    WriteCSharpOptionSets(request, controller);
+                        WriteCSharpMetadata(request, controller);
                     break;
                 }
                 case CodeGeneratorType.JavaScriptOptionSets:
@@ -69,18 +64,32 @@ namespace JosephM.CodeGenerator.Service
             sb.AppendLine("*/");
         }
 
-        private void WriteCSharpEntitiesAndFields(CodeGeneratorRequest request, LogController controller)
+        private void WriteCSharpMetadata(CodeGeneratorRequest request, LogController controller)
         {
             var stringBuilder = new StringBuilder();
             AppendGenerationComments(stringBuilder);
             stringBuilder.AppendLine("namespace " + request.Namespace);
             stringBuilder.AppendLine("{");
-            stringBuilder.AppendLine(string.Format("\tpublic class {0}", "Entities"));
-            stringBuilder.AppendLine("\t{");
             controller.LogLiteral("Loading Types.....");
+            AppendEntities(controller, request, stringBuilder);
+            AppendRelationships(controller, request, stringBuilder);
+            AppendFields(controller, stringBuilder, request);
+            AppendOptionSets(stringBuilder, request, controller);
+            stringBuilder.AppendLine("}");
+            FileUtility.WriteToFile(request.Folder.FolderPath,
+                request.FileName.EndsWith(".cs") ? request.FileName : request.FileName + ".cs",
+                stringBuilder.ToString());
+        }
+
+        private void AppendEntities(LogController controller, CodeGeneratorRequest request, StringBuilder stringBuilder)
+        {
+            if (!request.IncludeEntities)
+                return;
             var types = GetRecordTypesToImport(request);
             var countToDo = types.Count();
             var countDone = 0;
+            stringBuilder.AppendLine(string.Format("\tpublic static class {0}", "Entities"));
+            stringBuilder.AppendLine("\t{");
             foreach (var recordType in types)
             {
                 controller.UpdateProgress(countDone, countToDo,
@@ -92,6 +101,15 @@ namespace JosephM.CodeGenerator.Service
                 countDone++;
             }
             stringBuilder.AppendLine("\t}");
+        }
+
+        private void AppendRelationships(LogController controller, CodeGeneratorRequest request, StringBuilder stringBuilder)
+        {
+            if (!request.IncludeRelationships)
+                return;
+            var types = GetRecordTypesToImport(request);
+            var countToDo = types.Count();
+            var countDone = 0;
             var relationshipsAdded = false;
             countDone = 0;
             foreach (var recordType in types)
@@ -105,15 +123,15 @@ namespace JosephM.CodeGenerator.Service
                     {
                         if (!relationshipsAdded)
                         {
-                            stringBuilder.AppendLine(string.Format("\tpublic class {0}", "Relationships"));
+                            stringBuilder.AppendLine(string.Format("\tpublic static class {0}", "Relationships"));
                             stringBuilder.AppendLine("\t{");
                             relationshipsAdded = true;
                         }
-                        stringBuilder.AppendLine(string.Format("\t\tpublic class {0}_", recordType));
+                        stringBuilder.AppendLine(string.Format("\t\tpublic static class {0}_", recordType));
                         stringBuilder.AppendLine("\t\t{");
                         foreach (var relationship in relationships)
                         {
-                            stringBuilder.AppendLine(string.Format("\t\t\tpublic class {0}", relationship.SchemaName));
+                            stringBuilder.AppendLine(string.Format("\t\t\tpublic static class {0}", relationship.SchemaName));
                             stringBuilder.AppendLine("\t\t\t{");
                             stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string Name = \"{0}\";",
                                 relationship.SchemaName));
@@ -128,17 +146,26 @@ namespace JosephM.CodeGenerator.Service
             }
             if (relationshipsAdded)
                 stringBuilder.AppendLine("\t}");
-            stringBuilder.AppendLine(string.Format("\tpublic class {0}", "Fields"));
+        }
+
+        private void AppendFields(LogController controller, StringBuilder stringBuilder, CodeGeneratorRequest request)
+        {
+            if (!request.IncludeFields)
+                return;
+            var types = GetRecordTypesToImport(request);
+            var countToDo = types.Count();
+            stringBuilder.AppendLine("\tpublic static class Fields");
             stringBuilder.AppendLine("\t{");
-            countDone = 0;
+            var countDone = 0;
             foreach (var recordType in types)
             {
                 controller.UpdateProgress(countDone, countToDo,
                     string.Format("Processing Fields ({0})", Service.GetDisplayName(recordType)));
                 if (!recordType.IsNullOrWhiteSpace())
                 {
-                    stringBuilder.AppendLine(string.Format("\t\tpublic class {0}_", recordType));
+                    stringBuilder.AppendLine(string.Format("\t\tpublic static class {0}_", recordType));
                     stringBuilder.AppendLine("\t\t{");
+                    var fieldLabels = new Dictionary<string,string>();
                     foreach (var field in Service.GetFields(recordType))
                     {
                         if (!field.IsNullOrWhiteSpace())
@@ -150,10 +177,6 @@ namespace JosephM.CodeGenerator.Service
                 countDone++;
             }
             stringBuilder.AppendLine("\t}");
-            stringBuilder.AppendLine("}");
-            FileUtility.WriteToFile(request.Folder.FolderPath,
-                request.FileName.EndsWith(".cs") ? request.FileName : request.FileName + ".cs",
-                stringBuilder.ToString());
         }
 
         private IEnumerable<string> GetRecordTypesToImport(CodeGeneratorRequest request)
@@ -166,7 +189,7 @@ namespace JosephM.CodeGenerator.Service
         private void WriteJavaScriptOptionSets(CodeGeneratorRequest request, LogController controller)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(string.Format("{0} = new Object()", request.ClassName));
+            stringBuilder.AppendLine(string.Format("{0} = new Object()", request.Namespace));
             AppendJavaScriptOptionSets(stringBuilder, request, controller);
             FileUtility.WriteToFile(request.Folder.FolderPath,
                 request.FileName.EndsWith(".js") ? request.FileName : request.FileName + ".js",
@@ -186,15 +209,15 @@ namespace JosephM.CodeGenerator.Service
                 if (IsValidForCode(recordType))
                 {
                     var recordTypeCodeLabel = CreateCodeLabel(Service.GetDisplayName(recordType));
-                    stringBuilder.AppendLine(string.Format("{0}.{1} = new Object();", request.ClassName,
+                    stringBuilder.AppendLine(string.Format("{0}.Options = new Object();", request.Namespace,
                         recordTypeCodeLabel));
                     foreach (var field in Service.GetFields(recordType))
                     {
-                        if (IsValidForCode(field, recordType))
+                        if (IsValidForOptionSetCode(field, recordType))
                         {
                             var fieldLabel = CreateCodeLabel(Service.GetFieldLabel(field, recordType));
-                            stringBuilder.AppendLine(string.Format("{0}.{1}.{2} = new Object();", request.ClassName,
-                                recordTypeCodeLabel,
+                            stringBuilder.AppendLine(string.Format("{0}.{1}.{2} = new Object();", request.Namespace,
+                                "Options",
                                 fieldLabel));
                             var options = Service.GetPicklistKeyValues(field, recordType);
                             var used = new List<string>();
@@ -206,7 +229,7 @@ namespace JosephM.CodeGenerator.Service
                                     if (!used.Contains(label))
                                     {
                                         stringBuilder.AppendLine(string.Format("{0}.{1}.{2}.{3} = {4};",
-                                            request.ClassName, recordTypeCodeLabel, fieldLabel, label, option.Key));
+                                            request.Namespace, "Options", fieldLabel, label, option.Key));
                                         used.Add(label);
                                     }
                                 }
@@ -218,26 +241,13 @@ namespace JosephM.CodeGenerator.Service
             }
         }
 
-
-        private void WriteCSharpOptionSets(CodeGeneratorRequest request, LogController controller)
-        {
-            var stringBuilder = new StringBuilder();
-            AppendGenerationComments(stringBuilder);
-            stringBuilder.AppendLine("namespace " + request.Namespace);
-            stringBuilder.AppendLine("{");
-            stringBuilder.AppendLine(string.Format("\tpublic static class {0}", request.ClassName));
-            stringBuilder.AppendLine("\t{");
-            AppendCSharpOptionSets(stringBuilder, request, controller);
-            stringBuilder.AppendLine("\t}");
-            stringBuilder.AppendLine("}");
-            FileUtility.WriteToFile(request.Folder.FolderPath,
-                request.FileName.EndsWith(".cs") ? request.FileName : request.FileName + ".cs",
-                stringBuilder.ToString());
-        }
-
-        private void AppendCSharpOptionSets(StringBuilder stringBuilder, CodeGeneratorRequest request,
+        private void AppendOptionSets(StringBuilder stringBuilder, CodeGeneratorRequest request,
             LogController controller)
         {
+            if (!request.IncludeOptions)
+                return;
+            stringBuilder.AppendLine("\tpublic static class OptionSets");
+            stringBuilder.AppendLine("\t{");
             var types = GetRecordTypesToImport(request);
             var countToDo = types.Count();
             var countDone = 0;
@@ -250,35 +260,43 @@ namespace JosephM.CodeGenerator.Service
                     var recordTypeCodeLabel = CreateCodeLabel(Service.GetDisplayName(recordType));
                     stringBuilder.AppendLine("\t\tpublic static class " + recordTypeCodeLabel);
                     stringBuilder.AppendLine("\t\t{");
-                    foreach (var field in Service.GetFields(recordType))
+                    var optionFields = Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType));
+                    var optionFieldLabels = optionFields.ToDictionary(f => f,
+                        f => CreateCodeLabel(Service.GetFieldLabel(f, recordType)));
+                    foreach (var field in optionFieldLabels)
                     {
-                        if (IsValidForCode(field, recordType))
+                        var fieldLabel = field.Value;
+                        if (optionFieldLabels.Any(kv => kv.Key != field.Key && kv.Value == field.Value))
+                            fieldLabel = string.Format("{0}_{1}", fieldLabel, field.Key);
+                        if (fieldLabel == recordTypeCodeLabel)
+                            fieldLabel = string.Format("{0}_", fieldLabel);
+                        stringBuilder.AppendLine("\t\t\tpublic static class " + fieldLabel);
+                        stringBuilder.AppendLine("\t\t\t{");
+                        var options = Service.GetPicklistKeyValues(field.Key, recordType);
+                        var used = new List<string>();
+                        foreach (var option in options)
                         {
-                            stringBuilder.AppendLine("\t\t\tpublic static class " +
-                                                     CreateCodeLabel(Service.GetFieldLabel(field, recordType)));
-                            stringBuilder.AppendLine("\t\t\t{");
-                            var options = Service.GetPicklistKeyValues(field, recordType);
-                            var used = new List<string>();
-                            foreach (var option in options)
+                            if (IsValidForCode(option))
                             {
-                                if (IsValidForCode(option))
+                                var optionLabel = CreateCodeLabel(option.Value);
+                                if (optionLabel == fieldLabel)
+                                    optionLabel = string.Format("{0}_", optionLabel);
+                                if (!used.Contains(optionLabel))
                                 {
-                                    var label = CreateCodeLabel(option.Value);
-                                    if (!used.Contains(label))
-                                    {
-                                        stringBuilder.AppendLine(
-                                            string.Format("\t\t\t\tpublic const int {0} = {1};", label, option.Key));
-                                        used.Add(label);
-                                    }
+                                    stringBuilder.AppendLine(
+                                        string.Format("\t\t\t\tpublic const int {0} = {1};", optionLabel, option.Key));
+                                    used.Add(optionLabel);
                                 }
                             }
-                            stringBuilder.AppendLine("\t\t\t}");
                         }
+                        stringBuilder.AppendLine("\t\t\t}");
+
                     }
                     stringBuilder.AppendLine("\t\t}");
                 }
                 countDone++;
             }
+            stringBuilder.AppendLine("\t}");
         }
 
         private static IEnumerable<string> KeyWords
@@ -319,10 +337,10 @@ namespace JosephM.CodeGenerator.Service
         {
             return
                 !CreateCodeLabel(Service.GetDisplayName(recordType)).IsNullOrWhiteSpace()
-                && Service.GetFields(recordType).Any(f => IsValidForCode(f, recordType));
+                && Service.GetFields(recordType).Any(f => IsValidForOptionSetCode(f, recordType));
         }
 
-        private bool IsValidForCode(string field, string recordType)
+        private bool IsValidForOptionSetCode(string field, string recordType)
         {
             return
                 OptionSetTypes.Contains(Service.GetFieldType(field, recordType))

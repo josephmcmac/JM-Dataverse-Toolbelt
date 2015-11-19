@@ -327,6 +327,13 @@ namespace JosephM.Xrm
                             OptionSetToKeyValues(
                                 metadata.OptionSet.Options);
                     }
+                case AttributeTypeCode.State:
+                    {
+                        var metadata = (StateAttributeMetadata)GetFieldMetadata(fieldName, entityType);
+                        return
+                            OptionSetToKeyValues(
+                                metadata.OptionSet.Options);
+                    }
             }
             throw new ArgumentException("Field type not implemented: " + fieldType);
         }

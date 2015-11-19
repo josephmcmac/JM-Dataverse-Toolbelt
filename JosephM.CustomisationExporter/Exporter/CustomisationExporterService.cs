@@ -72,7 +72,8 @@ namespace JosephM.CustomisationExporter.Exporter
                                         RelationshipExport.RelationshipType.ManyToMany,
                                         relationship.RecordType1UseCustomLabel, relationship.RecordType2UseCustomLabel,
                                         relationship.RecordType1CustomLabel, relationship.RecordType2CustomLabel
-                                        , relationship.RecordType1DisplayOrder, relationship.RecordType2DisplayOrder));
+                                        , relationship.RecordType1DisplayOrder, relationship.RecordType2DisplayOrder, relationship.MetadataId
+                                        , null));
                                     manyToManyDone.Add(relationship.SchemaName);
                                 }
                                 if (relationship.RecordType2 == thisType
@@ -87,7 +88,8 @@ namespace JosephM.CustomisationExporter.Exporter
                                         RelationshipExport.RelationshipType.ManyToMany,
                                         relationship.RecordType2UseCustomLabel, relationship.RecordType1UseCustomLabel,
                                         relationship.RecordType2CustomLabel, relationship.RecordType1CustomLabel
-                                        , relationship.RecordType2DisplayOrder, relationship.RecordType1DisplayOrder));
+                                        , relationship.RecordType2DisplayOrder, relationship.RecordType1DisplayOrder
+                                        , relationship.MetadataId, null));
                                     manyToManyDone.Add(relationship.SchemaName);
                                 }
                             }
@@ -114,7 +116,7 @@ namespace JosephM.CustomisationExporter.Exporter
                                         , null, relationship.ReferencingAttribute,
                                         RelationshipExport.RelationshipType.OneToMany, false, relationship.IsCustomLabel,
                                         null, relationship.GetRelationshipLabel
-                                        , 0, relationship.DisplayOrder));
+                                        , 0, relationship.DisplayOrder, relationship.MetadataId, relationship.DeleteCascadeConfiguration));
                                 }
                                 catch (Exception ex)
                                 {
@@ -325,7 +327,7 @@ namespace JosephM.CustomisationExporter.Exporter
                                     Service.GetFieldMetadata(field, thisType).Audit,
                                     Service.GetFieldMetadata(field, thisType).Searchable
                                     , displayRelated, referencedType, maxLength, textFormat, includeTime, minValue,
-                                    maxValue, precision, picklist);
+                                    maxValue, precision, picklist, Service.GetFieldMetadata(field, thisType).MetadataId);
                                 if (Service.IsString(field, thisType))
                                     fieldExport.MaxLength = Service.GetMaxLength(field, thisType);
                                 allFields.Add(fieldExport);
@@ -388,7 +390,8 @@ namespace JosephM.CustomisationExporter.Exporter
                             Service.GetRecordTypeMetadata(thisType).Activities
                             , Service.GetRecordTypeMetadata(thisType).Connections,
                             Service.GetRecordTypeMetadata(thisType).MailMerge,
-                            Service.GetRecordTypeMetadata(thisType).Queues));
+                            Service.GetRecordTypeMetadata(thisType).Queues,
+                            Service.GetRecordTypeMetadata(thisType).MetadataId));
                     }
                     catch (Exception ex)
                     {

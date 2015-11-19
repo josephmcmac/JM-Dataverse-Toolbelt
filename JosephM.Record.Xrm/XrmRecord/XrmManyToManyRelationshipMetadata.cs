@@ -44,6 +44,15 @@ namespace JosephM.Record.Xrm.XrmRecord
         public int RecordType2DisplayOrder { get { return GetManyToManyDisplayOrder(true); } }
         public bool IsCustomRelationship { get { return GetMetadata().IsCustomRelationship ?? false; } }
 
+        public string MetadataId
+        {
+            get
+            {
+                var id = GetMetadata().MetadataId;
+                return id?.ToString();
+            }
+        }
+
         public XrmManyToManyRelationshipMetadata(string name, XrmService xrmService, string recordType1)
             : base(xrmService)
         {

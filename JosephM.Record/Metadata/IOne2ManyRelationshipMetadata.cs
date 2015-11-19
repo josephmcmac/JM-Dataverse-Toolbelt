@@ -19,5 +19,9 @@
         bool IsCustomLabel { get; }
 
         string GetRelationshipLabel { get; }
+
+        string MetadataId { get; }
+
+        string DeleteCascadeConfiguration { get; }
     }
 }

@@ -10,7 +10,7 @@ namespace JosephM.CustomisationExporter.Exporter
             string fieldSchemaName, RecordFieldType fieldType, bool isCustomField, bool isMandatory, string description,
             bool isPrimaryField, bool audit, bool searchable, bool displayInRelated, string referencedType,
             int maxLength, string textFormat, bool includeTime, string minValue, string maxValue,
-            string decimalPrecision, string picklistOptions)
+            string decimalPrecision, string picklistOptions, string metadataId)
         {
             DecimalPrecision = decimalPrecision;
             RecordTypeSchemaName = recordTypeSchemaName;
@@ -33,6 +33,8 @@ namespace JosephM.CustomisationExporter.Exporter
 
             RecordTypeLabel = recordTypeLabel;
             IsCustomField = isCustomField;
+
+            MetadataId = metadataId;
         }
 
         [DisplayName(Headings.Fields.RecordTypeSchemaName)]
@@ -97,5 +99,7 @@ namespace JosephM.CustomisationExporter.Exporter
 
         public string RecordTypeLabel { get; set; }
         public bool IsCustomField { get; set; }
+
+        public string MetadataId { get; set; }
     }
 }

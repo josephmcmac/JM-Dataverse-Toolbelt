@@ -67,6 +67,7 @@ namespace JosephM.Record.Metadata
         public virtual string PicklistName { get { return null; } }
         public bool IsCustomField { get; set; }
 
+        public string MetadataId { get; set; }
         public static FieldMetadata Create(PropertyInfo propertyInfo)
         {
             var recordType = propertyInfo.ReflectedType != null ? propertyInfo.ReflectedType.Name : null;

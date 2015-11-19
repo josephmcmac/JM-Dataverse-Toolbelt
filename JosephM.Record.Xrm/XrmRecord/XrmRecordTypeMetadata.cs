@@ -80,5 +80,14 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return code.HasValue ? code.ToString() : null;
             }
         }
+
+        public string MetadataId
+        {
+            get
+            {
+                var id = XrmService.GetEntityMetadata(RecordType).MetadataId;
+                return id?.ToString();
+            }
+        }
     }
 }

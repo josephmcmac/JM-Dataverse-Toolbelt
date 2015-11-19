@@ -174,5 +174,14 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return relationshipMatches.Any(r => r.AssociatedMenuConfiguration != null && GetIsDisplayRelated(r.AssociatedMenuConfiguration));
             }
         }
+
+        public string MetadataId
+        {
+            get
+            {
+                var id = XrmService.GetFieldMetadata(FieldName, RecordType).MetadataId;
+                return id?.ToString();
+            }
+        }
     }
 }

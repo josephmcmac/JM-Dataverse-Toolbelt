@@ -34,5 +34,6 @@
         public int RecordType2DisplayOrder { get; set; }
 
         public bool IsCustomRelationship { get; set; }
+        public string MetadataId { get; set; }
     }
 }

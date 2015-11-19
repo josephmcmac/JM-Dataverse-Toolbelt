@@ -9,7 +9,7 @@ namespace JosephM.CustomisationExporter.Exporter
             string objectTypeCode,
             string displayCollectionName, string description, bool audit, bool isActivityType, bool notes,
             bool activities
-            , bool connections, bool mailMerge, bool queues)
+            , bool connections, bool mailMerge, bool queues, string metadataId)
         {
             RecordTypeLabel = recordTypeLabel;
             RecordTypeSchemaName = recordTypeSchemaName;
@@ -25,6 +25,8 @@ namespace JosephM.CustomisationExporter.Exporter
 
             IsCustomEntity = isCustomEntity;
             ObjectTypeCode = objectTypeCode;
+
+            MetadataId = metadataId;
         }
 
         [DisplayName(Headings.RecordTypes.DisplayName)]
@@ -62,5 +64,7 @@ namespace JosephM.CustomisationExporter.Exporter
 
         public bool IsCustomEntity { get; set; }
         public string ObjectTypeCode { get; set; }
+
+        public string MetadataId { get; set; }
     }
 }

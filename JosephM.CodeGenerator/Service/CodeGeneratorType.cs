@@ -2,8 +2,7 @@
 {
     public enum CodeGeneratorType
     {
-        CSharpEntitiesAndFields,
-        CSharpOptionSets,
+        CSharpMetadata,
         JavaScriptOptionSets
     }
 }

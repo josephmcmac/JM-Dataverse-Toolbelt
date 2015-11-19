@@ -43,6 +43,7 @@ namespace JosephM.Record.Metadata
         public bool Searchable { get; set; }
         public bool IsCustomType { get; set; }
         public virtual string RecordTypeCode { get { return SchemaName; } }
+        public string MetadataId { get; set; }
 
         public virtual string PrimaryFieldSchemaName
         {

@@ -8,6 +8,15 @@ namespace JosephM.CodeGenerator.Service
 {
     public class CodeGeneratorRequest : ServiceRequestBase
     {
+        public CodeGeneratorRequest()
+        {
+            IncludeEntities = true;
+            IncludeFields= true;
+            IncludeOptions = true;
+            IncludeRelationships = true;
+
+        }
+
         [RequiredProperty]
         public CodeGeneratorType? Type { get; set; }
 
@@ -15,51 +24,38 @@ namespace JosephM.CodeGenerator.Service
         public Folder Folder { get; set; }
 
         [RequiredProperty]
-        [InitialiseFor("Type", CodeGeneratorType.CSharpEntitiesAndFields, "Schema")]
-        [InitialiseFor("Type", CodeGeneratorType.CSharpOptionSets, "OptionSets")]
-        [PropertyInContextByPropertyValues("Type",
-            new object[]
-            {
-                CodeGeneratorType.CSharpOptionSets, CodeGeneratorType.JavaScriptOptionSets,
-                CodeGeneratorType.CSharpEntitiesAndFields
-            })]
+        [InitialiseFor("Type", CodeGeneratorType.CSharpMetadata, "Schema")]
+        [PropertyInContextByPropertyNotNull("Type")]
         public string FileName { get; set; }
 
         [RequiredProperty]
-        [InitialiseFor("Type", CodeGeneratorType.CSharpEntitiesAndFields, "Schema")]
-        [InitialiseFor("Type", CodeGeneratorType.CSharpOptionSets, "OptionSets")]
-        [PropertyInContextByPropertyValues("Type",
-            new object[]
-            {
-                CodeGeneratorType.CSharpOptionSets, CodeGeneratorType.JavaScriptOptionSets,
-                CodeGeneratorType.CSharpEntitiesAndFields
-            })]
+        [InitialiseFor("Type", CodeGeneratorType.CSharpMetadata, "Schema")]
+        [PropertyInContextByPropertyNotNull("Type")]
         public string Namespace { get; set; }
 
         [RequiredProperty]
-        [InitialiseFor("Type", CodeGeneratorType.CSharpEntitiesAndFields, "Schema")]
-        [InitialiseFor("Type", CodeGeneratorType.CSharpOptionSets, "OptionSets")]
-        [PropertyInContextByPropertyValues("Type",
-            new object[] {CodeGeneratorType.CSharpOptionSets, CodeGeneratorType.JavaScriptOptionSets})]
-        public string ClassName { get; set; }
+        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        public bool IncludeEntities { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValues("Type",
-            new object[]
-            {
-                CodeGeneratorType.CSharpOptionSets, CodeGeneratorType.JavaScriptOptionSets,
-                CodeGeneratorType.CSharpEntitiesAndFields
-            })]
+        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        public bool IncludeFields { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        public bool IncludeRelationships { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        public bool IncludeOptions { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool AllRecordTypes { get; set; }
 
         [RequiredProperty]
         [PropertyInContextByPropertyValue("AllRecordTypes", false)]
-        [PropertyInContextByPropertyValues("Type",
-            new object[]
-            {
-                CodeGeneratorType.CSharpOptionSets, CodeGeneratorType.JavaScriptOptionSets,
-                CodeGeneratorType.CSharpEntitiesAndFields
-            })]
+        [PropertyInContextByPropertyNotNull("Type")]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
     }
 }

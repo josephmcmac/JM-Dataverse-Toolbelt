@@ -15,5 +15,7 @@
         public bool DisplayRelated { get; set; }
         public bool IsCustomLabel { get; set; }
         public string GetRelationshipLabel { get; set; }
+        public string MetadataId { get; set; }
+        public string DeleteCascadeConfiguration { get; set; }
     }
 }
