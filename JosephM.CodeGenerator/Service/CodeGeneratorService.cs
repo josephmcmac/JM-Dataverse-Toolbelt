@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
@@ -10,6 +6,10 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace JosephM.CodeGenerator.Service
 {
@@ -19,7 +19,7 @@ namespace JosephM.CodeGenerator.Service
     {
         private static IEnumerable<RecordFieldType> OptionSetTypes
         {
-            get { return new[] {RecordFieldType.Picklist, RecordFieldType.Status, RecordFieldType.State, }; }
+            get { return new[] { RecordFieldType.Picklist, RecordFieldType.Status, RecordFieldType.State, }; }
         }
 
         public CodeGeneratorService(TService service)
@@ -35,15 +35,15 @@ namespace JosephM.CodeGenerator.Service
             switch (request.Type)
             {
                 case CodeGeneratorType.CSharpMetadata:
-                {
+                    {
                         WriteCSharpMetadata(request, controller);
-                    break;
-                }
+                        break;
+                    }
                 case CodeGeneratorType.JavaScriptOptionSets:
-                {
-                    WriteJavaScriptOptionSets(request, controller);
-                    break;
-                }
+                    {
+                        WriteJavaScriptOptionSets(request, controller);
+                        break;
+                    }
             }
             response.Folder = request.Folder != null ? request.Folder.FolderPath : null;
             if (request.FileName != null)
@@ -165,7 +165,7 @@ namespace JosephM.CodeGenerator.Service
                 {
                     stringBuilder.AppendLine(string.Format("\t\tpublic static class {0}_", recordType));
                     stringBuilder.AppendLine("\t\t{");
-                    var fieldLabels = new Dictionary<string,string>();
+                    var fieldLabels = new Dictionary<string, string>();
                     foreach (var field in Service.GetFields(recordType))
                     {
                         if (!field.IsNullOrWhiteSpace())
@@ -248,6 +248,30 @@ namespace JosephM.CodeGenerator.Service
                 return;
             stringBuilder.AppendLine("\tpublic static class OptionSets");
             stringBuilder.AppendLine("\t{");
+
+            if (request.IncludeAllSharedOptions)
+            {
+                var picklists = Service.GetSharedPicklists();
+                var countOptionsToDo = picklists.Count();
+                var countOptionsDone = 0;
+
+                stringBuilder.AppendLine("\t\tpublic static class Shared");
+                stringBuilder.AppendLine("\t\t{");
+                foreach (var item in picklists)
+                {
+                    controller.UpdateProgress(countOptionsDone, countOptionsToDo,
+                        string.Format("Processing Shared Options ({0})", item.DisplayName));
+                    stringBuilder.AppendLine("\t\t\tpublic static class " + CreateCodeLabel(item.DisplayName));
+                    stringBuilder.AppendLine("\t\t\t{");
+                    foreach (var option in item.PicklistOptions)
+                    {
+                        stringBuilder.AppendLine(
+                            string.Format("\t\t\t\tpublic const int {0} = {1};", CreateCodeLabel(option.Value), option.Key));
+                    }
+                    stringBuilder.AppendLine("\t\t\t}");
+                }
+                stringBuilder.AppendLine("\t\t}");
+            }
             var types = GetRecordTypesToImport(request);
             var countToDo = types.Count();
             var countDone = 0;
@@ -301,7 +325,7 @@ namespace JosephM.CodeGenerator.Service
 
         private static IEnumerable<string> KeyWords
         {
-            get { return new[] {"abstract", "event", "namespace"}; }
+            get { return new[] { "abstract", "event", "namespace" }; }
         }
 
         private static string CreateCodeLabel(string rawLabel)

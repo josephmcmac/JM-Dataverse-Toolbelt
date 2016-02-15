@@ -8,7 +8,7 @@ namespace JosephM.Core.Attributes
     /// </summary>
     [AttributeUsage(
         AttributeTargets.Property,
-        AllowMultiple = false)]
+        AllowMultiple = true)]
     public abstract class PropertyInContext : Attribute
     {
         /// <summary>

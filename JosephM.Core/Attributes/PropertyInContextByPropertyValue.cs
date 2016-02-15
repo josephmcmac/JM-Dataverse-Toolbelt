@@ -1,5 +1,5 @@
-﻿using System;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
+using System;
 
 namespace JosephM.Core.Attributes
 {
@@ -8,7 +8,7 @@ namespace JosephM.Core.Attributes
     /// </summary>
     [AttributeUsage(
         AttributeTargets.Property,
-        AllowMultiple = false)]
+        AllowMultiple = true)]
     public class PropertyInContextByPropertyValue : PropertyInContext
     {
         public string PropertyDependency { get; set; }

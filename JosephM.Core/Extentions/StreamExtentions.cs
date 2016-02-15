@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace JosephM.Core.Extentions
 {
@@ -21,6 +16,12 @@ namespace JosephM.Core.Extentions
                 }
                 return ms.ToArray();
             }
+        }
+
+        public static string ReadToString(this Stream stream)
+        {
+            var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
     }
 }

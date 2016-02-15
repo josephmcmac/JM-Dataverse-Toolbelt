@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
+using System.Collections.Generic;
 
 namespace JosephM.CodeGenerator.Service
 {
@@ -11,7 +11,7 @@ namespace JosephM.CodeGenerator.Service
         public CodeGeneratorRequest()
         {
             IncludeEntities = true;
-            IncludeFields= true;
+            IncludeFields = true;
             IncludeOptions = true;
             IncludeRelationships = true;
 
@@ -48,6 +48,11 @@ namespace JosephM.CodeGenerator.Service
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool IncludeOptions { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("IncludeOptions", true)]
+        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        public bool IncludeAllSharedOptions { get; set; }
 
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
