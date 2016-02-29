@@ -1,5 +1,8 @@
 ﻿#region
 
+using JosephM.Core.Extentions;
+using JosephM.Core.Log;
+using JosephM.Core.Sql;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,9 +11,6 @@ using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Text;
-using JosephM.Core.Extentions;
-using JosephM.Core.Log;
-using JosephM.Core.Sql;
 
 #endregion
 
@@ -37,10 +37,10 @@ namespace JosephM.Core.Utility
                 var propertyNames = typeToOutput.GetReadableProperties().Select(s => s.Name).ToArray();
 
                 CreateCsv(path, name, objects, propertyNames
-                    , delegate(string s)
+                    , delegate (string s)
                 {
                     return typeToOutput.GetProperty(s).GetDisplayName();
-                }, delegate(object o, string s)
+                }, delegate (object o, string s)
                 {
                     return o.GetPropertyValue(s);
                 });
@@ -89,6 +89,8 @@ namespace JosephM.Core.Utility
         /// <param name="fileName"></param>
         public static void ConstructTextSchema(string folder, string fileName)
         {
+            if (File.Exists(folder + @"\Schema.ini"))
+                File.Delete(folder + @"\Schema.ini");
             if (folder.IsNullOrWhiteSpace())
                 folder = AppDomain.CurrentDomain.BaseDirectory;
             var schema = new StringBuilder();
@@ -99,10 +101,7 @@ namespace JosephM.Core.Utility
             {
                 schema.AppendLine("col" + (i + 1) + "=\"" + fields[i] + "\" Text");
             }
-            var schemaFileName = folder + @"\Schema.ini";
-            TextWriter tw = new StreamWriter(schemaFileName);
-            tw.WriteLine(schema.ToString());
-            tw.Close();
+            FileUtility.WriteToFile(folder, "Schema.ini", schema.ToString());
         }
 
         public static IEnumerable<string> GetColumns(string fileNameQualified)
