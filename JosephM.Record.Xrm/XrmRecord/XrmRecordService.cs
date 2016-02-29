@@ -1,14 +1,5 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Globalization;
-using System.Linq;
-using System.Xml;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Metadata;
-using Microsoft.Xrm.Sdk.Query;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
@@ -19,6 +10,12 @@ using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Xrm;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 
 #endregion
 
@@ -222,11 +219,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
             if (newValue is EntityReference)
             {
-                newValue = _lookupMapper.Map((EntityReference) newValue);
+                newValue = _lookupMapper.Map((EntityReference)newValue);
             }
             else if (newValue is OptionSetValue)
             {
-                var key = ((OptionSetValue) newValue).Value;
+                var key = ((OptionSetValue)newValue).Value;
                 try
                 {
                     newValue = new PicklistOption(key.ToString(), _xrmService.GetOptionLabel(key, fieldName, recordType));
@@ -239,7 +236,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
             else if (newValue is EntityCollection)
             {
-                var entities = ((EntityCollection) newValue).Entities;
+                var entities = ((EntityCollection)newValue).Entities;
                 newValue = ToIRecords(entities);
             }
             return newValue;
@@ -274,13 +271,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                 //Strings no map
             }
             else if (temp is PicklistOption)
-                temp = new OptionSetValue(int.Parse(((PicklistOption) temp).Key));
+                temp = new OptionSetValue(int.Parse(((PicklistOption)temp).Key));
             else if (temp is Lookup)
-                temp = _lookupMapper.Map((Lookup) temp);
+                temp = _lookupMapper.Map((Lookup)temp);
             else if (temp is Password)
-                temp = ((Password) temp).GetRawPassword();
+                temp = ((Password)temp).GetRawPassword();
             else if (temp is IEnumerable<IRecord>)
-                temp = ToEntities((IEnumerable<IRecord>) temp).ToArray();
+                temp = ToEntities((IEnumerable<IRecord>)temp).ToArray();
             return temp;
         }
 
@@ -342,200 +339,200 @@ namespace JosephM.Record.Xrm.XrmRecord
             switch (field.FieldType)
             {
                 case (RecordFieldType.Boolean):
-                {
-                    var typedField = (BooleanFieldMetadata) field;
-                    _xrmService.CreateOrUpdateBooleanAttribute(typedField.SchemaName,
-                        typedField.DisplayName,
-                        typedField.Description,
-                        typedField.IsMandatory,
-                        typedField.Audit,
-                        typedField.Searchable,
-                        recordType);
-                    break;
-                }
+                    {
+                        var typedField = (BooleanFieldMetadata)field;
+                        _xrmService.CreateOrUpdateBooleanAttribute(typedField.SchemaName,
+                            typedField.DisplayName,
+                            typedField.Description,
+                            typedField.IsMandatory,
+                            typedField.Audit,
+                            typedField.Searchable,
+                            recordType);
+                        break;
+                    }
                 case (RecordFieldType.Date):
-                {
-                    var typedField = (DateFieldMetadata) field;
-                    _xrmService.CreateOrUpdateDateAttribute(typedField.SchemaName,
-                        typedField.DisplayName,
-                        typedField.Description,
-                        typedField.IsMandatory,
-                        typedField.Audit,
-                        typedField.Searchable,
-                        recordType,
-                        typedField.IncludeTime
-                        );
-                    break;
-                }
+                    {
+                        var typedField = (DateFieldMetadata)field;
+                        _xrmService.CreateOrUpdateDateAttribute(typedField.SchemaName,
+                            typedField.DisplayName,
+                            typedField.Description,
+                            typedField.IsMandatory,
+                            typedField.Audit,
+                            typedField.Searchable,
+                            recordType,
+                            typedField.IncludeTime
+                            );
+                        break;
+                    }
                 case (RecordFieldType.Decimal):
-                {
-                    var typedField = (DecimalFieldMetadata) field;
-                    _xrmService.CreateOrUpdateDecimalAttribute(typedField.SchemaName,
-                        typedField.DisplayName,
-                        typedField.Description,
-                        typedField.IsMandatory,
-                        typedField.Audit,
-                        typedField.Searchable,
-                        recordType,
-                        typedField.MinValue, typedField.MaxValue, typedField.DecimalPrecision);
-                    break;
-                }
+                    {
+                        var typedField = (DecimalFieldMetadata)field;
+                        _xrmService.CreateOrUpdateDecimalAttribute(typedField.SchemaName,
+                            typedField.DisplayName,
+                            typedField.Description,
+                            typedField.IsMandatory,
+                            typedField.Audit,
+                            typedField.Searchable,
+                            recordType,
+                            typedField.MinValue, typedField.MaxValue, typedField.DecimalPrecision);
+                        break;
+                    }
                 case (RecordFieldType.Integer):
-                {
-                    var typedField = (IntegerFieldMetadata) field;
-                    _xrmService.CreateOrUpdateIntegerAttribute(typedField.SchemaName,
-                        typedField.DisplayName,
-                        typedField.Description,
-                        typedField.IsMandatory,
-                        typedField.Audit,
-                        typedField.Searchable,
-                        recordType,
-                        Convert.ToInt32(typedField.MinValue), Convert.ToInt32(typedField.MaxValue));
-                    break;
-                }
+                    {
+                        var typedField = (IntegerFieldMetadata)field;
+                        _xrmService.CreateOrUpdateIntegerAttribute(typedField.SchemaName,
+                            typedField.DisplayName,
+                            typedField.Description,
+                            typedField.IsMandatory,
+                            typedField.Audit,
+                            typedField.Searchable,
+                            recordType,
+                            Convert.ToInt32(typedField.MinValue), Convert.ToInt32(typedField.MaxValue));
+                        break;
+                    }
                 case (RecordFieldType.Lookup):
-                {
-                    var typedField = (LookupFieldMetadata) field;
-                    _xrmService.CreateOrUpdateLookupAttribute(typedField.SchemaName,
-                        typedField.DisplayName,
-                        typedField.Description,
-                        typedField.IsMandatory,
-                        typedField.Audit,
-                        typedField.Searchable,
-                        recordType,
-                        typedField.ReferencedRecordType,
-                        typedField.DisplayInRelated);
-                    break;
-                }
+                    {
+                        var typedField = (LookupFieldMetadata)field;
+                        _xrmService.CreateOrUpdateLookupAttribute(typedField.SchemaName,
+                            typedField.DisplayName,
+                            typedField.Description,
+                            typedField.IsMandatory,
+                            typedField.Audit,
+                            typedField.Searchable,
+                            recordType,
+                            typedField.ReferencedRecordType,
+                            typedField.DisplayInRelated);
+                        break;
+                    }
                 case (RecordFieldType.Picklist):
-                {
-                    var typedField = (PicklistFieldMetadata) field;
-                    if (typedField.PicklistOptionSet.IsSharedOptionSet)
                     {
-                        _xrmService.CreateOrUpdatePicklistAttribute(typedField.SchemaName,
-                            typedField.DisplayName,
-                            typedField.Description,
-                            typedField.IsMandatory,
-                            typedField.Audit,
-                            typedField.Searchable,
-                            recordType,
-                            typedField.PicklistOptionSet
-                                .SchemaName);
+                        var typedField = (PicklistFieldMetadata)field;
+                        if (typedField.PicklistOptionSet.IsSharedOptionSet)
+                        {
+                            _xrmService.CreateOrUpdatePicklistAttribute(typedField.SchemaName,
+                                typedField.DisplayName,
+                                typedField.Description,
+                                typedField.IsMandatory,
+                                typedField.Audit,
+                                typedField.Searchable,
+                                recordType,
+                                typedField.PicklistOptionSet
+                                    .SchemaName);
+                        }
+                        else
+                        {
+                            _xrmService.CreateOrUpdatePicklistAttribute(typedField.SchemaName,
+                                typedField.DisplayName,
+                                typedField.Description,
+                                typedField.IsMandatory,
+                                typedField.Audit,
+                                typedField.Searchable,
+                                recordType,
+                                typedField.PicklistOptions.Select(
+                                    p =>
+                                        new KeyValuePair<int, string>(
+                                            int.Parse(p.Key), p.Value)));
+                        }
+                        break;
                     }
-                    else
-                    {
-                        _xrmService.CreateOrUpdatePicklistAttribute(typedField.SchemaName,
-                            typedField.DisplayName,
-                            typedField.Description,
-                            typedField.IsMandatory,
-                            typedField.Audit,
-                            typedField.Searchable,
-                            recordType,
-                            typedField.PicklistOptions.Select(
-                                p =>
-                                    new KeyValuePair<int, string>(
-                                        int.Parse(p.Key), p.Value)));
-                    }
-                    break;
-                }
                 case (RecordFieldType.String):
-                {
-                    var typedField = (StringFieldMetadata) field;
-                    _xrmService.CreateOrUpdateStringAttribute(typedField.SchemaName,
-                        typedField.DisplayName,
-                        typedField.Description,
-                        typedField.IsMandatory,
-                        typedField.Audit,
-                        typedField.Searchable,
-                        recordType,
-                        typedField.MaxLength,
-                        new StringFormatMapper().Map(
-                            typedField.TextFormat));
-                    break;
-                }
+                    {
+                        var typedField = (StringFieldMetadata)field;
+                        _xrmService.CreateOrUpdateStringAttribute(typedField.SchemaName,
+                            typedField.DisplayName,
+                            typedField.Description,
+                            typedField.IsMandatory,
+                            typedField.Audit,
+                            typedField.Searchable,
+                            recordType,
+                            typedField.MaxLength,
+                            new StringFormatMapper().Map(
+                                typedField.TextFormat));
+                        break;
+                    }
                 case (RecordFieldType.Money):
-                {
-                    var typedField = (MoneyFieldMetadata) field;
-                    _xrmService.CreateOrUpdateMoneyAttribute(typedField.SchemaName,
-                        typedField.DisplayName,
-                        typedField.Description,
-                        typedField.IsMandatory,
-                        typedField.Audit,
-                        typedField.Searchable,
-                        recordType,
-                        Convert.ToDouble(typedField.MinValue), Convert.ToDouble(typedField.MaxValue));
-                    break;
-                }
+                    {
+                        var typedField = (MoneyFieldMetadata)field;
+                        _xrmService.CreateOrUpdateMoneyAttribute(typedField.SchemaName,
+                            typedField.DisplayName,
+                            typedField.Description,
+                            typedField.IsMandatory,
+                            typedField.Audit,
+                            typedField.Searchable,
+                            recordType,
+                            Convert.ToDouble(typedField.MinValue), Convert.ToDouble(typedField.MaxValue));
+                        break;
+                    }
                 case (RecordFieldType.Memo):
-                {
-                    var typedField = (MemoFieldMetadata)field;
-                    _xrmService.CreateOrUpdateMemoAttribute(typedField.SchemaName,
-                        typedField.DisplayName,
-                        typedField.Description,
-                        typedField.IsMandatory,
-                        typedField.Audit,
-                        typedField.Searchable,
-                        recordType,
-                        typedField.MaxLength);
-                    break;
-                }
+                    {
+                        var typedField = (MemoFieldMetadata)field;
+                        _xrmService.CreateOrUpdateMemoAttribute(typedField.SchemaName,
+                            typedField.DisplayName,
+                            typedField.Description,
+                            typedField.IsMandatory,
+                            typedField.Audit,
+                            typedField.Searchable,
+                            recordType,
+                            typedField.MaxLength);
+                        break;
+                    }
                 case (RecordFieldType.Status):
-                {
-                    var typedField = (StatusFieldMetadata)field;
-                    _xrmService.CreateOrUpdateStatusAttribute(typedField.SchemaName,
-                            typedField.DisplayName,
-                            typedField.Description,
-                            typedField.IsMandatory,
-                            typedField.Audit,
-                            typedField.Searchable,
-                            recordType);
-                    break;
-                }
+                    {
+                        var typedField = (StatusFieldMetadata)field;
+                        _xrmService.CreateOrUpdateStatusAttribute(typedField.SchemaName,
+                                typedField.DisplayName,
+                                typedField.Description,
+                                typedField.IsMandatory,
+                                typedField.Audit,
+                                typedField.Searchable,
+                                recordType);
+                        break;
+                    }
                 case (RecordFieldType.Double):
-                {
-                    var typedField = (DoubleFieldMetadata)field;
-                    _xrmService.CreateOrUpdateDoubleAttribute(typedField.SchemaName,
-                            typedField.DisplayName,
-                            typedField.Description,
-                            typedField.IsMandatory,
-                            typedField.Audit,
-                            typedField.Searchable,
-                            recordType, Convert.ToDouble(typedField.MinValue), Convert.ToDouble(typedField.MaxValue), typedField.DecimalPrecision);
-                    break;
-                }
+                    {
+                        var typedField = (DoubleFieldMetadata)field;
+                        _xrmService.CreateOrUpdateDoubleAttribute(typedField.SchemaName,
+                                typedField.DisplayName,
+                                typedField.Description,
+                                typedField.IsMandatory,
+                                typedField.Audit,
+                                typedField.Searchable,
+                                recordType, Convert.ToDouble(typedField.MinValue), Convert.ToDouble(typedField.MaxValue), typedField.DecimalPrecision);
+                        break;
+                    }
                 case (RecordFieldType.State):
-                {
-                    var typedField = (StateFieldMetadata)field;
-                    _xrmService.CreateOrUpdateStateAttribute(typedField.SchemaName,
-                            typedField.DisplayName,
-                            typedField.Description,
-                            typedField.IsMandatory,
-                            typedField.Audit,
-                            typedField.Searchable,
-                            recordType);
-                    break;
-                }
+                    {
+                        var typedField = (StateFieldMetadata)field;
+                        _xrmService.CreateOrUpdateStateAttribute(typedField.SchemaName,
+                                typedField.DisplayName,
+                                typedField.Description,
+                                typedField.IsMandatory,
+                                typedField.Audit,
+                                typedField.Searchable,
+                                recordType);
+                        break;
+                    }
                 case (RecordFieldType.Virtual):
                 case (RecordFieldType.BigInt):
-                {
-                    throw new NotSupportedException(string.Format("Updating {0} Attributes Not Supported. Field = {1}", field.FieldType, field.SchemaName));
-                }
+                    {
+                        throw new NotSupportedException(string.Format("Updating {0} Attributes Not Supported. Field = {1}", field.FieldType, field.SchemaName));
+                    }
                 case (RecordFieldType.Uniqueidentifier):
-                {
-                    var typedField = (UniqueidentifierFieldMetadata)field;
-                    _xrmService.CreateOrUpdateAttribute(typedField.SchemaName,
-                            typedField.DisplayName,
-                            typedField.Description,
-                            typedField.IsMandatory,
-                            typedField.Audit,
-                            typedField.Searchable,
-                            recordType);
-                    break;
-                }
+                    {
+                        var typedField = (UniqueidentifierFieldMetadata)field;
+                        _xrmService.CreateOrUpdateAttribute(typedField.SchemaName,
+                                typedField.DisplayName,
+                                typedField.Description,
+                                typedField.IsMandatory,
+                                typedField.Audit,
+                                typedField.Searchable,
+                                recordType);
+                        break;
+                    }
                 default:
-                {
-                    throw new NotImplementedException(string.Format("CreateOrUpdateField Not Implemented For Field {0} In Object {1} For Field Type {2}", field.SchemaName, field.GetType().Name, field.FieldType));
-                }
+                    {
+                        throw new NotImplementedException(string.Format("CreateOrUpdateField Not Implemented For Field {0} In Object {1} For Field Type {2}", field.SchemaName, field.GetType().Name, field.FieldType));
+                    }
             }
         }
 
@@ -601,7 +598,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                             {
                                 foreach (XmlNode item in cellNodes)
                                 {
-                                    if (item != null && item.Attributes != null )
+                                    if (item != null && item.Attributes != null)
                                     {
                                         if (item.Attributes["name"] == null || item.Attributes["width"] == null)
                                             continue;
@@ -615,7 +612,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                             {
                                 Enum.TryParse(query.GetInt("querytype").ToString(), out viewType);
                             }
-                            var view = new ViewMetadata(viewFields) {ViewType = viewType};
+                            var view = new ViewMetadata(viewFields) { ViewType = viewType };
                             viewMetadatas.Add(view);
                         }
                     }

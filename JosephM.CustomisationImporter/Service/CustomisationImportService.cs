@@ -1,8 +1,5 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
@@ -11,6 +8,9 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Spreadsheet;
 using JosephM.Xrm.MetadataImportExport;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 #endregion
 
@@ -86,137 +86,137 @@ namespace JosephM.CustomisationImporter.Service
                         switch (type)
                         {
                             case (RecordFieldType.Boolean):
-                            {
-                                fieldMetadata = new BooleanFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName);
-                                break;
-                            }
-                            case (RecordFieldType.Date):
-                            {
-                                fieldMetadata = new DateFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName)
                                 {
-                                    IncludeTime = row.GetFieldAsBoolean(Headings.Fields.IncludeTime)
-                                };
-                                break;
-                            }
-                            case (RecordFieldType.Decimal):
-                            {
-                                fieldMetadata = new DecimalFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName)
-                                {
-                                    MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
-                                    MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum),
-                                    DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision)
-                                };
-                                break;
-                            }
-                            case (RecordFieldType.Integer):
-                            {
-                                fieldMetadata = new IntegerFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName)
-                                {
-                                    MinValue = row.GetFieldAsInteger(Headings.Fields.Minimum),
-                                    MaxValue = row.GetFieldAsInteger(Headings.Fields.Maximum)
-                                };
-                                break;
-                            }
-                            case (RecordFieldType.Lookup):
-                            {
-                                fieldMetadata = new LookupFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName,
-                                    row.GetFieldAsString(Headings.Fields.ReferencedRecordType))
-                                {
-                                    DisplayInRelated = row.GetFieldAsBoolean(Headings.Fields.DisplayInRelated)
-                                };
-                                break;
-                            }
-                            case (RecordFieldType.Money):
-                            {
-                                fieldMetadata = new MoneyFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName)
-                                {
-                                    MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
-                                    MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum)
-                                };
-                                break;
-                            }
-                            case (RecordFieldType.Picklist):
-                            {
-                                var optionSetName = row.GetFieldAsString(Headings.Fields.PicklistOptions);
-                                var optionSet = new PicklistOptionSet();
-                                if (!string.IsNullOrWhiteSpace(optionSetName))
-                                {
-                                    if (picklistOptionSets.Any(p => p.DisplayName == optionSetName))
-                                        optionSet = picklistOptionSets.First(p => p.DisplayName == optionSetName);
+                                    fieldMetadata = new BooleanFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName);
+                                    break;
                                 }
-                                fieldMetadata = new PicklistFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName, optionSet);
-                                break;
-                            }
+                            case (RecordFieldType.Date):
+                                {
+                                    fieldMetadata = new DateFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName)
+                                    {
+                                        IncludeTime = row.GetFieldAsBoolean(Headings.Fields.IncludeTime)
+                                    };
+                                    break;
+                                }
+                            case (RecordFieldType.Decimal):
+                                {
+                                    fieldMetadata = new DecimalFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName)
+                                    {
+                                        MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
+                                        MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum),
+                                        DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision)
+                                    };
+                                    break;
+                                }
+                            case (RecordFieldType.Integer):
+                                {
+                                    fieldMetadata = new IntegerFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName)
+                                    {
+                                        MinValue = row.GetFieldAsInteger(Headings.Fields.Minimum),
+                                        MaxValue = row.GetFieldAsInteger(Headings.Fields.Maximum)
+                                    };
+                                    break;
+                                }
+                            case (RecordFieldType.Lookup):
+                                {
+                                    fieldMetadata = new LookupFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName,
+                                        row.GetFieldAsString(Headings.Fields.ReferencedRecordType))
+                                    {
+                                        DisplayInRelated = row.GetFieldAsBoolean(Headings.Fields.DisplayInRelated)
+                                    };
+                                    break;
+                                }
+                            case (RecordFieldType.Money):
+                                {
+                                    fieldMetadata = new MoneyFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName)
+                                    {
+                                        MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
+                                        MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum)
+                                    };
+                                    break;
+                                }
+                            case (RecordFieldType.Picklist):
+                                {
+                                    var optionSetName = row.GetFieldAsString(Headings.Fields.PicklistOptions);
+                                    var optionSet = new PicklistOptionSet();
+                                    if (!string.IsNullOrWhiteSpace(optionSetName))
+                                    {
+                                        if (picklistOptionSets.Any(p => p.DisplayName == optionSetName))
+                                            optionSet = picklistOptionSets.First(p => p.DisplayName == optionSetName);
+                                    }
+                                    fieldMetadata = new PicklistFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName, optionSet);
+                                    break;
+                                }
                             case (RecordFieldType.String):
-                            {
-                                fieldMetadata = new StringFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName)
                                 {
-                                    MaxLength = row.GetFieldAsInteger(Headings.Fields.MaxLength),
-                                    TextFormat =
-                                        string.IsNullOrWhiteSpace(row.GetFieldAsString(Headings.Fields.TextFormat))
-                                            ? TextFormat.Text
-                                            : row.GetFieldAsEnum<TextFormat>(Headings.Fields.TextFormat),
-                                    IsPrimaryField = row.GetFieldAsBoolean(Headings.Fields.IsPrimaryField)
-                                };
-                                break;
-                            }
+                                    fieldMetadata = new StringFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName)
+                                    {
+                                        MaxLength = row.GetFieldAsInteger(Headings.Fields.MaxLength),
+                                        TextFormat =
+                                            string.IsNullOrWhiteSpace(row.GetFieldAsString(Headings.Fields.TextFormat))
+                                                ? TextFormat.Text
+                                                : row.GetFieldAsEnum<TextFormat>(Headings.Fields.TextFormat),
+                                        IsPrimaryField = row.GetFieldAsBoolean(Headings.Fields.IsPrimaryField)
+                                    };
+                                    break;
+                                }
                             case RecordFieldType.Memo:
-                            {
-                                fieldMetadata = new MemoFieldMetadata(recordTypeSchemaName, fieldSchemaName, displayName)
                                 {
-                                    MaxLength = row.GetFieldAsInteger(Headings.Fields.MaxLength)
-                                };
-                                break;
-                            }
+                                    fieldMetadata = new MemoFieldMetadata(recordTypeSchemaName, fieldSchemaName, displayName)
+                                    {
+                                        MaxLength = row.GetFieldAsInteger(Headings.Fields.MaxLength)
+                                    };
+                                    break;
+                                }
                             case RecordFieldType.Status:
-                            {
-                                fieldMetadata = new StatusFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName, null);
-                                break;
-                            }
-                            case (RecordFieldType.Double):
-                            {
-                                fieldMetadata = new DoubleFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName)
                                 {
-                                    MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
-                                    MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum),
-                                    DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision)
-                                };
-                                break;
-                            }
+                                    fieldMetadata = new StatusFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName, null);
+                                    break;
+                                }
+                            case (RecordFieldType.Double):
+                                {
+                                    fieldMetadata = new DoubleFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName)
+                                    {
+                                        MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum),
+                                        MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum),
+                                        DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision)
+                                    };
+                                    break;
+                                }
                             case (RecordFieldType.Uniqueidentifier):
-                            {
-                                fieldMetadata = new UniqueidentifierFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName);
-                                break;
-                            }
+                                {
+                                    fieldMetadata = new UniqueidentifierFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName);
+                                    break;
+                                }
                             case (RecordFieldType.State):
-                            {
-                                fieldMetadata = new StateFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName);
-                                break;
-                            }
+                                {
+                                    fieldMetadata = new StateFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName);
+                                    break;
+                                }
                             case (RecordFieldType.BigInt):
-                            {
-                                fieldMetadata = new BigIntFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName);
-                                break;
-                            }
+                                {
+                                    fieldMetadata = new BigIntFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName);
+                                    break;
+                                }
                             default:
-                            {
-                                fieldMetadata = new AnyFieldMetadata(recordTypeSchemaName, fieldSchemaName,
-                                    displayName, type);
-                                break;
-                            }
+                                {
+                                    fieldMetadata = new AnyFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName, type);
+                                    break;
+                                }
                         }
 
                         fieldMetadata.Description = row.GetFieldAsString(Headings.Fields.Description);
@@ -242,7 +242,7 @@ namespace JosephM.CustomisationImporter.Service
             var picklistFields = recordMetadata
                 .SelectMany(m => m.Fields)
                 .Where(
-                    f => f is PicklistFieldMetadata && !((PicklistFieldMetadata) f).PicklistOptionSet.IsSharedOptionSet)
+                    f => f is PicklistFieldMetadata && !((PicklistFieldMetadata)f).PicklistOptionSet.IsSharedOptionSet)
                 .Cast<PicklistFieldMetadata>()
                 .ToArray();
             var numberToDo = picklistFields.Count();
@@ -271,7 +271,11 @@ namespace JosephM.CustomisationImporter.Service
         private void ImportSharedOptionSets(IEnumerable<PicklistOptionSet> optionSets, LogController controller,
             CustomisationImportResponse importResponse)
         {
-            var sharedOptionSets = optionSets.Where(o => o.IsSharedOptionSet).ToArray();
+            var sharedOptionSets = optionSets
+                .Where(o => o.IsSharedOptionSet)
+                .Where(o => o.PicklistOptions.Any()
+                && (o.PicklistOptions.Count() > 1 || o.PicklistOptions.First().Key != "-1"))
+                .ToArray();
             var numberToDo = sharedOptionSets.Count();
             var numberCompleted = 0;
             for (var i = 0; i < sharedOptionSets.Count(); i++)
@@ -471,7 +475,7 @@ namespace JosephM.CustomisationImporter.Service
                             Queues = row.GetFieldAsBoolean(Headings.RecordTypes.Queues)
                         };
                         mapping.Fields = fieldMetadata.Where(f => f.RecordType == mapping.SchemaName).ToArray();
-                        mapping.Views = new[] {GetView(mapping.SchemaName, excelFile, controller)};
+                        mapping.Views = new[] { GetView(mapping.SchemaName, excelFile, controller) };
                         result.Add(mapping);
                     }
                     catch (Exception ex)

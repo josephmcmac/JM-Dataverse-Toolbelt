@@ -1,8 +1,5 @@
 ﻿#region
 
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Core.FieldType;
 using JosephM.CustomisationImporter.Prism;
 using JosephM.CustomisationImporter.Service;
@@ -10,7 +7,9 @@ using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
-using JosephM.Record.Xrm.Test;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
 
 #endregion
 
@@ -56,7 +55,7 @@ namespace JosephM.CustomisationImporter.Test
             {
                 var response = importService.Execute(request, Controller);
                 if (response.HasError)
-                Assert.IsFalse(response.HasError);
+                    Assert.IsFalse(response.HasError);
                 ClearCache();
 
                 VerifyRelationships(request);
@@ -136,36 +135,36 @@ namespace JosephM.CustomisationImporter.Test
                 if (field.FieldType == RecordFieldType.String)
                 {
                     Assert.IsTrue(XrmRecordService.GetMaxLength(field.SchemaName, field.RecordType) ==
-                                  ((StringFieldMetadata) field).MaxLength);
+                                  ((StringFieldMetadata)field).MaxLength);
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).TextFormat ==
-                                  ((StringFieldMetadata) field).TextFormat);
+                                  ((StringFieldMetadata)field).TextFormat);
                 }
                 if (field.FieldType == RecordFieldType.Integer)
                 {
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).MinValue ==
-                                  ((IntegerFieldMetadata) field).MinValue);
+                                  ((IntegerFieldMetadata)field).MinValue);
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).MaxValue ==
-                                  ((IntegerFieldMetadata) field).MaxValue);
+                                  ((IntegerFieldMetadata)field).MaxValue);
                 }
                 if (field.FieldType == RecordFieldType.Decimal)
                 {
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).MinValue ==
-                                  ((DecimalFieldMetadata) field).MinValue);
+                                  ((DecimalFieldMetadata)field).MinValue);
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).MaxValue ==
-                                  ((DecimalFieldMetadata) field).MaxValue);
+                                  ((DecimalFieldMetadata)field).MaxValue);
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).DecimalPrecision ==
               ((DecimalFieldMetadata)field).DecimalPrecision);
                 }
                 if (field.FieldType == RecordFieldType.Date)
                 {
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).IncludeTime ==
-                                  ((DateFieldMetadata) field).IncludeTime);
+                                  ((DateFieldMetadata)field).IncludeTime);
                 }
                 if (field.FieldType == RecordFieldType.Picklist)
                 {
                     var actualOptions = XrmRecordService.GetPicklistKeyValues(field.SchemaName,
                         field.RecordType);
-                    var expectedOption = ((PicklistFieldMetadata) field).PicklistOptions;
+                    var expectedOption = ((PicklistFieldMetadata)field).PicklistOptions;
                     VerifyOptionSetsEqual(actualOptions, expectedOption);
                 }
                 if (field.FieldType == RecordFieldType.Double)
