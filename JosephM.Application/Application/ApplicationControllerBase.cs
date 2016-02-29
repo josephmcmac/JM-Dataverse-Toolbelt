@@ -1,5 +1,8 @@
 ﻿#region
 
+using JosephM.Core.AppConfig;
+using JosephM.Core.Extentions;
+using JosephM.Core.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,9 +10,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Windows.Threading;
-using JosephM.Core.AppConfig;
-using JosephM.Core.Extentions;
-using JosephM.Core.Utility;
 
 #endregion
 
@@ -58,7 +58,7 @@ namespace JosephM.Application.Application
 
         public virtual void DoOnAsyncThread(Action action)
         {
-            new Thread(
+            var thread = new Thread(
                 () =>
                 {
                     try
@@ -70,7 +70,9 @@ namespace JosephM.Application.Application
                         UserMessage(string.Concat("Warning unhandled exception:\n",
                             ex.DisplayString()));
                     }
-                }).Start();
+                });
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         public string SettingsPath
@@ -105,8 +107,8 @@ namespace JosephM.Application.Application
 
         public virtual void SeralializeObjectToFile(object theObject, string fileName)
         {
-                var serializer = new DataContractSerializer(theObject.GetType());
-                FileUtility.CheckCreateFolder(Path.GetDirectoryName(fileName));
+            var serializer = new DataContractSerializer(theObject.GetType());
+            FileUtility.CheckCreateFolder(Path.GetDirectoryName(fileName));
             using (
                 var fileStream = new FileStream(fileName, FileMode.Create))
             {

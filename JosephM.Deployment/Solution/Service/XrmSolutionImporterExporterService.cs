@@ -1,32 +1,25 @@
 ﻿#region
 
+using JosephM.Core.FieldType;
+using JosephM.Core.Log;
+using JosephM.Core.Service;
+using JosephM.Core.Utility;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.ImportExporter.Solution.Service;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.Text.RegularExpressions;
 using System.Threading;
-using JosephM.Core.FieldType;
-using JosephM.Xrm.ImportExporter.Solution.Service;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using JosephM.Core.Extentions;
-using JosephM.Core.Log;
-using JosephM.Core.Service;
-using JosephM.Core.Sql;
-using JosephM.Core.Utility;
-using JosephM.Record.IService;
-using JosephM.Record.Query;
-using JosephM.Record.Xrm.XrmRecord;
 
 #endregion
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
-    public class XrmSolutionImporterExporterService:
+    public class XrmSolutionImporterExporterService :
         ServiceBase<XrmSolutionImporterExporterRequest, XrmSolutionImporterExporterResponse, XrmSolutionImporterExporterResponseItem>
     {
         public override void ExecuteExtention(XrmSolutionImporterExporterRequest request, XrmSolutionImporterExporterResponse response,
@@ -35,20 +28,20 @@ namespace JosephM.Xrm.ImportExporter.Service
             switch (request.ImportExportTask)
             {
                 case SolutionImportExportTask.ExportSolutions:
-                {
-                    ExportSolutions(request.SolutionExports, request.FolderPath.FolderPath, controller, response);
-                    break;
-                }
+                    {
+                        ExportSolutions(request.SolutionExports, request.FolderPath.FolderPath, controller, response);
+                        break;
+                    }
                 case SolutionImportExportTask.ImportSolutions:
-                {
-                    ImportSolutions(request, controller, response);
-                    break;
-                }
+                    {
+                        ImportSolutions(request, controller, response);
+                        break;
+                    }
                 case SolutionImportExportTask.MigrateSolutions:
-                {
-                    MigrateSolutions(request, controller, response);
-                    break;
-                }
+                    {
+                        MigrateSolutions(request, controller, response);
+                        break;
+                    }
             }
         }
 
@@ -60,7 +53,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             {
                 var thisItem = item;
                 var matchingExports = exported.Where(e => e.Export == thisItem);
-                if(!matchingExports.Any())
+                if (!matchingExports.Any())
                     throw new NullReferenceException(string.Format("Error Preparing Import Solutions - Solution {0} Was Not Matched In The Exports", thisItem.Solution.Name));
                 imports.Add(new ExportedSolutionImport(matchingExports.First(), thisItem));
             }
@@ -73,7 +66,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                 var dataImportService = new XrmImporterExporterService<XrmRecordService>(importToRecordService);
                 var importResponse = new XrmImporterExporterResponse();
                 dataImportService.ImportXml(dataPath, controller, importResponse);
-                if(importResponse.Exception != null)
+                if (importResponse.Exception != null)
                     response.AddResponseItem(new XrmSolutionImporterExporterResponseItem("Fatal Data Import Error", importResponse.Exception));
                 foreach (var item in importResponse.ResponseItems)
                     response.AddResponseItem(new XrmSolutionImporterExporterResponseItem(item));
@@ -118,8 +111,9 @@ namespace JosephM.Xrm.ImportExporter.Service
 
                     var finished = new Processor();
                     var extraService = new XrmService(xrmService.XrmConfiguration);
-                    new Thread(() => DoProgress(importId, controller.GetLevel2Controller(), finished, extraService))
-                        .Start();
+                    var monitoreProgressThread = new Thread(() => DoProgress(importId, controller.GetLevel2Controller(), finished, extraService));
+                    monitoreProgressThread.IsBackground = true;
+                    monitoreProgressThread.Start();
                     try
                     {
                         xrmService.Execute(req);
@@ -179,7 +173,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                         {
                             if (finished.Completed)
                                 return;
-                            controller.UpdateProgress(Convert.ToInt32(progress/1), 100, "Import Progress");
+                            controller.UpdateProgress(Convert.ToInt32(progress / 1), 100, "Import Progress");
                         }
                     }
                 }
@@ -211,13 +205,13 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var xrmRecordService = new XrmRecordService(export.Connection, controller);
                     var service = xrmRecordService.XrmService;
                     var solution = service.Retrieve("solution", new Guid(export.Solution.Id));
-                    var uniqueName = (string) solution.GetStringField("uniquename");
+                    var uniqueName = (string)solution.GetStringField("uniquename");
                     var req = new ExportSolutionRequest();
                     req.Managed = export.Managed;
                     req.SolutionName = uniqueName;
                     var version = solution.GetStringField("version");
                     var versionText = version == null ? null : version.Replace(".", "_");
-                    var eresponse = (ExportSolutionResponse) service.Execute(req);
+                    var eresponse = (ExportSolutionResponse)service.Execute(req);
                     var fileName = string.Format("{0}_{1}{2}.zip", uniqueName, versionText,
                         export.Managed ? "_managed" : null);
                     FileUtility.WriteToFile(folderPath, fileName, eresponse.ExportSolutionFile);
@@ -247,7 +241,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     response.AddResponseItem(
                         new XrmSolutionImporterExporterResponseItem(
                             string.Format("Error Exporting Solution {0}", export.Solution.Name), ex));
-                                    }
+                }
             }
             return exportResponse;
         }
