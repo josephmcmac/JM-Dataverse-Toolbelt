@@ -6,10 +6,13 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
+using JosephM.Record.Query;
+using JosephM.Xrm;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace JosephM.CodeGenerator.Service
 {
@@ -75,6 +78,7 @@ namespace JosephM.CodeGenerator.Service
             AppendRelationships(controller, request, stringBuilder);
             AppendFields(controller, stringBuilder, request);
             AppendOptionSets(stringBuilder, request, controller);
+            AppendActions(stringBuilder, request, controller);
             stringBuilder.AppendLine("}");
             FileUtility.WriteToFile(request.Folder.FolderPath,
                 request.FileName.EndsWith(".cs") ? request.FileName : request.FileName + ".cs",
@@ -238,6 +242,125 @@ namespace JosephM.CodeGenerator.Service
                     }
                 }
                 countDone++;
+            }
+        }
+
+        private void AppendActions(StringBuilder stringBuilder, CodeGeneratorRequest request,
+            LogController controller)
+        {
+            if (!request.IncludeActions)
+                return;
+
+            controller.UpdateProgress(1, 2,
+                        string.Format("Processing Actions"));
+
+            var actions = Service.RetrieveAllAndClauses("workflow", new[]
+            {
+                new Condition("category", ConditionType.Equal, XrmPicklists.WorkflowCategory.Action),
+                new Condition("type", ConditionType.Equal, XrmPicklists.WorkflowType.Definition)
+            }, null);
+
+            if (actions.Any())
+            {
+                var requests = Service.RetrieveAllOrClauses("sdkmessagerequest",
+                    actions.Select(a => a.GetStringField("uniquename"))
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .Select(s => new Condition("name", ConditionType.Like,
+                            "%_" + s))
+                    , null);
+
+                stringBuilder.AppendLine("\tpublic static class Actions");
+                stringBuilder.AppendLine("\t{");
+                foreach (var action in actions)
+                {
+                    var noTarget = action.GetStringField("primaryentity") == "none";
+
+                    var uniqueName = action.GetStringField("uniquename");
+                    var matchingRequestNames = requests
+                        .Where(r => r.GetStringField("name").EndsWith("_" + uniqueName))
+                        .Select(r => r.GetStringField("name"))
+                        .OrderBy(r => r)
+                        .ToArray();
+                    if (matchingRequestNames.Any())
+                    {
+                        var actionName = matchingRequestNames.First();
+                        var inArguments = new List<string>();
+                        var outArguments = new List<string>();
+
+                        var document = new XmlDocument();
+                        document.LoadXml(action.GetStringField("xaml"));
+
+
+                        foreach (XmlNode childNode in document.ChildNodes)
+                        {
+                            if (childNode.Name == "Activity")
+                            {
+                                foreach (XmlNode childNode2 in childNode.ChildNodes)
+                                {
+                                    if (childNode2.Name == "x:Members")
+                                    {
+                                        foreach (XmlNode property in childNode2.ChildNodes)
+                                        {
+                                            foreach (XmlNode propertyChild in property.ChildNodes)
+                                            {
+                                                if (propertyChild.Name == "x:Property.Attributes")
+                                                {
+                                                    var argumentName = property.Attributes != null
+                                                                       && property.Attributes["Name"] != null
+                                                        ? property.Attributes["Name"].InnerText
+                                                        : null;
+                                                    foreach (XmlNode attribute in propertyChild.ChildNodes)
+                                                    {
+                                                        var direction = attribute.Attributes != null
+                                                                        && attribute.Attributes["Value"] != null
+                                                            ? attribute.Attributes["Value"].InnerText
+                                                            : null;
+                                                        if (direction == "Input")
+                                                        {
+                                                            //don;t add a=target of global action type
+                                                            if (!noTarget || argumentName != "Target")
+                                                                inArguments.Add(argumentName);
+                                                        }
+                                                        if (direction == "Output")
+                                                        {
+                                                            outArguments.Add(argumentName);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        stringBuilder.AppendLine(string.Format("\tpublic static class {0}", actionName));
+                        stringBuilder.AppendLine("\t\t{");
+                        stringBuilder.AppendLine(string.Format("\t\t\tpublic const string Name = \"{0}\";", actionName));
+                        if (inArguments.Any())
+                        {
+                            stringBuilder.AppendLine("\t\t\tpublic static class In");
+                            stringBuilder.AppendLine("\t\t\t{");
+                            foreach (var item in inArguments)
+                            {
+                                stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string {0} = \"{0}\";", item));
+                            }
+                            stringBuilder.AppendLine("\t\t\t}");
+                        }
+                        if (outArguments.Any())
+                        {
+                            stringBuilder.AppendLine("\t\t\tpublic static class Out");
+                            stringBuilder.AppendLine("\t\t\t{");
+                            foreach (var item in outArguments)
+                            {
+                                stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string {0} = \"{0}\";", item));
+                            }
+                            stringBuilder.AppendLine("\t\t\t}");
+
+                        }
+                        stringBuilder.AppendLine("\t\t}");
+                    }
+                }
+                stringBuilder.AppendLine("\t}");
             }
         }
 

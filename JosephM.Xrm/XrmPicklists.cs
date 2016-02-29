@@ -81,5 +81,14 @@
             public const int Activation = 2;
             public const int Template = 3;
         }
+
+        public static class WorkflowCategory
+        {
+            public const int Workflow = 0;
+            public const int Dialog = 1;
+            public const int BusinessRule = 2;
+            public const int Action = 3;
+            public const int BusinessProcessFlow = 4;
+        }
     }
 }

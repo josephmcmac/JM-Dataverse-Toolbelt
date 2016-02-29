@@ -14,7 +14,9 @@ namespace JosephM.CodeGenerator.Service
             IncludeFields = true;
             IncludeOptions = true;
             IncludeRelationships = true;
-
+            AllRecordTypes = true;
+            IncludeAllSharedOptions = true;
+            IncludeActions = true;
         }
 
         [RequiredProperty]
@@ -53,6 +55,11 @@ namespace JosephM.CodeGenerator.Service
         [PropertyInContextByPropertyValue("IncludeOptions", true)]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool IncludeAllSharedOptions { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        public bool IncludeActions { get; set; }
+
 
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
