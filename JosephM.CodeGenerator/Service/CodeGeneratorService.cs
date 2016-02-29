@@ -317,7 +317,7 @@ namespace JosephM.CodeGenerator.Service
                                                             : null;
                                                         if (direction == "Input")
                                                         {
-                                                            //don;t add a=target of global action type
+                                                            //don't add a=target of global action type
                                                             if (!noTarget || argumentName != "Target")
                                                                 inArguments.Add(argumentName);
                                                         }
@@ -333,7 +333,7 @@ namespace JosephM.CodeGenerator.Service
                                 }
                             }
                         }
-                        stringBuilder.AppendLine(string.Format("\tpublic static class {0}", actionName));
+                        stringBuilder.AppendLine(string.Format("\t\tpublic static class {0}", actionName));
                         stringBuilder.AppendLine("\t\t{");
                         stringBuilder.AppendLine(string.Format("\t\t\tpublic const string Name = \"{0}\";", actionName));
                         if (inArguments.Any())
