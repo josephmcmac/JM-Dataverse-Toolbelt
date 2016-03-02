@@ -5,8 +5,10 @@ using JosephM.Core.Extentions;
 using JosephM.Core.Utility;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Windows.Threading;
@@ -25,7 +27,25 @@ namespace JosephM.Application.Application
             Container = container;
             Dispatcher = Dispatcher.CurrentDispatcher;
             ApplicationName = applicationName;
+            Notifications = new ObservableCollection<KeyValuePair<string, string>>();
         }
+
+        public void AddNotification(string id, string notification)
+        {
+            DoOnMainThread(() =>
+            {
+                var matchingIds = Notifications
+                    .Where(kv => kv.Key == id)
+                    .ToArray();
+                foreach (var item in matchingIds)
+                {
+                    Notifications.Remove(item);
+                }
+                Notifications.Add(new KeyValuePair<string, string>(id, notification));
+            });
+        }
+
+        public ObservableCollection<KeyValuePair<string, string>> Notifications { get; private set; }
 
         public abstract void Remove(string regionName, object item);
 

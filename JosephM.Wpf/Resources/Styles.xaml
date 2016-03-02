@@ -23,7 +23,8 @@
     <Style  x:Key="ApplicationTitle" TargetType="{x:Type TextBlock}" >
         <Setter Property="Margin" Value="8,8,8,8"  />
         <Setter Property="FontWeight" Value="Bold"></Setter>
-        <Setter Property="FontSize" Value="96px"></Setter>
+        <Setter Property="FontStyle" Value="Italic"></Setter>
+        <Setter Property="FontSize" Value="24px"></Setter>
     </Style>
     <ControlTemplate x:Key="ErrorTemplate">
         <DockPanel DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
@@ -35,6 +36,11 @@
             <AdornedElementPlaceholder Name="AdornedFieldElement" />
         </DockPanel>
     </ControlTemplate>
+
+    <Style x:Key="NotificationTextBlock" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontWeight"  Value="Bold" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+    </Style>
     <Style TargetType="{x:Type TextBlock}">
         <Setter Property="Margin" Value="8,8,8,8" />
     </Style>

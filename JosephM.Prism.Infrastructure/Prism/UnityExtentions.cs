@@ -6,11 +6,10 @@ using JosephM.Application.Options;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.HTML;
+using JosephM.Record.Application.Fakes;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
-using JosephM.Core.Log;
-using JosephM.Record.Application.Fakes;
 
 #endregion
 
@@ -46,7 +45,7 @@ namespace JosephM.Prism.Infrastructure.Prism
             var applicationViewModel = (ApplicationOptionsViewModel)bootstrapper.Container.Resolve<IApplicationOptions>();
             bootstrapper.Container.Resolve<IRegionManager>()
                 .RegisterViewWithRegion(RegionNames.Heading,
-                    () => applicationViewModel);
+                    () => applicationViewModel.ApplicationController);
         }
     }
 }

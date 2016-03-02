@@ -1,13 +1,12 @@
 ﻿#region
 
-using System.Linq;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
 using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
+using System.Linq;
 
 #endregion
 

@@ -1,12 +1,12 @@
 ﻿#region
 
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using JosephM.Application.Application;
 using JosephM.Application.Options;
 using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Commands;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 #endregion
 
@@ -22,7 +22,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         {
             Options = new ObservableCollection<ApplicationOption>();
             Settings = new ObservableCollection<ApplicationOption>();
-            Helps =new ObservableCollection<ApplicationOption>();
+            Helps = new ObservableCollection<ApplicationOption>();
             SettingsClick = new DelegateCommand(() => { OpenSettings = true; });
             HelpClick = new DelegateCommand(() => { OpenHelp = true; });
         }
@@ -36,13 +36,13 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         public void AddOption(string optionLabel, Action action, ApplicationOptionType type)
         {
             var option = new ApplicationOption(optionLabel, action, type);
-            if(type == ApplicationOptionType.Help)
+            if (type == ApplicationOptionType.Help)
                 AddToCollection(option, Helps);
             else if (type == ApplicationOptionType.Setting)
                 AddToCollection(option, Settings);
             else
                 AddToCollection(option, Options);
-           
+
             OnPropertyChanged("HasSettings");
             OnPropertyChanged("HasHelp");
         }
@@ -61,7 +61,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
                     }
                 }
             }
-            if(index != -1)
+            if (index != -1)
                 options.Insert(index, option);
             else
                 options.Add(option);
@@ -103,6 +103,11 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         public bool HasHelp
         {
             get { return Helps.Any(); }
+        }
+
+        public string ApplicationName
+        {
+            get { return ApplicationController.ApplicationName; }
         }
     }
 }

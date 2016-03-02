@@ -1,16 +1,13 @@
 ﻿#region
 
-using System.Configuration;
 using JosephM.Application.Application;
 using JosephM.Application.Modules;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
-using JosephM.Prism.Infrastructure.Constants;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
+using System.Configuration;
 
 #endregion
 
@@ -45,6 +42,8 @@ namespace JosephM.Prism.XrmModule.XrmConnection
         {
             controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
             controller.RegisterInstance(new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>()));
+            controller.AddNotification("XRMCONNECTION", string.Format("Connected To Instance '{0}'", xrmConfiguration));
+
         }
 
         public override void InitialiseModule()

@@ -63,6 +63,9 @@
     <DataTemplate x:Key="OptionTemplate">
         <Button Style="{StaticResource MainMenuButton}" Content="{Binding Label}" Command="{Binding DelegateCommand}" />
     </DataTemplate>
+    <DataTemplate x:Key="NotificationTemplate">
+        <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />
+    </DataTemplate>
     <DataTemplate x:Key="ButtonDropdownTemplate" DataType="applicationOptions:ApplicationOption">
         <Button Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
                 Command="{Binding DelegateCommand}" />

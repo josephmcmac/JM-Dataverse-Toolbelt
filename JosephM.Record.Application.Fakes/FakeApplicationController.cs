@@ -1,14 +1,14 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using JosephM.Application.Application;
 using JosephM.Core.Extentions;
 using JosephM.Core.Test;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 
 #endregion
 
@@ -22,6 +22,7 @@ namespace JosephM.Application.ViewModel.Fakes
         public FakeApplicationController()
             : base("Test Script Application", new FakesDependencyContainer(new UnityContainer()))
         {
+            AddNotification("FAKE", "FAKE NOTIFICATION");
         }
 
         public override void Remove(string regionName, object item)
@@ -44,10 +45,10 @@ namespace JosephM.Application.ViewModel.Fakes
         {
             var resolvedType = Container.ResolveType(type.FullName);
 
-            if(!_regions.ContainsKey(regionName))
+            if (!_regions.ContainsKey(regionName))
                 _regions.Add(regionName, new List<object>());
             _regions[regionName].Add(resolvedType);
-            if (type.IsTypeOf(typeof (INavigationAware)))
+            if (type.IsTypeOf(typeof(INavigationAware)))
             {
                 var uri = JosephM.Application.ViewModel.Extentions.Extentions.ToPrismNavigationUriType(type, uriQuery);
                 var navigationContext = new NavigationContext(new FakeRegionNavigationService(), uri);

@@ -1,9 +1,5 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Forms;
 using JosephM.Application;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.HTML;
@@ -11,7 +7,10 @@ using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Regions;
-using Microsoft.Practices.Unity;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Forms;
 using Extentions = JosephM.Application.ViewModel.Extentions.Extentions;
 using MessageBox = System.Windows.MessageBox;
 

@@ -1,8 +1,8 @@
 ﻿#region
 
+using JosephM.Core.AppConfig;
 using System;
 using System.Diagnostics;
-using JosephM.Core.AppConfig;
 
 #endregion
 
@@ -76,5 +76,6 @@ namespace JosephM.Application.Application
         Process StartProcess(string fileName, string arguments = null);
 
         void OpenHelp(string qualified);
+        void AddNotification(string id, string notification);
     }
 }

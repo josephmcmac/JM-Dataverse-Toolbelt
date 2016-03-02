@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:application="clr-namespace:JosephM.Wpf.Application"
-    xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel"
+    xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="600"
