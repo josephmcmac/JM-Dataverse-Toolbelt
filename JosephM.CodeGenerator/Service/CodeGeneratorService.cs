@@ -378,18 +378,30 @@ namespace JosephM.CodeGenerator.Service
                 var countOptionsToDo = picklists.Count();
                 var countOptionsDone = 0;
 
+                var duplicateSharedLabels = picklists
+                    .GroupBy(t => CreateCodeLabel(t.DisplayName), t => t)
+                    .Where(t => t.Count() > 1)
+                    .Select(t => t.Key)
+                    .ToArray();
+
                 stringBuilder.AppendLine("\t\tpublic static class Shared");
                 stringBuilder.AppendLine("\t\t{");
                 foreach (var item in picklists)
                 {
                     controller.UpdateProgress(countOptionsDone, countOptionsToDo,
                         string.Format("Processing Shared Options ({0})", item.DisplayName));
-                    stringBuilder.AppendLine("\t\t\tpublic static class " + CreateCodeLabel(item.DisplayName));
+                    var optionSetLabel = CreateCodeLabel(item.DisplayName);
+                    if (duplicateSharedLabels.Contains(optionSetLabel))
+                        optionSetLabel = optionSetLabel + "_" + item.SchemaName;
+                    stringBuilder.AppendLine("\t\t\tpublic static class " + optionSetLabel);
                     stringBuilder.AppendLine("\t\t\t{");
                     foreach (var option in item.PicklistOptions)
                     {
+                        var optionLabel = CreateCodeLabel(option.Value);
+                        if (optionLabel == optionSetLabel)
+                            optionLabel = optionLabel + "_";
                         stringBuilder.AppendLine(
-                            string.Format("\t\t\t\tpublic const int {0} = {1};", CreateCodeLabel(option.Value), option.Key));
+                            string.Format("\t\t\t\tpublic const int {0} = {1};", optionLabel, option.Key));
                     }
                     stringBuilder.AppendLine("\t\t\t}");
                 }
@@ -398,13 +410,21 @@ namespace JosephM.CodeGenerator.Service
             var types = GetRecordTypesToImport(request);
             var countToDo = types.Count();
             var countDone = 0;
+            var duplicateTypesLabels = types
+                .GroupBy(t => CreateCodeLabel(Service.GetDisplayName(t)), t => t)
+                .Where(t => t.Count() > 1)
+                .Select(t => t.Key)
+                .ToArray();
             foreach (var recordType in types)
             {
                 controller.UpdateProgress(countDone, countToDo,
                     string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
+
                 if (IsValidForCode(recordType))
                 {
                     var recordTypeCodeLabel = CreateCodeLabel(Service.GetDisplayName(recordType));
+                    if (duplicateTypesLabels.Contains(recordTypeCodeLabel))
+                        recordTypeCodeLabel = recordTypeCodeLabel + "_" + recordType;
                     stringBuilder.AppendLine("\t\tpublic static class " + recordTypeCodeLabel);
                     stringBuilder.AppendLine("\t\t{");
                     var optionFields = Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType));
