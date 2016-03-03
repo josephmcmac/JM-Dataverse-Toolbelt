@@ -13,7 +13,7 @@ using System.Configuration;
 
 namespace JosephM.Prism.XrmModule.XrmConnection
 {
-    public class XrmConnectionModule : PrismModuleBase
+    public class XrmConnectionModule : ModuleBase
     {
         public override void RegisterTypes()
         {

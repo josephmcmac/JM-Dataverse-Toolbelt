@@ -13,9 +13,9 @@ namespace JosephM.Application.Modules
     /// <summary>
     ///     Base Class For Implementing Modules To Plug Into The Application Framework
     /// </summary>
-    public abstract class PrismModuleBase
+    public abstract class ModuleBase
     {
-        public PrismModuleController Controller { get; set; }
+        public ModuleController Controller { get; set; }
 
         protected IApplicationController ApplicationController
         {

@@ -14,21 +14,21 @@ namespace JosephM.Application.Application
 
         public ApplicationBase(ApplicationControllerBase applicationController)
         {
-            Modules = new Dictionary<Type, PrismModuleBase>();
+            Modules = new Dictionary<Type, ModuleBase>();
             Controller = applicationController;
             Controller.RegisterInfrastructure(new ApplicationOptions());
         }
 
-        private IDictionary<Type, PrismModuleBase> Modules { get; set; }
+        private IDictionary<Type, ModuleBase> Modules { get; set; }
 
         public void AddModule<T>()
-            where T : PrismModuleBase, new()
+            where T : ModuleBase, new()
         {
             AddModule(typeof (T));
         }
 
         public T GetModule<T>()
-            where T : PrismModuleBase, new()
+            where T : ModuleBase, new()
         {
             if(!Modules.ContainsKey(typeof(T)))
                 throw new NullReferenceException(string.Format("Type {0} is not loaded as a module", typeof(T).Name));
@@ -40,7 +40,7 @@ namespace JosephM.Application.Application
             if (Modules.ContainsKey(moduleType))
                 return;
 
-            var moduleController = Controller.ResolveType<PrismModuleController>();
+            var moduleController = Controller.ResolveType<ModuleController>();
 
             var dependantModuleAttributes =
                 moduleType.GetCustomAttributes<DependantModuleAttribute>();
@@ -48,14 +48,14 @@ namespace JosephM.Application.Application
                 AddModule(dependantModule.DependantModule);
 
             //okay it needs to add items to the container
-            if (!moduleType.IsTypeOf(typeof (PrismModuleBase)))
+            if (!moduleType.IsTypeOf(typeof (ModuleBase)))
                 throw new NullReferenceException(string.Format("Object type {0} is not of type {1}", moduleType.Name,
-                    typeof (PrismModuleBase).Name));
+                    typeof (ModuleBase).Name));
             if (!moduleType.HasParameterlessConstructor())
                 throw new NullReferenceException(
                     string.Format("Object type {0} does not have a parameterless constructor", moduleType.Name));
 
-            var theModule = (PrismModuleBase) moduleType.CreateFromParameterlessConstructor();
+            var theModule = (ModuleBase) moduleType.CreateFromParameterlessConstructor();
             theModule.Controller = moduleController;
             theModule.RegisterTypes();
             theModule.InitialiseModule();

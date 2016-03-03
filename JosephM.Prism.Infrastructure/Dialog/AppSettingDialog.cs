@@ -4,7 +4,6 @@ using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Record.IService;
 
 #endregion
@@ -26,7 +25,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
         {
         }
 
-        protected AppSettingsDialog(IDialogController dialogController, 
+        protected AppSettingsDialog(IDialogController dialogController,
             IRecordService lookupService)
             : base(dialogController)
         {
@@ -40,12 +39,12 @@ namespace JosephM.Prism.Infrastructure.Dialog
             var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, lookupService,
                 null, OnSave);
 
-            SubDialogs = new DialogViewModel[] {configEntryDialog};
+            SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
 
         protected virtual void OnSave()
         {
-            
+
         }
 
         protected TSettingsObject SettingsObject { get; set; }

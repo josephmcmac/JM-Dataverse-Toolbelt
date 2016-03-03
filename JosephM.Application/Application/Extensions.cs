@@ -15,13 +15,13 @@ namespace JosephM.Application.Application
 
             applicationController.RegisterInstance<IApplicationOptions>(applicationOptions);
 
-            var prismModuleController = new PrismModuleController(
+            var prismModuleController = new ModuleController(
                 applicationController,
                 applicationController.ResolveType<PrismSettingsManager>(),
                 applicationController.ResolveType<IApplicationOptions>()
                 );
 
-            applicationController.RegisterInstance<PrismModuleController>(prismModuleController);
+            applicationController.RegisterInstance<ModuleController>(prismModuleController);
             applicationController.RegisterInstance(new LogController());
         }
     }

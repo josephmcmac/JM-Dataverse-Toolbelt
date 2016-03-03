@@ -11,9 +11,9 @@ namespace JosephM.Application.Modules
     /// <summary>
     /// Container Object For The Required Objects For A Prism Module To Initialise
     /// </summary>
-    public class PrismModuleController
+    public class ModuleController
     {
-        public PrismModuleController(
+        public ModuleController(
             IApplicationController applicationController,
             PrismSettingsManager settingsManager,
             IApplicationOptions applicationOptions

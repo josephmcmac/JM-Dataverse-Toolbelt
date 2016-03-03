@@ -11,7 +11,7 @@ using JosephM.Prism.XrmModule.Xrm;
 
 namespace JosephM.Prism.XrmTestModule.Prism
 {
-    public class XrmTestModule : PrismModuleBase
+    public class XrmTestModule : ModuleBase
     {
         public override void InitialiseModule()
         {

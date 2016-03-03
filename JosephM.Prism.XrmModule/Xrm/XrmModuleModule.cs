@@ -9,7 +9,7 @@ using JosephM.Prism.XrmModule.XrmConnection;
 namespace JosephM.Prism.XrmModule.Xrm
 {
     [DependantModule(typeof(XrmConnectionModule))]
-    public class XrmModuleModule : PrismModuleBase
+    public class XrmModuleModule : ModuleBase
     {
         public override void RegisterTypes()
         {

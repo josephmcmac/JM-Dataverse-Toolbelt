@@ -4,7 +4,7 @@ using JosephM.Prism.Infrastructure.Module;
 
 namespace JosephM.Prism.XrmTestModule.TestXrmSettingsDialog
 {
-    public class XrmSettingsModule : PrismModuleBase
+    public class XrmSettingsModule : ModuleBase
     {
         public override void RegisterTypes()
         {

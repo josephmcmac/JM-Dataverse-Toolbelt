@@ -9,7 +9,7 @@ using JosephM.Record.Application.Fakes;
 
 namespace JosephM.Prism.Infrastructure.Test
 {
-    public class TestingModule : PrismModuleBase
+    public class TestingModule : ModuleBase
     {
         public override void RegisterTypes()
         {

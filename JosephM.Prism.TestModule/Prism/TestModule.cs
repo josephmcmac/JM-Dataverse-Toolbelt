@@ -10,7 +10,7 @@ using JosephM.Record.Application.Fakes;
 
 namespace JosephM.Prism.TestModule.Prism
 {
-    public class TestModule : PrismModuleBase
+    public class TestModule : ModuleBase
     {
         public override void InitialiseModule()
         {

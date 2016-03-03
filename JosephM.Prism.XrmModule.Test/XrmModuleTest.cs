@@ -19,7 +19,7 @@ namespace JosephM.Prism.XrmModule.Test
     public class XrmModuleTest : XrmRecordTest
     {
         protected TestApplication CreateAndLoadTestApplication<TModule>()
-            where TModule : PrismModuleBase, new()
+            where TModule : ModuleBase, new()
         {
             var testApplication = new TestApplication();
             testApplication.AddModule<TModule>();

@@ -1,6 +1,5 @@
 ﻿using JosephM.Core.Extentions;
 using JosephM.Core.Service;
-using JosephM.Prism.Infrastructure.Constants;
 using JosephM.Prism.Infrastructure.Dialog;
 
 namespace JosephM.Prism.Infrastructure.Module
@@ -22,7 +21,7 @@ namespace JosephM.Prism.Infrastructure.Module
     {
         protected override string MainOperationName
         {
-            get { return (typeof (TRequest)).GetDisplayName(); }
+            get { return (typeof(TRequest)).GetDisplayName(); }
         }
     }
 }

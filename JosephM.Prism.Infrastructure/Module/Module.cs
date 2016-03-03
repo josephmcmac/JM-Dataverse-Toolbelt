@@ -2,7 +2,6 @@
 
 using JosephM.Application.Modules;
 using Microsoft.Practices.Prism.Modularity;
-using JosephM.Prism.Infrastructure.Prism;
 
 #endregion
 
@@ -13,14 +12,14 @@ namespace JosephM.Prism.Infrastructure.Module
     /// </summary>
     /// <typeparam name="TModule"></typeparam>
     internal class Module<TModule> : IModule
-        where TModule : PrismModuleBase, new()
+        where TModule : ModuleBase, new()
     {
-        public Module(PrismModuleController controller)
+        public Module(ModuleController controller)
         {
-            PrismModuleBase = new TModule {Controller = controller};
+            PrismModuleBase = new TModule { Controller = controller };
         }
 
-        private PrismModuleBase PrismModuleBase { get; set; }
+        private ModuleBase PrismModuleBase { get; set; }
 
         public void Initialize()
         {
