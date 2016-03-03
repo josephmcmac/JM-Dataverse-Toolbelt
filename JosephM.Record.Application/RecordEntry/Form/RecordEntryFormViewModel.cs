@@ -1,10 +1,5 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using JosephM.Application.ViewModel.Navigation;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
@@ -14,6 +9,11 @@ using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 #endregion
@@ -47,11 +47,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             {
                 IsVisible = false
             };
-            LoadRequestButtonViewModel = new XrmButtonViewModel("Load Object", LoadObject, ApplicationController)
+            LoadRequestButtonViewModel = new XrmButtonViewModel("Load Saved Details", LoadObject, ApplicationController)
             {
                 IsVisible = false
             };
-            SaveRequestButtonViewModel = new XrmButtonViewModel("Save Object", SaveObject, ApplicationController)
+            SaveRequestButtonViewModel = new XrmButtonViewModel("Save Details", SaveObject, ApplicationController)
             {
                 IsVisible = false
             };
@@ -180,6 +180,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         public virtual void LoadObject()
         {
             var selectFileDialog = new OpenFileDialog { Filter = FileMasks.XmlFile };
+            selectFileDialog.Title = "Select A Saved XML File";
             var selected = selectFileDialog.ShowDialog();
             if (selected ?? false)
             {
@@ -269,7 +270,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         }
 
         private string _validationPrompt;
-        public string ValidationPrompt {
+        public string ValidationPrompt
+        {
             get { return _validationPrompt; }
             set
             {
@@ -290,14 +292,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 if (section is FormFieldSection)
                 {
                     sectionViewModels.Add(new FieldSectionViewModel(
-                        (FormFieldSection) section,
+                        (FormFieldSection)section,
                         this
                         ));
                 }
                 else if (section is SubGridSection)
                 {
                     sectionViewModels.Add(new GridSectionViewModel(
-                        (SubGridSection) section,
+                        (SubGridSection)section,
                         this
                         ));
                 }
@@ -425,7 +427,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         /// </summary>
         public ObservableCollection<RecordEntryFormViewModel> ChildForms
         {
-         get { return _childForms; }
+            get { return _childForms; }
             set
             {
                 _childForms = value;

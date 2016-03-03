@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace JosephM.CodeGenerator.Service
 {
+    [DisplayName("Code Generation")]
     public class CodeGeneratorRequest : ServiceRequestBase
     {
         public CodeGeneratorRequest()

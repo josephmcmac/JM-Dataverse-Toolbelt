@@ -14,7 +14,7 @@ namespace JosephM.Prism.XrmModule.SavedXrmConnections
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelp("Saved Connections", "Saved CRM Connections Help.htm");
+            AddHelp("Saved Connections", "Saved CRM Connections Help.docx");
         }
 
         public override void RegisterTypes()

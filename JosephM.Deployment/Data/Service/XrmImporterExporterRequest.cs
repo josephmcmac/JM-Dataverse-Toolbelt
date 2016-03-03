@@ -1,14 +1,15 @@
 ﻿#region
 
-using System.Collections.Generic;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
+using System.Collections.Generic;
 
 #endregion
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
+    [DisplayName("Data Import/Export")]
     [AllowSaveAndLoad]
     public class XrmImporterExporterRequest : ServiceRequestBase
     {

@@ -1,6 +1,5 @@
 ﻿#region
 
-using JosephM.Prism.Infrastructure.Constants;
 using JosephM.Prism.Infrastructure.Module;
 
 #endregion
@@ -12,7 +11,7 @@ namespace JosephM.Xrm.ImportExporter.Prism
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelp("Data Import / Export", "Xrm Importer Exporter Help.htm");
+            AddHelp("Data Import / Export", "Xrm Importer Exporter Help.docx");
         }
 
         protected override string MainOperationName { get { return "Data Import / Export"; } }

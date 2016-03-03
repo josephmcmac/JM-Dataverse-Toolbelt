@@ -1,7 +1,5 @@
-﻿using System;
-using JosephM.Application.Modules;
+﻿using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 
@@ -22,7 +20,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelp("CRM Text Search", "Text Search Help.htm");
+            AddHelp("CRM Text Search", "Text Search Help.docx");
         }
     }
 }

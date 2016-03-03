@@ -7,10 +7,5 @@ namespace JosephM.CustomisationExporter.Exporter
             <CustomisationExporterDialog, CustomisationExporterService, CustomisationExporterRequest,
                 CustomisationExporterResponse, CustomisationExporterResponseItem>
     {
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-            AddHelp("Export Customisations", "Customisation Exporter Help.htm");
-        }
     }
 }

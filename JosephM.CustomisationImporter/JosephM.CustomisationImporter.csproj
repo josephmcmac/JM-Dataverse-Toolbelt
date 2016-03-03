@@ -162,7 +162,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Customisation Importer Help.docx" />
+    <Content Include="HelpFiles\Customisation Importer Help.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ContentFiles\Customisations Import Template.xls">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

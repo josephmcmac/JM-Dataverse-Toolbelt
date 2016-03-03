@@ -182,7 +182,7 @@ namespace JosephM.Application.Application
             throw new NotImplementedException();
         }
 
-        public virtual void OpenHelp(string qualified)
+        public virtual void OpenHelp(string fileName)
         {
             throw new NotImplementedException();
         }

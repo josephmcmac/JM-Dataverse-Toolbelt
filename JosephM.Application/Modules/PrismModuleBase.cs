@@ -1,10 +1,10 @@
 ﻿#region
 
-using System;
-using System.IO;
 using JosephM.Application.Application;
 using JosephM.Application.Options;
 using JosephM.Core.AppConfig;
+using System;
+using System.IO;
 
 #endregion
 
@@ -43,7 +43,7 @@ namespace JosephM.Application.Modules
 
         public void NavigateTo<T>(UriQuery uriQuery)
         {
-            ApplicationController.RequestNavigate(RegionNames.MainTabRegion, typeof (T), uriQuery);
+            ApplicationController.RequestNavigate(RegionNames.MainTabRegion, typeof(T), uriQuery);
         }
 
         public void RegisterTypeForNavigation<T>()
@@ -56,7 +56,7 @@ namespace JosephM.Application.Modules
             Container.RegisterInstance<T>(instance);
         }
 
-        public void RegisterType<I,T>()
+        public void RegisterType<I, T>()
         {
             Container.RegisterType<I, T>();
         }
@@ -82,13 +82,12 @@ namespace JosephM.Application.Modules
         /// </summary>
         public void AddHelp(string optionLabel, string htmlFileName)
         {
-            //todo jmm removed this
-            //ApplicationOptions.AddOption(optionLabel, () => HelpCommand(htmlFileName), ApplicationOptionType.Help);
+            ApplicationOptions.AddOption(optionLabel, () => HelpCommand(htmlFileName), ApplicationOptionType.Help);
         }
 
-        private void HelpCommand(string htmlFileName)
+        private void HelpCommand(string fileName)
         {
-            var qualified = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "HelpFiles", htmlFileName);
+            var qualified = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "HelpFiles", fileName);
             ApplicationController.OpenHelp(qualified);
         }
     }

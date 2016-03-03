@@ -1,14 +1,10 @@
 ﻿#region
 
-using System;
-using System.Diagnostics;
-using System.IO;
 using JosephM.Application.Modules;
-using JosephM.Prism.Infrastructure.Constants;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.Xrm;
-using JosephM.Prism.XrmModule.XrmConnection;
+using System;
+using System.IO;
 
 #endregion
 
@@ -22,7 +18,7 @@ namespace JosephM.CustomisationImporter.Prism
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelp("Import Customisations", "Customisation Importer Help.htm");
+            AddHelp("Import Customisations", "Customisation Importer Help.docx");
             AddOption("Import Customisations Sample", OpenTemplateCommand);
         }
 

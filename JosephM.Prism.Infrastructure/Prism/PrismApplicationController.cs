@@ -9,6 +9,8 @@ using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using Extentions = JosephM.Application.ViewModel.Extentions.Extentions;
@@ -124,11 +126,28 @@ namespace JosephM.Prism.Infrastructure.Prism
         }
 
 
-        public override void OpenHelp(string qualified)
+        public override void OpenHelp(string fileName)
         {
-            var query = new UriQuery();
-            query.Add("path", qualified);
-            NavigateTo(typeof(HtmlFileModel), query);
+            if (!File.Exists(fileName))
+            {
+                UserMessage(string.Format("Error File Does Not Exist '{0}'", fileName));
+            }
+            var info = new FileInfo(fileName);
+            if (info.Extension == "htm" || info.Extension == "html")
+            {
+                var query = new UriQuery();
+                query.Add("path", fileName);
+                NavigateTo(typeof(HtmlFileModel), query);
+            }
+            else
+            {
+                OpenFile(fileName);
+            }
+        }
+
+        private void OpenFile(string fileName)
+        {
+            Process.Start(fileName);
         }
     }
 }

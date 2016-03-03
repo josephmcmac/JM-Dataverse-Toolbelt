@@ -43,13 +43,12 @@ namespace JosephM.Prism.XrmModule.XrmConnection
             controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
             controller.RegisterInstance(new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>()));
             controller.AddNotification("XRMCONNECTION", string.Format("Connected To Instance '{0}'", xrmConfiguration));
-
         }
 
         public override void InitialiseModule()
         {
             AddSetting("Connect To Crm", ConnectToCrm);
-            AddHelp("Connect To Crm", "Connect To CRM Help.htm");
+            AddHelp("Connect To Crm", "Connect To CRM Help.docx");
         }
 
         private void ConnectToCrm()

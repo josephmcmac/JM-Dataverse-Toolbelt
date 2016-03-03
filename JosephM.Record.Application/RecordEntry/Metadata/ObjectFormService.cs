@@ -50,7 +50,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var type = ObjectToEnter.GetType();
                 var propertyMetadata = RecordMetadataFactory.GetClassFieldMetadata(type);
                 var primaryFieldSection = new List<FormFieldMetadata>();
-                formSections.Add(new FormFieldSection(type.Name.SplitCamelCase(), primaryFieldSection));
+                formSections.Add(new FormFieldSection(type.GetDisplayName(), primaryFieldSection));
                 foreach (var property in propertyMetadata.Where(m => m.Readable || m.Writeable))
                 {
                     if (property.FieldType == RecordFieldType.Enumerable)

@@ -9,6 +9,7 @@ using JosephM.Core.Service;
 
 namespace JosephM.CustomisationImporter.Service
 {
+    [DisplayName("Import Customisations")]
     public class CustomisationImportRequest : ServiceRequestBase
     {
         [RequiredProperty]
