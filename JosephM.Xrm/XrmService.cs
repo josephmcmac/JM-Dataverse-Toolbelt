@@ -1,22 +1,21 @@
 ﻿#region
 
+using JosephM.Core.Constants;
+using JosephM.Core.Extentions;
+using JosephM.Core.Log;
+using JosephM.Core.Service;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Metadata;
+using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Metadata;
-using Microsoft.Xrm.Sdk.Query;
-using JosephM.Core.Constants;
-using JosephM.Core.Extentions;
-using JosephM.Core.Log;
-using JosephM.Core.Service;
-using Microsoft.Xrm.Sdk.Client;
-using Microsoft.Xrm.Client.Services;
 
 #endregion
 

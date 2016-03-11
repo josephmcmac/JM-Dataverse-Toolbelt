@@ -262,6 +262,13 @@ namespace JosephM.CodeGenerator.Service
 
             if (actions.Any())
             {
+
+                //todo use reference field
+                //Entities.sdkmessage
+                //Fields.sdkmessage_.name
+                //linked by
+                //Fields.workflow_.sdkmessageid
+
                 var requests = Service.RetrieveAllOrClauses("sdkmessagerequest",
                     actions.Select(a => a.GetStringField("uniquename"))
                         .Where(s => !string.IsNullOrWhiteSpace(s))

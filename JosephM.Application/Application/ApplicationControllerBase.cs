@@ -45,6 +45,11 @@ namespace JosephM.Application.Application
             });
         }
 
+        public void OpenFile(string fileName)
+        {
+            Process.Start(fileName);
+        }
+
         public ObservableCollection<KeyValuePair<string, string>> Notifications { get; private set; }
 
         public abstract void Remove(string regionName, object item);

@@ -102,6 +102,7 @@
     <Compile Include="ExceptionExtentions.cs" />
     <Compile Include="IXrmConfiguration.cs" />
     <Compile Include="OrganisationSettings.cs" />
+    <Compile Include="Schema.cs" />
     <Compile Include="XrmConnection.cs" />
     <Compile Include="XrmService.cs" />
     <Compile Include="XrmConfiguration.cs" />

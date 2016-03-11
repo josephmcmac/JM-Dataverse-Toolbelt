@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using JosephM.Record.IService;
+﻿using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Xrm;
 using Microsoft.Xrm.Sdk.Metadata;
+using System;
+using System.Linq;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -44,7 +42,13 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public int MaxLength
         {
-            get { return XrmService.GetMaxLength(FieldName, RecordType); }
+            get
+            {
+                return
+                    XrmService.IsString(FieldName, RecordType)
+                        ? XrmService.GetMaxLength(FieldName, RecordType)
+                        : 0;
+            }
         }
 
         public bool IsPrimaryKey
@@ -69,24 +73,34 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public bool IncludeTime
         {
-            get { return XrmService.IsDateIncludeTime(FieldName, RecordType); }
+            get
+            {
+                return FieldType == RecordFieldType.Date && XrmService.IsDateIncludeTime(FieldName, RecordType);
+            }
         }
 
         public TextFormat TextFormat
         {
             get
             {
+                if (FieldType != RecordFieldType.String)
+                    return TextFormat.Text;
                 var format = XrmService.GetTextFormat(FieldName, RecordType);
                 return
                     format == null
                         ? TextFormat.Text
-                        : new StringFormatMapper().Map((StringFormat) format);
+                        : new StringFormatMapper().Map((StringFormat)format);
             }
         }
 
         public int DecimalPrecision
         {
-            get { return XrmService.GetPrecision(FieldName, RecordType); }
+            get
+            {
+                return FieldType == RecordFieldType.Decimal || FieldType == RecordFieldType.Double
+                    ? XrmService.GetPrecision(FieldName, RecordType)
+                    : 0;
+            }
         }
 
         public decimal MinValue
@@ -100,7 +114,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                     case RecordFieldType.Integer: return XrmService.GetMinIntValue(FieldName, RecordType) ?? int.MinValue;
                     case RecordFieldType.Money: return Convert.ToDecimal(XrmService.GetMinMoneyValue(FieldName, RecordType) ?? double.MinValue);
                 }
-                throw new NotImplementedException(string.Format("Not implemented for field {0} in {1} of type {2}", FieldName, RecordType, FieldType));
+                return 0;
             }
         }
 
@@ -115,13 +129,18 @@ namespace JosephM.Record.Xrm.XrmRecord
                     case RecordFieldType.Integer: return XrmService.GetMaxIntValue(FieldName, RecordType) ?? int.MaxValue;
                     case RecordFieldType.Money: return Convert.ToDecimal(XrmService.GetMaxMoneyValue(FieldName, RecordType) ?? double.MaxValue);
                 }
-                throw new NotImplementedException(string.Format("Not implemented for field {0} in {1} of type {2}", FieldName, RecordType, FieldType));
+                return 0;
             }
         }
 
         public IntegerType IntegerFormat
         {
-            get { return new IntegerTypeMapper().Map(XrmService.GetIntegerFormat(FieldName, RecordType)); }
+            get
+            {
+                return FieldType == RecordFieldType.Integer
+                  ? new IntegerTypeMapper().Map(XrmService.GetIntegerFormat(FieldName, RecordType))
+                  : IntegerType.None;
+            }
         }
 
         public bool IsNonNullable { get { return false; } }
@@ -130,7 +149,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             get
             {
-                return ((PicklistAttributeMetadata)XrmService.GetFieldMetadata(FieldName, RecordType)).OptionSet.IsGlobal ?? false;
+                return FieldType == RecordFieldType.Picklist && (((PicklistAttributeMetadata)XrmService.GetFieldMetadata(FieldName, RecordType)).OptionSet.IsGlobal ?? false);
             }
         }
 
@@ -138,6 +157,8 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             get
             {
+                if (!IsSharedPicklist)
+                    return null;
                 var name = ((PicklistAttributeMetadata)XrmService.GetFieldMetadata(FieldName, RecordType)).OptionSet.Name;
                 return XrmService.GetSharedPicklistDisplayName(name);
             }
@@ -167,6 +188,8 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             get
             {
+                if (!XrmService.IsLookup(FieldName, RecordType))
+                    return false;
                 var relationships = XrmService.GetEntityManyToOneRelationships(RecordType);
                 var relationshipMatches = relationships.Where(r => r.ReferencingAttribute == FieldName && r.ReferencingEntity == RecordType).ToArray();
                 if (!relationshipMatches.Any())

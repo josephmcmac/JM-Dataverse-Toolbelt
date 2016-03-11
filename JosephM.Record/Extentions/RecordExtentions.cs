@@ -1,15 +1,13 @@
-﻿using System;
+﻿using JosephM.Core.Extentions;
+using JosephM.Core.FieldType;
+using JosephM.Core.Serialisation;
+using JosephM.Record.IService;
+using JosephM.Record.Metadata;
+using JosephM.Record.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
-using JosephM.Record.IService;
-using JosephM.Record.Query;
-using JosephM.Core.Attributes;
 using System.Reflection;
-using System.Runtime.Serialization.Json;
-using JosephM.Core.Serialisation;
-using JosephM.Record.Metadata;
 
 namespace JosephM.Record.Extentions
 {
@@ -187,7 +185,7 @@ namespace JosephM.Record.Extentions
 
         public static string GetFieldLabel(this IRecordService recordService, string fieldName, string recordtype)
         {
-            return recordService.GetFieldMetadata(fieldName, recordtype).DisplayName;
+            return recordService.GetFieldMetadata(fieldName, recordtype).DisplayName ?? fieldName;
         }
 
         public static int GetMaxLength(this IRecordService recordService, string fieldName, string recordtype)
@@ -363,6 +361,21 @@ namespace JosephM.Record.Extentions
             if (!match.Any())
                 throw new NullReferenceException(string.Format("No {0} relationship for type {1} has name {2}", typeof(IMany2ManyRelationshipMetadata).Name, recordType, name));
             return match.First();
+        }
+
+        public static IPicklistSet GetSharedPicklist(this IRecordService recordService, string name)
+        {
+            var match = recordService.GetSharedPicklists()
+                .Where(r => r.SchemaName == name)
+                .ToArray();
+            if (!match.Any())
+                throw new NullReferenceException("No picklist found with name " + name);
+            return match.First();
+        }
+
+        public static IEnumerable<PicklistOption> GetSharedPicklistOptions(this IRecordService recordService, string name)
+        {
+            return recordService.GetSharedPicklist(name).PicklistOptions;
         }
     }
 }

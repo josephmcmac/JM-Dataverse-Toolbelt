@@ -11,6 +11,7 @@ using JosephM.Record.Query;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Xrm;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -71,9 +72,14 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
-            return _xrmService.GetPicklistKeyValues(recordType, field)
+            var type = _xrmService.GetFieldType(field, recordType);
+            return type == AttributeTypeCode.Picklist
+                || type == AttributeTypeCode.State
+                || type == AttributeTypeCode.Status
+                ? _xrmService.GetPicklistKeyValues(recordType, field)
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value))
-                .ToArray();
+                .ToArray()
+                : null;
         }
 
         public IRecord NewRecord(string recordType)
@@ -238,6 +244,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 var entities = ((EntityCollection)newValue).Entities;
                 newValue = ToIRecords(entities);
+            }
+            else if (newValue is Guid)
+            {
+                newValue = ((Guid)newValue).ToString();
             }
             return newValue;
         }
@@ -840,7 +850,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             var relationships = _xrmService.GetEntityManyToManyRelationships(recordType);
             //var real = relationships.First();
             return relationships
-                .Where(r => r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
+                //.Where(r => r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
                 .Select(r => new XrmManyToManyRelationshipMetadata(r.SchemaName, XrmService, recordType))
                 .ToArray();
         }

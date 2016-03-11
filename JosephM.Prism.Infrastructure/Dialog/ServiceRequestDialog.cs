@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Record.IService;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace JosephM.Prism.Infrastructure.Dialog
 {
@@ -40,7 +40,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
             var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService,
                 LookupAllowedValues);
-            SubDialogs = new DialogViewModel[] {configEntryDialog};
+            SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
 
         protected virtual IDictionary<string, IEnumerable<string>> LookupAllowedValues
@@ -79,7 +79,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
             {
                 CompletionItems.Add(responseItem);
             }
-            if (Request.GetType().GetCustomAttributes(typeof (AllowSaveAndLoad), false).Any())
+            if (Request.GetType().GetCustomAttributes(typeof(AllowSaveAndLoad), false).Any())
             {
                 AddCompletionOption("Save Request", SaveRequest);
             }
@@ -108,7 +108,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
         public override string TabLabel
         {
-            get { return typeof (TRequest).GetDisplayName(); }
+            get { return typeof(TRequest).GetDisplayName(); }
         }
 
         public void OpenFolder(string folder)

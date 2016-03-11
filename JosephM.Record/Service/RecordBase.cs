@@ -1,10 +1,10 @@
 ﻿#region
 
+using JosephM.Core.FieldType;
+using JosephM.Record.IService;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using JosephM.Core.FieldType;
-using JosephM.Record.IService;
 
 #endregion
 
@@ -41,7 +41,7 @@ namespace JosephM.Record.Service
             var value = GetField(field);
             if (value == null)
                 result = true;
-            else if (value is string && (string) value == "")
+            else if (value is string && (string)value == "")
                 result = true;
             return result;
         }
@@ -50,14 +50,15 @@ namespace JosephM.Record.Service
 
         public virtual string GetStringField(string field)
         {
-            return (string) GetField(field);
+            var value = GetField(field);
+            return value == null ? null : value.ToString();
         }
 
         public abstract bool ContainsField(string field);
 
         public bool? GetBoolFieldNullable(string field)
         {
-            return (bool?) GetField(field);
+            return (bool?)GetField(field);
         }
 
         public bool GetBoolField(string field)
@@ -70,7 +71,7 @@ namespace JosephM.Record.Service
         public int? GetIntegerFieldNullable(string fieldName)
         {
             var value = GetField(fieldName);
-            return (int?) value;
+            return (int?)value;
         }
 
         public int GetIntegerField(string fieldName)
@@ -101,8 +102,8 @@ namespace JosephM.Record.Service
             if (fieldValue == null)
                 return null;
             if (fieldValue is Lookup)
-                return (Lookup) fieldValue;
-            throw new Exception(string.Format("Expected Field Of Type {0}", typeof (Lookup).Name));
+                return (Lookup)fieldValue;
+            throw new Exception(string.Format("Expected Field Of Type {0}", typeof(Lookup).Name));
         }
 
         public string GetLookupName(string fieldName)
@@ -120,7 +121,7 @@ namespace JosephM.Record.Service
         {
             var fieldValue = GetField(fieldName);
             if (fieldValue is PicklistOption)
-                return ((PicklistOption) fieldValue).Key;
+                return ((PicklistOption)fieldValue).Key;
             if (fieldValue == null)
                 return null;
             throw new NotImplementedException(string.Format("Type {0} not Implemented", fieldValue.GetType().Name));
@@ -134,7 +135,7 @@ namespace JosephM.Record.Service
         public virtual IEnumerable<IRecord> GetActivityParties(string field)
         {
             var value = GetField(field);
-            return value != null ? (IEnumerable<IRecord>) value : new IRecord[0];
+            return value != null ? (IEnumerable<IRecord>)value : new IRecord[0];
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -147,7 +148,7 @@ namespace JosephM.Record.Service
 
         public DateTime? GetDateTime(string field)
         {
-            return (DateTime?) GetField(field);
+            return (DateTime?)GetField(field);
         }
     }
 }

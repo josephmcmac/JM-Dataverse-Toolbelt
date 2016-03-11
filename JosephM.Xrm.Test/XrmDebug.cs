@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using JosephM.Core.Attributes;
-using JosephM.Core.FieldType;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xrm.Sdk.Query;
+using System.Linq;
 
 namespace JosephM.Xrm.Test
 {
@@ -13,6 +10,22 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+
+            var relationships = XrmService.RetrieveAllOrClauses("systemform",
+                new[]
+                {
+                    new ConditionExpression("objecttypecode", ConditionOperator.Equal, 1)
+                });
+
+            var relationships2 = XrmService.RetrieveAllOrClauses("systemform",
+                new[]
+                {
+                                new ConditionExpression("objecttypecode", ConditionOperator.Equal, "account")
+                });
+
+            //var match = relationships.Where(r => r.IntersectEntityName == "roleprivileges");
+
+            var count = relationships.Count();
             //var lead = CreateTestRecord("lead");
 
             //var anote = CreateTestRecord("annotation",

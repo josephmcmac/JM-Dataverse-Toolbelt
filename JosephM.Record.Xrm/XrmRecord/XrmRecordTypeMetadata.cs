@@ -1,82 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using JosephM.Record.IService;
+﻿using JosephM.Record.IService;
 using JosephM.Xrm;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
     public class XrmRecordTypeMetadata : IRecordTypeMetadata
     {
-        private string RecordType { get; set; }
+        public string SchemaName { get; set; }
         private XrmService XrmService { get; set; }
 
-        public XrmRecordTypeMetadata(string recordType, XrmService xrmService)
+        public XrmRecordTypeMetadata(string schemaName, XrmService xrmService)
         {
-            RecordType = recordType;
+            SchemaName = schemaName;
             XrmService = xrmService;
         }
 
-        public string DisplayName { get { return XrmService.GetEntityDisplayName(RecordType); } }
+        public string DisplayName { get { return XrmService.GetEntityDisplayName(SchemaName); } }
 
         public bool Audit
         {
-            get { return XrmService.IsEntityAuditOn(RecordType); }
+            get { return XrmService.IsEntityAuditOn(SchemaName); }
         }
 
-        public string CollectionName { get { return XrmService.GetEntityCollectionName(RecordType); } }
-        public string PrimaryFieldSchemaName { get { return XrmService.GetPrimaryNameField(RecordType); }}
-        public string PrimaryKeyName { get { return XrmService.GetPrimaryKeyField(RecordType); } }
+        public string CollectionName { get { return XrmService.GetEntityCollectionName(SchemaName); } }
+        public string PrimaryFieldSchemaName { get { return XrmService.GetPrimaryNameField(SchemaName); } }
+        public string PrimaryKeyName { get { return XrmService.GetPrimaryKeyField(SchemaName); } }
 
         public bool Notes
         {
-            get { return XrmService.HasNotes(RecordType); }
+            get { return XrmService.HasNotes(SchemaName); }
         }
 
         public bool Activities
         {
-            get { return XrmService.HasActivities(RecordType); }
+            get { return XrmService.HasActivities(SchemaName); }
         }
 
         public bool Connections
         {
-            get { return XrmService.HasConnections(RecordType); }
+            get { return XrmService.HasConnections(SchemaName); }
         }
 
         public bool MailMerge
         {
-            get { return XrmService.HasMailMerge(RecordType); }
+            get { return XrmService.HasMailMerge(SchemaName); }
         }
 
         public bool Queues
         {
-            get { return XrmService.HasQueues(RecordType); }
+            get { return XrmService.HasQueues(SchemaName); }
         }
 
         public string Description
         {
-            get { return XrmService.GetDescription(RecordType); }
+            get { return XrmService.GetDescription(SchemaName); }
         }
 
         public bool IsActivityType
         {
-            get { return XrmService.GetEntityMetadata(RecordType).IsActivity ?? false; }
+            get { return XrmService.GetEntityMetadata(SchemaName).IsActivity ?? false; }
         }
 
         public bool IsActivityParticipant
         {
-            get { return XrmService.GetEntityMetadata(RecordType).IsActivityParty ?? false; }
+            get { return XrmService.GetEntityMetadata(SchemaName).IsActivityParty ?? false; }
         }
 
-        public bool Searchable { get { return XrmService.GetEntityMetadata(RecordType).IsValidForAdvancedFind ?? false; } }
-        public bool IsCustomType { get { return XrmService.GetEntityMetadata(RecordType).IsCustomEntity ?? false; } }
+        public bool Searchable { get { return XrmService.GetEntityMetadata(SchemaName).IsValidForAdvancedFind ?? false; } }
+        public bool IsCustomType { get { return XrmService.GetEntityMetadata(SchemaName).IsCustomEntity ?? false; } }
 
         public string RecordTypeCode
         {
             get
             {
-                var code = XrmService.GetEntityMetadata(RecordType).ObjectTypeCode;
+                var code = XrmService.GetEntityMetadata(SchemaName).ObjectTypeCode;
                 return code.HasValue ? code.ToString() : null;
             }
         }
@@ -85,7 +81,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             get
             {
-                var id = XrmService.GetEntityMetadata(RecordType).MetadataId;
+                var id = XrmService.GetEntityMetadata(SchemaName).MetadataId;
                 return id?.ToString();
             }
         }

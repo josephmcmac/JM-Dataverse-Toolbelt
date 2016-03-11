@@ -1,16 +1,15 @@
 ﻿#region
 
-using System.Collections.Generic;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using System.Collections.Generic;
 
 #endregion
 
 namespace JosephM.Record.IService
 {
-    //todo jmm interface could be simplified by extention methods
     /// <summary>
     ///     A Data Source For Querying Data And Metadata Defining The Record Types
     /// </summary>

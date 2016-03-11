@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace JosephM.Record.IService
+﻿namespace JosephM.Record.IService
 {
     public interface IRecordTypeMetadata
     {
+        string SchemaName { get; }
         string DisplayName { get; }
         bool Audit { get; }
         string CollectionName { get; }

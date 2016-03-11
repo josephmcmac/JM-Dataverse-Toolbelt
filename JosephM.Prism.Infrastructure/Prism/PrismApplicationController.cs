@@ -9,7 +9,6 @@ using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Regions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
@@ -143,11 +142,6 @@ namespace JosephM.Prism.Infrastructure.Prism
             {
                 OpenFile(fileName);
             }
-        }
-
-        private void OpenFile(string fileName)
-        {
-            Process.Start(fileName);
         }
     }
 }

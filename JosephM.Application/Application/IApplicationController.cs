@@ -77,5 +77,7 @@ namespace JosephM.Application.Application
 
         void OpenHelp(string fileName);
         void AddNotification(string id, string notification);
+
+        void OpenFile(string fileName);
     }
 }

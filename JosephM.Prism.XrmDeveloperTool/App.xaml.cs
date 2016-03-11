@@ -2,6 +2,7 @@
 using JosephM.CodeGenerator.Xrm;
 using JosephM.CustomisationExporter.Exporter;
 using JosephM.CustomisationImporter.Prism;
+using JosephM.InstanceComparer;
 using JosephM.OrganisationSettings;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
@@ -31,6 +32,7 @@ namespace JosephM.Xrm.DeveloperTool
             prism.AddModule<XrmTextSearchModule>();
             prism.AddModule<CustomisationExporterModule>();
             prism.AddModule<CustomisationImportModule>();
+            prism.AddModule<InstanceComparerModule>();
             prism.Run();
         }
     }
