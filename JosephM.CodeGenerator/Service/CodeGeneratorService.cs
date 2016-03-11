@@ -8,6 +8,7 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Xrm;
+using JosephM.Xrm.Schema;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -262,18 +263,10 @@ namespace JosephM.CodeGenerator.Service
 
             if (actions.Any())
             {
-
-                //todo use reference field
-                //Entities.sdkmessage
-                //Fields.sdkmessage_.name
-                //linked by
-                //Fields.workflow_.sdkmessageid
-
-                var requests = Service.RetrieveAllOrClauses("sdkmessagerequest",
-                    actions.Select(a => a.GetStringField("uniquename"))
+                var requests = Service.RetrieveAllOrClauses(Entities.sdkmessage,
+                    actions.Select(a => a.GetLookupId(Fields.workflow_.sdkmessageid))
                         .Where(s => !string.IsNullOrWhiteSpace(s))
-                        .Select(s => new Condition("name", ConditionType.Like,
-                            "%_" + s))
+                        .Select(s => new Condition(Fields.sdkmessage_.sdkmessageid, ConditionType.Equal, s))
                     , null);
 
                 stringBuilder.AppendLine("\tpublic static class Actions");
@@ -282,11 +275,10 @@ namespace JosephM.CodeGenerator.Service
                 {
                     var noTarget = action.GetStringField("primaryentity") == "none";
 
-                    var uniqueName = action.GetStringField("uniquename");
+                    var sdkMessageId = action.GetLookupId(Fields.workflow_.sdkmessageid);
                     var matchingRequestNames = requests
-                        .Where(r => r.GetStringField("name").EndsWith("_" + uniqueName))
-                        .Select(r => r.GetStringField("name"))
-                        .OrderBy(r => r)
+                        .Where(r => r.Id == sdkMessageId)
+                        .Select(r => r.GetStringField(Fields.workflow_.name))
                         .ToArray();
                     if (matchingRequestNames.Any())
                     {
