@@ -41,6 +41,7 @@ namespace JosephM.InstanceComparer
             //data/reference comarison
             //reports
             //any additional diffs e.g. access teams on entity, date type
+            //improve progress/messages
 
             if (processContainer.Differences.Any())
             {
@@ -62,7 +63,7 @@ namespace JosephM.InstanceComparer
             //this is a speical many to many type containing
             //the privilegedepthmask in intersect table
             //did a bit of manipulation to get privilegedepthmask + privelegename
-            var privilegeCompareParams = new ProcessCompareParams("Security Role Privileges",
+            var privilegeCompareParams = new ProcessCompareParams("Security Role Privilege",
                 Relationships.role_.roleprivileges_association.EntityName, Fields.privilege_.privilegeid, Fields.privilege_.privilegeid, null,
                 new[] { "privilegedepthmask" },
                 Fields.role_.roleid, ParentLinkType.Lookup);
@@ -86,7 +87,7 @@ namespace JosephM.InstanceComparer
                         nameof(IPicklistSet.PicklistOptions)
                     }));
 
-            var optionCompareParams = new ProcessCompareParams("Shared Picklist Options",
+            var optionCompareParams = new ProcessCompareParams("Shared Picklist Option",
                 (s, r) => r.GetSharedPicklistOptions(s).ToArray(),
                 nameof(PicklistOption.Key),
                 GetReadableProperties(typeof(PicklistOption), null));
@@ -103,7 +104,7 @@ namespace JosephM.InstanceComparer
                 new[] { new Condition(Fields.pluginassembly_.ishidden, ConditionType.NotEqual, true) },
                 new[] { Fields.pluginassembly_.content, Fields.pluginassembly_.isolationmode, Fields.pluginassembly_.description });
 
-            var pluginTypeCompareParams = new ProcessCompareParams("Plugin Types",
+            var pluginTypeCompareParams = new ProcessCompareParams("Plugin Type",
                 Entities.plugintype, Fields.plugintype_.typename, Fields.plugintype_.typename, null, new[]
                 {
                     Fields.plugintype_.name, Fields.plugintype_.assemblyname, Fields.plugintype_.description, Fields.plugintype_.workflowactivitygroupname, Fields.plugintype_.friendlyname,
@@ -112,7 +113,7 @@ namespace JosephM.InstanceComparer
 
             processCompareParams.ChildCompares = new[] { pluginTypeCompareParams };
 
-            var pluginRegistrationParams = new ProcessCompareParams("Plugin Registrations",
+            var pluginRegistrationParams = new ProcessCompareParams("Plugin Registration",
                 Entities.sdkmessageprocessingstep,
                 new[]
                 {
@@ -162,7 +163,7 @@ namespace JosephM.InstanceComparer
 
             fieldsCompareParams.ChildCompares = new[] { fieldsOptionParams };
 
-            var manyToManyCompareParams = new ProcessCompareParams("Many To Many Relationships",
+            var manyToManyCompareParams = new ProcessCompareParams("Many To Many Relationship",
                 (s, r) => r.GetManyToManyRelationships(s).ToArray(),
                 nameof(IMany2ManyRelationshipMetadata.SchemaName),
                 GetReadableProperties(typeof(IMany2ManyRelationshipMetadata), new[]
@@ -262,7 +263,7 @@ namespace JosephM.InstanceComparer
                 var isChildContext = parentCompareParams != null;
 
                 processContainer.Controller.UpdateProgress(processContainer.NumberOfProcessesCompleted,
-                    processContainer.NumberOfProcesses, processCompareParams.Context);
+                    processContainer.NumberOfProcesses, string.Format("Comparing {0} Components", processCompareParams.Context));
 
                 var inBoth = new List<List<IRecord>>();
 
@@ -277,6 +278,7 @@ namespace JosephM.InstanceComparer
                         //add some comments for this mess
                         if (processCompareParams.ParentLinkType == ParentLinkType.Lookup)
                         {
+                            processContainer.Controller.UpdateLevel2Progress(1, 4, "Loading Connection 1 Items");
                             var serviceOneItems =
                                 processContainer.ServiceOne.RetrieveAllOrClauses(processCompareParams.RecordType,
                                     parents.Select(v => v.First())
@@ -285,6 +287,7 @@ namespace JosephM.InstanceComparer
                                                 new Condition(processCompareParams.ParentLink, ConditionType.Equal,
                                                     GetParentId(parentCompareParams, r))),
                                     null);
+                            processContainer.Controller.UpdateLevel2Progress(2, 4, "Loading Connection 2 Items");
                             var serviceTwoItems =
                                 processContainer.ServiceTwo.RetrieveAllOrClauses(processCompareParams.RecordType,
                                     parents.Select(v => v.Last())
@@ -293,6 +296,7 @@ namespace JosephM.InstanceComparer
                                                 new Condition(processCompareParams.ParentLink, ConditionType.Equal,
                                                    GetParentId(parentCompareParams, r))),
                                     null);
+                            processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing Items");
                             foreach (var item in serviceOneItems)
                             {
                                 var referringField = item.GetField(processCompareParams.ParentLink);
@@ -382,15 +386,13 @@ namespace JosephM.InstanceComparer
                     }
                     if (processCompareParams.Type == ProcessCompareType.Objects)
                     {
-                        processContainer.Controller.UpdateProgress(processContainer.NumberOfProcessesCompleted,
-                            processContainer.NumberOfProcesses, processCompareParams.Context);
                         //differences
                         var countToDo = parents.Count();
                         var countDone = 0;
                         foreach (var group in groupThem)
                         {
                             var parentReference = group.First().Key.GetStringField(parentCompareParams.MatchField);
-                            processContainer.Controller.UpdateLevel2Progress(countDone++, countToDo, parentReference);
+                            processContainer.Controller.UpdateLevel2Progress(countDone++, countToDo, "Processing " + parentReference);
                             var items1 =
                                 processCompareParams.GetObjects(
                                     group.First().Key.GetStringField(parentCompareParams.MatchField),
@@ -403,33 +405,39 @@ namespace JosephM.InstanceComparer
                                     processContainer.ServiceTwo).Select(r => new ObjectRecord(r)).ToArray();
                             DoCompare(processCompareParams, processContainer, items1, items2, parentReference);
                         }
-                        processContainer.Controller.TurnOffLevel2();
                     }
                 }
                 else
                 {
                     if (processCompareParams.Type == ProcessCompareType.Records)
                     {
+                        processContainer.Controller.UpdateLevel2Progress(1, 4, "Loading Connection 1 Items");
                         var serviceOneItems = processContainer.ServiceOne.RetrieveAllAndClauses(
                             processCompareParams.RecordType, processCompareParams.Conditions, null);
+                        processContainer.Controller.UpdateLevel2Progress(2, 4, "Loading Connection 2 Items");
                         var serviceTwoItems = processContainer.ServiceTwo.RetrieveAllAndClauses(
                             processCompareParams.RecordType, processCompareParams.Conditions, null);
+                        processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing Items");
                         inBoth.AddRange(DoCompare(processCompareParams, processContainer, serviceOneItems, serviceTwoItems, null));
+
                     }
                     if (processCompareParams.Type == ProcessCompareType.Objects)
                     {
+                        processContainer.Controller.UpdateLevel2Progress(1, 4, "Loading Connection 1 Items");
                         var serviceOneItems =
                             processCompareParams.GetObjects(null, null, processContainer.ServiceOne)
                                 .Select(o => new ObjectRecord(o))
                                 .ToArray();
+                        processContainer.Controller.UpdateLevel2Progress(2, 4, "Loading Connection 2 Items");
                         var serviceTwoItems =
                             processCompareParams.GetObjects(null, null, processContainer.ServiceTwo)
                                 .Select(o => new ObjectRecord(o))
                                 .ToArray();
+                        processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing Items");
                         inBoth.AddRange(DoCompare(processCompareParams, processContainer, serviceOneItems, serviceTwoItems, null));
                     }
                 }
-
+                processContainer.Controller.TurnOffLevel2();
                 processContainer.NumberOfProcessesCompleted++;
                 if (processCompareParams.ChildCompares != null)
                 {

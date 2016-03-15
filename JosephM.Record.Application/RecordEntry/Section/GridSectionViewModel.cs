@@ -1,12 +1,5 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -17,6 +10,13 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
 
 #endregion
 
@@ -59,7 +59,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             try
             {
                 var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, RecordForm, (record) =>
-                DoOnMainThread(() => {
+                DoOnMainThread(() =>
+                {
                     InsertRecord(record, 0);
                     RecordForm.ClearChildForm();
                 }), () => RecordForm.ClearChildForm());
@@ -111,7 +112,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                 DoOnMainThread(() =>
                 {
                     DynamicGridViewModel.GridRecords.Remove(row);
-                    //todo this wouldn't match in test script couldn't figure out why
                     InsertRecord(record, index == -1 ? 0 : index);
                 });
             }, () => RecordForm.ClearChildForm(), row);
@@ -277,7 +277,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                                 records.Records
                                 , RecordService.GetFields(RecordType),
                                 (f) => RecordService.GetFieldLabel(f, RecordType),
-                                (r, f) => RecordService.GetFieldAsDisplayString((IRecord) r, f));
+                                (r, f) => RecordService.GetFieldAsDisplayString((IRecord)r, f));
                             Process.Start(fileName);
                         }
                         catch (Exception ex)

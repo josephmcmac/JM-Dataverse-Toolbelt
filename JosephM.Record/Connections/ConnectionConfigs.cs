@@ -1,13 +1,9 @@
 ﻿using JosephM.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JosephM.Record.Connections
 {
-    //todo wont serialise/deserialise passwords correctly for different users
     public class ConnectionConfigs
     {
         public void AddConfig(Type connectionType, Type serviceType)
