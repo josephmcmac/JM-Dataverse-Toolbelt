@@ -28,6 +28,7 @@ namespace JosephM.InstanceComparer
 
             //ENSURE TO INCREASE THIS IF ADDING TO PROCESSES
             processContainer.NumberOfProcesses = 16;
+            processContainer.NumberOfProcesses += request.DataComparisons.Count();
 
             AppendSolutions(processContainer);
             AppendWorkflows(processContainer);
@@ -37,11 +38,15 @@ namespace JosephM.InstanceComparer
             AppendOptions(processContainer);
             AppendSecurityRoles(processContainer);
 
+            AppendData(processContainer);
+
             //todo could do these addition of differences
-            //data/reference comarison
+            //data linked records
             //reports
+            //charts - savedqueryvisualisation
+            //dashboards - systemform, type = 0
+            //other solution components ribbon, sitemap
             //any additional diffs e.g. access teams on entity, date type
-            //improve progress/messages
 
             if (processContainer.Differences.Any())
             {
@@ -50,6 +55,18 @@ namespace JosephM.InstanceComparer
                 CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, fileName, processContainer.Differences);
                 response.FileName = Path.Combine(request.SaveToFolder.FolderPath, fileName);
                 response.Differences = true;
+            }
+        }
+
+        private void AppendData(ProcessContainer processContainer)
+        {
+            var compares = processContainer
+                .Request.DataComparisons
+                .Select(c => new ProcessCompareParams(c, processContainer.ServiceOne))
+                .ToArray();
+            foreach (var compare in compares)
+            {
+                ProcessCompare(compare, processContainer);
             }
         }
 
@@ -571,6 +588,7 @@ namespace JosephM.InstanceComparer
 
             public Dictionary<string, List<ConvertField>> _conversionsObjects =
                 new Dictionary<string, List<ConvertField>>();
+            private InstanceComparerRequest.InstanceCompareDataCompare c;
 
             public object ConvertField1(string field, object value)
             {
@@ -637,8 +655,21 @@ namespace JosephM.InstanceComparer
                 RecordType = recordType;
                 ParentLink = parentlink;
                 ParentLinkType = parentLinkType;
-                ChildCompares = new ProcessCompareParams[0];
                 Type = ProcessCompareType.Records;
+            }
+
+            public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, IRecordService recordService)
+                : this("Data",
+                      dataComparison.Type,
+                      recordService.GetPrimaryField(dataComparison.Type),
+                      recordService.GetPrimaryField(dataComparison.Type),
+                      new Condition[0],
+                      recordService
+                            .GetFields(dataComparison.Type)
+                            .Where(f => recordService.GetFieldMetadata(f, dataComparison.Type).IsCustomField)
+                            .ToArray()
+                      )
+            {
             }
 
             public ParentLinkType? ParentLinkType { get; set; }

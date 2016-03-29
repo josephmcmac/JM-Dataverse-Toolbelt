@@ -2,6 +2,7 @@
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
+using System.Collections.Generic;
 
 namespace JosephM.InstanceComparer
 {
@@ -11,6 +12,7 @@ namespace JosephM.InstanceComparer
     {
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
+        [ConnectionFor(nameof(InstanceComparerRequest.InstanceCompareDataCompare.RecordType))]
         public SavedXrmRecordConfiguration ConnectionOne { get; set; }
 
         [RequiredProperty]
@@ -20,12 +22,12 @@ namespace JosephM.InstanceComparer
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
 
-        //public IEnumerable<InstanceCompareDataCompare> DataComparisons { get; set; }
+        public IEnumerable<InstanceCompareDataCompare> DataComparisons { get; set; }
 
         public class InstanceCompareDataCompare
         {
             [Hidden]
-            public string Type { get { return Type == null ? null : RecordType.Key; } }
+            public string Type { get { return RecordType == null ? null : RecordType.Key; } }
 
             public RecordType RecordType { get; set; }
         }
