@@ -610,7 +610,9 @@ namespace JosephM.Record.Xrm.XrmRecord
                                 {
                                     if (item != null && item.Attributes != null)
                                     {
-                                        if (item.Attributes["name"] == null || item.Attributes["width"] == null)
+                                        //exclude where null or where a linked field
+                                        //linked fields in view not implemented in UI
+                                        if (item.Attributes["name"] == null || item.Attributes["width"] == null || item.Attributes["name"].Value == null || item.Attributes["name"].Value.Contains("."))
                                             continue;
                                         viewFields.Add(new ViewField(item.Attributes["name"].Value, ++i,
                                             Convert.ToInt32(item.Attributes["width"].Value)));
