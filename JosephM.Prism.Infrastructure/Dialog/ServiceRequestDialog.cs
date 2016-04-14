@@ -91,7 +91,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
             if (!Response.Success)
                 ProcessError(Response.Exception);
-            else
+            else if(CompletionMessage.IsNullOrWhiteSpace())
                 CompletionMessage = "Process Finished";
         }
 

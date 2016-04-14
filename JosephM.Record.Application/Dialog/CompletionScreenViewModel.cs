@@ -1,11 +1,11 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Shared;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 #endregion
 
@@ -22,11 +22,13 @@ namespace JosephM.Application.ViewModel.Dialog
             : base(controller)
         {
             Heading = new HeadingViewModel(heading, controller);
+            CompletionHeadingText = heading;
             CompletionOptions = options;
             CompletionDetails = new ObjectsGridSectionViewModel("Summary", completionDetails, controller);
             CloseButton = new XrmButtonViewModel("Close", onClose, controller);
         }
 
+        public string CompletionHeadingText { get; set; }
         public HeadingViewModel Heading { get; set; }
 
         public IEnumerable<XrmButtonViewModel> CompletionOptions { get; private set; }

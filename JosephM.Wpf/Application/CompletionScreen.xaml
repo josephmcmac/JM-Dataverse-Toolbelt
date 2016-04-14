@@ -20,7 +20,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical">
-        <shared:HeadingView DataContext="{Binding Heading}" />
+        <TextBox Background="Transparent"
+         BorderThickness="0"
+         Text="{Binding CompletionHeadingText, Mode=OneWay}"
+         IsReadOnly="True"
+         TextWrapping="Wrap" />
         <ItemsControl
             ItemsSource="{Binding CompletionOptions}"
             ItemTemplate="{StaticResource XrmButtonTemplate}">

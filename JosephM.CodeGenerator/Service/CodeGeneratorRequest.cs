@@ -24,51 +24,57 @@ namespace JosephM.CodeGenerator.Service
         public CodeGeneratorType? Type { get; set; }
 
         [RequiredProperty]
+        [PropertyInContextByPropertyValues(nameof(Type), new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public Folder Folder { get; set; }
 
+        [Multiline]
         [RequiredProperty]
-        [InitialiseFor("Type", CodeGeneratorType.CSharpMetadata, "Schema")]
-        [PropertyInContextByPropertyNotNull("Type")]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.FetchToJavascript)]
+        public string Fetch { get; set; }
+
+        [RequiredProperty]
+        [InitialiseFor(nameof(Type), CodeGeneratorType.CSharpMetadata, "Schema")]
+        [PropertyInContextByPropertyValues(nameof(Type), new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public string FileName { get; set; }
 
         [RequiredProperty]
-        [InitialiseFor("Type", CodeGeneratorType.CSharpMetadata, "Schema")]
-        [PropertyInContextByPropertyNotNull("Type")]
+        [InitialiseFor(nameof(Type), CodeGeneratorType.CSharpMetadata, "Schema")]
+        [PropertyInContextByPropertyValues(nameof(Type), new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public string Namespace { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.CSharpMetadata)]
         public bool IncludeEntities { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.CSharpMetadata)]
         public bool IncludeFields { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.CSharpMetadata)]
         public bool IncludeRelationships { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.CSharpMetadata)]
         public bool IncludeOptions { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("IncludeOptions", true)]
-        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        [PropertyInContextByPropertyValue(nameof(IncludeOptions), true)]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.CSharpMetadata)]
         public bool IncludeAllSharedOptions { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.CSharpMetadata)]
         public bool IncludeActions { get; set; }
 
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.CSharpMetadata)]
         public bool AllRecordTypes { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("AllRecordTypes", false)]
-        [PropertyInContextByPropertyNotNull("Type")]
+        [PropertyInContextByPropertyValue(nameof(AllRecordTypes), false)]
+        [PropertyInContextByPropertyNotNull(nameof(Type))]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
     }
 }

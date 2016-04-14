@@ -8,6 +8,7 @@
     <Grid>
         <TextBlock
             TextWrapping="WrapWithOverflow"
-            Text="{Binding Heading}" />
+            Text="{Binding Heading}"
+            />
     </Grid>
 </UserControl>

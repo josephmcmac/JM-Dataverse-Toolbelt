@@ -40,14 +40,6 @@ namespace JosephM.InstanceComparer
 
             AppendData(processContainer);
 
-            //todo could do these addition of differences
-            //data linked records
-            //reports
-            //charts - savedqueryvisualisation
-            //dashboards - systemform, type = 0
-            //other solution components ribbon, sitemap
-            //any additional diffs e.g. access teams on entity, date type
-
             if (processContainer.Differences.Any())
             {
                 processContainer.Controller.LogLiteral("Generating CSV");

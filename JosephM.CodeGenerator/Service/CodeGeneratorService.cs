@@ -9,6 +9,7 @@ using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,6 +49,11 @@ namespace JosephM.CodeGenerator.Service
                         WriteJavaScriptOptionSets(request, controller);
                         break;
                     }
+                case CodeGeneratorType.FetchToJavascript:
+                    {
+                        response.Javascript = WriteFetchToJavascript(request, controller);
+                        break;
+                    }
             }
             response.Folder = request.Folder != null ? request.Folder.FolderPath : null;
             if (request.FileName != null)
@@ -58,6 +64,28 @@ namespace JosephM.CodeGenerator.Service
                 else
                     response.FileName = response.FileName + ".cs";
             }
+        }
+
+        private string WriteFetchToJavascript(CodeGeneratorRequest request, LogController controller)
+        {
+            var fetch = request.Fetch;
+            var splitLines = fetch
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
+
+            var stringCharacter = "'";
+            var variableName = "fetchXml";
+
+            var conversionList = new List<string>();
+            for (var i = 0; i < splitLines.Length; i++)
+            {
+
+                if (i == 0)
+                    conversionList.Add(string.Format("var {0} = {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
+                else
+                    conversionList.Add(string.Format("{0} = {0} + {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
+            }
+            return string.Join(Environment.NewLine, conversionList);
         }
 
         private void AppendGenerationComments(StringBuilder sb)

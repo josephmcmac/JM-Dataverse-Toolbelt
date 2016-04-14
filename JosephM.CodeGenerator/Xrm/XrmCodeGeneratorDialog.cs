@@ -19,8 +19,11 @@ namespace JosephM.CodeGenerator.Xrm
         {
             if (!string.IsNullOrWhiteSpace(Response.FileName))
                 AddCompletionOption("Open File", OpenFile);
-            AddCompletionOption("Open Folder", OpenFolder);
+            if (!string.IsNullOrWhiteSpace(Response.Folder))
+                AddCompletionOption("Open Folder", OpenFolder);
             CompletionMessage = "Document Successfully Generated";
+            if (!string.IsNullOrWhiteSpace(Response.Javascript))
+                CompletionMessage = Response.Javascript;
         }
 
         public void OpenFile()

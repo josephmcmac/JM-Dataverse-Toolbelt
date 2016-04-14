@@ -3,6 +3,7 @@
     public enum CodeGeneratorType
     {
         CSharpMetadata,
-        JavaScriptOptionSets
+        JavaScriptOptionSets,
+        FetchToJavascript
     }
 }
