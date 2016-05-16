@@ -153,7 +153,7 @@ namespace JosephM.InstanceComparer
                 nameof(IRecordTypeMetadata.SchemaName),
                 GetReadableProperties(typeof(IRecordTypeMetadata), new[]
                     {
-                        nameof(IRecordTypeMetadata.MetadataId), nameof(IRecordTypeMetadata.RecordTypeCode)
+                        nameof(IRecordTypeMetadata.MetadataId), nameof(IRecordTypeMetadata.RecordTypeCode), nameof(IRecordTypeMetadata.Activities), nameof(IRecordTypeMetadata.Notes)
                     }));
 
             var fieldsCompareParams = new ProcessCompareParams("Field",
@@ -651,7 +651,7 @@ namespace JosephM.InstanceComparer
             }
 
             public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, IRecordService recordService)
-                : this("Data",
+                : this("Data - " + dataComparison.Type,
                       dataComparison.Type,
                       recordService.GetPrimaryField(dataComparison.Type),
                       recordService.GetPrimaryField(dataComparison.Type),
@@ -725,12 +725,16 @@ namespace JosephM.InstanceComparer
                     var theString = (string)sourceValue;
                     theString = theString.Replace("\"True\"", "\"true\"");
                     //remove xml encoding + whitespace which were different in a camparison when actually equivalent
-                    var removeStrings = new[] { "<?xml version=\"1.0\" encoding=\"utf-16\"?>", " ", "\n", "\r", "\t" };
+                    var removeStrings = new[] { "<?xml version=\"1.0\" encoding=\"utf-16\"?>", " ", "\n", "\r", "\t", "<Persist/>" };
                     theString = RemoveStrings(removeStrings, theString);
                     //strips out id in e.g. XrmWorkflowf736af5a4cba497084b54eb7d2cc0354
                     theString = StripCharactersAfter(theString, "XrmWorkflow", 32);
                     //had different declarations for some reason though equivalent
                     theString = StripStartToEnd(theString, "<Activityx:Class=", "xaml\">");
+                    //strips out id
+                    theString = StripStartToEnd(theString, "PropertyType.Guid,", "UniqueIdentifier");
+                    //strips out id
+                    theString = StripStartToEnd(theString, "Default=", "Name=\"stepLabelLabelId");
                     //strips target parts missing in some for unknown reason
                     theString = StripStartToEnd(theString, "<x:PropertyName=\"Target\"",
                         "</x:Property.Attributes></x:Property>");
