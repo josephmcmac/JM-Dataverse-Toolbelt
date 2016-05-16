@@ -1,9 +1,9 @@
-﻿using System;
+﻿using JosephM.Core.AppConfig;
+using JosephM.Core.Attributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Core.Attributes;
-using JosephM.Core.AppConfig;
 
 namespace JosephM.Core.Extentions
 {
@@ -49,7 +49,7 @@ namespace JosephM.Core.Extentions
                     propertyName, type.Name));
             return property
                 .GetGetMethod()
-                .Invoke(instance, new object[] {});
+                .Invoke(instance, new object[] { });
         }
 
         public static object SetPropertyValue(this object instance, string propertyName, object value)
@@ -64,7 +64,7 @@ namespace JosephM.Core.Extentions
                     propertyName, type.Name));
             return property
                 .GetSetMethod()
-                .Invoke(instance, new object[] {value});
+                .Invoke(instance, new object[] { value });
         }
 
         public static bool IsInContext(this object instance, string propertyName)
@@ -72,7 +72,7 @@ namespace JosephM.Core.Extentions
             var inContextAttributes =
                 instance.GetType()
                     .GetProperty(propertyName)
-                    .GetCustomAttributes(typeof (PropertyInContext), true)
+                    .GetCustomAttributes(typeof(PropertyInContext), true)
                     .Cast<PropertyInContext>();
             if (!inContextAttributes.Any())
                 return true;
@@ -86,10 +86,10 @@ namespace JosephM.Core.Extentions
         public static bool IsEmpty(this object instance)
         {
             if (instance is string)
-                return ((string) instance).IsNullOrWhiteSpace();
+                return ((string)instance).IsNullOrWhiteSpace();
             if (instance is IEnumerable)
             {
-                var any = ((IEnumerable) instance).GetEnumerator().MoveNext();
+                var any = ((IEnumerable)instance).GetEnumerator().MoveNext();
                 return !any;
             }
             return instance == null;
@@ -111,6 +111,34 @@ namespace JosephM.Core.Extentions
         public static bool IsNotEmpty(this object instance)
         {
             return !instance.IsEmpty();
+        }
+
+        /// <summary>
+        ///     Sets The Property Value Of The Object From The Raw String Value Loaded From app.config
+        /// </summary>
+        public static void SetPropertyByString(this object theObject, string propertyName, string rawConfigString)
+        {
+            if (rawConfigString.IsNullOrWhiteSpace())
+                theObject.SetPropertyValue(propertyName, null);
+
+            var property = theObject.GetType().GetProperty(propertyName);
+            var propertyType = property.PropertyType;
+            object newValue = null;
+
+            if (propertyType == typeof(bool))
+                newValue = rawConfigString == "1" || rawConfigString == "true";
+            else if (propertyType.IsEnum)
+                newValue = Enum.Parse(propertyType, rawConfigString);
+            else if (propertyType == typeof(IEnumerable<string>))
+                newValue = rawConfigString.Split(',');
+            else if (propertyType == typeof(int))
+                newValue = int.Parse(rawConfigString);
+            else if (propertyType.HasStringConstructor())
+                newValue = propertyType.CreateFromStringConstructor(rawConfigString);
+            else
+                newValue = rawConfigString;
+
+            theObject.SetPropertyValue(propertyName, newValue);
         }
     }
 }

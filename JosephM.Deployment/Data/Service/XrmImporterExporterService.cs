@@ -1,25 +1,20 @@
 ﻿#region
 
+using JosephM.Core.Extentions;
+using JosephM.Core.FieldType;
+using JosephM.Core.Log;
+using JosephM.Core.Service;
+using JosephM.Core.Utility;
+using JosephM.Record.Extentions;
+using JosephM.Record.IService;
+using JosephM.Record.Xrm.XrmRecord;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
-using System.Threading;
-using JosephM.Core.FieldType;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using JosephM.Core.Extentions;
-using JosephM.Core.Log;
-using JosephM.Core.Service;
-using JosephM.Core.Sql;
-using JosephM.Core.Utility;
-using JosephM.Record.Extentions;
-using JosephM.Record.IService;
-using JosephM.Record.Query;
-using JosephM.Record.Xrm.XrmRecord;
 
 #endregion
 
@@ -660,6 +655,8 @@ namespace JosephM.Xrm.ImportExporter.Service
             if (fieldName == "businessunitid")
                 return true;
             if (fieldName == "pricelevelid")
+                return true;
+            if (fieldName == "salesliteratureid")
                 return true;
             return
                 Service.FieldExists(fieldName, entityType) && Service.GetFieldMetadata(fieldName, entityType).Writeable;
