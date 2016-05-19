@@ -181,6 +181,10 @@
       <DependentUpon>EditRowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\EditRowColumn.cs" />
+    <Compile Include="Grid\GridLookupColumn.cs" />
+    <Compile Include="Grid\GridLookupPicklistFieldView.xaml.cs">
+      <DependentUpon>GridLookupPicklistFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\GridPasswordColumn.cs" />
     <Compile Include="Grid\GridPasswordFieldView.xaml.cs">
       <DependentUpon>GridPasswordFieldView.xaml</DependentUpon>
@@ -209,6 +213,9 @@
     </Compile>
     <Compile Include="RecordEntry\Field\FileRefView.xaml.cs">
       <DependentUpon>FileRefView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
+      <DependentUpon>LookupPicklistView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\RecordFieldView.xaml.cs">
       <DependentUpon>RecordFieldView.xaml</DependentUpon>
@@ -246,7 +253,7 @@
     <Compile Include="Converters\ToUpperConverter.cs" />
     <Compile Include="Converters\WidthConverter.cs" />
     <Compile Include="ControlExtentions\FocusExtension.cs" />
-    <Compile Include="Grid\GridLookupColumn.cs" />
+    <Compile Include="Grid\GridLookupPicklistColumn.cs" />
     <Compile Include="RecordEntry\Field\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
@@ -352,6 +359,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\GridLookupPicklistFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\GridPasswordFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -381,6 +392,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\FileRefView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\LookupPicklistView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

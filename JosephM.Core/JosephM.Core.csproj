@@ -83,6 +83,7 @@
     <Compile Include="AppConfig\Extentions.cs" />
     <Compile Include="AppConfig\IResolveObject.cs" />
     <Compile Include="AppConfig\IDependencyResolver.cs" />
+    <Compile Include="Attributes\DoNotAllowAdd.cs" />
     <Compile Include="Attributes\AllowSaveAndLoad.cs" />
     <Compile Include="Attributes\ConnectionFor.cs" />
     <Compile Include="Attributes\CustomFunction.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Attributes\RequiredProperty.cs" />
     <Compile Include="Attributes\PropertyInContextByPropertyValue.cs" />
     <Compile Include="Attributes\PropertyInContextByPropertyValues.cs" />
+    <Compile Include="Attributes\UsePicklist.cs" />
     <Compile Include="Constants\RegularExpressions.cs" />
     <Compile Include="Extentions\ByteExtentions.cs" />
     <Compile Include="Extentions\DateTimeExtentions.cs" />

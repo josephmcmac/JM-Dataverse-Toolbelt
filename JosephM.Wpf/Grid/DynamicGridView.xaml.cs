@@ -89,6 +89,8 @@ namespace JosephM.Wpf.Grid
             {
                 gridSectionViewModel.ApplicationController.DoOnAsyncThread(() =>
                 {
+                    if (gridSectionViewModel.RecordFields == null)
+                        return;
                     var columnMetadata = new List<ColumnMetadata>();
                     foreach (var gridField in gridSectionViewModel.RecordFields.OrderBy(gf => gf.Order))
                     {
@@ -142,16 +144,32 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             else if (column.FieldType == RecordFieldType.Picklist)
+                            {
+
                                 dataGridField = new GridPicklistColumn()
                                 {
                                     Binding = cellBinding
                                 };
+                            }
                             else if (column.FieldType == RecordFieldType.Lookup)
                             {
-                                dataGridField = new GridLookupColumn()
+                                if (gridSectionViewModel.FormController.FormService != null
+                                    &&
+                                    gridSectionViewModel.FormController.FormService.UsePicklist(column.FieldName,
+                                        gridSectionViewModel.RecordType))
                                 {
-                                    Binding = cellBinding
-                                };
+                                    dataGridField = new GridLookupPicklistColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else
+                                {
+                                    dataGridField = new GridLookupColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
                             }
                             else if (column.FieldType == RecordFieldType.Password)
                             {
@@ -181,7 +199,8 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             }
-                            else if (column.FieldType == RecordFieldType.Integer || column.FieldType == RecordFieldType.BigInt)
+                            else if (column.FieldType == RecordFieldType.Integer ||
+                                     column.FieldType == RecordFieldType.BigInt)
                             {
                                 dataGridField = new GridIntColumn()
                                 {

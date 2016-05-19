@@ -45,7 +45,7 @@ namespace JosephM.Core.AppConfig
                     try
                     {
                         var rawConfigString = sectionFields.GetValue(property.Name);
-                        configObject.SetPropertyByString(property.Name, rawConfigString);
+                        configObject.SetPropertyByString(property.Name, string.IsNullOrEmpty(rawConfigString) ? null : rawConfigString);
                     }
                     // ReSharper disable once EmptyGeneralCatchClause
                     catch (Exception)

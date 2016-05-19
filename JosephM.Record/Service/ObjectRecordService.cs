@@ -304,97 +304,215 @@ namespace JosephM.Record.Service
                     fieldName, recordType));
         }
 
+        public Condition GetLookupConditionFors(string fieldName, string recordType, string reference, IRecord record)
+        {
+
+            if (record != null && (!(record is ObjectRecord)))
+                throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name, typeof(ObjectRecord).Name));
+
+            var resolveAttributeReference = GetReferencingAttribute<LookupConditionFor>(nameof(LookupConditionFor.TargetProperty), fieldName, recordType, reference, record);
+            if (resolveAttributeReference != null && resolveAttributeReference.ReferencingProperty != null)
+            {
+                var attr2 = (LookupConditionFor) resolveAttributeReference.ReferencingAttribute;
+                var objectValue =
+                    resolveAttributeReference.ObjectContaining.GetPropertyValue(
+                        resolveAttributeReference.ReferencingProperty.Name);
+                if (objectValue != null)
+                {
+                    return new Condition(attr2.FieldName, ConditionType.Equal, objectValue);
+                }
+            }
+            //check for reference inj parent form
+            else if (ParentService != null)
+            {
+                return ParentService.GetLookupConditionFors(reference + "." + fieldName, ObjectType.Name, ParentServiceReference, new ObjectRecord(ObjectToEnter));
+            }
+            return null;
+        }
+
         private object _lockObject = new object();
         private Dictionary<object, IRecordService> _serviceConnections = new Dictionary<object, IRecordService>();
 
         public override IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record)
         {
-            //needed to implement several inspections to get service connections for other properties with ConnectionFor attributes
 
-            //may be object in a grid where have to check other properties for object in that row
-            //or property of object in main form
-            //or property of object in a parent form (accessed through the parent service)
             if (record != null && (!(record is ObjectRecord)))
                 throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name, typeof(ObjectRecord).Name));
-            IRecordService lookupService = null;
-            if (record != null)
+
+            var resolveAttributeReference = GetReferencingAttribute<ConnectionFor>(nameof(ConnectionFor.Property), fieldName, recordType, reference, record);
+            if (resolveAttributeReference != null && resolveAttributeReference.ReferencingProperty != null)
             {
-                lookupService = GetLookupServiceForConnectionFor(fieldName, ((ObjectRecord)record).Instance);
-                if (lookupService != null)
-                    return lookupService;
+                return GetLookupServiceForConnectionFor(resolveAttributeReference);
             }
-            //try all valid combinations of reference and field name
-            lookupService = GetLookupServiceForConnectionFor(reference, ObjectToEnter);
-            if (lookupService != null)
-                return lookupService;
-            lookupService = GetLookupServiceForConnectionFor(reference + "." + fieldName, ObjectToEnter);
-            if (lookupService != null)
-                return lookupService;
-            lookupService = GetLookupServiceForConnectionFor(fieldName, ObjectToEnter);
-            if (lookupService != null)
-                return lookupService;
+            //check for reference inj parent form
             if (ParentService != null)
             {
                 return ParentService.GetLookupService(reference + "." + fieldName, ObjectType.Name, ParentServiceReference, new ObjectRecord(ObjectToEnter));
             }
+
             return LookupService;
         }
 
-        private IRecordService GetLookupServiceForConnectionFor(string fieldName, object objectToEnter)
+        private GetReferencingAttributeResponse GetReferencingAttribute<T>(string attributeFieldNameProperty, string fieldName, string recordType, string reference, IRecord record)
+                where T : Attribute
+        {
+            //needed to implement several inspections to get referencing attributes
+
+            //may be object in a grid where have to check other properties for object in that row
+            //or property of object in main form
+            GetReferencingAttributeResponse response = null;
+            if (record != null)
+            {
+                response = GetReferencingAttribute<T>(attributeFieldNameProperty, fieldName, ((ObjectRecord)record).Instance);
+                if (response != null)
+                    return response;
+            }
+            //try all valid combinations of reference and field name
+            response = GetReferencingAttribute<T>(attributeFieldNameProperty, reference, ObjectToEnter);
+            if (response != null)
+                return response;
+            response = GetReferencingAttribute<T>(attributeFieldNameProperty, reference + "." + fieldName, ObjectToEnter);
+            if (response != null)
+                return response;
+            response = GetReferencingAttribute<T>(attributeFieldNameProperty, fieldName, ObjectToEnter);
+            return response;
+        }
+
+        private GetReferencingAttributeResponse GetReferencingAttribute<T>(string attributeFieldNameProperty, string fieldName, object objectToEnter)
+            where T : Attribute
         {
             var props = GetPropertyInfos(objectToEnter.GetType().Name);
             foreach (var prop in props)
             {
-                var connectionsFor = prop.GetCustomAttributes<ConnectionFor>(true)
-                    .Where(c => c.Property == fieldName);
+                var connectionsFor = prop.GetCustomAttributes<T>(true)
+                    .Where(c => (string)c.GetPropertyValue(attributeFieldNameProperty) == fieldName)
+                    .ToArray();
                 if (connectionsFor.Any())
                 {
-                    var value = objectToEnter.GetPropertyValue(prop.Name);
-                    lock (_lockObject)
+                    return new GetReferencingAttributeResponse()
                     {
-                        if (value != null)
-                        {
-                            if (_serviceConnections.ContainsKey(value))
-                                return _serviceConnections[value];
-
-                            var connectionFor = connectionsFor.First();
-                            if (connectionFor is LookupConnectionFor)
-                            {
-                                if (!(value is Lookup))
-                                    throw new Exception(string.Format("Value is required to be of type {0} for {1} attribute. Actual type is {2}. The property name is"
-                                        , typeof(Lookup).Name, value.GetType().Name, prop.Name));
-                                var lookup = (Lookup) value;
-                                var lookupLookupService = GetLookupService(prop.Name, objectToEnter.GetType().Name, null,
-                                    null);
-                                var lookupConnectionFor = (LookupConnectionFor)connectionFor;
-                                var parsedService = TypeLoader.LoadService(lookup, lookupLookupService, lookupConnectionFor, ObjectResolver);
-                                _serviceConnections.Add(value, parsedService);
-                                return parsedService;
-                            }
-                            
-                            var serviceType = connectionFor.ServiceType;
-                            var connectionFieldType = value.GetType();
-                            if (serviceType == null)
-                            {
-                                var serviceConnectionAttr =
-                                    connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
-                                if (serviceConnectionAttr == null)
-                                    throw new NullReferenceException(
-                                        string.Format(
-                                            "The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
-                                            prop.Name, typeof (ConnectionFor).Name, connectionFieldType.Name,
-                                            typeof (ServiceConnection).Name, typeof (IRecordService).Name));
-                                serviceType = serviceConnectionAttr.ServiceType;
-                            }
-                            var service = TypeLoader.LoadServiceForConnection(value, serviceType);
-                            _serviceConnections.Add(value, service);
-                            return service;
-                        }
-                    }
+                        ObjectContaining = objectToEnter,
+                        ReferencingProperty = prop,
+                        ReferencingAttribute = connectionsFor.First()
+                    };
                 }
             }
             return null;
         }
+
+        private class GetReferencingAttributeResponse
+        {
+            public object ObjectContaining { get; set; }
+            public PropertyInfo ReferencingProperty { get; set; }
+            public Attribute ReferencingAttribute { get; set; }
+        }
+
+        private IRecordService GetLookupServiceForConnectionFor(
+            GetReferencingAttributeResponse resolvedAttributeReference)
+        {
+            var prop = resolvedAttributeReference.ReferencingProperty;
+            var attr = (ConnectionFor)resolvedAttributeReference.ReferencingAttribute;
+            var value = resolvedAttributeReference.ObjectContaining.GetPropertyValue(prop.Name);
+            lock (_lockObject)
+            {
+                if (value != null)
+                {
+                    if (_serviceConnections.ContainsKey(value))
+                        return _serviceConnections[value];
+
+                    if (attr is LookupConnectionFor)
+                    {
+                        if (!(value is Lookup))
+                            throw new Exception(
+                                string.Format(
+                                    "Value is required to be of type {0} for {1} attribute. Actual type is {2}. The property name is"
+                                    , typeof (Lookup).Name, value.GetType().Name, prop.Name));
+                        var lookup = (Lookup) value;
+                        var lookupLookupService = GetLookupService(prop.Name, resolvedAttributeReference.ObjectContaining.GetType().Name, null,
+                            null);
+                        var lookupConnectionFor = (LookupConnectionFor) attr;
+                        var parsedService = TypeLoader.LoadService(lookup, lookupLookupService, lookupConnectionFor,
+                            ObjectResolver);
+                        _serviceConnections.Add(value, parsedService);
+                        return parsedService;
+                    }
+
+                    var serviceType = attr.ServiceType;
+                    var connectionFieldType = value.GetType();
+                    if (serviceType == null)
+                    {
+                        var serviceConnectionAttr =
+                            connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
+                        if (serviceConnectionAttr == null)
+                            throw new NullReferenceException(
+                                string.Format(
+                                    "The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
+                                    prop.Name, typeof (ConnectionFor).Name, connectionFieldType.Name,
+                                    typeof (ServiceConnection).Name, typeof (IRecordService).Name));
+                        serviceType = serviceConnectionAttr.ServiceType;
+                    }
+                    var service = TypeLoader.LoadServiceForConnection(value, serviceType);
+                    _serviceConnections.Add(value, service);
+                    return service;
+                }
+            }
+            return null;
+        }
+
+        //private IRecordService GetLookupServiceForConnectionFor(string fieldName, object objectToEnter)
+        //{
+        //    var referencingResponse = GetReferencingAttribute<ConnectionFor>(nameof(ConnectionFor.Property), fieldName, objectToEnter);
+        //    if (referencingResponse != null && referencingResponse.ReferencingProperty != null)
+        //    {
+        //        var prop = referencingResponse.ReferencingProperty;
+        //        var attr = (ConnectionFor)referencingResponse.ReferencingAttribute ;
+        //        var value = objectToEnter.GetPropertyValue(prop.Name);
+        //        lock (_lockObject)
+        //        {
+        //            if (value != null)
+        //            {
+        //                if (_serviceConnections.ContainsKey(value))
+        //                    return _serviceConnections[value];
+
+        //                if (attr is LookupConnectionFor)
+        //                {
+        //                    if (!(value is Lookup))
+        //                        throw new Exception(
+        //                            string.Format(
+        //                                "Value is required to be of type {0} for {1} attribute. Actual type is {2}. The property name is"
+        //                                , typeof (Lookup).Name, value.GetType().Name, prop.Name));
+        //                    var lookup = (Lookup) value;
+        //                    var lookupLookupService = GetLookupService(prop.Name, objectToEnter.GetType().Name, null,
+        //                        null);
+        //                    var lookupConnectionFor = (LookupConnectionFor)attr;
+        //                    var parsedService = TypeLoader.LoadService(lookup, lookupLookupService, lookupConnectionFor,
+        //                        ObjectResolver);
+        //                    _serviceConnections.Add(value, parsedService);
+        //                    return parsedService;
+        //                }
+
+        //                var serviceType = attr.ServiceType;
+        //                var connectionFieldType = value.GetType();
+        //                if (serviceType == null)
+        //                {
+        //                    var serviceConnectionAttr =
+        //                        connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
+        //                    if (serviceConnectionAttr == null)
+        //                        throw new NullReferenceException(
+        //                            string.Format(
+        //                                "The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
+        //                                prop.Name, typeof (ConnectionFor).Name, connectionFieldType.Name,
+        //                                typeof (ServiceConnection).Name, typeof (IRecordService).Name));
+        //                    serviceType = serviceConnectionAttr.ServiceType;
+        //                }
+        //                var service = TypeLoader.LoadServiceForConnection(value, serviceType);
+        //                _serviceConnections.Add(value, service);
+        //                return service;
+        //            }
+        //        }
+        //    }
+        //    return null;
+        //}
 
         public override object ParseField(string fieldName, string recordType, object value)
         {

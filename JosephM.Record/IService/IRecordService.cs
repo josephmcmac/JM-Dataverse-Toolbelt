@@ -123,7 +123,7 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Sets the Data Store To Apply All Customisation Changes
         /// </summary>
-        void PublishAll();
+        void Publish(string xml = null);
 
         /// <summary>
         ///     Updates The Views Defined In The RecordMetadata

@@ -50,8 +50,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public abstract void SetValue(IRecord selectedRecord);
 
+        protected virtual bool SetEnteredText
+        {
+            get { return true; }
+        }
         protected void SetEnteredTestWithoutClearingValue(string recordName)
         {
+            if (!SetEnteredText)
+                return;
             _enteredText = recordName;
             OnPropertyChanged("EnteredText");
         }
@@ -161,7 +167,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         protected IEnumerable<Condition> GetConditions()
         {
-            return FormService.GetLookupConditions(FieldName, RecordEntryViewModel.GetRecordType());
+            return FormService.GetLookupConditions(FieldName, RecordEntryViewModel.GetRecordType(), RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord());
         }
 
         protected abstract IEnumerable<IRecord> GetSearchResults();

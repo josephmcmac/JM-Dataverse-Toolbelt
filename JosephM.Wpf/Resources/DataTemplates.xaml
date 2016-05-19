@@ -149,6 +149,9 @@
     <DataTemplate x:Key="LookupFieldTemplate">
         <field:LookupView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="LookupFieldPicklistTemplate">
+        <field:LookupPicklistView DataContext="{Binding}" />
+    </DataTemplate>
     <DataTemplate x:Key="RecordTypeFieldTemplate">
         <field:RecordTypeFieldView DataContext="{Binding}" />
     </DataTemplate>
@@ -163,6 +166,7 @@
         IntegerFieldTemplate="{StaticResource integerFieldTemplate}"
         FileRefFieldTemplate="{StaticResource fileRefFieldTemplate}"
         LookupFieldTemplate="{StaticResource LookupFieldTemplate}"
+        LookupFieldPicklistTemplate="{StaticResource LookupFieldPicklistTemplate}"
         PasswordFieldTemplate="{StaticResource passwordFieldTemplate}"
         FolderFieldTemplate="{StaticResource folderFieldTemplate}"
         StringEnumerableFieldTemplate="{StaticResource stringEnumerableFieldTemplate}"

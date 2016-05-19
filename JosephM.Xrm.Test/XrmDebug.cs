@@ -8,13 +8,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            //var files =
-            //    Directory.GetFiles(
-            //        (@"C:\Users\joseph.mcgregor\Documents\Defence Health\Handover\Solution Packages\DHL-ARCHI-UAT\RETENTION"));
-
-            //var join = string.Join(Environment.NewLine, files);
-
-            //FileUtility.WriteToFile(@"C:\Users\joseph.mcgregor\Desktop", "Files.txt", join);
+            //var fields = XrmService.GetPrimaryNameField("plugintype");
         }
 
         private void CreateSomeRecords()

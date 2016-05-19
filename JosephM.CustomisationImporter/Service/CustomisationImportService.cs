@@ -59,7 +59,7 @@ namespace JosephM.CustomisationImporter.Service
             if (request.IncludeRelationships)
                 ImportRelationships(relationshipMetadataToImport, controller, response);
             controller.LogLiteral("Publishing Changes");
-            RecordService.PublishAll();
+            RecordService.Publish();
             RecordService.ClearCache();
         }
 

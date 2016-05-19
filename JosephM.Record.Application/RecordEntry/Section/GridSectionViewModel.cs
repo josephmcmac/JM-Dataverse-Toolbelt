@@ -34,7 +34,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                 PageSize = recordForm.GridPageSize,
                 DeleteRow = recordForm.IsReadOnly ? (Action<GridRowViewModel>)null : RemoveRow,
                 EditRow = EditRow,
-                AddRow = recordForm.IsReadOnly ? (Action)null : AddRow,
+                AddRow = !recordForm.IsReadOnly && FormService.AllowAddRow(ReferenceName) ? AddRow : (Action)null,
                 IsReadOnly = recordForm.IsReadOnly,
                 ParentForm = recordForm,
                 ReferenceName = ReferenceName,

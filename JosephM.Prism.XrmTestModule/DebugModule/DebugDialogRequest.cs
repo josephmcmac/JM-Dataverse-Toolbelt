@@ -1,4 +1,6 @@
-﻿using JosephM.Core.AppConfig;
+﻿using System.Collections;
+using System.Collections.Generic;
+using JosephM.Core.AppConfig;
 using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
@@ -21,5 +23,28 @@ namespace JosephM.Prism.XrmTestModule.DebugModule
         [LookupCondition("ismanaged", false)]
         [LookupCondition("isvisible", true)]
         public Lookup Solution { get; set; }
+
+        [ReferencedType("solution")]
+        [LookupCondition("ismanaged", false)]
+        [LookupCondition("isvisible", true)]
+        [UsePicklist]
+        public Lookup SolutionPicklistActiveConnection { get; set; }
+
+        [LookupConditionFor("SolutionPicklistActiveConnection", "uniquename")]
+        public string SolutionName
+        {
+            get { return "Something"; }
+        }
+
+        public IEnumerable<DebugDialogRequestItem> Items { get; set; }
+
+        public class DebugDialogRequestItem
+        {
+            [ReferencedType("solution")]
+            [LookupCondition("ismanaged", false)]
+            [LookupCondition("isvisible", true)]
+            [UsePicklist]
+            public Lookup SolutionPicklistActiveConnection { get; set; }
+        }
     }
 }

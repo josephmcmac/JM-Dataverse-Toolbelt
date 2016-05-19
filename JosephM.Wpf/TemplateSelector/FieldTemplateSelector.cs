@@ -18,6 +18,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate StringFieldTemplate { get; set; }
         public DataTemplate IntegerFieldTemplate { get; set; }
         public DataTemplate LookupFieldTemplate { get; set; }
+        public DataTemplate LookupFieldPicklistTemplate { get; set; }
         public DataTemplate PasswordFieldTemplate { get; set; }
         public DataTemplate FolderFieldTemplate { get; set; }
         public DataTemplate StringEnumerableFieldTemplate { get; set; }
@@ -39,7 +40,12 @@ namespace JosephM.Wpf.TemplateSelector
             if (item is IntegerFieldViewModel || item is BigIntFieldViewModel)
                 return IntegerFieldTemplate;
             if (item is LookupFieldViewModel)
-                return LookupFieldTemplate;
+            {
+                if (((LookupFieldViewModel) item).UsePicklist)
+                    return LookupFieldPicklistTemplate;
+                else
+                    return LookupFieldTemplate;
+            }
             if (item is PasswordFieldViewModel)
                 return PasswordFieldTemplate;
             if (item is FolderFieldViewModel)

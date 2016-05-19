@@ -76,7 +76,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return recordForm.RecordService.GetLookupTargetType(field, recordType);
         }
 
-        internal virtual IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType)
+        internal virtual IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)
         {
             return new Condition[0];
         }
@@ -84,6 +84,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         internal virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)
         {
             return new CustomGridFunction[0];
+        }
+
+        internal virtual bool AllowAddRow(string subGridName)
+        {
+            return true;
+        }
+
+        public virtual bool UsePicklist(string fieldName, string recordType)
+        {
+            return false;
         }
     }
 }

@@ -234,6 +234,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
+        internal override bool AllowAddRow(string subGridName)
+        {
+            var prop = GetPropertyInfo(subGridName, ObjectType.Name);
+            return prop.GetCustomAttribute<DoNotAllowAdd>() == null;
+        }
+
+        public override bool UsePicklist(string fieldName, string recordType)
+        {
+            var prop = GetPropertyInfo(fieldName, recordType);
+            return prop.GetCustomAttribute<UsePicklist>() != null;
+        }
+
         private void AppendUniqueOnAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
         {
             var attributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UniqueOn>();
@@ -432,13 +444,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return viewModel;
         }
 
-        internal override IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType)
+        internal override IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)
         {
             var propertyInfo = GetPropertyInfo(fieldName, recordType);
             var attr = propertyInfo.GetCustomAttributes<LookupCondition>();
-            return attr == null
-                ? new Condition[0]
-                : attr.Select(a => new Condition(a.FieldName, ConditionType.Equal, a.Value));
+            var conditions = attr == null
+                ? new Condition[0].ToList()
+                : attr.Select(a => new Condition(a.FieldName, ConditionType.Equal, a.Value)).ToList();
+            var otherCondition = ObjectRecordService.GetLookupConditionFors(fieldName, recordType, reference, record);
+            if (otherCondition != null)
+            {
+                conditions.Add(otherCondition);
+            }
+            return conditions;
         }
 
         internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)

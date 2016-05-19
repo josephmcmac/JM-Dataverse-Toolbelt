@@ -124,7 +124,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         var targetType = recordForm.FormService == null
                             ? null
                             : recordForm.FormService.GetLookupTargetType(field, recordType, recordForm);
-                        fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType)
+                            var usePicklist = recordForm.FormService == null
+                                    ? false
+                                    : recordForm.FormService.UsePicklist(field, recordType);
+                            fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType, usePicklist)
                         {
                             IsRecordServiceField = isRecordServiceField
                         };

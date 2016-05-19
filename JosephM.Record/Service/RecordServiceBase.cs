@@ -279,7 +279,7 @@ namespace JosephM.Record.Service
             throw new NotImplementedException();
         }
 
-        public virtual void PublishAll()
+        public virtual void Publish(string xml = null)
         {
         }
 

@@ -24,7 +24,7 @@ namespace JosephM.InstanceComparer
             LogController controller)
         {
 
-            var processContainer = new ProcessContainer(request, response, controller);
+            var processContainer = new InstanceComparerService.ProcessContainer(request, response, controller);
 
             //ENSURE TO INCREASE THIS IF ADDING TO PROCESSES
             processContainer.NumberOfProcesses = 16;
@@ -50,7 +50,7 @@ namespace JosephM.InstanceComparer
             }
         }
 
-        private void AppendData(ProcessContainer processContainer)
+        private void AppendData(InstanceComparerService.ProcessContainer processContainer)
         {
             var compares = processContainer
                 .Request.DataComparisons

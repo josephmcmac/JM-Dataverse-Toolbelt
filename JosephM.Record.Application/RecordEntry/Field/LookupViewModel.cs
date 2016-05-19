@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -16,9 +17,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
     public class LookupFieldViewModel : ReferenceFieldViewModel<Lookup>
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
-            string referencedRecordType)
+            string referencedRecordType, bool usePicklist)
             : base(fieldName, fieldLabel, recordForm)
         {
+            UsePicklist = usePicklist;
             RecordTypeToLookup = referencedRecordType;
             if (Value != null)
             {
@@ -26,8 +28,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     Value.Name = "Record Name Not Set";
                 SetEnteredTestWithoutClearingValue(Value.Name);
             }
-            LoadLookupGrid();
-            
+            if (UsePicklist)
+            {
+                
+                ItemsSource = GetSearchResults().Select(r => LookupService.ToLookup(r)).ToArray();
+            }
+            else
+                LoadLookupGrid();
+
         }
 
         private string _referencedRecordType;
@@ -38,6 +46,28 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 _referencedRecordType = value;
                 LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
+            }
+        }
+
+        public bool UsePicklist { get; set; }
+
+        protected override bool SetEnteredText { get { return !UsePicklist; } }
+
+        private IEnumerable<Lookup> _itemsSource;
+
+        public IEnumerable<Lookup> ItemsSource
+        {
+            get { return _itemsSource; }
+            set
+            {
+                _itemsSource = value;
+                OnPropertyChanged("ItemsSource");
+                if (Value != null && _itemsSource != null)
+                {
+                    var matchingItems = _itemsSource.Where(p => p.Id == Value.Id);
+                    if (matchingItems.Any())
+                        Value = matchingItems.First() ?? Value;
+                }
             }
         }
 
@@ -67,14 +97,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         protected override IEnumerable<IRecord> GetSearchResults()
         {
+            if(LookupService == null)
+                throw new NullReferenceException(string.Format("Error searching field {0}. {1} is null", FieldName, nameof(LookupService)));
             var primaryField = LookupService.GetPrimaryField(RecordTypeToLookup);
             var conditions = GetConditions();
-            if (!EnteredText.IsNullOrWhiteSpace())
+            if (!UsePicklist && !EnteredText.IsNullOrWhiteSpace())
             {
                 conditions =
                     conditions.Union(new [] { new Condition(primaryField, ConditionType.BeginsWith, EnteredText)});
             }
-            return LookupService.GetFirstX(RecordTypeToLookup, MaxRecordsForLookup, null, conditions, new [] { new SortExpression(primaryField, SortType.Ascending) });
+            return LookupService.GetFirstX(RecordTypeToLookup, UsePicklist ? -1 : MaxRecordsForLookup, null, conditions, new [] { new SortExpression(primaryField, SortType.Ascending) });
         }
     }
 }

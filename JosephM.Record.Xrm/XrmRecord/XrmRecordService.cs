@@ -98,7 +98,10 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public void Update(IRecord record, IEnumerable<string> changedPersistentFields)
         {
-            _xrmService.Update(ToEntity(record), changedPersistentFields);
+            if (changedPersistentFields == null)
+                _xrmService.Update(ToEntity(record));
+            else
+                _xrmService.Update(ToEntity(record), changedPersistentFields);
         }
 
         public string GetLookupTargetType(string field, string recordType)
@@ -140,7 +143,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Condition> orConditions)
         {
             return
-                ToEnumerableIRecord(_xrmService.RetrieveAllOrClauses(recordType, ToConditionExpressions(orConditions)));
+                ToEnumerableIRecord(_xrmService.RetrieveAllOrClauses(recordType, ToConditionExpressions(orConditions, recordType)));
         }
 
         private IEnumerable<IRecord> ToEnumerableIRecord(IEnumerable<Entity> entities)
@@ -151,14 +154,14 @@ namespace JosephM.Record.Xrm.XrmRecord
         public IEnumerable<IRecord> RetrieveAllAndClauses(string recordType, IEnumerable<Condition> andConditions)
         {
             return
-                ToEnumerableIRecord(_xrmService.RetrieveAllAndClauses(recordType, ToConditionExpressions(andConditions)));
+                ToEnumerableIRecord(_xrmService.RetrieveAllAndClauses(recordType, ToConditionExpressions(andConditions, recordType)));
         }
 
         public IEnumerable<IRecord> RetrieveAllAndClauses(string recordType, IEnumerable<Condition> andConditions,
             IEnumerable<string> fields)
         {
             return
-                ToEnumerableIRecord(_xrmService.RetrieveAllAndClauses(recordType, ToConditionExpressions(andConditions),
+                ToEnumerableIRecord(_xrmService.RetrieveAllAndClauses(recordType, ToConditionExpressions(andConditions, recordType),
                     fields));
         }
 
@@ -181,21 +184,21 @@ namespace JosephM.Record.Xrm.XrmRecord
             IEnumerable<SortExpression> sorts)
         {
             return
-                ToEnumerableIRecord(_xrmService.GetFirstX(recordType, x, ToConditionExpressions(conditions),
+                ToEnumerableIRecord(_xrmService.GetFirstX(recordType, x, ToConditionExpressions(conditions, recordType),
                     ToOrderExpressions(sorts)));
         }
 
-        private IEnumerable<ConditionExpression> ToConditionExpressions(IEnumerable<Condition> conditions)
+        private IEnumerable<ConditionExpression> ToConditionExpressions(IEnumerable<Condition> conditions, string recordType)
         {
-            return conditions == null ? null : conditions.Select(ToConditionExpression);
+            return conditions == null ? null : conditions.Select(c => ToConditionExpression(c, recordType));
         }
 
-        private ConditionExpression ToConditionExpression(Condition condition)
+        private ConditionExpression ToConditionExpression(Condition condition, string recordType)
         {
             if (condition.Value != null)
                 return new ConditionExpression(condition.FieldName,
                     new ConditionTypeMapper().Map(condition.ConditionType),
-                    condition.Value);
+                    ConvertToQueryValue(condition.FieldName, recordType, condition.Value));
             else
                 return new ConditionExpression(condition.FieldName,
                     new ConditionTypeMapper().Map(condition.ConditionType));
@@ -293,7 +296,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public bool FieldsEqual(object fieldValue1, object fieldValue2)
         {
-            return XrmEntity.FieldsEqual(fieldValue1, fieldValue2);
+            return XrmEntity.FieldsEqual(ToEntityValue(fieldValue1), ToEntityValue(fieldValue2));
         }
 
         /// <summary>
@@ -570,9 +573,9 @@ namespace JosephM.Record.Xrm.XrmRecord
                 .ToArray();
         }
 
-        public void PublishAll()
+        public void Publish(string xml = null)
         {
-            _xrmService.PublishAll();
+            _xrmService.Publish(xml);
         }
 
         private readonly SortedDictionary<string, IEnumerable<ViewMetadata>> _recordViews =
@@ -835,7 +838,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
                     crmFilter.FilterOperator = mapper.Map(f.ConditionOperator);
                     foreach (var c in f.Conditions)
-                        crmFilter.AddCondition(ToConditionExpression(c));
+                        crmFilter.AddCondition(ToConditionExpression(c, recordType));
                     return crmFilter;
                 })
                 .ToArray();
@@ -877,7 +880,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         public IEnumerable<IRecord> RetrieveAllOrClauses(string entityType, IEnumerable<Condition> orConditions,
             IEnumerable<string> fields)
         {
-            return ToIRecords(_xrmService.RetrieveAllOrClauses(entityType, ToConditionExpressions(orConditions), fields));
+            return ToIRecords(_xrmService.RetrieveAllOrClauses(entityType, ToConditionExpressions(orConditions, entityType), fields));
         }
 
         public bool IsActivityType(string recordType)
@@ -909,7 +912,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             IEnumerable<Condition> conditions, IEnumerable<SortExpression> sort)
         {
             return
-                ToIRecords(_xrmService.GetFirstX(type, x, fields, ToConditionExpressions(conditions),
+                ToIRecords(_xrmService.GetFirstX(type, x, fields, ToConditionExpressions(conditions, type),
                     ToOrderExpressions(sort)));
         }
 
@@ -930,7 +933,10 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public object ConvertToQueryValue(string fieldName, string entityType, object value)
         {
-            var parsedValue = ParseField(fieldName, entityType, value);
+            var temp = ToEntityValue(value);
+            var parsedValue = _xrmService.ParseField(fieldName,
+                entityType,
+                temp);
             if (parsedValue is EntityReference)
                 parsedValue = ((EntityReference)parsedValue).Id;
             else if (parsedValue is OptionSetValue)

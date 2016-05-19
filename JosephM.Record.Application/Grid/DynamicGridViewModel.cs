@@ -345,7 +345,7 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 lock (_lockthis)
                 {
-                    if (_recordFields == null)
+                    if (_recordFields == null && RecordService != null)
                     {
                         _recordFields =
                             RecordType == null

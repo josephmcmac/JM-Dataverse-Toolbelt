@@ -164,6 +164,26 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     }
                 }
             }
+            if (SubGrids != null)
+            {
+                foreach (var grid in SubGrids)
+                {
+                    if (grid.IsLoaded && !grid.HasError && grid.DynamicGridViewModel != null && !grid.DynamicGridViewModel.HasError)
+                    {
+                        foreach (var item in grid.GridRecords)
+                        {
+                            foreach (var field in item.FieldViewModels)
+                            {
+                                var methods = FormService.GetOnLoadTriggers(field.FieldName, item.GetRecordType());
+                                foreach (var method in methods)
+                                {
+                                    method(item);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

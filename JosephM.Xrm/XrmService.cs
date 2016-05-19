@@ -2098,9 +2098,16 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 : new AttributeRequiredLevelManagedProperty(AttributeRequiredLevel.None);
         }
 
-        public void PublishAll()
+        public void Publish(string xml = null)
         {
-            Execute(new PublishAllXmlRequest());
+            if (string.IsNullOrWhiteSpace(xml))
+                Execute(new PublishAllXmlRequest());
+            else
+            {
+                var req = new PublishXmlRequest();
+                req.ParameterXml = xml;
+                Execute(req);
+            }
         }
 
         private void RefreshFieldMetadata(string schemaName, string entityType)
