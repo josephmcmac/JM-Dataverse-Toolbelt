@@ -36,10 +36,13 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, LogController controller)
         {
+            XrmRecordConfiguration = iXrmRecordConfiguration;
             var xrmRecordConfiguration = new XrmRecordConfigurationInterfaceMapper().Map(iXrmRecordConfiguration);
             var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
             _xrmService = new XrmService(xrmConfiguration, controller);
         }
+
+        public IXrmRecordConfiguration XrmRecordConfiguration { get; set; }
 
         //DON'T REMOVE THIS CONSTRUCTOR - REQUIRED BY ServiceConnection Attribute
         public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration)
