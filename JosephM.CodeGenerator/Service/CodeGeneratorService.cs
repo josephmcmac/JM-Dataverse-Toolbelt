@@ -232,46 +232,45 @@ namespace JosephM.CodeGenerator.Service
         private void AppendJavaScriptOptionSets(StringBuilder stringBuilder, CodeGeneratorRequest request,
             LogController controller)
         {
-            var types = GetRecordTypesToImport(request);
-            var countToDo = types.Count();
-            var countDone = 0;
-            foreach (var recordType in GetRecordTypesToImport(request))
+            var countToDo = 2;
+            var countDone = 1;
+
+            if(request.RecordType == null)
+                throw new NullReferenceException("Error record type is null");
+            var recordType = request.RecordType.Key;
+
+            controller.UpdateProgress(countDone, countToDo,
+                string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
+            if (IsValidForCode(recordType))
             {
-                controller.UpdateProgress(countDone, countToDo,
-                    string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
-                if (IsValidForCode(recordType))
+                stringBuilder.AppendLine(string.Format("{0}.Options = new Object();", request.Namespace));
+                foreach (var field in Service.GetFields(recordType))
                 {
-                    var recordTypeCodeLabel = CreateCodeLabel(Service.GetDisplayName(recordType));
-                    stringBuilder.AppendLine(string.Format("{0}.Options = new Object();", request.Namespace,
-                        recordTypeCodeLabel));
-                    foreach (var field in Service.GetFields(recordType))
+                    if (IsValidForOptionSetCode(field, recordType))
                     {
-                        if (IsValidForOptionSetCode(field, recordType))
+                        var fieldLabel = CreateCodeLabel(Service.GetFieldLabel(field, recordType));
+                        stringBuilder.AppendLine(string.Format("{0}.{1}.{2} = new Object();", request.Namespace,
+                            "Options",
+                            fieldLabel));
+                        var options = Service.GetPicklistKeyValues(field, recordType);
+                        var used = new List<string>();
+                        foreach (var option in options)
                         {
-                            var fieldLabel = CreateCodeLabel(Service.GetFieldLabel(field, recordType));
-                            stringBuilder.AppendLine(string.Format("{0}.{1}.{2} = new Object();", request.Namespace,
-                                "Options",
-                                fieldLabel));
-                            var options = Service.GetPicklistKeyValues(field, recordType);
-                            var used = new List<string>();
-                            foreach (var option in options)
+                            if (IsValidForCode(option))
                             {
-                                if (IsValidForCode(option))
+                                var label = CreateCodeLabel(option.Value);
+                                if (!used.Contains(label))
                                 {
-                                    var label = CreateCodeLabel(option.Value);
-                                    if (!used.Contains(label))
-                                    {
-                                        stringBuilder.AppendLine(string.Format("{0}.{1}.{2}.{3} = {4};",
-                                            request.Namespace, "Options", fieldLabel, label, option.Key));
-                                        used.Add(label);
-                                    }
+                                    stringBuilder.AppendLine(string.Format("{0}.{1}.{2}.{3} = {4};",
+                                        request.Namespace, "Options", fieldLabel, label, option.Key));
+                                    used.Add(label);
                                 }
                             }
                         }
                     }
                 }
-                countDone++;
             }
+            countDone++;
         }
 
         private void AppendActions(StringBuilder stringBuilder, CodeGeneratorRequest request,
