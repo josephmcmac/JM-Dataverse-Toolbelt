@@ -28,6 +28,6 @@
   </TemplateContent>
   <WizardExtension>
     <Assembly>JosephM.XRM.VSIX, Version=1.0.0.0, Culture=Neutral, PublicKeyToken=25a4b5603b9d4ed3</Assembly>
-    <FullClassName>JosephM.XRM.VSIX.MyWizard</FullClassName>
+    <FullClassName>JosephM.XRM.VSIX.Wizards.XrmSolutionWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>

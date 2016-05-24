@@ -16,10 +16,10 @@
   <TemplateContent>
     <Project TargetFileName="JosephM.XRM.WebResources.csproj" File="JosephM.XRM.WebResources.csproj" ReplaceParameters="true">
       <Folder Name="JavaScript" TargetFolderName="JavaScript">
-        <ProjectItem ReplaceParameters="true" TargetFileName="template_jquery.js">template_jquery.js</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="template_pageutility.js">template_pageutility.js</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="template_sdk.rest.js">template_sdk.rest.js</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="template_webserviceutility.js">template_webserviceutility.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_jquery.js">$ext_jmxrmprefix$_jquery.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_pageutility.js">$ext_jmxrmprefix$_pageutility.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_sdk.rest.js">$ext_jmxrmprefix$_sdk.rest.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_webserviceutility.js">$ext_jmxrmprefix$_webserviceutility.js</ProjectItem>
       </Folder>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>

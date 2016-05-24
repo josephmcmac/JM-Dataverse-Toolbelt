@@ -4,8 +4,8 @@ namespace $safeprojectname$
 {
     //this class just for general debug purposes
     [TestClass]
-    public class DebugTests : TemplateXrmTest
-    {
+    public class DebugTests : $ext_jmobjprefix$XrmTest
+{
         [TestMethod]
         public void Debug()
         {

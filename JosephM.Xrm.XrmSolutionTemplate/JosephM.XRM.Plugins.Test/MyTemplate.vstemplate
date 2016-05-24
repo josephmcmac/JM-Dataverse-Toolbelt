@@ -19,7 +19,7 @@
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="TemplateXrmTest.cs">TemplateXrmTest.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$XrmTest.cs">$ext_jmobjprefix$XrmTest.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="TestXrmConfiguration.cs">TestXrmConfiguration.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="XrmTest.cs">XrmTest.cs</ProjectItem>
     </Project>

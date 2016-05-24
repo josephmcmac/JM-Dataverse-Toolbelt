@@ -53,9 +53,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\RefreshSettings\RefreshSettingsCommand.cs" />
+    <Compile Include="Commands\RefreshSettings\XrmPackageSettingDialog.cs" />
+    <Compile Include="Commands\UpdateAssembly\UpdateAssemblyCommand.cs" />
+    <Compile Include="Commands\UpdateAssembly\UpdateAssemblyDialog.cs" />
     <Compile Include="Commands\DeployAssembly\PluginAssembly.cs" />
     <Compile Include="Commands\ManagePluginTriggers\ManagePluginTriggersCommand.cs" />
-    <Compile Include="Commands\DeployAssembly\DeployAllCommand.cs" />
+    <Compile Include="Commands\DeployAssembly\DeployAssemblyCommand.cs" />
     <Compile Include="Commands\RefreshConnection\RefreshConnectionCommand.cs" />
     <Compile Include="Commands\DeployWebResource\DeployWebResourceCommand.cs" />
     <Compile Include="Commands\RefreshSchema\RefreshSchemaCommand.cs" />
@@ -71,14 +75,33 @@
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesResponseItem.cs" />
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesService.cs" />
     <Compile Include="Utilities\VsixUtility.cs" />
+    <Compile Include="Wizards\MyWizardBase.cs" />
+    <Compile Include="Wizards\MyProjectItemWizard.cs" />
+    <Compile Include="Wizards\XrmEntityJavaScriptWizard.cs" />
+    <Compile Include="Wizards\XrmEntityPluginWizard.cs" />
+    <Compile Include="Wizards\XrmTestWizard.cs" />
+    <Compile Include="Wizards\XrmWorkflowActivityWizard.cs" />
     <Compile Include="XrmPackage.cs" />
-    <Compile Include="MyWizard.cs" />
+    <Compile Include="Wizards\XrmSolutionWizard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dialogs\VsixApplicationController.cs" />
     <Compile Include="Dialogs\VsixServiceDialog.cs" />
     <Compile Include="Dialogs\VsixEntryDialog.cs" />
+    <Compile Include="XrmPackageSettings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ItemTemplates\JosephM XRM Entity JavaScript.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ItemTemplates\JosephM XRM Entity Plugin.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ItemTemplates\JosephM XRM WorkflowActivity.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ItemTemplates\JosephM XRM Test.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="JosephM.XRM.VSIX.snk" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">

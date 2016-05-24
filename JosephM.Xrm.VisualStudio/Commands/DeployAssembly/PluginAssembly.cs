@@ -39,6 +39,8 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
         [RequiredProperty]
         public string TypeName { get; set; }
         [RequiredProperty]
+        public string FriendlyName { get; set; }
+        [RequiredProperty]
         public string Name { get; set; }
         [Hidden]
         public bool IsWorkflowActivity { get; set; }

@@ -22,8 +22,6 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
     {
         public string AssemblyFile { get; set; }
         public XrmRecordService Service { get; set; }
-        public Solution2 Solution { get; set; }
-        public string Directory { get; set; }
 
         public DeployAssemblyDialog(IDialogController dialogController, string assemblyFile, XrmRecordService xrmRecordService)
             : base(dialogController)
@@ -68,7 +66,7 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
             //when the appdomain is unloaded
             //the loading and inspection is done in an object PluginAssemblyReader
             //which is loaded in the context of the separate app domain
-            var myDomain = AppDomain.CreateDomain("JosephM.XRM.VSIX.DeployAllCommand", null, null);
+            var myDomain = AppDomain.CreateDomain("JosephM.XRM.VSIX.DeployAssemblyCommand", null, null);
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             IEnumerable<PluginAssemblyReader.PluginType> plugins;
             try
@@ -111,7 +109,14 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
             {
                 var pluginType = new PluginType();
                 pluginType.TypeName = item.TypeName;
-                pluginType.Name = item.TypeName;
+                //get the type name after "." as the name
+                var startIndex = item.TypeName.LastIndexOf(".", StringComparison.Ordinal);
+                if (startIndex != -1 && item.TypeName.Length > startIndex + 1)
+                    startIndex = startIndex + 1;
+                else
+                    startIndex = 0;
+                pluginType.FriendlyName = item.TypeName.Substring(startIndex);
+                pluginType.Name = item.TypeName.Substring(startIndex);
                 pluginType.IsWorkflowActivity = item.Type == PluginAssemblyReader.PluginType.XrmPluginType.WorkflowActivity;
                 pluginType.InAssembly = true;
                 pluginTypes.Add(pluginType);
@@ -138,7 +143,8 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
                 }
 
                 matchingItem.Id = item.Id;
-                matchingItem.Name = item.GetStringField(Fields.plugintype_.friendlyname);
+                matchingItem.FriendlyName = item.GetStringField(Fields.plugintype_.friendlyname);
+                matchingItem.Name = item.GetStringField(Fields.plugintype_.name);
                 matchingItem.GroupName = item.GetStringField(Fields.plugintype_.workflowactivitygroupname);
             }
 
@@ -202,7 +208,7 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
                     pluginTypeRecord.SetField(Fields.plugintype_.plugintypeid, pluginType.Id, service);
                 pluginTypeRecord.SetField(Fields.plugintype_.typename, pluginType.TypeName, service);
                 pluginTypeRecord.SetField(Fields.plugintype_.name, pluginType.Name, service);
-                pluginTypeRecord.SetField(Fields.plugintype_.friendlyname, pluginType.Name, service);
+                pluginTypeRecord.SetField(Fields.plugintype_.friendlyname, pluginType.FriendlyName, service);
                 pluginTypeRecord.SetField(Fields.plugintype_.assemblyname, PluginAssembly.Name, service);
                 pluginTypeRecord.SetLookup(Fields.plugintype_.pluginassemblyid, assemblyRecord.Id, assemblyRecord.Type);
                 pluginTypeRecord.SetField(Fields.plugintype_.isworkflowactivity, pluginType.IsWorkflowActivity, service);

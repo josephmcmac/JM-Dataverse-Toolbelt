@@ -39,20 +39,58 @@
       <Group guid="guidXrmPackageCmdSet" id="XrmMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
       </Group>
-      <Group guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroup" priority="0x0600">
+      <Group guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroup" priority="0x0001">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
       </Group>
-      <Group guid="guidXrmPackageCmdSet" id="XrmItemMenuGroup" priority="0x0600">
+      <Group guid="guidXrmPackageCmdSet" id="XrmItemMenuGroup" priority="0x0001">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
       </Group>
       <Group guid="guidXrmPackageCmdSet" id="XrmMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE"/>
       </Group>
-      <Group guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroup" priority="0x0600">
+      <Group guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroup" priority="0x0001">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
       </Group>
     </Groups>
 
+    <Menus>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmProjectMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmSolutionMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmItemMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <Group guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmProjectMenu"/>
+      </Group>
+      <Group guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmSolutionMenu"/>
+      </Group>
+      <Group guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmItemMenu"/>
+      </Group>
+    </Groups>
     <!--Buttons section. -->
     <!--This section defines the elements the user can interact with, like a menu command or a button
         or combo box in a toolbar. -->
@@ -65,7 +103,7 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidXrmPackageCmdSet" id="RefreshSchemaCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroup" />
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -74,14 +112,14 @@
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="RefreshConnectionCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroup" />
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Refresh XRM Connection</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="DeployWebResourceCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroup" />
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -89,8 +127,8 @@
           <ButtonText>Deploy Web Resource</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="DeployAllCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroup" />
+      <Button guid="guidXrmPackageCmdSet" id="DeployPluginAssemblyCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <!--<CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>-->
@@ -98,13 +136,29 @@
           <ButtonText>Deploy Plugin Assembly</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidXrmPackageCmdSet" id="UpdatePluginAssemblyCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <!--<CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>-->
+        <Strings>
+          <ButtonText>Update Plugin Assembly (Assembly Only)</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidXrmPackageCmdSet" id="ManagePluginTriggersCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroup" />
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <!--<CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>-->
         <Strings>
           <ButtonText>Manage Plugin Triggers</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="RefreshSettingsCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <Strings>
+          <ButtonText>Refresh Settings</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -130,11 +184,19 @@
       <IDSymbol name="XrmProjectMenuGroup" value="0x1021" />
       <IDSymbol name="XrmMenuGroup" value="0x1022" />
       <IDSymbol name="XrmSolutionMenuGroup" value="0x1023" />
+      <IDSymbol name="XrmProjectMenuGroupMenu" value="0x1024" />
+      <IDSymbol name="xrmProjectMenu" value="0x1025" />
+      <IDSymbol name="XrmSolutionMenuGroupMenu" value="0x1026" />
+      <IDSymbol name="xrmSolutionMenu" value="0x1027" />
+      <IDSymbol name="XrmItemMenuGroupMenu" value="0x1028" />
+      <IDSymbol name="xrmItemMenu" value="0x1029" />
       <IDSymbol name="RefreshSchemaCommandId" value="0x0100" />
       <IDSymbol name="RefreshConnectionCommandId" value="0x0101" />
       <IDSymbol name="DeployWebResourceCommandId" value="0x0102" />
-      <IDSymbol name="DeployAllCommandId" value="0x0103" />
+      <IDSymbol name="DeployPluginAssemblyCommandId" value="0x0103" />
       <IDSymbol name="ManagePluginTriggersCommandId" value="0x0104" />
+      <IDSymbol name="UpdatePluginAssemblyCommandId" value="0x0105" />
+      <IDSymbol name="RefreshSettingsCommandId" value="0x0106" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{12d674ff-9d52-46e3-919d-4793108f5b20}" >

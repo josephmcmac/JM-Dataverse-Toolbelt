@@ -17,6 +17,7 @@ using JosephM.XRM.VSIX.Commands.DeployWebResource;
 using JosephM.XRM.VSIX.Commands.ManagePluginTriggers;
 using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using JosephM.XRM.VSIX.Commands.RefreshSchema;
+using JosephM.XRM.VSIX.Commands.RefreshSettings;
 using JosephM.XRM.VSIX.Utilities;
 
 namespace JosephM.XRM.VSIX
@@ -73,8 +74,10 @@ namespace JosephM.XRM.VSIX
             RefreshSchemaCommand.Initialize(this);
             RefreshConnectionCommand.Initialize(this);
             DeployWebResourceCommand.Initialize(this);
-            DeployAllCommand.Initialize(this);
+            DeployAssemblyCommand.Initialize(this);
             ManagePluginTriggersCommand.Initialize(this);
+            UpdateAssemblyCommand.Initialize(this);
+            RefreshSettingsCommand.Initialize(this);
 
             base.Initialize();
         }

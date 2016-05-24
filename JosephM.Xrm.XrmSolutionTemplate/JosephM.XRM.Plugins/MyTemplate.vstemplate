@@ -74,21 +74,19 @@
         <ProjectItem ReplaceParameters="false" TargetFileName="Microsoft.Xrm.Sdk.Workflow.dll">Microsoft.Xrm.Sdk.Workflow.dll</ProjectItem>
       </Folder>
       <Folder Name="Plugins" TargetFolderName="Plugins">
-        <ProjectItem ReplaceParameters="true" TargetFileName="AccountPlugin.cs">AccountPlugin.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="TemplateEntityPluginBase.cs">TemplateEntityPluginBase.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$EntityPluginBase.cs">$ext_jmobjprefix$EntityPluginBase.cs</ProjectItem>
       </Folder>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>
       <ProjectItem ReplaceParameters="true" TargetFileName="Schema.cs">Schema.cs</ProjectItem>
       <Folder Name="Services" TargetFolderName="Services">
-        <ProjectItem ReplaceParameters="true" TargetFileName="TemplateService.cs">TemplateService.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$Service.cs">$ext_jmobjprefix$Service.cs</ProjectItem>
       </Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="TemplatePluginRegistration.cs">TemplatePluginRegistration.cs</ProjectItem>
-      <ProjectItem ReplaceParameters="true" TargetFileName="TemplateSettings.cs">TemplateSettings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$PluginRegistration.cs">$ext_jmobjprefix$PluginRegistration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$Settings.cs">$ext_jmobjprefix$Settings.cs</ProjectItem>
       <Folder Name="Workflow" TargetFolderName="Workflow">
-        <ProjectItem ReplaceParameters="true" TargetFileName="BooleanValue.cs">BooleanValue.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="TemplateWorkflowActivityBase.cs">TemplateWorkflowActivityBase.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$WorkflowActivityBase.cs">$ext_jmobjprefix$WorkflowActivityBase.cs</ProjectItem>
       </Folder>
       <Folder Name="Xrm" TargetFolderName="Xrm">
         <ProjectItem ReplaceParameters="true" TargetFileName="DeviceIdManager.cs">DeviceIdManager.cs</ProjectItem>

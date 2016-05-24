@@ -44,7 +44,6 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
             var solutionItemsFolder = directory + @"\SolutionItems";
             var connectionFileName = "solution.xrmconnection";
             FileUtility.WriteToFile(solutionItemsFolder, connectionFileName, serialised);
-
             VsixUtility.AddProjectItem(project.ProjectItems, Path.Combine(solutionItemsFolder, connectionFileName));
 
             Project testProject = null;

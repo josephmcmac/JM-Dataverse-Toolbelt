@@ -46,10 +46,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="JavaScript\template_jquery.js" />
-    <Content Include="JavaScript\template_webserviceutility.js" />
-    <Content Include="JavaScript\template_pageutility.js" />
-    <Content Include="JavaScript\template_sdk.rest.js" />
+    <Content Include="JavaScript\$ext_jmxrmprefix$_jquery.js" />
+    <Content Include="JavaScript\$ext_jmxrmprefix$_webserviceutility.js" />
+    <Content Include="JavaScript\$ext_jmxrmprefix$_pageutility.js" />
+    <Content Include="JavaScript\$ext_jmxrmprefix$_sdk.rest.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

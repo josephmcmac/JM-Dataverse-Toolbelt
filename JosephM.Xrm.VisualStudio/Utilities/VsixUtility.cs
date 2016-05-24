@@ -9,6 +9,7 @@ using EnvDTE;
 using EnvDTE80;
 using JosephM.Core.Extentions;
 using JosephM.Core.Serialisation;
+using JosephM.Core.Utility;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
@@ -19,25 +20,55 @@ namespace JosephM.XRM.VSIX.Utilities
 {
     public static class VsixUtility
     {
+        public static string BuildSelectedProjectAndGetAssemblyName(IServiceProvider serviceProvider)
+        {
+            var dte = GetDte2(serviceProvider);
+            var build = dte.Solution.SolutionBuild;
+            build.Clean(true);
+            build.Build(true);
+            var info = build.LastBuildInfo;
+
+            if (info == 0)
+            {
+                var selectedItems = dte.SelectedItems;
+                foreach (SelectedItem item in selectedItems)
+                {
+                    var project = item.Project;
+                    if (project.Name != null)
+                    {
+                        var assemblyName = VsixUtility.GetProperty(project.Properties, "AssemblyName");
+                        var outputPath =
+                            VsixUtility.GetProperty(project.ConfigurationManager.ActiveConfiguration.Properties,
+                                "OutputPath");
+                        var fileInfo = new FileInfo(project.FullName);
+                        var rootFolder = fileInfo.DirectoryName;
+                        var outputFolder = Path.Combine(rootFolder ?? "", outputPath);
+                        var assemblyFile = Path.Combine(outputFolder, assemblyName) + ".dll";
+                        return assemblyFile;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static XrmPackageSettings GetPackageSettings(DTE2 dte)
+        {
+            var name = "xrmpackage.xrmsettings";
+
+            string read = GetSolutionItemText(dte, name);
+            if (string.IsNullOrEmpty(read))
+                return new XrmPackageSettings();
+            return (XrmPackageSettings)JsonHelper.JsonStringToObject(read, typeof(XrmPackageSettings));
+        }
+
         public static XrmRecordConfiguration GetXrmConfig(IServiceProvider serviceProvider)
         {
-            string fileName = null;
-            var dte = serviceProvider.GetService(typeof(SDTE)) as DTE2;
-            if(dte == null)
-                throw new NullReferenceException("Error dte is null");
-            var solutionItems = GetProject(dte.Solution as Solution2, "SolutionItems");
-            if (solutionItems == null)
-                return null;
-            foreach (ProjectItem item in solutionItems.ProjectItems)
-            {
-                if (item.Name == "solution.xrmconnection")
-                {
-                    fileName = item.FileNames[1];
-                }   
-            }
-            if(fileName == null)
-                throw new NullReferenceException("Could not find solution.xrmconnection in SolutionItems folder");
-            var read = File.ReadAllText(fileName);
+            var name = "solution.xrmconnection";
+
+            string read = GetSolutionItemText(GetDte2(serviceProvider), name);
+            if(string.IsNullOrEmpty(read))
+                throw new NullReferenceException(string.Format("Error reading {0} in SolutionItems", name));
+
             var dictionary =
                 (Dictionary<string, string>)
                     JsonHelper.JsonStringToObject(read, typeof(Dictionary<string, string>));
@@ -48,6 +79,32 @@ namespace JosephM.XRM.VSIX.Utilities
                 xrmConfig.SetPropertyByString(prop.Name, dictionary[prop.Name]);
             }
             return xrmConfig;
+        }
+
+        private static string GetSolutionItemText(DTE2 dte, string name)
+        {
+            string fileName = null;
+            var solutionItems = GetProject(dte.Solution as Solution2, "SolutionItems");
+            if (solutionItems == null)
+                return null;
+            foreach (ProjectItem item in solutionItems.ProjectItems)
+            {
+                if (item.Name == name)
+                {
+                    fileName = item.FileNames[1];
+                }
+            }
+            if (fileName == null)
+                return null;
+            return File.ReadAllText(fileName);
+        }
+
+        private static DTE2 GetDte2(IServiceProvider serviceProvider)
+        {
+            var dte = serviceProvider.GetService(typeof (SDTE)) as DTE2;
+            if (dte == null)
+                throw new NullReferenceException("Error dte is null");
+            return dte;
         }
 
         public static Project GetProject(Solution2 solution, string name)
@@ -103,7 +160,32 @@ namespace JosephM.XRM.VSIX.Utilities
                     return item;
             }
             var newItem = projectItems.AddFromFile(file);
+            if (newItem.IsOpen)
+            {
+                var document = newItem.Document;
+                if (document != null)
+                {
+                    document.Close();
+                }
+            }
             return newItem;
+        }
+
+        public static ProjectItem AddSolutionItem<T>(Solution2 solution, string name, T objectToJson, string directory)
+        {
+            var json = JsonHelper.ObjectToJsonString(objectToJson);
+            return AddSolutionItem(solution, name, json, directory);
+        }
+
+        public static ProjectItem AddSolutionItem(Solution2 solution, string name, string content, string directory)
+        {
+            if(solution == null)
+                throw new NullReferenceException("Solution Is Null");
+
+            var project = AddSolutionFolder(solution, "SolutionItems");
+            var solutionItemsFolder = directory + @"\SolutionItems";
+            FileUtility.WriteToFile(solutionItemsFolder, name, content);
+            return AddProjectItem(project.ProjectItems, Path.Combine(solutionItemsFolder, name));
         }
 
         public static string GetProperty(EnvDTE.Properties properties, string name)
