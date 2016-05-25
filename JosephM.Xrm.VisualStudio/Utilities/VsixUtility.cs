@@ -36,9 +36,9 @@ namespace JosephM.XRM.VSIX.Utilities
                     var project = item.Project;
                     if (project.Name != null)
                     {
-                        var assemblyName = VsixUtility.GetProperty(project.Properties, "AssemblyName");
+                        var assemblyName = GetProperty(project.Properties, "AssemblyName");
                         var outputPath =
-                            VsixUtility.GetProperty(project.ConfigurationManager.ActiveConfiguration.Properties,
+                            GetProperty(project.ConfigurationManager.ActiveConfiguration.Properties,
                                 "OutputPath");
                         var fileInfo = new FileInfo(project.FullName);
                         var rootFolder = fileInfo.DirectoryName;

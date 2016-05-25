@@ -70,7 +70,7 @@
       <Name>JosephM.Core.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
-      <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
+      <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Prism.Test.csproj">

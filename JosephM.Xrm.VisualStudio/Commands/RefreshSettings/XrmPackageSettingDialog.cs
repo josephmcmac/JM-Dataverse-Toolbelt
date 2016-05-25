@@ -34,15 +34,6 @@ namespace JosephM.XRM.VSIX.Commands.PackageSettings
 
         protected override void CompleteDialogExtention()
         {
-            //var directory = Directory;
-            //var serialised = JsonHelper.ObjectToJsonString(XrmPackageSettings);
-
-            //var project = VsixUtility.AddSolutionFolder(Solution, "SolutionItems");
-            //var solutionItemsFolder = directory + @"\SolutionItems";
-            //var settingsFileName = "xrmpackage.settings";
-            //FileUtility.WriteToFile(solutionItemsFolder, settingsFileName, serialised);
-
-            //VsixUtility.AddProjectItem(project.ProjectItems, Path.Combine(solutionItemsFolder, settingsFileName));
             if (SaveSettings)
             {
                 VsixUtility.AddSolutionItem(Solution, "xrmpackage.xrmsettings", XrmPackageSettings, Directory);

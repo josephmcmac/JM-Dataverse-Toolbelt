@@ -20,8 +20,6 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
     {
         public string AssemblyName { get; set; }
         public XrmRecordService XrmRecordService { get; set; }
-        public Solution2 Solution { get; set; }
-        public string Directory { get; set; }
 
         public ManagePluginTriggersDialog(IDialogController dialogController, string assemblyName, XrmRecordService xrmRecordService)
             : base(dialogController)
@@ -92,7 +90,6 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
                 trigger.Stage = stage.ParseEnum<PluginTrigger.PluginStage>();
                 trigger.Mode = mode.ParseEnum<PluginTrigger.PluginMode>();
                 trigger.Rank = rank;
-                trigger.Name = name;
 
                 triggers.Add(trigger);
             }
@@ -142,8 +139,7 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
             var filters = EntryObject.Triggers.Select(t =>
             {
                 var filter = new Filter();
-                filter.AddCondition(Fields.sdkmessagefilter_.primaryobjecttypecode, ConditionType.Equal,
-                    t.RecordType == null ? null : t.RecordType.Key);
+                filter.AddCondition(Fields.sdkmessagefilter_.primaryobjecttypecode, ConditionType.Equal, t.RecordType == null ? "none" : t.RecordType.Key);
                 filter.AddCondition(Fields.sdkmessagefilter_.sdkmessageid, ConditionType.Equal, t.Message.Id);
                 return filter;
             }).ToArray();
@@ -155,23 +151,20 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
                 var matchingPluginFilters =
                     pluginFilters.Where(f => f.GetLookupId(Fields.sdkmessagefilter_.sdkmessageid) == item.Message.Id
                                              &&
-                                             ((item.RecordType == null &&
-                                               f.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode) == null)
+                                             ((item.RecordType == null && f.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode) == "none")
                                               ||
-                                              (f.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode) ==
-                                               item.RecordType.Key)));
-                if(!matchingPluginFilters.Any())
-                    throw new NullReferenceException(string.Format("Error matching plugin filter {0} {1}", item.RecordType, item.Message));
-
+                                              (item.RecordType != null && f.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode) == item.RecordType.Key)))
+                                               .ToArray();
                 var record = XrmRecordService.NewRecord(Entities.sdkmessageprocessingstep);
-                record.SetField(Fields.sdkmessageprocessingstep_.name, item.Name, XrmRecordService);
+                var name = string.Format("{0} {1} {2} {3} {4}", item.Plugin, item.RecordType?.Key ?? "none", item.Message, item.Stage, item.Mode).Left(XrmRecordService.GetMaxLength(Fields.sdkmessageprocessingstep_.name, Entities.sdkmessageprocessingstep));
+                record.SetField(Fields.sdkmessageprocessingstep_.name, name, XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.rank, item.Rank, XrmRecordService);
                 if(item.Stage != null)
                     record.SetField(Fields.sdkmessageprocessingstep_.stage, (int)item.Stage, XrmRecordService);
                 if (item.Mode != null)
                     record.SetField(Fields.sdkmessageprocessingstep_.mode, (int)item.Mode, XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.plugintypeid, item.Plugin, XrmRecordService);
-                record.SetField(Fields.sdkmessageprocessingstep_.sdkmessagefilterid, matchingPluginFilters.First().ToLookup(), XrmRecordService);
+                record.SetField(Fields.sdkmessageprocessingstep_.sdkmessagefilterid, !matchingPluginFilters.Any() ? null : matchingPluginFilters.First().ToLookup(), XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageid, item.Message, XrmRecordService);
                 if (item.Id != null)
                     record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid, item.Id, XrmRecordService);

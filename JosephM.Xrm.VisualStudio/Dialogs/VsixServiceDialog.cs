@@ -62,8 +62,6 @@ namespace JosephM.XRM.VSIX.Dialogs
                 ProcessError(response.Exception);
             else if (string.IsNullOrWhiteSpace(CompletionMessage))
                 CompletionMessage = "Process Finished";
-
-
         }
     }
 }

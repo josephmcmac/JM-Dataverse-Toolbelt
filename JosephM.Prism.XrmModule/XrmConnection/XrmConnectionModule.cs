@@ -48,7 +48,7 @@ namespace JosephM.Prism.XrmModule.XrmConnection
         public override void InitialiseModule()
         {
             AddSetting("Connect To Crm", ConnectToCrm);
-            AddHelp("Connect To Crm", "Connect To CRM Help.docx");
+            //AddHelp("Connect To Crm", "Connect To CRM Help.docx");
         }
 
         private void ConnectToCrm()

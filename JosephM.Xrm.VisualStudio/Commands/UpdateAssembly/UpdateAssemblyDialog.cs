@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using EnvDTE80;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Core.Extentions;
-using JosephM.Core.Service;
 using JosephM.Record.Extentions;
-using JosephM.Record.IService;
-using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.ImportExporter.Service;
 using JosephM.Xrm.Schema;
 using JosephM.XRM.VSIX.Utilities;
-using Microsoft.Practices.Prism;
 
-namespace JosephM.XRM.VSIX.Commands.DeployAssembly
+namespace JosephM.XRM.VSIX.Commands.UpdateAssembly
 {
     public class UpdateAssemblyDialog : DialogViewModel
     {

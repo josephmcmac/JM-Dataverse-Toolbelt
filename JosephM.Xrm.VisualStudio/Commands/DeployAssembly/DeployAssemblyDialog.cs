@@ -11,7 +11,6 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.ImportExporter.Service;
 using JosephM.Xrm.Schema;
 using JosephM.XRM.VSIX.Utilities;
 using Microsoft.Practices.Prism;

@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;

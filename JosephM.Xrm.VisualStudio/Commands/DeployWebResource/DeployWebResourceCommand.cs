@@ -54,14 +54,14 @@ namespace JosephM.XRM.VSIX.Commands.DeployWebResource
                 }
             }
 
-            var codeGeneratorService = new DeployWebResourcesService(service);
+            var deployResourcesService = new DeployWebResourcesService(service);
 
             var request = new DeployWebResourcesRequest()
             {
                 Files = files
             };
             var dialog = new VsixServiceDialog<DeployWebResourcesService, DeployWebResourcesRequest, DeployWebResourcesResponse, DeployWebResourcesResponseItem>(
-                codeGeneratorService,
+                deployResourcesService,
                 request,
                 new DialogController(new VsixApplicationController("VSIX", null)));
 

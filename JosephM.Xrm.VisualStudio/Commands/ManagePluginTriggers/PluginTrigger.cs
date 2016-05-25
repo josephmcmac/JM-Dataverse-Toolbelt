@@ -18,10 +18,6 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
         [Hidden]
         public string Id { get; set; }
 
-        [GridWidth(300)]
-        [RequiredProperty]
-        public string Name { get; set; }
-
         //todo check re improve multiple load picklist
         [GridWidth(300)]
         [RequiredProperty]

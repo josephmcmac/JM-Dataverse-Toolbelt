@@ -45,7 +45,8 @@ namespace JosephM.CodeGenerator.Test
                 FileName = "JS",
                 Folder = new Folder(TestingFolder),
                 Namespace = "JS",
-                Type = CodeGeneratorType.JavaScriptOptionSets
+                Type = CodeGeneratorType.JavaScriptOptionSets,
+                RecordType = new RecordType(Entities.account, Entities.account)
             };
 
             testApplication.ClearTabs();

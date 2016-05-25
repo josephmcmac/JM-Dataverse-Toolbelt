@@ -18,6 +18,7 @@ using JosephM.XRM.VSIX.Commands.ManagePluginTriggers;
 using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using JosephM.XRM.VSIX.Commands.RefreshSchema;
 using JosephM.XRM.VSIX.Commands.RefreshSettings;
+using JosephM.XRM.VSIX.Commands.UpdateAssembly;
 using JosephM.XRM.VSIX.Utilities;
 
 namespace JosephM.XRM.VSIX

@@ -118,12 +118,44 @@
     <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7bf3e622-67ca-4e67-a9ca-f3b334c954fd}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.CodeGenerator\JosephM.CodeGenerator.csproj">
+      <Project>{0902CBF9-E77C-4B69-8021-3DA8E3999CCA}</Project>
+      <Name>JosephM.CodeGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+      <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
+      <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
+      <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
+      <Name>JosephM.Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Wpf\JosephM.Wpf.csproj">
+      <Project>{ED23E8EF-1623-491E-A30F-BA55C8F65CE7}</Project>
+      <Name>JosephM.Wpf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.XrmSolutionTemplate\JosephM.Xrm.XrmSolutionTemplate.csproj">
       <Project>{CC82489C-BBD1-4466-BFCE-C1C47EF738B5}</Project>
       <Name>JosephM.Xrm.XrmSolutionTemplate</Name>
       <VSIXSubPath>ProjectTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
+      <Name>JosephM.Xrm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -138,63 +170,6 @@
     </Reference>
     <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="JosephM.Application">
-      <HintPath>..\Lib\JosephM.Application.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Application.Prism">
-      <HintPath>..\Lib\JosephM.Application.Prism.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Application.ViewModel">
-      <HintPath>..\Lib\JosephM.Application.ViewModel.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.CodeGenerator">
-      <HintPath>..\Lib\JosephM.CodeGenerator.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Core">
-      <HintPath>..\Lib\JosephM.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.CustomisationExporter">
-      <HintPath>..\Lib\JosephM.CustomisationExporter.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.CustomisationImporter">
-      <HintPath>..\Lib\JosephM.CustomisationImporter.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Deployment">
-      <HintPath>..\Lib\JosephM.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.InstanceComparer">
-      <HintPath>..\Lib\JosephM.InstanceComparer.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.ObjectMapping">
-      <HintPath>..\Lib\JosephM.ObjectMapping.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.OrganisationSettings">
-      <HintPath>..\Lib\JosephM.OrganisationSettings.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Prism.XrmModule">
-      <HintPath>..\Lib\JosephM.Prism.XrmModule.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Record">
-      <HintPath>..\Lib\JosephM.Record.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Record.Xrm">
-      <HintPath>..\Lib\JosephM.Record.Xrm.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Spreadsheet">
-      <HintPath>..\Lib\JosephM.Spreadsheet.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Wpf">
-      <HintPath>..\Lib\JosephM.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Xrm">
-      <HintPath>..\Lib\JosephM.Xrm.dll</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Xrm.DeveloperTool.vshost">
-      <HintPath>..\Lib\JosephM.Xrm.DeveloperTool.vshost.exe</HintPath>
-    </Reference>
-    <Reference Include="JosephM.Xrm.RecordExtract">
-      <HintPath>..\Lib\JosephM.Xrm.RecordExtract.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Crm.Sdk.Proxy">
