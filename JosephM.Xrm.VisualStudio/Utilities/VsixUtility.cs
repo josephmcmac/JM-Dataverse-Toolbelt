@@ -76,7 +76,8 @@ namespace JosephM.XRM.VSIX.Utilities
             var xrmConfig = new XrmRecordConfiguration();
             foreach (var prop in xrmConfig.GetType().GetReadWriteProperties())
             {
-                xrmConfig.SetPropertyByString(prop.Name, dictionary[prop.Name]);
+                if (dictionary.ContainsKey(prop.Name))
+                    xrmConfig.SetPropertyByString(prop.Name, dictionary[prop.Name]);
             }
             return xrmConfig;
         }
@@ -198,6 +199,19 @@ namespace JosephM.XRM.VSIX.Utilities
                 }
             }
             return null;
+        }
+
+        public static void SetProperty(EnvDTE.Properties properties, string name, object value)
+        {
+            foreach (Property prop in properties)
+            {
+                if (prop.Name == name)
+                {
+                    prop.Value = value;
+                    return;
+                }
+            }
+            throw new NullReferenceException(string.Format("Could not find property {0}", name));
         }
 
         public static LoadToCrmResponse LoadIntoCrm(XrmRecordService service, IEnumerable<IRecord> records, string matchField)

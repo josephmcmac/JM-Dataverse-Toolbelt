@@ -17,10 +17,6 @@ namespace JosephM.XRM.VSIX.Wizards
 {
     public class XrmSolutionWizard : MyWizardBase
     {
-        private string Directory { get; set; }
-
-        private string SolutionName { get; set; }
-
         public XrmPackageSettings XrmPackageSettings { get; set; }
 
         public override void RunStartedExtention(Dictionary<string, string> replacementsDictionary)
@@ -30,49 +26,34 @@ namespace JosephM.XRM.VSIX.Wizards
                 XrmPackageSettings.SolutionDynamicsCrmPrefix = "template";
                 XrmPackageSettings.SolutionObjectPrefix = "Template";
             #endif
-            var settingsDialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), XrmPackageSettings, null, Directory, false);
+            var settingsDialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), XrmPackageSettings, VisualStudioService, false);
             DialogUtility.LoadDialog(settingsDialog, showCompletion: false);
 
             AddReplacements(replacementsDictionary, XrmPackageSettings);
-
-            Directory = replacementsDictionary.ContainsKey("$solutiondirectory$")
-                ? replacementsDictionary["$solutiondirectory$"]
-                : null;
-
-            SolutionName = replacementsDictionary.ContainsKey("$specifiedsolutionname$")
-                ? replacementsDictionary["$specifiedsolutionname$"]
-                : replacementsDictionary["safeprojectname"];
-
-
-            replacementsDictionary.Add("$myprefix$", SolutionName);
         }
 
         public override void RunFinishedExtention()
         {
-            var solution = DTE == null ? null : DTE.Solution as Solution2;
-            
-            if (solution != null)
-            {
-                VsixUtility.AddSolutionItem(solution, "xrmpackage.xrmsettings", XrmPackageSettings, Directory);
+            VisualStudioService.AddSolutionItem("xrmpackage.xrmsettings", XrmPackageSettings);
 
-                var xrmConfig = new XrmRecordConfiguration();
-                #if DEBUG
-                    xrmConfig.AuthenticationProviderType = XrmRecordAuthenticationProviderType.ActiveDirectory;
-                    xrmConfig.DiscoveryServiceAddress = "http://qa2012/XRMServices/2011/Discovery.svc";
-                    xrmConfig.Name = "TEST";
-                    xrmConfig.OrganizationUniqueName = "TEST";
-                    xrmConfig.Username = "joseph";
-                    xrmConfig.Domain = "auqa2012";
-                #endif
-                var dialog = new ConnectionEntryDialog(DialogUtility.CreateDialogController(), xrmConfig, solution,
-                    Directory);
+            var xrmConfig = new XrmRecordConfiguration();
+#if DEBUG
+            xrmConfig.AuthenticationProviderType = XrmRecordAuthenticationProviderType.ActiveDirectory;
+            xrmConfig.DiscoveryServiceAddress = "http://qa2012/XRMServices/2011/Discovery.svc";
+            xrmConfig.Name = "TEST";
+            xrmConfig.OrganizationUniqueName = "TEST";
+            xrmConfig.Username = "joseph";
+            xrmConfig.Domain = "auqa2012";
+#endif
+            var dialog = new ConnectionEntryDialog(DialogUtility.CreateDialogController(), xrmConfig,
+                VisualStudioService);
 
-                DialogUtility.LoadDialog(dialog, false);
+            DialogUtility.LoadDialog(dialog, false);
 
-                //DTE.Solution.Projects.Item(0).
-            }
+            VisualStudioService.CloseAllDocuments();
         }
 
+        //todo see if implement automatic key creation
         //private void GenerateStrongNameKeyAndToken()
         //{
         //    var clrStrongName = (ICLRStrongName)RuntimeEnvironment.GetRuntimeInterfaceAsObject(new Guid("B79B0ACD-F5CD-409b-B5A5-A16244610B92"), new Guid("9FD93CCF-3280-4391-B3A9-96E1CDE77C8D"));

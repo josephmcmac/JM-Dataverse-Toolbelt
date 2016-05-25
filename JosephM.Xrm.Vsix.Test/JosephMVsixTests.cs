@@ -16,6 +16,15 @@ namespace JosephM.Xrm.Vsix.Test
 {
     public class JosephMVsixTests : XrmRecordTest
     {
+        public static FakeVisualStudioService CreateVisualStudioService()
+        {
+            var fakeVisualStudioService = new FakeVisualStudioService();
+            return fakeVisualStudioService;
+        }
+        public static FakeDialogController CreateDialogController()
+        {
+            return new FakeDialogController(new FakeApplicationController());
+        }
         public static string GetTestPluginAssemblyName()
         {
             var file = new FileInfo(GetTestPluginAssemblyFile());

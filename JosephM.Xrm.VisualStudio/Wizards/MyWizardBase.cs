@@ -23,9 +23,19 @@ namespace JosephM.XRM.VSIX.Wizards
         }
 
         protected DTE2 DTE { get; set; }
+
+        public VisualStudioService VisualStudioService { get; set; }
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
+            var directory = replacementsDictionary.ContainsKey("$solutiondirectory$")
+                ? replacementsDictionary["$solutiondirectory$"]
+                : null;
+
+            //SolutionName = replacementsDictionary.ContainsKey("$specifiedsolutionname$")
+            //    ? replacementsDictionary["$specifiedsolutionname$"]
+            //    : replacementsDictionary["safeprojectname"];
             DTE = automationObject as DTE2;
+            VisualStudioService = new VisualStudioService(DTE, directory);
             RunStartedExtention(replacementsDictionary);
         }
 

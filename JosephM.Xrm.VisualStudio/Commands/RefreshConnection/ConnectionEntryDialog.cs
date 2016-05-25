@@ -14,14 +14,11 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
 {
     public class ConnectionEntryDialog : VsixEntryDialog
     {
-        public Solution2 Solution { get; set; }
-        public string Directory { get; set; }
-
-        public ConnectionEntryDialog(IDialogController dialogController, XrmRecordConfiguration objectToEnter, Solution2 solution, string directory)
+        public IVisualStudioService VisualStudioService { get; set; }
+        public ConnectionEntryDialog(IDialogController dialogController, XrmRecordConfiguration objectToEnter, IVisualStudioService visualStudioService)
             : base(dialogController, objectToEnter)
         {
-            Solution = solution;
-            Directory = directory;
+            VisualStudioService = visualStudioService;
         }
 
         protected override void LoadDialogExtention()
@@ -31,7 +28,6 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
 
         protected override void CompleteDialogExtention()
         {
-            var directory = Directory;
             var dictionary = new Dictionary<string, string>();
             foreach (var prop in XrmRecordConfiguration.GetType().GetReadWriteProperties())
             {
@@ -40,28 +36,15 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
             }
             var serialised = JsonHelper.ObjectToJsonString(dictionary);
 
-            var project = VsixUtility.AddSolutionFolder(Solution, "SolutionItems");
-            var solutionItemsFolder = directory + @"\SolutionItems";
             var connectionFileName = "solution.xrmconnection";
-            FileUtility.WriteToFile(solutionItemsFolder, connectionFileName, serialised);
-            VsixUtility.AddProjectItem(project.ProjectItems, Path.Combine(solutionItemsFolder, connectionFileName));
+            var file = VisualStudioService.AddSolutionItem(connectionFileName, serialised);
 
-            Project testProject = null;
-            foreach (Project item in Solution.Projects)
+            foreach (var item in VisualStudioService.GetSolutionProjects())
             {
                 if (item.Name.EndsWith(".Test"))
-                    testProject = item;
-            }
-            if (testProject != null)
-            {
-                var linkedConnectionItem = VsixUtility.AddProjectItem(testProject.ProjectItems, Path.Combine(solutionItemsFolder, connectionFileName));
-
-                foreach (Property prop in linkedConnectionItem.Properties)
                 {
-                    if (prop.Name == "CopyToOutputDirectory")
-                    {
-                        prop.Value = 1;
-                    }
+                    var linkedConnectionItem = item.AddProjectItem(file);
+                    linkedConnectionItem.SetProperty("CopyToOutputDirectory", 1);
                 }
             }
             CompletionMessage = "Connection Refreshed";

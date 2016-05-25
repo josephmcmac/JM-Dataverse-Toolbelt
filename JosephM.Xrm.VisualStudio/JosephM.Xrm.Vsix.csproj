@@ -74,6 +74,8 @@
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesResponse.cs" />
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesResponseItem.cs" />
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesService.cs" />
+    <Compile Include="Utilities\IVisualStudioService.cs" />
+    <Compile Include="Utilities\VisualStudioService.cs" />
     <Compile Include="Utilities\VsixUtility.cs" />
     <Compile Include="Wizards\MyWizardBase.cs" />
     <Compile Include="Wizards\MyProjectItemWizard.cs" />

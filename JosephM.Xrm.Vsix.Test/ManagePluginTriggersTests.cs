@@ -37,7 +37,7 @@ namespace JosephM.Xrm.Vsix.Test
             DeletePluginTriggers(assemblyRecord);
 
             //add one trigger
-            var dialog = new ManagePluginTriggersDialog(new FakeDialogController(new FakeApplicationController()), GetTestPluginAssemblyName(), XrmRecordService);
+            var dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService);
             dialog.Controller.BeginDialog();
 
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -57,7 +57,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNotNull(image);
 
             //add second trigger
-            dialog = new ManagePluginTriggersDialog(new FakeDialogController(new FakeApplicationController()), GetTestPluginAssemblyName(), XrmRecordService);
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService);
             dialog.Controller.BeginDialog();
 
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -73,7 +73,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual(2, triggers.Count());
 
             //delete a trigger
-            dialog = new ManagePluginTriggersDialog(new FakeDialogController(new FakeApplicationController()), GetTestPluginAssemblyName(), XrmRecordService);
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService);
             dialog.Controller.BeginDialog();
 
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

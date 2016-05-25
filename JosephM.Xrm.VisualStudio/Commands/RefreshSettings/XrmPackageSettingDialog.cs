@@ -15,15 +15,13 @@ namespace JosephM.XRM.VSIX.Commands.PackageSettings
 {
     public class XrmPackageSettingDialog : VsixEntryDialog
     {
-        public Solution2 Solution { get; set; }
-        public string Directory { get; set; }
+        public IVisualStudioService VisualStudioService { get; set; }
         public bool SaveSettings { get; set; }
 
-        public XrmPackageSettingDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, Solution2 solution, string directory, bool saveSettings)
+        public XrmPackageSettingDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, bool saveSettings)
             : base(dialogController, objectToEnter)
         {
-            Solution = solution;
-            Directory = directory;
+            VisualStudioService = visualStudioService;
             SaveSettings = saveSettings;
         }
 
@@ -36,7 +34,7 @@ namespace JosephM.XRM.VSIX.Commands.PackageSettings
         {
             if (SaveSettings)
             {
-                VsixUtility.AddSolutionItem(Solution, "xrmpackage.xrmsettings", XrmPackageSettings, Directory);
+                VisualStudioService.AddSolutionItem("xrmpackage.xrmsettings", XrmPackageSettings);
             }
 
             CompletionMessage = "Settings Updated";

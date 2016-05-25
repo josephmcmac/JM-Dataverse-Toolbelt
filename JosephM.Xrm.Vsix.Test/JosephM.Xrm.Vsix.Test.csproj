@@ -53,8 +53,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="FakeVisualStudioService.cs" />
     <Compile Include="ManagePluginTriggersTests.cs" />
-    <Compile Include="UpdateAssemblyDialogTests.cs" />
+    <Compile Include="RefreshSettingsDialogTests.cs" />
+    <Compile Include="UpdateAssemblyDialogTests - Copy.cs" />
+    <Compile Include="RefreshConnectionDialogTests.cs" />
     <Compile Include="DeployWebResourcesTests.cs" />
     <Compile Include="JosephMVsixTests.cs" />
     <Compile Include="DeployAssemblyDialogTests.cs" />
@@ -88,6 +91,10 @@
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
+      <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
+      <Name>JosephM.ObjectMapping</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
       <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>

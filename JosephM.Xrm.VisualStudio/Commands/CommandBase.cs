@@ -88,8 +88,12 @@ namespace JosephM.XRM.VSIX.Commands
 
         protected XrmRecordService GetXrmRecordService()
         {
-            var xrmService = package.GetXrmRecordService();
-            return xrmService;
+           return package.GetXrmRecordService();
+        }
+
+        protected IVisualStudioService GetVisualStudioService()
+        {
+            return package.GetVisualStudioService();
         }
 
         protected string GetFile(string getFileName)

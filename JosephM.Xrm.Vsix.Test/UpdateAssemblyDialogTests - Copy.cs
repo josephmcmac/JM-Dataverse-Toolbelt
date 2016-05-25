@@ -23,7 +23,6 @@ namespace JosephM.Xrm.Vsix.Test
         {
             DeployAssembly();
 
-            //todo could change the assembly and confirm updated modifiedon
             var dialog = new UpdateAssemblyDialog(new FakeDialogController(new FakeApplicationController()),
                 GetTestPluginAssemblyFile(), XrmRecordService);
             dialog.Controller.BeginDialog();

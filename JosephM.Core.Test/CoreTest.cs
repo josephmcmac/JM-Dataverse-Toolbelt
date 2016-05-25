@@ -60,7 +60,7 @@ namespace JosephM.Core.Test
         public void PopulateObject(object instance)
         {
             var type = instance.GetType();
-            foreach (var property in type.GetProperties())
+            foreach (var property in type.GetWritableProperties())
             {
                 var value = InstantiatePopulated(property.PropertyType);
 

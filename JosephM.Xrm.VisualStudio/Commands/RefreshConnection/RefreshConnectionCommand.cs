@@ -43,13 +43,10 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
             var solution = GetSolution();
             if (solution != null)
             {
-                var fileInfo = new FileInfo(solution.FullName);
-                var path = fileInfo.DirectoryName;
-
                 var xrmConfig = VsixUtility.GetXrmConfig(ServiceProvider);
                 if(xrmConfig == null)
                     xrmConfig = new XrmRecordConfiguration();
-                var dialog = new ConnectionEntryDialog(DialogUtility.CreateDialogController(), xrmConfig, solution, path);
+                var dialog = new ConnectionEntryDialog(DialogUtility.CreateDialogController(), xrmConfig, GetVisualStudioService());
 
                 DialogUtility.LoadDialog(dialog);
             }

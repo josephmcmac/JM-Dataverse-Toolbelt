@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
+using EnvDTE80;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Commands.DeployAssembly;
 using JosephM.XRM.VSIX.Commands.DeployWebResource;
@@ -116,6 +117,12 @@ namespace JosephM.XRM.VSIX
                 }
                 return _xrmRecordService;
             }
+        }
+
+        public VisualStudioService GetVisualStudioService()
+        {
+            var dte = GetService(typeof(SDTE)) as DTE2;
+            return new VisualStudioService(dte);
         }
 
         #endregion
