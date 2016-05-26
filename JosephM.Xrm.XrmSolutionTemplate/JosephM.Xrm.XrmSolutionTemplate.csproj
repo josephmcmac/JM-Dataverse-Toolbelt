@@ -85,6 +85,7 @@
   <ItemGroup>
     <VSTemplate Include="JosephM.XRM.XrmSolutionTemplate.vstemplate">
       <SubType>Designer</SubType>
+      <OutputSubPath>XRM</OutputSubPath>
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>

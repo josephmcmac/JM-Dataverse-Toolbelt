@@ -4,6 +4,7 @@
     <Identity Id="JosephM.XRM.VSIX.Joseph McGregor-Macdonald.0791ccd4-0cb6-4e16-923f-c7cc30e71464" Version="1.0" Language="en-US" Publisher="Joseph McGregor-Macdonald" />
     <DisplayName>JosephM.XRM.VSIX</DisplayName>
     <Description xml:space="preserve">Visual Studio Extention For Dynamics CRM With Solution Template And Features To Deploy Plugins And Web Resources In Visual Studio IDEVisual Studio Extention </Description>
+    <MoreInfo>https://github.com/josephmcmac/XRM-Developer-Tool/wiki/JosephM.XRM.VSTO</MoreInfo>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
@@ -16,9 +17,9 @@
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="JosephM.XRM.XrmSolutionTemplate" d:TargetPath="|JosephM.XRM.XrmSolutionTemplate;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" AssemblyName="|%CurrentProject%;AssemblyName|" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\JosephM XRM Entity JavaScript.zip" />
-    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\JosephM XRM Entity Plugin.zip" />
-    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\JosephM XRM WorkflowActivity.zip" />
-    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\JosephM XRM Test.zip" />
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\CSharp\XRM\JosephM XRM Entity JavaScript.zip" />
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\CSharp\XRM\JosephM XRM Entity Plugin.zip" />
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\CSharp\XRM\JosephM XRM Test.zip" />
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\CSharp\XRM\JosephM XRM WorkflowActivity.zip" />
   </Assets>
 </PackageManifest>

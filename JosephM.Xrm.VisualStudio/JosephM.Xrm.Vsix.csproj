@@ -92,16 +92,16 @@
     <Compile Include="XrmPackageSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ItemTemplates\JosephM XRM Entity JavaScript.zip">
+    <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Entity JavaScript.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ItemTemplates\JosephM XRM Entity Plugin.zip">
+    <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Entity Plugin.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ItemTemplates\JosephM XRM WorkflowActivity.zip">
+    <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM WorkflowActivity.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ItemTemplates\JosephM XRM Test.zip">
+    <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Test.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="JosephM.XRM.VSIX.snk" />
@@ -114,10 +114,8 @@
     <VSCTCompile Include="XrmPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
-    <Content Include="index.html" />
     <Content Include="Resources\CommandIcon.png" />
     <Content Include="Resources\XrmPackage.ico" />
-    <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

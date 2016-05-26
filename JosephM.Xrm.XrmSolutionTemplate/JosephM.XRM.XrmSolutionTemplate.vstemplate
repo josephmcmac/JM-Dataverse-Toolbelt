@@ -3,8 +3,7 @@
     <Name>JosephM XRM Solution</Name>
     <Description>JosephM XRM Solution</Description>
     <ProjectType>CSharp</ProjectType>
-    <ProjectSubType>
-    </ProjectSubType>
+    <ProjectSubType></ProjectSubType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>false</CreateNewFolder>
     <DefaultName>XRM</DefaultName>
