@@ -19,7 +19,7 @@ This repository contains source code for
 
 	* Comparing Differences In Customisations Between CRM Instances
 
-4. A Visual Studio VSTO Plugin For Dynamics CRM Development
+4. A Visual Studio VSIX Plugin For Dynamics CRM Development
 
 	* A Solution Template For Plugins, JavaScript and Test Scripts
 
