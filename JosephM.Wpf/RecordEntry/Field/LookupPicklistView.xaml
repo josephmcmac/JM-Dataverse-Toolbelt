@@ -17,16 +17,26 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid>
-        <ComboBox
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <shared:FieldLoadingView DataContext="{Binding LoadingViewModel}" />
+        </Grid>
+        <Grid Grid.Row="1"
+              Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
+            <ComboBox
             TabIndex="1"
             Name="ComboBox"
             Style="{StaticResource FieldEntryStyle}"
             Tag="Key"
             DisplayMemberPath="Name"
             ItemsSource="{Binding ItemsSource}"
-            SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}"
+            SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}"
             IsEnabled="{Binding IsEditable}"
             Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+        </Grid>
     </Grid>
 </field:FieldControlBase>

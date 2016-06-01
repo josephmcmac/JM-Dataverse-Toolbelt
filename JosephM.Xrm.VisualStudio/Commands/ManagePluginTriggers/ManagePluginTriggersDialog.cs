@@ -84,7 +84,11 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
 
                 var trigger = new PluginTrigger();
                 trigger.Id = item.Id;
+                //for some unknown reason thi field was setting the target type ot sdkmessage filter 
+                //despite the target being plugin type so I had to implement this to correct the type 
+                //the name is popuated after the loop
                 trigger.Message = filter == null ? null : filter.GetLookupField(Fields.sdkmessagefilter_.sdkmessageid);
+                item.SetField(Fields.sdkmessageprocessingstep_.plugintypeid, new Lookup(Entities.plugintype, item.GetLookupId(Fields.sdkmessageprocessingstep_.plugintypeid), null), XrmRecordService);
                 trigger.Plugin = item.GetLookupField(Fields.sdkmessageprocessingstep_.plugintypeid);
                 trigger.RecordType = recordTypeObj;
                 trigger.Stage = stage.ParseEnum<PluginTrigger.PluginStage>();
@@ -92,6 +96,14 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
                 trigger.Rank = rank;
 
                 triggers.Add(trigger);
+            }
+            //since I had to correct the target type for this fieldsw lookup need to populate the name
+            if (triggers.Any())
+            {
+                XrmRecordService.PopulateLookups(new Dictionary<string,List<Lookup>>()
+                {
+                    { Fields.sdkmessageprocessingstep_.plugintypeid, triggers.Select(t => t.Plugin).ToList() }
+                }, null);
             }
         }
 

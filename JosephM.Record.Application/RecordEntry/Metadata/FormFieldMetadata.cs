@@ -199,7 +199,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     case RecordFieldType.Object:
                     {
-                        fieldVm = new ObjectFieldViewModel(field, label, recordForm);
+                            //var usePicklist = recordForm.FormService == null
+                            //    ? false
+                            //    : recordForm.FormService.UsePicklist(field, recordType);
+                            fieldVm = new ObjectFieldViewModel(field, label, recordForm, true);
                         break;
                     }
                     case RecordFieldType.FileRef:

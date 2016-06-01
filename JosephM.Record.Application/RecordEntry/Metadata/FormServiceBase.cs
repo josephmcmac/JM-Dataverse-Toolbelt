@@ -81,6 +81,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new Condition[0];
         }
 
+        internal virtual IEnumerable<IRecord> GetLookupPicklist(string fieldName, string recordType, string reference, IRecord record, IRecordService lookupService, string recordTypeToLookup)
+        {
+            throw new NotImplementedException();
+        }
+
         internal virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)
         {
             return new CustomGridFunction[0];

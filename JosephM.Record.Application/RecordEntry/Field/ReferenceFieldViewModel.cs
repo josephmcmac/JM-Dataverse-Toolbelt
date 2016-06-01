@@ -3,9 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Core.FieldType;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 
@@ -15,11 +18,110 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     public abstract class ReferenceFieldViewModel<T> : FieldViewModel<T>, IReferenceFieldViewModel
     {
-        protected ReferenceFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm)
+        protected ReferenceFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm, bool usePicklist)
             : base(fieldName, fieldLabel, recordForm)
         {
-            if(Value != null)
+            UsePicklist = usePicklist;
+            if (Value != null)
                 SetEnteredTestWithoutClearingValue(GetValueName());
+        }
+
+        public bool UsePicklist { get; set; }
+
+        private IEnumerable<ReferencePicklistItem> _itemsSource;
+
+        private object _lockoObject = new object();
+        public IEnumerable<ReferencePicklistItem> ItemsSource
+        {
+            get
+            {
+                lock (_lockoObject)
+                {
+                    if (_itemsSource == null && LookupService != null)
+                    {
+                        _itemsSource = GetPicklistOptions();
+                        SelectedItem = MatchSelectedItemInItemsSourceToValue();
+                        OnPropertyChanged("SelectedItem");
+                    }
+                    return _itemsSource;
+                }
+            }
+            set
+            {
+                lock (_lockoObject)
+                {
+                    _itemsSource = value;
+                    OnPropertyChanged(nameof(ItemsSource));
+                    SelectedItem = MatchSelectedItemInItemsSourceToValue();
+                }
+            }
+        }
+
+        private ReferencePicklistItem _selectedItem;
+
+        public ReferencePicklistItem SelectedItem
+        {
+            get
+            {
+                return _selectedItem;
+            }
+            set
+            {
+                if (_selectedItem != value)
+                {
+                    _selectedItem = value;
+                    MatchValueToSelectedItems();
+                    OnPropertyChanged(nameof(SelectedItem));
+                }
+            }
+        }
+
+        public class ReferencePicklistItem
+        {
+            public ReferencePicklistItem(IRecord record, string name)
+            {
+                Record = record;
+                Name = name;
+            }
+
+            public IRecord Record { get; set; }
+            public string Name { get; set; }
+        }
+
+        protected abstract ReferencePicklistItem MatchSelectedItemInItemsSourceToValue();
+
+        protected abstract void MatchValueToSelectedItems();
+
+        protected abstract IEnumerable<ReferencePicklistItem> GetPicklistOptions();
+
+        public virtual void ConnectionForChanged()
+        {
+            if (UsePicklist)
+            {
+                //for some reason this was triggering too many times on load and not initialising selected item properly in Lookups
+                //so have added constraint to only load _itemsSource once
+                if (_itemsSource != null)
+                    return;
+                SetLoading();
+                DoOnAsynchThread(() =>
+                {
+
+                    try
+                    {
+                        ItemsSource = GetPicklistOptions();
+                    }
+                    catch (Exception ex)
+                    {
+                        RecordEntryViewModel.ApplicationController.ThrowException(ex);
+                    }
+                    finally
+                    {
+                        SetNotLoading();
+                    }
+                });
+            }
+            else
+                LoadLookupGrid();
         }
 
         public void LoadLookupGrid()
@@ -131,6 +233,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         }
 
         private readonly object _searchLock = new object();
+
         private void LoadRowsAsync()
         {
             lock (_searchLock)
@@ -163,11 +266,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     throw;
                 }
             }
-        }
-
-        protected IEnumerable<Condition> GetConditions()
-        {
-            return FormService.GetLookupConditions(FieldName, RecordEntryViewModel.GetRecordType(), RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord());
         }
 
         protected abstract IEnumerable<IRecord> GetSearchResults();

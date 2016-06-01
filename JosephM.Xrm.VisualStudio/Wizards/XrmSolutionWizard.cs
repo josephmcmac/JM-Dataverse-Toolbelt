@@ -52,31 +52,5 @@ namespace JosephM.XRM.VSIX.Wizards
 
             VisualStudioService.CloseAllDocuments();
         }
-
-        //todo see if implement automatic key creation
-        //private void GenerateStrongNameKeyAndToken()
-        //{
-        //    var clrStrongName = (ICLRStrongName)RuntimeEnvironment.GetRuntimeInterfaceAsObject(new Guid("B79B0ACD-F5CD-409b-B5A5-A16244610B92"), new Guid("9FD93CCF-3280-4391-B3A9-96E1CDE77C8D"));
-        //    IntPtr ppbKeyBlob;
-        //    int pcbKeyBlob;
-        //    clrStrongName.StrongNameKeyGen((string)null, 0, out ppbKeyBlob, out pcbKeyBlob);
-        //    VSXTemplateWizard.strongNameKey = new byte[pcbKeyBlob];
-        //    Marshal.Copy(ppbKeyBlob, VSXTemplateWizard.strongNameKey, 0, pcbKeyBlob);
-        //    IntPtr ppbPublicKeyBlob;
-        //    int pcbPublicKeyBlob;
-        //    clrStrongName.StrongNameGetPublicKey((string)null, ppbKeyBlob, pcbKeyBlob, out ppbPublicKeyBlob, out pcbPublicKeyBlob);
-        //    IntPtr ppbStrongNameToken;
-        //    int pcbStrongNameToken;
-        //    clrStrongName.StrongNameTokenFromPublicKey(ppbPublicKeyBlob, pcbPublicKeyBlob, out ppbStrongNameToken, out pcbStrongNameToken);
-        //    byte[] destination = new byte[pcbStrongNameToken];
-        //    Marshal.Copy(ppbStrongNameToken, destination, 0, pcbStrongNameToken);
-        //    StringBuilder stringBuilder = new StringBuilder();
-        //    for (int index = 0; index < pcbStrongNameToken; ++index)
-        //        stringBuilder.Append(destination[index].ToString("x02", (IFormatProvider)CultureInfo.InvariantCulture));
-        //    VSXTemplateWizard.publicKeyToken = stringBuilder.ToString();
-        //    clrStrongName.StrongNameFreeBuffer(ppbKeyBlob);
-        //    clrStrongName.StrongNameFreeBuffer(ppbPublicKeyBlob);
-        //    clrStrongName.StrongNameFreeBuffer(ppbStrongNameToken);
-        //}
     }
 }

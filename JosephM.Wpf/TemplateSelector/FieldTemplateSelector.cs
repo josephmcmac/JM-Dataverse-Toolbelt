@@ -58,7 +58,10 @@ namespace JosephM.Wpf.TemplateSelector
                 return RecordFieldFieldTemplate;
             if (item is ObjectFieldViewModel)
             {
-                return LookupFieldTemplate;
+                if (((ObjectFieldViewModel)item).UsePicklist)
+                    return LookupFieldPicklistTemplate;
+                else
+                    return LookupFieldTemplate;
             }
             if (item is FileRefFieldViewModel)
                 return FileRefFieldTemplate;

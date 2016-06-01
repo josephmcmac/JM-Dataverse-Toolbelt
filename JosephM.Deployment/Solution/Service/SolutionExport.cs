@@ -30,6 +30,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         [LookupCondition("ismanaged", false)]
         [LookupCondition("isvisible", true)]
         [PropertyInContextByPropertyNotNull("Connection")]
+        [UsePicklist]
         public Lookup Solution { get; set; }
 
         [DisplayOrder(40)]

@@ -11,6 +11,8 @@ using JosephM.Record.IService;
 using JosephM.Record.Service;
 using System.Linq;
 using JosephM.Core.AppConfig;
+using JosephM.Core.FieldType;
+using JosephM.Record.Extentions;
 
 #endregion
 
@@ -21,17 +23,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
     public class ObjectFieldViewModel : ReferenceFieldViewModel<object>
     {
-        public ObjectFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm)
-            : this(fieldName, fieldLabel, recordForm, null)
-        {
-        }
-        
-        public ObjectFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm, IRecordService lookupService)
-            : base(fieldName, fieldLabel, recordForm)
+        public ObjectFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
+            bool usePicklist)
+            : base(fieldName, fieldLabel, recordForm, usePicklist)
         {
             //okay i need to identify that this is getting the lookups from the settings
-            var settingsAttribute = GetSettingLookupAttribute();
-            if (settingsAttribute == null)
+            SettingsAttribute = GetSettingLookupAttribute();
+            if (SettingsAttribute == null)
             {
                 //throw new NotImplementedException(
                 //    string.Format(
@@ -40,12 +38,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
             else
             {
-                var settingsObject = ApplicationController.ResolveType(settingsAttribute.SettingsType);
+                var settingsObject = ApplicationController.ResolveType(SettingsAttribute.SettingsType);
                 XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
                 _lookupService = new ObjectRecordService(settingsObject, ApplicationController);
-                LoadLookupGrid();
+                if (!UsePicklist)
+                {
+                    LoadLookupGrid();
+                }
             }
         }
+
+        public SettingsLookup SettingsAttribute { get; set; }
 
         private IRecordService _lookupService;
         public override IRecordService LookupService
@@ -69,27 +72,46 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
+        protected override ReferencePicklistItem MatchSelectedItemInItemsSourceToValue()
+        {
+            if (ValueObject == null)
+                return null;
+            else if (ItemsSource != null)
+            {
+                foreach (var item in ItemsSource)
+                {
+                    if (((ObjectRecord) item.Record).Instance.ToString() == ValueObject.ToString())
+                    {
+                        return item;
+                    }
+                }
+            }
+            return null;
+        }
+
+        protected override void MatchValueToSelectedItems()
+        {
+            object newValue = null;
+            if (SelectedItem != null)
+                newValue = ((ObjectRecord)SelectedItem.Record).Instance;
+            if (newValue != Value)
+                Value = newValue;
+        }
+
+        protected override IEnumerable<ReferencePicklistItem> GetPicklistOptions()
+        {
+            return GetSearchResults()
+                .Select(r => new ReferencePicklistItem(r, r.GetStringField(LookupService.GetPrimaryField(r.Type))))
+                .ToArray();
+        }
+
         protected override IEnumerable<IRecord> GetSearchResults()
         {
             var records = LookupService.GetLinkedRecords(null, null, GetSettingLookupAttribute().PropertyName, null);
-            if (!EnteredText.IsNullOrWhiteSpace())
+            if (!UsePicklist && !EnteredText.IsNullOrWhiteSpace())
                 records = records.Where(r => r.GetStringField("ToString") != null && r.GetStringField("ToString").ToLower().StartsWith(EnteredText.ToLower()));
             return records;
         }
-
-        //private ObjectEntryViewModel ObjectRecordEntryForm
-        //{
-        //    get
-        //    {
-        //        //need to get the type of the parent form and then get the property type
-        //        if (RecordEntryViewModel is ObjectEntryViewModel)
-        //        {
-        //            return (ObjectEntryViewModel)RecordEntryViewModel;
-        //        }
-        //        else
-        //            throw new NotImplementedException(string.Format("Only Implemented For Type Of {0}", typeof(ObjectEntryViewModel).Name));
-        //    }
-        //}
 
         public override string RecordTypeToLookup
         {

@@ -18,9 +18,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
             string referencedRecordType, bool usePicklist)
-            : base(fieldName, fieldLabel, recordForm)
+            : base(fieldName, fieldLabel, recordForm, usePicklist)
         {
-            UsePicklist = usePicklist;
             RecordTypeToLookup = referencedRecordType;
             if (Value != null)
             {
@@ -28,14 +27,41 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     Value.Name = "Record Name Not Set";
                 SetEnteredTestWithoutClearingValue(Value.Name);
             }
-            if (UsePicklist)
-            {
-                
-                ItemsSource = GetSearchResults().Select(r => LookupService.ToLookup(r)).ToArray();
-            }
-            else
+            if (!UsePicklist)
                 LoadLookupGrid();
+        }
 
+        protected override ReferencePicklistItem MatchSelectedItemInItemsSourceToValue()
+        {
+            if (Value == null)
+                return null;
+            else if (ItemsSource != null)
+            {
+                foreach (var item in ItemsSource)
+                {
+                    if (item.Record.ToLookup() == Value)
+                    {
+                        return item;
+                    }
+                }
+            }
+            return null;
+        }
+
+        protected override void MatchValueToSelectedItems()
+        {
+            Lookup newValue = null;
+            if (SelectedItem != null)
+                newValue = LookupService.ToLookup(SelectedItem.Record);
+            if (newValue != Value)
+                Value = newValue;
+        }
+
+        protected override IEnumerable<ReferencePicklistItem> GetPicklistOptions()
+        {
+            return GetSearchResults()
+                .Select(r => new ReferencePicklistItem(r, r.GetStringField(LookupService.GetPrimaryField(r.Type))))
+                .ToArray();
         }
 
         private string _referencedRecordType;
@@ -49,27 +75,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public bool UsePicklist { get; set; }
-
         protected override bool SetEnteredText { get { return !UsePicklist; } }
-
-        private IEnumerable<Lookup> _itemsSource;
-
-        public IEnumerable<Lookup> ItemsSource
-        {
-            get { return _itemsSource; }
-            set
-            {
-                _itemsSource = value;
-                OnPropertyChanged("ItemsSource");
-                if (Value != null && _itemsSource != null)
-                {
-                    var matchingItems = _itemsSource.Where(p => p.Id == Value.Id);
-                    if (matchingItems.Any())
-                        Value = matchingItems.First() ?? Value;
-                }
-            }
-        }
 
         public override void SetValue(IRecord selectedRecord)
         {
@@ -99,14 +105,24 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             if(LookupService == null)
                 throw new NullReferenceException(string.Format("Error searching field {0}. {1} is null", FieldName, nameof(LookupService)));
-            var primaryField = LookupService.GetPrimaryField(RecordTypeToLookup);
-            var conditions = GetConditions();
-            if (!UsePicklist && !EnteredText.IsNullOrWhiteSpace())
+            if (UsePicklist)
             {
-                conditions =
-                    conditions.Union(new [] { new Condition(primaryField, ConditionType.BeginsWith, EnteredText)});
+                return FormService.GetLookupPicklist(FieldName, RecordEntryViewModel.GetRecordType(),
+                    RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord(), LookupService, RecordTypeToLookup);
             }
-            return LookupService.GetFirstX(RecordTypeToLookup, UsePicklist ? -1 : MaxRecordsForLookup, null, conditions, new [] { new SortExpression(primaryField, SortType.Ascending) });
+            else
+            {
+                var primaryField = LookupService.GetPrimaryField(RecordTypeToLookup);
+                var conditions = FormService.GetLookupConditions(FieldName, RecordEntryViewModel.GetRecordType(),
+                    RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord());
+                if (!EnteredText.IsNullOrWhiteSpace())
+                {
+                    conditions =
+                        conditions.Union(new[] {new Condition(primaryField, ConditionType.BeginsWith, EnteredText)});
+                }
+                return LookupService.GetFirstX(RecordTypeToLookup, UsePicklist ? -1 : MaxRecordsForLookup, null,
+                    conditions, new[] {new SortExpression(primaryField, SortType.Ascending)});
+            }
         }
     }
 }

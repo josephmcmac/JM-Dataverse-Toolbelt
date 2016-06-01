@@ -291,9 +291,16 @@ namespace JosephM.CustomisationImporter.Test
                         CustomisationImportService.ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName,
                             Controller))
                 {
-                    if (XrmRecordService.GetManyToManyRelationships(metadata.RecordType1).Any(r => r.SchemaName == metadata.SchemaName))
-                        XrmRecordService.DeleteRelationship(metadata.SchemaName);
-                    Assert.IsFalse(XrmRecordService.GetManyToManyRelationships(metadata.RecordType1).Any(r => r.SchemaName == metadata.SchemaName));
+                    if (XrmRecordService.RecordTypeExists(metadata.RecordType1))
+                    {
+                        if (
+                            XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
+                                .Any(r => r.SchemaName == metadata.SchemaName))
+                            XrmRecordService.DeleteRelationship(metadata.SchemaName);
+                        Assert.IsFalse(
+                            XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
+                                .Any(r => r.SchemaName == metadata.SchemaName));
+                    }
                 }
             }
         }

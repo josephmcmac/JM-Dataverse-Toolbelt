@@ -62,9 +62,9 @@ namespace JosephM.XRM.VSIX.Commands.DeployWebResource
                 var xml = new StringBuilder();
                 xml.Append("<importexportxml><webresources>");
                 foreach (var record in loadResponse.Updated)
-                    xml.Append(String.Format("<webresource>{0}</ webresource>", record.Id));
+                    xml.Append("<webresource>" + record.Id + "</webresource>");
                 xml.Append("</webresources></importexportxml>");
-                Service.Publish();
+                Service.Publish(xml.ToString());
             }
         }
 

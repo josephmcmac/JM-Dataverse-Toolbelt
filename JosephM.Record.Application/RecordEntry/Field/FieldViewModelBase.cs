@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Service;
 using JosephM.Record.Extentions;
@@ -25,6 +26,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected FieldViewModelBase(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(recordForm.ApplicationController)
         {
+            LoadingViewModel = new LoadingViewModel(recordForm.ApplicationController);
             RecordEntryViewModel = recordForm;
             Label = label;
             FieldName = fieldName;
@@ -178,7 +180,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             //could be in extended classes - is used to notify the ui of validation error
             //as sometimes it is a different property displayed in ui for different view model types
-            get { return new[] { "ValueObject", "Value", "StringDisplay", "EnteredText" }; }
+            get { return new[] { "ValueObject", "Value", "StringDisplay", "EnteredText", "SelectedItem" }; }
         }
 
         public IEnumerable GetErrors(string propertyName)
@@ -253,8 +255,20 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             OnChangeDelegate(this);
         }
 
+        public void SetLoading()
+        {
+            LoadingViewModel.IsLoading = true;
+        }
+
+        public void SetNotLoading()
+        {
+            LoadingViewModel.IsLoading = false;
+        }
+
         public virtual void OnChange()
         {
         }
+
+        public LoadingViewModel LoadingViewModel { get; set; }
     }
 }

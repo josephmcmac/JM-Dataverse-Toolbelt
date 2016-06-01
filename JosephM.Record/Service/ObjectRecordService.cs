@@ -233,6 +233,7 @@ namespace JosephM.Record.Service
         /// <param name="fieldName"></param>
         /// <param name="recordType"></param>
         /// <param name="dependantValue">Various uses...</param>
+        /// <param name="record">The record containing the field we are getting the options for</param>
         /// <returns></returns>
         public override IEnumerable<PicklistOption> GetPicklistKeyValues(string fieldName, string recordType, string dependantValue, IRecord record)
         {

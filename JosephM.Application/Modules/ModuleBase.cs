@@ -85,6 +85,11 @@ namespace JosephM.Application.Modules
             ApplicationOptions.AddOption(optionLabel, () => HelpCommand(htmlFileName), ApplicationOptionType.Help);
         }
 
+        public void AddHelpUrl(string optionLabel, string htmlFileName)
+        {
+            ApplicationOptions.AddOption(optionLabel, () => ApplicationController.OpenFile("https://github.com/josephmcmac/XRM-Developer-Tool/wiki/" + htmlFileName), ApplicationOptionType.Help);
+        }
+
         private void HelpCommand(string fileName)
         {
             var qualified = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "HelpFiles", fileName);

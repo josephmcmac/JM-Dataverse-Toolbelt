@@ -187,7 +187,7 @@ namespace JosephM.Wpf.Grid
                             }
                             else if (column.FieldType == RecordFieldType.Object)
                             {
-                                dataGridField = new GridLookupColumn()
+                                dataGridField = new GridLookupPicklistColumn()
                                 {
                                     Binding = cellBinding
                                 };

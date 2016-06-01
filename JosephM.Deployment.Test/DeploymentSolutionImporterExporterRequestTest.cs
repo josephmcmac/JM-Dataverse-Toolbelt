@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Prism.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
+using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.ImportExporter.Service;
@@ -36,14 +38,10 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             var row = solutionGrid.GridRecords.First();
             var connectionField = row.GetObjectFieldFieldViewModel("Connection");
-            connectionField.Search();
-            Assert.IsTrue(connectionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
-            connectionField.SetValue(connectionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.First().GetRecord());
+            PopulateObjectField(connectionField);
 
             var solutionField = row.GetLookupFieldFieldViewModel("Solution");
-            solutionField.Search();
-            Assert.IsTrue(solutionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
-            solutionField.SetValue(solutionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.First().GetRecord());
+            PopulateLookupField(solutionField);
         }
 
         [TestMethod]
@@ -63,12 +61,10 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             var row = solutionGrid.GridRecords.First();
             var connectionField = row.GetObjectFieldFieldViewModel("Connection");
-            connectionField.Search();
-            Assert.IsTrue(connectionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
-            connectionField.SetValue(connectionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.First().GetRecord());
+            PopulateObjectField(connectionField);
 
             var solutionField = row.GetLookupFieldFieldViewModel("Solution");
-            solutionField.Search();
+            PopulateLookupField(solutionField);
 
             var editViewModel = solutionGrid.GetEditRowViewModel(row);
 
@@ -90,6 +86,36 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var lookupField = specificRecord.GetLookupFieldFieldViewModel("Record");
             lookupField.Search();
 
+        }
+
+        private static void PopulateLookupField(LookupFieldViewModel solutionField)
+        {
+            if (solutionField.UsePicklist)
+            {
+                Assert.IsTrue(solutionField.ItemsSource.Any());
+                solutionField.SelectedItem = solutionField.ItemsSource.First();
+            }
+            else
+            {
+                solutionField.Search();
+                Assert.IsTrue(solutionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
+                solutionField.SetValue(solutionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.First().GetRecord());
+            }
+        }
+
+        private static void PopulateObjectField(ObjectFieldViewModel solutionField)
+        {
+            if (solutionField.UsePicklist)
+            {
+                Assert.IsTrue(solutionField.ItemsSource.Any());
+                solutionField.SelectedItem = solutionField.ItemsSource.First();
+            }
+            else
+            {
+                solutionField.Search();
+                Assert.IsTrue(solutionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
+                solutionField.SetValue(solutionField.LookupGridViewModel.DynamicGridViewModel.GridRecords.First().GetRecord());
+            }
         }
     }
 }

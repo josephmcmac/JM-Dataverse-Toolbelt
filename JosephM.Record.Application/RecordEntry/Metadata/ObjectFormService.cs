@@ -162,23 +162,22 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             var onChanges = new List<Action<RecordEntryViewModelBase>>();
             AppendLookupForChanges(fieldName, recordType, onChanges);
-            AppendConnectionForChanges(fieldName, recordType, onChanges);
+            AppendConnectionForChanges(fieldName, recordType, onChanges, false);
             AppendInitialiseAttributes(fieldName, recordType, onChanges);
             AppendUniqueOnAttributes(fieldName, recordType, onChanges);
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, onChanges);
             return base.GetOnChanges(fieldName, recordType).Union(onChanges);
         }
 
-        private void AppendConnectionForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        private void AppendConnectionForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges, bool isOnLoad)
         {
             var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType)
                 .GetCustomAttributes(typeof(ConnectionFor), true).Cast<ConnectionFor>();
             foreach (var attribute in lookupForAttributes)
             {
                 onChanges.Add(
-                    re => 
+                    re =>
                     {
-
                         var changedViewModel = re.GetFieldViewModel(fieldName);
                         if (changedViewModel.ValueObject != null)
                         {
@@ -187,16 +186,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             if (matchingFields.Any())
                             {
                                 var fieldViewModel = matchingFields.First();
-                                if (fieldViewModel is LookupFieldViewModel)
+                                if (!isOnLoad && fieldViewModel is LookupFieldViewModel)
                                 {
-                                    var typedViewModel = (LookupFieldViewModel)fieldViewModel;
-                                    typedViewModel.LoadLookupGrid();
+                                    var typedViewModel = (LookupFieldViewModel) fieldViewModel;
+                                    typedViewModel.ConnectionForChanged();
                                 }
                                 if (fieldViewModel is RecordTypeFieldViewModel)
                                 {
-                                    var typedViewModel = (RecordTypeFieldViewModel)fieldViewModel;
+                                    var typedViewModel = (RecordTypeFieldViewModel) fieldViewModel;
                                     typedViewModel.ItemsSource = ObjectRecordService
-                                        .GetPicklistKeyValues(fieldViewModel.FieldName, fieldViewModel.GetRecordType())
+                                        .GetPicklistKeyValues(fieldViewModel.FieldName,
+                                            fieldViewModel.GetRecordType())
                                         .Select(p => new RecordType(p.Key, p.Value))
                                         .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                                         .OrderBy(rt => rt.Value)
@@ -212,7 +212,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             var methods = new List<Action<RecordEntryViewModelBase>>();
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, methods);
-            AppendConnectionForChanges(fieldName, recordType, methods);
+            AppendConnectionForChanges(fieldName, recordType, methods, true);
             return methods;
         }
 
@@ -457,6 +457,45 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 conditions.Add(otherCondition);
             }
             return conditions;
+        }
+
+        private readonly object _lockObject = new Object();
+        private readonly IDictionary<string, CachedPicklist> _cachedPicklist = new Dictionary<string, CachedPicklist>();
+
+        private class CachedPicklist
+        {
+            private IEnumerable<Condition> Conditions { get; set; }
+            public IRecordService LookupService { get; set; }
+            public IEnumerable<IRecord> Picklist { get; set; }
+
+
+            public CachedPicklist(IEnumerable<IRecord> picklist, IEnumerable<Condition> conditions,
+                IRecordService lookupService)
+            {
+                {
+                    Picklist = picklist;
+                    Conditions = conditions;
+                    LookupService = lookupService;
+                }
+            }
+        }
+        internal override IEnumerable<IRecord> GetLookupPicklist(string fieldName, string recordType, string reference, IRecord record, IRecordService lookupService, string recordTypeToLookup)
+        {
+            var conditions = GetLookupConditions(fieldName, recordType, reference, record);
+            lock (_lockObject)
+            {
+                if (!_cachedPicklist.ContainsKey(fieldName) || _cachedPicklist[fieldName].LookupService != lookupService)
+                {
+                    var picklist = lookupService.RetrieveAllAndClauses(recordTypeToLookup, conditions,
+                        new[] {lookupService.GetPrimaryField(recordTypeToLookup)});
+                    var cache = new CachedPicklist(picklist, conditions, lookupService);
+                    if (_cachedPicklist.ContainsKey(fieldName))
+                        _cachedPicklist[fieldName] = cache;
+                    else
+                        _cachedPicklist.Add(fieldName, cache);
+                }
+                return _cachedPicklist[fieldName].Picklist;
+            }
         }
 
         internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)

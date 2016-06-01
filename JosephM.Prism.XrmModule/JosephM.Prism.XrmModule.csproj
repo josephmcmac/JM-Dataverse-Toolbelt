@@ -135,9 +135,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HelpFiles\Connect To CRM Help.docx" />
     <None Include="JosephM.snk" />
-    <Content Include="HelpFiles\Saved CRM Connections Help.docx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

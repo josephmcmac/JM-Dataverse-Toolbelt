@@ -98,10 +98,10 @@ namespace JosephM.Xrm.Vsix.Test
                         var typeFieldViewModel = (LookupFieldViewModel) field;
                         if (field.FieldName == nameof(PluginTrigger.Message))
                         {
-                            typeFieldViewModel.Value = typeFieldViewModel.ItemsSource.First(m => m.Name == message);
+                            typeFieldViewModel.Value = typeFieldViewModel.LookupService.ToLookup(typeFieldViewModel.ItemsSource.First(m => m.Name == message).Record);
                         }
                         else if (typeFieldViewModel.UsePicklist)
-                            typeFieldViewModel.Value = typeFieldViewModel.ItemsSource.First();
+                            typeFieldViewModel.Value = typeFieldViewModel.LookupService.ToLookup(typeFieldViewModel.ItemsSource.First().Record); ;
                     }
                     if (field is PicklistFieldViewModel)
                     {

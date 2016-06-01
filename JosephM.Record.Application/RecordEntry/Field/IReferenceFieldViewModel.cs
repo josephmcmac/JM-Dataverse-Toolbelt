@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.ComponentModel;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.IService;
 
@@ -7,7 +8,7 @@ using JosephM.Record.IService;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    public interface IReferenceFieldViewModel
+    public interface IReferenceFieldViewModel : INotifyPropertyChanged
     {
         string RecordTypeToLookup { get; set; }
 

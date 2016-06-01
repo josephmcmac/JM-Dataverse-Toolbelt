@@ -260,6 +260,9 @@
     <Compile Include="Grid\GridListView.xaml.cs">
       <DependentUpon>GridListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Shared\FieldLoadingView.xaml.cs">
+      <DependentUpon>FieldLoadingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Shared\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
@@ -432,6 +435,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grid\GridListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shared\FieldLoadingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
