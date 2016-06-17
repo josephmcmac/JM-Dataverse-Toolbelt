@@ -244,27 +244,28 @@ namespace JosephM.CodeGenerator.Service
             if (IsValidForCode(recordType))
             {
                 stringBuilder.AppendLine(string.Format("{0}.Options = new Object();", request.Namespace));
-                foreach (var field in Service.GetFields(recordType))
+                var fieldsToProcess = request.AllFields
+                    ? Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType))
+                    : new[] {request.OptionField?.Key};
+
+                foreach (var field in fieldsToProcess)
                 {
-                    if (IsValidForOptionSetCode(field, recordType))
-                    {
                         var fieldLabel = CreateCodeLabel(Service.GetFieldLabel(field, recordType));
                         stringBuilder.AppendLine(string.Format("{0}.{1}.{2} = new Object();", request.Namespace,
                             "Options",
                             fieldLabel));
                         var options = Service.GetPicklistKeyValues(field, recordType);
                         var used = new List<string>();
-                        foreach (var option in options)
+                    foreach (var option in options)
+                    {
+                        if (IsValidForCode(option))
                         {
-                            if (IsValidForCode(option))
+                            var label = CreateCodeLabel(option.Value);
+                            if (!used.Contains(label))
                             {
-                                var label = CreateCodeLabel(option.Value);
-                                if (!used.Contains(label))
-                                {
-                                    stringBuilder.AppendLine(string.Format("{0}.{1}.{2}.{3} = {4};",
-                                        request.Namespace, "Options", fieldLabel, label, option.Key));
-                                    used.Add(label);
-                                }
+                                stringBuilder.AppendLine(string.Format("{0}.{1}.{2}.{3} = {4};",
+                                    request.Namespace, "Options", fieldLabel, label, option.Key));
+                                used.Add(label);
                             }
                         }
                     }

@@ -86,8 +86,8 @@
   <ItemGroup>
     <Compile Include="Attributes\EnumerableRecordFieldMap.cs" />
     <Compile Include="Attributes\LimitPicklist.cs" />
-    <Compile Include="Attributes\LookupConditionFor.cs" />
     <Compile Include="Attributes\LookupCondition.cs" />
+    <Compile Include="Attributes\LookupConditionFor.cs" />
     <Compile Include="Attributes\RecordPropertyMap.cs" />
     <Compile Include="Attributes\RecordTypeMap.cs" />
     <Compile Include="Attributes\RecordFieldMap.cs" />

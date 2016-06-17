@@ -3,6 +3,10 @@ using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using System.Collections.Generic;
+using JosephM.Record.Attributes;
+using JosephM.Record.IService;
+using JosephM.Record.Metadata;
+using JosephM.Record.Query;
 
 namespace JosephM.CodeGenerator.Service
 {
@@ -44,6 +48,7 @@ namespace JosephM.CodeGenerator.Service
 
         [RequiredProperty]
         [PropertyInContextByPropertyValues(nameof(Type), new object[] { CodeGeneratorType.JavaScriptOptionSets })]
+        [RecordTypeFor(nameof(OptionField))]
         public RecordType RecordType { get; set; }
 
         [RequiredProperty]
@@ -80,5 +85,19 @@ namespace JosephM.CodeGenerator.Service
         [PropertyInContextByPropertyValue(nameof(AllRecordTypes), false)]
         [PropertyInContextByPropertyNotNull(nameof(Type))]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.JavaScriptOptionSets)]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        public bool AllFields { get; set; }
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(Type), CodeGeneratorType.JavaScriptOptionSets)]
+        [PropertyInContextByPropertyValue(nameof(AllFields), false)]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.In, new [] { RecordFieldType.Picklist, RecordFieldType.State, RecordFieldType.Status })]
+        public RecordField OptionField { get; set; }
+
+
     }
 }

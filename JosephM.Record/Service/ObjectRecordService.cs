@@ -275,11 +275,19 @@ namespace JosephM.Record.Service
                         }
                         var lookupService = GetLookupService(fieldName, recordType, parentReference, record);
 
-                        return type.IsNullOrWhiteSpace()
-                        ? new RecordField[0]
-                        : lookupService
-                            .GetFields(type)
-                            .Select(f => new RecordField(f, lookupService.GetFieldMetadata(f, type).DisplayName))
+                        var allFieldsMetadata = type.IsNullOrWhiteSpace()
+                            ? new IFieldMetadata[0]
+                            : lookupService
+                                .GetFieldMetadata(type);
+                        var propertyInfo = GetPropertyInfo(fieldName, recordType);
+                        var lookupConditions = propertyInfo.GetCustomAttributes<LookupCondition>();
+                        foreach (var condition in lookupConditions.Select(lc => lc.ToCondition()))
+                        {
+                            allFieldsMetadata =
+                                allFieldsMetadata.Where(f => MeetsCondition(f, condition)).ToArray();
+                        }
+                        return allFieldsMetadata
+                            .Select(f => new RecordField(f.SchemaName, f.DisplayName))
                             .Where(f => !f.Value.IsNullOrWhiteSpace())
                             .OrderBy(f => f.Value)
                             .ToArray();
@@ -567,6 +575,31 @@ namespace JosephM.Record.Service
                 }
             }
             return new[] { new ViewMetadata(viewFields) { ViewType = ViewType.LookupView } };
+        }
+
+        private bool MeetsCondition(object instance, Condition condition)
+        {
+            var propertyValue = instance.GetPropertyValue(condition.FieldName);
+            switch (condition.ConditionType)
+            {
+                case ConditionType.Equal:
+                    {
+                        return condition.Value.Equals(propertyValue);
+                    }
+                case ConditionType.In:
+                    {
+                        var enumerable = condition.Value as IEnumerable;
+                        if (enumerable == null)
+                            throw new Exception(string.Format("{0} must be {1} for {2} {3}", nameof(Condition.Value), typeof(IEnumerable).Name, typeof(Condition).Name, condition.ConditionType));
+                        foreach (var item in enumerable)
+                        {
+                            if (item.Equals(instance.GetPropertyValue(condition.FieldName)))
+                                return true;
+                        }
+                        return false;
+                    }
+            }
+            throw new NotImplementedException(string.Format("{0} not implemented", condition.ConditionType));
         }
     }
 }

@@ -5,14 +5,14 @@ namespace JosephM.Record.Attributes
     [AttributeUsage(
         AttributeTargets.Property,
         AllowMultiple = true)]
-    public class LookupCondition : Attribute
+    public class LookupConditionFor : Attribute
     {
+        public string TargetProperty { get; set; }
         public string FieldName { get; set; }
-        public object Value { get; set; }
 
-        public LookupCondition(string fieldName, object value)
+        public LookupConditionFor(string targetProperty, string fieldName)
         {
-            Value = value;
+            TargetProperty = targetProperty;
             FieldName = fieldName;
         }
     }

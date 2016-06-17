@@ -1,6 +1,8 @@
 ﻿#region
 
 using System;
+using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -450,7 +452,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var attr = propertyInfo.GetCustomAttributes<LookupCondition>();
             var conditions = attr == null
                 ? new Condition[0].ToList()
-                : attr.Select(a => new Condition(a.FieldName, ConditionType.Equal, a.Value)).ToList();
+                : attr.Select(a => a.ToCondition()).ToList();
             var otherCondition = ObjectRecordService.GetLookupConditionFors(fieldName, recordType, reference, record);
             if (otherCondition != null)
             {
