@@ -49,7 +49,7 @@ namespace JosephM.XRM.VSIX.Commands.UpdateAssembly
             assemblyRecord.Id = preAssembly.Id;
             if (preAssembly.Id != null)
                 assemblyRecord.SetField(Fields.pluginassembly_.pluginassemblyid, preAssembly.Id, Service);
-            preAssembly.SetField(Fields.pluginassembly_.content, assemblyContent, Service);
+            assemblyRecord.SetField(Fields.pluginassembly_.content, assemblyContent, Service);
             var matchField = Fields.pluginassembly_.pluginassemblyid;
 
             var assemblyLoadResponse = VsixUtility.LoadIntoCrm(Service, new[] { assemblyRecord }, matchField);
