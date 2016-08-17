@@ -37,8 +37,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [PropertyInContextByPropertyValues("AuthenticationProviderType",
             new object[]
             {
-                XrmRecordAuthenticationProviderType.ActiveDirectory, XrmRecordAuthenticationProviderType.Federation
-                , XrmRecordAuthenticationProviderType.OnlineFederation
+                XrmRecordAuthenticationProviderType.ActiveDirectory
             })]
         public string Domain { get; set; }
 
