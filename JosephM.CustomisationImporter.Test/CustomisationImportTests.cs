@@ -66,6 +66,30 @@ namespace JosephM.CustomisationImporter.Test
             }
         }
 
+        [TestMethod]
+        [DeploymentItem("TestCustomisationsIgnore.xls")]
+        public void CustomisationImportTestIgnore()
+        {
+            var file = "TestCustomisationsIgnore.xls";
+
+            var optionMetadata =
+                CustomisationImportService.ExtractOptionSetsFromExcel(file, Controller);
+            Assert.AreEqual(1, optionMetadata.Count());
+
+            var fieldMetadata =
+                CustomisationImportService.ExtractFieldMetadataFromExcel(file, Controller,
+                    optionMetadata);
+            Assert.AreEqual(1, fieldMetadata.Count());
+
+            var recordMetadata =
+                CustomisationImportService.ExtractRecordMetadataFromExcel(file, Controller,
+                    fieldMetadata);
+            Assert.AreEqual(1, recordMetadata.Count());
+
+            var relationshipMetadata =
+                CustomisationImportService.ExtractRelationshipMetadataFromExcel(file, Controller);
+            Assert.AreEqual(1, relationshipMetadata.Count());
+        }
         private void VerifyViews(CustomisationImportRequest request)
         {
             var optionMetadata =

@@ -6,6 +6,7 @@ namespace JosephM.Xrm.MetadataImportExport
     {
         public static class Fields
         {
+            public const string Ignore = "Ignore";
             public const string RecordTypeSchemaName = "Record Type Schema Name";
             public const string SchemaName = "Schema Name";
             public const string DisplayName = "Display Name";
@@ -30,6 +31,7 @@ namespace JosephM.Xrm.MetadataImportExport
 
         public static class RecordTypes
         {
+            public const string Ignore = "Ignore";
             public const string DisplayName = "Display Name";
             public const string SchemaName = "Schema Name";
             public const string DisplayCollectionName = "Display Collection Name";
@@ -45,6 +47,7 @@ namespace JosephM.Xrm.MetadataImportExport
 
         public static class Relationships
         {
+            public const string Ignore = "Ignore";
             public const string RelationshipName = "Relationship Name";
             public const string RecordType1 = "Record Type 1";
             public const string RecordType2 = "Record Type 2";
@@ -60,6 +63,7 @@ namespace JosephM.Xrm.MetadataImportExport
 
         public static class OptionSets
         {
+            public const string Ignore = "Ignore";
             public const string SchemaName = "Schema Name";
             public const string OptionSetName = "Option Set Name";
             public const string IsSharedOptionSet = "Is Shared Option Set";

@@ -73,6 +73,10 @@ namespace JosephM.CustomisationImporter.Service
             var fields = new List<FieldMetadata>();
             foreach (var row in rows)
             {
+                if (row.GetColumnNames().Contains(Headings.Fields.Ignore)
+                    && row.GetFieldAsBoolean(Headings.Fields.Ignore))
+                    continue;
+
                 FieldMetadata fieldMetadata = null;
                 var type = row.GetFieldAsEnum<RecordFieldType>(Headings.Fields.FieldType);
 
@@ -408,6 +412,10 @@ namespace JosephM.CustomisationImporter.Service
             //For each row
             foreach (var row in rows)
             {
+                if (row.GetColumnNames().Contains(Headings.Relationships.Ignore)
+                    && row.GetFieldAsBoolean(Headings.Relationships.Ignore))
+                    continue;
+
                 var relationshipName = row.GetFieldAsString(Headings.Relationships.RelationshipName);
                 if (!string.IsNullOrWhiteSpace(relationshipName))
                 {
@@ -454,6 +462,10 @@ namespace JosephM.CustomisationImporter.Service
             //For each row
             foreach (var row in rows)
             {
+                if (row.GetColumnNames().Contains(Headings.RecordTypes.Ignore)
+                    && row.GetFieldAsBoolean(Headings.RecordTypes.Ignore))
+                    continue;
+
                 var schemaName = row.GetFieldAsString(Headings.RecordTypes.SchemaName);
                 if (!string.IsNullOrWhiteSpace(schemaName))
                 {
@@ -496,6 +508,10 @@ namespace JosephM.CustomisationImporter.Service
             {
                 var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
                     OptionSetsTabName);
+
+                rows = rows.Where(row => !row.GetColumnNames().Contains(Headings.OptionSets.Ignore)
+                                         || !row.GetFieldAsBoolean(Headings.OptionSets.Ignore))
+                                         .ToArray();
 
                 var optionSetNames = rows
                     .Where(r => !string.IsNullOrWhiteSpace(r.GetFieldAsString("Option Set Name")))
