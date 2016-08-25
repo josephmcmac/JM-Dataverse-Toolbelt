@@ -57,13 +57,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
-      <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
-      <Name>JosephM.Core</Name>
-    </ProjectReference>
+    <None Include="JosephM.snk" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="JosephM.snk" />
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

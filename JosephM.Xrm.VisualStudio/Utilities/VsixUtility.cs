@@ -61,16 +61,17 @@ namespace JosephM.XRM.VSIX.Utilities
             return (XrmPackageSettings)JsonHelper.JsonStringToObject(read, typeof(XrmPackageSettings));
         }
 
-        public static XrmRecordConfiguration GetXrmConfig(IServiceProvider serviceProvider)
+        public static XrmRecordConfiguration GetXrmConfig(IServiceProvider serviceProvider, bool newIfNull = false)
         {
             var name = "solution.xrmconnection";
 
             string read = GetSolutionItemText(GetDte2(serviceProvider), name);
-            if(string.IsNullOrEmpty(read))
+            if(!newIfNull && string.IsNullOrEmpty(read))
                 throw new NullReferenceException(string.Format("Error reading {0} in SolutionItems", name));
 
-            var dictionary =
-                (Dictionary<string, string>)
+            var dictionary = string.IsNullOrEmpty(read)
+                ? new Dictionary<string, string>()
+                : (Dictionary<string, string>)
                     JsonHelper.JsonStringToObject(read, typeof(Dictionary<string, string>));
 
             var xrmConfig = new XrmRecordConfiguration();
