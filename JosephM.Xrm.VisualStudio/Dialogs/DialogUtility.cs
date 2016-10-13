@@ -32,7 +32,10 @@ namespace JosephM.XRM.VSIX.Dialogs
             dialogControl.DataContext = dialog;
             scroll.Content = dialogControl;
             
-            Action closeMethod = () => { dialog.DoOnMainThread(() => window.Close()); };
+            Action closeMethod = () => { dialog.DoOnMainThread(() =>
+            {
+                window.Close();
+            }); };
 
             if (dialog.ApplicationController is VsixApplicationController)
             {

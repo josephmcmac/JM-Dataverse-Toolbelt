@@ -30,13 +30,13 @@ namespace JosephM.InstanceComparer
             processContainer.NumberOfProcesses = 16;
             processContainer.NumberOfProcesses += request.DataComparisons.Count();
 
-            AppendSolutions(processContainer);
+            //AppendSolutions(processContainer);
             AppendWorkflows(processContainer);
-            AppendResources(processContainer);
-            AppendEntities(processContainer);
-            AppendPlugins(processContainer);
-            AppendOptions(processContainer);
-            AppendSecurityRoles(processContainer);
+            //AppendResources(processContainer);
+            //AppendEntities(processContainer);
+            //AppendPlugins(processContainer);
+            //AppendOptions(processContainer);
+            //AppendSecurityRoles(processContainer);
 
             AppendData(processContainer);
 
@@ -247,7 +247,7 @@ namespace JosephM.InstanceComparer
                 Entities.workflow,
                 Fields.workflow_.workflowid,
                 Fields.workflow_.name,
-                new[] { new Condition(Fields.workflow_.type, ConditionType.Equal, OptionSets.Process.Type.Definition) },
+                new[] { new Condition(Fields.workflow_.type, ConditionType.Equal, OptionSets.Process.Type.Definition), new Condition(Fields.workflow_.rendererobjecttypecode, ConditionType.Null) },
                 new[] { Fields.workflow_.name, Fields.workflow_.statecode, Fields.workflow_.xaml, Fields.workflow_.description, Fields.workflow_.ondemand, Fields.workflow_.rank, Fields.workflow_.triggeronupdateattributelist, Fields.workflow_.triggeroncreate, Fields.workflow_.triggerondelete, Fields.workflow_.createstage, Fields.workflow_.updatestage, Fields.workflow_.deletestage, Fields.workflow_.iscrmuiworkflow, Fields.workflow_.istransacted, Fields.workflow_.mode, Fields.workflow_.runas, Fields.workflow_.subprocess, Fields.workflow_.scope, Fields.workflow_.primaryentity, Fields.workflow_.sdkmessageid });
             processArgs.AddConversionObject(Fields.workflow_.sdkmessageid,
                 new ProcessCompareParams.ConvertWorkflowMessage(processContainer.ServiceOne),
@@ -331,6 +331,7 @@ namespace JosephM.InstanceComparer
                                 }
                             }
                         }
+                        #region not implemented many to many compare code
                         //else if (processCompareParams.ParentLinkType == ParentLinkType.ManyToMany)
                         //{
                         //    these could filter for only related to a parent
@@ -385,6 +386,8 @@ namespace JosephM.InstanceComparer
                         //        }
                         //    }
                         //}
+                        #endregion
+
                         //group by each parent and process
                         foreach (var group in groupThem)
                         {
