@@ -30,13 +30,13 @@ namespace JosephM.InstanceComparer
             processContainer.NumberOfProcesses = 16;
             processContainer.NumberOfProcesses += request.DataComparisons.Count();
 
-            //AppendSolutions(processContainer);
+            AppendSolutions(processContainer);
             AppendWorkflows(processContainer);
-            //AppendResources(processContainer);
-            //AppendEntities(processContainer);
-            //AppendPlugins(processContainer);
-            //AppendOptions(processContainer);
-            //AppendSecurityRoles(processContainer);
+            AppendResources(processContainer);
+            AppendEntities(processContainer);
+            AppendPlugins(processContainer);
+            AppendOptions(processContainer);
+            AppendSecurityRoles(processContainer);
 
             AppendData(processContainer);
 
