@@ -18,7 +18,7 @@ namespace JosephM.CustomisationImporter.Prism
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelp("Import Customisations", "Customisation Importer Help.docx");
+            AddHelpUrl("Import Customisations", "CustomisationImporter");
             AddOption("Import Customisations Sample", OpenTemplateCommand);
         }
 

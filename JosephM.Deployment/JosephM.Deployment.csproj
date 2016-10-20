@@ -135,13 +135,7 @@
     <Compile Include="Solution\Service\XrmSolutionImporterExporterService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HelpFiles\Solution Importer Exporter Help.docx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="JosephM.snk" />
-    <Content Include="HelpFiles\Xrm Importer Exporter Help.docx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

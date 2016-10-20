@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -121,9 +121,6 @@ EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "JosephM.Prism.XrmDeveloperTool.Install", "JosephM.Prism.XrmDeveloperTool.Install\JosephM.Prism.XrmDeveloperTool.Install.isproj", "{33F4419A-D9BB-410D-AE44-7AE611AEF95A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F303560E-2FD6-4198-BE27-3EAC2446103C} = {F303560E-2FD6-4198-BE27-3EAC2446103C}
-		{82118987-FB76-4E70-81A0-06D0B062D89C} = {82118987-FB76-4E70-81A0-06D0B062D89C}
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA} = {E9EF8691-923F-4738-AFA7-AF460BEDCCDA}
-		{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E} = {1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EncryptObject", "EncryptObject", "{31A0E44B-CA42-41D3-837D-1B5677F97245}"

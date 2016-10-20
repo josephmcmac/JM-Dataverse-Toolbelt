@@ -11,6 +11,12 @@ namespace JosephM.CodeGenerator.Xrm
             <XrmCodeGeneratorDialog, XrmCodeGeneratorService, CodeGeneratorRequest, CodeGeneratorResponse,
                 CodeGeneratorResponseItem>
     {
+        public override void InitialiseModule()
+        {
+            base.InitialiseModule();
+            AddHelpUrl("Generate Code", "CodeGeneration");
+        }
+
         protected override string MainOperationName
         {
             get { return "Generate Code"; }

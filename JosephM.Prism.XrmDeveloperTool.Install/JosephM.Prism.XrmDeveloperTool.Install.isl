@@ -341,11 +341,7 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>JosephM.CustomisationImporter.Content_Files</td><td>{B92F1E81-7020-49D2-A363-2CAD8830BCB0}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.customisationimporte</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.CustomisationImporter.Content_Files1</td><td>{9EC676FD-B443-45B7-847C-721D431829A9}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.customisationimporte1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Deployment.Content_Files</td><td>{2F797AE7-2858-4624-935B-0246D696CBCD}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.deployment.content_f</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>{4F317228-DBCE-497A-B143-A498FD0F1D12}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmdeveloperto</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JosephM.Xrm.RecordExtract.Content_Files</td><td>{DC551517-721C-4B3D-8163-FE57FC3290D2}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.xrm.recordextract.co</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1055,9 +1051,6 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>INSTALLDIR</td><td>JosephM.CustomisationImporter.Content_Files1</td></row>
-		<row><td>INSTALLDIR</td><td>JosephM.Deployment.Content_Files</td></row>
-		<row><td>INSTALLDIR</td><td>JosephM.Xrm.RecordExtract.Content_Files</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1872,11 +1865,7 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>AlwaysInstall</td><td>JosephM.CustomisationImporter.Content_Files</td></row>
-		<row><td>AlwaysInstall</td><td>JosephM.CustomisationImporter.Content_Files1</td></row>
-		<row><td>AlwaysInstall</td><td>JosephM.Deployment.Content_Files</td></row>
 		<row><td>AlwaysInstall</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td></row>
-		<row><td>AlwaysInstall</td><td>JosephM.Xrm.RecordExtract.Content_Files</td></row>
 	</table>
 
 	<table name="File">
@@ -1891,11 +1880,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>josephm.customisationimporte</td><td>JosephM.CustomisationImporter.Content_Files</td><td>JosephM.CustomisationImporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.CustomisationImporter&gt;|ContentFiles</td><td>3</td><td/></row>
-		<row><td>josephm.customisationimporte1</td><td>JosephM.CustomisationImporter.Content_Files1</td><td>JosephM.CustomisationImporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.CustomisationImporter&gt;|ContentFiles</td><td>3</td><td/></row>
-		<row><td>josephm.deployment.content_f</td><td>JosephM.Deployment.Content_Files</td><td>JosephM.Deployment.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Deployment&gt;|ContentFiles</td><td>3</td><td/></row>
 		<row><td>josephm.prism.xrmdeveloperto</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>JosephM.Prism.XrmDeveloperTool.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Prism.XrmDeveloperTool&gt;|Built</td><td>3</td><td/></row>
-		<row><td>josephm.xrm.recordextract.co</td><td>JosephM.Xrm.RecordExtract.Content_Files</td><td>JosephM.Xrm.RecordExtract.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Xrm.RecordExtract&gt;|ContentFiles</td><td>3</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2039,11 +2024,7 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>JosephM.CustomisationImporter.Content_Files</td><td/><td/><td>_87650202_D559_4D88_86FD_F6BC861A3EF7_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.CustomisationImporter.Content_Files1</td><td/><td/><td>_AEE6B4ED_5455_46C1_8B5B_EF2358C7065D_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Deployment.Content_Files</td><td/><td/><td>_C98620FA_A70B_4C94_A063_FA89EEF722A2_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td/><td>_AC8C6FCA_7939_4081_B144_5A9E804ACB37_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JosephM.Xrm.RecordExtract.Content_Files</td><td/><td/><td>_4CA6B62C_88C4_4BE4_B18A_70DA35403384_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">

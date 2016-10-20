@@ -29,21 +29,9 @@
 	</ItemGroup>
 	<Import Project="$(MSBuildExtensionsPath32)\InstallShield\2015Limited\InstallShield.targets"/>
 	<ItemGroup>
-		<ProjectReference Include="..\JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj">
-			<Name>JosephM.CustomisationImporter</Name>
-			<Project>{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}</Project>
-		</ProjectReference>
-		<ProjectReference Include="..\JosephM.Deployment\JosephM.Deployment.csproj">
-			<Name>JosephM.Deployment</Name>
-			<Project>{82118987-FB76-4E70-81A0-06D0B062D89C}</Project>
-		</ProjectReference>
 		<ProjectReference Include="..\JosephM.Prism.XrmDeveloperTool\JosephM.Prism.XrmDeveloperTool.csproj">
 			<Name>JosephM.Prism.XrmDeveloperTool</Name>
 			<Project>{F303560E-2FD6-4198-BE27-3EAC2446103C}</Project>
-		</ProjectReference>
-		<ProjectReference Include="..\JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj">
-			<Name>JosephM.Xrm.RecordExtract</Name>
-			<Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>
 		</ProjectReference>
 	</ItemGroup>
 </Project>
