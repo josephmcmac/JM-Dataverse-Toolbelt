@@ -341,6 +341,7 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
+		<row><td>JosephM.CustomisationImporter.Content_Files</td><td>{EDFCAC9A-82D6-4715-BD5F-62AF022D1640}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.customisationimporte</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>{4F317228-DBCE-497A-B143-A498FD0F1D12}</td><td>INSTALLDIR</td><td>2</td><td/><td>josephm.prism.xrmdeveloperto</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
@@ -1051,6 +1052,7 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>INSTALLDIR</td><td>JosephM.CustomisationImporter.Content_Files</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1865,6 +1867,7 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>AlwaysInstall</td><td>JosephM.CustomisationImporter.Content_Files</td></row>
 		<row><td>AlwaysInstall</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td></row>
 	</table>
 
@@ -1880,6 +1883,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>josephm.customisationimporte</td><td>JosephM.CustomisationImporter.Content_Files</td><td>JosephM.CustomisationImporter.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.CustomisationImporter&gt;|ContentFiles</td><td>3</td><td/></row>
 		<row><td>josephm.prism.xrmdeveloperto</td><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td>JosephM.Prism.XrmDeveloperTool.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JosephM.Prism.XrmDeveloperTool&gt;|Built</td><td>3</td><td/></row>
 	</table>
 
@@ -2024,6 +2028,7 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
+		<row><td>JosephM.CustomisationImporter.Content_Files</td><td/><td/><td>_4F65F3C9_78B2_478E_B53E_C5E53F9FC831_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>JosephM.Prism.XrmDeveloperTool.Primary_output</td><td/><td/><td>_AC8C6FCA_7939_4081_B144_5A9E804ACB37_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 

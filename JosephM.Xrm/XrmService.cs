@@ -2022,7 +2022,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 var exists = EntityExists(schemaName);
                 if (exists)
                     metadata = GetEntityMetadata(schemaName);
-
                 metadata.SchemaName = schemaName;
                 metadata.LogicalName = schemaName;
                 metadata.DisplayName = new Label(displayName, 1033);
@@ -2539,6 +2538,60 @@ string recordType)
 
             if (GetEntityMetadata(recordType).PrimaryNameAttribute == schemaName)
                 RefreshEntityMetadata(recordType);
+        }
+
+        public void CreateOrUpdateCustomerAttribute(string schemaName, string displayName, string description,
+            bool isRequired, bool audit, bool searchable, string recordType)
+        {
+            LookupAttributeMetadata metadata;
+            if (FieldExists(schemaName, recordType))
+                metadata = (LookupAttributeMetadata)GetFieldMetadata(schemaName, recordType);
+            else
+                metadata = new LookupAttributeMetadata();
+
+            SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
+
+            if (FieldExists(schemaName, recordType))
+            {
+                CreateOrUpdateAttribute(schemaName, recordType, metadata);
+            }
+            else
+            {
+                throw new NotSupportedException("Creation of Customer type fields is not supported by this application. You will need to create it manually in the web ui");
+                //this code for creating a Customer type field requires SDK V ~8.2
+                //however breaks this app for older CRM versions by introducing 
+                //the HasFeedback property for Entity creation/update requests
+
+                //var request = new CreateCustomerRelationshipsRequest()
+                //{
+                //    Lookup = metadata,
+                //    OneToManyRelationships = new []
+                //    {
+                //        new OneToManyRelationshipMetadata
+                //        {
+                //            SchemaName = string.Format("{0}_{1}_{2}", recordType, "account", schemaName),
+                //            ReferencingEntity = recordType,
+                //            ReferencedEntity = "account"
+                //        },
+                //        new OneToManyRelationshipMetadata
+                //        {
+                //            SchemaName = string.Format("{0}_{1}_{2}", recordType, "contact", schemaName),
+                //            ReferencingEntity = recordType,
+                //            ReferencedEntity = "contact"
+                //        },
+                //    }
+                //};
+
+                //Execute(request);
+                //RefreshFieldMetadata(schemaName, recordType);
+                //metadata = (LookupAttributeMetadata)GetFieldMetadata(schemaName, recordType);
+                //SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
+                //CreateOrUpdateAttribute(schemaName, recordType, metadata);
+                //RefreshFieldMetadata(schemaName, recordType);
+                //RefreshEntityMetadata(recordType);
+                //RefreshEntityMetadata("account");
+                //RefreshEntityMetadata("contact");
+            }
         }
 
         public void CreateOrUpdateAttribute(string schemaName, string displayName, string description,

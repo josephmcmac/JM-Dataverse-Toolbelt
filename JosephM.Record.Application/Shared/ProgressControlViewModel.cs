@@ -41,7 +41,7 @@ namespace JosephM.Application.ViewModel.Shared
         public double FractionCompleted
         {
             get { return _fractionCompleted; }
-            protected set
+            set
             {
                 _fractionCompleted = value;
                 OnPropertyChanged("FractionCompleted");
@@ -51,7 +51,7 @@ namespace JosephM.Application.ViewModel.Shared
         public string Message
         {
             get { return _message; }
-            protected set
+            set
             {
                 _message = value;
                 OnPropertyChanged("Message");

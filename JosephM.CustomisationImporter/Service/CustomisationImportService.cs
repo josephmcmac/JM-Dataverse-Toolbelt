@@ -215,6 +215,15 @@ namespace JosephM.CustomisationImporter.Service
                                         displayName);
                                     break;
                                 }
+                            case (RecordFieldType.Customer):
+                                {
+                                    fieldMetadata = new CustomerFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName)
+                                    {
+                                        DisplayInRelated = row.GetFieldAsBoolean(Headings.Fields.DisplayInRelated)
+                                    };
+                                    break;
+                                }
                             default:
                                 {
                                     fieldMetadata = new AnyFieldMetadata(recordTypeSchemaName, fieldSchemaName,

@@ -10,6 +10,7 @@ using JosephM.Record.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using JosephM.Core.Extentions;
 
 #endregion
 
@@ -55,7 +56,7 @@ namespace JosephM.CustomisationImporter.Test
             {
                 var response = importService.Execute(request, Controller);
                 if (response.HasError)
-                    Assert.IsFalse(response.HasError);
+                    Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
                 ClearCache();
 
                 VerifyRelationships(request);

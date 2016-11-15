@@ -545,6 +545,18 @@ namespace JosephM.Record.Xrm.XrmRecord
                                 recordType);
                         break;
                     }
+                case (RecordFieldType.Customer):
+                    {
+                        var typedField = (CustomerFieldMetadata)field;
+                        _xrmService.CreateOrUpdateCustomerAttribute(typedField.SchemaName,
+                                typedField.DisplayName,
+                                typedField.Description,
+                                typedField.IsMandatory,
+                                typedField.Audit,
+                                typedField.Searchable,
+                                recordType);
+                        break;
+                    }
                 default:
                     {
                         throw new NotImplementedException(string.Format("CreateOrUpdateField Not Implemented For Field {0} In Object {1} For Field Type {2}", field.SchemaName, field.GetType().Name, field.FieldType));

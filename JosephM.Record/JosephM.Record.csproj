@@ -103,6 +103,7 @@
     <Compile Include="Metadata\Fields\BigIntFieldMetadata.cs" />
     <Compile Include="Metadata\CascadeBehaviour.cs" />
     <Compile Include="Metadata\Fields\FileRefFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\CustomerFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\ObjectFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\StateFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\UniqueidentifierFieldMetadata.cs" />
@@ -138,7 +139,7 @@
     <Compile Include="Metadata\Fields\PicklistFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\DateFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\DecimalFieldMetadata.cs" />
-    <Compile Include="Metadata\Fields\LookuplFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\LookupFieldMetadata.cs" />
     <Compile Include="Metadata\RecordMetadata.cs" />
     <Compile Include="Metadata\RelationshipMetadata.cs" />
     <Compile Include="Metadata\Fields\StringFieldMetadata.cs" />

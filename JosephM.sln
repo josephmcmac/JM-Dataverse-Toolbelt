@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A59
 		Lib\Microsoft.Practices.Prism.UnityExtensions.dll = Lib\Microsoft.Practices.Prism.UnityExtensions.dll
 		Lib\Microsoft.Practices.ServiceLocation.dll = Lib\Microsoft.Practices.ServiceLocation.dll
 		Lib\Microsoft.Practices.Unity.dll = Lib\Microsoft.Practices.Unity.dll
-		Lib\microsoft.xrm.client.dll = Lib\microsoft.xrm.client.dll
 		Lib\microsoft.xrm.sdk.dll = Lib\microsoft.xrm.sdk.dll
 		Lib\microsoft.xrm.sdk.workflow.dll = Lib\microsoft.xrm.sdk.workflow.dll
 		Lib\MigraDoc.DocumentObjectModel-WPF.dll = Lib\MigraDoc.DocumentObjectModel-WPF.dll
@@ -121,6 +120,7 @@ EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "JosephM.Prism.XrmDeveloperTool.Install", "JosephM.Prism.XrmDeveloperTool.Install\JosephM.Prism.XrmDeveloperTool.Install.isproj", "{33F4419A-D9BB-410D-AE44-7AE611AEF95A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F303560E-2FD6-4198-BE27-3EAC2446103C} = {F303560E-2FD6-4198-BE27-3EAC2446103C}
+		{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E} = {1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EncryptObject", "EncryptObject", "{31A0E44B-CA42-41D3-837D-1B5677F97245}"
@@ -2512,6 +2512,7 @@ Global
 		{31A0E44B-CA42-41D3-837D-1B5677F97245} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{2FE73DC9-7959-4944-B594-29E73AA79604} = {31A0E44B-CA42-41D3-837D-1B5677F97245}
 		{53651F05-D505-4D59-8FED-E723D26E491F} = {67CE8CD0-4F37-4A0B-897A-E126AF300F8D}
+		{EA89F426-09BA-4F87-B5C5-17CFFB6A89F8} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 		{7BF3E622-67CA-4E67-A9CA-F3B334C954FD} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
 		{245EE7A0-478E-419A-8DC1-E1D201CC55C2} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
 		{9D3EB2D4-EC55-4080-938F-EA409162171D} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}

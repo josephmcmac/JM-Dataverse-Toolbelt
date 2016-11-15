@@ -32,6 +32,7 @@
         BigInt,
         ManagedProperty,
         Object,
-        FileRef
+        FileRef,
+        Customer
     }
 }

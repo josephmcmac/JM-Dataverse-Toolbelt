@@ -53,6 +53,11 @@ namespace JosephM.Xrm
 
                 if (!String.IsNullOrWhiteSpace(organizationUri))
                 {
+                    //noted this code throws a WCF nametable quote exceeded error
+                    //when connecting to CRM 2016 with old SDK assembly versions
+                    //if this occurs the assemblies will require updating to v8.1+
+                    //note this may cause regression for old CRM versions due to new request properties
+                    //e.g. the HasFeedback property on the CreateEntityRequest
                     var orgServiceManagement =
                         ServiceConfigurationFactory.CreateManagement<IOrganizationService>(
                             new Uri(organizationUri));
