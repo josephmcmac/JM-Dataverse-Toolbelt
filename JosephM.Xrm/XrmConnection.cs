@@ -53,6 +53,7 @@ namespace JosephM.Xrm
 
                 if (!String.IsNullOrWhiteSpace(organizationUri))
                 {
+                    //test branch
                     //noted this code throws a WCF nametable quote exceeded error
                     //when connecting to CRM 2016 with old SDK assembly versions
                     //if this occurs the assemblies will require updating to v8.1+
