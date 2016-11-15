@@ -89,7 +89,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void ParseFieldTest()
         {
-            PrepareTests();
+            PrepareTests(true);
             //testing fields getting converted to crm values
             RunTestFunctions(
                 new Action[]
@@ -441,7 +441,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void GetThisSideIdTest()
         {
-            PrepareTests();
+            PrepareTests(true);
             Assert.IsTrue(XrmService.GetThisSideId(Relationships.jmcg_testentity_.jmcg_testentity_jmcg_testentity.Name, Entities.jmcg_testentity, true) ==
                           "jmcg_testentityidone");
             Assert.IsTrue(XrmService.GetThisSideId(Relationships.jmcg_testentity_.jmcg_testentity_jmcg_testentity.Name, Entities.jmcg_testentity, false) ==

@@ -27,7 +27,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
         [TestMethod]
         public void DeploymentExportImportCsvMultipleTest()
         {
-            PrepareTests();
+            PrepareTests(true);
             var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity, Entities.account };
             var workFolder = ClearFilesAndData(types);
 
@@ -53,7 +53,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
         [TestMethod]
         public void DeploymentExportImportXmlMultipleTest()
         {
-            PrepareTests();
+            PrepareTests(true);
             var types = new[] {Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity};
             var workFolder = ClearFilesAndData(types);
 
@@ -90,7 +90,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
         public void DeploymentExportImportXmlSimpleTest()
         {
             var type = TestEntityType;
-            PrepareTests();
+            PrepareTests(true);
             var workFolder = ClearFilesAndData(type);
 
             var importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
@@ -171,7 +171,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
         {
             var query = new QueryExpression();
 
-            PrepareTests();
+            PrepareTests(true);
             var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity };
             var workFolder = ClearFilesAndData(types);
 

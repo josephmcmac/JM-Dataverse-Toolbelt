@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JosephM.Xrm.DeveloperTool.Properties {
+namespace JosephM.Xrm.DeveloperTool2016.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

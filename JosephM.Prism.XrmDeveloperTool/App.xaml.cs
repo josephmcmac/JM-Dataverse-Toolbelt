@@ -22,7 +22,7 @@ namespace JosephM.Xrm.DeveloperTool
         {
             base.OnStartup(e);
 
-            var prism = new PrismApplication("JosephM Xrm Developer Tool");
+            var prism = new PrismApplication("JosephM Xrm Developer Tool 2016");
             prism.AddModule<XrmModuleModule>();
             prism.AddModule<SavedXrmConnectionsModule>();
             prism.AddModule<XrmImporterExporterModule>();
