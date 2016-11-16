@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using EnvDTE80;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
+using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -13,7 +15,9 @@ using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.XRM.VSIX.Utilities;
+using Microsoft.Build.Framework;
 using Microsoft.Practices.Prism;
+using Condition = JosephM.Record.Query.Condition;
 
 namespace JosephM.XRM.VSIX.Commands.DeployAssembly
 {
@@ -44,6 +48,8 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
             {
                 if (_pluginAssembly == null)
                 {
+                    //Not sure why this is here
+                    //don't want to remove in case break something
                     Load();
                 }
                 return _pluginAssembly;
@@ -59,6 +65,13 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
 
             var bytes = File.ReadAllBytes(assemblyFile);
             var assemblyContent = Convert.ToBase64String(bytes);
+
+            var preAssembly = Service.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name, assemblyName);
+
+            PreTypeRecords = preAssembly == null
+                ? new IRecord[0]
+                : Service.RetrieveAllAndClauses(Entities.plugintype, new[] { new Condition(Fields.plugintype_.pluginassemblyid, ConditionType.Equal, preAssembly.Id) });
+
 
             //okay this crazy stuff is to load the assembly dll in a different app domain
             //that way it may be loaded, inspected, then released (removing any lock on the assembly file)
@@ -91,11 +104,18 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
             if(!plugins.Any())
                 throw new Exception("There are no plugin classes in the assembly");
 
+            //WARNING!! DO Not Add Service calls
+            //For some reason visual studio would crash with a WCF communication errror if XrmService calls were made
+            //at a point after the assembly load / app domain code above
+            //I had to move all the XrmService calls to prior at which point it appeared to stop crashing
+            //note it only crfashed in the deployed VSIX
+            //not when debug in the VS Shell
+
+            #region POSTASSEMBLYLOAD
             _pluginAssembly = new PluginAssembly();
             PluginAssembly.Name = assemblyName;
             PluginAssembly.Content = assemblyContent;
 
-            var preAssembly = Service.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name, assemblyName);
             if (preAssembly != null)
             {
                 PluginAssembly.Id = preAssembly.Id;
@@ -120,9 +140,6 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
                 pluginType.InAssembly = true;
                 pluginTypes.Add(pluginType);
             }
-            PreTypeRecords = preAssembly == null 
-                ? new IRecord[0]
-                : Service.RetrieveAllAndClauses(Entities.plugintype, new[] { new Condition(Fields.plugintype_.pluginassemblyid, ConditionType.Equal, PluginAssembly.Id) });
 
             foreach (var item in PreTypeRecords)
             {
@@ -145,6 +162,8 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
                 matchingItem.FriendlyName = item.GetStringField(Fields.plugintype_.friendlyname);
                 matchingItem.Name = item.GetStringField(Fields.plugintype_.name);
                 matchingItem.GroupName = item.GetStringField(Fields.plugintype_.workflowactivitygroupname);
+
+                #endregion POSTASSEMBLYLOAD
             }
 
             foreach (var item in pluginTypes)
