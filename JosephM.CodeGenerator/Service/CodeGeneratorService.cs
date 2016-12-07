@@ -246,7 +246,7 @@ namespace JosephM.CodeGenerator.Service
                 stringBuilder.AppendLine(string.Format("{0}.Options = new Object();", request.Namespace));
                 var fieldsToProcess = request.AllFields
                     ? Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType))
-                    : new[] {request.OptionField?.Key};
+                    : new[] {request.OptionField != null ? request.OptionField.Key : null};
 
                 foreach (var field in fieldsToProcess)
                 {

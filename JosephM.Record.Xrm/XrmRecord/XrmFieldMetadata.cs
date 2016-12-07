@@ -203,7 +203,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             get
             {
                 var id = XrmService.GetFieldMetadata(FieldName, RecordType).MetadataId;
-                return id?.ToString();
+                return id != null ? id.ToString() : null;
             }
         }
     }

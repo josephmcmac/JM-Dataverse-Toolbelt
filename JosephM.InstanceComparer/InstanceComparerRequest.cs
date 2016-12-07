@@ -12,7 +12,7 @@ namespace JosephM.InstanceComparer
     {
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
-        [ConnectionFor(nameof(DataComparisons))]
+        [ConnectionFor("DataComparisons")]
         public SavedXrmRecordConfiguration ConnectionOne { get; set; }
 
         [RequiredProperty]

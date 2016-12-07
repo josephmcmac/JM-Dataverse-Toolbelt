@@ -8,7 +8,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            //var fields = XrmService.GetPrimaryNameField("plugintype");
+            var me = XrmService.WhoAmI();
         }
 
         private void CreateSomeRecords()
