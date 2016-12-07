@@ -90,15 +90,15 @@ namespace JosephM.InstanceComparer
         {
             var processCompareParams = new ProcessCompareParams("Shared Picklist",
                 s => s.GetSharedPicklists().ToArray(),
-                nameof(IPicklistSet.SchemaName),
+                "SchemaName",
                 GetReadableProperties(typeof(IPicklistSet), new[]
                     {
-                        nameof(IPicklistSet.PicklistOptions)
+                        "PicklistOptions"
                     }));
 
             var optionCompareParams = new ProcessCompareParams("Shared Picklist Option",
                 (s, r) => r.GetSharedPicklistOptions(s).ToArray(),
-                nameof(PicklistOption.Key),
+                "Key",
                 GetReadableProperties(typeof(PicklistOption), null));
 
             processCompareParams.ChildCompares = new[] { optionCompareParams };
@@ -150,34 +150,34 @@ namespace JosephM.InstanceComparer
         {
             var processCompareParams = new ProcessCompareParams("Entity",
                 s => s.GetAllRecordTypes().Select(s.GetRecordTypeMetadata).ToArray(),
-                nameof(IRecordTypeMetadata.SchemaName),
+                "SchemaName",
                 GetReadableProperties(typeof(IRecordTypeMetadata), new[]
                     {
-                        nameof(IRecordTypeMetadata.MetadataId), nameof(IRecordTypeMetadata.RecordTypeCode), nameof(IRecordTypeMetadata.Activities), nameof(IRecordTypeMetadata.Notes)
+                        "MetadataId", "RecordTypeCode", "Activities", "Notes"
                     }));
 
             var fieldsCompareParams = new ProcessCompareParams("Field",
                 (s, r) => r.GetFieldMetadata(s).ToArray(),
-                nameof(IFieldMetadata.SchemaName),
+                "SchemaName",
                 GetReadableProperties(typeof(IFieldMetadata), new[]
                     {
-                        nameof(IFieldMetadata.MetadataId)
+                        "MetadataId"
                     }));
 
 
             var fieldsOptionParams = new ProcessCompareParams("Field Options",
                 (field, recordType, service) => service.GetPicklistKeyValues(field, recordType).ToArray(),
-                nameof(PicklistOption.Key),
+                "Key",
                 GetReadableProperties(typeof(PicklistOption), null));
 
             fieldsCompareParams.ChildCompares = new[] { fieldsOptionParams };
 
             var manyToManyCompareParams = new ProcessCompareParams("Many To Many Relationship",
                 (s, r) => r.GetManyToManyRelationships(s).ToArray(),
-                nameof(IMany2ManyRelationshipMetadata.SchemaName),
+                "SchemaName",
                 GetReadableProperties(typeof(IMany2ManyRelationshipMetadata), new[]
                     {
-                        nameof(IMany2ManyRelationshipMetadata.MetadataId)
+                        "MetadataId"
                     }));
 
             var formCompareParams = new ProcessCompareParams("Form",

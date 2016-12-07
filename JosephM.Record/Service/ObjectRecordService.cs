@@ -319,7 +319,7 @@ namespace JosephM.Record.Service
             if (record != null && (!(record is ObjectRecord)))
                 throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name, typeof(ObjectRecord).Name));
 
-            var resolveAttributeReference = GetReferencingAttribute<LookupConditionFor>(nameof(LookupConditionFor.TargetProperty), fieldName, recordType, reference, record);
+            var resolveAttributeReference = GetReferencingAttribute<LookupConditionFor>("TargetProperty", fieldName, recordType, reference, record);
             if (resolveAttributeReference != null && resolveAttributeReference.ReferencingProperty != null)
             {
                 var attr2 = (LookupConditionFor) resolveAttributeReference.ReferencingAttribute;
@@ -348,7 +348,7 @@ namespace JosephM.Record.Service
             if (record != null && (!(record is ObjectRecord)))
                 throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name, typeof(ObjectRecord).Name));
 
-            var resolveAttributeReference = GetReferencingAttribute<ConnectionFor>(nameof(ConnectionFor.Property), fieldName, recordType, reference, record);
+            var resolveAttributeReference = GetReferencingAttribute<ConnectionFor>("Property", fieldName, recordType, reference, record);
             if (resolveAttributeReference != null && resolveAttributeReference.ReferencingProperty != null)
             {
                 return GetLookupServiceForConnectionFor(resolveAttributeReference);
@@ -590,7 +590,7 @@ namespace JosephM.Record.Service
                     {
                         var enumerable = condition.Value as IEnumerable;
                         if (enumerable == null)
-                            throw new Exception(string.Format("{0} must be {1} for {2} {3}", nameof(Condition.Value), typeof(IEnumerable).Name, typeof(Condition).Name, condition.ConditionType));
+                            throw new Exception(string.Format("{0} must be {1} for {2} {3}", "Value", typeof(IEnumerable).Name, typeof(Condition).Name, condition.ConditionType));
                         foreach (var item in enumerable)
                         {
                             if (item.Equals(instance.GetPropertyValue(condition.FieldName)))

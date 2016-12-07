@@ -104,7 +104,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected override IEnumerable<IRecord> GetSearchResults()
         {
             if(LookupService == null)
-                throw new NullReferenceException(string.Format("Error searching field {0}. {1} is null", FieldName, nameof(LookupService)));
+                throw new NullReferenceException(string.Format("Error searching field {0}. {1} is null", FieldName, "LookupService"));
             if (UsePicklist)
             {
                 return FormService.GetLookupPicklist(FieldName, RecordEntryViewModel.GetRecordType(),

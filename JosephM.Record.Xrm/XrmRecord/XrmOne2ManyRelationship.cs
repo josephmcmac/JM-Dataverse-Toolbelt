@@ -58,7 +58,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             get
             {
                 var id = GetMetadata().MetadataId;
-                return id?.ToString();
+                return id != null ? id.ToString() : null;
             }
         }
 
@@ -67,7 +67,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             get
             {
                 var id = GetMetadata().CascadeConfiguration.Delete;
-                return id?.ToString();
+                return id != null ? id.ToString() : null;
             }
         }
     }

@@ -51,7 +51,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 lock (_lockoObject)
                 {
                     _itemsSource = value;
-                    OnPropertyChanged(nameof(ItemsSource));
+                    OnPropertyChanged("ItemsSource");
                     SelectedItem = MatchSelectedItemInItemsSourceToValue();
                 }
             }
@@ -71,7 +71,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     _selectedItem = value;
                     MatchValueToSelectedItems();
-                    OnPropertyChanged(nameof(SelectedItem));
+                    OnPropertyChanged("SelectedItem");
                 }
             }
         }

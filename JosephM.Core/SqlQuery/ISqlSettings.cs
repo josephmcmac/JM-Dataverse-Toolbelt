@@ -5,4 +5,4 @@
         string SqlServer { get; }
         string Database { get; }
     }
-}
+}  

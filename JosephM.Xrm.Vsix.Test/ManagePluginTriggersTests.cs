@@ -64,7 +64,7 @@ namespace JosephM.Xrm.Vsix.Test
             triggersSubGrid = entryViewModel.SubGrids.First();
 
             triggersSubGrid.AddRow();
-            newRow = triggersSubGrid.GridRecords.First(gr => gr.Record.GetField(nameof(PluginTrigger.Id)) == null);
+            newRow = triggersSubGrid.GridRecords.First(gr => gr.Record.GetField("Id") == null);
             PopulateRowForMessage(newRow, "Create");
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
@@ -96,7 +96,7 @@ namespace JosephM.Xrm.Vsix.Test
                     if (field is LookupFieldViewModel)
                     {
                         var typeFieldViewModel = (LookupFieldViewModel) field;
-                        if (field.FieldName == nameof(PluginTrigger.Message))
+                        if (field.FieldName == "Message")
                         {
                             typeFieldViewModel.Value = typeFieldViewModel.LookupService.ToLookup(typeFieldViewModel.ItemsSource.First(m => m.Name == message).Record);
                         }
