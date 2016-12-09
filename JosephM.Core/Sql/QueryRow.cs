@@ -112,5 +112,10 @@ namespace JosephM.Core.Sql
             }
             return columns;
         }
+
+        public int Index
+        {
+            get { return _row.Table.Rows.IndexOf(_row); }
+        }
     }
 }

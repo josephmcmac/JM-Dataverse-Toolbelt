@@ -57,6 +57,10 @@ namespace JosephM.CustomisationImporter.Test
                 var response = importService.Execute(request, Controller);
                 if (response.HasError)
                     Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+
+                Assert.IsFalse(response.ExcelReadErrors);
+                Assert.IsNull(response.Exception);
+
                 ClearCache();
 
                 VerifyRelationships(request);
@@ -72,35 +76,62 @@ namespace JosephM.CustomisationImporter.Test
         public void CustomisationImportTestIgnore()
         {
             var file = "TestCustomisationsIgnore.xls";
+            var response = new CustomisationImportResponse();
 
             var optionMetadata =
-                CustomisationImportService.ExtractOptionSetsFromExcel(file, Controller);
+                CustomisationImportService.ExtractOptionSetsFromExcel(file, Controller, response);
             Assert.AreEqual(1, optionMetadata.Count());
 
             var fieldMetadata =
                 CustomisationImportService.ExtractFieldMetadataFromExcel(file, Controller,
-                    optionMetadata);
+                    optionMetadata, response).Values;
             Assert.AreEqual(1, fieldMetadata.Count());
 
             var recordMetadata =
                 CustomisationImportService.ExtractRecordMetadataFromExcel(file, Controller,
-                    fieldMetadata);
+                    fieldMetadata, response);
             Assert.AreEqual(1, recordMetadata.Count());
 
             var relationshipMetadata =
-                CustomisationImportService.ExtractRelationshipMetadataFromExcel(file, Controller);
+                CustomisationImportService.ExtractRelationshipMetadataFromExcel(file, Controller, response);
             Assert.AreEqual(1, relationshipMetadata.Count());
         }
+
+        [TestMethod]
+        [DeploymentItem("TestCustomisationsSpreadsheetErrors.xlsx")]
+        public void CustomisationImportTestSpreadsheetErrors()
+        {
+            var request = new CustomisationImportRequest
+            {
+                ExcelFile = new FileReference("TestCustomisationsSpreadsheetErrors.xlsx"),
+                IncludeEntities = true,
+                IncludeFields = true,
+                IncludeRelationships = true,
+                UpdateViews = true,
+                UpdateOptionSets = true
+            };
+
+            var importService =
+                new XrmCustomisationImportService(XrmRecordService);
+
+            var response = importService.Execute(request, Controller);
+
+            Assert.IsTrue(response.ExcelReadErrors);
+            Assert.IsNull(response.Exception);
+        }
+
         private void VerifyViews(CustomisationImportRequest request)
         {
+            var response = new CustomisationImportResponse();
+
             var optionMetadata =
-                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller);
+                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller, response);
             var fieldMetadata =
                 CustomisationImportService.ExtractFieldMetadataFromExcel(request.ExcelFile.FileName, Controller,
-                    optionMetadata);
+                    optionMetadata, response).Values;
             var recordMetadata =
                 CustomisationImportService.ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, Controller,
-                    fieldMetadata);
+                    fieldMetadata, response).Values;
             foreach (var metadata in recordMetadata)
             {
                 var viewNamesToUpdate = XrmRecordService.GetViewNamesToUpdate(metadata);
@@ -125,8 +156,10 @@ namespace JosephM.CustomisationImporter.Test
 
         private void VerifyOptionSets(CustomisationImportRequest request)
         {
+            var response = new CustomisationImportResponse();
+
             var optionMetadata =
-                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller);
+                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller, response);
 
             foreach (var optionSet in optionMetadata.Where(o => o.IsSharedOptionSet))
             {
@@ -139,11 +172,13 @@ namespace JosephM.CustomisationImporter.Test
 
         private void VerifyFields(CustomisationImportRequest request)
         {
+            var response = new CustomisationImportResponse();
+
             var optionMetadata =
-                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller);
+                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller, response);
             var fieldMetadata =
                 CustomisationImportService.ExtractFieldMetadataFromExcel(request.ExcelFile.FileName, Controller,
-                    optionMetadata);
+                    optionMetadata, response).Values;
             foreach (var field in fieldMetadata)
             {
                 Assert.IsTrue(XrmRecordService.FieldExists(field.SchemaName, field.RecordType));
@@ -214,14 +249,16 @@ namespace JosephM.CustomisationImporter.Test
 
         private void VerifyRecordTypes(CustomisationImportRequest request)
         {
+            var response = new CustomisationImportResponse();
+
             var optionMetadata =
-                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller);
+                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller, response);
             var fieldMetadata =
                 CustomisationImportService.ExtractFieldMetadataFromExcel(request.ExcelFile.FileName, Controller,
-                    optionMetadata);
+                    optionMetadata, response).Values;
             var recordMetadata =
                 CustomisationImportService.ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, Controller,
-                    fieldMetadata);
+                    fieldMetadata, response).Values;
             foreach (var metadata in recordMetadata)
             {
                 Assert.IsTrue(XrmRecordService.RecordTypeExists(metadata.SchemaName));
@@ -234,8 +271,10 @@ namespace JosephM.CustomisationImporter.Test
 
         private void VerifyRelationships(CustomisationImportRequest request)
         {
+            var response = new CustomisationImportResponse();
+
             var relationShipmetadata =
-                CustomisationImportService.ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, Controller);
+                CustomisationImportService.ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, Controller, response).Values;
             foreach (var metadata in relationShipmetadata)
             {
                 Assert.IsTrue(XrmRecordService.GetManyToManyRelationships(metadata.RecordType1).Any(r => r.SchemaName == metadata.SchemaName));
@@ -270,11 +309,13 @@ namespace JosephM.CustomisationImporter.Test
 
         private void DeleteOptionSets(IEnumerable<CustomisationImportRequest> requests)
         {
+            var response = new CustomisationImportResponse();
+
             foreach (var request in requests)
             {
                 var optionMetadata =
                     CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName,
-                        Controller);
+                        Controller, response);
                 foreach (var metadata in optionMetadata)
                 {
                     if (metadata.IsSharedOptionSet &&
@@ -287,16 +328,18 @@ namespace JosephM.CustomisationImporter.Test
 
         private void DeleteEntities(IEnumerable<CustomisationImportRequest> requests)
         {
+            var response = new CustomisationImportResponse();
+
             foreach (var request in requests)
             {
                 var optionMetadata =
-                    CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller);
+                    CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller, response);
                 var fieldMetadata =
                     CustomisationImportService.ExtractFieldMetadataFromExcel(request.ExcelFile.FileName, Controller,
-                        optionMetadata);
+                        optionMetadata, response).Values;
                 var recordMetadata =
                     CustomisationImportService.ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, Controller,
-                        fieldMetadata);
+                        fieldMetadata, response).Values;
                 foreach (
                     var metadata in recordMetadata)
                 {
@@ -309,12 +352,14 @@ namespace JosephM.CustomisationImporter.Test
 
         private void DeleteRelationships(IEnumerable<CustomisationImportRequest> requests)
         {
+            var response = new CustomisationImportResponse();
+
             foreach (var request in requests)
             {
                 foreach (
                     var metadata in
                         CustomisationImportService.ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName,
-                            Controller))
+                            Controller, response).Values)
                 {
                     if (XrmRecordService.RecordTypeExists(metadata.RecordType1))
                     {

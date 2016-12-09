@@ -185,6 +185,8 @@ Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "JosephM.XRMDeveloperTool201
 		{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E} = {1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Spreadsheet.Test", "JosephM.Spreadsheet.Test\JosephM.Spreadsheet.Test.csproj", "{C33164E5-3A07-409A-A330-250A0F323100}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -2587,6 +2589,7 @@ Global
 		{01DB6BF5-1FA7-46C2-87AC-850E12670ACD} = {F54DAEB3-F26D-41A6-93E4-3A3B7921A621}
 		{6F65E14C-F70A-466B-A874-AC42CA7C31E6} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
+		{C33164E5-3A07-409A-A330-250A0F323100} = {42B099DB-0DD6-4312-B980-09AEAD911B90}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
