@@ -110,6 +110,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImportMetadata\ImportPicklistOption.cs" />
     <Compile Include="Prism\XrmCustomisationImportDialog.cs" />
     <Compile Include="Prism\CustomisationImportModule.cs" />
     <Compile Include="Service\CustomisationImportResponseItem.cs" />
@@ -117,6 +118,8 @@
     <Compile Include="Service\CustomisationImportResponse.cs" />
     <Compile Include="Service\CustomisationImportService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\ImportFieldsResponse.cs" />
+    <Compile Include="Service\ImportRecordTypesResponse.cs" />
     <Compile Include="Service\XrmCustomisationImportService.cs" />
   </ItemGroup>
   <ItemGroup>

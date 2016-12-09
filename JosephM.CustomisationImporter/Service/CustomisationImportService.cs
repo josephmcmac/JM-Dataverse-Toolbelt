@@ -3,6 +3,7 @@
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.CustomisationImporter.ImportMetadata;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
@@ -34,28 +35,45 @@ namespace JosephM.CustomisationImporter.Service
         public override void ExecuteExtention(CustomisationImportRequest request, CustomisationImportResponse response,
             LogController controller)
         {
-            controller.LogLiteral("Reading from excel");
+            controller.LogLiteral("Reading excel spreadsheet");
+
+            //todo log read errors for all
             var optionSets = ExtractOptionSetsFromExcel(request.ExcelFile.FileName,
-                controller);
+                controller, response);
             var fieldMetadataToImport = ExtractFieldMetadataFromExcel(
-                request.ExcelFile.FileName, controller, optionSets);
+                request.ExcelFile.FileName, controller, optionSets, response);
             var recordMetadataToImport =
-                ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, controller, fieldMetadataToImport);
+                ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, controller, fieldMetadataToImport.Values, response);
             var relationshipMetadataToImport =
-                ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, controller);
+                ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, controller, response);
+
+            if(response.ResponseItemsWithError.Any())
+            {
+                response.ExcelReadErrors = true;
+                return;
+            }
 
             CheckCrmConnection(controller);
 
+            var createdRecordTypes = new List<string>();
+            var createdFields = new List<FieldMetadata>();
+
             if (request.IncludeEntities)
-                ImportRecordTypes(recordMetadataToImport, controller, response);
+            {
+                var importRecordsResponse = ImportRecordTypes(recordMetadataToImport, controller, response);
+                createdRecordTypes.AddRange(importRecordsResponse.CreatedRecordTypes);
+            }
             if (request.UpdateOptionSets)
                 ImportSharedOptionSets(optionSets, controller, response);
             if (request.IncludeFields)
-                ImportFieldTypes(fieldMetadataToImport, controller, response);
+            {
+                var importFieldsResponse = ImportFieldTypes(fieldMetadataToImport, controller, response, createdRecordTypes);
+                createdFields.AddRange(importFieldsResponse.CreatedFields);
+            }
             if (request.UpdateOptionSets)
-                ImportFieldOptionSets(recordMetadataToImport, controller, response);
+                ImportFieldOptionSets(recordMetadataToImport.Values, controller, response, createdFields);
             if (request.UpdateViews)
-                ImportViews(recordMetadataToImport, controller, response);
+                ImportViews(recordMetadataToImport.Values, controller, response, createdRecordTypes);
             if (request.IncludeRelationships)
                 ImportRelationships(relationshipMetadataToImport, controller, response);
             controller.LogLiteral("Publishing Changes");
@@ -63,30 +81,36 @@ namespace JosephM.CustomisationImporter.Service
             RecordService.ClearCache();
         }
 
-        public static IEnumerable<FieldMetadata> ExtractFieldMetadataFromExcel(string excelFile,
+        public static IDictionary<int,FieldMetadata> ExtractFieldMetadataFromExcel(string excelFile,
             LogController controller,
             IEnumerable<PicklistOptionSet>
-                picklistOptionSets)
+                picklistOptionSets, CustomisationImportResponse response)
         {
             var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
                 FieldsTabName);
-            var fields = new List<FieldMetadata>();
+            var fields = new Dictionary<int,FieldMetadata>();
             foreach (var row in rows)
             {
                 if (row.GetColumnNames().Contains(Headings.Fields.Ignore)
                     && row.GetFieldAsBoolean(Headings.Fields.Ignore))
                     continue;
 
-                FieldMetadata fieldMetadata = null;
-                var type = row.GetFieldAsEnum<RecordFieldType>(Headings.Fields.FieldType);
-
                 var fieldSchemaName = row.GetFieldAsString(Headings.Fields.SchemaName);
-                if (!String.IsNullOrWhiteSpace(fieldSchemaName))
+
+                try
                 {
-                    var recordTypeSchemaName = row.GetFieldAsString(Headings.Fields.RecordTypeSchemaName);
-                    try
+                    FieldMetadata fieldMetadata = null;
+                    var type = row.GetFieldAsEnum<RecordFieldType>(Headings.Fields.FieldType);
+
+                    if (!String.IsNullOrWhiteSpace(fieldSchemaName))
                     {
+                        var recordTypeSchemaName = row.GetFieldAsString(Headings.Fields.RecordTypeSchemaName);
+
                         var displayName = row.GetFieldAsString(Headings.Fields.DisplayName);
+                        if (string.IsNullOrWhiteSpace(displayName))
+                            throw new NullReferenceException(string.Format("{0} Is Required", Headings.Fields.DisplayName));
+
+
                         switch (type)
                         {
                             case (RecordFieldType.Boolean):
@@ -236,21 +260,19 @@ namespace JosephM.CustomisationImporter.Service
                         fieldMetadata.IsMandatory = row.GetFieldAsBoolean(Headings.Fields.IsMandatory);
                         fieldMetadata.Audit = row.GetFieldAsBoolean(Headings.Fields.Audit);
                         fieldMetadata.Searchable = row.GetFieldAsBoolean(Headings.Fields.Searchable);
-                        fields.Add(fieldMetadata);
+                        fields.Add(row.Index + 1, fieldMetadata);
                     }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(
-                            "Error retrieving field from excel\nRecord Type: " + recordTypeSchemaName + "\nField: " +
-                            fieldSchemaName, ex);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    response.AddResponseItem(row.Index + 1, FieldsTabName, fieldSchemaName, ex);
                 }
             }
             return fields;
         }
 
         private void ImportFieldOptionSets(IEnumerable<RecordMetadata> recordMetadata, LogController controller,
-            CustomisationImportResponse response)
+            CustomisationImportResponse response, IEnumerable<FieldMetadata> createdFields)
         {
             var picklistFields = recordMetadata
                 .SelectMany(m => m.Fields)
@@ -271,7 +293,8 @@ namespace JosephM.CustomisationImporter.Service
                         var entityType = recordMetadata.First(rm => rm.Fields.Contains(field)).SchemaName;
                         RecordService.UpdateFieldOptionSet(entityType, field.SchemaName,
                             field.PicklistOptionSet);
-                        response.AddResponseItem("Field Option Set", field.SchemaName, true);
+                        var updated = !createdFields.Contains(field);
+                        response.AddResponseItem("Field Option Set", field.SchemaName, updated);
                     }
                     catch (Exception ex)
                     {
@@ -310,7 +333,7 @@ namespace JosephM.CustomisationImporter.Service
         }
 
         private void ImportViews(IEnumerable<RecordMetadata> metadata, LogController controller,
-            CustomisationImportResponse response)
+            CustomisationImportResponse response, IEnumerable<string> createdRecordTypes)
         {
             var numberToDo = metadata.Count();
             var numberCompleted = 0;
@@ -319,8 +342,8 @@ namespace JosephM.CustomisationImporter.Service
                 var recordMetadata = metadata.ElementAt(i);
                 try
                 {
-                    controller.UpdateProgress(numberCompleted++, numberToDo, "Importing views");
-                    var isUpdate = RecordService.RecordTypeExists(recordMetadata.SchemaName);
+                    controller.UpdateProgress(numberCompleted++, numberToDo, "Importing Views");
+                    var isUpdate = !createdRecordTypes.Contains(recordMetadata.SchemaName);
                     if (recordMetadata.Views.Any(f => f.Fields.Any(g => g.Order >= 0 && g.Width > 0)))
                         RecordService.UpdateViews(recordMetadata);
                     else
@@ -340,85 +363,115 @@ namespace JosephM.CustomisationImporter.Service
             RecordService.VerifyConnection();
         }
 
-        private void ImportRelationships(IEnumerable<Many2ManyRelationshipMetadata> metadata, LogController controller,
+        private void ImportRelationships(IDictionary<int, Many2ManyRelationshipMetadata> metadata, LogController controller,
             CustomisationImportResponse response)
         {
             var numberToDo = metadata.Count();
             var numberCompleted = 0;
             for (var i = 0; i < metadata.Count(); i++)
             {
-                var recordMetadata = metadata.ElementAt(i);
+                var keyValue = metadata.ElementAt(i);
+                var excelRow = keyValue.Key;
+                var recordMetadata = keyValue.Value;
                 try
                 {
-                    controller.UpdateProgress(numberCompleted++, numberToDo, "Importing relationships");
+                    controller.UpdateProgress(numberCompleted++, numberToDo, string.Format("Importing {0}", RelationshipTabName));
                     var isUpdate = RecordService.GetManyToManyRelationships(recordMetadata.RecordType1).Any(r => r.SchemaName == recordMetadata.SchemaName);
                     RecordService.CreateOrUpdate(recordMetadata);
-                    response.AddResponseItem("Relationship", recordMetadata.SchemaName, isUpdate);
+                    response.AddResponseItem(excelRow, RelationshipTabName, recordMetadata.SchemaName, isUpdate);
                 }
                 catch (Exception ex)
                 {
-                    response.AddResponseItem("Relationship", recordMetadata.SchemaName, ex);
+                    response.AddResponseItem(excelRow, RelationshipTabName, recordMetadata.SchemaName, ex);
                 }
             }
         }
 
-        private void ImportFieldTypes(IEnumerable<FieldMetadata> metadata, LogController controller,
-            CustomisationImportResponse response)
+        private ImportFieldsResponse ImportFieldTypes(IDictionary<int, FieldMetadata> metadata, LogController controller,
+            CustomisationImportResponse response, IEnumerable<string> createdRecordTypes)
         {
+            var importFieldsResponse = new ImportFieldsResponse();
+
             var numberToDo = metadata.Count();
             var numberCompleted = 0;
             for (var i = 0; i < metadata.Count(); i++)
             {
-                var field = metadata.ElementAt(i);
+                var keyValue = metadata.ElementAt(i);
+                var excelRow = keyValue.Key;
+                var field = keyValue.Value;
                 try
                 {
-                    controller.UpdateProgress(numberCompleted++, numberToDo, "Importing fields");
-                    var isUpdate = RecordService.FieldExists(field.SchemaName, field.RecordType);
+                    controller.UpdateProgress(numberCompleted++, numberToDo, string.Format("Importing {0}", FieldsTabName));
+
+                    //If this is a primary field and the record type was created this import
+                    //then the field has already been created when the record type was created
+                    if (field is StringFieldMetadata
+                        && ((StringFieldMetadata)field).IsPrimaryField
+                        && createdRecordTypes.Contains(field.RecordType))
+                    {
+                        importFieldsResponse.AddCreatedField(field);
+                        continue;
+                    }
+
+                    var isUpdate = !createdRecordTypes.Contains(field.RecordType)
+                        && RecordService.FieldExists(field.SchemaName, field.RecordType);
+
                     RecordService.CreateOrUpdate(field, field.RecordType);
-                    response.AddResponseItem("Field", field.SchemaName, isUpdate);
+                    response.AddResponseItem(excelRow, FieldsTabName, field.SchemaName, isUpdate);
+                    if (!isUpdate)
+                        importFieldsResponse.AddCreatedField(field);
                 }
                 catch (Exception ex)
                 {
-                    response.AddResponseItem("Field", field.SchemaName, ex);
+                    response.AddResponseItem(excelRow, FieldsTabName, field.SchemaName, ex);
                 }
             }
+            return importFieldsResponse;
         }
 
-        private void ImportRecordTypes(IEnumerable<RecordMetadata> metadata, LogController controller,
+        private ImportRecordTypesResponse ImportRecordTypes(IDictionary<int, RecordMetadata> metadata, LogController controller,
             CustomisationImportResponse response)
         {
+            var thisResponse = new ImportRecordTypesResponse();
+
             var numberToDo = metadata.Count();
             var numberCompleted = 0;
             for (var i = 0; i < metadata.Count(); i++)
             {
-                var recordMetadata = metadata.ElementAt(i);
+                var keyValue = metadata.ElementAt(i);
+                var excelRow = keyValue.Key;
+                var recordMetadata = keyValue.Value;
                 try
                 {
-                    controller.UpdateProgress(numberCompleted++, numberToDo, "Importing record types");
+                    controller.UpdateProgress(numberCompleted++, numberToDo, string.Format("Importing {0}", EntityTabName));
                     var isUpdate = RecordService.RecordTypeExists(recordMetadata.SchemaName);
                     RecordService.CreateOrUpdate(recordMetadata);
                     if (!isUpdate)
-                        response.AddResponseItem("Field", recordMetadata.GetPrimaryFieldMetadata().SchemaName, false);
-                    response.AddResponseItem("Record Type", recordMetadata.SchemaName, isUpdate);
+                    {
+                        thisResponse.AddCreatedRecordType(recordMetadata.SchemaName);
+                        response.AddResponseItem(FieldsTabName, recordMetadata.GetPrimaryFieldMetadata().SchemaName, false);
+                    }
+                    response.AddResponseItem(excelRow, EntityTabName, recordMetadata.SchemaName, isUpdate);
                 }
                 catch (Exception ex)
                 {
-                    response.AddResponseItem("Record Type", recordMetadata.SchemaName, ex);
+                    response.AddResponseItem(excelRow, EntityTabName, recordMetadata.SchemaName, ex);
                 }
             }
+            return thisResponse;
         }
 
         /// <summary>
         ///     Reads a set of mappings from the Excel file which contains the entity and field mapping metadata
         /// </summary>
-        internal static IEnumerable<Many2ManyRelationshipMetadata> ExtractRelationshipMetadataFromExcel(string excelFile,
-            LogController controller)
+        internal static IDictionary<int, Many2ManyRelationshipMetadata> ExtractRelationshipMetadataFromExcel(string excelFile,
+            LogController controller, CustomisationImportResponse response)
         {
-            var result = new List<Many2ManyRelationshipMetadata>();
+            var result = new Dictionary<int, Many2ManyRelationshipMetadata>();
 
             var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
                 RelationshipTabName);
-            //For each row
+            //For each row log errors
             foreach (var row in rows)
             {
                 if (row.GetColumnNames().Contains(Headings.Relationships.Ignore)
@@ -445,11 +498,15 @@ namespace JosephM.CustomisationImporter.Service
                             RecordType1DisplayOrder = row.GetFieldAsBoolean(Headings.Relationships.RecordType1DisplayRelated) ? row.GetFieldAsInteger(Headings.Relationships.RecordType1DisplayOrder) : -1,
                             RecordType2DisplayOrder = row.GetFieldAsBoolean(Headings.Relationships.RecordType2DisplayRelated) ? row.GetFieldAsInteger(Headings.Relationships.RecordType2DisplayOrder) : -1
                         };
-                        result.Add(mapping);
+                        if (string.IsNullOrWhiteSpace(mapping.RecordType1))
+                            throw new NullReferenceException(string.Format("{0} Is Required", Headings.Relationships.RecordType1));
+                        if (string.IsNullOrWhiteSpace(mapping.RecordType2))
+                            throw new NullReferenceException(string.Format("{0} Is Required", Headings.Relationships.RecordType2));
+                        result.Add(row.Index + 1, mapping);
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("Error reading relationship from excel: " + relationshipName, ex);
+                        response.AddResponseItem(row.Index +1, RelationshipTabName, relationshipName, ex);
                     }
                 }
             }
@@ -459,12 +516,12 @@ namespace JosephM.CustomisationImporter.Service
         /// <summary>
         ///     Reads a set of mappings from the Excel file which contains the entity and field mapping metadata
         /// </summary>
-        internal static IEnumerable<RecordMetadata> ExtractRecordMetadataFromExcel(string excelFile,
+        internal static IDictionary<int, RecordMetadata> ExtractRecordMetadataFromExcel(string excelFile,
             LogController controller,
             IEnumerable<FieldMetadata>
-                fieldMetadata)
+                fieldMetadata, CustomisationImportResponse response)
         {
-            var result = new List<RecordMetadata>();
+            var result = new Dictionary<int, RecordMetadata>();
 
             var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
                 EntityTabName);
@@ -496,12 +553,16 @@ namespace JosephM.CustomisationImporter.Service
                             Queues = row.GetFieldAsBoolean(Headings.RecordTypes.Queues)
                         };
                         mapping.Fields = fieldMetadata.Where(f => f.RecordType == mapping.SchemaName).ToArray();
-                        mapping.Views = new[] { GetView(mapping.SchemaName, excelFile, controller) };
-                        result.Add(mapping);
+                        mapping.Views = new[] { GetView(mapping.SchemaName, excelFile, controller, response) };
+
+                        if (string.IsNullOrWhiteSpace(mapping.DisplayName))
+                            throw new NullReferenceException(string.Format("{0} Is Required", Headings.RecordTypes.DisplayName));
+
+                        result.Add(row.Index + 1, mapping);
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("Error reading entity from excel: " + schemaName, ex);
+                        response.AddResponseItem(row.Index + 1, EntityTabName, schemaName, ex);
                     }
                 }
             }
@@ -510,7 +571,7 @@ namespace JosephM.CustomisationImporter.Service
         }
 
         public static IEnumerable<PicklistOptionSet> ExtractOptionSetsFromExcel(string excelFile,
-            LogController controller)
+            LogController controller, CustomisationImportResponse response)
         {
             var result = new List<PicklistOptionSet>();
             try
@@ -540,13 +601,26 @@ namespace JosephM.CustomisationImporter.Service
 
                         var options = rows
                             .Where(r => r.GetFieldAsString(Headings.OptionSets.OptionSetName) == thisOptionSetName)
-                            .Select(r => new PicklistOption(r.GetFieldAsString(Headings.OptionSets.Index), r.GetFieldAsString(Headings.OptionSets.Label)))
+                            .Select(r => new ImportPicklistOption(r.GetFieldAsString(Headings.OptionSets.Index), r.GetFieldAsString(Headings.OptionSets.Label), r.Index))
                             .ToArray();
 
                         foreach (var option in options)
                         {
-                            if (option.Value.StartsWith("TXT_"))
-                                option.Value = option.Value.Substring(4);
+                            try
+                            {
+                                if (isShared && string.IsNullOrWhiteSpace(schemaName))
+                                    throw new NullReferenceException(string.Format("{0} Is Required", Headings.OptionSets.SchemaName));
+                                if (string.IsNullOrWhiteSpace(option.Key))
+                                    throw new NullReferenceException(string.Format("{0} Is Required", Headings.OptionSets.Index));
+                                if (string.IsNullOrWhiteSpace(option.Value))
+                                    throw new NullReferenceException(string.Format("{0} Is Required", Headings.OptionSets.Label));
+                                if (option.Value.StartsWith("TXT_"))
+                                        option.Value = option.Value.Substring(4);
+                            }
+                            catch(Exception ex)
+                            {
+                                response.AddResponseItem(option.ExcelRow, OptionSetsTabName, option.Value, ex);
+                            }
                         }
 
                         var picklistOptionSet = new PicklistOptionSet(options, isShared, schemaName, thisOptionSetName);
@@ -554,7 +628,7 @@ namespace JosephM.CustomisationImporter.Service
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("Error retrieving option set " + thisOptionSetName, ex);
+                        throw new Exception("Error loading option set " + thisOptionSetName, ex);
                     }
                 }
             }
@@ -565,7 +639,7 @@ namespace JosephM.CustomisationImporter.Service
             return result;
         }
 
-        private static ViewMetadata GetView(string recordType, string excelFile, LogController controller)
+        private static ViewMetadata GetView(string recordType, string excelFile, LogController controller, CustomisationImportResponse response)
         {
             var fieldRows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
                 FieldsTabName);
@@ -573,21 +647,29 @@ namespace JosephM.CustomisationImporter.Service
             var viewFields = new List<ViewField>();
             foreach (
                 var row in
-                    fieldRows.Where(r => r.GetFieldAsString("Record Type Schema Name") == recordType))
+                    fieldRows.Where(r => r.GetFieldAsString(Headings.Fields.RecordTypeSchemaName) == recordType))
             {
-                var viewOrderString = row.GetFieldAsString("View Order");
-                if (!string.IsNullOrWhiteSpace(viewOrderString))
+                var fieldName = row.GetFieldAsString(Headings.Fields.SchemaName);
+                try
                 {
-                    var order = row.GetFieldAsInteger("View Order");
-                    if (order >= 0)
+                    var viewOrderString = row.GetFieldAsString(Headings.Fields.ViewOrder);
+                    if (!string.IsNullOrWhiteSpace(viewOrderString))
                     {
-                        var viewWidth = string.IsNullOrWhiteSpace(row.GetFieldAsString("View Width"))
-                            ? 100
-                            : row.GetFieldAsInteger("View Width");
-                        var viewField = new ViewField(row.GetFieldAsString("Schema Name"), order
-                            , viewWidth);
-                        viewFields.Add(viewField);
+                        var order = row.GetFieldAsInteger(Headings.Fields.ViewOrder);
+                        if (order >= 0)
+                        {
+                            var viewWidth = string.IsNullOrWhiteSpace(row.GetFieldAsString("View Width"))
+                                ? 100
+                                : row.GetFieldAsInteger("View Width");
+                            var viewField = new ViewField(fieldName, order
+                                , viewWidth);
+                            viewFields.Add(viewField);
+                        }
                     }
+                }
+                catch(Exception ex)
+                {
+                    response.AddResponseItem(row.Index + 1, "View Field", string.Format("{0}.{1}", recordType, fieldName), ex);
                 }
             }
 
