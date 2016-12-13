@@ -39,7 +39,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     if (_itemsSource == null && LookupService != null)
                     {
-                        _itemsSource = GetPicklistOptions();
+                        _itemsSource = GetPicklistOptions().OrderBy(p => p.Name);
                         SelectedItem = MatchSelectedItemInItemsSourceToValue();
                         OnPropertyChanged("SelectedItem");
                     }
@@ -108,7 +108,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
                     try
                     {
-                        ItemsSource = GetPicklistOptions();
+                        ItemsSource = GetPicklistOptions().OrderBy(p => p.Name).ToArray();
                     }
                     catch (Exception ex)
                     {

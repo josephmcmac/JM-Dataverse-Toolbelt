@@ -14,23 +14,10 @@ namespace JosephM.RecordCounts.Exporter
         }
 
         [RequiredProperty]
-        public Folder SaveToFolder { get; set;}
+        public Folder SaveToFolder { get; set; }
 
-        private bool _onlyIncludeSelectedOwner;
         [RequiredProperty]
-        public bool OnlyIncludeSelectedOwner
-        {
-            get
-            {
-                return _onlyIncludeSelectedOwner;
-            }
-            set
-            {
-                _onlyIncludeSelectedOwner = value;
-                if (GroupCountsByOwner)
-                    GroupCountsByOwner = false;
-            }
-        }
+        public bool OnlyIncludeSelectedOwner { get; set; }
 
         [PropertyInContextByPropertyValue("OnlyIncludeSelectedOwner", true)]
         [ReferencedType(Entities.systemuser)]

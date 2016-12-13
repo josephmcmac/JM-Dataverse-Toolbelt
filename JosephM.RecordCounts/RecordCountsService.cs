@@ -87,7 +87,6 @@ namespace JosephM.RecordCounts.Exporter
                            {
                                thisDictionary[noOwnerIndex]++;
                            }
-                           controller.LogLiteral("Loading Types");
                        });
                     var fields = hasOwner
                         ? new[] { "ownerid" }
