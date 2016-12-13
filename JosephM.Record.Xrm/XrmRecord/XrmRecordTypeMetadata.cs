@@ -1,4 +1,5 @@
-﻿using JosephM.Record.IService;
+﻿using System;
+using JosephM.Record.IService;
 using JosephM.Xrm;
 
 namespace JosephM.Record.Xrm.XrmRecord
@@ -83,6 +84,14 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 var id = XrmService.GetEntityMetadata(SchemaName).MetadataId;
                 return id != null ? id.ToString() : null;
+            }
+        }
+
+        public bool HasOwner
+        {
+            get
+            {
+                return XrmService.GetEntityMetadata(SchemaName).OwnershipType == Microsoft.Xrm.Sdk.Metadata.OwnershipTypes.UserOwned;
             }
         }
     }

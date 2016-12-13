@@ -75,6 +75,14 @@ namespace JosephM.Record.Metadata
             get { return GetPrimaryFieldMetadata().Audit; }
         }
 
+        public bool HasOwner
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public bool HasPrimaryFieldMetadata()
         {
             return Fields.Where(f => f is StringFieldMetadata).Cast<StringFieldMetadata>().Any(f => f.IsPrimaryField);

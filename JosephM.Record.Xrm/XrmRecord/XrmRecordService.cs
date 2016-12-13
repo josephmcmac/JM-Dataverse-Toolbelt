@@ -960,5 +960,15 @@ namespace JosephM.Record.Xrm.XrmRecord
                 parsedValue = ((Money)parsedValue).Value;
             return parsedValue;
         }
+
+        public void ProcessResults(string recordType, IEnumerable<string> fields, IEnumerable<Condition> conditions, Action<IEnumerable<IRecord>> processEachResultSet)
+        {
+            var query = XrmService.BuildQuery(recordType, fields, ToConditionExpressions(conditions, recordType), null);
+            XrmService.ProcessQueryResults(query, (entities) =>
+            {
+                var records = ToIRecords(entities);
+                processEachResultSet(records);
+            });
+        }
     }
 }

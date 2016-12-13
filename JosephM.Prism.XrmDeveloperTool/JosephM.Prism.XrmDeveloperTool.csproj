@@ -219,6 +219,10 @@
       <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
       <Name>JosephM.Record.Xrm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.RecordCounts\JosephM.RecordCounts.csproj">
+      <Project>{2B4C0363-133C-4A96-9D18-E3A90CA60F25}</Project>
+      <Name>JosephM.RecordCounts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>

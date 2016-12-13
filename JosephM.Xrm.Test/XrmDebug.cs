@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xrm.Sdk;
 
 namespace JosephM.Xrm.Test
 {
@@ -8,7 +9,29 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            var me = XrmService.WhoAmI();
+            //var type = Entities.account;
+            //var numberToCreate = 6000;
+            //CreateRecords(type, numberToCreate);
+        }
+
+        private void CreateRecords(string type, int numberToCreate)
+        {
+            var setSize = 100;
+            var numberCreated = 0;
+            while (numberCreated < numberToCreate)
+            {
+                var creates = new System.Collections.Generic.List<Entity>();
+                for (var i = 0; i < setSize; i++)
+                {
+                    var entity = new Entity(type);
+                    entity.SetField(XrmService.GetPrimaryNameField(type), "Test Record " + i);
+                    creates.Add(entity);
+                    numberCreated++;
+                    if (numberCreated >= numberToCreate)
+                        break;
+                }
+                XrmService.CreateMultiple(creates);
+            }
         }
 
         private void CreateSomeRecords()
