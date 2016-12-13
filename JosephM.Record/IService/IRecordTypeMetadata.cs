@@ -32,5 +32,7 @@
         string RecordTypeCode { get; }
 
         string MetadataId { get; }
+
+        bool HasOwner { get; }
     }
 }

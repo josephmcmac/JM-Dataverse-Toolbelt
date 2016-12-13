@@ -321,6 +321,23 @@ namespace JosephM.Xrm.Test
             get { return XrmService.WhoAmI(); }
         }
 
+        private Guid? _notCurrentUserId;
+        public Guid NotCurrentUserId
+        {
+            get
+            {
+                if (!_notCurrentUserId.HasValue)
+                {
+                    var conditions = new[] { new ConditionExpression("systemuserid", ConditionOperator.NotEqual, CurrentUserId) };
+                    var user = XrmService.RetrieveFirst(XrmService.BuildQuery("systemuser", new string[0], conditions, null));
+                    if (user == null)
+                        throw new NullReferenceException("Could not find other user");
+                    _notCurrentUserId = user.Id;
+                }
+                return _notCurrentUserId.Value;
+            }
+        }
+
         protected Entity CreateAccount()
         {
             var entity = new Entity("account");

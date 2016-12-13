@@ -109,9 +109,9 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public override Process StartProcess(string fileName, string arguments = null)
         {
-            var process = base.StartProcess(fileName, arguments);
-            process.Kill();
-            return process;
+            //var process = base.StartProcess(fileName, arguments);
+            //process.Kill();
+            return null;
         }
     }
 }

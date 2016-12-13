@@ -10,6 +10,7 @@ using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Xrm.ImportExporter.Prism;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.Xrm.RecordExtract.TextSearch;
+using JosephM.RecordCounts.Exporter;
 
 namespace JosephM.Xrm.DeveloperTool
 {
@@ -33,6 +34,7 @@ namespace JosephM.Xrm.DeveloperTool
             prism.AddModule<CustomisationExporterModule>();
             prism.AddModule<CustomisationImportModule>();
             prism.AddModule<InstanceComparerModule>();
+            prism.AddModule<RecordCountsModule>();
             prism.Run();
         }
     }
