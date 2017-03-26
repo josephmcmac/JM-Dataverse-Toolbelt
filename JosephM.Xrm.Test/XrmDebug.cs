@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using System;
 
 namespace JosephM.Xrm.Test
 {
@@ -9,6 +10,13 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+            var recordType = "opportunity";
+            var schemaName = "jmc_abc";
+            var indexOf_ = schemaName.IndexOf("_");
+            if (indexOf_ == -1)
+                throw new Exception("Could not determine prefix of field for new relationship name");
+            var prefix = schemaName.Substring(0, indexOf_ + 1);
+            var usePrefix = !recordType.StartsWith(prefix);
             //var type = Entities.account;
             //var numberToCreate = 6000;
             //CreateRecords(type, numberToCreate);
