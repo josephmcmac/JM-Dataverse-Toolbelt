@@ -19,6 +19,8 @@ namespace JosephM.Record.Xrm.Test
         [TestMethod]
         public void XrmRecordDebug()
         {
+            var config = XrmConfiguration;
+
             var views = XrmRecordService.GetFirst("sdkmessagefilter", "primaryobjecttypecode", "none");
         }
     }

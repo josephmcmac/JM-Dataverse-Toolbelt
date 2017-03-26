@@ -2365,11 +2365,17 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 }
                 else
                 {
+                    var indexOf_ = schemaName.IndexOf("_");
+                    if (indexOf_ == -1)
+                        throw new Exception("Could not determine prefix of field for new relationship name");
+                    var prefix = schemaName.Substring(0, indexOf_ + 1);
+                    var usePrefix = !recordType.StartsWith(prefix);
                     var request = new CreateOneToManyRequest
                     {
-                        OneToManyRelationship = new OneToManyRelationshipMetadata
+
+                    OneToManyRelationship = new OneToManyRelationshipMetadata
                         {
-                            SchemaName = string.Format("{0}_{1}_{2}", recordType, referencedEntityType, schemaName),
+                            SchemaName = string.Format("{0}{1}_{2}_{3}", usePrefix ? prefix : "", recordType, referencedEntityType, schemaName),
                             AssociatedMenuConfiguration = new AssociatedMenuConfiguration
                             {
                                 Behavior = displayInRelated ? AssociatedMenuBehavior.UseCollectionName : AssociatedMenuBehavior.DoNotDisplay
