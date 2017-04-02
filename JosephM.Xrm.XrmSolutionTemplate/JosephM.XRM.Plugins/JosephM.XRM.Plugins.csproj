@@ -45,10 +45,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xrm.Client, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\Microsoft.Xrm.Client.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Microsoft.Xrm.Sdk.dll</HintPath>
@@ -146,7 +142,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\Microsoft.Crm.Sdk.Proxy.dll" />
-    <Content Include="Lib\Microsoft.Xrm.Client.dll" />
     <Content Include="Lib\Microsoft.Xrm.Sdk.dll" />
     <Content Include="Lib\Microsoft.Xrm.Sdk.Workflow.dll" />
   </ItemGroup>

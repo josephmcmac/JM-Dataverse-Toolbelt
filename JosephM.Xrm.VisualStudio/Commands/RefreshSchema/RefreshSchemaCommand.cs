@@ -96,12 +96,12 @@ namespace JosephM.XRM.VSIX.Commands.RefreshSchema
                 FileName = fileInfo.Name,
                 Namespace = "Schema"
             };
-
             var dialog = new VsixServiceDialog<XrmCodeGeneratorService, CodeGeneratorRequest, CodeGeneratorResponse, CodeGeneratorResponseItem>(
                 codeGeneratorService,
                 request,
                 new DialogController(new VsixApplicationController("VSIX", null)));
-
+            //refresh cache in case customisation changes have been made
+            xrmService.ClearCache();
             DialogUtility.LoadDialog(dialog);
         }
     }

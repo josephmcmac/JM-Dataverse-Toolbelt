@@ -69,7 +69,6 @@
       </Folder>
       <Folder Name="Lib" TargetFolderName="Lib">
         <ProjectItem ReplaceParameters="false" TargetFileName="Microsoft.Crm.Sdk.Proxy.dll">Microsoft.Crm.Sdk.Proxy.dll</ProjectItem>
-        <ProjectItem ReplaceParameters="false" TargetFileName="Microsoft.Xrm.Client.dll">Microsoft.Xrm.Client.dll</ProjectItem>
         <ProjectItem ReplaceParameters="false" TargetFileName="Microsoft.Xrm.Sdk.dll">Microsoft.Xrm.Sdk.dll</ProjectItem>
         <ProjectItem ReplaceParameters="false" TargetFileName="Microsoft.Xrm.Sdk.Workflow.dll">Microsoft.Xrm.Sdk.Workflow.dll</ProjectItem>
       </Folder>
