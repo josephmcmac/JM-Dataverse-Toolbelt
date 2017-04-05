@@ -37,5 +37,20 @@ namespace JosephM.Core.Test
 
             CsvUtility.CreateCsv(TestingFolder, "CsvObjects" + DateTime.Now.ToFileTime() + "", objects);
         }
+
+        [DeploymentItem("TestCsv.csv")]
+        [TestMethod]
+        public void CsvUtilityReadCsvTest()
+        {
+            Assert.Inconclusive("Need to set the file TestCsv.csv Copy To Output Directory which breaks VSIX build");
+
+            CsvUtility.ConstructTextSchema(null, "TestCsv.csv");
+            var rows = CsvUtility.SelectAllRows("TestCsv.csv");
+            Assert.IsTrue(rows.Count() == 3);
+            var textString = rows.Last().GetFieldAsString("TextStringField");
+            Assert.IsTrue(textString.Length >= 300);
+            var phoneString = rows.Last().GetFieldAsString("PhoneNumber");
+            Assert.IsTrue(phoneString.StartsWith("0"));
+        }
     }
 }
