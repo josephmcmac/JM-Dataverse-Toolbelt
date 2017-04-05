@@ -89,17 +89,17 @@ namespace JosephM.Core.Utility
         /// <param name="fileName"></param>
         public static void ConstructTextSchema(string folder, string fileName)
         {
-            if (File.Exists(folder + @"\Schema.ini"))
-                File.Delete(folder + @"\Schema.ini");
             if (folder.IsNullOrWhiteSpace())
                 folder = AppDomain.CurrentDomain.BaseDirectory;
+            if (File.Exists(folder + @"\Schema.ini"))
+                File.Delete(folder + @"\Schema.ini");
             var schema = new StringBuilder();
             var fields = GetColumns(Path.Combine(folder, fileName)).ToList();
             schema.AppendLine("[" + fileName + "]");
             schema.AppendLine("ColNameHeader=True");
             for (var i = 0; i < fields.Count(); i++)
             {
-                schema.AppendLine("col" + (i + 1) + "=\"" + fields[i] + "\" Text");
+                schema.AppendLine("col" + (i + 1) + "=\"" + fields[i] + "\" Memo");
             }
             FileUtility.WriteToFile(folder, "Schema.ini", schema.ToString());
         }
