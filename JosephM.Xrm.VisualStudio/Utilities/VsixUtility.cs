@@ -248,7 +248,19 @@ namespace JosephM.XRM.VSIX.Utilities
                             var changedFields = record
                                 .GetFieldsInEntity()
                                 .Where(f => !service.FieldsEqual(record.GetField(f), matchingItem.GetField(f)))
-                                .ToArray();
+                                .ToList();
+
+                            //added this for plugin types where workflow activity
+                            //do not update the in/out arguments
+                            //explicitly setting the pluginassemblyid seems to refresh them
+                            if (record.Type == "plugintype"
+                                && record.GetBoolField("isworkflowactivity")
+                                && record.ContainsField("pluginassemblyid")
+                                && !changedFields.Contains("pluginassemblyid"))
+                            {
+                                changedFields.Add("pluginassemblyid");
+                            }
+
                             if (changedFields.Any())
                             {
                                 service.Update(record, changedFields);
