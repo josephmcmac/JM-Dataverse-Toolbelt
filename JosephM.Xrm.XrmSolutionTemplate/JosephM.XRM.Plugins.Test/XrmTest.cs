@@ -15,6 +15,7 @@ using Microsoft.Xrm.Sdk.Query;
 
 namespace $safeprojectname$
 {
+    [DeploymentItem("solution.xrmconnection")]
     [TestClass]
     public abstract class XrmTest
     {
@@ -38,11 +39,27 @@ namespace $safeprojectname$
         protected XrmTest()
         {
             Controller = new LogController();
-            XrmService = new XrmService(XrmConfiguration, Controller);
+            XrmServiceAdmin = new XrmService(XrmConfiguration, Controller);
         }
 
         protected LogController Controller { get; private set; }
-        public XrmService XrmService { get; private set; }
+
+        /// <summary>
+        /// Standard User Connection For Operations In The Test Script
+        /// If you need to script security roles then override this with a connection for a user with that security role
+        /// </summary>
+        public virtual XrmService XrmService
+        {
+            get
+            {
+                return XrmServiceAdmin;
+            }
+        }
+
+        /// <summary>
+        /// Admin Connection For Operations In The Test Script
+        /// </summary>
+        public XrmService XrmServiceAdmin { get; private set; }
 
         public virtual IXrmConfiguration XrmConfiguration
         {
@@ -57,13 +74,13 @@ namespace $safeprojectname$
                 foreach (var prop in xrmConfig.GetType().GetReadWriteProperties())
                 {
                     var value = dictionary[prop.Name];
-                    if (value != null && prop.Name == "Password")
+                    if (value != null && prop.Name == nameof(XrmConfiguration.Password))
                         xrmConfig.SetPropertyByString(prop.Name, new Password(value).GetRawPassword());
                     else
                         xrmConfig.SetPropertyByString(prop.Name, value);
                 }
                 return xrmConfig;
-        }
+            }
         }
 
         public string ExecutionPath
@@ -174,18 +191,20 @@ namespace $safeprojectname$
             return CreateAndRetrieve(entity);
         }
 
-        public virtual Entity CreateAndRetrieve(Entity entity)
+        public virtual Entity CreateAndRetrieve(Entity entity, XrmService xrmService = null)
         {
-            var primaryField = XrmService.GetPrimaryNameField(entity.LogicalName);
+            if (xrmService == null)
+                xrmService = XrmService;
+            var primaryField = xrmService.GetPrimaryNameField(entity.LogicalName);
             if (!entity.Contains(primaryField))
-                entity.SetField(primaryField, "Test Scripted Record".Left(XrmService.GetMaxLength(primaryField, entity.LogicalName)));
+                entity.SetField(primaryField, "Test Scripted Record".Left(xrmService.GetMaxLength(primaryField, entity.LogicalName)));
             if (entity.LogicalName == "contact" && !entity.Contains("firstname"))
                 entity.SetField("firstname", "Test");
             if (entity.LogicalName == "lead" && !entity.Contains("firstname"))
                 entity.SetField("firstname", "Test");
-            if (!entity.Contains("transactioncurrencyid") && XrmService.FieldExists("transactioncurrencyid", entity.LogicalName))
+            if (!entity.Contains("transactioncurrencyid") && xrmService.FieldExists("transactioncurrencyid", entity.LogicalName))
                 entity.SetLookupField("transactioncurrencyid", TransactionCurrency);
-            return XrmService.CreateAndRetreive(entity);
+            return xrmService.CreateAndRetreive(entity);
         }
 
         public Entity UpdateAndRetreive(Entity entity)
@@ -217,7 +236,7 @@ namespace $safeprojectname$
 
         public void Delete(Entity entity)
         {
-            XrmService.Delete(entity);
+            XrmServiceAdmin.Delete(entity);
         }
 
         public Guid CurrentUserId
@@ -236,15 +255,15 @@ namespace $safeprojectname$
             var query = XrmService.BuildQuery(entityType, new string[] { },
                 new[]
                 {
-                    new ConditionExpression("createdby", ConditionOperator.Equal, CurrentUserId),
-                    new ConditionExpression("createdon", ConditionOperator.Today)
+                        new ConditionExpression("createdby", ConditionOperator.Equal, CurrentUserId),
+                        new ConditionExpression("createdon", ConditionOperator.Today)
                 }, null);
-            var entities = XrmService.RetrieveAll(query);
+            var entities = XrmServiceAdmin.RetrieveAll(query);
             foreach (var entity in entities)
             {
                 try
                 {
-                    XrmService.Delete(entity);
+                    XrmServiceAdmin.Delete(entity);
                 }
                 catch (Exception)
                 {
@@ -566,10 +585,17 @@ namespace $safeprojectname$
             }
         }
 
+        public virtual Entity UpdateFieldsAndRetreive(XrmService xrmService, Entity entity, params string[] fieldsToUpdate)
+        {
+            if (xrmService == null)
+                xrmService = XrmService;
+            xrmService.Update(entity, fieldsToUpdate);
+            return xrmService.Retrieve(entity.LogicalName, entity.Id);
+        }
+
         public virtual Entity UpdateFieldsAndRetreive(Entity entity, params string[] fieldsToUpdate)
         {
-            XrmService.Update(entity, fieldsToUpdate);
-            return XrmService.Retrieve(entity.LogicalName, entity.Id);
+            return UpdateFieldsAndRetreive(XrmService, entity, fieldsToUpdate);
         }
 
         protected Entity CreateAccount()
@@ -603,14 +629,14 @@ namespace $safeprojectname$
             return account;
         }
 
-        public Entity CreateTestRecord(string entityType, Dictionary<string, object> fields)
+        public Entity CreateTestRecord(string entityType, Dictionary<string, object> fields, XrmService xrmService = null)
         {
             var entity = new Entity(entityType);
             foreach (var field in fields)
             {
                 entity.SetField(field.Key, field.Value);
             }
-            return CreateAndRetrieve(entity);
+            return CreateAndRetrieve(entity, xrmService);
         }
 
         public IEnumerable<Entity> GetRegardingEmails(Entity regardingObject)
@@ -637,6 +663,8 @@ namespace $safeprojectname$
             var instance = new T();
             instance.XrmService = XrmService;
             instance.LogController = Controller;
+            instance.InitiatingUserId = XrmService.WhoAmI();
+            instance.IsSandboxIsolated = true;
             return instance;
         }
 
@@ -646,7 +674,6 @@ namespace $safeprojectname$
             var instance = CreateWorkflowInstance<T>();
             instance.TargetId = target.Id;
             instance.TargetType = target.LogicalName;
-            instance.IsSandboxIsolated = true;
             return instance;
         }
 
@@ -655,8 +682,8 @@ namespace $safeprojectname$
             var firstContactConnections = XrmService.RetrieveAllAndClauses("connection",
                 new[]
                 {
-                    new ConditionExpression("record1id", ConditionOperator.Equal,
-                        entity.Id)
+                        new ConditionExpression("record1id", ConditionOperator.Equal,
+                            entity.Id)
                 });
             return firstContactConnections;
         }
@@ -697,8 +724,8 @@ namespace $safeprojectname$
             var query = XrmService.BuildQuery("teammembership", new string[0],
                 new[]
                 {
-                    new ConditionExpression("systemuserid", ConditionOperator.Equal, userId),
-                    new ConditionExpression("teamid", ConditionOperator.Equal, teamId),
+                        new ConditionExpression("systemuserid", ConditionOperator.Equal, userId),
+                        new ConditionExpression("teamid", ConditionOperator.Equal, teamId),
                 }, null);
             return XrmService.RetrieveFirst(query) != null;
         }
@@ -760,9 +787,9 @@ namespace $safeprojectname$
                         var target = XrmService.GetLookupTargetEntity(field, type);
                         var typesToExlcude = new[]
                     {
-                                "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
-                                "campaign", "territory"
-                            };
+                                    "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
+                                    "campaign", "territory"
+                                };
                         if (!typesToExlcude.Contains(target))
                             entity.SetField(field, CreateTestRecord(target).ToEntityReference());
                         break;

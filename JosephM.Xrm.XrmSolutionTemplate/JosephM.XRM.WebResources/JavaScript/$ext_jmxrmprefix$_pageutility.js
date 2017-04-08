@@ -295,7 +295,19 @@ $ext_jmobjprefix$PageUtility = function () {
     },
 
     this.GetFieldLabel = function (field) {
-        return Xrm.Page.getControl(field).getLabel();
+        var control = Xrm.Page.getControl(field);
+        if (control == null)
+            return "[Error in GetFieldLabel " + field + " not on form]";
+        return control.getLabel();
+    },
+
+    this.GetFieldDisplay = function (field) {
+        var attr = Xrm.Page.getAttribute(field);
+        if (attr == null)
+            return "[Error in GetFieldDisplay " + field + " not on form]";
+        if (attr.getText != null)
+            return attr.getText();
+        return that.GetFieldValue(field);
     },
 
     this.DoNothing = function () {
@@ -347,6 +359,12 @@ $ext_jmobjprefix$PageUtility = function () {
                     }
                 });
             });
+        }
+    },
+    this.SetGridVisibility = function (gridName, isVisible) {
+        var control = Xrm.Page.getControl(gridName);
+        if (control != null) {
+            control.setVisible(isVisible);
         }
     },
     this.LoadGridData = function (gridName) {

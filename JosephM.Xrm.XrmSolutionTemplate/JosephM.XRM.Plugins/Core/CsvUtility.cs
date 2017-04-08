@@ -5,6 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Collections;
+using System.Data.OleDb;
+using System.Data;
+using System.IO;
+
 
 #endregion
 
@@ -13,7 +18,7 @@ namespace $safeprojectname$.Core
     public class CsvUtility
     {
         private const string CsvNewLine = @"
-";
+    ";
 
         public static void CreateCsv<T>(string path, string name, IEnumerable<T> objects)
         {
@@ -28,82 +33,39 @@ namespace $safeprojectname$.Core
             {
                 var typeToOutput = objects.First(o => o != null).GetType();
 
-                var propertyNames = typeToOutput.GetReadableProperties().Select(p => p.Name).ToArray();
-                var propertyNamesText = String.Join(",", propertyNames);
-                FileUtility.CheckCreateFile(path, name, propertyNamesText);
+                var propertyNames = typeToOutput.GetReadableProperties().Select(s => s.Name).ToArray();
 
-                var stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine();
-
-                foreach (var o in objects)
-                {
-                    var thisObjectType = o.GetType();
-                    var valueStrings = new List<string>();
-                    foreach (var property in propertyNames)
+                CreateCsv(path, name, objects, propertyNames
+                    , delegate (string s)
                     {
-                        object value = null;
-                        if (thisObjectType.GetProperty(property) != null)
-                            value = o.GetPropertyValue(property);
-                        if (value == null)
-                            valueStrings.Add("");
-                        else
-                        {
-                            var thisString = value.ToString();
-                            thisString = thisString.Replace("\n", CsvNewLine);
-                            thisString = thisString.Replace("\"", "\"\"");
-                            valueStrings.Add("\"" + thisString + "\"");
-                        }
-                    }
-                    stringBuilder.AppendLine(string.Join(",", valueStrings));
-                }
-                FileUtility.AppendToFile(path, name, stringBuilder.ToString());
+                        return typeToOutput.GetProperty(s).GetDisplayName();
+                    }, delegate (object o, string s)
+                    {
+                        return o.GetPropertyValue(s);
+                    });
             }
         }
 
-        /// <summary>
-        ///     Outputs where the type uses csvattributes
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="objects"></param>
-        /// <returns></returns>
-        public static string CreateCsvText<T>(IEnumerable<T> objects)
+        public static void CreateCsv(string path, string name, IEnumerable objects, IEnumerable<string> propertyNames, Func<string, string> getLabel, Func<object, string, object> getField)
         {
-            var headerToPropertyNameMaps = new SortedDictionary<int, KeyValuePair<string, string>>();
-            var preoperties = typeof(T).GetProperties();
-            foreach (var property in preoperties)
-            {
-                var customerAttribute = property.GetCustomAttribute<CsvAttribute>();
-                if (customerAttribute != null)
-                {
-                    if (headerToPropertyNameMaps.ContainsKey(customerAttribute.Order))
-                        throw new Exception(
-                            string.Format(
-                                "Type {0} Has Multiple Properties With {1} Order Of {2}. The Order Must Be Unique"
-                                , typeof(T).Name, typeof(CsvAttribute).Name, customerAttribute.Order));
-                    headerToPropertyNameMaps.Add(customerAttribute.Order,
-                        new KeyValuePair<string, string>(customerAttribute.Label, property.Name));
-                }
-            }
+            var propertyLabels = propertyNames.Select(getLabel).ToArray();
+            var propertyNamesText = String.Join(",", propertyLabels);
+            FileUtility.CheckCreateFile(path, name, propertyNamesText);
 
-            var propertyNamesText = String.Join(",",
-                headerToPropertyNameMaps.OrderBy(i => i.Key).Select(i => i.Value.Key));
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(propertyNamesText);
+            stringBuilder.AppendLine();
 
             foreach (var o in objects)
             {
-                var thisObjectType = o.GetType();
                 var valueStrings = new List<string>();
-                foreach (var property in headerToPropertyNameMaps.OrderBy(i => i.Key))
+                foreach (var property in propertyNames)
                 {
-                    object value = null;
-                    if (thisObjectType.GetProperty(property.Value.Value) != null)
-                        value = o.GetPropertyValue(property.Value.Value);
+                    object value = getField(o, property);
                     if (value == null)
                         valueStrings.Add("");
                     else
                     {
-                        var thisString = value.ToString();
+                        var thisString = value.ToString() ?? "";
                         thisString = thisString.Replace("\n", CsvNewLine);
                         thisString = thisString.Replace("\"", "\"\"");
                         valueStrings.Add("\"" + thisString + "\"");
@@ -111,7 +73,7 @@ namespace $safeprojectname$.Core
                 }
                 stringBuilder.AppendLine(string.Join(",", valueStrings));
             }
-            return stringBuilder.ToString();
+            FileUtility.AppendToFile(path, name, stringBuilder.ToString());
         }
 
         private static string GetCsvFileName(string name)
@@ -119,16 +81,102 @@ namespace $safeprojectname$.Core
             return name.ToLower().EndsWith(".csv") ? name : name + ".csv";
         }
 
-        public class CsvAttribute : Attribute
+        /// <summary>
+        /// Generates a Schema.ini fiel for the csv specifiying all columns as type text
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="fileName"></param>
+        public static void ConstructTextSchema(string folder, string fileName)
         {
-            public int Order { get; set; }
-            public string Label { get; set; }
-
-            public CsvAttribute(int order, string label)
+            if (folder.IsNullOrWhiteSpace())
+                folder = AppDomain.CurrentDomain.BaseDirectory;
+            if (File.Exists(folder + @"\Schema.ini"))
+                File.Delete(folder + @"\Schema.ini");
+            var schema = new StringBuilder();
+            var fields = GetColumns(Path.Combine(folder, fileName)).ToList();
+            schema.AppendLine("[" + fileName + "]");
+            schema.AppendLine("ColNameHeader=True");
+            for (var i = 0; i < fields.Count(); i++)
             {
-                Label = label;
-                Order = order;
+                schema.AppendLine("col" + (i + 1) + "=\"" + fields[i] + "\" Memo");
             }
+            FileUtility.WriteToFile(folder, "Schema.ini", schema.ToString());
+        }
+
+        public static IEnumerable<string> GetColumns(string fileNameQualified)
+        {
+            var sql = string.Format("select top 1 * from [{0}]", GetTableName(fileNameQualified));
+            var result = SelectRows(fileNameQualified, sql);
+            if (!result.Any())
+                throw new NullReferenceException(string.Format("Error examining CSV. There were no rows returned in the csv {0}", fileNameQualified));
+            var row = result.First();
+            return row.GetColumnNames();
+        }
+
+        public static IEnumerable<QueryRow> SelectRows(string fileNameQualified, string sql)
+        {
+            return SelectRows(GetFolder(fileNameQualified), GetFileName(fileNameQualified), sql);
+        }
+
+        public static IEnumerable<QueryRow> SelectRows(string folder, string fileName, string sql)
+        {
+            OleDbDataAdapter dAdapter = null;
+            try
+            {
+                if (folder.IsNullOrWhiteSpace())
+                    folder = AppDomain.CurrentDomain.BaseDirectory;
+                var connString = GetConnectionString(folder);
+                var dTable = new DataTable();
+                dAdapter = new OleDbDataAdapter(sql, connString);
+                dAdapter.Fill(dTable);
+                var itemsToAdd = new List<DataRow>();
+                foreach (DataRow row in dTable.Rows)
+                {
+                    itemsToAdd.Add(row);
+                }
+                return itemsToAdd.Select(r => new QueryRow(r)).ToArray();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error reading from csv tab\nFolder: " + folder + "\nFile: " + fileName + "\n" +
+                                    ex.DisplayString());
+            }
+            finally
+            {
+                if (dAdapter != null)
+                {
+                    dAdapter.Dispose();
+                }
+            }
+        }
+
+        private static string GetConnectionString(string path)
+        {
+            var connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;"
+                                   + "Data Source=\"" + path + "\\\";"
+                                   + "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"";
+            return connectionString;
+        }
+
+        public static IEnumerable<QueryRow> SelectAllRows(string fileNameQualified)
+        {
+            return SelectRows(GetFolder(fileNameQualified), GetFileName(fileNameQualified),
+                "select * from [" + GetTableName(fileNameQualified) + "]");
+        }
+
+        private static string GetFolder(string fileNameQualified)
+        {
+            return Path.GetDirectoryName(fileNameQualified);
+        }
+
+        private static string GetFileName(string fileNameQualified)
+        {
+            return Path.GetFileName(fileNameQualified);
+        }
+
+        public static string GetTableName(string fileNameQualified)
+        {
+            return Path.GetFileName(fileNameQualified);
         }
     }
 }

@@ -101,5 +101,20 @@ namespace $safeprojectname$.Core
 
             throw new NotSupportedException("cannot parse double from null: " + fieldName);
         }
+
+        public IEnumerable<string> GetColumnNames()
+        {
+            var columns = new List<string>();
+            foreach (DataColumn column in _row.Table.Columns)
+            {
+                columns.Add(column.ColumnName);
+            }
+            return columns;
+        }
+
+        public int Index
+        {
+            get { return _row.Table.Rows.IndexOf(_row); }
+        }
     }
 }
