@@ -28,9 +28,12 @@ namespace JosephM.Xrm.ImporterExporter.Test
         [TestMethod]
         public void DeploymentExportImportCsvMultipleTest()
         {
-            PrepareTests();
+            PrepareTests(true);
             var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity, Entities.account };
             var workFolder = ClearFilesAndData(types);
+            var testimportTeam = XrmService.GetFirst("team", "name", "TestImportTeam");
+            if (testimportTeam != null)
+                XrmService.Delete(testimportTeam);
 
             File.Copy(@"Account.csv", Path.Combine(workFolder, @"Account.csv"));
             File.Copy(@"jmcg_testentity_account.csv", Path.Combine(workFolder, @"jmcg_testentity_account.csv"));
