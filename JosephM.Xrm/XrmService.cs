@@ -1109,7 +1109,10 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
         public Entity GetFirst(string entityType, string fieldName, object fieldValue, string[] fields)
         {
             var query = new QueryExpression(entityType);
-            query.Criteria.AddCondition(fieldName, ConditionOperator.Equal, fieldValue);
+            var condition = fieldValue == null
+                ? new ConditionExpression(fieldName, ConditionOperator.Null)
+                : new ConditionExpression(fieldName, ConditionOperator.Equal, fieldValue);
+            query.Criteria.AddCondition(condition);
             if (fields != null)
                 query.ColumnSet = new ColumnSet(fields);
             else

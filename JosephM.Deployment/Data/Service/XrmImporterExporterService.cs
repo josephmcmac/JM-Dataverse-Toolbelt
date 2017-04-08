@@ -443,6 +443,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                             }
                             else
                             {
+                                PopulateRequiredCreateFields(fieldsToRetry, thisEntity, fieldsToSet);
                                 CheckThrowValidForCreate(thisEntity, fieldsToSet);
                                 thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
                             }
@@ -601,6 +602,25 @@ namespace JosephM.Xrm.ImportExporter.Service
                     }
                 }
             }
+        }
+
+        private void PopulateRequiredCreateFields(Dictionary<Entity, List<string>> fieldsToRetry, Entity thisEntity, List<string> fieldsToSet)
+        {
+            if (thisEntity.LogicalName == "team"
+                && !fieldsToSet.Contains("businessunitid")
+                && XrmService.FieldExists("businessunitid", "team"))
+            {
+                thisEntity.SetLookupField("businessunitid", GetRootBusinessUnitId(), "businessunit");
+                fieldsToSet.Add("businessunitid");
+                if (fieldsToRetry.ContainsKey(thisEntity)
+                    && fieldsToRetry[thisEntity].Contains("businessunitid"))
+                    fieldsToRetry[thisEntity].Remove("businessunitid");
+            }
+        }
+
+        private Guid GetRootBusinessUnitId()
+        {
+            return XrmService.GetFirst("businessunit", "parentbusinessunitid", null, new string[0]).Id;
         }
 
         private List<string> GetTargetTypesToTry(Entity thisEntity, string field)
@@ -863,14 +883,17 @@ namespace JosephM.Xrm.ImportExporter.Service
             {
                 if (exportType.IncludeInactive)
                 {
-                    if (entity.GetOptionSetValue("statecode") != XrmPicklists.State.Active)
+                    var activeStates = new List<int>(new []{ XrmPicklists.State.Active });
+                    if (entity.LogicalName == "product")
+                        activeStates.AddRange(new[] { 2, 3 });//draft and under revision for latest crm releases
+                    if (!activeStates.Contains(entity.GetOptionSetValue("statecode")))
                         return true;
                 }
             }
-            //exlcude 1 = public
+            //include 1 = public
             if (entity.LogicalName == "queue" && entity.GetOptionSetValue("queueviewtype") == 1)
                 return true;
-            //exlcude 1 = customer service 2 = holiday schedule
+            //exclude 1 = customer service 2 = holiday schedule
             if (entity.LogicalName == "calendar" && !new[] { 1, 2, }.Contains(entity.GetOptionSetValue("type")))
                 return true;
             return false;

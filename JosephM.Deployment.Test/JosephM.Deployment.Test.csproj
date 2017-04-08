@@ -82,6 +82,9 @@
     <None Include="Files\jmcg_testentity_account.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Files\Team.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Files\Test Entity Three.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

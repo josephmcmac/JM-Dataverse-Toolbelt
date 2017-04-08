@@ -157,5 +157,18 @@ namespace $safeprojectname$.Xrm
         {
             TracingService.Trace(message);
         }
+
+        private Guid? _initiatingUserId;
+        public Guid InitiatingUserId
+        {
+            get
+            {
+                if (_initiatingUserId.HasValue)
+                    return _initiatingUserId.Value;
+                else
+                    return Context.InitiatingUserId;
+            }
+            set { _initiatingUserId = value; }
+        }
     }
 }

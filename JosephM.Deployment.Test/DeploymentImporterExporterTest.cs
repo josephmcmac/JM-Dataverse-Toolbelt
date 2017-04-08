@@ -24,10 +24,11 @@ namespace JosephM.Xrm.ImporterExporter.Test
         [DeploymentItem(@"Files\Test Entity.csv")]
         [DeploymentItem(@"Files\Test Entity Two.csv")]
         [DeploymentItem(@"Files\Test Entity Three.csv")]
+        [DeploymentItem(@"Files\Team.csv")]
         [TestMethod]
         public void DeploymentExportImportCsvMultipleTest()
         {
-            PrepareTests(true);
+            PrepareTests();
             var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity, Entities.account };
             var workFolder = ClearFilesAndData(types);
 
@@ -36,6 +37,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             File.Copy(@"Test Entity.csv", Path.Combine(workFolder, @"Test Entity.csv"));
             File.Copy(@"Test Entity Two.csv", Path.Combine(workFolder, @"Test Entity Two.csv"));
             File.Copy(@"Test Entity Three.csv", Path.Combine(workFolder, @"Test Entity Three.csv"));
+            File.Copy(@"Team.csv", Path.Combine(workFolder, @"Team.csv"));
 
             var importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
 

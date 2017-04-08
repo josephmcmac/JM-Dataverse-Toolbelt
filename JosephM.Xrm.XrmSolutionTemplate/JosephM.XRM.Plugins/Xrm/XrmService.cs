@@ -3181,7 +3181,8 @@ namespace $safeprojectname$.Xrm
         {
             var orderClose = new Entity("orderclose");
             orderClose["salesorderid"] = new EntityReference { LogicalName = "salesorder", Id = orderId };
-
+            orderClose["subject"] = "Order Fulfilled";
+            orderClose["description"] = "Order Fulfilled";
             var request = new FulfillSalesOrderRequest
             {
                 OrderClose = orderClose,
