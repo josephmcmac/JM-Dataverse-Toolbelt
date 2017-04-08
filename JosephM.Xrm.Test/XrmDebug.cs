@@ -10,6 +10,8 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+            //Schema.Fields.savedquery_.
+
             var recordType = "opportunity";
             var schemaName = "jmc_abc";
             var indexOf_ = schemaName.IndexOf("_");

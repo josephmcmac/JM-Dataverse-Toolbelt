@@ -69,7 +69,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Schema.cs" />
+    <Compile Include="TestSchema.cs" />
     <Compile Include="XrmDebug.cs" />
     <Compile Include="FakeOrganisationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
