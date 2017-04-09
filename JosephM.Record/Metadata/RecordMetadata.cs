@@ -98,5 +98,13 @@ namespace JosephM.Record.Metadata
                     .Cast<StringFieldMetadata>().First(f => f.IsPrimaryField);
             throw new ArgumentNullException("There is no primary field defined for type " + SchemaName);
         }
+
+        public string SchemaNameQualified
+        {
+            get
+            {
+                return SchemaName ?? DisplayName;
+            }
+        }
     }
 }

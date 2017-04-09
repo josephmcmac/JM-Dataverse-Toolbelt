@@ -42,7 +42,7 @@ namespace JosephM.Record.Metadata
 
         public string Description { get; set; }
         public string RecordType { get; set; }
-        public string SchemaName { get; private set; }
+        public string SchemaName { get; set; }
         public string DisplayName { get; private set; }
         public abstract RecordFieldType FieldType { get; }
         public bool IsMandatory { get; set; }
@@ -68,6 +68,15 @@ namespace JosephM.Record.Metadata
         public bool IsCustomField { get; set; }
 
         public string MetadataId { get; set; }
+
+        public string SchemaNameQualified
+        {
+            get
+            {
+                return string.Format("{0}.{1}", RecordType, SchemaName ?? DisplayName);
+            }
+        }
+
         public static FieldMetadata Create(PropertyInfo propertyInfo)
         {
             var recordType = propertyInfo.ReflectedType != null ? propertyInfo.ReflectedType.Name : null;

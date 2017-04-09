@@ -34,5 +34,18 @@ namespace JosephM.Record.Xrm.XrmRecord
                     .ToArray();
             }
         }
+
+        public string MetadataId
+        {
+            get { return XrmService.GetSharedPicklist(SchemaName).MetadataId.ToString(); }
+        }
+
+        public string SchemaNameQualified
+        {
+            get
+            {
+                return XrmService.GetSharedPicklist(SchemaName).Name.ToString();
+            }
+        }
     }
 }

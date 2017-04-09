@@ -53,6 +53,14 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        public string SchemaNameQualified
+        {
+            get
+            {
+                return SchemaName;
+            }
+        }
+
         public XrmManyToManyRelationshipMetadata(string name, XrmService xrmService, string recordType1)
             : base(xrmService)
         {

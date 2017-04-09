@@ -29,6 +29,11 @@ namespace JosephM.Record.Metadata
                 PicklistOptionSet = picklistOptions;
         }
 
+        public PicklistFieldMetadata(string recordType, string internalName, string label)
+    : base(recordType, internalName, label)
+        {
+        }
+
         public PicklistFieldMetadata(string recordType, string internalName, string label,
             IEnumerable<PicklistOption> picklistOptions)
             : base(recordType, internalName, label)
@@ -50,7 +55,7 @@ namespace JosephM.Record.Metadata
         public PicklistOptionSet PicklistOptionSet
         {
             get { return _picklistOptionSet; }
-            private set { _picklistOptionSet = value; }
+            set { _picklistOptionSet = value; }
         }
 
         public override bool IsSharedPicklist

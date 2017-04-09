@@ -1,8 +1,9 @@
-﻿namespace JosephM.Record.IService
+﻿using JosephM.Record.Metadata;
+
+namespace JosephM.Record.IService
 {
-    public interface IRecordTypeMetadata
+    public interface IRecordTypeMetadata : IMetadata
     {
-        string SchemaName { get; }
         string DisplayName { get; }
         bool Audit { get; }
         string CollectionName { get; }
@@ -30,8 +31,6 @@
         bool IsCustomType { get; }
 
         string RecordTypeCode { get; }
-
-        string MetadataId { get; }
 
         bool HasOwner { get; }
     }

@@ -2,6 +2,7 @@
 
 using System;
 using JosephM.Core.Service;
+using JosephM.Record.Metadata;
 
 #endregion
 
@@ -11,27 +12,27 @@ namespace JosephM.CustomisationImporter.Service
     {
         public bool ExcelReadErrors { get; internal set; }
 
-        public void AddResponseItem(string type, string name, bool isUpdate)
+        public void AddResponseItem(IMetadata metadata, bool isUpdate)
         {
-            var responseItem = new CustomisationImportResponseItem {Name = name, Type = type, Updated = isUpdate};
+            var responseItem = new CustomisationImportResponseItem(metadata, isUpdate);
             AddResponseItem(responseItem);
         }
 
-        public void AddResponseItem(int excelRow, string type, string name, bool isUpdate)
+        public void AddResponseItem(int excelRow, IMetadata metadata, bool isUpdate)
         {
-            var responseItem = new CustomisationImportResponseItem { ExcelRow = excelRow, Name = name, Type = type, Updated = isUpdate };
+            var responseItem = new CustomisationImportResponseItem(excelRow, metadata, isUpdate);
             AddResponseItem(responseItem);
         }
 
-        internal void AddResponseItem(string type, string name, Exception ex)
+        internal void AddResponseItem(IMetadata metadata, Exception ex)
         {
-            var responseItem = new CustomisationImportResponseItem {Name = name, Type = type, Exception = ex};
+            var responseItem = new CustomisationImportResponseItem(metadata, ex);
             AddResponseItem(responseItem);
         }
 
-        internal void AddResponseItem(int excelRow, string type, string name, Exception ex)
+        internal void AddResponseItem(int excelRow, IMetadata metadata, Exception ex)
         {
-            var responseItem = new CustomisationImportResponseItem { ExcelRow = excelRow, Type = type, Name = name, Exception = ex };
+            var responseItem = new CustomisationImportResponseItem(excelRow, metadata, ex);
             AddResponseItem(responseItem);
         }
     }

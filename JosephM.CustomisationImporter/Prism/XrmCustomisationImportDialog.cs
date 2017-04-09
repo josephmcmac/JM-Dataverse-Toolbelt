@@ -14,7 +14,7 @@ namespace JosephM.CustomisationImporter.Prism
                 CustomisationImportResponseItem>
     {
         public XrmCustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController)
-            : base(service, dialogController)
+            : base(service, dialogController, service.RecordService)
         {
         }
 

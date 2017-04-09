@@ -11,6 +11,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 using JosephM.Core.Extentions;
+using JosephM.Xrm.Schema;
+using Microsoft.Xrm.Sdk;
+using JosephM.Xrm;
+using JosephM.Record.IService;
 
 #endregion
 
@@ -34,6 +38,116 @@ namespace JosephM.CustomisationImporter.Test
 
             //var module = testApplication.GetModule<CustomisationImportModule>();
             //module.OpenTemplateCommand();
+        }
+
+        [TestMethod]
+        [DeploymentItem("TestCustomisationsAddToSolution.xlsx")]
+        public void CustomisationImportTestImportServiceAddToSolution()
+        {
+
+            //verifies that entities or shared option sets
+            //are added to solution for customisation import where selected 
+            PrepareTests();
+
+            var testSolution = ReCreateTestImportSolution();
+
+            //initial verifies created entity, field, shared option set and n2n relationship
+            var request = new CustomisationImportRequest
+            {
+                ExcelFile = new FileReference("TestCustomisationsAddToSolution.xlsx"),
+                IncludeEntities = true,
+                IncludeFields = true,
+                IncludeRelationships = true,
+                UpdateViews = false,
+                UpdateOptionSets = true,
+                AddToSolution = true,
+                Solution = testSolution.ToLookup()
+            };
+
+            var importService =
+                new XrmCustomisationImportService(XrmRecordService);
+
+            var response = importService.Execute(request, Controller);
+            if (response.HasError)
+                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+
+            Assert.IsFalse(response.ExcelReadErrors);
+            Assert.IsNull(response.Exception);
+
+            var currentComponentIds = XrmRecordService.RetrieveAllAndClauses(Entities.solutioncomponent, new[]
+                {
+                     new Condition(Fields.solutioncomponent_.solutionid, ConditionType.Equal, testSolution.Id)
+                }, null).Select(c => c.GetIdField(Fields.solutioncomponent_.objectid));
+
+            var dummyResponse = new CustomisationImportResponse();
+            var relationShipmetadata =
+                CustomisationImportService.ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, Controller, response).Values;
+            var optionMetadata =
+                CustomisationImportService.ExtractOptionSetsFromExcel(request.ExcelFile.FileName, Controller, response)
+                .Where(o => o.IsSharedOptionSet);
+
+            var fieldMetadata =
+                CustomisationImportService.ExtractFieldMetadataFromExcel(request.ExcelFile.FileName, Controller, optionMetadata, response).Values;
+
+            var typeMetadata =
+                CustomisationImportService.ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, Controller, fieldMetadata, response).Values;
+
+            Assert.IsTrue(relationShipmetadata.All(r => currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata(r.RecordType1).MetadataId)));
+            Assert.IsTrue(relationShipmetadata.All(r => currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata(r.RecordType2).MetadataId)));
+            Assert.IsTrue(optionMetadata.All(r => currentComponentIds.Contains(XrmRecordService.GetSharedPicklist(r.SchemaName).MetadataId)));
+            Assert.IsTrue(fieldMetadata.All(r => currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata(r.RecordType).MetadataId)));
+            Assert.IsTrue(typeMetadata.All(r => currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata(r.SchemaName).MetadataId)));
+
+            //this one verifies where just fields picklist options and entity views
+            testSolution = ReCreateTestImportSolution();
+
+            request = new CustomisationImportRequest
+            {
+                ExcelFile = new FileReference("TestCustomisationsAddToSolution.xlsx"),
+                IncludeEntities = false,
+                IncludeFields = false,
+                IncludeRelationships = false,
+                UpdateViews = true,
+                UpdateOptionSets = true,
+                AddToSolution = true,
+                Solution = testSolution.ToLookup()
+            };
+
+            importService =
+                new XrmCustomisationImportService(XrmRecordService);
+
+            response = importService.Execute(request, Controller);
+            if (response.HasError)
+                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+
+            Assert.IsFalse(response.ExcelReadErrors);
+            Assert.IsNull(response.Exception);
+
+            currentComponentIds = XrmRecordService.RetrieveAllAndClauses(Entities.solutioncomponent, new[]
+                {
+                     new Condition(Fields.solutioncomponent_.solutionid, ConditionType.Equal, testSolution.Id)
+                }, null).Select(c => c.GetIdField(Fields.solutioncomponent_.objectid));
+            //addded for field picklist change
+            Assert.IsTrue(currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata(Entities.account).MetadataId));
+            //addded for field change
+            Assert.IsTrue(currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata("new_testentitysolutionadd").MetadataId));
+        }
+
+        private IRecord ReCreateTestImportSolution()
+        {
+            var testSolution = XrmRecordService.GetFirst(Entities.solution, Fields.solution_.uniquename, "TESTCUSTOMISATIONIMPORT");
+            if (testSolution != null)
+                XrmRecordService.Delete(testSolution);
+
+            var publisher = XrmRecordService.GetFirst(Entities.publisher, Fields.publisher_.uniquename, "josephmcgregor");
+
+            testSolution = XrmRecordService.NewRecord(Entities.solution);
+            testSolution.SetField(Fields.solution_.publisherid, publisher.ToLookup(), XrmRecordService);
+            testSolution.SetField(Fields.solution_.uniquename, "TESTCUSTOMISATIONIMPORT", XrmRecordService);
+            testSolution.SetField(Fields.solution_.friendlyname, "TESTCUSTOMISATIONIMPORT", XrmRecordService);
+            testSolution.SetField(Fields.solution_.version, "1.0.0.0", XrmRecordService);
+            testSolution.Id = XrmRecordService.Create(testSolution);
+            return testSolution;
         }
 
         [TestMethod]

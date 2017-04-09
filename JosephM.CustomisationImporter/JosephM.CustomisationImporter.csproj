@@ -94,9 +94,6 @@
     <Reference Include="Microsoft.Practices.Prism">
       <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
-    <Reference Include="microsoft.xrm.client">
-      <HintPath>..\Lib\microsoft.xrm.client.dll</HintPath>
-    </Reference>
     <Reference Include="microsoft.xrm.sdk">
       <HintPath>..\Lib\microsoft.xrm.sdk.dll</HintPath>
     </Reference>
@@ -110,6 +107,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImportMetadata\ImportViews.cs" />
+    <Compile Include="ImportMetadata\ImportPicklistFieldOptions.cs" />
+    <Compile Include="ImportMetadata\ImportRecordMetadata.cs" />
     <Compile Include="ImportMetadata\ImportPicklistOption.cs" />
     <Compile Include="Prism\XrmCustomisationImportDialog.cs" />
     <Compile Include="Prism\CustomisationImportModule.cs" />

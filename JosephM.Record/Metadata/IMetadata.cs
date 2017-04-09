@@ -6,9 +6,10 @@ using JosephM.Core.FieldType;
 
 namespace JosephM.Record.Metadata
 {
-    public interface IPicklistSet : IMetadata
+    public interface IMetadata
     {
-        IEnumerable<PicklistOption> PicklistOptions { get; }
-        string DisplayName { get; }
+        string MetadataId { get; }
+        string SchemaName { get; }
+        string SchemaNameQualified { get; }
     }
 }

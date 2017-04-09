@@ -94,5 +94,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return XrmService.GetEntityMetadata(SchemaName).OwnershipType == Microsoft.Xrm.Sdk.Metadata.OwnershipTypes.UserOwned;
             }
         }
+
+        public string SchemaNameQualified
+        {
+            get
+            {
+                return SchemaName;
+            }
+        }
     }
 }

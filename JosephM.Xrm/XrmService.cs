@@ -3188,6 +3188,11 @@ string recordType)
             return set.DisplayName == null ? null : GetLabelDisplay(set.DisplayName);
         }
 
+        public OptionSetMetadata GetSharedPicklist(string optionSetName)
+        {
+            return GetSharedOptionSet(optionSetName);
+        }
+
         public bool HasNotes(string recordType)
         {
             return GetEntityOneToManyRelationships(recordType).Any(

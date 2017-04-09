@@ -10,15 +10,23 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+            //var something = XrmService.RetrieveAllEntityType(Schema.Entities.solutioncomponent);
+
+            //var field = Schema.Fields.solutioncomponent_.componenttype;
+
+            //var type = Schema.OptionSets.SolutionComponent.ObjectTypeCode.
+
+
+
             //Schema.Fields.savedquery_.
 
-            var recordType = "opportunity";
-            var schemaName = "jmc_abc";
-            var indexOf_ = schemaName.IndexOf("_");
-            if (indexOf_ == -1)
-                throw new Exception("Could not determine prefix of field for new relationship name");
-            var prefix = schemaName.Substring(0, indexOf_ + 1);
-            var usePrefix = !recordType.StartsWith(prefix);
+            //var recordType = "opportunity";
+            //var schemaName = "jmc_abc";
+            //var indexOf_ = schemaName.IndexOf("_");
+            //if (indexOf_ == -1)
+            //    throw new Exception("Could not determine prefix of field for new relationship name");
+            //var prefix = schemaName.Substring(0, indexOf_ + 1);
+            //var usePrefix = !recordType.StartsWith(prefix);
             //var type = Entities.account;
             //var numberToCreate = 6000;
             //CreateRecords(type, numberToCreate);
