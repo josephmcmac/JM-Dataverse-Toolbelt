@@ -25,10 +25,12 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
     {
         public string AssemblyFile { get; set; }
         public XrmRecordService Service { get; set; }
+        public XrmPackageSettings PackageSettings { get; set; }
 
-        public DeployAssemblyDialog(IDialogController dialogController, string assemblyFile, XrmRecordService xrmRecordService)
+        public DeployAssemblyDialog(IDialogController dialogController, string assemblyFile, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
             : base(dialogController)
         {
+            PackageSettings = packageSettings;
             AssemblyFile = assemblyFile;
             Service = xrmRecordService;
 
@@ -244,6 +246,12 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
                 responses.Add(responseItem);
             }
             CompletionItems.AddRange(responses);
+
+            //add plugin assembly to the solution
+            var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
+            var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
+            VsixUtility.AddSolutionComponents(service, PackageSettings, componentType, itemsToAdd);
+
             if (responses.Any())
                 CompletionMessage = "There Were Errors Thrown Updating The Plugins";
             else

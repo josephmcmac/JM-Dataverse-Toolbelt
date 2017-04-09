@@ -16,12 +16,13 @@ using Entities = JosephM.Xrm.Schema.Entities;
 namespace JosephM.Xrm.Vsix.Test
 {
     [TestClass]
-    public class UpdateAssemblyDialogTests : JosephMVsixTests
+    public class VsixUpdateAssemblyDialogTests : JosephMVsixTests
     {
         [TestMethod]
-        public void UpdateAssemblyDialogTest()
+        public void VsixUpdateAssemblyDialogTest()
         {
-            DeployAssembly();
+            var packageSettings = GetPackageSettingsAddToSolution();
+            DeployAssembly(packageSettings);
 
             var dialog = new UpdateAssemblyDialog(new FakeDialogController(new FakeApplicationController()),
                 GetTestPluginAssemblyFile(), XrmRecordService);

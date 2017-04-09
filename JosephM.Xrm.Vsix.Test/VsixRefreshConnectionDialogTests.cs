@@ -11,8 +11,6 @@ using JosephM.XRM.VSIX.Commands.DeployAssembly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Record.Xrm.Test;
 using JosephM.Xrm.Test;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Commands.PackageSettings;
 using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using JosephM.XRM.VSIX.Commands.UpdateAssembly;
 using Fields = JosephM.Xrm.Schema.Fields;
@@ -21,17 +19,15 @@ using Entities = JosephM.Xrm.Schema.Entities;
 namespace JosephM.Xrm.Vsix.Test
 {
     [TestClass]
-    public class RefreshSettingsDialogTests : JosephMVsixTests
+    public class VsixRefreshConnectionDialogTests : JosephMVsixTests
     {
         [TestMethod]
-        public void RefreshSettingsDialogTest()
+        public void VsixRefreshConnectionDialogTest()
         {
             var fakeVisualStudioService = CreateVisualStudioService();
-
-            var packageSettinns = new XrmPackageSettings();
-            PopulateObject(packageSettinns);
-
-            var dialog = new XrmPackageSettingDialog(CreateDialogController(), packageSettinns, fakeVisualStudioService, true);
+            var xrmConfiguration = new InterfaceMapperFor<IXrmConfiguration,XrmConfiguration>().Map(XrmConfiguration);
+            var xrmRecordConfiguration = new XrmConfigurationMapper().Map(xrmConfiguration);
+            var dialog = new ConnectionEntryDialog(CreateDialogController(), xrmRecordConfiguration, fakeVisualStudioService, true);
             dialog.Controller.BeginDialog();
 
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

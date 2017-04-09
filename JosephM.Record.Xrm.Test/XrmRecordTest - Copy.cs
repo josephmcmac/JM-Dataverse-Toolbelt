@@ -14,6 +14,23 @@ namespace JosephM.Record.Xrm.Test
 {
     public abstract class XrmRecordTest : XrmTest
     {
+        public IRecord ReCreateTestSolution()
+        {
+            var testSolution = XrmRecordService.GetFirst(JosephM.Xrm.Schema.Entities.solution, JosephM.Xrm.Schema.Fields.solution_.uniquename, "TESTSCRIPTSOLUTION");
+            if (testSolution != null)
+                XrmRecordService.Delete(testSolution);
+
+            var publisher = XrmRecordService.GetFirst(JosephM.Xrm.Schema.Entities.publisher, JosephM.Xrm.Schema.Fields.publisher_.uniquename, "josephmcgregor");
+
+            testSolution = XrmRecordService.NewRecord(JosephM.Xrm.Schema.Entities.solution);
+            testSolution.SetField(JosephM.Xrm.Schema.Fields.solution_.publisherid, publisher.ToLookup(), XrmRecordService);
+            testSolution.SetField(JosephM.Xrm.Schema.Fields.solution_.uniquename, "TESTSCRIPTSOLUTION", XrmRecordService);
+            testSolution.SetField(JosephM.Xrm.Schema.Fields.solution_.friendlyname, "TESTSCRIPTSOLUTION", XrmRecordService);
+            testSolution.SetField(JosephM.Xrm.Schema.Fields.solution_.version, "1.0.0.0", XrmRecordService);
+            testSolution.Id = XrmRecordService.Create(testSolution);
+            return testSolution;
+        }
+
         protected XrmRecordTest()
         {
             XrmRecordService = new XrmRecordService(XrmService);

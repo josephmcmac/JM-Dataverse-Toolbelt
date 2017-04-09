@@ -15,23 +15,23 @@ using Entities = JosephM.Xrm.Schema.Entities;
 namespace JosephM.Xrm.Vsix.Test
 {
     [TestClass]
-    public class DeployAssemblyDialogTests : JosephMVsixTests
+    public class VsixDeployAssemblyDialogTests : JosephMVsixTests
     {
         [TestMethod]
-        public void DeployAssemblyDialogTest()
+        public void VsixDeployAssemblyDialogTest()
         {
             //todo location  of assemblies etc. sometimes copied to different directory and doesn't locate the TestFiles
             //maybe use the DeploymentItem attribute
             //throw new Exception(Assembly.GetExecutingAssembly().CodeBase + " - " + Assembly.GetExecutingAssembly().Location);
 
             var pluginAssembly = GetTestPluginAssemblyFile();
-
+            var packageSettings = GetPackageSettingsAddToSolution();
 
             DeleteTestPluginAssembly();
 
             Assert.IsFalse(GetTestPluginAssemblyRecords().Any());
 
-            var dialog = new DeployAssemblyDialog(CreateDialogController(), pluginAssembly, XrmRecordService);
+            var dialog = new DeployAssemblyDialog(CreateDialogController(), pluginAssembly, XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             var objectEntry = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -39,7 +39,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.AreEqual(1, GetTestPluginAssemblyRecords().Count());
 
-            dialog = new DeployAssemblyDialog(CreateDialogController(), pluginAssembly, XrmRecordService);
+            dialog = new DeployAssemblyDialog(CreateDialogController(), pluginAssembly, XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             objectEntry = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

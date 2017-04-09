@@ -46,7 +46,7 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
                 var xrmConfig = VsixUtility.GetXrmConfig(ServiceProvider, true);
                 if(xrmConfig == null)
                     xrmConfig = new XrmRecordConfiguration();
-                var dialog = new ConnectionEntryDialog(DialogUtility.CreateDialogController(), xrmConfig, GetVisualStudioService());
+                var dialog = new ConnectionEntryDialog(DialogUtility.CreateDialogController(), xrmConfig, GetVisualStudioService(), true);
 
                 DialogUtility.LoadDialog(dialog);
             }

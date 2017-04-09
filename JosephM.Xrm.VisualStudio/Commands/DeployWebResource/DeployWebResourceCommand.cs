@@ -10,6 +10,7 @@ using EnvDTE;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.XRM.VSIX.Dialogs;
 using Microsoft.VisualStudio.Shell;
+using JosephM.XRM.VSIX.Utilities;
 
 namespace JosephM.XRM.VSIX.Commands.DeployWebResource
 {
@@ -53,8 +54,10 @@ namespace JosephM.XRM.VSIX.Commands.DeployWebResource
                     files.Add(item.ProjectItem.FileNames[0]);
                 }
             }
-
-            var deployResourcesService = new DeployWebResourcesService(service);
+            var settings = VsixUtility.GetPackageSettings(GetDte2());
+            if (settings == null)
+                settings = new XrmPackageSettings();
+            var deployResourcesService = new DeployWebResourcesService(service, settings);
 
             var request = new DeployWebResourcesRequest()
             {

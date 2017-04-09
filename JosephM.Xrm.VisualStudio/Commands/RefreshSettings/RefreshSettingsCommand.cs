@@ -48,7 +48,8 @@ namespace JosephM.XRM.VSIX.Commands.RefreshSettings
                 var settings = VsixUtility.GetPackageSettings(GetDte2());
                 if(settings == null)
                     settings = new XrmPackageSettings();
-                var dialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), settings, GetVisualStudioService(), true);
+                var xrmService = GetXrmRecordService();
+                var dialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), settings, GetVisualStudioService(), true, xrmService);
 
                 DialogUtility.LoadDialog(dialog);
             }

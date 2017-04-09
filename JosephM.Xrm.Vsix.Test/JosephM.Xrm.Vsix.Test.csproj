@@ -54,13 +54,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="FakeVisualStudioService.cs" />
-    <Compile Include="ManagePluginTriggersTests.cs" />
-    <Compile Include="RefreshSettingsDialogTests.cs" />
-    <Compile Include="UpdateAssemblyDialogTests - Copy.cs" />
-    <Compile Include="RefreshConnectionDialogTests.cs" />
-    <Compile Include="DeployWebResourcesTests.cs" />
+    <Compile Include="VsixManagePluginTriggersTests.cs" />
+    <Compile Include="VsixRefreshSettingsDialogTests.cs" />
+    <Compile Include="VsixUpdateAssemblyDialogTests.cs" />
+    <Compile Include="VsixRefreshConnectionDialogTests.cs" />
+    <Compile Include="VsixDeployWebResourcesTests.cs" />
     <Compile Include="JosephMVsixTests.cs" />
-    <Compile Include="DeployAssemblyDialogTests.cs" />
+    <Compile Include="VsixDeployAssemblyDialogTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

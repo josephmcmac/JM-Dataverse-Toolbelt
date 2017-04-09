@@ -15,11 +15,13 @@ namespace JosephM.XRM.VSIX.Commands.DeployWebResource
     public class DeployWebResourcesService :
         ServiceBase<DeployWebResourcesRequest, DeployWebResourcesResponse, DeployWebResourcesResponseItem>
     {
-        public DeployWebResourcesService(XrmRecordService service)
+        public DeployWebResourcesService(XrmRecordService service, XrmPackageSettings packageSettings)
         {
             Service = service;
+            PackageSettings = packageSettings;
         }
 
+        public XrmPackageSettings PackageSettings { get; set; }
         private XrmRecordService Service { get; set; }
 
         public override void ExecuteExtention(DeployWebResourcesRequest request, DeployWebResourcesResponse response,
@@ -66,6 +68,12 @@ namespace JosephM.XRM.VSIX.Commands.DeployWebResource
                 xml.Append("</webresources></importexportxml>");
                 Service.Publish(xml.ToString());
             }
+
+            //add plugin assembly to the solution
+            var componentType = OptionSets.SolutionComponent.ObjectTypeCode.WebResource;
+            var itemsToAdd = loadResponse.Created.Union(loadResponse.Updated);
+            VsixUtility.AddSolutionComponents(Service, PackageSettings, componentType, itemsToAdd);
+
         }
 
         public int GetWebResourceType(string extention)

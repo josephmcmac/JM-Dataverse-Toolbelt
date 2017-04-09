@@ -11,11 +11,22 @@ using JosephM.XRM.VSIX.Commands.DeployAssembly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Record.Xrm.Test;
 using JosephM.Xrm.Schema;
+using JosephM.XRM.VSIX;
+using JosephM.Record.Extentions;
 
 namespace JosephM.Xrm.Vsix.Test
 {
     public class JosephMVsixTests : XrmRecordTest
     {
+        public XrmPackageSettings GetPackageSettingsAddToSolution()
+        {
+            var testSolution = ReCreateTestSolution();
+            var packageSettinns = new XrmPackageSettings();
+            packageSettinns.AddToSolution = true;
+            packageSettinns.Solution = testSolution.ToLookup();
+            return packageSettinns;
+        }
+
         public static FakeVisualStudioService CreateVisualStudioService()
         {
             var fakeVisualStudioService = new FakeVisualStudioService();
@@ -39,10 +50,10 @@ namespace JosephM.Xrm.Vsix.Test
             return pluginAssembly;
         }
 
-        public void DeployAssembly()
+        public void DeployAssembly(XrmPackageSettings settings)
         {
             var createDialog = new DeployAssemblyDialog(new FakeDialogController(new FakeApplicationController()),
-                GetTestPluginAssemblyFile(), XrmRecordService);
+                GetTestPluginAssemblyFile(), XrmRecordService, settings);
             createDialog.Controller.BeginDialog();
 
             var objectEntry = (ObjectEntryViewModel)createDialog.Controller.UiItems.First();

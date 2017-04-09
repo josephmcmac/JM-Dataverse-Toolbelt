@@ -14,11 +14,13 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
 {
     public class ConnectionEntryDialog : VsixEntryDialog
     {
+        private bool AddToSolution { get; set; }
         public IVisualStudioService VisualStudioService { get; set; }
-        public ConnectionEntryDialog(IDialogController dialogController, XrmRecordConfiguration objectToEnter, IVisualStudioService visualStudioService)
+        public ConnectionEntryDialog(IDialogController dialogController, XrmRecordConfiguration objectToEnter, IVisualStudioService visualStudioService, bool addtoSolution)
             : base(dialogController, objectToEnter)
         {
             VisualStudioService = visualStudioService;
+            AddToSolution = addtoSolution;
         }
 
         protected override void LoadDialogExtention()
@@ -28,24 +30,9 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
 
         protected override void CompleteDialogExtention()
         {
-            var dictionary = new Dictionary<string, string>();
-            foreach (var prop in XrmRecordConfiguration.GetType().GetReadWriteProperties())
+            if(AddToSolution)
             {
-                var value = XrmRecordConfiguration.GetPropertyValue(prop.Name);
-                dictionary.Add(prop.Name, value == null ? null : value.ToString());
-            }
-            var serialised = JsonHelper.ObjectToJsonString(dictionary);
-
-            var connectionFileName = "solution.xrmconnection";
-            var file = VisualStudioService.AddSolutionItem(connectionFileName, serialised);
-
-            foreach (var item in VisualStudioService.GetSolutionProjects())
-            {
-                if (item.Name.EndsWith(".Test"))
-                {
-                    var linkedConnectionItem = item.AddProjectItem(file);
-                    linkedConnectionItem.SetProperty("CopyToOutputDirectory", 1);
-                }
+                VsixUtility.AddXrmConnectionToSolution(XrmRecordConfiguration, VisualStudioService);
             }
             CompletionMessage = "Connection Refreshed";
         }
