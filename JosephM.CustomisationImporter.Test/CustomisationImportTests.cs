@@ -49,7 +49,7 @@ namespace JosephM.CustomisationImporter.Test
             //are added to solution for customisation import where selected 
             PrepareTests();
 
-            var testSolution = ReCreateTestImportSolution();
+            var testSolution = ReCreateTestSolution();
 
             //initial verifies created entity, field, shared option set and n2n relationship
             var request = new CustomisationImportRequest
@@ -99,7 +99,7 @@ namespace JosephM.CustomisationImporter.Test
             Assert.IsTrue(typeMetadata.All(r => currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata(r.SchemaName).MetadataId)));
 
             //this one verifies where just fields picklist options and entity views
-            testSolution = ReCreateTestImportSolution();
+            testSolution = ReCreateTestSolution();
 
             request = new CustomisationImportRequest
             {
@@ -131,23 +131,6 @@ namespace JosephM.CustomisationImporter.Test
             Assert.IsTrue(currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata(Entities.account).MetadataId));
             //addded for field change
             Assert.IsTrue(currentComponentIds.Contains(XrmRecordService.GetRecordTypeMetadata("new_testentitysolutionadd").MetadataId));
-        }
-
-        private IRecord ReCreateTestImportSolution()
-        {
-            var testSolution = XrmRecordService.GetFirst(Entities.solution, Fields.solution_.uniquename, "TESTCUSTOMISATIONIMPORT");
-            if (testSolution != null)
-                XrmRecordService.Delete(testSolution);
-
-            var publisher = XrmRecordService.GetFirst(Entities.publisher, Fields.publisher_.uniquename, "josephmcgregor");
-
-            testSolution = XrmRecordService.NewRecord(Entities.solution);
-            testSolution.SetField(Fields.solution_.publisherid, publisher.ToLookup(), XrmRecordService);
-            testSolution.SetField(Fields.solution_.uniquename, "TESTCUSTOMISATIONIMPORT", XrmRecordService);
-            testSolution.SetField(Fields.solution_.friendlyname, "TESTCUSTOMISATIONIMPORT", XrmRecordService);
-            testSolution.SetField(Fields.solution_.version, "1.0.0.0", XrmRecordService);
-            testSolution.Id = XrmRecordService.Create(testSolution);
-            return testSolution;
         }
 
         [TestMethod]

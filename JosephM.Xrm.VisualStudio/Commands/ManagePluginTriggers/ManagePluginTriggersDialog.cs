@@ -13,6 +13,7 @@ using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.XRM.VSIX.Utilities;
 using Microsoft.Practices.Prism;
+using Microsoft.Crm.Sdk.Messages;
 
 namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
 {
@@ -20,10 +21,12 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
     {
         public string AssemblyName { get; set; }
         public XrmRecordService XrmRecordService { get; set; }
+        public XrmPackageSettings PackageSettings { get; set; }
 
-        public ManagePluginTriggersDialog(IDialogController dialogController, string assemblyName, XrmRecordService xrmRecordService)
+        public ManagePluginTriggersDialog(IDialogController dialogController, string assemblyName, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
             : base(dialogController)
         {
+            PackageSettings = packageSettings;
             AssemblyName = assemblyName;
             XrmRecordService = xrmRecordService;
 
@@ -227,6 +230,11 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
                 };
                 responses.Add(error);
             }
+
+            //add plugin steps to the solution
+            var componentType = OptionSets.SolutionComponent.ObjectTypeCode.SDKMessageProcessingStep;
+            var itemsToAdd = triggerLoads.Created.Union(triggerLoads.Updated);
+            VsixUtility.AddSolutionComponents(XrmRecordService, PackageSettings, componentType, itemsToAdd);
 
             CompletionItems.AddRange(responses);
             if (responses.Any())

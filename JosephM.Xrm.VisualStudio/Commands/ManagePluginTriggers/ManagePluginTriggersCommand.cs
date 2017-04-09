@@ -46,9 +46,12 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
                 if (project.Name != null)
                 {
                     var service = GetXrmRecordService();
+                    var settings = VsixUtility.GetPackageSettings(GetDte2());
+                    if (settings == null)
+                        settings = new XrmPackageSettings();
                     var assemblyName = VsixUtility.GetProperty(project.Properties, "AssemblyName");
 
-                    var dialog = new ManagePluginTriggersDialog(DialogUtility.CreateDialogController(), assemblyName, service);
+                    var dialog = new ManagePluginTriggersDialog(DialogUtility.CreateDialogController(), assemblyName, service, settings);
 
                     DialogUtility.LoadDialog(dialog);
                 } 

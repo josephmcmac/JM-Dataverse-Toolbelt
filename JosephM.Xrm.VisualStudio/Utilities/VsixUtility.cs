@@ -15,6 +15,8 @@ using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.VisualStudio.Shell.Interop;
 using Condition = JosephM.Record.Query.Condition;
+using JosephM.Xrm.Schema;
+using Microsoft.Crm.Sdk.Messages;
 
 namespace JosephM.XRM.VSIX.Utilities
 {
@@ -351,6 +353,63 @@ namespace JosephM.XRM.VSIX.Utilities
             public IEnumerable<IRecord> Deleted { get { return _deleted; } }
 
             public Dictionary<IRecord, Exception> Errors { get { return _errors; } }
+        }
+
+        public static void AddSolutionComponents(XrmRecordService xrmRecordService, XrmPackageSettings settings, int componentType, IEnumerable<IRecord> itemsToAdd)
+        {
+            if (settings.AddToSolution)
+            {
+                var solutionId = settings.Solution.Id;
+                var solution = xrmRecordService.Get(Entities.solution, solutionId);
+
+                var xrmService = xrmRecordService.XrmService;
+                var currentComponentIds = xrmRecordService.RetrieveAllAndClauses(Entities.solutioncomponent, new[]
+                    {
+                            new Condition(Fields.solutioncomponent_.componenttype, ConditionType.Equal, componentType),
+                            new Condition(Fields.solutioncomponent_.solutionid, ConditionType.Equal, solution.Id)
+                        }, null)
+                            .Select(r => r.GetIdField(Fields.solutioncomponent_.objectid))
+                            .ToList();
+                foreach (var item in itemsToAdd)
+                {
+
+                    if (!currentComponentIds.Contains(item.Id))
+                    {
+                        var addRequest = new AddSolutionComponentRequest()
+                        {
+                            AddRequiredComponents = false,
+                            ComponentType = componentType,
+                            ComponentId = new Guid(item.Id),
+                            SolutionUniqueName = solution.GetStringField(Fields.solution_.uniquename)
+                        };
+                        xrmService.Execute(addRequest);
+                        currentComponentIds.Add(item.Id);
+                    }
+                }
+            }
+        }
+
+        public static void AddXrmConnectionToSolution(XrmRecordConfiguration config, IVisualStudioService visualStudioService)
+        {
+            var dictionary = new Dictionary<string, string>();
+            foreach (var prop in config.GetType().GetReadWriteProperties())
+            {
+                var value = config.GetPropertyValue(prop.Name);
+                dictionary.Add(prop.Name, value == null ? null : value.ToString());
+            }
+            var serialised = JsonHelper.ObjectToJsonString(dictionary);
+
+            var connectionFileName = "solution.xrmconnection";
+            var file = visualStudioService.AddSolutionItem(connectionFileName, serialised);
+
+            foreach (var item in visualStudioService.GetSolutionProjects())
+            {
+                if (item.Name.EndsWith(".Test"))
+                {
+                    var linkedConnectionItem = item.AddProjectItem(file);
+                    linkedConnectionItem.SetProperty("CopyToOutputDirectory", 1);
+                }
+            }
         }
     }
 }

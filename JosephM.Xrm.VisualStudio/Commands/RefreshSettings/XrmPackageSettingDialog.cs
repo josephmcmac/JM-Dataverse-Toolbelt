@@ -18,8 +18,8 @@ namespace JosephM.XRM.VSIX.Commands.PackageSettings
         public IVisualStudioService VisualStudioService { get; set; }
         public bool SaveSettings { get; set; }
 
-        public XrmPackageSettingDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, bool saveSettings)
-            : base(dialogController, objectToEnter)
+        public XrmPackageSettingDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, bool saveSettings, XrmRecordService xrmRecordService)
+            : base(dialogController, objectToEnter, xrmRecordService)
         {
             VisualStudioService = visualStudioService;
             SaveSettings = saveSettings;

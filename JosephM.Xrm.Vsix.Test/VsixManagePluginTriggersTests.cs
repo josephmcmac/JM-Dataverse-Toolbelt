@@ -21,23 +21,25 @@ using JosephM.XRM.VSIX.Commands.ManagePluginTriggers;
 using JosephM.XRM.VSIX.Dialogs;
 using Fields = JosephM.Xrm.Schema.Fields;
 using Entities = JosephM.Xrm.Schema.Entities;
+using JosephM.XRM.VSIX;
 
 namespace JosephM.Xrm.Vsix.Test
 {
     [TestClass]
-    public class ManagePluginTriggersTests : JosephMVsixTests
+    public class VsixManagePluginTriggersTests : JosephMVsixTests
     {
         [TestMethod]
-        public void ManagePluginTriggersTest()
+        public void VsixManagePluginTriggersTest()
         {
-            DeployAssembly();
+            var packageSettings = GetPackageSettingsAddToSolution();
+            DeployAssembly(packageSettings);
 
             var assemblyRecord = GetTestPluginAssemblyRecords().First();
 
             DeletePluginTriggers(assemblyRecord);
 
             //add one trigger
-            var dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService);
+            var dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -57,7 +59,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNotNull(image);
 
             //add second trigger
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService);
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -73,7 +75,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual(2, triggers.Count());
 
             //delete a trigger
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService);
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

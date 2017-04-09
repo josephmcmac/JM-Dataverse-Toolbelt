@@ -43,8 +43,11 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
             var assemblyFile = VsixUtility.BuildSelectedProjectAndGetAssemblyName(ServiceProvider);
             if (!string.IsNullOrWhiteSpace(assemblyFile))
             {
+                var settings = VsixUtility.GetPackageSettings(GetDte2());
+                if (settings == null)
+                    settings = new XrmPackageSettings();
                 var dialog = new DeployAssemblyDialog(DialogUtility.CreateDialogController(), assemblyFile,
-                    GetXrmRecordService());
+                    GetXrmRecordService(), settings);
                 DialogUtility.LoadDialog(dialog);
             }
         }

@@ -20,10 +20,10 @@ using Entities = JosephM.Xrm.Schema.Entities;
 namespace JosephM.Xrm.Vsix.Test
 {
     [TestClass]
-    public class DeployWebResourcesTests : JosephMVsixTests
+    public class VsixDeployWebResourcesTests : JosephMVsixTests
     {
         [TestMethod]
-        public void DeployWebResourcesTest()
+        public void VsixDeployWebResourcesTest()
         {
             var javaScriptFiles = GetJavaScriptFiles();
 
@@ -31,7 +31,9 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.IsFalse(GetJavaScriptFileRecords().Any());
 
-            var deployResourcesService = new DeployWebResourcesService(XrmRecordService);
+            var packageSettings = GetPackageSettingsAddToSolution();
+
+            var deployResourcesService = new DeployWebResourcesService(XrmRecordService, packageSettings);
 
             Assert.IsTrue(javaScriptFiles.Any());
             var request = new DeployWebResourcesRequest()
