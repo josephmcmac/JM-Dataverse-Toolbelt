@@ -22,7 +22,7 @@ namespace JosephM.CustomisationImporter.Service
         [LookupCondition(Fields.solution_.ismanaged, false)]
         [LookupCondition(Fields.solution_.isvisible, true)]
         [LookupCondition(Fields.solution_.uniquename, ConditionType.NotEqual, "default")]
-        [PropertyInContextByPropertyValue(nameof(AddToSolution), true)]
+        [PropertyInContextByPropertyValue("AddToSolution", true)]
         public Lookup Solution { get; set; }
         [RequiredProperty]
         [FileMask(FileMasks.ExcelFile)]
