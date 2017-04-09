@@ -206,5 +206,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return id != null ? id.ToString() : null;
             }
         }
+
+        public string SchemaNameQualified
+        {
+            get
+            {
+                return string.Format("{0}.{1}", RecordType, SchemaName ?? DisplayName);
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace JosephM.Record.Metadata
 {
-    public interface IMany2ManyRelationshipMetadata
+    public interface IMany2ManyRelationshipMetadata : IMetadata
     {
         string Entity1IntersectAttribute { get; }
 
@@ -11,8 +11,6 @@
         string RecordType2 { get; }
 
         string IntersectEntityName { get; }
-
-        string SchemaName { get; }
 
         bool RecordType1DisplayRelated { get; }
 
@@ -31,7 +29,5 @@
         int RecordType2DisplayOrder { get; }
 
         bool IsCustomRelationship { get; }
-
-        string MetadataId { get; }
     }
 }

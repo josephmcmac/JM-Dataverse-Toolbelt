@@ -110,6 +110,7 @@
     <Compile Include="Metadata\Fields\DoubleFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\StatusFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\MemoFieldMetadata.cs" />
+    <Compile Include="Metadata\IMetadata.cs" />
     <Compile Include="Metadata\IPicklistSet.cs" />
     <Compile Include="Metadata\IOne2ManyRelationshipMetadata.cs" />
     <Compile Include="Metadata\IMany2ManyRelationshipMetadata.cs" />

@@ -96,6 +96,19 @@ namespace JosephM.Record.Service
             return lookup == null ? null : lookup.Id;
         }
 
+        public virtual string GetIdField(string fieldName)
+        {
+            var fieldValue = GetField(fieldName);
+            if (fieldValue == null)
+                return null;
+            if (fieldValue is string)
+                return (string)fieldValue;
+            if (fieldValue is Guid)
+                return fieldValue.ToString();
+            throw new NotImplementedException(string.Format("Type {0} not Implemented", fieldValue.GetType().Name));
+
+        }
+
         public virtual Lookup GetLookupField(string fieldName)
         {
             var fieldValue = GetField(fieldName);

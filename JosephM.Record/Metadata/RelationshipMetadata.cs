@@ -1,4 +1,6 @@
-﻿namespace JosephM.Record.Metadata
+﻿using System;
+
+namespace JosephM.Record.Metadata
 {
     public class Many2ManyRelationshipMetadata : IMany2ManyRelationshipMetadata
     {
@@ -35,5 +37,13 @@
 
         public bool IsCustomRelationship { get; set; }
         public string MetadataId { get; set; }
+
+        public string SchemaNameQualified
+        {
+            get
+            {
+                return SchemaName;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using JosephM.Core.FieldType;
 
@@ -28,9 +29,18 @@ namespace JosephM.Record.Metadata
             SchemaName = schemaName;
         }
 
-        public IEnumerable<PicklistOption> PicklistOptions { get; private set; }
-        public bool IsSharedOptionSet { get; private set; }
-        public string SchemaName { get; private set; }
-        public string DisplayName { get; private set; }
+        public IEnumerable<PicklistOption> PicklistOptions { get; set; }
+        public bool IsSharedOptionSet { get; set; }
+        public string SchemaName { get; set; }
+        public string DisplayName { get; set; }
+        public string MetadataId { get; set; }
+
+        public string SchemaNameQualified
+        {
+            get
+            {
+                return SchemaName ?? DisplayName;
+            }
+        }
     }
 }

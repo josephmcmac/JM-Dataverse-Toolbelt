@@ -6,7 +6,7 @@ using JosephM.Record.Metadata;
 
 namespace JosephM.Record.IService
 {
-    public interface IFieldMetadata
+    public interface IFieldMetadata : IMetadata
     {
         RecordFieldType FieldType { get; }
         bool IsMandatory { get; }
@@ -14,7 +14,6 @@ namespace JosephM.Record.IService
         int MaxLength { get; }
         decimal MinValue { get; }
         decimal MaxValue { get; }
-        string SchemaName { get; }
         bool IsPrimaryKey { get; }
         string Description { get; }
         bool Audit { get; }
@@ -31,7 +30,5 @@ namespace JosephM.Record.IService
         bool Writeable { get; }
         bool Createable { get; }
         bool IsDisplayRelated { get; }
-
-        string MetadataId { get; }
     }
 }

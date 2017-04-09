@@ -62,7 +62,12 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Get The Fields Object Value Cast As A String.
         /// </summary>
-        string GetStringField(string field);
+        string GetStringField(string field); 
+
+        /// <summary>
+        ///     Get The Fields Object Value Cast As A String.
+        /// </summary>
+        string GetIdField(string field);
 
         /// <summary>
         ///     0 If Null. Gets The Fields Object Value Cast As A Boolean.
