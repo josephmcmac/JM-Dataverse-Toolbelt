@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace JosephM.InstanceComparer
 {
-    [AllowSaveAndLoad]
     [DisplayName("Instance Compare")]
     public class InstanceComparerRequest : ServiceRequestBase
     {

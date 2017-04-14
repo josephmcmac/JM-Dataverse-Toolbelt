@@ -11,7 +11,6 @@ using System.Collections.Generic;
 namespace JosephM.Xrm.ImportExporter.Service
 {
     [DisplayName("Solution Import/Export")]
-    [AllowSaveAndLoad]
     public class XrmSolutionImporterExporterRequest : ServiceRequestBase
     {
         [RequiredProperty]

@@ -17,7 +17,7 @@ namespace JosephM.Record.Service
     public class ObjectRecord : RecordBase
     {
         public ObjectRecord(object instance)
-            : base(instance.GetType().Name)
+            : base(instance.GetType().AssemblyQualifiedName)
         {
             Instance = instance;
         }

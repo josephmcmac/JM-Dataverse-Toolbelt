@@ -7,6 +7,7 @@ using JosephM.Xrm.Schema;
 
 namespace JosephM.RecordCounts.Exporter
 {
+    [DisplayName("Record Count")]
     public class RecordCountsRequest : ServiceRequestBase
     {
         public RecordCountsRequest()

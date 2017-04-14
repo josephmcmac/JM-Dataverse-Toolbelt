@@ -6,6 +6,8 @@ using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 #endregion
 
@@ -43,6 +45,48 @@ namespace JosephM.Application.ViewModel.TabArea
         protected virtual bool ConfirmTabClose()
         {
             return true;
+        }
+
+        internal void LoadChildForm(TabAreaViewModelBase viewModel)
+        {
+            ApplicationController.DoOnMainThread(() =>
+            {
+                ChildForms.Add(viewModel);
+                OnPropertyChanged("MainFormInContext");
+            });
+        }
+
+        internal void ClearChildForm()
+        {
+            ApplicationController.DoOnMainThread(() =>
+            {
+                ChildForms.Clear();
+                OnPropertyChanged("MainFormInContext");
+            });
+        }
+
+        private ObservableCollection<TabAreaViewModelBase> _childForms = new ObservableCollection<TabAreaViewModelBase>();
+
+        /// <summary>
+        /// DONT USE CLEAR USER ClearChildForm()
+        /// </summary>
+        public ObservableCollection<TabAreaViewModelBase> ChildForms
+        {
+            get { return _childForms; }
+            set
+            {
+                _childForms = value;
+                OnPropertyChanged("ChildForms");
+                OnPropertyChanged("MainFormInContext");
+            }
+        }
+
+        public bool MainFormInContext
+        {
+            get
+            {
+                return !ChildForms.Any();
+            }
         }
 
         #region INavigationAware Members

@@ -30,10 +30,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         private FormMetadata _formMetadata;
         private ObjectRecordService ObjectRecordService { get; set; }
 
-        public ObjectFormService(object objectToEnter, ObjectRecordService objectRecordService)
+        public ObjectFormService(object objectToEnter, ObjectRecordService objectRecordService, IDictionary<string, Type> objectTypeMaps = null)
         {
             ObjectToEnter = objectToEnter;
             ObjectRecordService = objectRecordService;
+            ObjectTypeMaps = objectTypeMaps;
         }
 
         public object ObjectToEnter { get; set; }
@@ -43,6 +44,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             get { return ObjectToEnter.GetType(); }
         }
 
+        public IDictionary<string, Type> ObjectTypeMaps { get; private set; }
+
         public override FormMetadata GetFormMetadata(string recordType)
         {
             if (_formMetadata == null)
@@ -50,7 +53,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var formSections = new List<FormSection>();
 
                 var type = ObjectToEnter.GetType();
-                var propertyMetadata = RecordMetadataFactory.GetClassFieldMetadata(type);
+                var propertyMetadata = ObjectRecordService.GetFieldMetadata(type.AssemblyQualifiedName);
                 var primaryFieldSection = new List<FormFieldMetadata>();
                 formSections.Add(new FormFieldSection(type.GetDisplayName(), primaryFieldSection));
                 foreach (var property in propertyMetadata.Where(m => m.Readable || m.Writeable))
@@ -58,10 +61,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     if (property.FieldType == RecordFieldType.Enumerable)
                     {
                         var thisMetadata = (EnumerableFieldMetadata)property;
-                        var thisFieldType = thisMetadata.EnumeratedType;
+                        var thisFieldType = thisMetadata.EnumeratedTypeQualifiedName;
                         var gridFields = GetGridMetadata(thisFieldType);
                         var section = new SubGridSection(property.SchemaName.SplitCamelCase(),
-                            thisMetadata.EnumeratedType,
+                            thisMetadata.EnumeratedTypeQualifiedName,
                             property.SchemaName, gridFields);
                         formSections.Add(section);
                     }
@@ -92,6 +95,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
                     if (orderAttribute != null)
                         gridField.Order = orderAttribute.Order;
+                    else
+                        gridField.Order = 100000;
                     var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
                     if (widthAttribute != null)
                         gridField.WidthPart = widthAttribute.Width;
@@ -127,12 +132,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
             var validators = new List<ValidationRuleBase>();
-            var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.Name);
+            var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.AssemblyQualifiedName);
             var isValidatable = type.IsTypeOf(typeof(IValidatableObject));
 
             if (isValidatable)
                 validators.Add(new IValidatableObjectValidationRule());
-            validators.AddRange(ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.Name)
+            validators.AddRange(ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.AssemblyQualifiedName)
                     .Select(va => new PropertyAttributeValidationRule(va)));
             return validators;
         }
@@ -148,7 +153,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             if (ObjectType.GetProperty(sectionIdentifier) != null)
             {
                 return
-                    ObjectRecordService.GetValidatorAttributes(sectionIdentifier, ObjectType.Name)
+                    ObjectRecordService.GetValidatorAttributes(sectionIdentifier, ObjectType.AssemblyQualifiedName)
                         .Select(va => new PropertyAttributeValidationRule(va));
             }
             else
@@ -157,7 +162,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         internal override IEnumerable<Action<RecordEntryFormViewModel>> GetOnChanges(string fieldName)
         {
-            return GetOnChanges(fieldName, ObjectType.Name);
+            return GetOnChanges(fieldName, ObjectType.AssemblyQualifiedName);
         }
 
         internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType)
@@ -238,7 +243,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         internal override bool AllowAddRow(string subGridName)
         {
-            var prop = GetPropertyInfo(subGridName, ObjectType.Name);
+            var prop = GetPropertyInfo(subGridName, ObjectType.AssemblyQualifiedName);
             return prop.GetCustomAttribute<DoNotAllowAdd>() == null;
         }
 
@@ -413,7 +418,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             if (propertyInfo.GetCustomAttribute<FormEntry>() != null)
             {
                 //lets start a dialog to add it on complete
-                var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(propertyInfo.PropertyType.GetGenericArguments()[0].Name);
+                var fieldMetadata = (EnumerableFieldMetadata)ObjectRecordService.GetFieldMetadata(propertyInfo.Name, ObjectToEnter.GetType().AssemblyQualifiedName);
+                var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(fieldMetadata.EnumeratedType.AssemblyQualifiedName);
                 var newObject = newRecord.Instance;
                 var recordService = new ObjectRecordService(newObject, parentForm.ApplicationController);
                 var viewModel = new ObjectEntryViewModel(
@@ -506,7 +512,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var objectFormService = recordForm as ObjectEntryViewModel;
             if (objectFormService != null)
             {
-                var property = GetPropertyInfo(referenceName, ObjectType.Name);
+                var property = GetPropertyInfo(referenceName, ObjectType.AssemblyQualifiedName);
                 var customFunctions = property.GetCustomAttributes<CustomFunction>();
                 if (customFunctions != null)
                 {

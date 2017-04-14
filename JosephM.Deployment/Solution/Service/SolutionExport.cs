@@ -51,5 +51,10 @@ namespace JosephM.Xrm.ImportExporter.Service
         [GridWidth(400)]
         [PropertyInContextByPropertyNotNull("Connection")]
         public IEnumerable<ImportExportRecordType> DataToExport { get; set; }
+
+        public override string ToString()
+        {
+            return Solution != null ? Solution.Name : base.ToString();
+        }
     }
 }

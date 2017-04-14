@@ -22,7 +22,7 @@ namespace JosephM.Core.Test
 
         protected LogController Controller { get; private set; }
 
-        public string TestingFolder
+        public static string TestingFolder
         {
             get { return TestConstants.TestFolder; }
         }
@@ -57,7 +57,7 @@ namespace JosephM.Core.Test
             return value is string || value is Enum || value is bool;
         }
 
-        public void PopulateObject(object instance)
+        public static void PopulateObject(object instance)
         {
             var type = instance.GetType();
             foreach (var property in type.GetWritableProperties())
@@ -68,7 +68,7 @@ namespace JosephM.Core.Test
             }
         }
 
-        private object InstantiatePopulated(Type type)
+        private static object InstantiatePopulated(Type type)
         {
             if (type.Name == "Nullable`1")
                 type = type.GetGenericArguments()[0];

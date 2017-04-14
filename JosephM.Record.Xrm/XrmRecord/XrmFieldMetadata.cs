@@ -214,5 +214,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return string.Format("{0}.{1}", RecordType, SchemaName ?? DisplayName);
             }
         }
+
+        public int Order
+        {
+            get
+            {
+                return 0;
+            }
+        }
     }
 }

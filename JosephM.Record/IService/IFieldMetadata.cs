@@ -30,5 +30,6 @@ namespace JosephM.Record.IService
         bool Writeable { get; }
         bool Createable { get; }
         bool IsDisplayRelated { get; }
+        int Order { get; }
     }
 }

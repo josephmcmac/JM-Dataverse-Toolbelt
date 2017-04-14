@@ -22,5 +22,11 @@ namespace JosephM.Xrm.ImportExporter.Service
         public bool PublishWorkflows { get; set; }
 
         public int? ImportOrder { get; set; }
+
+
+        public override string ToString()
+        {
+            return SolutionFile != null ? SolutionFile.FileName : base.ToString();
+        }
     }
 }

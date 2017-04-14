@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
@@ -9,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using JosephM.Core.AppConfig;
+using JosephM.ObjectMapping;
+using JosephM.Application.ViewModel.Extentions;
 
 namespace JosephM.Prism.Infrastructure.Dialog
 {
@@ -56,6 +60,24 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
         protected override void LoadDialogExtention()
         {
+            var savedRequests = ApplicationController
+                .ResolveType<PrismSettingsManager>()
+                .Resolve<SavedSettings>(typeof(TRequest));
+
+            if (savedRequests != null && savedRequests.SavedRequests != null)
+            {
+                var autoLoads = savedRequests.SavedRequests
+                    .Where(r => r is TRequest)
+                    .Cast<TRequest>()
+                    .Where(r => r.Autoload)
+                    .ToArray();
+                if (autoLoads.Any())
+                {
+                    var mapper = new ClassSelfMapper();
+                    mapper.Map(autoLoads.First(), Request);
+                }
+            }
+
             StartNextAction();
         }
 
@@ -79,7 +101,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
             {
                 CompletionItems.Add(responseItem);
             }
-            if (Request.GetType().GetCustomAttributes(typeof(AllowSaveAndLoad), false).Any())
+            if (Request.GetType().IsTypeOf(typeof(IAllowSaveAndLoad)))
             {
                 AddCompletionOption("Save Request", SaveRequest);
             }
@@ -97,9 +119,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
         private void SaveRequest()
         {
-            var fileName = ApplicationController.GetSaveFileName("*", ".xml");
-            if (!fileName.IsNullOrWhiteSpace())
-                ApplicationController.SeralializeObjectToFile(Request, fileName);
+            this.SaveSettingObject(Request);
         }
 
         protected virtual void ProcessCompletionExtention()

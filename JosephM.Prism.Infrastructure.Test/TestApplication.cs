@@ -13,6 +13,7 @@ using JosephM.Core.Extentions;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.Infrastructure.Prism;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using JosephM.Core.Test;
 
 namespace JosephM.Prism.Infrastructure.Test
 {
@@ -68,8 +69,14 @@ namespace JosephM.Prism.Infrastructure.Test
                         Assert.IsNotNull(parentForm);
                         Assert.AreEqual(1, parentForm.ChildForms.Count);
                         var childForm = parentForm.ChildForms.First();
-                        childForm.LoadFormSections();
-                        EnterAndSaveObject(objectToEnter, childForm);
+                        if (childForm is RecordEntryFormViewModel)
+                        {
+                            var tChildForm = childForm as RecordEntryFormViewModel;
+                            tChildForm.LoadFormSections();
+                            EnterAndSaveObject(objectToEnter, tChildForm);
+                        }
+                        else
+                            throw new NotImplementedException("Havent implemented for type " + childForm.GetType().Name);
                     }
                     else
                         throw new NotImplementedException("Unexpected type " + viewModel.GetType().Name);
@@ -98,6 +105,34 @@ namespace JosephM.Prism.Infrastructure.Test
             where TDialog : DialogViewModel
         {
             var entryForm = NavigateToDialogModuleEntryForm<TDialogModule, TDialog>();
+
+            if (entryForm is ObjectEntryViewModel)
+            {
+                entryForm.LoadFormSections();
+                    var oevm = (ObjectEntryViewModel)entryForm;
+
+                foreach (var grid in oevm.SubGrids)
+                    if (grid.DynamicGridViewModel.LoadedCallback != null)
+                        grid.DynamicGridViewModel.LoadedCallback();
+
+                if (oevm.SaveRequestButtonViewModel.IsVisible)
+                {
+                    oevm.SaveRequestButtonViewModel.Invoke();
+                    Assert.AreEqual(1, oevm.ChildForms.Count());
+                    var childForm = oevm.ChildForms.First();
+                    if (childForm is RecordEntryFormViewModel)
+                    {
+                        var tChildForm = childForm as ObjectEntryViewModel;
+                        tChildForm.LoadFormSections();
+                        var childObject = tChildForm.GetObject();
+                        CoreTest.PopulateObject(childObject);
+                        EnterAndSaveObject(childObject, tChildForm);
+                    }
+                    else
+                        throw new NotImplementedException("Havent implemented for type " + childForm.GetType().Name);
+                }
+            }
+
             EnterAndSaveObject(instanceEntered, entryForm);
         }
 

@@ -13,6 +13,7 @@ using System.Linq;
 using JosephM.Core.AppConfig;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
+using JosephM.Application.Application;
 
 #endregion
 
@@ -38,9 +39,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
             else
             {
-                var settingsObject = ApplicationController.ResolveType(SettingsAttribute.SettingsType);
+                var objectRecordService = (ObjectRecordService)recordForm.RecordService;
+
+                var lookupType = objectRecordService.ObjectTypeMaps != null && objectRecordService.ObjectTypeMaps.ContainsKey(FieldName)
+                    ? objectRecordService.ObjectTypeMaps[FieldName]
+                    : null;
+
+                var settingsObject = objectRecordService.ObjectTypeMaps != null && objectRecordService.ObjectTypeMaps.ContainsKey(SettingsAttribute.PropertyName)
+                    ? ApplicationController.ResolveType<PrismSettingsManager>().Resolve<SavedSettings>(objectRecordService.ObjectTypeMaps[SettingsAttribute.PropertyName])
+                    : ApplicationController.ResolveType(SettingsAttribute.SettingsType);
                 XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
-                _lookupService = new ObjectRecordService(settingsObject, ApplicationController);
+                _lookupService = new ObjectRecordService(settingsObject, ApplicationController, objectRecordService.ObjectTypeMaps);
                 if (!UsePicklist)
                 {
                     LoadLookupGrid();
@@ -87,6 +96,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
             }
             return null;
+        }
+
+        public override ReferencePicklistItem GetValueAsPicklistItem()
+        {
+            if (Value == null)
+                return null;
+            //just use this type of irecord as only for an irecord reference and otherwise may throw type error
+            var iReocrd = new RecordObject(RecordTypeToLookup);
+            //iReocrd.Id = Value.Id;
+            return new ReferencePicklistItem(iReocrd, Value.ToString());
         }
 
         protected override void MatchValueToSelectedItems()

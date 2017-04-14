@@ -77,7 +77,7 @@ namespace JosephM.Record.Metadata
             }
         }
 
-        public static FieldMetadata Create(PropertyInfo propertyInfo)
+        public static FieldMetadata Create(PropertyInfo propertyInfo, IDictionary<string, Type> objectTypeMaps = null)
         {
             var recordType = propertyInfo.ReflectedType != null ? propertyInfo.ReflectedType.Name : null;
             var type = propertyInfo.PropertyType;
@@ -88,7 +88,7 @@ namespace JosephM.Record.Metadata
             var label = propertyInfo.GetDisplayName();
 
             FieldMetadata fm = null;
-            if (type == typeof (bool))
+            if (type == typeof(bool))
                 fm = new BooleanFieldMetadata(recordType, internalName, label);
             else if (type.IsEnum)
             {
@@ -97,34 +97,41 @@ namespace JosephM.Record.Metadata
                     options.Add(new PicklistOption(item.ToString(), item.GetDisplayString()));
                 fm = new PicklistFieldMetadata(recordType, internalName, label, options);
             }
-            else if (type == typeof (Password))
+            else if (type == typeof(Password))
                 fm = new PasswordFieldMetadata(recordType, internalName, label);
-            else if (type == typeof (Folder))
+            else if (type == typeof(Folder))
                 fm = new FolderFieldMetadata(recordType, internalName, label);
-            else if (type == typeof (string))
+            else if (type == typeof(string))
             {
                 fm = new StringFieldMetadata(recordType, internalName, label);
                 if (propertyInfo.GetCustomAttribute<Multiline>() != null)
                     fm.TextFormat = TextFormat.TextArea;
             }
-            else if (type == typeof (IEnumerable<string>))
+            else if (type == typeof(IEnumerable<string>))
                 fm = new StringEnumerableFieldMetadata(recordType, internalName, label);
-            else if (type == typeof (int))
+            else if (type == typeof(int))
             {
-                fm = new IntegerFieldMetadata(recordType, internalName, label) {NotNullable = !isNullableType};
+                fm = new IntegerFieldMetadata(recordType, internalName, label) { NotNullable = !isNullableType };
             }
-            else if (type == typeof (Lookup))
+            else if (type == typeof(Lookup))
                 fm = new LookupFieldMetadata(recordType, internalName, label, null);
-            else if (type == typeof (RecordType))
+            else if (type == typeof(RecordType))
                 fm = new RecordTypeFieldMetadata(internalName, label);
-            else if (type == typeof (RecordField))
+            else if (type == typeof(RecordField))
                 fm = new RecordFieldFieldMetadata(internalName, label);
-            else if (type == typeof (FileReference))
+            else if (type == typeof(FileReference))
                 fm = new FileRefFieldMetadata(internalName, label);
-            else if (type == typeof (DateTime))
+            else if (type == typeof(DateTime))
                 fm = new DateFieldMetadata(internalName, label);
             else if (type.IsIEnumerableOfT())
-                fm = new EnumerableFieldMetadata(internalName, label, type.GetGenericArguments()[0].Name);
+            {
+                if (objectTypeMaps != null && objectTypeMaps.ContainsKey(internalName))
+                {
+                    fm = new EnumerableFieldMetadata(internalName, label, objectTypeMaps[internalName]);
+                }
+                else
+                    fm = new EnumerableFieldMetadata(internalName, label, type.GetGenericArguments()[0]);
+            }
             else
                 fm = new ObjectFieldMetadata(recordType, internalName, label, propertyInfo.ReflectedType);
             if(fm == null)
@@ -135,6 +142,8 @@ namespace JosephM.Record.Metadata
             var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
             if (orderAttribute != null)
                 fm.Order = orderAttribute.Order;
+            else
+                fm.Order = 100000;
             return fm;
         }
     }

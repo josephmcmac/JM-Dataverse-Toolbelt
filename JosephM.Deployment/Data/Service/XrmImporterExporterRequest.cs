@@ -10,9 +10,13 @@ using System.Collections.Generic;
 namespace JosephM.Xrm.ImportExporter.Service
 {
     [DisplayName("Data Import/Export")]
-    [AllowSaveAndLoad]
     public class XrmImporterExporterRequest : ServiceRequestBase
     {
+        public XrmImporterExporterRequest()
+        {
+            MatchByName = true;
+        }
+
         [RequiredProperty]
         public ImportExportTask? ImportExportTask { get; set; }
 

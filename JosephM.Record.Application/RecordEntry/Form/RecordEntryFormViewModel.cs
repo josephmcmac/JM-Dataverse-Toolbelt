@@ -1,5 +1,6 @@
 ﻿#region
 
+using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Navigation;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
@@ -14,7 +15,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using JosephM.Core.AppConfig;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using JosephM.Application.ViewModel.TabArea;
 
 #endregion
 
@@ -51,7 +54,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             {
                 IsVisible = false
             };
-            SaveRequestButtonViewModel = new XrmButtonViewModel("Save Details", SaveObject, ApplicationController)
+            SaveRequestButtonViewModel = new XrmButtonViewModel("Save Entered Details", SaveObject, ApplicationController)
             {
                 IsVisible = false
             };
@@ -167,28 +170,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public virtual void SaveObject()
         {
-            var fileName = ApplicationController.GetSaveFileName("*", ".xml");
-            if (!fileName.IsNullOrWhiteSpace())
-                SaveObject(fileName);
-        }
-
-        public virtual void SaveObject(string fileName)
-        {
             throw new NotImplementedException();
         }
 
         public virtual void LoadObject()
-        {
-            var selectFileDialog = new OpenFileDialog { Filter = FileMasks.XmlFile };
-            selectFileDialog.Title = "Select A Saved XML File";
-            var selected = selectFileDialog.ShowDialog();
-            if (selected ?? false)
-            {
-                LoadObject(selectFileDialog.FileName);
-            }
-        }
-
-        public virtual void LoadObject(string fileName)
         {
             throw new NotImplementedException();
         }
@@ -322,7 +307,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 });
         }
 
-        protected virtual bool AllowSaveAndLoad
+        public virtual bool AllowSaveAndLoad
         {
             get { return false; }
         }
@@ -401,49 +386,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             throw new ArgumentOutOfRangeException("subgridName", "No SubGrid In Has The SectionIdentifier: " + subgridName);
         }
 
-
-        internal void LoadChildForm(RecordEntryFormViewModel viewModel)
-        {
-            ApplicationController.DoOnMainThread(() =>
-            {
-                ChildForms.Add(viewModel);
-                OnPropertyChanged("MainFormInContext");
-            });
-        }
-
-        internal void ClearChildForm()
-        {
-            ApplicationController.DoOnMainThread(() =>
-            {
-                ChildForms.Clear();
-                OnPropertyChanged("MainFormInContext");
-            });
-        }
-
-        private ObservableCollection<RecordEntryFormViewModel> _childForms = new ObservableCollection<RecordEntryFormViewModel>();
-
-        /// <summary>
-        /// DONT USE CLEAR USER ClearChildForm()
-        /// </summary>
-        public ObservableCollection<RecordEntryFormViewModel> ChildForms
-        {
-            get { return _childForms; }
-            set
-            {
-                _childForms = value;
-                OnPropertyChanged("ChildForms");
-                OnPropertyChanged("MainFormInContext");
-            }
-        }
-
-        public bool MainFormInContext
-        {
-            get
-            {
-                return !ChildForms.Any();
-            }
-        }
-
         private readonly RecordEntryViewModelBase _parentForm;
         internal override RecordEntryViewModelBase ParentForm
         {
@@ -475,8 +417,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 if (AllowSaveAndLoad)
                     LoadRequestButtonViewModel.IsVisible = true;
 
+                PostLoading();
+
                 LoadingViewModel.IsLoading = false;
             }
+        }
+
+        protected virtual void PostLoading()
+        {
+            return;
         }
     }
 }
