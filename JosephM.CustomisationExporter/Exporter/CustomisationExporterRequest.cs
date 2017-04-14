@@ -7,33 +7,46 @@ using JosephM.Core.Service;
 namespace JosephM.CustomisationExporter.Exporter
 {
     [DisplayName("Export Customisations")]
+    [Group("Include Records and Fields", true)]
+    [Group("Include Relationships", true)]
+    [Group("Include Option Sets", true)]
+    [Group("Record Types", true)]
     public class CustomisationExporterRequest : ServiceRequestBase
     {
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
 
-        public bool ExportEntities { get; set; }
+        [Group("Include Records and Fields", true)]
+        public bool Entities { get; set; }
 
-        public bool ExportFields { get; set; }
+        [Group("Include Records and Fields", true)]
+        public bool Fields { get; set; }
 
-        public bool ExportRelationships { get; set; }
+        [Group("Include Relationships", true)]
+        public bool Relationships { get; set; }
 
-        [PropertyInContextByPropertyValue("ExportRelationships", true)]
+        [Group("Include Relationships", true)]
+        [PropertyInContextByPropertyValue("Relationships", true)]
         public bool DuplicateManyToManyRelationshipSides { get; set; }
 
-        [PropertyInContextByPropertyValue("ExportRelationships", true)]
+        [Group("Include Relationships", true)]
+        [PropertyInContextByPropertyValue("Relationships", true)]
         public bool IncludeOneToManyRelationships { get; set; }
 
-        public bool ExportOptionSets { get; set; }
+        [Group("Include Option Sets", true)]
+        public bool OptionSets { get; set; }
 
-        [PropertyInContextByPropertyValue("ExportOptionSets", true)]
-        public bool ExportSharedOptionSets { get; set; }
+        [Group("Include Option Sets", true)]
+        [PropertyInContextByPropertyValue("OptionSets", true)]
+        public bool IncludeSharedOptionSets { get; set; }
 
         [RequiredProperty]
-        public bool AllRecordTypes { get; set; }
+        [Group("Record Types")]
+        public bool IncludeAllRecordTypes { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValue("AllRecordTypes", false)]
+        [DisplayName("Include These Specific Record Types")]
+        [PropertyInContextByPropertyValue("IncludeAllRecordTypes", false)]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
     }
 }

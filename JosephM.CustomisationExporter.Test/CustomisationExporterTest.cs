@@ -26,26 +26,26 @@ namespace JosephM.CustomisationExporter.Test
 
             //first script generation of C# entities and fields
             var request = new CustomisationExporterRequest();
-            request.AllRecordTypes = true;
+            request.IncludeAllRecordTypes = true;
             request.DuplicateManyToManyRelationshipSides = true;
-            request.ExportEntities = true;
-            request.ExportFields = true;
-            request.ExportOptionSets = true;
-            request.ExportRelationships = true;
-            request.ExportSharedOptionSets = true;
+            request.Entities = true;
+            request.Fields = true;
+            request.OptionSets = true;
+            request.Relationships = true;
+            request.IncludeSharedOptionSets = true;
             request.IncludeOneToManyRelationships = true;
             request.SaveToFolder = new Folder(TestingFolder);
 
             testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog>(request);
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
-            request.AllRecordTypes = true;
+            request.IncludeAllRecordTypes = true;
             request.DuplicateManyToManyRelationshipSides = false;
-            request.ExportEntities = true;
-            request.ExportFields = false;
-            request.ExportOptionSets = false;
-            request.ExportRelationships = true;
-            request.ExportSharedOptionSets = false;
+            request.Entities = true;
+            request.Fields = false;
+            request.OptionSets = false;
+            request.Relationships = true;
+            request.IncludeSharedOptionSets = false;
             request.IncludeOneToManyRelationships = false;
 
             Thread.Sleep(1000);
@@ -54,13 +54,13 @@ namespace JosephM.CustomisationExporter.Test
             testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog>(request);
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
-            request.AllRecordTypes = false;
+            request.IncludeAllRecordTypes = false;
             request.DuplicateManyToManyRelationshipSides = true;
-            request.ExportEntities = true;
-            request.ExportFields = true;
-            request.ExportOptionSets = true;
-            request.ExportRelationships = true;
-            request.ExportSharedOptionSets = true;
+            request.Entities = true;
+            request.Fields = true;
+            request.OptionSets = true;
+            request.Relationships = true;
+            request.IncludeSharedOptionSets = true;
             request.IncludeOneToManyRelationships = true;
             request.RecordTypes = new[]
             {

@@ -13,12 +13,19 @@ namespace JosephM.Wpf.TemplateSelector
     {
         public DataTemplate FieldSectionTemplate { get; set; }
         public DataTemplate GridSectionTemplate { get; set; }
-
+        public DataTemplate FieldSectionCompactTemplate { get; set; }
+        
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
             if (item is FieldSectionViewModel)
-                return FieldSectionTemplate;
+            {
+                var vm = (FieldSectionViewModel)item;
+                if (vm.WrapHorizontal)
+                    return FieldSectionCompactTemplate;
+                else
+                    return FieldSectionTemplate;
+            }
             if (item is GridSectionViewModel)
                 return GridSectionTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",

@@ -62,23 +62,23 @@ namespace JosephM.CustomisationImporter.Service
             var createdRecordTypes = new List<string>();
             var createdFields = new List<FieldMetadata>();
 
-            if (request.IncludeEntities)
+            if (request.Entities)
             {
                 var importRecordsResponse = ImportRecordTypes(recordMetadataToImport, controller, response);
                 createdRecordTypes.AddRange(importRecordsResponse.CreatedRecordTypes);
             }
-            if (request.UpdateOptionSets)
+            if (request.SharedOptionSets)
                 ImportSharedOptionSets(optionSets, controller, response);
-            if (request.IncludeFields)
+            if (request.Fields)
             {
                 var importFieldsResponse = ImportFieldTypes(fieldMetadataToImport, controller, response, createdRecordTypes);
                 createdFields.AddRange(importFieldsResponse.CreatedFields);
             }
-            if (request.UpdateOptionSets)
+            if (request.FieldOptionSets)
                 ImportFieldOptionSets(fieldMetadataToImport.Values, controller, response, createdFields);
-            if (request.UpdateViews)
+            if (request.Views)
                 ImportViews(recordMetadataToImport.Values, controller, response, createdRecordTypes);
-            if (request.IncludeRelationships)
+            if (request.Relationships)
                 ImportRelationships(relationshipMetadataToImport, controller, response);
             controller.LogLiteral("Publishing Changes");
             RecordService.Publish();

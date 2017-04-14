@@ -173,6 +173,14 @@
         RecordTypeFieldTemplate="{StaticResource RecordTypeFieldTemplate}"
         RecordFieldFieldTemplate="{StaticResource RecordFieldFieldTemplate}"
         x:Key="fieldTemplateSelector" />
+    <!--<DataTemplate x:Key="labelledFieldTemplate" >
+        <WrapPanel>
+            <field:FieldLabelView DataContext="{Binding}" />
+            <ContentControl
+                    Content="{Binding}"
+                    ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
+        </WrapPanel>
+    </DataTemplate>-->
     <DataTemplate x:Key="labelledFieldTemplate">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -204,9 +212,15 @@
             <recordEntry:FieldSectionView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="FieldSectionCompactTemplate">
+        <Grid Grid.Row="1">
+            <recordEntry:FieldSectionCompactView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <templateSelector:FormSectionTemplateSelector
         GridSectionTemplate="{StaticResource GridSectionTemplate}"
         FieldSectionTemplate="{StaticResource FieldSectionTemplate}"
+        FieldSectionCompactTemplate="{StaticResource FieldSectionCompactTemplate}"
         x:Key="FormSectionTemplateSelector" />
     <DataTemplate x:Key="IntegerCellTemplate">
         <controls:IntegerTextBox

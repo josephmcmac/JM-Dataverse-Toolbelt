@@ -14,9 +14,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid>
+    <Grid             >
         <CheckBox
             TabIndex="1"
+             VerticalAlignment="Center"
+             MinHeight="10"
             Name="CheckBox"
             Style="{StaticResource FieldEntryStyle}"
             IsChecked="{Binding ValueObject, Mode=TwoWay}"

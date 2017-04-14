@@ -39,7 +39,7 @@ namespace JosephM.CustomisationExporter.Exporter
             CustomisationExporterResponse response,
             LogController controller)
         {
-            if (request.ExportRelationships)
+            if (request.Relationships)
             {
                 var allRelationship = new List<RelationshipExport>();
                 var types = GetRecordTypesToExport(request).OrderBy(t => Service.GetDisplayName(t)).ToArray();
@@ -148,7 +148,7 @@ namespace JosephM.CustomisationExporter.Exporter
         private void ProcessForOptionSets(CustomisationExporterRequest request, CustomisationExporterResponse response,
             LogController controller)
         {
-            if (request.ExportOptionSets)
+            if (request.OptionSets)
             {
                 var allOptions = new List<OptionExport>();
                 var types = GetRecordTypesToExport(request).OrderBy(t => Service.GetDisplayName(t)).ToArray();
@@ -195,7 +195,7 @@ namespace JosephM.CustomisationExporter.Exporter
                                 thisType, ex));
                     }
                 }
-                if (request.ExportSharedOptionSets)
+                if (request.IncludeSharedOptionSets)
                 {
                     var sets = Service.GetSharedPicklists();
                     var countSets = sets.Count();
@@ -231,7 +231,7 @@ namespace JosephM.CustomisationExporter.Exporter
         private void ProcessForFields(CustomisationExporterRequest request, CustomisationExporterResponse response,
             LogController controller)
         {
-            if (request.ExportFields)
+            if (request.Fields)
             {
                 var allFields = new List<FieldExport>();
                 var types = GetRecordTypesToExport(request).OrderBy(t => Service.GetDisplayName(t)).ToArray();
@@ -368,7 +368,7 @@ namespace JosephM.CustomisationExporter.Exporter
         private void ProcessForEntities(CustomisationExporterRequest request, CustomisationExporterResponse response,
             LogController controller)
         {
-            if (request.ExportEntities)
+            if (request.Entities)
             {
                 var allEntities = new List<EntityExport>();
                 var types = GetRecordTypesToExport(request).OrderBy(t => Service.GetDisplayName(t)).ToArray();
@@ -407,7 +407,7 @@ namespace JosephM.CustomisationExporter.Exporter
 
         private IEnumerable<string> GetRecordTypesToExport(CustomisationExporterRequest request)
         {
-            var recordTypes = request.AllRecordTypes
+            var recordTypes = request.IncludeAllRecordTypes
                 ? Service.GetAllRecordTypes()
                 : request.RecordTypes.Select(r => r.RecordType.Key);
             return recordTypes.Where(r => !Service.GetDisplayName(r).IsNullOrWhiteSpace()).ToArray();

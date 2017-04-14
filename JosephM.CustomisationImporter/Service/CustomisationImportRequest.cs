@@ -13,24 +13,32 @@ using JosephM.Xrm.Schema;
 namespace JosephM.CustomisationImporter.Service
 {
     [DisplayName("Import Customisations")]
+    [Group("Include These Items In Import", true)]
     public class CustomisationImportRequest : ServiceRequestBase
     {
         public bool AddToSolution { get; set; }
         [RequiredProperty]
-        [ReferencedType(Entities.solution)]
+        [ReferencedType(Xrm.Schema.Entities.solution)]
         [UsePicklist]
-        [LookupCondition(Fields.solution_.ismanaged, false)]
-        [LookupCondition(Fields.solution_.isvisible, true)]
-        [LookupCondition(Fields.solution_.uniquename, ConditionType.NotEqual, "default")]
+        [LookupCondition(Xrm.Schema.Fields.solution_.ismanaged, false)]
+        [LookupCondition(Xrm.Schema.Fields.solution_.isvisible, true)]
+        [LookupCondition(Xrm.Schema.Fields.solution_.uniquename, ConditionType.NotEqual, "default")]
         [PropertyInContextByPropertyValue("AddToSolution", true)]
         public Lookup Solution { get; set; }
         [RequiredProperty]
         [FileMask(FileMasks.ExcelFile)]
         public FileReference ExcelFile { get; set; }
-        public bool IncludeEntities { get; set; }
-        public bool IncludeFields { get; set; }
-        public bool IncludeRelationships { get; set; }
-        public bool UpdateOptionSets { get; set; }
-        public bool UpdateViews { get; set; }
+        [Group("Include These Items In Import")]
+        public bool Entities { get; set; }
+        [Group("Include These Items In Import")]
+        public bool Fields { get; set; }
+        [Group("Include These Items In Import")]
+        public bool Relationships { get; set; }
+        [Group("Include These Items In Import")]
+        public bool FieldOptionSets { get; set; }
+        [Group("Include These Items In Import")]
+        public bool SharedOptionSets { get; set; }
+        [Group("Include These Items In Import")]
+        public bool Views { get; set; }
     }
 }

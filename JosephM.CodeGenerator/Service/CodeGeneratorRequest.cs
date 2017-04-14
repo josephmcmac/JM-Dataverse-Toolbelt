@@ -47,11 +47,6 @@ namespace JosephM.CodeGenerator.Service
         public string Namespace { get; set; }
 
         [RequiredProperty]
-        [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.JavaScriptOptionSets })]
-        [RecordTypeFor("OptionField")]
-        public RecordType RecordType { get; set; }
-
-        [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool IncludeEntities { get; set; }
 
@@ -85,6 +80,12 @@ namespace JosephM.CodeGenerator.Service
         [PropertyInContextByPropertyValue("AllRecordTypes", false)]
         [PropertyInContextByPropertyNotNull("Type")]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
+
+
+        [RequiredProperty]
+        [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.JavaScriptOptionSets })]
+        [RecordTypeFor("OptionField")]
+        public RecordType RecordType { get; set; }
 
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.JavaScriptOptionSets)]

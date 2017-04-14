@@ -211,6 +211,9 @@
     <Compile Include="Html\HtmlFileView.xaml.cs">
       <DependentUpon>HtmlFileView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\FieldSectionCompactView.xaml.cs">
+      <DependentUpon>FieldSectionCompactView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\FileRefView.xaml.cs">
       <DependentUpon>FileRefView.xaml</DependentUpon>
     </Compile>
@@ -391,6 +394,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Html\HtmlFileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\FieldSectionCompactView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

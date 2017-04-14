@@ -56,6 +56,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var propertyMetadata = ObjectRecordService.GetFieldMetadata(type.AssemblyQualifiedName);
                 var primaryFieldSection = new List<FormFieldMetadata>();
                 formSections.Add(new FormFieldSection(type.GetDisplayName(), primaryFieldSection));
+
+                var fieldSections = type.GetCustomAttributes<Group>();
+                var otherSections = new Dictionary<string, List<FormFieldMetadata>>();
+                foreach(var section in fieldSections)
+                {
+                    otherSections[section.Name] = new List<FormFieldMetadata>();
+                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.WrapHorizontal);
+                    formSections.Add(newSection);
+                }
+
                 foreach (var property in propertyMetadata.Where(m => m.Readable || m.Writeable))
                 {
                     if (property.FieldType == RecordFieldType.Enumerable)
@@ -70,9 +80,27 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     else
                     {
+
                         var fieldMetadata = new PersistentFormField(property.SchemaName);
                         fieldMetadata.Order = property.Order;
-                        primaryFieldSection.Add(fieldMetadata);
+
+                        var propinfo = ObjectRecordService.GetPropertyInfo(property.SchemaName, type.AssemblyQualifiedName);
+                        var groupAttribute = propinfo.GetCustomAttribute<Group>();
+                        if(groupAttribute == null)
+                        {
+                            primaryFieldSection.Add(fieldMetadata);
+                        }
+                        else
+                        {
+                            if (!otherSections.ContainsKey(groupAttribute.Name))
+                            {
+                                otherSections[groupAttribute.Name] = new List<FormFieldMetadata>();
+                                var newSection = new FormFieldSection(groupAttribute.Name, otherSections[groupAttribute.Name]);
+                                formSections.Add(newSection);
+                            }
+                            otherSections[groupAttribute.Name].Add(fieldMetadata);
+                        }
+
                     }
                 }
 
