@@ -14,13 +14,18 @@ using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.Infrastructure.Prism;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Core.Test;
+using JosephM.Application.Options;
+using JosephM.Core.AppConfig;
+using JosephM.Application.ViewModel.ApplicationOptions;
+using JosephM.Prism.Infrastructure.Dialog;
 
 namespace JosephM.Prism.Infrastructure.Test
 {
     public class TestApplication : ApplicationBase
     {
+        //todo should be creating 2 controllers to pass into base
         public TestApplication()
-            : base(new FakeApplicationController())
+            : base(new FakeApplicationController(), new ApplicationOptionsViewModel(new FakeApplicationController()))
         {
             Controller.RegisterType<IDialogController, FakeDialogController>();
         }
@@ -106,6 +111,9 @@ namespace JosephM.Prism.Infrastructure.Test
         {
             var entryForm = NavigateToDialogModuleEntryForm<TDialogModule, TDialog>();
 
+            var saveRequest = false;
+            Type savedRequestType = null;
+
             if (entryForm is ObjectEntryViewModel)
             {
                 entryForm.LoadFormSections();
@@ -117,6 +125,10 @@ namespace JosephM.Prism.Infrastructure.Test
 
                 if (oevm.SaveRequestButtonViewModel.IsVisible)
                 {
+                    saveRequest = true;
+                    savedRequestType = oevm.GetObject().GetType();
+                    //okay this part is for the save request
+                    //if configured then save the request and afterwards we will navigate to it and delete it
                     oevm.SaveRequestButtonViewModel.Invoke();
                     Assert.AreEqual(1, oevm.ChildForms.Count());
                     var childForm = oevm.ChildForms.First();
@@ -134,6 +146,30 @@ namespace JosephM.Prism.Infrastructure.Test
             }
 
             EnterAndSaveObject(instanceEntered, entryForm);
+
+
+            if(saveRequest)
+            {
+                //okay lets delete the request we saved earlier (and any others)
+                var applicationOptions = (ApplicationOptionsViewModel)this.Controller.Container.ResolveType<IApplicationOptions>();
+                
+                //get the setting which has the label - hope this doesn't break
+                var savedSettingsOption = applicationOptions.Settings.First(o => o.Label.EndsWith(savedRequestType.GetDisplayName()));
+                savedSettingsOption.DelegateCommand.Execute();
+
+                var items = Controller.GetObjects(RegionNames.MainTabRegion);
+                var dialog = items.First();
+                Assert.IsTrue(dialog is SavedRequestDialog);
+                var srd = (SavedRequestDialog)dialog;
+                srd.Controller.BeginDialog();
+                var oevm = GetSubObjectEntryViewModel(srd);
+                foreach(var grid in oevm.SubGrids)
+                {
+                    while (grid.GridRecords.Any())
+                         grid.GridRecords.First().DeleteRow();
+                }
+                oevm.SaveButtonViewModel.Invoke();
+            }
         }
 
         public void NavigateAndProcessDialog<TDialogModule, TDialog>(IEnumerable<object> instancesEntered)

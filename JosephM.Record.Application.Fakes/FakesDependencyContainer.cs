@@ -35,6 +35,7 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public void RegisterTypeForNavigation<T>()
         {
+            UnityContainer.RegisterType(typeof(T), typeof(T));
             UnityContainer.RegisterType(typeof(object), typeof(T), typeof(T).FullName);
         }
     }

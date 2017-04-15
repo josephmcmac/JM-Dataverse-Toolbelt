@@ -37,7 +37,7 @@ namespace JosephM.Prism.Infrastructure.Test
             Assert.IsNotNull(settings);
 
             module.DialogCommand();
-            dialog = testApplication.GetNavigatedDialog<TDialog>(1);
+            dialog = testApplication.GetNavigatedDialog<TDialog>();
 
             settingsFiles = FileUtility.GetFiles(fakeApplicationController.SettingsPath);
             Assert.AreEqual(1, settingsFiles.Count());

@@ -43,11 +43,14 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public override void RequestNavigate(string regionName, Type type, UriQuery uriQuery)
         {
-            var resolvedType = Container.ResolveType(type.FullName);
+            ClearTabs();
+
+            var resolvedType = Container.ResolveType(type);
 
             if (!_regions.ContainsKey(regionName))
                 _regions.Add(regionName, new List<object>());
             _regions[regionName].Add(resolvedType);
+
             if (type.IsTypeOf(typeof(INavigationAware)))
             {
                 var uri = JosephM.Application.ViewModel.Extentions.Extentions.ToPrismNavigationUriType(type, uriQuery);
@@ -112,6 +115,11 @@ namespace JosephM.Application.ViewModel.Fakes
             //var process = base.StartProcess(fileName, arguments);
             //process.Kill();
             return null;
+        }
+
+        public override void NavigateTo(Type type, UriQuery uriQuery)
+        {
+            RequestNavigate(RegionNames.MainTabRegion, type, uriQuery);
         }
     }
 }
