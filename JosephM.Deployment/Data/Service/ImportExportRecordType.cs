@@ -7,28 +7,36 @@ using JosephM.Core.FieldType;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
+    [Group(Sections.Main, true)]
+    [Group(Sections.Fetch, false)]
     public class ImportExportRecordType
     {
+        [Group(Sections.Main)]
         [RequiredProperty]
         public ExportType Type { get; set; }
 
+        [PropertyInContextByPropertyNotNull("Type")]
+        [Group(Sections.Main)]
         [RequiredProperty]
         [ReadOnlyWhenSet]
-        [RecordTypeFor("ExcludeFields.RecordField")]
-        [RecordTypeFor("OnlyExportSpecificRecords.Record")]
+        [RecordTypeFor("ExcludeTheseFieldsInExportedRecords.RecordField")]
+        [RecordTypeFor("SpecificRecordsToExport.Record")]
         public RecordType RecordType { get; set; }
 
-        public bool IncludeInactive { get; set; }
-
-        [PropertyInContextByPropertyNotNull("RecordType")]
-        public IEnumerable<FieldSetting> ExcludeFields { get; set; }
+        [PropertyInContextByPropertyNotNull("Type")]
+        [Group(Sections.Main)]
+        public bool IncludeInactiveRecords { get; set; }
 
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", ExportType.SpecificRecords)]
         [PropertyInContextByPropertyNotNull("RecordType")]
-        public IEnumerable<LookupSetting> OnlyExportSpecificRecords { get; set; }
+        public IEnumerable<LookupSetting> SpecificRecordsToExport { get; set; }
 
-        [DisplayName("Fetch XML (Attributes Ignored)")]
+        [PropertyInContextByPropertyNotNull("RecordType")]
+        public IEnumerable<FieldSetting> ExcludeTheseFieldsInExportedRecords { get; set; }
+
+        [Group(Sections.Fetch)]
+        [DisplayName("Fetch XML")]
         [Multiline]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", ExportType.FetchXml)]
@@ -37,6 +45,12 @@ namespace JosephM.Xrm.ImportExporter.Service
         public override string ToString()
         {
             return RecordType == null ? "Null" : RecordType.Value;
+        }
+
+        private static class Sections
+        {
+            public const string Main = "Export Type Details";
+            public const string Fetch = "Fetch XML - Note Attributes in The Entered XML Will Be Ignored. All fields Will Be Included Apart From Those Selected For Exclusion";
         }
     }
 }

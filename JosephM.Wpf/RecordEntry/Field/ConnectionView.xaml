@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid>
+    <Grid MinWidth="150">
         <TextBox
             AcceptsReturn="{Binding IsMultiline}"
             MinLines ="{Binding NumberOfLines}"

@@ -15,7 +15,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid>
+    <Grid MinWidth="100">
         <controls:IntegerTextBox
             TabIndex="1"
             x:Name="IntegerTextBox"

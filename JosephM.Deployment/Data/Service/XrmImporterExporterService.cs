@@ -781,9 +781,9 @@ namespace JosephM.Xrm.ImportExporter.Service
                     case ExportType.SpecificRecords:
                         {
                             var primaryKey = XrmService.GetPrimaryKeyField(type);
-                            var ids = exportType.OnlyExportSpecificRecords == null
+                            var ids = exportType.SpecificRecordsToExport == null
                                 ? new string[0]
-                                : exportType.OnlyExportSpecificRecords
+                                : exportType.SpecificRecordsToExport
                                     .Select(r => r.Record == null ? null : r.Record.Id)
                                     .Where(s => !s.IsNullOrWhiteSpace()).Distinct().ToArray();
                             entities = ids.Any()
@@ -799,9 +799,9 @@ namespace JosephM.Xrm.ImportExporter.Service
                         }
                 }
 
-                var excludeFields = exportType.ExcludeFields == null
+                var excludeFields = exportType.ExcludeTheseFieldsInExportedRecords == null
                     ? new string[0]
-                    : exportType.ExcludeFields.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray();
+                    : exportType.ExcludeTheseFieldsInExportedRecords.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray();
 
                 var fieldsAlwaysExclude = new[] { "calendarrules" };
                 excludeFields = excludeFields.Union(fieldsAlwaysExclude).ToArray();
@@ -881,7 +881,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             if (XrmService.FieldExists("statecode", entity.LogicalName))
             {
-                if (exportType.IncludeInactive)
+                if (exportType.IncludeInactiveRecords)
                 {
                     var activeStates = new List<int>(new []{ XrmPicklists.State.Active });
                     if (entity.LogicalName == "product")

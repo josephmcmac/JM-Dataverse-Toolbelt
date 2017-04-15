@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JosephM.Core.Attributes;
-using JosephM.Core.FieldType;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+﻿using JosephM.Core.Attributes;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
+    [Group(Sections.ImportOptions, true, 20)]
     public class SolutionMigration : SolutionExport
     {
         public SolutionMigration()
@@ -17,13 +11,21 @@ namespace JosephM.Xrm.ImportExporter.Service
             PublishWorkflows = true;
         }
 
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(120)]
         public bool OverwriteCustomisations { get; set; }
 
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(130)]
         public bool PublishWorkflows { get; set; }
 
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(140)]
         public int? ImportOrder { get; set; }
+
+        private static class Sections
+        {
+            public const string ImportOptions = "Import Options";
+        }
     }
 }

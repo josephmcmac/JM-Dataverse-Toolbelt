@@ -10,7 +10,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
     {
         public SubGridSection(string sectionName, string linkedRecordType, string linkedRecordLookup,
             IEnumerable<GridFieldMetadata> fields)
-            : base(sectionName)
+            : base(sectionName, 10000)
         {
             Fields = fields;
             LinkedRecordLookup = linkedRecordLookup;

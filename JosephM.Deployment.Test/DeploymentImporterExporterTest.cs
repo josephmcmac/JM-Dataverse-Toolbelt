@@ -212,7 +212,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             {
                 Type = ExportType.SpecificRecords,
                 RecordType = new RecordType(Entities.jmcg_testentitythree, Entities.jmcg_testentitythree),
-                OnlyExportSpecificRecords = new[]
+                SpecificRecordsToExport = new[]
                 {
                     new LookupSetting() { Record = new Lookup(Entities.jmcg_testentitythree, t3_1.Id.ToString(), "t3_1") },
                     new LookupSetting() { Record = new Lookup(Entities.jmcg_testentitythree, t3_2.Id.ToString(), "t3_2") },

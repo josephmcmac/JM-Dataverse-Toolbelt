@@ -17,7 +17,7 @@
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" MinWidth="150">
             <TextBox
                 TabIndex="1"
                 DataContext="{Binding NotifyOnValidationError=True}"

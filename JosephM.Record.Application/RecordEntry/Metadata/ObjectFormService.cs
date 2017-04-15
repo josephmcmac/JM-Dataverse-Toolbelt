@@ -54,15 +54,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                 var type = ObjectToEnter.GetType();
                 var propertyMetadata = ObjectRecordService.GetFieldMetadata(type.AssemblyQualifiedName);
-                var primaryFieldSection = new List<FormFieldMetadata>();
-                formSections.Add(new FormFieldSection(type.GetDisplayName(), primaryFieldSection));
+
+                var standardFieldSectionName = type.GetDisplayName();
 
                 var fieldSections = type.GetCustomAttributes<Group>();
                 var otherSections = new Dictionary<string, List<FormFieldMetadata>>();
                 foreach(var section in fieldSections)
                 {
                     otherSections[section.Name] = new List<FormFieldMetadata>();
-                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.WrapHorizontal);
+                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.WrapHorizontal, section.Order);
                     formSections.Add(newSection);
                 }
 
@@ -80,30 +80,31 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     else
                     {
-
                         var fieldMetadata = new PersistentFormField(property.SchemaName);
                         fieldMetadata.Order = property.Order;
 
                         var propinfo = ObjectRecordService.GetPropertyInfo(property.SchemaName, type.AssemblyQualifiedName);
                         var groupAttribute = propinfo.GetCustomAttribute<Group>();
-                        if(groupAttribute == null)
-                        {
-                            primaryFieldSection.Add(fieldMetadata);
-                        }
-                        else
-                        {
-                            if (!otherSections.ContainsKey(groupAttribute.Name))
-                            {
-                                otherSections[groupAttribute.Name] = new List<FormFieldMetadata>();
-                                var newSection = new FormFieldSection(groupAttribute.Name, otherSections[groupAttribute.Name]);
-                                formSections.Add(newSection);
-                            }
-                            otherSections[groupAttribute.Name].Add(fieldMetadata);
-                        }
+                        var sectionName = groupAttribute != null
+                            ? groupAttribute.Name
+                            : standardFieldSectionName;
+                        var order = groupAttribute != null
+                            ? groupAttribute.Order
+                            : 1;
+                        var wrapHorizontal = groupAttribute != null
+                            ? groupAttribute.WrapHorizontal
+                            : false;
 
+                        if (!otherSections.ContainsKey(sectionName))
+                        {
+                            otherSections[sectionName] = new List<FormFieldMetadata>();
+                            var newSection = new FormFieldSection(sectionName, otherSections[sectionName], wrapHorizontal, order);
+                            formSections.Add(newSection);
+                        }
+                        otherSections[sectionName].Add(fieldMetadata);
                     }
                 }
-
+                formSections = formSections.OrderBy(s => s.Order).ToList();
                 _formMetadata = new FormMetadata(formSections);
             }
             return _formMetadata;

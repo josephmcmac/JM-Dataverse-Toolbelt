@@ -31,18 +31,18 @@ namespace JosephM.CodeGenerator.Service
         public CodeGeneratorType? Type { get; set; }
 
         [RequiredProperty]
-        [DisplayName("Select The Folder To Save The File Into")]
+        [DisplayName("Folder To Save The File Into")]
         [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public Folder Folder { get; set; }
 
         [RequiredProperty]
-        [DisplayName("Enter Name Of The File To Create")]
+        [DisplayName("Name Of The File To Create")]
         [InitialiseFor("Type", CodeGeneratorType.CSharpMetadata, "Schema")]
         [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public string FileName { get; set; }
 
         [RequiredProperty]
-        [DisplayName("Enter The Namespace Of The Code Object")]
+        [DisplayName("Namespace Of The Code Object")]
         [InitialiseFor("Type", CodeGeneratorType.CSharpMetadata, "Schema")]
         [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public string Namespace { get; set; }

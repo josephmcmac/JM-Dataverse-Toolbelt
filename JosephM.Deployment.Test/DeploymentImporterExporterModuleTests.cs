@@ -33,7 +33,7 @@ namespace JosephM.Deployment.Test
                 {
                     Type = ExportType.AllRecords,
                     RecordType = new RecordType(Entities.account, Entities.account),
-                    ExcludeFields = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.accountcategorycode, Fields.account_.accountcategorycode)}}
+                    ExcludeTheseFieldsInExportedRecords = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.accountcategorycode, Fields.account_.accountcategorycode)}}
                 }
             };
 
