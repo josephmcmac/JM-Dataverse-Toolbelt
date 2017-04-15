@@ -154,6 +154,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             get { return FormSectionsAsync.Where(s => s is GridSectionViewModel).Cast<GridSectionViewModel>(); }
         }
 
+        public IEnumerable<FieldSectionViewModel> FieldSections
+        {
+            get { return FormSectionsAsync.Where(s => s is FieldSectionViewModel).Cast<FieldSectionViewModel>(); }
+        }
+
         public void UserMessage(string message)
         {
             ApplicationController.UserMessage(message);
@@ -373,6 +378,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 foreach (var section in SubGrids)
                 {
                     section.IsVisible = FormService.IsSectionInContext(section.ReferenceName, GetRecord());
+                }
+                foreach (var section in FieldSections)
+                {
+                    section.IsVisible = section.Fields.Any(f => f.IsVisible);
                 }
             }
         }

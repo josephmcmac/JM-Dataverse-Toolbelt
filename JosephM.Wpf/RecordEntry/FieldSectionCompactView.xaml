@@ -10,13 +10,14 @@
              d:DataContext="{d:DesignInstance Type=fakes:FakeFieldSectionViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border>
+    <Border Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

@@ -26,7 +26,7 @@ namespace JosephM.CodeGenerator.Test
             //first script generation of C# entities and fields
             var request = new CodeGeneratorRequest()
             {
-                AllRecordTypes = true,
+                IncludeAllRecordTypes = true,
                 FileName = "Schema",
                 Folder = new Folder(TestingFolder),
                 Namespace = "Schema",
@@ -41,13 +41,13 @@ namespace JosephM.CodeGenerator.Test
             //now script generation of javascript options
             request = new CodeGeneratorRequest()
             {
-                AllRecordTypes = true,
+                IncludeAllRecordTypes = true,
                 FileName = "JS",
                 Folder = new Folder(TestingFolder),
                 Namespace = "JS",
                 Type = CodeGeneratorType.JavaScriptOptionSets,
                 RecordType = new RecordType(Entities.account, Entities.account),
-                AllFields = true
+                AllOptionSetFields = true
             };
 
             testApplication.ClearTabs();
@@ -58,7 +58,7 @@ namespace JosephM.CodeGenerator.Test
             //now script generation of C# options
             request = new CodeGeneratorRequest()
             {
-                AllRecordTypes = true,
+                IncludeAllRecordTypes = true,
                 FileName = "OptionSets",
                 Folder = new Folder(TestingFolder),
                 Namespace = "OptionSets",
@@ -73,7 +73,7 @@ namespace JosephM.CodeGenerator.Test
             //do one other test for genarte only one specific type
             request = new CodeGeneratorRequest()
             {
-                AllRecordTypes = false,
+                IncludeAllRecordTypes = false,
                 FileName = "Schema",
                 Folder = new Folder(TestingFolder),
                 Namespace = "Schema",
