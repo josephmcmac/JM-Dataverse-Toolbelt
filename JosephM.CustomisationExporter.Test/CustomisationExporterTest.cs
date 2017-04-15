@@ -30,9 +30,9 @@ namespace JosephM.CustomisationExporter.Test
             request.DuplicateManyToManyRelationshipSides = true;
             request.Entities = true;
             request.Fields = true;
-            request.OptionSets = true;
+            request.FieldOptionSets = true;
             request.Relationships = true;
-            request.IncludeSharedOptionSets = true;
+            request.SharedOptionSets = true;
             request.IncludeOneToManyRelationships = true;
             request.SaveToFolder = new Folder(TestingFolder);
 
@@ -43,9 +43,9 @@ namespace JosephM.CustomisationExporter.Test
             request.DuplicateManyToManyRelationshipSides = false;
             request.Entities = true;
             request.Fields = false;
-            request.OptionSets = false;
+            request.FieldOptionSets = false;
             request.Relationships = true;
-            request.IncludeSharedOptionSets = false;
+            request.SharedOptionSets = false;
             request.IncludeOneToManyRelationships = false;
 
             Thread.Sleep(1000);
@@ -58,9 +58,9 @@ namespace JosephM.CustomisationExporter.Test
             request.DuplicateManyToManyRelationshipSides = true;
             request.Entities = true;
             request.Fields = true;
-            request.OptionSets = true;
+            request.FieldOptionSets = true;
             request.Relationships = true;
-            request.IncludeSharedOptionSets = true;
+            request.SharedOptionSets = true;
             request.IncludeOneToManyRelationships = true;
             request.RecordTypes = new[]
             {

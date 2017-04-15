@@ -13,11 +13,22 @@ using JosephM.Xrm.Schema;
 namespace JosephM.CustomisationImporter.Service
 {
     [DisplayName("Import Customisations")]
-    [Group("Include These Items In Import", true)]
+    [Group(Sections.File, true)]
+    [Group(Sections.Solution, true)]
+    [Group(Sections.Include, true)]
     public class CustomisationImportRequest : ServiceRequestBase
     {
-        public bool AddToSolution { get; set; }
+        [Group(Sections.File)]
         [RequiredProperty]
+        [FileMask(FileMasks.ExcelFile)]
+        public FileReference ExcelFile { get; set; }
+
+        [Group(Sections.Solution)]
+        [DisplayName("Add Components To Solution")]
+        public bool AddToSolution { get; set; }
+
+        [RequiredProperty]
+        [Group(Sections.Solution)]
         [ReferencedType(Xrm.Schema.Entities.solution)]
         [UsePicklist]
         [LookupCondition(Xrm.Schema.Fields.solution_.ismanaged, false)]
@@ -25,20 +36,25 @@ namespace JosephM.CustomisationImporter.Service
         [LookupCondition(Xrm.Schema.Fields.solution_.uniquename, ConditionType.NotEqual, "default")]
         [PropertyInContextByPropertyValue("AddToSolution", true)]
         public Lookup Solution { get; set; }
-        [RequiredProperty]
-        [FileMask(FileMasks.ExcelFile)]
-        public FileReference ExcelFile { get; set; }
-        [Group("Include These Items In Import")]
+
+        [Group(Sections.Include)]
         public bool Entities { get; set; }
-        [Group("Include These Items In Import")]
+        [Group(Sections.Include)]
         public bool Fields { get; set; }
-        [Group("Include These Items In Import")]
+        [Group(Sections.Include)]
         public bool Relationships { get; set; }
-        [Group("Include These Items In Import")]
+        [Group(Sections.Include)]
         public bool FieldOptionSets { get; set; }
-        [Group("Include These Items In Import")]
+        [Group(Sections.Include)]
         public bool SharedOptionSets { get; set; }
-        [Group("Include These Items In Import")]
+        [Group(Sections.Include)]
         public bool Views { get; set; }
+
+        private static class Sections
+        {
+            public const string File = "File";
+            public const string Include = "Include These Items In Import";
+            public const string Solution = "Solution";
+        }
     }
 }

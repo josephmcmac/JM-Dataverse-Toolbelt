@@ -34,7 +34,7 @@ namespace JosephM.RecordCounts.Test
             var request = new RecordCountsRequest();
             request.AllRecordTypes = true;
             request.GroupCountsByOwner = false;
-            request.SaveToFolder = new Folder(TestingFolder);
+            request.Folder = new Folder(TestingFolder);
 
             //verify dialog processes
             testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
@@ -54,7 +54,7 @@ namespace JosephM.RecordCounts.Test
             request = new RecordCountsRequest();
             request.AllRecordTypes = true;
             request.GroupCountsByOwner = true;
-            request.SaveToFolder = new Folder(TestingFolder);
+            request.Folder = new Folder(TestingFolder);
             //verify dialog processes
             testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
             Assert.AreEqual(1, FileUtility.GetFiles(TestingFolder).Count());

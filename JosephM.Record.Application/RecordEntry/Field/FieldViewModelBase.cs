@@ -81,7 +81,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         }
 
         public string FieldName { get; private set; }
-        public string Label { get; private set; }
+
+        private string _label;
+        public string Label
+        {
+            get
+            {
+                return _label;
+            }
+            set
+            {
+                _label = value;
+                OnPropertyChanged("Label");
+            }
+        }
+
         public bool IsRecordServiceField { get; set; }
 
         public virtual object ValueObject

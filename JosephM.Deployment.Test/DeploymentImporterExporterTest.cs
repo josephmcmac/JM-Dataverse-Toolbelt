@@ -46,7 +46,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             var request = new XrmImporterExporterRequest
             {
-                FolderPath = new Folder(workFolder),
+                Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportCsvs,
                 DateFormat = DateFormat.English
             };
@@ -71,9 +71,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
             }
             var request = new XrmImporterExporterRequest
             {
-                FolderPath = new Folder(workFolder),
+                Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ExportXml,
-                RecordTypes = types.Select(t => new ImportExportRecordType() { RecordType = new RecordType(t, t) })
+                RecordTypesToExport = types.Select(t => new ImportExportRecordType() { RecordType = new RecordType(t, t) })
             };
             var response = importerExporterService.Execute(request, Controller);
             Assert.IsFalse(response.HasError);
@@ -83,9 +83,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             request = new XrmImporterExporterRequest
             {
-                FolderPath = new Folder(workFolder),
+                Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportXml,
-                RecordTypes = types.Select(t => new ImportExportRecordType() { RecordType = new RecordType(t, t) })
+                RecordTypesToExport = types.Select(t => new ImportExportRecordType() { RecordType = new RecordType(t, t) })
             };
             response = importerExporterService.Execute(request, Controller);
             Assert.IsFalse(response.HasError);
@@ -108,9 +108,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             var request = new XrmImporterExporterRequest
             {
-                FolderPath = new Folder(workFolder),
+                Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ExportXml,
-                RecordTypes = new [] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
+                RecordTypesToExport = new [] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
             };
             var response = importerExporterService.Execute(request, Controller);
             Assert.IsTrue(response.Success);
@@ -119,9 +119,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             request = new XrmImporterExporterRequest
             {
-                FolderPath = new Folder(workFolder),
+                Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportXml,
-                RecordTypes = new[] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
+                RecordTypesToExport = new[] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
             };
 
             response = importerExporterService.Execute(request, Controller);
@@ -154,9 +154,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             request = new XrmImporterExporterRequest
             {
-                FolderPath = new Folder(workFolder),
+                Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportXml,
-                RecordTypes = new[] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
+                RecordTypesToExport = new[] { new ImportExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
             };
 
             response = importerExporterService.Execute(request, Controller);
@@ -221,9 +221,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             var request = new XrmImporterExporterRequest
             {
-                FolderPath = new Folder(workFolder),
+                Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ExportXml,
-                RecordTypes = new [] { t1RequestAll, t2RequestFetch, t3RequestSpecific}
+                RecordTypesToExport = new [] { t1RequestAll, t2RequestFetch, t3RequestSpecific}
             };
             var response = importerExporterService.Execute(request, Controller);
             Assert.IsFalse(response.HasError);

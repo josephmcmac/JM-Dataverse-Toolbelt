@@ -44,8 +44,8 @@ namespace JosephM.InstanceComparer
             {
                 processContainer.Controller.LogLiteral("Generating CSV");
                 var fileName = "InstanceCompare_" + DateTime.Now.ToFileTime() + ".csv";
-                CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, fileName, processContainer.Differences);
-                response.FileName = Path.Combine(request.SaveToFolder.FolderPath, fileName);
+                CsvUtility.CreateCsv(request.Folder.FolderPath, fileName, processContainer.Differences);
+                response.FileName = Path.Combine(request.Folder.FolderPath, fileName);
                 response.Differences = true;
             }
         }

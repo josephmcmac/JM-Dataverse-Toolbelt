@@ -26,8 +26,8 @@ namespace JosephM.Deployment.Test
             instance.ImportExportTask = ImportExportTask.ExportXml;
             instance.IncludeNotes = true;
             instance.IncludeNNRelationshipsBetweenEntities = true;
-            instance.FolderPath = new Folder(TestingFolder);
-            instance.RecordTypes = new[]
+            instance.Folder = new Folder(TestingFolder);
+            instance.RecordTypesToExport = new[]
             {
                 new ImportExportRecordType()
                 {

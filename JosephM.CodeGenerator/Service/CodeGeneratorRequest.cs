@@ -10,9 +10,9 @@ using JosephM.Record.Query;
 
 namespace JosephM.CodeGenerator.Service
 {
-    [Group("Option Set Selection", true)]
-    [Group("Include Constants For These Items", true)]
-    [Group("Record Types", true)]
+    [Group(Sections.OptionSetSelection, true)]
+    [Group(Sections.IncludeConstantsForTheseItems, true)]
+    [Group(Sections.RecordTypes, true)]
     [DisplayName("Code Generation")]
     public class CodeGeneratorRequest : ServiceRequestBase
     {
@@ -31,50 +31,53 @@ namespace JosephM.CodeGenerator.Service
         public CodeGeneratorType? Type { get; set; }
 
         [RequiredProperty]
+        [DisplayName("Select The Folder To Save The File Into")]
         [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public Folder Folder { get; set; }
 
         [RequiredProperty]
+        [DisplayName("Enter Name Of The File To Create")]
         [InitialiseFor("Type", CodeGeneratorType.CSharpMetadata, "Schema")]
         [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public string FileName { get; set; }
 
         [RequiredProperty]
+        [DisplayName("Enter The Namespace Of The Code Object")]
         [InitialiseFor("Type", CodeGeneratorType.CSharpMetadata, "Schema")]
         [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.CSharpMetadata, CodeGeneratorType.JavaScriptOptionSets })]
         public string Namespace { get; set; }
 
-        [Group("Include Constants For These Items", true)]
+        [Group(Sections.IncludeConstantsForTheseItems)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool Entities { get; set; }
 
-        [Group("Include Constants For These Items", true)]
+        [Group(Sections.IncludeConstantsForTheseItems)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool Fields { get; set; }
 
-        [Group("Include Constants For These Items", true)]
+        [Group(Sections.IncludeConstantsForTheseItems)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool Relationships { get; set; }
 
-        [Group("Include Constants For These Items", true)]
+        [Group(Sections.IncludeConstantsForTheseItems)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool FieldOptions { get; set; }
 
-        [Group("Include Constants For These Items", true)]
+        [Group(Sections.IncludeConstantsForTheseItems)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool SharedOptions { get; set; }
 
-        [Group("Include Constants For These Items", true)]
+        [Group(Sections.IncludeConstantsForTheseItems)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.CSharpMetadata)]
         public bool Actions { get; set; }
 
-        [Group("Record Types", true)]
+        [Group(Sections.RecordTypes)]
         [RequiredProperty]
         [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.CSharpMetadata })]
         public bool IncludeAllRecordTypes { get; set; }
@@ -85,19 +88,19 @@ namespace JosephM.CodeGenerator.Service
         [DisplayName("Include These Specific Record Types")]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
 
-        [Group("Option Set Selection", true)]
+        [Group(Sections.OptionSetSelection)]
         [RequiredProperty]
         [PropertyInContextByPropertyValues("Type", new object[] { CodeGeneratorType.JavaScriptOptionSets })]
         [RecordTypeFor("SpecificOptionSetField")]
         public RecordType RecordType { get; set; }
 
-        [Group("Option Set Selection", true)]
+        [Group(Sections.OptionSetSelection)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.JavaScriptOptionSets)]
         [PropertyInContextByPropertyNotNull("RecordType")]
         public bool AllOptionSetFields { get; set; }
 
-        [Group("Option Set Selection", true)]
+        [Group(Sections.OptionSetSelection)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.JavaScriptOptionSets)]
         [PropertyInContextByPropertyValue("AllOptionSetFields", false)]
@@ -109,5 +112,12 @@ namespace JosephM.CodeGenerator.Service
         [RequiredProperty]
         [PropertyInContextByPropertyValue("Type", CodeGeneratorType.FetchToJavascript)]
         public string Fetch { get; set; }
+
+        private static class Sections
+        {
+            public const string OptionSetSelection = "Select Details Of The Option Set Field(s) To Generate Constants For";
+            public const string IncludeConstantsForTheseItems = "Include Constants For These Items";
+            public const string RecordTypes = "Record Types";
+        }
     }
 }

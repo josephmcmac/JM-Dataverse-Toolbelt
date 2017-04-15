@@ -201,6 +201,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendInitialiseAttributes(fieldName, recordType, onChanges);
             AppendUniqueOnAttributes(fieldName, recordType, onChanges);
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, onChanges);
+            AppendDisplayNameAttributes(fieldName, recordType, onChanges);
             return base.GetOnChanges(fieldName, recordType).Union(onChanges);
         }
 
@@ -247,6 +248,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             var methods = new List<Action<RecordEntryViewModelBase>>();
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, methods);
+            AppendDisplayNameAttributes(fieldName, recordType, methods);
             AppendConnectionForChanges(fieldName, recordType, methods, true);
             return methods;
         }
@@ -329,6 +331,31 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                 && dependencyViewModel.ValueObject.Equals(initialiseForAttribute.ForValue)
                                 && dependantViewModel.ValueObject.IsEmpty())
                                 dependantViewModel.ValueObject = initialiseForAttribute.InitialValue;
+                        }
+                    });
+                }
+            }
+        }
+
+        private void AppendDisplayNameAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            foreach (var property in ObjectRecordService.GetFields(recordType))
+            {
+                var propertyInfo = ObjectRecordService.GetPropertyInfo(property, recordType);
+                var attributes = propertyInfo
+                    .GetCustomAttributes<DisplayNameForPropertyValueAttribute>()
+                    .Where(a => a.Property == fieldName);
+                if (attributes.Any())
+                {
+                    onChanges.Add((re) =>
+                    {
+                        foreach (var attribute in attributes)
+                        {
+                            var dependencyViewModel = re.GetFieldViewModel(fieldName);
+                            var dependantViewModel = re.GetFieldViewModel(propertyInfo.Name);
+                            if (dependencyViewModel.ValueObject != null
+                                && dependencyViewModel.ValueObject.Equals(attribute.Value))
+                                dependantViewModel.Label = attribute.Label;
                         }
                     });
                 }

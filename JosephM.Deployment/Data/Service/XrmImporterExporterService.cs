@@ -55,12 +55,12 @@ namespace JosephM.Xrm.ImportExporter.Service
                     }
                 case ImportExportTask.ImportXml:
                     {
-                        ImportXml(request.FolderPath.FolderPath, controller, response);
+                        ImportXml(request.Folder.FolderPath, controller, response);
                         break;
                     }
                 case ImportExportTask.ExportXml:
                     {
-                        ExportXml(request.RecordTypes, request.FolderPath, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller);
+                        ExportXml(request.RecordTypesToExport, request.Folder, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller);
                         break;
                     }
             }
@@ -70,7 +70,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             var organisationSettings = new OrganisationSettings(XrmService);
             controller.LogLiteral("Preparing Import");
-            var csvFiles = FileUtility.GetFiles(request.FolderPath.FolderPath).Where(f => f.EndsWith(".csv"));
+            var csvFiles = FileUtility.GetFiles(request.Folder.FolderPath).Where(f => f.EndsWith(".csv"));
             var entities = new List<Entity>();
             var countToImport = csvFiles.Count();
             var countImported = 0;
@@ -85,7 +85,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var getTypeResponse = GetTargetType(XrmService, csvFile);
                     var type = getTypeResponse.LogicalName;
                     var primaryField = XrmService.GetPrimaryNameField(type);
-                    CsvUtility.ConstructTextSchema(request.FolderPath.FolderPath, Path.GetFileName(csvFile));
+                    CsvUtility.ConstructTextSchema(request.Folder.FolderPath, Path.GetFileName(csvFile));
                     var rows = CsvUtility.SelectAllRows(csvFile);
                     var rowNumber = 0;
                     foreach (var row in rows)
