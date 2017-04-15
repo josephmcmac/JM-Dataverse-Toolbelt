@@ -13,7 +13,7 @@ namespace JosephM.InstanceComparer.Test
             var request = new InstanceComparerRequest();
             request.ConnectionOne = GetSavedXrmRecordConfiguration();
             request.ConnectionTwo = GetSavedXrmRecordConfiguration();
-            request.SaveToFolder = new Folder(TestingFolder);
+            request.Folder = new Folder(TestingFolder);
 
             var application = CreateAndLoadTestApplication<InstanceComparerModule>();
             application.NavigateAndProcessDialog<InstanceComparerModule, InstanceComparerDialog>(request);

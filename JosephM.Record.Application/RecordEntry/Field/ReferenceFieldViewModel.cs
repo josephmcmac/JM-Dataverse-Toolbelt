@@ -37,10 +37,23 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 lock (_lockoObject)
                 {
-                    if (_itemsSource == null && LookupService != null)
+                    if (_itemsSource == null)
                     {
-                        _itemsSource = GetPicklistOptions().OrderBy(p => p.Name);
-                        SelectedItem = MatchSelectedItemInItemsSourceToValue();
+                        _itemsSource = new ReferencePicklistItem[0];
+                        if (LookupService != null)
+                        {
+                            _itemsSource = GetPicklistOptions().OrderBy(p => p.Name);
+                        }
+                        //if(SelectedItem != null && !_itemsSource.Any(i => i.)
+                        var matchingItem = MatchSelectedItemInItemsSourceToValue();
+                        if (matchingItem == null)
+                        {
+                            SelectedItem = GetValueAsPicklistItem();
+                            if (SelectedItem != null)
+                                _itemsSource = _itemsSource.Union(new[] { SelectedItem });
+                        }
+                        else
+                            SelectedItem = matchingItem;
                         OnPropertyChanged("SelectedItem");
                     }
                     return _itemsSource;
@@ -56,6 +69,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
             }
         }
+
+        public abstract ReferencePicklistItem GetValueAsPicklistItem();
 
         private ReferencePicklistItem _selectedItem;
 
@@ -101,7 +116,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 //for some reason this was triggering too many times on load and not initialising selected item properly in Lookups
                 //so have added constraint to only load _itemsSource once
                 if (_itemsSource != null)
-                    return;
+                    _itemsSource = null;
                 SetLoading();
                 DoOnAsynchThread(() =>
                 {

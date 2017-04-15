@@ -20,12 +20,25 @@ namespace JosephM.Application.ViewModel.Dialog
     {
         protected ObjectEntryDialogBase(DialogViewModel parentDialog,
             IApplicationController applicationController, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod)
+            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null)
             : base(parentDialog)
         {
             ApplicationController = applicationController;
             LookupService = lookupService;
             OptionsetLimitedValues = optionsetLimitedValues;
+            ObjectTypeMaps = objectTypeMaps;
+            SaveMethod = saveMethod;
+        }
+
+        protected ObjectEntryDialogBase(
+    IDialogController dialogController, IRecordService lookupService,
+    IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null)
+    : base(dialogController)
+        {
+            ApplicationController = dialogController.ApplicationController;
+            LookupService = lookupService;
+            OptionsetLimitedValues = optionsetLimitedValues;
+            ObjectTypeMaps = objectTypeMaps;
             SaveMethod = saveMethod;
         }
 
@@ -39,14 +52,15 @@ namespace JosephM.Application.ViewModel.Dialog
 
         protected override void LoadDialogExtention()
         {
-            var recordService = new ObjectRecordService(ObjectToEnter, LookupService, OptionsetLimitedValues, ApplicationController);
-            var formService = new ObjectFormService(ObjectToEnter, recordService);
+            var recordService = new ObjectRecordService(ObjectToEnter, LookupService, OptionsetLimitedValues, ApplicationController, ObjectTypeMaps);
+            var formService = new ObjectFormService(ObjectToEnter, recordService, ObjectTypeMaps);
             ViewModel = new ObjectEntryViewModel(StartNextAction, OnCancel, ObjectToEnter,
                 new FormController(recordService, formService, ApplicationController));
             Controller.LoadToUi(ViewModel);
         }
 
         protected Action SaveMethod{ get; set; }
+        public IDictionary<string, Type> ObjectTypeMaps { get; private set; }
 
         protected override void CompleteDialogExtention()
         {

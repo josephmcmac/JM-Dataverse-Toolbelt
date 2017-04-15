@@ -25,19 +25,19 @@ namespace JosephM.Record.Service
     /// </summary>
     public class ObjectRecordService : RecordServiceBase
     {
-        public ObjectRecordService(object objectToEnter, IResolveObject objectResolver)
-            : this(objectToEnter, null, null, objectResolver)
+        public ObjectRecordService(object objectToEnter, IResolveObject objectResolver, IDictionary<string, Type> objectTypeMaps = null)
+            : this(objectToEnter, null, null, objectResolver, objectTypeMaps)
         {
         }
 
         public ObjectRecordService(object objectToEnter, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionSetLimitedValues, IResolveObject objectResolver)
-            : this(objectToEnter, lookupService, optionSetLimitedValues, null, null, objectResolver)
+            IDictionary<string, IEnumerable<string>> optionSetLimitedValues, IResolveObject objectResolver, IDictionary<string, Type> objectTypeMaps = null)
+            : this(objectToEnter, lookupService, optionSetLimitedValues, null, null, objectResolver, objectTypeMaps)
         {
         }
 
         public ObjectRecordService(object objectToEnter, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionSetLimitedValues, ObjectRecordService parentService, string parentServiceReference, IResolveObject objectResolver)
+            IDictionary<string, IEnumerable<string>> optionSetLimitedValues, ObjectRecordService parentService, string parentServiceReference, IResolveObject objectResolver, IDictionary<string, Type> objectTypeMaps = null)
         {
             ObjectResolver = objectResolver;
             ParentServiceReference = parentServiceReference;
@@ -45,20 +45,20 @@ namespace JosephM.Record.Service
             ObjectToEnter = objectToEnter;
             _lookupService = lookupService;
             OptionSetLimitedValues = optionSetLimitedValues;
+            ObjectTypeMaps = objectTypeMaps;
             var objectTypeFieldMetadata = new List<FieldMetadata>();
 
             var type = ObjectToEnter.GetType();
-            objectTypeFieldMetadata.AddRange(RecordMetadataFactory.GetClassFieldMetadata(type));
-            FieldMetadata.Add(type.Name, objectTypeFieldMetadata);
+            objectTypeFieldMetadata.AddRange(RecordMetadataFactory.GetClassFieldMetadata(type, ObjectTypeMaps));
+            FieldMetadata.Add(type.AssemblyQualifiedName, objectTypeFieldMetadata);
             foreach (var field in objectTypeFieldMetadata.Where(f => f.FieldType == RecordFieldType.Enumerable))
             {
                 //need to add the field metadata for any nested types
-                var propertyType = type.GetProperty(field.SchemaName).PropertyType;
-                var genericEnumerableType = propertyType.GetGenericArguments()[0];
-                if (!FieldMetadata.ContainsKey(genericEnumerableType.Name))
+                var asEnumerable = (EnumerableFieldMetadata)field;
+                if (!FieldMetadata.ContainsKey(asEnumerable.EnumeratedTypeQualifiedName))
                 {
-                    var metadata = RecordMetadataFactory.GetClassFieldMetadata(genericEnumerableType);
-                    FieldMetadata.Add(genericEnumerableType.Name, metadata);
+                    var metadata = RecordMetadataFactory.GetClassFieldMetadata(asEnumerable.EnumeratedType);
+                    FieldMetadata.Add(asEnumerable.EnumeratedTypeQualifiedName, metadata);
                 }
             }
         }
@@ -96,6 +96,8 @@ namespace JosephM.Record.Service
             get { return _fieldMetadata; }
         }
 
+        public IDictionary<string, Type> ObjectTypeMaps { get; private set; }
+
         public override IRecord NewRecord(string recordType)
         {
             //need to get the class constructor and instantiate
@@ -114,17 +116,23 @@ namespace JosephM.Record.Service
         public Type GetClassType(string recordType)
         {
             Type type = null;
-            if (recordType == ObjectType.Name)
+            if (recordType == ObjectType.AssemblyQualifiedName)
                 type = ObjectType;
             else
             {
-                var fieldMetadata = GetFieldMetadata(ObjectType.Name);
+                var fieldMetadata = GetFieldMetadata(ObjectType.AssemblyQualifiedName);
                 foreach (var metadata in fieldMetadata.Where(m => m.FieldType == RecordFieldType.Enumerable))
                 {
-                    if (((EnumerableFieldMetadata)metadata).EnumeratedType == recordType)
+                    if (((EnumerableFieldMetadata)metadata).EnumeratedTypeQualifiedName == recordType)
                     {
                         var propertyName = metadata.SchemaName;
-                        type = ObjectType.GetProperty(propertyName).PropertyType.GetGenericArguments()[0];
+                        if (ObjectTypeMaps != null && ObjectTypeMaps.ContainsKey(propertyName))
+                        {
+                            type = ObjectTypeMaps[propertyName];
+                        }
+                        else
+                            type = ObjectType.GetProperty(propertyName).PropertyType.GetGenericArguments()[0];
+
                         break;
                     }
                 }
@@ -390,7 +398,7 @@ namespace JosephM.Record.Service
         private GetReferencingAttributeResponse GetReferencingAttribute<T>(string attributeFieldNameProperty, string fieldName, object objectToEnter)
             where T : Attribute
         {
-            var props = GetPropertyInfos(objectToEnter.GetType().Name);
+            var props = GetPropertyInfos(objectToEnter.GetType().AssemblyQualifiedName);
             foreach (var prop in props)
             {
                 var connectionsFor = prop.GetCustomAttributes<T>(true)

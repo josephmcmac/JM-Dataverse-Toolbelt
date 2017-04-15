@@ -9,6 +9,7 @@ using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
+using JosephM.Record.Service;
 
 #endregion
 
@@ -46,6 +47,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
             }
             return null;
+        }
+
+        public override ReferencePicklistItem GetValueAsPicklistItem()
+        {
+            if (Value == null)
+                return null;
+            var iReocrd = new RecordObject(RecordTypeToLookup);
+            iReocrd.Id = Value.Id;
+            return new ReferencePicklistItem(iReocrd, Value.Name);
         }
 
         protected override void MatchValueToSelectedItems()

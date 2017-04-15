@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Utility;
+using JosephM.Core.Service;
 
 #endregion
 
@@ -25,16 +26,16 @@ namespace JosephM.Application.Application
         private AppConfigManager AppConfigManager { get; set; }
         private IApplicationController ApplicationController { get; set; }
 
-        public TSettingsObject Resolve<TSettingsObject>() where TSettingsObject : new()
+        public TSettingsObject Resolve<TSettingsObject>(Type settingsType = null) where TSettingsObject : new()
         {
             // if the setting exists in the settings folder then get it
             var settingsFilename = Path.Combine(ApplicationController.SettingsPath,
-                typeof (TSettingsObject).Name + ".xml");
+                typeof (TSettingsObject).Name + GenerateSuffix(settingsType) + ".xml");
             if (File.Exists(settingsFilename))
             {
                 try
                 {
-                    return LoadFromSettingsFile<TSettingsObject>(settingsFilename);
+                    return LoadFromSettingsFile<TSettingsObject>(settingsFilename, settingsType);
                 }
                 catch (Exception ex)
                 {
@@ -55,12 +56,15 @@ namespace JosephM.Application.Application
             return new TSettingsObject();
         }
 
-        private static TSettingsObject LoadFromSettingsFile<TSettingsObject>(string settingsFilename)
+        private static TSettingsObject LoadFromSettingsFile<TSettingsObject>(string settingsFilename, Type settingsType = null)
             where TSettingsObject : new()
         {
             TSettingsObject settingsObject;
+            var type = typeof(TSettingsObject);
             //read from serializer
-            var serializer = new DataContractSerializer(typeof (TSettingsObject));
+            var serializer = settingsType == null
+                ? new DataContractSerializer(type)
+                : new DataContractSerializer(type, new[] { settingsType });
 
             using (var fileStream = new FileStream(settingsFilename, FileMode.Open))
             {
@@ -69,21 +73,29 @@ namespace JosephM.Application.Application
             return settingsObject;
         }
 
-        public void SaveSettingsObject(object settingsObject)
+        public void SaveSettingsObject(object settingsObject, Type settingsType = null)
         {
             // save to the setting exists in the settings folder then get it
             var type = settingsObject.GetType();
-            var serializer = new DataContractSerializer(type);
+            var serializer = settingsType == null
+                ? new DataContractSerializer(type)
+                : new DataContractSerializer(type, new[] { settingsType });
+            
 
             var folder = ApplicationController.SettingsPath;
             FileUtility.CheckCreateFolder(folder);
 
             using (
-                var fileStream = new FileStream(Path.Combine(folder, type.Name + ".xml"),
+                var fileStream = new FileStream(Path.Combine(folder, type.Name + GenerateSuffix(settingsType) + ".xml"),
                     FileMode.Create))
             {
                 serializer.WriteObject(fileStream, settingsObject);
             }
+        }
+
+        private static string GenerateSuffix(Type settingsType)
+        {
+            return (settingsType != null ? "_" + settingsType.Name : "");
         }
     }
 }

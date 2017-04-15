@@ -39,7 +39,7 @@ namespace JosephM.CustomisationExporter.Exporter
             CustomisationExporterResponse response,
             LogController controller)
         {
-            if (request.ExportRelationships)
+            if (request.Relationships)
             {
                 var allRelationship = new List<RelationshipExport>();
                 var types = GetRecordTypesToExport(request).OrderBy(t => Service.GetDisplayName(t)).ToArray();
@@ -148,9 +148,13 @@ namespace JosephM.CustomisationExporter.Exporter
         private void ProcessForOptionSets(CustomisationExporterRequest request, CustomisationExporterResponse response,
             LogController controller)
         {
-            if (request.ExportOptionSets)
+            if (!request.FieldOptionSets && !request.SharedOptionSets)
+                return;
+
+            var allOptions = new List<OptionExport>();
+
+            if (request.FieldOptionSets)
             {
-                var allOptions = new List<OptionExport>();
                 var types = GetRecordTypesToExport(request).OrderBy(t => Service.GetDisplayName(t)).ToArray();
                 var count = types.Count();
                 for (var i = 0; i < count; i++)
@@ -195,43 +199,43 @@ namespace JosephM.CustomisationExporter.Exporter
                                 thisType, ex));
                     }
                 }
-                if (request.ExportSharedOptionSets)
+            }
+            if (request.SharedOptionSets)
+            {
+                var sets = Service.GetSharedPicklists();
+                var countSets = sets.Count();
+                for (var i = 0; i < countSets; i++)
                 {
-                    var sets = Service.GetSharedPicklists();
-                    var countSets = sets.Count();
-                    for (var i = 0; i < countSets; i++)
+                    var thisSet = sets.ElementAt(i);
+                    controller.UpdateProgress(i, countSets, "Exporting Share Option Sets");
+                    try
                     {
-                        var thisSet = sets.ElementAt(i);
-                        controller.UpdateProgress(i, countSets, "Exporting Share Option Sets");
-                        try
+                        var options = thisSet.PicklistOptions;
+                        var label = thisSet.DisplayName;
+                        foreach (var option in options)
                         {
-                            var options = thisSet.PicklistOptions;
-                            var label = thisSet.DisplayName;
-                            foreach (var option in options)
-                            {
-                                allOptions.Add(new OptionExport(null, null,
-                                    null, null, option.Key, option.Value, true, thisSet.SchemaName, label));
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            response.AddResponseItem(
-                                new CustomisationExporterResponseItem("Error Exporting Shared Option Set",
-                                    thisSet.SchemaName, ex));
+                            allOptions.Add(new OptionExport(null, null,
+                                null, null, option.Key, option.Value, true, thisSet.SchemaName, label));
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        response.AddResponseItem(
+                            new CustomisationExporterResponseItem("Error Exporting Shared Option Set",
+                                thisSet.SchemaName, ex));
+                    }
                 }
-                var fileName = "OptionsExport_" + DateTime.Now.ToFileTime() + ".csv";
-                CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, fileName, allOptions);
-                response.OptionSetsFileName = fileName;
-                response.Folder = request.SaveToFolder.FolderPath;
             }
+            var fileName = "OptionsExport_" + DateTime.Now.ToFileTime() + ".csv";
+            CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, fileName, allOptions);
+            response.OptionSetsFileName = fileName;
+            response.Folder = request.SaveToFolder.FolderPath;
         }
 
         private void ProcessForFields(CustomisationExporterRequest request, CustomisationExporterResponse response,
             LogController controller)
         {
-            if (request.ExportFields)
+            if (request.Fields)
             {
                 var allFields = new List<FieldExport>();
                 var types = GetRecordTypesToExport(request).OrderBy(t => Service.GetDisplayName(t)).ToArray();
@@ -368,7 +372,7 @@ namespace JosephM.CustomisationExporter.Exporter
         private void ProcessForEntities(CustomisationExporterRequest request, CustomisationExporterResponse response,
             LogController controller)
         {
-            if (request.ExportEntities)
+            if (request.Entities)
             {
                 var allEntities = new List<EntityExport>();
                 var types = GetRecordTypesToExport(request).OrderBy(t => Service.GetDisplayName(t)).ToArray();
@@ -407,7 +411,7 @@ namespace JosephM.CustomisationExporter.Exporter
 
         private IEnumerable<string> GetRecordTypesToExport(CustomisationExporterRequest request)
         {
-            var recordTypes = request.AllRecordTypes
+            var recordTypes = request.IncludeAllRecordTypes
                 ? Service.GetAllRecordTypes()
                 : request.RecordTypes.Select(r => r.RecordType.Key);
             return recordTypes.Where(r => !Service.GetDisplayName(r).IsNullOrWhiteSpace()).ToArray();

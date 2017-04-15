@@ -55,12 +55,12 @@ namespace JosephM.Xrm.ImportExporter.Service
                     }
                 case ImportExportTask.ImportXml:
                     {
-                        ImportXml(request.FolderPath.FolderPath, controller, response);
+                        ImportXml(request.Folder.FolderPath, controller, response);
                         break;
                     }
                 case ImportExportTask.ExportXml:
                     {
-                        ExportXml(request.RecordTypes, request.FolderPath, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller);
+                        ExportXml(request.RecordTypesToExport, request.Folder, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller);
                         break;
                     }
             }
@@ -70,7 +70,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             var organisationSettings = new OrganisationSettings(XrmService);
             controller.LogLiteral("Preparing Import");
-            var csvFiles = FileUtility.GetFiles(request.FolderPath.FolderPath).Where(f => f.EndsWith(".csv"));
+            var csvFiles = FileUtility.GetFiles(request.Folder.FolderPath).Where(f => f.EndsWith(".csv"));
             var entities = new List<Entity>();
             var countToImport = csvFiles.Count();
             var countImported = 0;
@@ -85,7 +85,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var getTypeResponse = GetTargetType(XrmService, csvFile);
                     var type = getTypeResponse.LogicalName;
                     var primaryField = XrmService.GetPrimaryNameField(type);
-                    CsvUtility.ConstructTextSchema(request.FolderPath.FolderPath, Path.GetFileName(csvFile));
+                    CsvUtility.ConstructTextSchema(request.Folder.FolderPath, Path.GetFileName(csvFile));
                     var rows = CsvUtility.SelectAllRows(csvFile);
                     var rowNumber = 0;
                     foreach (var row in rows)
@@ -781,9 +781,9 @@ namespace JosephM.Xrm.ImportExporter.Service
                     case ExportType.SpecificRecords:
                         {
                             var primaryKey = XrmService.GetPrimaryKeyField(type);
-                            var ids = exportType.OnlyExportSpecificRecords == null
+                            var ids = exportType.SpecificRecordsToExport == null
                                 ? new string[0]
-                                : exportType.OnlyExportSpecificRecords
+                                : exportType.SpecificRecordsToExport
                                     .Select(r => r.Record == null ? null : r.Record.Id)
                                     .Where(s => !s.IsNullOrWhiteSpace()).Distinct().ToArray();
                             entities = ids.Any()
@@ -799,9 +799,9 @@ namespace JosephM.Xrm.ImportExporter.Service
                         }
                 }
 
-                var excludeFields = exportType.ExcludeFields == null
+                var excludeFields = exportType.ExcludeTheseFieldsInExportedRecords == null
                     ? new string[0]
-                    : exportType.ExcludeFields.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray();
+                    : exportType.ExcludeTheseFieldsInExportedRecords.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray();
 
                 var fieldsAlwaysExclude = new[] { "calendarrules" };
                 excludeFields = excludeFields.Union(fieldsAlwaysExclude).ToArray();
@@ -881,7 +881,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             if (XrmService.FieldExists("statecode", entity.LogicalName))
             {
-                if (exportType.IncludeInactive)
+                if (exportType.IncludeInactiveRecords)
                 {
                     var activeStates = new List<int>(new []{ XrmPicklists.State.Active });
                     if (entity.LogicalName == "product")

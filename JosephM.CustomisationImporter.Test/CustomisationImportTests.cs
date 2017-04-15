@@ -55,11 +55,12 @@ namespace JosephM.CustomisationImporter.Test
             var request = new CustomisationImportRequest
             {
                 ExcelFile = new FileReference("TestCustomisationsAddToSolution.xlsx"),
-                IncludeEntities = true,
-                IncludeFields = true,
-                IncludeRelationships = true,
-                UpdateViews = false,
-                UpdateOptionSets = true,
+                Entities = true,
+                Fields = true,
+                Relationships = true,
+                Views = false,
+                FieldOptionSets = true,
+                SharedOptionSets = true,
                 AddToSolution = true,
                 Solution = testSolution.ToLookup()
             };
@@ -104,11 +105,12 @@ namespace JosephM.CustomisationImporter.Test
             request = new CustomisationImportRequest
             {
                 ExcelFile = new FileReference("TestCustomisationsAddToSolution.xlsx"),
-                IncludeEntities = false,
-                IncludeFields = false,
-                IncludeRelationships = false,
-                UpdateViews = true,
-                UpdateOptionSets = true,
+                Entities = false,
+                Fields = false,
+                Relationships = false,
+                Views = true,
+                FieldOptionSets = true,
+                SharedOptionSets = true,
                 AddToSolution = true,
                 Solution = testSolution.ToLookup()
             };
@@ -201,11 +203,12 @@ namespace JosephM.CustomisationImporter.Test
             var request = new CustomisationImportRequest
             {
                 ExcelFile = new FileReference("TestCustomisationsSpreadsheetErrors.xlsx"),
-                IncludeEntities = true,
-                IncludeFields = true,
-                IncludeRelationships = true,
-                UpdateViews = true,
-                UpdateOptionSets = true
+                Entities = true,
+                Fields = true,
+                Relationships = true,
+                Views = true,
+                SharedOptionSets = true,
+                FieldOptionSets = true
             };
 
             var importService =

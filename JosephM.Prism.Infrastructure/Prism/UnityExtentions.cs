@@ -6,6 +6,7 @@ using JosephM.Application.Options;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.HTML;
+using JosephM.Prism.Infrastructure.Dialog;
 using JosephM.Record.Application.Fakes;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
@@ -29,6 +30,7 @@ namespace JosephM.Prism.Infrastructure.Prism
             applicationController.RegisterInfrastructure(new ApplicationOptionsViewModel(applicationController));
             applicationController.RegisterTypeForNavigation<HtmlFileModel>();
             applicationController.RegisterType<IDialogController, DialogController>();
+            applicationController.RegisterTypeForNavigation<SavedRequestDialog>();
         }
 
 

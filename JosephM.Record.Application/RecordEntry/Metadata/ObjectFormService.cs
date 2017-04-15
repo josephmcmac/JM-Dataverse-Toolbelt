@@ -30,10 +30,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         private FormMetadata _formMetadata;
         private ObjectRecordService ObjectRecordService { get; set; }
 
-        public ObjectFormService(object objectToEnter, ObjectRecordService objectRecordService)
+        public ObjectFormService(object objectToEnter, ObjectRecordService objectRecordService, IDictionary<string, Type> objectTypeMaps = null)
         {
             ObjectToEnter = objectToEnter;
             ObjectRecordService = objectRecordService;
+            ObjectTypeMaps = objectTypeMaps;
         }
 
         public object ObjectToEnter { get; set; }
@@ -43,6 +44,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             get { return ObjectToEnter.GetType(); }
         }
 
+        public IDictionary<string, Type> ObjectTypeMaps { get; private set; }
+
         public override FormMetadata GetFormMetadata(string recordType)
         {
             if (_formMetadata == null)
@@ -50,18 +53,28 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var formSections = new List<FormSection>();
 
                 var type = ObjectToEnter.GetType();
-                var propertyMetadata = RecordMetadataFactory.GetClassFieldMetadata(type);
-                var primaryFieldSection = new List<FormFieldMetadata>();
-                formSections.Add(new FormFieldSection(type.GetDisplayName(), primaryFieldSection));
+                var propertyMetadata = ObjectRecordService.GetFieldMetadata(type.AssemblyQualifiedName);
+
+                var standardFieldSectionName = type.GetDisplayName();
+
+                var fieldSections = type.GetCustomAttributes<Group>();
+                var otherSections = new Dictionary<string, List<FormFieldMetadata>>();
+                foreach(var section in fieldSections)
+                {
+                    otherSections[section.Name] = new List<FormFieldMetadata>();
+                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.WrapHorizontal, section.Order);
+                    formSections.Add(newSection);
+                }
+
                 foreach (var property in propertyMetadata.Where(m => m.Readable || m.Writeable))
                 {
                     if (property.FieldType == RecordFieldType.Enumerable)
                     {
                         var thisMetadata = (EnumerableFieldMetadata)property;
-                        var thisFieldType = thisMetadata.EnumeratedType;
+                        var thisFieldType = thisMetadata.EnumeratedTypeQualifiedName;
                         var gridFields = GetGridMetadata(thisFieldType);
                         var section = new SubGridSection(property.SchemaName.SplitCamelCase(),
-                            thisMetadata.EnumeratedType,
+                            thisMetadata.EnumeratedTypeQualifiedName,
                             property.SchemaName, gridFields);
                         formSections.Add(section);
                     }
@@ -69,10 +82,29 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     {
                         var fieldMetadata = new PersistentFormField(property.SchemaName);
                         fieldMetadata.Order = property.Order;
-                        primaryFieldSection.Add(fieldMetadata);
+
+                        var propinfo = ObjectRecordService.GetPropertyInfo(property.SchemaName, type.AssemblyQualifiedName);
+                        var groupAttribute = propinfo.GetCustomAttribute<Group>();
+                        var sectionName = groupAttribute != null
+                            ? groupAttribute.Name
+                            : standardFieldSectionName;
+                        var order = groupAttribute != null
+                            ? groupAttribute.Order
+                            : 1;
+                        var wrapHorizontal = groupAttribute != null
+                            ? groupAttribute.WrapHorizontal
+                            : false;
+
+                        if (!otherSections.ContainsKey(sectionName))
+                        {
+                            otherSections[sectionName] = new List<FormFieldMetadata>();
+                            var newSection = new FormFieldSection(sectionName, otherSections[sectionName], wrapHorizontal, order);
+                            formSections.Add(newSection);
+                        }
+                        otherSections[sectionName].Add(fieldMetadata);
                     }
                 }
-
+                formSections = formSections.OrderBy(s => s.Order).ToList();
                 _formMetadata = new FormMetadata(formSections);
             }
             return _formMetadata;
@@ -92,6 +124,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
                     if (orderAttribute != null)
                         gridField.Order = orderAttribute.Order;
+                    else
+                        gridField.Order = 100000;
                     var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
                     if (widthAttribute != null)
                         gridField.WidthPart = widthAttribute.Width;
@@ -127,12 +161,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
             var validators = new List<ValidationRuleBase>();
-            var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.Name);
+            var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.AssemblyQualifiedName);
             var isValidatable = type.IsTypeOf(typeof(IValidatableObject));
 
             if (isValidatable)
                 validators.Add(new IValidatableObjectValidationRule());
-            validators.AddRange(ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.Name)
+            validators.AddRange(ObjectRecordService.GetValidatorAttributes(fieldName, ObjectType.AssemblyQualifiedName)
                     .Select(va => new PropertyAttributeValidationRule(va)));
             return validators;
         }
@@ -148,7 +182,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             if (ObjectType.GetProperty(sectionIdentifier) != null)
             {
                 return
-                    ObjectRecordService.GetValidatorAttributes(sectionIdentifier, ObjectType.Name)
+                    ObjectRecordService.GetValidatorAttributes(sectionIdentifier, ObjectType.AssemblyQualifiedName)
                         .Select(va => new PropertyAttributeValidationRule(va));
             }
             else
@@ -157,7 +191,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         internal override IEnumerable<Action<RecordEntryFormViewModel>> GetOnChanges(string fieldName)
         {
-            return GetOnChanges(fieldName, ObjectType.Name);
+            return GetOnChanges(fieldName, ObjectType.AssemblyQualifiedName);
         }
 
         internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType)
@@ -168,6 +202,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendInitialiseAttributes(fieldName, recordType, onChanges);
             AppendUniqueOnAttributes(fieldName, recordType, onChanges);
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, onChanges);
+            AppendDisplayNameAttributes(fieldName, recordType, onChanges);
             return base.GetOnChanges(fieldName, recordType).Union(onChanges);
         }
 
@@ -214,6 +249,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             var methods = new List<Action<RecordEntryViewModelBase>>();
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, methods);
+            AppendDisplayNameAttributes(fieldName, recordType, methods);
             AppendConnectionForChanges(fieldName, recordType, methods, true);
             return methods;
         }
@@ -238,7 +274,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         internal override bool AllowAddRow(string subGridName)
         {
-            var prop = GetPropertyInfo(subGridName, ObjectType.Name);
+            var prop = GetPropertyInfo(subGridName, ObjectType.AssemblyQualifiedName);
             return prop.GetCustomAttribute<DoNotAllowAdd>() == null;
         }
 
@@ -296,6 +332,31 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                 && dependencyViewModel.ValueObject.Equals(initialiseForAttribute.ForValue)
                                 && dependantViewModel.ValueObject.IsEmpty())
                                 dependantViewModel.ValueObject = initialiseForAttribute.InitialValue;
+                        }
+                    });
+                }
+            }
+        }
+
+        private void AppendDisplayNameAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            foreach (var property in ObjectRecordService.GetFields(recordType))
+            {
+                var propertyInfo = ObjectRecordService.GetPropertyInfo(property, recordType);
+                var attributes = propertyInfo
+                    .GetCustomAttributes<DisplayNameForPropertyValueAttribute>()
+                    .Where(a => a.Property == fieldName);
+                if (attributes.Any())
+                {
+                    onChanges.Add((re) =>
+                    {
+                        foreach (var attribute in attributes)
+                        {
+                            var dependencyViewModel = re.GetFieldViewModel(fieldName);
+                            var dependantViewModel = re.GetFieldViewModel(propertyInfo.Name);
+                            if (dependencyViewModel.ValueObject != null
+                                && dependencyViewModel.ValueObject.Equals(attribute.Value))
+                                dependantViewModel.Label = attribute.Label;
                         }
                     });
                 }
@@ -413,7 +474,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             if (propertyInfo.GetCustomAttribute<FormEntry>() != null)
             {
                 //lets start a dialog to add it on complete
-                var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(propertyInfo.PropertyType.GetGenericArguments()[0].Name);
+                var fieldMetadata = (EnumerableFieldMetadata)ObjectRecordService.GetFieldMetadata(propertyInfo.Name, ObjectToEnter.GetType().AssemblyQualifiedName);
+                var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(fieldMetadata.EnumeratedType.AssemblyQualifiedName);
                 var newObject = newRecord.Instance;
                 var recordService = new ObjectRecordService(newObject, parentForm.ApplicationController);
                 var viewModel = new ObjectEntryViewModel(
@@ -506,7 +568,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var objectFormService = recordForm as ObjectEntryViewModel;
             if (objectFormService != null)
             {
-                var property = GetPropertyInfo(referenceName, ObjectType.Name);
+                var property = GetPropertyInfo(referenceName, ObjectType.AssemblyQualifiedName);
                 var customFunctions = property.GetCustomAttributes<CustomFunction>();
                 if (customFunctions != null)
                 {

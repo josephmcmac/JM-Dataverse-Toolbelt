@@ -207,13 +207,13 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var solution = service.Retrieve("solution", new Guid(export.Solution.Id));
                     var uniqueName = (string)solution.GetStringField("uniquename");
                     var req = new ExportSolutionRequest();
-                    req.Managed = export.Managed;
+                    req.Managed = export.ExportAsManaged;
                     req.SolutionName = uniqueName;
                     var version = solution.GetStringField("version");
                     var versionText = version == null ? null : version.Replace(".", "_");
                     var eresponse = (ExportSolutionResponse)service.Execute(req);
                     var fileName = string.Format("{0}_{1}{2}.zip", uniqueName, versionText,
-                        export.Managed ? "_managed" : null);
+                        export.ExportAsManaged ? "_managed" : null);
                     FileUtility.WriteToFile(folderPath, fileName, eresponse.ExportSolutionFile);
                     exportResponse.Add(new ExportedSolution(export,
                         new FileReference(Path.Combine(folderPath, fileName))));

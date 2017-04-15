@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid>
+    <Grid MinWidth="150">
         <ComboBox
             TabIndex="1"
             Name="ComboBox"

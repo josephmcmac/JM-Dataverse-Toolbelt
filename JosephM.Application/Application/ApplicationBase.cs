@@ -12,11 +12,16 @@ namespace JosephM.Application.Application
     {
         public ApplicationControllerBase Controller { get; set; }
 
-        public ApplicationBase(ApplicationControllerBase applicationController)
+        public ApplicationBase(ApplicationControllerBase applicationController, IApplicationOptions applicationOptions)
         {
             Modules = new Dictionary<Type, ModuleBase>();
             Controller = applicationController;
-            Controller.RegisterInfrastructure(new ApplicationOptions());
+            Controller.RegisterInfrastructure(applicationOptions);
+        }
+
+        public ApplicationBase(ApplicationControllerBase applicationController)
+            : this(applicationController, new ApplicationOptions())
+        {
         }
 
         private IDictionary<Type, ModuleBase> Modules { get; set; }

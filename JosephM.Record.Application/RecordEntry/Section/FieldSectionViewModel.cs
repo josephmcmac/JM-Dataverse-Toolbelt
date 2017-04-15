@@ -23,6 +23,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
         {
         }
 
+        public bool WrapHorizontal {  get { return FormFieldSection.WrapHorizontal; } }
+
         private FormFieldSection FormFieldSection
         {
             get { return FormSection as FormFieldSection; }

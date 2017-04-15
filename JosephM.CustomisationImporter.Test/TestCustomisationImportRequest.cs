@@ -23,11 +23,12 @@ namespace JosephM.CustomisationImporter.Test
                 .Select(ef => new CustomisationImportRequest
                 {
                     ExcelFile = ef,
-                    IncludeEntities = true,
-                    IncludeFields = true,
-                    IncludeRelationships = true,
-                    UpdateViews = true,
-                    UpdateOptionSets = true
+                    Entities = true,
+                    Fields = true,
+                    Relationships = true,
+                    Views = true,
+                    SharedOptionSets = true,
+                    FieldOptionSets = true
                 })
                 .ToArray();
         }

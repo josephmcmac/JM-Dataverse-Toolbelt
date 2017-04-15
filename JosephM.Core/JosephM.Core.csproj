@@ -83,6 +83,8 @@
     <Compile Include="AppConfig\Extentions.cs" />
     <Compile Include="AppConfig\IResolveObject.cs" />
     <Compile Include="AppConfig\IDependencyResolver.cs" />
+    <Compile Include="Attributes\DisplayNameForPropertyValue.cs" />
+    <Compile Include="Attributes\Group.cs" />
     <Compile Include="Attributes\DoNotAllowAdd.cs" />
     <Compile Include="Attributes\AllowSaveAndLoad.cs" />
     <Compile Include="Attributes\ConnectionFor.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="FieldType\RecordType.cs" />
     <Compile Include="Log\LogFileUserInterface.cs" />
     <Compile Include="Serialisation\JsonHelper.cs" />
+    <Compile Include="Service\IAllowSaveAndLoad.cs" />
     <Compile Include="Service\ServiceResponseItem.cs" />
     <Compile Include="Service\IsValidResponse.cs" />
     <Compile Include="Service\ServiceResponseBase.cs" />

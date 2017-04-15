@@ -8,6 +8,14 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using JosephM.Core.Service;
+using JosephM.Application.ViewModel.TabArea;
+using JosephM.Application.Application;
+using JosephM.ObjectMapping;
+using JosephM.Core.AppConfig;
+using JosephM.Record.Service;
+using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
 namespace JosephM.Application.ViewModel.Extentions
 {
@@ -66,6 +74,45 @@ namespace JosephM.Application.ViewModel.Extentions
             }
             var uri = new Uri(type.FullName + prismQuery, UriKind.Relative);
             return uri;
+        }
+
+        public static void SaveSettingObject(this TabAreaViewModelBase viewModel, object theObject)
+        {
+            var theObjectType = theObject.GetType();
+            if (!theObjectType.IsTypeOf(typeof(IAllowSaveAndLoad)))
+                throw new Exception(string.Format("type {0} is not of type {1}", theObjectType.Name, typeof(IAllowSaveAndLoad).Name));
+
+            //this is an object specifically for entering the name and autoload properties
+            //they are mapped into the IAllowSaveAndLoad object after entry then it is saved
+            var saveObject = new SaveAndLoadFields();
+
+            Action saveSettings = () =>
+            {
+                var mapper = new ClassSelfMapper();
+                mapper.Map(saveObject, theObject);
+
+                var settingsManager = viewModel.ApplicationController.ResolveType<PrismSettingsManager>();
+                var settings = settingsManager.Resolve<SavedSettings>(theObjectType);
+
+                if (saveObject.Autoload)
+                {
+                    foreach (var item in settings.SavedRequests.Cast<IAllowSaveAndLoad>())
+                        item.Autoload = false;
+                }
+
+                settings.SavedRequests = settings.SavedRequests.Union(new[] { theObject }).ToArray();
+                settingsManager.SaveSettingsObject(settings, theObjectType);
+
+                viewModel.ClearChildForm();
+
+                viewModel.ApplicationController.UserMessage("Saved!");
+            };
+
+            var os = new ObjectRecordService(saveObject, viewModel.ApplicationController, null);
+            var ofs = new ObjectFormService(saveObject, os, null);
+            var fc = new FormController(os, ofs, viewModel.ApplicationController);
+            var vm = new ObjectEntryViewModel(saveSettings, () => viewModel.ClearChildForm(), saveObject, fc);
+            viewModel.LoadChildForm(vm);
         }
     }
 }

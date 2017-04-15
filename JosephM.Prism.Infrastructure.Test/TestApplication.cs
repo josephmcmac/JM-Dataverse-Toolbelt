@@ -13,13 +13,19 @@ using JosephM.Core.Extentions;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.Infrastructure.Prism;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using JosephM.Core.Test;
+using JosephM.Application.Options;
+using JosephM.Core.AppConfig;
+using JosephM.Application.ViewModel.ApplicationOptions;
+using JosephM.Prism.Infrastructure.Dialog;
 
 namespace JosephM.Prism.Infrastructure.Test
 {
     public class TestApplication : ApplicationBase
     {
+        //todo should be creating 2 controllers to pass into base
         public TestApplication()
-            : base(new FakeApplicationController())
+            : base(new FakeApplicationController(), new ApplicationOptionsViewModel(new FakeApplicationController()))
         {
             Controller.RegisterType<IDialogController, FakeDialogController>();
         }
@@ -68,8 +74,14 @@ namespace JosephM.Prism.Infrastructure.Test
                         Assert.IsNotNull(parentForm);
                         Assert.AreEqual(1, parentForm.ChildForms.Count);
                         var childForm = parentForm.ChildForms.First();
-                        childForm.LoadFormSections();
-                        EnterAndSaveObject(objectToEnter, childForm);
+                        if (childForm is RecordEntryFormViewModel)
+                        {
+                            var tChildForm = childForm as RecordEntryFormViewModel;
+                            tChildForm.LoadFormSections();
+                            EnterAndSaveObject(objectToEnter, tChildForm);
+                        }
+                        else
+                            throw new NotImplementedException("Havent implemented for type " + childForm.GetType().Name);
                     }
                     else
                         throw new NotImplementedException("Unexpected type " + viewModel.GetType().Name);
@@ -98,7 +110,66 @@ namespace JosephM.Prism.Infrastructure.Test
             where TDialog : DialogViewModel
         {
             var entryForm = NavigateToDialogModuleEntryForm<TDialogModule, TDialog>();
+
+            var saveRequest = false;
+            Type savedRequestType = null;
+
+            if (entryForm is ObjectEntryViewModel)
+            {
+                entryForm.LoadFormSections();
+                    var oevm = (ObjectEntryViewModel)entryForm;
+
+                foreach (var grid in oevm.SubGrids)
+                    if (grid.DynamicGridViewModel.LoadedCallback != null)
+                        grid.DynamicGridViewModel.LoadedCallback();
+
+                if (oevm.SaveRequestButtonViewModel.IsVisible)
+                {
+                    saveRequest = true;
+                    savedRequestType = oevm.GetObject().GetType();
+                    //okay this part is for the save request
+                    //if configured then save the request and afterwards we will navigate to it and delete it
+                    oevm.SaveRequestButtonViewModel.Invoke();
+                    Assert.AreEqual(1, oevm.ChildForms.Count());
+                    var childForm = oevm.ChildForms.First();
+                    if (childForm is RecordEntryFormViewModel)
+                    {
+                        var tChildForm = childForm as ObjectEntryViewModel;
+                        tChildForm.LoadFormSections();
+                        var childObject = tChildForm.GetObject();
+                        CoreTest.PopulateObject(childObject);
+                        EnterAndSaveObject(childObject, tChildForm);
+                    }
+                    else
+                        throw new NotImplementedException("Havent implemented for type " + childForm.GetType().Name);
+                }
+            }
+
             EnterAndSaveObject(instanceEntered, entryForm);
+
+
+            if(saveRequest)
+            {
+                //okay lets delete the request we saved earlier (and any others)
+                var applicationOptions = (ApplicationOptionsViewModel)this.Controller.Container.ResolveType<IApplicationOptions>();
+                
+                //get the setting which has the label - hope this doesn't break
+                var savedSettingsOption = applicationOptions.Settings.First(o => o.Label.EndsWith(savedRequestType.GetDisplayName()));
+                savedSettingsOption.DelegateCommand.Execute();
+
+                var items = Controller.GetObjects(RegionNames.MainTabRegion);
+                var dialog = items.First();
+                Assert.IsTrue(dialog is SavedRequestDialog);
+                var srd = (SavedRequestDialog)dialog;
+                srd.Controller.BeginDialog();
+                var oevm = GetSubObjectEntryViewModel(srd);
+                foreach(var grid in oevm.SubGrids)
+                {
+                    while (grid.GridRecords.Any())
+                         grid.GridRecords.First().DeleteRow();
+                }
+                oevm.SaveButtonViewModel.Invoke();
+            }
         }
 
         public void NavigateAndProcessDialog<TDialogModule, TDialog>(IEnumerable<object> instancesEntered)

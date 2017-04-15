@@ -36,7 +36,7 @@ namespace JosephM.Deployment.Test
                 {
                     Connection = GetSavedXrmRecordConfiguration(),
                     Solution = solution.ToLookup(),
-                    Managed = false,
+                    ExportAsManaged = false,
                     DataToExport = new[]
                     {
                         new ImportExportRecordType()
@@ -44,7 +44,7 @@ namespace JosephM.Deployment.Test
                             RecordType = new RecordType(Entities.account, Entities.account),
                             Type = ExportType.AllRecords,
                            
-                            ExcludeFields = new[]
+                            ExcludeTheseFieldsInExportedRecords = new[]
                             {
                                 new FieldSetting
                                 {
@@ -70,7 +70,7 @@ namespace JosephM.Deployment.Test
                 {
                     Connection = GetSavedXrmRecordConfiguration(),
                     Solution = solution.ToLookup(),
-                    Managed = false,
+                    ExportAsManaged = false,
                     DataToExport = new[]
                     {
                         new ImportExportRecordType()
@@ -78,7 +78,7 @@ namespace JosephM.Deployment.Test
                             RecordType = new RecordType(Entities.account, Entities.account),
                             Type = ExportType.AllRecords,
                            
-                            ExcludeFields = new[]
+                            ExcludeTheseFieldsInExportedRecords = new[]
                             {
                                 new FieldSetting
                                 {

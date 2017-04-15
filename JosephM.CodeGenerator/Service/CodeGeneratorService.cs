@@ -116,7 +116,7 @@ namespace JosephM.CodeGenerator.Service
 
         private void AppendEntities(LogController controller, CodeGeneratorRequest request, StringBuilder stringBuilder)
         {
-            if (!request.IncludeEntities)
+            if (!request.Entities)
                 return;
             var types = GetRecordTypesToImport(request);
             var countToDo = types.Count();
@@ -138,7 +138,7 @@ namespace JosephM.CodeGenerator.Service
 
         private void AppendRelationships(LogController controller, CodeGeneratorRequest request, StringBuilder stringBuilder)
         {
-            if (!request.IncludeRelationships)
+            if (!request.Relationships)
                 return;
             var types = GetRecordTypesToImport(request);
             var countToDo = types.Count();
@@ -183,7 +183,7 @@ namespace JosephM.CodeGenerator.Service
 
         private void AppendFields(LogController controller, StringBuilder stringBuilder, CodeGeneratorRequest request)
         {
-            if (!request.IncludeFields)
+            if (!request.Fields)
                 return;
             var types = GetRecordTypesToImport(request);
             var countToDo = types.Count();
@@ -214,7 +214,7 @@ namespace JosephM.CodeGenerator.Service
 
         private IEnumerable<string> GetRecordTypesToImport(CodeGeneratorRequest request)
         {
-            return request.AllRecordTypes
+            return request.IncludeAllRecordTypes
                 ? Service.GetAllRecordTypes()
                 : request.RecordTypes.Select(r => r.RecordType.Key);
         }
@@ -244,9 +244,9 @@ namespace JosephM.CodeGenerator.Service
             if (IsValidForCode(recordType))
             {
                 stringBuilder.AppendLine(string.Format("{0}.Options = new Object();", request.Namespace));
-                var fieldsToProcess = request.AllFields
+                var fieldsToProcess = request.AllOptionSetFields
                     ? Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType))
-                    : new[] {request.OptionField != null ? request.OptionField.Key : null};
+                    : new[] {request.SpecificOptionSetField != null ? request.SpecificOptionSetField.Key : null};
 
                 foreach (var field in fieldsToProcess)
                 {
@@ -277,7 +277,7 @@ namespace JosephM.CodeGenerator.Service
         private void AppendActions(StringBuilder stringBuilder, CodeGeneratorRequest request,
             LogController controller)
         {
-            if (!request.IncludeActions)
+            if (!request.Actions)
                 return;
 
             controller.UpdateProgress(1, 2,
@@ -394,12 +394,12 @@ namespace JosephM.CodeGenerator.Service
         private void AppendOptionSets(StringBuilder stringBuilder, CodeGeneratorRequest request,
             LogController controller)
         {
-            if (!request.IncludeOptions)
+            if (!request.FieldOptions && !request.SharedOptions)
                 return;
             stringBuilder.AppendLine("\tpublic static class OptionSets");
             stringBuilder.AppendLine("\t{");
 
-            if (request.IncludeAllSharedOptions)
+            if (request.SharedOptions)
             {
                 var picklists = Service.GetSharedPicklists();
                 var countOptionsToDo = picklists.Count();
@@ -434,61 +434,64 @@ namespace JosephM.CodeGenerator.Service
                 }
                 stringBuilder.AppendLine("\t\t}");
             }
-            var types = GetRecordTypesToImport(request);
-            var countToDo = types.Count();
-            var countDone = 0;
-            var duplicateTypesLabels = types
-                .GroupBy(t => CreateCodeLabel(Service.GetDisplayName(t)), t => t)
-                .Where(t => t.Count() > 1)
-                .Select(t => t.Key)
-                .ToArray();
-            foreach (var recordType in types)
+            if (request.FieldOptions)
             {
-                controller.UpdateProgress(countDone, countToDo,
-                    string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
-
-                if (IsValidForCode(recordType))
+                var types = GetRecordTypesToImport(request);
+                var countToDo = types.Count();
+                var countDone = 0;
+                var duplicateTypesLabels = types
+                    .GroupBy(t => CreateCodeLabel(Service.GetDisplayName(t)), t => t)
+                    .Where(t => t.Count() > 1)
+                    .Select(t => t.Key)
+                    .ToArray();
+                foreach (var recordType in types)
                 {
-                    var recordTypeCodeLabel = CreateCodeLabel(Service.GetDisplayName(recordType));
-                    if (duplicateTypesLabels.Contains(recordTypeCodeLabel))
-                        recordTypeCodeLabel = recordTypeCodeLabel + "_" + recordType;
-                    stringBuilder.AppendLine("\t\tpublic static class " + recordTypeCodeLabel);
-                    stringBuilder.AppendLine("\t\t{");
-                    var optionFields = Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType));
-                    var optionFieldLabels = optionFields.ToDictionary(f => f,
-                        f => CreateCodeLabel(Service.GetFieldLabel(f, recordType)));
-                    foreach (var field in optionFieldLabels)
+                    controller.UpdateProgress(countDone, countToDo,
+                        string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
+
+                    if (IsValidForCode(recordType))
                     {
-                        var fieldLabel = field.Value;
-                        if (optionFieldLabels.Any(kv => kv.Key != field.Key && kv.Value == field.Value))
-                            fieldLabel = string.Format("{0}_{1}", fieldLabel, field.Key);
-                        if (fieldLabel == recordTypeCodeLabel)
-                            fieldLabel = string.Format("{0}_", fieldLabel);
-                        stringBuilder.AppendLine("\t\t\tpublic static class " + fieldLabel);
-                        stringBuilder.AppendLine("\t\t\t{");
-                        var options = Service.GetPicklistKeyValues(field.Key, recordType);
-                        var used = new List<string>();
-                        foreach (var option in options)
+                        var recordTypeCodeLabel = CreateCodeLabel(Service.GetDisplayName(recordType));
+                        if (duplicateTypesLabels.Contains(recordTypeCodeLabel))
+                            recordTypeCodeLabel = recordTypeCodeLabel + "_" + recordType;
+                        stringBuilder.AppendLine("\t\tpublic static class " + recordTypeCodeLabel);
+                        stringBuilder.AppendLine("\t\t{");
+                        var optionFields = Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType));
+                        var optionFieldLabels = optionFields.ToDictionary(f => f,
+                            f => CreateCodeLabel(Service.GetFieldLabel(f, recordType)));
+                        foreach (var field in optionFieldLabels)
                         {
-                            if (IsValidForCode(option))
+                            var fieldLabel = field.Value;
+                            if (optionFieldLabels.Any(kv => kv.Key != field.Key && kv.Value == field.Value))
+                                fieldLabel = string.Format("{0}_{1}", fieldLabel, field.Key);
+                            if (fieldLabel == recordTypeCodeLabel)
+                                fieldLabel = string.Format("{0}_", fieldLabel);
+                            stringBuilder.AppendLine("\t\t\tpublic static class " + fieldLabel);
+                            stringBuilder.AppendLine("\t\t\t{");
+                            var options = Service.GetPicklistKeyValues(field.Key, recordType);
+                            var used = new List<string>();
+                            foreach (var option in options)
                             {
-                                var optionLabel = CreateCodeLabel(option.Value);
-                                if (optionLabel == fieldLabel)
-                                    optionLabel = string.Format("{0}_", optionLabel);
-                                if (!used.Contains(optionLabel))
+                                if (IsValidForCode(option))
                                 {
-                                    stringBuilder.AppendLine(
-                                        string.Format("\t\t\t\tpublic const int {0} = {1};", optionLabel, option.Key));
-                                    used.Add(optionLabel);
+                                    var optionLabel = CreateCodeLabel(option.Value);
+                                    if (optionLabel == fieldLabel)
+                                        optionLabel = string.Format("{0}_", optionLabel);
+                                    if (!used.Contains(optionLabel))
+                                    {
+                                        stringBuilder.AppendLine(
+                                            string.Format("\t\t\t\tpublic const int {0} = {1};", optionLabel, option.Key));
+                                        used.Add(optionLabel);
+                                    }
                                 }
                             }
-                        }
-                        stringBuilder.AppendLine("\t\t\t}");
+                            stringBuilder.AppendLine("\t\t\t}");
 
+                        }
+                        stringBuilder.AppendLine("\t\t}");
                     }
-                    stringBuilder.AppendLine("\t\t}");
+                    countDone++;
                 }
-                countDone++;
             }
             stringBuilder.AppendLine("\t}");
         }

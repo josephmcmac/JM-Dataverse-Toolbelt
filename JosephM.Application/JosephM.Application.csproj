@@ -51,6 +51,8 @@
     <Compile Include="Application\ApplicationControllerBase.cs" />
     <Compile Include="Application\Extensions.cs" />
     <Compile Include="Application\PrismSettingsManager.cs" />
+    <Compile Include="Application\SavedSettingSelection.cs" />
+    <Compile Include="Application\SavedSettings.cs" />
     <Compile Include="Modules\ModuleController.cs" />
     <Compile Include="Options\ApplicationOptions.cs" />
     <Compile Include="Options\ApplicationOptionType.cs" />

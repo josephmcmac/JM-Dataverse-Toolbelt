@@ -12,6 +12,11 @@ using JosephM.Core.Service;
 using JosephM.ObjectMapping;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
+using JosephM.Application.Application;
+using JosephM.Core.AppConfig;
+using JosephM.Application.ViewModel.Dialog;
+using System.Collections.Generic;
+using JosephM.Application.ViewModel.Extentions;
 
 #endregion
 
@@ -111,44 +116,68 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             return new IsValidResponse();
         }
 
-        public override void LoadObject(string fileName)
+        public override void LoadObject()
         {
             try
             {
-                //read from serializer
                 var theObject = GetObject();
                 var theObjectType = theObject.GetType();
-                var serializer = new DataContractSerializer(theObjectType);
-                object newOne = null;
-                using (var fileStream = new FileStream(fileName, FileMode.Open))
+
+                var resolve = ApplicationController.ResolveType<PrismSettingsManager>().Resolve<SavedSettings>(theObjectType);
+                if (!resolve.SavedRequests.Any())
                 {
-                    newOne = serializer.ReadObject(fileStream);
+                    ApplicationController.UserMessage(string.Format("There are no saved {0} records", theObjectType.GetDisplayName()));
+                    return;
                 }
-                var mapper = new ClassSelfMapper();
-                mapper.Map(newOne, theObject);
-                Reload();
-                foreach (var grid in SubGrids)
+
+                var objectTypeMaps = new Dictionary<string, Type>()
                 {
-                    grid.DynamicGridViewModel.ReloadGrid();
-                }
+                    { "SavedRequests", theObjectType }
+                };
+                var selectionObject = new SavedSettingSelection();
+                Action loadSelection = () =>
+                {
+                    if (selectionObject.Selection == null)
+                        return;
+
+                    var mapper = new ClassSelfMapper();
+                    mapper.Map(selectionObject.Selection, theObject);
+                    if (theObject is ServiceRequestBase)
+                        ((ServiceRequestBase)theObject).DisplaySavedSettingFields = false;
+                    Reload();
+                    foreach (var grid in SubGrids)
+                    {
+                        grid.DynamicGridViewModel.ReloadGrid();
+                    }
+                    ClearChildForm();
+                };
+
+                var dialogController = new DialogController(ApplicationController);
+                var recordService = new ObjectRecordService(selectionObject, null, null, ApplicationController, objectTypeMaps);
+                var formService = new ObjectFormService(selectionObject, recordService, objectTypeMaps);
+                var vm = new ObjectEntryViewModel(loadSelection, ClearChildForm, selectionObject,
+                    new FormController(recordService, formService, ApplicationController));
+                LoadChildForm(vm);
             }
             catch (Exception ex)
             {
-                ApplicationController.UserMessage(string.Format("Error Saving Object\n{0}", ex.DisplayString()));
+                ApplicationController.UserMessage(string.Format("Error Loading Object\n{0}", ex.DisplayString()));
             }
         }
 
-        public override void SaveObject(string fileName)
+        public override void SaveObject()
         {
             //subgrids don't map directly to object so need to unload them to object
+            //before saving the record
             LoadSubgridsToObject();
+
             var theObject = GetObject();
-            ApplicationController.SeralializeObjectToFile(theObject, fileName);
+            this.SaveSettingObject(theObject);
         }
 
-        protected override bool AllowSaveAndLoad
+        public override bool AllowSaveAndLoad
         {
-            get { return GetObject().GetType().GetCustomAttributes(typeof(AllowSaveAndLoad), false).Any(); }
+            get { return GetObject().GetType().IsTypeOf(typeof(IAllowSaveAndLoad)) ; }
         }
 
         internal override void RefreshEditabilityExtention()
@@ -183,6 +212,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                         }
                     }
                 }
+            }
+        }
+
+        protected override void PostLoading()
+        {
+            foreach(var field in FieldViewModels)
+            {
+                var prop = GetObjectRecordService().GetPropertyInfo(field.FieldName, RecordType);
             }
         }
     }

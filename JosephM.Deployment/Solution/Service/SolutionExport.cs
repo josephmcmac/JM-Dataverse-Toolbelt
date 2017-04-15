@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
@@ -10,19 +6,23 @@ using JosephM.Record.Attributes;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
+    [Group(Sections.Solution, true, 10)]
+    [Group(Sections.IncludeWithExportedRecords, true, 30)]
     public class SolutionExport
     {
+        [Group(Sections.Solution)]
+        [DisplayName("Saved Connection For The CRM Instance")]
         [DisplayOrder(20)]
         [RequiredProperty]
         [GridWidth(400)]
         [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
         [ConnectionFor("Solution")]
-        //[ConnectionFor("DataToExport.RecordType")]
-        //[ConnectionFor("DataToExport.OnlyExportSpecificRecords.Record")]
         [ConnectionFor("DataToExport")]
         [ReadOnlyWhenSet]
         public SavedXrmRecordConfiguration Connection { get; set; }
 
+        [Group(Sections.Solution)]
+        [DisplayName("Solution To Export")]
         [DisplayOrder(30)]
         [RequiredProperty]
         [GridWidth(400)]
@@ -33,15 +33,17 @@ namespace JosephM.Xrm.ImportExporter.Service
         [UsePicklist]
         public Lookup Solution { get; set; }
 
+        [Group(Sections.Solution)]
+        [PropertyInContextByPropertyNotNull("Solution")]
         [DisplayOrder(40)]
-        [RequiredProperty]
-        public bool Managed { get; set; }
+        public bool ExportAsManaged { get; set; }
 
+        [Group(Sections.IncludeWithExportedRecords)]
         [DisplayOrder(1050)]
-        [RequiredProperty]
         [PropertyInContextByPropertyNotNull("Connection")]
         public bool IncludeNotes { get; set; }
 
+        [Group(Sections.IncludeWithExportedRecords)]
         [DisplayOrder(1060)]
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull("Connection")]
@@ -51,5 +53,16 @@ namespace JosephM.Xrm.ImportExporter.Service
         [GridWidth(400)]
         [PropertyInContextByPropertyNotNull("Connection")]
         public IEnumerable<ImportExportRecordType> DataToExport { get; set; }
+
+        public override string ToString()
+        {
+            return Solution != null ? Solution.Name : base.ToString();
+        }
+
+        private static class Sections
+        {
+            public const string Solution = "Solution";
+            public const string IncludeWithExportedRecords = "Options To Include With Exported Records";
+        }
     }
 }

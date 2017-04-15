@@ -17,21 +17,34 @@
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" >
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
-        <Grid Grid.Row="1" Visibility="{Binding ShowProgressControlViewModel, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
-            <shared:ProgressControl
+        <Grid Grid.Row="1"
+              Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Visibility="{Binding ShowProgressControlViewModel, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
+                <shared:ProgressControl
                 DataContext="{Binding ProgressControlViewModel}" />
-        </Grid>
-        <Grid Grid.Row="2"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
-            <ItemsControl
+            </Grid>
+            <Grid Grid.Row="1"  Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                <ItemsControl
                 Name="DialogPanel"
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
                 ItemsSource="{Binding Controller.UiItems}" />
+            </Grid>
+            <Grid Grid.Row="2" >
+                <ItemsControl
+                Name="ChildrenPanel"
+                ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
+                ItemsSource="{Binding ChildForms}" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

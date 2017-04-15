@@ -10,7 +10,7 @@ namespace JosephM.Record.Metadata
 {
     public static class RecordMetadataFactory
     {
-        public static IEnumerable<FieldMetadata> GetClassFieldMetadata(Type configTypeName)
+        public static IEnumerable<FieldMetadata> GetClassFieldMetadata(Type configTypeName, IDictionary<string, Type> objectTypeMaps = null)
         {
             var result = new List<FieldMetadata>();
 
@@ -18,7 +18,7 @@ namespace JosephM.Record.Metadata
 
             foreach (var item in properties)
             {
-                result.Add(FieldMetadata.Create(item));
+                result.Add(FieldMetadata.Create(item, objectTypeMaps));
             }
 
             return result;

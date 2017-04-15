@@ -30,7 +30,7 @@ namespace JosephM.RecordCounts.Exporter
             RecordCountsResponse response,
             LogController controller)
         {
-            response.Folder = request.SaveToFolder.FolderPath;
+            response.Folder = request.Folder.FolderPath;
 
             controller.LogLiteral("Loading Types");
 
