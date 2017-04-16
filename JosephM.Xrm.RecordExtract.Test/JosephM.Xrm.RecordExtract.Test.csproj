@@ -70,16 +70,12 @@
   <ItemGroup>
     <Compile Include="FakeRecordExtractTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecordExtract\TestRecordExtractSettingsModuleTests.cs" />
     <Compile Include="RecordExtract\TestRecordExtractTests.cs" />
-    <Compile Include="RecordExtract\RecordExtractSettingsTests.cs" />
-    <Compile Include="RecordExtract\TestRecordExtractSettingsModule.cs" />
     <Compile Include="RecordExtract\TestRecordExtractModuleTests.cs" />
     <Compile Include="RecordExtract\XrmRecordExtractTests.cs" />
     <Compile Include="RecordExtract\TestRecordExtractDialog.cs" />
     <Compile Include="RecordExtract\TestRecordExtractModule.cs" />
     <Compile Include="RecordExtract\TestRecordExtractService.cs" />
-    <Compile Include="RecordExtract\TestRecordExtractSettingsDialog.cs" />
     <Compile Include="TextSearch\TestTextSearchModuleTests.cs" />
     <Compile Include="TextSearch\TestTextSearchSettingsModule.cs" />
     <Compile Include="TextSearch\TestTextSearchSettingsModuleTests.cs" />
@@ -142,6 +138,10 @@
     <ProjectReference Include="..\JosephM.Xrm.Test\JosephM.Xrm.Test.csproj">
       <Project>{5282ba96-7e87-49f3-9429-0cd8821ef4e5}</Project>
       <Name>JosephM.Xrm.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
+      <Name>JosephM.Xrm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

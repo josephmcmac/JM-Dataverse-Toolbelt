@@ -4,9 +4,9 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
     public class XrmRecordExtractService : RecordExtractService
     {
-        public XrmRecordExtractService(XrmRecordService service, IRecordExtractSettings recordExtractSettings,
+        public XrmRecordExtractService(XrmRecordService service,
             DocumentWriter.DocumentWriter documentWriter)
-            : base(service, recordExtractSettings, documentWriter)
+            : base(service, documentWriter)
         {
         }
     }

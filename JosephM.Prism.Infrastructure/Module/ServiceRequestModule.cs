@@ -1,6 +1,9 @@
-﻿using JosephM.Core.Extentions;
+﻿using JosephM.Application;
+using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Dialog;
+using System;
+using System.Linq;
 
 namespace JosephM.Prism.Infrastructure.Module
 {
@@ -22,6 +25,20 @@ namespace JosephM.Prism.Infrastructure.Module
         protected override string MainOperationName
         {
             get { return (typeof(TRequest)).GetDisplayName(); }
+        }
+
+        public override void InitialiseModule()
+        {
+            base.InitialiseModule();
+
+            //add setting option for accessing saved requests
+            //requests may be saved during the dialog
+            AddSetting("Saved " + typeof(TRequest).GetDisplayName(), () =>
+            {
+                var uri = new UriQuery();
+                uri.Add("Type", typeof(TRequest).AssemblyQualifiedName);
+                ApplicationController.NavigateTo(typeof(SavedRequestDialog), uri);
+            });
         }
     }
 }

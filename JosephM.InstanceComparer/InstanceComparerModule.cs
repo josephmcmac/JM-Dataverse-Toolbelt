@@ -12,11 +12,11 @@ namespace JosephM.InstanceComparer
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelpUrl("Compare CRM Instances", "CrmInstanceComparison");
+            AddHelpUrl("Instance Comparison", "CrmInstanceComparison");
         }
         protected override string MainOperationName
         {
-            get { return "Compare CRM Instances"; }
+            get { return "Instance Comparison"; }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿#region
 
 using JosephM.Application.Modules;
+using JosephM.CustomisationImporter.Service;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using System;
@@ -11,7 +12,8 @@ using System.IO;
 namespace JosephM.CustomisationImporter.Prism
 {
     [DependantModule(typeof(SavedXrmConnectionsModule))]
-    public class CustomisationImportModule : DialogModule<XrmCustomisationImportDialog>
+    public class CustomisationImportModule
+        : ServiceRequestModule<XrmCustomisationImportDialog, XrmCustomisationImportService, CustomisationImportRequest, CustomisationImportResponse, CustomisationImportResponseItem>
     {
         protected override string MainOperationName { get { return "Import Customisations"; } }
 
@@ -19,7 +21,7 @@ namespace JosephM.CustomisationImporter.Prism
         {
             base.InitialiseModule();
             AddHelpUrl("Import Customisations", "CustomisationImporter");
-            AddOption("Import Customisations Sample", OpenTemplateCommand);
+            AddOption("Import Customisation Template", OpenTemplateCommand);
         }
 
         public void OpenTemplateCommand()

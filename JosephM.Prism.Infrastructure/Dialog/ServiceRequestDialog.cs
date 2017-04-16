@@ -42,14 +42,8 @@ namespace JosephM.Prism.Infrastructure.Dialog
             Service = service;
             Request = new TRequest();
 
-            var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService,
-                LookupAllowedValues);
+            var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null);
             SubDialogs = new DialogViewModel[] { configEntryDialog };
-        }
-
-        protected virtual IDictionary<string, IEnumerable<string>> LookupAllowedValues
-        {
-            get { return new Dictionary<string, IEnumerable<string>>(); }
         }
 
         protected TService Service { get; set; }

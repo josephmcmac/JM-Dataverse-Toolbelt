@@ -19,7 +19,7 @@ namespace JosephM.Xrm.RecordExtract.Test
         {
             get
             {
-                return new TestRecordExtractService(FakeRecordService.Get(), new RecordExtractSettings(), DocumentWriter);
+                return new TestRecordExtractService(FakeRecordService.Get(), DocumentWriter);
             }
         }
 

@@ -18,7 +18,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" MinWidth="250">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
@@ -48,11 +48,14 @@
                 <TextBlock Text="Searching..." />
             </Popup>
             <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding LookupGridVisible}">
-                <field:LookupGridView
+                <Border>
+                    <field:LookupGridView
                     Background="WhiteSmoke"
-                    DataContext="{Binding LookupGridViewModel}"
-                    Width="{Binding ActualWidth, ElementName=EnteredTextBox}" />
-
+                    DataContext="{Binding LookupGridViewModel}"/>
+                    <!--Width="{Binding ActualWidth, ElementName=EnteredTextBox}"-->
+                        
+                    <!--popup children here-->
+                </Border>
             </Popup>
         </Grid>
     </Grid>

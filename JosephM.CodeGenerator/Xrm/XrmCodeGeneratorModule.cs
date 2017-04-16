@@ -14,12 +14,12 @@ namespace JosephM.CodeGenerator.Xrm
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelpUrl("Generate Code", "CodeGeneration");
+            AddHelpUrl("Code Generation", "CodeGeneration");
         }
 
         protected override string MainOperationName
         {
-            get { return "Generate Code"; }
+            get { return "Code Generation"; }
         }
     }
 }

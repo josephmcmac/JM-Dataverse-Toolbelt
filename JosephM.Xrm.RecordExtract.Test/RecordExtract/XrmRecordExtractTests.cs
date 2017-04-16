@@ -7,6 +7,7 @@ using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.Test;
 using JosephM.Xrm.RecordExtract.DocumentWriter;
 using JosephM.Xrm.RecordExtract.RecordExtract;
+using JosephM.Xrm.Schema;
 
 namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
 {
@@ -18,14 +19,13 @@ namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
         {
             PrepareTests();
 
-            Assert.Inconclusive("Test Data Not Generated");
-            var testReportRecord = XrmRecordService.GetFirst("contact", "fullname", "Test Report");
+            var testReportRecord = XrmRecordService.GetFirst(Entities.contact);
             //script out a document from fake data
             var recordService = FakeRecordService.Get();
 
             const string type = FakeConstants.RecordType;
             var request = new RecordExtractRequest();
-            request.SaveToFolder = new Folder(@"C:\Users\josephm\Desktop");
+            request.SaveToFolder = new Folder(TestingFolder);
             request.RecordType = new RecordType(type, recordService.GetDisplayName(type));
             request.RecordLookup = new Lookup(testReportRecord.Type, testReportRecord.Id, "Test Report");
 
@@ -37,8 +37,7 @@ namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
         {
             get
             {
-                return new XrmRecordExtractService(XrmRecordService, new RecordExtractSettings(),
-                    new DocumentWriter.DocumentWriter());
+                return new XrmRecordExtractService(XrmRecordService, new DocumentWriter.DocumentWriter());
             }
         }
     }
