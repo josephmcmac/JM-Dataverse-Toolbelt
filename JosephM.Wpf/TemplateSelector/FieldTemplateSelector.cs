@@ -25,6 +25,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate RecordTypeFieldTemplate { get; set; }
         public DataTemplate RecordFieldFieldTemplate { get; set; }
         public DataTemplate FileRefFieldTemplate { get; set; }
+        public DataTemplate EnumerableFieldTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -65,6 +66,8 @@ namespace JosephM.Wpf.TemplateSelector
             }
             if (item is FileRefFieldViewModel)
                 return FileRefFieldTemplate;
+            if (item is EnumerableFieldViewModel)
+                return EnumerableFieldTemplate;
 
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));

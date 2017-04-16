@@ -18,15 +18,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             get { return false; }
         }
 
-        protected FormFieldMetadata(string fieldName)
+        protected FormFieldMetadata(string fieldName, string otherType = null, bool displayLabel = true)
         {
             FieldName = fieldName;
             Order = int.MaxValue;
+            OtherType = otherType;
+            DisplayLabel = displayLabel;
         }
 
         public int Order { get; set; }
 
         public string FieldName { get; private set; }
+
+        public string OtherType { get; private set; }
+
+        public bool DisplayLabel { get; private set; }
 
         public FieldViewModelBase CreateFieldViewModel(string recordType, IRecordService recordService,
             RecordEntryViewModelBase recordForm, IApplicationController applicationController)
@@ -191,7 +197,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     case RecordFieldType.Enumerable:
                     {
-                        fieldVm = new EnumerableFieldViewModel(field, label, recordForm)
+                        //need grid fields
+                        //need linked record type
+                        fieldVm = new EnumerableFieldViewModel(field, label, recordForm, OtherType)
                         {
                             IsRecordServiceField = isRecordServiceField
                         };
@@ -238,6 +246,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         IsRecordServiceField = isRecordServiceField
                     };
                 fieldVm.IsEditable = isEditable;
+                fieldVm.DisplayLabel = DisplayLabel;
                 return fieldVm;
             }
             catch (Exception ex)

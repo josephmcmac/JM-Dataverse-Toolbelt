@@ -24,6 +24,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 {
     public class GridSectionViewModel : SectionViewModelBase, IValidatable
     {
+        /// <summary>
+        /// !! DEPRECIATED !! Use EnumerableField type instead
+        /// </summary>
         public GridSectionViewModel(SubGridSection subGridSection,
             RecordEntryFormViewModel recordForm)
             : base(subGridSection, recordForm)

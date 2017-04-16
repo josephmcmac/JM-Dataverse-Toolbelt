@@ -68,41 +68,46 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                 foreach (var property in propertyMetadata.Where(m => m.Readable || m.Writeable))
                 {
-                    if (property.FieldType == RecordFieldType.Enumerable)
-                    {
-                        var thisMetadata = (EnumerableFieldMetadata)property;
-                        var thisFieldType = thisMetadata.EnumeratedTypeQualifiedName;
-                        var gridFields = GetGridMetadata(thisFieldType);
-                        var section = new SubGridSection(property.SchemaName.SplitCamelCase(),
-                            thisMetadata.EnumeratedTypeQualifiedName,
-                            property.SchemaName, gridFields);
-                        formSections.Add(section);
-                    }
+                    var propinfo = ObjectRecordService.GetPropertyInfo(property.SchemaName, type.AssemblyQualifiedName);
+                    var groupAttribute = propinfo.GetCustomAttribute<Group>();
+
+                    string enumerableType = null;
+                    if (property is EnumerableFieldMetadata)
+                        enumerableType = ((EnumerableFieldMetadata)property).EnumeratedTypeQualifiedName;
+
+                    var displayLabel = property.FieldType != RecordFieldType.Enumerable
+                        || groupAttribute != null;
+
+                    var fieldMetadata = new PersistentFormField(property.SchemaName, enumerableType, displayLabel);
+                    fieldMetadata.Order = property.Order;
+
+                    string sectionName = null;
+                    if (groupAttribute != null)
+                        sectionName = groupAttribute.Name;
+                    else if (property.FieldType == RecordFieldType.Enumerable)
+                        sectionName = property.DisplayName;
                     else
+                        sectionName = standardFieldSectionName;
+
+                    var order = 0;
+                    if (groupAttribute != null)
+                        order = groupAttribute.Order;
+                    else if (property.FieldType == RecordFieldType.Enumerable)
+                        order = 200000;
+                    else
+                        order = 1;
+
+                    var wrapHorizontal = groupAttribute != null
+                        ? groupAttribute.WrapHorizontal
+                        : false;
+
+                    if (!otherSections.ContainsKey(sectionName))
                     {
-                        var fieldMetadata = new PersistentFormField(property.SchemaName);
-                        fieldMetadata.Order = property.Order;
-
-                        var propinfo = ObjectRecordService.GetPropertyInfo(property.SchemaName, type.AssemblyQualifiedName);
-                        var groupAttribute = propinfo.GetCustomAttribute<Group>();
-                        var sectionName = groupAttribute != null
-                            ? groupAttribute.Name
-                            : standardFieldSectionName;
-                        var order = groupAttribute != null
-                            ? groupAttribute.Order
-                            : 1;
-                        var wrapHorizontal = groupAttribute != null
-                            ? groupAttribute.WrapHorizontal
-                            : false;
-
-                        if (!otherSections.ContainsKey(sectionName))
-                        {
-                            otherSections[sectionName] = new List<FormFieldMetadata>();
-                            var newSection = new FormFieldSection(sectionName, otherSections[sectionName], wrapHorizontal, order);
-                            formSections.Add(newSection);
-                        }
-                        otherSections[sectionName].Add(fieldMetadata);
+                        otherSections[sectionName] = new List<FormFieldMetadata>();
+                        var newSection = new FormFieldSection(sectionName, otherSections[sectionName], wrapHorizontal, order);
+                        formSections.Add(newSection);
                     }
+                    otherSections[sectionName].Add(fieldMetadata);
                 }
                 formSections = formSections.OrderBy(s => s.Order).ToList();
                 _formMetadata = new FormMetadata(formSections);
@@ -110,13 +115,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return _formMetadata;
         }
 
-        private IEnumerable<GridFieldMetadata> GetGridMetadata(string thisFieldType)
+        public override IEnumerable<GridFieldMetadata> GetGridMetadata(string recordType)
         {
             //very similar logic in get saved views
             var gridFields = new List<GridFieldMetadata>();
-            foreach (var field in ObjectRecordService.GetFields(thisFieldType))
+            foreach (var field in ObjectRecordService.GetFields(recordType))
             {
-                var propertyInfo = ObjectRecordService.GetPropertyInfo(field, thisFieldType);
+                var propertyInfo = ObjectRecordService.GetPropertyInfo(field, recordType);
                 if (propertyInfo.GetCustomAttribute<HiddenAttribute>() == null)
                 {
                     var gridField = new GridFieldMetadata(field);

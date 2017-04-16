@@ -17,6 +17,7 @@ using JosephM.Core.AppConfig;
 using JosephM.Application.ViewModel.Dialog;
 using System.Collections.Generic;
 using JosephM.Application.ViewModel.Extentions;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 
 #endregion
 
@@ -94,7 +95,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        private object MapGridToEnumerableValue(GridSectionViewModel grid)
+        private object MapGridToEnumerableValue(EnumerableFieldViewModel grid)
         {
             var objectRecordService = GetObjectRecordService();
             var records = grid.DynamicGridViewModel.GridRecords.Select(g => g.Record);

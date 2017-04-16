@@ -44,6 +44,7 @@ namespace JosephM.CustomisationExporter.Exporter
         [Group(Sections.RecordTypes)]
         public bool IncludeAllRecordTypes { get; set; }
 
+        [Group(Sections.RecordTypes)]
         [RequiredProperty]
         [DisplayName("Include These Specific Record Types")]
         [PropertyInContextByPropertyValue("IncludeAllRecordTypes", false)]

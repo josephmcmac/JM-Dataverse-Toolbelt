@@ -217,6 +217,9 @@
     <Compile Include="RecordEntry\Field\FileRefView.xaml.cs">
       <DependentUpon>FileRefView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\EnumerableFieldView.xaml.cs">
+      <DependentUpon>EnumerableFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
       <DependentUpon>LookupPicklistView.xaml</DependentUpon>
     </Compile>
@@ -402,6 +405,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\FileRefView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\EnumerableFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

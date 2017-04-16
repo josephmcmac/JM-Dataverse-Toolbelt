@@ -32,6 +32,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             FieldName = fieldName;
             IsVisible = true;
             IsRecordServiceField = true;
+            DisplayLabel = true;
         }
 
         public bool IsNotNullable { get; set; }
@@ -284,5 +285,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         }
 
         public LoadingViewModel LoadingViewModel { get; set; }
+        public bool DisplayLabel { get; set; }
     }
 }

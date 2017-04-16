@@ -10,7 +10,9 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
     [Group(Sections.Document, true)]
     [Group(Sections.RecordToReport, true)]
+    [Group(Sections.DetailLevelOptions, true)]
     [Group(Sections.CommonFieldOptions, true)]
+    [Group(Sections.ConfigureReportExclusions, true)]
     [DisplayName("Record Report")]
     public class RecordExtractRequest : ServiceRequestBase
     {
@@ -29,10 +31,6 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         [RequiredProperty]
         public DocumentType DocumentFormat { get; set; }
 
-        [Group(Sections.Document)]
-        [RequiredProperty]
-        public DetailLevel DetailOfRelatedRecords { get; set; }
-
         [Group(Sections.RecordToReport)]
         [RequiredProperty]
         [RecordTypeFor("RecordLookup")]
@@ -42,6 +40,14 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull("RecordType")]
         public Lookup RecordLookup { get; set; }
+
+        [Group(Sections.DetailLevelOptions)]
+        [RequiredProperty]
+        public DetailLevel DetailOfRelatedRecords { get; set; }
+
+        [Group(Sections.DetailLevelOptions)]
+        [PropertyInContextByPropertyValue("DetailOfRelatedRecords", DetailLevel.AllFields)]
+        public IEnumerable<RecordTypeSetting> RecordTypesOnlyDisplayName { get; set; }
 
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeCreatedByAndOn { get; set; }
@@ -54,18 +60,19 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeStatus { get; set; }
 
-        [PropertyInContextByPropertyValue("DetailOfRelatedRecords", DetailLevel.AllFields)]
-        public IEnumerable<RecordTypeSetting> RecordTypesOnlyDisplayName { get; set; }
-
-        public IEnumerable<RecordFieldSetting> FieldsToExclude { get; set; }
-
+        [Group(Sections.ConfigureReportExclusions)]
         public IEnumerable<RecordTypeSetting> RecordTypesToExclude { get; set; }
+
+        [Group(Sections.ConfigureReportExclusions)]
+        public IEnumerable<RecordFieldSetting> FieldsToExclude { get; set; }
 
         private static class Sections
         {
             public const string Document = "Document";
             public const string RecordToReport = "Record To Report";
             public const string CommonFieldOptions = "Common Field Options";
+            public const string DetailLevelOptions = "Detail Level Options";
+            public const string ConfigureReportExclusions = "Configure Report Exclusions";
         }
     }
 }
