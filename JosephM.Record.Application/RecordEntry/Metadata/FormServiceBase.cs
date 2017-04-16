@@ -100,5 +100,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             return false;
         }
+
+        public virtual IEnumerable<GridFieldMetadata> GetGridMetadata(string recordType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

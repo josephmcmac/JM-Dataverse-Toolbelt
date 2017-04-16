@@ -158,6 +158,9 @@
     <DataTemplate x:Key="RecordFieldFieldTemplate">
         <field:RecordFieldFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="EnumerableFieldTemplate">
+        <field:EnumerableFieldView DataContext="{Binding}" />
+    </DataTemplate>
     <templateSelector:FieldTemplateSelector
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
@@ -172,6 +175,7 @@
         StringEnumerableFieldTemplate="{StaticResource stringEnumerableFieldTemplate}"
         RecordTypeFieldTemplate="{StaticResource RecordTypeFieldTemplate}"
         RecordFieldFieldTemplate="{StaticResource RecordFieldFieldTemplate}"
+        EnumerableFieldTemplate="{StaticResource EnumerableFieldTemplate}"
         x:Key="fieldTemplateSelector" />
     <!--<DataTemplate x:Key="labelledFieldTemplate" >
         <WrapPanel>
@@ -199,9 +203,23 @@
             </Grid>
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="unlabelledFieldTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <ContentControl
+                    Content="{Binding}"
+                    ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
+            </Grid>
+        </Grid>
+    </DataTemplate>
     <templateSelector:LabelledFieldTemplateSelector
         LabelledFieldTemplate="{StaticResource labelledFieldTemplate}"
-        x:Key="labelledFieldTemplateSelector" />
+        UnlabelledFieldTemplate="{StaticResource unlabelledFieldTemplate}"
+        x:Key="labelledFieldTemplateSelector" 
+        />
     <DataTemplate x:Key="GridSectionTemplate">
         <Grid>
             <recordEntry:GridSectionView DataContext="{Binding}" />

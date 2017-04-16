@@ -102,6 +102,16 @@ namespace JosephM.Record.Application.Fakes
                                 TestConstants.TestingString));
                     typed.OnRecordSelected(typed.LookupGridViewModel.DynamicGridViewModel.GridRecords.First().Record);
                 }
+                else if(field is EnumerableFieldViewModel)
+                {
+                    var gridSection = (EnumerableFieldViewModel)field;
+                    gridSection.AddRow();
+                    var rowViewModel = gridSection.DynamicGridViewModel.GridRecords.First();
+                    foreach (var gridField in rowViewModel.FieldViewModels)
+                    {
+                        PopulateViewModel(gridField);
+                    }
+                }
                 else
                     throw new NotImplementedException(
                         string.Format("No Logic Implemented To AutoPopulate The Form For Type {0}",

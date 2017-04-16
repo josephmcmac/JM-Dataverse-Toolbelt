@@ -7,7 +7,6 @@ using JosephM.Xrm.RecordExtract.RecordExtract;
 namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
 {
     [DependantModule(typeof(TestingModule))]
-    [DependantModule(typeof(TestRecordExtractSettingsModule))]
     public class TestRecordExtractModule :
         ServiceRequestModule
             <TestRecordExtractDialog, TestRecordExtractService, RecordExtractRequest, RecordExtractResponse, RecordExtractResponseItem>

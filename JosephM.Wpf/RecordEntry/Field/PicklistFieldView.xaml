@@ -16,6 +16,7 @@
     </field:FieldControlBase.Resources>
     <Grid MinWidth="150">
         <ComboBox
+            VerticalAlignment="Top"
             TabIndex="1"
             Name="ComboBox"
             Style="{StaticResource FieldEntryStyle}"

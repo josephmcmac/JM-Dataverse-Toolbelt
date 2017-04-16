@@ -78,7 +78,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             var editType = recordsToExportGrid.GetEditRowViewModel(recordToExport);
 
-            var specificRecordGrid = editType.GetSubGridViewModel("OnlyExportSpecificRecords");
+            var specificRecordGrid = editType.GetSubGridViewModel("SpecificRecordsToExport");
             specificRecordGrid.AddRow();
 
             var specificRecord = specificRecordGrid.GridRecords.First();

@@ -9,7 +9,6 @@ using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Xrm.ImportExporter.Prism;
 using JosephM.Xrm.RecordExtract.RecordExtract;
-using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.RecordCounts.Exporter;
 
 namespace JosephM.Xrm.DeveloperTool
@@ -30,7 +29,7 @@ namespace JosephM.Xrm.DeveloperTool
             prism.AddModule<XrmSolutionImporterExporterModule>();
             prism.AddModule<XrmCodeGeneratorModule>();
             prism.AddModule<MaintainOrganisationModule>();
-           // prism.AddModule<XrmTextSearchModule>();
+            prism.AddModule<XrmRecordExtractModule>();
             prism.AddModule<CustomisationExporterModule>();
             prism.AddModule<CustomisationImportModule>();
             prism.AddModule<InstanceComparerModule>();

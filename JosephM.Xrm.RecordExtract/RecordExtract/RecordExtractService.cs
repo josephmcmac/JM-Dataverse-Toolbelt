@@ -17,20 +17,11 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
     public class RecordExtractService :
         ServiceBase<RecordExtractRequest, RecordExtractResponse, RecordExtractResponseItem>
     {
-        public RecordExtractService(IRecordService service, IRecordExtractSettings settings,
-            DocumentWriter.DocumentWriter documentWriter)
+        public RecordExtractService(IRecordService service, DocumentWriter.DocumentWriter documentWriter)
         {
             Service = service;
-            Settings = settings;
             DocumentWriter = documentWriter;
         }
-
-        public IEnumerable<string> AllowedRecordTypes
-        {
-            get { return Settings.AllowedRecordTypes.Select(r => r.RecordType.Key); }
-        }
-
-        private IRecordExtractSettings Settings { get; set; }
 
         private DocumentWriter.DocumentWriter DocumentWriter { get; set; }
 
@@ -43,7 +34,10 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             var firstSection = document.AddSection();
             var nextSection = document.AddSection();
             var extractToDocumentRequest = new RecordExtractToDocumentRequest(request.RecordLookup, nextSection,
-                controller, request.DetailOfRelatedRecords);
+                controller, request.DetailOfRelatedRecords
+                , request.RecordTypesOnlyDisplayName.Where(r => r.RecordType != null).Select(r => r.RecordType.Key).ToArray()
+                 , request.FieldsToExclude, request.RecordTypesToExclude.Where(r => r.RecordType != null).Select(r => r.RecordType.Key).ToArray()
+                 , request.IncludeCreatedByAndOn, request.IncludeModifiedByAndOn, request.IncludeCrmOwner, request.IncludeState, request.IncludeStatus);
             var extractResponse = ExtractRecordToDocument(extractToDocumentRequest);
             response.AddResponseItems(extractResponse.ResponseItems);
             //insert title/summary
@@ -95,7 +89,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                         GetManyToManyRelated(container, relatedType, recordsToOutput);
                         GetActivityPartyRelated(container, relatedType, recordsToOutput);
                         hasRelatedRecordOutput = AppendRelatedToDocument(recordsToOutput, hasRelatedRecordOutput,
-                            container, recordType, ref bookmark);
+                            container, recordType, ref bookmark, request);
                     }
                     catch (Exception ex)
                     {
@@ -130,12 +124,17 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             if (Service.GetRecordTypeMetadata(container.RecordToExtractType).IsActivityParticipant)
                 relatedTypes.AddRange(Service.GetAllRecordTypes().Where(r => Service.GetRecordTypeMetadata(r).IsActivityType));
             relatedTypes = relatedTypes.Distinct()
-                .Where(r => !Settings.GetRecordTypesToExclude().Contains(r))
+                .Where(r => !GetRecordTypesToExclude().Contains(r))
                 //we exclude activity parties from this as we get the links when processing activity types
                 .Where(r => r != "activityparty")
                 .ToList();
 
             return relatedTypes;
+        }
+
+        private IEnumerable<string> GetRecordTypesToExclude()
+        {
+            return ExtractUtility.GetSystemRecordTypesToExclude();
         }
 
         private void GetActivityPartyRelated(RecordExtractContainer container, string relatedType,
@@ -157,12 +156,12 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         }
 
         private bool AppendRelatedToDocument(Dictionary<string, IRecord> recordsToOutput, bool hasRelatedRecordOutput,
-            RecordExtractContainer container, string recordType, ref ContentBookmark bookmark)
+            RecordExtractContainer container, string recordType, ref ContentBookmark bookmark, RecordExtractToDocumentRequest request)
         {
             if (recordsToOutput.Any())
             {
                 var outputNumbers = recordsToOutput.Count > 1 && container.Request.RelatedDetail == DetailLevel.AllFields;
-                recordsToOutput.Values.PopulateEmptyLookups(Service, Settings.GetRecordTypesToExclude());
+                recordsToOutput.Values.PopulateEmptyLookups(Service, GetRecordTypesToExclude());
                 var recordTypeCollectionLabel = Service.GetCollectionName(recordType);
                 var recordTypeLabel = Service.GetDisplayName(recordType);
                 if (!hasRelatedRecordOutput)
@@ -185,7 +184,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                         container.Section.AddParagraph(string.Format("{0} {1}", recordTypeLabel, i++), true);
                     container.Controller.UpdateProgress(todoDone++, todoCount,
                         string.Format("Appending Related {0} To Document", recordTypeCollectionLabel));
-                    WriteRecordToSection(match, container.Section, container.Request.RelatedDetail);
+                    WriteRecordToSection(match, container.Section, container.Request.RelatedDetail, request);
                 }
             }
             return hasRelatedRecordOutput;
@@ -287,13 +286,18 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         {
             return
                 Service.GetManyToManyRelationships(container.RecordToExtractType)
-                    .Where(r => !Settings.GetRelationshipsToExclude().Contains(r.SchemaName));
+                    .Where(r => !GetRelationshipsToExclude().Contains(r.SchemaName));
         }
 
         private IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(RecordExtractContainer container)
         {
             return Service.GetOneToManyRelationships(container.RecordToExtractType)
-                .Where(r => !Settings.GetRelationshipsToExclude().Contains(r.SchemaName));
+                .Where(r => !GetRelationshipsToExclude().Contains(r.SchemaName));
+        }
+
+        private IEnumerable<string> GetRelationshipsToExclude()
+        {
+            return ExtractUtility.GetSystemRelationshipsToExclude();
         }
 
         private IRecord ExtractMainRecord(RecordExtractContainer container)
@@ -308,11 +312,11 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                 primaryField));
             container.Response.Record = recordToExtract;
             container.Controller.UpdateProgress(2, 3, "Loading Record");
-            WriteRecordToSection(recordToExtract, container.Section, DetailLevel.AllFields);
+            WriteRecordToSection(recordToExtract, container.Section, DetailLevel.AllFields, container.Request);
             return recordToExtract;
         }
 
-        private void WriteRecordToSection(IRecord record, Section section, DetailLevel detailLevel)
+        private void WriteRecordToSection(IRecord record, Section section, DetailLevel detailLevel, RecordExtractToDocumentRequest request)
         {
             if (detailLevel == DetailLevel.CountsOnly)
                 return;
@@ -323,7 +327,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             table.AddFieldToTable(Service.GetFieldLabel(primaryField, record.Type),
                 ExtractUtility.CheckStripFormatting(recordName, record.Type, primaryField));
 
-            if (detailLevel == DetailLevel.Names || Settings.OnlyDisplayName(recordName))
+            if (detailLevel == DetailLevel.Names || request.OnlyDisplayName(recordName))
                 return;
 
             var fields = record.GetFieldsInEntity();
@@ -332,7 +336,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                 var primaryKey = Service.GetPrimaryKey(record.Type);
                 var actualFieldsToExclude = new List<string> {primaryField, primaryKey};
 
-                actualFieldsToExclude.AddRange(Settings.GetAllFieldsToExclude(record.Type));
+                actualFieldsToExclude.AddRange(request.GetAllFieldsToExclude(record.Type));
 
                 foreach (var field in fields)
                 {
@@ -358,10 +362,15 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                     var display = Service.GetFieldAsDisplayString(record, field);
                     display = display.CheckStripHtml(field);
                     if (!label.IsNullOrWhiteSpace() && !display.IsNullOrWhiteSpace() &&
-                        !Settings.GetStringValuesToExclude().Contains(display))
+                        !GetStringValuesToExclude().Contains(display))
                         table.AddFieldToTable(label, display);
                 }
             }
+        }
+
+        public IEnumerable<string> GetStringValuesToExclude()
+        {
+            return ExtractUtility.GetStringValuesToExclude();
         }
     }
 }

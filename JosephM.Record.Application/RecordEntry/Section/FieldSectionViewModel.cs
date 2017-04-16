@@ -68,6 +68,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 
             foreach (var recordField in Fields)
             {
+                if (RecordForm.OnlyValidate != null && (!RecordForm.OnlyValidate.ContainsKey(RecordForm.GetRecordType()) || !RecordForm.OnlyValidate[RecordForm.GetRecordType()].Contains(recordField.FieldName)))
+                    continue;
                 if (recordField.IsVisible && !recordField.Validate())
                     isValid = false;
             }

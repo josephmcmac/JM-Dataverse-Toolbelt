@@ -21,7 +21,7 @@ namespace JosephM.Application.ViewModel.Grid
     public class GridRowViewModel : RecordEntryViewModelBase
     {
         public GridRowViewModel(IRecord record, DynamicGridViewModel gridViewModel)
-            : base(gridViewModel.FormController)
+            : base(gridViewModel.FormController, gridViewModel.OnlyValidate)
         {
             Record = record;
             GridViewModel = gridViewModel;

@@ -26,11 +26,6 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             CompletionMessage = "Document Successfully Generated";
         }
 
-        protected override IDictionary<string, IEnumerable<string>> LookupAllowedValues
-        {
-            get { return new Dictionary<string, IEnumerable<string>>() {{"RecordType", Service.AllowedRecordTypes}}; }
-        }
-
         public void OpenFile()
         {
             try

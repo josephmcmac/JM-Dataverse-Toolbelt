@@ -400,6 +400,8 @@ namespace JosephM.Application.ViewModel.Grid
                 OnPropertyChanged("HasError");
             }
         }
+
+        public IDictionary<string, IEnumerable<string>> OnlyValidate { get; internal set; }
     }
 
     public class GetGridRecordsResponse

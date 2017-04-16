@@ -32,15 +32,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         private List<FieldViewModelBase> _recordFields;
         private string _recordType;
 
-        protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference)
-            : this(formController)
+        protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+            : this(formController, onlyValidate)
         {
             _parentForm = parentForm;
             _parentFormReference = parentFormReference;
         }
 
-        protected RecordEntryFormViewModel(FormController formController)
-            : base(formController)
+        protected RecordEntryFormViewModel(FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+            : base(formController, onlyValidate)
         {
             SaveButtonViewModel = new XrmButtonViewModel(SaveButtonLabel, DoOnSave, ApplicationController)
             {
@@ -149,9 +149,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             };
         }
         //
-        public IEnumerable<GridSectionViewModel> SubGrids
+        public IEnumerable<EnumerableFieldViewModel> SubGrids
         {
-            get { return FormSectionsAsync.Where(s => s is GridSectionViewModel).Cast<GridSectionViewModel>(); }
+            get
+            {
+                return FieldSections
+                  .SelectMany(s => s.Fields)
+                  .Where(f => f is EnumerableFieldViewModel)
+                  .Cast<EnumerableFieldViewModel>();
+            }
         }
 
         public IEnumerable<FieldSectionViewModel> FieldSections
@@ -364,7 +370,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     {
                         var message = fieldViewModelBase.GetErrorsString();
                         if (!message.IsNullOrWhiteSpace())
-                            validationBuilder.AppendLine(string.Format("{0} - {1}: {2}", subGrid.SectionLabel, fieldViewModelBase.Label, message));
+                            validationBuilder.AppendLine(string.Format("{0} - {1}: {2}", subGrid.FieldName, fieldViewModelBase.Label, message));
                     }
                 }
             }
@@ -386,11 +392,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        public GridSectionViewModel GetSubGridViewModel(string subgridName)
+        public EnumerableFieldViewModel GetSubGridViewModel(string subgridName)
         {
-            if (SubGrids.Any(g => g.SectionIdentifier == subgridName))
+            var matchingFields = FieldSections.SelectMany(s => s.Fields).Where(g => g.FieldName == subgridName);
+            if (matchingFields.Any())
             {
-                return SubGrids.First(g => g.SectionIdentifier == subgridName);
+                return (EnumerableFieldViewModel)matchingFields.First();
             }
             throw new ArgumentOutOfRangeException("subgridName", "No SubGrid In Has The SectionIdentifier: " + subgridName);
         }

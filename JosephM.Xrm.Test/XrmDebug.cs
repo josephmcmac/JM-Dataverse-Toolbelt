@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using System;
+using System.Linq;
 
 namespace JosephM.Xrm.Test
 {
@@ -10,26 +11,60 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            //var something = XrmService.RetrieveAllEntityType(Schema.Entities.solutioncomponent);
+            //DeleteOnlineSampleData();
+        }
 
-            //var field = Schema.Fields.solutioncomponent_.componenttype;
+        private void DeleteOnlineSampleData()
+        {
+            throw new NotImplementedException("need to turn off plugins for actuals and quote line details");
 
-            //var type = Schema.OptionSets.SolutionComponent.ObjectTypeCode.
+            var toDelete = new[]
+            {
+                Schema.Entities.task,
+                Schema.Entities.email,
+                Schema.Entities.phonecall,
+                Schema.Entities.letter,
+                Schema.Entities.appointment,
+                Schema.Entities.incident,
+                Schema.Entities.invoice,
+                Schema.Entities.contractdetail,
+                Schema.Entities.contract,
+                Schema.Entities.salesorderdetail,
+                "msdyn_actual",
+                "msdyn_project",
+                "msdyn_fact",
+                Schema.Entities.entitlement,
+                Schema.Entities.quote,
+                Schema.Entities.salesorder,
+                Schema.Entities.opportunity,
+                Schema.Entities.campaign,
+                "bookableresourcebooking",
+                "msdyn_resourcerequirement",
+                "msdyn_workorder",
+                "msdyn_customerasset",
+                Schema.Entities.account,
+                Schema.Entities.contact,
+                Schema.Entities.lead,
+            };
 
-
-
-            //Schema.Fields.savedquery_.
-
-            //var recordType = "opportunity";
-            //var schemaName = "jmc_abc";
-            //var indexOf_ = schemaName.IndexOf("_");
-            //if (indexOf_ == -1)
-            //    throw new Exception("Could not determine prefix of field for new relationship name");
-            //var prefix = schemaName.Substring(0, indexOf_ + 1);
-            //var usePrefix = !recordType.StartsWith(prefix);
-            //var type = Entities.account;
-            //var numberToCreate = 6000;
-            //CreateRecords(type, numberToCreate);
+            foreach (var entity in toDelete)
+            {
+                var getAll = XrmService.RetrieveAllEntityType(entity);
+                if (entity == "msdyn_project")
+                {
+                    foreach (var item in getAll)
+                    {
+                        XrmService.Delete(item);
+                    }
+                }
+                else
+                {
+                    var allDelete = XrmService.DeleteMultiple(getAll);
+                    var errors = allDelete.Where(r => r.Fault != null);
+                    foreach (var item in errors)
+                        throw new Exception(item.Fault.Message);
+                }
+            }
         }
 
         private void CreateRecords(string type, int numberToCreate)

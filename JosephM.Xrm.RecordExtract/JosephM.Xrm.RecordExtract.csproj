@@ -64,7 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DetailLevel.cs" />
-    <Compile Include="RecordExtract\XrmRecordExtractSettingsModule.cs" />
     <Compile Include="DocumentWriter\ContentBookmark.cs" />
     <Compile Include="DocumentWriter\TableOfContents.cs" />
     <Compile Include="DocumentWriter\Table1Column.cs" />
@@ -74,15 +73,11 @@
     <Compile Include="DocumentWriter\Section.cs" />
     <Compile Include="DocumentWriter\Document.cs" />
     <Compile Include="ExtractUtility.cs" />
-    <Compile Include="RecordExtract\XrmRecordExtractSettingsDialog.cs" />
-    <Compile Include="RecordExtract\IRecordExtractSettings.cs" />
     <Compile Include="RecordExtract\RecordExtractToDocumentResponse.cs" />
     <Compile Include="RecordExtract\RecordExtractToDocumentRequest.cs" />
     <Compile Include="RecordExtract\RecordExtractDialogBase.cs" />
-    <Compile Include="RecordExtract\RecordExtractSettingsDialog.cs" />
     <Compile Include="DocumentWriter\Table.cs" />
     <Compile Include="RecordExtract\RecordExtractService.cs" />
-    <Compile Include="RecordExtract\RecordExtractSettings.cs" />
     <Compile Include="RecordExtract\RecordExtractRequest.cs" />
     <Compile Include="RecordExtract\RecordExtractResponse.cs" />
     <Compile Include="RecordExtract\RecordExtractResponseItem.cs" />

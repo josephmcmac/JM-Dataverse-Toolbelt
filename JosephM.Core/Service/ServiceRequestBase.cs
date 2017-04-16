@@ -17,6 +17,7 @@ namespace JosephM.Core.Service
         [DisplayOrder(2)]
         [GridWidth(250)]
         [PropertyInContextByPropertyValue("DisplaySavedSettingFields", true)]
+        [RequiredProperty]
         public string Name { get; set; }
 
         [Hidden]

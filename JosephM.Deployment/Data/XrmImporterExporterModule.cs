@@ -1,12 +1,15 @@
 ﻿#region
 
 using JosephM.Prism.Infrastructure.Module;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.ImportExporter.Service;
 
 #endregion
 
 namespace JosephM.Xrm.ImportExporter.Prism
 {
-    public class XrmImporterExporterModule : DialogModule<XrmImporterExporterDialog>
+    public class XrmImporterExporterModule
+        : ServiceRequestModule<XrmImporterExporterDialog, XrmImporterExporterService<XrmRecordService>, XrmImporterExporterRequest, XrmImporterExporterResponse, XrmImporterExporterResponseItem>
     {
         public override void InitialiseModule()
         {

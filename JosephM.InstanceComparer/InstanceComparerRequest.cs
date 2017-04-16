@@ -8,7 +8,7 @@ namespace JosephM.InstanceComparer
 {
     [Group(Sections.Connections, true)]
     [Group(Sections.Folder, true)]
-    [DisplayName("Instance Compare")]
+    [DisplayName("Instance Comparison")]
     public class InstanceComparerRequest : ServiceRequestBase
     {
         [Group(Sections.Connections)]
