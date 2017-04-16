@@ -27,10 +27,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             var isValid = true;
             foreach (var recordField in FieldViewModels)
             {
-                if (OnlyValidate != null && (!OnlyValidate.ContainsKey(GetRecordType()) || !OnlyValidate[GetRecordType()].Contains(recordField.FieldName)))
-                    continue;
-                if (recordField.IsVisible && !recordField.Validate())
-                    isValid = false;
+                if (OnlyValidate == null
+                    || (OnlyValidate.ContainsKey(GetRecordType()) && OnlyValidate[GetRecordType()].Contains(recordField.FieldName)
+                    || recordField is EnumerableFieldViewModel)
+                    )
+                {
+                    if (recordField.IsVisible && !recordField.Validate())
+                        isValid = false;
+                }
             }
             return isValid;
         }
