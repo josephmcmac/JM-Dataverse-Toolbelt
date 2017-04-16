@@ -201,16 +201,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     if (!gridRowViewModel.Validate())
                         isValid = false;
                 }
-                var thisValidators = FormService.GetSectionValidationRules(SectionIdentifier);
-
-                foreach (var validator in thisValidators)
+                var onlyValidate = GetRecordForm().OnlyValidate;
+                if (onlyValidate == null ||
+                    (onlyValidate.ContainsKey(RecordType) && onlyValidate[RecordType].Contains(FieldName)))
                 {
-                    var response = validator.Validate(this);
-                    if (!response.IsValid)
+                    var thisValidators = FormService.GetSectionValidationRules(SectionIdentifier);
+
+                    foreach (var validator in thisValidators)
                     {
-                        ErrorMessage = response.ErrorContent != null ? response.ErrorContent.ToString() : "No Error Content";
-                        //need to somehow get the error message into the grid
-                        isValid = false;
+                        var response = validator.Validate(this);
+                        if (!response.IsValid)
+                        {
+                            ErrorMessage = response.ErrorContent != null ? response.ErrorContent.ToString() : "No Error Content";
+                            //need to somehow get the error message into the grid
+                            isValid = false;
+                        }
                     }
                 }
             }
