@@ -47,7 +47,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                 {
                     IsLoaded = true;
                     RecordForm.OnSectionLoaded();
-                }
+                },
+                OnlyValidate = recordForm.OnlyValidate
             };
             var customFunctions = FormService.GetCustomFunctionsFor(ReferenceName, GetRecordForm()).ToList();
             customFunctions.Add(new CustomGridFunction("Download CSV", DownloadCsv));

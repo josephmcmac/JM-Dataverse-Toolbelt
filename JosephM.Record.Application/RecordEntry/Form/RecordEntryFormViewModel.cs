@@ -32,15 +32,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         private List<FieldViewModelBase> _recordFields;
         private string _recordType;
 
-        protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference)
-            : this(formController)
+        protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+            : this(formController, onlyValidate)
         {
             _parentForm = parentForm;
             _parentFormReference = parentFormReference;
         }
 
-        protected RecordEntryFormViewModel(FormController formController)
-            : base(formController)
+        protected RecordEntryFormViewModel(FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+            : base(formController, onlyValidate)
         {
             SaveButtonViewModel = new XrmButtonViewModel(SaveButtonLabel, DoOnSave, ApplicationController)
             {

@@ -15,10 +15,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public abstract class RecordEntryViewModelBase : TabAreaViewModelBase
     {
-        protected RecordEntryViewModelBase(FormController formController)
+        protected RecordEntryViewModelBase(FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null)
             : base(formController.ApplicationController)
         {
             FormController = formController;
+            OnlyValidate = onlyValidate;
         }
 
         public virtual bool Validate()
@@ -26,6 +27,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             var isValid = true;
             foreach (var recordField in FieldViewModels)
             {
+                if (OnlyValidate != null && (!OnlyValidate.ContainsKey(GetRecordType()) || !OnlyValidate[GetRecordType()].Contains(recordField.FieldName)))
+                    continue;
                 if (recordField.IsVisible && !recordField.Validate())
                     isValid = false;
             }
@@ -170,5 +173,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         internal abstract string ParentFormReference { get; }
 
         public bool IsReadOnly { get; set; }
+        public IDictionary<string, IEnumerable<string>> OnlyValidate { get; private set; }
     }
 }

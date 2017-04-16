@@ -33,7 +33,15 @@ namespace JosephM.Prism.Infrastructure.Dialog
                 { "SavedRequests", RequestType }
             };
 
-            var configEntryDialog = new ObjectGetEntryDialog(() => SettingsObject, this, ApplicationController, saveMethod: null, objectTypeMaps: objectTypeMaps);
+            //okay for these saved requests
+            //we dont want to validate them in this dialog as an incomplete request should be allowed to save
+            //it should only be required/validate when the actual process is run
+            //here we only want to validate the name is populated (property in the base request class)
+            var onlyValidate = new Dictionary<string, IEnumerable<string>>()
+            {
+                { RequestType.AssemblyQualifiedName, typeof(ServiceRequestBase).GetProperties().Select(p => p.Name).ToArray() }
+            };
+            var configEntryDialog = new ObjectGetEntryDialog(() => SettingsObject, this, ApplicationController, saveMethod: null, objectTypeMaps: objectTypeMaps, onlyValidate: onlyValidate);
             SubDialogs = new DialogViewModel[] { configEntryDialog };
             StartNextAction();
         }

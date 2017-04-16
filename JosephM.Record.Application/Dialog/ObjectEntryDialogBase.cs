@@ -20,13 +20,14 @@ namespace JosephM.Application.ViewModel.Dialog
     {
         protected ObjectEntryDialogBase(DialogViewModel parentDialog,
             IApplicationController applicationController, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null)
+            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null, IDictionary<string, IEnumerable<string>> onlyValidate = null)
             : base(parentDialog)
         {
             ApplicationController = applicationController;
             LookupService = lookupService;
             OptionsetLimitedValues = optionsetLimitedValues;
             ObjectTypeMaps = objectTypeMaps;
+            OnlyValidate = onlyValidate;
             SaveMethod = saveMethod;
         }
 
@@ -55,12 +56,13 @@ namespace JosephM.Application.ViewModel.Dialog
             var recordService = new ObjectRecordService(ObjectToEnter, LookupService, OptionsetLimitedValues, ApplicationController, ObjectTypeMaps);
             var formService = new ObjectFormService(ObjectToEnter, recordService, ObjectTypeMaps);
             ViewModel = new ObjectEntryViewModel(StartNextAction, OnCancel, ObjectToEnter,
-                new FormController(recordService, formService, ApplicationController));
+                new FormController(recordService, formService, ApplicationController), OnlyValidate);
             Controller.LoadToUi(ViewModel);
         }
 
         protected Action SaveMethod{ get; set; }
         public IDictionary<string, Type> ObjectTypeMaps { get; private set; }
+        public IDictionary<string, IEnumerable<string>> OnlyValidate { get; private set; }
 
         protected override void CompleteDialogExtention()
         {

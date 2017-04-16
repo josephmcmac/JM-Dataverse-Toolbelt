@@ -13,14 +13,14 @@ namespace JosephM.Application.ViewModel.Dialog
     {
         public ObjectGetEntryDialog(Func<object> objectToEnter, 
             IDialogController dialogController, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null)
-            : base(dialogController, null, null, saveMethod, objectTypeMaps)
+            : base(dialogController, null, null, saveMethod, objectTypeMaps: objectTypeMaps)
         {
             _objectToEnter = objectToEnter;
         }
 
         public ObjectGetEntryDialog(Func<object> objectToEnter, DialogViewModel parentDialog,
-            IApplicationController applicationController, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null)
-            : base(parentDialog, applicationController, null, null, saveMethod, objectTypeMaps)
+            IApplicationController applicationController, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+            : base(parentDialog, applicationController, null, null, saveMethod, objectTypeMaps, onlyValidate)
         {
             _objectToEnter = objectToEnter;
         }

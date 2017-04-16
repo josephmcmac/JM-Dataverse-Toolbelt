@@ -28,13 +28,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override int GridPageSize { get { return 0; } }
 
-        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController)
-            : this(onSave, onCancel, objectToEnter, formController, null, null)
+        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+            : this(onSave, onCancel, objectToEnter, formController, null, null, onlyValidate)
         {
         }
 
-        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference)
-            : base(formController, parentForm, parentFormReference)
+        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+            : base(formController, parentForm, parentFormReference, onlyValidate)
         {
             _objectRecord = new ObjectRecord(objectToEnter);
             OnSave = onSave;

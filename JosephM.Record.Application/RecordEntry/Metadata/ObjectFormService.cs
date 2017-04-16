@@ -481,7 +481,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
-                    newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName);
+                    newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
                 return viewModel;
                 //ideally could hide the parent dialog temporarily and load this one
             }
@@ -504,7 +504,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var viewModel = new ObjectEntryViewModel(
                 () => onSave(new ObjectRecord(newObject)),
                 onCancel,
-                newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName);
+                newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
             return viewModel;
         }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
+using JosephM.Core.Extentions;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -22,13 +23,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 _itemsSource = value;
-                OnPropertyChanged("ItemsSource");
                 if (Value != null && _itemsSource != null)
                 {
                     var matchingItems = _itemsSource.Where(p => p.Key == Value.Key);
                     if (matchingItems.Any())
                         Value.Value = matchingItems.First().Value ?? Value.Value;
+                    if (!_itemsSource.Any())
+                    {
+                        _itemsSource = new[] { Value };
+                    }
                 }
+                OnPropertyChanged("ItemsSource");
             }
         }
     }
