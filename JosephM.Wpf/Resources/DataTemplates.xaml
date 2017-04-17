@@ -220,11 +220,6 @@
         UnlabelledFieldTemplate="{StaticResource unlabelledFieldTemplate}"
         x:Key="labelledFieldTemplateSelector" 
         />
-    <DataTemplate x:Key="GridSectionTemplate">
-        <Grid>
-            <recordEntry:GridSectionView DataContext="{Binding}" />
-        </Grid>
-    </DataTemplate>
     <DataTemplate x:Key="FieldSectionTemplate">
         <Grid Grid.Row="1">
             <recordEntry:FieldSectionView DataContext="{Binding}" />
@@ -236,7 +231,6 @@
         </Grid>
     </DataTemplate>
     <templateSelector:FormSectionTemplateSelector
-        GridSectionTemplate="{StaticResource GridSectionTemplate}"
         FieldSectionTemplate="{StaticResource FieldSectionTemplate}"
         FieldSectionCompactTemplate="{StaticResource FieldSectionCompactTemplate}"
         x:Key="FormSectionTemplateSelector" />

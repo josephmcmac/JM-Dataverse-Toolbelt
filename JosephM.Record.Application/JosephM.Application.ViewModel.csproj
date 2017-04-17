@@ -140,7 +140,6 @@
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="RecordEntry\Form\CreateViewModel.cs" />
     <Compile Include="RecordEntry\Section\FieldSectionViewModel.cs" />
-    <Compile Include="RecordEntry\Section\GridSectionViewModel.cs" />
     <Compile Include="RecordEntry\Form\MaintainViewModel.cs" />
     <Compile Include="RecordEntry\Form\ObjectEntryViewModel.cs" />
     <Compile Include="RecordEntry\Form\RecordEntryFormViewModel.cs" />
@@ -158,7 +157,6 @@
     <Compile Include="RecordEntry\Metadata\ObjectFormService.cs" />
     <Compile Include="RecordEntry\Metadata\PersistentFormField.cs" />
     <Compile Include="Validation\PropertyAtttributeValidationRule.cs" />
-    <Compile Include="RecordEntry\Metadata\SubGridSection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\ValidationRuleBase.cs" />
   </ItemGroup>

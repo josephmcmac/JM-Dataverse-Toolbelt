@@ -292,13 +292,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                         this
                         ));
                 }
-                else if (section is SubGridSection)
-                {
-                    sectionViewModels.Add(new GridSectionViewModel(
-                        (SubGridSection)section,
-                        this
-                        ));
-                }
             }
             //we need to populate the RecordFields property with the generated field view models
             _recordFields = new List<FieldViewModelBase>();

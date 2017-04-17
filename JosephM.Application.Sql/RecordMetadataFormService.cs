@@ -36,40 +36,50 @@ namespace JosephM.Migration.Prism.Module.Sql
                     .Cast<LookupFieldMetadata>()
                     .Where(f => f.ReferencedRecordType == recordType);
 
-            var sections = new List<FormSection>();
-            sections.Add(new FormFieldSection("Details", recordMetadata.Fields.Select(f => new PersistentFormField(f.SchemaName)).ToArray()));
+            var fields = recordMetadata.Fields
+                .Select(f => new PersistentFormField(f.SchemaName)).ToList();
+
             foreach (var field in referencingKeys)
             {
-                var referencingTypeMetadata = RecordMetadata.First(m => m.SchemaName == field.RecordType);
-                var gridFields = new List<GridFieldMetadata>();
-                var view = referencingTypeMetadata.Views != null && referencingTypeMetadata.Views.Any()
-                    ? referencingTypeMetadata.Views.First()
-                    : null;
-                if (view != null)
-                {
-                    gridFields.AddRange(view.Fields.Select(f => new GridFieldMetadata(f)));
-                }
-                else
-                {
-                    foreach (var referencingTypeFields in referencingTypeMetadata.Fields)
-                    {
-                        
-                        {
-                            var gridField = new GridFieldMetadata(referencingTypeFields.SchemaName);
-                            gridFields.Add(gridField);
-                        }
-                    }
-                }
-                foreach (var gridField in gridFields.ToArray())
-                {
-                    if (gridField.FieldName == field.SchemaName || gridField.FieldName == referencingTypeMetadata.PrimaryKeyName)
-                        gridFields.Remove(gridField);
-                }
-                var gridSection = new SubGridSection(field.RecordType, field.RecordType, field.SchemaName, gridFields);
-                sections.Add(gridSection);
+                var gridFormField = new PersistentFormField(field.SchemaName, field.RecordType);
+                fields.Add(gridFormField);
             }
+
+            var sections = new List<FormSection>();
+            sections.Add(new FormFieldSection("Details", fields));
+
             return new FormMetadata(sections);
 
+        }
+
+        public override IEnumerable<GridFieldMetadata> GetGridMetadata(string recordType)
+        {
+            var referencingTypeMetadata = RecordMetadata.First(m => m.SchemaName == recordType);
+            var gridFields = new List<GridFieldMetadata>();
+            var view = referencingTypeMetadata.Views != null && referencingTypeMetadata.Views.Any()
+                ? referencingTypeMetadata.Views.First()
+                : null;
+            if (view != null)
+            {
+                gridFields.AddRange(view.Fields.Select(f => new GridFieldMetadata(f)));
+            }
+            else
+            {
+                foreach (var referencingTypeFields in referencingTypeMetadata.Fields)
+                {
+
+                    {
+                        var gridField = new GridFieldMetadata(referencingTypeFields.SchemaName);
+                        gridFields.Add(gridField);
+                    }
+                }
+            }
+            foreach (var gridField in gridFields.ToArray())
+            {
+                if (gridField.FieldName == referencingTypeMetadata.PrimaryKeyName)
+                    gridFields.Remove(gridField);
+            }
+            return gridFields;
         }
 
         public override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave,

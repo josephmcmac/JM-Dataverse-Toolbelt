@@ -7,10 +7,10 @@ namespace JosephM.Record.Metadata
     /// </summary>
     public class EnumerableFieldMetadata : FieldMetadata
     {
-        public EnumerableFieldMetadata(string internalName, string label, Type enumeratedType)
+        public EnumerableFieldMetadata(string internalName, string label, string enumeratedType)
             : base(internalName, label)
         {
-            EnumeratedType = enumeratedType;
+            EnumeratedTypeQualifiedName = enumeratedType;
         }
 
         public override RecordFieldType FieldType
@@ -18,8 +18,6 @@ namespace JosephM.Record.Metadata
             get { return RecordFieldType.Enumerable; }
         }
 
-        public Type EnumeratedType { get; set; }
-
-        public string EnumeratedTypeQualifiedName { get { return EnumeratedType.AssemblyQualifiedName; } }
+        public string EnumeratedTypeQualifiedName { get; set; }
     }
 }

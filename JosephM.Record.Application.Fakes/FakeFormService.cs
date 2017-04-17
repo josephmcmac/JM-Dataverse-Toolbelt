@@ -39,24 +39,12 @@ namespace JosephM.Application.ViewModel.Fakes
             }
         }
 
-        public static SubGridSection FakeSubGridSection
-        {
-            get
-            {
-                return new SubGridSection("Section 3",
-                    FakeConstants.RecordType,
-                    FakeConstants.LookupField,
-                    FakeConstants.FakeGridFields
-                    );
-            }
-        }
-
         public override FormMetadata GetFormMetadata(string recordType)
         {
             return new FormMetadata(
                 new FormSection[]
                 {
-                    FakeSection1, FakeSection2, FakeSubGridSection
+                    FakeSection1, FakeSection2
                 });
         }
     }

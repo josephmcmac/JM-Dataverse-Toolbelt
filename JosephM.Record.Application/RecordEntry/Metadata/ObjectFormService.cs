@@ -480,7 +480,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             {
                 //lets start a dialog to add it on complete
                 var fieldMetadata = (EnumerableFieldMetadata)ObjectRecordService.GetFieldMetadata(propertyInfo.Name, ObjectToEnter.GetType().AssemblyQualifiedName);
-                var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(fieldMetadata.EnumeratedType.AssemblyQualifiedName);
+                var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(fieldMetadata.EnumeratedTypeQualifiedName);
                 var newObject = newRecord.Instance;
                 var recordService = new ObjectRecordService(newObject, parentForm.ApplicationController);
                 var viewModel = new ObjectEntryViewModel(

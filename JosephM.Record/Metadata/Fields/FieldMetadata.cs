@@ -127,10 +127,10 @@ namespace JosephM.Record.Metadata
             {
                 if (objectTypeMaps != null && objectTypeMaps.ContainsKey(internalName))
                 {
-                    fm = new EnumerableFieldMetadata(internalName, label, objectTypeMaps[internalName]);
+                    fm = new EnumerableFieldMetadata(internalName, label, objectTypeMaps[internalName].AssemblyQualifiedName);
                 }
                 else
-                    fm = new EnumerableFieldMetadata(internalName, label, type.GetGenericArguments()[0]);
+                    fm = new EnumerableFieldMetadata(internalName, label, type.GetGenericArguments()[0].AssemblyQualifiedName);
             }
             else
                 fm = new ObjectFieldMetadata(recordType, internalName, label, propertyInfo.ReflectedType);
