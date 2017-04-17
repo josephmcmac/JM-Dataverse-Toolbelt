@@ -178,7 +178,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override bool AllowSaveAndLoad
         {
-            get { return GetObject().GetType().IsTypeOf(typeof(IAllowSaveAndLoad)) ; }
+            get
+            {
+                var objectType = GetObject().GetType();
+                return objectType.IsTypeOf(typeof(IAllowSaveAndLoad))
+                    && !(objectType == typeof(SaveAndLoadFields));
+            }
         }
 
         internal override void RefreshEditabilityExtention()
