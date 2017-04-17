@@ -29,10 +29,12 @@
                 prism:RegionManager.RegionName="{x:Static constants:RegionNames.Heading}"
                 ContentTemplate="{StaticResource applicationHeadingTemplate}" />
         </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" MaxHeight="190" >
+            <ScrollViewer>
             <ContentControl
                 prism:RegionManager.RegionName="{x:Static constants:RegionNames.ApplicationOptions}"
                 ContentTemplate="{StaticResource applicationMenuViewTemplate}" />
+            </ScrollViewer>
         </Grid>
         <Grid Grid.Row="2">
             <TabControl
