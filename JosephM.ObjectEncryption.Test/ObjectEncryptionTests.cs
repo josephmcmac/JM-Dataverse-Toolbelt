@@ -18,7 +18,7 @@ namespace JosephM.ObjectEncryption.Test
         {
             FileUtility.DeleteFiles(TestingFolder);
 
-            var application = new TestApplication();
+            var application = TestApplication.CreateTestApplication();
             application.AddModule<ObjectEncryptModule<TestObjectEncryptDialog, TestClassToEncrypt>>();
 
             var instance = new TestClassToEncrypt();

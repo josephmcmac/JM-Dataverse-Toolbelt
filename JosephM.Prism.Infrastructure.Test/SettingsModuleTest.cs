@@ -23,7 +23,7 @@ namespace JosephM.Prism.Infrastructure.Test
             var fakeApplicationController = new FakeApplicationController();
             FileUtility.DeleteFiles(fakeApplicationController.SettingsPath);
 
-            var testApplication = new TestApplication();
+            var testApplication = TestApplication.CreateTestApplication();
             testApplication.Controller.RegisterType<IDialogController, AutoDialogController>();
             testApplication.AddModule<TSettingsModule>();
             var module = testApplication.GetModule<TSettingsModule>();

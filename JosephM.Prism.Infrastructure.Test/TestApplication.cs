@@ -23,9 +23,14 @@ namespace JosephM.Prism.Infrastructure.Test
 {
     public class TestApplication : ApplicationBase
     {
-        //todo should be creating 2 controllers to pass into base
-        public TestApplication()
-            : base(new FakeApplicationController(), new ApplicationOptionsViewModel(new FakeApplicationController()))
+        public static TestApplication CreateTestApplication()
+        {
+            var applicationController = new FakeApplicationController();
+            return new TestApplication(applicationController);
+        }
+
+        private TestApplication(FakeApplicationController applicationController)
+            : base(applicationController, new ApplicationOptionsViewModel(applicationController))
         {
             Controller.RegisterType<IDialogController, FakeDialogController>();
         }
@@ -151,25 +156,31 @@ namespace JosephM.Prism.Infrastructure.Test
             if(saveRequest)
             {
                 //okay lets delete the request we saved earlier (and any others)
-                var applicationOptions = (ApplicationOptionsViewModel)this.Controller.Container.ResolveType<IApplicationOptions>();
-                
-                //get the setting which has the label - hope this doesn't break
-                var savedSettingsOption = applicationOptions.Settings.First(o => o.Label.EndsWith(savedRequestType.GetDisplayName()));
-                savedSettingsOption.DelegateCommand.Execute();
-
-                var items = Controller.GetObjects(RegionNames.MainTabRegion);
-                var dialog = items.First();
-                Assert.IsTrue(dialog is SavedRequestDialog);
-                var srd = (SavedRequestDialog)dialog;
-                srd.Controller.BeginDialog();
-                var oevm = GetSubObjectEntryViewModel(srd);
-                foreach(var grid in oevm.SubGrids)
+                ObjectEntryViewModel oevm = LoadSavedRequestsEntryForm(savedRequestType);
+                foreach (var grid in oevm.SubGrids)
                 {
                     while (grid.GridRecords.Any())
-                         grid.GridRecords.First().DeleteRow();
+                        grid.GridRecords.First().DeleteRow();
                 }
                 oevm.SaveButtonViewModel.Invoke();
             }
+        }
+
+        public ObjectEntryViewModel LoadSavedRequestsEntryForm(Type savedRequestType)
+        {
+            var applicationOptions = (ApplicationOptionsViewModel)Controller.Container.ResolveType<IApplicationOptions>();
+
+            //get the setting which has the label - hope this doesn't break
+            var savedSettingsOption = applicationOptions.Settings.First(o => o.Label.EndsWith(savedRequestType.GetDisplayName()));
+            savedSettingsOption.DelegateCommand.Execute();
+
+            var items = Controller.GetObjects(RegionNames.MainTabRegion);
+            var dialog = items.First();
+            Assert.IsTrue(dialog is SavedRequestDialog);
+            var srd = (SavedRequestDialog)dialog;
+            srd.Controller.BeginDialog();
+            var oevm = GetSubObjectEntryViewModel(srd);
+            return oevm;
         }
 
         public void NavigateAndProcessDialog<TDialogModule, TDialog>(IEnumerable<object> instancesEntered)
