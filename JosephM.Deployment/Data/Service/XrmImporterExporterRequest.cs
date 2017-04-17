@@ -9,9 +9,9 @@ using System.Collections.Generic;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
-    [Group(Sections.Main, true)]
-    [Group(Sections.CsvImport, true)]
-    [Group(Sections.IncludeWithExportedRecords, true)]
+    [Group(Sections.Main, true, 10)]
+    [Group(Sections.CsvImport, true, 20)]
+    [Group(Sections.IncludeWithExportedRecords, true, 30)]
     [DisplayName("Data Import/Export")]
     public class XrmImporterExporterRequest : ServiceRequestBase
     {
