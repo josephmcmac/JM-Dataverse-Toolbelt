@@ -3,9 +3,11 @@ using System.Runtime.Serialization;
 
 namespace JosephM.Core.Service
 {
+    [Group(Sections.SavedRequestDetails, true, 0)]
     [DataContract]
     public class ServiceRequestBase : IAllowSaveAndLoad
     {
+        [Group(Sections.SavedRequestDetails)]
         [DataMember]
         [UniqueOn]
         [DisplayOrder(1)]
@@ -13,6 +15,7 @@ namespace JosephM.Core.Service
         [PropertyInContextByPropertyValue("DisplaySavedSettingFields", true)]
         public bool Autoload { get; set; }
 
+        [Group(Sections.SavedRequestDetails)]
         [DataMember]
         [DisplayOrder(2)]
         [GridWidth(250)]
@@ -26,6 +29,11 @@ namespace JosephM.Core.Service
         public override string ToString()
         {
             return Name ?? base.ToString();
+        }
+
+        private static class Sections
+        {
+            public const string SavedRequestDetails = "SavedRequestDetails";
         }
     }
 }

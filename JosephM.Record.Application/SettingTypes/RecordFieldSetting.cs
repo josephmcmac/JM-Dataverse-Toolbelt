@@ -13,5 +13,10 @@ namespace JosephM.Application.ViewModel.SettingTypes
         [DisplayOrder(20)]
         [RequiredProperty]
         public RecordField RecordField { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}.{1}", RecordType, RecordField);
+        }
     }
 }
