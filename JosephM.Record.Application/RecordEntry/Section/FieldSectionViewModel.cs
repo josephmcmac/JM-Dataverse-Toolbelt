@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -53,7 +54,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                     fieldVm.IsEditable = false;
                 fieldViewModels.Add(fieldVm);
             }
-            IsLoaded = true;
             return fieldViewModels;
         }
 
@@ -77,5 +77,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
         }
 
         public bool IsReadOnly { get { return RecordForm.IsReadOnly; } }
+
+        public override bool IsLoaded
+        {
+            get
+            {
+                return Fields.All(f => f.IsLoaded);
+            }
+        }
     }
 }

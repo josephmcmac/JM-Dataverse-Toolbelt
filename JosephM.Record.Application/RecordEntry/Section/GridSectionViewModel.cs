@@ -48,7 +48,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                 FormController = RecordForm.FormController,
                 LoadedCallback = () =>
                 {
-                    IsLoaded = true;
+                    _isLoaded = true;
                     RecordForm.OnSectionLoaded();
                 },
                 OnlyValidate = recordForm.OnlyValidate
@@ -149,6 +149,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                 return new GetGridRecordsResponse(RecordService.GetLinkedRecords(SubGridSection.LinkedRecordType, RecordForm.RecordType,
                     SubGridSection.LinkedRecordLookup, RecordForm.RecordId));
         }
+
+        private bool _isLoaded;
+        public override bool IsLoaded { get { return _isLoaded; } }
 
         private void InsertRecord(IRecord record, int index)
         {

@@ -46,7 +46,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     FormController = recordForm.FormController,
                     LoadedCallback = () =>
                     {
-                        IsLoaded = true;
+                        _isLoaded = true;
                         RecordForm.OnSectionLoaded();
                     },
                     OnlyValidate = recordForm.OnlyValidate
@@ -57,7 +57,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public bool IsLoaded { get; set; }
+        private bool _isLoaded;
+        public override bool IsLoaded { get { return _isLoaded; } }
 
         private string LinkedRecordLookup {  get { return FieldName; } }
         private string LinkedRecordType { get; set; }
