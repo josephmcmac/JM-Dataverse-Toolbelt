@@ -57,7 +57,8 @@ namespace JosephM.Record.Service
                 var asEnumerable = (EnumerableFieldMetadata)field;
                 if (!FieldMetadata.ContainsKey(asEnumerable.EnumeratedTypeQualifiedName))
                 {
-                    var metadata = RecordMetadataFactory.GetClassFieldMetadata(asEnumerable.EnumeratedType, ObjectTypeMaps);
+                    
+                    var metadata = RecordMetadataFactory.GetClassFieldMetadata(GetClassType(asEnumerable.EnumeratedTypeQualifiedName), ObjectTypeMaps);
                     FieldMetadata.Add(asEnumerable.EnumeratedTypeQualifiedName, metadata);
                 }
             }

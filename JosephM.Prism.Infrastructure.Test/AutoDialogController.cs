@@ -32,16 +32,6 @@ namespace JosephM.Record.Application.Fakes
                         PopulateViewModel(field);
                     }
                 }
-                if (section is GridSectionViewModel)
-                {
-                    var gridSection = (GridSectionViewModel)section;
-                    gridSection.AddRow();
-                    var rowViewModel = gridSection.DynamicGridViewModel.GridRecords.First();
-                    foreach (var field in rowViewModel.FieldViewModels)
-                    {
-                        PopulateViewModel(field);
-                    }
-                }
             }
             if (!viewModel.Validate())
             {

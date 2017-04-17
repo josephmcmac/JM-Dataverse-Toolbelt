@@ -33,7 +33,7 @@ $ext_jmobjprefix$ServiceUtility = function () {
         /// <param name="entityType" type="String">Logical name of type of records to retrieve. use lowercase</param>
         /// <param name="fields" type="Array of String">Array of the the logical names of fields to include in the results. use lowercase</param>
         /// <param name="conditions" type="Array of FilterCondition">Use new this.FilterCondition method to create each condition in the array</param>
-        /// <param name="orders" type="Array of OrderCondition">!! Not Implemented !!</param>
+        /// <param name="orders" type="Array of OrderCondition">Use new this.Ordercondition method to create each order in the array</param>
         /// <param name="asyncCallback" type="Function">Method to invoke asynchronously passing in the results as array of this.EntityObject objects the first argument</param>
         var executerequestxml = "";
         executerequestxml += "<request i:type='a:RetrieveMultipleRequest' xmlns:a='http://schemas.microsoft.com/xrm/2011/Contracts' >";
@@ -706,10 +706,10 @@ $ext_jmobjprefix$ServiceUtility = function () {
         else
             return "" + value;
     }
-    function RetrieveMultipleMiscParamXml() {
+    function RetrieveMultipleMiscParamXml(orders) {
         var xml = "";
         xml += "<a:Distinct>false</a:Distinct>";
-        xml += "<a:Orders />";
+        xml += CreateOrderXml(orders);
         xml += "<a:PageInfo>";
         xml += "<a:Count>0</a:Count>";
         xml += "<a:PageNumber>0</a:PageNumber>";
@@ -717,6 +717,22 @@ $ext_jmobjprefix$ServiceUtility = function () {
         xml += "<a:ReturnTotalRecordCount>false</a:ReturnTotalRecordCount>";
         xml += "</a:PageInfo>";
         xml += "<a:NoLock>false</a:NoLock>";
+        return xml;
+    }
+    function CreateOrderXml(orders) {
+        var xml = "<a:Orders>";
+        if (orders != null) {
+            for (var i = 0; i < orders.length; i++) {
+                xml = xml + "<a:OrderExpression>";
+                xml = xml + "<a:AttributeName>" + orders[i].field + "</a:AttributeName>";
+                if (orders[i].descending == true)
+                    xml = xml + "<a:OrderType>Descending</a:OrderType>";
+                else
+                    xml = xml + "<a:OrderType>Ascending</a:OrderType>";
+                xml = xml + "</a:OrderExpression>";
+            }
+        }
+        xml = xml + "</a:Orders>";
         return xml;
     }
     function CreateColumnSetXml(fields) {

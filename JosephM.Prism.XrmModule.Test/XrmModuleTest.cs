@@ -21,7 +21,7 @@ namespace JosephM.Prism.XrmModule.Test
         protected TestApplication CreateAndLoadTestApplication<TModule>()
             where TModule : ModuleBase, new()
         {
-            var testApplication = new TestApplication();
+            var testApplication = TestApplication.CreateTestApplication();
             testApplication.AddModule<TModule>();
             XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), testApplication.Controller);
             testApplication.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections.SavedXrmConnections

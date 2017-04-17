@@ -12,7 +12,6 @@ namespace JosephM.Wpf.TemplateSelector
     public class FormSectionTemplateSelector : DataTemplateSelector
     {
         public DataTemplate FieldSectionTemplate { get; set; }
-        public DataTemplate GridSectionTemplate { get; set; }
         public DataTemplate FieldSectionCompactTemplate { get; set; }
         
         public override DataTemplate SelectTemplate(object item,
@@ -26,8 +25,6 @@ namespace JosephM.Wpf.TemplateSelector
                 else
                     return FieldSectionTemplate;
             }
-            if (item is GridSectionViewModel)
-                return GridSectionTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }

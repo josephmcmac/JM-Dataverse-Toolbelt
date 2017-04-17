@@ -15,14 +15,6 @@ namespace JosephM.Record.Application.Test
         }
 
         [TestMethod]
-        public void RecordApplicationTestFakeSubgridViewModelTests()
-        {
-            var viewModel = new FakeSubGridViewModel();
-            var records = viewModel.GridRecords;
-            Assert.IsNotNull(records);
-        }
-
-        [TestMethod]
         public void RecordApplicationTestFakeLookupViewModelTests()
         {
             var viewModel = new FakeLookupViewModel();

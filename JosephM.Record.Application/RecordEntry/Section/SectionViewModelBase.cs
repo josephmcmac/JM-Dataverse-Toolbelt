@@ -72,6 +72,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             }
         }
 
-        public bool IsLoaded { get; set; }
+        public abstract bool IsLoaded { get; }
     }
 }

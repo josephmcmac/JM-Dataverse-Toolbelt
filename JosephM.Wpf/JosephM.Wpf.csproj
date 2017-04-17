@@ -324,9 +324,6 @@
     <Compile Include="RecordEntry\FieldSectionView.xaml.cs">
       <DependentUpon>FieldSectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RecordEntry\GridSectionView.xaml.cs">
-      <DependentUpon>GridSectionView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="RecordEntry\RecordEntryView.xaml.cs">
       <DependentUpon>RecordEntryView.xaml</DependentUpon>
     </Compile>
@@ -544,10 +541,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\FieldSectionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="RecordEntry\GridSectionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

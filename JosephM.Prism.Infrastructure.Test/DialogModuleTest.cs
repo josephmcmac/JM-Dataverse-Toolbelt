@@ -32,7 +32,7 @@ namespace JosephM.Prism.Infrastructure.Test
         {
             PrepareTest();
 
-            var testApplication = new TestApplication();
+            var testApplication = TestApplication.CreateTestApplication();
             testApplication.Controller.RegisterType<IDialogController, AutoDialogController>();
             testApplication.AddModule<TModule>();
             var module = testApplication.GetModule<TModule>();
@@ -50,7 +50,7 @@ namespace JosephM.Prism.Infrastructure.Test
 
         public void ExecuteObjectEntryTest(object instanceToEnter)
         {
-            var testApplication = new TestApplication();
+            var testApplication = TestApplication.CreateTestApplication();
             testApplication.Controller.RegisterType<IDialogController, FakeDialogController>();
             testApplication.AddModule<TModule>();
             var module = testApplication.GetModule<TModule>();
