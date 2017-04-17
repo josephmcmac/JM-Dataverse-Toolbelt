@@ -17,5 +17,10 @@ namespace JosephM.Application.ViewModel.SettingTypes
 
         [RequiredProperty]
         public RecordType RecordType { get; set; }
+
+        public override string ToString()
+        {
+            return RecordType != null ? RecordType.Value : base.ToString();
+        }
     }
 }

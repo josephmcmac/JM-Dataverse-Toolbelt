@@ -13,20 +13,23 @@ using JosephM.Xrm.Schema;
 namespace JosephM.CustomisationImporter.Service
 {
     [DisplayName("Import Customisations")]
-    [Group(Sections.File, true)]
-    [Group(Sections.Solution, true)]
-    [Group(Sections.Include, true)]
+    [Group(Sections.File, true, 10)]
+    [Group(Sections.Solution, true, 20)]
+    [Group(Sections.Include, true, 30)]
     public class CustomisationImportRequest : ServiceRequestBase
     {
+        [DisplayOrder(10)]
         [Group(Sections.File)]
         [RequiredProperty]
         [FileMask(FileMasks.ExcelFile)]
         public FileReference ExcelFile { get; set; }
 
+        [DisplayOrder(100)]
         [Group(Sections.Solution)]
         [DisplayName("Add Components To Solution")]
         public bool AddToSolution { get; set; }
 
+        [DisplayOrder(110)]
         [RequiredProperty]
         [Group(Sections.Solution)]
         [ReferencedType(Xrm.Schema.Entities.solution)]
@@ -37,16 +40,22 @@ namespace JosephM.CustomisationImporter.Service
         [PropertyInContextByPropertyValue("AddToSolution", true)]
         public Lookup Solution { get; set; }
 
+        [DisplayOrder(200)]
         [Group(Sections.Include)]
         public bool Entities { get; set; }
+        [DisplayOrder(210)]
         [Group(Sections.Include)]
         public bool Fields { get; set; }
+        [DisplayOrder(220)]
         [Group(Sections.Include)]
         public bool Relationships { get; set; }
+        [DisplayOrder(230)]
         [Group(Sections.Include)]
         public bool FieldOptionSets { get; set; }
+        [DisplayOrder(240)]
         [Group(Sections.Include)]
         public bool SharedOptionSets { get; set; }
+        [DisplayOrder(250)]
         [Group(Sections.Include)]
         public bool Views { get; set; }
 

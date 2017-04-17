@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
-    [Group(Sections.Document, true)]
-    [Group(Sections.RecordToReport, true)]
-    [Group(Sections.DetailLevelOptions, true)]
-    [Group(Sections.CommonFieldOptions, true)]
-    [Group(Sections.ConfigureReportExclusions, true)]
+    [Group(Sections.Document, true, 10)]
+    [Group(Sections.RecordToReport, true, 20)]
+    [Group(Sections.DetailLevelOptions, true, 30)]
+    [Group(Sections.CommonFieldOptions, true, 40)]
+    [Group(Sections.ConfigureReportExclusions, true, 50)]
     [DisplayName("Record Report")]
     public class RecordExtractRequest : ServiceRequestBase
     {
@@ -23,46 +23,59 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             RecordTypesToExclude = new RecordTypeSetting[0];
         }
 
+        [DisplayOrder(10)]
         [Group(Sections.Document)]
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
 
+        [DisplayOrder(20)]
         [Group(Sections.Document)]
         [RequiredProperty]
         public DocumentType DocumentFormat { get; set; }
 
+        [DisplayOrder(100)]
         [Group(Sections.RecordToReport)]
         [RequiredProperty]
         [RecordTypeFor("RecordLookup")]
         public RecordType RecordType { get; set; }
 
+        [DisplayOrder(110)]
         [Group(Sections.RecordToReport)]
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull("RecordType")]
         public Lookup RecordLookup { get; set; }
 
+        [DisplayOrder(200)]
         [Group(Sections.DetailLevelOptions)]
         [RequiredProperty]
         public DetailLevel DetailOfRelatedRecords { get; set; }
 
+        [DisplayOrder(210)]
         [Group(Sections.DetailLevelOptions)]
         [PropertyInContextByPropertyValue("DetailOfRelatedRecords", DetailLevel.AllFields)]
         public IEnumerable<RecordTypeSetting> RecordTypesOnlyDisplayName { get; set; }
 
+        [DisplayOrder(300)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeCreatedByAndOn { get; set; }
+        [DisplayOrder(310)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeModifiedByAndOn { get; set; }
+        [DisplayOrder(320)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeCrmOwner { get; set; }
+        [DisplayOrder(330)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeState { get; set; }
+        [DisplayOrder(340)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeStatus { get; set; }
 
+        [DisplayOrder(400)]
         [Group(Sections.ConfigureReportExclusions)]
         public IEnumerable<RecordTypeSetting> RecordTypesToExclude { get; set; }
 
+        [DisplayOrder(410)]
         [Group(Sections.ConfigureReportExclusions)]
         public IEnumerable<RecordFieldSetting> FieldsToExclude { get; set; }
 

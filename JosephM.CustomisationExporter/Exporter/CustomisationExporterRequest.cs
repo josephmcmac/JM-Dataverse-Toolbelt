@@ -7,43 +7,53 @@ using JosephM.Core.Service;
 namespace JosephM.CustomisationExporter.Exporter
 {
     [DisplayName("Export Customisations")]
-    [Group(Sections.Folder, true)]
-    [Group(Sections.RecordsFieldsoptions, true)]
-    [Group(Sections.Relationships, true)]
-    [Group(Sections.RecordTypes, true)]
+    [Group(Sections.Folder, true, 10)]
+    [Group(Sections.RecordsFieldsoptions, true, 20)]
+    [Group(Sections.Relationships, true, 30)]
+    [Group(Sections.RecordTypes, true, 40)]
     public class CustomisationExporterRequest : ServiceRequestBase
     {
+        [DisplayOrder(10)]
         [Group(Sections.Folder)]
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
 
+        [DisplayOrder(100)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool Entities { get; set; }
 
+        [DisplayOrder(110)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool Fields { get; set; }
 
+        [DisplayOrder(120)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool FieldOptionSets { get; set; }
 
+        [DisplayOrder(130)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool SharedOptionSets { get; set; }
 
+        [DisplayOrder(200)]
         [Group(Sections.Relationships)]
         public bool Relationships { get; set; }
 
+        [DisplayOrder(210)]
         [Group(Sections.Relationships)]
         [PropertyInContextByPropertyValue("Relationships", true)]
         public bool DuplicateManyToManyRelationshipSides { get; set; }
 
+        [DisplayOrder(220)]
         [Group(Sections.Relationships)]
         [PropertyInContextByPropertyValue("Relationships", true)]
         public bool IncludeOneToManyRelationships { get; set; }
 
+        [DisplayOrder(300)]
         [RequiredProperty]
         [Group(Sections.RecordTypes)]
         public bool IncludeAllRecordTypes { get; set; }
 
+        [DisplayOrder(310)]
         [Group(Sections.RecordTypes)]
         [RequiredProperty]
         [DisplayName("Include These Specific Record Types")]

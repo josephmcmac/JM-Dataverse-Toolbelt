@@ -7,14 +7,16 @@ using JosephM.Core.FieldType;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
-    [Group(Sections.Main, true)]
-    [Group(Sections.Fetch, false)]
+    [Group(Sections.Main, true, 10)]
+    [Group(Sections.Fetch, false, 20)]
     public class ImportExportRecordType
     {
+        [DisplayOrder(0)]
         [Group(Sections.Main)]
         [RequiredProperty]
         public ExportType Type { get; set; }
 
+        [DisplayOrder(10)]
         [PropertyInContextByPropertyNotNull("Type")]
         [Group(Sections.Main)]
         [RequiredProperty]
@@ -23,6 +25,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RecordTypeFor("SpecificRecordsToExport.Record")]
         public RecordType RecordType { get; set; }
 
+        [DisplayOrder(20)]
         [PropertyInContextByPropertyNotNull("Type")]
         [Group(Sections.Main)]
         public bool IncludeInactiveRecords { get; set; }
@@ -35,6 +38,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         [PropertyInContextByPropertyNotNull("RecordType")]
         public IEnumerable<FieldSetting> ExcludeTheseFieldsInExportedRecords { get; set; }
 
+        [DisplayOrder(100)]
         [Group(Sections.Fetch)]
         [DisplayName("Fetch XML")]
         [Multiline]
