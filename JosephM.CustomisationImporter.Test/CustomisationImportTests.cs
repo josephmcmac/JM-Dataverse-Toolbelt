@@ -234,17 +234,17 @@ namespace JosephM.CustomisationImporter.Test
                     fieldMetadata, response).Values;
             foreach (var metadata in recordMetadata)
             {
-                var viewNamesToUpdate = XrmRecordService.GetViewNamesToUpdate(metadata);
-                var views = XrmRecordService.RetrieveAllAndClauses("savedquery", new[] { new Condition("returnedtypecode", ConditionType.Equal, metadata.SchemaName), new Condition("statecode", ConditionType.Equal, 0) });
-                foreach (var query in views.Where(sq => viewNamesToUpdate.Contains(sq.GetStringField("name"))))
+                var views = XrmRecordService.GetViewsToUpdate(metadata);
+                Assert.IsTrue(views.Any());
+                foreach (var query in views)
                 {
                     foreach (var viewField in metadata.Views.First().Fields)
                     {
-                        if (query.ContainsField("fetchxml"))
+                        if (query.Contains("fetchxml"))
                             Assert.IsTrue(
                                 query.GetStringField("fetchxml")
                                     .Contains("<attribute name=\"" + viewField.FieldName + "\" />"));
-                        if (query.ContainsField("layoutxml"))
+                        if (query.Contains("layoutxml"))
                             Assert.IsTrue(
                                 query.GetStringField("layoutxml")
                                     .Contains("<cell name=\"" + viewField.FieldName + "\" width=\"" + viewField.Width +
