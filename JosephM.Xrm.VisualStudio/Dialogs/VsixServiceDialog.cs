@@ -14,6 +14,7 @@ namespace JosephM.XRM.VSIX.Dialogs
     {
         public TService Service { get; set; }
         public TRequest Request { get; set; }
+        public TResponse Response { get; set; }
 
         public VsixServiceDialog(TService service, TRequest request, DialogController dialogController)
             : base(dialogController)
@@ -39,12 +40,12 @@ namespace JosephM.XRM.VSIX.Dialogs
             var controller = new LogController(progressControlViewModel);
             controller.AddLevel2Ui(progressControlViewModelLevel2);
 
-            var response = Service.Execute(Request, controller);
+            Response = Service.Execute(Request, controller);
 
             Controller.RemoveFromUi(progressControlViewModel);
             Controller.RemoveFromUi(progressControlViewModelLevel2);
 
-            foreach (var responseItem in response.ResponseItems)
+            foreach (var responseItem in Response.ResponseItems)
             {
                 CompletionItems.Add(responseItem);
             }
@@ -58,8 +59,8 @@ namespace JosephM.XRM.VSIX.Dialogs
 
             IsProcessing = false;
 
-            if (!response.Success)
-                ProcessError(response.Exception);
+            if (!Response.Success)
+                ProcessError(Response.Exception);
             else if (string.IsNullOrWhiteSpace(CompletionMessage))
                 CompletionMessage = "Process Finished";
         }

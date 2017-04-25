@@ -5,12 +5,9 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
-using Microsoft.VisualStudio.Shell;
 
 namespace JosephM.XRM.VSIX.Commands.RefreshConnection
 {

@@ -10,6 +10,7 @@ using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Xrm;
+using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
@@ -114,7 +115,11 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public void ClearCache()
         {
-            _xrmService.ClearCache();
+            lock (_lockObject)
+            {
+                _xrmService.ClearCache();
+                _recordViews.Clear();
+            }
         }
 
         public IsValidResponse VerifyConnection()
@@ -660,18 +665,8 @@ namespace JosephM.Record.Xrm.XrmRecord
                     recordMetadata.SchemaName));
 
             var viewUpdating = recordMetadata.Views.First();
-            var viewNamesToUpdate = GetViewNamesToUpdate(recordMetadata);
-
-            var savedQueries =
-                _xrmService.RetrieveAllActive("savedquery", null,
-                    new[]
-                    {
-                        new ConditionExpression("returnedtypecode",
-                            ConditionOperator.Equal,
-                            recordMetadata.SchemaName)
-                    },
-                    null).ToArray();
-            foreach (var query in savedQueries.Where(sq => viewNamesToUpdate.Contains(sq.GetStringField("name"))))
+            var savedQueries = GetViewsToUpdate(recordMetadata);
+            foreach (var query in savedQueries)
             {
                 var layoutXmlString = query.GetStringField("layoutxml");
                 if (!string.IsNullOrWhiteSpace(layoutXmlString))
@@ -732,6 +727,27 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        public IEnumerable<Entity> GetViewsToUpdate(RecordMetadata recordMetadata)
+        {
+            var typesToUpdate = new[] { ViewType.AdvancedSearch, ViewType.AssociatedView, ViewType.MainApplicationView, ViewType.QuickFindSearch }
+            .Cast<int>()
+            .ToArray()
+            .Cast<object>()
+            .ToArray();
+            var savedQueries = _xrmService.RetrieveAllActive("savedquery", null,
+                    new[]
+                    {
+                        new ConditionExpression("returnedtypecode",
+                            ConditionOperator.Equal,
+                            recordMetadata.SchemaName),
+                        new ConditionExpression(Fields.savedquery_.querytype,
+                        ConditionOperator.In
+                        , typesToUpdate)
+                    },
+                    null).ToArray();
+            return savedQueries;
+        }
+
         public void CreateOrUpdateSharedOptionSet(PicklistOptionSet sharedOptionSet)
         {
             _xrmService.CreateOrUpdateSharedOptionSet(
@@ -765,23 +781,6 @@ namespace JosephM.Record.Xrm.XrmRecord
         public IRecordService LookupService
         {
             get { return this; }
-        }
-
-        public string[] GetViewNamesToUpdate(RecordMetadata recordMetadata)
-        {
-            var displayName = _xrmService.GetEntityDisplayName(recordMetadata.SchemaName);
-            var displayCollectionName =
-                _xrmService.GetEntityDisplayCollectionName(recordMetadata.SchemaName);
-            var viewNamesToUpdate = new[]
-            {
-                displayName + " Associated View",
-                //"Quick Find Active " + displayCollectionName,
-                displayName + " Advanced Find View",
-                "Active " + displayCollectionName,
-                //"My " + displayCollectionName,
-                "Inactive " + displayCollectionName
-            };
-            return viewNamesToUpdate;
         }
 
         public void DeleteRecordType(string recordType)

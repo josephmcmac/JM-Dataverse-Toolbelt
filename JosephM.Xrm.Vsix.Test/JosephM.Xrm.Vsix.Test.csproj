@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.Xrm.Vsix.Test</RootNamespace>
     <AssemblyName>JosephM.Xrm.Vsix.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,6 +56,7 @@
   <ItemGroup>
     <Compile Include="FakeVisualStudioService.cs" />
     <Compile Include="VsixManagePluginTriggersTests.cs" />
+    <Compile Include="VsixGetSolutionDialogTests.cs" />
     <Compile Include="VsixRefreshSettingsDialogTests.cs" />
     <Compile Include="VsixUpdateAssemblyDialogTests.cs" />
     <Compile Include="VsixRefreshConnectionDialogTests.cs" />
@@ -120,8 +122,8 @@
       <Project>{5282BA96-7E87-49F3-9429-0CD8821EF4E5}</Project>
       <Name>JosephM.Xrm.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.VisualStudio\JosephM.Xrm.Vsix.csproj">
-      <Project>{6F65E14C-F70A-466B-A874-AC42CA7C31E6}</Project>
+    <ProjectReference Include="..\JosephM.Xrm.Vsix\JosephM.Xrm.Vsix.csproj">
+      <Project>{c034f8d0-95c6-44dc-97d1-3647d9463149}</Project>
       <Name>JosephM.Xrm.Vsix</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">

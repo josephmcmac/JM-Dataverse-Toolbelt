@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
 using EnvDTE80;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
@@ -17,6 +16,11 @@ using JosephM.Xrm.Schema;
 using JosephM.XRM.VSIX.Utilities;
 using Microsoft.Build.Framework;
 using Microsoft.Practices.Prism;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Condition = JosephM.Record.Query.Condition;
 
 namespace JosephM.XRM.VSIX.Commands.DeployAssembly

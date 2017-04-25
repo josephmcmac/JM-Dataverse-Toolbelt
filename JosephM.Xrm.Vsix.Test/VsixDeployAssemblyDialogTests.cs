@@ -1,16 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using JosephM.Application.ViewModel.Fakes;
-using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.Query;
 using JosephM.XRM.VSIX.Commands.DeployAssembly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Record.Xrm.Test;
-using JosephM.Xrm.Test;
-using Fields = JosephM.Xrm.Schema.Fields;
+using System.Linq;
 using Entities = JosephM.Xrm.Schema.Entities;
+using Fields = JosephM.Xrm.Schema.Fields;
 
 namespace JosephM.Xrm.Vsix.Test
 {

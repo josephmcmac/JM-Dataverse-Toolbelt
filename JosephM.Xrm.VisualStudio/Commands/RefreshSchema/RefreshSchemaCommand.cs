@@ -13,7 +13,6 @@ using JosephM.CodeGenerator.Service;
 using JosephM.CodeGenerator.Xrm;
 using JosephM.Core.FieldType;
 using JosephM.XRM.VSIX.Dialogs;
-using JosephM.XRM.VSIX.Utilities;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 

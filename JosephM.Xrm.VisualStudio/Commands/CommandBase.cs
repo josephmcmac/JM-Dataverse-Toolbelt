@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
-using JosephM.Core.Extentions;
-using JosephM.Core.Serialisation;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Utilities;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.ComponentModel.Design;
 
 namespace JosephM.XRM.VSIX.Commands
 {

@@ -5,11 +5,8 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.IO;
-using EnvDTE;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
-using Microsoft.VisualStudio.Shell;
 
 namespace JosephM.XRM.VSIX.Commands.DeployAssembly
 {

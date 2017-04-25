@@ -29,7 +29,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             {
                 case SolutionImportExportTask.ExportSolutions:
                     {
-                        ExportSolutions(request.SolutionExports, request.FolderPath.FolderPath, controller, response);
+                        response.ExportedSolutions = ExportSolutions(request.SolutionExports, request.FolderPath.FolderPath, controller, response);
                         break;
                     }
                 case SolutionImportExportTask.ImportSolutions:
@@ -209,11 +209,14 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var req = new ExportSolutionRequest();
                     req.Managed = export.ExportAsManaged;
                     req.SolutionName = uniqueName;
+
+                    var eresponse = (ExportSolutionResponse)service.Execute(req);
+
                     var version = solution.GetStringField("version");
                     var versionText = version == null ? null : version.Replace(".", "_");
-                    var eresponse = (ExportSolutionResponse)service.Execute(req);
                     var fileName = string.Format("{0}_{1}{2}.zip", uniqueName, versionText,
                         export.ExportAsManaged ? "_managed" : null);
+
                     FileUtility.WriteToFile(folderPath, fileName, eresponse.ExportSolutionFile);
                     exportResponse.Add(new ExportedSolution(export,
                         new FileReference(Path.Combine(folderPath, fileName))));

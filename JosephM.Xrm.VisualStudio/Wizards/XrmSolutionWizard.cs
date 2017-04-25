@@ -1,17 +1,9 @@
-﻿using System;
-using EnvDTE;
-using EnvDTE80;
-using JosephM.Record.Xrm.XrmRecord;
-using Microsoft.VisualStudio.TemplateWizard;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Commands.PackageSettings;
 using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
-using Microsoft.VisualStudio.OLE.Interop;
+using System.Collections.Generic;
 
 namespace JosephM.XRM.VSIX.Wizards
 {
