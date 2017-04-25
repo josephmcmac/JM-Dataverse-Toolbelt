@@ -70,7 +70,10 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             var organisationSettings = new OrganisationSettings(XrmService);
             controller.LogLiteral("Preparing Import");
-            var csvFiles = FileUtility.GetFiles(request.Folder.FolderPath).Where(f => f.EndsWith(".csv"));
+            var csvFiles = request.FolderOrFiles == XrmImporterExporterRequest.CsvImportOption.Folder
+                ? FileUtility.GetFiles(request.Folder.FolderPath).Where(f => f.EndsWith(".csv"))
+                : request.CsvsToImport.Select(c => c.Csv.FileName).ToArray();
+
             var entities = new List<Entity>();
             var countToImport = csvFiles.Count();
             var countImported = 0;
@@ -85,7 +88,8 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var getTypeResponse = GetTargetType(XrmService, csvFile);
                     var type = getTypeResponse.LogicalName;
                     var primaryField = XrmService.GetPrimaryNameField(type);
-                    CsvUtility.ConstructTextSchema(request.Folder.FolderPath, Path.GetFileName(csvFile));
+                    var fileInfo = new FileInfo(csvFile);
+                    CsvUtility.ConstructTextSchema(fileInfo.Directory.FullName, Path.GetFileName(csvFile));
                     var rows = CsvUtility.SelectAllRows(csvFile);
                     var rowNumber = 0;
                     foreach (var row in rows)

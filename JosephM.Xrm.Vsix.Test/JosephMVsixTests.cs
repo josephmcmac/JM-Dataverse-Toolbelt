@@ -1,18 +1,18 @@
-﻿using System;
+﻿using JosephM.Application.ViewModel.Fakes;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Record.Extentions;
+using JosephM.Record.IService;
+using JosephM.Record.Query;
+using JosephM.Record.Xrm.Test;
+using JosephM.Xrm.Schema;
+using JosephM.XRM.VSIX;
+using JosephM.XRM.VSIX.Commands.DeployAssembly;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using JosephM.Application.ViewModel.Fakes;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Record.IService;
-using JosephM.Record.Query;
-using JosephM.XRM.VSIX.Commands.DeployAssembly;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Record.Xrm.Test;
-using JosephM.Xrm.Schema;
-using JosephM.XRM.VSIX;
-using JosephM.Record.Extentions;
 
 namespace JosephM.Xrm.Vsix.Test
 {

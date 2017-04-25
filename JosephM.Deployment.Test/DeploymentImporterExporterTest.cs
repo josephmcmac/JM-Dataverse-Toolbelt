@@ -13,6 +13,7 @@ using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.ImportExporter.Service;
 using JosephM.Xrm.Test;
 using Microsoft.Xrm.Sdk.Query;
+using static JosephM.Xrm.ImportExporter.Service.XrmImporterExporterRequest;
 
 namespace JosephM.Xrm.ImporterExporter.Test
 {
@@ -34,7 +35,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var testimportTeam = XrmService.GetFirst("team", "name", "TestImportTeam");
             if (testimportTeam != null)
                 XrmService.Delete(testimportTeam);
-
+            DeleteAll(Entities.account);
             File.Copy(@"Account.csv", Path.Combine(workFolder, @"Account.csv"));
             File.Copy(@"jmcg_testentity_account.csv", Path.Combine(workFolder, @"jmcg_testentity_account.csv"));
             File.Copy(@"Test Entity.csv", Path.Combine(workFolder, @"Test Entity.csv"));
@@ -51,6 +52,20 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 DateFormat = DateFormat.English
             };
             var response = importerExporterService.Execute(request, Controller);
+            if (response.HasError)
+                throw response.ResponseItemsWithError.First().Exception;
+
+            importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
+
+            request = new XrmImporterExporterRequest
+            {
+                Folder = new Folder(workFolder),
+                ImportExportTask = ImportExportTask.ImportCsvs,
+                DateFormat = DateFormat.English,
+                FolderOrFiles = XrmImporterExporterRequest.CsvImportOption.SpecificFiles,
+                CsvsToImport = new[] { new CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } }
+            };
+            response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
                 throw response.ResponseItemsWithError.First().Exception;
         }

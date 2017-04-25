@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using EnvDTE;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.XRM.VSIX.Dialogs;
-using Microsoft.VisualStudio.Shell;
 using JosephM.XRM.VSIX.Utilities;
 
 namespace JosephM.XRM.VSIX.Commands.DeployWebResource

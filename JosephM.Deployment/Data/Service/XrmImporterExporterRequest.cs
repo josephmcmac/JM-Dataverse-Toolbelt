@@ -1,6 +1,7 @@
 ﻿#region
 
 using JosephM.Core.Attributes;
+using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using System.Collections.Generic;
@@ -25,6 +26,12 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RequiredProperty]
         public ImportExportTask? ImportExportTask { get; set; }
 
+        [DisplayOrder(15)]
+        [Group(Sections.Main)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ImportCsvs)]
+        public CsvImportOption FolderOrFiles { get; set; }
+
         [DisplayOrder(20)]
         [Group(Sections.Main)]
         [RequiredProperty]
@@ -32,7 +39,14 @@ namespace JosephM.Xrm.ImportExporter.Service
         [DisplayNameForPropertyValue("ImportExportTask", Service.ImportExportTask.ImportXml, "Select The Folder Containing The XML Files")]
         [DisplayNameForPropertyValue("ImportExportTask", Service.ImportExportTask.ExportXml, "Select The Folder To Export The XML Files Into")]
         [PropertyInContextByPropertyValues("ImportExportTask", new object[] { Service.ImportExportTask.ImportCsvs, Service.ImportExportTask.ExportXml, Service.ImportExportTask.ImportXml })]
+        [PropertyInContextByPropertyValue("FolderOrFiles", CsvImportOption.Folder)]
         public Folder Folder { get; set; }
+
+        [Group(Sections.Main)]
+        [DisplayOrder(30)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue("FolderOrFiles", CsvImportOption.SpecificFiles)]
+        public IEnumerable<CsvToImport> CsvsToImport { get; set; }
 
         [DisplayOrder(100)]
         [Group(Sections.CsvImport)]
@@ -66,6 +80,19 @@ namespace JosephM.Xrm.ImportExporter.Service
         [RequiredProperty]
         [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ExportXml)]
         public IEnumerable<ImportExportRecordType> RecordTypesToExport { get; set; }
+
+        public enum CsvImportOption
+        {
+            Folder,
+            SpecificFiles
+        }
+
+        public class CsvToImport
+        {
+            [RequiredProperty]
+            [FileMask(FileMasks.CsvFile)]
+            public FileReference Csv { get; set; }
+        }
 
         private static class Sections
         {

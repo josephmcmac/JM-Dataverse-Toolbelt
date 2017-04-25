@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Commands.PackageSettings;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;

@@ -16,6 +16,11 @@ namespace JosephM.Xrm.Vsix.Test
             return null;
         }
 
+        public string AddSolutionItem(string fileName)
+        {
+            return null;
+        }
+
         public IEnumerable<IVisualStudioProject> GetSolutionProjects()
         {
             return new IVisualStudioProject[0];

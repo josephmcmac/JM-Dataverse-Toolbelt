@@ -21,6 +21,7 @@ using JosephM.XRM.VSIX.Commands.RefreshSchema;
 using JosephM.XRM.VSIX.Commands.RefreshSettings;
 using JosephM.XRM.VSIX.Commands.UpdateAssembly;
 using JosephM.XRM.VSIX.Utilities;
+using JosephM.XRM.VSIX.Commands.GetSolution;
 
 namespace JosephM.XRM.VSIX
 {
@@ -80,6 +81,7 @@ namespace JosephM.XRM.VSIX
             ManagePluginTriggersCommand.Initialize(this);
             UpdateAssemblyCommand.Initialize(this);
             RefreshSettingsCommand.Initialize(this);
+            GetSolutionCommand.Initialize(this);
 
             base.Initialize();
         }
