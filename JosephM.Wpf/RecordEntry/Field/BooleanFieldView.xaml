@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Height="40" VerticalAlignment="Top">
+    <Grid Height="40" VerticalAlignment="Top" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <CheckBox
             TabIndex="1"
              VerticalAlignment="Center"
@@ -24,6 +24,6 @@
             Style="{StaticResource FieldEntryStyle}"
             IsChecked="{Binding ValueObject, Mode=TwoWay}"
             IsEnabled="{Binding IsEditable}"
-            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+             />
     </Grid>
 </field:FieldControlBase>

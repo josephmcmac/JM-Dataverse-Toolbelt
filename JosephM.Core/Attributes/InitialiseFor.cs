@@ -12,6 +12,7 @@ namespace JosephM.Core.Attributes
         public string PropertyDependency { get; set; }
         public object ForValue { get; set; }
         public object InitialValue { get; set; }
+        public bool AlwaysSetIfNotEmpty { get; set; }
 
         public InitialiseFor(string propertyDependency, object forValue, object initialValue)
         {

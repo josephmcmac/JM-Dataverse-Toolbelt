@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid MinWidth="150">
+    <Grid MinWidth="150" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <ComboBox
             VerticalAlignment="Top"
             TabIndex="1"
@@ -25,6 +25,6 @@
             ItemsSource="{Binding ItemsSource}"
             SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}"
             IsEnabled="{Binding IsEditable}"
-            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+             />
     </Grid>
 </field:FieldControlBase>

@@ -12,10 +12,10 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <TextBlock
             Text="{Binding Label}"
             Style="{StaticResource FieldLabelStyle}"
-            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+             />
     </Grid>
 </UserControl>

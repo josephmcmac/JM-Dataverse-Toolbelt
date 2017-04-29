@@ -30,6 +30,8 @@ namespace JosephM.Xrm.ImportExporter.Service
         [Group(Sections.Main)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ImportCsvs)]
+        [InitialiseFor("ImportExportTask", Service.ImportExportTask.ExportXml, CsvImportOption.Folder, AlwaysSetIfNotEmpty =true)]
+        [InitialiseFor("ImportExportTask", Service.ImportExportTask.ImportXml, CsvImportOption.Folder, AlwaysSetIfNotEmpty = true)]
         public CsvImportOption FolderOrFiles { get; set; }
 
         [DisplayOrder(20)]

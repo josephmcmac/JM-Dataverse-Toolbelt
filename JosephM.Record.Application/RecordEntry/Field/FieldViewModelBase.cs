@@ -262,6 +262,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             //this should just defer these onloads to the on changes
             RecordEntryViewModel.RefreshVisibility();
             OnPropertyChanged("ValueObject");
+            OnPropertyChanged("Value");
             //Removed On Change Validation Because Some Do Service Connections (XrmRecordConfiguration) To Validate
             //And Caused Selection To Delay
             //So Just Validate On Save

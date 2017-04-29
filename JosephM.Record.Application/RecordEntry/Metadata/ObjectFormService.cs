@@ -335,7 +335,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             var dependantViewModel = re.GetFieldViewModel(propertyInfo.Name);
                             if (dependencyViewModel.ValueObject != null
                                 && dependencyViewModel.ValueObject.Equals(initialiseForAttribute.ForValue)
-                                && dependantViewModel.ValueObject.IsEmpty())
+                                && (initialiseForAttribute.AlwaysSetIfNotEmpty || dependantViewModel.ValueObject.IsEmpty()))
                                 dependantViewModel.ValueObject = initialiseForAttribute.InitialValue;
                         }
                     });
