@@ -71,15 +71,16 @@ namespace JosephM.XRM.VSIX
         protected override void Initialize()
         {
             base.Initialize();
-            JosephM.XRM.VSIX.Commands.RefreshConnection.RefreshConnectionCommand.Initialize(this);
-            JosephM.XRM.VSIX.Commands.DeployWebResource.DeployWebResourceCommand.Initialize(this);
-            JosephM.XRM.VSIX.Commands.DeployAssembly.DeployAssemblyCommand.Initialize(this);
-            JosephM.XRM.VSIX.Commands.ManagePluginTriggers.ManagePluginTriggersCommand.Initialize(this);
-            JosephM.XRM.VSIX.Commands.UpdateAssembly.UpdateAssemblyCommand.Initialize(this);
-            JosephM.XRM.VSIX.Commands.RefreshSchema.RefreshSchemaCommand.Initialize(this);
-            JosephM.XRM.VSIX.Commands.RefreshSettings.RefreshSettingsCommand.Initialize(this);
-            JosephM.XRM.VSIX.Commands.GetSolution.GetSolutionCommand.Initialize(this);
-            JosephM.XRM.VSIX.Commands.ImportCsvs.ImportCsvsCommand.Initialize(this);
+            Commands.RefreshConnection.RefreshConnectionCommand.Initialize(this);
+            Commands.DeployWebResource.DeployWebResourceCommand.Initialize(this);
+            Commands.DeployAssembly.DeployAssemblyCommand.Initialize(this);
+            Commands.ManagePluginTriggers.ManagePluginTriggersCommand.Initialize(this);
+            Commands.UpdateAssembly.UpdateAssemblyCommand.Initialize(this);
+            Commands.RefreshSchema.RefreshSchemaCommand.Initialize(this);
+            Commands.RefreshSettings.RefreshSettingsCommand.Initialize(this);
+            Commands.GetSolution.GetSolutionCommand.Initialize(this);
+            Commands.ImportCsvs.ImportCsvsCommand.Initialize(this);
+            Commands.ClearCache.ClearCacheCommand.Initialize(this);
         }
 
         private XrmRecordService _xrmRecordService;

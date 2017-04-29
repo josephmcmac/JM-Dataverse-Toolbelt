@@ -60,6 +60,7 @@
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesResponse.cs" />
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesResponseItem.cs" />
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesService.cs" />
+    <Compile Include="Commands\ClearCache\ClearCacheCommand.cs" />
     <Compile Include="Commands\GetSolution\GetSolutionCommand.cs" />
     <Compile Include="Commands\GetSolution\GetSolutionDialog.cs" />
     <Compile Include="Commands\ImportCsvs\ImportCsvsCommand.cs" />

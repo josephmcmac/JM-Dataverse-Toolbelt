@@ -180,6 +180,13 @@
           <ButtonText>Import Csvs</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ClearCacheCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <Strings>
+          <ButtonText>Clear Cache</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -219,6 +226,7 @@
       <IDSymbol name="RefreshSettingsCommandId" value="0x0106" />
       <IDSymbol name="GetSolutionCommandId" value="0x0107" />
       <IDSymbol name="ImportCsvsCommandId" value="0x0108" />
+      <IDSymbol name="ClearCacheCommandId" value="0x0109" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >
