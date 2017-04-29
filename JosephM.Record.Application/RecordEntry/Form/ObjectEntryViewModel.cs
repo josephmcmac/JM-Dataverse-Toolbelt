@@ -181,7 +181,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             get
             {
                 var objectType = GetObject().GetType();
-                return objectType.IsTypeOf(typeof(IAllowSaveAndLoad))
+                return ApplicationController.AllowSaveRequests
+                    && objectType.IsTypeOf(typeof(IAllowSaveAndLoad))
                     && !(objectType == typeof(SaveAndLoadFields));
             }
         }
