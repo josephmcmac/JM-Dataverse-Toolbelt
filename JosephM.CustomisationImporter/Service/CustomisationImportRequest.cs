@@ -22,10 +22,18 @@ namespace JosephM.CustomisationImporter.Service
         [Group(Sections.File)]
         [RequiredProperty]
         [FileMask(FileMasks.ExcelFile)]
+        [PropertyInContextByPropertyValue("HideExcelFile", false)]
         public FileReference ExcelFile { get; set; }
+
+        [Hidden]
+        public bool HideExcelFile { get; set; }
+
+        [Hidden]
+        public bool HideSolutionOptions { get; set; }
 
         [DisplayOrder(100)]
         [Group(Sections.Solution)]
+        [PropertyInContextByPropertyValue("HideSolutionOptions", false)]
         [DisplayName("Add Components To Solution")]
         public bool AddToSolution { get; set; }
 
@@ -38,6 +46,7 @@ namespace JosephM.CustomisationImporter.Service
         [LookupCondition(Xrm.Schema.Fields.solution_.isvisible, true)]
         [LookupCondition(Xrm.Schema.Fields.solution_.uniquename, ConditionType.NotEqual, "default")]
         [PropertyInContextByPropertyValue("AddToSolution", true)]
+        [PropertyInContextByPropertyValue("HideSolutionOptions", false)]
         public Lookup Solution { get; set; }
 
         [DisplayOrder(200)]

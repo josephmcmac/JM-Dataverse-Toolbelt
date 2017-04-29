@@ -81,6 +81,7 @@ namespace JosephM.XRM.VSIX
             Commands.GetSolution.GetSolutionCommand.Initialize(this);
             Commands.ImportCsvs.ImportCsvsCommand.Initialize(this);
             Commands.ClearCache.ClearCacheCommand.Initialize(this);
+            Commands.ImportCustomisations.ImportCustomisationsCommand.Initialize(this);
         }
 
         private XrmRecordService _xrmRecordService;

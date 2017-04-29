@@ -2,6 +2,7 @@
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.Record.IService;
 
 namespace JosephM.XRM.VSIX.Dialogs
 {
@@ -16,11 +17,16 @@ namespace JosephM.XRM.VSIX.Dialogs
         public TRequest Request { get; set; }
         public TResponse Response { get; set; }
 
-        public VsixServiceDialog(TService service, TRequest request, IDialogController dialogController)
+        public VsixServiceDialog(TService service, TRequest request, IDialogController dialogController, bool showRequestEntryForm = false, IRecordService lookupService = null)
             : base(dialogController)
         {
             Service = service;
             Request = request;
+            if(showRequestEntryForm)
+            {
+                var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null);
+                SubDialogs = new DialogViewModel[] { configEntryDialog };
+            }
         }
 
         protected override void LoadDialogExtention()
