@@ -50,7 +50,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             if (_formMetadata == null)
             {
-                var formSections = new List<FormSection>();
+                var formSections = new List<FormFieldSection>();
 
                 var type = ObjectToEnter.GetType();
                 var propertyMetadata = ObjectRecordService.GetFieldMetadata(type.AssemblyQualifiedName);
@@ -108,6 +108,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         formSections.Add(newSection);
                     }
                     otherSections[sectionName].Add(fieldMetadata);
+                }
+                foreach (var section in formSections)
+                {
+                    var fields = section.FormFields;
+                    if(fields.Count() == 1)
+                    {
+                        var field = fields.First();
+                        var fieldMt = ObjectRecordService.GetFieldMetadata(field.FieldName, type.AssemblyQualifiedName);
+                        if (fieldMt is EnumerableFieldMetadata
+                            || fieldMt is MemoFieldMetadata
+                            || (fieldMt is StringFieldMetadata && fieldMt.IsMultiline()))
+                            field.DisplayLabel = false;
+                    }
                 }
                 formSections = formSections.OrderBy(s => s.Order).ToList();
                 _formMetadata = new FormMetadata(formSections);

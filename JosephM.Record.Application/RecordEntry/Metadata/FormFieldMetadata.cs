@@ -32,7 +32,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public string OtherType { get; private set; }
 
-        public bool DisplayLabel { get; private set; }
+        public bool DisplayLabel { get; set; }
 
         public FieldViewModelBase CreateFieldViewModel(string recordType, IRecordService recordService,
             RecordEntryViewModelBase recordForm, IApplicationController applicationController)
