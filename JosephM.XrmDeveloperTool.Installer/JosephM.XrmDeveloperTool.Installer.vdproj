@@ -2808,7 +2808,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_13E5878E1E274FFB8A8A9222F3A28F5B"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_53AF411BF5AA4442A7A023CB4914D5DE"
             {
             "SourcePath" = "8:"
             "TargetName" = "8:"
@@ -2828,9 +2828,9 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
+            "OutputConfiguration" = "8:Release|Any CPU"
             "OutputGroupCanonicalName" = "8:ContentFiles"
-            "OutputProjectGuid" = "8:{F52C0989-0F48-419A-B4CF-591F8ADA8DD1}"
+            "OutputProjectGuid" = "8:{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
