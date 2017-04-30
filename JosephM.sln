@@ -117,12 +117,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Prism.XrmDeveloperT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Spreadsheet", "JosephM.Spreadsheet\JosephM.Spreadsheet.csproj", "{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}"
 EndProject
-Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "JosephM.Prism.XrmDeveloperTool.Install", "JosephM.Prism.XrmDeveloperTool.Install\JosephM.Prism.XrmDeveloperTool.Install.isproj", "{33F4419A-D9BB-410D-AE44-7AE611AEF95A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F303560E-2FD6-4198-BE27-3EAC2446103C} = {F303560E-2FD6-4198-BE27-3EAC2446103C}
-		{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E} = {1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EncryptObject", "EncryptObject", "{31A0E44B-CA42-41D3-837D-1B5677F97245}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.ObjectEncryption", "JosephM.ObjectEncryption\JosephM.ObjectEncryption.csproj", "{2FE73DC9-7959-4944-B594-29E73AA79604}"
@@ -186,6 +180,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.XRM.Plugins", "JosephM.Xrm.SolutionTemplate\JosephM.XRM.Plugins\JosephM.XRM.Plugins.csproj", "{01DB6BF5-1FA7-46C2-87AC-850E12670ACD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix.Test", "JosephM.Xrm.Vsix.Test\JosephM.Xrm.Vsix.Test.csproj", "{F5EC8E25-2152-448D-9459-8F0EF9933B3B}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "JosephM.XrmDeveloperTool.Installer", "JosephM.XrmDeveloperTool.Installer\JosephM.XrmDeveloperTool.Installer.vdproj", "{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1427,53 +1423,6 @@ Global
 		{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}.Stage|Mixed Platforms.Build.0 = Debug|x86
 		{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}.Stage|x86.ActiveCfg = Release|x86
 		{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}.Stage|x86.Build.0 = Release|x86
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.CD_ROM|Any CPU.Build.0 = CD_ROM
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.CD_ROM|Mixed Platforms.ActiveCfg = CD_ROM
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.CD_ROM|Mixed Platforms.Build.0 = CD_ROM
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.CD_ROM|x86.ActiveCfg = CD_ROM
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.CD_ROM|x86.Build.0 = CD_ROM
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Debug|Any CPU.ActiveCfg = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Debug|Any CPU.Build.0 = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Debug|Mixed Platforms.ActiveCfg = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Debug|x86.ActiveCfg = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Debug|x86.Build.0 = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.DVD-5|Any CPU.ActiveCfg = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.DVD-5|Any CPU.Build.0 = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.DVD-5|Mixed Platforms.ActiveCfg = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.DVD-5|Mixed Platforms.Build.0 = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.DVD-5|x86.ActiveCfg = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.DVD-5|x86.Build.0 = DVD-5
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.LazyWeb|Any CPU.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.LazyWeb|Any CPU.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.LazyWeb|Mixed Platforms.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.LazyWeb|Mixed Platforms.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.LazyWeb|x86.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.LazyWeb|x86.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Live|Any CPU.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Live|Any CPU.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Live|Mixed Platforms.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Live|Mixed Platforms.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Live|x86.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Live|x86.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Release|Any CPU.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Release|Any CPU.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Release|Mixed Platforms.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Release|Mixed Platforms.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Release|x86.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Release|x86.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.SingleImage|Any CPU.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.SingleImage|Any CPU.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.SingleImage|Mixed Platforms.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.SingleImage|Mixed Platforms.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.SingleImage|x86.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.SingleImage|x86.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Stage|Any CPU.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Stage|Any CPU.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Stage|Mixed Platforms.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Stage|Mixed Platforms.Build.0 = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Stage|x86.ActiveCfg = SingleImage
-		{33F4419A-D9BB-410D-AE44-7AE611AEF95A}.Stage|x86.Build.0 = SingleImage
 		{2FE73DC9-7959-4944-B594-29E73AA79604}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{2FE73DC9-7959-4944-B594-29E73AA79604}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
 		{2FE73DC9-7959-4944-B594-29E73AA79604}.CD_ROM|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -2618,6 +2567,30 @@ Global
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B}.Stage|Mixed Platforms.Build.0 = Release|Any CPU
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B}.Stage|x86.ActiveCfg = Release|Any CPU
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B}.Stage|x86.Build.0 = Release|Any CPU
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.CD_ROM|Any CPU.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.CD_ROM|Mixed Platforms.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.CD_ROM|x86.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Debug|Any CPU.ActiveCfg = Debug
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Debug|x86.ActiveCfg = Debug
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.DVD-5|Any CPU.ActiveCfg = Debug
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.DVD-5|Mixed Platforms.ActiveCfg = Debug
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.DVD-5|x86.ActiveCfg = Debug
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.LazyWeb|Any CPU.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.LazyWeb|Mixed Platforms.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.LazyWeb|x86.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Live|Any CPU.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Live|Mixed Platforms.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Live|x86.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Release|Any CPU.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Release|Mixed Platforms.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Release|x86.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.SingleImage|Any CPU.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.SingleImage|Mixed Platforms.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.SingleImage|x86.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Stage|Any CPU.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Stage|Mixed Platforms.ActiveCfg = Release
+		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Stage|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2690,6 +2663,9 @@ Global
 		{B6F50801-2B68-456B-A438-BCB15F6FD48D} = {F54DAEB3-F26D-41A6-93E4-3A3B7921A621}
 		{01DB6BF5-1FA7-46C2-87AC-850E12670ACD} = {F54DAEB3-F26D-41A6-93E4-3A3B7921A621}
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
