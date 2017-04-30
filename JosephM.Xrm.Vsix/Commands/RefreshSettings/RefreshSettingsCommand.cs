@@ -41,8 +41,7 @@ namespace JosephM.XRM.VSIX.Commands.RefreshSettings
             {
                 var fileInfo = new FileInfo(solution.FullName);
                 var path = fileInfo.DirectoryName;
-
-                var settings = VsixUtility.GetPackageSettings(GetDte2());
+                var settings = GetPackageSettings();
                 if (settings == null)
                     settings = new XrmPackageSettings();
                 var xrmService = GetXrmRecordService();

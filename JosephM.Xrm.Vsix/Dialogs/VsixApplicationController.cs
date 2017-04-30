@@ -73,5 +73,7 @@ namespace JosephM.XRM.VSIX.Dialogs
         {
             throw new NotImplementedException();
         }
+
+        public override bool AllowSaveRequests {  get { return false; } }
     }
 }

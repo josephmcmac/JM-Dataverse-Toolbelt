@@ -95,7 +95,8 @@ namespace JosephM.Prism.Infrastructure.Dialog
             {
                 CompletionItems.Add(responseItem);
             }
-            if (Request.GetType().IsTypeOf(typeof(IAllowSaveAndLoad)))
+            if (ApplicationController.AllowSaveRequests
+                && Request.GetType().IsTypeOf(typeof(IAllowSaveAndLoad)))
             {
                 AddCompletionOption("Save Request", SaveRequest);
             }

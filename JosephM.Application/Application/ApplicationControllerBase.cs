@@ -191,5 +191,7 @@ namespace JosephM.Application.Application
         {
             throw new NotImplementedException();
         }
+
+        public virtual bool AllowSaveRequests { get { return true; } }
     }
 }

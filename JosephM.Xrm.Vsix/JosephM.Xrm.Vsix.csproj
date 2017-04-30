@@ -60,8 +60,10 @@
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesResponse.cs" />
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesResponseItem.cs" />
     <Compile Include="Commands\DeployWebResource\DeployWebResourcesService.cs" />
+    <Compile Include="Commands\ClearCache\ClearCacheCommand.cs" />
     <Compile Include="Commands\GetSolution\GetSolutionCommand.cs" />
     <Compile Include="Commands\GetSolution\GetSolutionDialog.cs" />
+    <Compile Include="Commands\ImportCustomisations\ImportCustomisationsCommand.cs" />
     <Compile Include="Commands\ImportCsvs\ImportCsvsCommand.cs" />
     <Compile Include="Commands\ManagePluginTriggers\ManagePluginTriggersCommand.cs" />
     <Compile Include="Commands\ManagePluginTriggers\ManagePluginTriggersDialog.cs" />
@@ -258,6 +260,10 @@
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj">
+      <Project>{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}</Project>
+      <Name>JosephM.CustomisationImporter</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Deployment\JosephM.Deployment.csproj">
       <Project>{82118987-fb76-4e70-81a0-06d0b062d89c}</Project>

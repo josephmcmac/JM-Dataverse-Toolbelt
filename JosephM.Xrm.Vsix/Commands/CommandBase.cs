@@ -128,6 +128,11 @@ namespace JosephM.XRM.VSIX.Commands
             return VsixUtility.GetFile(ServiceProvider, getFileName);
         }
 
+        public XrmPackageSettings GetPackageSettings()
+        {
+            return VsixUtility.GetPackageSettings(GetDte2());
+        }
+
         protected Solution2 GetSolution()
         {
             var dte = GetDte2();

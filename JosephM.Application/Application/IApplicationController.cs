@@ -79,5 +79,7 @@ namespace JosephM.Application.Application
         void AddNotification(string id, string notification);
 
         void OpenFile(string fileName);
+
+        bool AllowSaveRequests { get; }
     }
 }

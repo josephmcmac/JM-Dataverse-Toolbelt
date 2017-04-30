@@ -76,6 +76,9 @@
     <Compile Include="DeploymentImporterExporterTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Files\jmcg_testentity.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Files\Account.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

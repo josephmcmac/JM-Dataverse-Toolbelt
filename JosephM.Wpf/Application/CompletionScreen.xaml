@@ -25,22 +25,37 @@
          Text="{Binding CompletionHeadingText, Mode=OneWay}"
          IsReadOnly="True"
          TextWrapping="Wrap" />
-        <ItemsControl
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0">
+                <ItemsControl
             ItemsSource="{Binding CompletionOptions}"
             ItemTemplate="{StaticResource XrmButtonTemplate}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1">
+                <StackPanel HorizontalAlignment="Right">
+                    <shared:XrmButton
+                DataContext="{Binding CloseButton}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
         <StackPanel Visibility="{Binding ShowCompletionDetails, Converter={StaticResource BoolToVis}}">
             <grid:ObjectsGridSectionView
                 DataContext="{Binding CompletionDetails}" />
         </StackPanel>
-        <StackPanel HorizontalAlignment="Right">
+        <!--<StackPanel HorizontalAlignment="Right">
             <shared:XrmButton
                 DataContext="{Binding CloseButton}" />
-        </StackPanel>
+        </StackPanel>-->
     </StackPanel>
 </UserControl>

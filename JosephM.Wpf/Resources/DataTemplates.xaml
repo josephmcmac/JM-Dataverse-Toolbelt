@@ -13,6 +13,9 @@
                     xmlns:grid1="clr-namespace:JosephM.Wpf.Grid">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        </ResourceDictionary>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/modernui.light.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -186,7 +189,7 @@
         </WrapPanel>
     </DataTemplate>-->
     <DataTemplate x:Key="labelledFieldTemplate">
-        <Grid>
+        <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
