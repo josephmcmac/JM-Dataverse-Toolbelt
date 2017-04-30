@@ -98,7 +98,29 @@ namespace JosephM.Xrm.ImportExporter.Service
                         try
                         {
                             var entity = new Entity(type);
-                            if (request.MatchByName && !getTypeResponse.IsRelationship)
+                            var keyColumns =
+                                    rows.First()
+                                    .GetColumnNames()
+                                    .Where(c => c.StartsWith("key|"));
+                            if(keyColumns.Any())
+                            {
+                                var fieldValues = new Dictionary<string, object>();
+                                foreach(var key in keyColumns)
+                                {
+                                    var fieldName = MapColumnToFieldSchemaName(XrmService, type, key);
+                                    var columnValue = row.GetFieldAsString(key);
+                                    if (columnValue != null)
+                                        columnValue = columnValue.Trim();
+
+                                    fieldValues.Add(fieldName, columnValue);
+                                }
+                                var matchingEntity = GetMatchingEntities(type, fieldValues);
+                                if (matchingEntity.Count() > 1)
+                                    throw new Exception(string.Format("Specified Match By Name But More Than One {0} Record Matched To The Keys Of {1}", type, string.Join(",", fieldValues.Select(kv => kv.Key + "=" + kv.Value))));
+                                if (matchingEntity.Count() == 1)
+                                    entity.Id = matchingEntity.First().Id;
+                            }
+                            else if (request.MatchByName && !getTypeResponse.IsRelationship)
                             {
                                 var primaryFieldColumns =
                                     rows.First()
@@ -177,16 +199,24 @@ namespace JosephM.Xrm.ImportExporter.Service
             return organisation.GetLookupId("basecurrencyid");
         }
 
-        private IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
+        private IEnumerable<Entity> GetMatchingEntities(string type, IDictionary<string,object> fieldValues)
         {
-            var conditions = new List<ConditionExpression>
-            {
-                new ConditionExpression(field, ConditionOperator.Equal,
-                    XrmService.ParseField(field, type, value)),
-            };
+            var conditions = fieldValues.Select(fv =>
+            fv.Value == null
+            ? new ConditionExpression(fv.Key, ConditionOperator.Null)
+            : new ConditionExpression(fv.Key, ConditionOperator.Equal, XrmService.ConvertToQueryValue(fv.Key, type, XrmService.ParseField(fv.Key, type, fv.Value)))
+            ).ToList();
             if (type == "workflow")
                 conditions.Add(new ConditionExpression("type", ConditionOperator.Equal, XrmPicklists.WorkflowType.Definition));
             return XrmService.RetrieveAllAndClauses(type, conditions, new String[0]);
+        }
+
+        private IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
+        {
+            return GetMatchingEntities(type, new Dictionary<string, object>()
+            {
+                { field, value }
+            });
         }
 
         private Entity GetUniqueMatchingEntity(string type, string field, string value)
@@ -203,6 +233,8 @@ namespace JosephM.Xrm.ImportExporter.Service
 
         private string MapColumnToFieldSchemaName(XrmService service, string type, string column)
         {
+            if (column.StartsWith("key|"))
+                column = column.Substring(4);
             var fields = service.GetFields(type);
             var fieldsForLabel = fields.Where(f => service.GetFieldLabel(f, type) == column);
             if (fieldsForLabel.Count() == 1)

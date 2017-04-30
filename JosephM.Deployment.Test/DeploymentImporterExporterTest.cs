@@ -14,6 +14,7 @@ using JosephM.Xrm.ImportExporter.Service;
 using JosephM.Xrm.Test;
 using Microsoft.Xrm.Sdk.Query;
 using static JosephM.Xrm.ImportExporter.Service.XrmImporterExporterRequest;
+using JosephM.Core.Extentions;
 
 namespace JosephM.Xrm.ImporterExporter.Test
 {
@@ -68,11 +69,31 @@ namespace JosephM.Xrm.ImporterExporter.Test
             };
             response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
-                throw response.ResponseItemsWithError.First().Exception;
+                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
 
             File.Copy(@"jmcg_testentity.csv", Path.Combine(workFolder, @"jmcg_testentity.csv"));
 
             //this one sets a record inactive state
+            //and matches on multiple keys
+            var accounta = CreateTestRecord(Entities.account, new Dictionary<string, object>()
+            {
+                { Fields.account_.name, "accounta" }
+            });
+            var accountb = CreateTestRecord(Entities.account, new Dictionary<string, object>()
+            {
+                { Fields.account_.name, "accountb" }
+            });
+            var testMultiKeya = CreateTestRecord(Entities.jmcg_testentity, new Dictionary<string, object>()
+            {
+                { Fields.jmcg_testentity_.jmcg_name, "TESTMATCH" },
+                { Fields.jmcg_testentity_.jmcg_account, accounta.ToEntityReference() },
+            });
+            var testMultiKeyb = CreateTestRecord(Entities.jmcg_testentity, new Dictionary<string, object>()
+            {
+                { Fields.jmcg_testentity_.jmcg_name, "TESTMATCH" },
+                { Fields.jmcg_testentity_.jmcg_account, accountb.ToEntityReference() },
+            });
+
             importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
 
             request = new XrmImporterExporterRequest
@@ -85,10 +106,12 @@ namespace JosephM.Xrm.ImporterExporter.Test
             };
             response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
-                throw response.ResponseItemsWithError.First().Exception;
+                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
 
             var entity = XrmService.GetFirst(Entities.jmcg_testentity, Fields.jmcg_testentity_.jmcg_name, "BLAH 2");
             Assert.AreEqual(XrmPicklists.State.Inactive, entity.GetOptionSetValue(Fields.jmcg_testentity_.statecode));
+            Assert.AreEqual(XrmPicklists.State.Inactive, Refresh(testMultiKeya).GetOptionSetValue(Fields.jmcg_testentity_.statecode));
+            Assert.AreEqual(XrmPicklists.State.Inactive, Refresh(testMultiKeyb).GetOptionSetValue(Fields.jmcg_testentity_.statecode));
         }
 
         [TestMethod]

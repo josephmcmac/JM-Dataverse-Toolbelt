@@ -1,3 +1,5 @@
-Name,Created On,Date,statecode
-BLAH,24/3/2015 3:19 PM,15/11/1980 0:00,Active
-BLAH 2,,,Inactive
+key|jmcg_account,key|Name,Created On,Date,statecode
+, BLAH,24/3/2015 3:19 PM,15/11/1980 0:00,Active
+, BLAH 2,,,Inactive
+"accounta",TESTMATCH,,,Inactive
+"accountb",TESTMATCH,,,Inactive
