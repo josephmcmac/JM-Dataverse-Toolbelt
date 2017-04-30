@@ -26,6 +26,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
         [DeploymentItem(@"Files\Test Entity Two.csv")]
         [DeploymentItem(@"Files\Test Entity Three.csv")]
         [DeploymentItem(@"Files\Team.csv")]
+        [DeploymentItem(@"Files\jmcg_testentity.csv")]
         [TestMethod]
         public void DeploymentExportImportCsvMultipleTest()
         {
@@ -49,7 +50,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             {
                 Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportCsvs,
-                DateFormat = DateFormat.English
+                DateFormat = DateFormat.American
             };
             var response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
@@ -61,13 +62,33 @@ namespace JosephM.Xrm.ImporterExporter.Test
             {
                 Folder = new Folder(workFolder),
                 ImportExportTask = ImportExportTask.ImportCsvs,
-                DateFormat = DateFormat.English,
+                DateFormat = DateFormat.American,
                 FolderOrFiles = XrmImporterExporterRequest.CsvImportOption.SpecificFiles,
                 CsvsToImport = new[] { new CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } }
             };
             response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
                 throw response.ResponseItemsWithError.First().Exception;
+
+            File.Copy(@"jmcg_testentity.csv", Path.Combine(workFolder, @"jmcg_testentity.csv"));
+
+            //this one sets a record inactive state
+            importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
+
+            request = new XrmImporterExporterRequest
+            {
+                Folder = new Folder(workFolder),
+                ImportExportTask = ImportExportTask.ImportCsvs,
+                DateFormat = DateFormat.English,
+                FolderOrFiles = XrmImporterExporterRequest.CsvImportOption.SpecificFiles,
+                CsvsToImport = new[] { new CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"jmcg_testentity.csv")) } }
+            };
+            response = importerExporterService.Execute(request, Controller);
+            if (response.HasError)
+                throw response.ResponseItemsWithError.First().Exception;
+
+            var entity = XrmService.GetFirst(Entities.jmcg_testentity, Fields.jmcg_testentity_.jmcg_name, "BLAH 2");
+            Assert.AreEqual(XrmPicklists.State.Inactive, entity.GetOptionSetValue(Fields.jmcg_testentity_.statecode));
         }
 
         [TestMethod]

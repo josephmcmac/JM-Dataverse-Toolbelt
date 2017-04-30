@@ -120,7 +120,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                             foreach (var column in row.GetColumnNames())
                             {
                                 var field = MapColumnToFieldSchemaName(XrmService, type, column);
-                                if (getTypeResponse.IsRelationship || IsIncludeField(field, type))
+                                if (true)//(getTypeResponse.IsRelationship || XrmService.IsWritable(field, type))
                                 {
                                     var stringValue = row.GetFieldAsString(column);
                                     if (stringValue != null)
@@ -456,14 +456,12 @@ namespace JosephM.Xrm.ImportExporter.Service
                             else if (isUpdate && existingMatchingIds.Any())
                             {
                                 var matchRecord = existingMatchingIds.First();
-                                if (
-                                    thisEntity.GetOptionSetValue("statecode") != -1
-                                    && thisEntity.GetOptionSetValue("statuscode") != -1
-                                        &&
-                                        (matchRecord.GetOptionSetValue("statecode") != thisEntity.GetOptionSetValue("statecode")
-                                        ||
-                                    matchRecord.GetOptionSetValue("statuscode") !=
-                                    thisEntity.GetOptionSetValue("statuscode")))
+                                var thisState = thisEntity.GetOptionSetValue("statecode");
+                                var thisStatus = thisEntity.GetOptionSetValue("statuscode");
+                                var matchState = matchRecord.GetOptionSetValue("statecode");
+                                var matchStatus = matchRecord.GetOptionSetValue("statuscode");
+                                if ((thisState != -1 && thisState != matchState)
+                                    ||  (thisStatus != -1 && thisState != matchStatus))
                                 {
                                     XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
                                 }
@@ -722,7 +720,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             var hardcodeInvalidFields = new[]
             {
                 "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
-                "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "myr_currentnumberposition", "calendarrules"
+                "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules"
             };
             if (hardcodeInvalidFields.Contains(fieldName))
                 return false;
