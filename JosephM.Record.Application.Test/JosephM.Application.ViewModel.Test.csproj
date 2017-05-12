@@ -59,7 +59,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DynamicsGridViewModelItemsTests.cs" />
-    <Compile Include="ObjectEntryViewModelTests.cs" />
     <Compile Include="RecordApplicationTests.cs" />
     <Compile Include="RecordEntryViewModelTests.cs" />
     <Compile Include="FakeTests.cs" />
