@@ -8,6 +8,7 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -102,6 +103,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                                     rows.First()
                                     .GetColumnNames()
                                     .Where(c => c.StartsWith("key|"));
+                             
                             if(keyColumns.Any())
                             {
                                 var fieldValues = new Dictionary<string, object>();
@@ -650,6 +652,16 @@ namespace JosephM.Xrm.ImportExporter.Service
                     && fieldsToRetry[thisEntity].Contains("businessunitid"))
                     fieldsToRetry[thisEntity].Remove("businessunitid");
             }
+            if (thisEntity.LogicalName == Entities.subject
+                    && !fieldsToSet.Contains(Fields.subject_.featuremask)
+                    && XrmService.FieldExists(Fields.subject_.featuremask, Entities.subject))
+            {
+                thisEntity.SetField(Fields.subject_.featuremask, 1);
+                fieldsToSet.Add(Fields.subject_.featuremask);
+                if (fieldsToRetry.ContainsKey(thisEntity)
+                    && fieldsToRetry[thisEntity].Contains(Fields.subject_.featuremask))
+                    fieldsToRetry[thisEntity].Remove(Fields.subject_.featuremask);
+            }
         }
 
         private Guid GetRootBusinessUnitId()
@@ -915,7 +927,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             if (XrmService.FieldExists("statecode", entity.LogicalName))
             {
-                if (exportType.IncludeInactiveRecords)
+                if (!exportType.IncludeInactiveRecords)
                 {
                     var activeStates = new List<int>(new []{ XrmPicklists.State.Active });
                     if (entity.LogicalName == "product")
