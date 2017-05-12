@@ -914,8 +914,10 @@ namespace JosephM.Xrm.ImportExporter.Service
                 foreach (var character in invalidChars)
                     namesToUse = namesToUse.Replace(character, '_');
             }
-            var fileName = string.Format(@"{0}\{1}_{2}_{3}.xml", folder, entity.LogicalName, entity.Id,
-                namesToUse);
+            //ensure dont exceed max filename length
+            var fileName = string.Format(@"{0}\{1}_{2}_{3}", folder, entity.LogicalName, entity.Id,
+                namesToUse).Left(240);
+            fileName = fileName + ".xml";
             fileName = fileName.Replace('-', '_');
             using (var fileStream = new FileStream(fileName, FileMode.Create))
             {
