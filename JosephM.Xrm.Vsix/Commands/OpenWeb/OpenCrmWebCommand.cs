@@ -13,8 +13,7 @@ namespace JosephM.XRM.VSIX.Commands.OpenWeb
         {
             var xrmRecordService = GetXrmRecordService();
             var url = xrmRecordService.WebUrl;
-            var solutionUrl = string.Format("{0}{1}main.aspx?pagetype=advancedfind", url, url.EndsWith("/") ? "" : "/");
-            Process.Start(solutionUrl);
+            Process.Start(url);
         }
     }
 }
