@@ -137,6 +137,22 @@ namespace JosephM.Xrm
             set { _service = value; }
         }
 
+        private string _webUrl;
+        public string WebUrl
+        {
+            get
+            {
+                if (_webUrl == null)
+                {
+                    if (XrmConfiguration == null)
+                        throw new NotImplementedException(string.Format("XrmConfiguration is null"));
+                    _webUrl = new XrmConnection(XrmConfiguration).GetWebUrl();
+                }
+                return _webUrl;
+            }
+        }
+
+
         public virtual OrganizationResponse Execute(OrganizationRequest request)
         {
             return Execute(request, true);
@@ -2585,40 +2601,40 @@ string recordType)
             }
             else
             {
-                //throw new NotSupportedException("Creation of Customer type fields is not supported by this application. You will need to create it manually in the web ui");
+                throw new NotSupportedException("Creation of Customer type fields is not supported by this application. You will need to create it manually in the web ui");
                 //this code for creating a Customer type field requires SDK V ~8.2
                 //however breaks this app for older CRM versions by introducing 
                 //the HasFeedback property for Entity creation/update requests
 
-                var request = new CreateCustomerRelationshipsRequest()
-                {
-                    Lookup = metadata,
-                    OneToManyRelationships = new[]
-                    {
-                        new OneToManyRelationshipMetadata
-                        {
-                            SchemaName = string.Format("{0}_{1}_{2}", recordType, "account", schemaName),
-                            ReferencingEntity = recordType,
-                            ReferencedEntity = "account"
-                        },
-                        new OneToManyRelationshipMetadata
-                        {
-                            SchemaName = string.Format("{0}_{1}_{2}", recordType, "contact", schemaName),
-                            ReferencingEntity = recordType,
-                            ReferencedEntity = "contact"
-                        },
-                    }
-                };
+                //var request = new CreateCustomerRelationshipsRequest()
+                //{
+                //    Lookup = metadata,
+                //    OneToManyRelationships = new []
+                //    {
+                //        new OneToManyRelationshipMetadata
+                //        {
+                //            SchemaName = string.Format("{0}_{1}_{2}", recordType, "account", schemaName),
+                //            ReferencingEntity = recordType,
+                //            ReferencedEntity = "account"
+                //        },
+                //        new OneToManyRelationshipMetadata
+                //        {
+                //            SchemaName = string.Format("{0}_{1}_{2}", recordType, "contact", schemaName),
+                //            ReferencingEntity = recordType,
+                //            ReferencedEntity = "contact"
+                //        },
+                //    }
+                //};
 
-                Execute(request);
-                RefreshFieldMetadata(schemaName, recordType);
-                metadata = (LookupAttributeMetadata)GetFieldMetadata(schemaName, recordType);
-                SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
-                CreateOrUpdateAttribute(schemaName, recordType, metadata);
-                RefreshFieldMetadata(schemaName, recordType);
-                RefreshEntityMetadata(recordType);
-                RefreshEntityMetadata("account");
-                RefreshEntityMetadata("contact");
+                //Execute(request);
+                //RefreshFieldMetadata(schemaName, recordType);
+                //metadata = (LookupAttributeMetadata)GetFieldMetadata(schemaName, recordType);
+                //SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
+                //CreateOrUpdateAttribute(schemaName, recordType, metadata);
+                //RefreshFieldMetadata(schemaName, recordType);
+                //RefreshEntityMetadata(recordType);
+                //RefreshEntityMetadata("account");
+                //RefreshEntityMetadata("contact");
             }
         }
 

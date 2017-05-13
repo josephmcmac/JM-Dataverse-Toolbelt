@@ -196,6 +196,27 @@
           <ButtonText>Import Customisations</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmWebCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <Strings>
+          <ButtonText>Open CRM Web</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmSolutionCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <Strings>
+          <ButtonText>Open Solution</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmAdvancedFindCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <Strings>
+          <ButtonText>Open Advanced Find</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -237,6 +258,9 @@
       <IDSymbol name="ImportCsvsCommandId" value="0x0108" />
       <IDSymbol name="ClearCacheCommandId" value="0x0109" />
       <IDSymbol name="ImportCustomisationsCommandId" value="0x010A" />
+      <IDSymbol name="OpenCrmWebCommandId" value="0x010B" />
+      <IDSymbol name="OpenCrmSolutionCommandId" value="0x010C" />
+      <IDSymbol name="OpenCrmAdvancedFindCommandId" value="0x010D" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

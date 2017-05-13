@@ -1,27 +1,17 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Command1.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using EnvDTE;
-using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.CodeGenerator.Service;
 using JosephM.CodeGenerator.Xrm;
 using JosephM.Core.FieldType;
 using JosephM.XRM.VSIX.Dialogs;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Windows;
-using JosephM.Core.Extentions;
 
 namespace JosephM.XRM.VSIX.Commands.RefreshSchema
 {
-    internal sealed class RefreshSchemaCommand : SolutionItemCommandBase
+    internal sealed class RefreshSchemaCommand : SolutionItemCommandBase<RefreshSchemaCommand>
     {
         public override IEnumerable<string> ValidFileNames
         {
@@ -36,31 +26,7 @@ namespace JosephM.XRM.VSIX.Commands.RefreshSchema
             get { return 0x0100; }
         }
 
-        private RefreshSchemaCommand(XrmPackage package)
-            : base(package)
-        {
-        }
-
-        public static RefreshSchemaCommand Instance { get; private set; }
-
-        public static void Initialize(XrmPackage package)
-        {
-            Instance = new RefreshSchemaCommand(package);
-        }
-
-        public override void MenuItemCallback(object sender, EventArgs e)
-        {
-            try
-            {
-                DoDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.DisplayString());
-            }
-        }
-
-        private void DoDialog()
+        public override void DoDialog()
         {
             var xrmService = GetXrmRecordService();
 

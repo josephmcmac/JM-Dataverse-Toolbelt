@@ -26,30 +26,9 @@ namespace JosephM.Xrm
             {
                 OrganizationServiceProxy organizationProxy = null;
 
-                var serviceManagement =
-                    ServiceConfigurationFactory.CreateManagement<IDiscoveryService>(
-                        new Uri(CrmConfig.DiscoveryServiceAddress));
 
-                var authenticationType = CrmConfig.AuthenticationProviderType;
-
-                // Set the credentials.
-                var authCredentials = GetCredentials(authenticationType);
-
-                var organizationUri = String.Empty;
-                // Get the discovery service proxy.
-                using (var discoveryProxy =
-                    GetProxy<IDiscoveryService, DiscoveryServiceProxy>(serviceManagement, authCredentials))
-                {
-                    // Obtain organization information from the Discovery service. 
-                    if (discoveryProxy != null)
-                    {
-                        // Obtain information about the organizations that the system user belongs to.
-                        var orgs = DiscoverOrganizations(discoveryProxy);
-                        // Obtains the Web address (Uri) of the target organization.
-                        organizationUri = FindOrganization(CrmConfig.OrganizationUniqueName,
-                            orgs.ToArray()).Endpoints[EndpointType.OrganizationService];
-                    }
-                }
+                var endPointType = EndpointType.OrganizationService;
+                var organizationUri = GetEndpointUrl(endPointType);
 
                 if (!String.IsNullOrWhiteSpace(organizationUri))
                 {
@@ -64,7 +43,7 @@ namespace JosephM.Xrm
                             new Uri(organizationUri));
 
                     // Set the credentials.
-                    var credentials = GetCredentials(authenticationType);
+                    var credentials = GetCredentials(CrmConfig.AuthenticationProviderType);
 
                     organizationProxy = GetProxy<IOrganizationService, OrganizationServiceProxy>(orgServiceManagement,
                         credentials);
@@ -75,6 +54,52 @@ namespace JosephM.Xrm
             {
                 throw new Exception("Error connecting to crm instance - check your crm connection details", ex);
             }
+        }
+
+        /// <summary>
+        ///     Return Organisation Service Proxy
+        /// </summary>
+        /// <returns></returns>
+        public string GetWebUrl()
+        {
+            try
+            {
+                var endPointType = EndpointType.WebApplication;
+                return GetEndpointUrl(endPointType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting web url - check your crm connection details", ex);
+            }
+        }
+
+        private string GetEndpointUrl(EndpointType endPointType)
+        {
+            string result = null;
+
+            // Set the credentials.
+            var authCredentials = GetCredentials(CrmConfig.AuthenticationProviderType);
+
+            var serviceManagement =
+                ServiceConfigurationFactory.CreateManagement<IDiscoveryService>(
+                    new Uri(CrmConfig.DiscoveryServiceAddress));
+
+            // Get the discovery service proxy.
+            using (var discoveryProxy =
+                GetProxy<IDiscoveryService, DiscoveryServiceProxy>(serviceManagement, authCredentials))
+            {
+                // Obtain organization information from the Discovery service. 
+                if (discoveryProxy != null)
+                {
+                    // Obtain information about the organizations that the system user belongs to.
+                    var orgs = DiscoverOrganizations(discoveryProxy);
+                    // Obtains the Web address (Uri) of the target organization.
+                    result = FindOrganization(CrmConfig.OrganizationUniqueName,
+                        orgs.ToArray()).Endpoints[endPointType];
+                }
+            }
+
+            return result;
         }
 
         public DiscoveryServiceProxy GetDiscoveryService()
