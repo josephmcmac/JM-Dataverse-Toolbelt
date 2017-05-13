@@ -1,25 +1,14 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Command1.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
-using JosephM.XRM.VSIX.Dialogs;
-using JosephM.XRM.VSIX.Utilities;
-using EnvDTE;
-using System.Collections.Generic;
-using System.Windows;
-using JosephM.Core.Extentions;
-using JosephM.Xrm.ImportExporter.Service;
-using System.Linq;
-using JosephM.Record.Xrm.XrmRecord;
+﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.FieldType;
-using JosephM.Application.ViewModel.Dialog;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.ImportExporter.Service;
+using JosephM.XRM.VSIX.Dialogs;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.XRM.VSIX.Commands.ImportCsvs
 {
-    internal sealed class ImportCsvsCommand : SolutionItemCommandBase
+    internal sealed class ImportCsvsCommand : SolutionItemCommandBase<ImportCsvsCommand>
     {
         public override IEnumerable<string> ValidExtentions { get { return new[] { "csv" }; } }
 
@@ -28,32 +17,7 @@ namespace JosephM.XRM.VSIX.Commands.ImportCsvs
             get { return 0x0108; }
         }
 
-        private ImportCsvsCommand(XrmPackage package)
-            : base(package)
-        {
-        }
-
-        public static ImportCsvsCommand Instance { get; private set; }
-
-
-        public static void Initialize(XrmPackage package)
-        {
-            Instance = new ImportCsvsCommand(package);
-        }
-
-        public override void MenuItemCallback(object sender, EventArgs e)
-        {
-            try
-            {
-                DoDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.DisplayString());
-            }
-        }
-
-        private void DoDialog()
+        public override void DoDialog()
         {
             var files = GetSelectedFileNamesQualified();
 

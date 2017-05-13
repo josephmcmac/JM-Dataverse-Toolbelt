@@ -1,5 +1,6 @@
 ﻿using EnvDTE;
 using EnvDTE80;
+using JosephM.Core.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Utilities;
 using Microsoft.VisualStudio.Shell;
@@ -7,31 +8,37 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Windows;
 
 namespace JosephM.XRM.VSIX.Commands
 {
-    internal abstract class CommandBase
+    internal abstract class CommandBase<T>
+        where T : CommandBase<T>, new()
     {
-        protected XrmPackage package;
+        public static T Instance { get; set; }
 
-        protected CommandBase(XrmPackage package)
+        private XrmPackage XrmPackage { get; set; }
+
+        public static void Initialize(XrmPackage package)
         {
-            if (package == null)
+            Instance = new T()
             {
+                XrmPackage = package
+            };
+            if (package == null)
                 throw new ArgumentNullException("package");
-            }
 
-            this.package = package;
+            Instance.XrmPackage = package;
 
             OleMenuCommandService commandService =
-                this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+                Instance.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                MenuCommandId = new CommandID(new Guid(CommandSetId), CommandId);
-                MenuItem = new OleMenuCommand(this.MenuItemCallback, MenuCommandId);
-                commandService.AddCommand(MenuItem);
+                Instance.MenuCommandId = new CommandID(new Guid(Instance.CommandSetId), Instance.CommandId);
+                Instance.MenuItem = new OleMenuCommand(Instance.MenuItemCallback, Instance.MenuCommandId);
+                commandService.AddCommand(Instance.MenuItem);
 
-                MenuItem.BeforeQueryStatus += menuCommand_BeforeQueryStatus;
+                Instance.MenuItem.BeforeQueryStatus += Instance.menuCommand_BeforeQueryStatus;
             }
         }
 
@@ -47,13 +54,25 @@ namespace JosephM.XRM.VSIX.Commands
         /// </summary>
         protected IServiceProvider ServiceProvider
         {
-            get { return this.package; }
+            get { return XrmPackage; }
         }
 
         public OleMenuCommand MenuItem { get; set; }
         public CommandID MenuCommandId { get; private set; }
 
-        public abstract void MenuItemCallback(object sender, EventArgs e);
+        public void MenuItemCallback(object sender, EventArgs e)
+        {
+            try
+            {
+                DoDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.DisplayString());
+            }
+        }
+
+        public abstract void DoDialog();
 
         protected void SetVisible()
         {
@@ -115,12 +134,12 @@ namespace JosephM.XRM.VSIX.Commands
 
         protected XrmRecordService GetXrmRecordService()
         {
-            return package.GetXrmRecordService();
+            return XrmPackage.GetXrmRecordService();
         }
 
         protected IVisualStudioService GetVisualStudioService()
         {
-            return package.GetVisualStudioService();
+            return XrmPackage.GetVisualStudioService();
         }
 
         protected string GetFile(string getFileName)

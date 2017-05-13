@@ -5,15 +5,11 @@ using EnvDTE;
 
 namespace JosephM.XRM.VSIX.Commands
 {
-    abstract class SolutionItemCommandBase : CommandBase
+    abstract class SolutionItemCommandBase<T> : CommandBase<T>
+        where T : CommandBase<T>, new()
     {
         public virtual IEnumerable<string> ValidFileNames { get { return null; } }
         public abstract IEnumerable<string> ValidExtentions { get; }
-
-        protected SolutionItemCommandBase(XrmPackage package)
-            : base(package)
-        {
-        }
 
         protected override void menuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {

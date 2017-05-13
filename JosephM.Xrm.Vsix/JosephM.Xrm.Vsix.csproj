@@ -68,6 +68,9 @@
     <Compile Include="Commands\ManagePluginTriggers\ManagePluginTriggersCommand.cs" />
     <Compile Include="Commands\ManagePluginTriggers\ManagePluginTriggersDialog.cs" />
     <Compile Include="Commands\ManagePluginTriggers\PluginTrigger.cs" />
+    <Compile Include="Commands\OpenWeb\OpenCrmSolutionCommand.cs" />
+    <Compile Include="Commands\OpenWeb\OpenCrmAdvancedFindCommand.cs" />
+    <Compile Include="Commands\OpenWeb\OpenCrmWebCommand.cs" />
     <Compile Include="Commands\RefreshConnection\ConnectionEntryDialog.cs" />
     <Compile Include="Commands\RefreshConnection\RefreshConnectionCommand.cs" />
     <Compile Include="Commands\RefreshSchema\RefreshSchemaCommand.cs" />

@@ -1,55 +1,22 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Command1.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
-using JosephM.XRM.VSIX.Dialogs;
-using JosephM.XRM.VSIX.Utilities;
-using JosephM.Application.ViewModel.Dialog;
-using JosephM.Xrm.ImportExporter.Service;
+﻿using JosephM.Application.ViewModel.Dialog;
+using JosephM.Core.FieldType;
 using JosephM.ObjectMapping;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Core.FieldType;
-using System.Windows;
-using JosephM.Core.Extentions;
+using JosephM.Xrm.ImportExporter.Service;
+using JosephM.XRM.VSIX.Dialogs;
+using JosephM.XRM.VSIX.Utilities;
+using System;
 
 namespace JosephM.XRM.VSIX.Commands.GetSolution
 {
-    internal sealed class GetSolutionCommand : CommandBase
+    internal sealed class GetSolutionCommand : CommandBase<GetSolutionCommand>
     {
         public override int CommandId
         {
             get { return 0x0107; }
         }
 
-        private GetSolutionCommand(XrmPackage package)
-            : base(package)
-        {
-        }
-
-        public static GetSolutionCommand Instance { get; private set; }
-
-
-        public static void Initialize(XrmPackage package)
-        {
-            Instance = new GetSolutionCommand(package);
-        }
-
-        public override void MenuItemCallback(object sender, EventArgs e)
-        {
-            try
-            {
-                DoDialog();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.DisplayString());
-            }
-        }
-
-        private void DoDialog()
+        public override void DoDialog()
         {
             var settings = VsixUtility.GetPackageSettings(GetDte2());
             if (settings == null)
