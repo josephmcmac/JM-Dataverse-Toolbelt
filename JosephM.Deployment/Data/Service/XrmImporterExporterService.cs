@@ -210,6 +210,8 @@ namespace JosephM.Xrm.ImportExporter.Service
             ).ToList();
             if (type == "workflow")
                 conditions.Add(new ConditionExpression("type", ConditionOperator.Equal, XrmPicklists.WorkflowType.Definition));
+            if (type == Entities.kbarticle)
+                conditions.Add(new ConditionExpression("islatestversion", ConditionOperator.Equal, true));
             return XrmService.RetrieveAllAndClauses(type, conditions, new String[0]);
         }
 
