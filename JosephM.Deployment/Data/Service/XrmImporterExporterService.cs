@@ -210,7 +210,9 @@ namespace JosephM.Xrm.ImportExporter.Service
             ).ToList();
             if (type == "workflow")
                 conditions.Add(new ConditionExpression("type", ConditionOperator.Equal, XrmPicklists.WorkflowType.Definition));
-            if (type == Entities.kbarticle)
+            if (type == "account" || type == "contact")
+                conditions.Add(new ConditionExpression("merged", ConditionOperator.NotEqual, true));
+            if (type == "knowledgearticle")
                 conditions.Add(new ConditionExpression("islatestversion", ConditionOperator.Equal, true));
             return XrmService.RetrieveAllAndClauses(type, conditions, new String[0]);
         }
@@ -802,6 +804,8 @@ namespace JosephM.Xrm.ImportExporter.Service
                 var conditions = new List<ConditionExpression>();
                 if (type == "list")
                     conditions.Add(new ConditionExpression("type", ConditionOperator.Equal, XrmPicklists.ListType.Dynamic));
+                if (type == "knowledgearticle")
+                    conditions.Add(new ConditionExpression("islatestversion", ConditionOperator.Equal, true));
                 //doesn't work for too many notes
                 //should have option on each or all entities for notes maybe
                 IEnumerable<Entity> entities;
@@ -936,6 +940,11 @@ namespace JosephM.Xrm.ImportExporter.Service
                     var activeStates = new List<int>(new []{ XrmPicklists.State.Active });
                     if (entity.LogicalName == "product")
                         activeStates.AddRange(new[] { 2, 3 });//draft and under revision for latest crm releases
+                    if (entity.LogicalName == "knowledgearticle")
+                    {
+                        activeStates.Clear();
+                        activeStates.AddRange(new[] { 1, 2, 3 });//draft and under revision for latest crm releases
+                    }
                     if (!activeStates.Contains(entity.GetOptionSetValue("statecode")))
                         return true;
                 }
