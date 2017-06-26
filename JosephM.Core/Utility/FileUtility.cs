@@ -18,6 +18,15 @@ namespace JosephM.Core.Utility
                 }
         }
 
+        public static void DeleteSubFolders(string folder)
+        {
+            if (Directory.Exists(folder))
+                foreach (var subFolder in Directory.GetDirectories(folder))
+                {
+                    Directory.Delete(subFolder);
+                }
+        }
+
         public static IEnumerable<string> GetFiles(string folder)
         {
             return Directory.GetFiles(folder);

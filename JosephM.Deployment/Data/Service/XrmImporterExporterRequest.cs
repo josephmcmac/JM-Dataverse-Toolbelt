@@ -13,6 +13,7 @@ namespace JosephM.Xrm.ImportExporter.Service
     [Group(Sections.Main, true, 10)]
     [Group(Sections.CsvImport, true, 20)]
     [Group(Sections.IncludeWithExportedRecords, true, 30)]
+    [Group(Sections.Misc, true, 40)]
     [DisplayName("Data Import/Export")]
     public class XrmImporterExporterRequest : ServiceRequestBase
     {
@@ -64,6 +65,12 @@ namespace JosephM.Xrm.ImportExporter.Service
         [PropertyInContextByPropertyValue("ImportExportTask", Service.ImportExportTask.ImportCsvs)]
         public DateFormat DateFormat { get; set; }
 
+        [Group(Sections.Misc)]
+        [DisplayOrder(400)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValues("ImportExportTask", new object[] { Service.ImportExportTask.ImportCsvs, Service.ImportExportTask.ImportXml })]
+        public bool MaskEmails { get; set; }
+
         [DisplayOrder(200)]
         [Group(Sections.IncludeWithExportedRecords)]
         [DisplayName("Include Notes Attached To Exported Records")]
@@ -100,6 +107,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             public const string Main = "Main";
             public const string CsvImport = "CSV Import Options";
+            public const string Misc = "Misc";
             public const string IncludeWithExportedRecords = "Options To Include With Exported Records";
         }
     }

@@ -2072,6 +2072,8 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 metadata.IsActivity = isActivityType;
                 if (!String.IsNullOrWhiteSpace(description))
                     metadata.Description = new Label(description, 1033);
+                else
+                    metadata.Description = new Label(displayCollectionName, 1033);
 
                 if (exists)
                 {
