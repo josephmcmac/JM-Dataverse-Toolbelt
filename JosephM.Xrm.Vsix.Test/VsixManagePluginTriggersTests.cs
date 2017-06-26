@@ -33,11 +33,17 @@ namespace JosephM.Xrm.Vsix.Test
             triggersSubGrid.AddRow();
             var newRow = triggersSubGrid.GridRecords.First();
             PopulateRowForMessage(newRow, "Update");
+            var modeVm = newRow.GetFieldViewModel<PicklistFieldViewModel>(nameof(PluginTrigger.Mode));
+            modeVm.ValueObject = PluginTrigger.PluginMode.Asynchronous;
+            var stageVm = newRow.GetFieldViewModel<PicklistFieldViewModel>(nameof(PluginTrigger.Stage));
+            stageVm.ValueObject = PluginTrigger.PluginStage.PostEvent;
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
 
             var triggers = GetPluginTriggers(assemblyRecord);
             Assert.AreEqual(1, triggers.Count());
+            Assert.IsTrue(triggers.First().GetBoolField(Fields.sdkmessageprocessingstep_.asyncautodelete));
+
             //verify preimage created for update
             var image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage,
                 Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, triggers.First().Id);
