@@ -41,7 +41,7 @@ namespace JosephM.CustomisationImporter.Service
         [RequiredProperty]
         [Group(Sections.Solution)]
         [ReferencedType(Xrm.Schema.Entities.solution)]
-        [UsePicklist]
+        [UsePicklist(Xrm.Schema.Fields.solution_.uniquename)]
         [LookupCondition(Xrm.Schema.Fields.solution_.ismanaged, false)]
         [LookupCondition(Xrm.Schema.Fields.solution_.isvisible, true)]
         [LookupCondition(Xrm.Schema.Fields.solution_.uniquename, ConditionType.NotEqual, "default")]

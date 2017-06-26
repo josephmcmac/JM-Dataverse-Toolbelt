@@ -7,6 +7,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Attributes;
+using JosephM.Xrm.Schema;
 
 namespace JosephM.Prism.XrmTestModule.DebugModule
 {
@@ -27,7 +28,7 @@ namespace JosephM.Prism.XrmTestModule.DebugModule
         [ReferencedType("solution")]
         [LookupCondition("ismanaged", false)]
         [LookupCondition("isvisible", true)]
-        [UsePicklist]
+        [UsePicklist(Fields.solution_.uniquename)]
         public Lookup SolutionPicklistActiveConnection { get; set; }
 
         [LookupConditionFor("SolutionPicklistActiveConnection", "uniquename")]
@@ -43,7 +44,7 @@ namespace JosephM.Prism.XrmTestModule.DebugModule
             [ReferencedType("solution")]
             [LookupCondition("ismanaged", false)]
             [LookupCondition("isvisible", true)]
-            [UsePicklist]
+            [UsePicklist(Fields.solution_.uniquename)]
             public Lookup SolutionPicklistActiveConnection { get; set; }
         }
     }

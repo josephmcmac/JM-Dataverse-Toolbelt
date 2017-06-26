@@ -70,7 +70,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected override IEnumerable<ReferencePicklistItem> GetPicklistOptions()
         {
             return GetSearchResults()
-                .Select(r => new ReferencePicklistItem(r, r.GetStringField(LookupService.GetPrimaryField(r.Type))))
+                .Select(r => new ReferencePicklistItem(r, r.GetStringField(FormService.GetPicklistDisplayField(FieldName, GetRecordType(), LookupService, RecordTypeToLookup))))
                 .ToArray();
         }
 
