@@ -18,7 +18,7 @@ namespace $safeprojectname$
     [DeploymentItem("solution.xrmconnection")]
     [TestClass]
     public abstract class XrmTest
-    {
+    { 
         private Entity _transactionCurrency;
 
         public Entity TransactionCurrency
@@ -107,10 +107,10 @@ namespace $safeprojectname$
             entity.SetField("firstname", "Test Script");
             entity.SetField("lastname", DateTime.Now.ToFileTime().ToString());
             entity.SetField("fax", "0999999999fax");
-            entity.SetField("emailaddress1", "testemail@ntaadev.com");
+            entity.SetField("emailaddress1", "testemail@fakemail.com");
             if (entity.GetField("address1_line1") == null)
             {
-                entity.SetField("address1_line1", "9/455 Bourke St");
+                entity.SetField("address1_line1", "100 Collins St");
                 entity.SetField("address1_city", "Melbourne");
                 entity.SetField("address1_stateorprovince", "VIC");
                 entity.SetField("address1_postalcode", "3000");
@@ -197,7 +197,7 @@ namespace $safeprojectname$
                 xrmService = XrmService;
             var primaryField = xrmService.GetPrimaryNameField(entity.LogicalName);
             if (!entity.Contains(primaryField))
-                entity.SetField(primaryField, "Test Scripted Record".Left(xrmService.GetMaxLength(primaryField, entity.LogicalName)));
+                entity.SetField(primaryField, ("Test Scripted Record" + DateTime.UtcNow.ToFileTime()).Left(xrmService.GetMaxLength(primaryField, entity.LogicalName)));
             if (entity.LogicalName == "contact" && !entity.Contains("firstname"))
                 entity.SetField("firstname", "Test");
             if (entity.LogicalName == "lead" && !entity.Contains("firstname"))
@@ -255,8 +255,8 @@ namespace $safeprojectname$
             var query = XrmService.BuildQuery(entityType, new string[] { },
                 new[]
                 {
-                        new ConditionExpression("createdby", ConditionOperator.Equal, CurrentUserId),
-                        new ConditionExpression("createdon", ConditionOperator.Today)
+                    new ConditionExpression("createdby", ConditionOperator.Equal, CurrentUserId),
+                    new ConditionExpression("createdon", ConditionOperator.Today)
                 }, null);
             var entities = XrmServiceAdmin.RetrieveAll(query);
             foreach (var entity in entities)
@@ -403,110 +403,110 @@ namespace $safeprojectname$
             get { return null; }
         }
 
-        public void UpdateSql(Entity target, IEnumerable<string> fieldsToUpdate)
-        {
-            UpdateSql(XrmService.ReplicateWithFields(target, fieldsToUpdate));
-        }
+        //public void UpdateSql(Entity target, IEnumerable<string> fieldsToUpdate)
+        //{
+        //    UpdateSql(XrmService.ReplicateWithFields(target, fieldsToUpdate));
+        //}
 
         private string WrapSqlString(string astring)
         {
             return string.Format("'{0}'", astring);
         }
 
-        public void UpdateSql(Entity target)
-        {
-            var type = target.LogicalName;
-            var table = type; // + "ExtensionBase";
+        //public void UpdateSql(Entity target)
+        //{
+        //    var type = target.LogicalName;
+        //    var table = type; // + "ExtensionBase";
 
-            var fieldsToUpdate = new List<KeyValuePair<string, string>>();
-            foreach (var field in target.GetFieldsInEntity())
-            {
-                var fieldType = XrmService.GetFieldType(field, type);
-                var value = target.GetField(field);
-                if (value == null)
-                {
-                    if (fieldType == AttributeTypeCode.Money)
-                    {
-                        fieldsToUpdate.Add(new KeyValuePair<string, string>(field + "_base", "null"));
-                    }
-                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field, "null"));
-                }
-                else
-                {
-                    switch (fieldType)
-                    {
-                        case AttributeTypeCode.DateTime:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
-                                SqlProvider.ToSqlDateString((DateTime)value)));
-                            break;
-                        case AttributeTypeCode.Money:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
-                                XrmEntity.GetMoneyValue(value).ToString(CultureInfo.InvariantCulture)));
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field + "_base",
-                                XrmEntity.GetMoneyValue(value).ToString(CultureInfo.InvariantCulture)));
-                            break;
-                        case AttributeTypeCode.Lookup:
-                            var id = XrmEntity.GetLookupGuid(value);
-                            if (!id.HasValue)
-                                throw new NullReferenceException("error no id in " + field);
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
-                                WrapSqlString(id.Value.ToString())));
-                            break;
-                        case AttributeTypeCode.Picklist:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
-                                XrmEntity.GetOptionSetValue(value).ToString(CultureInfo.InvariantCulture)));
-                            break;
-                        case AttributeTypeCode.Status:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
-                                XrmEntity.GetOptionSetValue(value).ToString(CultureInfo.InvariantCulture)));
-                            break;
-                        case AttributeTypeCode.Integer:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field, value.ToString()));
-                            break;
-                        case AttributeTypeCode.Decimal:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field, value.ToString()));
-                            break;
-                        case AttributeTypeCode.Boolean:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
-                                XrmEntity.GetBoolean(value) ? "1" : "0"));
-                            break;
-                        case AttributeTypeCode.String:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
-                                SqlProvider.ToSqlString((string)value)));
-                            break;
-                        case AttributeTypeCode.Memo:
-                            fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
-                                SqlProvider.ToSqlString((string)value)));
-                            break;
-                        case AttributeTypeCode.Uniqueidentifier:
-                            break;
-                        default:
-                            throw new NotImplementedException("No update logic implemented for field type " + fieldType);
-                    }
-                }
-            }
-            var setStrings = string.Join(",",
-                fieldsToUpdate.Select(kv => string.Format("{0} = {1}", kv.Key, kv.Value)));
-            var primaryKey = XrmService.GetPrimaryKeyField(target.LogicalName);
-            var primaryKeySql = SqlProvider.ToSqlString(target.Id);
-            var sql = string.Format("update {0} set {1} where {2} = {3}", table, setStrings, primaryKey, primaryKeySql);
-            SqlProvider.ExecuteNonQuery(sql);
-        }
+        //    var fieldsToUpdate = new List<KeyValuePair<string, string>>();
+        //    foreach (var field in target.GetFieldsInEntity())
+        //    {
+        //        var fieldType = XrmService.GetFieldType(field, type);
+        //        var value = target.GetField(field);
+        //        if (value == null)
+        //        {
+        //            if (fieldType == AttributeTypeCode.Money)
+        //            {
+        //                fieldsToUpdate.Add(new KeyValuePair<string, string>(field + "_base", "null"));
+        //            }
+        //            fieldsToUpdate.Add(new KeyValuePair<string, string>(field, "null"));
+        //        }
+        //        else
+        //        {
+        //            switch (fieldType)
+        //            {
+        //                case AttributeTypeCode.DateTime:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
+        //                        SqlOledbProvider.ToSqlDateString((DateTime)value)));
+        //                    break;
+        //                case AttributeTypeCode.Money:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
+        //                        XrmEntity.GetMoneyValue(value).ToString(CultureInfo.InvariantCulture)));
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field + "_base",
+        //                        XrmEntity.GetMoneyValue(value).ToString(CultureInfo.InvariantCulture)));
+        //                    break;
+        //                case AttributeTypeCode.Lookup:
+        //                    var id = XrmEntity.GetLookupGuid(value);
+        //                    if (!id.HasValue)
+        //                        throw new NullReferenceException("error no id in " + field);
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
+        //                        WrapSqlString(id.Value.ToString())));
+        //                    break;
+        //                case AttributeTypeCode.Picklist:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
+        //                        XrmEntity.GetOptionSetValue(value).ToString(CultureInfo.InvariantCulture)));
+        //                    break;
+        //                case AttributeTypeCode.Status:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
+        //                        XrmEntity.GetOptionSetValue(value).ToString(CultureInfo.InvariantCulture)));
+        //                    break;
+        //                case AttributeTypeCode.Integer:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field, value.ToString()));
+        //                    break;
+        //                case AttributeTypeCode.Decimal:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field, value.ToString()));
+        //                    break;
+        //                case AttributeTypeCode.Boolean:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
+        //                        XrmEntity.GetBoolean(value) ? "1" : "0"));
+        //                    break;
+        //                case AttributeTypeCode.String:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
+        //                        SqlOledbProvider.ToSqlString((string)value)));
+        //                    break;
+        //                case AttributeTypeCode.Memo:
+        //                    fieldsToUpdate.Add(new KeyValuePair<string, string>(field,
+        //                        SqlOledbProvider.ToSqlString((string)value)));
+        //                    break;
+        //                case AttributeTypeCode.Uniqueidentifier:
+        //                    break;
+        //                default:
+        //                    throw new NotImplementedException("No update logic implemented for field type " + fieldType);
+        //            }
+        //        }
+        //    }
+        //    var setStrings = string.Join(",",
+        //        fieldsToUpdate.Select(kv => string.Format("{0} = {1}", kv.Key, kv.Value)));
+        //    var primaryKey = XrmService.GetPrimaryKeyField(target.LogicalName);
+        //    var primaryKeySql = SqlOledbProvider.ToSqlString(target.Id);
+        //    var sql = string.Format("update {0} set {1} where {2} = {3}", table, setStrings, primaryKey, primaryKeySql);
+        //    SqlProvider.ExecuteNonQuery(sql);
+        //}
 
 
-        private SqlProvider _sqlProvider;
+        //private SqlOledbProvider _sqlProvider;
 
-        public SqlProvider SqlProvider
-        {
-            get
-            {
-                if (_sqlProvider == null)
-                {
-                    _sqlProvider = new SqlProvider(SqlServer, SqlDatabase);
-                }
-                return _sqlProvider;
-            }
-        }
+        //public SqlOledbProvider SqlProvider
+        //{
+        //    get
+        //    {
+        //        if (_sqlProvider == null)
+        //        {
+        //            _sqlProvider = new SqlOledbProvider(SqlServer, SqlDatabase);
+        //        }
+        //        return _sqlProvider;
+        //    }
+        //}
 
         public void WaitTillTrue(Func<bool> assertInTime, int seconds)
         {
@@ -538,6 +538,10 @@ namespace $safeprojectname$
                         _testContact = XrmService.Retrieve("contact", contactId.Value);
                         _testContact.SetField("firstname", "TEST SCRIPT");
                         _testContact.SetField("lastname", "CONTACT");
+                        _testContact.SetField("salutation", "Mr");
+                        _testContact.SetField("nickname", "iTest");
+                        _testContact.SetField("birthdate", new DateTime(1080,11,15));
+                        _testContact.SetField("gendercode", new OptionSetValue(1));
                         _testContact = UpdateFieldsAndRetreive(_testContact, "firstname", "lastname");
                     }
                 }
@@ -583,6 +587,10 @@ namespace $safeprojectname$
                 }
                 return _testContactAccount;
             }
+            set
+            {
+                _testContactAccount = value;
+            }
         }
 
         public virtual Entity UpdateFieldsAndRetreive(XrmService xrmService, Entity entity, params string[] fieldsToUpdate)
@@ -605,10 +613,10 @@ namespace $safeprojectname$
             entity.SetField("name", "Test Account - " + DateTime.Now.ToLocalTime());
             entity.SetField("fax", "0999999999fax");
             entity.SetField("telephone1", "0999999999");
-            entity.SetField("emailaddress1", "testemail@ntaadev.com");
+            entity.SetField("emailaddress1", "testfakeemail@fakeemailcrmdev.com");
             if (entity.GetField("address1_line1") == null)
             {
-                entity.SetField("address1_line1", "9/455 Bourke St");
+                entity.SetField("address1_line1", "100 Collins St");
                 entity.SetField("address1_city", "Melbourne");
                 entity.SetField("address1_stateorprovince", "VIC");
                 entity.SetField("address1_postalcode", "3000");
@@ -682,8 +690,8 @@ namespace $safeprojectname$
             var firstContactConnections = XrmService.RetrieveAllAndClauses("connection",
                 new[]
                 {
-                        new ConditionExpression("record1id", ConditionOperator.Equal,
-                            entity.Id)
+                    new ConditionExpression("record1id", ConditionOperator.Equal,
+                        entity.Id)
                 });
             return firstContactConnections;
         }
@@ -724,8 +732,8 @@ namespace $safeprojectname$
             var query = XrmService.BuildQuery("teammembership", new string[0],
                 new[]
                 {
-                        new ConditionExpression("systemuserid", ConditionOperator.Equal, userId),
-                        new ConditionExpression("teamid", ConditionOperator.Equal, teamId),
+                    new ConditionExpression("systemuserid", ConditionOperator.Equal, userId),
+                    new ConditionExpression("teamid", ConditionOperator.Equal, teamId),
                 }, null);
             return XrmService.RetrieveFirst(query) != null;
         }
@@ -787,9 +795,9 @@ namespace $safeprojectname$
                         var target = XrmService.GetLookupTargetEntity(field, type);
                         var typesToExlcude = new[]
                     {
-                                    "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
-                                    "campaign", "territory"
-                                };
+                                "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
+                                "campaign", "territory"
+                            };
                         if (!typesToExlcude.Contains(target))
                             entity.SetField(field, CreateTestRecord(target).ToEntityReference());
                         break;
@@ -845,6 +853,20 @@ namespace $safeprojectname$
                         break;
                     }
             }
+        }
+
+        private void DeleteMultiple(IEnumerable<Guid> ids, string type)
+        {
+            var responses = XrmServiceAdmin.DeleteMultiple(ids.Select(g => new Entity(type) { Id = g }));
+            if (responses.Any(r => r.Fault != null))
+                Assert.Fail(responses.First(r => r.Fault != null).Fault.Message);
+        }
+
+        public void DeleteMultiple(IEnumerable<Entity> entities)
+        {
+            var responses = XrmServiceAdmin.DeleteMultiple(entities);
+            if (responses.Any(r => r.Fault != null))
+                Assert.Fail(responses.First(r => r.Fault != null).Fault.Message);
         }
     }
 }

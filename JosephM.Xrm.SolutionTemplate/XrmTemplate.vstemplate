@@ -14,14 +14,17 @@
   </TemplateData>
   <TemplateContent>
     <ProjectCollection>
-      <ProjectTemplateLink ProjectName="$projectname$.Plugins.Test" CopyParameters="true">
-        JosephM.XRM.Plugins.Test\MyTemplate.vstemplate
-      </ProjectTemplateLink>
       <ProjectTemplateLink ProjectName="$projectname$.Plugins" CopyParameters="true">
-        JosephM.XRM.Plugins\MyTemplate.vstemplate
+        JosephM.Xrm.Plugins\MyTemplate.vstemplate
+      </ProjectTemplateLink>
+      <ProjectTemplateLink ProjectName="$projectname$.Plugins.Test" CopyParameters="true">
+        JosephM.Xrm.Plugins.Test\MyTemplate.vstemplate
       </ProjectTemplateLink>
       <ProjectTemplateLink ProjectName="$projectname$.WebResources" CopyParameters="true">
-        JosephM.XRM.WebResources\MyTemplate.vstemplate
+        JosephM.Xrm.WebResources\MyTemplate.vstemplate
+      </ProjectTemplateLink>
+      <ProjectTemplateLink ProjectName="$projectname$.Console" CopyParameters="true">
+        JosephM.Xrm.Console\MyTemplate.vstemplate
       </ProjectTemplateLink>
     </ProjectCollection>
   </TemplateContent>

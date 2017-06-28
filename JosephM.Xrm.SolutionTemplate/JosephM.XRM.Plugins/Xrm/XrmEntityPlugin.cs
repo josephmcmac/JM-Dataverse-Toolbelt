@@ -80,6 +80,26 @@ namespace $safeprojectname$.Xrm
                     return TargetEntityReference.Id;
                 else if (Context.InputParameters.Contains("EmailId") && Context.InputParameters["EmailId"] is Guid)
                     return (Guid)Context.InputParameters["EmailId"];
+                else if(MessageName == PluginMessage.Cancel)
+                {
+                    var orderClose = Context.InputParameters["OrderClose"] as Entity;
+                    if (orderClose == null)
+                        throw new NullReferenceException("Could not extract OrderClose in " + PluginMessage.Cancel);
+                    var salesOrderId = orderClose.GetLookupGuid("salesorderid");
+                    if (!salesOrderId.HasValue)
+                        throw new NullReferenceException("Could not extract salesOrderId in OrderClose");
+                    return salesOrderId.Value;
+                }
+                else if (MessageName == PluginMessage.Win || MessageName == PluginMessage.Lose)
+                {
+                    var oppClose = Context.InputParameters["OpportunityClose"] as Entity;
+                    if (oppClose == null)
+                        throw new NullReferenceException("Could not extract OpportunityClose in " + MessageName);
+                    var opportunityId = oppClose.GetLookupGuid("opportunityid");
+                    if (!opportunityId.HasValue)
+                        throw new NullReferenceException("Could not extract opportunityid in OpportunityClose");
+                    return opportunityId.Value;
+                }
                 else
                     throw new InvalidPluginExecutionException("Error Getting Target Id");
             }
@@ -99,6 +119,8 @@ namespace $safeprojectname$.Xrm
                     return TargetEntityReference.LogicalName;
                 else if (MessageName == PluginMessage.Send)
                     return "email";
+                else if (MessageName == PluginMessage.Win || MessageName == PluginMessage.Lose)
+                    return "opportunity";
                 else
                     throw new InvalidPluginExecutionException("Error Getting TargetType");
             }

@@ -788,5 +788,17 @@ namespace $safeprojectname$.Xrm
             throw new Exception(string.Format("Field {0} Of Unexpected Type For Method {1}", fieldName,
                 value.GetType().Name));
         }
+
+        public static void RemoveFields(this Entity entity, IEnumerable<string> fieldNames)
+        {
+            if (fieldNames != null)
+            {
+                foreach (var field in fieldNames)
+                {
+                    if (entity.Contains(field))
+                        entity.Attributes.Remove(field);
+                }
+            }
+        }
     }
 }

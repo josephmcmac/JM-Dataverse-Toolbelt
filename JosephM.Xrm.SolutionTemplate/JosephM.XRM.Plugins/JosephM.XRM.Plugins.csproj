@@ -1,21 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{01DB6BF5-1FA7-46C2-87AC-850E12670ACD}</ProjectGuid>
+    <ProjectGuid>{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>$ext_safeprojectname$.Plugins</RootNamespace>
     <AssemblyName>$ext_safeprojectname$.Plugins</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,41 +29,36 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xrm.Sdk, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Xrm.Sdk, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
-    <Reference Include="System.Configuration" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$ext_jmobjprefix$PluginRegistration.cs" />
+    <Compile Include="$ext_jmobjprefix$Settings.cs" />
     <Compile Include="Aggregate\AggregateType.cs" />
     <Compile Include="Aggregate\XrmAggregate.cs" />
     <Compile Include="Aggregate\XrmLookupAggregate.cs" />
@@ -81,6 +71,7 @@
     <Compile Include="Core\DisplayOrder.cs" />
     <Compile Include="Core\EnumExtentions.cs" />
     <Compile Include="Core\ExcelFile.cs" />
+    <Compile Include="Core\ExcelUtility.cs" />
     <Compile Include="Core\ExceptionExtentions.cs" />
     <Compile Include="Core\File.cs" />
     <Compile Include="Core\FileMasks.cs" />
@@ -107,6 +98,7 @@
     <Compile Include="Core\RecordTypeFor.cs" />
     <Compile Include="Core\RegularExpressions.cs" />
     <Compile Include="Core\RequiredProperty.cs" />
+    <Compile Include="Core\SettingsFile.cs" />
     <Compile Include="Core\SqlException.cs" />
     <Compile Include="Core\SqlProvider.cs" />
     <Compile Include="Core\StreamExtentions.cs" />
@@ -116,13 +108,14 @@
     <Compile Include="Core\StringLocker.cs" />
     <Compile Include="Core\TypeExtentions.cs" />
     <Compile Include="Core\WebConfigManager.cs" />
-    <Compile Include="Services\$ext_jmobjprefix$Service.cs" />
-    <Compile Include="$ext_jmobjprefix$PluginRegistration.cs" />
-    <Compile Include="$ext_jmobjprefix$Settings.cs" />
+    <Compile Include="Extentions\XrmServiceExtentions.cs" />
+    <Compile Include="HtmlEmails\HtmlEmailGenerator.cs" />
+    <Compile Include="HtmlEmails\ProcessEntityResponseBase.cs" />
     <Compile Include="Plugins\$ext_jmobjprefix$EntityPluginBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.cs" />
-    <Compile Include="Workflow\$ext_jmobjprefix$WorkflowActivityBase.cs" />
+    <Compile Include="Services\$ext_jmobjprefix$Service.cs" />
+    <Compile Include="Workflows\$ext_jmobjprefix$WorkflowActivityBase.cs" />
     <Compile Include="Xrm\DeviceIdManager.cs" />
     <Compile Include="Xrm\ExceptionExtentions.cs" />
     <Compile Include="Xrm\IXrmConfiguration.cs" />
@@ -136,28 +129,17 @@
     <Compile Include="Xrm\XrmPlugin.cs" />
     <Compile Include="Xrm\XrmPluginRegistration.cs" />
     <Compile Include="Xrm\XrmService.cs" />
+    <Compile Include="Xrm\XrmSetting.cs" />
     <Compile Include="Xrm\XrmTraceController.cs" />
     <Compile Include="Xrm\XrmWorkflowActivityInstance.cs" />
     <Compile Include="Xrm\XrmWorkflowActivityInstanceBase.cs" />
     <Compile Include="Xrm\XrmWorkflowActivityRegistration.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Lib\Microsoft.Crm.Sdk.Proxy.dll" />
     <Content Include="Lib\Microsoft.Xrm.Sdk.dll" />
     <Content Include="Lib\Microsoft.Xrm.Sdk.Workflow.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

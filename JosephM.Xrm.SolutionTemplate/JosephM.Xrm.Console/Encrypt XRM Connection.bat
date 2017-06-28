@@ -1,0 +1,1 @@
+JosephM.Xrm.Console.exe -xrmsetting

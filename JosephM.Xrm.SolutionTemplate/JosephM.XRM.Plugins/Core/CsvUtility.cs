@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Linq;
 using System.Collections;
 using System.Data.OleDb;
 using System.Data;
 using System.IO;
-
 
 #endregion
 
@@ -18,7 +18,7 @@ namespace $safeprojectname$.Core
     public class CsvUtility
     {
         private const string CsvNewLine = @"
-    ";
+";
 
         public static void CreateCsv<T>(string path, string name, IEnumerable<T> objects)
         {

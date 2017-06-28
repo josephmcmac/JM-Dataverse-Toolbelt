@@ -5,7 +5,7 @@ namespace $safeprojectname$.Plugins
 {
     public class $ext_jmobjprefix$EntityPluginBase : XrmEntityPlugin
     {
-        //class for shared services or settings objects for plugins
+    //class for shared services or settings objects for plugins
         private $ext_jmobjprefix$Settings _settings;
         public $ext_jmobjprefix$Settings $ext_jmobjprefix$Settings
         {
@@ -23,7 +23,7 @@ namespace $safeprojectname$.Plugins
             get
             {
                 if (_service == null)
-                    _service = new $ext_jmobjprefix$Service(XrmService);
+                    _service = new $ext_jmobjprefix$Service(XrmService, $ext_jmobjprefix$Settings);
                 return _service;
             }
         }

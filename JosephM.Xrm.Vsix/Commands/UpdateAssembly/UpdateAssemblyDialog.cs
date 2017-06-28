@@ -13,12 +13,14 @@ namespace JosephM.XRM.VSIX.Commands.UpdateAssembly
     {
         public string AssemblyFile { get; set; }
         public XrmRecordService Service { get; set; }
+        public XrmPackageSettings PackageSettings { get; set; }
 
-        public UpdateAssemblyDialog(IDialogController dialogController, string assemblyFile, XrmRecordService xrmRecordService)
+        public UpdateAssemblyDialog(IDialogController dialogController, string assemblyFile, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
             : base(dialogController)
         {
             AssemblyFile = assemblyFile;
             Service = xrmRecordService;
+            PackageSettings = packageSettings;
         }
 
         protected override void LoadDialogExtention()
@@ -57,6 +59,11 @@ namespace JosephM.XRM.VSIX.Commands.UpdateAssembly
             {
                 throw new Exception("Error Updating Assembly", assemblyLoadResponse.Errors.Values.First());
             }
+            //add plugin assembly to the solution
+            var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
+            var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
+            VsixUtility.AddSolutionComponents(Service, PackageSettings, componentType, itemsToAdd);
+
             CompletionMessage = "Assembly Updated";
 
             LoadingViewModel.IsLoading = false;

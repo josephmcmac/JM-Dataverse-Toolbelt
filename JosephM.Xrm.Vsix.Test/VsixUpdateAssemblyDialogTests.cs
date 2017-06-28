@@ -11,10 +11,11 @@ namespace JosephM.Xrm.Vsix.Test
         public void VsixUpdateAssemblyDialogTest()
         {
             var packageSettings = GetPackageSettingsAddToSolution();
+            packageSettings.AddToSolution = false;
             DeployAssembly(packageSettings);
-
+            packageSettings.AddToSolution = true;
             var dialog = new UpdateAssemblyDialog(new FakeDialogController(new FakeApplicationController()),
-                GetTestPluginAssemblyFile(), XrmRecordService);
+                GetTestPluginAssemblyFile(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
         }

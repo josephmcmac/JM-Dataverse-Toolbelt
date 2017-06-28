@@ -56,7 +56,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     }
                 case ImportExportTask.ImportXml:
                     {
-                        ImportXml(request.Folder.FolderPath, controller, response);
+                        ImportXml(request.Folder.FolderPath, controller, response, request.MaskEmails);
                         break;
                     }
                 case ImportExportTask.ExportXml:
@@ -192,7 +192,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     response.AddResponseItem(new XrmImporterExporterResponseItem("Not Imported", csvFile, ex));
                 }
             }
-            DoImport(response, entities, controller);
+            DoImport(response, entities, controller, request.MaskEmails);
         }
 
         public string GetBaseTransactionId(IRecordService service)
@@ -286,11 +286,11 @@ namespace JosephM.Xrm.ImportExporter.Service
         }
 
         public void ImportXml(string folder, LogController controller,
-            XrmImporterExporterResponse response)
+            XrmImporterExporterResponse response, bool maskEmails = false)
         {
             var entities = LoadEntitiesFromXmlFiles(folder);
 
-            DoImport(response, entities, controller);
+            DoImport(response, entities, controller, maskEmails);
         }
 
         public IEnumerable<Entity> LoadEntitiesFromXmlFiles(string folder)
@@ -308,7 +308,7 @@ namespace JosephM.Xrm.ImportExporter.Service
             return entities;
         }
 
-        private void DoImport(XrmImporterExporterResponse response, IEnumerable<Entity> entities, LogController controller)
+        private void DoImport(XrmImporterExporterResponse response, IEnumerable<Entity> entities, LogController controller, bool maskEmails)
         {
             controller.LogLiteral("Preparing Import");
 
@@ -478,6 +478,20 @@ namespace JosephM.Xrm.ImportExporter.Service
                                 .Where(importFieldsForEntity.Contains));
                             if (fieldsToRetry.ContainsKey(thisEntity))
                                 fieldsToSet.RemoveAll(f => fieldsToRetry[thisEntity].Contains(f));
+
+                            if (maskEmails)
+                            {
+                                var emailFields = new[] { "emailaddress1", "emailaddress2", "emailaddress3" };
+                                foreach (var field in emailFields)
+                                {
+                                    var theEmail = thisEntity.GetStringField(field);
+                                    if (!string.IsNullOrWhiteSpace(theEmail))
+                                    {
+                                        thisEntity.SetField(field, theEmail.Replace("@", "_AT_") + "_fakecrmdevemail@example.com");
+                                    }
+                                }
+                            }
+
                             if (isUpdate)
                             {
                                 var existingRecord = existingMatchingIds.First();

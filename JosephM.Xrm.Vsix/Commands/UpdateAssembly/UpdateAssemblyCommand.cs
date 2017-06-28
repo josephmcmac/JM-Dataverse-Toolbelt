@@ -16,7 +16,7 @@ namespace JosephM.XRM.VSIX.Commands.UpdateAssembly
             if (!string.IsNullOrWhiteSpace(assemblyFile))
             {
                 var dialog = new UpdateAssemblyDialog(DialogUtility.CreateDialogController(), assemblyFile,
-                    GetXrmRecordService());
+                    GetXrmRecordService(), GetPackageSettings());
                 DialogUtility.LoadDialog(dialog);
             }
         }

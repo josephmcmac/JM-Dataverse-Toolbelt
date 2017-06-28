@@ -25,64 +25,64 @@ namespace $safeprojectname$.Core
     ///     </TestObject>
     /// </summary>
     public class AppConfigManager
-{
-    /// <summary>
-    ///     Creates A new Instance Of Type T and Loads Properties From app.config
-    /// </summary>
-    public T Resolve<T>() where T : new()
     {
-        var configObject = new T();
-        var type = configObject.GetType();
-        try
+        /// <summary>
+        ///     Creates A new Instance Of Type T and Loads Properties From app.config
+        /// </summary>
+        public T Resolve<T>() where T : new()
         {
+            var configObject = new T();
+            var type = configObject.GetType();
+            try
+            {
+                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var section = (CustomConfigurationSection)config.GetSection(type.Name);
+                var sectionFields = section.ConfigurationItems;
+
+                foreach (var property in configObject.GetType().GetProperties())
+                {
+                    try
+                    {
+                        var rawConfigString = sectionFields.GetValue(property.Name);
+                        configObject.SetPropertyByString(property.Name, rawConfigString);
+                    }
+                    // ReSharper disable once EmptyGeneralCatchClause
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ConfigurationErrorsException(
+                    string.Format(
+                        "Error Loading {0} Object From app.config. Ensure The Section Is Defined In 'configSections' With The Correct Type And Assembly Name e.g. type=\"JosephM.Core.AppConfig.CustomConfigurationSection, JosephM.Core\"",
+                        type.Name), ex);
+            }
+
+            return configObject;
+        }
+
+        /// <summary>
+        ///     Saves The Objects Values Into the Section For Its Type In app.config
+        /// </summary>
+        public void SetConfigurationSectionObject(object configObject)
+        {
+            var type = configObject.GetType();
+
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             var section = (CustomConfigurationSection)config.GetSection(type.Name);
             var sectionFields = section.ConfigurationItems;
 
-            foreach (var property in configObject.GetType().GetProperties())
+            foreach (var property in configObject.GetType().GetReadWriteProperties())
             {
-                try
-                {
-                    var rawConfigString = sectionFields.GetValue(property.Name);
-                    configObject.SetPropertyByString(property.Name, rawConfigString);
-                }
-                // ReSharper disable once EmptyGeneralCatchClause
-                catch (Exception)
-                {
-                }
+                var propertyValue = property.GetGetMethod().Invoke(configObject, new object[] { });
+                if (propertyValue is IEnumerable<string>)
+                    sectionFields.SetValue(property.Name, string.Join(",", (IEnumerable<string>)propertyValue));
+                else
+                    sectionFields.SetValue(property.Name, propertyValue);
             }
+            config.Save();
         }
-        catch (Exception ex)
-        {
-            throw new ConfigurationErrorsException(
-                string.Format(
-                    "Error Loading {0} Object From app.config. Ensure The Section Is Defined In 'configSections' With The Correct Type And Assembly Name e.g. type=\"JosephM.Core.AppConfig.CustomConfigurationSection, JosephM.Core\"",
-                    type.Name), ex);
-        }
-
-        return configObject;
     }
-
-    /// <summary>
-    ///     Saves The Objects Values Into the Section For Its Type In app.config
-    /// </summary>
-    public void SetConfigurationSectionObject(object configObject)
-    {
-        var type = configObject.GetType();
-
-        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        var section = (CustomConfigurationSection)config.GetSection(type.Name);
-        var sectionFields = section.ConfigurationItems;
-
-        foreach (var property in configObject.GetType().GetReadWriteProperties())
-        {
-            var propertyValue = property.GetGetMethod().Invoke(configObject, new object[] { });
-            if (propertyValue is IEnumerable<string>)
-                sectionFields.SetValue(property.Name, string.Join(",", (IEnumerable<string>)propertyValue));
-            else
-                sectionFields.SetValue(property.Name, propertyValue);
-        }
-        config.Save();
-    }
-}
 }

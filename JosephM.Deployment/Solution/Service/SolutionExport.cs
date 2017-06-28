@@ -3,6 +3,7 @@ using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Attributes;
+using JosephM.Xrm.Schema;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
@@ -30,7 +31,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         [LookupCondition("ismanaged", false)]
         [LookupCondition("isvisible", true)]
         [PropertyInContextByPropertyNotNull("Connection")]
-        [UsePicklist]
+        [UsePicklist(Fields.solution_.uniquename)]
         public Lookup Solution { get; set; }
 
         [Group(Sections.Solution)]

@@ -568,8 +568,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             {
                 if (!_cachedPicklist.ContainsKey(fieldName) || _cachedPicklist[fieldName].LookupService != lookupService)
                 {
+                    var displayField = GetPicklistDisplayField(fieldName, recordType, lookupService, recordTypeToLookup);
+
                     var picklist = lookupService.RetrieveAllAndClauses(recordTypeToLookup, conditions,
-                        new[] {lookupService.GetPrimaryField(recordTypeToLookup)});
+                        new[] { displayField });
                     var cache = new CachedPicklist(picklist, conditions, lookupService);
                     if (_cachedPicklist.ContainsKey(fieldName))
                         _cachedPicklist[fieldName] = cache;
@@ -578,6 +580,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 }
                 return _cachedPicklist[fieldName].Picklist;
             }
+        }
+
+        internal override string GetPicklistDisplayField(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
+        {
+            var picklistAttribute = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UsePicklist>();
+            return picklistAttribute != null && !string.IsNullOrWhiteSpace(picklistAttribute.OverrideDisplayField)
+                ? picklistAttribute.OverrideDisplayField
+                : lookupService.GetPrimaryField(recordTypeToLookup);
         }
 
         internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)

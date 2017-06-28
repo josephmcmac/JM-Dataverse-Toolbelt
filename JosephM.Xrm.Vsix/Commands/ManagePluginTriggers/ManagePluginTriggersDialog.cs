@@ -181,6 +181,7 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
                 record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageid, item.Message, XrmRecordService);
                 if (item.Id != null)
                     record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid, item.Id, XrmRecordService);
+                record.SetField(Fields.sdkmessageprocessingstep_.asyncautodelete, item.Mode == PluginTrigger.PluginMode.Asynchronous, XrmRecordService);
                 unloadedObjects.Add(record);
             }
 

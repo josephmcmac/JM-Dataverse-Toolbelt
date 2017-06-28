@@ -24,8 +24,22 @@ namespace $safeprojectname$.Core
             Console.WriteLine(output);
         }
 
+        private int LastPercentProgress { get; set; }
         public void UpdateProgress(int countCompleted, int countOutOf, string message)
         {
+            var percentProgress = Convert.ToInt32(Convert.ToDecimal(countCompleted) / Convert.ToDecimal(countOutOf) * (decimal)100);
+            if (percentProgress < LastPercentProgress)
+                LastPercentProgress = 0;
+            while (LastPercentProgress < percentProgress)
+            {
+                LastPercentProgress++;
+                if (LastPercentProgress % 10 == 0)
+                    Console.Write(LastPercentProgress + "%");
+                else
+                    Console.Write(".");
+            }
+            if (LastPercentProgress == 100)
+                Console.WriteLine();
         }
 
         public void LogDetail(string detail)

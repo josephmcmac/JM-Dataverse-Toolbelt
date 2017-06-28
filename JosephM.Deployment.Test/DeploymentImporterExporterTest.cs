@@ -292,6 +292,89 @@ namespace JosephM.Xrm.ImporterExporter.Test
             Assert.AreEqual(7, entities.Count());
         }
 
+        [DeploymentItem(@"Files\Account.csv")]
+        [TestMethod]
+        public void DeploymentExportImportMaskEmailsTest()
+        {
+            PrepareTests();
+            var workFolder = ClearFilesAndData();
+            DeleteAll(Entities.account);
+            File.Copy(@"Account.csv", Path.Combine(workFolder, @"Account.csv"));
+
+            var importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
+
+            var request = new XrmImporterExporterRequest
+            {
+                Folder = new Folder(workFolder),
+                ImportExportTask = ImportExportTask.ImportCsvs,
+                FolderOrFiles = XrmImporterExporterRequest.CsvImportOption.SpecificFiles,
+                CsvsToImport = new[] { new CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } },
+                MaskEmails = true
+
+            };
+            var response = importerExporterService.Execute(request, Controller);
+            if (response.HasError)
+                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+
+            var entity = XrmService.GetFirst(Entities.account);
+            Assert.IsTrue(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
+
+            request = new XrmImporterExporterRequest
+            {
+                Folder = new Folder(workFolder),
+                ImportExportTask = ImportExportTask.ImportCsvs,
+                FolderOrFiles = XrmImporterExporterRequest.CsvImportOption.SpecificFiles,
+                CsvsToImport = new[] { new CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } },
+                MaskEmails = false
+            };
+            response = importerExporterService.Execute(request, Controller);
+            if (response.HasError)
+                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+
+            entity = XrmService.GetFirst(Entities.account);
+            Assert.IsFalse(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
+
+            var accountsExport = new ImportExportRecordType()
+            {
+                Type = ExportType.AllRecords,
+                RecordType = new RecordType(Entities.account, Entities.account)
+            };
+
+            request = new XrmImporterExporterRequest
+            {
+                Folder = new Folder(workFolder),
+                ImportExportTask = ImportExportTask.ExportXml,
+                RecordTypesToExport = new [] { accountsExport }
+            };
+            response = importerExporterService.Execute(request, Controller);
+            Assert.IsFalse(response.HasError);
+
+            request = new XrmImporterExporterRequest
+            {
+                Folder = new Folder(workFolder),
+                ImportExportTask = ImportExportTask.ImportXml,
+                MaskEmails = true
+            };
+            response = importerExporterService.Execute(request, Controller);
+            Assert.IsFalse(response.HasError);
+
+            entity = XrmService.GetFirst(Entities.account);
+            Assert.IsTrue(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
+
+            request = new XrmImporterExporterRequest
+            {
+                Folder = new Folder(workFolder),
+                ImportExportTask = ImportExportTask.ImportXml,
+                MaskEmails = false
+            };
+            response = importerExporterService.Execute(request, Controller);
+            Assert.IsFalse(response.HasError);
+
+            entity = XrmService.GetFirst(Entities.account);
+            Assert.IsFalse(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
+
+        }
+
         private Entity CreateTestRecord(string type, XrmImporterExporterService<XrmRecordService> importerExporterService)
         {
             var record = new Entity(type);

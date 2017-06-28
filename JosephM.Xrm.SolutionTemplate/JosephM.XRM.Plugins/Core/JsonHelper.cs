@@ -10,7 +10,15 @@ namespace $safeprojectname$.Core
     /// </summary>
     public static class JsonHelper
     {
-
+        public static string ObjectToJsonString(object objectValue)
+        {
+            var serializer = new DataContractJsonSerializer(objectValue.GetType());
+            using (var stream = new MemoryStream())
+            {
+                serializer.WriteObject(stream, objectValue);
+                return Encoding.Default.GetString(stream.ToArray());
+            }
+        }
         public static string ObjectToJsonString<T>(T objectValue)
         {
             var serializer = new DataContractJsonSerializer(typeof(T));

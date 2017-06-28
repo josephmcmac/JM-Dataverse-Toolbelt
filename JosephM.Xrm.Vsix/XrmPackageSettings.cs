@@ -16,7 +16,7 @@ namespace JosephM.XRM.VSIX
         public bool AddToSolution { get; set; }
         [RequiredProperty]
         [ReferencedType(Entities.solution)]
-        [UsePicklist]
+        [UsePicklist(Fields.solution_.uniquename)]
         [LookupCondition(Fields.solution_.ismanaged, false)]
         [LookupCondition(Fields.solution_.isvisible, true)]
         [LookupCondition(Fields.solution_.uniquename, ConditionType.NotEqual, "default")]
