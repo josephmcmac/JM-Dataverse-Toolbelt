@@ -59,7 +59,12 @@ namespace $safeprojectname$.Core
 
         public static string GetDisplayName(this PropertyInfo info)
         {
-            return info.Name.SplitCamelCase();
+            var displayNameProperties =
+                info.GetCustomAttributes(typeof(DisplayNameAttribute), true).Cast<DisplayNameAttribute>();
+            if (displayNameProperties.Any())
+                return displayNameProperties.First().Label;
+            else
+                return info.Name.SplitCamelCase();
         }
 
         public static string GetDisplayName(this Type type)

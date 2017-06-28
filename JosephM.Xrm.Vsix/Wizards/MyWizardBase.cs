@@ -11,6 +11,7 @@ namespace JosephM.XRM.VSIX.Wizards
         protected void AddReplacements(Dictionary<string, string> replacementsDictionary,
             XrmPackageSettings xrmPackageSettings)
         {
+            //various token replacements in the template projects
             if (!string.IsNullOrWhiteSpace(xrmPackageSettings.SolutionObjectPrefix) &&
                 !replacementsDictionary.ContainsKey("$jmobjprefix$"))
                 replacementsDictionary.Add("$jmobjprefix$", xrmPackageSettings.SolutionObjectPrefix);

@@ -1,7 +1,4 @@
-﻿
-using $safeprojectname$.Plugins;
-using $safeprojectname$.Xrm;
-using Schema;
+﻿using $safeprojectname$.Xrm;
 
 namespace $safeprojectname$
 {

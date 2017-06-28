@@ -1,26 +1,26 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name>JosephM.XRM.Plugins.Test</Name>
+    <Name>JosephM.Xrm.Plugins.Test</Name>
     <Description>&lt;No description available&gt;</Description>
     <ProjectType>CSharp</ProjectType>
     <ProjectSubType>
     </ProjectSubType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>JosephM.XRM.Plugins.Test</DefaultName>
+    <DefaultName>JosephM.Xrm.Plugins.Test</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
-    <Icon></Icon>
+    <Icon>__TemplateIcon.ico</Icon>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="JosephM.XRM.Plugins.Test.csproj" File="JosephM.XRM.Plugins.Test.csproj" ReplaceParameters="true">
+    <Project TargetFileName="JosephM.Xrm.Plugins.Test.csproj" File="JosephM.Xrm.Plugins.Test.csproj" ReplaceParameters="true">
       <ProjectItem ReplaceParameters="true" TargetFileName="Debug.cs">Debug.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$XrmTest.cs">$ext_jmobjprefix$XrmTest.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="packages.config">packages.config</ProjectItem>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$XrmTest.cs">$ext_jmobjprefix$XrmTest.cs</ProjectItem>
-      <ProjectItem ReplaceParameters="true" TargetFileName="TestXrmConfiguration.cs">TestXrmConfiguration.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="XrmTest.cs">XrmTest.cs</ProjectItem>
     </Project>
   </TemplateContent>

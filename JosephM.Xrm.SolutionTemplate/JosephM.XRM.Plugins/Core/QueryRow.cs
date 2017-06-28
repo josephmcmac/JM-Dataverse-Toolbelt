@@ -13,6 +13,11 @@ namespace $safeprojectname$.Core
             _row = row;
         }
 
+        public void SetField(string fieldName, object value)
+        {
+            _row[fieldName] = value;
+        }
+
         public object GetField(string fieldName)
         {
             if (!IsDbNull(fieldName))

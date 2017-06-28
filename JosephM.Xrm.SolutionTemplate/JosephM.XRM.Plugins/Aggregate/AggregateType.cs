@@ -10,6 +10,6 @@
         Sum = 3,
         Min = 4,
         CSV = 5,
-        PSV = 6
+        PSV = 6,
     }
 }

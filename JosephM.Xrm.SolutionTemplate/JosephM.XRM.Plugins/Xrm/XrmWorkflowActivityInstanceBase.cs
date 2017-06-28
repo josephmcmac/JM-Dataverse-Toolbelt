@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk.Workflow;
 using $safeprojectname$.Core;
 using System;
 using System.Activities;
+using System.Collections.Generic;
 
 namespace $safeprojectname$.Xrm
 {
@@ -39,6 +40,17 @@ namespace $safeprojectname$.Xrm
                     return Context.IsolationMode == 2;
             }
             set { _isSandboxIsolated = value; }
+        }
+
+        public void ProcessWhileInSandboxLimit(DateTime startedAt, IEnumerable<Entity> entitiesToProcess, Action<Entity> processEntity)
+        {
+            foreach (var entity in entitiesToProcess)
+            {
+                if (IsSandboxIsolated && DateTime.UtcNow - startedAt > new TimeSpan(0, 0, MaxSandboxIsolationExecutionSeconds - 10))
+                    break;
+                else
+                    processEntity(entity);
+            }
         }
 
         private int _maxSandboxIsolationExecutionSeconds = 120;

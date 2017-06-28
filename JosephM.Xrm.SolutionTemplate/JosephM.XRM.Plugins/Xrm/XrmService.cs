@@ -112,7 +112,7 @@ namespace $safeprojectname$.Xrm
             set { Controller = value; }
         }
 
-        internal IXrmConfiguration XrmConfiguration { get; set; }
+        public IXrmConfiguration XrmConfiguration { get; set; }
 
         /// <summary>
         ///     DON'T USE CALL THE EXECUTE METHOD
@@ -669,7 +669,7 @@ namespace $safeprojectname$.Xrm
             }
         }
 
-        public object ParseField(string fieldName, string entityType, object value)
+        public object ParseField(string fieldName, string entityType, object value, bool datesAmericanFormat = false)
         {
             var fieldType = GetFieldType(fieldName, entityType);
             if (!value.IsEmpty())
@@ -699,10 +699,10 @@ namespace $safeprojectname$.Xrm
                             int temp;
                             if (value is int)
                                 temp = (int)value;
-                            else if (value is string && String.IsNullOrWhiteSpace((string)value))
+                            else if (value is string && value.ToString().IsNullOrWhiteSpace())
                                 return null;
                             else
-                                temp = int.Parse(value.ToString());
+                                temp = int.Parse(value.ToString().Replace(",", ""));
                             if (!IntInRange(fieldName, entityType, temp))
                                 throw new ArgumentOutOfRangeException("Field " + fieldName +
                                                                       " outside permitted range of " +
@@ -723,7 +723,7 @@ namespace $safeprojectname$.Xrm
                                 if (!String.IsNullOrWhiteSpace(value.ToString()))
                                     try
                                     {
-                                        DateTime.Parse(value.ToString(), CultureInfo.CurrentCulture);
+                                        temp = DateTime.Parse(value.ToString(), new CultureInfo(datesAmericanFormat ? "en-US" : "en-GB"));
                                     }
                                     catch (Exception ex)
                                     {
@@ -736,6 +736,9 @@ namespace $safeprojectname$.Xrm
                                 throw new ArgumentOutOfRangeException("Field " + fieldName + " in entity " + entityType +
                                                                       " below lowest permitted value of " +
                                                                       MinCrmDateTime);
+                            //remove the second fractions as crm strips them out
+                            if (temp.HasValue)
+                                temp = temp.Value.AddMilliseconds(-1 * temp.Value.Millisecond).ToUniversalTime();
                             return temp;
                         }
                     case AttributeTypeCode.Lookup:
@@ -744,20 +747,58 @@ namespace $safeprojectname$.Xrm
                         {
                             if (value is EntityReference)
                                 return value;
-                            else if (fieldType == AttributeTypeCode.Lookup && value is string)
+                            if (value is Guid && fieldType == AttributeTypeCode.Lookup)
+                                return new EntityReference(GetLookupTargetEntity(fieldName, entityType), (Guid)value);
+                            else if (value is string)
                             {
-                                var id = Guid.Empty;
-                                if (Guid.TryParse((string)value, out id))
-                                    return CreateLookup(GetLookupTargetEntity(fieldName, entityType), id);
-                                else
-                                    throw new ArgumentException(
-                                        string.Format(
-                                            "Expected string value to be of {0} form for field {1} when converting to {2}. The actual value was {3}"
-                                            , typeof(Guid).Name, fieldName, typeof(EntityReference).Name, value));
+                                var types = new List<string>();
+                                if (fieldType == AttributeTypeCode.Lookup)
+                                    types.Add(GetLookupTargetEntity(fieldName, entityType));
+                                else if (fieldType == AttributeTypeCode.Owner)
+                                    types.AddRange(new[] { "team", "systemuser" });
+                                else if (fieldType == AttributeTypeCode.Customer)
+                                    types.AddRange(new[] { "account", "contact" });
+
+                                var matchingRecords = new List<EntityReference>();
+                                foreach (var type in types)
+                                {
+                                    Guid tryGetGuid = Guid.Empty;
+                                    if (Guid.TryParse(value.ToString(), out tryGetGuid))
+                                    {
+                                        if (types.Count() == 1)
+                                            matchingRecords.Add(CreateLookup(type, tryGetGuid));
+                                        else
+                                        {
+                                            var match = GetFirst(type, GetPrimaryKeyField(type), tryGetGuid);
+                                            if (match != null)
+                                                matchingRecords.Add(match.ToEntityReference());
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var conditions = new List<ConditionExpression>(new[]
+                                        {
+                                            new ConditionExpression(GetPrimaryNameField(type), ConditionOperator.Equal,
+                                                value.ToString())
+                                        });
+                                        if (type == "account" || type == "contact")
+                                            conditions.Add(new ConditionExpression("merged", ConditionOperator.NotEqual, true));
+                                        matchingRecords.AddRange(RetrieveAllAndClauses(type, conditions
+                                            , new string[0]).Select(e => e.ToEntityReference()).ToArray());
+
+                                    }
+                                }
+                                if (matchingRecords.Count() == 1)
+                                    return matchingRecords.First();
+                                throw new Exception(
+                                    string.Format(
+                                        "Error Parsing Field {0}. The String Value Was Not A Guid And Did Not Match To A Unique {1} Records Name. The value was {2}",
+                                        fieldName, string.Join(",", types), value));
                             }
                             else
-                                throw new ArgumentException("Parse lookup not implemented for argument type: " +
-                                                            value.GetType().Name);
+                                throw new ArgumentException(
+                                    string.Format("Parse {0} not implemented for argument type of {1} ", fieldType,
+                                        value.GetType().Name));
                         }
                     case AttributeTypeCode.Picklist:
                         {
@@ -784,7 +825,7 @@ namespace $safeprojectname$.Xrm
                             if (value is decimal)
                                 newValue = (decimal)value;
                             else
-                                newValue = decimal.Parse(value.ToString());
+                                newValue = decimal.Parse(value.ToString().Replace(",", ""));
                             newValue = decimal.Round(newValue, GetDecimalPrecision(fieldName, entityType));
                             if (!DecimalInRange(fieldName, entityType, newValue))
                                 throw new ArgumentOutOfRangeException("Field " + fieldName +
@@ -802,7 +843,7 @@ namespace $safeprojectname$.Xrm
                             if (value is double)
                                 temp = (double)value;
                             else
-                                temp = double.Parse(value.ToString());
+                                temp = double.Parse(value.ToString().Replace(",", ""));
                             if (!DoubleInRange(fieldName, entityType, temp))
                                 throw new ArgumentOutOfRangeException("Field " + fieldName +
                                                                       " outside permitted range of " +
@@ -821,7 +862,7 @@ namespace $safeprojectname$.Xrm
                             else if (value is Decimal)
                                 temp = new Money((decimal)value);
                             else
-                                temp = new Money(decimal.Parse(value.ToString()));
+                                temp = new Money(decimal.Parse(value.ToString().Replace(",", "")));
                             if (!MoneyInRange(fieldName, entityType, temp))
                                 throw new ArgumentOutOfRangeException("Field " + fieldName +
                                                                       " outside permitted range of " +
@@ -860,16 +901,7 @@ namespace $safeprojectname$.Xrm
                             if (value is Guid)
                                 return value;
                             if (value is string)
-                            {
-                                var id = Guid.Empty;
-                                if (Guid.TryParse((string)value, out id))
-                                    return id;
-                                else
-                                    throw new ArgumentException(
-                                        string.Format(
-                                            "Expected string value to be of {0} form for field {1} when converting to {2}. The actual value was {3}"
-                                            , typeof(Guid).Name, fieldName, typeof(Guid).Name, value));
-                            }
+                                return new Guid((string)value);
                             else
                                 throw new ArgumentException(
                                     "Parse UniqueIdentifier not implemented for argument type: " + value.GetType().Name);
@@ -906,6 +938,18 @@ namespace $safeprojectname$.Xrm
             }
             else
                 return null;
+        }
+
+        public object ConvertToQueryValue(string fieldName, string entityType, object value)
+        {
+            var parsedValue = ParseField(fieldName, entityType, value);
+            if (parsedValue is EntityReference)
+                parsedValue = ((EntityReference)parsedValue).Id;
+            else if (parsedValue is OptionSetValue)
+                parsedValue = ((OptionSetValue)parsedValue).Value;
+            else if (parsedValue is Money)
+                parsedValue = ((Money)parsedValue).Value;
+            return parsedValue;
         }
 
         public bool DecimalInRange(string field, string entity, decimal value)
@@ -1111,10 +1155,10 @@ namespace $safeprojectname$.Xrm
             var thisSideId = isReferencing
                 ? relationshipMetadata.Entity1IntersectAttribute
                 : relationshipMetadata.Entity2IntersectAttribute;
-            var query = new QueryExpression(GetRelationshipEntityName(relationshipName));
+            var query = new QueryExpression(GetRelationshipEntityName(relationshipMetadata.IntersectEntityName));
             query.ColumnSet = CreateColumnSet(new[] { otherSideId });
             query.Criteria.AddCondition(thisSideId, ConditionOperator.Equal, thisId);
-            return RetrieveAll(query).Select(entity => (Guid)XrmEntity.GetField(entity, otherSideId));
+            return RetrieveAll(query).Select(entity => (Guid)XrmEntity.GetField(entity, otherSideId)).ToArray();
         }
 
         public IEnumerable<Guid> GetAssociatedIds(string relationshipName, string thisSideId, Guid thisId,
@@ -1343,7 +1387,7 @@ namespace $safeprojectname$.Xrm
             SortedDictionary<Guid, object> idFieldSwitches)
         {
             var existingValues = new SortedDictionary<Guid, object>();
-            var ids = idFieldSwitches.Keys.Select(guid => (object)guid).ToArray();
+            var ids = idFieldSwitches.Keys;
             var items = Retrieve(recordType, ids, new[] { fieldName });
             foreach (var item in items)
             {
@@ -1361,10 +1405,12 @@ namespace $safeprojectname$.Xrm
             }
         }
 
-        public IEnumerable<Entity> Retrieve(string entityType, object[] ids, IEnumerable<string> fields)
+        public IEnumerable<Entity> Retrieve(string entityType, IEnumerable<Guid> ids, IEnumerable<string> fields)
         {
+            if (!ids.Any())
+                return new Entity[0];
             var query = new QueryExpression(entityType);
-            query.Criteria.AddCondition(XrmEntity.GetPrimaryKeyName(entityType), ConditionOperator.In, ids);
+            query.Criteria.AddCondition(XrmEntity.GetPrimaryKeyName(entityType), ConditionOperator.In, ids.Distinct().Cast<object>().ToArray());
             if (fields != null)
                 query.ColumnSet = new ColumnSet(fields.ToArray());
             else
@@ -1518,18 +1564,22 @@ namespace $safeprojectname$.Xrm
             return GetLabelDisplay(GetEntityMetadata(entityType).DisplayCollectionName);
         }
 
-        public void Create(Entity entity, IEnumerable<string> fieldsToSubmit)
+        public Guid Create(Entity entity, IEnumerable<string> fieldsToSubmit)
         {
-            if (fieldsToSubmit != null && fieldsToSubmit.Any())
+            if (fieldsToSubmit == null)
+                return Create(entity);
+            if (fieldsToSubmit.Any())
             {
                 var submissionEntity = new Entity(entity.LogicalName) { Id = entity.Id };
                 foreach (var field in fieldsToSubmit)
                 {
                     if (entity.Contains(field))
-                        XrmEntity.SetField(submissionEntity, field, XrmEntity.GetField(entity, field));
+                        submissionEntity.SetField(field, entity.GetField(field));
                 }
-                Create(submissionEntity);
+                return Create(submissionEntity);
             }
+            else
+                throw new NullReferenceException("fieldsToSubmit Passed To Set In New Record");
         }
 
         #region standard methods
@@ -1610,14 +1660,23 @@ namespace $safeprojectname$.Xrm
             Execute(request);
         }
 
-        public void Associate(string relationshipName, string keyAttributeFrom, Guid entityFrom, string keyAttributeTo,
-            IEnumerable<Guid> relatedEntities)
+        public void Associate(string relationshipName, Guid idFrom, string typeFrom, string keyAttributeFrom, string typeTo, string keyAttributeTo, IEnumerable<Guid> relatedEntities, bool isReferencing = false)
         {
-            var metadata = GetRelationshipMetadata(relationshipName);
-            var isReferencing = metadata.Entity1IntersectAttribute == keyAttributeFrom;
-            var relatedType = isReferencing ? metadata.Entity2LogicalName : metadata.Entity1LogicalName;
-            var targetType = isReferencing ? metadata.Entity1LogicalName : metadata.Entity2LogicalName;
+            var relationship = new Relationship(relationshipName)
+            {
+                PrimaryEntityRole =
+                    isReferencing ? EntityRole.Referencing : EntityRole.Referenced
+            };
 
+            var entityReferenceCollection = new EntityReferenceCollection();
+            foreach (var id in relatedEntities.Distinct())
+                entityReferenceCollection.Add(CreateLookup(typeTo, id));
+
+            Associate(typeFrom, idFrom, relationship, entityReferenceCollection);
+        }
+
+        public void DisAssociate(string relationshipName, Guid idFrom, string typeFrom, string keyAttributeFrom, string typeTo, string keyAttributeTo, IEnumerable<Guid> relatedEntities, bool isReferencing = false)
+        {
             var relationship = new Relationship(relationshipName)
             {
                 PrimaryEntityRole =
@@ -1626,31 +1685,9 @@ namespace $safeprojectname$.Xrm
 
             var entityReferenceCollection = new EntityReferenceCollection();
             foreach (var id in relatedEntities)
-                entityReferenceCollection.Add(CreateLookup(relatedType, id));
+                entityReferenceCollection.Add(CreateLookup(typeTo, id));
 
-            Associate(targetType, entityFrom, relationship, entityReferenceCollection);
-        }
-
-        public void Associate(string relationshipName, string entityType1, Guid id1, bool Is1Referencing,
-            string entityType2, Guid id2)
-        {
-            var rMetadata = GetRelationshipMetadata(relationshipName);
-            string thisSideId;
-            if ((entityType1 != rMetadata.Entity2LogicalName) || Is1Referencing)
-                thisSideId = rMetadata.Entity1IntersectAttribute;
-            else
-                thisSideId = rMetadata.Entity2IntersectAttribute;
-            var otherSideId = thisSideId == rMetadata.Entity1IntersectAttribute
-                ? rMetadata.Entity2IntersectAttribute
-                : rMetadata.Entity1IntersectAttribute;
-
-            Associate(relationshipName, thisSideId, id1, otherSideId, new[] { id2 });
-        }
-
-        public void Associate(string relationshipName, string keyAttributeFrom, Guid entityFrom, string keyAttributeTo,
-            Guid relatedEntity)
-        {
-            Associate(relationshipName, keyAttributeFrom, entityFrom, keyAttributeTo, new[] { relatedEntity });
+            Disassociate(typeFrom, idFrom, relationship, entityReferenceCollection);
         }
 
         public void Delete(Entity entity)
@@ -1676,55 +1713,6 @@ namespace $safeprojectname$.Xrm
         public object LookupField(string entityType, Guid id, string fieldName)
         {
             return XrmEntity.GetField(Retrieve(entityType, id, new[] { fieldName }), fieldName);
-        }
-
-        /// <summary>
-        ///     !! Doesn;t work same entity type!!
-        /// </summary>
-        public void Disassociate(string relationshipName, string keyAttributeFrom, Guid entityFrom,
-            string keyAttributeTo, IEnumerable<Guid> relatedEntities)
-        {
-            var metadata = GetRelationshipMetadata(relationshipName);
-            var isReferencing = metadata.Entity1IntersectAttribute == keyAttributeFrom;
-            var relatedType = isReferencing ? metadata.Entity2LogicalName : metadata.Entity1LogicalName;
-            var targetType = isReferencing ? metadata.Entity1LogicalName : metadata.Entity2LogicalName;
-
-            var relationship = new Relationship(relationshipName)
-            {
-                PrimaryEntityRole =
-                    isReferencing ? EntityRole.Referencing : EntityRole.Referenced
-            };
-
-            var entityReferenceCollection = new EntityReferenceCollection();
-            foreach (var id in relatedEntities)
-                entityReferenceCollection.Add(CreateLookup(relatedType, id));
-
-            Disassociate(targetType, entityFrom, relationship, entityReferenceCollection);
-        }
-
-        public void Disassociate(string relationshipName, string entityType1, Guid id1, bool Is1Referencing,
-            string entityType2, Guid id2)
-        {
-            var rMetadata = GetRelationshipMetadata(relationshipName);
-            string thisSideId;
-            if ((entityType1 != rMetadata.Entity2LogicalName) || Is1Referencing)
-                thisSideId = rMetadata.Entity1IntersectAttribute;
-            else
-                thisSideId = rMetadata.Entity2IntersectAttribute;
-            var otherSideId = thisSideId == rMetadata.Entity1IntersectAttribute
-                ? rMetadata.Entity2IntersectAttribute
-                : rMetadata.Entity1IntersectAttribute;
-
-            Disassociate(relationshipName, thisSideId, id1, otherSideId, new[] { id2 });
-        }
-
-        /// <summary>
-        ///     !! Doesn;t work same entity type!!
-        /// </summary>
-        public void Disassociate(string relationshipName, string keyAttributeFrom, Guid entityFrom,
-            string keyAttributeTo, Guid relatedEntity)
-        {
-            Disassociate(relationshipName, keyAttributeFrom, entityFrom, keyAttributeTo, new[] { relatedEntity });
         }
 
         private static string GetRequestDescription(OrganizationRequest request)
@@ -2732,7 +2720,10 @@ namespace $safeprojectname$.Xrm
 
         public IEnumerable<string> GetAllEntityTypes()
         {
-            return GetAllEntityMetadata().Select(e => e.LogicalName).ToArray<string>();
+            return GetAllEntityMetadata()
+                .Where(m => !(m.IsIntersect ?? false))
+                .Select(e => e.LogicalName)
+               .ToArray();
         }
 
         public IEnumerable<ExecuteMultipleResponseItem> UpdateMultiple(IEnumerable<Entity> entities,
@@ -2805,22 +2796,20 @@ namespace $safeprojectname$.Xrm
             return request;
         }
 
-        public string GetFieldAsDisplayString(string recordType, string fieldName, object value)
+        public string GetFieldAsDisplayString(string recordType, string fieldName, object value, bool isHtml = false, string func = null)
         {
             if (value == null)
                 return "";
             else if (value is string)
-                return (string)value;
+            {
+                if (isHtml)
+                    return ((string)value).Replace(Environment.NewLine, "<br />");
+                else
+                    return ((string)value);
+            }
             else if (IsLookup(fieldName, recordType))
             {
                 return XrmEntity.GetLookupName(value);
-                //if (name != null)
-                //    return name;
-                //else
-                //{
-                //    var lookup = (EntityReference) value;
-                //    return lookup.Id == Guid.Empty ? null : (string) LookupField(lookup.LogicalName, lookup.Id, GetPrimaryNameField(lookup.LogicalName));
-                //}
             }
             else if (IsOptionSet(fieldName, recordType))
             {
@@ -2836,6 +2825,8 @@ namespace $safeprojectname$.Xrm
             {
                 if (value is DateTime)
                 {
+                    if (func == "year")
+                        return ((DateTime)value).ToLocalTime().ToString("yyyy");
                     if (GetDateFormat(fieldName, recordType) == DateTimeFormat.DateAndTime)
                         return ((DateTime)value).ToLocalTime().ToString(StringFormats.DateTimeFormat);
                     return ((DateTime)value).ToLocalTime().Date.ToString(StringFormats.DateFormat);
@@ -2851,6 +2842,19 @@ namespace $safeprojectname$.Xrm
                         namesToOutput.Add(XrmEntity.GetLookupName(party, "partyid"));
                     }
                     return string.Join(", ", namesToOutput.Where(f => !f.IsNullOrWhiteSpace()));
+                }
+            }
+            else if (value is bool)
+            {
+                var metadata = GetFieldMetadata(fieldName, recordType) as BooleanAttributeMetadata;
+                if (metadata != null)
+                {
+                    var boolValue = (bool)value;
+                    if (boolValue && metadata.OptionSet != null && metadata.OptionSet.TrueOption != null && metadata.OptionSet.TrueOption.Label != null)
+                        return GetLabelDisplay(metadata.OptionSet.TrueOption.Label);
+                    if (!boolValue && metadata.OptionSet != null && metadata.OptionSet.FalseOption != null && metadata.OptionSet.FalseOption.Label != null)
+                        return GetLabelDisplay(metadata.OptionSet.FalseOption.Label);
+                    return value.ToString();
                 }
             }
             return value.ToString();
@@ -2879,16 +2883,6 @@ namespace $safeprojectname$.Xrm
         {
             var fieldType = GetFieldType(fieldName, recordType);
             return fieldType == AttributeTypeCode.Money;
-        }
-
-        public void AssociateSafe(string relationshipName, string entityFrom, string keyAttributeFrom, Guid entityFromId,
-            string entityTo, string keyAttributeTo,
-            IEnumerable<Guid> entitiesTo)
-        {
-            var associatedItems = GetAssociatedIds(relationshipName, keyAttributeFrom, entityFromId, keyAttributeTo);
-            var newItems = entitiesTo.Where(id => !associatedItems.Contains(id));
-            if (newItems.Any())
-                Associate(relationshipName, keyAttributeFrom, entityFromId, keyAttributeTo, newItems);
         }
 
         public int GetObjectTypeCode(string recordType)
@@ -2992,7 +2986,7 @@ namespace $safeprojectname$.Xrm
         }
 
         public static QueryExpression BuildQuery(string entityType, IEnumerable<string> fields,
-            IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
+            IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields = null)
         {
             var query = new QueryExpression(entityType);
             if (filters != null)
@@ -3189,6 +3183,40 @@ namespace $safeprojectname$.Xrm
                 Status = new OptionSetValue(status)
             };
             Execute(request);
+        }
+
+        public IEnumerable<string> GetAllNnRelationshipEntityNames()
+        {
+            return GetAllEntityMetadata()
+                .Where(m => m.IsIntersect ?? false)
+                .Select(e => e.LogicalName)
+               .ToArray();
+        }
+
+        public virtual ManyToManyRelationshipMetadata GetRelationshipMetadataForEntityName(string relationshipEntityName)
+        {
+            lock (LockObject)
+            {
+                if (AllRelationshipMetadata.All(r => r.IntersectEntityName != relationshipEntityName))
+                    throw new NullReferenceException(string.Format("Couldn't Find Relationship With Entity Name {0}", (relationshipEntityName)));
+                return AllRelationshipMetadata.First(r => r.IntersectEntityName == relationshipEntityName);
+            }
+        }
+
+        public string GetRelationshipDisplayLabel(string relationshipName, string entityType)
+        {
+            var relationship = GetRelationshipMetadata(relationshipName);
+            var isRecordType2 = relationship.Entity2LogicalName == entityType;
+            var menuConfiguration = isRecordType2 ? relationship.Entity2AssociatedMenuConfiguration : relationship.Entity1AssociatedMenuConfiguration;
+            if(menuConfiguration.Behavior == AssociatedMenuBehavior.UseLabel)
+            {
+                var label = isRecordType2 ? relationship.Entity2AssociatedMenuConfiguration.Label : relationship.Entity1AssociatedMenuConfiguration.Label;
+                return GetLabelDisplay(label);
+            }
+            else
+            {
+                return GetEntityCollectionName(entityType);
+            }
         }
     }
 }

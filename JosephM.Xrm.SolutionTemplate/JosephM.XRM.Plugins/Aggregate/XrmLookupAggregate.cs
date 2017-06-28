@@ -86,7 +86,6 @@ namespace $safeprojectname$.Aggregate
                             break;
                         }
                 }
-
                 if (isDependencyChanging)
                 {
                     object preImageLookup = plugin.PreImageEntity.GetLookupGuid(LookupName);

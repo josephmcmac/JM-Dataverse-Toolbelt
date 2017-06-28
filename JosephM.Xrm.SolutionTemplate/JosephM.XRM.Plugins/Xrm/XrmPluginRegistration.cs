@@ -58,7 +58,12 @@ namespace $safeprojectname$.Xrm
                 entityType = "email";
             else if (context.MessageName == PluginMessage.Lose && context.InputParameters.Contains("OpportunityClose"))
                 entityType = "opportunity";
-
+            else if (context.MessageName == PluginMessage.Cancel)
+                entityType = "salesorder";
+            else if (context.MessageName == PluginMessage.Win || context.MessageName == PluginMessage.Lose)
+                entityType = "opportunity";
+            else if (context.MessageName == PluginMessage.Cancel)
+                entityType = "salesorder";
             else
             {
                 var args = "";

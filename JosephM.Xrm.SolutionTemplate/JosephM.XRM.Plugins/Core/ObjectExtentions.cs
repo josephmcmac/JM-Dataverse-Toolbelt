@@ -90,6 +90,8 @@ namespace $safeprojectname$.Core
                 newValue = rawConfigString.Split(',');
             else if (propertyType == typeof(int))
                 newValue = int.Parse(rawConfigString);
+            else if (propertyType == typeof(Password))
+                newValue = Password.CreateFromRawPassword(rawConfigString);
             else if (propertyType.HasStringConstructor())
                 newValue = propertyType.CreateFromStringConstructor(rawConfigString);
             else

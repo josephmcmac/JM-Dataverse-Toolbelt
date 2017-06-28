@@ -1,4 +1,5 @@
-﻿using $safeprojectname$.Xrm;
+﻿using $safeprojectname$.Services;
+using $safeprojectname$.Xrm;
 using Microsoft.Xrm.Sdk;
 using Schema;
 using System;
@@ -46,5 +47,8 @@ namespace $safeprojectname$
                 return Settings.GetStringField(Fields.organization_.name);
             }
         }
+
+        public string WebIntegrationUrl { get { throw new NotImplementedException(); } }
+        public string WebIntegrationPasscode { get { throw new NotImplementedException(); } }
     }
 }

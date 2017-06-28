@@ -25,8 +25,13 @@ namespace $safeprojectname$.Core
 
         public static void WriteToFile(string folder, string name, string text)
         {
-            CheckCreateFolder(folder);
-            File.WriteAllText(folder + @"\" + name, text);
+            if (!string.IsNullOrEmpty(folder))
+            {
+                CheckCreateFolder(folder);
+                File.WriteAllText(folder + @"\" + name, text);
+            }
+            else
+                File.WriteAllText(name, text);
         }
 
         public static void AppendToFile(string folder, string name, string text)

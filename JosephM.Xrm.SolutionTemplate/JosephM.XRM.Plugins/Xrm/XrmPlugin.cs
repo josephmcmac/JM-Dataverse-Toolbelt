@@ -137,7 +137,10 @@ namespace $safeprojectname$.Xrm
         /// </summary>
         public Guid InitiatingUserId
         {
-            get { return Context.InitiatingUserId; }
+            get
+            {
+                return Context.InitiatingUserId;
+            }
         }
 
         /// <summary>
@@ -254,6 +257,9 @@ namespace $safeprojectname$.Xrm
         public const string AddListMember = "AddListMember";
         public const string AddMembers = "AddMembers";
         public const string RetrieveMultiple = "RetrieveMultiple";
+        public const string Cancel = "Cancel";
+        public const string Win = "Win";
+        public const string Lost = "Lost";
     }
 
     /// <summary>

@@ -483,7 +483,7 @@ namespace $safeprojectname$.Xrm
             }
 
             var encryptedBytes = ProtectedData.Protect(Encoding.UTF8.GetBytes(value), null,
-                DataProtectionScope.CurrentUser);
+                DataProtectionScope.LocalMachine);
             return Convert.ToBase64String(encryptedBytes);
         }
 
@@ -495,7 +495,7 @@ namespace $safeprojectname$.Xrm
             }
 
             var decryptedBytes = ProtectedData.Unprotect(Convert.FromBase64String(value), null,
-                DataProtectionScope.CurrentUser);
+                DataProtectionScope.LocalMachine);
             if (0 == decryptedBytes.Length)
             {
                 return null;
