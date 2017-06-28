@@ -1,1 +1,1 @@
-JosephM.Xrm.Console.exe -xrmsetting
+$ext_safeprojectname$.Console.exe -xrmsetting
