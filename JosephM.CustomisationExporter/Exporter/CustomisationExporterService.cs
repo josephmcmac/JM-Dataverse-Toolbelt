@@ -275,11 +275,16 @@ namespace JosephM.CustomisationExporter.Exporter
                                 var textFormat = thisFieldType == RecordFieldType.String
                                     ? Service.GetFieldMetadata(field, thisType).TextFormat.ToString()
                                     : null;
-                                var includeTime = thisFieldType == RecordFieldType.Date &&
-                                                  Service.GetFieldMetadata(field, thisType).IncludeTime;
+                                var includeTime = false;
+                                var dateBehaviour = "N/A";
                                 var minValue = "-1";
                                 var maxValue = "-1";
                                 var precision = "-1";
+                                if (thisFieldType == RecordFieldType.Date)
+                                {
+                                    includeTime = Service.GetFieldMetadata(field, thisType).IncludeTime;
+                                    dateBehaviour = Service.GetFieldMetadata(field, thisType).DateBehaviour;
+                                }
                                 if (thisFieldType == RecordFieldType.Decimal)
                                 {
                                     minValue =
@@ -330,7 +335,7 @@ namespace JosephM.CustomisationExporter.Exporter
                                     Service.GetFieldMetadata(field, thisType).Description, primaryField == field,
                                     Service.GetFieldMetadata(field, thisType).Audit,
                                     Service.GetFieldMetadata(field, thisType).Searchable
-                                    , displayRelated, referencedType, maxLength, textFormat, includeTime, minValue,
+                                    , displayRelated, referencedType, maxLength, textFormat, dateBehaviour, includeTime, minValue,
                                     maxValue, precision, picklist, Service.GetFieldMetadata(field, thisType).MetadataId);
                                 if (Service.IsString(field, thisType))
                                     fieldExport.MaxLength = Service.GetMaxLength(field, thisType);

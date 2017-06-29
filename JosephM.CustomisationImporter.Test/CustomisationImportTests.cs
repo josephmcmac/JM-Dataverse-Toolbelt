@@ -24,8 +24,8 @@ namespace JosephM.CustomisationImporter.Test
     public class CustomisationImportTests : XrmModuleTest
     {
         [TestMethod]
-        [DeploymentItem("TestCustomisations.xls")]
-        [DeploymentItem(@"ContentFiles\Customisations Import Template.xls")]
+        [DeploymentItem("TestCustomisations.xlsx")]
+        [DeploymentItem(@"ContentFiles\Customisations Import Template.xlsx")]
         public void CustomisationImportTestImportModule()
         {
             //create test application with module loaded
@@ -136,8 +136,8 @@ namespace JosephM.CustomisationImporter.Test
         }
 
         [TestMethod]
-        [DeploymentItem("TestCustomisations.xls")]
-        [DeploymentItem("TestCustomisationsUpdate.xls")]
+        [DeploymentItem("TestCustomisations.xlsx")]
+        [DeploymentItem("TestCustomisationsUpdate.xlsx")]
         public void CustomisationImportTestImportService()
         {
             PrepareTests();
@@ -319,6 +319,8 @@ namespace JosephM.CustomisationImporter.Test
                 {
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).IncludeTime ==
                                   ((DateFieldMetadata)field).IncludeTime);
+                    Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).DateBehaviour ==
+                                ((DateFieldMetadata)field).DateBehaviour);
                 }
                 if (field.FieldType == RecordFieldType.Picklist)
                 {

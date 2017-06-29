@@ -19,6 +19,7 @@ namespace JosephM.Record.IService
         bool Audit { get; }
         bool Searchable { get; }
         TextFormat TextFormat { get; }
+        string DateBehaviour { get; }
         bool IncludeTime { get; }
         int DecimalPrecision { get; }
         IntegerType IntegerFormat { get; }

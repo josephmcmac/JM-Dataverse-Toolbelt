@@ -59,6 +59,7 @@ namespace JosephM.Record.Metadata
         public decimal MinValue { get; set; }
         public decimal MaxValue { get; set; }
         public int DecimalPrecision { get; set; }
+        public string DateBehaviour { get; set; }
         public IntegerType IntegerFormat { get; set; }
         public TextFormat TextFormat { get; set; }
         public bool IncludeTime { get; set; }

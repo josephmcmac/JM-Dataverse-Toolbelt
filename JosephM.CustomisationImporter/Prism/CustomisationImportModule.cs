@@ -27,7 +27,7 @@ namespace JosephM.CustomisationImporter.Prism
         public void OpenTemplateCommand()
         {
             var templateName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ContentFiles",
-                "Customisations Import Template.xls");
+                "Customisations Import Template.xlsx");
             ApplicationController.StartProcess(templateName);
         }
     }

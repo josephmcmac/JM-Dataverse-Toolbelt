@@ -104,7 +104,7 @@ namespace JosephM.RecordCounts.Test
             service = new RecordCountsService(XrmRecordService);
             response = service.Execute(request, Controller);
 
-            Assert.IsTrue(response.RecordCounts.Count() > 10);
+            Assert.IsTrue(response.RecordCounts.Count() > 5);
             Assert.AreEqual(1, response.RecordCounts.Count(r => r.RecordType == accountLabel));
             accountCount = response.RecordCounts.First(r => r.RecordType == accountLabel);
             Assert.IsTrue(accountCount is RecordCountByOwner);

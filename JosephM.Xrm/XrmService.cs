@@ -2241,7 +2241,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public void CreateOrUpdateDateAttribute(string schemaName, string displayName, string description,
             bool isRequired, bool audit, bool searchable, string recordType,
-            bool includeTime)
+            string dateTimeBehaviour, bool includeTime)
         {
             DateTimeAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
@@ -2251,6 +2251,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
             SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
 
+            metadata.DateTimeBehavior = dateTimeBehaviour;
             metadata.Format = includeTime ? DateTimeFormat.DateAndTime : DateTimeFormat.DateOnly;
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
@@ -2788,20 +2789,6 @@ string recordType)
                 if (item.Value.Any(r => r.SchemaName == relationshipName))
                     EntityRelationships.Remove(item.Key);
             }
-        }
-
-        //public void CreateLookupAttribute(string fieldName, string displayName, string recordType, string targetType)
-        //{
-        //    if (FieldExists(fieldName, recordType))
-        //        throw new ArgumentException("Field Already Exists");
-        //    CreateOrUpdateLookupAttribute(fieldName, displayName, null, false, false, false, recordType, targetType);
-        //}
-
-        public void CreateDateAttribute(string fieldName, string displayName, string recordType)
-        {
-            if (FieldExists(fieldName, recordType))
-                throw new ArgumentException("Field Already Exists");
-            CreateOrUpdateDateAttribute(fieldName, displayName, null, false, false, false, recordType, false);
         }
 
         public void DeleteField(string fieldName, string entityName)

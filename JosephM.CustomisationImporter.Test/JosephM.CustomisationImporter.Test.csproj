@@ -81,13 +81,13 @@
     <None Include="TestCustomisationsIgnore.xls">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestCustomisations.xls">
+    <None Include="TestCustomisations.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestCustomisationsSpreadsheetErrors.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestCustomisationsUpdate.xls">
+    <None Include="TestCustomisationsUpdate.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

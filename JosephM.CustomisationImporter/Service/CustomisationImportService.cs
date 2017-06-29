@@ -237,6 +237,10 @@ namespace JosephM.CustomisationImporter.Service
                                     fieldMetadata = new DateFieldMetadata(recordTypeSchemaName, fieldSchemaName,
                                         displayName);
                                     fieldMetadata.IncludeTime = row.GetFieldAsBoolean(Headings.Fields.IncludeTime);
+                                    var dateBehaviour = !row.GetColumnNames().Contains(Headings.Fields.DateBehaviour) || string.IsNullOrWhiteSpace(row.GetFieldAsString(Headings.Fields.DateBehaviour))
+                                            ? "UserLocal"
+                                            : row.GetFieldAsString(Headings.Fields.DateBehaviour);
+                                    fieldMetadata.DateBehaviour = dateBehaviour;
                                     break;
                                 }
                             case (RecordFieldType.Decimal):

@@ -165,7 +165,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ContentFiles\Customisations Import Template.xls">
+    <Content Include="ContentFiles\Customisations Import Template.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="JosephM.snk" />
