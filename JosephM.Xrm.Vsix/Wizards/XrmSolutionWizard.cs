@@ -108,6 +108,17 @@ namespace JosephM.XRM.VSIX.Wizards
                 }
             }
 
+            if (DestinationDirectory.EndsWith(SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName))
+                DestinationDirectory = DestinationDirectory.Substring(0, DestinationDirectory.Length - (Path.DirectorySeparatorChar + SafeProjectName).Length);
+
+            var consoleFileName = DestinationDirectory + Path.DirectorySeparatorChar + SafeProjectName + ".Console" + Path.DirectorySeparatorChar + "Encrypt XRM Connection.bat";
+            if(File.Exists(consoleFileName))
+            {
+                var read = File.ReadAllText(consoleFileName);
+                read = read.Replace("$ext_safeprojectname$", SafeProjectName);
+                File.WriteAllText(consoleFileName, read);
+            }
+
             //add xrm connection and package settings to solution items
             VisualStudioService.AddSolutionItem("xrmpackage.xrmsettings", XrmPackageSettings);
             VsixUtility.AddXrmConnectionToSolution(XrmRecordConfiguration, VisualStudioService);

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{147ACA64-2605-4157-9AED-B512B3E327CC}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>$ext_safeprojectname$.Plugins</RootNamespace>
-    <AssemblyName>$ext_safeprojectname$.Plugins</AssemblyName>
+    <RootNamespace>$ext_safeprojectname$.Console</RootNamespace>
+    <AssemblyName>$ext_safeprojectname$.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
