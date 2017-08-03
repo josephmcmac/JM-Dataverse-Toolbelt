@@ -469,20 +469,25 @@ namespace JosephM.CodeGenerator.Service
                             stringBuilder.AppendLine("\t\t\tpublic static class " + fieldLabel);
                             stringBuilder.AppendLine("\t\t\t{");
                             var options = Service.GetPicklistKeyValues(field.Key, recordType);
-                            var used = new List<string>();
                             foreach (var option in options)
                             {
                                 if (IsValidForCode(option))
                                 {
+                                    var labelCounts = options
+                                        .Select(o => CreateCodeLabel(option.Value))
+                                        .GroupBy(s => s);
+
+
                                     var optionLabel = CreateCodeLabel(option.Value);
+                                    var isDuplicateLabel = labelCounts.First(g => g.Key == optionLabel).Count() > 1;
+
                                     if (optionLabel == fieldLabel)
                                         optionLabel = string.Format("{0}_", optionLabel);
-                                    if (!used.Contains(optionLabel))
-                                    {
-                                        stringBuilder.AppendLine(
-                                            string.Format("\t\t\t\tpublic const int {0} = {1};", optionLabel, option.Key));
-                                        used.Add(optionLabel);
-                                    }
+                                    if (isDuplicateLabel)
+                                        optionLabel = optionLabel + "_" + option.Key;
+
+                                    stringBuilder.AppendLine(
+                                        string.Format("\t\t\t\tpublic const int {0} = {1};", optionLabel, option.Key));
                                 }
                             }
                             stringBuilder.AppendLine("\t\t\t}");
@@ -498,7 +503,7 @@ namespace JosephM.CodeGenerator.Service
 
         private static IEnumerable<string> KeyWords
         {
-            get { return new[] { "abstract", "event", "namespace" }; }
+            get { return new[] { "abstract", "event", "namespace", "Equals" }; }
         }
 
         private static string CreateCodeLabel(string rawLabel)
