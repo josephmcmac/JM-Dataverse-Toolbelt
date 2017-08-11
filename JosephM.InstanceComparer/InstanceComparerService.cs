@@ -1,4 +1,4 @@
-﻿using JosephM.Core.Extentions;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
@@ -508,16 +508,18 @@ namespace JosephM.InstanceComparer
                 .ToArray();
             foreach (var item in inOneNotInTwo)
             {
+                var displayName = processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
                 processContainer.AddDifference(processCompareParams.Context,
-                    processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField)), "In One Not In Two", parentReference);
+                    displayName, "In One Not In Two", parentReference, displayName, null, item.Id, null);
             }
             var inTwoNotInOne = serviceTwoItems
                 .Where(w => !thisInBoth.Select(kv => kv.Last()).Contains(w))
                 .ToArray();
             foreach (var item in inTwoNotInOne)
             {
+                var displayName = processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
                 processContainer.AddDifference(processCompareParams.Context,
-                    processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField)), "In Two Not In One", parentReference);
+                    displayName, "In Two Not In One", parentReference, null, displayName, null, item.Id);
             }
 
             //differences
@@ -534,9 +536,36 @@ namespace JosephM.InstanceComparer
                                 : processContainer.ServiceOne.GetFieldLabel(field, processCompareParams.RecordType);
                         if (string.IsNullOrWhiteSpace(fieldLabel))
                             fieldLabel = field;
+                        var displayValue1 = field1 == null ? string.Empty : field1.ToString();
+                        var displayValue2 = field2 == null ? string.Empty : field2.ToString();
+                        if (processCompareParams.Type == ProcessCompareType.Records)
+                        {
+                            displayValue1 = processContainer.ServiceOne.GetFieldAsDisplayString(item.First(), field);
+                            displayValue2 = processContainer.ServiceTwo.GetFieldAsDisplayString(item.Last(), field);
+                            //okay for difference if it is a string we only really want to display s part of string which is different
+                            if (field1 is string || field2 is string)
+                            {
+                                var charsToDisplay = 40;
+                                if (field1 == null)
+                                    displayValue2 = displayValue2.Left(charsToDisplay) + (displayValue2.Length > 40 ? "..." : "");
+                                else if (field2 == null)
+                                    displayValue1 = displayValue1.Left(charsToDisplay) + (displayValue1.Length > 40 ? "..." : "");
+                                else
+                                {
+                                    //https://stackoverflow.com/questions/4585939/comparing-strings-and-get-the-first-place-where-they-vary-from-eachother
+                                    var indexOfDiff = displayValue1.Zip(displayValue2, (c1, c2) => c1 == c2).TakeWhile(b => b).Count() + 1;
+                                    var startIndex = indexOfDiff - 10;
+                                    if (startIndex < 0)
+                                        startIndex = 0;
+
+                                    displayValue1 = displayValue1.Substring(startIndex).Left(charsToDisplay);
+                                    displayValue2 = displayValue2.Substring(startIndex).Left(charsToDisplay);
+                                }
+                            }
+                        }
                         processContainer.AddDifference(processCompareParams.Context,
                             processCompareParams.ConvertField1(processCompareParams.DisplayField, item.First().GetStringField(processCompareParams.DisplayField)),
-                            "Field Different - " + fieldLabel, parentReference);
+                            "Field Different - " + fieldLabel, parentReference, displayValue1, displayValue2, item.First().Id, item.Last().Id);
                     }
                 }
             }
@@ -915,9 +944,9 @@ namespace JosephM.InstanceComparer
                 Differences = new List<InstanceComparerDifference>();
             }
 
-            internal void AddDifference(string type, object name, string difference, string parentReference)
+            internal void AddDifference(string type, object name, string difference, string parentReference, object value1, object value2, string id1, string id2)
             {
-                Differences.Add(new InstanceComparerDifference(type, name == null ? null : name.ToString(), difference, parentReference));
+                Differences.Add(new InstanceComparerDifference(type, name == null ? null : name.ToString(), difference, parentReference, value1 == null ? null : value1.ToString(), value2 == null ? null : value2.ToString(), id1, id2));
             }
         }
     }
