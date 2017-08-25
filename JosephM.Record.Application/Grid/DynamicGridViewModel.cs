@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Collections.Generic;
@@ -275,6 +275,9 @@ namespace JosephM.Application.ViewModel.Grid
 
         public void ReloadGrid()
         {
+            if (OnReloading != null)
+                OnReloading();
+
             var getRecordsResponse = GetGridRecords(false);
             var records = getRecordsResponse.Records;
             
@@ -297,8 +300,8 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
 
-
         public Action LoadedCallback { get; set; }
+        public Action OnReloading { get; set; }
 
         private bool _gridLoadError;
         public bool GridLoadError
