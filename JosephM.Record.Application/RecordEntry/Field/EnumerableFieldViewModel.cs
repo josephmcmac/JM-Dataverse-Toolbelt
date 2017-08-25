@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Grid;
@@ -44,6 +44,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     GetGridRecords = GetGridRecords,
                     LoadRecordsAsync = true,
                     FormController = recordForm.FormController,
+                    OnReloading = () =>
+                    {
+                        _isLoaded = false;
+                    },
                     LoadedCallback = () =>
                     {
                         _isLoaded = true;
