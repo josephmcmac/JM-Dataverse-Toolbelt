@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
@@ -140,6 +140,8 @@ namespace JosephM.Xrm.ImportExporter.Service
                 }
             }
             controller.TurnOffLevel2();
+            controller.LogLiteral("Publishing Customisations");
+            xrmService.Publish();
         }
 
         public class Processor
