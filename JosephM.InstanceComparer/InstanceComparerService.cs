@@ -24,7 +24,7 @@ namespace JosephM.InstanceComparer
             LogController controller)
         {
 
-            var processContainer = new InstanceComparerService.ProcessContainer(request, response, controller);
+            var processContainer = new ProcessContainer(request, response, controller);
 
             //ENSURE TO INCREASE THIS IF ADDING TO PROCESSES
             processContainer.NumberOfProcesses = 16;
@@ -67,7 +67,10 @@ namespace JosephM.InstanceComparer
             var processCompareParams = new ProcessCompareParams("Security Role",
                 Entities.role, Fields.role_.name, Fields.role_.name,
                 new[] { new Condition(Fields.role_.parentroleid, ConditionType.Null) },
-                null);
+                null)
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.role_.roleid, OptionSets.SolutionComponent.ObjectTypeCode.Role)
+            };
 
             //this is a speical many to many type containing
             //the privilegedepthmask in intersect table
@@ -90,11 +93,14 @@ namespace JosephM.InstanceComparer
         {
             var processCompareParams = new ProcessCompareParams("Shared Picklist",
                 s => s.GetSharedPicklists().ToArray(),
-                "SchemaName",
+                nameof(IPicklistSet.SchemaName),
                 GetReadableProperties(typeof(IPicklistSet), new[]
                     {
-                        "PicklistOptions"
-                    }));
+                        nameof(IPicklistSet.PicklistOptions)
+                    }))
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(nameof(IPicklistSet.MetadataId), OptionSets.SolutionComponent.ObjectTypeCode.OptionSet)
+            };
 
             var optionCompareParams = new ProcessCompareParams("Shared Picklist Option",
                 (s, r) => r.GetSharedPicklistOptions(s).ToArray(),
@@ -108,10 +114,15 @@ namespace JosephM.InstanceComparer
 
         private void AppendPlugins(ProcessContainer processContainer)
         {
+
+
             var processCompareParams = new ProcessCompareParams("Plugin Assembly",
                 Entities.pluginassembly, Fields.pluginassembly_.pluginassemblyid, Fields.pluginassembly_.name,
                 new[] { new Condition(Fields.pluginassembly_.ishidden, ConditionType.NotEqual, true) },
-                new[] { Fields.pluginassembly_.content, Fields.pluginassembly_.isolationmode, Fields.pluginassembly_.description });
+                new[] { Fields.pluginassembly_.content, Fields.pluginassembly_.isolationmode, Fields.pluginassembly_.description })
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.pluginassembly_.pluginassemblyid, OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly)
+            };
 
             var pluginTypeCompareParams = new ProcessCompareParams("Plugin Type",
                 Entities.plugintype, Fields.plugintype_.typename, Fields.plugintype_.typename, null, new[]
@@ -150,18 +161,21 @@ namespace JosephM.InstanceComparer
         {
             var processCompareParams = new ProcessCompareParams("Entity",
                 s => s.GetAllRecordTypes().Select(s.GetRecordTypeMetadata).ToArray(),
-                "SchemaName",
+                nameof(IRecordTypeMetadata.SchemaName),
                 GetReadableProperties(typeof(IRecordTypeMetadata), new[]
                     {
-                        "MetadataId", "RecordTypeCode", "Activities", "Notes"
-                    }));
+                        nameof(IRecordTypeMetadata.MetadataId), nameof(IRecordTypeMetadata.RecordTypeCode), nameof(IRecordTypeMetadata.Activities), nameof(IRecordTypeMetadata.Notes)
+                    }))
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(nameof(IRecordTypeMetadata.MetadataId), OptionSets.SolutionComponent.ObjectTypeCode.Entity)
+            };
 
             var fieldsCompareParams = new ProcessCompareParams("Field",
                 (s, r) => r.GetFieldMetadata(s).ToArray(),
-                "SchemaName",
+                nameof(IFieldMetadata.SchemaName),
                 GetReadableProperties(typeof(IFieldMetadata), new[]
                     {
-                        "MetadataId"
+                        nameof(IFieldMetadata.MetadataId)
                     }));
 
 
@@ -174,10 +188,10 @@ namespace JosephM.InstanceComparer
 
             var manyToManyCompareParams = new ProcessCompareParams("Many To Many Relationship",
                 (s, r) => r.GetManyToManyRelationships(s).ToArray(),
-                "SchemaName",
+                nameof(IMany2ManyRelationshipMetadata.SchemaName),
                 GetReadableProperties(typeof(IMany2ManyRelationshipMetadata), new[]
                     {
-                        "MetadataId"
+                        nameof(IMany2ManyRelationshipMetadata.MetadataId)
                     }));
 
             var formCompareParams = new ProcessCompareParams("Form",
@@ -224,7 +238,10 @@ namespace JosephM.InstanceComparer
                 Fields.webresource_.name,
                 Fields.webresource_.name,
                 new[] { new Condition(Fields.webresource_.ishidden, ConditionType.NotEqual, true) },
-                new[] { Fields.webresource_.content, Fields.webresource_.description, Fields.webresource_.displayname, Fields.webresource_.webresourcetype, Fields.webresource_.languagecode });
+                new[] { Fields.webresource_.content, Fields.webresource_.description, Fields.webresource_.displayname, Fields.webresource_.webresourcetype, Fields.webresource_.languagecode })
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.webresource_.webresourceid, OptionSets.SolutionComponent.ObjectTypeCode.WebResource)
+            };
 
             ProcessCompare(processArgs, processContainer);
         }
@@ -248,7 +265,11 @@ namespace JosephM.InstanceComparer
                 Fields.workflow_.workflowid,
                 Fields.workflow_.name,
                 new[] { new Condition(Fields.workflow_.type, ConditionType.Equal, OptionSets.Process.Type.Definition), new Condition(Fields.workflow_.rendererobjecttypecode, ConditionType.Null) },
-                new[] { Fields.workflow_.name, Fields.workflow_.statecode, Fields.workflow_.xaml, Fields.workflow_.description, Fields.workflow_.ondemand, Fields.workflow_.rank, Fields.workflow_.triggeronupdateattributelist, Fields.workflow_.triggeroncreate, Fields.workflow_.triggerondelete, Fields.workflow_.createstage, Fields.workflow_.updatestage, Fields.workflow_.deletestage, Fields.workflow_.iscrmuiworkflow, Fields.workflow_.istransacted, Fields.workflow_.mode, Fields.workflow_.runas, Fields.workflow_.subprocess, Fields.workflow_.scope, Fields.workflow_.primaryentity, Fields.workflow_.sdkmessageid });
+                new[] { Fields.workflow_.name, Fields.workflow_.statecode, Fields.workflow_.xaml, Fields.workflow_.description, Fields.workflow_.ondemand, Fields.workflow_.rank, Fields.workflow_.triggeronupdateattributelist, Fields.workflow_.triggeroncreate, Fields.workflow_.triggerondelete, Fields.workflow_.createstage, Fields.workflow_.updatestage, Fields.workflow_.deletestage, Fields.workflow_.iscrmuiworkflow, Fields.workflow_.istransacted, Fields.workflow_.mode, Fields.workflow_.runas, Fields.workflow_.subprocess, Fields.workflow_.scope, Fields.workflow_.primaryentity, Fields.workflow_.sdkmessageid })
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.workflow_.workflowid, OptionSets.SolutionComponent.ObjectTypeCode.Workflow)
+            };
+
             processArgs.AddConversionObject(Fields.workflow_.sdkmessageid,
                 new ProcessCompareParams.ConvertWorkflowMessage(processContainer.ServiceOne),
                 new ProcessCompareParams.ConvertWorkflowMessage(processContainer.ServiceTwo));
@@ -508,18 +529,24 @@ namespace JosephM.InstanceComparer
                 .ToArray();
             foreach (var item in inOneNotInTwo)
             {
-                var displayName = processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
-                processContainer.AddDifference(processCompareParams.Context,
-                    displayName, "In One Not In Two", parentReference, displayName, null, item.Id, null);
+                if (!processContainer.ProcessIfManagedComponentExclude(processCompareParams, item, true))
+                {
+                    var displayName = processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
+                    processContainer.AddDifference(processCompareParams.Context,
+                        displayName, "In One Not In Two", parentReference, displayName, null, item.Id, null);
+                }
             }
             var inTwoNotInOne = serviceTwoItems
                 .Where(w => !thisInBoth.Select(kv => kv.Last()).Contains(w))
                 .ToArray();
             foreach (var item in inTwoNotInOne)
             {
-                var displayName = processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
-                processContainer.AddDifference(processCompareParams.Context,
-                    displayName, "In Two Not In One", parentReference, null, displayName, null, item.Id);
+                if (!processContainer.ProcessIfManagedComponentExclude(processCompareParams, item, false))
+                {
+                    var displayName = processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
+                    processContainer.AddDifference(processCompareParams.Context,
+                        displayName, "In Two Not In One", parentReference, null, displayName, null, item.Id);
+                }
             }
 
             //differences
@@ -545,11 +572,14 @@ namespace JosephM.InstanceComparer
                             //okay for difference if it is a string we only really want to display s part of string which is different
                             if (field1 is string || field2 is string)
                             {
+                                displayValue1 = (string)field1;
+                                displayValue2 = (string)field2;
+
                                 var charsToDisplay = 40;
                                 if (field1 == null)
-                                    displayValue2 = displayValue2.Left(charsToDisplay) + (displayValue2.Length > 40 ? "..." : "");
+                                    displayValue2 = displayValue2.Left(charsToDisplay) + (displayValue2.Length > charsToDisplay ? "..." : "");
                                 else if (field2 == null)
-                                    displayValue1 = displayValue1.Left(charsToDisplay) + (displayValue1.Length > 40 ? "..." : "");
+                                    field1 = displayValue1.Left(charsToDisplay) + (displayValue1.Length > charsToDisplay ? "..." : "");
                                 else
                                 {
                                     //https://stackoverflow.com/questions/4585939/comparing-strings-and-get-the-first-place-where-they-vary-from-eachother
@@ -583,6 +613,19 @@ namespace JosephM.InstanceComparer
 
         public class ProcessCompareParams
         {
+            public class SolutionComponentConfig
+            {
+                public string MetadataIdFieldName { get; set; }
+                public int ComponentType { get; set; }
+
+                public SolutionComponentConfig(string metadataIdFieldName, int componentType)
+                {
+                    MetadataIdFieldName = metadataIdFieldName;
+                    ComponentType = componentType;
+                }
+            }
+
+            public SolutionComponentConfig SolutionComponentConfiguration { get; set; }
             public string Context { get; set; }
             public Func<string, string, IRecordService, IEnumerable<object>> GetObjects { get; set; }
             public IEnumerable<Condition> Conditions { get; set; }
@@ -789,6 +832,7 @@ namespace JosephM.InstanceComparer
                     var theString = (string)sourceValue;
                     //strips out id in e.g. object="10010"
                     theString = StripStartToEnd(theString, "object=\"", "\"");
+                    theString = theString.Replace(" />", "/>");
                     return theString;
                 }
             }
@@ -803,6 +847,7 @@ namespace JosephM.InstanceComparer
                     theString = RemoveStrings(removeStrings, theString);
                     //strips out id in e.g. id="{0ae8f26b-f7b6-4ad8-933e-7c972b297624}"
                     theString = StripStartToEnd(theString, "id=\"{", "}");
+                    theString = theString.Replace("<row></row>", "<row />");
                     return theString;
                 }
             }
@@ -924,6 +969,7 @@ namespace JosephM.InstanceComparer
             public IRecordService ServiceTwo { get; set; }
 
             public List<InstanceComparerDifference> Differences { get; set; }
+            public Dictionary<string, IEnumerable<IRecord>> MissingManagedSolutionComponents { get; private set; }
 
             //public IEnumerable<InstanceComparerRequest.InstanceCompareDataCompare> TypesToCompareData
             //{
@@ -942,11 +988,46 @@ namespace JosephM.InstanceComparer
                 ServiceOne = new XrmRecordService(request.ConnectionOne);
                 ServiceTwo = new XrmRecordService(request.ConnectionTwo);
                 Differences = new List<InstanceComparerDifference>();
+                MissingManagedSolutionComponents = new Dictionary<string, IEnumerable<IRecord>>();
             }
 
             internal void AddDifference(string type, object name, string difference, string parentReference, object value1, object value2, string id1, string id2)
             {
                 Differences.Add(new InstanceComparerDifference(type, name == null ? null : name.ToString(), difference, parentReference, value1 == null ? null : value1.ToString(), value2 == null ? null : value2.ToString(), id1, id2));
+            }
+
+            internal bool ProcessIfManagedComponentExclude(ProcessCompareParams processCompareParams, IRecord item, bool isInConnection1)
+            {
+                //okay if we have a managed solution missing in one environment
+                //then lets exclude components in that solution in the list because it just creates irrelevant noise in the output
+
+                //firstly if this is a solution we need to capture it in this record
+                if(processCompareParams.RecordType == Entities.solution && item.GetBoolField(Fields.solution_.ismanaged))
+                {
+                    if(!MissingManagedSolutionComponents.ContainsKey(item.Id))
+                    {
+                        var componentsInSolution = isInConnection1
+                            ? ServiceOne.GetLinkedRecords(Entities.solutioncomponent, Entities.solution, Fields.solutioncomponent_.solutionid, item.Id)
+                            : ServiceTwo.GetLinkedRecords(Entities.solutioncomponent, Entities.solution, Fields.solutioncomponent_.solutionid, item.Id);
+                        MissingManagedSolutionComponents.Add(item.Id, componentsInSolution);
+                    }
+                }
+                //okay otherwise if a solution component configured then check if this is a part of the managed solution
+                else if (processCompareParams.SolutionComponentConfiguration != null)
+                {
+                    foreach(var solution in MissingManagedSolutionComponents)
+                    {
+                        foreach(var component in solution.Value)
+                        {
+                            if(component.GetIdField(Fields.solutioncomponent_.objectid) == item.GetIdField(processCompareParams.SolutionComponentConfiguration.MetadataIdFieldName)
+                                && component.GetOptionKey(Fields.solutioncomponent_.componenttype) == processCompareParams.SolutionComponentConfiguration.ComponentType.ToString())
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
             }
         }
     }

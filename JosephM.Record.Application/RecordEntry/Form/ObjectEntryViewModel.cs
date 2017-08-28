@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.IO;
@@ -18,6 +18,7 @@ using JosephM.Application.ViewModel.Dialog;
 using System.Collections.Generic;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Field;
+using System.Threading;
 
 #endregion
 
@@ -119,6 +120,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override void LoadObject()
         {
+
             try
             {
                 var theObject = GetObject();
@@ -145,7 +147,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     mapper.Map(selectionObject.Selection, theObject);
                     if (theObject is ServiceRequestBase)
                         ((ServiceRequestBase)theObject).DisplaySavedSettingFields = false;
+
+                    LoadingViewModel.IsLoading = true;
+
+                    //put this in here so that this gets the the UI before the grid hijacks the main thread
+                    //if not here the main thread is taken before the loading form display hits the main thread 
+                    //and the screen freezes while loading the grid metadata
+
+                    Thread.Sleep(1000);
+
                     Reload();
+
                     foreach (var grid in SubGrids)
                     {
                         grid.DynamicGridViewModel.ReloadGrid();
