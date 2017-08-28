@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
@@ -171,5 +171,7 @@ namespace JosephM.Record.IService
         IRecordService GetLookupService(string fieldName, string recordType, string reference, IRecord record);
 
         IsValidResponse IsValidForNewType(string typeName);
+
+        string GetDisplayNameField(string recordType);
     }
 }
