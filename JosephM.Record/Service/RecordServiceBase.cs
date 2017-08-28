@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Collections.Generic;
@@ -303,6 +303,11 @@ namespace JosephM.Record.Service
         public virtual IEnumerable<IRecord> GetLinkedRecordsThroughBridge(string linkedRecordType, string recordTypeThrough, string recordTypeFrom, string linkedThroughLookupFrom, string linkedThroughLookupTo, string recordFromId)
         {
             throw new NotImplementedException();
+        }
+
+        public string GetDisplayNameField(string recordType)
+        {
+            return GetRecordTypeMetadata(recordType).PrimaryFieldSchemaName;
         }
     }
 }

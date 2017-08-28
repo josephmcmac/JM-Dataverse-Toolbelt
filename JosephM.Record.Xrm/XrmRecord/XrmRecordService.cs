@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
@@ -956,6 +956,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                 var records = ToIRecords(entities);
                 processEachResultSet(records);
             });
+        }
+
+        public string GetDisplayNameField(string recordType)
+        {
+            if (recordType == Entities.solution)
+                return Fields.solution_.uniquename;
+            return GetRecordTypeMetadata(recordType).PrimaryFieldSchemaName;
         }
 
         public string WebUrl

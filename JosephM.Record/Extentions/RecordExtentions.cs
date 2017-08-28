@@ -1,4 +1,4 @@
-﻿using JosephM.Core.Extentions;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Serialisation;
 using JosephM.Record.IService;
@@ -47,7 +47,7 @@ namespace JosephM.Record.Extentions
             var lookup = new Lookup(record.Type, record.Id, null);
             if (service != null)
             {
-                var primaryField = service.GetRecordTypeMetadata(lookup.RecordType).PrimaryFieldSchemaName;
+                var primaryField = service.GetDisplayNameField(lookup.RecordType);
                 if (primaryField != null)
                     lookup.Name = record.GetStringField(primaryField);
             }
