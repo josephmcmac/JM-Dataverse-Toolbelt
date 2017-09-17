@@ -117,6 +117,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         public bool ExportAsManaged { get; set; }
 
         [Group(Sections.PackageSolution)]
+        [PropertyInContextByPropertyValue(nameof(ImportExportTask), SolutionImportExportTask.CreateDeploymentPackage)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [CascadeOnChange(nameof(SetVersionPostRelease))]
         [DisplayOrder(520)]
@@ -124,6 +125,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         public string ThisReleaseVersion { get; set; }
 
         [Group(Sections.PackageSolution)]
+        [PropertyInContextByPropertyValue(nameof(ImportExportTask), SolutionImportExportTask.CreateDeploymentPackage)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [DisplayOrder(530)]
         [RequiredProperty]
