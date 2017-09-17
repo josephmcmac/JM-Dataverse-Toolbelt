@@ -262,11 +262,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         {
                             var changedViewModelLookup = ((LookupFieldViewModel)changedViewModel).Value;
                             var matchingFields = re.FieldViewModels.Where(f => f.FieldName == attribute.TargetProperty);
-                            var lookupRecord = ObjectRecordService.GetLookupService(changedViewModel.FieldName, re.GetRecordType(), re.ParentFormReference, re.GetRecord()).Get(changedViewModelLookup.RecordType, changedViewModelLookup.Id);
-                            var sourceFieldValue = lookupRecord.GetField(attribute.SourceRecordField);
-                            if (matchingFields.Any())
+                            var lookupService = ObjectRecordService.GetLookupService(changedViewModel.FieldName, re.GetRecordType(), re.ParentFormReference, re.GetRecord());
+                            if (lookupService != null)
                             {
-                                matchingFields.First().ValueObject = sourceFieldValue;
+                                var lookupRecord = lookupService.Get(changedViewModelLookup.RecordType, changedViewModelLookup.Id);
+                                var sourceFieldValue = lookupRecord.GetField(attribute.SourceRecordField);
+                                if (matchingFields.Any())
+                                {
+                                    matchingFields.First().ValueObject = sourceFieldValue;
+                                }
                             }
                         }
                     });
