@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
@@ -934,11 +934,11 @@ namespace JosephM.Xrm.ImportExporter.Service
                 foreach (var character in invalidChars)
                     namesToUse = namesToUse.Replace(character, '_');
             }
-            //ensure dont exceed max filename length
-            var fileName = string.Format(@"{0}\{1}_{2}_{3}", folder, entity.LogicalName, entity.Id,
-                namesToUse).Left(240);
-            fileName = fileName + ".xml";
+            var fileName = string.Format(@"{0}_{1}_{2}", entity.LogicalName, entity.Id, namesToUse);
             fileName = fileName.Replace('-', '_');
+            //ensure dont exceed max filename length
+            fileName = string.Format(@"{0}\{1}", folder, fileName).Left(240);
+            fileName = fileName + ".xml";
             using (var fileStream = new FileStream(fileName, FileMode.Create))
             {
                 lateBoundSerializer.WriteObject(fileStream, entity);

@@ -10,7 +10,7 @@ namespace JosephM.XRM.VSIX.Dialogs
     {
         public static IDialogController CreateDialogController()
         {
-            return new DialogController(new VsixApplicationController("VSIX", null));
+            return new DialogController(new VsixApplicationController(null));
         }
 
         public static void LoadDialog(DialogViewModel dialog, bool showCompletion = true, bool isModal = false)

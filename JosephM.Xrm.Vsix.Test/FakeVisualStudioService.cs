@@ -1,11 +1,19 @@
 using System.Collections.Generic;
 using JosephM.XRM.VSIX.Utilities;
+using JosephM.Core.Test;
+using System.IO;
 
 namespace JosephM.Xrm.Vsix.Test
 {
     public class FakeVisualStudioService : IVisualStudioService
     {
-        public string SolutionDirectory { get { return null; } }
+        //WARNING THIS IS CLEARED EVERY TEST SCRIPT !!
+        public string SolutionDirectory { get { return Path.Combine(TestConstants.TestFolder, "FakeVSSolutionFolder"); } }
+
+        public void AddFolder(string folderDirectory)
+        {
+        }
+
         public string AddSolutionItem(string connectionFileName, string serialised)
         {
             return null;

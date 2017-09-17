@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -23,6 +24,8 @@ namespace JosephM.Core.Utility
             if (Directory.Exists(folder))
                 foreach (var subFolder in Directory.GetDirectories(folder))
                 {
+                    DeleteFiles(subFolder);
+                    DeleteSubFolders(subFolder);
                     Directory.Delete(subFolder);
                 }
         }
@@ -30,6 +33,11 @@ namespace JosephM.Core.Utility
         public static IEnumerable<string> GetFiles(string folder)
         {
             return Directory.GetFiles(folder);
+        }
+
+        public static IEnumerable<string> GetFolders(string folder)
+        {
+            return Directory.GetDirectories(folder);
         }
 
         public static void WriteToFile(string folder, string name, string text)
@@ -60,6 +68,24 @@ namespace JosephM.Core.Utility
         {
             CheckCreateFolder(folder);
             WriteToFile(folder, name, text);
+        }
+
+        public static void MoveWithReplace(string sourceFolder, string targetFolder)
+        {
+            if (!Directory.Exists(targetFolder))
+                Directory.CreateDirectory(targetFolder);
+            foreach (var file in Directory.GetFiles(sourceFolder))
+            {
+                var targetFile = file.Replace(sourceFolder, targetFolder);
+                if (File.Exists(targetFile))
+                    File.Delete(targetFile);
+                File.Move(file, targetFile);
+            }
+            foreach (var folder in Directory.GetDirectories(sourceFolder))
+            {
+                var targetSubFolder = folder.Replace(sourceFolder, targetFolder);
+                MoveWithReplace(folder, targetSubFolder);
+            }
         }
     }
 }

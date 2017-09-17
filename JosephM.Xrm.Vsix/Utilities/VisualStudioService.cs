@@ -4,6 +4,8 @@ using EnvDTE;
 using EnvDTE80;
 using JosephM.Core.Serialisation;
 using JosephM.Core.Utility;
+using System;
+using System.Linq;
 
 namespace JosephM.XRM.VSIX.Utilities
 {
@@ -40,9 +42,19 @@ namespace JosephM.XRM.VSIX.Utilities
             }
         }
 
+        private Project AddSolutionFolder(string folder)
+        {
+            foreach (Project item in Solution.Projects)
+            {
+                if (item.Name == folder)
+                    return item;
+            }
+            return Solution.AddSolutionFolder(folder);
+        }
+
         public string AddSolutionItem(string name, string serialised)
         {
-            var project = VsixUtility.AddSolutionFolder(Solution, "SolutionItems");
+            var project = AddSolutionFolder("SolutionItems");
             var solutionItemsFolder = SolutionDirectory + @"\SolutionItems";
             FileUtility.WriteToFile(solutionItemsFolder, name, serialised);
             VsixUtility.AddProjectItem(project.ProjectItems, Path.Combine(solutionItemsFolder, name));
@@ -51,7 +63,7 @@ namespace JosephM.XRM.VSIX.Utilities
 
         public string AddSolutionItem(string fileQualified)
         {
-            var project = VsixUtility.AddSolutionFolder(Solution, "SolutionItems");
+            var project = AddSolutionFolder("SolutionItems");
             if (fileQualified.StartsWith(SolutionDirectory))
             {
                 var subString = fileQualified.Substring(SolutionDirectory.Length + 1);
@@ -59,7 +71,7 @@ namespace JosephM.XRM.VSIX.Utilities
                 {
                     var folder = subString.Substring(0, subString.LastIndexOf(@"\"));
                     FileUtility.CheckCreateFolder(SolutionDirectory + @"\" + folder);
-                    project = VsixUtility.AddSolutionFolder(Solution, folder);
+                    project = AddSolutionFolder(folder);
                 }
             }
             VsixUtility.AddProjectItem(project.ProjectItems, fileQualified);
@@ -114,6 +126,66 @@ namespace JosephM.XRM.VSIX.Utilities
         public void CloseAllDocuments()
         {
             DTE.Documents.CloseAll();
+        }
+
+        public void AddFolder(string folderDirectory)
+        {
+            if (folderDirectory == null)
+                throw new ArgumentNullException(nameof(folderDirectory));
+
+            var solutionDirectory = SolutionDirectory;
+
+            if (!folderDirectory.StartsWith(solutionDirectory))
+                throw new ArgumentOutOfRangeException(nameof(folderDirectory), "Required to be in solution directory - " + solutionDirectory);
+
+            var subPath = folderDirectory.Substring(solutionDirectory.Length);
+
+            var subDirectories = subPath.Split(Path.DirectorySeparatorChar).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            Project carryProject = null;
+            foreach(var item in subDirectories)
+            {
+                if (carryProject == null)
+                {
+                    carryProject = AddSolutionFolder(item);
+                }
+                else
+                {
+                    var solutionFolder = (SolutionFolder)carryProject.Object;
+                    carryProject = AddSolutionFolderSubFolder(solutionFolder, item);
+                }
+            }
+            var releaseSolutionFolder = (SolutionFolder)carryProject.Object;
+            CopyFilesIntoSolutionFolder(releaseSolutionFolder, folderDirectory);
+
+            if (!Solution.Saved)
+                Solution.SaveAs(Solution.FullName);
+        }
+
+        private Project AddSolutionFolderSubFolder(SolutionFolder solutionFolder, string folder)
+        {
+            var parent = solutionFolder.Parent;
+
+            foreach (ProjectItem item in parent.ProjectItems)
+            {
+                if (item.Name == folder)
+                    return (Project)item.Object;
+            }
+            return solutionFolder.AddSolutionFolder(folder);
+        }
+
+        private void CopyFilesIntoSolutionFolder(SolutionFolder releaseSolutionFolder, string folderDirectory)
+        {
+            var parent = releaseSolutionFolder.Parent;
+            var name = parent.Name;
+            foreach (var file in Directory.GetFiles(folderDirectory))
+            {
+                parent.ProjectItems.AddFromFile(file);
+            }
+            foreach (var childFolder in Directory.GetDirectories(folderDirectory))
+            {
+                var childSolutionFolder = AddSolutionFolderSubFolder(releaseSolutionFolder, new DirectoryInfo(childFolder).Name);
+                CopyFilesIntoSolutionFolder((SolutionFolder)childSolutionFolder.Object, childFolder);
+            }
         }
     }
 }

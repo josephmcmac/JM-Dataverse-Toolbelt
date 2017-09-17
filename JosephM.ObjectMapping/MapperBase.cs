@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,7 +93,7 @@ namespace JosephM.ObjectMapping
                         {
                             objectList.Add(classSelfMapper.Map(instance));
                         }
-                        genericType.ToNewTypedEnumerable(objectList);
+                        mappedValue = genericType.ToNewTypedEnumerable(objectList);
                     }
                     else if (propertyTo.PropertyType.HasParameterlessConstructor())
                     {

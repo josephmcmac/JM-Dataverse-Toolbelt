@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
@@ -6,6 +6,7 @@ using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.ImportExporter.Solution.Service;
+using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -22,6 +23,11 @@ namespace JosephM.Xrm.ImportExporter.Service
     public class XrmSolutionImporterExporterService :
         ServiceBase<XrmSolutionImporterExporterRequest, XrmSolutionImporterExporterResponse, XrmSolutionImporterExporterResponseItem>
     {
+        public XrmSolutionImporterExporterService(XrmRecordService xrmRecordService)
+        {
+            XrmRecordService = xrmRecordService;
+        }
+
         public override void ExecuteExtention(XrmSolutionImporterExporterRequest request, XrmSolutionImporterExporterResponse response,
             LogController controller)
         {
@@ -42,6 +48,129 @@ namespace JosephM.Xrm.ImportExporter.Service
                         MigrateSolutions(request, controller, response);
                         break;
                     }
+                case SolutionImportExportTask.CreateDeploymentPackage:
+                    {
+                        CreateDeploymentPackage(request, controller, response);
+                        break;
+                    }
+                case SolutionImportExportTask.DeployPackage:
+                    {
+                        DeployPackage(request, controller, response);
+                        break;
+                    }
+            }
+        }
+
+        private void DeployPackage(XrmSolutionImporterExporterRequest request, LogController controller, XrmSolutionImporterExporterResponse response)
+        {
+            var xrmRecordService = new XrmRecordService(request.Connection, controller);
+            var packageFolder = request.FolderContainingPackage.FolderPath;
+            var solutionFiles = Directory.GetFiles(packageFolder, "*.zip");
+            var solutions = solutionFiles.Select(f => new SolutionImport()
+            {
+                OverwriteCustomisations = true,
+                PublishWorkflows = true,
+                SolutionFile = new FileReference(f)
+            });
+
+            ImportSolutions(solutions, controller, response, xrmRecordService.XrmService);
+
+            foreach(var childFolder in Directory.GetDirectories(packageFolder))
+            {
+                if(new DirectoryInfo(childFolder).Name == "Data")
+                {
+                    var dataImportService = new XrmImporterExporterService<XrmRecordService>(xrmRecordService);
+                    var importResponse = new XrmImporterExporterResponse();
+                    dataImportService.ImportXml(childFolder, controller, importResponse);
+                    if (importResponse.Exception != null)
+                        response.AddResponseItem(new XrmSolutionImporterExporterResponseItem("Fatal Data Import Error", importResponse.Exception));
+                    foreach (var item in importResponse.ResponseItems)
+                        response.AddResponseItem(new XrmSolutionImporterExporterResponseItem(item));
+                }
+            }
+        }
+
+        private void CreateDeploymentPackage(XrmSolutionImporterExporterRequest request, LogController controller, XrmSolutionImporterExporterResponse response)
+        {
+            var folderPath = request.FolderPath.FolderPath;
+
+            var exportResponse = new List<ExportedSolution>();
+            var tasksDone = 0;
+            var totalTasks = 3;
+
+            var xrmRecordService = XrmRecordService;
+            var service = xrmRecordService.XrmService;
+            var solution = service.Retrieve(Entities.solution, new Guid(request.Solution.Id));
+            tasksDone++;
+            if (solution.GetStringField(Fields.solution_.version) != request.ThisReleaseVersion)
+            {
+                controller.UpdateProgress(tasksDone, totalTasks, "Setting Release Version " + request.ThisReleaseVersion);
+                solution.SetField(Fields.solution_.version, request.ThisReleaseVersion);
+                service.Update(solution, new[] { Fields.solution_.version });
+            }
+            controller.UpdateProgress(tasksDone, totalTasks, "Exporting Solution " + request.Solution.Name);
+
+            var uniqueName = (string)solution.GetStringField(Fields.solution_.uniquename);
+            var req = new ExportSolutionRequest();
+            req.Managed = request.ExportAsManaged;
+            req.SolutionName = uniqueName;
+
+            var eresponse = (ExportSolutionResponse)service.Execute(req);
+
+            var version = solution.GetStringField(Fields.solution_.version);
+            var versionText = version == null ? null : version.Replace(".", "_");
+            var fileName = string.Format("{0}_{1}{2}.zip", uniqueName, versionText,
+                request.ExportAsManaged ? "_managed" : null);
+
+            FileUtility.WriteToFile(folderPath, fileName, eresponse.ExportSolutionFile);
+            ++tasksDone;
+            if (request.DataToInclude != null && request.DataToInclude.Any())
+            {
+                controller.UpdateProgress(tasksDone, totalTasks, "Exporting Data " + request.Solution.Name);
+                try
+                {
+                    var dataExportService = new XrmImporterExporterService<XrmRecordService>(xrmRecordService);
+                    dataExportService.ExportXml(request.DataToInclude,
+                        new Folder(GetDataExportFolder(folderPath)), request.IncludeNotes,
+                        request.IncludeNNRelationshipsBetweenEntities, controller);
+                }
+                catch (Exception ex)
+                {
+                    response.AddResponseItem(
+                        new XrmSolutionImporterExporterResponseItem(
+                            string.Format("Error Exporting Data For {0}", request.Solution.Name), ex));
+                }
+            }
+            tasksDone++;
+            if (solution.GetStringField(Fields.solution_.version) != request.SetVersionPostRelease)
+            {
+                controller.UpdateProgress(tasksDone, totalTasks, "Setting New Solution Version " + request.SetVersionPostRelease);
+                solution.SetField(Fields.solution_.version, request.SetVersionPostRelease);
+                service.Update(solution, new[] { Fields.solution_.version });
+            }
+            if(request.DeployPackageInto != null)
+            {
+                try
+                {
+                    if(response.HasError)
+                    {
+                        throw new Exception("Package Deployment Aborted Due To Errors During Creating");
+                    }
+                    else
+                    {
+                        var deployRequest = new XrmSolutionImporterExporterRequest
+                        {
+                            ImportExportTask = SolutionImportExportTask.DeployPackage,
+                            FolderContainingPackage = request.FolderPath,
+                            Connection = request.DeployPackageInto
+                        };
+                        DeployPackage(deployRequest, controller, response);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    response.AddResponseItem(new XrmSolutionImporterExporterResponseItem("Import Failure", ex));
+                }
             }
         }
 
@@ -57,7 +186,7 @@ namespace JosephM.Xrm.ImportExporter.Service
                     throw new NullReferenceException(string.Format("Error Preparing Import Solutions - Solution {0} Was Not Matched In The Exports", thisItem.Solution.Name));
                 imports.Add(new ExportedSolutionImport(matchingExports.First(), thisItem));
             }
-            var importToRecordService = new XrmRecordService(request.ImportToConnection, controller);
+            var importToRecordService = new XrmRecordService(request.Connection, controller);
             ImportSolutions(imports, controller, response, importToRecordService.XrmService);
 
             var dataPath = GetDataExportFolder(request.FolderPath.FolderPath);
@@ -73,12 +202,10 @@ namespace JosephM.Xrm.ImportExporter.Service
             }
         }
 
-        private object _lockObject = new object();
-
         private void ImportSolutions(XrmSolutionImporterExporterRequest request, LogController controller,
-            XrmSolutionImporterExporterResponse response)
+    XrmSolutionImporterExporterResponse response)
         {
-            var xrmRecordService = new XrmRecordService(request.ImportToConnection, controller);
+            var xrmRecordService = new XrmRecordService(request.Connection, controller);
             ImportSolutions(request.SolutionImports, controller, response, xrmRecordService.XrmService);
             if (request.IncludeImportDataInFolder != null && Directory.Exists(request.IncludeImportDataInFolder.FolderPath))
             {
@@ -91,6 +218,13 @@ namespace JosephM.Xrm.ImportExporter.Service
                     response.AddResponseItem(new XrmSolutionImporterExporterResponseItem(item));
             }
         }
+
+        private object _lockObject = new object();
+
+        /// <summary>
+        /// WARNING IN SOME CASES THERE IS A SEPERATE CONNECTION USING OTHER PROPERTIES
+        /// </summary>
+        public XrmRecordService XrmRecordService { get; set; }
 
         private void ImportSolutions(IEnumerable<ISolutionImport> imports, LogController controller, XrmSolutionImporterExporterResponse response, XrmService xrmService)
         {
@@ -140,6 +274,8 @@ namespace JosephM.Xrm.ImportExporter.Service
                 }
             }
             controller.TurnOffLevel2();
+            controller.LogLiteral("Publishing Customisations");
+            xrmService.Publish();
         }
 
         public class Processor
@@ -190,6 +326,7 @@ namespace JosephM.Xrm.ImportExporter.Service
         {
             return rootFolder == null ? null : Path.Combine(rootFolder, "Data");
         }
+
 
         private IEnumerable<ExportedSolution> ExportSolutions(IEnumerable<SolutionExport> exports, string folderPath, LogController controller, XrmSolutionImporterExporterResponse response)
         {

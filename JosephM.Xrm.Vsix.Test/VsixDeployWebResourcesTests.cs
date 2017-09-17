@@ -25,7 +25,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.IsFalse(GetJavaScriptFileRecords().Any());
 
-            var packageSettings = GetPackageSettingsAddToSolution();
+            var packageSettings = GetTestPackageSettings();
 
             var deployResourcesService = new DeployWebResourcesService(XrmRecordService, packageSettings);
 

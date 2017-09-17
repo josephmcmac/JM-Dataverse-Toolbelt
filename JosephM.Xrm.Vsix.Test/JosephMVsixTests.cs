@@ -1,12 +1,18 @@
-﻿using JosephM.Application.ViewModel.Fakes;
+﻿using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Utility;
+using JosephM.ObjectMapping;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
+using JosephM.Record.Xrm.Mappers;
 using JosephM.Record.Xrm.Test;
 using JosephM.Xrm.Schema;
 using JosephM.XRM.VSIX;
 using JosephM.XRM.VSIX.Commands.DeployAssembly;
+using JosephM.XRM.VSIX.Dialogs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -18,24 +24,38 @@ namespace JosephM.Xrm.Vsix.Test
 {
     public class JosephMVsixTests : XrmRecordTest
     {
-        public XrmPackageSettings GetPackageSettingsAddToSolution()
+        private XrmPackageSettings _testPackageSettings;
+        public XrmPackageSettings GetTestPackageSettings()
         {
-            var testSolution = ReCreateTestSolution();
-            var packageSettinns = new XrmPackageSettings();
-            packageSettinns.AddToSolution = true;
-            packageSettinns.Solution = testSolution.ToLookup();
-            return packageSettinns;
+            if (_testPackageSettings == null)
+            {
+                var xrmConfiguration = new InterfaceMapperFor<IXrmConfiguration, XrmConfiguration>().Map(XrmConfiguration);
+                var xrmRecordConfiguration = new XrmConfigurationMapper().Map(xrmConfiguration);
+                var savedConnection = SavedXrmRecordConfiguration.CreateNew(xrmRecordConfiguration);
+
+                var testSolution = ReCreateTestSolution();
+                var packageSettings = new XrmPackageSettings();
+                PopulateObject(packageSettings);
+                packageSettings.AddToSolution = true;
+                packageSettings.Solution = testSolution.ToLookup();
+                packageSettings.Connections = new SavedXrmRecordConfiguration[] { savedConnection };
+                _testPackageSettings = packageSettings;
+            }
+            return _testPackageSettings;
         }
 
         public static FakeVisualStudioService CreateVisualStudioService()
         {
             var fakeVisualStudioService = new FakeVisualStudioService();
+            FileUtility.DeleteFiles(fakeVisualStudioService.SolutionDirectory);
+            FileUtility.DeleteSubFolders(fakeVisualStudioService.SolutionDirectory);
             return fakeVisualStudioService;
         }
-        public static FakeDialogController CreateDialogController()
+        public FakeDialogController CreateDialogController()
         {
-            return new FakeDialogController(new FakeApplicationController());
+            return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings())));
         }
+
         public static string GetTestPluginAssemblyName()
         {
             var file = new FileInfo(GetTestPluginAssemblyFile());
@@ -113,6 +133,18 @@ namespace JosephM.Xrm.Vsix.Test
                 new Condition(Fields.pluginassembly_.name, ConditionType.Equal, PluginAssemblyName)
             });
             return assemblyRecords;
+        }
+
+        public static void SubmitEntryForm(DialogViewModel dialog)
+        {
+            ObjectEntryViewModel entryViewModel = GetEntryForm(dialog);
+            Assert.IsTrue(entryViewModel.Validate(), entryViewModel.GetValidationSummary());
+            entryViewModel.OnSave();
+        }
+
+        public static ObjectEntryViewModel GetEntryForm(DialogViewModel dialog)
+        {
+            return (ObjectEntryViewModel)dialog.Controller.UiItems.First();
         }
     }
 }

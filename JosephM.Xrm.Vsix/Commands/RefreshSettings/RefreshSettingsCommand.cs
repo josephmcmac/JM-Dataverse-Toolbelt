@@ -16,7 +16,7 @@ namespace JosephM.XRM.VSIX.Commands.RefreshSettings
             if (settings == null)
                 settings = new XrmPackageSettings();
             var xrmService = GetXrmRecordService();
-            var dialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), settings, GetVisualStudioService(), true, xrmService);
+            var dialog = new XrmPackageSettingDialog(CreateDialogController(settings), settings, GetVisualStudioService(), true, xrmService);
 
             DialogUtility.LoadDialog(dialog);
         }

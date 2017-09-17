@@ -35,7 +35,7 @@ namespace JosephM.XRM.VSIX.Commands.ImportCsvs
             var dialog = new VsixServiceDialog<XrmImporterExporterService<XrmRecordService>, XrmImporterExporterRequest, XrmImporterExporterResponse, XrmImporterExporterResponseItem>(
                 service,
                 request,
-                new DialogController(new VsixApplicationController("VSIX", null)));
+                CreateDialogController());
 
             DialogUtility.LoadDialog(dialog);
         }

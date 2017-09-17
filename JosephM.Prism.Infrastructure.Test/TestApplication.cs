@@ -218,7 +218,8 @@ namespace JosephM.Prism.Infrastructure.Test
         public void EnterAndSaveObject(object objectToEnter, RecordEntryFormViewModel viewModel)
         {
             EnterObject(objectToEnter, viewModel);
-            Assert.IsTrue(viewModel.Validate(), viewModel.GetValidationSummary());
+            if(!viewModel.Validate())
+                throw new Exception(viewModel.GetValidationSummary());
             viewModel.SaveButtonViewModel.Invoke();
         }
 

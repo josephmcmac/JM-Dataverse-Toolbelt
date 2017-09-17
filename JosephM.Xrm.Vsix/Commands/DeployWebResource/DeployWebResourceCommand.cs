@@ -32,7 +32,7 @@ namespace JosephM.XRM.VSIX.Commands.DeployWebResource
             var dialog = new VsixServiceDialog<DeployWebResourcesService, DeployWebResourcesRequest, DeployWebResourcesResponse, DeployWebResourcesResponseItem>(
                 deployResourcesService,
                 request,
-                new DialogController(new VsixApplicationController("VSIX", null)));
+                CreateDialogController());
 
             DialogUtility.LoadDialog(dialog);
         }

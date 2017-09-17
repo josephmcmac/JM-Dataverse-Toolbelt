@@ -38,7 +38,7 @@ namespace JosephM.Prism.Infrastructure.Test
             {
                 SavedRequests = new[] { new TestSavedRequestDialogRequest() }
             };
-            var settingsManager = testApplication.Controller.ResolveType<PrismSettingsManager>();
+            var settingsManager = testApplication.Controller.ResolveType<ISettingsManager>();
             settingsManager.SaveSettingsObject(settings, typeof(TestSavedRequestDialogRequest));
 
             //navigate to the saved requests

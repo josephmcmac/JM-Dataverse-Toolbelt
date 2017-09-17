@@ -13,9 +13,9 @@ namespace JosephM.Xrm.ImportExporter.Prism
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelpUrl("Solution Import / Export", "SolutionImportExport");
+            AddHelpUrl("Solution Deployment", "SolutionImportExport");
         }
 
-        protected override string MainOperationName { get { return "Solution Import / Export"; } }
+        protected override string MainOperationName { get { return "Solution Deployment"; } }
     }
 }

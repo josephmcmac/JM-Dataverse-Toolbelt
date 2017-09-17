@@ -1,4 +1,6 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Utility;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.XRM.VSIX;
 using JosephM.XRM.VSIX.Commands.PackageSettings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,25 +16,19 @@ namespace JosephM.Xrm.Vsix.Test
         {
             var fakeVisualStudioService = CreateVisualStudioService();
 
-            var packageSettinns = new XrmPackageSettings();
-            PopulateObject(packageSettinns);
+            var packageSettinns = GetTestPackageSettings();
 
             var dialog = new XrmPackageSettingDialog(CreateDialogController(), packageSettinns, fakeVisualStudioService, true, null);
             dialog.Controller.BeginDialog();
 
-            var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
-            Assert.IsTrue(entryViewModel.Validate());
-            entryViewModel.OnSave();
+            SubmitEntryForm(dialog);
 
-            packageSettinns = new XrmPackageSettings();
-            PopulateObject(packageSettinns);
+            packageSettinns = GetTestPackageSettings();
 
             dialog = new XrmPackageSettingDialog(CreateDialogController(), packageSettinns, fakeVisualStudioService, true, XrmRecordService);
             dialog.Controller.BeginDialog();
 
-            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
-            Assert.IsTrue(entryViewModel.Validate());
-            entryViewModel.OnSave();
+            SubmitEntryForm(dialog);
         }
     }
 }

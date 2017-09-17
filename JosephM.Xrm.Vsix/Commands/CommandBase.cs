@@ -1,8 +1,13 @@
 ﻿using EnvDTE;
 using EnvDTE80;
+using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -194,6 +199,15 @@ namespace JosephM.XRM.VSIX.Commands
         {
             var dte = this.ServiceProvider.GetService(typeof (SDTE)) as DTE2;
             return dte;
+        }
+
+        public DialogController CreateDialogController(XrmPackageSettings settings = null)
+        {
+            if (settings == null)
+                settings = GetPackageSettings();
+            var container = VsixDependencyContainer.Create(settings);
+            var controller = new DialogController(new VsixApplicationController(container));
+            return controller;
         }
     }
 }

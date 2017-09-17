@@ -15,7 +15,7 @@ namespace JosephM.Prism.Infrastructure.Module
         public override void RegisterTypes()
         {
             base.RegisterTypes();
-            var configManager = Resolve<PrismSettingsManager>();
+            var configManager = Resolve<ISettingsManager>();
             var settings = configManager.Resolve<TSettingsGetSetClass>();
             Container.RegisterInstance<TSettingsInterface>(settings);
         }

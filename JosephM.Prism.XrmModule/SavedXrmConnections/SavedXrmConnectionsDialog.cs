@@ -28,7 +28,7 @@ namespace JosephM.Prism.XrmModule.SavedXrmConnections
                 var savedConfig = connections.Connections.First(c => c.Active);
                 var recordconfig =
                     new ObjectMapping.ClassMapperFor<SavedXrmRecordConfiguration, XrmRecordConfiguration>().Map(savedConfig);
-                ApplicationController.ResolveType<PrismSettingsManager>().SaveSettingsObject(recordconfig);
+                ApplicationController.ResolveType<ISettingsManager>().SaveSettingsObject(recordconfig);
                 XrmConnectionModule.RefreshXrmServices(recordconfig, ApplicationController);
             }
         }

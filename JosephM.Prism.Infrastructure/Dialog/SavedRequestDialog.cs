@@ -53,7 +53,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
             {
                 if (_settingsObject == null)
                 {
-                    var resolve = ApplicationController.ResolveType<PrismSettingsManager>().Resolve<SavedSettings>(RequestType);
+                    var resolve = ApplicationController.ResolveType<ISettingsManager>().Resolve<SavedSettings>(RequestType);
                     if(!resolve.SavedRequests.Any())
                     {
                         ApplicationController.UserMessage(string.Format("There are no saved {0} records", RequestType.GetDisplayName()));
@@ -76,7 +76,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
         protected override void CompleteDialogExtention()
         {
-            ApplicationController.ResolveType<PrismSettingsManager>().SaveSettingsObject(SettingsObject, RequestType);
+            ApplicationController.ResolveType<ISettingsManager>().SaveSettingsObject(SettingsObject, RequestType);
             //ApplicationController.RegisterInstance<TSettingsInterface>(SettingsObject);
             if (CompletionMessage == null)
                 CompletionMessage = "The Settings Have Been Saved";

@@ -13,10 +13,9 @@ namespace JosephM.Xrm.Vsix.Test
         [TestMethod]
         public void VsixRefreshConnectionDialogTest()
         {
-            var fakeVisualStudioService = CreateVisualStudioService();
             var xrmConfiguration = new InterfaceMapperFor<IXrmConfiguration,XrmConfiguration>().Map(XrmConfiguration);
             var xrmRecordConfiguration = new XrmConfigurationMapper().Map(xrmConfiguration);
-            var dialog = new ConnectionEntryDialog(CreateDialogController(), xrmRecordConfiguration, fakeVisualStudioService, true);
+            var dialog = new ConnectionEntryDialog(CreateDialogController(), xrmRecordConfiguration, CreateVisualStudioService(), true);
             dialog.Controller.BeginDialog();
 
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

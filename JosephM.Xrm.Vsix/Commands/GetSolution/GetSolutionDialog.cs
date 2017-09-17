@@ -13,14 +13,13 @@ namespace JosephM.XRM.VSIX.Commands.GetSolution
 {
     public class GetSolutionDialog : VsixServiceDialog<XrmSolutionImporterExporterService, XrmSolutionImporterExporterRequest, XrmSolutionImporterExporterResponse, XrmSolutionImporterExporterResponseItem>
     {
-        public XrmRecordService XrmRecordService { get; set; }
+        public XrmRecordService XrmRecordService { get { return Service.XrmRecordService; } }
         public XrmPackageSettings PackageSettings { get; set; }
         public IVisualStudioService VisualStudioService { get; set; }
 
-        public GetSolutionDialog(XrmSolutionImporterExporterService service, XrmSolutionImporterExporterRequest request, IDialogController dialogController, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings, IVisualStudioService visualStudioService)
+        public GetSolutionDialog(XrmSolutionImporterExporterService service, XrmSolutionImporterExporterRequest request, IDialogController dialogController, XrmPackageSettings packageSettings, IVisualStudioService visualStudioService)
             : base(service, request, dialogController)
         {
-            XrmRecordService = xrmRecordService;
             PackageSettings = packageSettings;
             VisualStudioService = visualStudioService;
         }

@@ -1,6 +1,7 @@
 ﻿#region
 
 using JosephM.Application.Application;
+using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Test;
 using Microsoft.Practices.Prism.Regions;
@@ -19,10 +20,15 @@ namespace JosephM.Application.ViewModel.Fakes
     /// </summary>
     public class FakeApplicationController : ApplicationControllerBase
     {
-        public FakeApplicationController()
-            : base("Test Script Application", new FakesDependencyContainer(new UnityContainer()))
+        public FakeApplicationController(IDependencyResolver dependencyResolver)
+            : base("Test Script Application", dependencyResolver)
         {
             AddNotification("FAKE", "FAKE NOTIFICATION");
+        }
+
+        public FakeApplicationController()
+            : this(new FakesDependencyContainer(new UnityContainer()))
+        {
         }
 
         public override void Remove(string regionName, object item)
