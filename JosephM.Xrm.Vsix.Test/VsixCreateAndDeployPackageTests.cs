@@ -1,13 +1,9 @@
-﻿using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
-using JosephM.ObjectMapping;
-using JosephM.Record.Xrm.Mappers;
 using JosephM.Xrm.ImportExporter.Service;
 using JosephM.Xrm.Schema;
 using JosephM.XRM.VSIX.Commands.CreateDeploymentPackage;
 using JosephM.XRM.VSIX.Commands.DeployPackage;
-using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
@@ -22,7 +18,10 @@ namespace JosephM.Xrm.Vsix.Test
         public void VsixCreateAndDeployPackageTest()
         {
             DeleteAll(Entities.account);
-            var account = CreateAccount();
+
+            var account = XrmRecordService.NewRecord(Entities.account);
+            account.SetField(Fields.account_.name, "TEST", XrmRecordService);
+            account.Id = XrmRecordService.Create(account, null);
 
             var visualStudioService = CreateVisualStudioService();
 
@@ -73,7 +72,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual("4.0.0.0", solution.GetStringField(Fields.solution_.version));
 
             //delete for recreation
-            XrmService.Delete(account);
+            XrmRecordService.Delete(account);
 
             //Okay now lets deploy it
             request = XrmSolutionImporterExporterRequest.CreateForDeployPackage(folder);
@@ -89,7 +88,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual("3.0.0.0", solution.GetStringField(Fields.solution_.version));
 
             //should be recreated
-            account = Refresh(account);
+            account = XrmRecordService.Get(account.Type, account.Id);
         }
     }
 }
