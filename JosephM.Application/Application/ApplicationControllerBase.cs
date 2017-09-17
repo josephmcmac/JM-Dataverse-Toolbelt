@@ -159,7 +159,7 @@ namespace JosephM.Application.Application
 
         public object ResolveType(Type type)
         {
-            return Container.ResolveType(type);
+            return Container == null ? null : Container.ResolveType(type);
         }
 
         public void RegisterInstance(Type type, object instance)

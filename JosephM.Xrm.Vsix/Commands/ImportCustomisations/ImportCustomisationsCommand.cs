@@ -41,7 +41,7 @@ namespace JosephM.XRM.VSIX.Commands.ImportCustomisations
             var dialog = new VsixServiceDialog<CustomisationImportService, CustomisationImportRequest, CustomisationImportResponse, CustomisationImportResponseItem>(
                 customisationImportService,
                 request,
-                new DialogController(new VsixApplicationController("VSIX", null))
+                CreateDialogController()
                 , showRequestEntryForm: true);
             //refresh cache in case customisation changes have been made
             xrmService.ClearCache();

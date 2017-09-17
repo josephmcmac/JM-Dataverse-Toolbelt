@@ -10,6 +10,7 @@ namespace JosephM.XRM.VSIX.Utilities
         string AddSolutionItem<T>(string name, T objectToSerialise);
         string AddSolutionItem(string fileQualified);
         IEnumerable<IVisualStudioProject> GetSolutionProjects();
+        void AddFolder(string folderDirectory);
     }
 
     public interface IVisualStudioProject

@@ -49,11 +49,11 @@ namespace JosephM.XRM.VSIX.Commands.GetSolution
                    }
             };
 
-            var controller = new DialogController(new VsixApplicationController("VSIX", null));
+            var controller = CreateDialogController(settings);
 
-            var service = new XrmSolutionImporterExporterService();
+            var service = new XrmSolutionImporterExporterService(xrmRecordService);
 
-            var dialog = new GetSolutionDialog(service, request, controller, xrmRecordService, settings, visualStudioService);
+            var dialog = new GetSolutionDialog(service, request, controller, settings, visualStudioService);
 
             DialogUtility.LoadDialog(dialog);
         }

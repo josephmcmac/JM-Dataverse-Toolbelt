@@ -39,6 +39,7 @@
     <Reference Include="Microsoft.Practices.Prism">
       <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -57,6 +58,7 @@
     <Compile Include="FakeVisualStudioService.cs" />
     <Compile Include="VsixManagePluginTriggersTests.cs" />
     <Compile Include="VsixGetSolutionDialogTests.cs" />
+    <Compile Include="VsixCreateAndDeployPackageTests.cs" />
     <Compile Include="VsixRefreshSettingsDialogTests.cs" />
     <Compile Include="VsixUpdateAssemblyDialogTests.cs" />
     <Compile Include="VsixRefreshConnectionDialogTests.cs" />
@@ -94,9 +96,17 @@
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Deployment\JosephM.Deployment.csproj">
+      <Project>{82118987-FB76-4E70-81A0-06D0B062D89C}</Project>
+      <Name>JosephM.Deployment</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
       <Name>JosephM.ObjectMapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+      <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
+      <Name>JosephM.Prism.XrmModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
       <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>

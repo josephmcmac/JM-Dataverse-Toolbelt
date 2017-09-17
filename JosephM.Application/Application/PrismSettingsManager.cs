@@ -15,7 +15,7 @@ namespace JosephM.Application.Application
     /// <summary>
     ///     Interfaces To The User Defined And System Application Settings
     /// </summary>
-    public class PrismSettingsManager
+    public class PrismSettingsManager : ISettingsManager
     {
         public PrismSettingsManager(IApplicationController applicationController)
         {

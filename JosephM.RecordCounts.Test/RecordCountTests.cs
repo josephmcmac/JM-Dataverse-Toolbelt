@@ -104,7 +104,10 @@ namespace JosephM.RecordCounts.Test
             service = new RecordCountsService(XrmRecordService);
             response = service.Execute(request, Controller);
 
-            Assert.IsTrue(response.RecordCounts.Count() > 10);
+            var userName = (string)XrmService.LookupField(Entities.systemuser, CurrentUserId, Fields.systemuser_.fullname);
+            Assert.IsTrue(response.RecordCounts.Any());
+            Assert.IsTrue(response.RecordCounts.All(rc => rc is RecordCountByOwner));
+            Assert.IsTrue(response.RecordCounts.Cast<RecordCountByOwner>().All(rc => rc.Owner == userName));
             Assert.AreEqual(1, response.RecordCounts.Count(r => r.RecordType == accountLabel));
             accountCount = response.RecordCounts.First(r => r.RecordType == accountLabel);
             Assert.IsTrue(accountCount is RecordCountByOwner);

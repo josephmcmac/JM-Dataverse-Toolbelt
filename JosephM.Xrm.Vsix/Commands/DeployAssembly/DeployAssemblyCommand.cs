@@ -18,7 +18,7 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
                 var settings = VsixUtility.GetPackageSettings(GetDte2());
                 if (settings == null)
                     settings = new XrmPackageSettings();
-                var dialog = new DeployAssemblyDialog(DialogUtility.CreateDialogController(), assemblyFile,
+                var dialog = new DeployAssemblyDialog(CreateDialogController(settings), assemblyFile,
                     GetXrmRecordService(), settings);
                 DialogUtility.LoadDialog(dialog);
             }

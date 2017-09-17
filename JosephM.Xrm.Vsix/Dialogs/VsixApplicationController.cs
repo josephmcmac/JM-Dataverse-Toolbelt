@@ -4,12 +4,14 @@ using System.Windows;
 using JosephM.Application;
 using JosephM.Application.Application;
 using JosephM.Core.AppConfig;
+using Microsoft.Practices.Unity;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
 
 namespace JosephM.XRM.VSIX.Dialogs
 {
     class VsixApplicationController : ApplicationControllerBase
     {
-        public VsixApplicationController(string applicationName, IDependencyResolver container) : base(applicationName, container)
+        public VsixApplicationController(IDependencyResolver dependencyResolver) : base("VSIX", dependencyResolver)
         {
         }
 

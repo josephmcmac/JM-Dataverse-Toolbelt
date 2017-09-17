@@ -404,6 +404,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             foreach (var type in typesToDelete)
                 DeleteAll(type);
             var workFolder = WorkFolder;
+
             FileUtility.DeleteFiles(workFolder);
             return workFolder;
         }
@@ -413,6 +414,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
             get
             {
                 var workFolder = TestingFolder + @"\ExportedRecords";
+                if (!Directory.Exists(workFolder))
+                    Directory.CreateDirectory(workFolder);
                 return workFolder;
             }
         }

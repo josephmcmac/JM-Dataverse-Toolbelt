@@ -221,7 +221,56 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendUniqueOnAttributes(fieldName, recordType, onChanges);
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, onChanges);
             AppendDisplayNameAttributes(fieldName, recordType, onChanges);
+            AppendLookupFieldCascadeChanges(fieldName, recordType, onChanges);
+            AppendCascadeOnChanges(fieldName, recordType, onChanges);
             return base.GetOnChanges(fieldName, recordType).Union(onChanges);
+        }
+
+        private void AppendCascadeOnChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType)
+                .GetCustomAttributes(typeof(CascadeOnChange), true).Cast<CascadeOnChange>();
+            foreach (var attribute in lookupForAttributes)
+            {
+                onChanges.Add(
+                    re =>
+                    {
+                        var changedViewModel = re.GetFieldViewModel(fieldName);
+                        if (changedViewModel.ValueObject != null)
+                        {
+                            var matchingFields = re.FieldViewModels.Where(f => f.FieldName == attribute.TargetProperty);
+                            if (matchingFields.Any())
+                            {
+                                matchingFields.First().ValueObject = changedViewModel.ValueObject;
+                            }
+                        }
+                    });
+            }
+        }
+
+        private void AppendLookupFieldCascadeChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType)
+                .GetCustomAttributes(typeof(LookupFieldCascade), true).Cast<LookupFieldCascade>();
+            foreach (var attribute in lookupForAttributes)
+            {
+                onChanges.Add(
+                    re =>
+                    {
+                        var changedViewModel = re.GetFieldViewModel(fieldName);
+                        if (changedViewModel.ValueObject != null)
+                        {
+                            var changedViewModelLookup = ((LookupFieldViewModel)changedViewModel).Value;
+                            var matchingFields = re.FieldViewModels.Where(f => f.FieldName == attribute.TargetProperty);
+                            var lookupRecord = ObjectRecordService.GetLookupService(changedViewModel.FieldName, re.GetRecordType(), re.ParentFormReference, re.GetRecord()).Get(changedViewModelLookup.RecordType, changedViewModelLookup.Id);
+                            var sourceFieldValue = lookupRecord.GetField(attribute.SourceRecordField);
+                            if (matchingFields.Any())
+                            {
+                                matchingFields.First().ValueObject = sourceFieldValue;
+                            }
+                        }
+                    });
+            }
         }
 
         private void AppendConnectionForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges, bool isOnLoad)
@@ -269,6 +318,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, methods);
             AppendDisplayNameAttributes(fieldName, recordType, methods);
             AppendConnectionForChanges(fieldName, recordType, methods, true);
+            AppendLookupFieldCascadeChanges(fieldName, recordType, methods);
             return methods;
         }
 

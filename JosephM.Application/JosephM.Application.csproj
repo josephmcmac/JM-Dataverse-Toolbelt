@@ -50,6 +50,7 @@
     <Compile Include="Application\ApplicationBase.cs" />
     <Compile Include="Application\ApplicationControllerBase.cs" />
     <Compile Include="Application\Extensions.cs" />
+    <Compile Include="Application\ISettingsManager.cs" />
     <Compile Include="Application\PrismSettingsManager.cs" />
     <Compile Include="Application\SavedSettingSelection.cs" />
     <Compile Include="Application\SavedSettings.cs" />

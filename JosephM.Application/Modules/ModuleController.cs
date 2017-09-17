@@ -15,7 +15,7 @@ namespace JosephM.Application.Modules
     {
         public ModuleController(
             IApplicationController applicationController,
-            PrismSettingsManager settingsManager,
+            ISettingsManager settingsManager,
             IApplicationOptions applicationOptions
             )
         {
@@ -31,7 +31,7 @@ namespace JosephM.Application.Modules
 
         public IApplicationOptions ApplicationOptions { get; private set; }
 
-        public PrismSettingsManager SettingsManager { get; private set; }
+        public ISettingsManager SettingsManager { get; private set; }
 
         public IApplicationController ApplicationController { get; private set; }
     }

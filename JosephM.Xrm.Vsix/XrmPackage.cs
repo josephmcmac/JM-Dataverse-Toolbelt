@@ -85,6 +85,8 @@ namespace JosephM.XRM.VSIX
             Commands.OpenWeb.OpenCrmWebCommand.Initialize(this);
             Commands.OpenWeb.OpenCrmSolutionCommand.Initialize(this);
             Commands.OpenWeb.OpenCrmAdvancedFindCommand.Initialize(this);
+            Commands.CreateDeploymentPackage.CreateDeploymentPackageCommand.Initialize(this);
+            Commands.DeployPackage.DeployPackageCommand.Initialize(this);
         }
 
         private XrmRecordService _xrmRecordService;

@@ -19,7 +19,7 @@ namespace JosephM.Xrm.Vsix.Test
             //throw new Exception(Assembly.GetExecutingAssembly().CodeBase + " - " + Assembly.GetExecutingAssembly().Location);
 
             var pluginAssembly = GetTestPluginAssemblyFile();
-            var packageSettings = GetPackageSettingsAddToSolution();
+            var packageSettings = GetTestPackageSettings();
 
             DeleteTestPluginAssembly();
 

@@ -11,6 +11,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+            var blah = XrmService.WhoAmI();
             //DeleteOnlineSampleData();
         }
 

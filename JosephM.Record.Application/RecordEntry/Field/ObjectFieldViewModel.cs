@@ -46,13 +46,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     : null;
 
                 var settingsObject = objectRecordService.ObjectTypeMaps != null && objectRecordService.ObjectTypeMaps.ContainsKey(SettingsAttribute.PropertyName)
-                    ? ApplicationController.ResolveType<PrismSettingsManager>().Resolve<SavedSettings>(objectRecordService.ObjectTypeMaps[SettingsAttribute.PropertyName])
+                    ? ApplicationController.ResolveType<ISettingsManager>().Resolve<SavedSettings>(objectRecordService.ObjectTypeMaps[SettingsAttribute.PropertyName])
                     : ApplicationController.ResolveType(SettingsAttribute.SettingsType);
                 XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
-                _lookupService = new ObjectRecordService(settingsObject, ApplicationController, objectRecordService.ObjectTypeMaps);
-                if (!UsePicklist)
+                if (settingsObject != null)
                 {
-                    LoadLookupGrid();
+                    _lookupService = new ObjectRecordService(settingsObject, ApplicationController, objectRecordService.ObjectTypeMaps);
+                    if (!UsePicklist)
+                    {
+                        LoadLookupGrid();
+                    }
                 }
             }
         }

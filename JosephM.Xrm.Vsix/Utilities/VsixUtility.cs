@@ -140,15 +140,7 @@ namespace JosephM.XRM.VSIX.Utilities
             return fileName;
         }
 
-        public static Project AddSolutionFolder(Solution2 solution, string folder)
-        {
-            foreach (Project item in solution.Projects)
-            {
-                if (item.Name == folder)
-                    return item;
-            }
-            return solution.AddSolutionFolder(folder);
-        }
+
 
         public static ProjectItem AddProjectItem(ProjectItems projectItems, string file)
         {
@@ -172,22 +164,22 @@ namespace JosephM.XRM.VSIX.Utilities
             return newItem;
         }
 
-        public static ProjectItem AddSolutionItem<T>(Solution2 solution, string name, T objectToJson, string directory)
-        {
-            var json = JsonHelper.ObjectToJsonString(objectToJson);
-            return AddSolutionItem(solution, name, json, directory);
-        }
+        //public static ProjectItem AddSolutionItem<T>(Solution2 solution, string name, T objectToJson, string directory)
+        //{
+        //    var json = JsonHelper.ObjectToJsonString(objectToJson);
+        //    return AddSolutionItem(solution, name, json, directory);
+        //}
 
-        public static ProjectItem AddSolutionItem(Solution2 solution, string name, string content, string directory)
-        {
-            if(solution == null)
-                throw new NullReferenceException("Solution Is Null");
+        //public static ProjectItem AddSolutionItem(Solution2 solution, string name, string content, string directory)
+        //{
+        //    if(solution == null)
+        //        throw new NullReferenceException("Solution Is Null");
 
-            var project = AddSolutionFolder(solution, "SolutionItems");
-            var solutionItemsFolder = directory + @"\SolutionItems";
-            FileUtility.WriteToFile(solutionItemsFolder, name, content);
-            return AddProjectItem(project.ProjectItems, Path.Combine(solutionItemsFolder, name));
-        }
+        //    var project = AddSolutionFolder(solution, "SolutionItems");
+        //    var solutionItemsFolder = directory + @"\SolutionItems";
+        //    FileUtility.WriteToFile(solutionItemsFolder, name, content);
+        //    return AddProjectItem(project.ProjectItems, Path.Combine(solutionItemsFolder, name));
+        //}
 
         public static string GetProperty(EnvDTE.Properties properties, string name)
         {

@@ -126,7 +126,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 var theObject = GetObject();
                 var theObjectType = theObject.GetType();
 
-                var resolve = ApplicationController.ResolveType<PrismSettingsManager>().Resolve<SavedSettings>(theObjectType);
+                var resolve = ApplicationController.ResolveType<ISettingsManager>().Resolve<SavedSettings>(theObjectType);
                 if (!resolve.SavedRequests.Any())
                 {
                     ApplicationController.UserMessage(string.Format("There are no saved {0} records", theObjectType.GetDisplayName()));

@@ -4,6 +4,8 @@
     {
         ExportSolutions,
         ImportSolutions,
-        MigrateSolutions
+        MigrateSolutions,
+        CreateDeploymentPackage,
+        DeployPackage,
     }
 }

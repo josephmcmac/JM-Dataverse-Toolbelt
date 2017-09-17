@@ -17,7 +17,7 @@ namespace JosephM.Prism.XrmModule.XrmConnection
     {
         public override void RegisterTypes()
         {
-            var configManager = Resolve<PrismSettingsManager>();
+            var configManager = Resolve<ISettingsManager>();
 
             try
             {

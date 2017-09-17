@@ -46,11 +46,14 @@
         <Group guid="guidXrmPackageCmdSet" id="XrmItemMenuGroup" priority="0x0001">
           <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
         </Group>
-        <Group guid="guidXrmPackageCmdSet" id="XrmMenuGroup" priority="0x0600">
+        <Group guid="guidXrmPackageCmdSet" id="XrmFolderMenuGroup" priority="0x0001">
           <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE"/>
         </Group>
         <Group guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroup" priority="0x0001">
           <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
+        </Group>
+        <Group guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroup" priority="0x0001">
+          <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNFOLDER"/>
         </Group>
       </Groups>
     </Groups>
@@ -80,6 +83,22 @@
           <CommandName>XRM</CommandName>
         </Strings>
       </Menu>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmFolderMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmFolderMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmSolutionFolderMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
     </Menus>
 
     <Groups>
@@ -91,6 +110,12 @@
       </Group>
       <Group guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" priority="0x1000">
         <Parent guid="guidXrmPackageCmdSet" id="xrmItemMenu"/>
+      </Group>
+      <Group guid="guidXrmPackageCmdSet" id="XrmFolderMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmFolderMenu"/>
+      </Group>
+      <Group guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmSolutionFolderMenu"/>
       </Group>
     </Groups>
 
@@ -187,7 +212,7 @@
           <ButtonText>Clear Cache</ButtonText>
         </Strings>
       </Button>
-          <Button guid="guidXrmPackageCmdSet" id="ImportCustomisationsCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="ImportCustomisationsCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -215,6 +240,22 @@
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Open Advanced Find</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="CreateDeploymentPackageCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <Strings>
+          <ButtonText>Create Deployment Package</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="DeployPackageCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <Strings>
+          <ButtonText>Deploy Package</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -247,6 +288,12 @@
       <IDSymbol name="xrmSolutionMenu" value="0x1027" />
       <IDSymbol name="XrmItemMenuGroupMenu" value="0x1028" />
       <IDSymbol name="xrmItemMenu" value="0x1029" />
+      <IDSymbol name="XrmFolderMenuGroupMenu" value="0x102A" />
+      <IDSymbol name="XrmFolderMenuGroup" value="0x102B" />
+      <IDSymbol name="xrmFolderMenu" value="0x102C" />
+      <IDSymbol name="XrmSolutionFolderMenuGroupMenu" value="0x102D" />
+      <IDSymbol name="XrmSolutionFolderMenuGroup" value="0x1030" />
+      <IDSymbol name="xrmSolutionFolderMenu" value="0x1031" />
       <IDSymbol name="RefreshSchemaCommandId" value="0x0100" />
       <IDSymbol name="RefreshConnectionCommandId" value="0x0101" />
       <IDSymbol name="DeployWebResourceCommandId" value="0x0102" />
@@ -261,6 +308,8 @@
       <IDSymbol name="OpenCrmWebCommandId" value="0x010B" />
       <IDSymbol name="OpenCrmSolutionCommandId" value="0x010C" />
       <IDSymbol name="OpenCrmAdvancedFindCommandId" value="0x010D" />
+      <IDSymbol name="CreateDeploymentPackageCommandId" value="0x010E" />
+      <IDSymbol name="DeployPackageCommandId" value="0x0110" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

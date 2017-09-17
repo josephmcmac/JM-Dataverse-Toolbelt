@@ -16,7 +16,7 @@ namespace JosephM.Xrm.Vsix.Test
         [TestMethod]
         public void VsixManagePluginTriggersTest()
         {
-            var packageSettings = GetPackageSettingsAddToSolution();
+            var packageSettings = GetTestPackageSettings();
             DeployAssembly(packageSettings);
 
             var assemblyRecord = GetTestPluginAssemblyRecords().First();

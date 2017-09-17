@@ -367,6 +367,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     }
                 }
             }
+            if (validationBuilder.ToString().Length == 0)
+            {
+                var finalResponse = ValidateFinal();
+                var isValid = finalResponse.IsValid;
+                if (!isValid)
+                    validationBuilder.AppendLine(finalResponse.GetErrorString());
+            }
             return validationBuilder.ToString();
         }
 

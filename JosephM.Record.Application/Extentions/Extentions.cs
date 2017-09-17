@@ -91,7 +91,7 @@ namespace JosephM.Application.ViewModel.Extentions
                 var mapper = new ClassSelfMapper();
                 mapper.Map(saveObject, theObject);
 
-                var settingsManager = viewModel.ApplicationController.ResolveType<PrismSettingsManager>();
+                var settingsManager = viewModel.ApplicationController.ResolveType<ISettingsManager>();
                 var settings = settingsManager.Resolve<SavedSettings>(theObjectType);
 
                 if (saveObject.Autoload)

@@ -17,7 +17,7 @@ namespace JosephM.Xrm.Vsix.Test
         {
             var fakeVisualStudioService = CreateVisualStudioService();
             
-            var settings = GetPackageSettingsAddToSolution(); ;
+            var settings = GetTestPackageSettings(); ;
             //var dialog = new GetSolutionDialog(CreateDialogController(), XrmRecordService, settings, fakeVisualStudioService);
             //dialog.Controller.BeginDialog();
         }

@@ -9,7 +9,7 @@ namespace JosephM.Application.Application
     {
         public static void RegisterInfrastructure(this IApplicationController applicationController, IApplicationOptions applicationOptions)
         {
-            applicationController.RegisterInstance(new PrismSettingsManager(applicationController));
+            applicationController.RegisterInstance<ISettingsManager>(new PrismSettingsManager(applicationController));
             applicationController.RegisterInstance<IApplicationController>(applicationController);
             applicationController.RegisterInstance<IResolveObject>(applicationController);
 
@@ -17,7 +17,7 @@ namespace JosephM.Application.Application
 
             var prismModuleController = new ModuleController(
                 applicationController,
-                applicationController.ResolveType<PrismSettingsManager>(),
+                applicationController.ResolveType<ISettingsManager>(),
                 applicationController.ResolveType<IApplicationOptions>()
                 );
 

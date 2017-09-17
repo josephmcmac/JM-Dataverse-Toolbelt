@@ -8,6 +8,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 
 namespace JosephM.Core.Test
 {
@@ -24,7 +25,12 @@ namespace JosephM.Core.Test
 
         public static string TestingFolder
         {
-            get { return TestConstants.TestFolder; }
+            get
+            {
+                if (!Directory.Exists(TestConstants.TestFolder))
+                    Directory.CreateDirectory(TestConstants.TestFolder);
+                return TestConstants.TestFolder;
+            }
         }
 
         public virtual string TestingString

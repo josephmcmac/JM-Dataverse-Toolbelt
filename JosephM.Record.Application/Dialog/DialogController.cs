@@ -49,7 +49,7 @@ namespace JosephM.Application.ViewModel.Dialog
             ApplicationController.DoOnMainThread(() => UiItems.Remove(viewModel));
         }
 
-        public void BeginDialog()
+        public virtual void BeginDialog()
         {
             MainDialog.LoadDialog();
             IsStarted = true;

@@ -10,7 +10,7 @@ namespace JosephM.Xrm.Vsix.Test
         [TestMethod]
         public void VsixUpdateAssemblyDialogTest()
         {
-            var packageSettings = GetPackageSettingsAddToSolution();
+            var packageSettings = GetTestPackageSettings();
             packageSettings.AddToSolution = false;
             DeployAssembly(packageSettings);
             packageSettings.AddToSolution = true;
