@@ -55,6 +55,7 @@
       <OutputSubPath>XRM</OutputSubPath>
     </VSTemplate>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="obj\Debug\CSharp\XRM\1033\XrmTemplate.zip" />
     <None Include="obj\Release\CSharp\XRM\1033\XrmTemplate.zip" />
