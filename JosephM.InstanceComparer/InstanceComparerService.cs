@@ -37,7 +37,7 @@ namespace JosephM.InstanceComparer
             AppendPlugins(processContainer);
             AppendOptions(processContainer);
             AppendSecurityRoles(processContainer);
-
+            AppendCaseCreationRules(processContainer);
             AppendData(processContainer);
 
             if (processContainer.Differences.Any())
@@ -48,6 +48,31 @@ namespace JosephM.InstanceComparer
                 response.FileName = Path.Combine(request.Folder.FolderPath, fileName);
                 response.Differences = true;
             }
+        }
+
+        private void AppendCaseCreationRules(ProcessContainer processContainer)
+        {
+            var processCompareParams = new ProcessCompareParams("Case Creation Rule",
+                Entities.convertrule, Fields.convertrule_.name, Fields.convertrule_.name,
+                null,
+                new[] {Fields.convertrule_.statecode,
+                    Fields.convertrule_.statuscode,
+                    Fields.convertrule_.sourcetypecode,
+                    Fields.convertrule_.allowunknownsender,
+                    Fields.convertrule_.checkactiveentitlement,
+                    Fields.convertrule_.checkifresolved,
+                    Fields.convertrule_.resolvedsince,
+                    Fields.convertrule_.sendautomaticresponse,
+                    Fields.convertrule_.responsetemplateid,
+                    Fields.convertrule_.checkblockedsocialprofile,
+                    Fields.convertrule_.checkdirectmessages}
+                )
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.convertrule_.convertruleid, OptionSets.SolutionComponent.ObjectTypeCode.ConvertRule)
+            };
+
+            if (processContainer.ServiceOne.RecordTypeExists(processCompareParams.RecordType))
+                ProcessCompare(processCompareParams, processContainer);
         }
 
         private void AppendData(InstanceComparerService.ProcessContainer processContainer)
