@@ -10,6 +10,7 @@ using System;
 using EnvDTE;
 using System.Linq;
 using VSLangProj;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
 
 namespace JosephM.XRM.VSIX.Wizards
 {
@@ -43,6 +44,12 @@ namespace JosephM.XRM.VSIX.Wizards
                 XrmPackageSettings.SolutionDynamicsCrmPrefix = "template";
                 XrmPackageSettings.SolutionObjectPrefix = "Template";
             #endif
+            var savedConnection = SavedXrmRecordConfiguration.CreateNew(XrmRecordConfiguration);
+            savedConnection.Active = true;
+            XrmPackageSettings.Connections = new[]
+            {
+                savedConnection
+            };
             var settingsDialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), XrmPackageSettings, VisualStudioService, false, new XrmRecordService(XrmRecordConfiguration));
             DialogUtility.LoadDialog(settingsDialog, showCompletion: false, isModal: true);
 

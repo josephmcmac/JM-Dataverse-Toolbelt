@@ -71,7 +71,7 @@ namespace JosephM.XRM.VSIX
         protected override void Initialize()
         {
             base.Initialize();
-            Commands.RefreshConnection.RefreshConnectionCommand.Initialize(this);
+            //Commands.RefreshConnection.RefreshConnectionCommand.Initialize(this);
             Commands.DeployWebResource.DeployWebResourceCommand.Initialize(this);
             Commands.DeployAssembly.DeployAssemblyCommand.Initialize(this);
             Commands.ManagePluginTriggers.ManagePluginTriggersCommand.Initialize(this);

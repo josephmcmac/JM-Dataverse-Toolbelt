@@ -141,6 +141,7 @@
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="RefreshConnectionCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Refresh XRM Connection</ButtonText>
@@ -186,7 +187,7 @@
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
-          <ButtonText>Refresh Settings</ButtonText>
+          <ButtonText>Package Settings</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="GetSolutionCommandId" priority="0x0100" type="Button">
