@@ -67,14 +67,24 @@ namespace JosephM.XRM.VSIX.Commands
 
         public void MenuItemCallback(object sender, EventArgs e)
         {
+            TryDoSomething(DoDialog);
+        }
+
+        public void TryDoSomething(Action doSomething)
+        {
             try
             {
-                DoDialog();
+                doSomething();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.DisplayString());
+                UserMessage(ex.DisplayString());
             }
+        }
+
+        public static void UserMessage(string message)
+        {
+            MessageBox.Show(message);
         }
 
         public abstract void DoDialog();
