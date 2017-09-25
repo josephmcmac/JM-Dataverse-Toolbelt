@@ -13,7 +13,7 @@ namespace JosephM.XRM.VSIX.Dialogs
             return new DialogController(new VsixApplicationController(null));
         }
 
-        public static void LoadDialog(DialogViewModel dialog, bool showCompletion = true, bool isModal = false)
+        public static void LoadDialog(DialogViewModel dialog, bool showCompletion = true, bool isModal = false, Action postCompletion = null)
         {
             var window = new Window
             {
@@ -31,6 +31,8 @@ namespace JosephM.XRM.VSIX.Dialogs
             Action closeMethod = () => { dialog.DoOnMainThread(() =>
             {
                 window.Close();
+                if (postCompletion != null)
+                    postCompletion();
             }); };
 
             if (dialog.ApplicationController is VsixApplicationController)
