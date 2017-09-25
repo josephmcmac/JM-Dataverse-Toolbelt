@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -2466,7 +2466,6 @@ Global
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.CD_ROM|x86.Build.0 = Release|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Debug|x86.Build.0 = Debug|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2512,7 +2511,6 @@ Global
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.CD_ROM|x86.Build.0 = Release|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{147ACA64-2605-4157-9AED-B512B3E327CC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Debug|x86.Build.0 = Debug|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2558,7 +2556,6 @@ Global
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.CD_ROM|x86.Build.0 = Release|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Debug|x86.Build.0 = Debug|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2604,7 +2601,6 @@ Global
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.CD_ROM|x86.Build.0 = Release|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Debug|x86.Build.0 = Debug|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2765,5 +2761,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 	EndGlobalSection
 EndGlobal

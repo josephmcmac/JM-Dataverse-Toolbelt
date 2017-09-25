@@ -47,6 +47,7 @@ namespace JosephM.XRM.VSIX
             }
         }
 
+        [FormEntry]
         [Group(Sections.ConnectionInstances)]
         public IEnumerable<SavedXrmRecordConfiguration> Connections { get; set; }
 
