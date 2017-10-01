@@ -19,6 +19,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate CompletionTemplate { get; set; }
         public DataTemplate LoadingTemplate { get; set; }
         public DataTemplate ListViewTemplate { get; set; }
+        public DataTemplate QueryViewTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -33,6 +34,8 @@ namespace JosephM.Wpf.TemplateSelector
                 return ListViewTemplate;
             if (item is LoadingViewModel)
                 return LoadingTemplate;
+            if (item is QueryViewModel)
+                return QueryViewTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }

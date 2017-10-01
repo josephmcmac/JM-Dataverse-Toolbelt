@@ -173,5 +173,7 @@ namespace JosephM.Record.IService
         IsValidResponse IsValidForNewType(string typeName);
 
         string GetDisplayNameField(string recordType);
+
+        IEnumerable<IRecord> RetreiveAll(QueryDefinition query);
     }
 }

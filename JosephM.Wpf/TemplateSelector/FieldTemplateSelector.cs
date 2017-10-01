@@ -68,7 +68,8 @@ namespace JosephM.Wpf.TemplateSelector
                 return FileRefFieldTemplate;
             if (item is EnumerableFieldViewModel)
                 return EnumerableFieldTemplate;
-
+            else
+                return StringFieldTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }

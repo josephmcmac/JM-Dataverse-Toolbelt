@@ -4,9 +4,11 @@ using JosephM.Application.ViewModel.SettingTypes;
 using System.Configuration;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
+using JosephM.Application.ViewModel.Attributes;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
+    [BulkAddRecordTypeFunction]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Fetch, false, 20)]
     public class ImportExportRecordType

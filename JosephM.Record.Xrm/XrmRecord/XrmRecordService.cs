@@ -260,6 +260,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 newValue = ((Guid)newValue).ToString();
             }
+            else if (newValue is Money)
+            {
+                newValue = ((Money)newValue).Value;
+            }
             return newValue;
         }
 
@@ -832,19 +836,28 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Filter> filters)
         {
-            var mapper = new EnumMapper<FilterOperator, LogicalOperator>();
             var crmFilters = filters
-                .Select(f =>
-                {
-                    var crmFilter = new FilterExpression();
-
-                    crmFilter.FilterOperator = mapper.Map(f.ConditionOperator);
-                    foreach (var c in f.Conditions)
-                        crmFilter.AddCondition(ToConditionExpression(c, recordType));
-                    return crmFilter;
-                })
+                .Select(f => ToFilterExpression(f, recordType))
                 .ToArray();
             return _xrmService.RetrieveAllOrClauses(recordType, crmFilters, null).Select(ToIRecord);
+        }
+
+        private FilterExpression ToFilterExpression(Filter filter, string recordType)
+        {
+            var mapper = new EnumMapper<FilterOperator, LogicalOperator>();
+            var crmFilter = new FilterExpression();
+            crmFilter.FilterOperator = mapper.Map(filter.ConditionOperator);
+            if (filter.Conditions != null)
+            {
+                foreach (var c in filter.Conditions)
+                    crmFilter.AddCondition(ToConditionExpression(c, recordType));
+            }
+            if (filter.SubFilters != null)
+            {
+                foreach (var f in filter.SubFilters)
+                    crmFilter.Filters.Add(ToFilterExpression(f, recordType));
+            }
+            return crmFilter;
         }
 
         public string GetRelationshipLabel(One2ManyRelationshipMetadata relationship)
@@ -963,6 +976,17 @@ namespace JosephM.Record.Xrm.XrmRecord
             if (recordType == Entities.solution)
                 return Fields.solution_.uniquename;
             return GetRecordTypeMetadata(recordType).PrimaryFieldSchemaName;
+        }
+
+        public IEnumerable<IRecord> RetreiveAll(QueryDefinition query)
+        {
+            var queryExpression = new QueryExpression(query.RecordType);
+            queryExpression.ColumnSet = XrmService.CreateColumnSet(query.Fields);
+            queryExpression.Criteria = ToFilterExpression(query.RootFilter, query.RecordType);
+            //if (query.Top > -1)
+            //    queryExpression.TopCount = query.Top;
+            queryExpression.Orders.AddRange(ToOrderExpressions(query.Sorts));
+            return ToIRecords(XrmService.RetrieveFirstX(queryExpression, query.Top));
         }
 
         public string WebUrl

@@ -7,6 +7,7 @@ using System.Linq;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Core.Attributes;
 
 #endregion
 
@@ -18,13 +19,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 
         public FieldSectionViewModel(
             FormFieldSection formSection,
-            RecordEntryFormViewModel recordForm
+            RecordEntryViewModelBase recordForm
             )
             : base(formSection, recordForm)
         {
         }
 
-        public bool WrapHorizontal {  get { return FormFieldSection.WrapHorizontal; } }
+        public Group.DisplayLayoutEnum DisplayLayout {  get { return FormFieldSection.DisplayLayout; } }
 
         private FormFieldSection FormFieldSection
         {
@@ -59,7 +60,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 
         public override string RecordType
         {
-            get { return RecordForm.RecordType; }
+            get { return RecordForm.GetRecordType(); }
         }
 
         internal override bool Validate()

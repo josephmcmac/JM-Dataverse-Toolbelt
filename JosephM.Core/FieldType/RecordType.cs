@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using JosephM.Core.Attributes;
+using System.Runtime.Serialization;
 
 namespace JosephM.Core.FieldType
 {

@@ -10,19 +10,26 @@ namespace JosephM.Core.Attributes
     public class Group : Attribute
     {
         public string Name { get; private set; }
-        public bool WrapHorizontal { get; private set; }
+        public DisplayLayoutEnum DisplayLayout { get; private set; }
         public int Order { get; private set; }
 
-        public Group(string name)
+        public Group(string name, DisplayLayoutEnum displayLayout = DisplayLayoutEnum.VerticalList, int order = 0)
         {
             Name = name;
+            DisplayLayout = displayLayout;
+            Order = order;
         }
 
         public Group(string name, bool wrapHorizontal, int order = 10000)
+            : this(name, displayLayout: wrapHorizontal ? DisplayLayoutEnum.HorizontalWrap : DisplayLayoutEnum.VerticalList, order: order)
         {
-            Name = name;
-            WrapHorizontal = wrapHorizontal;
-            Order = order;
+        }
+
+        public enum DisplayLayoutEnum
+        {
+            VerticalList,
+            HorizontalWrap,
+            HorizontalInputOnly
         }
     }
 }

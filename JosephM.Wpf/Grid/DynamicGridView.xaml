@@ -4,11 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controlExtentions="clr-namespace:JosephM.Wpf.ControlExtentions"
+             xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
+             xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
              mc:Ignorable="d">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <converters:BooleanToMultiSelectConverter x:Key="BoolToMulti" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
@@ -18,21 +21,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Visibility="{Binding GridLoadError, Converter={StaticResource BoolToVis}}">
-            <TextBlock
-                    Text="{Binding ErrorMessage}"
-                     Style="{StaticResource ValidationMessage}"  />
+        <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
-        <Grid Grid.Row="1"  Visibility="{Binding GridLoadError, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" >
+        <Grid Grid.Row="1"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <ItemsControl
             ItemsSource="{Binding CustomFunctions}"
             ItemTemplate="{StaticResource XrmButtonTemplate}">
@@ -43,31 +39,49 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </Grid>
-        <Grid Grid.Row="1" Visibility="{Binding CanAddRow, Converter={StaticResource BoolToVis}}">
-            <WrapPanel Orientation="Horizontal">
-                <Button DataContext="{Binding Path=AddRowButton}"
+        <Grid Grid.Row="2" Visibility="{Binding GridLoadError, Converter={StaticResource BoolToVis}}">
+            <TextBlock
+                    Text="{Binding ErrorMessage}"
+                     Style="{StaticResource ValidationMessage}"  />
+        </Grid>
+        <Grid Grid.Row="3"  Visibility="{Binding GridLoaded, Converter={StaticResource BoolToVis}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition  />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Visibility="{Binding CanAddRow, Converter={StaticResource BoolToVis}}">
+                <WrapPanel Orientation="Horizontal">
+                    <Button DataContext="{Binding Path=AddRowButton}"
                         Style="{StaticResource AddRowButton}"
-                            Command="{Binding Command}" />
-            </WrapPanel>
-        </Grid>
-        <Grid Grid.Row="2" MaxHeight="350">
-            <DataGrid
+                            Command="{Binding Command}" ToolTip="Click To Add A Row" />
+                    <Grid Grid.Row="0" Visibility="{Binding CanAddMultipleRow, Converter={StaticResource BoolToVis}}">
+                        <Button DataContext="{Binding Path=AddMultipleRowButton}" 
+                        Style="{StaticResource AddMultipleRowButton}"
+                            Command="{Binding Command}" ToolTip="Click To Add Multiple Items" />
+                    </Grid>
+                </WrapPanel>
+            </Grid>
+            <Grid Grid.Row="1" MaxHeight="350">
+                <DataGrid
                 controlExtentions:FocusExtension.IsFocused="{Binding IsFocused, Mode=TwoWay}"
-                CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid" CanUserAddRows="True" SelectionMode="Single" >
-                <DataGrid.ColumnHeaderStyle>
-                    <Style TargetType="DataGridColumnHeader">
-                        <EventSetter Event="Click" Handler="columnHeader_Click" />
-                    </Style>
-                </DataGrid.ColumnHeaderStyle>
-            </DataGrid>
+                CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"
+                CanUserAddRows="True" SelectionChanged="DataGrid_SelectionChanged" SelectionMode="{Binding MultiSelect, Converter={StaticResource BoolToMulti}}"
+                >
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <EventSetter Event="Click" Handler="columnHeader_Click" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                </DataGrid>
+            </Grid>
+            <Grid  Grid.Row="2" Visibility="{Binding HasPaging, Converter={StaticResource BoolToVis}}">
+                <WrapPanel Orientation="Horizontal">
+                    <Button DataContext="{Binding PreviousPageButton}" Style="{StaticResource PreviousButton}" Command="{Binding Command}" />
+                    <Button DataContext="{Binding NextPageButton}" Style="{StaticResource NextButton}" Command="{Binding Command}" />
+                    <TextBlock Text="{Binding PageDescription}"></TextBlock>
+                </WrapPanel>
+            </Grid>
         </Grid>
-        <Grid  Grid.Row="3" Visibility="{Binding HasPaging, Converter={StaticResource BoolToVis}}">
-            <WrapPanel Orientation="Horizontal">
-                <Button DataContext="{Binding PreviousPageButton}" Style="{StaticResource PreviousButton}" Command="{Binding Command}" />
-                <Button DataContext="{Binding NextPageButton}" Style="{StaticResource NextButton}" Command="{Binding Command}" />
-                <TextBlock Text="{Binding PageDescription}"></TextBlock>
-            </WrapPanel>
-        </Grid>
-        </Grid> 
     </Grid>
 </UserControl>

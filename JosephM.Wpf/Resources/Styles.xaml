@@ -8,6 +8,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Image x:Key="AddButtonImageKey" Source="../Images/AddIcon.jpg" Height="15" Width="15" />
+    <Image x:Key="AddMultipleButtonImageKey" Source="../Images/AddMultipleIcon.jpg" Height="15" Width="15" />
     <Image x:Key="DeleteButtonImageKey" Source="../Images/DeleteIcon.jpg" Height="15" Width="15" />
     <Image x:Key="EditButtonImageKey" Source="../Images/EditIcon.jpg" Height="15" Width="15" />
     <Image x:Key="CloseButtonImageKey" Source="../Images/CloseButton.gif" />
@@ -72,6 +73,10 @@
     </Style>
     <Style x:Key="AddRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource AddButtonImageKey}" />
+        <Setter Property="Margin" Value="16,0,0,0" />
+    </Style>
+    <Style x:Key="AddMultipleRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Content" Value="{StaticResource AddMultipleButtonImageKey}" />
         <Setter Property="Margin" Value="16,0,0,0" />
     </Style>
     <Style x:Key="PreviousButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">

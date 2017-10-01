@@ -10,7 +10,8 @@
                     xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector"
                     xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
                     xmlns:html="clr-namespace:JosephM.Wpf.Html"
-                    xmlns:grid1="clr-namespace:JosephM.Wpf.Grid">
+                    xmlns:grid1="clr-namespace:JosephM.Wpf.Grid"
+                    xmlns:query="clr-namespace:JosephM.Wpf.Query">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary>
@@ -25,6 +26,11 @@
     </DataTemplate>
     <DataTemplate x:Key="applicationHeadingTemplate">
         <application:ApplicationHeadingView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="queryViewTemplate">
+        <Grid>
+            <grid:GridQueryView DataContext="{Binding}" />
+        </Grid>
     </DataTemplate>
     <DataTemplate x:Key="recordEntryViewTemplate">
         <Grid>
@@ -45,11 +51,27 @@
         </Grid>
     </DataTemplate>
     <templateSelector:MainTabRegionDataTemplateSelector
+        QueryViewTemplate="{StaticResource queryViewTemplate}"
         RecordEntryViewTemplate="{StaticResource recordEntryViewTemplate}"
         DialogTemplate="{StaticResource dialogTemplate}"
         NavigationErrorTemplate="{StaticResource navigationErrorTemplate}"
         HtmlFileTemplate="{StaticResource htmlFileTemplate}"
         x:Key="viewTemplateSelector" />
+    <DataTemplate x:Key="conditionTemplate">
+        <Grid>
+            <query:ConditionView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="filterConditionsTemplate">
+        <Grid>
+            <query:FilterConditionsView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <templateSelector:ConditionTemplateSelector
+        ConditionTemplate="{StaticResource conditionTemplate}"
+        FilterConditionsTemplate="{StaticResource filterConditionsTemplate}" 
+         x:Key="conditionTemplateSelector"
+        />
     <DataTemplate x:Key="TabItemTemplate">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ContentControl
@@ -115,12 +137,18 @@
             <shared:LoadingView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="QueryViewTemplate">
+        <Grid>
+            <grid1:GridQueryView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <templateSelector:DialogTemplateSelector
         RecordEntryTemplate="{StaticResource RecordEntryTemplate}"
         ProgressTemplate="{StaticResource ProgressControlTemplate}"
         CompletionTemplate="{StaticResource CompletionTemplate}"
         LoadingTemplate="{StaticResource LoadingTemplate}"
         ListViewTemplate="{StaticResource ListViewTemplate}"
+        QueryViewTemplate="{StaticResource QueryViewTemplate}"
         x:Key="DialogTemplateSelector" />
     <DataTemplate x:Key="booleanFieldTemplate">
         <field:BooleanFieldView DataContext="{Binding}" />
@@ -211,7 +239,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="0">
                 <ContentControl
                     Content="{Binding}"
                     ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
@@ -233,9 +261,15 @@
             <recordEntry:FieldSectionCompactView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="FieldSectionInputOnlyTemplate">
+        <Grid Grid.Row="1">
+            <recordEntry:FieldSectionInputOnlyView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <templateSelector:FormSectionTemplateSelector
         FieldSectionTemplate="{StaticResource FieldSectionTemplate}"
         FieldSectionCompactTemplate="{StaticResource FieldSectionCompactTemplate}"
+        FieldSectionInputOnlyTemplate="{StaticResource FieldSectionInputOnlyTemplate}"
         x:Key="FormSectionTemplateSelector" />
     <DataTemplate x:Key="IntegerCellTemplate">
         <controls:IntegerTextBox

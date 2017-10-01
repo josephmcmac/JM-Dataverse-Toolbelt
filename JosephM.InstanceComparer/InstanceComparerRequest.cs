@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Attributes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
@@ -31,6 +32,7 @@ namespace JosephM.InstanceComparer
 
         public IEnumerable<InstanceCompareDataCompare> DataComparisons { get; set; }
 
+        [BulkAddRecordTypeFunction]
         public class InstanceCompareDataCompare
         {
             [Hidden]

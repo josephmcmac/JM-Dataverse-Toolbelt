@@ -274,5 +274,25 @@ namespace JosephM.Wpf.Grid
             public double WidthPart { get; private set; }
             public bool IsEditable { get; private set; }
         }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(e.AddedItems != null)
+            {
+                foreach(var item in e.AddedItems)
+                {
+                    if(item is GridRowViewModel)
+                        ((GridRowViewModel)item).IsSelected = true;
+                }
+            }
+            if (e.RemovedItems != null)
+            {
+                foreach (var item in e.RemovedItems)
+                {
+                    if (item is GridRowViewModel)
+                        ((GridRowViewModel)item).IsSelected = false;
+                }
+            }
+        }
     }
 }

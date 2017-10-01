@@ -81,6 +81,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\BulkAddFunction.cs" />
+    <Compile Include="Attributes\BulkAddRecordTypeFunction.cs" />
+    <Compile Include="Attributes\CustomFunction.cs" />
+    <Compile Include="Attributes\BulkAddLookupFunction.cs" />
+    <Compile Include="Attributes\CustomObjectFunction.cs" />
     <Compile Include="Dialog\IDialogController.cs" />
     <Compile Include="Dialog\ObjectGetEntryDialog.cs" />
     <Compile Include="Dialog\ObjectEntryDialogBase.cs" />
@@ -91,7 +96,10 @@
     <Compile Include="ApplicationOptions\ApplicationOption.cs" />
     <Compile Include="ApplicationOptions\ApplicationOptionsViewModel.cs" />
     <Compile Include="Dialog\CompletionScreenViewModel.cs" />
+    <Compile Include="Grid\QueryViewModel.cs" />
     <Compile Include="HTML\HtmlFileModel.cs" />
+    <Compile Include="Query\ConditionViewModel.cs" />
+    <Compile Include="Query\FilterConditionsViewModel.cs" />
     <Compile Include="RecordEntry\Field\DropdownFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\FileRefFieldViewModell.cs" />
     <Compile Include="RecordEntry\Field\BigIntFieldViewModel.cs" />

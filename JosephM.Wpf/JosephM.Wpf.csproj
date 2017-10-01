@@ -155,6 +155,7 @@
     <Compile Include="Application\ApplicationHeadingView.xaml.cs">
       <DependentUpon>ApplicationHeadingView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToMultiSelectConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\BooleanToFalseConverter.cs" />
     <Compile Include="Converters\FileRefToStringConverter.cs" />
@@ -181,6 +182,9 @@
       <DependentUpon>EditRowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\EditRowColumn.cs" />
+    <Compile Include="Grid\GridQueryView.xaml.cs">
+      <DependentUpon>GridQueryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\GridLookupColumn.cs" />
     <Compile Include="Grid\GridLookupPicklistFieldView.xaml.cs">
       <DependentUpon>GridLookupPicklistFieldView.xaml</DependentUpon>
@@ -210,6 +214,15 @@
     </Compile>
     <Compile Include="Html\HtmlFileView.xaml.cs">
       <DependentUpon>HtmlFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Query\ConditionView.xaml.cs">
+      <DependentUpon>ConditionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Query\FilterConditionsView.xaml.cs">
+      <DependentUpon>FilterConditionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\FieldSectionInputOnlyView.xaml.cs">
+      <DependentUpon>FieldSectionInputOnlyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\FieldSectionCompactView.xaml.cs">
       <DependentUpon>FieldSectionCompactView.xaml</DependentUpon>
@@ -328,6 +341,7 @@
       <DependentUpon>RecordEntryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="TemplateSelector\CompletionItemTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\ConditionTemplateSelector.cs" />
     <Compile Include="TemplateSelector\DialogTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FieldTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FormSectionTemplateSelector.cs" />
@@ -365,6 +379,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\GridQueryView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\GridLookupPicklistFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -394,6 +412,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Html\HtmlFileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Query\ConditionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Query\FilterConditionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\FieldSectionInputOnlyView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -637,6 +667,9 @@
   <ItemGroup>
     <Resource Include="Images\Next.png" />
     <Resource Include="Images\Previous.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\AddMultipleIcon.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

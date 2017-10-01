@@ -309,5 +309,10 @@ namespace JosephM.Record.Service
         {
             return GetRecordTypeMetadata(recordType).PrimaryFieldSchemaName;
         }
+
+        public virtual IEnumerable<IRecord> RetreiveAll(QueryDefinition query)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

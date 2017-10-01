@@ -64,6 +64,17 @@ namespace JosephM.Application.ViewModel.Extentions
             return new GetGridRecordsResponse(records, hasMoreRows);
         }
 
+        public static GetGridRecordsResponse GetGridRecordPage(this DynamicGridViewModel gridViewModel, QueryDefinition query)
+        {
+            query.Top = gridViewModel.CurrentPageCeiling + 1;
+            if (gridViewModel.GetLastSortExpression() != null)
+                query.Sorts.Insert(0, gridViewModel.GetLastSortExpression());
+            var records = gridViewModel.RecordService.RetreiveAll(query);
+            var hasMoreRows = records.Count() > gridViewModel.CurrentPageCeiling;
+            records = records.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();
+            return new GetGridRecordsResponse(records, hasMoreRows);
+        }
+
         public static Uri ToPrismNavigationUriType(Type type, UriQuery uriQuery)
         {
             var prismQuery = new Microsoft.Practices.Prism.UriQuery();

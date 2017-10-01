@@ -7,6 +7,7 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.HTML;
 using JosephM.Application.ViewModel.Navigation;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Grid;
 
 #endregion
 
@@ -14,6 +15,7 @@ namespace JosephM.Wpf.TemplateSelector
 {
     public class MainTabRegionDataTemplateSelector : DataTemplateSelector
     {
+        public DataTemplate QueryViewTemplate { get; set; }
         public DataTemplate RecordEntryViewTemplate { get; set; }
         public DataTemplate DialogTemplate { get; set; }
         public DataTemplate NavigationErrorTemplate { get; set; }
@@ -22,6 +24,8 @@ namespace JosephM.Wpf.TemplateSelector
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
+            if (item is QueryViewModel)
+                return QueryViewTemplate;
             if (item is RecordEntryFormViewModel)
                 return RecordEntryViewTemplate;
             if (item is NavigationErrorViewModel)

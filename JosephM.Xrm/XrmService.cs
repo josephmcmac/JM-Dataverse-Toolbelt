@@ -1933,7 +1933,8 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
         public IEnumerable<Entity> RetrieveFirstX(QueryExpression query, int x)
         {
             query.PageInfo.PageNumber = 1;
-            query.PageInfo.Count = x;
+            if (x >= 0)
+                query.PageInfo.Count = x;
             var response = RetrieveMultiple(query);
             var result = response.Entities.ToArray();
 
@@ -1941,7 +1942,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             if (response.MoreRecords)
             {
                 var tempHolder = new List<Entity>(result);
-                while (response.MoreRecords && tempHolder.Count < x)
+                while (response.MoreRecords && (tempHolder.Count < x || x < 0))
                 {
                     query.PageInfo.PagingCookie = response.PagingCookie;
                     query.PageInfo.PageNumber = query.PageInfo.PageNumber + 1;

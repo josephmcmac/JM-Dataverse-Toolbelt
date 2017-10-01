@@ -208,7 +208,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     var methods = FormService.GetOnLoadTriggers(field.FieldName, RecordType);
                     foreach (var method in methods)
                     {
-                        method(this);
+                        try
+                        {
+                            method(this);
+                        }
+                        catch (Exception ex)
+                        {
+                            ApplicationController.ThrowException(ex);
+                        }
                     }
                 }
             }
@@ -225,7 +232,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                                 var methods = FormService.GetOnLoadTriggers(field.FieldName, item.GetRecordType());
                                 foreach (var method in methods)
                                 {
-                                    method(item);
+                                    try
+                                    {
+                                        method(item);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        ApplicationController.ThrowException(ex);
+                                    }
                                 }
                             }
                         }

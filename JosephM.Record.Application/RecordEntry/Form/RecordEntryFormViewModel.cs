@@ -145,7 +145,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             {
                 AddChangedField(f);
                 foreach (var action in FormService.GetOnChanges(f.FieldName))
-                    action(this);
+                {
+                    try
+                    {
+                        action(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        ApplicationController.ThrowException(ex);
+                    }
+                }
             };
         }
         //
@@ -160,7 +169,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        public IEnumerable<FieldSectionViewModel> FieldSections
+        public override IEnumerable<FieldSectionViewModel> FieldSections
         {
             get { return FormSectionsAsync.Where(s => s is FieldSectionViewModel).Cast<FieldSectionViewModel>(); }
         }

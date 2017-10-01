@@ -57,9 +57,24 @@ namespace JosephM.Record.Service
                 var asEnumerable = (EnumerableFieldMetadata)field;
                 if (!FieldMetadata.ContainsKey(asEnumerable.EnumeratedTypeQualifiedName))
                 {
-                    
                     var metadata = RecordMetadataFactory.GetClassFieldMetadata(GetClassType(asEnumerable.EnumeratedTypeQualifiedName), ObjectTypeMaps);
                     FieldMetadata.Add(asEnumerable.EnumeratedTypeQualifiedName, metadata);
+                }
+
+                //if the property is an interface we also want to load the metadata for any instance types
+                var propertyValue = ObjectToEnter.GetPropertyValue(field.SchemaName);
+                if (propertyValue != null)
+                {
+                    var enumerable = ((IEnumerable)propertyValue);
+                    foreach(var item in enumerable)
+                    {
+                        var instanceType = item.GetType();
+                        if (!FieldMetadata.ContainsKey(instanceType.AssemblyQualifiedName))
+                        {
+                            var metadata = RecordMetadataFactory.GetClassFieldMetadata(instanceType, ObjectTypeMaps);
+                            FieldMetadata.Add(instanceType.AssemblyQualifiedName, metadata);
+                        }
+                    }
                 }
             }
         }
@@ -171,6 +186,11 @@ namespace JosephM.Record.Service
         public override IEnumerable<IRecord> GetLinkedRecords(string linkedEntityType, string entityTypeFrom,
             string linkedEntityLookup, string entityFromId)
         {
+            return GetPropertyObjectsAsRecords(linkedEntityLookup);
+        }
+
+        private IEnumerable<IRecord> GetPropertyObjectsAsRecords(string linkedEntityLookup)
+        {
             var propertyValue = ObjectToEnter.GetPropertyValue(linkedEntityLookup);
             if (propertyValue == null)
                 return new IRecord[0];
@@ -183,10 +203,54 @@ namespace JosephM.Record.Service
             return objectList;
         }
 
+        public override IEnumerable<IRecord> RetreiveAll(QueryDefinition query)
+        {
+            //okay this is initially implemented purely for querying an IEnumerable property of the primary object
+            var objects = new List<IRecord>();
+            foreach(var property in ObjectType.GetProperties())
+            {
+                if(property.PropertyType.GenericTypeArguments.Count() > 0
+                    && property.PropertyType.GenericTypeArguments[0].AssemblyQualifiedName == query.RecordType)
+                {
+                    objects.AddRange(GetPropertyObjectsAsRecords(property.Name));
+                }
+            }
+            if (!query.IsQuickFind)
+                throw new NotImplementedException("Only IsQuickFind Queries Are implemented For This Service Type");
+            if (query.QuickFindText != null)
+            {
+                objects = objects
+                    .Where(o =>
+                    {
+                        var instance = ((ObjectRecord)o).Instance;
+                        return GetFieldMetadata(instance.GetType().AssemblyQualifiedName).Any(p =>
+                        {
+                            var propValue = instance.GetPropertyValue(p.SchemaName);
+                            return propValue != null && propValue.ToString().Contains(query.QuickFindText);
+                        });
+                    })
+                .ToList();
+            }
+            var newSorts = new List<SortExpression>(query.Sorts);
+            newSorts.Reverse();
+            //todo only implemented 1 sort
+            foreach (var sort in newSorts.Take(1))
+            {
+                var comparer = new ObjectComparer(sort.FieldName);
+                objects.Sort(comparer);
+                if (sort.SortType == SortType.Descending)
+                   objects.Reverse();
+            }
+            return objects;
+        }
+
         public override IEnumerable<IFieldMetadata> GetFieldMetadata(string recordType)
         {
             if (FieldMetadata.ContainsKey(recordType))
-                return FieldMetadata[recordType];
+            {
+                var fieldMetadata = FieldMetadata[recordType];
+                return fieldMetadata;
+            }
             throw new ArgumentOutOfRangeException("recordType",
                 "No Field Metadata Has Been Created For Type " + recordType);
         }
@@ -219,7 +283,32 @@ namespace JosephM.Record.Service
 
         public IEnumerable<PropertyInfo> GetPropertyInfos(string recordType)
         {
-            return GetClassType(recordType).GetProperties();
+            var classType = GetClassType(recordType);
+            var properties = classType.GetProperties().ToList();
+            if (classType.IsInterface)
+            {
+                var interfaces = classType.GetInterfaces();
+                foreach (var interface_ in interfaces)
+                {
+                    foreach (var item in interface_.GetProperties())
+                    {
+                        if (!properties.Any(m => m.Name == item.Name))
+                            properties.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                if (classType.BaseType != null)
+                {
+                    foreach (var item in classType.BaseType.GetProperties())
+                    {
+                        if (!properties.Any(m => m.Name == item.Name))
+                            properties.Add(item);
+                    }
+                }
+            }
+            return properties;
         }
 
         /// <summary>
@@ -302,20 +391,38 @@ namespace JosephM.Record.Service
                             .ToArray();
                     }
                 case RecordFieldType.Picklist:
-                {
-                    var type = GetPropertyType(fieldName, recordType);
-                    var options = PicklistOption.GenerateEnumOptions(type);
-                    var propertyInfo = GetPropertyInfo(fieldName, recordType);
-                    var limitAttribute = propertyInfo.GetCustomAttribute<LimitPicklist>();
-                    if (limitAttribute != null)
-                        options =
-                            options.Where(
-                                o =>
-                                    limitAttribute.ToInclude.Select(kv => Convert.ToInt32(kv).ToString())
-                                        .Contains(o.Key))
-                                        .ToArray();
-                    return options;
-                }
+                    {
+                        var type = GetPropertyType(fieldName, recordType);
+                        var options = new List<PicklistOption>();
+                        foreach (Enum item in type.GetEnumValues())
+                        {
+                            var enumMember = item.GetType().GetMember(item.ToString()).First();
+                            var validForFieldAttribute = enumMember.GetCustomAttribute<ValidForFieldTypes>();
+                            if (validForFieldAttribute == null || dependantValue == null)
+                            {
+                                options.Add(PicklistOption.EnumToPicklistOption(item));
+                            }
+                            else
+                            {
+                                if(validForFieldAttribute.FieldTypes.Contains(dependantValue.ParseEnum<RecordFieldType>()))
+                                {
+                                    options.Add(PicklistOption.EnumToPicklistOption(item));
+                                }
+                            }
+                        }
+                        var propertyInfo = GetPropertyInfo(fieldName, recordType);
+                        var limitAttribute = propertyInfo.GetCustomAttribute<LimitPicklist>();
+                        if (limitAttribute != null)
+                        {
+                            options =
+                                options.Where(
+                                    o =>
+                                        limitAttribute.ToInclude.Select(kv => Convert.ToInt32(kv).ToString())
+                                            .Contains(o.Key))
+                                            .ToList();
+                        }
+                        return options;
+                    }
             }
             throw new ArgumentOutOfRangeException(
                 string.Format("GetPicklistOptions Not Implemented For Fiel Of Type {0} Field: {1} Type {2}", fieldType,
@@ -566,8 +673,7 @@ namespace JosephM.Record.Service
         {
             //very similar logic in form get grid metadata
             var viewFields = new List<ViewField>();
-            var type = GetClassType(recordType);
-            foreach (var propertyInfo in type.GetProperties())
+            foreach (var propertyInfo in GetPropertyInfos(recordType))
             {
                 var hiddenAttribute = propertyInfo.GetCustomAttribute<HiddenAttribute>();
                 if (propertyInfo.CanRead && hiddenAttribute == null)
@@ -583,7 +689,7 @@ namespace JosephM.Record.Service
                     viewFields.Add(viewField);
                 }
             }
-            return new[] { new ViewMetadata(viewFields) { ViewType = ViewType.LookupView } };
+            return new[] { new ViewMetadata(viewFields.OrderBy(o => o.Order).ToArray()) { ViewType = ViewType.LookupView } };
         }
 
         private bool MeetsCondition(object instance, Condition condition)
@@ -609,6 +715,40 @@ namespace JosephM.Record.Service
                     }
             }
             throw new NotImplementedException(string.Format("{0} not implemented", condition.ConditionType));
+        }
+
+        public class ObjectComparer : IComparer<IRecord>
+        {
+            private string PropertyName { get; set; }
+            public ObjectComparer(string propertyName)
+            {
+                PropertyName = propertyName;
+            }
+
+            public int Compare(IRecord x, IRecord y)
+            {
+                var value1 = x.GetField(PropertyName);
+                var value2 = y.GetField(PropertyName);
+                if (value1 == null && value2 == null)
+                {
+                    return 0;
+                }
+                if (value2 == null)
+                {
+                    return 1;
+                }
+                else if (!(value1 is Enum) && value1 is IComparable)
+                {
+                    return ((IComparable)value1).CompareTo(value2);
+                }
+                var sortString1 = value1.ToString();
+                var sortString2 = value2.ToString();
+                if (value1 is Enum)
+                    sortString1 = ((Enum)value1).GetDisplayString();
+                if (value2 is Enum)
+                    sortString2 = ((Enum)value2).GetDisplayString();
+                return String.Compare(sortString1, sortString2, StringComparison.Ordinal);
+            }
         }
     }
 }

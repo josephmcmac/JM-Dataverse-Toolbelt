@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\EnumerableRecordFieldMap.cs" />
+    <Compile Include="Attributes\ValidForFieldTypes.cs" />
     <Compile Include="Attributes\LimitPicklist.cs" />
     <Compile Include="Attributes\LookupFieldCascade.cs" />
     <Compile Include="Attributes\LookupCondition.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Query\ConditionType.cs" />
     <Compile Include="Query\Filter.cs" />
     <Compile Include="Query\FilterOperator.cs" />
+    <Compile Include="Query\QueryDefinition.cs" />
     <Compile Include="Service\ObjectRecordMetadata.cs" />
     <Compile Include="Service\Record.cs" />
     <Compile Include="Query\SortExpression.cs" />
