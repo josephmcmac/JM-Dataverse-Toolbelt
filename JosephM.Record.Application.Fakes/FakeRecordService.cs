@@ -332,6 +332,9 @@ namespace JosephM.Application.ViewModel.Fakes
                     "Html"),
                     new DateFieldMetadata(FakeConstants.EnumerableField,
                     "Enumerable"),
+                    new DecimalFieldMetadata(FakeConstants.RecordType, FakeConstants.DecimalField, "A Decimal"),
+                    new DoubleFieldMetadata(FakeConstants.RecordType, FakeConstants.DoubleField, "A Double"),
+                    new MoneyFieldMetadata(FakeConstants.RecordType, FakeConstants.MoneyField, "A Money"),
             };
         }
 

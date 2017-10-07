@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\BulkAddFunction.cs" />
+    <Compile Include="Attributes\BulkAddFieldFunction.cs" />
     <Compile Include="Attributes\BulkAddRecordTypeFunction.cs" />
     <Compile Include="Attributes\CustomFunction.cs" />
     <Compile Include="Attributes\BulkAddLookupFunction.cs" />
@@ -100,9 +101,12 @@
     <Compile Include="HTML\HtmlFileModel.cs" />
     <Compile Include="Query\ConditionViewModel.cs" />
     <Compile Include="Query\FilterConditionsViewModel.cs" />
+    <Compile Include="RecordEntry\Field\MoneyFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\DoubleFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DropdownFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\FileRefFieldViewModell.cs" />
     <Compile Include="RecordEntry\Field\BigIntFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\DecimalFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\IReferenceFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\ObjectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\ReferenceFieldViewModel.cs" />

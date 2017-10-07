@@ -214,6 +214,27 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             }
+                            else if (column.FieldType == RecordFieldType.Decimal)
+                            {
+                                dataGridField = new GridDecimalColumn()
+                                {
+                                    Binding = cellBinding
+                                };
+                            }
+                            else if (column.FieldType == RecordFieldType.Double)
+                            {
+                                dataGridField = new GridDoubleColumn()
+                                {
+                                    Binding = cellBinding
+                                };
+                            }
+                            else if (column.FieldType == RecordFieldType.Money)
+                            {
+                                dataGridField = new GridMoneyColumn()
+                                {
+                                    Binding = cellBinding
+                                };
+                            }
                             else
                                 dataGridField = new GridStringColumn()
                                 {
@@ -293,6 +314,7 @@ namespace JosephM.Wpf.Grid
                         ((GridRowViewModel)item).IsSelected = false;
                 }
             }
+            GridSectionViewModel.OnSelectionsChanged();
         }
     }
 }

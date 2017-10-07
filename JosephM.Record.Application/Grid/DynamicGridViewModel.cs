@@ -58,12 +58,22 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 if (functions == null)
                     functions = new CustomGridFunction[0];
+                _loadedGridButtons = functions;
                 _customFunctions =
-                    new ObservableCollection<XrmButtonViewModel>(functions.Select(cf =>
-                        new XrmButtonViewModel(cf.Label, () => cf.Function(),
+                    new ObservableCollection<XrmButtonViewModel>(functions
+                    .Where(cf => cf.VisibleFunction(this))
+                    .Select(cf =>
+                        new XrmButtonViewModel(cf.Label, () => cf.Function(this),
                             ApplicationController)));
                 OnPropertyChanged("CustomFunctions");
             });
+        }
+
+        private IEnumerable<CustomGridFunction> _loadedGridButtons;
+
+        public void OnSelectionsChanged()
+        {
+            LoadGridButtons(_loadedGridButtons);
         }
 
         private ObservableCollection<XrmButtonViewModel> _customFunctions;
@@ -429,7 +439,7 @@ namespace JosephM.Application.ViewModel.Grid
 
         public IEnumerable<GridRowViewModel> SelectedRows
         {
-            get { return GridRecords.Where(r => r.IsSelected).ToArray(); }
+            get { return GridRecords == null ? new GridRowViewModel[0] :  GridRecords.Where(r => r.IsSelected).ToArray(); }
         }
 
         public RecordEntry.Form.RecordEntryViewModelBase ParentForm { get; set; }

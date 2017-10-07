@@ -104,6 +104,7 @@
     <Compile Include="Metadata\Fields\AnyFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\BigIntFieldMetadata.cs" />
     <Compile Include="Metadata\CascadeBehaviour.cs" />
+    <Compile Include="Metadata\Fields\OwnerFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\FileRefFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\CustomerFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\ObjectFieldMetadata.cs" />

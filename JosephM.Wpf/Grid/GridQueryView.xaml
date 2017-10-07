@@ -30,8 +30,8 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" >
                 <WrapPanel Orientation="Horizontal">
+                    <shared:XrmButton DataContext="{Binding ReturnButton}" />
                     <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
-                    <shared:XrmButton DataContext="{Binding QuickFindButton}" />
                     <WrapPanel Orientation="Horizontal"  Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
                     <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
                     <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />

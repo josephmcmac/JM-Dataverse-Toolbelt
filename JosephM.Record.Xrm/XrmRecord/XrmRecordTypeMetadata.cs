@@ -15,6 +15,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             XrmService = xrmService;
         }
 
+        public override string ToString()
+        {
+            return DisplayName ?? base.ToString();
+        }
+
         public string DisplayName { get { return XrmService.GetEntityDisplayName(SchemaName); } }
 
         public bool Audit

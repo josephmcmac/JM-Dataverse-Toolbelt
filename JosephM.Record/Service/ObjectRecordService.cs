@@ -151,6 +151,23 @@ namespace JosephM.Record.Service
 
                         break;
                     }
+                    else
+                    {
+                        var propertyValue = ObjectToEnter.GetPropertyValue(metadata.SchemaName);
+                        if (propertyValue != null)
+                        {
+                            var enumerable = ((IEnumerable)propertyValue);
+                            foreach (var item in enumerable)
+                            {
+                                var instanceType = item.GetType();
+                                if (instanceType.AssemblyQualifiedName == recordType)
+                                {
+                                    type = instanceType;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             if (type == null)
@@ -232,14 +249,20 @@ namespace JosephM.Record.Service
                 .ToList();
             }
             var newSorts = new List<SortExpression>(query.Sorts);
-            newSorts.Reverse();
-            //todo only implemented 1 sort
-            foreach (var sort in newSorts.Take(1))
+            if (!newSorts.Any())
             {
-                var comparer = new ObjectComparer(sort.FieldName);
-                objects.Sort(comparer);
-                if (sort.SortType == SortType.Descending)
-                   objects.Reverse();
+                newSorts.OrderBy(o => o.ToString()).ToList();
+            }
+            else
+            {
+                newSorts.Reverse();
+                foreach (var sort in newSorts.Take(1))
+                {
+                    var comparer = new ObjectComparer(sort.FieldName);
+                    objects.Sort(comparer);
+                    if (sort.SortType == SortType.Descending)
+                        objects.Reverse();
+                }
             }
             return objects;
         }
@@ -278,7 +301,11 @@ namespace JosephM.Record.Service
 
         public PropertyInfo GetPropertyInfo(string fieldName, string recordType)
         {
-            return GetClassType(recordType).GetProperty(fieldName);
+            var properties = GetPropertyInfos(recordType);
+            foreach (var property in properties)
+                if (property.Name == fieldName)
+                    return property;
+            return null;
         }
 
         public IEnumerable<PropertyInfo> GetPropertyInfos(string recordType)
@@ -319,7 +346,7 @@ namespace JosephM.Record.Service
         /// <returns></returns>
         public Type GetPropertyType(string fieldName, string recordType)
         {
-            var type = GetClassType(recordType).GetProperty(fieldName).PropertyType;
+            var type = GetPropertyInfo(fieldName, recordType).PropertyType;
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 type = type.GenericTypeArguments[0];
             return type;
@@ -384,9 +411,14 @@ namespace JosephM.Record.Service
                             allFieldsMetadata =
                                 allFieldsMetadata.Where(f => MeetsCondition(f, condition)).ToArray();
                         }
+                        var onlyInclude = OptionSetLimitedValues == null || !OptionSetLimitedValues.ContainsKey(fieldName)
+                            ? null
+                            : OptionSetLimitedValues[fieldName];
+
                         return allFieldsMetadata
                             .Select(f => new RecordField(f.SchemaName, f.DisplayName))
                             .Where(f => !f.Value.IsNullOrWhiteSpace())
+                            .Where(f => onlyInclude == null || onlyInclude.Contains(f.Key))
                             .OrderBy(f => f.Value)
                             .ToArray();
                     }

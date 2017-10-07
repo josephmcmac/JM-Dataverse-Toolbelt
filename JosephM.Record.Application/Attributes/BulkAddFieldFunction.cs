@@ -16,32 +16,33 @@ namespace JosephM.Application.ViewModel.Attributes
     [AttributeUsage(
         AttributeTargets.Class,
         AllowMultiple = false)]
-    public class BulkAddRecordTypeFunction : BulkAddFunction
+    public class BulkAddFieldFunction : BulkAddFunction
     {
         public override Type TargetPropertyType
         {
-            get { return typeof(RecordType); }
+            get { return typeof(RecordField); }
         }
 
         public override IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
         {
+            var targetPropertyInfo = GetTargetProperty(recordForm, subGridReference);
+            var recordType = recordForm.FormService.GetDependantValue(subGridReference + "." + targetPropertyInfo.Name, GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName, recordForm);
             var lookupService = GetLookupService(recordForm, subGridReference);
-            var types = lookupService
-                .GetAllRecordTypes()
-                .Select(r => lookupService.GetRecordTypeMetadata(r))
-                .Where(r => r.Searchable)
+            var fields = lookupService.GetFieldMetadata(recordType)
+                .Where(f => f.Searchable)
                 .OrderBy(r => r.DisplayName)
                 .ToArray();
-            var queryTypesObject = new RecordTypesObject
+
+            var queryTypesObject = new FieldsObject
             {
-                RecordTypes = types
+                Fields = fields
             };
             return new ObjectRecordService(queryTypesObject, recordForm.ApplicationController);
         }
 
         public override string GetTargetType(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            return typeof(IRecordTypeMetadata).AssemblyQualifiedName;
+            return typeof(IFieldMetadata).AssemblyQualifiedName;
         }
 
         public override bool AllowQuery { get { return false; } }
@@ -55,21 +56,21 @@ namespace JosephM.Application.ViewModel.Attributes
             var selectedRowrecord = selectedRow.GetRecord() as ObjectRecord;
             if (selectedRowrecord != null)
             {
-                var newRecordType = new RecordType();
-                newRecordType.Key = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IRecordTypeMetadata.SchemaName));
-                newRecordType.Value = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IRecordTypeMetadata.DisplayName));
+                var newRecordType = new RecordField();
+                newRecordType.Key = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IFieldMetadata.SchemaName));
+                newRecordType.Value = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IFieldMetadata.DisplayName));
 
                 newRecord.SetField(targetPropertyname, newRecordType, recordForm.RecordService);
-                if (gridField.GridRecords.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value == newRecordType))
+                if (gridField.GridRecords.Any(g => g.GetRecordFieldFieldViewModel(targetPropertyname).Value == newRecordType))
                     return;
                 newRecord.SetField(targetPropertyname, newRecordType, recordForm.RecordService);
                 gridField.InsertRecord(newRecord, 0);
             }
         }
 
-        public class RecordTypesObject
+        public class FieldsObject
         {
-            public IEnumerable<IRecordTypeMetadata> RecordTypes { get; set; }
+            public IEnumerable<IFieldMetadata> Fields { get; set; }
         }
     }
 }

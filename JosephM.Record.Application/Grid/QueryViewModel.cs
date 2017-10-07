@@ -18,14 +18,15 @@ namespace JosephM.Application.ViewModel.Grid
 {
     public class QueryViewModel : TabAreaViewModelBase, INotifyPropertyChanged
     {
-        public QueryViewModel(IEnumerable<string> recordTypes, IRecordService recordService, IApplicationController controller, IEnumerable<CustomGridFunction> customFunctions, bool allowQuery = false, bool loadInitially = false)
+        public QueryViewModel(IEnumerable<string> recordTypes, IRecordService recordService, IApplicationController controller, bool allowQuery = false, bool loadInitially = false, CustomGridFunction closeFunction = null
+            , CustomGridFunction processSelectedFunction = null)
             : base(controller)
         {
-            //todo haven't implemented all field types
-
+            AllowQuery = allowQuery;
             RecordTypes = recordTypes;
             RecordService = recordService;
-            QuickFindButton = new XrmButtonViewModel("Run Query", QuickFind, ApplicationController);
+            if (closeFunction != null)
+                ReturnButton = new XrmButtonViewModel(closeFunction.Label, () => { closeFunction.Function(DynamicGridViewModel); }, controller);
             QueryTypeButton = new XrmButtonViewModel("Change Query Type", ChangeQueryType, ApplicationController);
             DeleteSelectedConditionsButton = new XrmButtonViewModel("Delete Selected", () => DeleteSelected(), ApplicationController);
             GroupSelectedConditionsOr = new XrmButtonViewModel("Group Selected Or", () => GroupSelected(FilterOperator.Or), ApplicationController);
@@ -33,10 +34,9 @@ namespace JosephM.Application.ViewModel.Grid
             UngroupSelectedConditions = new XrmButtonViewModel("Ungroup Selected", () => UnGroupSelected(), ApplicationController);
             ChangeQueryType();
 
-            if (allowQuery)
+            if (AllowQuery)
                 FilterConditions = CreateFilterCondition();
-
-            QueryTypeButton.IsVisible = allowQuery;
+            QueryTypeButton.IsVisible = AllowQuery;
 
             DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
             {
@@ -50,18 +50,30 @@ namespace JosephM.Application.ViewModel.Grid
                 MultiSelect = true,
                 GridLoaded = false
             };
+            var customFunctions = new List<CustomGridFunction>()
+            {
+                new CustomGridFunction("Run Query", QuickFind)
+            };
+            if (processSelectedFunction != null)
+                customFunctions.Add(processSelectedFunction);
+
             DynamicGridViewModel.LoadGridButtons(customFunctions);
             if(loadInitially)
                 DynamicGridViewModel.ReloadGrid();
+
+            RefreshConditionButtons();
         }
+
+        private bool AllowQuery { get; set; }
 
         private FilterConditionsViewModel CreateFilterCondition()
         {
-            return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController);
+            return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons());
         }
 
         private void GroupSelected(FilterOperator filterOperator, FilterConditionsViewModel filterConditions = null, FilterConditionsViewModel parentFilterConditions = null)
         {
+            var isRootFilter = filterConditions == null;
             if (filterConditions == null)
                 filterConditions = FilterConditions;
             var selectedConditions = filterConditions.SelectedConditions;
@@ -81,10 +93,42 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 GroupSelected(filterOperator, item, filterConditions);
             }
+            if (isRootFilter)
+                RefreshConditionButtons();
         }
+
+        public void RefreshConditionButtons(FilterConditionsViewModel filter = null)
+        {
+            var isRootFilter = filter == null;
+            if (filter == null)
+            {
+                DeleteSelectedConditionsButton.IsVisible = false;
+                GroupSelectedConditionsAnd.IsVisible = false;
+                GroupSelectedConditionsOr.IsVisible = false;
+                UngroupSelectedConditions.IsVisible = false;
+                filter = FilterConditions;
+                if (!AllowQuery)
+                    return;
+            }
+            var selectedCount = filter.SelectedConditions.Count();
+            if (selectedCount > 0)
+                DeleteSelectedConditionsButton.IsVisible = true;
+            if (selectedCount > 0 && !isRootFilter)
+                UngroupSelectedConditions.IsVisible = true;
+            if (selectedCount > 1 && filter.FilterOperator == FilterOperator.And)
+                GroupSelectedConditionsOr.IsVisible = true;
+            if (selectedCount > 1 && filter.FilterOperator == FilterOperator.Or)
+                GroupSelectedConditionsAnd.IsVisible = true;
+            foreach(var item in filter.FilterConditions)
+            {
+                RefreshConditionButtons(item);
+            }
+        }
+
 
         private void UnGroupSelected(FilterConditionsViewModel filterConditions = null, FilterConditionsViewModel parentFilterConditions = null)
         {
+            var isRootFilter = filterConditions == null;
             if (filterConditions == null)
                 filterConditions = FilterConditions;
             var selectedConditions = filterConditions.SelectedConditions;
@@ -102,6 +146,8 @@ namespace JosephM.Application.ViewModel.Grid
                 UnGroupSelected(item, filterConditions);
             }
             CheckRemoveFilter(filterConditions, parentFilterConditions);
+            if (isRootFilter)
+                RefreshConditionButtons();
         }
 
         private static void CheckRemoveFilter(FilterConditionsViewModel filterConditions, FilterConditionsViewModel parentFilterConditions)
@@ -114,6 +160,7 @@ namespace JosephM.Application.ViewModel.Grid
 
         private void DeleteSelected(FilterConditionsViewModel filterConditions = null, FilterConditionsViewModel parentFilterConditions = null)
         {
+            var isRootFilter = filterConditions == null;
             if (filterConditions == null)
                 filterConditions = FilterConditions;
             var selectedConditions = filterConditions.SelectedConditions;
@@ -126,6 +173,8 @@ namespace JosephM.Application.ViewModel.Grid
                 DeleteSelected(item, filterConditions);
             }
             CheckRemoveFilter(filterConditions, parentFilterConditions);
+            if(isRootFilter)
+                RefreshConditionButtons();
         }
 
         private bool _isQuickFind;
@@ -150,6 +199,19 @@ namespace JosephM.Application.ViewModel.Grid
 
         public void QuickFind()
         {
+            if (!IsQuickFind)
+            {
+                var anyNotValid = false;
+                foreach (var condition in FilterConditions.Conditions)
+                {
+                    if (!condition.Validate())
+                    {
+                        anyNotValid = true;
+                    }
+                }
+                if (anyNotValid)
+                    return;
+            }
             DynamicGridViewModel.ReloadGrid();
         }
 
@@ -217,7 +279,7 @@ namespace JosephM.Application.ViewModel.Grid
             }
         }
 
-        public XrmButtonViewModel QuickFindButton { get; set; }
+        public XrmButtonViewModel ReturnButton { get; set; }
 
         public XrmButtonViewModel QueryTypeButton { get; set; }
 

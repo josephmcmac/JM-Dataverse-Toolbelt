@@ -14,15 +14,18 @@ namespace JosephM.Application.ViewModel.Query
 {
     public class FilterConditionsViewModel : ViewModelBase
     {
-        public FilterConditionsViewModel(string recordType, IRecordService recordService, IApplicationController controller)
+        public FilterConditionsViewModel(string recordType, IRecordService recordService, IApplicationController controller, Action onConditionSelectedChanged)
             : base(controller)
         {
+            OnConditionSelectedChanged = onConditionSelectedChanged;
             RecordType = recordType;
             RecordService = recordService;
             Conditions = new ObservableCollection<ConditionViewModel>();
             AddNewCondition();
             FilterConditions = new ObservableCollection<FilterConditionsViewModel>();
         }
+
+        Action OnConditionSelectedChanged { get; set; }
 
         private string RecordType { get; set; }
 
@@ -31,7 +34,7 @@ namespace JosephM.Application.ViewModel.Query
         private void AddNewCondition()
         {
             var queryConditionObject = new ConditionViewModel.QueryCondition(
-                () => AddNewCondition());
+                () => AddNewCondition(), OnConditionSelectedChanged);
             queryConditionObject.RecordType = new RecordType(RecordType, RecordType);
             var condition = new ConditionViewModel(queryConditionObject, RecordType, RecordService, ApplicationController);
             Conditions.Add(condition);

@@ -18,7 +18,7 @@
         <xctk:DateTimePicker
             TabIndex="1"
             Name="DatePicker"
-            Value="{Binding ValueObject, Mode=TwoWay}"
+            Value="{Binding Value, Mode=TwoWay}"
             Width="200"
             HorizontalAlignment="Left"
             Style="{StaticResource FieldEntryStyle}"
@@ -29,7 +29,7 @@
         <TextBox
             Name="TextBox"
             TabIndex="1"
-            Text="{Binding ValueObject, StringFormat=dd/MM/yyyy hh:mm:ss tt}"
+            Text="{Binding FormattedDate, Mode=OneWay}"
             Style="{StaticResource FieldEntryStyle}"
             IsEnabled="False"
             Visibility="{Binding IsVisibleAndReadonly, Converter={StaticResource BoolToVis}}"

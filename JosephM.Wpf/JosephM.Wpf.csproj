@@ -155,6 +155,7 @@
     <Compile Include="Application\ApplicationHeadingView.xaml.cs">
       <DependentUpon>ApplicationHeadingView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DecimalTextBox.cs" />
     <Compile Include="Converters\BooleanToMultiSelectConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\BooleanToFalseConverter.cs" />
@@ -166,6 +167,18 @@
       <DependentUpon>GridDateFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\GridDateColumn.cs" />
+    <Compile Include="Grid\GridMoneyFieldView.xaml.cs">
+      <DependentUpon>GridMoneyFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridDoubleFieldView.xaml.cs">
+      <DependentUpon>GridDoubleFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridDecimalFieldView.xaml.cs">
+      <DependentUpon>GridDecimalFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridMoneyColumn.cs" />
+    <Compile Include="Grid\GridDoubleColumn.cs" />
+    <Compile Include="Grid\GridDecimalColumn.cs" />
     <Compile Include="Grid\GridIntFieldView.xaml.cs">
       <DependentUpon>GridIntFieldView.xaml</DependentUpon>
     </Compile>
@@ -232,6 +245,9 @@
     </Compile>
     <Compile Include="RecordEntry\Field\EnumerableFieldView.xaml.cs">
       <DependentUpon>EnumerableFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\DecimalFieldView.xaml.cs">
+      <DependentUpon>DecimalFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
       <DependentUpon>LookupPicklistView.xaml</DependentUpon>
@@ -363,6 +379,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\GridMoneyFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridDoubleFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridDecimalFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\GridIntFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -436,6 +464,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\EnumerableFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\DecimalFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -548,7 +548,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                             //otherwise is a field input dynamic for the field's tpye
                                             //now we need to create the view model for the target field as the correct type
                                             //okay now we need to replace the old field view model for this field
-                                            var explicitTargetType = fieldType == RecordFieldType.Lookup
+                                            var explicitTargetType = fieldType == RecordFieldType.Lookup || fieldType == RecordFieldType.Customer || fieldType == RecordFieldType.Owner
                                                 ? lookupService.GetLookupTargetType(selectedFieldName, selectedFieldRecordType)
                                                 : null;
                                             var explicitPicklistOptions = fieldType == RecordFieldType.Picklist
@@ -556,6 +556,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                                                         || fieldType == RecordFieldType.State
                                                 ? lookupService.GetPicklistKeyValues(selectedFieldName, selectedFieldRecordType)
                                                 : null;
+                                            fieldViewModel.ValueObject = null;
                                             var newFieldViewModel = fieldMetadata.CreateFieldViewModel(re.GetRecordType(), re.RecordService, re, re.ApplicationController, explicitFieldType: fieldType, explicitLookupTargetType: explicitTargetType, explicitPicklistOptions: explicitPicklistOptions);
                                             var section = re.FieldSections.First(s => s.SectionLabel == sectionName);
                                             var index = section.Fields.Count;
@@ -589,12 +590,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         internal override string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
         {
             var propertyInfo = GetPropertyInfo(field, viewModel.GetRecord().Type);
-            if (propertyInfo.PropertyType == typeof(FileReference))
+            if (propertyInfo != null && propertyInfo.PropertyType == typeof(FileReference))
             {
                 var attr = propertyInfo.GetCustomAttribute<FileMask>();
                 return attr == null ? null : attr.Mask;
             }
-            else return GetRecordTypeFor(field, viewModel);
+            else
+            {
+                return GetRecordTypeFor(field, viewModel);
+            }
         }
 
         private string GetRecordTypeFor(string field, RecordEntryViewModelBase viewModel)

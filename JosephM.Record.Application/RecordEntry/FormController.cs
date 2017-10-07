@@ -2,14 +2,15 @@
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
+using System.Collections.Generic;
 
 namespace JosephM.Application.ViewModel.RecordEntry
 {
     public class FormController
     {
-        public static FormController CreateForObject(object objectToEnter, IApplicationController applicationController, IRecordService lookupService)
+        public static FormController CreateForObject(object objectToEnter, IApplicationController applicationController, IRecordService lookupService, IDictionary<string,IEnumerable<string>> optionSetLimitedvalues = null)
         {
-            var recordService = new ObjectRecordService(objectToEnter, lookupService, null, applicationController);
+            var recordService = new ObjectRecordService(objectToEnter, lookupService, optionSetLimitedvalues, applicationController);
             var formService = new ObjectFormService(objectToEnter, recordService);
             var formController = new FormController(recordService, formService, applicationController);
             return formController;

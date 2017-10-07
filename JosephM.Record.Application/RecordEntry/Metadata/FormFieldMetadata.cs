@@ -132,7 +132,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         break;
                     }
                     case RecordFieldType.Lookup:
-                    {
+                    case RecordFieldType.Customer:
+                    case RecordFieldType.Owner:
+                        {
                             //the check for null here was when loading a lookup grid the rows in the lookup do not require a form
                             var targetType = explicitLookupTargetType;
                             if (targetType == null)
@@ -251,6 +253,54 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }
                         break;
                     }
+                    case RecordFieldType.Decimal:
+                        {
+                            fieldVm = new DecimalFieldViewModel(field, label, recordForm)
+                            {
+                                IsRecordServiceField = isRecordServiceField
+                            };
+                            if (this is PersistentFormField && !explicitFieldType.HasValue)
+                            {
+                                ((DecimalFieldViewModel)fieldVm).MinValue =
+                                    recordService.GetFieldMetadata(field, recordType).MinValue;
+                                ((DecimalFieldViewModel)fieldVm).MaxValue =
+                                    recordService.GetFieldMetadata(field, recordType).MaxValue;
+                                fieldVm.IsNotNullable = recordService.GetFieldMetadata(field, recordType).IsNonNullable;
+                            }
+                            break;
+                        }
+                    case RecordFieldType.Double:
+                        {
+                            fieldVm = new DoubleFieldViewModel(field, label, recordForm)
+                            {
+                                IsRecordServiceField = isRecordServiceField
+                            };
+                            if (this is PersistentFormField && !explicitFieldType.HasValue)
+                            {
+                                ((DoubleFieldViewModel)fieldVm).MinValue =
+                                    Convert.ToDouble(recordService.GetFieldMetadata(field, recordType).MinValue);
+                                ((DoubleFieldViewModel)fieldVm).MaxValue =
+                                    Convert.ToDouble(recordService.GetFieldMetadata(field, recordType).MaxValue);
+                                fieldVm.IsNotNullable = recordService.GetFieldMetadata(field, recordType).IsNonNullable;
+                            }
+                            break;
+                        }
+                    case RecordFieldType.Money:
+                        {
+                            fieldVm = new MoneyFieldViewModel(field, label, recordForm)
+                            {
+                                IsRecordServiceField = isRecordServiceField
+                            };
+                            if (this is PersistentFormField && !explicitFieldType.HasValue)
+                            {
+                                ((MoneyFieldViewModel)fieldVm).MinValue =
+                                    recordService.GetFieldMetadata(field, recordType).MinValue;
+                                ((MoneyFieldViewModel)fieldVm).MaxValue =
+                                    recordService.GetFieldMetadata(field, recordType).MaxValue;
+                                fieldVm.IsNotNullable = recordService.GetFieldMetadata(field, recordType).IsNonNullable;
+                            }
+                            break;
+                        }
                 }
                 if (fieldVm == null)
                     fieldVm = new UnmatchedFieldViewModel(field, label, recordForm)

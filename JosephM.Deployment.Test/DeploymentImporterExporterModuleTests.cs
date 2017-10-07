@@ -49,12 +49,10 @@ namespace JosephM.Deployment.Test
         }
 
         [TestMethod]
-        public void DeploymentImporterExporterModuleTestExportSepcificRecordsWithQuery()
+        public void DeploymentImporterExporterModuleTestExportSpecificRecordsWithQuery()
         {
-            //todo add script for bulk add record type
-
-            //okay this test is for the new bulk add to the specific records grid with query feature
-            //need to navigate it as well as verify querying all the field types
+            //okay this test is for the new bulk add
+            //for lookups in specific record grid, record types and data to export, and fields in fields to exclude
             DeleteAll(Entities.account);
 
             var account = CreateRecordAllFieldsPopulated(Entities.account);
@@ -97,19 +95,25 @@ namespace JosephM.Deployment.Test
             var bulkAddForm = specificRecordEntry.ChildForms.First() as QueryViewModel;
             //verify a quickfind finds a record
             bulkAddForm.QuickFindText = account.GetStringField(Fields.account_.name);
-            bulkAddForm.QuickFindButton.Invoke();
+            bulkAddForm.QuickFind();
             Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
             Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
             //now do an and query on every field in the entity and verify it works
             bulkAddForm.QueryTypeButton.Invoke();
-            foreach(var field in accountRecord.GetFieldsInEntity())
+
+            var lastCondition = bulkAddForm.FilterConditions.Conditions.Last();
+            Assert.AreEqual(Entities.account, lastCondition.GetRecordTypeFieldViewModel(nameof(ConditionViewModel.QueryCondition.RecordType)).Value.Key);
+            var fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            var validSearchFields = fieldViewModel.ItemsSource.Select(i => i.Key).ToArray();
+
+            foreach (var field in validSearchFields)
             {
                 var fieldvalue = accountRecord.GetField(field);
                 if (fieldvalue != null)
                 {
-                    var lastCondition = bulkAddForm.FilterConditions.Conditions.Last();
+                    lastCondition = bulkAddForm.FilterConditions.Conditions.Last();
                     Assert.AreEqual(Entities.account, lastCondition.GetRecordTypeFieldViewModel(nameof(ConditionViewModel.QueryCondition.RecordType)).Value.Key);
-                    var fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+                    fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
                     fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First(i => i.Key == field);
                     var conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
                     conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Value == ConditionType.Equal.ToString());
@@ -117,16 +121,37 @@ namespace JosephM.Deployment.Test
                     valueViewModel.ValueObject = fieldvalue;
                 }
             }
-            bulkAddForm.QuickFindButton.Invoke();
+            bulkAddForm.QuickFind();
             Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
             Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
             //select and add
             bulkAddForm.DynamicGridViewModel.GridRecords.First().IsSelected = true;
+            //this triggered by the grid event
+            bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
             //this is supposed to be the add selected button
             bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
             Assert.IsTrue(specificRecordsGrid.GridRecords.Any());
-            specificRecordEntry.SaveButtonViewModel.Invoke();
 
+            var excludeFieldsGrid = specificRecordEntry.GetSubGridViewModel(nameof(ImportExportRecordType.ExcludeTheseFieldsInExportedRecords));
+            //now add using the add multiple option
+            excludeFieldsGrid.DynamicGridViewModel.AddMultipleRowButton.Invoke();
+            bulkAddForm = specificRecordEntry.ChildForms.First() as QueryViewModel;
+            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
+
+            bulkAddForm.QuickFindText = Fields.account_.name;
+            bulkAddForm.QuickFind();
+
+            Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
+            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
+
+            bulkAddForm.DynamicGridViewModel.GridRecords.First().IsSelected = true;
+            //this triggered by the grid event
+            bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
+            //this is supposed to be the add selected button
+            bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
+            Assert.IsFalse(specificRecordEntry.ChildForms.Any());
+
+            specificRecordEntry.SaveButtonViewModel.Invoke();
             Assert.IsFalse(entryForm.ChildForms.Any());
 
             var subGrid = entryForm.GetSubGridViewModel(nameof(XrmImporterExporterRequest.RecordTypesToExport));
@@ -137,12 +162,14 @@ namespace JosephM.Deployment.Test
             Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
 
             bulkAddForm.QuickFindText = Entities.contact;
-            bulkAddForm.QuickFindButton.Invoke();
+            bulkAddForm.QuickFind();
 
             Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
             Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
 
             bulkAddForm.DynamicGridViewModel.GridRecords.First().IsSelected = true;
+            //this triggered by the grid event
+            bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
             //this is supposed to be the add selected button
             bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
 

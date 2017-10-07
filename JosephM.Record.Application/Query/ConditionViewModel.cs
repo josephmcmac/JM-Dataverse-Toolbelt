@@ -16,13 +16,14 @@ using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Core.FieldType;
 using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Core.Attributes;
+using JosephM.Record.Metadata;
 
 namespace JosephM.Application.ViewModel.Query
 {
     public class ConditionViewModel : RecordEntryViewModelBase
     {
         public ConditionViewModel(QueryCondition conditionObject, string recordType, IRecordService recordService, IApplicationController controller)
-            : base(FormController.CreateForObject(conditionObject, controller, recordService))
+            : base(FormController.CreateForObject(conditionObject, controller, recordService, optionSetLimitedvalues: new Dictionary<string, IEnumerable<string>> { { nameof(QueryCondition.FieldName), GetValidFields(recordType, recordService) } }))
         {
             _queryCondition = conditionObject;
             _queryConditionRecord = new ObjectRecord(conditionObject);
@@ -36,6 +37,16 @@ namespace JosephM.Application.ViewModel.Query
                         );
             FormFieldSection = sectionViewModel;
             OnLoad();
+        }
+
+        private static IEnumerable<string> GetValidFields(string recordType, IRecordService lookupService)
+        {
+            var invalidFieldTypes = new[] { RecordFieldType.ActivityParty, RecordFieldType.Unknown, RecordFieldType.Virtual, RecordFieldType.Uniqueidentifier, RecordFieldType.Image, RecordFieldType.EntityName };
+            return lookupService
+                .GetFieldMetadata(recordType)
+                .Where(f => !invalidFieldTypes.Contains(f.FieldType))
+                .Select(f => f.SchemaName)
+                .ToArray();
         }
 
         public override IEnumerable<FieldSectionViewModel> FieldSections
@@ -63,7 +74,7 @@ namespace JosephM.Application.ViewModel.Query
 
         protected internal override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
-            return new ValidationRuleBase[0];
+            return FormService.GetValidationRules(fieldName);
         }
 
         internal override RecordEntryViewModelBase ParentForm
@@ -109,9 +120,10 @@ namespace JosephM.Application.ViewModel.Query
         [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalInputOnly)]
         public class QueryCondition
         {
-            public QueryCondition(Action onFieldSelected)
+            public QueryCondition(Action onFieldSelected, Action onselectedChanged)
             {
                 OnFieldSelected = onFieldSelected;
+                OnSelectedChanged = onselectedChanged;
             }
 
             [Group(Sections.Main)] //removing this causes it not to initialise
@@ -134,11 +146,13 @@ namespace JosephM.Application.ViewModel.Query
                 set
                 {
                     _isSelected = value;
+                    OnSelectedChanged();
                 }
             }
 
             private RecordField _fieldName;
 
+            //don't set this required as empty one always appended at end of query
             [RecordFieldFor(nameof(ConditionType))]
             [RecordFieldFor(nameof(Value))]
             [DisplayOrder(10)]
@@ -157,16 +171,21 @@ namespace JosephM.Application.ViewModel.Query
                         OnFieldSelected();
                 }
             }
+
+            [RequiredProperty]
             [DisplayOrder(20)]
             [Group(Sections.Main)]
             [PropertyInContextByPropertyNotNull(nameof(FieldName))]
             public ConditionType? ConditionType { get; set; }
+
+            [RequiredProperty]
             [DisplayOrder(30)]
             [Group(Sections.Main)]
             [PropertyInContextByPropertyValues(nameof(ConditionType), new object[] { Record.Query.ConditionType.BeginsWith, Record.Query.ConditionType.Equal, Record.Query.ConditionType.NotEqual, Record.Query.ConditionType.Like, Record.Query.ConditionType.LessEqual, Record.Query.ConditionType.GreaterEqual, Record.Query.ConditionType.GreaterThan, Record.Query.ConditionType.In })]
             public object Value { get; set; }
 
             private Action OnFieldSelected { get; set; }
+            private Action OnSelectedChanged { get; set; }
 
             private static class Sections
             {

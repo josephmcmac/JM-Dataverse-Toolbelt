@@ -24,10 +24,25 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition MinWidth="150" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Row="0">
+        <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BoolToVis}}">
+            <ComboBox
+            MinWidth="150"
+            VerticalAlignment="Top"
+            TabIndex="1"
+            Name="ComboBox"
+            Style="{StaticResource FieldEntryStyle}"
+            Tag="Key"
+            DisplayMemberPath="Value"
+            ItemsSource="{Binding RecordTypeItemsSource}"
+            SelectedItem="{Binding SelectedRecordType, Mode=TwoWay}"
+            IsEnabled="{Binding IsEditable}"
+             />
+        </Grid>
+        <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulated, Converter={StaticResource BoolToVis}}">
             <TextBox
                 TabIndex="1"
                 DataContext="{Binding NotifyOnValidationError=True}"
@@ -38,7 +53,7 @@
                 IsEnabled="{Binding IsEditable}"
                 PreviewKeyDown="OnPreviewKeyDown" />
         </Grid>
-        <Grid Grid.Column="1" Row="0" Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}">
+        <Grid Grid.Column="2" Row="0" Visibility="{Binding EditableAndTypePopulated, Converter={StaticResource BoolToVis}}">
             <shared:XrmButton
                 TabIndex="1"
                 DataContext="{Binding XrmButton}" />

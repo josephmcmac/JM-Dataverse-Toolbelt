@@ -132,6 +132,8 @@ namespace JosephM.Record.Metadata
                 else
                     fm = new EnumerableFieldMetadata(internalName, label, type.GetGenericArguments()[0].AssemblyQualifiedName);
             }
+            else if (type == typeof(decimal))
+                fm = new DecimalFieldMetadata(internalName, label);
             else
                 fm = new ObjectFieldMetadata(recordType, internalName, label, propertyInfo.ReflectedType);
             if(fm == null)

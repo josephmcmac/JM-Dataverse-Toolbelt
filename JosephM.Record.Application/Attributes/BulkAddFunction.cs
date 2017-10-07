@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JosephM.Record.Extentions;
 using System.Reflection;
+using System.Threading;
 
 namespace JosephM.Application.ViewModel.Attributes
 {
@@ -18,7 +19,35 @@ namespace JosephM.Application.ViewModel.Attributes
             return "Add Multiple";
         }
 
-        public abstract Action GetCustomFunction(RecordEntryViewModelBase recordForm, string subGridReference);
+        public abstract IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference);
+
+        public IRecordService GetLookupservice(RecordEntryViewModelBase recordForm, string subGridReference)
+        {
+            return recordForm.RecordService.GetLookupService(GetTargetProperty(recordForm, subGridReference).Name, GetEnumeratedType(recordForm, subGridReference).FullName, subGridReference, recordForm.GetRecord());
+        }
+
+        public Action GetCustomFunction(RecordEntryViewModelBase recordForm, string subGridReference)
+        {
+            return () =>
+            {
+                recordForm.LoadingViewModel.IsLoading = true;
+                recordForm.DoOnAsynchThread(() =>
+                {
+                    try
+                    {
+                        Thread.Sleep(100);
+                        Load(recordForm, subGridReference);
+                    }
+                    catch (Exception ex)
+                    {
+                        recordForm.ApplicationController.ThrowException(ex);
+                        recordForm.LoadingViewModel.IsLoading = false;
+                    }
+                });
+            };
+        }
+
+        public virtual bool AllowQuery { get { return true; } }
 
         public abstract Type TargetPropertyType { get; }
 
@@ -62,24 +91,40 @@ namespace JosephM.Application.ViewModel.Attributes
             return objectFormService;
         }
 
-        public void Load(RecordEntryViewModelBase recordForm, string subGridReference, QueryViewModel childForm)
+        public void Load(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            var functions = new[]
+            try
             {
-                    new CustomGridFunction("Return To Input Form", () =>  recordForm.ClearChildForm()),
-                    new CustomGridFunction("Add Selected", () =>
+                recordForm.DoOnMainThread(() =>
+                {
+                    var closeFunction = new CustomGridFunction("Return", () => recordForm.ClearChildForm());
+                    var targetType = GetTargetType(recordForm, subGridReference);
+
+                    var selectedFunction = new CustomGridFunction("Add Selected", (g) =>
                     {
-                        foreach(var selectedRow in childForm.DynamicGridViewModel.SelectedRows)
+                        foreach (var selectedRow in g.SelectedRows)
                         {
                             AddSelectedItem(selectedRow, recordForm, subGridReference);
                         }
                         recordForm.ClearChildForm();
-                    })
-                };
-            childForm.DynamicGridViewModel.LoadGridButtons(functions);
-            recordForm.LoadChildForm(childForm);
+                    }, visibleFunction: (g) => g.SelectedRows.Any());
+
+                    var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, processSelectedFunction: selectedFunction);
+
+                    recordForm.LoadChildForm(childForm);
+                });
+            }
+            catch (Exception ex)
+            {
+                recordForm.ApplicationController.ThrowException(ex);
+            }
+            finally
+            {
+                recordForm.LoadingViewModel.IsLoading = false;
+            }
         }
 
+        public abstract string GetTargetType(RecordEntryViewModelBase recordForm, string subGridReference);
         public abstract void AddSelectedItem(GridRowViewModel gridRow, RecordEntryViewModelBase recordForm, string subGridReference);
     }
 }

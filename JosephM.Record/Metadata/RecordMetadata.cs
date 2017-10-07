@@ -16,6 +16,11 @@ namespace JosephM.Record.Metadata
             Searchable = true;
         }
 
+        public override string ToString()
+        {
+            return DisplayName ?? base.ToString();
+        }
+
         public IEnumerable<ViewMetadata> Views { get; set; }
         public IEnumerable<FieldMetadata> Fields { get; set; }
         public string DisplayName { get; set; }

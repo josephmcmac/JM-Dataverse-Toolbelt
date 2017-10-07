@@ -21,50 +21,14 @@ namespace JosephM.Application.ViewModel.Attributes
             get { return typeof(Lookup); }
         }
 
-        public override Action GetCustomFunction(RecordEntryViewModelBase recordForm, string subGridReference)
+        public override string GetTargetType(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            return () =>
-            {
-                recordForm.LoadingViewModel.IsLoading = true;
-                recordForm.DoOnAsynchThread(() =>
-                {
-                    try
-                    {
-                        Thread.Sleep(100);
-                        var targetPropertyInfo = GetTargetProperty(recordForm, subGridReference);
+            return recordForm.FormService.GetLookupTargetType(subGridReference + "." + GetTargetProperty(recordForm, subGridReference).Name, GetEnumeratedType(recordForm, subGridReference).FullName, recordForm);
+        }
 
-                        var targetTypes = new List<string>();
-
-                        targetTypes.Add(recordForm.FormService.GetLookupTargetType(subGridReference + "." + targetPropertyInfo.Name, GetEnumeratedType(recordForm, subGridReference).FullName, recordForm));
-
-                        var lookupService = GetLookupService(recordForm, subGridReference);
-
-
-                        try
-                        {
-                            recordForm.DoOnMainThread(() =>
-                            {
-                                var childForm = new QueryViewModel(targetTypes, lookupService, recordForm.ApplicationController, null, allowQuery: true);
-
-                                Load(recordForm, subGridReference, childForm);
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            recordForm.ApplicationController.ThrowException(ex);
-                        }
-                        finally
-                        {
-                            recordForm.LoadingViewModel.IsLoading = false;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        recordForm.ApplicationController.ThrowException(ex);
-                        recordForm.LoadingViewModel.IsLoading = false;
-                    }
-                });
-            };
+        public override IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
+        {
+            return GetLookupService(recordForm, subGridReference);
         }
 
         public override void AddSelectedItem(GridRowViewModel selectedRow, RecordEntryViewModelBase recordForm, string subGridReference)

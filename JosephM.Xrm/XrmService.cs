@@ -483,14 +483,12 @@ namespace JosephM.Xrm
         {
             var result = "";
             var metadata = GetFieldMetadata(field, entity);
-            if (metadata.AttributeType == AttributeTypeCode.Lookup)
+            if (metadata.AttributeType == AttributeTypeCode.Lookup
+                || metadata.AttributeType == AttributeTypeCode.Owner
+                || metadata.AttributeType == AttributeTypeCode.Customer)
             {
                 var targets = ((LookupAttributeMetadata)metadata).Targets;
-                result = targets.Count() == 1 ? targets[0] : "ambiguous or not implemented";
-            }
-            else if (metadata.AttributeType == AttributeTypeCode.Owner)
-            {
-                result = "systemuser";
+                result = targets.Any() ? string.Join(",", targets) : null;
             }
             return result;
         }
