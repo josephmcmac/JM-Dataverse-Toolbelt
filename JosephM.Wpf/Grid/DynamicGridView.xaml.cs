@@ -10,6 +10,9 @@ using System.Windows.Input;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
+using System.Windows.Media;
+using System;
+using System.ComponentModel;
 
 #endregion
 
@@ -27,6 +30,20 @@ namespace JosephM.Wpf.Grid
             MouseDoubleClick += OnMouseDoubleClick;
             MouseDown += OnMouseClick;
             KeyDown += OnKeyDown;
+
+            var dp = DependencyPropertyDescriptor.FromProperty(TextBlock.TextProperty, typeof(TextBlock));
+            dp.AddValueChanged(PageDescriptionTextBlock, TextBlock_SourceUpdated);
+        }
+
+        private void TextBlock_SourceUpdated(object sender, EventArgs e)
+        {
+            var border = VisualTreeHelper.GetChild(DataGrid, 0) as Decorator;
+            if (border != null)
+            {
+                var scrollViewer = border.Child as ScrollViewer;
+                if (scrollViewer != null)
+                    scrollViewer.ScrollToTop();
+            }
         }
 
         private void AddingNewItem(object sender, AddingNewItemEventArgs e)
