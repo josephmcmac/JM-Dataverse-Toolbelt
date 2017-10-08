@@ -147,7 +147,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             var usePicklist = recordForm.FormService == null
                                     ? false
                                     : recordForm.FormService.UsePicklist(field, recordType);
-                            fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType, usePicklist)
+                            fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType, usePicklist, isEditable)
                         {
                             IsRecordServiceField = isRecordServiceField
                         };

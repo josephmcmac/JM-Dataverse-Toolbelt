@@ -79,7 +79,7 @@
                 <WrapPanel Orientation="Horizontal">
                     <Button DataContext="{Binding PreviousPageButton}" Style="{StaticResource PreviousButton}" Command="{Binding Command}" />
                     <Button DataContext="{Binding NextPageButton}" Style="{StaticResource NextButton}" Command="{Binding Command}" />
-                    <TextBlock Text="{Binding PageDescription}"></TextBlock>
+                    <TextBlock Name="PageDescriptionTextBlock" Text="{Binding PageDescription}"></TextBlock>
                 </WrapPanel>
             </Grid>
         </Grid>

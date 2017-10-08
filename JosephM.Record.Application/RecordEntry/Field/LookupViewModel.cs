@@ -18,13 +18,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
     public class LookupFieldViewModel : ReferenceFieldViewModel<Lookup>
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
-            string referencedRecordType, bool usePicklist)
-            : base(fieldName, fieldLabel, recordForm, usePicklist)
+                 string referencedRecordType, bool usePicklist, bool isEditable)
+                 : base(fieldName, fieldLabel, recordForm, usePicklist)
         {
-            if(referencedRecordType != null)
+            if (referencedRecordType != null)
             {
                 var splitIt = referencedRecordType.Split(',');
-                if(splitIt.Count() == 1)
+                if (splitIt.Count() == 1)
                 {
                     _selectedRecordType = new RecordType(splitIt.First(), splitIt.First());
                 }
@@ -37,14 +37,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     RecordTypeItemsSource = recordTypes;
                 }
             }
-            RecordTypeToLookup = referencedRecordType;
             if (Value != null)
             {
                 if (Value.Name.IsNullOrWhiteSpace())
                     Value.Name = "Record Name Not Set";
                 SetEnteredTestWithoutClearingValue(Value.Name);
             }
-            if (!UsePicklist && SelectedRecordType != null && IsEditable)
+            if (!UsePicklist && SelectedRecordType != null && isEditable)
                 LoadLookupGrid();
         }
 

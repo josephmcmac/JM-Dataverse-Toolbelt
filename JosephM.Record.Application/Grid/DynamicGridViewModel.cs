@@ -15,6 +15,7 @@ using JosephM.Core.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using System.Threading;
 
 #endregion
 
@@ -138,7 +139,6 @@ namespace JosephM.Application.ViewModel.Grid
                 //okay need to refresh the set of rows
                 ReloadGrid();
                 OnPropertyChanged("CurrentPage");
-                OnPropertyChanged("PageDescription");
                 PreviousPageButton.Enabled = _currentPage > 1;
             }
         }
@@ -314,6 +314,7 @@ namespace JosephM.Application.ViewModel.Grid
                     GridLoadError = false;
                     GridLoaded = false;
                     LoadingViewModel.IsLoading = true;
+                    Thread.Sleep(100);
                     if (OnReloading != null)
                         OnReloading();
                     var getRecordsResponse = GetGridRecords(false);
@@ -332,24 +333,21 @@ namespace JosephM.Application.ViewModel.Grid
                             GridLoadError = true;
                             ErrorMessage = string.Format("There was an error loading data into the grid: {0}", ex.DisplayString());
                         }
+                        LoadingViewModel.IsLoading = false;
                         if (!GridLoadError)
                             GridLoaded = true;
                         if (LoadedCallback != null)
                             LoadedCallback();
                     });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     GridLoadError = true;
                     ErrorMessage = string.Format("There was an error loading data into the grid: {0}", ex.DisplayString());
-                }
-                finally
-                {
                     LoadingViewModel.IsLoading = false;
                 }
             });
         }
-
 
         public Action LoadedCallback { get; set; }
         public Action OnReloading { get; set; }
