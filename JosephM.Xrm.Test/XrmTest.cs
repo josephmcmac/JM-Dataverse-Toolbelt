@@ -172,6 +172,18 @@ namespace JosephM.Xrm.Test
 
         public Entity CreateAndRetrieve(Entity entity)
         {
+            var primaryField = XrmService.GetPrimaryNameField(entity.LogicalName);
+            if (!entity.Contains(primaryField))
+                entity.SetField(primaryField, "Test Record " + DateTime.Now.ToFileTimeUtc());
+            switch (entity.LogicalName)
+            {
+                case "sla":
+                    {
+                        if (!entity.Contains("applicablefrom"))
+                            entity.SetField("applicablefrom", "?");
+                        break;
+                    }
+            }
             return XrmService.CreateAndRetreive(entity);
         }
 

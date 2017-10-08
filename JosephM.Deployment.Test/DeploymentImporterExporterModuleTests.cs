@@ -119,6 +119,9 @@ namespace JosephM.Deployment.Test
                     conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Value == ConditionType.Equal.ToString());
                     var valueViewModel = lastCondition.GetFieldViewModel(nameof(ConditionViewModel.QueryCondition.Value));
                     valueViewModel.ValueObject = fieldvalue;
+                    //bulkAddForm.QuickFind();
+                    //Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
+                    //Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
                 }
             }
             bulkAddForm.QuickFind();

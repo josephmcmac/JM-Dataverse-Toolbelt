@@ -44,6 +44,7 @@ namespace JosephM.Application.ViewModel.Query
             var invalidFieldTypes = new[] { RecordFieldType.ActivityParty, RecordFieldType.Unknown, RecordFieldType.Virtual, RecordFieldType.Uniqueidentifier, RecordFieldType.Image, RecordFieldType.EntityName };
             return lookupService
                 .GetFieldMetadata(recordType)
+                .Where(f => f.Searchable)
                 .Where(f => !invalidFieldTypes.Contains(f.FieldType))
                 .Select(f => f.SchemaName)
                 .ToArray();
