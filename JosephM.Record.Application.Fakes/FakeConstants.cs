@@ -21,6 +21,9 @@ namespace JosephM.Application.ViewModel.Fakes
         public const string DateOfBirthField = "DateOfBirthField";
         public const string AgeField = "AgeField";
         public const string LookupField = "LookupField";
+        public const string DecimalField = "DecimalField";
+        public const string DoubleField = "DoubleField";
+        public const string MoneyField = "MoneyField";
         public const string PasswordField = "PasswordField";
         public const string FakeLookupId = "Id";
         public const string FakeName = "Fake Record!";

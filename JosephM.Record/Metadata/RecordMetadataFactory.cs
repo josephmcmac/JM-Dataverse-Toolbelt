@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using JosephM.Record.IService;
+using System.Linq;
 
 #endregion
 
@@ -19,6 +20,30 @@ namespace JosephM.Record.Metadata
             foreach (var item in properties)
             {
                 result.Add(FieldMetadata.Create(item, objectTypeMaps));
+            }
+
+            if (configTypeName.IsInterface)
+            {
+                var interfaces = configTypeName.GetInterfaces();
+                foreach(var interface_ in interfaces)
+                {
+                    foreach (var item in interface_.GetProperties())
+                    {
+                        if(!result.Any(m => m.SchemaName == item.Name))
+                            result.Add(FieldMetadata.Create(item, objectTypeMaps));
+                    }
+                }
+            }
+            else
+            {
+                if (configTypeName.BaseType != null)
+                {
+                    foreach (var item in configTypeName.BaseType.GetProperties())
+                    {
+                        if (!result.Any(m => m.SchemaName == item.Name))
+                            result.Add(FieldMetadata.Create(item, objectTypeMaps));
+                    }
+                }
             }
 
             return result;

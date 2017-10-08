@@ -324,7 +324,7 @@ namespace JosephM.Application.ViewModel.Fakes
                 new IntegerFieldMetadata(FakeConstants.IntegerField, "An Integer", 0, 100000),
                 new BooleanFieldMetadata(FakeConstants.BooleanField, "An Check"),
                 new StringFieldMetadata(FakeConstants.StringField, "An String"),
-                new PicklistFieldMetadata(FakeConstants.ComboField, "An Combo", new PicklistOptionSet()), 
+                new PicklistFieldMetadata(FakeConstants.ComboField, "An Combo", new PicklistOptionSet(new [] { new PicklistOption("1", "Option 1"), new PicklistOption("2", "Option 2") })), 
                 new LookupFieldMetadata(FakeConstants.LookupField, "A Lookup", FakeConstants.RecordType),
                 new DateFieldMetadata(FakeConstants.DateOfBirthField,
                     "Date of Birth"),
@@ -332,6 +332,9 @@ namespace JosephM.Application.ViewModel.Fakes
                     "Html"),
                     new DateFieldMetadata(FakeConstants.EnumerableField,
                     "Enumerable"),
+                    new DecimalFieldMetadata(FakeConstants.RecordType, FakeConstants.DecimalField, "A Decimal"),
+                    new DoubleFieldMetadata(FakeConstants.RecordType, FakeConstants.DoubleField, "A Double"),
+                    new MoneyFieldMetadata(FakeConstants.RecordType, FakeConstants.MoneyField, "A Money"),
             };
         }
 

@@ -36,6 +36,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     DeleteRow = recordForm.IsReadOnly ? (Action<GridRowViewModel>)null : RemoveRow,
                     EditRow = EditRow,
                     AddRow = !recordForm.IsReadOnly && FormService.AllowAddRow(ReferenceName) ? AddRow : (Action)null,
+                    AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel),
                     IsReadOnly = recordForm.IsReadOnly,
                     ParentForm = recordForm,
                     ReferenceName = ReferenceName,
@@ -55,6 +56,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     },
                     OnlyValidate = recordForm.OnlyValidate
                 };
+                DynamicGridViewModel.AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);
                 var customFunctions = FormService.GetCustomFunctionsFor(ReferenceName, GetRecordForm()).ToList();
                 //customFunctions.Add(new CustomGridFunction("Download CSV", DownloadCsv));
                 DynamicGridViewModel.LoadGridButtons(customFunctions);
@@ -153,7 +155,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
 
 
-        private void InsertRecord(IRecord record, int index)
+        public void InsertRecord(IRecord record, int index)
         {
             DoOnAsynchThread(() =>
             {

@@ -355,6 +355,15 @@ namespace JosephM.CustomisationImporter.Service
                                     };
                                     break;
                                 }
+                            case (RecordFieldType.Owner):
+                                {
+                                    fieldMetadata = new OwnerFieldMetadata(recordTypeSchemaName, fieldSchemaName,
+                                        displayName)
+                                    {
+                                        DisplayInRelated = row.GetFieldAsBoolean(Headings.Fields.DisplayInRelated)
+                                    };
+                                    break;
+                                }
                             default:
                                 {
                                     fieldMetadata = new AnyFieldMetadata(recordTypeSchemaName, fieldSchemaName,

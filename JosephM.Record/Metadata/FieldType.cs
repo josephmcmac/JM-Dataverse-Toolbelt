@@ -13,6 +13,7 @@
         Boolean,
         Date,
         Lookup,
+        Owner,
         Decimal,
         Money,
         Password,

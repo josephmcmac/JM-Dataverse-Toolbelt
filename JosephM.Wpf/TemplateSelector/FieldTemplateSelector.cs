@@ -26,7 +26,8 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate RecordFieldFieldTemplate { get; set; }
         public DataTemplate FileRefFieldTemplate { get; set; }
         public DataTemplate EnumerableFieldTemplate { get; set; }
-
+        public DataTemplate DecimalFieldTemplate { get; set; }
+        
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
@@ -68,7 +69,14 @@ namespace JosephM.Wpf.TemplateSelector
                 return FileRefFieldTemplate;
             if (item is EnumerableFieldViewModel)
                 return EnumerableFieldTemplate;
-
+            if (item is DecimalFieldViewModel)
+                return DecimalFieldTemplate;
+            if (item is DoubleFieldViewModel)
+                return DecimalFieldTemplate;
+            if (item is MoneyFieldViewModel)
+                return DecimalFieldTemplate;
+            else
+                return StringFieldTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }

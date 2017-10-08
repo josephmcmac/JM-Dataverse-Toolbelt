@@ -1,8 +1,7 @@
 ﻿#region
 
-using System.Windows.Forms;
-using System.Windows.Input;
 using JosephM.Application.ViewModel.RecordEntry.Field;
+using System.Windows.Input;
 using Binding = System.Windows.Data.Binding;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 

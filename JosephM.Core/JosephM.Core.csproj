@@ -95,9 +95,9 @@
     <Compile Include="Attributes\Group.cs" />
     <Compile Include="Attributes\DoNotAllowAdd.cs" />
     <Compile Include="Attributes\ConnectionFor.cs" />
-    <Compile Include="Attributes\CustomFunction.cs" />
     <Compile Include="Attributes\Hidden.cs" />
     <Compile Include="Attributes\Multiline.cs" />
+    <Compile Include="Attributes\RecordFieldFor.cs" />
     <Compile Include="Attributes\ServiceConnection.cs" />
     <Compile Include="Attributes\FileMask.cs" />
     <Compile Include="Attributes\ReferencedType.cs" />

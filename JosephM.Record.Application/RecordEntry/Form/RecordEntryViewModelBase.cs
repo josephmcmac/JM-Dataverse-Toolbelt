@@ -8,6 +8,7 @@ using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.IService;
+using JosephM.Application.ViewModel.RecordEntry.Section;
 
 #endregion
 
@@ -134,6 +135,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         }
 
         public abstract IEnumerable<FieldViewModelBase> FieldViewModels { get; }
+
+        public virtual IEnumerable<FieldSectionViewModel> FieldSections
+        {
+            get { return new FieldSectionViewModel[0]; }
+        }
 
         internal void RunOnChanges()
         {

@@ -17,6 +17,16 @@ namespace JosephM.Core.Extentions
             return (T) Enum.Parse(typeof (T), enumString);
         }
 
+        public static string ReplicateString(this string aString, int numberOfTimes)
+        {
+            if (aString == null)
+                return null;
+            var stringBuilder = new StringBuilder();
+            for (var i = 0; i < numberOfTimes; i++)
+                stringBuilder.Append(aString);
+            return stringBuilder.ToString();
+        }
+
         public static string SplitCamelCase(this string stringToSplit)
         {
             var result = stringToSplit;

@@ -29,6 +29,7 @@ namespace JosephM.Application.ViewModel.Grid
         public DynamicGridViewModel(IApplicationController applicationController)
         {
             ApplicationController = applicationController;
+            LoadingViewModel = new LoadingViewModel(applicationController);
             OnDoubleClick = () => { };
             OnKeyDown = () => { };
             PreviousPageButton = new XrmButtonViewModel("Prev", () =>
@@ -49,18 +50,30 @@ namespace JosephM.Application.ViewModel.Grid
             };
         }
 
+        public LoadingViewModel LoadingViewModel { get; set; }
+
         public void LoadGridButtons(IEnumerable<CustomGridFunction> functions)
         {
             ApplicationController.DoOnMainThread(() =>
             {
                 if (functions == null)
                     functions = new CustomGridFunction[0];
+                _loadedGridButtons = functions;
                 _customFunctions =
-                    new ObservableCollection<XrmButtonViewModel>(functions.Select(cf =>
-                        new XrmButtonViewModel(cf.Label, () => cf.Function(),
+                    new ObservableCollection<XrmButtonViewModel>(functions
+                    .Where(cf => cf.VisibleFunction(this))
+                    .Select(cf =>
+                        new XrmButtonViewModel(cf.Label, () => cf.Function(this),
                             ApplicationController)));
                 OnPropertyChanged("CustomFunctions");
             });
+        }
+
+        private IEnumerable<CustomGridFunction> _loadedGridButtons;
+
+        public void OnSelectionsChanged()
+        {
+            LoadGridButtons(_loadedGridButtons);
         }
 
         private ObservableCollection<XrmButtonViewModel> _customFunctions;
@@ -74,6 +87,8 @@ namespace JosephM.Application.ViewModel.Grid
         {
             get { return PageSize > 0; }
         }
+
+        public bool MultiSelect { get; set; }
 
         public string PageDescription
         {
@@ -178,6 +193,23 @@ namespace JosephM.Application.ViewModel.Grid
         }
         public XrmButtonViewModel AddRowButton { get; set; }
 
+        public bool CanAddMultipleRow { get { return AddMultipleRow != null; } }
+        private Action _addMultipleRow;
+
+        public Action AddMultipleRow
+        {
+            get { return _addMultipleRow; }
+            set
+            {
+                _addMultipleRow = value;
+                
+                AddMultipleRowButton = _addMultipleRow == null
+                    ? null
+                    : new XrmButtonViewModel("Add Multiple", _addMultipleRow, ApplicationController);
+            }
+        }
+        public XrmButtonViewModel AddMultipleRowButton { get; set; }
+
         public string LastSortField { get; set; }
         public bool LastSortAscending { get; set; }
 
@@ -275,27 +307,46 @@ namespace JosephM.Application.ViewModel.Grid
 
         public void ReloadGrid()
         {
-            if (OnReloading != null)
-                OnReloading();
-
-            var getRecordsResponse = GetGridRecords(false);
-            var records = getRecordsResponse.Records;
-            
-            ApplicationController.DoOnMainThread(() =>
+            ApplicationController.DoOnAsyncThread(() =>
             {
                 try
                 {
-                    GridRecords = GridRowViewModel.LoadRows(records, this);
-                    OnPropertyChanged("PageDescription");
-                    HasMoreRows = getRecordsResponse.HasMoreRecords;
+                    GridLoadError = false;
+                    GridLoaded = false;
+                    LoadingViewModel.IsLoading = true;
+                    if (OnReloading != null)
+                        OnReloading();
+                    var getRecordsResponse = GetGridRecords(false);
+                    var records = getRecordsResponse.Records;
+
+                    ApplicationController.DoOnMainThread(() =>
+                    {
+                        try
+                        {
+                            GridRecords = GridRowViewModel.LoadRows(records, this);
+                            OnPropertyChanged("PageDescription");
+                            HasMoreRows = getRecordsResponse.HasMoreRecords;
+                        }
+                        catch (Exception ex)
+                        {
+                            GridLoadError = true;
+                            ErrorMessage = string.Format("There was an error loading data into the grid: {0}", ex.DisplayString());
+                        }
+                        if (!GridLoadError)
+                            GridLoaded = true;
+                        if (LoadedCallback != null)
+                            LoadedCallback();
+                    });
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     GridLoadError = true;
                     ErrorMessage = string.Format("There was an error loading data into the grid: {0}", ex.DisplayString());
                 }
-                if (LoadedCallback != null)
-                    LoadedCallback();
+                finally
+                {
+                    LoadingViewModel.IsLoading = false;
+                }
             });
         }
 
@@ -310,7 +361,18 @@ namespace JosephM.Application.ViewModel.Grid
             set
             {
                 _gridLoadError = value;
-                OnPropertyChanged("GridLoadError");
+                OnPropertyChanged(nameof(GridLoadError));
+            }
+        }
+
+        private bool _gridLoaded = true;
+        public bool GridLoaded
+        {
+            get { return _gridLoaded; }
+            set
+            {
+                _gridLoaded = value;
+                OnPropertyChanged(nameof(GridLoaded));
             }
         }
 
@@ -373,6 +435,11 @@ namespace JosephM.Application.ViewModel.Grid
                 _selectedRow = value;
                 OnPropertyChanged("SelectedRow");
             }
+        }
+
+        public IEnumerable<GridRowViewModel> SelectedRows
+        {
+            get { return GridRecords == null ? new GridRowViewModel[0] :  GridRecords.Where(r => r.IsSelected).ToArray(); }
         }
 
         public RecordEntry.Form.RecordEntryViewModelBase ParentForm { get; set; }

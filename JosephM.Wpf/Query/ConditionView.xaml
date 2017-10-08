@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="JosephM.Wpf.Query.ConditionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="400"
+             d:DataContext="{d:DesignInstance Type=fakes:FakeFieldSectionViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <ItemsControl 
+            ItemsSource="{Binding FieldSections}"
+            HorizontalContentAlignment="Stretch"
+            ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}">
+        </ItemsControl>
+    </Grid>
+</UserControl>

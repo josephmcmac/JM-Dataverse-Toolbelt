@@ -85,8 +85,12 @@ namespace JosephM.Record.Query
                 }
                 case ConditionType.NotNull:
                 {
-                    return fieldValue.IsEmpty();
+                    return !fieldValue.IsEmpty();
                 }
+                case ConditionType.Null:
+                    {
+                        return fieldValue.IsEmpty();
+                    }
             }
             throw new NotSupportedException(string.Format("No Logic Implemented For Condition Type {0}", ConditionType));
         }

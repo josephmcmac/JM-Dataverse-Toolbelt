@@ -1,8 +1,10 @@
-﻿using JosephM.Core.Attributes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 
 namespace JosephM.Application.ViewModel.SettingTypes
 {
+    [BulkAddRecordTypeFunction]
     public class RecordTypeSetting
     {
         public RecordTypeSetting()

@@ -20,7 +20,17 @@ namespace JosephM.Application.ViewModel.Shared
             Command = new DelegateCommand(clickAction);
         }
 
-        public string Label { get; set; }
+        private string _label;
+        public string Label
+        {
+            get { return _label; }
+            set
+            {
+                _label = value;
+                OnPropertyChanged(nameof(Label));
+            }
+        }
+
         public ICommand Command { get; private set; }
 
         public bool IsVisible

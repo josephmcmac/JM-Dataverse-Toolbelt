@@ -41,9 +41,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new ValidationRuleBase[] { };
         }
 
-        internal virtual IEnumerable<Action<RecordEntryFormViewModel>> GetOnChanges(string fieldName)
+        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName)
         {
-            return new Action<RecordEntryFormViewModel>[] {};
+            return new Action<RecordEntryViewModelBase>[] {};
         }
 
         internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string subGrid)
@@ -109,6 +109,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public virtual IEnumerable<GridFieldMetadata> GetGridMetadata(string recordType)
         {
             throw new NotImplementedException();
+        }
+
+        public virtual Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)
+        {
+            return null;
         }
     }
 }

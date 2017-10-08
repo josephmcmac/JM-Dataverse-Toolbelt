@@ -699,6 +699,10 @@ namespace JosephM.Xrm.ImportExporter.Service
             {
                 switch (Service.GetFieldType(field, thisEntity.LogicalName))
                 {
+                    case Record.Metadata.RecordFieldType.Owner:
+                        targetTypesToTry.Add("systemuser");
+                        targetTypesToTry.Add("team");
+                        break;
                     case Record.Metadata.RecordFieldType.Customer:
                         targetTypesToTry.Add("account");
                         targetTypesToTry.Add("contact");

@@ -1,4 +1,6 @@
-﻿namespace JosephM.Record.IService
+﻿using JosephM.Record.Metadata;
+
+namespace JosephM.Record.IService
 {
     /// <summary>
     ///     Object For Attempting To Convert A Value To The Required Type By The IService Through The ParseField Method

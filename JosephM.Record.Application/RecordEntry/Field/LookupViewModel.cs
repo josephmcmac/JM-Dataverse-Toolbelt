@@ -21,6 +21,22 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             string referencedRecordType, bool usePicklist)
             : base(fieldName, fieldLabel, recordForm, usePicklist)
         {
+            if(referencedRecordType != null)
+            {
+                var splitIt = referencedRecordType.Split(',');
+                if(splitIt.Count() == 1)
+                {
+                    _selectedRecordType = new RecordType(splitIt.First(), splitIt.First());
+                }
+                else
+                {
+                    var recordTypes = splitIt
+                        .Select(s => LookupService.GetRecordTypeMetadata(s))
+                        .Select(r => new RecordType(r.SchemaName, r.DisplayName))
+                        .ToArray();
+                    RecordTypeItemsSource = recordTypes;
+                }
+            }
             RecordTypeToLookup = referencedRecordType;
             if (Value != null)
             {
@@ -28,8 +44,66 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     Value.Name = "Record Name Not Set";
                 SetEnteredTestWithoutClearingValue(Value.Name);
             }
-            if (!UsePicklist)
+            if (!UsePicklist && SelectedRecordType != null && IsEditable)
                 LoadLookupGrid();
+        }
+
+        private RecordType _selectedRecordType;
+        public RecordType SelectedRecordType
+        {
+            get { return _selectedRecordType; }
+            set
+            {
+                if (_selectedRecordType != value)
+                {
+                    Value = null;
+                    EnteredText = null;
+                }
+                _selectedRecordType = value;
+                OnPropertyChanged(nameof(SelectedRecordType));
+                if (_selectedRecordType != null)
+                {
+                    LoadLookupGrid();
+                }
+                OnPropertyChanged(nameof(TypePopulated));
+                OnPropertyChanged(nameof(EditableAndTypePopulated));
+            }
+        }
+
+        public bool TypePopulated
+        {
+            get
+            {
+                return RecordTypeToLookup != null;
+            }
+        }
+
+        public bool EditableAndTypePopulated
+        {
+            get
+            {
+                return IsEditable && TypePopulated;
+            }
+        }
+
+        public bool DisplayTypeSelection
+        {
+            get
+            {
+                return IsEditable && RecordTypeItemsSource != null;
+            }
+        }
+
+        private IEnumerable<RecordType> _recordTypeItemsSource;
+
+        public IEnumerable<RecordType> RecordTypeItemsSource
+        {
+            get { return _recordTypeItemsSource; }
+            set
+            {
+                _recordTypeItemsSource = value;
+                OnPropertyChanged(nameof(RecordTypeItemsSource));
+            }
         }
 
         protected override ReferencePicklistItem MatchSelectedItemInItemsSourceToValue()
@@ -74,14 +148,20 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 .ToArray();
         }
 
-        private string _referencedRecordType;
         public override string RecordTypeToLookup
         {
-            get { return _referencedRecordType; }
+            get { return SelectedRecordType?.Key; }
             set
             {
-                _referencedRecordType = value;
-                LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
+                if (value == null)
+                {
+                    SelectedRecordType = null;
+                }
+                else
+                {
+                    SelectedRecordType = new RecordType(value, value);
+                    LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
+                }
             }
         }
 

@@ -155,6 +155,8 @@
     <Compile Include="Application\ApplicationHeadingView.xaml.cs">
       <DependentUpon>ApplicationHeadingView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DecimalTextBox.cs" />
+    <Compile Include="Converters\BooleanToMultiSelectConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\BooleanToFalseConverter.cs" />
     <Compile Include="Converters\FileRefToStringConverter.cs" />
@@ -165,6 +167,18 @@
       <DependentUpon>GridDateFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\GridDateColumn.cs" />
+    <Compile Include="Grid\GridMoneyFieldView.xaml.cs">
+      <DependentUpon>GridMoneyFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridDoubleFieldView.xaml.cs">
+      <DependentUpon>GridDoubleFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridDecimalFieldView.xaml.cs">
+      <DependentUpon>GridDecimalFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridMoneyColumn.cs" />
+    <Compile Include="Grid\GridDoubleColumn.cs" />
+    <Compile Include="Grid\GridDecimalColumn.cs" />
     <Compile Include="Grid\GridIntFieldView.xaml.cs">
       <DependentUpon>GridIntFieldView.xaml</DependentUpon>
     </Compile>
@@ -181,6 +195,9 @@
       <DependentUpon>EditRowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\EditRowColumn.cs" />
+    <Compile Include="Grid\GridQueryView.xaml.cs">
+      <DependentUpon>GridQueryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\GridLookupColumn.cs" />
     <Compile Include="Grid\GridLookupPicklistFieldView.xaml.cs">
       <DependentUpon>GridLookupPicklistFieldView.xaml</DependentUpon>
@@ -211,6 +228,15 @@
     <Compile Include="Html\HtmlFileView.xaml.cs">
       <DependentUpon>HtmlFileView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Query\ConditionView.xaml.cs">
+      <DependentUpon>ConditionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Query\FilterConditionsView.xaml.cs">
+      <DependentUpon>FilterConditionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\FieldSectionInputOnlyView.xaml.cs">
+      <DependentUpon>FieldSectionInputOnlyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\FieldSectionCompactView.xaml.cs">
       <DependentUpon>FieldSectionCompactView.xaml</DependentUpon>
     </Compile>
@@ -219,6 +245,9 @@
     </Compile>
     <Compile Include="RecordEntry\Field\EnumerableFieldView.xaml.cs">
       <DependentUpon>EnumerableFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\DecimalFieldView.xaml.cs">
+      <DependentUpon>DecimalFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
       <DependentUpon>LookupPicklistView.xaml</DependentUpon>
@@ -328,6 +357,7 @@
       <DependentUpon>RecordEntryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="TemplateSelector\CompletionItemTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\ConditionTemplateSelector.cs" />
     <Compile Include="TemplateSelector\DialogTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FieldTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FormSectionTemplateSelector.cs" />
@@ -349,6 +379,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\GridMoneyFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridDoubleFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridDecimalFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\GridIntFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -362,6 +404,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grid\EditRowView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridQueryView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -397,6 +443,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Query\ConditionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Query\FilterConditionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\FieldSectionInputOnlyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="RecordEntry\FieldSectionCompactView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -406,6 +464,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\EnumerableFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\DecimalFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -637,6 +699,9 @@
   <ItemGroup>
     <Resource Include="Images\Next.png" />
     <Resource Include="Images\Previous.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\AddMultipleIcon.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

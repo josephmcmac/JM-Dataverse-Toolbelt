@@ -37,6 +37,8 @@ namespace JosephM.Application.ViewModel.Grid
             get { return Record.Type; }
         }
 
+        public bool IsSelected { get; set; }
+
         private void LoadFields()
         {
             foreach (var field in GridFields)
@@ -132,7 +134,16 @@ namespace JosephM.Application.ViewModel.Grid
                 if (FormService != null)
                 {
                     foreach (var action in FormService.GetOnChanges(f.FieldName, RecordType))
-                        action(this);
+                    {
+                        try
+                        {
+                            action(this);
+                        }
+                        catch (Exception ex)
+                        {
+                            ApplicationController.ThrowException(ex);
+                        }
+                    }
                 }
             };
         }

@@ -14,7 +14,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 
         protected SectionViewModelBase(
             FormSection formSection,
-            RecordEntryFormViewModel recordForm
+            RecordEntryViewModelBase recordForm
             )
             : base(recordForm.FormController.ApplicationController)
         {
@@ -23,7 +23,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
         }
 
         public FormSection FormSection { get; private set; }
-        public RecordEntryFormViewModel RecordForm { get; private set; }
+        public RecordEntryViewModelBase RecordForm { get; private set; }
 
         public virtual string SectionIdentifier
         {

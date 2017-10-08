@@ -20,6 +20,7 @@ using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
 using JosephM.Record.Extentions;
+using JosephM.Application.ViewModel.Attributes;
 
 #endregion
 
@@ -62,7 +63,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 foreach(var section in fieldSections)
                 {
                     otherSections[section.Name] = new List<FormFieldMetadata>();
-                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.WrapHorizontal, section.Order);
+                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.DisplayLayout, section.Order);
                     formSections.Add(newSection);
                 }
 
@@ -97,14 +98,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     else
                         order = 1;
 
-                    var wrapHorizontal = groupAttribute != null
-                        ? groupAttribute.WrapHorizontal
-                        : false;
+                    var displayLayout = groupAttribute != null
+                        ? groupAttribute.DisplayLayout
+                        : Group.DisplayLayoutEnum.VerticalList;
 
                     if (!otherSections.ContainsKey(sectionName))
                     {
                         otherSections[sectionName] = new List<FormFieldMetadata>();
-                        var newSection = new FormFieldSection(sectionName, otherSections[sectionName], wrapHorizontal, order);
+                        var newSection = new FormFieldSection(sectionName, otherSections[sectionName], displayLayout, order);
                         formSections.Add(newSection);
                     }
                     otherSections[sectionName].Add(fieldMetadata);
@@ -112,7 +113,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 foreach (var section in formSections)
                 {
                     var fields = section.FormFields;
-                    if(fields.Count() == 1)
+                    if (section.DisplayLayout == Group.DisplayLayoutEnum.HorizontalInputOnly)
+                    {
+                        foreach (var field in fields)
+                        {
+                            field.DisplayLabel = false;
+                        }
+                    }
+                    if (fields.Count() == 1)
                     {
                         var field = fields.First();
                         var fieldMt = ObjectRecordService.GetFieldMetadata(field.FieldName, type.AssemblyQualifiedName);
@@ -207,7 +215,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 return new ValidationRuleBase[0];
         }
 
-        internal override IEnumerable<Action<RecordEntryFormViewModel>> GetOnChanges(string fieldName)
+        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName)
         {
             return GetOnChanges(fieldName, ObjectType.AssemblyQualifiedName);
         }
@@ -223,6 +231,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendDisplayNameAttributes(fieldName, recordType, onChanges);
             AppendLookupFieldCascadeChanges(fieldName, recordType, onChanges);
             AppendCascadeOnChanges(fieldName, recordType, onChanges);
+            AppendFieldForChanges(fieldName, recordType, onChanges);
             return base.GetOnChanges(fieldName, recordType).Union(onChanges);
         }
 
@@ -486,15 +495,110 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
+        private void AppendFieldForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType)
+                .GetCustomAttributes(typeof(RecordFieldFor), true).Cast<RecordFieldFor>();
+            foreach (var attribute in lookupForAttributes)
+            {
+                onChanges.Add(
+                    re => re.StartNewAction(() =>
+                    {
+                        var recordFieldViewModel = re.GetRecordFieldFieldViewModel(fieldName);
+                        if (recordFieldViewModel.Value != null)
+                        {
+                            var matchingFields = re.FieldViewModels.Where(f => f.FieldName == attribute.PropertyPaths.First());
+                            foreach (var fieldViewModel in matchingFields.ToArray())
+                            {
+                                var selectedFieldName = recordFieldViewModel.Value.Key;
+                                var selectedFieldRecordType = GetRecordTypeFor(recordFieldViewModel.FieldName, re);
+                                var lookupService = re.RecordService.GetLookupService(recordFieldViewModel.FieldName, recordFieldViewModel.GetRecordType(), null, recordFieldViewModel.RecordEntryViewModel.GetRecord());
+                                if (lookupService != null)
+                                {
+                                    //get the source field type
+                                    var fieldType = lookupService.GetFieldType(selectedFieldName, selectedFieldRecordType);
+                                    //get the section the target field is in and its field metadata
+                                    var metadata = re.FormService.GetFormMetadata(re.GetRecordType());
+                                    FormFieldMetadata fieldMetadata = null;
+                                    string sectionName = null;
+                                    foreach (var sectionMetadata in metadata.FormSections.Cast<FormFieldSection>())
+                                    {
+                                        foreach (var field in sectionMetadata.FormFields)
+                                        {
+                                            if (field.FieldName == fieldViewModel.FieldName)
+                                            {
+                                                sectionName = sectionMetadata.SectionLabel;
+                                                fieldMetadata = field;
+                                            }
+                                        }
+                                    }
+                                    if (!string.IsNullOrWhiteSpace(sectionName))
+                                    {
+                                        var targetPropInfo = ObjectRecordService.GetPropertyType(attribute.PropertyPaths.First(), recordType);
+                                        if (targetPropInfo.IsEnum)
+                                        {
+                                            //if target is an enum then filter the items source for the field type
+                                            var picklistFieldViewModel = fieldViewModel as PicklistFieldViewModel;
+                                            var picklistOptions = ObjectRecordService.GetPicklistKeyValues(picklistFieldViewModel.FieldName, picklistFieldViewModel.GetRecordType(), fieldType.ToString(), picklistFieldViewModel.RecordEntryViewModel.GetRecord());
+                                            picklistFieldViewModel.Value = null;
+                                            picklistFieldViewModel.ItemsSource = picklistOptions;
+                                        }
+                                        else
+                                        {
+                                            //otherwise is a field input dynamic for the field's tpye
+                                            //now we need to create the view model for the target field as the correct type
+                                            //okay now we need to replace the old field view model for this field
+                                            var explicitTargetType = fieldType == RecordFieldType.Lookup || fieldType == RecordFieldType.Customer || fieldType == RecordFieldType.Owner
+                                                ? lookupService.GetLookupTargetType(selectedFieldName, selectedFieldRecordType)
+                                                : null;
+                                            var explicitPicklistOptions = fieldType == RecordFieldType.Picklist
+                                                                        || fieldType == RecordFieldType.Status
+                                                                        || fieldType == RecordFieldType.State
+                                                ? lookupService.GetPicklistKeyValues(selectedFieldName, selectedFieldRecordType)
+                                                : null;
+                                            fieldViewModel.ValueObject = null;
+                                            var newFieldViewModel = fieldMetadata.CreateFieldViewModel(re.GetRecordType(), re.RecordService, re, re.ApplicationController, explicitFieldType: fieldType, explicitLookupTargetType: explicitTargetType, explicitPicklistOptions: explicitPicklistOptions);
+                                            var section = re.FieldSections.First(s => s.SectionLabel == sectionName);
+                                            var index = section.Fields.Count;
+                                            for (var i = 0; i < section.Fields.Count; i++)
+                                            {
+                                                if (section.Fields[i].FieldName == fieldViewModel.FieldName)
+                                                {
+                                                    index = i;
+                                                    break;
+                                                }
+                                            }
+
+                                            re.DoOnMainThread(() =>
+                                            {
+                                                if (section.Fields.Count > index)
+                                                    section.Fields.RemoveAt(index);
+
+                                                fieldViewModel.ValueObject = null;
+                                                section.Fields.Insert(index, newFieldViewModel);
+                                                re.RefreshVisibility();
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }));
+            }
+        }
+
         internal override string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
         {
             var propertyInfo = GetPropertyInfo(field, viewModel.GetRecord().Type);
-            if (propertyInfo.PropertyType == typeof(FileReference))
+            if (propertyInfo != null && propertyInfo.PropertyType == typeof(FileReference))
             {
                 var attr = propertyInfo.GetCustomAttribute<FileMask>();
                 return attr == null ? null : attr.Mask;
             }
-            else return GetRecordTypeFor(field, viewModel);
+            else
+            {
+                return GetRecordTypeFor(field, viewModel);
+            }
         }
 
         private string GetRecordTypeFor(string field, RecordEntryViewModelBase viewModel)
@@ -505,6 +609,26 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var attribute = propertyInfo.GetCustomAttribute<ReferencedType>();
                 if (attribute != null)
                     return attribute.Type;
+            }
+            foreach (var parentField in ObjectRecordService.GetPropertyInfos(viewModel.GetRecordType()))
+            {
+                var lookupForAttributes =
+                    parentField.GetCustomAttributes(typeof(RecordTypeFor), true).Cast<RecordTypeFor>();
+                foreach (var lookupForAttribute in lookupForAttributes)
+                {
+                    if (lookupForAttribute.LookupProperty == field)
+                    {
+                        //can;t use the fiueld view model as called on load and may trigger infinite loop loading field list
+                        var record = viewModel.GetRecord();
+                        if(record is ObjectRecord)
+                        {
+                            var objectrecord = (ObjectRecord)record;
+                            var propertyValue = objectrecord.Instance.GetPropertyValue(parentField.Name);
+                            if (propertyValue is RecordType)
+                                return ((RecordType)propertyValue).Key;
+                        }
+                    }
+                }
             }
             var parentForm = viewModel.ParentForm;
             if (parentForm is ObjectEntryViewModel)
@@ -647,29 +771,26 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)
         {
             var functions = new Dictionary<string, Action>();
-            var objectFormService = recordForm as ObjectEntryViewModel;
-            if (objectFormService != null)
+            var enumeratedType = ObjectRecordService.GetPropertyType(referenceName, recordForm.GetRecordType()).GenericTypeArguments[0];
+            var customFunctions = enumeratedType.GetCustomAttributes<CustomFunction>();
+            if (customFunctions != null)
             {
-                var property = GetPropertyInfo(referenceName, ObjectType.AssemblyQualifiedName);
-                var customFunctions = property.GetCustomAttributes<CustomFunction>();
-                if (customFunctions != null)
+                foreach (var item in customFunctions)
                 {
-                    foreach (var item in customFunctions)
-                    {
-                        var thisItem = item;
-                        var thisMethod = new Action(() => ObjectToEnter.InvokeMethod(thisItem.FunctionName, recordForm.ApplicationController));
-                        functions.Add(thisItem.FunctionName.SplitCamelCase(),
-                            () =>
-                            {
-                                objectFormService.LoadSubgridsToObject();
-                                thisMethod();
-                                var subGrid = objectFormService.GetSubGridViewModel(referenceName);
-                                subGrid.DynamicGridViewModel.ReloadGrid();
-                            });
-                    }
+                    functions.Add(item.GetFunctionLabel(), item.GetCustomFunction(recordForm, referenceName));
                 }
             }
             return functions.Select(kv => new CustomGridFunction(kv.Key, kv.Value)).ToArray();
+        }
+
+        public override Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)
+        {
+            var functions = new Dictionary<string, Action>();
+            var enumeratedType = ObjectRecordService.GetPropertyType(referenceName, recordForm.GetRecordType()).GenericTypeArguments[0];
+            var customFunction = enumeratedType.GetCustomAttribute<BulkAddFunction>();
+            return customFunction != null
+                ? customFunction.GetCustomFunction(recordForm, referenceName)
+                : null;
         }
     }
 }

@@ -191,6 +191,12 @@ namespace JosephM.Record.Service
             return Clone(GetRecordsOfType(recordType).Where(r => orConditions.Any(c => c.MeetsCondition(r))), fields);
         }
 
+        public override IEnumerable<IRecord> RetreiveAll(QueryDefinition query)
+        {
+            var results = new List<IRecord>();
+            return Clone(GetRecordsOfType(query.RecordType).Where(r => query.RootFilter.MeetsFilter(r)), query.Fields);
+        }
+
         public override string GetFieldAsDisplayString(IRecord record, string fieldName)
         {
             var fieldValue = record.GetField(fieldName);
@@ -217,6 +223,8 @@ namespace JosephM.Record.Service
 
         public override IEnumerable<IRecord> GetFirstX(string recordType, int x, IEnumerable<string> fields, IEnumerable<Condition> conditions, IEnumerable<SortExpression> sortExpressions)
         {
+            if (conditions == null)
+                conditions = new Condition[0];
             var records = x > 0
                 ? GetRecordsOfType(recordType).Where(r => conditions.All(c => c.MeetsCondition(r))).Take(x)
                 : GetRecordsOfType(recordType).Where(r => conditions.All(c => c.MeetsCondition(r)));
@@ -225,7 +233,7 @@ namespace JosephM.Record.Service
 
         private IEnumerable<IRecord> Clone(IEnumerable<IRecord> records, IEnumerable<string> fields)
         {
-            return records.Select(r => Clone(r, fields));
+            return records.Select(r => Clone(r, fields)).ToArray();
         }
 
         private IRecord Clone(IRecord record, IEnumerable<string> fields)

@@ -15,7 +15,6 @@ namespace JosephM.Record.Xrm.Mappers
             new[]
             {
                 new TypeMapping<AttributeTypeCode, RecordFieldType>(AttributeTypeCode.DateTime, RecordFieldType.Date),
-                new TypeMapping<AttributeTypeCode, RecordFieldType>(AttributeTypeCode.Owner, RecordFieldType.Lookup),
                 new TypeMapping<AttributeTypeCode, RecordFieldType>(AttributeTypeCode.PartyList,
                     RecordFieldType.ActivityParty)
             };
