@@ -19,7 +19,7 @@ namespace JosephM.Application.ViewModel
             ApplicationController = controller;
         }
 
-        public int StandardPageSize { get { return 20; } }
+        public int StandardPageSize { get { return 50; } }
 
 
         public IApplicationController ApplicationController { get; set; }
