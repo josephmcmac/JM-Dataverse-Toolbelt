@@ -224,9 +224,9 @@ namespace JosephM.Record.Service
         {
             //okay this is initially implemented purely for querying an IEnumerable property of the primary object
             var objects = new List<IRecord>();
-            foreach(var property in ObjectType.GetProperties())
+            foreach (var property in ObjectType.GetProperties())
             {
-                if(property.PropertyType.GenericTypeArguments.Count() > 0
+                if (property.PropertyType.GenericTypeArguments.Count() > 0
                     && property.PropertyType.GenericTypeArguments[0].AssemblyQualifiedName == query.RecordType)
                 {
                     objects.AddRange(GetPropertyObjectsAsRecords(property.Name));
@@ -240,7 +240,9 @@ namespace JosephM.Record.Service
                     .Where(o =>
                     {
                         var instance = ((ObjectRecord)o).Instance;
-                        return GetFieldMetadata(instance.GetType().AssemblyQualifiedName).Any(p =>
+                        return GetFieldMetadata(instance.GetType().AssemblyQualifiedName)
+                        .Where(p => p.Searchable)
+                        .Any(p =>
                         {
                             var propValue = instance.GetPropertyValue(p.SchemaName);
                             return propValue != null && propValue.ToString().Contains(query.QuickFindText);

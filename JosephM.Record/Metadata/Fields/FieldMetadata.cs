@@ -7,6 +7,7 @@ using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.IService;
+using JosephM.Record.Attributes;
 
 #endregion
 
@@ -137,11 +138,12 @@ namespace JosephM.Record.Metadata
                 fm = new DecimalFieldMetadata(internalName, label);
             else
                 fm = new ObjectFieldMetadata(recordType, internalName, label, propertyInfo.ReflectedType);
-            if(fm == null)
+            if (fm == null)
                 throw new ArgumentOutOfRangeException(type + " not implemented");
             fm.IsMandatory = true;
             fm.Readable = propertyInfo.GetSetMethod() != null;
             fm.Writeable = propertyInfo.GetGetMethod() != null;
+            fm.Searchable = propertyInfo.GetCustomAttribute<NotSearchable>() == null;
             var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
             if (orderAttribute != null)
                 fm.Order = orderAttribute.Order;
