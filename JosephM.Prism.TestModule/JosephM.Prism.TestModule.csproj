@@ -91,6 +91,11 @@
     <Compile Include="Prism\TestDialog\TestDialogResponse.cs" />
     <Compile Include="Prism\TestDialog\TestDialogResponseItem.cs" />
     <Compile Include="Prism\TestDialog\TestDialogService.cs" />
+    <Compile Include="Prism\TestSettings\ITestSettings.cs" />
+    <Compile Include="Prism\TestSettings\TestSettings.cs" />
+    <Compile Include="Prism\TestSettings\TestSettingsDialog.cs" />
+    <Compile Include="Prism\TestSettings\TestSettingsModule.cs" />
+    <Compile Include="Prism\TestSettings\TestSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

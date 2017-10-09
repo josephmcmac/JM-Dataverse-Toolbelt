@@ -14,13 +14,14 @@ using JosephM.Core.AppConfig;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Application.Application;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 
 #endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    //okay so i need to somehow get this type for a settings lookup
-    //and have it load the grid objects from the settings
+    //todo the different lookup classes need more verification scripts
+    //settings/readonly/query/owner/grid/lookupgrid etc
 
     public class ObjectFieldViewModel : ReferenceFieldViewModel<object>
     {
@@ -39,25 +40,72 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
             else
             {
-                var objectRecordService = (ObjectRecordService)recordForm.RecordService;
+                var settingsObject = GetSettingsObject();
 
-                var lookupType = objectRecordService.ObjectTypeMaps != null && objectRecordService.ObjectTypeMaps.ContainsKey(FieldName)
-                    ? objectRecordService.ObjectTypeMaps[FieldName]
-                    : null;
-
-                var settingsObject = objectRecordService.ObjectTypeMaps != null && objectRecordService.ObjectTypeMaps.ContainsKey(SettingsAttribute.PropertyName)
-                    ? ApplicationController.ResolveType<ISettingsManager>().Resolve<SavedSettings>(objectRecordService.ObjectTypeMaps[SettingsAttribute.PropertyName])
-                    : ApplicationController.ResolveType(SettingsAttribute.SettingsType);
                 XrmButton = new XrmButtonViewModel("Search", Search, ApplicationController);
                 if (settingsObject != null)
                 {
-                    _lookupService = new ObjectRecordService(settingsObject, ApplicationController, objectRecordService.ObjectTypeMaps);
+                    _lookupService = new ObjectRecordService(settingsObject, ApplicationController, GetObjectRecordService().ObjectTypeMaps);
                     if (!UsePicklist)
                     {
                         LoadLookupGrid();
                     }
                 }
+
+                NewAction = () =>
+                {
+                    //todo try/catch
+
+                    var propertyInfo = settingsObject.GetType().GetProperty(SettingsAttribute.PropertyName);
+                    var enumerateType = propertyInfo.PropertyType.GenericTypeArguments[0];
+                    var newSettingObject = enumerateType.CreateFromParameterlessConstructor();
+
+                    var objectRecordService = new ObjectRecordService(newSettingObject, ApplicationController, null);
+                    var formService = new ObjectFormService(newSettingObject, objectRecordService);
+                    var formController = new FormController(objectRecordService, formService, ApplicationController);
+
+                    Action onSave = () =>
+                    {
+                        //add the new item to the permanent settings
+                        var settingsManager = ApplicationController.ResolveType<ISettingsManager>();
+                        settingsObject = GetSettingsObject();
+                        var settingsService = new ObjectRecordService(settingsObject, ApplicationController);
+                        var currentSettings = settingsService.RetrieveAll(enumerateType.AssemblyQualifiedName, null)
+                            .Select(r => ((ObjectRecord)r).Instance)
+                            .ToList();
+                        currentSettings.Add(newSettingObject);
+                        settingsObject.SetPropertyValue(SettingsAttribute.PropertyName, enumerateType.ToNewTypedEnumerable(currentSettings));
+                        settingsManager.SaveSettingsObject(settingsObject);
+                        ValueObject = newSettingObject;
+                        if (UsePicklist)
+                        {
+                            //reload the picklist
+                            ValueObject = newSettingObject;
+                            LoadPicklistItems();
+                        }
+                        else
+                        {
+                            SetEnteredTestWithoutClearingValue(ValueObject.ToString());
+                        }
+                        RecordEntryViewModel.ClearChildForm();
+                    };
+
+                    var newSettingForm = new ObjectEntryViewModel(onSave, RecordEntryViewModel.ClearChildForm, newSettingObject, formController);
+                    RecordEntryViewModel.LoadChildForm(newSettingForm);
+                };
             }
+        }
+
+        private object GetSettingsObject()
+        {
+            return GetObjectRecordService().ObjectTypeMaps != null && GetObjectRecordService().ObjectTypeMaps.ContainsKey(SettingsAttribute.PropertyName)
+                ? ApplicationController.ResolveType<ISettingsManager>().Resolve<SavedSettings>(GetObjectRecordService().ObjectTypeMaps[SettingsAttribute.PropertyName])
+                : ApplicationController.ResolveType(SettingsAttribute.SettingsType);
+        }
+
+        private ObjectRecordService GetObjectRecordService()
+        {
+            return (ObjectRecordService) GetRecordForm().RecordService;
         }
 
         public SettingsLookup SettingsAttribute { get; set; }

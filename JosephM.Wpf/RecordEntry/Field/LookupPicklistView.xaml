@@ -26,8 +26,13 @@
             <shared:FieldLoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
         <Grid Grid.Row="1"
-              Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
-            <ComboBox
+                  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <ComboBox
             TabIndex="1"
             Name="ComboBox"
             Style="{StaticResource FieldEntryStyle}"
@@ -37,6 +42,12 @@
             SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}"
             IsEnabled="{Binding IsEditable}"
             Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+            </Grid>
+            <Grid Grid.Column="1" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}">
+                <Button DataContext="{Binding Path=NewButton}"
+                        Style="{StaticResource AddRowButton}"
+                            Command="{Binding Command}" ToolTip="Click To Create New" />
+            </Grid>
         </Grid>
     </Grid>
 </field:FieldControlBase>

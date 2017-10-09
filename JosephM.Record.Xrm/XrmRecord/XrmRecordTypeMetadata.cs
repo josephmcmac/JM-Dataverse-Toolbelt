@@ -32,8 +32,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         public string PrimaryFieldSchemaName { get { return XrmService.GetPrimaryNameField(SchemaName); } }
         public string PrimaryKeyName { get { return XrmService.GetPrimaryKeyField(SchemaName); } }
 
-        //todo these not searchable as load relationships potentially oibject by object
-        //may be more efficient way
+        //todo change to just check the target types of the relevant lookup field
         [NotSearchable]
         public bool Notes
         {

@@ -189,7 +189,14 @@ namespace JosephM.Record.Service
 
         public override IEnumerable<IRecord> GetFirstX(string type, int x, IEnumerable<string> fields, IEnumerable<Condition> conditions, IEnumerable<SortExpression> sort)
         {
-            throw new NotImplementedException();
+            var query = new QueryDefinition(type);
+            query.Top = x;
+            query.RootFilter = new Filter();
+            if (conditions != null)
+                query.RootFilter.Conditions = conditions.ToList();
+            if (sort != null)
+                query.Sorts = sort.ToList();
+            return RetreiveAll(query);
         }
 
         public override IsValidResponse VerifyConnection()
@@ -233,37 +240,49 @@ namespace JosephM.Record.Service
                 }
             }
             if (!query.IsQuickFind)
-                throw new NotImplementedException("Only IsQuickFind Queries Are implemented For This Service Type");
-            if (query.QuickFindText != null)
             {
-                objects = objects
-                    .Where(o =>
-                    {
-                        var instance = ((ObjectRecord)o).Instance;
-                        return GetFieldMetadata(instance.GetType().AssemblyQualifiedName)
-                        .Where(p => p.Searchable)
-                        .Any(p =>
-                        {
-                            var propValue = instance.GetPropertyValue(p.SchemaName);
-                            return propValue != null && propValue.ToString().Contains(query.QuickFindText);
-                        });
-                    })
-                .ToList();
-            }
-            var newSorts = new List<SortExpression>(query.Sorts);
-            if (!newSorts.Any())
-            {
-                newSorts.OrderBy(o => o.ToString()).ToList();
+                if (query.RootFilter.Conditions.Any()
+                    || query.RootFilter.SubFilters.Any())
+                    throw new NotImplementedException("Queries With Conditions Are Not Implemented");
+                if (query.Sorts.Any())
+                    throw new NotImplementedException("Queries With Sorts Are Not Implemented");
+                return query.Top > 0
+                    ? objects.Take(query.Top)
+                    : objects;
             }
             else
             {
-                newSorts.Reverse();
-                foreach (var sort in newSorts.Take(1))
+                if (query.QuickFindText != null)
                 {
-                    var comparer = new ObjectComparer(sort.FieldName);
-                    objects.Sort(comparer);
-                    if (sort.SortType == SortType.Descending)
-                        objects.Reverse();
+                    objects = objects
+                        .Where(o =>
+                        {
+                            var instance = ((ObjectRecord)o).Instance;
+                            return GetFieldMetadata(instance.GetType().AssemblyQualifiedName)
+                            .Where(p => p.Searchable)
+                            .Any(p =>
+                            {
+                                var propValue = instance.GetPropertyValue(p.SchemaName);
+                                return propValue != null && propValue.ToString().Contains(query.QuickFindText);
+                            });
+                        })
+                    .ToList();
+                }
+                var newSorts = new List<SortExpression>(query.Sorts);
+                if (!newSorts.Any())
+                {
+                    newSorts.OrderBy(o => o.ToString()).ToList();
+                }
+                else
+                {
+                    newSorts.Reverse();
+                    foreach (var sort in newSorts.Take(1))
+                    {
+                        var comparer = new ObjectComparer(sort.FieldName);
+                        objects.Sort(comparer);
+                        if (sort.SortType == SortType.Descending)
+                            objects.Reverse();
+                    }
                 }
             }
             return objects;

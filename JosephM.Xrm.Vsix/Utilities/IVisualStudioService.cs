@@ -11,6 +11,7 @@ namespace JosephM.XRM.VSIX.Utilities
         string AddSolutionItem(string fileQualified);
         IEnumerable<IVisualStudioProject> GetSolutionProjects();
         void AddFolder(string folderDirectory);
+        string GetSolutionItemText(string name);
     }
 
     public interface IVisualStudioProject

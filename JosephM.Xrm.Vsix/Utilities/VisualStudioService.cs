@@ -80,7 +80,7 @@ namespace JosephM.XRM.VSIX.Utilities
 
         public string AddSolutionItem<T>(string name, T objectToSerialise)
         {
-            var json = JsonHelper.ObjectToJsonString(objectToSerialise);
+            var json = JsonHelper.ObjectAsTypeToJsonString(objectToSerialise);
             return AddSolutionItem(name, json);
         }
 
@@ -186,6 +186,35 @@ namespace JosephM.XRM.VSIX.Utilities
                 var childSolutionFolder = AddSolutionFolderSubFolder(releaseSolutionFolder, new DirectoryInfo(childFolder).Name);
                 CopyFilesIntoSolutionFolder((SolutionFolder)childSolutionFolder.Object, childFolder);
             }
+        }
+
+        public string GetSolutionItemText(string name)
+        {
+            string fileName = null;
+            var solutionItems = GetProject(DTE.Solution as Solution2, "SolutionItems");
+            if (solutionItems == null)
+                return null;
+            foreach (ProjectItem item in solutionItems.ProjectItems)
+            {
+                if (item.Name == name)
+                {
+                    fileName = item.FileNames[1];
+                }
+            }
+            if (fileName == null)
+                return null;
+            return File.ReadAllText(fileName);
+        }
+
+
+        private static Project GetProject(Solution2 solution, string name)
+        {
+            foreach (Project item in solution.Projects)
+            {
+                if (item.Name == name)
+                    return item;
+            }
+            return null;
         }
     }
 }

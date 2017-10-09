@@ -39,22 +39,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     if (_itemsSource == null)
                     {
-                        _itemsSource = new ReferencePicklistItem[0];
-                        if (LookupService != null)
-                        {
-                            _itemsSource = GetPicklistOptions().OrderBy(p => p.Name);
-                        }
-                        //if(SelectedItem != null && !_itemsSource.Any(i => i.)
-                        var matchingItem = MatchSelectedItemInItemsSourceToValue();
-                        if (matchingItem == null)
-                        {
-                            SelectedItem = GetValueAsPicklistItem();
-                            if (SelectedItem != null)
-                                _itemsSource = _itemsSource.Union(new[] { SelectedItem });
-                        }
-                        else
-                            SelectedItem = matchingItem;
-                        OnPropertyChanged("SelectedItem");
+                        LoadPicklistItems();
                     }
                     return _itemsSource;
                 }
@@ -64,10 +49,29 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 lock (_lockoObject)
                 {
                     _itemsSource = value;
-                    OnPropertyChanged("ItemsSource");
+                    OnPropertyChanged(nameof(ItemsSource));
                     SelectedItem = MatchSelectedItemInItemsSourceToValue();
                 }
             }
+        }
+
+        public void LoadPicklistItems()
+        {
+            _itemsSource = new ReferencePicklistItem[0];
+            if (LookupService != null)
+            {
+                ItemsSource = GetPicklistOptions().OrderBy(p => p.Name);
+            }
+            var matchingItem = MatchSelectedItemInItemsSourceToValue();
+            if (matchingItem == null)
+            {
+                SelectedItem = GetValueAsPicklistItem();
+                if (SelectedItem != null)
+                    ItemsSource = ItemsSource.Union(new[] { SelectedItem });
+            }
+            else
+                SelectedItem = matchingItem;
+            OnPropertyChanged(nameof(SelectedItem));
         }
 
         public abstract ReferencePicklistItem GetValueAsPicklistItem();
@@ -203,6 +207,41 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 _xrmButton = value;
                 OnPropertyChanged("XrmButton");
+            }
+        }
+
+        public bool AllowNew
+        {
+            get
+            {
+                return NewAction != null;
+            }
+        }
+
+        private Action _newAction;
+        public Action NewAction
+        {
+            get
+            {
+                return _newAction;
+            }
+            set
+            {
+                _newAction = value;
+                if (_newAction != null)
+                    NewButton = new XrmButtonViewModel("New", _newAction, ApplicationController);
+                OnPropertyChanged(nameof(AllowNew));
+            }
+        }
+
+        private XrmButtonViewModel _newButton;
+        public XrmButtonViewModel NewButton
+        {
+            get { return _newButton; }
+            set
+            {
+                _newButton = value;
+                OnPropertyChanged(nameof(NewButton));
             }
         }
 

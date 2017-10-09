@@ -42,7 +42,7 @@
             IsEnabled="{Binding IsEditable}"
              />
         </Grid>
-        <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulated, Converter={StaticResource BoolToVis}}">
+        <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
             <TextBox
                 TabIndex="1"
                 DataContext="{Binding NotifyOnValidationError=True}"
@@ -54,9 +54,9 @@
                 PreviewKeyDown="OnPreviewKeyDown" />
         </Grid>
         <Grid Grid.Column="2" Row="0" Visibility="{Binding EditableAndTypePopulated, Converter={StaticResource BoolToVis}}">
-            <shared:XrmButton
-                TabIndex="1"
-                DataContext="{Binding XrmButton}" />
+            <Button DataContext="{Binding Path=XrmButton}"
+                        Style="{StaticResource SearchButton}"
+                            Command="{Binding Command}" ToolTip="Click To Search" />
         </Grid>
         <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="2" Row="1">
             <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding Searching}">

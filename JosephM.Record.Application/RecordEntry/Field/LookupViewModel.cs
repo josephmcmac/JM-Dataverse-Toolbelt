@@ -77,6 +77,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
+        public bool TypePopulatedOrReadOnly
+        {
+            get
+            {
+                return TypePopulated || !IsEditable;
+            }
+        }
+
         public bool EditableAndTypePopulated
         {
             get

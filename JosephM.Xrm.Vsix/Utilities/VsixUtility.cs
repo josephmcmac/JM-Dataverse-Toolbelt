@@ -17,6 +17,7 @@ using Microsoft.Crm.Sdk.Messages;
 
 namespace JosephM.XRM.VSIX.Utilities
 {
+    //todo this should all be in the visual studio service
     public static class VsixUtility
     {
         public static string BuildSelectedProjectAndGetAssemblyName(IServiceProvider serviceProvider)
