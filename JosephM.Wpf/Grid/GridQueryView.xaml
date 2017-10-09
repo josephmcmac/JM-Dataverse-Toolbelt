@@ -5,12 +5,13 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
                       xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
-             xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
-             xmlns:query="clr-namespace:JosephM.Wpf.Query"
-             mc:Ignorable="d"
+                      xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+                      xmlns:query="clr-namespace:JosephM.Wpf.Query"
+                      mc:Ignorable="d"
                       d:DesignWidth="800"
-                      d:DesignHeight="2000"
-                      d:DataContext="{d:DesignInstance Type=fakes:FakeRecordEntryViewModel, IsDesignTimeCreatable=True}">
+                      d:DesignHeight="800"
+                      d:DataContext="{d:DesignInstance Type=fakes:FakeQueryViewModel, IsDesignTimeCreatable=True}"
+             >
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
