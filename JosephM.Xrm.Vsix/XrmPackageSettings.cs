@@ -14,14 +14,17 @@ namespace JosephM.XRM.VSIX
     [Group(Sections.ConnectionInstances, true, 30)]
     public class XrmPackageSettings : ISavedXrmConnections
     {
+        //todo get rid of these somehow
         [Group(Sections.ObjectPrefixes)]
         [RequiredProperty]
         public string SolutionObjectPrefix { get; set; }
         [Group(Sections.ObjectPrefixes)]
         [RequiredProperty]
         public string SolutionDynamicsCrmPrefix { get; set; }
+
         [Group(Sections.Solution)]
         public bool AddToSolution { get; set; }
+
         [Group(Sections.Solution)]
         [RequiredProperty]
         [ReferencedType(Entities.solution)]

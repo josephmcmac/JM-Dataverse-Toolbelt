@@ -100,6 +100,7 @@
     <Compile Include="Extentions\RecordExtentions.cs" />
     <Compile Include="Extentions\TypeLoader.cs" />
     <Compile Include="IService\IFieldMetadata.cs" />
+    <Compile Include="IService\IFormService.cs" />
     <Compile Include="IService\IRecordTypeMetadata.cs" />
     <Compile Include="Metadata\Fields\AggregateFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\AnyFieldMetadata.cs" />

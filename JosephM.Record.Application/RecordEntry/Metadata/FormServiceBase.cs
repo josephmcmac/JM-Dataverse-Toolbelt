@@ -12,7 +12,7 @@ using JosephM.Record.Query;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
-    public abstract class FormServiceBase
+    public abstract class FormServiceBase : IFormService
     {
         public abstract FormMetadata GetFormMetadata(string recordType); 
 
@@ -26,12 +26,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return true;
         }
 
-        public virtual IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
+        public virtual IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string recordType)
         {
             return new ValidationRuleBase[] {};
         }
 
-        public virtual IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string subGrid)
+        public virtual IEnumerable<ValidationRuleBase> GetSubgridValidationRules(string fieldName, string subGrid)
         {
             return new ValidationRuleBase[] {};
         }
@@ -76,7 +76,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return recordForm.RecordService.GetLookupTargetType(field, recordType);
         }
 
-        internal virtual IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)
+        public virtual IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)
         {
             return new Condition[0];
         }

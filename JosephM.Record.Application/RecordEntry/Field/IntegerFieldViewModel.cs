@@ -25,6 +25,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             var response = new IsValidResponse();
             if (value != null && !string.IsNullOrWhiteSpace(value.ToString()))
             {
+                //this needs to try parse and throw 
                 var intValue = int.Parse(value.ToString());
                 if (intValue > MaxValue)
                 {

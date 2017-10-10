@@ -342,7 +342,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         protected internal override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
-            return FormService.GetValidationRules(fieldName);
+            return FormService.GetValidationRules(fieldName, GetRecordType());
         }
 
         public void OnNavigatedTo(INavigationProvider navigationProvider)

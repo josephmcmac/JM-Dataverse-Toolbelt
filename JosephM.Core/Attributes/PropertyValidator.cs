@@ -10,8 +10,8 @@ namespace JosephM.Core.Attributes
         AllowMultiple = true)]
     public abstract class PropertyValidator : Attribute
     {
-        public abstract bool IsValid(object value, object instance);
+        public abstract bool IsValid(object value);
 
-        public abstract string GetErrorMessage(string propertyName, object instance);
+        public abstract string GetErrorMessage(string propertyLabel);
     }
 }

@@ -31,7 +31,7 @@ namespace JosephM.Prism.XrmTestModule.DebugModule
         [UsePicklist(Fields.solution_.uniquename)]
         public Lookup SolutionPicklistActiveConnection { get; set; }
 
-        [LookupConditionFor("SolutionPicklistActiveConnection", "uniquename")]
+        //[LookupConditionFor("SolutionPicklistActiveConnection", "uniquename")]
         public string SolutionName
         {
             get { return "Something"; }

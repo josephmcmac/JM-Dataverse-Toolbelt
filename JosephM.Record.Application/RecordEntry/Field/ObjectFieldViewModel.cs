@@ -20,9 +20,6 @@ using JosephM.Application.ViewModel.RecordEntry.Metadata;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    //todo the different lookup classes need more verification scripts
-    //settings/readonly/query/owner/grid/lookupgrid etc
-
     public class ObjectFieldViewModel : ReferenceFieldViewModel<object>
     {
         public ObjectFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
@@ -52,48 +49,52 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     }
                 }
 
-                NewAction = () =>
-                {
-                    //todo try/catch
-
-                    var propertyInfo = settingsObject.GetType().GetProperty(SettingsAttribute.PropertyName);
-                    var enumerateType = propertyInfo.PropertyType.GenericTypeArguments[0];
-                    var newSettingObject = enumerateType.CreateFromParameterlessConstructor();
-
-                    var objectRecordService = new ObjectRecordService(newSettingObject, ApplicationController, null);
-                    var formService = new ObjectFormService(newSettingObject, objectRecordService);
-                    var formController = new FormController(objectRecordService, formService, ApplicationController);
-
-                    Action onSave = () =>
-                    {
-                        //add the new item to the permanent settings
-                        var settingsManager = ApplicationController.ResolveType<ISettingsManager>();
-                        settingsObject = GetSettingsObject();
-                        var settingsService = new ObjectRecordService(settingsObject, ApplicationController);
-                        var currentSettings = settingsService.RetrieveAll(enumerateType.AssemblyQualifiedName, null)
-                            .Select(r => ((ObjectRecord)r).Instance)
-                            .ToList();
-                        currentSettings.Add(newSettingObject);
-                        settingsObject.SetPropertyValue(SettingsAttribute.PropertyName, enumerateType.ToNewTypedEnumerable(currentSettings));
-                        settingsManager.SaveSettingsObject(settingsObject);
-                        ValueObject = newSettingObject;
-                        if (UsePicklist)
-                        {
-                            //reload the picklist
-                            ValueObject = newSettingObject;
-                            LoadPicklistItems();
-                        }
-                        else
-                        {
-                            SetEnteredTestWithoutClearingValue(ValueObject.ToString());
-                        }
-                        RecordEntryViewModel.ClearChildForm();
-                    };
-
-                    var newSettingForm = new ObjectEntryViewModel(onSave, RecordEntryViewModel.ClearChildForm, newSettingObject, formController);
-                    RecordEntryViewModel.LoadChildForm(newSettingForm);
-                };
+                SetNewAction();
             }
+        }
+
+        private void SetNewAction()
+        {
+            NewAction = () =>
+            {
+                var settingsObject = GetSettingsObject();
+                var propertyInfo = settingsObject.GetType().GetProperty(SettingsAttribute.PropertyName);
+                var enumerateType = propertyInfo.PropertyType.GenericTypeArguments[0];
+                var newSettingObject = enumerateType.CreateFromParameterlessConstructor();
+
+                var objectRecordService = new ObjectRecordService(newSettingObject, ApplicationController, null);
+                var formService = new ObjectFormService(newSettingObject, objectRecordService);
+                var formController = new FormController(objectRecordService, formService, ApplicationController);
+
+                Action onSave = () =>
+                {
+                    //add the new item to the permanent settings
+                    var settingsManager = ApplicationController.ResolveType<ISettingsManager>();
+                    settingsObject = GetSettingsObject();
+                    var settingsService = new ObjectRecordService(settingsObject, ApplicationController);
+                    var currentSettings = settingsService.RetrieveAll(enumerateType.AssemblyQualifiedName, null)
+                        .Select(r => ((ObjectRecord)r).Instance)
+                        .ToList();
+                    currentSettings.Add(newSettingObject);
+                    settingsObject.SetPropertyValue(SettingsAttribute.PropertyName, enumerateType.ToNewTypedEnumerable(currentSettings));
+                    settingsManager.SaveSettingsObject(settingsObject);
+                    ValueObject = newSettingObject;
+                    if (UsePicklist)
+                    {
+                        //reload the picklist
+                        ValueObject = newSettingObject;
+                        LoadPicklistItems();
+                    }
+                    else
+                    {
+                        SetEnteredTestWithoutClearingValue(ValueObject.ToString());
+                    }
+                    RecordEntryViewModel.ClearChildForm();
+                };
+
+                var newSettingForm = new ObjectEntryViewModel(onSave, RecordEntryViewModel.ClearChildForm, newSettingObject, formController);
+                RecordEntryViewModel.LoadChildForm(newSettingForm);
+            };
         }
 
         private object GetSettingsObject()

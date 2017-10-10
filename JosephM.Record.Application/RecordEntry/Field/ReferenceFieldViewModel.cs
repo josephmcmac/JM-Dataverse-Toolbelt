@@ -229,7 +229,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 _newAction = value;
                 if (_newAction != null)
-                    NewButton = new XrmButtonViewModel("New", _newAction, ApplicationController);
+                    NewButton = new XrmButtonViewModel("New", () => { try { _newAction(); } catch (Exception ex) { ApplicationController.ThrowException(ex); } } , ApplicationController);
                 OnPropertyChanged(nameof(AllowNew));
             }
         }

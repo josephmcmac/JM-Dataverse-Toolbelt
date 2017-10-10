@@ -314,5 +314,10 @@ namespace JosephM.Record.Service
         {
             throw new NotImplementedException();
         }
+
+        public virtual IFormService GetFormService()
+        {
+            return null;
+        }
     }
 }

@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\XrmFormService.cs" />
     <Compile Include="XrmConnection\XrmConnectionDialog.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmRecordConnection.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmConnectionsDialog.cs" />
@@ -97,7 +98,6 @@
     <Compile Include="Xrm\XrmReadViewModel.cs" />
     <Compile Include="Xrm\XrmFormServiceController.cs" />
     <Compile Include="Xrm\XrmCreateViewModel.cs" />
-    <Compile Include="Xrm\XrmTestFormService.cs" />
     <Compile Include="Xrm\XrmMaintainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

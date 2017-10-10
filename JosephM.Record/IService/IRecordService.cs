@@ -175,5 +175,6 @@ namespace JosephM.Record.IService
         string GetDisplayNameField(string recordType);
 
         IEnumerable<IRecord> RetreiveAll(QueryDefinition query);
+        IFormService GetFormService();
     }
 }

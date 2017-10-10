@@ -10,11 +10,16 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 
 #endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
+    //todo the different lookup classes need more verification scripts
+    //settings/readonly/query/owner/grid/lookupgrid etc
+
+    //todo consider the XrmFormService now in the XrmRecordService in xrm module everywhere
     public class LookupFieldViewModel : ReferenceFieldViewModel<Lookup>
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
@@ -43,8 +48,36 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     Value.Name = "Record Name Not Set";
                 SetEnteredTestWithoutClearingValue(Value.Name);
             }
-            if (!UsePicklist && SelectedRecordType != null && isEditable)
-                LoadLookupGrid();
+            if (isEditable && SelectedRecordType != null)
+            {
+                SetNewAction();
+                if (!UsePicklist)
+                    LoadLookupGrid();
+            }
+        }
+
+        private void SetNewAction()
+        {
+            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null)
+            {
+                NewAction = () =>
+                {
+                    var formController = new FormController(LookupService, LookupFormService, ApplicationController);
+                    var newRecord = LookupService.NewRecord(RecordTypeToLookup);
+
+                    Action onSave = () =>
+                    {
+                        Value = LookupService.ToLookup(newRecord);
+                        SetEnteredTestWithoutClearingValue(Value.Name);
+                        RecordEntryViewModel.ClearChildForm();
+                    };
+
+                    var newForm = new CreateOrUpdateViewModel(newRecord, formController, onSave, RecordEntryViewModel.ClearChildForm);
+                    RecordEntryViewModel.LoadChildForm(newForm);
+                };
+            }
+            else
+                NewAction = null;
         }
 
         private RecordType _selectedRecordType;
@@ -66,6 +99,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 OnPropertyChanged(nameof(TypePopulated));
                 OnPropertyChanged(nameof(EditableAndTypePopulated));
+                OnPropertyChanged(nameof(TypePopulatedOrReadOnly));
             }
         }
 
@@ -188,6 +222,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public override IRecordService LookupService
         {
             get { return RecordEntryViewModel.RecordService.GetLookupService(FieldName, RecordEntryViewModel.GetRecordType(), RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord()); }
+        }
+
+        public FormServiceBase LookupFormService
+        {
+            get
+            {
+                //just hack to get around the project heirachys without having to move all the form code into Record project
+                //unsure the IFormService is of the type FormServiceBase
+                var formService = LookupService?.GetFormService();
+                if(formService != null && !(formService is FormServiceBase))
+                {
+                    throw new NotSupportedException(string.Format("The {0} is An Unexpected Type Of {1}. It Is Required To Be A {2}", typeof(IFormService).Name, formService.GetType().Name, typeof(FormServiceBase).Name));
+                }
+                return formService as FormServiceBase;
+            }
         }
 
         protected override string GetValueName()

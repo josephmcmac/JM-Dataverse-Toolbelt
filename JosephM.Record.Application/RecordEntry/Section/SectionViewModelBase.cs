@@ -40,7 +40,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             get { return FormSection.SectionLabel; }
         }
 
-        public FormServiceBase FormService
+        public IFormService FormService
         {
             get { return FormController.FormService; }
         }

@@ -29,14 +29,14 @@ namespace JosephM.Record.Application.Test
             var requiredStringViewModel = viewModel.GetFieldViewModel("RequiredString");
             Assert.IsTrue(requiredStringViewModel.HasErrors);
             var propertyAttribute = objectToEnter.GetType().GetProperty("RequiredString").GetCustomAttribute<RequiredProperty>();
-            Assert.AreEqual(propertyAttribute.GetErrorMessage("RequiredString", objectToEnter), requiredStringViewModel.GetErrorsString());
+            Assert.AreEqual(propertyAttribute.GetErrorMessage("RequiredString"), requiredStringViewModel.GetErrorsString());
             //check the subgrid validates as required
             var notRequiredSubGrid = viewModel.GetSubGridViewModel("NotRequiredIEnumerableProperty");
             Assert.IsFalse(notRequiredSubGrid.HasError);
             var requiredSubGrid = viewModel.GetSubGridViewModel("RequiredIEnumerableProperty");
             Assert.IsTrue(requiredSubGrid.HasError);
             var subGridAttribute = objectToEnter.GetType().GetProperty("RequiredIEnumerableProperty").GetCustomAttribute<RequiredProperty>();
-            Assert.AreEqual(subGridAttribute.GetErrorMessage("RequiredIEnumerableProperty", objectToEnter), requiredSubGrid.ErrorMessage);
+            Assert.AreEqual(subGridAttribute.GetErrorMessage("RequiredIEnumerableProperty"), requiredSubGrid.ErrorMessage);
 
             requiredStringViewModel.ValueObject = "Populate";
             requiredSubGrid.AddRow();
@@ -51,7 +51,7 @@ namespace JosephM.Record.Application.Test
             Assert.IsTrue(requiredGridFieldViewModel.HasErrors);
             var subGridRowObject = objectToEnter.RequiredIEnumerableProperty.First();
             var subGridFieldAttribute = subGridRowObject.GetType().GetProperty("RequiredString").GetCustomAttribute<RequiredProperty>();
-            Assert.AreEqual(subGridFieldAttribute.GetErrorMessage("RequiredString", subGridRowObject), requiredGridFieldViewModel.GetErrorsString());
+            Assert.AreEqual(subGridFieldAttribute.GetErrorMessage("RequiredString"), requiredGridFieldViewModel.GetErrorsString());
 
             requiredGridFieldViewModel.ValueObject = "Something";
             Assert.IsTrue(viewModel.Validate());

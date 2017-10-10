@@ -141,6 +141,7 @@ namespace JosephM.Record.Metadata
                 throw new ArgumentOutOfRangeException(type + " not implemented");
             fm.IsMandatory = true;
             fm.Readable = propertyInfo.GetSetMethod() != null;
+            fm.Createable = propertyInfo.GetGetMethod() != null;
             fm.Writeable = propertyInfo.GetGetMethod() != null;
             fm.Searchable = propertyInfo.GetCustomAttribute<NotSearchable>() == null;
             var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();

@@ -27,6 +27,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition MinWidth="150" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BoolToVis}}">
             <ComboBox
@@ -58,7 +59,12 @@
                         Style="{StaticResource SearchButton}"
                             Command="{Binding Command}" ToolTip="Click To Search" />
         </Grid>
-        <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="2" Row="1">
+        <Grid Grid.Column="3" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}">
+            <Button DataContext="{Binding Path=NewButton}"
+                        Style="{StaticResource AddRowButton}"
+                            Command="{Binding Command}" ToolTip="Click To Create New" />
+        </Grid>
+        <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="4" Row="1">
             <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding Searching}">
                 <TextBlock Text="Searching..." />
             </Popup>

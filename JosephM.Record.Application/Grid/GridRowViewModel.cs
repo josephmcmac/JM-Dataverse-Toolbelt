@@ -150,7 +150,7 @@ namespace JosephM.Application.ViewModel.Grid
 
         protected internal override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
-            return FormService.GetValidationRules(fieldName, RecordType);
+            return FormService.GetSubgridValidationRules(fieldName, RecordType);
         }
     }
 }

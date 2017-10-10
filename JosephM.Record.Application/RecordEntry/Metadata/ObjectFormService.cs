@@ -184,7 +184,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 typeof(ObjectRecord).Name));
         }
 
-        public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
+        public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string recordType)
         {
             var validators = new List<ValidationRuleBase>();
             var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.AssemblyQualifiedName);
@@ -197,7 +197,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return validators;
         }
 
-        public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string subGridRecordType)
+        public override IEnumerable<ValidationRuleBase> GetSubgridValidationRules(string fieldName, string subGridRecordType)
         {
             return ObjectRecordService.GetValidatorAttributes(fieldName, subGridRecordType)
                 .Select(va => new PropertyAttributeValidationRule(va));
@@ -704,7 +704,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return viewModel;
         }
 
-        internal override IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)
+        public override IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)
         {
             var propertyInfo = GetPropertyInfo(fieldName, recordType);
             var attr = propertyInfo.GetCustomAttributes<LookupCondition>();

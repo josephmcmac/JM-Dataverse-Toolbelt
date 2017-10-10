@@ -18,6 +18,7 @@ using Microsoft.Win32;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Utilities;
 using EnvDTE80;
+using JosephM.Prism.XrmModule.Forms;
 
 namespace JosephM.XRM.VSIX
 {
@@ -118,7 +119,7 @@ namespace JosephM.XRM.VSIX
                 }
                 if (_xrmRecordService == null)
                 {
-                    _xrmRecordService = new XrmRecordService(xrmConfig);
+                    _xrmRecordService = new XrmRecordService(xrmConfig, formService: new XrmFormService());
                 }
                 return _xrmRecordService;
             }

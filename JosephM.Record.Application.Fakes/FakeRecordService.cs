@@ -394,5 +394,11 @@ namespace JosephM.Application.ViewModel.Fakes
         {
             return new IsValidResponse();
         }
+
+        private FakeFormService _formService = new FakeFormService();
+        public override IFormService GetFormService()
+        {
+            return _formService;
+        }
     }
 }
