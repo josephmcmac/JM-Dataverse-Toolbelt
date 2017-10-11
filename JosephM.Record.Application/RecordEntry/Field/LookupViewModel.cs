@@ -18,8 +18,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
     //todo the different lookup classes need more verification scripts
     //settings/readonly/query/owner/grid/lookupgrid etc
-
-    //todo consider the XrmFormService now in the XrmRecordService in xrm module everywhere
     public class LookupFieldViewModel : ReferenceFieldViewModel<Lookup>
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
@@ -58,7 +56,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         private void SetNewAction()
         {
-            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null)
+            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null && LookupFormService.GetFormMetadata(RecordTypeToLookup) != null)
             {
                 NewAction = () =>
                 {

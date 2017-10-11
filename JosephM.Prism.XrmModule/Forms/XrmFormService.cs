@@ -64,7 +64,7 @@ namespace JosephM.Prism.XrmModule.Forms
                         });
                     }
             }
-            throw new NotImplementedException(string.Format("Not Implemented For Type {0}", recordType ?? "(null)"));
+            return null;
         }
 
         public override IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)

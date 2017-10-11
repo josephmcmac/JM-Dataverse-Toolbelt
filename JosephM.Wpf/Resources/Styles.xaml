@@ -75,15 +75,15 @@
     </Style>
     <Style x:Key="AddRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource AddButtonImageKey}" />
-        <Setter Property="Margin" Value="16,0,0,0" />
+        <Setter Property="Margin" Value="8,0,8,0" />
     </Style>
     <Style x:Key="SearchButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource SearchButtonImageKey}" />
-        <Setter Property="Margin" Value="16,0,0,0" />
+        <Setter Property="Margin" Value="8,0,8,0" />
     </Style>
     <Style x:Key="AddMultipleRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource AddMultipleButtonImageKey}" />
-        <Setter Property="Margin" Value="16,0,0,0" />
+        <Setter Property="Margin" Value="8,0,8,0" />
     </Style>
     <Style x:Key="PreviousButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource PreviousImageKey}" />
