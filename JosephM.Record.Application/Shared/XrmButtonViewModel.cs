@@ -14,11 +14,21 @@ namespace JosephM.Application.ViewModel.Shared
         private bool _saveButtonVisible = true;
 
         public XrmButtonViewModel(string label, Action clickAction, IApplicationController applicationController)
-            : base(applicationController)
+            : this(label, label, clickAction, applicationController)
         {
             Label = label;
             Command = new DelegateCommand(clickAction);
         }
+
+        public XrmButtonViewModel(string id, string label, Action clickAction, IApplicationController applicationController)
+    : base(applicationController)
+        {
+            Id = id;
+            Label = label;
+            Command = new DelegateCommand(clickAction);
+        }
+
+        public string Id { get; set; }
 
         private string _label;
         public string Label

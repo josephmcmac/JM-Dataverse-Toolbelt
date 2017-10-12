@@ -86,6 +86,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\XrmCrudDialog.cs" />
+    <Compile Include="Forms\XrmCrudModule.cs" />
     <Compile Include="Forms\XrmFormService.cs" />
     <Compile Include="XrmConnection\XrmConnectionDialog.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmRecordConnection.cs" />

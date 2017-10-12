@@ -22,7 +22,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             RecordType = record.Type;
             OnSave = () =>
             {
-                GetRecord().Id = RecordService.Create(GetRecord());
+                if (GetRecord().Id == null)
+                    GetRecord().Id = RecordService.Create(GetRecord());
+                else
+                    RecordService.Update(GetRecord(), ChangedPersistentFields);
                 if (postSave != null)
                     postSave();
             };

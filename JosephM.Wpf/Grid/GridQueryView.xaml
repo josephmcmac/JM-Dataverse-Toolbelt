@@ -7,7 +7,8 @@
                       xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
                       xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
                       xmlns:query="clr-namespace:JosephM.Wpf.Query"
-                      mc:Ignorable="d"
+             xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
+             mc:Ignorable="d"
                       d:DesignWidth="800"
                       d:DesignHeight="800"
                       d:DataContext="{d:DesignInstance Type=fakes:FakeQueryViewModel, IsDesignTimeCreatable=True}"
@@ -15,6 +16,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <converters:NullToHiddenConverter x:Key="NullToHidden" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
@@ -25,42 +27,95 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" >
-                <WrapPanel Orientation="Horizontal">
-                    <shared:XrmButton DataContext="{Binding ReturnButton}" />
-                    <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
-                    <WrapPanel Orientation="Horizontal"  Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
-                    <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
-                    <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
-                    <shared:XrmButton DataContext="{Binding GroupSelectedConditionsAnd}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
-                    <shared:XrmButton DataContext="{Binding UngroupSelectedConditions}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
-                    </WrapPanel>
-                </WrapPanel>
+            <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
             </Grid>
-            <Grid Grid.Row="1" Visibility="{Binding IsQuickFind, Converter={StaticResource BoolToVis}}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition  />
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <TextBlock Text="Enter Search Text" Style="{StaticResource FieldLabelStyle}" />
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <TextBox Text="{Binding QuickFindText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="OnQuickFindKeyDown" >
-                        </TextBox>
+            <Grid Grid.Row="1"
+              Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0"  Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0"  Visibility="{Binding MultipleRecordTypes, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <WrapPanel>
+                                <TextBlock
+                    Text="Select Record Type"
+                    Style="{StaticResource FieldLabelStyle}"
+                     />
+                                <ComboBox
+                    MinWidth="150"
+                    VerticalAlignment="Top"
+                    TabIndex="1"
+                    Name="ComboBox"
+                    Style="{StaticResource FieldEntryStyle}"
+                    Tag="Key"
+                    DisplayMemberPath="Value"
+                    ItemsSource="{Binding RecordTypeItemsSource}"
+                    SelectedItem="{Binding SelectedRecordType, Mode=TwoWay}"
+                     />
+                            </WrapPanel>
+                        </Grid>
+                        <Grid Grid.Row="1" Visibility="{Binding RecordTypeSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" >
+                                    <WrapPanel Orientation="Horizontal">
+                                        <Grid Visibility="{Binding ReturnButton, Converter={StaticResource NullToHidden}}">
+                                            <shared:XrmButton DataContext="{Binding ReturnButton}" />
+                                        </Grid>
+                                        <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
+                                        <WrapPanel Orientation="Horizontal"  Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                                            <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
+                                            <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
+                                            <shared:XrmButton DataContext="{Binding GroupSelectedConditionsAnd}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
+                                            <shared:XrmButton DataContext="{Binding UngroupSelectedConditions}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
+                                        </WrapPanel>
+                                    </WrapPanel>
+                                </Grid>
+                                <Grid Grid.Row="1" Visibility="{Binding IsQuickFind, Converter={StaticResource BoolToVis}}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition  />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.Column="0">
+                                            <TextBlock Text="Enter Search Text" Style="{StaticResource FieldLabelStyle}" />
+                                        </Grid>
+                                        <Grid Grid.Column="1">
+                                            <TextBox Text="{Binding QuickFindText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="OnQuickFindKeyDown" >
+                                            </TextBox>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid Grid.Row="2" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
+                                    <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
+                                </Grid>
+                                <Grid Grid.Row="3" >
+                                    <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid Grid.Row="2" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
-                <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
-            </Grid>
-            <Grid Grid.Row="3" >
-                <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
+                <Grid Grid.Row="1" >
+                    <ItemsControl
+                Name="DialogPanel"
+                ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
+                ItemsSource="{Binding ChildForms}" />
+                </Grid>
             </Grid>
         </Grid>
     </Border>

@@ -56,7 +56,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         private void SetNewAction()
         {
-            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null && LookupFormService.GetFormMetadata(RecordTypeToLookup) != null)
+            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null && LookupFormService.GetFormMetadata(RecordTypeToLookup, LookupService) != null)
             {
                 NewAction = () =>
                 {

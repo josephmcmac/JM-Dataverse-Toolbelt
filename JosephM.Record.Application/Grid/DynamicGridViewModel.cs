@@ -51,6 +51,11 @@ namespace JosephM.Application.ViewModel.Grid
             };
         }
 
+        public XrmButtonViewModel GetButton(string id)
+        {
+            return CustomFunctions.First(b => b.Id == id);
+        }
+
         public LoadingViewModel LoadingViewModel { get; set; }
 
         public void LoadGridButtons(IEnumerable<CustomGridFunction> functions)
@@ -64,7 +69,7 @@ namespace JosephM.Application.ViewModel.Grid
                     new ObservableCollection<XrmButtonViewModel>(functions
                     .Where(cf => cf.VisibleFunction(this))
                     .Select(cf =>
-                        new XrmButtonViewModel(cf.Label, () => cf.Function(this),
+                        new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(this),
                             ApplicationController)));
                 OnPropertyChanged("CustomFunctions");
             });

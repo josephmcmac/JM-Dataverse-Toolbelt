@@ -28,7 +28,7 @@ namespace JosephM.Application.ViewModel.Query
             _queryCondition = conditionObject;
             _queryConditionRecord = new ObjectRecord(conditionObject);
 
-            var metadata = FormService.GetFormMetadata(GetRecord().Type);
+            var metadata = FormService.GetFormMetadata(GetRecord().Type, RecordService);
             var sections = metadata.FormSections;
             var firstSection = sections.First();
             var sectionViewModel = new FieldSectionViewModel(

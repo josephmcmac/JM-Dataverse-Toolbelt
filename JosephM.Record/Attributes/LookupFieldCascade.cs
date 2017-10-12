@@ -16,6 +16,5 @@ namespace JosephM.Record.Attributes
             TargetProperty = targetProperty;
             SourceRecordField = sourceRecordField;
         }
-
     }
 }

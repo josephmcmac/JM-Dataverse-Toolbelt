@@ -9,13 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Attributes;
+using JosephM.Record.Extentions;
 
 namespace JosephM.Prism.XrmModule.Forms
 {
-    //todo review if better way to structure this
     public class XrmFormService : FormServiceBase
     {
-        public override FormMetadata GetFormMetadata(string recordType)
+        public override FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null)
         {
             switch (recordType)
             {
@@ -64,6 +64,8 @@ namespace JosephM.Prism.XrmModule.Forms
                         });
                     }
             }
+            if (recordService != null)
+                return new FormMetadata(recordService.GetFields(recordType).OrderBy(f => recordService.GetFieldLabel(f, recordType)).ToArray());
             return null;
         }
 

@@ -52,7 +52,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 
         public FormMetadata FormMetadata
         {
-            get { return FormController.FormService.GetFormMetadata(RecordType); }
+            get { return FormController.FormService.GetFormMetadata(RecordType, RecordService); }
         }
 
         public abstract string RecordType { get; }

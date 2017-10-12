@@ -13,7 +13,7 @@ namespace JosephM.Prism.XrmTestModule.XrmTest
 {
     public class XrmTestFormService : FormServiceBase
     {
-        public override FormMetadata GetFormMetadata(string recordType)
+        public override FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null)
         {
             if (recordType == "new_testentity")
                 return

@@ -288,7 +288,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         public void LoadFormSections()
         {
             //forcing enumeration up front
-            var sections = FormService.GetFormMetadata(RecordType).FormSections.ToArray();
+            var sections = FormService.GetFormMetadata(RecordType, RecordService).FormSections.ToArray();
             var sectionViewModels = new List<SectionViewModelBase>();
             //Create the section view models
 

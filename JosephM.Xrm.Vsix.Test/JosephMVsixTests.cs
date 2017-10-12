@@ -53,7 +53,7 @@ namespace JosephM.Xrm.Vsix.Test
         }
         public FakeDialogController CreateDialogController()
         {
-            return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings())));
+            return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings(), CreateVisualStudioService())));
         }
 
         public static string GetTestPluginAssemblyName()

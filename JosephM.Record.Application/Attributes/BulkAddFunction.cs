@@ -97,13 +97,13 @@ namespace JosephM.Application.ViewModel.Attributes
             {
                 try
                 {
-                    var closeFunction = new CustomGridFunction("Return", () => recordForm.ClearChildForm());
+                    var closeFunction = new CustomGridFunction("RETURN", "Return", () => recordForm.ClearChildForm());
                     var targetType = GetTargetType(recordForm, subGridReference);
 
                     var selectedFunction = new CustomGridFunction("Add Selected", (g) => AddSelectedItems(g, recordForm, subGridReference)
                     , visibleFunction: (g) => g.SelectedRows.Any());
 
-                    var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, processSelectedFunction: selectedFunction);
+                    var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, customFunctions: new[] { selectedFunction });
 
                     recordForm.LoadChildForm(childForm);
                 }

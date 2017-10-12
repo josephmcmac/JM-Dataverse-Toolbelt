@@ -85,6 +85,8 @@
   <ItemGroup>
     <Compile Include="ObjectEncrypt\TestClassToEncrypt.cs" />
     <Compile Include="ObjectEncrypt\TestObjectEncryptDialog.cs" />
+    <Compile Include="Prism\TestCrud\TestCrudDialog.cs" />
+    <Compile Include="Prism\TestCrud\TestCrudModule.cs" />
     <Compile Include="Prism\TestDialog\TestDialogModule.cs" />
     <Compile Include="Prism\TestDialog\TestDialogBase.cs" />
     <Compile Include="Prism\TestDialog\TestDialogRequest.cs" />

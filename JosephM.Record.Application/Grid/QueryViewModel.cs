@@ -13,17 +13,22 @@ using JosephM.Application.ViewModel.Shared;
 using JosephM.Record.Query;
 using JosephM.Record.Extentions;
 using JosephM.Application.ViewModel.Query;
+using JosephM.Core.FieldType;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using System.Threading;
 
 namespace JosephM.Application.ViewModel.Grid
 {
     public class QueryViewModel : TabAreaViewModelBase, INotifyPropertyChanged
     {
         public QueryViewModel(IEnumerable<string> recordTypes, IRecordService recordService, IApplicationController controller, bool allowQuery = false, bool loadInitially = false, CustomGridFunction closeFunction = null
-            , CustomGridFunction processSelectedFunction = null)
+            , IEnumerable<CustomGridFunction> customFunctions = null)
             : base(controller)
         {
+            CustomFunctions = customFunctions;
+            LoadInitially = loadInitially;
             AllowQuery = allowQuery;
-            RecordTypes = recordTypes;
             RecordService = recordService;
             if (closeFunction != null)
                 ReturnButton = new XrmButtonViewModel(closeFunction.Label, () => { closeFunction.Function(DynamicGridViewModel); }, controller);
@@ -34,34 +39,69 @@ namespace JosephM.Application.ViewModel.Grid
             UngroupSelectedConditions = new XrmButtonViewModel("Ungroup Selected", () => UnGroupSelected(), ApplicationController);
             ChangeQueryType();
 
-            if (AllowQuery)
-                FilterConditions = CreateFilterCondition();
             QueryTypeButton.IsVisible = AllowQuery;
 
-            DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
-            {
-                PageSize = StandardPageSize,
-                ViewType = ViewType.MainApplicationView,
-                RecordService = recordService,
-                RecordType = recordTypes.First(),
-                IsReadOnly = true,
-                FormController = new FormController(recordService, null, controller),
-                GetGridRecords = GetGridRecords,
-                MultiSelect = true,
-                GridLoaded = false
-            };
-            var customFunctions = new List<CustomGridFunction>()
-            {
-                new CustomGridFunction("Run Query", QuickFind)
-            };
-            if (processSelectedFunction != null)
-                customFunctions.Add(processSelectedFunction);
+            _recordTypes = recordTypes;
+        }
 
-            DynamicGridViewModel.LoadGridButtons(customFunctions);
-            if(loadInitially)
-                DynamicGridViewModel.ReloadGrid();
+        private IEnumerable<CustomGridFunction> CustomFunctions { get; set; }
+        private bool LoadInitially { get; set; }
 
-            RefreshConditionButtons();
+
+        private void RecreateGrid()
+        {
+            if (RecordType != null)
+            {
+                DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
+                {
+                    PageSize = StandardPageSize,
+                    ViewType = ViewType.MainApplicationView,
+                    RecordService = RecordService,
+                    RecordType = RecordType,
+                    IsReadOnly = true,
+                    FormController = new FormController(RecordService, null, ApplicationController),
+                    GetGridRecords = GetGridRecords,
+                    MultiSelect = true,
+                    GridLoaded = false
+                };
+                var customFunctionList = new List<CustomGridFunction>()
+                {
+                    new CustomGridFunction("QUERY", "Run Query", QuickFind)
+                };
+                if (FormService != null)
+                {
+                    //todo add some sort of bulk set field option
+                    customFunctionList.Add(new CustomGridFunction("OPEN", "Open Selected", (g) =>
+                    {
+                        var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
+                        var formController = new FormController(this.RecordService, FormService, ApplicationController);
+                        var selectedRow = DynamicGridViewModel.SelectedRows?.First();
+                        if (selectedRow != null)
+                        {
+                            Action onSave = () =>
+                            {
+                                ClearChildForm();
+                                DynamicGridViewModel.ReloadGrid();
+                            };
+
+                            var newForm = new CreateOrUpdateViewModel(selectedRow.Record, formController, onSave, ClearChildForm);
+                            LoadChildForm(newForm);
+                        }
+                    }, (g) => g.SelectedRows.Count() == 1));
+                }
+
+                if (CustomFunctions != null)
+                {
+                    foreach (var item in CustomFunctions)
+                        customFunctionList.Add(item);
+                }
+
+                DynamicGridViewModel.LoadGridButtons(customFunctionList);
+                if (LoadInitially)
+                    DynamicGridViewModel.ReloadGrid();
+
+                RefreshConditionButtons();
+            }
         }
 
         private bool AllowQuery { get; set; }
@@ -110,18 +150,21 @@ namespace JosephM.Application.ViewModel.Grid
                 if (!AllowQuery)
                     return;
             }
-            var selectedCount = filter.SelectedConditions.Count();
-            if (selectedCount > 0)
-                DeleteSelectedConditionsButton.IsVisible = true;
-            if (selectedCount > 0 && !isRootFilter)
-                UngroupSelectedConditions.IsVisible = true;
-            if (selectedCount > 1 && filter.FilterOperator == FilterOperator.And)
-                GroupSelectedConditionsOr.IsVisible = true;
-            if (selectedCount > 1 && filter.FilterOperator == FilterOperator.Or)
-                GroupSelectedConditionsAnd.IsVisible = true;
-            foreach(var item in filter.FilterConditions)
+            if (filter != null)
             {
-                RefreshConditionButtons(item);
+                var selectedCount = filter.SelectedConditions.Count();
+                if (selectedCount > 0)
+                    DeleteSelectedConditionsButton.IsVisible = true;
+                if (selectedCount > 0 && !isRootFilter)
+                    UngroupSelectedConditions.IsVisible = true;
+                if (selectedCount > 1 && filter.FilterOperator == FilterOperator.And)
+                    GroupSelectedConditionsOr.IsVisible = true;
+                if (selectedCount > 1 && filter.FilterOperator == FilterOperator.Or)
+                    GroupSelectedConditionsAnd.IsVisible = true;
+                foreach (var item in filter.FilterConditions)
+                {
+                    RefreshConditionButtons(item);
+                }
             }
         }
 
@@ -225,7 +268,19 @@ namespace JosephM.Application.ViewModel.Grid
 
         public IRecordService RecordService { get; private set; }
 
-        public DynamicGridViewModel DynamicGridViewModel { get; private set; }
+        private DynamicGridViewModel _dynamicGridViewModel;
+        public DynamicGridViewModel DynamicGridViewModel
+        {
+            get
+            {
+                return _dynamicGridViewModel;
+            }
+            set
+            {
+                _dynamicGridViewModel = value;
+                OnPropertyChanged(nameof(DynamicGridViewModel));
+            }
+        }
 
         private ObservableCollection<ViewModelBase> _childForms = new ObservableCollection<ViewModelBase>();
 
@@ -283,7 +338,20 @@ namespace JosephM.Application.ViewModel.Grid
 
         public XrmButtonViewModel QueryTypeButton { get; set; }
 
-        public FilterConditionsViewModel FilterConditions { get; set; }
+        private FilterConditionsViewModel _filterConditions;
+        public FilterConditionsViewModel FilterConditions
+        {
+            get
+            {
+                return _filterConditions;
+            }
+            set
+            {
+                _filterConditions = value;
+                OnPropertyChanged(nameof(FilterConditions));
+                RefreshConditionButtons();
+            }
+        }
 
         public XrmButtonViewModel DeleteSelectedConditionsButton { get; set; }
 
@@ -293,17 +361,85 @@ namespace JosephM.Application.ViewModel.Grid
 
         public XrmButtonViewModel UngroupSelectedConditions { get; set; }
 
-        public IEnumerable<string> RecordTypes
+        private IEnumerable<string> _recordTypes;
+        private IEnumerable<RecordType> _recordTypeItemsSource;
+        public IEnumerable<RecordType> RecordTypeItemsSource
         {
-            get; set;
+            get
+            {
+                if (_recordTypeItemsSource == null)
+                {
+                    _recordTypeItemsSource = _recordTypes
+                        .Select(r => new RecordType(r, RecordService.GetDisplayName(r)))
+                        .OrderBy(r => r.Value)
+                        .ToArray();
+                }
+                return _recordTypeItemsSource;
+            }
         }
 
+        private RecordType _selectedRecordType;
+        public RecordType SelectedRecordType
+        {
+            get
+            {
+                return _selectedRecordType;
+            }
+            set
+            {
+                _selectedRecordType = value;
+                RecordType = value?.Key;
+            }
+        }
+
+        private string _recordType;
         public string RecordType
         {
             get
             {
-                return RecordTypes.First(); ;
+                if (_recordType == null && RecordTypeItemsSource.Count() == 1)
+                    _recordType = RecordTypeItemsSource.First().Key;
+                return _recordType;
+            }
+            set
+            {
+                _recordType = value;
+                if (_recordType != null && AllowQuery)
+                    FilterConditions = CreateFilterCondition();
+                OnPropertyChanged(nameof(RecordTypeSelected));
+                if (_recordType != null)
+                    RecreateGrid();
             }
         }
+
+        public bool RecordTypeSelected
+        {
+            get { return RecordType != null; }
+        }
+
+        public bool MultipleRecordTypes
+        {
+            get
+            {
+                return RecordTypeItemsSource.Count() > 1;
+            }
+        }
+
+        public FormServiceBase FormService
+        {
+            get
+            {
+                //just hack to get around the project heirachys without having to move all the form code into Record project
+                //unsure the IFormService is of the type FormServiceBase
+                var formService = RecordService.GetFormService();
+                if (formService != null && !(formService is FormServiceBase))
+                {
+                    throw new NotSupportedException(string.Format("The {0} is An Unexpected Type Of {1}. It Is Required To Be A {2}", typeof(IFormService).Name, formService.GetType().Name, typeof(FormServiceBase).Name));
+                }
+                return formService as FormServiceBase;
+            }
+        }
+
+        public RecordType First { get; set; }
     }
 }

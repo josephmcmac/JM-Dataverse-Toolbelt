@@ -14,7 +14,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     public abstract class FormServiceBase : IFormService
     {
-        public abstract FormMetadata GetFormMetadata(string recordType); 
+        public abstract FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null); 
 
         public virtual bool IsFieldInContext(string fieldName, IRecord record)
         {

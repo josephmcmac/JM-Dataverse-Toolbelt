@@ -97,6 +97,8 @@
   <ItemGroup>
     <Compile Include="Dialog\SavedRequestDialog.cs" />
     <Compile Include="Dialog\AppSettingDialog.cs" />
+    <Compile Include="Module\Crud\CrudDialog.cs" />
+    <Compile Include="Module\Crud\CrudModule.cs" />
     <Compile Include="Module\DialogModule.cs" />
     <Compile Include="Module\SettingsModule.cs" />
     <Compile Include="Constants\MenuNames.cs" />

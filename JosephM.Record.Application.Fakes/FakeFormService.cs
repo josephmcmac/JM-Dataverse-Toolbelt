@@ -1,6 +1,7 @@
 ﻿#region
 
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 
@@ -40,13 +41,15 @@ namespace JosephM.Application.ViewModel.Fakes
             }
         }
 
-        public override FormMetadata GetFormMetadata(string recordType)
+        public override FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null)
         {
-            return new FormMetadata(
-                new FormSection[]
-                {
+            if (recordType == FakeConstants.RecordType)
+                return new FormMetadata(
+                    new FormSection[]
+                    {
                     FakeSection1, FakeSection2
-                });
+                    });
+            else return new FormMetadata(FakeRecordService.Get().GetFields(recordType));
         }
     }
 }

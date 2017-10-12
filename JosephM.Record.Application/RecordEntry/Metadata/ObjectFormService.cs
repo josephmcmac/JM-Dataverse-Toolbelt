@@ -47,7 +47,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public IDictionary<string, Type> ObjectTypeMaps { get; private set; }
 
-        public override FormMetadata GetFormMetadata(string recordType)
+        public override FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null)
         {
             if (_formMetadata == null)
             {
@@ -518,7 +518,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                     //get the source field type
                                     var fieldType = lookupService.GetFieldType(selectedFieldName, selectedFieldRecordType);
                                     //get the section the target field is in and its field metadata
-                                    var metadata = re.FormService.GetFormMetadata(re.GetRecordType());
+                                    var metadata = re.FormService.GetFormMetadata(re.GetRecordType(), ObjectRecordService);
                                     FormFieldMetadata fieldMetadata = null;
                                     string sectionName = null;
                                     foreach (var sectionMetadata in metadata.FormSections.Cast<FormFieldSection>())
@@ -780,7 +780,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     functions.Add(item.GetFunctionLabel(), item.GetCustomFunction(recordForm, referenceName));
                 }
             }
-            return functions.Select(kv => new CustomGridFunction(kv.Key, kv.Value)).ToArray();
+            return functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToArray();
         }
 
         public override Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)

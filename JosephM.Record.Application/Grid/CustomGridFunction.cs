@@ -4,17 +4,29 @@ namespace JosephM.Application.ViewModel.Grid
 {
     public class CustomGridFunction
     {
+        public string Id { get; set; }
         public string Label { get; set; }
         public Action<DynamicGridViewModel> Function { get; set; }
         public Func<DynamicGridViewModel, bool> VisibleFunction { get; set; }
 
-        public CustomGridFunction(string label, Action function)
-            : this(label, (g) => { function(); })
+        public CustomGridFunction(string id, string label, Action function)
+            : this(id, label, (g) => { function(); })
         {
         }
 
         public CustomGridFunction(string label, Action<DynamicGridViewModel> function, Func<DynamicGridViewModel, bool> visibleFunction = null)
+            : this(label, label, function, visibleFunction = null)
         {
+            Function = function;
+            Label = label;
+            VisibleFunction = (g) => { return true; };
+            if (visibleFunction != null)
+                VisibleFunction = visibleFunction;
+        }
+
+        public CustomGridFunction(string id, string label, Action<DynamicGridViewModel> function, Func<DynamicGridViewModel, bool> visibleFunction = null)
+        {
+            Id = id;
             Function = function;
             Label = label;
             VisibleFunction = (g) => { return true; };
