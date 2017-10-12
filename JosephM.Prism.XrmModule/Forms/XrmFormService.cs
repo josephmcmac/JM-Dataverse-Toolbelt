@@ -64,6 +64,7 @@ namespace JosephM.Prism.XrmModule.Forms
                         });
                     }
             }
+            //consider virtual owner (display as name not loaded)
             if (recordService != null)
                 return new FormMetadata(recordService.GetFields(recordType).OrderBy(f => recordService.GetFieldLabel(f, recordType)).ToArray());
             return null;

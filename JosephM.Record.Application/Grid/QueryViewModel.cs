@@ -85,8 +85,9 @@ namespace JosephM.Application.ViewModel.Grid
                                 ClearChildForm();
                                 DynamicGridViewModel.ReloadGrid();
                             };
+                            var record = selectedRow.Record;
 
-                            var newForm = new CreateOrUpdateViewModel(selectedRow.Record, formController, onSave, ClearChildForm);
+                            var newForm = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, onSave, ClearChildForm);
                             LoadChildForm(newForm);
                         }
                     }, (g) => g.SelectedRows.Count() == 1));

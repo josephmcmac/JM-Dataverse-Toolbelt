@@ -45,6 +45,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 if (Value.Name.IsNullOrWhiteSpace())
                     Value.Name = "Record Name Not Set";
                 SetEnteredTestWithoutClearingValue(Value.Name);
+                RecordTypeToLookup = Value.RecordType;
             }
             if (isEditable && SelectedRecordType != null)
             {
@@ -84,7 +85,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get { return _selectedRecordType; }
             set
             {
-                if (_selectedRecordType != value)
+                if (_selectedRecordType != value
+                    && value?.Key != Value?.RecordType)
                 {
                     Value = null;
                     EnteredText = null;
@@ -198,7 +200,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 else
                 {
-                    SelectedRecordType = new RecordType(value, value);
+                    SelectedRecordType = new RecordType(value, GetRecordService() == null ? value : GetRecordService().GetDisplayName(value));
                     LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
                 }
             }

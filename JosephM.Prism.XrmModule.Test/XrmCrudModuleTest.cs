@@ -29,7 +29,7 @@ namespace JosephM.Prism.XrmModule.Test
         [TestMethod]
         public void XrmCrudModuleTestScript()
         {
-            //todo consider anything else necessary
+            //todo consider anything else necessary e.g. change other field types
 
             //this script is just to verify a simple scenario
             //1. opening the query view
@@ -68,6 +68,8 @@ namespace JosephM.Prism.XrmModule.Test
             //set its name
             var newName = "Updated " + DateTime.Now.ToFileTime();
             editAccountForm.GetStringFieldFieldViewModel(Fields.account_.name).Value = newName;
+            Assert.IsTrue(editAccountForm.ChangedPersistentFields.Count == 1);
+            Assert.IsTrue(editAccountForm.ChangedPersistentFields.First() == Fields.account_.name);
             //save
             editAccountForm.SaveButtonViewModel.Invoke();
             Assert.IsFalse(queryViewModel.ChildForms.Any());
