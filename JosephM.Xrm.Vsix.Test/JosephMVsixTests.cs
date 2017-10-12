@@ -44,16 +44,23 @@ namespace JosephM.Xrm.Vsix.Test
             return _testPackageSettings;
         }
 
-        public static FakeVisualStudioService CreateVisualStudioService()
+        private FakeVisualStudioService _visualStudioService;
+        public FakeVisualStudioService VisualStudioService
         {
-            var fakeVisualStudioService = new FakeVisualStudioService();
-            FileUtility.DeleteFiles(fakeVisualStudioService.SolutionDirectory);
-            FileUtility.DeleteSubFolders(fakeVisualStudioService.SolutionDirectory);
-            return fakeVisualStudioService;
+            get
+            {
+                if(_visualStudioService == null)
+                {
+                    _visualStudioService = new FakeVisualStudioService();
+                    FileUtility.DeleteFiles(_visualStudioService.SolutionDirectory);
+                    FileUtility.DeleteSubFolders(_visualStudioService.SolutionDirectory);
+                }
+                return _visualStudioService;
+            }
         }
         public FakeDialogController CreateDialogController()
         {
-            return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings(), CreateVisualStudioService())));
+            return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings(), VisualStudioService)));
         }
 
         public static string GetTestPluginAssemblyName()

@@ -24,8 +24,6 @@ namespace JosephM.Xrm.Vsix.Test
             DeleteAll(Entities.account);
             var account = CreateAccount();
 
-            var visualStudioService = CreateVisualStudioService();
-
             var tempFolder = Path.Combine(TestingFolder, "TEMP");
             if (Directory.Exists(tempFolder))
             {
@@ -46,7 +44,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             var service = new XrmSolutionImporterExporterService(XrmRecordService);
 
-            var dialogCreate = new CreateDeploymentPackageDialog(service, request, CreateDialogController(), packageSettings, visualStudioService);
+            var dialogCreate = new CreateDeploymentPackageDialog(service, request, CreateDialogController(), packageSettings, VisualStudioService);
             dialogCreate.Controller.BeginDialog();
 
             var entryForm = GetEntryForm(dialogCreate);
@@ -64,7 +62,7 @@ namespace JosephM.Xrm.Vsix.Test
             dataToExportRow.GetPicklistFieldFieldViewModel(nameof(ImportExportRecordType.Type)).Value = new PicklistOption(ExportType.AllRecords.ToString(), ExportType.AllRecords.ToString());
             SubmitEntryForm(dialogCreate);
 
-            var folder = Directory.GetDirectories(Path.Combine(visualStudioService.SolutionDirectory, "Releases")).First();
+            var folder = Directory.GetDirectories(Path.Combine(VisualStudioService.SolutionDirectory, "Releases")).First();
             Assert.IsTrue(FileUtility.GetFiles(folder).First().EndsWith(".zip"));
             Assert.IsTrue(FileUtility.GetFolders(folder).First().EndsWith("Data"));
             Assert.IsTrue(FileUtility.GetFiles((FileUtility.GetFolders(folder).First())).Any());
@@ -80,7 +78,7 @@ namespace JosephM.Xrm.Vsix.Test
             request.Connection = packageSettings.Connections.First();
 
             service = new XrmSolutionImporterExporterService(XrmRecordService);
-            var dialogDeploy = new DeployPackageDialog(service, request, CreateDialogController(), packageSettings, visualStudioService);
+            var dialogDeploy = new DeployPackageDialog(service, request, CreateDialogController(), packageSettings, VisualStudioService);
             dialogDeploy.Controller.BeginDialog();
 
             SubmitEntryForm(dialogDeploy);

@@ -42,6 +42,8 @@ namespace JosephM.Application.ViewModel.Grid
             QueryTypeButton.IsVisible = AllowQuery;
 
             _recordTypes = recordTypes;
+            if (_recordTypes.Count() == 1)
+                RecordType = _recordTypes.First();
         }
 
         private IEnumerable<CustomGridFunction> CustomFunctions { get; set; }
@@ -238,6 +240,8 @@ namespace JosephM.Application.ViewModel.Grid
         {
             IsQuickFind = !IsQuickFind;
             QueryTypeButton.Label = IsQuickFind ? "Use Query" : "Use Quick Find";
+            if (!IsQuickFind)
+                CreateFilterCondition();
         }
 
         public void QuickFind()

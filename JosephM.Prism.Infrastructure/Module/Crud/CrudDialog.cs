@@ -39,7 +39,8 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
                 {
                     var recordTypesForBrowsing = RecordService.GetAllRecordTypes()
                         .Where(r =>
-                        RecordService.GetRecordTypeMetadata(r).Searchable);
+                        RecordService.GetRecordTypeMetadata(r).Searchable)
+                        .ToArray();
 
                     DoOnMainThread(() =>
                     {

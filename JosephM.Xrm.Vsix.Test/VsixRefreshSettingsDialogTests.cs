@@ -14,18 +14,16 @@ namespace JosephM.Xrm.Vsix.Test
         [TestMethod]
         public void VsixRefreshSettingsDialogTest()
         {
-            var fakeVisualStudioService = CreateVisualStudioService();
-
             var packageSettinns = GetTestPackageSettings();
 
-            var dialog = new XrmPackageSettingDialog(CreateDialogController(), packageSettinns, fakeVisualStudioService, true, null);
+            var dialog = new XrmPackageSettingDialog(CreateDialogController(), packageSettinns, VisualStudioService, true, null);
             dialog.Controller.BeginDialog();
 
             SubmitEntryForm(dialog);
 
             packageSettinns = GetTestPackageSettings();
 
-            dialog = new XrmPackageSettingDialog(CreateDialogController(), packageSettinns, fakeVisualStudioService, true, XrmRecordService);
+            dialog = new XrmPackageSettingDialog(CreateDialogController(), packageSettinns, VisualStudioService, true, XrmRecordService);
             dialog.Controller.BeginDialog();
 
             SubmitEntryForm(dialog);

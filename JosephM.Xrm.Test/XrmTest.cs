@@ -195,7 +195,9 @@ namespace JosephM.Xrm.Test
         public Entity CreateRecordAllFieldsPopulated(string type)
         {
             var entity = new Entity(type);
-            var fields = XrmService.GetFields(type);
+            var fieldsToExlcude = new[] { "traversedpath" };
+            var fields = XrmService.GetFields(type)
+                .Where(f => !fieldsToExlcude.Contains(f));
             foreach (var field in fields)
             {
                 if (XrmService.IsWritable(field, type))
@@ -255,7 +257,7 @@ namespace JosephM.Xrm.Test
                                 var typesToExlcude = new[]
                             {
                                 "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
-                                "campaign", "territory"
+                                "campaign", "territory", "sla"
                             };
                                 if (!typesToExlcude.Contains(target))
                                     entity.SetField(field, CreateTestRecord(target).ToEntityReference());
