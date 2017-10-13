@@ -66,13 +66,31 @@ namespace JosephM.Application.ViewModel.Grid
                     functions = new CustomGridFunction[0];
                 _loadedGridButtons = functions;
                 _customFunctions =
-                    new ObservableCollection<XrmButtonViewModel>(functions
-                    .Where(cf => cf.VisibleFunction(this))
-                    .Select(cf =>
-                        new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(this),
-                            ApplicationController)));
+                    new ObservableCollection<XrmButtonViewModel>(GridsFunctionsToXrmButtons(functions));
                 OnPropertyChanged("CustomFunctions");
             });
+        }
+
+        private IEnumerable<XrmButtonViewModel> GridsFunctionsToXrmButtons(IEnumerable<CustomGridFunction> functions)
+        {
+            var buttons = new List<XrmButtonViewModel>();
+            foreach(var cf in functions)
+            {
+                var isVisible = cf.VisibleFunction(this);
+                if (isVisible)
+                {
+                    if (cf.ChildGridFunctions != null && cf.ChildGridFunctions.Any())
+                    {
+                        var childButtons = GridsFunctionsToXrmButtons(cf.ChildGridFunctions);
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, childButtons, ApplicationController));
+                    }
+                    else
+                    {
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(this), ApplicationController));
+                    }
+                }
+            }
+            return buttons;
         }
 
         private IEnumerable<CustomGridFunction> _loadedGridButtons;

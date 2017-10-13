@@ -2,16 +2,47 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d">
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:JosephM.Wpf.Converters" mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <converters:BooleanToVisibilityHiddenConverter x:Key="BoolToHidden" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
-        <Button Command="{Binding Command}" IsEnabled="{Binding Enabled}" Content="{Binding Label}" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Visibility="{Binding HasChildOptions, Converter={StaticResource BoolToHidden}}" >
+                <Button Command="{Binding Command}" IsEnabled="{Binding Enabled}" Content="{Binding Label}" />
+            </Grid>
+            <Grid Grid.Row="1" Visibility="{Binding HasChildOptions, Converter={StaticResource BoolToVis}}" VerticalAlignment="Top">
+                <Button
+            Name="ParentButton"
+            Content="{Binding Label}"
+            Command="{Binding Command}" />
+                <Popup
+            PlacementTarget="{Binding ElementName=ParentButton}"
+            IsOpen="{Binding OpenChildButtons}"
+            d:IsHidden="false">
+                    <ItemsControl
+                ItemsSource="{Binding ChildButtons}"
+                ItemTemplate="{StaticResource XrmButtonDropdownTemplate}" d:IsLocked="True">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Popup>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

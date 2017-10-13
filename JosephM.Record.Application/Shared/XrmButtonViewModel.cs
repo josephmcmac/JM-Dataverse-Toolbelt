@@ -4,6 +4,10 @@ using System;
 using System.Windows.Input;
 using JosephM.Application.Application;
 using Microsoft.Practices.Prism.Commands;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 #endregion
 
@@ -27,6 +31,20 @@ namespace JosephM.Application.ViewModel.Shared
             Label = label;
             Command = new DelegateCommand(clickAction);
         }
+
+        public XrmButtonViewModel(string id, string label, IEnumerable<XrmButtonViewModel> childButtons, IApplicationController applicationController)
+            : base(applicationController)
+        {
+            Id = id;
+            Label = label;
+            Command = new DelegateCommand(() => { OpenChildButtons = true; OnPropertyChanged(nameof(OpenChildButtons)); });
+            ChildButtons = childButtons;
+        }
+
+        public bool OpenChildButtons { get; set; }
+
+        public bool HasChildOptions {  get { return ChildButtons != null && ChildButtons.Any(); } }
+        public IEnumerable<XrmButtonViewModel> ChildButtons { get; set; }
 
         public string Id { get; set; }
 

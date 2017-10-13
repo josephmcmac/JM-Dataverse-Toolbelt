@@ -21,6 +21,8 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate ListViewTemplate { get; set; }
         public DataTemplate QueryViewTemplate { get; set; }
 
+        public DataTemplate DialogTemplate { get; set; }
+
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
@@ -36,6 +38,8 @@ namespace JosephM.Wpf.TemplateSelector
                 return LoadingTemplate;
             if (item is QueryViewModel)
                 return QueryViewTemplate;
+            if (item is DialogViewModel)
+                return DialogTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }

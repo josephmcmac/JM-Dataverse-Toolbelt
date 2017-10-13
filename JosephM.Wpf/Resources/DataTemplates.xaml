@@ -95,6 +95,9 @@
         <Button Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
                 Command="{Binding DelegateCommand}" />
     </DataTemplate>
+    <DataTemplate x:Key="XrmButtonDropdownTemplate" DataType="applicationOptions:ApplicationOption">
+        <shared:XrmButton  DataContext="{Binding}"  ></shared:XrmButton>
+    </DataTemplate>
     <DataTemplate x:Key="HeadingTemplate">
         <shared:HeadingView
             DataContext="{Binding}" />
@@ -142,6 +145,11 @@
             <grid1:GridQueryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="DialogDialogTemplate">
+        <Grid>
+            <application:DialogForm DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <templateSelector:DialogTemplateSelector
         RecordEntryTemplate="{StaticResource RecordEntryTemplate}"
         ProgressTemplate="{StaticResource ProgressControlTemplate}"
@@ -149,6 +157,7 @@
         LoadingTemplate="{StaticResource LoadingTemplate}"
         ListViewTemplate="{StaticResource ListViewTemplate}"
         QueryViewTemplate="{StaticResource QueryViewTemplate}"
+        DialogTemplate="{StaticResource DialogDialogTemplate}"
         x:Key="DialogTemplateSelector" />
     <DataTemplate x:Key="booleanFieldTemplate">
         <field:BooleanFieldView DataContext="{Binding}" />

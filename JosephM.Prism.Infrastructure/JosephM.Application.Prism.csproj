@@ -97,6 +97,11 @@
   <ItemGroup>
     <Compile Include="Dialog\SavedRequestDialog.cs" />
     <Compile Include="Dialog\AppSettingDialog.cs" />
+    <Compile Include="Module\Crud\BulkUpdate\BulkUpdateDialog.cs" />
+    <Compile Include="Module\Crud\BulkUpdate\BulkUpdateRequest.cs" />
+    <Compile Include="Module\Crud\BulkUpdate\BulkUpdateResponse.cs" />
+    <Compile Include="Module\Crud\BulkUpdate\BulkUpdateResponseItem.cs" />
+    <Compile Include="Module\Crud\BulkUpdate\BulkUpdateService.cs" />
     <Compile Include="Module\Crud\CrudDialog.cs" />
     <Compile Include="Module\Crud\CrudModule.cs" />
     <Compile Include="Module\DialogModule.cs" />

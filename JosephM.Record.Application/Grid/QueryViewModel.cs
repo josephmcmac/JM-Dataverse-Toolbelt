@@ -296,6 +296,21 @@ namespace JosephM.Application.ViewModel.Grid
 
         public GetGridRecordsResponse GetGridRecords(bool ignorePages)
         {
+            var query = GenerateQuery();
+
+            if (!DynamicGridViewModel.HasPaging)
+            {
+                var records = DynamicGridViewModel.RecordService.RetreiveAll(query);
+                return new GetGridRecordsResponse(records);
+            }
+            else
+            {
+                return DynamicGridViewModel.GetGridRecordPage(query);
+            }
+        }
+
+        public QueryDefinition GenerateQuery()
+        {
             var query = new QueryDefinition(RecordType);
             if (IsQuickFind)
             {
@@ -312,17 +327,7 @@ namespace JosephM.Application.ViewModel.Grid
             }
             var view = DynamicGridViewModel.RecordService.GetView(DynamicGridViewModel.RecordType, DynamicGridViewModel.ViewType);
             query.Sorts = view.Sorts.ToList();
-
-
-            if (!DynamicGridViewModel.HasPaging)
-            {
-                var records = DynamicGridViewModel.RecordService.RetreiveAll(query);
-                return new GetGridRecordsResponse(records);
-            }
-            else
-            {
-                return DynamicGridViewModel.GetGridRecordPage(query);
-            }
+            return query;
         }
 
         private string _quickFindText;
