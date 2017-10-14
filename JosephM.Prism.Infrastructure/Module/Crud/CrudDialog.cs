@@ -26,8 +26,24 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
             RecordService = recordService;
         }
 
+        public override string TabLabel
+        {
+            get
+            {
+                return "Browse/Update Data";
+            }
+        }
+
         protected override void CompleteDialogExtention()
         {
+        }
+
+        public virtual IEnumerable<string> AdditionalExplicitTypes
+        {
+            get
+            {
+                return new string[0];
+            }
         }
 
         protected override void LoadDialogExtention()
@@ -43,6 +59,7 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
                     var recordTypesForBrowsing = RecordService.GetAllRecordTypes()
                         .Where(r =>
                         RecordService.GetRecordTypeMetadata(r).Searchable)
+                        .Union(AdditionalExplicitTypes)
                         .ToArray();
 
                     DoOnMainThread(() =>

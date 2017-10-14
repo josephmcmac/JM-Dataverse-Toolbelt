@@ -7,5 +7,9 @@ namespace JosephM.Prism.XrmModule.Crud
     [DependantModule(typeof(XrmConnectionModule))]
     public class XrmCrudModule : CrudModule<XrmCrudDialog>
     {
+        protected override string MainOperationName
+        {
+            get { return "Browse/Update Data"; }
+        }
     }
 }
