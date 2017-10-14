@@ -165,9 +165,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ContentFiles\Customisations Import Template.xlsx">
+    <Content Include="ContentFiles\Customisations Import Template.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="JosephM.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
