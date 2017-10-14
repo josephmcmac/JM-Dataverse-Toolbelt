@@ -9,19 +9,14 @@ using System.Collections.Generic;
 
 namespace JosephM.XRM.VSIX
 {
-    [Group(Sections.ObjectPrefixes, true, 10)]
-    [Group(Sections.Solution, true, 20)]
+    [Group(Sections.ObjectPrefixes, true, 20)]
+    [Group(Sections.Solution, true, 10)]
     [Group(Sections.ConnectionInstances, true, 30)]
     public class XrmPackageSettings : ISavedXrmConnections
     {
-        [Group(Sections.ObjectPrefixes)]
-        [RequiredProperty]
-        public string SolutionObjectPrefix { get; set; }
-        [Group(Sections.ObjectPrefixes)]
-        [RequiredProperty]
-        public string SolutionDynamicsCrmPrefix { get; set; }
         [Group(Sections.Solution)]
         public bool AddToSolution { get; set; }
+
         [Group(Sections.Solution)]
         [RequiredProperty]
         [ReferencedType(Entities.solution)]
@@ -29,8 +24,18 @@ namespace JosephM.XRM.VSIX
         [LookupCondition(Fields.solution_.ismanaged, false)]
         [LookupCondition(Fields.solution_.isvisible, true)]
         [LookupCondition(Fields.solution_.uniquename, ConditionType.NotEqual, "default")]
-        [PropertyInContextByPropertyValue("AddToSolution", true)]
+        [PropertyInContextByPropertyValue(nameof(AddToSolution), true)]
         public Lookup Solution { get; set; }
+
+        //todo get rid of these somehow
+        [Group(Sections.ObjectPrefixes)]
+        [RequiredProperty]
+        public string SolutionObjectPrefix { get; set; }
+        [Group(Sections.ObjectPrefixes)]
+        [RequiredProperty]
+        public string SolutionDynamicsCrmPrefix { get; set; }
+
+
 
         [Hidden]
         public string SolutionObjectInstancePrefix

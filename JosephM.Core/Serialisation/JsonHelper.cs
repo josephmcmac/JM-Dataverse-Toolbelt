@@ -10,6 +10,15 @@ namespace JosephM.Core.Serialisation
     /// </summary>
     public static class JsonHelper
     {
+        public static string ObjectAsTypeToJsonString(object objectValue)
+        {
+            var serializer = new DataContractJsonSerializer(objectValue.GetType());
+            using (var stream = new MemoryStream())
+            {
+                serializer.WriteObject(stream, objectValue);
+                return Encoding.Default.GetString(stream.ToArray());
+            }
+        }
 
         public static string ObjectToJsonString<T>(T objectValue)
         {

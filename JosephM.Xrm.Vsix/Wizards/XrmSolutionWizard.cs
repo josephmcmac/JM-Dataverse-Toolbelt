@@ -11,6 +11,7 @@ using EnvDTE;
 using System.Linq;
 using VSLangProj;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Prism.XrmModule.Crud;
 
 namespace JosephM.XRM.VSIX.Wizards
 {
@@ -50,7 +51,7 @@ namespace JosephM.XRM.VSIX.Wizards
             {
                 savedConnection
             };
-            var settingsDialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), XrmPackageSettings, VisualStudioService, false, new XrmRecordService(XrmRecordConfiguration));
+            var settingsDialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), XrmPackageSettings, VisualStudioService, false, new XrmRecordService(XrmRecordConfiguration, formService: new XrmFormService()));
             DialogUtility.LoadDialog(settingsDialog, showCompletion: false, isModal: true);
 
             //add token replacements for the template projects

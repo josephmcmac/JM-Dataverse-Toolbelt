@@ -7,6 +7,7 @@ using JosephM.Core.AppConfig;
 using Microsoft.Practices.Unity;
 using JosephM.Application.Application;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XRM.VSIX.Utilities;
 
 namespace JosephM.XRM.VSIX.Dialogs
 {
@@ -44,10 +45,10 @@ namespace JosephM.XRM.VSIX.Dialogs
             UnityContainer.RegisterType(typeof(object), typeof(T), typeof(T).FullName);
         }
 
-        public static VsixDependencyContainer Create(XrmPackageSettings settings)
+        public static VsixDependencyContainer Create(XrmPackageSettings settings, IVisualStudioService visualStudioService)
         {
             var container = new VsixDependencyContainer(new UnityContainer());
-            container.RegisterInstance(typeof(ISettingsManager), new VsixSettingsManager());
+            container.RegisterInstance(typeof(ISettingsManager), new VsixSettingsManager(visualStudioService));
             container.RegisterInstance(typeof(ISavedXrmConnections), settings);
             return container;
         }

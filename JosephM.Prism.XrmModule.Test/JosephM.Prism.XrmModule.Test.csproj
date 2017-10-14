@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="FakeXrmApplicationController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XrmCrudModuleTest.cs" />
     <Compile Include="XrmModuleTest.cs" />
     <Compile Include="XrmRecordConfigurationMapperTests.cs" />
   </ItemGroup>
@@ -130,6 +131,10 @@
     <ProjectReference Include="..\JosephM.Xrm.Test\JosephM.Xrm.Test.csproj">
       <Project>{5282BA96-7E87-49F3-9429-0CD8821EF4E5}</Project>
       <Name>JosephM.Xrm.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
+      <Name>JosephM.Xrm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

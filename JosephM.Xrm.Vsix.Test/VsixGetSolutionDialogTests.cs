@@ -15,10 +15,10 @@ namespace JosephM.Xrm.Vsix.Test
         [TestMethod]
         public void VsixGetSolutionDialogTest()
         {
-            var fakeVisualStudioService = CreateVisualStudioService();
-            
+            //todo why was this removed
+
             var settings = GetTestPackageSettings(); ;
-            //var dialog = new GetSolutionDialog(CreateDialogController(), XrmRecordService, settings, fakeVisualStudioService);
+            //var dialog = new GetSolutionDialog(CreateDialogController(), XrmRecordService, settings, VisualStudioService);
             //dialog.Controller.BeginDialog();
         }
     }

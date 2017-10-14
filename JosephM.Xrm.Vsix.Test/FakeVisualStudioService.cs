@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using JosephM.XRM.VSIX.Utilities;
 using JosephM.Core.Test;
 using System.IO;
+using System;
 
 namespace JosephM.Xrm.Vsix.Test
 {
@@ -27,6 +28,11 @@ namespace JosephM.Xrm.Vsix.Test
         public string AddSolutionItem(string fileName)
         {
             return null;
+        }
+
+        public string GetSolutionItemText(string name)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<IVisualStudioProject> GetSolutionProjects()

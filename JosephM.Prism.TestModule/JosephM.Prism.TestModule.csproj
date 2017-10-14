@@ -85,12 +85,19 @@
   <ItemGroup>
     <Compile Include="ObjectEncrypt\TestClassToEncrypt.cs" />
     <Compile Include="ObjectEncrypt\TestObjectEncryptDialog.cs" />
+    <Compile Include="Prism\TestCrud\TestCrudDialog.cs" />
+    <Compile Include="Prism\TestCrud\TestCrudModule.cs" />
     <Compile Include="Prism\TestDialog\TestDialogModule.cs" />
     <Compile Include="Prism\TestDialog\TestDialogBase.cs" />
     <Compile Include="Prism\TestDialog\TestDialogRequest.cs" />
     <Compile Include="Prism\TestDialog\TestDialogResponse.cs" />
     <Compile Include="Prism\TestDialog\TestDialogResponseItem.cs" />
     <Compile Include="Prism\TestDialog\TestDialogService.cs" />
+    <Compile Include="Prism\TestSettings\ITestSettings.cs" />
+    <Compile Include="Prism\TestSettings\TestSettings.cs" />
+    <Compile Include="Prism\TestSettings\TestSettingsDialog.cs" />
+    <Compile Include="Prism\TestSettings\TestSettingsModule.cs" />
+    <Compile Include="Prism\TestSettings\TestSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

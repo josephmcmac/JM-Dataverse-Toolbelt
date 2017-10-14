@@ -3,6 +3,7 @@ using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Utility;
 using JosephM.ObjectMapping;
+using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -24,6 +25,11 @@ namespace JosephM.Xrm.Vsix.Test
 {
     public class JosephMVsixTests : XrmRecordTest
     {
+        public JosephMVsixTests()
+        {
+            XrmRecordService.SetFormService(new XrmFormService());
+        }
+
         private XrmPackageSettings _testPackageSettings;
         public XrmPackageSettings GetTestPackageSettings()
         {
@@ -44,16 +50,23 @@ namespace JosephM.Xrm.Vsix.Test
             return _testPackageSettings;
         }
 
-        public static FakeVisualStudioService CreateVisualStudioService()
+        private FakeVisualStudioService _visualStudioService;
+        public FakeVisualStudioService VisualStudioService
         {
-            var fakeVisualStudioService = new FakeVisualStudioService();
-            FileUtility.DeleteFiles(fakeVisualStudioService.SolutionDirectory);
-            FileUtility.DeleteSubFolders(fakeVisualStudioService.SolutionDirectory);
-            return fakeVisualStudioService;
+            get
+            {
+                if(_visualStudioService == null)
+                {
+                    _visualStudioService = new FakeVisualStudioService();
+                    FileUtility.DeleteFiles(_visualStudioService.SolutionDirectory);
+                    FileUtility.DeleteSubFolders(_visualStudioService.SolutionDirectory);
+                }
+                return _visualStudioService;
+            }
         }
         public FakeDialogController CreateDialogController()
         {
-            return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings())));
+            return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings(), VisualStudioService)));
         }
 
         public static string GetTestPluginAssemblyName()
@@ -137,7 +150,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public static void SubmitEntryForm(DialogViewModel dialog)
         {
-            ObjectEntryViewModel entryViewModel = GetEntryForm(dialog);
+            var entryViewModel = GetEntryForm(dialog);
             Assert.IsTrue(entryViewModel.Validate(), entryViewModel.GetValidationSummary());
             entryViewModel.OnSave();
         }

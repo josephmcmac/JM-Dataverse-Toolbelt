@@ -1,5 +1,6 @@
 ﻿#region
 
+using JosephM.Record.IService;
 using System.Collections.Generic;
 using System.Linq;
 

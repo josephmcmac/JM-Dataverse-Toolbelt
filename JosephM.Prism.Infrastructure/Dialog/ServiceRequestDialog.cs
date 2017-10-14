@@ -32,17 +32,23 @@ namespace JosephM.Prism.Infrastructure.Dialog
         where TService : ServiceBase<TRequest, TResponse, TResponseItem>
     {
         public ServiceRequestDialog(TService service, IDialogController dialogController)
-            : this(service, dialogController, null)
+            : this(service, dialogController, null, null)
         {
         }
 
-        public ServiceRequestDialog(TService service, IDialogController dialogController, IRecordService lookupService)
+        public ServiceRequestDialog(TService service, IDialogController dialogController, IRecordService lookupService, TRequest request = null, Action onClose = null)
             : base(dialogController)
         {
-            Service = service;
-            Request = new TRequest();
+            if (onClose != null)
+                OnCancel = onClose;
 
-            var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null);
+            Service = service;
+            
+            Request = new TRequest();
+            if (request != null)
+                Request = request;
+
+            var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose);
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
 

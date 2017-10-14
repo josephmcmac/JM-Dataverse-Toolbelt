@@ -22,7 +22,7 @@ namespace JosephM.Migration.Prism.Module.Sql
             RecordMetadata = recordMetadata;
         }
 
-        public override FormMetadata GetFormMetadata(string recordType)
+        public override FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null)
         {
             var matchingRecordMetadata = RecordMetadata.Where(r => r.SchemaName == recordType);
             if(!matchingRecordMetadata.Any())

@@ -15,7 +15,7 @@ namespace JosephM.Xrm.Vsix.Test
         {
             var xrmConfiguration = new InterfaceMapperFor<IXrmConfiguration,XrmConfiguration>().Map(XrmConfiguration);
             var xrmRecordConfiguration = new XrmConfigurationMapper().Map(xrmConfiguration);
-            var dialog = new ConnectionEntryDialog(CreateDialogController(), xrmRecordConfiguration, CreateVisualStudioService(), true);
+            var dialog = new ConnectionEntryDialog(CreateDialogController(), xrmRecordConfiguration, VisualStudioService, true);
             dialog.Controller.BeginDialog();
 
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

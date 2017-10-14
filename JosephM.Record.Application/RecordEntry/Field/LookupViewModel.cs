@@ -10,11 +10,14 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 
 #endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
+    //todo the different lookup classes need more verification scripts
+    //settings/readonly/query/owner/grid/lookupgrid etc
     public class LookupFieldViewModel : ReferenceFieldViewModel<Lookup>
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
@@ -26,7 +29,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 var splitIt = referencedRecordType.Split(',');
                 if (splitIt.Count() == 1)
                 {
-                    _selectedRecordType = new RecordType(splitIt.First(), splitIt.First());
+                    SelectedRecordType = new RecordType(splitIt.First(), splitIt.First());
                 }
                 else
                 {
@@ -42,9 +45,47 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 if (Value.Name.IsNullOrWhiteSpace())
                     Value.Name = "Record Name Not Set";
                 SetEnteredTestWithoutClearingValue(Value.Name);
+                RecordTypeToLookup = Value.RecordType;
             }
-            if (!UsePicklist && SelectedRecordType != null && isEditable)
-                LoadLookupGrid();
+            if (isEditable && SelectedRecordType != null)
+            {
+                SetNewAction();
+                if (!UsePicklist)
+                    LoadLookupGrid();
+            }
+        }
+
+        private void SetNewAction()
+        {
+            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null && LookupFormService.GetFormMetadata(RecordTypeToLookup, LookupService) != null)
+            {
+                NewAction = () =>
+                {
+                    var formController = new FormController(LookupService, LookupFormService, ApplicationController);
+                    var newRecord = LookupService.NewRecord(RecordTypeToLookup);
+
+                    Action onSave = () =>
+                    {
+                        Value = LookupService.ToLookup(newRecord);
+                        if (UsePicklist)
+                        {
+                            var newPicklistItem = new ReferencePicklistItem(newRecord, Value.Name);
+                            ItemsSource = ItemsSource
+                            .Union(new[] { newPicklistItem })
+                            .OrderBy(r => r.Name)
+                            .ToArray();
+                            SelectedItem = newPicklistItem;
+                        }
+                        SetEnteredTestWithoutClearingValue(Value.Name);
+                        RecordEntryViewModel.ClearChildForm();
+                    };
+
+                    var newForm = new CreateOrUpdateViewModel(newRecord, formController, onSave, RecordEntryViewModel.ClearChildForm);
+                    RecordEntryViewModel.LoadChildForm(newForm);
+                };
+            }
+            else
+                NewAction = null;
         }
 
         private RecordType _selectedRecordType;
@@ -53,7 +94,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get { return _selectedRecordType; }
             set
             {
-                if (_selectedRecordType != value)
+                if (_selectedRecordType != value
+                    && value?.Key != Value?.RecordType)
                 {
                     Value = null;
                     EnteredText = null;
@@ -66,6 +108,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 OnPropertyChanged(nameof(TypePopulated));
                 OnPropertyChanged(nameof(EditableAndTypePopulated));
+                OnPropertyChanged(nameof(TypePopulatedOrReadOnly));
             }
         }
 
@@ -74,6 +117,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get
             {
                 return RecordTypeToLookup != null;
+            }
+        }
+
+        public bool TypePopulatedOrReadOnly
+        {
+            get
+            {
+                return TypePopulated || !IsEditable;
             }
         }
 
@@ -158,7 +209,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 else
                 {
-                    SelectedRecordType = new RecordType(value, value);
+                    SelectedRecordType = new RecordType(value, LookupService == null ? value : LookupService.GetDisplayName(value));
                     LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
                 }
             }
@@ -180,6 +231,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public override IRecordService LookupService
         {
             get { return RecordEntryViewModel.RecordService.GetLookupService(FieldName, RecordEntryViewModel.GetRecordType(), RecordEntryViewModel.ParentFormReference, RecordEntryViewModel.GetRecord()); }
+        }
+
+        public FormServiceBase LookupFormService
+        {
+            get
+            {
+                //just hack to get around the project heirachys without having to move all the form code into Record project
+                //unsure the IFormService is of the type FormServiceBase
+                var formService = LookupService?.GetFormService();
+                if(formService != null && !(formService is FormServiceBase))
+                {
+                    throw new NotSupportedException(string.Format("The {0} is An Unexpected Type Of {1}. It Is Required To Be A {2}", typeof(IFormService).Name, formService.GetType().Name, typeof(FormServiceBase).Name));
+                }
+                return formService as FormServiceBase;
+            }
         }
 
         protected override string GetValueName()
@@ -212,6 +278,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 return LookupService.GetFirstX(RecordTypeToLookup, UsePicklist ? -1 : MaxRecordsForLookup, null,
                     conditions, new[] {new SortExpression(primaryField, SortType.Ascending)});
             }
+        }
+
+        protected int MaxRecordsForLookup
+        {
+            get { return 11; }
         }
     }
 }

@@ -40,7 +40,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             get { return FormSection.SectionLabel; }
         }
 
-        public FormServiceBase FormService
+        public IFormService FormService
         {
             get { return FormController.FormService; }
         }
@@ -52,7 +52,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
 
         public FormMetadata FormMetadata
         {
-            get { return FormController.FormService.GetFormMetadata(RecordType); }
+            get { return FormController.FormService.GetFormMetadata(RecordType, RecordService); }
         }
 
         public abstract string RecordType { get; }

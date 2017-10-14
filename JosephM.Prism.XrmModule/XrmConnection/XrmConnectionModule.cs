@@ -5,6 +5,7 @@ using JosephM.Application.Modules;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
+using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Configuration;
@@ -41,7 +42,7 @@ namespace JosephM.Prism.XrmModule.XrmConnection
         public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller)
         {
             controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
-            controller.RegisterInstance(new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>()));
+            controller.RegisterInstance(new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>(), formService: new XrmFormService()));
             controller.AddNotification("XRMCONNECTION", string.Format("Connected To Instance '{0}'", xrmConfiguration));
         }
 

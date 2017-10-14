@@ -19,7 +19,7 @@ namespace JosephM.Migration.Prism.Module.Sql
             RecordService = recordService;
 
             var configEntryDialog = new ObjectEntryDialog(SqlObject, this, ApplicationController, RecordService,
-                null, () => { SaveObject(); });
+                null, () => { SaveObject(); }, null);
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
 

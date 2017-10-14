@@ -56,6 +56,7 @@ namespace JosephM.XRM.VSIX.Commands.PackageSettings
         {
             if (SaveSettings)
             {
+
                 VisualStudioService.AddSolutionItem("xrmpackage.xrmsettings", XrmPackageSettings);
                 //set the active connection to the connection selected as active
                 if (XrmPackageSettings.Connections != null)

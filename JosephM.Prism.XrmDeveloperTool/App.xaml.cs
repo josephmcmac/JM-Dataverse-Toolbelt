@@ -3,13 +3,13 @@ using JosephM.CodeGenerator.Xrm;
 using JosephM.CustomisationExporter.Exporter;
 using JosephM.CustomisationImporter.Prism;
 using JosephM.InstanceComparer;
-using JosephM.OrganisationSettings;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Xrm.ImportExporter.Prism;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.RecordCounts.Exporter;
+using JosephM.Prism.XrmModule.Crud;
 
 namespace JosephM.Xrm.DeveloperTool
 {
@@ -28,12 +28,12 @@ namespace JosephM.Xrm.DeveloperTool
             prism.AddModule<XrmImporterExporterModule>();
             prism.AddModule<XrmSolutionImporterExporterModule>();
             prism.AddModule<XrmCodeGeneratorModule>();
-            prism.AddModule<MaintainOrganisationModule>();
             prism.AddModule<XrmRecordExtractModule>();
             prism.AddModule<CustomisationExporterModule>();
             prism.AddModule<CustomisationImportModule>();
             prism.AddModule<InstanceComparerModule>();
             prism.AddModule<RecordCountsModule>();
+            prism.AddModule<XrmCrudModule>();
             prism.Run();
         }
     }

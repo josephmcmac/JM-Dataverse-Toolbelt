@@ -204,7 +204,7 @@ namespace JosephM.Prism.Infrastructure.Test
             return GetSubObjectEntryViewModel(dialog);
         }
 
-        private TDialog NavigateToDialog<TDialogModule, TDialog>() where TDialogModule : DialogModule<TDialog>, new()
+        public TDialog NavigateToDialog<TDialogModule, TDialog>() where TDialogModule : DialogModule<TDialog>, new()
             where TDialog : DialogViewModel
         {
             Controller.ClearTabs();

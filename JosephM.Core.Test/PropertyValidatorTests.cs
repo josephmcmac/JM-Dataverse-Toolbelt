@@ -16,11 +16,11 @@ namespace JosephM.Core.Test
             var testObject = new TestObject();
 
             var validator = new RequiredProperty();
-            Assert.IsFalse(validator.IsValid(null, null));
-            Assert.IsFalse(validator.IsValid("  ", null));
-            Assert.IsTrue(validator.IsValid("Somthing", null));
+            Assert.IsFalse(validator.IsValid(null));
+            Assert.IsFalse(validator.IsValid("  "));
+            Assert.IsTrue(validator.IsValid("Somthing"));
 
-            Assert.IsNotNull(validator.GetErrorMessage("RequiredProperty", testObject));
+            Assert.IsNotNull(validator.GetErrorMessage("RequiredProperty"));
         }
     }
 }

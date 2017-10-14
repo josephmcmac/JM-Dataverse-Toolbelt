@@ -11,14 +11,9 @@ using System.Windows;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("JosephM.Xrm.DeveloperTool")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("JosephM")]
 [assembly: AssemblyProduct("JosephM.Xrm.DeveloperTool")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.8.*")]
+[assembly: AssemblyVersion("2.0.*")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

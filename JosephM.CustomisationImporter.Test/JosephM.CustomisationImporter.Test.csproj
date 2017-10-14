@@ -78,7 +78,7 @@
     <None Include="TestCustomisationsAddToSolution.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestCustomisationsIgnore.xls">
+    <None Include="TestCustomisationsIgnore.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestCustomisations.xlsx">

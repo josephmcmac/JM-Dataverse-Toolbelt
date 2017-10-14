@@ -7,6 +7,8 @@
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.Light.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+
+    <Image x:Key="SearchButtonImageKey" Source="../Images/Search.png" Height="15" Width="15" />
     <Image x:Key="AddButtonImageKey" Source="../Images/AddIcon.jpg" Height="15" Width="15" />
     <Image x:Key="AddMultipleButtonImageKey" Source="../Images/AddMultipleIcon.jpg" Height="15" Width="15" />
     <Image x:Key="DeleteButtonImageKey" Source="../Images/DeleteIcon.jpg" Height="15" Width="15" />
@@ -73,11 +75,15 @@
     </Style>
     <Style x:Key="AddRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource AddButtonImageKey}" />
-        <Setter Property="Margin" Value="16,0,0,0" />
+        <Setter Property="Margin" Value="8,0,8,0" />
+    </Style>
+    <Style x:Key="SearchButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Content" Value="{StaticResource SearchButtonImageKey}" />
+        <Setter Property="Margin" Value="8,0,8,0" />
     </Style>
     <Style x:Key="AddMultipleRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource AddMultipleButtonImageKey}" />
-        <Setter Property="Margin" Value="16,0,0,0" />
+        <Setter Property="Margin" Value="8,0,8,0" />
     </Style>
     <Style x:Key="PreviousButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource PreviousImageKey}" />
@@ -98,11 +104,6 @@
         <Setter Property="CornerRadius" Value="1" />
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="Margin" Value="2" />
-    </Style>
-    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
-        <Setter Property="MinWidth" Value="75px" />
-        <Setter Property="MaxHeight" Value="30px" />
-        <Setter Property="Margin" Value="4,4,4,4" />
     </Style>
     <Style x:Key="CloseTabButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Height" Value="15" />
@@ -163,5 +164,15 @@
         <Setter Property="Width" Value="240px" />
         <Setter Property="Height" Value="30px" />
         <Setter Property="Margin" Value="8,8,8,8" />
+    </Style>
+    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
+        <Setter Property="MinWidth" Value="75px" />
+        <Setter Property="MaxHeight" Value="30px" />
+        <Setter Property="Margin" Value="4,4,4,4" />
+    </Style>
+    <Style x:Key="XrmDropdownButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
+        <Setter Property="Width" Value="120px" />
+        <Setter Property="MaxHeight" Value="30px" />
+        <Setter Property="Margin" Value="4,4,4,4" />
     </Style>
 </ResourceDictionary>

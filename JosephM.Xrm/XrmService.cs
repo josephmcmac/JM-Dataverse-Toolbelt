@@ -1949,7 +1949,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 }
                 result = tempHolder.ToArray();
             }
-            return result.Take(x);
+            return x >= 0 ? result.Take(x).ToArray() : result;
         }
 
         /// <summary>

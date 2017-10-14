@@ -20,10 +20,15 @@ namespace JosephM.Prism.XrmTestModule.DebugModule
         [ConnectionFor("Solution")]
         public SavedXrmRecordConfiguration Connection { get; set; }
 
+        [PropertyInContextByPropertyNotNull(nameof(Connection))]
         [ReferencedType("solution")]
         [LookupCondition("ismanaged", false)]
         [LookupCondition("isvisible", true)]
         public Lookup Solution { get; set; }
+
+        [UsePicklist]
+        [ReferencedType(Entities.webresource)]
+        public Lookup WebResourcePicklistActiveConnection { get; set; }
 
         [ReferencedType("solution")]
         [LookupCondition("ismanaged", false)]
@@ -31,12 +36,13 @@ namespace JosephM.Prism.XrmTestModule.DebugModule
         [UsePicklist(Fields.solution_.uniquename)]
         public Lookup SolutionPicklistActiveConnection { get; set; }
 
-        [LookupConditionFor("SolutionPicklistActiveConnection", "uniquename")]
+        //[LookupConditionFor("SolutionPicklistActiveConnection", "uniquename")]
         public string SolutionName
         {
             get { return "Something"; }
         }
 
+        [PropertyInContextByPropertyNotNull(nameof(Connection))]
         public IEnumerable<DebugDialogRequestItem> Items { get; set; }
 
         public class DebugDialogRequestItem

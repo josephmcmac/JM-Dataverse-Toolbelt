@@ -13,6 +13,8 @@ namespace JosephM.Xrm.Test
         public void XrmDebug()
         {
             var blah = XrmService.WhoAmI();
+
+            var targetTypes = XrmService.GetLookupTargetEntity(Schema.Fields.annotation_.objectid, Schema.Entities.annotation);
             //DeleteOnlineSampleData();
         }
 

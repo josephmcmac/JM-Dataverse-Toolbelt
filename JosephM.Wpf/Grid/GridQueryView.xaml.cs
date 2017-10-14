@@ -32,6 +32,8 @@ namespace JosephM.Wpf.Grid
             else if (e.Key == Key.K &&
                      (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)))
                 ViewModel.QuickFind();
+            if (ViewModel.TypeAhead)
+                ViewModel.DynamicGridViewModel.ReloadGrid();
         }
     }
 }

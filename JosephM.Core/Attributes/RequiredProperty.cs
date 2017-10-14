@@ -11,14 +11,14 @@ namespace JosephM.Core.Attributes
         AllowMultiple = false)]
     public class RequiredProperty : PropertyValidator
     {
-        public override bool IsValid(object value, object instance)
+        public override bool IsValid(object value)
         {
             return value.IsNotEmpty();
         }
 
-        public override string GetErrorMessage(string propertyName, object instance)
+        public override string GetErrorMessage(string propertyLabel)
         {
-            return string.Format("{0} must be populated", instance.GetType().GetPropertyDisplayName(propertyName));
+            return string.Format("{0} must be populated", propertyLabel);
         }
     }
 }

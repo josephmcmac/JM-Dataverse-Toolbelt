@@ -2,6 +2,8 @@
 using JosephM.Record.IService;
 using JosephM.Xrm;
 using JosephM.Record.Attributes;
+using JosephM.Xrm.Schema;
+using System.Linq;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -32,18 +34,20 @@ namespace JosephM.Record.Xrm.XrmRecord
         public string PrimaryFieldSchemaName { get { return XrmService.GetPrimaryNameField(SchemaName); } }
         public string PrimaryKeyName { get { return XrmService.GetPrimaryKeyField(SchemaName); } }
 
-        //todo these not searchable as load relationships potentially oibject by object
-        //may be more efficient way
-        [NotSearchable]
         public bool Notes
         {
-            get { return XrmService.HasNotes(SchemaName); }
+            get
+            {
+                return XrmService.GetLookupTargetEntity(Fields.annotation_.objectid, Entities.annotation).Contains(SchemaName);
+            }
         }
 
-        [NotSearchable]
         public bool Activities
         {
-            get { return XrmService.HasActivities(SchemaName); }
+            get
+            {
+                return XrmService.GetLookupTargetEntity(Fields.activitypointer_.regardingobjectid, Entities.activitypointer).Split(',').Contains(SchemaName);
+            }
         }
 
         public bool Connections

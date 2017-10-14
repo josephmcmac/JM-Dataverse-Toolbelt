@@ -13,6 +13,8 @@ using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Prism.XrmTestModule.DebugModule;
 using JosephM.Prism.XrmTestModule.TestXrmSettingsDialog;
 using JosephM.Xrm.RecordExtract.Test.TextSearch;
+using JosephM.Prism.TestModule.Prism.TestSettings;
+using JosephM.Prism.TestModule.Prism.TestCrud;
 
 #endregion
 
@@ -37,6 +39,8 @@ namespace JosephM.Prism.TestPrismApplication
             prism.AddModule<DebugDialogModule>();
             prism.AddModule<XrmSettingsModule>();
             prism.AddModule<ObjectEncryptModule<TestObjectEncryptDialog, TestClassToEncrypt>>();
+            prism.AddModule<TestSettingsModule>();
+            prism.AddModule<TestCrudModule>();
             prism.Run();
         }
     }

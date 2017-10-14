@@ -21,11 +21,12 @@
     <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" MinWidth="250">
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition MinWidth="150" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BoolToVis}}">
@@ -42,7 +43,7 @@
             IsEnabled="{Binding IsEditable}"
              />
         </Grid>
-        <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulated, Converter={StaticResource BoolToVis}}">
+        <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
             <TextBox
                 TabIndex="1"
                 DataContext="{Binding NotifyOnValidationError=True}"
@@ -54,11 +55,16 @@
                 PreviewKeyDown="OnPreviewKeyDown" />
         </Grid>
         <Grid Grid.Column="2" Row="0" Visibility="{Binding EditableAndTypePopulated, Converter={StaticResource BoolToVis}}">
-            <shared:XrmButton
-                TabIndex="1"
-                DataContext="{Binding XrmButton}" />
+            <Button DataContext="{Binding Path=XrmButton}"
+                        Style="{StaticResource SearchButton}"
+                            Command="{Binding Command}" ToolTip="Click To Search" />
         </Grid>
-        <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="2" Row="1">
+        <Grid Grid.Column="3" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}">
+            <Button DataContext="{Binding Path=NewButton}"
+                        Style="{StaticResource AddRowButton}"
+                            Command="{Binding Command}" ToolTip="Click To Create New" />
+        </Grid>
+        <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="4" Row="1">
             <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding Searching}">
                 <TextBlock Text="Searching..." />
             </Popup>
@@ -67,9 +73,6 @@
                     <field:LookupGridView
                     Background="WhiteSmoke"
                     DataContext="{Binding LookupGridViewModel}"/>
-                    <!--Width="{Binding ActualWidth, ElementName=EnteredTextBox}"-->
-                        
-                    <!--popup children here-->
                 </Border>
             </Popup>
         </Grid>

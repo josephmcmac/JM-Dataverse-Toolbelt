@@ -13,14 +13,22 @@ using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Xrm.Sdk.Client;
 using JosephM.Record.IService;
+using JosephM.Prism.XrmModule.Crud;
 
 namespace JosephM.Prism.XrmModule.Test
 {
     public class XrmModuleTest : XrmRecordTest
     {
+        protected XrmModuleTest()
+            : base()
+        {
+            XrmRecordService.SetFormService(new XrmFormService());
+        }
+
         protected TestApplication CreateAndLoadTestApplication<TModule>()
             where TModule : ModuleBase, new()
         {
+
             var testApplication = TestApplication.CreateTestApplication();
             testApplication.AddModule<TModule>();
             XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), testApplication.Controller);

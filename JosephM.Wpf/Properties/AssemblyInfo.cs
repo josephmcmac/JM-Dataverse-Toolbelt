@@ -17,7 +17,7 @@ using System.Windows;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: AssemblyVersion("1.2.*")]
+[assembly: AssemblyVersion("2.0.*")]
 [assembly: ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
     //(used if a resource is not found in the page, 

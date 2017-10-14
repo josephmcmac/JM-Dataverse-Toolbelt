@@ -215,7 +215,7 @@ namespace JosephM.XRM.VSIX.Commands
         {
             if (settings == null)
                 settings = GetPackageSettings();
-            var container = VsixDependencyContainer.Create(settings);
+            var container = VsixDependencyContainer.Create(settings, GetVisualStudioService());
             var controller = new DialogController(new VsixApplicationController(container));
             return controller;
         }

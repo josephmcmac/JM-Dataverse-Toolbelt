@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeGridViewModel.cs" />
+    <Compile Include="FakeQueryViewModel.cs" />
     <Compile Include="FakesDependencyContainer.cs" />
     <Compile Include="FakeApplicationController.cs" />
     <Compile Include="FakeApplicationOptions.cs" />

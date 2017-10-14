@@ -184,5 +184,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public bool IsReadOnly { get; set; }
         public IDictionary<string, IEnumerable<string>> OnlyValidate { get; private set; }
+
+        public virtual bool AllowNewLookup {  get { return true; } }
     }
 }

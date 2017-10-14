@@ -171,10 +171,10 @@ namespace JosephM.CustomisationImporter.Test
         }
 
         [TestMethod]
-        [DeploymentItem("TestCustomisationsIgnore.xls")]
+        [DeploymentItem("TestCustomisationsIgnore.xlsx")]
         public void CustomisationImportTestIgnore()
         {
-            var file = "TestCustomisationsIgnore.xls";
+            var file = "TestCustomisationsIgnore.xlsx";
             var response = new CustomisationImportResponse();
 
             var optionMetadata =

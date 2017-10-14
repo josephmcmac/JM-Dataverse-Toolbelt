@@ -47,7 +47,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public IDictionary<string, Type> ObjectTypeMaps { get; private set; }
 
-        public override FormMetadata GetFormMetadata(string recordType)
+        public override FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null)
         {
             if (_formMetadata == null)
             {
@@ -184,7 +184,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 typeof(ObjectRecord).Name));
         }
 
-        public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
+        public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string recordType)
         {
             var validators = new List<ValidationRuleBase>();
             var type = ObjectRecordService.GetPropertyType(fieldName, ObjectType.AssemblyQualifiedName);
@@ -197,7 +197,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return validators;
         }
 
-        public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string subGridRecordType)
+        public override IEnumerable<ValidationRuleBase> GetSubgridValidationRules(string fieldName, string subGridRecordType)
         {
             return ObjectRecordService.GetValidatorAttributes(fieldName, subGridRecordType)
                 .Select(va => new PropertyAttributeValidationRule(va));
@@ -518,7 +518,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                     //get the source field type
                                     var fieldType = lookupService.GetFieldType(selectedFieldName, selectedFieldRecordType);
                                     //get the section the target field is in and its field metadata
-                                    var metadata = re.FormService.GetFormMetadata(re.GetRecordType());
+                                    var metadata = re.FormService.GetFormMetadata(re.GetRecordType(), ObjectRecordService);
                                     FormFieldMetadata fieldMetadata = null;
                                     string sectionName = null;
                                     foreach (var sectionMetadata in metadata.FormSections.Cast<FormFieldSection>())
@@ -704,7 +704,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return viewModel;
         }
 
-        internal override IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)
+        public override IEnumerable<Condition> GetLookupConditions(string fieldName, string recordType, string reference, IRecord record)
         {
             var propertyInfo = GetPropertyInfo(fieldName, recordType);
             var attr = propertyInfo.GetCustomAttributes<LookupCondition>();
@@ -780,7 +780,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     functions.Add(item.GetFunctionLabel(), item.GetCustomFunction(recordForm, referenceName));
                 }
             }
-            return functions.Select(kv => new CustomGridFunction(kv.Key, kv.Value)).ToArray();
+            return functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToArray();
         }
 
         public override Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)

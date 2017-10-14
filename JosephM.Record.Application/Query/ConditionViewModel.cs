@@ -28,7 +28,7 @@ namespace JosephM.Application.ViewModel.Query
             _queryCondition = conditionObject;
             _queryConditionRecord = new ObjectRecord(conditionObject);
 
-            var metadata = FormService.GetFormMetadata(GetRecord().Type);
+            var metadata = FormService.GetFormMetadata(GetRecord().Type, RecordService);
             var sections = metadata.FormSections;
             var firstSection = sections.First();
             var sectionViewModel = new FieldSectionViewModel(
@@ -75,7 +75,7 @@ namespace JosephM.Application.ViewModel.Query
 
         protected internal override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
-            return FormService.GetValidationRules(fieldName);
+            return FormService.GetValidationRules(fieldName, GetRecordType());
         }
 
         internal override RecordEntryViewModelBase ParentForm
@@ -117,6 +117,8 @@ namespace JosephM.Application.ViewModel.Query
         {
             return new Condition(_queryCondition.FieldName?.Key, _queryCondition.ConditionType.HasValue ? _queryCondition.ConditionType.Value : ConditionType.Equal, _queryCondition.Value);
         }
+
+        public override bool AllowNewLookup { get { return false; } }
 
         [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalInputOnly)]
         public class QueryCondition

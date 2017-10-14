@@ -25,6 +25,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 {
     public class XrmRecordService : IRecordService
     {
+        private IFormService _formService;
         private readonly XrmService _xrmService;
         private readonly Object _lockObject = new object();
 
@@ -35,8 +36,9 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService = xrmService;
         }
 
-        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, LogController controller)
+        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, LogController controller, IFormService formService = null)
         {
+            _formService = formService;
             XrmRecordConfiguration = iXrmRecordConfiguration;
             var xrmRecordConfiguration = new XrmRecordConfigurationInterfaceMapper().Map(iXrmRecordConfiguration);
             var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
@@ -45,11 +47,17 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IXrmRecordConfiguration XrmRecordConfiguration { get; set; }
 
+        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, IFormService formService = null)
+            : this(iXrmRecordConfiguration, new LogController(), formService)
+        {
+        }
+
         //DON'T REMOVE THIS CONSTRUCTOR - REQUIRED BY ServiceConnection Attribute
         public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration)
             : this(iXrmRecordConfiguration, new LogController())
         {
         }
+
 
         public XrmService XrmService
         {
@@ -996,6 +1004,16 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 return XrmService.WebUrl;
             }
+        }
+
+        public IFormService GetFormService()
+        {
+            return _formService;
+        }
+
+        public void SetFormService(IFormService formService)
+        {
+            _formService = formService;
         }
     }
 }

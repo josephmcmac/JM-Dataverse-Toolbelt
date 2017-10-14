@@ -14,6 +14,30 @@ namespace JosephM.Record.Xrm.Test
 {
     public abstract class XrmRecordTest : XrmTest
     {
+        public void DeleteTestNewLookupSolution()
+        {
+            while(true)
+            {
+                var test = XrmRecordService.GetFirst(JosephM.Xrm.Schema.Entities.solution, JosephM.Xrm.Schema.Fields.solution_.uniquename, "TESTNEWLOOKUPSOLUTION");
+                if (test != null)
+                    XrmRecordService.Delete(test);
+                else
+                    break;
+            }
+        }
+
+        public void DeleteTestNewLookupPublisher()
+        {
+            while (true)
+            {
+                var test = XrmRecordService.GetFirst(JosephM.Xrm.Schema.Entities.publisher, JosephM.Xrm.Schema.Fields.publisher_.uniquename, "TESTNEWLOOKUPPUBLISHER");
+                if (test != null)
+                    XrmRecordService.Delete(test);
+                else
+                    break;
+            }
+        }
+
         public IRecord ReCreateTestSolution()
         {
             var testSolution = XrmRecordService.GetFirst(JosephM.Xrm.Schema.Entities.solution, JosephM.Xrm.Schema.Fields.solution_.uniquename, "TESTSCRIPTSOLUTION");

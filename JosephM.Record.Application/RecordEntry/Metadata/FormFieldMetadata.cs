@@ -59,7 +59,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     if (!explicitFieldType.HasValue)
                         fieldType = recordService.GetFieldType(field, recordType);
                     label = recordService.GetFieldLabel(field, recordType);
-                    isEditable = recordService.GetFieldMetadata(field, recordType).Writeable;
+                    isEditable = string.IsNullOrWhiteSpace(recordForm.GetRecord().Id) ? recordService.GetFieldMetadata(field, recordType).Createable : recordService.GetFieldMetadata(field, recordType).Writeable;
                 }
                 FieldViewModelBase fieldVm = null;
                 switch (fieldType)

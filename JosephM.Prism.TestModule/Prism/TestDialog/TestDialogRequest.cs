@@ -5,6 +5,7 @@ using JosephM.Core.Service;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Application.ViewModel.Attributes;
+using JosephM.Prism.TestModule.Prism.TestSettings;
 
 namespace JosephM.Prism.TestModule.Prism.TestDialog
 {
@@ -16,6 +17,9 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
             Items = new[] {new TestDialogRequestItem()};
         }
         public bool ThrowResponseErrors { get; set; }
+
+        [SettingsLookup(typeof(ITestSettings), nameof(ITestSettings.Settings))]
+        public TestSetting TestSetting { get; set; }
 
         [RecordTypeFor(nameof(Fields) + "." + nameof(FieldSetting.RecordField))]
         [RecordTypeFor(nameof(SpecificRecordsToExport) + "." + nameof(LookupSetting.Record))]

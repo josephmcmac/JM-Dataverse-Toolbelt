@@ -23,6 +23,8 @@ namespace JosephM.Application.ViewModel.Attributes
             get { return typeof(RecordType); }
         }
 
+        public override bool TypeAhead { get { return true; } }
+
         public override IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
         {
             var lookupService = GetLookupService(recordForm, subGridReference);

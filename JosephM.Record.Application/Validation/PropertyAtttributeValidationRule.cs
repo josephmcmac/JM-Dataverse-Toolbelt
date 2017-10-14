@@ -4,6 +4,7 @@ using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using JosephM.Record.Service;
 using JosephM.Core.Extentions;
+using JosephM.Record.Extentions;
 
 #endregion
 
@@ -24,11 +25,13 @@ namespace JosephM.Application.ViewModel.Validation
 
         protected override IsValidResponse ValidateExtention()
         {
-            var instance = ((ObjectRecord) RecordForm.GetRecord()).Instance;
+            var record = RecordForm.GetRecord();
             var response = new IsValidResponse();
 
-            if (!PropertyValidator.IsValid(instance.GetPropertyValue(ChangedField.ReferenceName), instance))
-                response.AddInvalidReason(PropertyValidator.GetErrorMessage(ChangedField.ReferenceName, instance));
+            if (!PropertyValidator.IsValid(record.GetField(ChangedField.ReferenceName)))
+            {
+                response.AddInvalidReason(PropertyValidator.GetErrorMessage(RecordForm.RecordService.GetFieldMetadata(ChangedField.ReferenceName, RecordForm.GetRecordType()).DisplayName));
+            }
 
             return response;
         }

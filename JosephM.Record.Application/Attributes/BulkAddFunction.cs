@@ -93,38 +93,60 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public void Load(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            try
+            recordForm.DoOnMainThread(() =>
             {
-                recordForm.DoOnMainThread(() =>
+                try
                 {
-                    var closeFunction = new CustomGridFunction("Return", () => recordForm.ClearChildForm());
+                    var closeFunction = new CustomGridFunction("RETURN", "Return", () => recordForm.ClearChildForm());
                     var targetType = GetTargetType(recordForm, subGridReference);
 
-                    var selectedFunction = new CustomGridFunction("Add Selected", (g) =>
-                    {
-                        foreach (var selectedRow in g.SelectedRows)
-                        {
-                            AddSelectedItem(selectedRow, recordForm, subGridReference);
-                        }
-                        recordForm.ClearChildForm();
-                    }, visibleFunction: (g) => g.SelectedRows.Any());
+                    var selectedFunction = new CustomGridFunction("ADDSELECTED", "Add Selected", (g) => AddSelectedItems(g, recordForm, subGridReference)
+                    , visibleFunction: (g) => g.SelectedRows.Any());
 
-                    var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, processSelectedFunction: selectedFunction);
-
+                    var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, customFunctions: new[] { selectedFunction });
+                    childForm.TypeAhead = TypeAhead;
                     recordForm.LoadChildForm(childForm);
-                });
-            }
-            catch (Exception ex)
-            {
-                recordForm.ApplicationController.ThrowException(ex);
-            }
-            finally
-            {
-                recordForm.LoadingViewModel.IsLoading = false;
-            }
+                }
+                catch (Exception ex)
+                {
+                    recordForm.ApplicationController.ThrowException(ex);
+                }
+                finally
+                {
+                    recordForm.LoadingViewModel.IsLoading = false;
+                }
+            });
         }
 
+        public virtual bool TypeAhead { get { return false; } }
+
         public abstract string GetTargetType(RecordEntryViewModelBase recordForm, string subGridReference);
+
+        public void AddSelectedItems(DynamicGridViewModel grid, RecordEntryViewModelBase recordForm, string subGridReference)
+        {
+            recordForm.ApplicationController.DoOnAsyncThread(() =>
+            {
+                recordForm.LoadingViewModel.IsLoading = true;
+                try
+                {
+                    Thread.Sleep(100);
+                    foreach (var selectedRow in grid.SelectedRows)
+                    {
+                        AddSelectedItem(selectedRow, recordForm, subGridReference);
+                    }
+                    recordForm.ClearChildForm();
+                }
+                catch(Exception ex)
+                {
+                    recordForm.ApplicationController.ThrowException(ex);
+                }
+                finally
+                {
+                    recordForm.LoadingViewModel.IsLoading = false;
+                }
+            });
+        }
+
         public abstract void AddSelectedItem(GridRowViewModel gridRow, RecordEntryViewModelBase recordForm, string subGridReference);
     }
 }
