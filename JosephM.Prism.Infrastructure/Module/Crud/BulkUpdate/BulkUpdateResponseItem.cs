@@ -5,13 +5,13 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
 {
     public class BulkUpdateResponseItem : ServiceResponseItem
     {
-        public string ErrorType { get; set; }
-        public string Type { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
 
-        public BulkUpdateResponseItem(string errorType, string type, Exception ex)
+        public BulkUpdateResponseItem(string id, string name, Exception ex)
         {
-            ErrorType = errorType;
-            Type = type;
+            Id = id;
+            Name = name;
             Exception = ex;
         }
     }

@@ -2,7 +2,7 @@
 using JosephM.Prism.Infrastructure.Module.Crud;
 using JosephM.Prism.XrmModule.XrmConnection;
 
-namespace JosephM.Prism.XrmModule.Forms
+namespace JosephM.Prism.XrmModule.Crud
 {
     [DependantModule(typeof(XrmConnectionModule))]
     public class XrmCrudModule : CrudModule<XrmCrudDialog>

@@ -72,7 +72,6 @@ namespace JosephM.Application.ViewModel.Grid
                 };
                 if (FormService != null)
                 {
-                    //todo add some sort of bulk set field option
                     customFunctionList.Add(new CustomGridFunction("OPEN", "Open Selected", (g) =>
                     {
                         var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);

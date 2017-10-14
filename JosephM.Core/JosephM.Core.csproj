@@ -140,7 +140,6 @@
     <Compile Include="Extentions\ObjectExtentions.cs" />
     <Compile Include="FieldType\Folder.cs" />
     <Compile Include="FieldType\Password.cs" />
-    <Compile Include="FieldType\File.cs" />
     <Compile Include="Constants\FileMasks.cs" />
     <Compile Include="Log\LogConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

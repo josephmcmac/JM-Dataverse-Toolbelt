@@ -10,7 +10,7 @@ using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Xrm.ImportExporter.Prism;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.RecordCounts.Exporter;
-using JosephM.Prism.XrmModule.Forms;
+using JosephM.Prism.XrmModule.Crud;
 
 namespace JosephM.Xrm.DeveloperTool
 {

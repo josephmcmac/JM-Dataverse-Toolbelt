@@ -2,6 +2,7 @@
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
+using JosephM.Record.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
     [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalWrap, 20)]
     public class BulkUpdateRequest : ServiceRequestBase
     {
-        public BulkUpdateRequest(RecordType recordType, IEnumerable<string> recordsToUpdate)
+        public BulkUpdateRequest(RecordType recordType, IEnumerable<IRecord> recordsToUpdate)
         {
             RecordType = recordType;
             _recordsToUpdate = recordsToUpdate;
@@ -23,11 +24,9 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
 
         }
 
-        //todo could extend to multiple fields
+        private IEnumerable<IRecord> _recordsToUpdate { get; set; }
 
-        private IEnumerable<string> _recordsToUpdate { get; set; }
-
-        public IEnumerable<string> GetRecordsToUpdate()
+        public IEnumerable<IRecord> GetRecordsToUpdate()
         {
             return _recordsToUpdate;
         }
@@ -39,7 +38,7 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
 
         [Group(Sections.RecordDetails)]
         [DisplayOrder(20)]
-        public int? RecordCount { get { return _recordsToUpdate?.Count(); } }
+        public int RecordCount { get { return _recordsToUpdate?.Count() ?? 0; } }
 
         [Group(Sections.FieldUpdate)]
         [DisplayOrder(20)]
@@ -63,8 +62,8 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
 
         private static class Sections
         {
-            public const string RecordDetails = "Record Details";
-            public const string FieldUpdate = "Field Update";
+            public const string RecordDetails = "Selected Update Details";
+            public const string FieldUpdate = "Field Value To Update";
         }
     }
 }

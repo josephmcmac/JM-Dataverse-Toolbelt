@@ -23,15 +23,15 @@ namespace JosephM.Application.ViewModel.Dialog
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
             IApplicationController applicationController, IRecordService lookupService,
             IDictionary<string, IEnumerable<string>> optionsetLimitedValues)
-            : this(objectsToEnter, parentDialog, applicationController, lookupService, optionsetLimitedValues, null)
+            : this(objectsToEnter, parentDialog, applicationController, lookupService, optionsetLimitedValues, null, null)
         {
             _objectToEnter = objectsToEnter;
         }
 
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
     IApplicationController applicationController, IRecordService lookupService,
-    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave)
-            : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave)
+    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel)
+            : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave, onCancel: onCancel)
         {
             _objectToEnter = objectsToEnter;
         }

@@ -17,11 +17,11 @@ namespace JosephM.Application.ViewModel.Shared
     {
         private bool _saveButtonVisible = true;
 
+        public Action ClickAction { get; set; }
+
         public XrmButtonViewModel(string label, Action clickAction, IApplicationController applicationController)
             : this(label, label, clickAction, applicationController)
         {
-            Label = label;
-            Command = new DelegateCommand(clickAction);
         }
 
         public XrmButtonViewModel(string id, string label, Action clickAction, IApplicationController applicationController)
@@ -29,6 +29,7 @@ namespace JosephM.Application.ViewModel.Shared
         {
             Id = id;
             Label = label;
+            ClickAction = clickAction;
             Command = new DelegateCommand(clickAction);
         }
 
@@ -37,11 +38,27 @@ namespace JosephM.Application.ViewModel.Shared
         {
             Id = id;
             Label = label;
-            Command = new DelegateCommand(() => { OpenChildButtons = true; OnPropertyChanged(nameof(OpenChildButtons)); });
+            Command = new DelegateCommand(() => { OpenChildButtons = true; });
             ChildButtons = childButtons;
+            foreach(var button in childButtons)
+            {
+                button.Command = new DelegateCommand(() => { OpenChildButtons = false; button.ClickAction(); });
+            }
         }
 
-        public bool OpenChildButtons { get; set; }
+        private bool _openChildButtons;
+        public bool OpenChildButtons
+        {
+            get
+            {
+                return _openChildButtons;
+            }
+            set
+            {
+                _openChildButtons = value;
+                OnPropertyChanged(nameof(OpenChildButtons));
+            }
+        }
 
         public bool HasChildOptions {  get { return ChildButtons != null && ChildButtons.Any(); } }
         public IEnumerable<XrmButtonViewModel> ChildButtons { get; set; }

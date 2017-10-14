@@ -21,7 +21,7 @@
     <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" MinWidth="250">
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -73,9 +73,6 @@
                     <field:LookupGridView
                     Background="WhiteSmoke"
                     DataContext="{Binding LookupGridViewModel}"/>
-                    <!--Width="{Binding ActualWidth, ElementName=EnteredTextBox}"-->
-                        
-                    <!--popup children here-->
                 </Border>
             </Popup>
         </Grid>

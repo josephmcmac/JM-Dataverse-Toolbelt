@@ -24,7 +24,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 RecordService = referenceField.LookupService,
                 FormController = new FormController(referenceField.LookupService, null, referenceField.RecordEntryViewModel.ApplicationController),
                 RecordType = referenceField.RecordTypeToLookup,
-                IsReadOnly = true
+                IsReadOnly = true,
             };
         }
 

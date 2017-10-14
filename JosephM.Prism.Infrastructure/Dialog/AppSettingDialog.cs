@@ -37,7 +37,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
 
             var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, lookupService,
-                null, OnSave);
+                null, OnSave, null);
 
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }

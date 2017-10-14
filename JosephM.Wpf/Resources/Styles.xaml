@@ -105,11 +105,6 @@
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="Margin" Value="2" />
     </Style>
-    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
-        <Setter Property="MinWidth" Value="75px" />
-        <Setter Property="MaxHeight" Value="30px" />
-        <Setter Property="Margin" Value="4,4,4,4" />
-    </Style>
     <Style x:Key="CloseTabButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Height" Value="15" />
         <Setter Property="Width" Value="15" />
@@ -169,5 +164,15 @@
         <Setter Property="Width" Value="240px" />
         <Setter Property="Height" Value="30px" />
         <Setter Property="Margin" Value="8,8,8,8" />
+    </Style>
+    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
+        <Setter Property="MinWidth" Value="75px" />
+        <Setter Property="MaxHeight" Value="30px" />
+        <Setter Property="Margin" Value="4,4,4,4" />
+    </Style>
+    <Style x:Key="XrmDropdownButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
+        <Setter Property="Width" Value="120px" />
+        <Setter Property="MaxHeight" Value="30px" />
+        <Setter Property="Margin" Value="4,4,4,4" />
     </Style>
 </ResourceDictionary>

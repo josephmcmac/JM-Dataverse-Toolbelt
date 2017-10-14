@@ -95,12 +95,12 @@
         <Button Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
                 Command="{Binding DelegateCommand}" />
     </DataTemplate>
-    <DataTemplate x:Key="XrmButtonDropdownTemplate" DataType="applicationOptions:ApplicationOption">
-        <shared:XrmButton  DataContext="{Binding}"  ></shared:XrmButton>
+    <DataTemplate x:Key="XrmButtonDropdownTemplate" DataType="shared:XrmButtonViewModel">
+        <Button Style="{StaticResource XrmDropdownButton}" Margin="0,0,0,0" Content="{Binding Label}"
+                Command="{Binding Command}" />
     </DataTemplate>
     <DataTemplate x:Key="HeadingTemplate">
-        <shared:HeadingView
-            DataContext="{Binding}" />
+        <shared:HeadingView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="ObjectGridTemplate">
         <grid:ObjectsGridSectionView

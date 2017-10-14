@@ -18,7 +18,7 @@ using Microsoft.Win32;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Utilities;
 using EnvDTE80;
-using JosephM.Prism.XrmModule.Forms;
+using JosephM.Prism.XrmModule.Crud;
 
 namespace JosephM.XRM.VSIX
 {

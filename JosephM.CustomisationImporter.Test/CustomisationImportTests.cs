@@ -24,8 +24,8 @@ namespace JosephM.CustomisationImporter.Test
     public class CustomisationImportTests : XrmModuleTest
     {
         [TestMethod]
-        [DeploymentItem("TestCustomisations.xls")]
-        [DeploymentItem(@"ContentFiles\Customisations Import Template.xls")]
+        [DeploymentItem("TestCustomisations.xlsx")]
+        [DeploymentItem(@"ContentFiles\Customisations Import Template.xlsx")]
         public void CustomisationImportTestImportModule()
         {
             //create test application with module loaded
@@ -136,8 +136,8 @@ namespace JosephM.CustomisationImporter.Test
         }
 
         [TestMethod]
-        [DeploymentItem("TestCustomisations.xls")]
-        [DeploymentItem("TestCustomisationsUpdate.xls")]
+        [DeploymentItem("TestCustomisations.xlsx")]
+        [DeploymentItem("TestCustomisationsUpdate.xlsx")]
         public void CustomisationImportTestImportService()
         {
             PrepareTests();
@@ -171,10 +171,10 @@ namespace JosephM.CustomisationImporter.Test
         }
 
         [TestMethod]
-        [DeploymentItem("TestCustomisationsIgnore.xls")]
+        [DeploymentItem("TestCustomisationsIgnore.xlsx")]
         public void CustomisationImportTestIgnore()
         {
-            var file = "TestCustomisationsIgnore.xls";
+            var file = "TestCustomisationsIgnore.xlsx";
             var response = new CustomisationImportResponse();
 
             var optionMetadata =

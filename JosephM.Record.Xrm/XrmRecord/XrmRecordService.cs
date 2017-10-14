@@ -1009,5 +1009,10 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             return _formService;
         }
+
+        public void SetFormService(IFormService formService)
+        {
+            _formService = formService;
+        }
     }
 }

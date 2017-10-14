@@ -36,16 +36,19 @@ namespace JosephM.Prism.Infrastructure.Dialog
         {
         }
 
-        public ServiceRequestDialog(TService service, IDialogController dialogController, IRecordService lookupService, TRequest request = null)
+        public ServiceRequestDialog(TService service, IDialogController dialogController, IRecordService lookupService, TRequest request = null, Action onClose = null)
             : base(dialogController)
         {
+            if (onClose != null)
+                OnCancel = onClose;
+
             Service = service;
             
             Request = new TRequest();
             if (request != null)
                 Request = request;
 
-            var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null);
+            var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose);
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
 

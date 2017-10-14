@@ -29,7 +29,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 var splitIt = referencedRecordType.Split(',');
                 if (splitIt.Count() == 1)
                 {
-                    _selectedRecordType = new RecordType(splitIt.First(), splitIt.First());
+                    SelectedRecordType = new RecordType(splitIt.First(), splitIt.First());
                 }
                 else
                 {
@@ -67,6 +67,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     Action onSave = () =>
                     {
                         Value = LookupService.ToLookup(newRecord);
+                        if (UsePicklist)
+                        {
+                            var newPicklistItem = new ReferencePicklistItem(newRecord, Value.Name);
+                            ItemsSource = ItemsSource
+                            .Union(new[] { newPicklistItem })
+                            .OrderBy(r => r.Name)
+                            .ToArray();
+                            SelectedItem = newPicklistItem;
+                        }
                         SetEnteredTestWithoutClearingValue(Value.Name);
                         RecordEntryViewModel.ClearChildForm();
                     };
@@ -200,7 +209,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 else
                 {
-                    SelectedRecordType = new RecordType(value, GetRecordService() == null ? value : GetRecordService().GetDisplayName(value));
+                    SelectedRecordType = new RecordType(value, LookupService == null ? value : LookupService.GetDisplayName(value));
                     LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
                 }
             }
@@ -269,6 +278,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 return LookupService.GetFirstX(RecordTypeToLookup, UsePicklist ? -1 : MaxRecordsForLookup, null,
                     conditions, new[] {new SortExpression(primaryField, SortType.Ascending)});
             }
+        }
+
+        protected int MaxRecordsForLookup
+        {
+            get { return 11; }
         }
     }
 }

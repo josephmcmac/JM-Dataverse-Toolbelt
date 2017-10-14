@@ -20,7 +20,7 @@ namespace JosephM.Application.ViewModel.Dialog
     {
         protected ObjectEntryDialogBase(DialogViewModel parentDialog,
             IApplicationController applicationController, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null, IDictionary<string, IEnumerable<string>> onlyValidate = null, Action onCancel = null)
             : base(parentDialog)
         {
             ApplicationController = applicationController;
@@ -29,6 +29,8 @@ namespace JosephM.Application.ViewModel.Dialog
             ObjectTypeMaps = objectTypeMaps;
             OnlyValidate = onlyValidate;
             SaveMethod = saveMethod;
+            if (onCancel != null)
+                OnCancel = onCancel;
         }
 
         protected ObjectEntryDialogBase(

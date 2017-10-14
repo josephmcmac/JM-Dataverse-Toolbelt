@@ -25,6 +25,7 @@
             </Grid>
             <Grid Grid.Row="1" Visibility="{Binding HasChildOptions, Converter={StaticResource BoolToVis}}" VerticalAlignment="Top">
                 <Button
+                    Style="{StaticResource XrmDropdownButton}"
             Name="ParentButton"
             Content="{Binding Label}"
             Command="{Binding Command}" />

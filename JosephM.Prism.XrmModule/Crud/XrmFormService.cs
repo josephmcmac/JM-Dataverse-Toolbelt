@@ -11,7 +11,7 @@ using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Attributes;
 using JosephM.Record.Extentions;
 
-namespace JosephM.Prism.XrmModule.Forms
+namespace JosephM.Prism.XrmModule.Crud
 {
     public class XrmFormService : FormServiceBase
     {
@@ -19,6 +19,10 @@ namespace JosephM.Prism.XrmModule.Forms
         {
             switch (recordType)
             {
+                case Entities.webresource:
+                    {
+                        return null;
+                    }
                 case Entities.solution:
                     {
                         return new FormMetadata(new[]

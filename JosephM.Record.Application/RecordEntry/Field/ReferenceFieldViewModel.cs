@@ -269,11 +269,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        protected int MaxRecordsForLookup
-        {
-            get { return 15; }
-        }
-
         private bool _searching;
 
         public bool Searching

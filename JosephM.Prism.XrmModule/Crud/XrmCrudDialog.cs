@@ -2,7 +2,7 @@
 using JosephM.Prism.Infrastructure.Module.Crud;
 using JosephM.Record.Xrm.XrmRecord;
 
-namespace JosephM.Prism.XrmModule.Forms
+namespace JosephM.Prism.XrmModule.Crud
 {
     public class XrmCrudDialog : CrudDialog
     {

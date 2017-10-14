@@ -53,7 +53,11 @@ namespace JosephM.Application.ViewModel.Grid
 
         public XrmButtonViewModel GetButton(string id)
         {
-            return CustomFunctions.First(b => b.Id == id);
+            if (CustomFunctions.Any(b => b.Id == id))
+                return CustomFunctions.First(b => b.Id == id);
+            if (CustomFunctions.Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).Any(b => b.Id == id))
+                return CustomFunctions.Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).First(b => b.Id == id);
+            throw new ArgumentOutOfRangeException("id", "No Button Found With Id Of " + id);
         }
 
         public LoadingViewModel LoadingViewModel { get; set; }
@@ -67,6 +71,7 @@ namespace JosephM.Application.ViewModel.Grid
                 _loadedGridButtons = functions;
                 _customFunctions =
                     new ObservableCollection<XrmButtonViewModel>(GridsFunctionsToXrmButtons(functions));
+                
                 OnPropertyChanged("CustomFunctions");
             });
         }
@@ -418,6 +423,7 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 _records = value;
                 OnPropertyChanged("GridRecords");
+                LoadGridButtons(_loadedGridButtons);
             }
         }
 

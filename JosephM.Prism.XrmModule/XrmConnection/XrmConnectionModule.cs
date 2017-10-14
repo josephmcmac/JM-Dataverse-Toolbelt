@@ -5,7 +5,7 @@ using JosephM.Application.Modules;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
-using JosephM.Prism.XrmModule.Forms;
+using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Configuration;

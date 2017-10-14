@@ -76,9 +76,18 @@ namespace JosephM.Application.ViewModel.TabArea
             set
             {
                 _childForms = value;
-                OnPropertyChanged("ChildForms");
-                OnPropertyChanged("MainFormInContext");
+                OnPropertyChanged(nameof(ChildForms));
+                OnPropertyChanged(nameof(MainFormInContext));
             }
+        }
+
+        public void ClearChildForms()
+        {
+            DoOnMainThread(() =>
+            {
+                ChildForms.Clear();
+                OnPropertyChanged(nameof(MainFormInContext));
+            });
         }
 
         public bool MainFormInContext

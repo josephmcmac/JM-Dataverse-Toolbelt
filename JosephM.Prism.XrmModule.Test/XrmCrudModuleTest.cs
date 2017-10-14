@@ -1,25 +1,14 @@
-﻿using JosephM.Application.Application;
-using JosephM.Application.Modules;
-using JosephM.Application.ViewModel.Fakes;
-using JosephM.Application.ViewModel.RecordEntry;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.AppConfig;
-using JosephM.ObjectMapping;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Test;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.XrmConnection;
-using JosephM.Record.Xrm.Test;
-using JosephM.Record.Xrm.XrmRecord;
-using Microsoft.Xrm.Sdk.Client;
-using JosephM.Record.IService;
-using JosephM.Prism.XrmModule.Forms;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
-using System.Linq;
-using JosephM.Xrm.Schema;
-using System;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate;
+using JosephM.Prism.XrmModule.Crud;
 using JosephM.Record.Extentions;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Schema;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace JosephM.Prism.XrmModule.Test
 {
@@ -31,17 +20,17 @@ namespace JosephM.Prism.XrmModule.Test
         {
             //todo consider anything else necessary e.g. change other field types
 
-            //this script is just to verify a simple scenario
-            //1. opening the query view
-            //2. runnning the query
-            //3. opening a record
-            //4. changing the name
-            //5. saving
-            //and verify the record is updated
-
-            var account = XrmRecordService.GetFirst(Entities.account);
-            if (account == null)
+            //this script runs through several scenarios in the crud module
+            // opening and running quickfind
+            // opening a record updating a field and saving
+            // selecting 2 records and doing a bulk update on them
+            // doing a bulk update on all records
+            var count = XrmRecordService.GetFirstX(Entities.account, 3, null, null).Count();
+            while (count < 3)
+            {
                 CreateAccount();
+                count++;
+            }
 
             //Create test app and load query
             var app = CreateAndLoadTestApplication<XrmCrudModule>();
@@ -77,6 +66,53 @@ namespace JosephM.Prism.XrmModule.Test
             //verify record updated
             var record = XrmRecordService.Get(Entities.account, id);
             Assert.AreEqual(newName, record.GetStringField(Fields.account_.name));
+
+            //now do bulk updates selected
+
+            //select 2 record for bulk update
+            queryViewModel.GridRecords.First().IsSelected = true;
+            queryViewModel.GridRecords.ElementAt(1).IsSelected = true;
+            id = queryViewModel.GridRecords.First().GetRecord().Id;
+            var id2 = queryViewModel.GridRecords.ElementAt(1).GetRecord().Id;
+            //this triggered by ui event
+            queryViewModel.DynamicGridViewModel.OnSelectionsChanged();
+            //trigger and enter bulk update
+            queryViewModel.DynamicGridViewModel.GetButton("BULKUPDATESELECTED").Invoke();
+            var newAddressLine1 = "Bulk Selected " + DateTime.Now.ToFileTime();
+            DoBulkUpdate(dialog, newAddressLine1, Fields.account_.address1_line1);
+            //verify records updated
+            record = XrmRecordService.Get(Entities.account, id);
+            Assert.AreEqual(newAddressLine1, record.GetStringField(Fields.account_.address1_line1));
+            record = XrmRecordService.Get(Entities.account, id2);
+            Assert.AreEqual(newAddressLine1, record.GetStringField(Fields.account_.address1_line1));
+            Assert.IsFalse(queryViewModel.ChildForms.Any());
+
+            //now do bulk updates all
+            queryViewModel.DynamicGridViewModel.GetButton("BULKUPDATEALL").Invoke();
+            newAddressLine1 = "Bulk Update All " + DateTime.Now.ToFileTime();
+            DoBulkUpdate(dialog, newAddressLine1, Fields.account_.address1_line1);
+
+            var allAccounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            foreach(var account in allAccounts)
+                Assert.AreEqual(newAddressLine1, account.GetStringField(Fields.account_.address1_line1));
+        }
+
+        private static void DoBulkUpdate(XrmCrudDialog crudDialog, string newValue, string field)
+        {
+            var bulkUpdateDialog = crudDialog.ChildForms.First() as BulkUpdateDialog;
+            Assert.IsNotNull(bulkUpdateDialog);
+            bulkUpdateDialog.LoadDialog();
+            var bulkUpdateEntry = bulkUpdateDialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(bulkUpdateDialog);
+            var fieldField = bulkUpdateEntry.GetRecordFieldFieldViewModel(nameof(BulkUpdateRequest.FieldToSet));
+            fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == field);
+            var valueField = bulkUpdateEntry.GetStringFieldFieldViewModel(nameof(BulkUpdateRequest.ValueToSet));
+            valueField.Value = newValue;
+            bulkUpdateEntry.SaveButtonViewModel.Invoke();
+            var completionScreen = bulkUpdateDialog.Controller.UiItems.First() as CompletionScreenViewModel;
+            Assert.IsFalse(completionScreen.CompletionDetails.Items.Any());
+            completionScreen.CloseButton.Invoke();
+            Assert.IsFalse(crudDialog.ChildForms.Any());
         }
     }
 }

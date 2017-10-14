@@ -29,7 +29,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         private ObservableCollection<SectionViewModelBase> _formSections;
 
-        private List<FieldViewModelBase> _recordFields;
         private string _recordType;
 
         protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference, IDictionary<string, IEnumerable<string>> onlyValidate = null)
@@ -302,15 +301,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                         ));
                 }
             }
-            //we need to populate the RecordFields property with the generated field view models
-            _recordFields = new List<FieldViewModelBase>();
-            foreach (
-                var formSection in
-                    sectionViewModels.Where(fs => fs is FieldSectionViewModel).Cast<FieldSectionViewModel>()
-                )
-            {
-                _recordFields.AddRange(formSection.Fields);
-            }
             //now set the section view model property in the ui thread which will notify the ui with the sections
             DoOnMainThread(
                 () =>
@@ -334,9 +324,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         {
             get
             {
-                if (_recordFields == null)
+                if (_formSections == null)
                     throw new NullReferenceException("The Field Sections Are Not Loaded Yet. The Reload Method Needs To Have Been Called And Completed To Initialise It");
-                return _recordFields;
+                return _formSections
+                    .Where(fs => fs is FieldSectionViewModel)
+                    .Cast<FieldSectionViewModel>()
+                    .SelectMany(s => s.Fields)
+                    .ToArray();
             }
         }
 

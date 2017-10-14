@@ -23,8 +23,6 @@ namespace JosephM.Record.Metadata
         internal FieldMetadata(string internalName, string label)
             : this(null, internalName, label)
         {
-            SchemaName = internalName;
-            DisplayName = label;
         }
 
         internal FieldMetadata(string recordType, string internalName, string label)
@@ -35,6 +33,7 @@ namespace JosephM.Record.Metadata
             Readable = true;
             Writeable = true;
             Createable = true;
+            Searchable = true;
             IsDisplayRelated = true;
         }
 
