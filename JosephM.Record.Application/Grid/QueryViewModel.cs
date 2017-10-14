@@ -49,6 +49,7 @@ namespace JosephM.Application.ViewModel.Grid
         private IEnumerable<CustomGridFunction> CustomFunctions { get; set; }
         private bool LoadInitially { get; set; }
 
+        public bool TypeAhead { get; set; }
 
         private void RecreateGrid()
         {

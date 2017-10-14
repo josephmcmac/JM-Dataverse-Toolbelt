@@ -104,7 +104,7 @@ namespace JosephM.Application.ViewModel.Attributes
                     , visibleFunction: (g) => g.SelectedRows.Any());
 
                     var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, customFunctions: new[] { selectedFunction });
-
+                    childForm.TypeAhead = TypeAhead;
                     recordForm.LoadChildForm(childForm);
                 }
                 catch (Exception ex)
@@ -117,6 +117,8 @@ namespace JosephM.Application.ViewModel.Attributes
                 }
             });
         }
+
+        public virtual bool TypeAhead { get { return false; } }
 
         public abstract string GetTargetType(RecordEntryViewModelBase recordForm, string subGridReference);
 

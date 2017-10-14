@@ -3,7 +3,6 @@ using JosephM.CodeGenerator.Xrm;
 using JosephM.CustomisationExporter.Exporter;
 using JosephM.CustomisationImporter.Prism;
 using JosephM.InstanceComparer;
-using JosephM.OrganisationSettings;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Xrm;

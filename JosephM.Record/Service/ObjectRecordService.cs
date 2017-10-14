@@ -254,19 +254,22 @@ namespace JosephM.Record.Service
             {
                 if (query.QuickFindText != null)
                 {
+                    var quickFindToLower = query.QuickFindText.ToLower();
+                    var fieldsToSearch = GetFieldMetadata(query.RecordType)
+                            .Where(p => p.Searchable)
+                            .ToArray();
                     objects = objects
                         .Where(o =>
                         {
                             var instance = ((ObjectRecord)o).Instance;
-                            return GetFieldMetadata(instance.GetType().AssemblyQualifiedName)
-                            .Where(p => p.Searchable)
+                            return fieldsToSearch
                             .Any(p =>
                             {
                                 var propValue = instance.GetPropertyValue(p.SchemaName);
-                                return propValue != null && propValue.ToString().Contains(query.QuickFindText);
+                                return propValue != null && propValue.ToString().ToLower().Contains(quickFindToLower);
                             });
                         })
-                    .ToList();
+                        .ToList();
                 }
                 var newSorts = new List<SortExpression>(query.Sorts);
                 if (!newSorts.Any())
