@@ -73,11 +73,17 @@
          x:Key="conditionTemplateSelector"
         />
     <DataTemplate x:Key="TabItemTemplate">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Border Grid.Row="0" Name="tabBorder">
             <ContentControl
                 Content="{Binding}"
                 ContentTemplateSelector="{StaticResource viewTemplateSelector}" />
-        </ScrollViewer>
+            </Border>
+        </Grid>
     </DataTemplate>
     <DataTemplate x:Key="TabItemHeaderTemplate">
         <DockPanel>
@@ -127,7 +133,7 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="CompletionTemplate">
-        <application:CompletionScreen
+        <application:CompletionScreen Height="{Binding ActualHeight, ElementName=tabBorder}"
             DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="ListViewTemplate">
@@ -146,7 +152,7 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="DialogDialogTemplate">
-        <Grid>
+        <Grid >
             <application:DialogForm DataContext="{Binding}" />
         </Grid>
     </DataTemplate>

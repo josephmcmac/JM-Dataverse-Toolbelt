@@ -27,7 +27,7 @@
                 <TextBlock Text="{Binding FilterOperator}" />
             </Border>
         </Grid>
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1"  >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -41,6 +41,7 @@
                     </ItemsControl>
                 </Grid>
                 <Grid Grid.Row="1">
+
                     <ItemsControl 
                 ItemsSource="{Binding Conditions}"
                 HorizontalContentAlignment="Stretch"

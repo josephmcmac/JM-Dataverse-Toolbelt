@@ -5,22 +5,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
              xmlns:fakes1="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
+             xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="2000"
              d:DataContext="{d:DesignInstance Type=fakes1:FakeRecordEntryViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:LengthConverter x:Key="LengthConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Height="{Binding ActualHeight, ElementName=tabBorder, Converter={StaticResource LengthConverter}, ConverterParameter=.97}" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
@@ -28,8 +30,8 @@
         <Grid Grid.Row="1"
               Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto"  />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
               Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
@@ -37,8 +39,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <StackPanel
@@ -64,10 +66,12 @@
                     <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
                 </Grid>
                 <Grid Grid.Row="2">
+                        <ScrollViewer>
                     <ItemsControl
                         ItemsSource="{Binding FormSectionsAsync}"
                         ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
-                </Grid>
+                        </ScrollViewer>
+                    </Grid>
                 <Grid Grid.Row="3">
                     <StackPanel
                         Orientation="Horizontal"

@@ -26,8 +26,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
@@ -51,8 +51,8 @@
         <Grid Grid.Row="3"  Visibility="{Binding GridLoaded, Converter={StaticResource BoolToVis}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition  />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto"  />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Visibility="{Binding CanAddRow, Converter={StaticResource BoolToVis}}">
                 <WrapPanel Orientation="Horizontal">
@@ -67,7 +67,7 @@
                 </WrapPanel>
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid MaxHeight="720"
+                <DataGrid  
                 controlExtentions:FocusExtension.IsFocused="{Binding IsFocused, Mode=TwoWay}"
                 CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"
                 CanUserAddRows="True" SelectionChanged="DataGrid_SelectionChanged" SelectionMode="{Binding MultiSelect, Converter={StaticResource BoolToMulti}}"

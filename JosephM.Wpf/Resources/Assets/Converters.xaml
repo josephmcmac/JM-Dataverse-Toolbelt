@@ -6,11 +6,13 @@
     <converters:BooleanToFontWeightConverter x:Key="BooleanToFontWeightConverter" />
     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
+    <converters:BooleanToStarOrZeroConverter x:Key="BooleanToStarOrZeroConverter" />
+    <converters:BooleanToZeroOrStarConverter x:Key="BooleanToZeroOrStarConverter" />
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     <converters:NullToHiddenConverter x:Key="NullToHiddenConverter" />
     <converters:NullOrEmptyStringToVisibilityConverter x:Key="NullOrEmptyStringToVisibilityConverter" />
     <converters:ToUpperConverter x:Key="ToUpperConverter" />
     <converters:ToLowerConverter x:Key="ToLowerConverter" />
     <converters:WidthConverter x:Key="WidthConverter" />
-
+    <converters:LengthConverter x:Key="LengthConverter" />
 </ResourceDictionary>

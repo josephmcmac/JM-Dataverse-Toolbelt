@@ -18,26 +18,37 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
         <shared:HeadingView DataContext="{Binding HeadingViewModel}" />
-        <DockPanel Visibility="{Binding CsvForExtraction, Converter={StaticResource BoolToVis}}">
+        </Grid>
+        <Grid Grid.Row="1">
+            <WrapPanel Orientation="Horizontal">
+                <Grid Visibility="{Binding CsvForExtraction, Converter={StaticResource BoolToVis}}" >
             <Button Click="CsvButtonClick" Content="Download To CSV" />
-        </DockPanel>
-        <DockPanel Visibility="{Binding CsvExtracting, Converter={StaticResource BoolToVis}}">
+        </Grid>
+        <Grid Visibility="{Binding CsvExtracting, Converter={StaticResource BoolToVis}}" >
             <shared:ProgressControl DataContext="{Binding CsvExtractingProgress}" />
-        </DockPanel>
-        <DockPanel Visibility="{Binding CsvExtracted, Converter={StaticResource BoolToVis}}">
+        </Grid>
+        <Grid Visibility="{Binding CsvExtracted, Converter={StaticResource BoolToVis}}" >
             <TextBlock Text="CSV Downloaded" />
             <WrapPanel Orientation="Horizontal">
                 <shared:XrmButton DataContext="{Binding OpenCsvFolderButton}" />
                 <shared:XrmButton DataContext="{Binding OpenCsvButton}" />
             </WrapPanel>
-        </DockPanel>
-        <DockPanel>
+        </Grid>
+            </WrapPanel>
+        </Grid>
+        <Grid Grid.Row="2" >
             <DataGrid
                 ClipboardCopyMode="IncludeHeader"
                 IsReadOnly="True"
                 ItemsSource="{Binding Items}" />
-        </DockPanel>
-    </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>

@@ -19,13 +19,20 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
         <TextBox Background="Transparent"
          BorderThickness="0"
          Text="{Binding CompletionHeadingText, Mode=OneWay}"
          IsReadOnly="True"
          TextWrapping="Wrap" />
-        <Grid>
+        </Grid>
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -48,14 +55,9 @@
                 </StackPanel>
             </Grid>
         </Grid>
-
-        <StackPanel Visibility="{Binding ShowCompletionDetails, Converter={StaticResource BoolToVis}}">
+        <Grid Grid.Row="2" Visibility="{Binding ShowCompletionDetails, Converter={StaticResource BoolToVis}}" >
             <grid:ObjectsGridSectionView
                 DataContext="{Binding CompletionDetails}" />
-        </StackPanel>
-        <!--<StackPanel HorizontalAlignment="Right">
-            <shared:XrmButton
-                DataContext="{Binding CloseButton}" />
-        </StackPanel>-->
-    </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>
