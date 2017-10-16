@@ -1,4 +1,5 @@
 ﻿using JosephM.Core.Attributes;
+using JosephM.Record.Attributes;
 using JosephM.Record.Metadata;
 
 namespace JosephM.Record.IService
@@ -7,10 +8,12 @@ namespace JosephM.Record.IService
     {
         //the hiddens are used for the add multiple grid view
         [DisplayOrder(10)]
+        [QuickFind]
         string DisplayName { get; }
         [Hidden]
         bool Audit { get; }
         [DisplayOrder(20)]
+        [QuickFind]
         string CollectionName { get; }
         [Hidden]
         string PrimaryFieldSchemaName { get; }
@@ -18,6 +21,7 @@ namespace JosephM.Record.IService
         string PrimaryKeyName { get; }
         [DisplayOrder(40)]
         [GridWidth(400)]
+        [QuickFind]
         string Description { get; }
         [Hidden]
         bool Notes { get; }

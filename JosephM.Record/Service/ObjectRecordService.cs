@@ -255,17 +255,28 @@ namespace JosephM.Record.Service
                 if (query.QuickFindText != null)
                 {
                     var quickFindToLower = query.QuickFindText.ToLower();
-                    var fieldsToSearch = GetFieldMetadata(query.RecordType)
+                    var props = GetPropertyInfos(query.RecordType);
+                    var quickFinds = props
+                        .Where(p => p.GetCustomAttribute<QuickFind>() != null)
+                        .Select(p => p.Name)
+                        .ToArray();
+                    if(!quickFinds.Any())
+                    {
+                        quickFinds = GetFieldMetadata(query.RecordType)
                             .Where(p => p.Searchable)
+                            .Select(p => p.SchemaName)
                             .ToArray();
+                    }
+
+
                     objects = objects
                         .Where(o =>
                         {
                             var instance = ((ObjectRecord)o).Instance;
-                            return fieldsToSearch
+                            return quickFinds
                             .Any(p =>
                             {
-                                var propValue = instance.GetPropertyValue(p.SchemaName);
+                                var propValue = instance.GetPropertyValue(p);
                                 return propValue != null && propValue.ToString().ToLower().Contains(quickFindToLower);
                             });
                         })

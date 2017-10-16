@@ -48,6 +48,8 @@ namespace JosephM.Application.ViewModel.Attributes
             return typeof(IFieldMetadata).AssemblyQualifiedName;
         }
 
+        public override bool TypeAhead {  get { return true; } }
+
         public override bool AllowQuery { get { return false; } }
 
         public override void AddSelectedItem(GridRowViewModel selectedRow, RecordEntryViewModelBase recordForm, string subGridReference)
