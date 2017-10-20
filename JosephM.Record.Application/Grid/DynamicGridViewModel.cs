@@ -370,8 +370,11 @@ namespace JosephM.Application.ViewModel.Grid
                 }
                 catch (Exception ex)
                 {
+                    //todo on entry form need to set as loaded and display the error
                     GridLoadError = true;
                     ErrorMessage = string.Format("There was an error loading data into the grid: {0}", ex.DisplayString());
+                    if (LoadedCallback != null)
+                        LoadedCallback();
                     LoadingViewModel.IsLoading = false;
                 }
             });

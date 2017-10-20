@@ -53,10 +53,11 @@ namespace JosephM.XRM.VSIX.Dialogs
             Controller.RemoveFromUi(progressControlViewModel);
             Controller.RemoveFromUi(progressControlViewModelLevel2);
 
-            foreach (var responseItem in Response.ResponseItems)
-            {
-                CompletionItems.Add(responseItem);
-            }
+            CompletionItem = Response;
+            //foreach (var responseItem in Response.ResponseItems)
+            //{
+            //    CompletionItems.Add(responseItem);
+            //}
 
             IsProcessing = false;
 

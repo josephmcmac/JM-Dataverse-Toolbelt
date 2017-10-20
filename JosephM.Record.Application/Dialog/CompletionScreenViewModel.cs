@@ -2,6 +2,8 @@
 
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 using System;
 using System.Collections.Generic;
@@ -17,14 +19,19 @@ namespace JosephM.Application.ViewModel.Dialog
     public class CompletionScreenViewModel : ViewModelBase
     {
         public CompletionScreenViewModel(Action onClose, string heading, IEnumerable<XrmButtonViewModel> options,
-            IEnumerable<object> completionDetails,
+            object completionObject,
             IApplicationController controller)
             : base(controller)
         {
             Heading = new HeadingViewModel(heading, controller);
             CompletionHeadingText = heading;
             CompletionOptions = options;
-            CompletionDetails = new ObjectsGridSectionViewModel("Summary", completionDetails, controller);
+
+
+            var formController = FormController.CreateForObject(completionObject, ApplicationController, null);
+            CompletionDetails = new ObjectDisplayViewModel(completionObject, formController);
+
+            //CompletionDetails = new ObjectsGridSectionViewModel("Summary", completionDetails, controller);
             CloseButton = new XrmButtonViewModel("Close", onClose, controller);
         }
 
@@ -35,10 +42,10 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public bool ShowCompletionDetails
         {
-            get { return CompletionDetails != null && CompletionDetails.Items.Any(); }
+            get { return true; }
         }
 
-        public ObjectsGridSectionViewModel CompletionDetails { get; set; }
+        public ObjectDisplayViewModel CompletionDetails { get; set; }
 
         public XrmButtonViewModel CloseButton { get; private set; }
     }

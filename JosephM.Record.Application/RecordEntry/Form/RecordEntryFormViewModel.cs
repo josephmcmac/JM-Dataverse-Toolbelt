@@ -284,7 +284,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        public void LoadFormSections()
+        public virtual void LoadFormSections()
         {
             //forcing enumeration up front
             var sections = FormService.GetFormMetadata(RecordType, RecordService).FormSections.ToArray();
@@ -424,7 +424,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 OnLoad();
                 foreach (var section in SubGrids)
                 {
-                    if (section.GridRecords != null)
+                    if (!section.DynamicGridViewModel.GridLoadError && section.GridRecords != null)
                         foreach (var record in section.GridRecords)
                             record.OnLoad();
                 }

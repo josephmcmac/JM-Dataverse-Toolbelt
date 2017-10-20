@@ -25,7 +25,6 @@ namespace JosephM.InstanceComparer
         {
 
             var processContainer = new ProcessContainer(request, response, controller);
-
             //ENSURE TO INCREASE THIS IF ADDING TO PROCESSES
             processContainer.NumberOfProcesses = 16;
             processContainer.NumberOfProcesses += request.DataComparisons.Count();
@@ -40,18 +39,21 @@ namespace JosephM.InstanceComparer
             AppendCaseCreationRules(processContainer);
             AppendData(processContainer);
 
+            response.Differences = processContainer.Differences;
             if (processContainer.Differences.Any())
             {
                 processContainer.Controller.LogLiteral("Generating CSV");
                 var fileName = "InstanceCompare_" + DateTime.Now.ToFileTime() + ".csv";
                 CsvUtility.CreateCsv(request.Folder.FolderPath, fileName, processContainer.Differences);
                 response.FileName = Path.Combine(request.Folder.FolderPath, fileName);
-                response.Differences = true;
+                response.AreDifferences = true;
             }
         }
 
         private void AppendCaseCreationRules(ProcessContainer processContainer)
         {
+            if (!processContainer.Request.CaseCreationRules)
+                return;
             var processCompareParams = new ProcessCompareParams("Case Creation Rule",
                 Entities.convertrule, Fields.convertrule_.name, Fields.convertrule_.name,
                 null,
@@ -77,6 +79,8 @@ namespace JosephM.InstanceComparer
 
         private void AppendData(InstanceComparerService.ProcessContainer processContainer)
         {
+            if (!processContainer.Request.Data)
+                return;
             var compares = processContainer
                 .Request.DataComparisons
                 .Select(c => new ProcessCompareParams(c, processContainer.ServiceOne))
@@ -89,6 +93,8 @@ namespace JosephM.InstanceComparer
 
         private void AppendSecurityRoles(ProcessContainer processContainer)
         {
+            if (!processContainer.Request.SecurityRoles)
+                return;
             var processCompareParams = new ProcessCompareParams("Security Role",
                 Entities.role, Fields.role_.name, Fields.role_.name,
                 new[] { new Condition(Fields.role_.parentroleid, ConditionType.Null) },
@@ -116,6 +122,8 @@ namespace JosephM.InstanceComparer
 
         private void AppendOptions(ProcessContainer processContainer)
         {
+            if (!processContainer.Request.SharedOptions)
+                return;
             var processCompareParams = new ProcessCompareParams("Shared Picklist",
                 s => s.GetSharedPicklists().ToArray(),
                 nameof(IPicklistSet.SchemaName),
@@ -140,7 +148,8 @@ namespace JosephM.InstanceComparer
         private void AppendPlugins(ProcessContainer processContainer)
         {
 
-
+            if (!processContainer.Request.Plugins)
+                return;
             var processCompareParams = new ProcessCompareParams("Plugin Assembly",
                 Entities.pluginassembly, Fields.pluginassembly_.pluginassemblyid, Fields.pluginassembly_.name,
                 new[] { new Condition(Fields.pluginassembly_.ishidden, ConditionType.NotEqual, true) },
@@ -184,6 +193,8 @@ namespace JosephM.InstanceComparer
 
         private void AppendEntities(ProcessContainer processContainer)
         {
+            if (!processContainer.Request.Entities)
+                return;
             var processCompareParams = new ProcessCompareParams("Entity",
                 s => s.GetAllRecordTypes().Select(s.GetRecordTypeMetadata).ToArray(),
                 nameof(IRecordTypeMetadata.SchemaName),
@@ -258,6 +269,8 @@ namespace JosephM.InstanceComparer
 
         private void AppendResources(ProcessContainer processContainer)
         {
+            if (!processContainer.Request.WebResource)
+                return;
             var processArgs = new ProcessCompareParams("Web Resource",
                 Entities.webresource,
                 Fields.webresource_.name,
@@ -273,6 +286,8 @@ namespace JosephM.InstanceComparer
 
         private void AppendSolutions(ProcessContainer processContainer)
         {
+            if (!processContainer.Request.Solutions)
+                return;
             var processArgs = new ProcessCompareParams("Solution",
                 Entities.solution,
                 Fields.solution_.uniquename,
@@ -285,6 +300,8 @@ namespace JosephM.InstanceComparer
 
         private void AppendWorkflows(ProcessContainer processContainer)
         {
+            if (!processContainer.Request.Workflows)
+                return;
             var processArgs = new ProcessCompareParams("Workflow",
                 Entities.workflow,
                 Fields.workflow_.workflowid,
@@ -333,7 +350,7 @@ namespace JosephM.InstanceComparer
                         //add some comments for this mess
                         if (processCompareParams.ParentLinkType == ParentLinkType.Lookup)
                         {
-                            processContainer.Controller.UpdateLevel2Progress(1, 4, "Loading Connection 1 Items");
+                            processContainer.Controller.UpdateLevel2Progress(1, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionOne.Name));
                             var serviceOneItems =
                                 processContainer.ServiceOne.RetrieveAllOrClauses(processCompareParams.RecordType,
                                     parents.Select(v => v.First())
@@ -342,7 +359,7 @@ namespace JosephM.InstanceComparer
                                                 new Condition(processCompareParams.ParentLink, ConditionType.Equal,
                                                     GetParentId(parentCompareParams, r))),
                                     null);
-                            processContainer.Controller.UpdateLevel2Progress(2, 4, "Loading Connection 2 Items");
+                            processContainer.Controller.UpdateLevel2Progress(2, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionTwo.Name));
                             var serviceTwoItems =
                                 processContainer.ServiceTwo.RetrieveAllOrClauses(processCompareParams.RecordType,
                                     parents.Select(v => v.Last())
@@ -351,7 +368,7 @@ namespace JosephM.InstanceComparer
                                                 new Condition(processCompareParams.ParentLink, ConditionType.Equal,
                                                    GetParentId(parentCompareParams, r))),
                                     null);
-                            processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing Items");
+                            processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
                             foreach (var item in serviceOneItems)
                             {
                                 var referringField = item.GetField(processCompareParams.ParentLink);
@@ -469,29 +486,29 @@ namespace JosephM.InstanceComparer
                 {
                     if (processCompareParams.Type == ProcessCompareType.Records)
                     {
-                        processContainer.Controller.UpdateLevel2Progress(1, 4, "Loading Connection 1 Items");
+                        processContainer.Controller.UpdateLevel2Progress(1, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionOne.Name));
                         var serviceOneItems = processContainer.ServiceOne.RetrieveAllAndClauses(
                             processCompareParams.RecordType, processCompareParams.Conditions, null);
-                        processContainer.Controller.UpdateLevel2Progress(2, 4, "Loading Connection 2 Items");
+                        processContainer.Controller.UpdateLevel2Progress(2, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionTwo.Name));
                         var serviceTwoItems = processContainer.ServiceTwo.RetrieveAllAndClauses(
                             processCompareParams.RecordType, processCompareParams.Conditions, null);
-                        processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing Items");
+                        processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
                         inBoth.AddRange(DoCompare(processCompareParams, processContainer, serviceOneItems, serviceTwoItems, null));
 
                     }
                     if (processCompareParams.Type == ProcessCompareType.Objects)
                     {
-                        processContainer.Controller.UpdateLevel2Progress(1, 4, "Loading Connection 1 Items");
+                        processContainer.Controller.UpdateLevel2Progress(1, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionOne.Name));
                         var serviceOneItems =
                             processCompareParams.GetObjects(null, null, processContainer.ServiceOne)
                                 .Select(o => new ObjectRecord(o))
                                 .ToArray();
-                        processContainer.Controller.UpdateLevel2Progress(2, 4, "Loading Connection 2 Items");
+                        processContainer.Controller.UpdateLevel2Progress(2, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionTwo.Name));
                         var serviceTwoItems =
                             processCompareParams.GetObjects(null, null, processContainer.ServiceTwo)
                                 .Select(o => new ObjectRecord(o))
                                 .ToArray();
-                        processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing Items");
+                        processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
                         inBoth.AddRange(DoCompare(processCompareParams, processContainer, serviceOneItems, serviceTwoItems, null));
                     }
                 }
@@ -558,7 +575,7 @@ namespace JosephM.InstanceComparer
                 {
                     var displayName = processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
                     processContainer.AddDifference(processCompareParams.Context,
-                        displayName, "In One Not In Two", parentReference, displayName, null, item.Id, null);
+                        displayName, "Only In " + processContainer.Request.ConnectionOne.Name, parentReference, displayName, null, item.Id, null);
                 }
             }
             var inTwoNotInOne = serviceTwoItems
@@ -570,7 +587,7 @@ namespace JosephM.InstanceComparer
                 {
                     var displayName = processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
                     processContainer.AddDifference(processCompareParams.Context,
-                        displayName, "In Two Not In One", parentReference, null, displayName, null, item.Id);
+                        displayName, "Only In " + processContainer.Request.ConnectionTwo.Name, parentReference, null, displayName, null, item.Id);
                 }
             }
 
@@ -620,7 +637,7 @@ namespace JosephM.InstanceComparer
                         }
                         processContainer.AddDifference(processCompareParams.Context,
                             processCompareParams.ConvertField1(processCompareParams.DisplayField, item.First().GetStringField(processCompareParams.DisplayField)),
-                            "Field Different - " + fieldLabel, parentReference, displayValue1, displayValue2, item.First().Id, item.Last().Id);
+                            "Different " + fieldLabel, parentReference, displayValue1, displayValue2, item.First().Id, item.Last().Id);
                     }
                 }
             }

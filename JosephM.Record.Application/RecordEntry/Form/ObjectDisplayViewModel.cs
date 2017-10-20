@@ -46,5 +46,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 fieldViewModel.OnChangeBase();
             });
         }
+        public override void LoadFormSections()
+        {
+            base.LoadFormSections();
+            foreach (var grid in SubGrids)
+            {
+                grid.DynamicGridViewModel.ReloadGrid();
+            }
+        }
     }
 }

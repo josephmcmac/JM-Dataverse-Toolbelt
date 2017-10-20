@@ -8,10 +8,30 @@ using System.Collections.Generic;
 namespace JosephM.InstanceComparer
 {
     [Group(Sections.Connections, true, 10)]
-    [Group(Sections.Folder, true, 20)]
+    [Group(Sections.Folder, true, 15)]
+    [Group(Sections.CompareOptions, true, 20)]
     [DisplayName("Instance Comparison")]
     public class InstanceComparerRequest : ServiceRequestBase
     {
+        [Group(Sections.CompareOptions)]
+        public bool Solutions { get; set; }
+        [Group(Sections.CompareOptions)]
+        public bool Workflows { get; set; }
+        [Group(Sections.CompareOptions)]
+        public bool WebResource { get; set; }
+        [Group(Sections.CompareOptions)]
+        public bool Entities { get; set; }
+        [Group(Sections.CompareOptions)]
+        public bool Plugins { get; set; }
+        [Group(Sections.CompareOptions)]
+        public bool SharedOptions { get; set; }
+        [Group(Sections.CompareOptions)]
+        public bool SecurityRoles { get; set; }
+        [Group(Sections.CompareOptions)]
+        public bool CaseCreationRules { get; set; }
+        [Group(Sections.CompareOptions)]
+        public bool Data { get; set; }
+
         [DisplayOrder(10)]
         [Group(Sections.Connections)]
         [RequiredProperty]
@@ -30,6 +50,7 @@ namespace JosephM.InstanceComparer
         [RequiredProperty]
         public Folder Folder { get; set; }
 
+        [PropertyInContextByPropertyValue(nameof(Data), true)]
         public IEnumerable<InstanceCompareDataCompare> DataComparisons { get; set; }
 
         [BulkAddRecordTypeFunction]
@@ -49,6 +70,7 @@ namespace JosephM.InstanceComparer
         private static class Sections
         {
             public const string Folder = "Select The Folder To Save The Generated CSV Into";
+            public const string CompareOptions = "CompareOptions";
             public const string Connections = "Select The Saved Connections For The CRM Instances To Compare";
         }
     }

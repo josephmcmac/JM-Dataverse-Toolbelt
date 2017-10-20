@@ -243,7 +243,20 @@ namespace JosephM.Record.Service
             {
                 if (query.RootFilter.Conditions.Any()
                     || query.RootFilter.SubFilters.Any())
-                    throw new NotImplementedException("Queries With Conditions Are Not Implemented");
+                {
+                    //todo sort this meess out and didn't do sorting a query top etc.
+                    //this is for getting an enumerable fields records for a grid
+                    if (!query.RootFilter.SubFilters.Any() && query.RootFilter.Conditions.Count == 1 && query.RootFilter.Conditions.First().ConditionType == ConditionType.Equal)
+                    {
+                        var condition = query.RootFilter.Conditions.First();
+                        var property = ObjectType.GetProperty(condition.FieldName);
+                        if(property == null)
+                            throw new NotImplementedException("Queries With Conditions Are Not Implemented");
+                        return GetLinkedRecords(property.PropertyType.GenericTypeArguments[0].AssemblyQualifiedName, ObjectType.AssemblyQualifiedName, condition.FieldName, condition.Value?.ToString());
+                    }
+                    else
+                        throw new NotImplementedException("Queries With Conditions Are Not Implemented");
+                }
                 if (query.Sorts.Any())
                     throw new NotImplementedException("Queries With Sorts Are Not Implemented");
                 return query.Top > 0

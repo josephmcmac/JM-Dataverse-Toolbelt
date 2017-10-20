@@ -6,6 +6,7 @@
              xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
              xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
              xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
+             xmlns:recordentry="clr-namespace:JosephM.Wpf.RecordEntry"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="600"
@@ -56,7 +57,7 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="2" Visibility="{Binding ShowCompletionDetails, Converter={StaticResource BoolToVis}}" >
-            <grid:ObjectsGridSectionView
+            <recordentry:RecordEntryView
                 DataContext="{Binding CompletionDetails}" />
         </Grid>
     </Grid>

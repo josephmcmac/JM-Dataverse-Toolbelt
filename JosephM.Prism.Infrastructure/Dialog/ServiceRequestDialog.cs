@@ -97,10 +97,13 @@ namespace JosephM.Prism.Infrastructure.Dialog
             Controller.RemoveFromUi(progressControlViewModel);
             Controller.RemoveFromUi(progressControlViewModelLevel2);
 
-            foreach (var responseItem in Response.ResponseItems)
-            {
-                CompletionItems.Add(responseItem);
-            }
+            CompletionItem = Response;
+            //foreach (var responseItem in Response.ResponseItems)
+            //{
+            //    CompletionItems.Add(responseItem);
+            //}
+
+
             if (ApplicationController.AllowSaveRequests
                 && Request.GetType().IsTypeOf(typeof(IAllowSaveAndLoad)))
             {

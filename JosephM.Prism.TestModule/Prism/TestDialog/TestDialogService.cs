@@ -12,14 +12,6 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
         public override void ExecuteExtention(TestDialogRequest request, TestDialogResponse response,
             LogController controller)
         {
-            var seconds = 60;
-
-            for (var counter = 0; counter < seconds; counter++)
-            {
-                FileUtility.AppendToFile(@"C:\Users\joseph.mcgregormacdo\Documents", "Debug Close.txt", counter + "\n");
-                Thread.Sleep(1000);
-            }
-
             if (request.ThrowResponseErrors)
             {
                 for (var i = 0; i < 100; i++)

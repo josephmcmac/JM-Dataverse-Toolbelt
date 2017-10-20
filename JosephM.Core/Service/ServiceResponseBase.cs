@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace JosephM.Core.Service
 {
+    //todo sort this and its subclasses for displaying in completion screen
     public class ServiceResponseBase<TResponseItem>
         where TResponseItem : ServiceResponseItem
     {

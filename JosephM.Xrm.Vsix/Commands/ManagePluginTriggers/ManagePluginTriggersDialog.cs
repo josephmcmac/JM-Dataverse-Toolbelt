@@ -235,7 +235,11 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
             var itemsToAdd = triggerLoads.Created.Union(triggerLoads.Updated);
             VsixUtility.AddSolutionComponents(XrmRecordService, PackageSettings, componentType, itemsToAdd);
 
-            CompletionItems.AddRange(responses);
+            CompletionItem = Response;
+            //foreach (var responseItem in Response.ResponseItems)
+            //{
+            //    CompletionItems.Add(responseItem);
+            //}
             if (responses.Any())
                 CompletionMessage = "There Were Errors Thrown Updating The Plugins";
             else
