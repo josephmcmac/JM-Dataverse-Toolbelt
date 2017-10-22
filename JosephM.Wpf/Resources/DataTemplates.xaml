@@ -11,10 +11,13 @@
                     xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
                     xmlns:html="clr-namespace:JosephM.Wpf.Html"
                     xmlns:grid1="clr-namespace:JosephM.Wpf.Grid"
-                    xmlns:query="clr-namespace:JosephM.Wpf.Query">
+                    xmlns:query="clr-namespace:JosephM.Wpf.Query"
+                    xmlns:converters="clr-namespace:JosephM.Wpf.Converters">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary>
+            <converters:BooleanToStarOrZeroConverter x:Key="BoolToStar" />
+            <converters:BooleanToZeroOrStarConverter x:Key="BoolToZero" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </ResourceDictionary>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
@@ -122,9 +125,28 @@
         HeadingTemplate="{StaticResource HeadingTemplate}"
         XrmButtonTemplate="{StaticResource XrmButtonTemplate}"
         x:Key="CompletionItemTemplateSelector" />
-    <DataTemplate x:Key="RecordEntryTemplate">
+    <DataTemplate x:Key="RecordEntryTemplateWindowMinimum">
 
-        <Grid   Height="{Binding Path=ActualHeight,
+        <Grid
+            MinHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Window,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
+            Height="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Border,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
+            <recordEntry:RecordEntryView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="RecordEntryTemplate">
+        <Grid
+            MinHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=TabControl,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
+           
+            Height="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
                                        AncestorType=Border,
                                        AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
@@ -155,6 +177,14 @@
             <grid1:GridQueryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="QueryViewTemplateWindowMinimum">
+        <Grid MinHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Window,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}" >
+            <grid1:GridQueryView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <DataTemplate x:Key="DialogDialogTemplate">
         <Grid >
             <application:DialogForm DataContext="{Binding}" />
@@ -162,11 +192,13 @@
     </DataTemplate>
     <templateSelector:DialogTemplateSelector
         RecordEntryTemplate="{StaticResource RecordEntryTemplate}"
+        RecordEntryTemplateWindowMinimum="{StaticResource RecordEntryTemplateWindowMinimum}"
         ProgressTemplate="{StaticResource ProgressControlTemplate}"
         CompletionTemplate="{StaticResource CompletionTemplate}"
         LoadingTemplate="{StaticResource LoadingTemplate}"
         ListViewTemplate="{StaticResource ListViewTemplate}"
         QueryViewTemplate="{StaticResource QueryViewTemplate}"
+        QueryViewTemplateWindowMinimum="{StaticResource QueryViewTemplateWindowMinimum}"
         DialogTemplate="{StaticResource DialogDialogTemplate}"
         x:Key="DialogTemplateSelector" />
     <DataTemplate x:Key="booleanFieldTemplate">

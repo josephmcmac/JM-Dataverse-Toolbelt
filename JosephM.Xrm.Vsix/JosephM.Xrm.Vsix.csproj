@@ -70,6 +70,8 @@
     <Compile Include="Commands\CreateDeploymentPackage\CreateDeploymentPackageDialog.cs" />
     <Compile Include="Commands\GetSolution\GetSolutionCommand.cs" />
     <Compile Include="Commands\GetSolution\GetSolutionDialog.cs" />
+    <Compile Include="Commands\Crud\CrudCommand.cs" />
+    <Compile Include="Commands\InstanceComparison\InstanceComparisonCommand.cs" />
     <Compile Include="Commands\ImportCustomisations\ImportCustomisationsCommand.cs" />
     <Compile Include="Commands\ImportCsvs\ImportCsvsCommand.cs" />
     <Compile Include="Commands\ManagePluginTriggers\ManagePluginTriggersCommand.cs" />
@@ -288,9 +290,17 @@
       <Project>{82118987-fb76-4e70-81a0-06d0b062d89c}</Project>
       <Name>JosephM.Deployment</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.InstanceComparer\JosephM.InstanceComparer.csproj">
+      <Project>{9D2F8F1B-CB77-46F2-A32B-AA7D7959A1D0}</Project>
+      <Name>JosephM.InstanceComparer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
       <Name>JosephM.ObjectMapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+      <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
+      <Name>JosephM.Application.Prism</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
       <Project>{ca2bb834-77fa-43db-8ddc-b0d1b5f519b9}</Project>

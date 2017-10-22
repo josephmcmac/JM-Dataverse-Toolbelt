@@ -81,5 +81,7 @@ namespace JosephM.Application.Application
         void OpenFile(string fileName);
 
         bool AllowSaveRequests { get; }
+
+        bool ForceElementWindowHeight { get; }
     }
 }

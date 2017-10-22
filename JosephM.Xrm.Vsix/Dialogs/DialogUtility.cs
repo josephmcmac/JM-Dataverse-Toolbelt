@@ -19,14 +19,11 @@ namespace JosephM.XRM.VSIX.Dialogs
             {
                 Title = "XRM Dialog"
             };
-            var scroll = new ScrollViewer()
-            {
-                Content = "XRM Dialog"
-            };
-            window.Content = scroll;
+            var content = new WindowShell();
+            window.Content = content;
             var dialogControl = new DialogForm();
             dialogControl.DataContext = dialog;
-            scroll.Content = dialogControl;
+            content.Content = dialogControl;
             
             Action closeMethod = () => { dialog.DoOnMainThread(() =>
             {

@@ -11,16 +11,19 @@ namespace JosephM.InstanceComparer
     {
         public static IEnumerable<InstanceComparerTypeSummary> CreateSummaries(IEnumerable<InstanceComparerDifference> differences)
         {
-            return differences
+            var summary = differences
                 .GroupBy(d => d.Type)
                 .Select(g => new InstanceComparerTypeSummary(g.Key, g.ToArray()))
                 .ToArray();
+            return summary.Any()
+                ? summary
+                : new[] { new InstanceComparerTypeSummary("No Differences Found", null) };
         }
 
         public InstanceComparerTypeSummary(string type, IEnumerable<InstanceComparerDifference> differences)
         {
             Type = type;
-            Differences = differences;
+            Differences = differences ?? new InstanceComparerDifference[0];
         }
 
         [GridField]
@@ -50,7 +53,11 @@ namespace JosephM.InstanceComparer
 
         [DisplayOrder(1000)]
         [AllowDownload]
+        [PropertyInContextByPropertyValue(nameof(HasDifferences), true)]
         public IEnumerable<InstanceComparerDifference> Differences { get; }
+
+        [Hidden]
+        public bool HasDifferences {  get { return Differences != null && Differences.Any(); } }
 
         private static class Sections
         {

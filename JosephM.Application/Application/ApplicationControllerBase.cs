@@ -193,5 +193,7 @@ namespace JosephM.Application.Application
         }
 
         public virtual bool AllowSaveRequests { get { return true; } }
+
+        public virtual bool ForceElementWindowHeight {  get { return false; } }
     }
 }
