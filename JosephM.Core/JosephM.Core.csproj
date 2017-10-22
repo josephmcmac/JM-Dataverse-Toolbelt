@@ -94,6 +94,7 @@
     <Compile Include="Attributes\AllowDownload.cs" />
     <Compile Include="Attributes\DisplayNameForPropertyValue.cs" />
     <Compile Include="Attributes\AllowSaveAndLoad.cs" />
+    <Compile Include="Attributes\GridField.cs" />
     <Compile Include="Attributes\Group.cs" />
     <Compile Include="Attributes\DoNotAllowAdd.cs" />
     <Compile Include="Attributes\ConnectionFor.cs" />

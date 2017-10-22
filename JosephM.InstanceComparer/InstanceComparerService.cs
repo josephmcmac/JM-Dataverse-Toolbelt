@@ -23,7 +23,7 @@ namespace JosephM.InstanceComparer
         {
 
             var processContainer = new ProcessContainer(request, response, controller);
-            response.Differences = processContainer.Differences;
+            response.AllDifferences = processContainer.Differences;
             //ENSURE TO INCREASE THIS IF ADDING TO PROCESSES
 
             AppendSolutions(processContainer);
@@ -1053,7 +1053,7 @@ namespace JosephM.InstanceComparer
                     ? null
                     : new Url(url2String, string.Format("Open ({0})", Request.ConnectionTwo.Name));
 
-                Differences.Add(new InstanceComparerDifference(type, name == null ? null : name.ToString(), difference, parentReference, value1 == null ? null : value1.ToString(), value2 == null ? null : value2.ToString(), url1, url2));
+                Differences.Add(new InstanceComparerDifference(type, name == null ? null : name.ToString(), difference, parentReference, value1 == null ? null : value1.ToString(), value2 == null ? null : value2.ToString(), url1, url2, id1, id2));
             }
 
             internal bool ProcessIfManagedComponentExclude(ProcessCompareParams processCompareParams, IRecord item, bool isInConnection1)

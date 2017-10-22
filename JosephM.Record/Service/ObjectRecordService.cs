@@ -718,13 +718,25 @@ namespace JosephM.Record.Service
         {
             var viewFields = new List<ViewField>();
             var allObjects = RetreiveAll(new QueryDefinition(recordType));
+            var areExplicitGridFields = false;
             foreach (var propertyInfo in GetPropertyInfos(recordType))
             {
                 var hiddenAttribute = propertyInfo.GetCustomAttribute<HiddenAttribute>();
                 if (propertyInfo.CanRead && hiddenAttribute == null)
                 {
+                    var gridFieldAttribute = propertyInfo.GetCustomAttribute<GridField>();
+                    if(gridFieldAttribute != null && !areExplicitGridFields)
+                    {
+                        areExplicitGridFields = true;
+                        viewFields.Clear();
+                    }
                     //so lets not display a field if it is read only and is out of contxt for all records
-                    if (!propertyInfo.CanWrite && allObjects.All(o => !((ObjectRecord)o).Instance.IsInContext(propertyInfo.Name)))
+                    if (!propertyInfo.CanWrite && allObjects.All(o => {
+                        var instance = ((ObjectRecord)o).Instance;
+                        return instance.GetPropertyValue(propertyInfo.Name) == null || !instance.IsInContext(propertyInfo.Name);
+                    }))
+                        continue;
+                    if (areExplicitGridFields && gridFieldAttribute == null)
                         continue;
                     //these initial values repeated
                     var viewField = new ViewField(propertyInfo.Name,10000, 200);
