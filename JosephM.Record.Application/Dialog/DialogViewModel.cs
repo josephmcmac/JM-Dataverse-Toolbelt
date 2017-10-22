@@ -19,8 +19,8 @@ namespace JosephM.Application.ViewModel.Dialog
     {
         public Action OverideCompletionScreenMethod { get; set; }
 
-        private readonly ObservableCollection<object> _completionItems =
-            new ObservableCollection<object>();
+        //private readonly ObservableCollection<object> _completionItems =
+        //    new ObservableCollection<object>();
 
         private readonly ObservableCollection<XrmButtonViewModel> _completionOptions =
             new ObservableCollection<XrmButtonViewModel>();
@@ -69,9 +69,9 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public string CompletionMessage { get; set; }
 
-        public ObservableCollection<object> CompletionItems
+        public object CompletionItem
         {
-            get { return _completionItems; }
+            get; set;
         }
 
         public ObservableCollection<XrmButtonViewModel> CompletionOptions

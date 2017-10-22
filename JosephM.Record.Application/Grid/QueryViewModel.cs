@@ -92,6 +92,7 @@ namespace JosephM.Application.ViewModel.Grid
                         }
                     }, (g) => g.SelectedRows.Count() == 1));
                 }
+                customFunctionList.Add(new CustomGridFunction("CSV", "Download CSV", (g) => g.DownloadCsv(), (g) => g.GridRecords != null && g.GridRecords.Any()));
 
                 if (CustomFunctions != null)
                 {
@@ -298,7 +299,7 @@ namespace JosephM.Application.ViewModel.Grid
         {
             var query = GenerateQuery();
 
-            if (!DynamicGridViewModel.HasPaging)
+            if (!DynamicGridViewModel.HasPaging || ignorePages)
             {
                 var records = DynamicGridViewModel.RecordService.RetreiveAll(query);
                 return new GetGridRecordsResponse(records);

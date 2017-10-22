@@ -36,6 +36,9 @@ namespace JosephM.XRM.VSIX.Dialogs
 
         protected override void CompleteDialogExtention()
         {
+            //todo refactor this to use the same dialog as app
+            //so runs same dialog completion
+
             LoadingViewModel.IsLoading = false;
             IsProcessing = true;
 
@@ -53,10 +56,7 @@ namespace JosephM.XRM.VSIX.Dialogs
             Controller.RemoveFromUi(progressControlViewModel);
             Controller.RemoveFromUi(progressControlViewModelLevel2);
 
-            foreach (var responseItem in Response.ResponseItems)
-            {
-                CompletionItems.Add(responseItem);
-            }
+            CompletionItem = Response;
 
             IsProcessing = false;
 

@@ -55,7 +55,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             };
             var response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
-                throw response.ResponseItemsWithError.First().Exception;
+                throw response.GetResponseItemsWithError().First().Exception;
 
             importerExporterService = new XrmImporterExporterService<XrmRecordService>(XrmRecordService);
 
@@ -69,7 +69,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             };
             response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
-                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
             File.Copy(@"jmcg_testentity.csv", Path.Combine(workFolder, @"jmcg_testentity.csv"));
 
@@ -106,7 +106,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             };
             response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
-                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
             var entity = XrmService.GetFirst(Entities.jmcg_testentity, Fields.jmcg_testentity_.jmcg_name, "BLAH 2");
             Assert.AreEqual(XrmPicklists.State.Inactive, entity.GetOptionSetValue(Fields.jmcg_testentity_.statecode));
@@ -314,7 +314,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             };
             var response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
-                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
             var entity = XrmService.GetFirst(Entities.account);
             Assert.IsTrue(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
@@ -329,7 +329,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             };
             response = importerExporterService.Execute(request, Controller);
             if (response.HasError)
-                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
             entity = XrmService.GetFirst(Entities.account);
             Assert.IsFalse(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));

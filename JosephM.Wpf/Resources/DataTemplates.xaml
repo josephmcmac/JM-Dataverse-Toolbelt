@@ -11,10 +11,13 @@
                     xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
                     xmlns:html="clr-namespace:JosephM.Wpf.Html"
                     xmlns:grid1="clr-namespace:JosephM.Wpf.Grid"
-                    xmlns:query="clr-namespace:JosephM.Wpf.Query">
+                    xmlns:query="clr-namespace:JosephM.Wpf.Query"
+                    xmlns:converters="clr-namespace:JosephM.Wpf.Converters">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary>
+            <converters:BooleanToStarOrZeroConverter x:Key="BoolToStar" />
+            <converters:BooleanToZeroOrStarConverter x:Key="BoolToZero" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </ResourceDictionary>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
@@ -73,11 +76,17 @@
          x:Key="conditionTemplateSelector"
         />
     <DataTemplate x:Key="TabItemTemplate">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Border Grid.Row="0" Name="tabBorder">
             <ContentControl
                 Content="{Binding}"
                 ContentTemplateSelector="{StaticResource viewTemplateSelector}" />
-        </ScrollViewer>
+            </Border>
+        </Grid>
     </DataTemplate>
     <DataTemplate x:Key="TabItemHeaderTemplate">
         <DockPanel>
@@ -116,8 +125,31 @@
         HeadingTemplate="{StaticResource HeadingTemplate}"
         XrmButtonTemplate="{StaticResource XrmButtonTemplate}"
         x:Key="CompletionItemTemplateSelector" />
+    <DataTemplate x:Key="RecordEntryTemplateWindowMinimum">
+
+        <Grid
+            MinHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Window,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
+            Height="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Border,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
+            <recordEntry:RecordEntryView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <DataTemplate x:Key="RecordEntryTemplate">
-        <Grid>
+        <Grid
+            MinHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=TabControl,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
+           
+            Height="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Border,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
             <recordEntry:RecordEntryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -127,7 +159,7 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="CompletionTemplate">
-        <application:CompletionScreen
+        <application:CompletionScreen Height="{Binding ActualHeight, ElementName=tabBorder}"
             DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="ListViewTemplate">
@@ -145,18 +177,28 @@
             <grid1:GridQueryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="QueryViewTemplateWindowMinimum">
+        <Grid MinHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Window,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}" >
+            <grid1:GridQueryView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <DataTemplate x:Key="DialogDialogTemplate">
-        <Grid>
+        <Grid >
             <application:DialogForm DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
     <templateSelector:DialogTemplateSelector
         RecordEntryTemplate="{StaticResource RecordEntryTemplate}"
+        RecordEntryTemplateWindowMinimum="{StaticResource RecordEntryTemplateWindowMinimum}"
         ProgressTemplate="{StaticResource ProgressControlTemplate}"
         CompletionTemplate="{StaticResource CompletionTemplate}"
         LoadingTemplate="{StaticResource LoadingTemplate}"
         ListViewTemplate="{StaticResource ListViewTemplate}"
         QueryViewTemplate="{StaticResource QueryViewTemplate}"
+        QueryViewTemplateWindowMinimum="{StaticResource QueryViewTemplateWindowMinimum}"
         DialogTemplate="{StaticResource DialogDialogTemplate}"
         x:Key="DialogTemplateSelector" />
     <DataTemplate x:Key="booleanFieldTemplate">
@@ -204,6 +246,9 @@
     <DataTemplate x:Key="DecimalFieldTemplate">
         <field:DecimalFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="UrlFieldTemplate">
+        <field:UrlFieldView DataContext="{Binding}" />
+    </DataTemplate>
     <templateSelector:FieldTemplateSelector
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
@@ -220,6 +265,7 @@
         RecordFieldFieldTemplate="{StaticResource RecordFieldFieldTemplate}"
         EnumerableFieldTemplate="{StaticResource EnumerableFieldTemplate}"
         DecimalFieldTemplate="{StaticResource DecimalFieldTemplate}"
+        UrlFieldTemplate="{StaticResource UrlFieldTemplate}"
         x:Key="fieldTemplateSelector" />
     <!--<DataTemplate x:Key="labelledFieldTemplate" >
         <WrapPanel>

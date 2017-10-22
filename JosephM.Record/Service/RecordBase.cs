@@ -66,7 +66,12 @@ namespace JosephM.Record.Service
             return GetBoolFieldNullable(field) ?? false;
         }
 
-        public string Id { get; set; }
+        private string _id;
+        public virtual string Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
 
         public int? GetIntegerFieldNullable(string fieldName)
         {

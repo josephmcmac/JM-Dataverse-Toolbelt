@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Prism.Infrastructure.Dialog;
+using System.Linq;
 
 namespace JosephM.InstanceComparer
 {
@@ -14,10 +15,9 @@ namespace JosephM.InstanceComparer
         protected override void CompleteDialogExtention()
         {
             base.CompleteDialogExtention();
-            if (Response.FileName != null)
-                AddCompletionOption("Open CSV", () => ApplicationController.OpenFile(Response.FileName));
-            if (Response.Differences)
-                CompletionMessage = "Differences Were Found Between The Enviornments. See The Generated CSV";
+
+            if (Response.AreDifferences)
+                CompletionMessage = "Differences Were Found Between The Environments";
             else
                 CompletionMessage = "No Difference Were Found";
         }

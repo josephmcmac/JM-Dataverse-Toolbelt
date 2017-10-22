@@ -8,6 +8,11 @@ using Microsoft.Practices.Unity;
 using JosephM.Application.Application;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.XRM.VSIX.Utilities;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Prism.Infrastructure.Module.Crud;
+using JosephM.Application.ViewModel.Dialog;
+using JosephM.Record.Service;
 
 namespace JosephM.XRM.VSIX.Dialogs
 {
@@ -51,6 +56,16 @@ namespace JosephM.XRM.VSIX.Dialogs
             container.RegisterInstance(typeof(ISettingsManager), new VsixSettingsManager(visualStudioService));
             container.RegisterInstance(typeof(ISavedXrmConnections), settings);
             return container;
+        }
+
+        public void RegisterInstance(Type type, string key, object instance)
+        {
+            UnityContainer.RegisterInstance(type, key, instance);
+        }
+
+        public object ResolveInstance(Type type, string key)
+        {
+            return UnityContainer.Resolve(type, key);
         }
     }
 }

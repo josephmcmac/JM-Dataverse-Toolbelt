@@ -12,10 +12,11 @@ using JosephM.Xrm.Schema;
 
 namespace JosephM.CustomisationImporter.Service
 {
+    [AllowSaveAndLoad]
     [DisplayName("Import Customisations")]
     [Group(Sections.File, true, 10)]
     [Group(Sections.Solution, true, 20)]
-    [Group(Sections.Include, true, 30)]
+    [Group(Sections.Include, true, order: 30, selectAll: true)]
     public class CustomisationImportRequest : ServiceRequestBase
     {
         [DisplayOrder(10)]

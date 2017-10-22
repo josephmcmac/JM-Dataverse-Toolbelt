@@ -13,6 +13,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
     {
         private readonly ObjectRecord _objectRecord;
 
+        public override int GridPageSize { get { return 25; } }
+
         public ObjectDisplayViewModel(object objectToEnter, FormController formController)
             : base(formController)
         {
@@ -45,6 +47,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 var fieldViewModel = GetFieldViewModel(propertyChangedEventArgs.PropertyName);
                 fieldViewModel.OnChangeBase();
             });
+        }
+        public override void LoadFormSections()
+        {
+            base.LoadFormSections();
+            foreach (var grid in SubGrids)
+            {
+                grid.DynamicGridViewModel.ReloadGrid();
+            }
         }
     }
 }

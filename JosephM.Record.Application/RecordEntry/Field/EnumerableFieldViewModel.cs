@@ -15,6 +15,7 @@ using System.IO;
 using System.Diagnostics;
 using JosephM.Record.Extentions;
 using JosephM.Application.ViewModel.Extentions;
+using JosephM.Record.Metadata;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -26,13 +27,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             if (recordForm is RecordEntryFormViewModel)
             {
                 RecordForm = (RecordEntryFormViewModel)recordForm;
-                RecordFields = recordForm.FormService.GetGridMetadata(linkedRecordType);
                 LinkedRecordType = linkedRecordType;
 
                 DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
                 {
-                    RecordFields = RecordFields,
                     PageSize = RecordForm.GridPageSize,
+                    ViewType = ViewType.AssociatedView,
                     DeleteRow = recordForm.IsReadOnly ? (Action<GridRowViewModel>)null : RemoveRow,
                     EditRow = EditRow,
                     AddRow = !recordForm.IsReadOnly && FormService.AllowAddRow(ReferenceName) ? AddRow : (Action)null,
@@ -54,11 +54,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         _isLoaded = true;
                         RecordForm.OnSectionLoaded();
                     },
-                    OnlyValidate = recordForm.OnlyValidate
+                    OnlyValidate = recordForm.OnlyValidate,
+                    MaxHeight = 300,
+                    LoadDialog = (d) => { RecordEntryViewModel.LoadChildForm(d); }
                 };
                 DynamicGridViewModel.AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);
-                var customFunctions = FormService.GetCustomFunctionsFor(ReferenceName, GetRecordForm()).ToList();
-                //customFunctions.Add(new CustomGridFunction("Download CSV", DownloadCsv));
+                var customFunctions = FormService.GetCustomFunctionsFor(ReferenceName, (RecordEntryFormViewModel) GetRecordForm()).ToList();
                 DynamicGridViewModel.LoadGridButtons(customFunctions);
             }
         }
@@ -112,7 +113,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     throw new NotImplementedException("No Form For Type");
                 }
                 else
+                {
+                    viewModel.IsReadOnly = IsReadOnly;
                     RecordForm.LoadChildForm(viewModel);
+                }
             }
             catch (Exception ex)
             {
@@ -135,7 +139,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             return viewModel;
         }
 
-        public IEnumerable<GridFieldMetadata> RecordFields
+        public IEnumerable<GridFieldMetadata> GridFieldMetadata
         {
             get; set;
         }

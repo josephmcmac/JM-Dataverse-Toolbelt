@@ -26,12 +26,18 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
             RecordService = recordService;
         }
 
+        private string _tabLabel = "Browse/Update Data";
         public override string TabLabel
         {
             get
             {
-                return "Browse/Update Data";
+                return _tabLabel;
             }
+        }
+
+        public void SetTabLabel(string newLabel)
+        {
+            _tabLabel = newLabel;
         }
 
         protected override void CompleteDialogExtention()

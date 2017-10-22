@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.AppConfig;
 using Microsoft.Practices.Unity;
 
@@ -40,6 +41,16 @@ namespace JosephM.Record.Application.Fakes
         public void RegisterTypeForNavigation<T>()
         {
             UnityContainer.RegisterType(typeof(object), typeof(T), typeof(T).FullName);
+        }
+
+        public void RegisterInstance(Type type, string key, object instance)
+        {
+            UnityContainer.RegisterInstance(type, key, instance);
+        }
+
+        public object ResolveInstance(Type type, string key)
+        {
+            return UnityContainer.Resolve(type, key);
         }
     }
 }

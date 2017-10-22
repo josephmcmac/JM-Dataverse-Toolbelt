@@ -23,9 +23,6 @@ namespace JosephM.Application.ViewModel.Attributes
             get { return typeof(RecordField); }
         }
 
-        //todo object needs optimising for type ahead
-        //public override bool TypeAhead { get { return true; } }
-
         public override IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
         {
             var targetPropertyInfo = GetTargetProperty(recordForm, subGridReference);
@@ -47,6 +44,8 @@ namespace JosephM.Application.ViewModel.Attributes
         {
             return typeof(IFieldMetadata).AssemblyQualifiedName;
         }
+
+        public override bool TypeAhead {  get { return true; } }
 
         public override bool AllowQuery { get { return false; } }
 

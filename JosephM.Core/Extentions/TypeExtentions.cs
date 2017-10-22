@@ -133,5 +133,35 @@ namespace JosephM.Core.Extentions
                 .Invoke(null, new object[] { typedEnumerable });
             return typedEnumerable;
         }
+
+
+        public static IEnumerable<PropertyInfo> GetAllPropertyInfos(this Type classType)
+        {
+            var properties = classType.GetProperties().ToList();
+            if (classType.IsInterface)
+            {
+                var interfaces = classType.GetInterfaces();
+                foreach (var interface_ in interfaces)
+                {
+                    foreach (var item in interface_.GetProperties())
+                    {
+                        if (!properties.Any(m => m.Name == item.Name))
+                            properties.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                if (classType.BaseType != null)
+                {
+                    foreach (var item in classType.BaseType.GetProperties())
+                    {
+                        if (!properties.Any(m => m.Name == item.Name))
+                            properties.Add(item);
+                    }
+                }
+            }
+            return properties;
+        }
     }
 }

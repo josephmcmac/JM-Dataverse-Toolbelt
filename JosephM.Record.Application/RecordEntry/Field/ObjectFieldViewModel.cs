@@ -155,7 +155,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             if (Value == null)
                 return null;
             //just use this type of irecord as only for an irecord reference and otherwise may throw type error
-            var iReocrd = new RecordObject(RecordTypeToLookup);
+            var iReocrd = new ObjectRecord(Value);
             //iReocrd.Id = Value.Id;
             return new ReferencePicklistItem(iReocrd, Value.ToString());
         }

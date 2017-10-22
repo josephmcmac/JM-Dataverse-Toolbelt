@@ -6,6 +6,7 @@
              xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
              xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
              xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
+             xmlns:recordentry="clr-namespace:JosephM.Wpf.RecordEntry"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="600"
@@ -19,13 +20,20 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical">
-        <TextBox Background="Transparent"
-         BorderThickness="0"
-         Text="{Binding CompletionHeadingText, Mode=OneWay}"
-         IsReadOnly="True"
-         TextWrapping="Wrap" />
-        <Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"  Visibility="{Binding DisplayCompletionHeading, Converter={StaticResource BoolToVis}}">
+            <TextBox Background="Transparent"
+             BorderThickness="0"
+             Text="{Binding CompletionHeadingText, Mode=OneWay}"
+             IsReadOnly="True"
+             TextWrapping="Wrap" />
+        </Grid>
+        <Grid Grid.Row="1"  Visibility="{Binding DisplayCompletionHeading, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -48,14 +56,9 @@
                 </StackPanel>
             </Grid>
         </Grid>
-
-        <StackPanel Visibility="{Binding ShowCompletionDetails, Converter={StaticResource BoolToVis}}">
-            <grid:ObjectsGridSectionView
+        <Grid Grid.Row="2" Visibility="{Binding ShowCompletionDetails, Converter={StaticResource BoolToVis}}" >
+            <recordentry:RecordEntryView
                 DataContext="{Binding CompletionDetails}" />
-        </StackPanel>
-        <!--<StackPanel HorizontalAlignment="Right">
-            <shared:XrmButton
-                DataContext="{Binding CloseButton}" />
-        </StackPanel>-->
-    </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>

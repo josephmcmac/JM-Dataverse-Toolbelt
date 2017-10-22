@@ -11,14 +11,17 @@ namespace JosephM.ObjectMapping
             var targetType = from.GetType();
             object to;
             if (targetType.HasParameterlessConstructor())
+            {
                 to = targetType.CreateFromParameterlessConstructor();
+                Map(from, to);
+            }
             else
-                throw new NullReferenceException(
-                    string.Format(
-                        "Type {0} Is Required To Have A Parameterless Constructor To Be Mapped By This Class",
-                        targetType.Name));
-            
-            Map(from, to);
+                to = from;
+            //throw new NullReferenceException(
+            //    string.Format(
+            //        "Type {0} Is Required To Have A Parameterless Constructor To Be Mapped By This Class",
+            //        targetType.Name));
+
             return (T) to;
         }
     }

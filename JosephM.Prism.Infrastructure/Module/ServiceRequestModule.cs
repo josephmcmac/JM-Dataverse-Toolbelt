@@ -1,9 +1,11 @@
 ﻿using JosephM.Application;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Dialog;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace JosephM.Prism.Infrastructure.Module
 {
@@ -33,12 +35,15 @@ namespace JosephM.Prism.Infrastructure.Module
 
             //add setting option for accessing saved requests
             //requests may be saved during the dialog
-            AddSetting("Saved " + typeof(TRequest).GetDisplayName(), () =>
+            if (typeof(TRequest).GetCustomAttribute<AllowSaveAndLoad>() != null)
             {
-                var uri = new UriQuery();
-                uri.Add("Type", typeof(TRequest).AssemblyQualifiedName);
-                ApplicationController.NavigateTo(typeof(SavedRequestDialog), uri);
-            });
+                AddSetting("Saved " + typeof(TRequest).GetDisplayName(), () =>
+                {
+                    var uri = new UriQuery();
+                    uri.Add("Type", typeof(TRequest).AssemblyQualifiedName);
+                    ApplicationController.NavigateTo(typeof(SavedRequestDialog), uri);
+                });
+            }
         }
     }
 }

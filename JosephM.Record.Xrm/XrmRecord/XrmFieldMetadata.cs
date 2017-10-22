@@ -1,4 +1,5 @@
-﻿using JosephM.Record.IService;
+﻿using JosephM.Core.Attributes;
+using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Xrm;
@@ -11,7 +12,7 @@ namespace JosephM.Record.Xrm.XrmRecord
     public class XrmFieldMetadata : XrmConfigurationBase, IFieldMetadata
     {
         private string FieldName { get; set; }
-        private string RecordType { get; set; }
+        public string RecordType { get; set; }
 
         public XrmFieldMetadata(string fieldName, string recordType, XrmService xrmService)
             : base(xrmService)
@@ -212,6 +213,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        [Key]
         public string MetadataId
         {
             get

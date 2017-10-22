@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Record.Extentions;
@@ -110,7 +111,7 @@ namespace JosephM.Prism.XrmModule.Test
             valueField.Value = newValue;
             bulkUpdateEntry.SaveButtonViewModel.Invoke();
             var completionScreen = bulkUpdateDialog.Controller.UiItems.First() as CompletionScreenViewModel;
-            Assert.IsFalse(completionScreen.CompletionDetails.Items.Any());
+            Assert.IsFalse(completionScreen.CompletionDetails.GetSubGridViewModel(nameof(BulkUpdateResponse.ResponseItems)).GetGridRecords(false).Records.Any());
             completionScreen.CloseButton.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }

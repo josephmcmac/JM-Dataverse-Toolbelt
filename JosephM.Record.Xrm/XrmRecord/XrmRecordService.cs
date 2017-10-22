@@ -1006,6 +1006,14 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        public string GetWebUrl(string recordType, string id, string additionalparams = null)
+        {
+            var idGuid = Guid.Empty;
+            if (!Guid.TryParse(id, out idGuid))
+                return null;
+            return XrmService.GetWebUrl(recordType, idGuid, additionalparams);
+        }
+
         public IFormService GetFormService()
         {
             return _formService;

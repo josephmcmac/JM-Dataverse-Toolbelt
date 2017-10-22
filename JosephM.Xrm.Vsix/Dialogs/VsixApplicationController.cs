@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using JosephM.Application;
+﻿using JosephM.Application;
 using JosephM.Application.Application;
 using JosephM.Core.AppConfig;
-using Microsoft.Practices.Unity;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Forms;
 
 namespace JosephM.XRM.VSIX.Dialogs
 {
@@ -35,7 +34,7 @@ namespace JosephM.XRM.VSIX.Dialogs
         public override void UserMessage(string message)
         {
             DoOnMainThread(
-                () => MessageBox.Show(message));
+                () => System.Windows.MessageBox.Show(message));
     //        VsShellUtilities.ShowMessageBox(
     //this.ServiceProvider,
     //"Finished",
@@ -52,7 +51,7 @@ namespace JosephM.XRM.VSIX.Dialogs
             const string caption = "Confirm";
             const MessageBoxButton button = MessageBoxButton.YesNo;
             const MessageBoxImage icon = MessageBoxImage.Warning;
-            var result = MessageBox.Show(messageBoxText, caption, button, icon);
+            var result = System.Windows.MessageBox.Show(messageBoxText, caption, button, icon);
             return result == MessageBoxResult.Yes;
         }
 
@@ -63,12 +62,22 @@ namespace JosephM.XRM.VSIX.Dialogs
 
         public override string GetSaveFileName(string initialFileName, string extention)
         {
-            throw new NotImplementedException();
+            var selectFolderDialog = new SaveFileDialog() { DefaultExt = extention, FileName = initialFileName, Filter = string.Format("{0} files |*{0}", extention) };
+            var result = selectFolderDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                return selectFolderDialog.FileName;
+            }
+            return null;
         }
 
         public override string GetSaveFolderName()
         {
-            throw new NotImplementedException();
+            var selectFolderDialog = new FolderBrowserDialog { ShowNewFolderButton = true };
+            var dialogResult = selectFolderDialog.ShowDialog();
+            return dialogResult == DialogResult.OK
+                ? selectFolderDialog.SelectedPath
+                : null;
         }
 
         public override IEnumerable<object> GetObjects(string regionName)
@@ -77,5 +86,7 @@ namespace JosephM.XRM.VSIX.Dialogs
         }
 
         public override bool AllowSaveRequests {  get { return false; } }
+
+        public override bool ForceElementWindowHeight { get { return true; } }
     }
 }

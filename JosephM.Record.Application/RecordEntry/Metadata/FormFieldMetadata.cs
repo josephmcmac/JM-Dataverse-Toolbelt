@@ -301,6 +301,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             }
                             break;
                         }
+                    case RecordFieldType.Url:
+                        {
+                            fieldVm = new UrlFieldViewModel(field, label, recordForm)
+                            {
+                                IsRecordServiceField = isRecordServiceField
+                            };
+                            break;
+                        }
                 }
                 if (fieldVm == null)
                     fieldVm = new UnmatchedFieldViewModel(field, label, recordForm)

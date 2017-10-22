@@ -7,6 +7,7 @@ using JosephM.Xrm.Schema;
 
 namespace JosephM.RecordCounts.Exporter
 {
+    [AllowSaveAndLoad]
     [Group(Sections.Folder, true, 10)]
     [Group(Sections.RecordOwnerOptions, true, 20)]
     [Group(Sections.RecordTypes, true, 30)]

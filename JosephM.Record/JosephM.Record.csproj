@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\EnumerableRecordFieldMap.cs" />
+    <Compile Include="Attributes\QuickFind.cs" />
     <Compile Include="Attributes\NotSearchable.cs" />
     <Compile Include="Attributes\ValidForFieldTypes.cs" />
     <Compile Include="Attributes\LimitPicklist.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Metadata\Fields\CustomerFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\ObjectFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\StateFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\UrlFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\UniqueidentifierFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\DoubleFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\StatusFieldMetadata.cs" />

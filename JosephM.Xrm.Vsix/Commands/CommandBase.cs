@@ -2,8 +2,12 @@
 using EnvDTE80;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.Extentions;
+using JosephM.Prism.Infrastructure.Module.Crud;
+using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
@@ -13,6 +17,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Linq;
 using System.Windows;
 
 namespace JosephM.XRM.VSIX.Commands
@@ -216,7 +221,33 @@ namespace JosephM.XRM.VSIX.Commands
             if (settings == null)
                 settings = GetPackageSettings();
             var container = VsixDependencyContainer.Create(settings, GetVisualStudioService());
+            var applicationController = new VsixApplicationController(container);
+            var customGridFunction = new CustomGridFunction("CRUD", "Browse Selected", (g) =>
+            {
+                if (g.SelectedRows.Count() != 1)
+                {
+                    applicationController.UserMessage("Please select 1 connection to browse");
+                }
+                else
+                {
+                    var selectedRow = g.SelectedRows.First();
+                    var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
+                    if (instance != null)
+                    {
+                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var dialog = new CrudDialog(new DialogController(applicationController), xrmRecordService);
+                        dialog.SetTabLabel("Browse " + instance.Name);
+                        g.LoadDialog(dialog);
+                    }
+                }                
+            }, (g) => g.GridRecords != null && g.GridRecords.Any());
+            var functions = new CustomGridFunctions();
+            functions.AddFunction(customGridFunction);
+            //todo this should add the function not just inject it
+            applicationController.RegisterInstance(typeof(CustomGridFunctions), typeof(SavedXrmRecordConfiguration).AssemblyQualifiedName, functions);
             var controller = new DialogController(new VsixApplicationController(container));
+            container.RegisterInstance(typeof(IApplicationController),applicationController);
+            container.RegisterType<IDialogController, DialogController>();
             return controller;
         }
     }

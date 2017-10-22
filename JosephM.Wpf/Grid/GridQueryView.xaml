@@ -17,17 +17,18 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <converters:NullToHiddenConverter x:Key="NullToHidden" />
+            <converters:LengthConverter x:Key="LengthConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border>
+    <Grid Height="{Binding ActualHeight, ElementName=tabBorder, Converter={StaticResource LengthConverter}, ConverterParameter=.97}" >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition />
+                <RowDefinition  Height="*" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
                 <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
@@ -35,14 +36,14 @@
             <Grid Grid.Row="1"
               Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"  />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0"  Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition />
+                            <RowDefinition Height="*"  />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0"  Visibility="{Binding MultipleRecordTypes, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <WrapPanel>
@@ -69,7 +70,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition />
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <Grid Grid.Row="0" >
                                     <WrapPanel Orientation="Horizontal">
@@ -101,7 +102,10 @@
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Row="2" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
-                                    <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
+                                    <Border  MaxHeight="{Binding MaxHeight}">
+                                        <ScrollViewer>
+                                        <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
+                                        </ScrollViewer></Border>
                                 </Grid>
                                 <Grid Grid.Row="3" >
                                     <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
@@ -118,5 +122,5 @@
                 </Grid>
             </Grid>
         </Grid>
-    </Border>
+    </Grid>
 </UserControl>

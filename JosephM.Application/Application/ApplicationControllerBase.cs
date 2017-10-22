@@ -192,6 +192,18 @@ namespace JosephM.Application.Application
             throw new NotImplementedException();
         }
 
+        public void RegisterInstance(Type type, string key, object instance)
+        {
+            Container.RegisterInstance(type, key, instance);
+        }
+
+        public object ResolveInstance(Type type, string key)
+        {
+            return Container.ResolveInstance(type, key);
+        }
+
         public virtual bool AllowSaveRequests { get { return true; } }
+
+        public virtual bool ForceElementWindowHeight {  get { return false; } }
     }
 }

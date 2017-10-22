@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using JosephM.Record.Metadata;
 using JosephM.Core.Attributes;
+using JosephM.Record.Attributes;
 
 namespace JosephM.Record.IService
 {
@@ -14,6 +15,7 @@ namespace JosephM.Record.IService
         [Hidden]
         bool IsMandatory { get; }
         [DisplayOrder(40)]
+        [QuickFind]
         string DisplayName { get; }
         [Hidden]
         int MaxLength { get; }
@@ -25,6 +27,7 @@ namespace JosephM.Record.IService
         bool IsPrimaryKey { get; }
         [DisplayOrder(80)]
         [GridWidth(400)]
+        [QuickFind]
         string Description { get; }
         [Hidden]
         bool Audit { get; }
@@ -59,5 +62,7 @@ namespace JosephM.Record.IService
         bool IsDisplayRelated { get; }
         [Hidden]
         int Order { get; }
+        [Hidden]
+        string RecordType { get; }
     }
 }

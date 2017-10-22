@@ -1,5 +1,7 @@
 ﻿#region
 
+using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,8 @@ using System.Linq;
 
 namespace JosephM.Core.Service
 {
+    [Group(Sections.FatalError, false, 0)]
+    [Group(Sections.ResponseItems, false, 1)]
     public class ServiceResponseBase<TResponseItem>
         where TResponseItem : ServiceResponseItem
     {
@@ -24,7 +28,10 @@ namespace JosephM.Core.Service
             Exception = ex;
         }
 
+        [Hidden]
         public bool Success { get; private set; }
+
+        [Hidden]
         public Exception Exception { get; set; }
 
         public void AddResponseItem(TResponseItem responseItem)
@@ -37,19 +44,42 @@ namespace JosephM.Core.Service
             _errors.AddRange(responseItems);
         }
 
+        [AllowDownload]
+        [Group(Sections.ResponseItems)]
+        [DisplayOrder(20)]
+        [PropertyInContextByPropertyValue(nameof(HasResponseItems), true)]
         public IEnumerable<TResponseItem> ResponseItems
         {
             get { return _errors; }
         }
 
-        public IEnumerable<TResponseItem> ResponseItemsWithError
+        public IEnumerable<TResponseItem> GetResponseItemsWithError()
         {
-            get { return ResponseItems.Where(e => e.HasError); }
+            return ResponseItems.Where(e => e.HasError);
         }
 
+        [Hidden]
+        public bool HasResponseItems
+        {
+            get { return ResponseItems.Any(); }
+        }
+
+        [Hidden]
+        public bool HasResponseItemError
+        {
+            get { return ResponseItems.Any(r => r.HasError); }
+        }
+
+        [Hidden]
         public bool HasError
         {
-            get { return Exception != null || ResponseItems.Any(r => r.HasError); }
+            get { return Exception != null || HasResponseItemError; }
+        }
+
+        private static class Sections
+        {
+            public const string FatalError = "Summary";
+            public const string ResponseItems = "Response Items";
         }
     }
 }

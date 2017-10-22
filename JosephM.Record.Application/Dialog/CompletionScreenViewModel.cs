@@ -2,9 +2,12 @@
 
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 #endregion
@@ -17,15 +20,29 @@ namespace JosephM.Application.ViewModel.Dialog
     public class CompletionScreenViewModel : ViewModelBase
     {
         public CompletionScreenViewModel(Action onClose, string heading, IEnumerable<XrmButtonViewModel> options,
-            IEnumerable<object> completionDetails,
+            object completionObject,
             IApplicationController controller)
             : base(controller)
         {
             Heading = new HeadingViewModel(heading, controller);
             CompletionHeadingText = heading;
             CompletionOptions = options;
-            CompletionDetails = new ObjectsGridSectionViewModel("Summary", completionDetails, controller);
+
+            if (completionObject != null)
+            {
+                var formController = FormController.CreateForObject(completionObject, ApplicationController, null);
+                CompletionDetails = new ObjectDisplayViewModel(completionObject, formController);
+                CompletionDetails.PropertyChanged += CompletionDetails_PropertyChanged;
+            }
+
+            //CompletionDetails = new ObjectsGridSectionViewModel("Summary", completionDetails, controller);
             CloseButton = new XrmButtonViewModel("Close", onClose, controller);
+        }
+
+        private void CompletionDetails_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ObjectDisplayViewModel.MainFormInContext))
+                OnPropertyChanged(nameof(DisplayCompletionHeading));
         }
 
         public string CompletionHeadingText { get; set; }
@@ -35,11 +52,16 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public bool ShowCompletionDetails
         {
-            get { return CompletionDetails != null && CompletionDetails.Items.Any(); }
+            get { return CompletionDetails != null; }
         }
 
-        public ObjectsGridSectionViewModel CompletionDetails { get; set; }
+        public ObjectDisplayViewModel CompletionDetails { get; set; }
 
         public XrmButtonViewModel CloseButton { get; private set; }
+
+        public bool DisplayCompletionHeading
+        {
+            get { return CompletionDetails == null || CompletionDetails.MainFormInContext; }
+        }
     }
 }

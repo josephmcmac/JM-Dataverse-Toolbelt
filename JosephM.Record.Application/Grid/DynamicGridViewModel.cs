@@ -16,6 +16,10 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using System.Threading;
+using JosephM.Core.Utility;
+using System.IO;
+using JosephM.Record.Extentions;
+using JosephM.Application.ViewModel.Dialog;
 
 #endregion
 
@@ -49,7 +53,11 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 Enabled = false
             };
+            MaxHeight = 1000;
+            LoadDialog = (d) => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(LoadDialog))); };
         }
+
+        public int MaxHeight { get; set; }
 
         public XrmButtonViewModel GetButton(string id)
         {
@@ -130,12 +138,20 @@ namespace JosephM.Application.ViewModel.Grid
                     if (GridRecords == null || !GridRecords.Any())
                         description.Append("No Records");
                     else
-                        description.Append(string.Format("Displaying Records {0} to {1}", CurrentPageFloor + 1,
+                        description.Append(string.Format("Records {0} to {1}", CurrentPageFloor + 1,
                             CurrentPageFloor + GridRecords.Count));
                     return description.ToString();
                 }
                 else
                     return null;
+            }
+        }
+
+        public bool IsNotFirstPage
+        {
+            get
+            {
+                return CurrentPage != 1;
             }
         }
 
@@ -150,6 +166,7 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 _hasMoreRows = value;
                 NextPageButton.Enabled = _hasMoreRows;
+                OnPropertyChanged(nameof(HasMoreRows));
             }
         }
 
@@ -166,7 +183,8 @@ namespace JosephM.Application.ViewModel.Grid
                 _currentPage = value;
                 //okay need to refresh the set of rows
                 ReloadGrid();
-                OnPropertyChanged("CurrentPage");
+                OnPropertyChanged(nameof(CurrentPage));
+                OnPropertyChanged(nameof(IsNotFirstPage));
                 PreviousPageButton.Enabled = _currentPage > 1;
             }
         }
@@ -353,7 +371,7 @@ namespace JosephM.Application.ViewModel.Grid
                         try
                         {
                             GridRecords = GridRowViewModel.LoadRows(records, this);
-                            OnPropertyChanged("PageDescription");
+                            OnPropertyChanged(nameof(PageDescription));
                             HasMoreRows = getRecordsResponse.HasMoreRecords;
                         }
                         catch (Exception ex)
@@ -372,6 +390,8 @@ namespace JosephM.Application.ViewModel.Grid
                 {
                     GridLoadError = true;
                     ErrorMessage = string.Format("There was an error loading data into the grid: {0}", ex.DisplayString());
+                    if (LoadedCallback != null)
+                        LoadedCallback();
                     LoadingViewModel.IsLoading = false;
                 }
             });
@@ -429,25 +449,25 @@ namespace JosephM.Application.ViewModel.Grid
 
         public bool IsReadOnly { get; set; }
 
-        private IEnumerable<GridFieldMetadata> _recordFields;
+        private IEnumerable<GridFieldMetadata> _fieldMetadata;
         private readonly object _lockthis = new object();
-        public IEnumerable<GridFieldMetadata> RecordFields
+        public IEnumerable<GridFieldMetadata> FieldMetadata
         {
             get
             {
                 lock (_lockthis)
                 {
-                    if (_recordFields == null && RecordService != null)
+                    if (_fieldMetadata == null && RecordService != null)
                     {
-                        _recordFields =
+                        _fieldMetadata =
                             RecordType == null
                             ? new GridFieldMetadata[0]
                             : RecordService.GetGridFields(RecordType, ViewType);
                     }
                 }
-                return _recordFields;
+                return _fieldMetadata;
             }
-            set { _recordFields = value; }
+            set { _fieldMetadata = value; }
         }
 
         public FormController FormController { get; set; }
@@ -499,6 +519,36 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
         public IDictionary<string, IEnumerable<string>> OnlyValidate { get; internal set; }
+        public Action<DialogViewModel> LoadDialog { get; set; }
+
+        public void DownloadCsv()
+        {
+            var newFileName = ApplicationController.GetSaveFileName(string.Format("{0}", RecordService.GetCollectionName(RecordType)), "csv");
+            ApplicationController.DoOnAsyncThread(() =>
+            {
+                try
+                {
+                    LoadingViewModel.IsLoading = true;
+                    if (!string.IsNullOrWhiteSpace(newFileName))
+                    {
+
+                        var folder = Path.GetDirectoryName(newFileName);
+                        var fileName = Path.GetFileName(newFileName);
+                        var fields = FieldMetadata.Select(rf => rf.FieldName);
+                        CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records, fields, (f) => RecordService.GetFieldLabel(f, RecordType), (r, f) => { return RecordService.GetFieldAsDisplayString((IRecord)r, f); });
+                        ApplicationController.StartProcess(folder);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ApplicationController.UserMessage("Error Downloading CSV: " + ex.DisplayString());
+                }
+                finally
+                {
+                    LoadingViewModel.IsLoading = false;
+                }
+            });
+        }
     }
 
     public class GetGridRecordsResponse

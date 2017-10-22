@@ -319,5 +319,10 @@ namespace JosephM.Record.Service
         {
             return null;
         }
+
+        public string GetWebUrl(string recordType, string id, string additionalparams = null)
+        {
+            return null;
+        }
     }
 }

@@ -25,9 +25,28 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <TextBlock
-                    Text="{Binding SectionLabel}"
-                    Style="{StaticResource HeadingStyle}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <TextBlock
+                            Text="{Binding SectionLabel}"
+                            Style="{StaticResource HeadingStyle}" />
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <ItemsControl
+                            ItemsSource="{Binding CustomFunctions}"
+                            ItemTemplate="{StaticResource XrmButtonTemplate}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                </Grid>
             </Grid>
             <Grid Grid.Row="1">
                 <ItemsControl 

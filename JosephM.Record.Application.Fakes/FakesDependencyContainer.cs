@@ -38,5 +38,15 @@ namespace JosephM.Application.ViewModel.Fakes
             UnityContainer.RegisterType(typeof(T), typeof(T));
             UnityContainer.RegisterType(typeof(object), typeof(T), typeof(T).FullName);
         }
+
+        public void RegisterInstance(Type type, string key, object instance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object ResolveInstance(Type type, string key)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

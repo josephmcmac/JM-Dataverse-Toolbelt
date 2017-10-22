@@ -225,7 +225,11 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
                 responseItem.Exception = item.Value;
                 responses.Add(responseItem);
             }
-            CompletionItems.AddRange(responses);
+            CompletionItem = new PluginTypeDeployResponse()
+            {
+                Responses = responses
+            };
+            //CompletionItems.AddRange(responses);
 
             //add plugin assembly to the solution
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
@@ -261,6 +265,12 @@ namespace JosephM.XRM.VSIX.Commands.DeployAssembly
                           ".dll";
 
             return Assembly.LoadFrom(file);
+        }
+
+
+        public class PluginTypeDeployResponse
+        {
+            public IEnumerable<PluginTypeErrors> Responses { get; set; }
         }
 
         public class PluginTypeErrors : ServiceResponseItem

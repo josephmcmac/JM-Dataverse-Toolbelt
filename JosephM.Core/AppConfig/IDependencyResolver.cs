@@ -11,5 +11,7 @@ namespace JosephM.Core.AppConfig
         object ResolveType(string typeName);
         void RegisterType<I, T>();
         void RegisterTypeForNavigation<T>();
+        void RegisterInstance(Type type, string key, object instance);
+        object ResolveInstance(Type type, string key);
     }
 }

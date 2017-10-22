@@ -52,36 +52,6 @@ namespace JosephM.Migration.Prism.Module.Sql
 
         }
 
-        public override IEnumerable<GridFieldMetadata> GetGridMetadata(string recordType)
-        {
-            var referencingTypeMetadata = RecordMetadata.First(m => m.SchemaName == recordType);
-            var gridFields = new List<GridFieldMetadata>();
-            var view = referencingTypeMetadata.Views != null && referencingTypeMetadata.Views.Any()
-                ? referencingTypeMetadata.Views.First()
-                : null;
-            if (view != null)
-            {
-                gridFields.AddRange(view.Fields.Select(f => new GridFieldMetadata(f)));
-            }
-            else
-            {
-                foreach (var referencingTypeFields in referencingTypeMetadata.Fields)
-                {
-
-                    {
-                        var gridField = new GridFieldMetadata(referencingTypeFields.SchemaName);
-                        gridFields.Add(gridField);
-                    }
-                }
-            }
-            foreach (var gridField in gridFields.ToArray())
-            {
-                if (gridField.FieldName == referencingTypeMetadata.PrimaryKeyName)
-                    gridFields.Remove(gridField);
-            }
-            return gridFields;
-        }
-
         public override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave,
             Action onCancel, GridRowViewModel gridRow)
         {

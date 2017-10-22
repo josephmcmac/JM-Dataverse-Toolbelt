@@ -4,20 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+             xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
              DataContextChanged="OnDataContextChanged">
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:BooleanToStarOrZeroConverter x:Key="BoolToStar" />
+            <converters:BooleanToZeroOrStarConverter x:Key="BoolToZero" />
+            <converters:LengthConverter x:Key="LengthConverter" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Name="MainGrid">
+    <Grid Name="MainGrid" Height="{Binding ActualHeight, ElementName=tabBorder, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="*"  />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" >
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
@@ -26,8 +30,8 @@
               Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
+                <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToStar}, Mode=OneWay}" />
+                <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToZero}, Mode=OneWay}" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Visibility="{Binding ShowProgressControlViewModel, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
                 <shared:ProgressControl
@@ -39,7 +43,7 @@
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
                 ItemsSource="{Binding Controller.UiItems}" />
             </Grid>
-            <Grid Grid.Row="2" >
+            <Grid Grid.Row="2"  Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}" >
                 <ItemsControl
                 Name="ChildrenPanel"
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"

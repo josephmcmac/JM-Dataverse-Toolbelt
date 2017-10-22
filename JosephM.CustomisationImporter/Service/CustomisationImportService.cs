@@ -51,7 +51,7 @@ namespace JosephM.CustomisationImporter.Service
             var relationshipMetadataToImport =
                 ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, controller, response);
 
-            if(response.ResponseItemsWithError.Any())
+            if(response.GetResponseItemsWithError().Any())
             {
                 response.ExcelReadErrors = true;
                 return;

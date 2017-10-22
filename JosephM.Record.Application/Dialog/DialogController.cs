@@ -34,7 +34,7 @@ namespace JosephM.Application.ViewModel.Dialog
         public virtual void ShowCompletionScreen(DialogViewModel dialog)
         {
             var completionScreenViewModel = new CompletionScreenViewModel(dialog.OnCancel ?? Close, dialog.CompletionMessage,
-                dialog.CompletionOptions, dialog.CompletionItems,
+                dialog.CompletionOptions, dialog.CompletionItem,
                 ApplicationController);
             LoadToUi(completionScreenViewModel);
         }

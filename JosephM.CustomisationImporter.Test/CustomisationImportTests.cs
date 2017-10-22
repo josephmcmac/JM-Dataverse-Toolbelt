@@ -70,7 +70,7 @@ namespace JosephM.CustomisationImporter.Test
 
             var response = importService.Execute(request, Controller);
             if (response.HasError)
-                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
             Assert.IsFalse(response.ExcelReadErrors);
             Assert.IsNull(response.Exception);
@@ -120,7 +120,7 @@ namespace JosephM.CustomisationImporter.Test
 
             response = importService.Execute(request, Controller);
             if (response.HasError)
-                Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
             Assert.IsFalse(response.ExcelReadErrors);
             Assert.IsNull(response.Exception);
@@ -155,7 +155,7 @@ namespace JosephM.CustomisationImporter.Test
             {
                 var response = importService.Execute(request, Controller);
                 if (response.HasError)
-                    Assert.Fail(response.ResponseItemsWithError.First().Exception.DisplayString());
+                    Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
                 Assert.IsFalse(response.ExcelReadErrors);
                 Assert.IsNull(response.Exception);

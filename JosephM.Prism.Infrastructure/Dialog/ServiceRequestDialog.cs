@@ -13,6 +13,7 @@ using System.Linq;
 using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
 using JosephM.Application.ViewModel.Extentions;
+using System.Reflection;
 
 namespace JosephM.Prism.Infrastructure.Dialog
 {
@@ -97,12 +98,16 @@ namespace JosephM.Prism.Infrastructure.Dialog
             Controller.RemoveFromUi(progressControlViewModel);
             Controller.RemoveFromUi(progressControlViewModelLevel2);
 
-            foreach (var responseItem in Response.ResponseItems)
-            {
-                CompletionItems.Add(responseItem);
-            }
+            CompletionItem = Response;
+            //foreach (var responseItem in Response.ResponseItems)
+            //{
+            //    CompletionItems.Add(responseItem);
+            //}
+
+
             if (ApplicationController.AllowSaveRequests
-                && Request.GetType().IsTypeOf(typeof(IAllowSaveAndLoad)))
+                && Request.GetType().IsTypeOf(typeof(IAllowSaveAndLoad))
+                && Request.GetType().GetCustomAttribute<AllowSaveAndLoad>() != null)
             {
                 AddCompletionOption("Save Request", SaveRequest);
             }

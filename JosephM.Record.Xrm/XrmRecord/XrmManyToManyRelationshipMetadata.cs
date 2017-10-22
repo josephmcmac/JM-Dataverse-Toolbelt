@@ -5,6 +5,7 @@ using System.Text;
 using JosephM.Record.Metadata;
 using JosephM.Xrm;
 using Microsoft.Xrm.Sdk.Metadata;
+using JosephM.Core.Attributes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -43,7 +44,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         public int RecordType1DisplayOrder { get { return GetManyToManyDisplayOrder(false); } }
         public int RecordType2DisplayOrder { get { return GetManyToManyDisplayOrder(true); } }
         public bool IsCustomRelationship { get { return GetMetadata().IsCustomRelationship ?? false; } }
-
+        [Key]
         public string MetadataId
         {
             get

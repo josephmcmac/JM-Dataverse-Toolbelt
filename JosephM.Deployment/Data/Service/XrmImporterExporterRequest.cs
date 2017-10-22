@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
+    [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.CsvImport, true, 20)]
     [Group(Sections.IncludeWithExportedRecords, true, 30)]

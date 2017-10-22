@@ -6,6 +6,7 @@ using JosephM.Core.Service;
 
 namespace JosephM.CustomisationExporter.Exporter
 {
+    [AllowSaveAndLoad]
     [DisplayName("Export Customisations")]
     [Group(Sections.Folder, true, 10)]
     [Group(Sections.RecordsFieldsoptions, true, 20)]

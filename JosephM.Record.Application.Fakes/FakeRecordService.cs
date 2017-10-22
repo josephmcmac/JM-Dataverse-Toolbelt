@@ -317,7 +317,7 @@ namespace JosephM.Application.ViewModel.Fakes
 
         internal static IEnumerable<FieldMetadata> GetFakeRecordFieldMetadata()
         {
-            return new FieldMetadata[]
+            var fieldMetadata = new List<FieldMetadata>(new FieldMetadata[]
             {
                 new StringFieldMetadata(FakeConstants.Id, "Id") { IsPrimaryKey = true },
                 new StringFieldMetadata(FakeConstants.PrimaryField, "Record Name") {IsPrimaryField = true},
@@ -335,7 +335,10 @@ namespace JosephM.Application.ViewModel.Fakes
                     new DecimalFieldMetadata(FakeConstants.RecordType, FakeConstants.DecimalField, "A Decimal"),
                     new DoubleFieldMetadata(FakeConstants.RecordType, FakeConstants.DoubleField, "A Double"),
                     new MoneyFieldMetadata(FakeConstants.RecordType, FakeConstants.MoneyField, "A Money"),
-            };
+            });
+            for (var i = 1; i <= 50; i++)
+                fieldMetadata.Add(new StringFieldMetadata(FakeConstants.StringField + i, "An String" + i));
+            return fieldMetadata;
         }
 
         internal static IEnumerable<FieldMetadata> GetFakeRecordFieldMetadata2()

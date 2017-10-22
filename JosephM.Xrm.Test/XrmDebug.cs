@@ -14,8 +14,6 @@ namespace JosephM.Xrm.Test
         {
             var blah = XrmService.WhoAmI();
 
-            var targetTypes = XrmService.GetLookupTargetEntity(Schema.Fields.annotation_.objectid, Schema.Entities.annotation);
-            //DeleteOnlineSampleData();
         }
 
         private void DeleteOnlineSampleData()

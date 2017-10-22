@@ -67,7 +67,7 @@ namespace JosephM.Record.Metadata
         public virtual bool IsSharedPicklist { get { return false; } }
         public virtual string PicklistName { get { return null; } }
         public bool IsCustomField { get; set; }
-
+        [Key]
         public string MetadataId { get; set; }
 
         public string SchemaNameQualified
@@ -135,6 +135,8 @@ namespace JosephM.Record.Metadata
             }
             else if (type == typeof(decimal))
                 fm = new DecimalFieldMetadata(internalName, label);
+            else if (type == typeof(Url))
+                fm = new UrlFieldMetadata(internalName, label);
             else
                 fm = new ObjectFieldMetadata(recordType, internalName, label, propertyInfo.ReflectedType);
             if (fm == null)

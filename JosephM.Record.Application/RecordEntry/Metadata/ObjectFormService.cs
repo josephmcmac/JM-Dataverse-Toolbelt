@@ -21,6 +21,8 @@ using JosephM.Record.Query;
 using JosephM.Record.Service;
 using JosephM.Record.Extentions;
 using JosephM.Application.ViewModel.Attributes;
+using JosephM.Core.Utility;
+using System.IO;
 
 #endregion
 
@@ -62,8 +64,24 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var otherSections = new Dictionary<string, List<FormFieldMetadata>>();
                 foreach(var section in fieldSections)
                 {
+                    var functions = new List<CustomFormFunction>();
+                    if(section.SelectAll)
+                    {
+                        functions.Add(new CustomFormFunction("SELECTALL", "SELECT ALL", (re) =>
+                        {
+                            var entryForm = re as RecordEntryFormViewModel;
+                            if (entryForm != null)
+                            {
+                                var thisSection = entryForm.GetFieldSection(section.Name);
+                                var booleanFields = thisSection.Fields.Where(f => f is BooleanFieldViewModel).Cast<BooleanFieldViewModel>();
+                                var turnOff = booleanFields.All(b => b.Value);
+                                foreach (var field in booleanFields)
+                                    field.Value = !turnOff;
+                            }
+                        }));
+                    }
                     otherSections[section.Name] = new List<FormFieldMetadata>();
-                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.DisplayLayout, section.Order);
+                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.DisplayLayout, section.Order, customFunctions: functions);
                     formSections.Add(newSection);
                 }
 
@@ -134,31 +152,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 _formMetadata = new FormMetadata(formSections);
             }
             return _formMetadata;
-        }
-
-        public override IEnumerable<GridFieldMetadata> GetGridMetadata(string recordType)
-        {
-            //very similar logic in get saved views
-            var gridFields = new List<GridFieldMetadata>();
-            foreach (var field in ObjectRecordService.GetFields(recordType))
-            {
-                var propertyInfo = ObjectRecordService.GetPropertyInfo(field, recordType);
-                if (propertyInfo.GetCustomAttribute<HiddenAttribute>() == null)
-                {
-                    var gridField = new GridFieldMetadata(field);
-                    gridField.IsEditable = propertyInfo.CanWrite;
-                    var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
-                    if (orderAttribute != null)
-                        gridField.Order = orderAttribute.Order;
-                    else
-                        gridField.Order = 100000;
-                    var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
-                    if (widthAttribute != null)
-                        gridField.WidthPart = widthAttribute.Width;
-                    gridFields.Add(gridField);
-                }
-            }
-            return gridFields;
         }
 
         public override bool IsFieldInContext(string fieldName, IRecord record)
@@ -768,7 +761,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 : lookupService.GetPrimaryField(recordTypeToLookup);
         }
 
-        internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)
+        internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
         {
             var functions = new Dictionary<string, Action>();
             var enumeratedType = ObjectRecordService.GetPropertyType(referenceName, recordForm.GetRecordType()).GenericTypeArguments[0];
@@ -780,7 +773,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     functions.Add(item.GetFunctionLabel(), item.GetCustomFunction(recordForm, referenceName));
                 }
             }
-            return functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToArray();
+            var allowDownloadAttribute = ObjectRecordService.GetPropertyInfo(referenceName, recordForm.RecordType).GetCustomAttribute<AllowDownload>();
+            if (allowDownloadAttribute != null)
+            {
+                functions.Add("Download CSV", () => { recordForm.GetSubGridViewModel(referenceName).DynamicGridViewModel.DownloadCsv(); });
+            }
+            var customGridFunctions = functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToList();
+            var injectedFunctions = recordForm.ApplicationController.ResolveInstance(typeof(CustomGridFunctions), enumeratedType.AssemblyQualifiedName) as CustomGridFunctions;
+            if (injectedFunctions != null)
+                customGridFunctions.AddRange(injectedFunctions.CustomFunctions);
+            return customGridFunctions;
         }
 
         public override Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)

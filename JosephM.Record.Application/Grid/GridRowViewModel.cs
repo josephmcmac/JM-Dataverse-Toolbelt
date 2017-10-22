@@ -67,7 +67,7 @@ namespace JosephM.Application.ViewModel.Grid
 
         public IEnumerable<GridFieldMetadata> GridFields
         {
-            get { return GridViewModel.RecordFields; }
+            get { return GridViewModel.FieldMetadata; }
         }
 
         private readonly List<FieldViewModelBase> _gridFields = new List<FieldViewModelBase>();

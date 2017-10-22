@@ -11,6 +11,7 @@ using JosephM.Xrm.Schema;
 
 namespace JosephM.Prism.XrmTestModule.DebugModule
 {
+    [AllowSaveAndLoad]
     public class DebugDialogRequest : ServiceRequestBase
     {
         [FileMask(FileMasks.ZipFile)]

@@ -155,12 +155,18 @@
     <Compile Include="Application\ApplicationHeadingView.xaml.cs">
       <DependentUpon>ApplicationHeadingView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Application\WindowShell.xaml.cs">
+      <DependentUpon>WindowShell.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DecimalTextBox.cs" />
     <Compile Include="Converters\BooleanToMultiSelectConverter.cs" />
+    <Compile Include="Converters\BooleanToZeroOrStarConverter.cs" />
+    <Compile Include="Converters\BooleanToStarOrZeroConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\BooleanToFalseConverter.cs" />
     <Compile Include="Converters\FileRefToStringConverter.cs" />
     <Compile Include="Converters\NullOrEmptyStringToVisibilityConverter.cs" />
+    <Compile Include="Converters\LengthConverter.cs" />
     <Compile Include="Grid\DynamicGridView.xaml.cs">
       <DependentUpon>DynamicGridView.xaml</DependentUpon>
     </Compile>
@@ -215,6 +221,10 @@
     <Compile Include="Grid\GridBooleanFieldView.xaml.cs">
       <DependentUpon>GridBooleanFieldView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Grid\GridUrlFieldView.xaml.cs">
+      <DependentUpon>GridUrlFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridUrlColumn.cs" />
     <Compile Include="Grid\GridStringColumn.cs" />
     <Compile Include="Grid\GridStringFieldView.xaml.cs">
       <DependentUpon>GridStringFieldView.xaml</DependentUpon>
@@ -296,6 +306,9 @@
     <Compile Include="Grid\GridListView.xaml.cs">
       <DependentUpon>GridListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\UrlFieldView.xaml.cs">
+      <DependentUpon>UrlFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Shared\FieldLoadingView.xaml.cs">
       <DependentUpon>FieldLoadingView.xaml</DependentUpon>
     </Compile>
@@ -372,6 +385,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Application\WindowShell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\DynamicGridView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -425,6 +442,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grid\GridBooleanFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridUrlFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -509,6 +530,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grid\GridListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\UrlFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

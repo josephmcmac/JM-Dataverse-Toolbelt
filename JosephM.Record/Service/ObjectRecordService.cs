@@ -241,53 +241,65 @@ namespace JosephM.Record.Service
             }
             if (!query.IsQuickFind)
             {
-                if (query.RootFilter.Conditions.Any()
-                    || query.RootFilter.SubFilters.Any())
+                if (query.RootFilter.SubFilters.Any()
+                    || query.RootFilter.Conditions.Count > 1
+                    || (query.RootFilter.Conditions.Count == 1 && query.RootFilter.Conditions.First().ConditionType != ConditionType.Equal))
+                {
                     throw new NotImplementedException("Queries With Conditions Are Not Implemented");
-                if (query.Sorts.Any())
-                    throw new NotImplementedException("Queries With Sorts Are Not Implemented");
-                return query.Top > 0
-                    ? objects.Take(query.Top)
-                    : objects;
+                }
             }
             else
             {
                 if (query.QuickFindText != null)
                 {
                     var quickFindToLower = query.QuickFindText.ToLower();
-                    var fieldsToSearch = GetFieldMetadata(query.RecordType)
+                    var props = GetPropertyInfos(query.RecordType);
+                    var quickFinds = props
+                        .Where(p => p.GetCustomAttribute<QuickFind>() != null)
+                        .Select(p => p.Name)
+                        .ToArray();
+                    if(!quickFinds.Any())
+                    {
+                        quickFinds = GetFieldMetadata(query.RecordType)
                             .Where(p => p.Searchable)
+                            .Select(p => p.SchemaName)
                             .ToArray();
+                    }
+
+
                     objects = objects
                         .Where(o =>
                         {
                             var instance = ((ObjectRecord)o).Instance;
-                            return fieldsToSearch
+                            return quickFinds
                             .Any(p =>
                             {
-                                var propValue = instance.GetPropertyValue(p.SchemaName);
+                                var propValue = instance.GetPropertyValue(p);
                                 return propValue != null && propValue.ToString().ToLower().Contains(quickFindToLower);
                             });
                         })
                         .ToList();
                 }
-                var newSorts = new List<SortExpression>(query.Sorts);
-                if (!newSorts.Any())
+            }
+            var newSorts = new List<SortExpression>(query.Sorts);
+            if (!newSorts.Any())
+            {
+                newSorts.OrderBy(o => o.ToString()).ToList();
+            }
+            else
+            {
+                newSorts.Reverse();
+                foreach (var sort in newSorts.Take(1))
                 {
-                    newSorts.OrderBy(o => o.ToString()).ToList();
-                }
-                else
-                {
-                    newSorts.Reverse();
-                    foreach (var sort in newSorts.Take(1))
-                    {
-                        var comparer = new ObjectComparer(sort.FieldName);
-                        objects.Sort(comparer);
-                        if (sort.SortType == SortType.Descending)
-                            objects.Reverse();
-                    }
+                    var comparer = new ObjectComparer(sort.FieldName);
+                    objects.Sort(comparer);
+                    if (sort.SortType == SortType.Descending)
+                        objects.Reverse();
                 }
             }
+            objects = query.Top > 0
+                ? objects.Take(query.Top).ToList()
+                : objects;
             return objects;
         }
 
@@ -335,32 +347,9 @@ namespace JosephM.Record.Service
         public IEnumerable<PropertyInfo> GetPropertyInfos(string recordType)
         {
             var classType = GetClassType(recordType);
-            var properties = classType.GetProperties().ToList();
-            if (classType.IsInterface)
-            {
-                var interfaces = classType.GetInterfaces();
-                foreach (var interface_ in interfaces)
-                {
-                    foreach (var item in interface_.GetProperties())
-                    {
-                        if (!properties.Any(m => m.Name == item.Name))
-                            properties.Add(item);
-                    }
-                }
-            }
-            else
-            {
-                if (classType.BaseType != null)
-                {
-                    foreach (var item in classType.BaseType.GetProperties())
-                    {
-                        if (!properties.Any(m => m.Name == item.Name))
-                            properties.Add(item);
-                    }
-                }
-            }
-            return properties;
+            return classType.GetAllPropertyInfos();
         }
+
 
         /// <summary>
         /// If Nullable Return The Nullable Type
@@ -727,15 +716,30 @@ namespace JosephM.Record.Service
 
         public override IEnumerable<ViewMetadata> GetViews(string recordType)
         {
-            //very similar logic in form get grid metadata
             var viewFields = new List<ViewField>();
+            var allObjects = RetreiveAll(new QueryDefinition(recordType));
+            var areExplicitGridFields = false;
             foreach (var propertyInfo in GetPropertyInfos(recordType))
             {
                 var hiddenAttribute = propertyInfo.GetCustomAttribute<HiddenAttribute>();
                 if (propertyInfo.CanRead && hiddenAttribute == null)
                 {
+                    var gridFieldAttribute = propertyInfo.GetCustomAttribute<GridField>();
+                    if(gridFieldAttribute != null && !areExplicitGridFields)
+                    {
+                        areExplicitGridFields = true;
+                        viewFields.Clear();
+                    }
+                    //so lets not display a field if it is read only and is out of contxt for all records
+                    if (!propertyInfo.CanWrite && allObjects.All(o => {
+                        var instance = ((ObjectRecord)o).Instance;
+                        return instance.GetPropertyValue(propertyInfo.Name) == null || !instance.IsInContext(propertyInfo.Name);
+                    }))
+                        continue;
+                    if (areExplicitGridFields && gridFieldAttribute == null)
+                        continue;
                     //these initial values repeated
-                    var viewField = new ViewField(propertyInfo.Name, int.MaxValue, 200);
+                    var viewField = new ViewField(propertyInfo.Name,10000, 200);
                     var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
                     if (orderAttribute != null)
                         viewField.Order = orderAttribute.Order;
