@@ -737,7 +737,6 @@ namespace JosephM.Record.Service
                     viewFields.Add(viewField);
                 }
             }
-            //todo somehow exclude fields if read only and all out of context
             return new[] { new ViewMetadata(viewFields.OrderBy(o => o.Order).ToArray()) { ViewType = ViewType.LookupView } };
         }
 

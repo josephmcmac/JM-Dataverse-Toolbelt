@@ -12,7 +12,6 @@ namespace JosephM.Core.Service
 {
     [Group(Sections.FatalError, false, 0)]
     [Group(Sections.ResponseItems, false, 1)]
-    //todo sort this and its subclasses for displaying in completion screen
     public class ServiceResponseBase<TResponseItem>
         where TResponseItem : ServiceResponseItem
     {
