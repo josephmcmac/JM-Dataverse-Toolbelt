@@ -106,10 +106,10 @@ namespace JosephM.Wpf.Grid
             {
                 gridSectionViewModel.ApplicationController.DoOnAsyncThread(() =>
                 {
-                    if (gridSectionViewModel.RecordFields == null)
+                    if (gridSectionViewModel.FieldMetadata == null)
                         return;
                     var columnMetadata = new List<ColumnMetadata>();
-                    foreach (var gridField in gridSectionViewModel.RecordFields.OrderBy(gf => gf.Order))
+                    foreach (var gridField in gridSectionViewModel.FieldMetadata.OrderBy(gf => gf.Order))
                     {
                         var fieldName = gridField.FieldName;
                         var fieldType = gridSectionViewModel.RecordService.GetFieldType(fieldName,
@@ -248,6 +248,13 @@ namespace JosephM.Wpf.Grid
                             else if (column.FieldType == RecordFieldType.Money)
                             {
                                 dataGridField = new GridMoneyColumn()
+                                {
+                                    Binding = cellBinding
+                                };
+                            }
+                            else if (column.FieldType == RecordFieldType.Url)
+                            {
+                                dataGridField = new GridUrlColumn()
                                 {
                                     Binding = cellBinding
                                 };

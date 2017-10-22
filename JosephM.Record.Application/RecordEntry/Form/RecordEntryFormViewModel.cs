@@ -173,6 +173,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             get { return FormSectionsAsync.Where(s => s is FieldSectionViewModel).Cast<FieldSectionViewModel>(); }
         }
 
+        public FieldSectionViewModel GetFieldSection(string name)
+        {
+            return FieldSections.First(s => s.SectionLabel == name);
+        }
+
         public void UserMessage(string message)
         {
             ApplicationController.UserMessage(message);

@@ -16,15 +16,8 @@ namespace JosephM.InstanceComparer
         {
             base.CompleteDialogExtention();
 
-            //if (Response.Differences.Any())
-            //    CompletionItems.Add(Response.Differences);
-
-            //todo finish off changing this to displaying results with csv download option
-
-            if (Response.FileName != null)
-                AddCompletionOption("Open CSV", () => ApplicationController.OpenFile(Response.FileName));
             if (Response.AreDifferences)
-                CompletionMessage = "Differences Were Found Between The Environments. See The Generated CSV";
+                CompletionMessage = "Differences Were Found Between The Environments";
             else
                 CompletionMessage = "No Difference Were Found";
         }

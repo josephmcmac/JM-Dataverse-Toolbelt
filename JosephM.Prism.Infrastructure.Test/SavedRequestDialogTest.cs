@@ -59,6 +59,7 @@ namespace JosephM.Prism.Infrastructure.Test
             Assert.IsTrue(entryForm.Validate());
         }
 
+        [AllowSaveAndLoad]
         public class TestSavedRequestDialogRequest : ServiceRequestBase
         {
             [RequiredProperty]

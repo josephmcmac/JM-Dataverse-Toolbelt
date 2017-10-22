@@ -5,6 +5,7 @@ using System.Text;
 using JosephM.Record.Metadata;
 using JosephM.Xrm;
 using Microsoft.Xrm.Sdk.Metadata;
+using JosephM.Core.Attributes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -52,7 +53,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return IsCustomLabel ? GetCustomLabel(mt.AssociatedMenuConfiguration) : XrmService.GetEntityCollectionName(mt.ReferencingEntity);
             }
         }
-
+        [Key]
         public string MetadataId
         {
             get

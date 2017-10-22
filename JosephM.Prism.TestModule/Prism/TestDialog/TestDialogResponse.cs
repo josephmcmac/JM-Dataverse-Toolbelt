@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Service;
+﻿using JosephM.Core.Attributes;
+using JosephM.Core.Service;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,6 +13,7 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
 
         public bool BoolProperty { get { return true; } }
 
+        [AllowDownload]
         public IEnumerable<SomeOtherType> SomethingElseToDisplay
         {
             get

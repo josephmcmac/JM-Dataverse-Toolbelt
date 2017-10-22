@@ -6,6 +6,7 @@ using System.Text;
 using JosephM.Core.FieldType;
 using JosephM.Record.Metadata;
 using JosephM.Xrm;
+using JosephM.Core.Attributes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -35,6 +36,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        [Key]
         public string MetadataId
         {
             get { return XrmService.GetSharedPicklist(SchemaName).MetadataId.ToString(); }

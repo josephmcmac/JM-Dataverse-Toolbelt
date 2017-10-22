@@ -60,5 +60,7 @@ namespace JosephM.Record.IService
         bool IsDisplayRelated { get; }
         [Hidden]
         int Order { get; }
+        [Hidden]
+        string RecordType { get; }
     }
 }

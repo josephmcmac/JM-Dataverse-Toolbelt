@@ -112,6 +112,7 @@
     <Compile Include="Metadata\Fields\CustomerFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\ObjectFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\StateFieldMetadata.cs" />
+    <Compile Include="Metadata\Fields\UrlFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\UniqueidentifierFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\DoubleFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\StatusFieldMetadata.cs" />

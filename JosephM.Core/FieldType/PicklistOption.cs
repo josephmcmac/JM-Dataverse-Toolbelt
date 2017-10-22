@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization;
 using JosephM.Core.Extentions;
+using JosephM.Core.Attributes;
 
 namespace JosephM.Core.FieldType
 {
@@ -51,6 +52,7 @@ namespace JosephM.Core.FieldType
             Value = value;
         }
 
+        [Key]
         [DataMember]
         public string Key { get; set; }
 

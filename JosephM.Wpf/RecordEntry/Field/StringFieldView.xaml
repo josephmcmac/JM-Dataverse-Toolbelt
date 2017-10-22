@@ -5,11 +5,12 @@
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 
                         xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+                        xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
                         mc:Ignorable="d"
                         d:DesignHeight="40" d:DesignWidth="300">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
-
+            <converters:BooleanToFalseConverter x:Key="BooleanToFalseConverter" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
@@ -18,6 +19,8 @@
     </field:FieldControlBase.Resources>
     <Grid MinWidth="200">
         <TextBox
+            VerticalScrollBarVisibility="Visible"
+            TextWrapping="WrapWithOverflow"
             AcceptsReturn="{Binding IsMultiline}"
             MinLines ="{Binding NumberOfLines}"
             MaxLines ="{Binding NumberOfLines}"
@@ -26,7 +29,7 @@
             DataContext="{Binding NotifyOnValidationError=True}"
             Text="{Binding Mode=TwoWay, Path=ValueObject}"
             Style="{StaticResource FieldEntryStyle}"
-            IsEnabled="{Binding IsEditable, Mode=TwoWay}"
+            IsReadOnly="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToFalseConverter}}"
             Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}" />
     </Grid>
 </field:FieldControlBase>

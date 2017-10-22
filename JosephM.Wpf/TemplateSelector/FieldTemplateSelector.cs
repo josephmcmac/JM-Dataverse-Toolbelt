@@ -27,7 +27,8 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate FileRefFieldTemplate { get; set; }
         public DataTemplate EnumerableFieldTemplate { get; set; }
         public DataTemplate DecimalFieldTemplate { get; set; }
-        
+        public DataTemplate UrlFieldTemplate { get; set; }
+
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
@@ -75,6 +76,8 @@ namespace JosephM.Wpf.TemplateSelector
                 return DecimalFieldTemplate;
             if (item is MoneyFieldViewModel)
                 return DecimalFieldTemplate;
+            if (item is UrlFieldViewModel)
+                return UrlFieldTemplate;
             else
                 return StringFieldTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",

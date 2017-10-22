@@ -18,6 +18,7 @@ namespace JosephM.Deployment.Test
         [TestMethod]
         public void DeploymentSolutionImporterExporterModuleTest()
         {
+
             var account = CreateAccount();
             var solution = XrmRecordService.GetFirst("solution", XrmRecordService.GetPrimaryField("solution"), "Test Components");
             Assert.IsNotNull(solution);

@@ -34,6 +34,7 @@
         ManagedProperty,
         Object,
         FileRef,
-        Customer
+        Customer,
+        Url
     }
 }

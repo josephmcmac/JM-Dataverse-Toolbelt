@@ -26,14 +26,14 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-        <TextBox Background="Transparent"
-         BorderThickness="0"
-         Text="{Binding CompletionHeadingText, Mode=OneWay}"
-         IsReadOnly="True"
-         TextWrapping="Wrap" />
+        <Grid Grid.Row="0"  Visibility="{Binding DisplayCompletionHeading, Converter={StaticResource BoolToVis}}">
+            <TextBox Background="Transparent"
+             BorderThickness="0"
+             Text="{Binding CompletionHeadingText, Mode=OneWay}"
+             IsReadOnly="True"
+             TextWrapping="Wrap" />
         </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"  Visibility="{Binding DisplayCompletionHeading, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

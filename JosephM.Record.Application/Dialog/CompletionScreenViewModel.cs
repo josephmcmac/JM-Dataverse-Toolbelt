@@ -7,6 +7,7 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 #endregion
@@ -27,12 +28,21 @@ namespace JosephM.Application.ViewModel.Dialog
             CompletionHeadingText = heading;
             CompletionOptions = options;
 
-
-            var formController = FormController.CreateForObject(completionObject, ApplicationController, null);
-            CompletionDetails = new ObjectDisplayViewModel(completionObject, formController);
+            if (completionObject != null)
+            {
+                var formController = FormController.CreateForObject(completionObject, ApplicationController, null);
+                CompletionDetails = new ObjectDisplayViewModel(completionObject, formController);
+                CompletionDetails.PropertyChanged += CompletionDetails_PropertyChanged;
+            }
 
             //CompletionDetails = new ObjectsGridSectionViewModel("Summary", completionDetails, controller);
             CloseButton = new XrmButtonViewModel("Close", onClose, controller);
+        }
+
+        private void CompletionDetails_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ObjectDisplayViewModel.MainFormInContext))
+                OnPropertyChanged(nameof(DisplayCompletionHeading));
         }
 
         public string CompletionHeadingText { get; set; }
@@ -42,11 +52,16 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public bool ShowCompletionDetails
         {
-            get { return true; }
+            get { return CompletionDetails != null; }
         }
 
         public ObjectDisplayViewModel CompletionDetails { get; set; }
 
         public XrmButtonViewModel CloseButton { get; private set; }
+
+        public bool DisplayCompletionHeading
+        {
+            get { return CompletionDetails == null || CompletionDetails.MainFormInContext; }
+        }
     }
 }

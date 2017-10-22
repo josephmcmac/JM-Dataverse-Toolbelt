@@ -10,6 +10,7 @@ namespace JosephM.Record.Metadata
 {
     public interface IMetadata
     {
+        [Key]
         [Hidden]
         string MetadataId { get; }
         [DisplayOrder(5)]

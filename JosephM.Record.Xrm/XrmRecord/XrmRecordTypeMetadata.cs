@@ -4,6 +4,7 @@ using JosephM.Xrm;
 using JosephM.Record.Attributes;
 using JosephM.Xrm.Schema;
 using System.Linq;
+using JosephM.Core.Attributes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -91,7 +92,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return code.HasValue ? code.ToString() : null;
             }
         }
-
+        [Key]
         public string MetadataId
         {
             get

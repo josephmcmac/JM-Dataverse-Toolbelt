@@ -241,27 +241,12 @@ namespace JosephM.Record.Service
             }
             if (!query.IsQuickFind)
             {
-                if (query.RootFilter.Conditions.Any()
-                    || query.RootFilter.SubFilters.Any())
+                if (query.RootFilter.SubFilters.Any()
+                    || query.RootFilter.Conditions.Count > 1
+                    || (query.RootFilter.Conditions.Count == 1 && query.RootFilter.Conditions.First().ConditionType != ConditionType.Equal))
                 {
-                    //todo sort this meess out and didn't do sorting a query top etc.
-                    //this is for getting an enumerable fields records for a grid
-                    if (!query.RootFilter.SubFilters.Any() && query.RootFilter.Conditions.Count == 1 && query.RootFilter.Conditions.First().ConditionType == ConditionType.Equal)
-                    {
-                        var condition = query.RootFilter.Conditions.First();
-                        var property = ObjectType.GetProperty(condition.FieldName);
-                        if(property == null)
-                            throw new NotImplementedException("Queries With Conditions Are Not Implemented");
-                        return GetLinkedRecords(property.PropertyType.GenericTypeArguments[0].AssemblyQualifiedName, ObjectType.AssemblyQualifiedName, condition.FieldName, condition.Value?.ToString());
-                    }
-                    else
-                        throw new NotImplementedException("Queries With Conditions Are Not Implemented");
+                    throw new NotImplementedException("Queries With Conditions Are Not Implemented");
                 }
-                if (query.Sorts.Any())
-                    throw new NotImplementedException("Queries With Sorts Are Not Implemented");
-                return query.Top > 0
-                    ? objects.Take(query.Top)
-                    : objects;
             }
             else
             {
@@ -295,23 +280,26 @@ namespace JosephM.Record.Service
                         })
                         .ToList();
                 }
-                var newSorts = new List<SortExpression>(query.Sorts);
-                if (!newSorts.Any())
+            }
+            var newSorts = new List<SortExpression>(query.Sorts);
+            if (!newSorts.Any())
+            {
+                newSorts.OrderBy(o => o.ToString()).ToList();
+            }
+            else
+            {
+                newSorts.Reverse();
+                foreach (var sort in newSorts.Take(1))
                 {
-                    newSorts.OrderBy(o => o.ToString()).ToList();
-                }
-                else
-                {
-                    newSorts.Reverse();
-                    foreach (var sort in newSorts.Take(1))
-                    {
-                        var comparer = new ObjectComparer(sort.FieldName);
-                        objects.Sort(comparer);
-                        if (sort.SortType == SortType.Descending)
-                            objects.Reverse();
-                    }
+                    var comparer = new ObjectComparer(sort.FieldName);
+                    objects.Sort(comparer);
+                    if (sort.SortType == SortType.Descending)
+                        objects.Reverse();
                 }
             }
+            objects = query.Top > 0
+                ? objects.Take(query.Top).ToList()
+                : objects;
             return objects;
         }
 
@@ -359,32 +347,9 @@ namespace JosephM.Record.Service
         public IEnumerable<PropertyInfo> GetPropertyInfos(string recordType)
         {
             var classType = GetClassType(recordType);
-            var properties = classType.GetProperties().ToList();
-            if (classType.IsInterface)
-            {
-                var interfaces = classType.GetInterfaces();
-                foreach (var interface_ in interfaces)
-                {
-                    foreach (var item in interface_.GetProperties())
-                    {
-                        if (!properties.Any(m => m.Name == item.Name))
-                            properties.Add(item);
-                    }
-                }
-            }
-            else
-            {
-                if (classType.BaseType != null)
-                {
-                    foreach (var item in classType.BaseType.GetProperties())
-                    {
-                        if (!properties.Any(m => m.Name == item.Name))
-                            properties.Add(item);
-                    }
-                }
-            }
-            return properties;
+            return classType.GetAllPropertyInfos();
         }
+
 
         /// <summary>
         /// If Nullable Return The Nullable Type
@@ -751,15 +716,18 @@ namespace JosephM.Record.Service
 
         public override IEnumerable<ViewMetadata> GetViews(string recordType)
         {
-            //very similar logic in form get grid metadata
             var viewFields = new List<ViewField>();
+            var allObjects = RetreiveAll(new QueryDefinition(recordType));
             foreach (var propertyInfo in GetPropertyInfos(recordType))
             {
                 var hiddenAttribute = propertyInfo.GetCustomAttribute<HiddenAttribute>();
                 if (propertyInfo.CanRead && hiddenAttribute == null)
                 {
+                    //so lets not display a field if it is read only and is out of contxt for all records
+                    if (!propertyInfo.CanWrite && allObjects.All(o => !((ObjectRecord)o).Instance.IsInContext(propertyInfo.Name)))
+                        continue;
                     //these initial values repeated
-                    var viewField = new ViewField(propertyInfo.Name, int.MaxValue, 200);
+                    var viewField = new ViewField(propertyInfo.Name,10000, 200);
                     var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
                     if (orderAttribute != null)
                         viewField.Order = orderAttribute.Order;
@@ -769,6 +737,7 @@ namespace JosephM.Record.Service
                     viewFields.Add(viewField);
                 }
             }
+            //todo somehow exclude fields if read only and all out of context
             return new[] { new ViewMetadata(viewFields.OrderBy(o => o.Order).ToArray()) { ViewType = ViewType.LookupView } };
         }
 

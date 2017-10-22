@@ -3,6 +3,7 @@
 using System;
 using JosephM.Core.Service;
 using JosephM.Record.Metadata;
+using JosephM.Core.Attributes;
 
 #endregion
 
@@ -10,6 +11,7 @@ namespace JosephM.CustomisationImporter.Service
 {
     public class CustomisationImportResponse : ServiceResponseBase<CustomisationImportResponseItem>
     {
+        [Hidden]
         public bool ExcelReadErrors { get; internal set; }
 
         public void AddResponseItem(IMetadata metadata, bool isUpdate)

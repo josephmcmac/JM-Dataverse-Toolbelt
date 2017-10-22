@@ -13,6 +13,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
     {
         private readonly ObjectRecord _objectRecord;
 
+        public override int GridPageSize { get { return 25; } }
+
         public ObjectDisplayViewModel(object objectToEnter, FormController formController)
             : base(formController)
         {

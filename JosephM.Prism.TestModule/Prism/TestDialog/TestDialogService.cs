@@ -12,6 +12,7 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
         public override void ExecuteExtention(TestDialogRequest request, TestDialogResponse response,
             LogController controller)
         {
+            response.AddResponseItem(new TestDialogResponseItem("Dummy Response", null));
             if (request.ThrowResponseErrors)
             {
                 for (var i = 0; i < 100; i++)

@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
+    [AllowSaveAndLoad]
     [Group(Sections.Document, true, 10)]
     [Group(Sections.RecordToReport, true, 20)]
     [Group(Sections.DetailLevelOptions, true, 30)]

@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using System.Reflection;
+using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 
 #endregion
 
@@ -20,6 +23,34 @@ namespace JosephM.Record.Service
             : base(instance.GetType().AssemblyQualifiedName)
         {
             Instance = instance;
+        }
+
+        public override string Id
+        {
+            get
+            {
+                var propInfo = GetKeyPropertyInfo();
+                if(propInfo != null)
+                {
+                    return Instance.GetPropertyValue(propInfo.Name)?.ToString();
+                }
+                return null;
+            }
+            set
+            {
+                var propInfo = GetKeyPropertyInfo();
+                if (propInfo != null)
+                {
+                    Instance.SetPropertyValue(propInfo.Name, value);
+                }
+            }
+        }
+
+        private PropertyInfo GetKeyPropertyInfo()
+        {
+            var properties = Instance.GetType().GetAllPropertyInfos(); ;
+            var keyProperties = properties.Where(p => p.GetCustomAttribute<KeyAttribute>() != null).ToArray();
+            return keyProperties.Any() ? keyProperties.First() : null;
         }
 
         public object Instance { get; set; }

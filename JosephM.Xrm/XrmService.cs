@@ -4,6 +4,7 @@ using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
@@ -152,6 +153,18 @@ namespace JosephM.Xrm
             }
         }
 
+        private Guid? _defaultSolutionId;
+        public Guid DefaultSolutionId
+        {
+            get
+            {
+                if (!_defaultSolutionId.HasValue)
+                {
+                    _defaultSolutionId = GetFirst(Entities.solution, Fields.solution_.uniquename, "default")?.Id ?? Guid.Empty;
+                }
+                return _defaultSolutionId.Value;
+            }
+        }
 
         public virtual OrganizationResponse Execute(OrganizationRequest request)
         {
@@ -1001,6 +1014,91 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             }
             else
                 return null;
+        }
+
+        public string GetWebUrl(string recordType, Guid id, string additionalparams = null)
+        {
+            if (recordType == null)
+                return null;
+            string result = null;
+            switch(recordType)
+            {
+                case Entities.pluginassembly:
+                case Entities.plugintype:
+                case Entities.sdkmessageprocessingstep:
+                case Entities.sdkmessageprocessingstepimage:
+                    {
+                        return null;
+                    }
+                case Entities.solution:
+                    {
+                        result = string.Format("{0}/tools/solution/edit.aspx?id={1}", WebUrl, id);
+                        break;
+                    }
+                case Entities.workflow:
+                    {
+                        var workflow = Retrieve(Entities.workflow, id, new[] { Fields.workflow_.category });
+                        if (workflow.GetOptionSetValue(Fields.workflow_.category) == OptionSets.Process.Category.BusinessProcessFlow)
+                            result = string.Format("{0}/Tools/ProcessControl/bpfConfigurator.aspx?id={1}", WebUrl, id);
+                        else
+                            result = string.Format("{0}/sfa/workflow/edit.aspx?id={1}", WebUrl, id);
+                        break;
+                    }
+                case Entities.webresource:
+                    {
+                        result = string.Format("{0}/main.aspx?etn={1}&id={2}&pagetype=webresourceedit", WebUrl, recordType, id);
+                        break;
+                    }
+                case Entities.systemform:
+                    {
+                        result = string.Format("{0}/main.aspx?etn={1}&extraqs=formtype%3dmain%26formId%3d{2}%26action%3d-1&pagetype=formeditor", WebUrl, recordType, id);
+                        break;
+                        //main.aspx?appSolutionId=%7b06E9A3A9-FD45-E511-80D2-000C29634D55%7d&etc=10018&extraqs=formtype%3dmain%26formId%3dAD395571-0EC9-4AE2-BB86-BF6B00C087BD%26action%3d-1&pagetype=formeditor
+                        //http://qa2012/WorkflowScheduler/main.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etc=1&extraqs=formtype%3dmain%26formId%3d8448B78F-8F42-454E-8E2A-F8196B0419AF%26action%3d-1&pagetype=formeditor
+                        //http://qa2012/WorkflowScheduler/main.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etc=1&extraqs=formtype%3dquickCreate%26formId%3dC9E7EC2D-EFCA-4E4C-B3E3-F63C4BBA5E4B%26action%3d-1&pagetype=formeditor#211662733
+                        //http://qa2012/WorkflowScheduler/m/Console/EntityConfig.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etn=account&formid=%7b20EC3318-E87E-4623-AFE5-CAC39CD090DE%7d
+                        //http://qa2012/WorkflowScheduler/main.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etc=1&extraqs=formtype%3dquick%26formId%3dB028DB32-3619-48A5-AC51-CF3F947B0EF3%26action%3d-1&pagetype=formeditor#989634411
+                    }
+                case Entities.savedquery:
+                    {
+                        result = string.Format("{0}/tools/vieweditor/viewManager.aspx?id={1}", WebUrl, id);
+                        break;
+                    }
+                case Entities.role:
+                    {
+                        result = string.Format("{0}/biz/roles/edit.aspx?id={1}", WebUrl, id);
+                        break;
+                    }
+                case "entity":
+                    {
+                        result = string.Format("{0}/tools/solution/edit.aspx?id={1}", WebUrl, DefaultSolutionId);
+                        break;
+                    }
+                case "field":
+                    {
+                        result = string.Format("{0}/tools/systemcustomization/attributes/manageAttribute.aspx?attributeId={1}", WebUrl, id);
+                        break;
+                    }
+                case "manytomanyrelationship":
+                    {
+                        result = string.Format("{0}/tools/systemcustomization/relationships/manageRelationship.aspx?entityRelationshipId={1}&entityRole=many", WebUrl, id);
+                        break;
+                    }
+                case "sharedoptionset":
+                    {
+                        result = string.Format("{0}/tools/systemcustomization/optionset/optionset.aspx?id={1}", WebUrl, id);
+                        break;
+                    }
+            }
+            if (result == null)
+            {
+                result = string.Format("{0}/main.aspx?etn={1}&id={2}&pagetype=entityrecord", WebUrl, recordType, id);
+            }
+            if (result != null && additionalparams != null)
+            {
+                result = result + "&" + additionalparams;
+            }
+            return result;
         }
 
         public bool DecimalInRange(string field, string entity, decimal value)

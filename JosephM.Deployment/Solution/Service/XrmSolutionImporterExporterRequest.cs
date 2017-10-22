@@ -17,6 +17,7 @@ using System.IO;
 
 namespace JosephM.Xrm.ImportExporter.Service
 {
+    [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Connection, true, 20)]
     [Group(Sections.PackageSolution, true, 25)]

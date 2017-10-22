@@ -91,10 +91,13 @@
     <Compile Include="AppConfig\IResolveObject.cs" />
     <Compile Include="AppConfig\IDependencyResolver.cs" />
     <Compile Include="Attributes\CascadeOnChange.cs" />
+    <Compile Include="Attributes\AllowDownload.cs" />
     <Compile Include="Attributes\DisplayNameForPropertyValue.cs" />
+    <Compile Include="Attributes\AllowSaveAndLoad.cs" />
     <Compile Include="Attributes\Group.cs" />
     <Compile Include="Attributes\DoNotAllowAdd.cs" />
     <Compile Include="Attributes\ConnectionFor.cs" />
+    <Compile Include="Attributes\Key.cs" />
     <Compile Include="Attributes\Hidden.cs" />
     <Compile Include="Attributes\Multiline.cs" />
     <Compile Include="Attributes\RecordFieldFor.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Extentions\DateTimeExtentions.cs" />
     <Compile Include="Extentions\StreamExtentions.cs" />
     <Compile Include="FieldType\FileReference.cs" />
+    <Compile Include="FieldType\Url.cs" />
     <Compile Include="FieldType\Lookup.cs" />
     <Compile Include="FieldType\RecordField.cs" />
     <Compile Include="FieldType\PicklistOption.cs" />

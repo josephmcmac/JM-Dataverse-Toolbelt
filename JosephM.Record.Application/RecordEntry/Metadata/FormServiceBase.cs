@@ -91,7 +91,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             throw new NotImplementedException();
         }
 
-        internal virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryViewModelBase recordForm)
+        internal virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
         {
             return new CustomGridFunction[0];
         }
@@ -104,11 +104,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public virtual bool UsePicklist(string fieldName, string recordType)
         {
             return false;
-        }
-
-        public virtual IEnumerable<GridFieldMetadata> GetGridMetadata(string recordType)
-        {
-            throw new NotImplementedException();
         }
 
         public virtual Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)

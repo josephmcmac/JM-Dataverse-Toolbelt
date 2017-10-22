@@ -123,7 +123,11 @@
         XrmButtonTemplate="{StaticResource XrmButtonTemplate}"
         x:Key="CompletionItemTemplateSelector" />
     <DataTemplate x:Key="RecordEntryTemplate">
-        <Grid>
+
+        <Grid   Height="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Border,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
             <recordEntry:RecordEntryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -210,6 +214,9 @@
     <DataTemplate x:Key="DecimalFieldTemplate">
         <field:DecimalFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="UrlFieldTemplate">
+        <field:UrlFieldView DataContext="{Binding}" />
+    </DataTemplate>
     <templateSelector:FieldTemplateSelector
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
@@ -226,6 +233,7 @@
         RecordFieldFieldTemplate="{StaticResource RecordFieldFieldTemplate}"
         EnumerableFieldTemplate="{StaticResource EnumerableFieldTemplate}"
         DecimalFieldTemplate="{StaticResource DecimalFieldTemplate}"
+        UrlFieldTemplate="{StaticResource UrlFieldTemplate}"
         x:Key="fieldTemplateSelector" />
     <!--<DataTemplate x:Key="labelledFieldTemplate" >
         <WrapPanel>

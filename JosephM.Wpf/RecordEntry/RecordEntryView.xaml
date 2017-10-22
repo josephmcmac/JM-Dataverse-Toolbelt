@@ -12,6 +12,8 @@
              d:DataContext="{d:DesignInstance Type=fakes1:FakeRecordEntryViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:BooleanToStarOrZeroConverter x:Key="BoolToStar" />
+            <converters:BooleanToZeroOrStarConverter x:Key="BoolToZero" />
             <converters:LengthConverter x:Key="LengthConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
@@ -30,8 +32,8 @@
         <Grid Grid.Row="1"
               Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToStar}, Mode=OneWay}" />
+                <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToZero}, Mode=OneWay}"  />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
               Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
@@ -72,7 +74,7 @@
                         ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
                         </ScrollViewer>
                     </Grid>
-                <Grid Grid.Row="3">
+                <Grid Grid.Row="3" Margin="0,0,0,15">
                     <StackPanel
                         Orientation="Horizontal"
                         VerticalAlignment="Top"

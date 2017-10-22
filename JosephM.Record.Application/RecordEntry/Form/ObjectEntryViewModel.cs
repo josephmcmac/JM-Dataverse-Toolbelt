@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using System.Threading;
+using System.Reflection;
 
 #endregion
 
@@ -195,7 +196,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 var objectType = GetObject().GetType();
                 return ApplicationController.AllowSaveRequests
                     && objectType.IsTypeOf(typeof(IAllowSaveAndLoad))
-                    && !(objectType == typeof(SaveAndLoadFields));
+                    && !(objectType == typeof(SaveAndLoadFields))
+                    && objectType.GetCustomAttribute<AllowSaveAndLoad>() != null;
             }
         }
 
