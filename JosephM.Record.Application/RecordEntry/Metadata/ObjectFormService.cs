@@ -778,7 +778,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             {
                 functions.Add("Download CSV", () => { recordForm.GetSubGridViewModel(referenceName).DynamicGridViewModel.DownloadCsv(); });
             }
-            return functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToArray();
+            var customGridFunctions = functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToList();
+            var injectedFunctions = recordForm.ApplicationController.ResolveInstance(typeof(CustomGridFunctions), enumeratedType.AssemblyQualifiedName) as CustomGridFunctions;
+            if (injectedFunctions != null)
+                customGridFunctions.AddRange(injectedFunctions.CustomFunctions);
+            return customGridFunctions;
         }
 
         public override Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)

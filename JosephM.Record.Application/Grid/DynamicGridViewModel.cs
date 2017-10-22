@@ -19,6 +19,7 @@ using System.Threading;
 using JosephM.Core.Utility;
 using System.IO;
 using JosephM.Record.Extentions;
+using JosephM.Application.ViewModel.Dialog;
 
 #endregion
 
@@ -53,6 +54,7 @@ namespace JosephM.Application.ViewModel.Grid
                 Enabled = false
             };
             MaxHeight = 1000;
+            LoadDialog = (d) => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(LoadDialog))); };
         }
 
         public int MaxHeight { get; set; }
@@ -517,6 +519,7 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
         public IDictionary<string, IEnumerable<string>> OnlyValidate { get; internal set; }
+        public Action<DialogViewModel> LoadDialog { get; set; }
 
         public void DownloadCsv()
         {

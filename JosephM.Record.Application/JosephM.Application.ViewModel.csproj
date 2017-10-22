@@ -92,6 +92,7 @@
     <Compile Include="Dialog\ObjectEntryDialogBase.cs" />
     <Compile Include="Dialog\ObjectInstanceEntryDialog.cs" />
     <Compile Include="Extentions\Extentions.cs" />
+    <Compile Include="Grid\CustomGridFunctions.cs" />
     <Compile Include="Grid\DynamicGridViewModel.cs" />
     <Compile Include="Grid\GridRowViewModel.cs" />
     <Compile Include="ApplicationOptions\ApplicationOption.cs" />
