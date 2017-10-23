@@ -17,6 +17,7 @@ namespace JosephM.Prism.XrmModule.Crud
     {
         public override void InitialiseModule()
         {
+            base.InitialiseModule();
             var customGridFunction = new CustomGridFunction("CRUD", "Browse Selected", (g) =>
             {
                 var selectedRow = g.SelectedRows.First();
