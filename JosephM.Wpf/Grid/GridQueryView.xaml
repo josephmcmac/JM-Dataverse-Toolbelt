@@ -102,7 +102,7 @@
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Row="2" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
-                                    <Border  MaxHeight="{Binding MaxHeight}">
+                                    <Border  MaxHeight="300">
                                         <ScrollViewer>
                                         <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
                                         </ScrollViewer></Border>
