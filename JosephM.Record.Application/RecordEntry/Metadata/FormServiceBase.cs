@@ -7,6 +7,8 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
+using System.Linq;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 
 #endregion
 
@@ -44,6 +46,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName)
         {
             return new Action<RecordEntryViewModelBase>[] {};
+        }
+
+        internal virtual IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> OrderPicklistItems<T>(string fieldName, string recordType, IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> picklistItems)
+        {
+            return picklistItems.OrderBy(p => p.Name);
         }
 
         internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string subGrid)

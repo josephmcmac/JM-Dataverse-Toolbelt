@@ -30,6 +30,7 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
         [ReferencedType(Entities.sdkmessage)]
         [LookupCondition(Fields.sdkmessage_.isprivate, false)]
         [UsePicklist]
+        [OrderPriority("Create", "Update", "Delete")]
         public Lookup Message { get; set; }
 
         [GridWidth(150)]

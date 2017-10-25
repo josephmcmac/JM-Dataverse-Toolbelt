@@ -753,6 +753,20 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
+        internal override IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> OrderPicklistItems<T>(string fieldName, string recordType, IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> picklistItems)
+        {
+            var orderPriority = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<OrderPriority>();
+            if (orderPriority == null)
+                return picklistItems.OrderBy(p => p.Name).ToArray();
+
+            return picklistItems.ToList().OrderBy(p =>
+            {
+                return orderPriority.PriorityValues.Contains(p.Name)
+                ? orderPriority.PriorityValues.ToList().IndexOf(p.Name)
+                : 999999;
+            }).ToArray();
+        }
+
         internal override string GetPicklistDisplayField(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
         {
             var picklistAttribute = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UsePicklist>();
