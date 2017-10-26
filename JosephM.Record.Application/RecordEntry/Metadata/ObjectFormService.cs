@@ -764,7 +764,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 return orderPriority.PriorityValues.Contains(p.Name)
                 ? orderPriority.PriorityValues.ToList().IndexOf(p.Name)
                 : 999999;
-            }).ToArray();
+            }).ThenBy(p => p.Name).ToArray();
         }
 
         internal override bool InitialisePicklistIfOneOption(string fieldName, string recordType)
