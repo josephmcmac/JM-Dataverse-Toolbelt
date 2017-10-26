@@ -20,17 +20,23 @@ namespace JosephM.Prism.XrmModule.Crud
             base.InitialiseModule();
             var customGridFunction = new CustomGridFunction("CRUD", "Browse Selected", (g) =>
             {
-                var selectedRow = g.SelectedRows.First();
-                var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
-                if(instance != null)
+                if (g.SelectedRows.Count() != 1)
                 {
-                    var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
-                    var dialog = new CrudDialog(new DialogController(ApplicationController), xrmRecordService);
-                    dialog.SetTabLabel("Browse " + instance.Name);
-                    g.LoadDialog(dialog);
+                    g.ApplicationController.UserMessage("Please Select One Row To Browse The Connection");
                 }
-
-            }, (g) => g.GridRecords != null && g.SelectedRows.Count() == 1);
+                else
+                {
+                    var selectedRow = g.SelectedRows.First();
+                    var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
+                    if (instance != null)
+                    {
+                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var dialog = new CrudDialog(new DialogController(ApplicationController), xrmRecordService);
+                        dialog.SetTabLabel("Browse " + instance.Name);
+                        g.LoadDialog(dialog);
+                    }
+                }
+            }, (g) => g.GridRecords != null && g.GridRecords.Any());
             var functions = new CustomGridFunctions();
             functions.AddFunction(customGridFunction);
             //todo this should add the function not just inject it

@@ -224,6 +224,7 @@ namespace JosephM.XRM.VSIX.Commands
             var applicationController = new VsixApplicationController(container);
             var customGridFunction = new CustomGridFunction("CRUD", "Browse Selected", (g) =>
             {
+                //todo this code should be consolidated with the module
                 if (g.SelectedRows.Count() != 1)
                 {
                     applicationController.UserMessage("Please select 1 connection to browse");
