@@ -26,10 +26,14 @@ namespace JosephM.Application.ViewModel.Attributes
         public override IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
         {
             var targetPropertyInfo = GetTargetProperty(recordForm, subGridReference);
+
+            var gridField = GetObjectFormService(recordForm).GetSubGridViewModel(subGridReference);
+            var gridRecords = gridField.GridRecords;
+            
             var recordType = recordForm.FormService.GetDependantValue(subGridReference + "." + targetPropertyInfo.Name, GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName, recordForm);
             var lookupService = GetLookupService(recordForm, subGridReference);
             var fields = lookupService.GetFieldMetadata(recordType)
-                .Where(f => f.Searchable)
+                .Where(f => f.Searchable && (!gridRecords?.Any(g => g.GetRecordFieldFieldViewModel(targetPropertyInfo.Name)?.Value.Key == f.SchemaName) ?? true))
                 .OrderBy(r => r.DisplayName)
                 .ToArray();
 
