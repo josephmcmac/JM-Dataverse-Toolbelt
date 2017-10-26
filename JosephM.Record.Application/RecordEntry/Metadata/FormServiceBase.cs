@@ -53,6 +53,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return picklistItems.OrderBy(p => p.Name);
         }
 
+        internal virtual bool InitialisePicklistIfOneOption(string fieldName, string recordType)
+        {
+            return false;
+        }
+
         internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string subGrid)
         {
             return new Action<RecordEntryViewModelBase>[] {};

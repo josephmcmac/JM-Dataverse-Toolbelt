@@ -767,6 +767,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }).ToArray();
         }
 
+        internal override bool InitialisePicklistIfOneOption(string fieldName, string recordType)
+        {
+            return GetPropertyInfo(fieldName, recordType).GetCustomAttribute<InitialiseIfOneOption>() != null;
+        }
+
         internal override string GetPicklistDisplayField(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
         {
             var picklistAttribute = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UsePicklist>();
