@@ -4,6 +4,6 @@ namespace JosephM.Application.Options
 {
     public interface IApplicationOptions
     {
-        void AddOption(string optionLabel, Action action, ApplicationOptionType type);
+        void AddOption(string group, string optionLabel, Action action);
     }
 }

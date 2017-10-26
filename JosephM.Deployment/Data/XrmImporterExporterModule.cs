@@ -18,5 +18,7 @@ namespace JosephM.Xrm.ImportExporter.Prism
         }
 
         protected override string MainOperationName { get { return "Data Import / Export"; } }
+
+        public override string MenuGroup => "Deployment / Migration";
     }
 }

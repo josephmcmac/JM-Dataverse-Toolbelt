@@ -20,6 +20,8 @@ namespace JosephM.Prism.XrmModule.Crud
             switch (recordType)
             {
                 case Entities.webresource:
+                case Entities.plugintype:
+                case Entities.sdkmessage:
                     {
                         return null;
                     }

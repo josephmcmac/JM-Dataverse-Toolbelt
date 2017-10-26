@@ -60,7 +60,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             _itemsSource = new ReferencePicklistItem[0];
             if (LookupService != null)
             {
-                ItemsSource = GetPicklistOptions().OrderBy(p => p.Name);
+                ItemsSource = (FormService?.OrderPicklistItems(FieldName, GetRecordType(), GetPicklistOptions()) ?? GetPicklistOptions().OrderBy(p => p.Name)).ToArray();
+                if (Value == null && ItemsSource.Count() == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordType()) ?? false))
+                    SelectedItem = ItemsSource.First();
             }
             var matchingItem = MatchSelectedItemInItemsSourceToValue();
             if (matchingItem == null)

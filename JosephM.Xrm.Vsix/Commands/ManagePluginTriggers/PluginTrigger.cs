@@ -15,6 +15,11 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
     }
     public class PluginTrigger
     {
+        public PluginTrigger()
+        {
+            Mode = PluginMode.Synchronous;
+        }
+
         [Hidden]
         public string Id { get; set; }
 
@@ -22,6 +27,7 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
         [RequiredProperty]
         [ReferencedType(Entities.plugintype)]
         [UsePicklist]
+        [InitialiseIfOneOption]
         [LookupCondition(Fields.plugintype_.isworkflowactivity, false)]
         public Lookup Plugin { get; set; }
 
@@ -30,6 +36,7 @@ namespace JosephM.XRM.VSIX.Commands.ManagePluginTriggers
         [ReferencedType(Entities.sdkmessage)]
         [LookupCondition(Fields.sdkmessage_.isprivate, false)]
         [UsePicklist]
+        [OrderPriority("Create", "Update", "Delete")]
         public Lookup Message { get; set; }
 
         [GridWidth(150)]

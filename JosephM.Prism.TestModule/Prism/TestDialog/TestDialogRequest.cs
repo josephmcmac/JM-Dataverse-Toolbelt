@@ -6,6 +6,7 @@ using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Application.ViewModel.Attributes;
 using JosephM.Prism.TestModule.Prism.TestSettings;
+using JosephM.Application.ViewModel.Fakes;
 
 namespace JosephM.Prism.TestModule.Prism.TestDialog
 {
@@ -42,6 +43,12 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
         [RecordTypeFor(nameof(Fields) + "." + nameof(FieldSetting.RecordField))]
         [RecordTypeFor(nameof(SpecificRecordsToExport) + "." + nameof(LookupSetting.Record))]
         public RecordType RecordType { get; set; }
+
+        [Group(Sections.TypesAndLookups)]
+        [ReferencedType(FakeConstants.RecordType)]
+        [UsePicklist]
+        [OrderPriority(FakeConstants.MainRecordName, "TestingString")]
+        public Lookup LookupField { get; set; }
 
         [Group(Sections.TypesAndLookups)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]

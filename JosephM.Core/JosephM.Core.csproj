@@ -98,6 +98,8 @@
     <Compile Include="Attributes\Group.cs" />
     <Compile Include="Attributes\DoNotAllowAdd.cs" />
     <Compile Include="Attributes\ConnectionFor.cs" />
+    <Compile Include="Attributes\InitialiseIfOneOption.cs" />
+    <Compile Include="Attributes\OrderPriority.cs" />
     <Compile Include="Attributes\Key.cs" />
     <Compile Include="Attributes\Hidden.cs" />
     <Compile Include="Attributes\Multiline.cs" />

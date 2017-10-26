@@ -12,6 +12,7 @@ using JosephM.Xrm.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace JosephM.InstanceComparer
 {
@@ -283,6 +284,10 @@ namespace JosephM.InstanceComparer
             {
                 SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.webresource_.webresourceid, OptionSets.SolutionComponent.ObjectTypeCode.WebResource)
             };
+
+            processArgs.AddConversionObject(Fields.webresource_.content,
+                new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceOne),
+                new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceTwo));
 
             processContainer.Comparisons.Add(processArgs);
         }
@@ -942,6 +947,25 @@ namespace JosephM.InstanceComparer
                 }
 
                 private IDictionary<string, string> _mapDictionary = null;
+            }
+
+            public class ConvertFromBase64String : ConvertField
+            {
+                public IRecordService Service { get; set; }
+
+                public ConvertFromBase64String(IRecordService service)
+                {
+                    Service = service;
+                }
+
+                public override object Convert(object sourceValue)
+                {
+                    if (sourceValue == null)
+                        return null;
+
+                    var data = System.Convert.FromBase64String(sourceValue.ToString());
+                    return Encoding.UTF8.GetString(data);
+                }
             }
         }
 

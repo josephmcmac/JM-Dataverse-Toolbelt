@@ -21,7 +21,7 @@ namespace JosephM.CustomisationImporter.Prism
         {
             base.InitialiseModule();
             AddHelpUrl("Import Customisations", "CustomisationImporter");
-            AddOption("Import Customisation Template", OpenTemplateCommand);
+            AddOption(MenuGroup, "Download Template", OpenTemplateCommand);
         }
 
         public void OpenTemplateCommand()
@@ -30,5 +30,7 @@ namespace JosephM.CustomisationImporter.Prism
                 "Customisations Import Template.xlsx");
             ApplicationController.StartProcess(templateName);
         }
+
+        public override string MenuGroup => "Customisations";
     }
 }

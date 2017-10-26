@@ -107,7 +107,6 @@
     <Compile Include="Module\DialogModule.cs" />
     <Compile Include="Module\SettingsModule.cs" />
     <Compile Include="Constants\MenuNames.cs" />
-    <Compile Include="Module\MaintainRecordModule.cs" />
     <Compile Include="Prism\PrismDependencyContainer.cs" />
     <Compile Include="Prism\PrismApplication.cs" />
     <Compile Include="Prism\UnityBootstrapperExtention.cs" />

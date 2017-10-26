@@ -66,28 +66,19 @@ namespace JosephM.Application.Modules
             return Container.ResolveType<T>();
         }
 
-        public void AddOption(string label, Action action)
+        public void AddOption(string group, string label, Action action)
         {
-            ApplicationOptions.AddOption(label, action, ApplicationOptionType.Main);
+            ApplicationOptions.AddOption(group, label, action);
         }
 
         public void AddSetting(string label, Action action)
         {
-            ApplicationOptions.AddOption(label, action, ApplicationOptionType.Setting);
-        }
-
-        /// <summary>
-        /// !!! YOU NEED TO HAVE THE HTML FILE IN A FOLDER NAMED "HelpFiles" INCLUDED IN THE PROJECT BUILD COPY TO OUTPUT
-        /// Then ensure the applications build folder is included in the installer folders
-        /// </summary>
-        public void AddHelp(string optionLabel, string htmlFileName)
-        {
-            ApplicationOptions.AddOption(optionLabel, () => HelpCommand(htmlFileName), ApplicationOptionType.Help);
+            ApplicationOptions.AddOption("Setting", label, action);
         }
 
         public void AddHelpUrl(string optionLabel, string htmlFileName)
         {
-            ApplicationOptions.AddOption(optionLabel, () => ApplicationController.OpenFile("https://github.com/josephmcmac/XRM-Developer-Tool/wiki/" + htmlFileName), ApplicationOptionType.Help);
+            ApplicationOptions.AddOption("Help", optionLabel, () => ApplicationController.OpenFile("https://github.com/josephmcmac/XRM-Developer-Tool/wiki/" + htmlFileName));
         }
 
         private void HelpCommand(string fileName)
