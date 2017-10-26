@@ -95,7 +95,11 @@
         </DockPanel>
     </DataTemplate>
     <DataTemplate x:Key="OptionTemplate">
-        <Button Style="{StaticResource MainMenuButton}" Content="{Binding Label}" Command="{Binding DelegateCommand}" />
+        <application:ApplicationMenuGroupView Content="{Binding Label}"  />
+    </DataTemplate>
+    <DataTemplate x:Key="OptionDropdownTemplate" DataType="applicationOptions:ApplicationOption" >
+        <Button Margin="0,0,0,0" Content="{Binding Label}"
+                Command="{Binding DelegateCommand}" Style="{StaticResource MainMenuButton}"  />
     </DataTemplate>
     <DataTemplate x:Key="NotificationTemplate">
         <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />

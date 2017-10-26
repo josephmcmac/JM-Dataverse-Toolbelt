@@ -12,6 +12,8 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             get { return "Record Report"; }
         }
 
+        public override string MenuGroup => "Reports";
+
         public override void InitialiseModule()
         {
             base.InitialiseModule();

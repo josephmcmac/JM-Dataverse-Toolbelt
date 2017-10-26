@@ -81,6 +81,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationOptions\MenuGroupViewModel.cs" />
     <Compile Include="Attributes\BulkAddFunction.cs" />
     <Compile Include="Attributes\BulkAddFieldFunction.cs" />
     <Compile Include="Attributes\BulkAddRecordTypeFunction.cs" />

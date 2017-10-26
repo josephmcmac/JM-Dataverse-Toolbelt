@@ -16,12 +16,12 @@ namespace JosephM.Application.ViewModel.Fakes
         public FakeApplicationOptions()
             : base(new FakeApplicationController())
         {
-            AddOption("Fake Option", Nothing, ApplicationOptionType.Main);
-            AddOption("Fake Option 2", Nothing, ApplicationOptionType.Main);
-            AddOption("Fake Option 3", Nothing, ApplicationOptionType.Main);
-            AddOption("Fake Setting", Nothing, ApplicationOptionType.Setting);
-            AddOption("Fake Setting", Nothing, ApplicationOptionType.Setting);
-            AddOption("Fake Setting", Nothing, ApplicationOptionType.Setting);
+            AddOption("Main", "Fake Option", Nothing);
+            AddOption("Main", "Fake Option 2", Nothing);
+            AddOption("Main", "Fake Option 3", Nothing);
+            AddOption("Main", "Fake Setting", Nothing);
+            AddOption("Main", "Fake Setting", Nothing);
+            AddOption("Main", "Fake Setting", Nothing);
 
             new Thread(() =>
             {

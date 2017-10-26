@@ -12,5 +12,7 @@ namespace JosephM.CustomisationExporter.Exporter
             base.InitialiseModule();
             AddHelpUrl("Customisation Exporter", "CustomisationExport");
         }
+
+        public override string MenuGroup => "Customisations";
     }
 }

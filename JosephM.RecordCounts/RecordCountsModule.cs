@@ -12,5 +12,7 @@ namespace JosephM.RecordCounts.Exporter
             base.InitialiseModule();
             AddHelpUrl("Record Counts", "RecordCounts");
         }
+
+        public override string MenuGroup => "Reports";
     }
 }

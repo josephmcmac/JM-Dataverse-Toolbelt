@@ -20,7 +20,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelp("CRM Text Search", "Text Search Help.docx");
         }
     }
 }

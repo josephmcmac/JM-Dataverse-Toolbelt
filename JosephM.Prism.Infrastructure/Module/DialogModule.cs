@@ -1,11 +1,5 @@
-﻿using JosephM.Application;
-using JosephM.Application.Modules;
-using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Modules;
 using JosephM.Core.Extentions;
-using JosephM.Core.Service;
-using JosephM.Prism.Infrastructure.Dialog;
-using System;
-using System.Linq;
 
 namespace JosephM.Prism.Infrastructure.Module
 {
@@ -18,7 +12,7 @@ namespace JosephM.Prism.Infrastructure.Module
 
         public override void InitialiseModule()
         {
-            AddOption(MainOperationName, DialogCommand);
+            AddOption(MenuGroup, MainOperationName, DialogCommand);
         }
 
         protected virtual string MainOperationName
@@ -30,5 +24,7 @@ namespace JosephM.Prism.Infrastructure.Module
         {
             NavigateTo<TDialog>();
         }
+
+        public virtual string MenuGroup => MainOperationName;
     }
 }

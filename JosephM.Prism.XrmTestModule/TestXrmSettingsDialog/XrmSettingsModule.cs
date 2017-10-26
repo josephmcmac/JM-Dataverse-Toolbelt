@@ -13,7 +13,7 @@ namespace JosephM.Prism.XrmTestModule.TestXrmSettingsDialog
 
         public override void InitialiseModule()
         {
-            AddOption("Save Xrm Test Connection", DialogCommand);
+            AddOption("TESTSETTINGS", "Save Xrm Test Connection", DialogCommand);
         }
 
         private void DialogCommand()
