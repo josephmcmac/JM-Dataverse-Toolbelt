@@ -1,17 +1,14 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.CodeGenerator.Service;
+using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Record.Xrm.XrmRecord;
 
-namespace JosephM.CodeGenerator.Xrm
+namespace JosephM.CodeGenerator.CSharp
 {
-    public class XrmCodeGeneratorDialog :
-        ServiceRequestDialog
-            <XrmCodeGeneratorService, CodeGeneratorRequest, CodeGeneratorResponse, CodeGeneratorResponseItem>
+    public class CSharpDialog :
+        ServiceRequestDialog<CSharpService, CSharpRequest, CSharpResponse, ServiceResponseItem>
     {
-        public XrmCodeGeneratorDialog(XrmCodeGeneratorService service, IDialogController dialogController,
-            XrmRecordService xrmRecordService)
-            : base(service, dialogController, xrmRecordService)
+        public CSharpDialog(CSharpService service, IDialogController dialogController)
+            : base(service, dialogController)
         {
         }
 
@@ -22,8 +19,6 @@ namespace JosephM.CodeGenerator.Xrm
             if (!string.IsNullOrWhiteSpace(Response.Folder))
                 AddCompletionOption("Open Folder", OpenFolder);
             CompletionMessage = "Document Successfully Generated";
-            if (!string.IsNullOrWhiteSpace(Response.Javascript))
-                CompletionMessage = Response.Javascript;
         }
 
         public void OpenFile()

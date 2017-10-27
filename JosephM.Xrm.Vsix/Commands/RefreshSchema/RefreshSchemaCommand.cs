@@ -1,7 +1,6 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.CodeGenerator.Service;
-using JosephM.CodeGenerator.Xrm;
+﻿using JosephM.CodeGenerator.CSharp;
 using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.XRM.VSIX.Dialogs;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -30,7 +29,7 @@ namespace JosephM.XRM.VSIX.Commands.RefreshSchema
         {
             var xrmService = GetXrmRecordService();
 
-            var codeGeneratorService = new XrmCodeGeneratorService(xrmService);
+            var codeGeneratorService = new CSharpService(xrmService);
 
             var selectedItems = GetSelectedFileNamesQualified();
             if (selectedItems.Count() != 1)
@@ -46,14 +45,20 @@ namespace JosephM.XRM.VSIX.Commands.RefreshSchema
             }
             FileInfo fileInfo = new FileInfo(selectedItems.First());
 
-            var request = new CodeGeneratorRequest()
+            var request = new CSharpRequest()
             {
-                Type = CodeGeneratorType.CSharpMetadata,
                 Folder = new Folder(fileInfo.DirectoryName),
                 FileName = fileInfo.Name,
-                Namespace = "Schema"
+                Namespace = "Schema",
+                Actions = true,
+                Entities = true,
+                Fields = true,
+                FieldOptions = true,
+                Relationships = true,
+                SharedOptions = true,
+                IncludeAllRecordTypes = true
             };
-            var dialog = new VsixServiceDialog<XrmCodeGeneratorService, CodeGeneratorRequest, CodeGeneratorResponse, CodeGeneratorResponseItem>(
+            var dialog = new VsixServiceDialog<CSharpService, CSharpRequest, CSharpResponse, ServiceResponseItem>(
                 codeGeneratorService,
                 request,
                 CreateDialogController());

@@ -1,15 +1,13 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 
-namespace JosephM.CodeGenerator.Service
+namespace JosephM.CodeGenerator.CSharp
 {
-    public class CodeGeneratorResponse : ServiceResponseBase<CodeGeneratorResponseItem>
+    public class CSharpResponse : ServiceResponseBase<ServiceResponseItem>
     {
         [Hidden]
         public string Folder { get; set; }
         [Hidden]
         public string FileName { get; set; }
-        [Hidden]
-        public string Javascript { get; set; }
     }
 }
