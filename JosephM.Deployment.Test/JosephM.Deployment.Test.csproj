@@ -69,11 +69,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DeploymentSolutionImporterExporterModuleTests.cs" />
-    <Compile Include="DeploymentImporterExporterModuleTests.cs" />
-    <Compile Include="DeploymentSolutionImporterExporterRequestTest.cs" />
+    <Compile Include="DeploymentExportXmlModuleTests.cs" />
+    <Compile Include="DeploymentImportCsvsTests.cs" />
+    <Compile Include="DeploymentImportXmlTests.cs" />
+    <Compile Include="DeploymentCreateAndDeployPackageModuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DeploymentImporterExporterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Files\jmcg_testentity.csv">

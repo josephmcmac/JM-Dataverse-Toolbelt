@@ -1,13 +1,11 @@
-﻿using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
-using JosephM.ObjectMapping;
-using JosephM.Record.Xrm.Mappers;
-using JosephM.Xrm.ImportExporter.Service;
+using JosephM.Deployment.CreateDeploymentPackage;
+using JosephM.Deployment.DeployPackage;
+using JosephM.Deployment.ExportXml;
 using JosephM.Xrm.Schema;
 using JosephM.XRM.VSIX.Commands.CreateDeploymentPackage;
 using JosephM.XRM.VSIX.Commands.DeployPackage;
-using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
@@ -33,33 +31,33 @@ namespace JosephM.Xrm.Vsix.Test
             var packageSettings = GetTestPackageSettings();
             XrmService.SetField(Entities.solution, new Guid(packageSettings.Solution.Id), Fields.solution_.version, "2.0.0.0");
 
-            var request = XrmSolutionImporterExporterRequest.CreateForCreatePackage(tempFolder, packageSettings.Solution);
+            var request = CreateDeploymentPackageRequest.CreateForCreatePackage(tempFolder, packageSettings.Solution);
             request.DataToInclude = new[]
             {
-                new ImportExportRecordType()
+                new ExportRecordType()
                 {
                      RecordType = new RecordType(Entities.account, Entities.account), Type = ExportType.AllRecords
                 }
             };
 
-            var service = new XrmSolutionImporterExporterService(XrmRecordService);
+            var service = new CreateDeploymentPackageService(XrmRecordService);
 
-            var dialogCreate = new CreateDeploymentPackageDialog(service, request, CreateDialogController(), packageSettings, VisualStudioService);
+            var dialogCreate = new XRM.VSIX.Commands.CreateDeploymentPackage.CreateDeploymentPackageDialog(service, request, CreateDialogController(), packageSettings, VisualStudioService);
             dialogCreate.Controller.BeginDialog();
 
             var entryForm = GetEntryForm(dialogCreate);
-            var thisVersionField = entryForm.GetStringFieldFieldViewModel(nameof(XrmSolutionImporterExporterRequest.ThisReleaseVersion));
-            var nextVersionField = entryForm.GetStringFieldFieldViewModel(nameof(XrmSolutionImporterExporterRequest.SetVersionPostRelease));
+            var thisVersionField = entryForm.GetStringFieldFieldViewModel(nameof(CreateDeploymentPackageRequest.ThisReleaseVersion));
+            var nextVersionField = entryForm.GetStringFieldFieldViewModel(nameof(CreateDeploymentPackageRequest.SetVersionPostRelease));
             Assert.AreEqual("2.0.0.0", nextVersionField.Value);
             Assert.AreEqual("2.0.0.0", thisVersionField.Value);
             thisVersionField.Value = "3.0.0.0";
             Assert.AreEqual("3.0.0.0", nextVersionField.Value);
             nextVersionField.Value = "4.0.0.0";
-            var dataToExportField = entryForm.GetSubGridViewModel(nameof(XrmSolutionImporterExporterRequest.DataToInclude));
+            var dataToExportField = entryForm.GetSubGridViewModel(nameof(CreateDeploymentPackageRequest.DataToInclude));
             dataToExportField.AddRow();
             var dataToExportRow = dataToExportField.GridRecords.First();
-            dataToExportRow.GetRecordTypeFieldViewModel(nameof(ImportExportRecordType.RecordType)).Value = new RecordType(Entities.account, Entities.account);
-            dataToExportRow.GetPicklistFieldFieldViewModel(nameof(ImportExportRecordType.Type)).Value = new PicklistOption(ExportType.AllRecords.ToString(), ExportType.AllRecords.ToString());
+            dataToExportRow.GetRecordTypeFieldViewModel(nameof(ExportRecordType.RecordType)).Value = new RecordType(Entities.account, Entities.account);
+            dataToExportRow.GetPicklistFieldFieldViewModel(nameof(ExportRecordType.Type)).Value = new PicklistOption(ExportType.AllRecords.ToString(), ExportType.AllRecords.ToString());
             SubmitEntryForm(dialogCreate);
 
             var folder = Directory.GetDirectories(Path.Combine(VisualStudioService.SolutionDirectory, "Releases")).First();
@@ -74,11 +72,11 @@ namespace JosephM.Xrm.Vsix.Test
             XrmService.Delete(account);
 
             //Okay now lets deploy it
-            request = XrmSolutionImporterExporterRequest.CreateForDeployPackage(folder);
-            request.Connection = packageSettings.Connections.First();
+            var deployRequest = DeployPackageRequest.CreateForDeployPackage(folder);
+            deployRequest.Connection = packageSettings.Connections.First();
 
-            service = new XrmSolutionImporterExporterService(XrmRecordService);
-            var dialogDeploy = new DeployPackageDialog(service, request, CreateDialogController(), packageSettings, VisualStudioService);
+            var deployService = new DeployPackageService(XrmRecordService);
+            var dialogDeploy = new XRM.VSIX.Commands.DeployPackage.DeployPackageDialog(deployService, deployRequest, CreateDialogController(), packageSettings, VisualStudioService);
             dialogDeploy.Controller.BeginDialog();
 
             SubmitEntryForm(dialogDeploy);

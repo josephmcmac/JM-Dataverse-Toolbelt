@@ -60,7 +60,6 @@
   <ItemGroup>
     <Compile Include="FakeVisualStudioService.cs" />
     <Compile Include="VsixManagePluginTriggersTests.cs" />
-    <Compile Include="VsixGetSolutionDialogTests.cs" />
     <Compile Include="VsixCreateAndDeployPackageTests.cs" />
     <Compile Include="VsixRefreshSettingsDialogTests.cs" />
     <Compile Include="VsixUpdateAssemblyDialogTests.cs" />

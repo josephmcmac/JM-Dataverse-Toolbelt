@@ -1,7 +1,6 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.FieldType;
+using JosephM.Deployment.ImportCsvs;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.ImportExporter.Service;
 using JosephM.XRM.VSIX.Dialogs;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,18 +20,17 @@ namespace JosephM.XRM.VSIX.Commands.ImportCsvs
         {
             var files = GetSelectedFileNamesQualified();
 
-            var request = new XrmImporterExporterRequest()
+            var request = new ImportCsvsRequest()
             {
-                ImportExportTask = ImportExportTask.ImportCsvs,
-                FolderOrFiles = XrmImporterExporterRequest.CsvImportOption.SpecificFiles,
+                FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
                 MatchByName = true,
                 DateFormat = DateFormat.English,
-                CsvsToImport = files.Select(f => new XrmImporterExporterRequest.CsvToImport() { Csv = new FileReference(f) }).ToArray()
+                CsvsToImport = files.Select(f => new ImportCsvsRequest.CsvToImport() { Csv = new FileReference(f) }).ToArray()
             };
 
-            var service = new XrmImporterExporterService<XrmRecordService>(GetXrmRecordService());
+            var service = new ImportCsvsService(GetXrmRecordService());
 
-            var dialog = new VsixServiceDialog<XrmImporterExporterService<XrmRecordService>, XrmImporterExporterRequest, XrmImporterExporterResponse, XrmImporterExporterResponseItem>(
+            var dialog = new VsixServiceDialog<ImportCsvsService, ImportCsvsRequest, ImportCsvsResponse, ImportCsvsResponseItem>(
                 service,
                 request,
                 CreateDialogController());

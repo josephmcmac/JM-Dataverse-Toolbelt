@@ -79,7 +79,6 @@ namespace JosephM.XRM.VSIX
             Commands.UpdateAssembly.UpdateAssemblyCommand.Initialize(this);
             Commands.RefreshSchema.RefreshSchemaCommand.Initialize(this);
             Commands.RefreshSettings.RefreshSettingsCommand.Initialize(this);
-            Commands.GetSolution.GetSolutionCommand.Initialize(this);
             Commands.ImportCsvs.ImportCsvsCommand.Initialize(this);
             Commands.ClearCache.ClearCacheCommand.Initialize(this);
             Commands.ImportCustomisations.ImportCustomisationsCommand.Initialize(this);

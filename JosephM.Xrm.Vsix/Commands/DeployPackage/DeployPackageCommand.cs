@@ -1,10 +1,7 @@
 ﻿using EnvDTE;
 using EnvDTE80;
-using JosephM.Application.ViewModel.Dialog;
-using JosephM.Core.FieldType;
-using JosephM.ObjectMapping;
+using JosephM.Deployment.DeployPackage;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Xrm.ImportExporter.Service;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
 using System;
@@ -80,10 +77,10 @@ namespace JosephM.XRM.VSIX.Commands.DeployPackage
             var visualStudioService = GetVisualStudioService();
 
             var savedConnection = SavedXrmRecordConfiguration.CreateNew(xrmRecordService.XrmRecordConfiguration);
-            var request = XrmSolutionImporterExporterRequest.CreateForDeployPackage(folder);
+            var request = DeployPackageRequest.CreateForDeployPackage(folder);
             var controller = CreateDialogController(settings);
 
-            var service = new XrmSolutionImporterExporterService(xrmRecordService);
+            var service = new DeployPackageService(xrmRecordService);
             var dialog = new DeployPackageDialog(service, request, controller, settings, visualStudioService);
 
             DialogUtility.LoadDialog(dialog);

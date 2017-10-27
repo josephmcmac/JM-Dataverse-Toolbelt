@@ -26,7 +26,11 @@ namespace JosephM.Prism.Infrastructure.Module
     {
         protected override string MainOperationName
         {
-            get { return (typeof(TRequest)).GetDisplayName(); }
+            get
+            {
+                var typeName = (typeof(TRequest)).GetDisplayName();
+                return typeName.EndsWith(" Request") ? typeName.Substring(0, typeName.Length - 8) : typeName;
+            }
         }
 
         public override void InitialiseModule()

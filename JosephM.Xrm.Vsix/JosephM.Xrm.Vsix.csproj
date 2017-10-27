@@ -68,8 +68,6 @@
     <Compile Include="Commands\ClearCache\ClearCacheCommand.cs" />
     <Compile Include="Commands\CreateDeploymentPackage\CreateDeploymentPackageCommand.cs" />
     <Compile Include="Commands\CreateDeploymentPackage\CreateDeploymentPackageDialog.cs" />
-    <Compile Include="Commands\GetSolution\GetSolutionCommand.cs" />
-    <Compile Include="Commands\GetSolution\GetSolutionDialog.cs" />
     <Compile Include="Commands\Crud\CrudCommand.cs" />
     <Compile Include="Commands\InstanceComparison\InstanceComparisonCommand.cs" />
     <Compile Include="Commands\ImportCustomisations\ImportCustomisationsCommand.cs" />

@@ -190,13 +190,6 @@
           <ButtonText>Package Settings</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="GetSolutionCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
-        <Strings>
-          <ButtonText>Get Solution</ButtonText>
-        </Strings>
-      </Button>
       <Button guid="guidXrmPackageCmdSet" id="ImportCsvsCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
@@ -314,7 +307,6 @@
       <IDSymbol name="ManagePluginTriggersCommandId" value="0x0104" />
       <IDSymbol name="UpdatePluginAssemblyCommandId" value="0x0105" />
       <IDSymbol name="RefreshSettingsCommandId" value="0x0106" />
-      <IDSymbol name="GetSolutionCommandId" value="0x0107" />
       <IDSymbol name="ImportCsvsCommandId" value="0x0108" />
       <IDSymbol name="ClearCacheCommandId" value="0x0109" />
       <IDSymbol name="ImportCustomisationsCommandId" value="0x010A" />
