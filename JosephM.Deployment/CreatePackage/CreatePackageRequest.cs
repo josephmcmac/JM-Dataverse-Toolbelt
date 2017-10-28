@@ -16,18 +16,18 @@ using System.Linq;
 
 #endregion
 
-namespace JosephM.Deployment.CreateDeploymentPackage
+namespace JosephM.Deployment.CreatePackage
 {
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Connection, true, 20)]
     [Group(Sections.PackageSolution, true, 25)]
     [Group(Sections.DataIncluded, true, 30)]
-    public class CreateDeploymentPackageRequest : ServiceRequestBase, IValidatableObject
+    public class CreatePackageRequest : ServiceRequestBase, IValidatableObject
     {
-        public static CreateDeploymentPackageRequest CreateForCreatePackage(string folder, Lookup solution)
+        public static CreatePackageRequest CreateForCreatePackage(string folder, Lookup solution)
         {
-            return new CreateDeploymentPackageRequest()
+            return new CreatePackageRequest()
             {
                 FolderPath = new Folder(folder),
                 Solution = solution,

@@ -1,6 +1,6 @@
 ﻿using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
-using JosephM.Deployment.CreateDeploymentPackage;
+using JosephM.Deployment.CreatePackage;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Deployment.ExportXml;
 using JosephM.Xrm.Schema;
@@ -31,7 +31,7 @@ namespace JosephM.Xrm.Vsix.Test
             var packageSettings = GetTestPackageSettings();
             XrmService.SetField(Entities.solution, new Guid(packageSettings.Solution.Id), Fields.solution_.version, "2.0.0.0");
 
-            var request = CreateDeploymentPackageRequest.CreateForCreatePackage(tempFolder, packageSettings.Solution);
+            var request = CreatePackageRequest.CreateForCreatePackage(tempFolder, packageSettings.Solution);
             request.DataToInclude = new[]
             {
                 new ExportRecordType()
@@ -40,20 +40,20 @@ namespace JosephM.Xrm.Vsix.Test
                 }
             };
 
-            var service = new CreateDeploymentPackageService(XrmRecordService);
+            var service = new CreatePackageService(XrmRecordService);
 
             var dialogCreate = new XRM.VSIX.Commands.CreateDeploymentPackage.CreateDeploymentPackageDialog(service, request, CreateDialogController(), packageSettings, VisualStudioService);
             dialogCreate.Controller.BeginDialog();
 
             var entryForm = GetEntryForm(dialogCreate);
-            var thisVersionField = entryForm.GetStringFieldFieldViewModel(nameof(CreateDeploymentPackageRequest.ThisReleaseVersion));
-            var nextVersionField = entryForm.GetStringFieldFieldViewModel(nameof(CreateDeploymentPackageRequest.SetVersionPostRelease));
+            var thisVersionField = entryForm.GetStringFieldFieldViewModel(nameof(CreatePackageRequest.ThisReleaseVersion));
+            var nextVersionField = entryForm.GetStringFieldFieldViewModel(nameof(CreatePackageRequest.SetVersionPostRelease));
             Assert.AreEqual("2.0.0.0", nextVersionField.Value);
             Assert.AreEqual("2.0.0.0", thisVersionField.Value);
             thisVersionField.Value = "3.0.0.0";
             Assert.AreEqual("3.0.0.0", nextVersionField.Value);
             nextVersionField.Value = "4.0.0.0";
-            var dataToExportField = entryForm.GetSubGridViewModel(nameof(CreateDeploymentPackageRequest.DataToInclude));
+            var dataToExportField = entryForm.GetSubGridViewModel(nameof(CreatePackageRequest.DataToInclude));
             dataToExportField.AddRow();
             var dataToExportRow = dataToExportField.GridRecords.First();
             dataToExportRow.GetRecordTypeFieldViewModel(nameof(ExportRecordType.RecordType)).Value = new RecordType(Entities.account, Entities.account);

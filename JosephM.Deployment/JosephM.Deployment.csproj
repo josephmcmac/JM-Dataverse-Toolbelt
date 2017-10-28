@@ -131,10 +131,10 @@
     <Compile Include="ExportXml\ExportXmlResponse.cs" />
     <Compile Include="ExportXml\ExportXmlResponseItem.cs" />
     <Compile Include="ExportXml\ExportXmlService.cs" />
-    <Compile Include="CreateDeploymentPackage\CreateDeploymentPackageDialog.cs" />
-    <Compile Include="CreateDeploymentPackage\CreateDeploymentPackageModule.cs" />
-    <Compile Include="CreateDeploymentPackage\CreateDeploymentPackageRequest.cs" />
-    <Compile Include="CreateDeploymentPackage\CreateDeploymentPackageService.cs" />
+    <Compile Include="CreatePackage\CreatePackageDialog.cs" />
+    <Compile Include="CreatePackage\CreatePackageModule.cs" />
+    <Compile Include="CreatePackage\CreatePackageRequest.cs" />
+    <Compile Include="CreatePackage\CreatePackageService.cs" />
     <Compile Include="ImportXml\ImportXmlDialog.cs" />
     <Compile Include="ImportXml\ImportXmlModule.cs" />
     <Compile Include="ImportXml\ImportXmlRequest.cs" />

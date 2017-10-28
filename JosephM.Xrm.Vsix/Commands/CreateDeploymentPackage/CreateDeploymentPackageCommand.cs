@@ -1,4 +1,4 @@
-﻿using JosephM.Deployment.CreateDeploymentPackage;
+﻿using JosephM.Deployment.CreatePackage;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
@@ -30,11 +30,11 @@ namespace JosephM.XRM.VSIX.Commands.CreateDeploymentPackage
             //WARNING THIS FOLDER IS CLEARED BEFORE PROCESSING SO CAREFUL IF CHANGE DIRECTORY
             var folderPath = visualStudioService.SolutionDirectory + "/TempSolutionFolder";
 
-            var request = CreateDeploymentPackageRequest.CreateForCreatePackage(folderPath, settings.Solution);
+            var request = CreatePackageRequest.CreateForCreatePackage(folderPath, settings.Solution);
 
             var controller = CreateDialogController();
 
-            var service = new CreateDeploymentPackageService(xrmRecordService);
+            var service = new CreatePackageService(xrmRecordService);
 
             var dialog = new CreateDeploymentPackageDialog(service, request, controller, settings, visualStudioService);
 

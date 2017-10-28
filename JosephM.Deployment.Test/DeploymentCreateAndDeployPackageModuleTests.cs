@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
-using JosephM.Deployment.CreateDeploymentPackage;
+using JosephM.Deployment.CreatePackage;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Deployment.ExportXml;
 using JosephM.Prism.XrmModule.Test;
@@ -26,7 +26,7 @@ namespace JosephM.Deployment.Test
 
             FileUtility.DeleteFiles(TestingFolder);
 
-            var createDeploymentPackageRequest = new CreateDeploymentPackageRequest();
+            var createDeploymentPackageRequest = new CreatePackageRequest();
             createDeploymentPackageRequest.FolderPath = new Folder(TestingFolder);
             createDeploymentPackageRequest.Solution = solution.ToLookup();
             createDeploymentPackageRequest.ThisReleaseVersion = "3.0.0.0";
@@ -38,8 +38,8 @@ namespace JosephM.Deployment.Test
                      RecordType = new RecordType(Entities.account, Entities.account), Type = ExportType.AllRecords
                 }
             };
-            var createApplication = CreateAndLoadTestApplication<CreateDeploymentPackageModule>();
-            createApplication.NavigateAndProcessDialog<CreateDeploymentPackageModule, CreateDeploymentPackageDialog>(createDeploymentPackageRequest);
+            var createApplication = CreateAndLoadTestApplication<CreatePackageModule>();
+            createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog>(createDeploymentPackageRequest);
 
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).First().EndsWith(".zip"));
             Assert.IsTrue(FileUtility.GetFolders(TestingFolder).First().EndsWith("Data"));
@@ -65,7 +65,7 @@ namespace JosephM.Deployment.Test
             //should be recreated
             account = Refresh(account);
 
-            createDeploymentPackageRequest = new CreateDeploymentPackageRequest();
+            createDeploymentPackageRequest = new CreatePackageRequest();
             createDeploymentPackageRequest.FolderPath = new Folder(TestingFolder);
             createDeploymentPackageRequest.Solution = solution.ToLookup();
             createDeploymentPackageRequest.ThisReleaseVersion = "3.0.0.0";
@@ -80,10 +80,10 @@ namespace JosephM.Deployment.Test
             };
             //error if already .zips on the folder
             FileUtility.WriteToFile(TestingFolder, "Fake.zip", "FakeContent");
-            createApplication = CreateAndLoadTestApplication<CreateDeploymentPackageModule>();
+            createApplication = CreateAndLoadTestApplication<CreatePackageModule>();
             try
             {
-                createApplication.NavigateAndProcessDialog<CreateDeploymentPackageModule, CreateDeploymentPackageDialog>(createDeploymentPackageRequest);
+                createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog>(createDeploymentPackageRequest);
                 Assert.Fail();
             }
             catch(Exception ex)
@@ -92,7 +92,7 @@ namespace JosephM.Deployment.Test
             }
             FileUtility.DeleteFiles(TestingFolder);
             FileUtility.DeleteSubFolders(TestingFolder);
-            createApplication.NavigateAndProcessDialog<CreateDeploymentPackageModule, CreateDeploymentPackageDialog>(createDeploymentPackageRequest);
+            createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog>(createDeploymentPackageRequest);
 
             solution = XrmRecordService.Get(solution.Type, solution.Id);
             Assert.AreEqual("3.0.0.0", solution.GetStringField(Fields.solution_.version));

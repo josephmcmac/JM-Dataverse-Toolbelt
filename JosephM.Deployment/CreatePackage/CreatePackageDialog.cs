@@ -7,14 +7,14 @@ using JosephM.Record.Xrm.XrmRecord;
 
 #endregion
 
-namespace JosephM.Deployment.CreateDeploymentPackage
+namespace JosephM.Deployment.CreatePackage
 {
-    public class CreateDeploymentPackageDialog :
+    public class CreatePackageDialog :
         ServiceRequestDialog
-            <CreateDeploymentPackageService, CreateDeploymentPackageRequest,
+            <CreatePackageService, CreatePackageRequest,
                 ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
     {
-        public CreateDeploymentPackageDialog(CreateDeploymentPackageService service,
+        public CreatePackageDialog(CreatePackageService service,
             IDialogController dialogController, XrmRecordService lookupService)
             : base(service, dialogController, lookupService)
         {

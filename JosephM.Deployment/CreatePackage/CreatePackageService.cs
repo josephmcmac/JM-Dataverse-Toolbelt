@@ -23,17 +23,17 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace JosephM.Deployment.CreateDeploymentPackage
+namespace JosephM.Deployment.CreatePackage
 {
-    public class CreateDeploymentPackageService :
-        DataImportServiceBase<CreateDeploymentPackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
+    public class CreatePackageService :
+        DataImportServiceBase<CreatePackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
     {
-        public CreateDeploymentPackageService(XrmRecordService xrmRecordService)
+        public CreatePackageService(XrmRecordService xrmRecordService)
             : base(xrmRecordService)
         {
         }
 
-        public override void ExecuteExtention(CreateDeploymentPackageRequest request, ServiceResponseBase<DataImportResponseItem> response,
+        public override void ExecuteExtention(CreatePackageRequest request, ServiceResponseBase<DataImportResponseItem> response,
             LogController controller)
         {
             //todo catch fatal error in response in base class
@@ -41,7 +41,7 @@ namespace JosephM.Deployment.CreateDeploymentPackage
         }
 
 
-        private void CreateDeploymentPackage(CreateDeploymentPackageRequest request, LogController controller, ServiceResponseBase<DataImportResponseItem> response)
+        private void CreateDeploymentPackage(CreatePackageRequest request, LogController controller, ServiceResponseBase<DataImportResponseItem> response)
         {
             var folderPath = request.FolderPath.FolderPath;
 

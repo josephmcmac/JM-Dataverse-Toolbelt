@@ -2,7 +2,7 @@
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment;
-using JosephM.Deployment.CreateDeploymentPackage;
+using JosephM.Deployment.CreatePackage;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
@@ -10,13 +10,13 @@ using System.IO;
 
 namespace JosephM.XRM.VSIX.Commands.CreateDeploymentPackage
 {
-    public class CreateDeploymentPackageDialog : VsixServiceDialog<CreateDeploymentPackageService, CreateDeploymentPackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
+    public class CreateDeploymentPackageDialog : VsixServiceDialog<CreatePackageService, CreatePackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
     {
         public XrmRecordService XrmRecordService { get { return Service.XrmRecordService; } }
         public XrmPackageSettings PackageSettings { get; set; }
         public IVisualStudioService VisualStudioService { get; set; }
 
-        public CreateDeploymentPackageDialog(CreateDeploymentPackageService service, CreateDeploymentPackageRequest request, IDialogController dialogController, XrmPackageSettings packageSettings, IVisualStudioService visualStudioService)
+        public CreateDeploymentPackageDialog(CreatePackageService service, CreatePackageRequest request, IDialogController dialogController, XrmPackageSettings packageSettings, IVisualStudioService visualStudioService)
             : base(service, request, dialogController, lookupService: service.XrmRecordService, showRequestEntryForm: true)
         {
             PackageSettings = packageSettings;
