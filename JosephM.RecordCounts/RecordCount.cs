@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JosephM.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,10 @@ namespace JosephM.RecordCounts
             Count = count;
         }
 
+        [DisplayOrder(20)]
         public string RecordType { get; set; }
+        [DisplayOrder(30)]
+        [GridWidth(125)]
         public long Count { get; set; }
     }
 }
