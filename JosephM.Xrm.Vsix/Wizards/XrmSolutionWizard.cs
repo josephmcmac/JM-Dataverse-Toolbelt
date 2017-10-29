@@ -1,17 +1,14 @@
-﻿using JosephM.Record.Xrm.XrmRecord;
+﻿using EnvDTE;
+using JosephM.Prism.XrmModule.Crud;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
 using System.Collections.Generic;
-using JosephM.XRM.VSIX.Commands.PackageSettings;
 using System.IO;
-using EnvDTE80;
-using System;
-using EnvDTE;
-using System.Linq;
 using VSLangProj;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.Crud;
 
 namespace JosephM.XRM.VSIX.Wizards
 {
@@ -37,7 +34,7 @@ namespace JosephM.XRM.VSIX.Wizards
             var dialog = new ConnectionEntryDialog(DialogUtility.CreateDialogController(), xrmConfig,
                 VisualStudioService, false);
 
-            DialogUtility.LoadDialog(dialog, showCompletion: false, isModal: true);
+            VsixApplicationController.LoadDialogIntoWindow(dialog, showCompletion: false, isModal: true);
             XrmRecordConfiguration = xrmConfig;
 
             XrmPackageSettings = new XrmPackageSettings();
@@ -51,8 +48,9 @@ namespace JosephM.XRM.VSIX.Wizards
             {
                 savedConnection
             };
-            var settingsDialog = new XrmPackageSettingDialog(DialogUtility.CreateDialogController(), XrmPackageSettings, VisualStudioService, false, new XrmRecordService(XrmRecordConfiguration, formService: new XrmFormService()));
-            DialogUtility.LoadDialog(settingsDialog, showCompletion: false, isModal: true);
+            var settingsDialog = new XrmPackageSettingsDialog(DialogUtility.CreateDialogController(), XrmPackageSettings, VisualStudioService, new XrmRecordService(XrmRecordConfiguration, formService: new XrmFormService()));
+            settingsDialog.SaveSettings = false;
+            VsixApplicationController.LoadDialogIntoWindow(settingsDialog, showCompletion: false, isModal: true);
 
             //add token replacements for the template projects
             AddReplacements(replacementsDictionary, XrmPackageSettings);

@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using EnvDTE;
 
-namespace JosephM.XRM.VSIX.Utilities
+namespace JosephM.Xrm.Vsix.Utilities
 {
     public interface IVisualStudioService
     {
         string SolutionDirectory { get; }
-        string AddSolutionItem(string connectionFileName, string serialised);
+        string AddSolutionItem(string name, string serialised);
         string AddSolutionItem<T>(string name, T objectToSerialise);
         string AddSolutionItem(string fileQualified);
         IEnumerable<IVisualStudioProject> GetSolutionProjects();
         void AddFolder(string folderDirectory);
         string GetSolutionItemText(string name);
+        string BuildSelectedProjectAndGetAssemblyName();
+        string GetSelectedProjectAssemblyName();
+        IEnumerable<string> GetSelectedFileNamesQualified();
+        IEnumerable<IVisualStudioItem> GetSelectedItems();
     }
 
     public interface IVisualStudioProject
@@ -20,8 +24,26 @@ namespace JosephM.XRM.VSIX.Utilities
         IProjectItem AddProjectItem(string file);
     }
 
-    public interface IProjectItem
+    public interface IProjectItem : IVisualStudioItem
     {
         void SetProperty(string propertyName, object value);
+        string FileName { get; }
+        string Name { get; }
+        string FileFolder { get; }
+    }
+
+    public interface ISolutionFolder : IVisualStudioItem
+    {
+        string ParentProjectName { get; }
+
+        IEnumerable<IProjectItem> ProjectItems { get; }
+
+        IProjectItem AddProjectItem(string file);
+        ISolutionFolder AddSubFolder(string subFolder);
+        void CopyFilesIntoSolutionFolder(string folderDirectory);
+    }
+
+    public interface IVisualStudioItem
+    {
     }
 }

@@ -3,6 +3,7 @@ using EnvDTE;
 using EnvDTE80;
 using JosephM.XRM.VSIX.Utilities;
 using Microsoft.VisualStudio.TemplateWizard;
+using JosephM.Xrm.Vsix.Utilities;
 
 namespace JosephM.XRM.VSIX.Wizards
 {

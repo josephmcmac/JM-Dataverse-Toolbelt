@@ -1,10 +1,8 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Utility;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Xrm.Schema;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Commands.PackageSettings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
@@ -18,12 +16,15 @@ namespace JosephM.Xrm.Vsix.Test
         {
             var packageSettinns = GetTestPackageSettings();
 
-            var dialog = new XrmPackageSettingDialog(CreateDialogController(), packageSettinns, VisualStudioService, true, XrmRecordService);
+            var dialog = new XrmPackageSettingsDialog(CreateDialogController(), packageSettinns, VisualStudioService, XrmRecordService);
             dialog.Controller.BeginDialog();
 
             //okay I am going to add script in here to create a new publisher and solution
             var entryViewModel = GetEntryForm(dialog);
             entryViewModel.LoadFormSections();
+
+            entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionDynamicsCrmPrefix)).Value = "Foo";
+            entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionObjectPrefix)).Value = "Foo";
 
             var solutionField = entryViewModel.GetLookupFieldFieldViewModel(nameof(XrmPackageSettings.Solution));
             var Loo = solutionField.LookupService;

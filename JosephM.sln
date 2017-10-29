@@ -2250,7 +2250,6 @@ Global
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.CD_ROM|x86.ActiveCfg = Release|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.CD_ROM|x86.Build.0 = Release|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|x86.Build.0 = Debug|Any CPU
@@ -2613,7 +2612,7 @@ Global
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322} = {F54DAEB3-F26D-41A6-93E4-3A3B7921A621}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 	EndGlobalSection
 EndGlobal

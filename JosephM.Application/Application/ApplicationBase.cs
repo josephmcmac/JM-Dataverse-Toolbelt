@@ -12,24 +12,19 @@ namespace JosephM.Application.Application
     {
         public ApplicationControllerBase Controller { get; set; }
 
-        public ApplicationBase(ApplicationControllerBase applicationController, IApplicationOptions applicationOptions)
+        public ApplicationBase(ApplicationControllerBase applicationController, IApplicationOptions applicationOptions, ISettingsManager settingsManager)
         {
             Modules = new Dictionary<Type, ModuleBase>();
             Controller = applicationController;
-            Controller.RegisterInfrastructure(applicationOptions);
-        }
-
-        public ApplicationBase(ApplicationControllerBase applicationController)
-            : this(applicationController, new ApplicationOptions())
-        {
+            Controller.RegisterInfrastructure(applicationOptions, settingsManager);
         }
 
         private IDictionary<Type, ModuleBase> Modules { get; set; }
 
-        public void AddModule<T>()
+        public T AddModule<T>()
             where T : ModuleBase, new()
         {
-            AddModule(typeof (T));
+            return AddModule(typeof (T)) as T;
         }
 
         public T GetModule<T>()
@@ -40,10 +35,10 @@ namespace JosephM.Application.Application
             return (T)Modules[typeof (T)];
         }
 
-        private void AddModule(Type moduleType)
+        private object AddModule(Type moduleType)
         {
             if (Modules.ContainsKey(moduleType))
-                return;
+                return Modules[moduleType];
 
             var moduleController = Controller.ResolveType<ModuleController>();
 
@@ -65,6 +60,7 @@ namespace JosephM.Application.Application
             theModule.RegisterTypes();
             theModule.InitialiseModule();
             Modules.Add(moduleType, theModule);
+            return theModule;
         }
 
         protected void LogError(string message)

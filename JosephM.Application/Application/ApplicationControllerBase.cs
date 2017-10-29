@@ -157,7 +157,7 @@ namespace JosephM.Application.Application
 
         public IDependencyResolver Container { get; set; }
 
-        public object ResolveType(Type type)
+        public virtual object ResolveType(Type type)
         {
             return Container == null ? null : Container.ResolveType(type);
         }
