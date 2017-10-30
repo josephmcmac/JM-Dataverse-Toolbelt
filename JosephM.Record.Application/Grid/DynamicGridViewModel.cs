@@ -235,6 +235,8 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 _addRow = value;
                 AddRowButton = _addRow == null ? null : new XrmButtonViewModel("Add", _addRow, ApplicationController);
+                OnPropertyChanged(nameof(CanAddRow));
+                OnPropertyChanged(nameof(AddRowButton));
             }
         }
         public XrmButtonViewModel AddRowButton { get; set; }

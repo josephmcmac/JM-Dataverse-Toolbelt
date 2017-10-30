@@ -109,7 +109,7 @@ namespace JosephM.XRM.VSIX.Dialogs
         public override void UserMessage(string message)
         {
             DoOnMainThread(
-                () => MessageBox.Show(message));
+                () => System.Windows.MessageBox.Show(message));
         }
 
         public override bool UserConfirmation(string message)

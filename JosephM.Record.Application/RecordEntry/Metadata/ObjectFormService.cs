@@ -354,7 +354,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
-        internal override bool AllowAddRow(string subGridName)
+        public override bool AllowAddRow(string subGridName)
         {
             var prop = GetPropertyInfo(subGridName, ObjectType.AssemblyQualifiedName);
             return prop.GetCustomAttribute<DoNotAllowAdd>() == null;

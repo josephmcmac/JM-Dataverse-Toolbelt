@@ -306,6 +306,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             foreach (var field in iRecord.GetFieldsInEntity())
             {
                 var originalValue = ToEntityValue(iRecord.GetField(field));
+                if (originalValue is string && !string.IsNullOrWhiteSpace(originalValue.ToString()) && _xrmService.GetFieldType(field, iRecord.Type) == AttributeTypeCode.Uniqueidentifier)
+                {
+                    originalValue = new Guid(originalValue.ToString());
+                }
                 entity.SetField(field, originalValue);
             }
 

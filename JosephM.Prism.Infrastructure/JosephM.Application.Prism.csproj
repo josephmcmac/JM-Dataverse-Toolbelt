@@ -97,6 +97,11 @@
   <ItemGroup>
     <Compile Include="Dialog\SavedRequestDialog.cs" />
     <Compile Include="Dialog\AppSettingDialog.cs" />
+    <Compile Include="Module\Crud\BulkDelete\BulkDeleteDialog.cs" />
+    <Compile Include="Module\Crud\BulkDelete\BulkDeleteRequest.cs" />
+    <Compile Include="Module\Crud\BulkDelete\BulkDeleteResponse.cs" />
+    <Compile Include="Module\Crud\BulkDelete\BulkDeleteResponseItem.cs" />
+    <Compile Include="Module\Crud\BulkDelete\BulkDeleteService.cs" />
     <Compile Include="Module\Crud\BulkUpdate\BulkUpdateDialog.cs" />
     <Compile Include="Module\Crud\BulkUpdate\BulkUpdateRequest.cs" />
     <Compile Include="Module\Crud\BulkUpdate\BulkUpdateResponse.cs" />
