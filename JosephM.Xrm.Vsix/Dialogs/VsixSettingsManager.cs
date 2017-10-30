@@ -26,8 +26,6 @@ namespace JosephM.XRM.VSIX.Dialogs
         {
 
             var type = settingsType ?? typeof(TSettingsObject);
-            if (type == typeof(ISavedXrmConnections))
-                type = typeof(XrmRecordConfiguration);
             var fileName = MapTypeToFileName(settingsType ?? typeof(TSettingsObject));
 
             string read = fileName != null ? VisualStudioService.GetSolutionItemText(fileName) : null;
@@ -36,8 +34,7 @@ namespace JosephM.XRM.VSIX.Dialogs
                 return (TSettingsObject)type.CreateFromParameterlessConstructor();
             else
             {
-                if (type == typeof(XrmRecordConfiguration)
-                    || type == typeof(ISavedXrmConnections))
+                if (type == typeof(XrmRecordConfiguration))
                 {
                     //csan't recall why but this type is saved as a dictionary rather than just an object
                     //maybe due to interfaces

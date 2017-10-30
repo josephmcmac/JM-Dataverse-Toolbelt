@@ -15,6 +15,8 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
         public ConnectionEntryDialog(IDialogController dialogController, XrmRecordConfiguration objectToEnter, IVisualStudioService visualStudioService, bool addtoSolution)
             : base(dialogController)
         {
+            VisualStudioService = visualStudioService;
+            AddToSolution = addtoSolution;
             ObjectToEnter = objectToEnter;
             var configEntryDialog = new ObjectEntryDialog(ObjectToEnter, this, ApplicationController);
             SubDialogs = new DialogViewModel[] { configEntryDialog };
@@ -23,6 +25,8 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
         public ConnectionEntryDialog(DialogViewModel parentDialog, XrmRecordConfiguration objectToEnter, IVisualStudioService visualStudioService, bool addtoSolution, Action doPostEntry = null)
             : base(parentDialog)
         {
+            VisualStudioService = visualStudioService;
+            AddToSolution = addtoSolution;
             ObjectToEnter = objectToEnter;
             var configEntryDialog = new ObjectEntryDialog(ObjectToEnter, this, ApplicationController);
             SubDialogs = new DialogViewModel[] { configEntryDialog };

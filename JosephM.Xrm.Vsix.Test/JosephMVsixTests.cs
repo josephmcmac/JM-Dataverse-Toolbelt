@@ -33,12 +33,15 @@ namespace JosephM.Xrm.Vsix.Test
     {
         public JosephMVsixTests()
         {
+            InitialiseModuleXrmConnection = true;
             XrmRecordService.SetFormService(new XrmFormService());
         }
 
-        protected override TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null)
+        public bool InitialiseModuleXrmConnection { get; set; }
+
+        protected override TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null, bool loadXrmConnection = true)
         {
-            return base.CreateAndLoadTestApplication<TModule>(CreateTestVsixApplicationController(), new VsixSettingsManager(VisualStudioService));
+            return base.CreateAndLoadTestApplication<TModule>(CreateTestVsixApplicationController(), new VsixSettingsManager(VisualStudioService), loadXrmConnection: InitialiseModuleXrmConnection);
         }
 
         public ApplicationControllerBase CreateTestVsixApplicationController()
@@ -62,9 +65,11 @@ namespace JosephM.Xrm.Vsix.Test
                     FileUtility.DeleteFiles(_visualStudioService.SolutionDirectory);
                     FileUtility.DeleteSubFolders(_visualStudioService.SolutionDirectory);
                     //okay we 
-                    var connectionFileName = "solution.xrmconnection";
-                    _visualStudioService.AddSolutionItem(connectionFileName, GetXrmRecordConfiguration());
-                    _visualStudioService.AddSolutionItem("xrmpackage.xrmsettings", GetTestPackageSettings());
+                    if (InitialiseModuleXrmConnection)
+                    {
+                        _visualStudioService.AddSolutionItem("solution.xrmconnection", GetXrmRecordConfiguration());
+                        _visualStudioService.AddSolutionItem("xrmpackage.xrmsettings", GetTestPackageSettings());
+                    }
                 }
                 return _visualStudioService;
             }

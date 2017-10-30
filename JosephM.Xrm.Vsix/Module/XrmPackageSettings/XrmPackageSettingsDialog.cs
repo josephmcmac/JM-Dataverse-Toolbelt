@@ -28,9 +28,11 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
             if(string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
             {
                 //if there was no connection then lets redirect to the connection entry first
-                ApplicationController.UserMessage("You are being redirected to the connection form as there is no connection for the solution");
-                var newConnection = new XrmRecordConfiguration();
-                Action refreshChildDialogConnection = () => { XrmRecordService.XrmRecordConfiguration = newConnection; };
+                var newConnection = new SavedXrmRecordConfiguration();
+                Action refreshChildDialogConnection = () => {
+                    XrmRecordService.XrmRecordConfiguration = newConnection;
+                    SettingsObject.Connections = new[] { newConnection };
+                };
                 var connectionEntryDialog = new ConnectionEntryDialog(this, newConnection, visualStudioService, true, doPostEntry: refreshChildDialogConnection);
                 var subDialogList = new List<DialogViewModel>();
                 subDialogList.Add(connectionEntryDialog);

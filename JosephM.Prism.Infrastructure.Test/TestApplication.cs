@@ -71,8 +71,19 @@ namespace JosephM.Prism.Infrastructure.Test
                                 foreach (var item in (IEnumerable)proprtyValue)
                                 {
                                     subGrid.AddRow();
-                                    var newRow = subGrid.GridRecords.First();
-                                    EnterObject(item, newRow);
+                                    if(viewModel.ChildForms.Any())
+                                    {
+                                        var childForm = viewModel.ChildForms.First() as ObjectEntryViewModel;
+                                        if (childForm == null)
+                                            throw new NullReferenceException();
+                                        childForm.LoadFormSections();
+                                        EnterAndSaveObject(item, childForm);
+                                    }
+                                    else
+                                    {
+                                        var newRow = subGrid.GridRecords.First();
+                                        EnterObject(item, newRow);
+                                    }
                                 }
                             }
                         }
@@ -236,6 +247,11 @@ namespace JosephM.Prism.Infrastructure.Test
             var viewModel = typeSelection.ViewModel;
             viewModel.LoadFormSections();
             return viewModel;
+        }
+
+        public DialogViewModel GetSubDialog(DialogViewModel addDialog, int index = 0)
+        {
+            return addDialog.SubDialogs.ElementAt(index);
         }
 
         public void ClearTabs()

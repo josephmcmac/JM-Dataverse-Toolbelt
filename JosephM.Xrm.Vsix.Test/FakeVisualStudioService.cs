@@ -78,7 +78,7 @@ namespace JosephM.Xrm.Vsix.Test
         {
             var qualifiedDirectory = Path.Combine(SolutionDirectory, name);
             if (!Directory.Exists(qualifiedDirectory))
-                throw new NullReferenceException("Could not find directory " + qualifiedDirectory);
+               return null;
             return new FakeVisualStudioSolutionFolder(qualifiedDirectory);
         }
     }
