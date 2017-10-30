@@ -97,7 +97,7 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public override void ThrowException(Exception ex)
         {
-            throw new ApplicationException("Unexpected Error throw By Application", ex);
+            throw new FakeUserMessageException(ex);
         }
 
         public override string GetSaveFileName(string initialFileName, string extention)

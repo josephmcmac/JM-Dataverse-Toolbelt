@@ -1,5 +1,6 @@
 ﻿using JosephM.Application;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Test;
 using JosephM.XRM.VSIX.Dialogs;
@@ -56,7 +57,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public override void ThrowException(Exception ex)
         {
-            throw new ApplicationException("Unexpected Error throw By Application", ex);
+            throw new FakeUserMessageException(ex);
         }
 
         public override string GetSaveFileName(string initialFileName, string extention)

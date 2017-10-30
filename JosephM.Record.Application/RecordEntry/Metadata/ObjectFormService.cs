@@ -268,10 +268,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             if (lookupService != null)
                             {
                                 var lookupRecord = lookupService.Get(changedViewModelLookup.RecordType, changedViewModelLookup.Id);
-                                var sourceFieldValue = lookupRecord.GetField(attribute.SourceRecordField);
-                                if (matchingFields.Any())
+                                if (lookupRecord == null)
                                 {
-                                    matchingFields.First().ValueObject = sourceFieldValue;
+                                    changedViewModel.ValueObject = null;
+                                    re.ApplicationController.UserMessage(string.Format("The {0} Was Not Found And The Value Has Been Cleared", changedViewModel.Label));
+                                }
+                                else
+                                {
+                                    var sourceFieldValue = lookupRecord.GetField(attribute.SourceRecordField);
+                                    if (matchingFields.Any())
+                                    {
+                                        matchingFields.First().ValueObject = sourceFieldValue;
+                                    }
                                 }
                             }
                         }

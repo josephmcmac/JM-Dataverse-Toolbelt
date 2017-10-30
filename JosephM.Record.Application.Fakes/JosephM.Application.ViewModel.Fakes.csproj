@@ -74,6 +74,7 @@
     <Compile Include="FakeRecordEntryViewModel.cs" />
     <Compile Include="FakeRecordService.cs" />
     <Compile Include="FakeRegionNavigationService.cs" />
+    <Compile Include="FakeUserMessageException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

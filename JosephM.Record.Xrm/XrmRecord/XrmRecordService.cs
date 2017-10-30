@@ -152,7 +152,8 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IRecord Get(string recordType, string id)
         {
-            return ToIRecord(_xrmService.Retrieve(recordType, new Guid(id)));
+            var record = XrmService.GetFirst(recordType, XrmService.GetPrimaryKeyField(recordType), new Guid(id));
+            return record == null ? null : ToIRecord(_xrmService.Retrieve(recordType, new Guid(id)));
         }
 
 
