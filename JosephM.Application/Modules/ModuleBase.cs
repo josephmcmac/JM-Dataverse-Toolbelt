@@ -17,7 +17,7 @@ namespace JosephM.Application.Modules
     {
         public ModuleController Controller { get; set; }
 
-        protected IApplicationController ApplicationController
+        public IApplicationController ApplicationController
         {
             get { return Controller.ApplicationController; }
         }

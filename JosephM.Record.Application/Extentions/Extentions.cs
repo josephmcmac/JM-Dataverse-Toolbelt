@@ -16,11 +16,21 @@ using JosephM.Core.AppConfig;
 using JosephM.Record.Service;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.Modules;
 
 namespace JosephM.Application.ViewModel.Extentions
 {
     public static class Extentions
     {
+        public static void AddCustomGridFunction(this ModuleBase module, CustomGridFunction customGridFunction, Type type)
+        {
+            //okay this one is autmatically created by the unity container 
+            //but iteratively add and resolve 2 items and verify they are retained in the resolved list
+            var customGridFunctions = (CustomGridFunctions)module.ApplicationController.ResolveInstance(typeof(CustomGridFunctions), type.AssemblyQualifiedName);
+            customGridFunctions.AddFunction(customGridFunction);
+            module.ApplicationController.RegisterInstance(typeof(CustomGridFunctions), type.AssemblyQualifiedName, customGridFunctions);
+        }
+
         public static IEnumerable<GridFieldMetadata> GetGridFields(this IRecordService recordService, string recordType,
             ViewType preferredViewType)
         {
