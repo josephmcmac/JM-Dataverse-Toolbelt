@@ -111,14 +111,6 @@ namespace JosephM.Prism.Infrastructure.Dialog
             //    CompletionItems.Add(responseItem);
             //}
 
-
-            if (ApplicationController.AllowSaveRequests
-                && Request.GetType().IsTypeOf(typeof(IAllowSaveAndLoad))
-                && Request.GetType().GetCustomAttribute<AllowSaveAndLoad>() != null)
-            {
-                AddCompletionOption("Save Request", SaveRequest);
-            }
-
             if (Response.Success)
                 ProcessCompletionExtention();
 
@@ -128,11 +120,6 @@ namespace JosephM.Prism.Infrastructure.Dialog
                 ProcessError(Response.Exception);
             else if(CompletionMessage.IsNullOrWhiteSpace())
                 CompletionMessage = "Process Finished";
-        }
-
-        private void SaveRequest()
-        {
-            this.SaveSettingObject(Request);
         }
 
         protected virtual void ProcessCompletionExtention()

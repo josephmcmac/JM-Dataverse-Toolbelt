@@ -85,7 +85,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             LoadSubgridsToObject();
         }
 
-        internal void LoadSubgridsToObject()
+        public void LoadSubgridsToObject()
         {
             foreach (var grid in SubGrids)
             {
@@ -117,76 +117,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 return ((IValidatableObject) theObject).Validate();
             }
             return new IsValidResponse();
-        }
-
-        public override void LoadObject()
-        {
-
-            try
-            {
-                var theObject = GetObject();
-                var theObjectType = theObject.GetType();
-
-                var resolve = ApplicationController.ResolveType<ISettingsManager>().Resolve<SavedSettings>(theObjectType);
-                if (!resolve.SavedRequests.Any())
-                {
-                    ApplicationController.UserMessage(string.Format("There are no saved {0} records", theObjectType.GetDisplayName()));
-                    return;
-                }
-
-                var objectTypeMaps = new Dictionary<string, Type>()
-                {
-                    { "SavedRequests", theObjectType }
-                };
-                var selectionObject = new SavedSettingSelection();
-                Action loadSelection = () =>
-                {
-                    if (selectionObject.Selection == null)
-                        return;
-
-                    var mapper = new ClassSelfMapper();
-                    mapper.Map(selectionObject.Selection, theObject);
-                    if (theObject is ServiceRequestBase)
-                        ((ServiceRequestBase)theObject).DisplaySavedSettingFields = false;
-
-                    LoadingViewModel.IsLoading = true;
-
-                    //put this in here so that this gets the the UI before the grid hijacks the main thread
-                    //if not here the main thread is taken before the loading form display hits the main thread 
-                    //and the screen freezes while loading the grid metadata
-
-                    Thread.Sleep(1000);
-
-                    Reload();
-
-                    foreach (var grid in SubGrids)
-                    {
-                        grid.DynamicGridViewModel.ReloadGrid();
-                    }
-                    ClearChildForm();
-                };
-
-                var dialogController = new DialogController(ApplicationController);
-                var recordService = new ObjectRecordService(selectionObject, null, null, ApplicationController, objectTypeMaps);
-                var formService = new ObjectFormService(selectionObject, recordService, objectTypeMaps);
-                var vm = new ObjectEntryViewModel(loadSelection, ClearChildForm, selectionObject,
-                    new FormController(recordService, formService, ApplicationController));
-                LoadChildForm(vm);
-            }
-            catch (Exception ex)
-            {
-                ApplicationController.UserMessage(string.Format("Error Loading Object\n{0}", ex.DisplayString()));
-            }
-        }
-
-        public override void SaveObject()
-        {
-            //subgrids don't map directly to object so need to unload them to object
-            //before saving the record
-            LoadSubgridsToObject();
-
-            var theObject = GetObject();
-            this.SaveSettingObject(theObject);
         }
 
         public override bool AllowSaveAndLoad

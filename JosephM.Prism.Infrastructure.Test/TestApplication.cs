@@ -145,26 +145,6 @@ namespace JosephM.Prism.Infrastructure.Test
                     if (grid.DynamicGridViewModel.LoadedCallback != null)
                         grid.DynamicGridViewModel.LoadedCallback();
 
-                if (oevm.SaveRequestButtonViewModel.IsVisible)
-                {
-                    saveRequest = true;
-                    savedRequestType = oevm.GetObject().GetType();
-                    //okay this part is for the save request
-                    //if configured then save the request and afterwards we will navigate to it and delete it
-                    oevm.SaveRequestButtonViewModel.Invoke();
-                    Assert.AreEqual(1, oevm.ChildForms.Count());
-                    var childForm = oevm.ChildForms.First();
-                    if (childForm is RecordEntryFormViewModel)
-                    {
-                        var tChildForm = childForm as ObjectEntryViewModel;
-                        tChildForm.LoadFormSections();
-                        var childObject = tChildForm.GetObject();
-                        CoreTest.PopulateObject(childObject);
-                        EnterAndSaveObject(childObject, tChildForm);
-                    }
-                    else
-                        throw new NotImplementedException("Havent implemented for type " + childForm.GetType().Name);
-                }
             }
 
             EnterAndSaveObject(instanceEntered, entryForm);
@@ -248,6 +228,15 @@ namespace JosephM.Prism.Infrastructure.Test
             viewModel.LoadFormSections();
             return viewModel;
         }
+
+        public ObjectEntryViewModel GetSubObjectEntryViewModel(RecordEntryFormViewModel entryForm)
+        {
+            var subEntry = entryForm.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(subEntry);
+            subEntry.LoadFormSections();
+            return subEntry;
+        }
+
 
         public DialogViewModel GetSubDialog(DialogViewModel addDialog, int index = 0)
         {

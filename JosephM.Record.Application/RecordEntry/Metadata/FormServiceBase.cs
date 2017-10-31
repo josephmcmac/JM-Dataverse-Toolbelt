@@ -103,6 +103,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             throw new NotImplementedException();
         }
 
+        internal virtual IEnumerable<CustomFormFunction> GetCustomFunctions(string recordType, RecordEntryFormViewModel recordForm)
+        {
+            return new CustomFormFunction[0];
+        }
+
         internal virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
         {
             return new CustomGridFunction[0];

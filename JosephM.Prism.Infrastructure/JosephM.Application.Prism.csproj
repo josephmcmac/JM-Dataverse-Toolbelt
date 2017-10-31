@@ -110,6 +110,7 @@
     <Compile Include="Module\Crud\CrudDialog.cs" />
     <Compile Include="Module\Crud\CrudModule.cs" />
     <Compile Include="Module\DialogModule.cs" />
+    <Compile Include="Module\SavedRequests\SavedRequestModule.cs" />
     <Compile Include="Module\SettingsModule.cs" />
     <Compile Include="Constants\MenuNames.cs" />
     <Compile Include="Prism\PrismDependencyContainer.cs" />

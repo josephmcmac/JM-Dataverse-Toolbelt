@@ -3,6 +3,7 @@ using JosephM.CustomisationExporter.Exporter;
 using JosephM.CustomisationImporter.Prism;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
+using JosephM.Prism.Infrastructure.Module.SavedRequests;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
@@ -33,6 +34,7 @@ namespace JosephM.Xrm.DeveloperTool
             prism.AddModule<InstanceComparerModule>();
             prism.AddModule<RecordCountsModule>();
             prism.AddModule<XrmCrudModule>();
+            prism.AddModule<SavedRequestModule>();
             prism.Run();
         }
     }

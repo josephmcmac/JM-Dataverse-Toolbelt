@@ -116,10 +116,11 @@
     <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />
     <Compile Include="RecordEntry\Form\CreateOrUpdateViewModel.cs" />
+    <Compile Include="RecordEntry\Form\CustomFormFunction.cs" />
+    <Compile Include="RecordEntry\Form\CustomFormFunctions.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />
     <Compile Include="Grid\CustomGridFunction.cs" />
     <Compile Include="Grid\ListViewModel.cs" />
-    <Compile Include="RecordEntry\Metadata\CustomFormFunction.cs" />
     <Compile Include="SettingTypes\LookupSetting.cs" />
     <Compile Include="SettingTypes\FieldSetting.cs" />
     <Compile Include="SettingTypes\RecordFieldSetting.cs" />

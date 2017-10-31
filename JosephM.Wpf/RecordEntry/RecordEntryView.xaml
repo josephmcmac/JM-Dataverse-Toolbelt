@@ -45,16 +45,24 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <StackPanel
-                        Orientation="Horizontal"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left">
-                        <shared:XrmButton
-                            DataContext="{Binding LoadRequestButtonViewModel}" />
-                        <shared:XrmButton
-                            DataContext="{Binding SaveRequestButtonViewModel}" />
-                    </StackPanel>
-                    <StackPanel
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" >
+                            <ItemsControl
+                                ItemsSource="{Binding CustomFunctions}"
+                                ItemTemplate="{StaticResource XrmButtonTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </Grid>
+                            <Grid Grid.Column="1" >
+                                <StackPanel
                         Orientation="Horizontal"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Right">
@@ -63,7 +71,9 @@
                         <shared:XrmButton
                             DataContext="{Binding CancelButtonViewModel}" />
                     </StackPanel>
-                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 <Grid Grid.Row="1">
                     <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
                 </Grid>

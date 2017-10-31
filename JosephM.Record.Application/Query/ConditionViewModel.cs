@@ -78,7 +78,7 @@ namespace JosephM.Application.ViewModel.Query
             return FormService.GetValidationRules(fieldName, GetRecordType());
         }
 
-        internal override RecordEntryViewModelBase ParentForm
+        public override RecordEntryViewModelBase ParentForm
         {
             get { return null; }
         }

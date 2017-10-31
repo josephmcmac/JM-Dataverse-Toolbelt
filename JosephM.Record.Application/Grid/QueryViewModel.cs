@@ -112,7 +112,7 @@ namespace JosephM.Application.ViewModel.Grid
                         customFunctionList.Add(item);
                 }
 
-                DynamicGridViewModel.LoadGridButtons(customFunctionList);
+                DynamicGridViewModel.AddGridButtons(customFunctionList);
                 if (LoadInitially)
                     DynamicGridViewModel.ReloadGrid();
 

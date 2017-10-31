@@ -1,5 +1,6 @@
 ﻿#region
 
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using System.Collections.Generic;
 
