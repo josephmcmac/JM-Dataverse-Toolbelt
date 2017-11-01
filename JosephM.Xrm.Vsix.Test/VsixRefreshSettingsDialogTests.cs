@@ -19,37 +19,45 @@ namespace JosephM.Xrm.Vsix.Test
         [TestMethod]
         public void VsixRefreshSettingsDialogTest()
         {
-            var packageSettinns = GetTestPackageSettings();
+            var testApplication = CreateAndLoadTestApplication<XrmPackageSettingsModule>();
+            var dialog = testApplication.NavigateToDialog<XrmPackageSettingsModule, XrmPackageSettingsDialog>();
 
-            var dialog = new XrmPackageSettingsDialog(CreateDialogController(), packageSettinns, VisualStudioService, XrmRecordService);
-            dialog.Controller.BeginDialog();
+            //okay this one doesn't just auto enter an object
+            //I am going to create a new publisher and solution
+            //in the lookup fields
 
-            //okay I am going to add script in here to create a new publisher and solution
+            //get the settings entry form
             var entryViewModel = GetEntryForm(dialog);
             entryViewModel.LoadFormSections();
 
+            //set dummy prefix values
             entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionDynamicsCrmPrefix)).Value = "Foo";
             entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionObjectPrefix)).Value = "Foo";
 
+            DeleteTestNewLookupSolution();
+            //invoke new on the solution lookup field
             var solutionField = entryViewModel.GetLookupFieldFieldViewModel(nameof(XrmPackageSettings.Solution));
             var Loo = solutionField.LookupService;
             var For = solutionField.LookupFormService;
             Assert.IsTrue(solutionField.AllowNew);
             solutionField.Value = null;
-            DeleteTestNewLookupSolution();
             solutionField.NewButton.Invoke();
 
+            //get the new solution entry form
             var solutionEntryForm = entryViewModel.ChildForms.First() as RecordEntryFormViewModel;
             Assert.IsNotNull(solutionEntryForm);
             solutionEntryForm.LoadFormSections();
             solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.uniquename).Value = "TESTNEWLOOKUPSOLUTION";
             solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.friendlyname).Value = "TESTNEWLOOKUPSOLUTION";
             solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.version).Value = "1.0.0.0";
+
+            DeleteTestNewLookupPublisher();
+            //invoke new on the publisher field
             var publisherField = solutionEntryForm.GetLookupFieldFieldViewModel(Fields.solution_.publisherid);
             Assert.IsTrue(publisherField.AllowNew);
-            DeleteTestNewLookupPublisher();
             publisherField.NewButton.Invoke();
 
+            //get the new publisher entry form enter some details and save
             var publisherEntryForm = solutionEntryForm.ChildForms.First() as RecordEntryFormViewModel;
             Assert.IsNotNull(publisherEntryForm);
             publisherEntryForm.LoadFormSections();
@@ -57,21 +65,33 @@ namespace JosephM.Xrm.Vsix.Test
             publisherEntryForm.GetStringFieldFieldViewModel(Fields.publisher_.friendlyname).Value = "TESTNEWLOOKUPPUBLISHER";
             publisherEntryForm.GetStringFieldFieldViewModel(Fields.publisher_.customizationprefix).Value = "abc";
             publisherEntryForm.GetIntegerFieldFieldViewModel(Fields.publisher_.customizationoptionvalueprefix).Value = 12345;
-
             publisherEntryForm.SaveButtonViewModel.Invoke();
+            //verify publisher form closed
             Assert.IsFalse(solutionEntryForm.ChildForms.Any(), publisherEntryForm.GetValidationSummary());
 
+            //verify the solution entry form is populated with the created publisher
             Assert.IsNotNull(publisherField.Value);
+            Assert.IsNotNull(XrmRecordService.Get(publisherField.Value.RecordType, publisherField.Value.Id));
+
+            //save the solution and verify form closed
             solutionEntryForm.SaveButtonViewModel.Invoke();
             Assert.IsFalse(entryViewModel.ChildForms.Any(), solutionEntryForm.GetValidationSummary());
 
+            //verify the package entry form is populated with the created solution
             Assert.IsNotNull(solutionField.Value);
+            Assert.IsNotNull(XrmRecordService.Get(solutionField.Value.RecordType, solutionField.Value.Id));
+            //save package entry form
             SubmitEntryForm(dialog);
 
             //todo refactor these to service requests
             var completionScreen = dialog.Controller.UiItems.First() as CompletionScreenViewModel;
-            //todo add an assert no error in 
+            //todo add an assert no error in response
             completionScreen.CloseButton.Invoke();
+
+            //verify the package settings now have the solutioon we created when resolved
+            var settingsManager = testApplication.Controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
+            Assert.IsNotNull(settingsManager);
+            Assert.AreEqual(solutionField.Value.Id, settingsManager.Resolve<XrmPackageSettings>().Solution.Id);
         }
 
         /// <summary>
