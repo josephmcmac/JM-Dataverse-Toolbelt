@@ -26,7 +26,7 @@ namespace JosephM.Xrm.Vsix.Utilities
             var subPath = folderDirectory.Substring(solutionDirectory.Length);
 
             var subDirectories = subPath.Split(Path.DirectorySeparatorChar).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-            //todo create the folder paths in the solution folders
+
             ISolutionFolder carryProject = null;
             foreach (var subFolder in subDirectories)
             {

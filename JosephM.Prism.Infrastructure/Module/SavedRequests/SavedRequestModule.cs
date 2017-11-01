@@ -168,8 +168,6 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
                     var dialogController = new DialogController(ApplicationController);
                     var recordService = new ObjectRecordService(savedSettings, null, null, ApplicationController, objectTypeMaps);
                     var formService = new ObjectFormService(savedSettings, recordService, objectTypeMaps);
-                    //todo condiser at least script this because the parent is different context to other parents
-                    //others being enumerable subgrids on objects, this being a separate dialog
                     var vm = new ObjectEntryViewModel(savedLoadForm, oevm.ClearChildForms, savedSettings, 
                         new FormController(recordService, formService, ApplicationController), re, "LOADING");
 

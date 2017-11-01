@@ -66,7 +66,6 @@ namespace JosephM.Xrm.Vsix.Module.RefreshSchema
             var uri = new UriQuery();
             uri.AddObject(nameof(CSharpDialog.Request), request);
             uri.AddObject(nameof(CSharpDialog.SkipObjectEntry), true);
-            //todo need to pass through to skip the entry screen
             ApplicationController.RequestNavigate("Main", typeof(CSharpDialog), uri);
         }
     }

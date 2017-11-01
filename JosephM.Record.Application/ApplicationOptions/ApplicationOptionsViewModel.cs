@@ -36,7 +36,6 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         public void AddOption(string group, string optionLabel, Action action)
         {
             var option = new ApplicationOption(optionLabel, action);
-            //todo remove magic strings
             if (group == "Help")
                 AddToCollection(option, Helps);
             else if (group == "Setting")
@@ -57,7 +56,6 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
 
         private void AddToCollection(MenuGroupViewModel menuGroup, ObservableCollection<MenuGroupViewModel> menuGroups)
         {
-            //todo remove magic string
             var forceLastLabel = "Other";
             if (menuGroup.Label == forceLastLabel)
                 menuGroups.Add(menuGroup);

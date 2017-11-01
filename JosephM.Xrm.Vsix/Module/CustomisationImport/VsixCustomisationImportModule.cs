@@ -20,8 +20,6 @@ namespace JosephM.Xrm.Vsix.Module.CustomisationImport
     {
         public override void DialogCommand()
         {
-            //todo verify the package settings resolved when dialog created
-
             var visualStudioService = ApplicationController.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService;
             if (visualStudioService == null)
                 throw new NullReferenceException("visualStudioService");

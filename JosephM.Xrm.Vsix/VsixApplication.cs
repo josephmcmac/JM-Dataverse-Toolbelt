@@ -30,7 +30,6 @@ namespace JosephM.XRM.VSIX
         public void AddModule<T>(int commandId)
             where T : ActionModuleBase, new()
         {
-            //todo may need to check not added multiple times
             var module = AddModule<T>();
 
             var commandService = Controller.ResolveType(typeof(IMenuCommandService)) as IMenuCommandService;

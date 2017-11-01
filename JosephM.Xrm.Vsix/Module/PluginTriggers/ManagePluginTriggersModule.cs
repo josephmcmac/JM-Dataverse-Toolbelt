@@ -18,7 +18,6 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
         public override void DialogCommand()
         {
-            //todo verify the package settings resolved when dialog created
             ApplicationController.RequestNavigate("Main", typeof(ManagePluginTriggersDialog), null);
         }
     }

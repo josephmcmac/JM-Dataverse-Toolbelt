@@ -18,7 +18,6 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 
         public override void DialogCommand()
         {
-            //todo verify the package settings resolved when dialog created
             ApplicationController.RequestNavigate("Main", typeof(UpdateAssemblyDialog), null);
         }
     }

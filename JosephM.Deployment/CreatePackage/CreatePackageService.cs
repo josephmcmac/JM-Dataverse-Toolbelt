@@ -36,7 +36,6 @@ namespace JosephM.Deployment.CreatePackage
         public override void ExecuteExtention(CreatePackageRequest request, ServiceResponseBase<DataImportResponseItem> response,
             LogController controller)
         {
-            //todo catch fatal error in response in base class
             CreateDeploymentPackage(request, controller, response);
         }
 

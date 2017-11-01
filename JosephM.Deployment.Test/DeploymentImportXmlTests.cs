@@ -57,7 +57,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog>(importRequest);
 
 
-            //todo verify no resonse error
+            //todo verify no response error
         }
 
         [TestMethod]

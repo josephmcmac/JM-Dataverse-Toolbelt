@@ -51,7 +51,6 @@ namespace JosephM.Xrm.Vsix.Module.DeployPackage
 
             var uri = new UriQuery();
             uri.AddObject(nameof(DeployPackageDialog.Request), request);
-            //todo need to pass through to skip the entry screen
             ApplicationController.RequestNavigate("Main", typeof(DeployPackageDialog), uri);
         }
     }

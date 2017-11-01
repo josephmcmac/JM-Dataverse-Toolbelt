@@ -83,12 +83,11 @@ namespace JosephM.Xrm.Vsix.Test
             //save package entry form
             SubmitEntryForm(dialog);
 
-            //todo refactor these to service requests
             var completionScreen = dialog.Controller.UiItems.First() as CompletionScreenViewModel;
             //todo add an assert no error in response
             completionScreen.CloseButton.Invoke();
 
-            //verify the package settings now have the solutioon we created when resolved
+            //verify the package settings now have the solution we created when resolved
             var settingsManager = testApplication.Controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
             Assert.IsNotNull(settingsManager);
             Assert.AreEqual(solutionField.Value.Id, settingsManager.Resolve<XrmPackageSettings>().Solution.Id);

@@ -40,7 +40,6 @@ namespace JosephM.Xrm.Vsix.Module.ImportCsvs
             var uri = new UriQuery();
             uri.AddObject(nameof(ImportCsvsDialog.Request), request);
             uri.AddObject(nameof(ImportCsvsDialog.SkipObjectEntry), true);
-            //todo need to pass through to skip the entry screen
             ApplicationController.RequestNavigate("Main", typeof(ImportCsvsDialog), uri);
         }
     }
