@@ -26,7 +26,7 @@ namespace JosephM.Record.Xrm.XrmRecord
     public class XrmRecordService : IRecordService
     {
         private IFormService _formService;
-        private readonly XrmService _xrmService;
+        private XrmService _xrmService;
         private readonly Object _lockObject = new object();
 
         private readonly LookupMapper _lookupMapper = new LookupMapper();
@@ -39,13 +39,28 @@ namespace JosephM.Record.Xrm.XrmRecord
         public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, LogController controller, IFormService formService = null)
         {
             _formService = formService;
+            Controller = controller;
             XrmRecordConfiguration = iXrmRecordConfiguration;
-            var xrmRecordConfiguration = new XrmRecordConfigurationInterfaceMapper().Map(iXrmRecordConfiguration);
-            var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
-            _xrmService = new XrmService(xrmConfiguration, controller);
         }
 
-        public IXrmRecordConfiguration XrmRecordConfiguration { get; set; }
+        private IXrmRecordConfiguration _xrmRecordConfiguration;
+        public IXrmRecordConfiguration XrmRecordConfiguration
+        {
+            get
+            {
+                return _xrmRecordConfiguration;
+            }
+            set
+            {
+                _xrmRecordConfiguration = value;
+                if (_xrmRecordConfiguration != null)
+                {
+                    var xrmRecordConfiguration = new XrmRecordConfigurationInterfaceMapper().Map(_xrmRecordConfiguration);
+                    var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
+                    _xrmService = new XrmService(xrmConfiguration, Controller);
+                }
+            }
+        }
 
         public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, IFormService formService = null)
             : this(iXrmRecordConfiguration, new LogController(), formService)
@@ -137,7 +152,8 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IRecord Get(string recordType, string id)
         {
-            return ToIRecord(_xrmService.Retrieve(recordType, new Guid(id)));
+            var record = XrmService.GetFirst(recordType, XrmService.GetPrimaryKeyField(recordType), new Guid(id));
+            return record == null ? null : ToIRecord(_xrmService.Retrieve(recordType, new Guid(id)));
         }
 
 
@@ -290,6 +306,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             foreach (var field in iRecord.GetFieldsInEntity())
             {
                 var originalValue = ToEntityValue(iRecord.GetField(field));
+                if (originalValue is string && !string.IsNullOrWhiteSpace(originalValue.ToString()) && _xrmService.GetFieldType(field, iRecord.Type) == AttributeTypeCode.Uniqueidentifier)
+                {
+                    originalValue = new Guid(originalValue.ToString());
+                }
                 entity.SetField(field, originalValue);
             }
 
@@ -1005,6 +1025,8 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return XrmService.WebUrl;
             }
         }
+
+        public LogController Controller { get; private set; }
 
         public string GetWebUrl(string recordType, string id, string additionalparams = null)
         {

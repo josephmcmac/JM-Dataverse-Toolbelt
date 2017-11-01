@@ -7,9 +7,9 @@ namespace JosephM.Application.Application
 {
     public static class Extensions
     {
-        public static void RegisterInfrastructure(this IApplicationController applicationController, IApplicationOptions applicationOptions)
+        public static void RegisterInfrastructure(this IApplicationController applicationController, IApplicationOptions applicationOptions, ISettingsManager settingsManager)
         {
-            applicationController.RegisterInstance<ISettingsManager>(new PrismSettingsManager(applicationController));
+            applicationController.RegisterInstance<ISettingsManager>(settingsManager);
             applicationController.RegisterInstance<IApplicationController>(applicationController);
             applicationController.RegisterInstance<IResolveObject>(applicationController);
 

@@ -1,19 +1,25 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Utility;
 using JosephM.ObjectMapping;
+using JosephM.Prism.Infrastructure.Test;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Prism.XrmModule.Test;
+using JosephM.Record.Application.Fakes;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Record.Xrm.Test;
 using JosephM.Xrm.Schema;
+using JosephM.Xrm.Vsix.Module.DeployAssembly;
+using JosephM.Xrm.Vsix.Utilities;
 using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Commands.DeployAssembly;
 using JosephM.XRM.VSIX.Dialogs;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -23,11 +29,50 @@ using System.Reflection;
 
 namespace JosephM.Xrm.Vsix.Test
 {
-    public class JosephMVsixTests : XrmRecordTest
+    public class JosephMVsixTests : XrmModuleTest
     {
         public JosephMVsixTests()
         {
+            InitialiseModuleXrmConnection = true;
             XrmRecordService.SetFormService(new XrmFormService());
+        }
+
+        public bool InitialiseModuleXrmConnection { get; set; }
+
+        protected override TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null, bool loadXrmConnection = true)
+        {
+            return base.CreateAndLoadTestApplication<TModule>(CreateTestVsixApplicationController(), new VsixSettingsManager(VisualStudioService), loadXrmConnection: InitialiseModuleXrmConnection);
+        }
+
+        public ApplicationControllerBase CreateTestVsixApplicationController()
+        {
+            var container = new PrismDependencyContainer(new UnityContainer());
+            var visualStudioService = VisualStudioService;
+            container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
+            container.RegisterInstance(typeof(ISettingsManager), new VsixSettingsManager(visualStudioService));
+            var applicationController = new FakeVsixApplicationController(container);
+            return applicationController;
+        }
+
+        private FakeVisualStudioService _visualStudioService;
+        public FakeVisualStudioService VisualStudioService
+        {
+            get
+            {
+                if (_visualStudioService == null)
+                {
+                    _visualStudioService = new FakeVisualStudioService();
+                    FileUtility.DeleteFiles(_visualStudioService.SolutionDirectory);
+                    FileUtility.DeleteSubFolders(_visualStudioService.SolutionDirectory);
+                    //okay we 
+                    if (InitialiseModuleXrmConnection)
+                    {
+                        _visualStudioService.AddSolutionItem("solution.xrmconnection", GetXrmRecordConfiguration());
+                        _visualStudioService.AddSolutionItem("xrmpackage.xrmsettings", GetTestPackageSettings());
+                    }
+                }
+                return _visualStudioService;
+            }
         }
 
         private XrmPackageSettings _testPackageSettings;
@@ -50,20 +95,6 @@ namespace JosephM.Xrm.Vsix.Test
             return _testPackageSettings;
         }
 
-        private FakeVisualStudioService _visualStudioService;
-        public FakeVisualStudioService VisualStudioService
-        {
-            get
-            {
-                if(_visualStudioService == null)
-                {
-                    _visualStudioService = new FakeVisualStudioService();
-                    FileUtility.DeleteFiles(_visualStudioService.SolutionDirectory);
-                    FileUtility.DeleteSubFolders(_visualStudioService.SolutionDirectory);
-                }
-                return _visualStudioService;
-            }
-        }
         public FakeDialogController CreateDialogController()
         {
             return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings(), VisualStudioService)));
@@ -86,7 +117,7 @@ namespace JosephM.Xrm.Vsix.Test
         public void DeployAssembly(XrmPackageSettings settings)
         {
             var createDialog = new DeployAssemblyDialog(new FakeDialogController(new FakeApplicationController()),
-                GetTestPluginAssemblyFile(), XrmRecordService, settings);
+                new FakeVisualStudioService(), XrmRecordService, settings);
             createDialog.Controller.BeginDialog();
 
             var objectEntry = (ObjectEntryViewModel)createDialog.Controller.UiItems.First();

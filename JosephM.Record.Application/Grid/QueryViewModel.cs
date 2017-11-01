@@ -51,7 +51,7 @@ namespace JosephM.Application.ViewModel.Grid
 
         public bool TypeAhead { get; set; }
 
-        private void RecreateGrid()
+        public void RecreateGrid()
         {
             if (RecordType != null)
             {
@@ -73,11 +73,11 @@ namespace JosephM.Application.ViewModel.Grid
                 };
                 if (FormService != null)
                 {
-                    customFunctionList.Add(new CustomGridFunction("OPEN", "Open Selected", (g) =>
+                    DynamicGridViewModel.EditRow = (g) =>
                     {
                         var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
                         var formController = new FormController(this.RecordService, FormService, ApplicationController);
-                        var selectedRow = DynamicGridViewModel.SelectedRows?.First();
+                        var selectedRow = g;
                         if (selectedRow != null)
                         {
                             Action onSave = () =>
@@ -90,7 +90,19 @@ namespace JosephM.Application.ViewModel.Grid
                             var newForm = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, onSave, ClearChildForm);
                             LoadChildForm(newForm);
                         }
-                    }, (g) => g.SelectedRows.Count() == 1));
+                    };
+                    DynamicGridViewModel.AddRow = () =>
+                    {
+                        var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
+                        var formController = new FormController(RecordService, FormService, ApplicationController);
+                        Action onSave = () =>
+                        {
+                            ClearChildForm();
+                            DynamicGridViewModel.ReloadGrid();
+                        };
+                        var newForm = new CreateOrUpdateViewModel(RecordService.NewRecord(RecordType), formController, onSave, ClearChildForm, explicitIsCreate: true);
+                        LoadChildForm(newForm);
+                    };
                 }
                 customFunctionList.Add(new CustomGridFunction("CSV", "Download CSV", (g) => g.DownloadCsv(), (g) => g.GridRecords != null && g.GridRecords.Any()));
 
@@ -100,7 +112,7 @@ namespace JosephM.Application.ViewModel.Grid
                         customFunctionList.Add(item);
                 }
 
-                DynamicGridViewModel.LoadGridButtons(customFunctionList);
+                DynamicGridViewModel.AddGridButtons(customFunctionList);
                 if (LoadInitially)
                     DynamicGridViewModel.ReloadGrid();
 

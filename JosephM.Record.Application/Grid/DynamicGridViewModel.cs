@@ -70,24 +70,21 @@ namespace JosephM.Application.ViewModel.Grid
 
         public LoadingViewModel LoadingViewModel { get; set; }
 
-        public void LoadGridButtons(IEnumerable<CustomGridFunction> functions)
+        public void RefreshGridButtons()
         {
             ApplicationController.DoOnMainThread(() =>
             {
-                if (functions == null)
-                    functions = new CustomGridFunction[0];
-                _loadedGridButtons = functions;
                 _customFunctions =
-                    new ObservableCollection<XrmButtonViewModel>(GridsFunctionsToXrmButtons(functions));
+                    new ObservableCollection<XrmButtonViewModel>(GridsFunctionsToXrmButtons(_loadedGridButtons.ToArray()));
                 
-                OnPropertyChanged("CustomFunctions");
+                OnPropertyChanged(nameof(CustomFunctions));
             });
         }
 
         private IEnumerable<XrmButtonViewModel> GridsFunctionsToXrmButtons(IEnumerable<CustomGridFunction> functions)
         {
             var buttons = new List<XrmButtonViewModel>();
-            foreach(var cf in functions)
+            foreach(var cf in functions.ToArray())
             {
                 var isVisible = cf.VisibleFunction(this);
                 if (isVisible)
@@ -106,11 +103,17 @@ namespace JosephM.Application.ViewModel.Grid
             return buttons;
         }
 
-        private IEnumerable<CustomGridFunction> _loadedGridButtons;
+        public void AddGridButtons(IEnumerable<CustomGridFunction> gridButtons)
+        {
+            _loadedGridButtons.AddRange(gridButtons);
+            RefreshGridButtons();
+        }
+
+        private List<CustomGridFunction> _loadedGridButtons = new List<CustomGridFunction>();
 
         public void OnSelectionsChanged()
         {
-            LoadGridButtons(_loadedGridButtons);
+            RefreshGridButtons();
         }
 
         private ObservableCollection<XrmButtonViewModel> _customFunctions;
@@ -235,6 +238,8 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 _addRow = value;
                 AddRowButton = _addRow == null ? null : new XrmButtonViewModel("Add", _addRow, ApplicationController);
+                OnPropertyChanged(nameof(CanAddRow));
+                OnPropertyChanged(nameof(AddRowButton));
             }
         }
         public XrmButtonViewModel AddRowButton { get; set; }
@@ -442,8 +447,8 @@ namespace JosephM.Application.ViewModel.Grid
             set
             {
                 _records = value;
-                OnPropertyChanged("GridRecords");
-                LoadGridButtons(_loadedGridButtons);
+                OnPropertyChanged(nameof(GridRecords));
+                RefreshGridButtons();
             }
         }
 

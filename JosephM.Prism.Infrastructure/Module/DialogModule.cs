@@ -3,7 +3,7 @@ using JosephM.Core.Extentions;
 
 namespace JosephM.Prism.Infrastructure.Module
 {
-    public class DialogModule<TDialog> : ModuleBase
+    public class DialogModule<TDialog> : ActionModuleBase
     {
         public override void RegisterTypes()
         {
@@ -20,7 +20,7 @@ namespace JosephM.Prism.Infrastructure.Module
             get { return (typeof(TDialog)).GetDisplayName(); }
         }
 
-        public void DialogCommand()
+        public override void DialogCommand()
         {
             NavigateTo<TDialog>();
         }

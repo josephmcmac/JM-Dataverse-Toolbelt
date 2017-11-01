@@ -59,8 +59,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     LoadDialog = (d) => { RecordEntryViewModel.LoadChildForm(d); }
                 };
                 DynamicGridViewModel.AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);
-                var customFunctions = FormService.GetCustomFunctionsFor(ReferenceName, (RecordEntryFormViewModel) GetRecordForm()).ToList();
-                DynamicGridViewModel.LoadGridButtons(customFunctions);
             }
         }
 

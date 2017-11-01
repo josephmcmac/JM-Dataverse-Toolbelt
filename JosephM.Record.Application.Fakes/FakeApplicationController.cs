@@ -59,7 +59,7 @@ namespace JosephM.Application.ViewModel.Fakes
 
             if (type.IsTypeOf(typeof(INavigationAware)))
             {
-                var uri = JosephM.Application.ViewModel.Extentions.Extentions.ToPrismNavigationUriType(type, uriQuery);
+                var uri = Extentions.Extentions.ToPrismNavigationUriType(type, uriQuery);
                 var navigationContext = new NavigationContext(new FakeRegionNavigationService(), uri);
                 ((INavigationAware)resolvedType).OnNavigatedTo(navigationContext);
             }
@@ -97,7 +97,7 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public override void ThrowException(Exception ex)
         {
-            throw new ApplicationException("Unexpected Error throw By Application", ex);
+            throw new FakeUserMessageException(ex);
         }
 
         public override string GetSaveFileName(string initialFileName, string extention)
@@ -118,8 +118,6 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public override Process StartProcess(string fileName, string arguments = null)
         {
-            //var process = base.StartProcess(fileName, arguments);
-            //process.Kill();
             return null;
         }
 

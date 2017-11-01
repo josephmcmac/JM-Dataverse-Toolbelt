@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Condition = JosephM.Record.Query.Condition;
 using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
+using JosephM.Xrm.Vsix.Utilities;
 
 namespace JosephM.XRM.VSIX.Utilities
 {
@@ -381,16 +382,8 @@ namespace JosephM.XRM.VSIX.Utilities
 
         public static void AddXrmConnectionToSolution(XrmRecordConfiguration config, IVisualStudioService visualStudioService)
         {
-            var dictionary = new Dictionary<string, string>();
-            foreach (var prop in config.GetType().GetReadWriteProperties())
-            {
-                var value = config.GetPropertyValue(prop.Name);
-                dictionary.Add(prop.Name, value == null ? null : value.ToString());
-            }
-            var serialised = JsonHelper.ObjectToJsonString(dictionary);
-
             var connectionFileName = "solution.xrmconnection";
-            var file = visualStudioService.AddSolutionItem(connectionFileName, serialised);
+            var file = visualStudioService.AddSolutionItem(connectionFileName, config);
 
             foreach (var item in visualStudioService.GetSolutionProjects())
             {

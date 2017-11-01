@@ -1,7 +1,9 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Service;
+using JosephM.Prism.Infrastructure.Module.Crud.BulkDelete;
 using JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Record.Extentions;
@@ -21,11 +23,15 @@ namespace JosephM.Prism.XrmModule.Test
         {
             //todo consider anything else necessary e.g. change other field types
 
-            //this script runs through several scenarios in the crud module
+            // this script runs through several scenarios in the crud module
             // opening and running quickfind
             // opening a record updating a field and saving
             // selecting 2 records and doing a bulk update on them
             // doing a bulk update on all records
+            // selecting 2 records and doing a bulk delete on them
+            // doing a bulk delete on all records
+            // create a new record
+            // create a new record with an error thrown
             var count = XrmRecordService.GetFirstX(Entities.account, 3, null, null).Count();
             while (count < 3)
             {
@@ -45,11 +51,8 @@ namespace JosephM.Prism.XrmModule.Test
             Assert.IsTrue(queryViewModel.GridRecords.Any());
 
             //select first record and open it
-            queryViewModel.GridRecords.First().IsSelected = true;
-            //this triggered by ui event
-            queryViewModel.DynamicGridViewModel.OnSelectionsChanged();
+            queryViewModel.DynamicGridViewModel.EditRow(queryViewModel.DynamicGridViewModel.GridRecords.First());
 
-            queryViewModel.DynamicGridViewModel.GetButton("OPEN").Invoke();
             var editAccountForm = queryViewModel.ChildForms.First() as RecordEntryFormViewModel;
             Assert.IsNotNull(editAccountForm);
             editAccountForm.LoadFormSections();
@@ -96,6 +99,66 @@ namespace JosephM.Prism.XrmModule.Test
             var allAccounts = XrmRecordService.RetrieveAll(Entities.account, null);
             foreach(var account in allAccounts)
                 Assert.AreEqual(newAddressLine1, account.GetStringField(Fields.account_.address1_line1));
+
+            //select 2 record for bulk delete
+            queryViewModel.GridRecords.First().IsSelected = true;
+            queryViewModel.GridRecords.ElementAt(1).IsSelected = true;
+            id = queryViewModel.GridRecords.First().GetRecord().Id;
+            id2 = queryViewModel.GridRecords.ElementAt(1).GetRecord().Id;
+            //this triggered by ui event
+            queryViewModel.DynamicGridViewModel.OnSelectionsChanged();
+            //trigger and enter bulk update
+            queryViewModel.DynamicGridViewModel.GetButton("BULKDELETESELECTED").Invoke();
+            DoBulkDelete(dialog);
+            //verify records deleted
+            Assert.IsFalse(queryViewModel.ChildForms.Any());
+            Assert.IsNull(XrmRecordService.Get(Entities.account, id));
+            Assert.IsNull(XrmRecordService.Get(Entities.account, id2));
+
+            //now do bulk delete all
+            queryViewModel.DynamicGridViewModel.GetButton("BULKDELETEALL").Invoke();
+            DoBulkDelete(dialog);
+
+            allAccounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            Assert.AreEqual(0, allAccounts.Count());
+            //verify records deleted
+
+            //add a new row enytering it into the child form
+            queryViewModel.DynamicGridViewModel.AddRow();
+            EnterNewRecord(dialog);
+            //verify created
+            allAccounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            Assert.AreEqual(1, allAccounts.Count());
+
+            //okay well this just verifies an error is thrown to the user if the create fails (i set an explicit duplicate id)
+            queryViewModel.DynamicGridViewModel.AddRow();
+            var entryForm = dialog.QueryViewModel.ChildForms.First() as RecordEntryFormViewModel;
+            Assert.IsNotNull(entryForm);
+            entryForm.LoadFormSections();
+            entryForm.GetFieldViewModel(Fields.account_.accountid).ValueObject = allAccounts.First().Id;
+
+            try
+            {
+                entryForm.SaveButtonViewModel.Invoke();
+            }
+            catch(Exception ex)
+            {
+                Assert.IsTrue(ex is FakeUserMessageException);
+            }
+            //verify we are still on the child entry form
+            entryForm = dialog.QueryViewModel.ChildForms.First() as RecordEntryFormViewModel;
+            Assert.IsNotNull(entryForm);
+            Assert.IsFalse(entryForm.LoadingViewModel.IsLoading);
+        }
+
+        private static void EnterNewRecord(XrmCrudDialog crudDialog)
+        {
+            var entryForm = crudDialog.QueryViewModel.ChildForms.First() as RecordEntryFormViewModel;
+            Assert.IsNotNull(entryForm);
+            entryForm.LoadFormSections();
+            entryForm.GetStringFieldFieldViewModel(Fields.account_.name).Value = "Test Script Record";
+            entryForm.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(crudDialog.QueryViewModel.ChildForms.Any());
         }
 
         private static void DoBulkUpdate(XrmCrudDialog crudDialog, string newValue, string field)
@@ -104,7 +167,7 @@ namespace JosephM.Prism.XrmModule.Test
             Assert.IsNotNull(bulkUpdateDialog);
             bulkUpdateDialog.LoadDialog();
             var bulkUpdateEntry = bulkUpdateDialog.Controller.UiItems.First() as ObjectEntryViewModel;
-            Assert.IsNotNull(bulkUpdateDialog);
+            Assert.IsNotNull(bulkUpdateEntry);
             var fieldField = bulkUpdateEntry.GetRecordFieldFieldViewModel(nameof(BulkUpdateRequest.FieldToSet));
             fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == field);
             var valueField = bulkUpdateEntry.GetStringFieldFieldViewModel(nameof(BulkUpdateRequest.ValueToSet));
@@ -112,6 +175,20 @@ namespace JosephM.Prism.XrmModule.Test
             bulkUpdateEntry.SaveButtonViewModel.Invoke();
             var completionScreen = bulkUpdateDialog.Controller.UiItems.First() as CompletionScreenViewModel;
             Assert.IsFalse(completionScreen.CompletionDetails.GetSubGridViewModel(nameof(BulkUpdateResponse.ResponseItems)).GetGridRecords(false).Records.Any());
+            completionScreen.CloseButton.Invoke();
+            Assert.IsFalse(crudDialog.ChildForms.Any());
+        }
+
+        private static void DoBulkDelete(XrmCrudDialog crudDialog)
+        {
+            var bulkDeleteDialog = crudDialog.ChildForms.First() as BulkDeleteDialog;
+            Assert.IsNotNull(bulkDeleteDialog);
+            bulkDeleteDialog.LoadDialog();
+            var bulkUpdateEntry = bulkDeleteDialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(bulkDeleteDialog);
+            bulkUpdateEntry.SaveButtonViewModel.Invoke();
+            var completionScreen = bulkDeleteDialog.Controller.UiItems.First() as CompletionScreenViewModel;
+            Assert.IsFalse(completionScreen.CompletionDetails.GetSubGridViewModel(nameof(BulkDeleteResponse.ResponseItems)).GetGridRecords(false).Records.Any());
             completionScreen.CloseButton.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }

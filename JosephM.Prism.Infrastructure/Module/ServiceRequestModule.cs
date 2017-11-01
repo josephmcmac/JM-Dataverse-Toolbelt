@@ -26,24 +26,16 @@ namespace JosephM.Prism.Infrastructure.Module
     {
         protected override string MainOperationName
         {
-            get { return (typeof(TRequest)).GetDisplayName(); }
+            get
+            {
+                var typeName = (typeof(TRequest)).GetDisplayName();
+                return typeName.EndsWith(" Request") ? typeName.Substring(0, typeName.Length - 8) : typeName;
+            }
         }
 
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-
-            //add setting option for accessing saved requests
-            //requests may be saved during the dialog
-            if (typeof(TRequest).GetCustomAttribute<AllowSaveAndLoad>() != null)
-            {
-                AddSetting("Saved " + typeof(TRequest).GetDisplayName(), () =>
-                {
-                    var uri = new UriQuery();
-                    uri.Add("Type", typeof(TRequest).AssemblyQualifiedName);
-                    ApplicationController.NavigateTo(typeof(SavedRequestDialog), uri);
-                });
-            }
         }
     }
 }

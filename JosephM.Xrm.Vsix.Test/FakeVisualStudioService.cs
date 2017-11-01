@@ -1,43 +1,85 @@
-using System.Collections.Generic;
-using JosephM.XRM.VSIX.Utilities;
 using JosephM.Core.Test;
-using System.IO;
+using JosephM.Xrm.Vsix.Utilities;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace JosephM.Xrm.Vsix.Test
 {
-    public class FakeVisualStudioService : IVisualStudioService
+    public class FakeVisualStudioService : VisualStudioServiceBase
     {
-        //WARNING THIS IS CLEARED EVERY TEST SCRIPT !!
-        public string SolutionDirectory { get { return Path.Combine(TestConstants.TestFolder, "FakeVSSolutionFolder"); } }
+        public override string SolutionDirectory { get { return Path.Combine(TestConstants.TestFolder, "FakeVSSolutionFolder"); } }
 
-        public void AddFolder(string folderDirectory)
+        public override string BuildSelectedProjectAndGetAssemblyName()
         {
+            return GetTestPluginAssemblyFile();
         }
 
-        public string AddSolutionItem(string connectionFileName, string serialised)
+        public static string GetTestPluginAssemblyFile()
         {
-            return null;
+            var rootFolder = GetRootFolder();
+            var pluginAssembly = Path.Combine(rootFolder.FullName, "TestFiles", "PluginAssemblyBin",
+                PluginAssemblyName + ".dll");
+            return pluginAssembly;
         }
 
-        public string AddSolutionItem<T>(string name, T objectToSerialise)
+        public static string PluginAssemblyName
         {
-            return null;
+            get { return "TestXrmSolution.Plugins"; }
         }
 
-        public string AddSolutionItem(string fileName)
+        public static DirectoryInfo GetRootFolder()
         {
-            return null;
+
+            var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+            var fileInfo = new FileInfo(assemblyLocation);
+            var rootFolder = fileInfo.Directory.Parent.Parent;
+            return rootFolder;
         }
 
-        public string GetSolutionItemText(string name)
+        public override IEnumerable<string> GetSelectedFileNamesQualified()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IVisualStudioProject> GetSolutionProjects()
+        public override IEnumerable<IVisualStudioItem> GetSelectedItems()
+        {
+            return _selectedItems;
+        }
+
+        public override string GetSelectedProjectAssemblyName()
+        {
+            return PluginAssemblyName;
+        }
+
+        public override IEnumerable<IVisualStudioProject> GetSolutionProjects()
         {
             return new IVisualStudioProject[0];
+        }
+
+        private List<IVisualStudioItem> _selectedItems = new List<IVisualStudioItem>();
+
+        internal void SetSelectedItem(IVisualStudioItem item)
+        {
+            _selectedItems.Clear();
+            _selectedItems.Add(item);
+        }
+
+        protected override ISolutionFolder AddSolutionFolder(string name)
+        {
+            var qualifiedDirectory = Path.Combine(SolutionDirectory, name);
+            if (!Directory.Exists(qualifiedDirectory))
+                Directory.CreateDirectory(qualifiedDirectory);
+            return new FakeVisualStudioSolutionFolder(qualifiedDirectory);
+        }
+
+        protected override ISolutionFolder GetSolutionFolder(string name)
+        {
+            var qualifiedDirectory = Path.Combine(SolutionDirectory, name);
+            if (!Directory.Exists(qualifiedDirectory))
+               return null;
+            return new FakeVisualStudioSolutionFolder(qualifiedDirectory);
         }
     }
 }

@@ -2,7 +2,7 @@
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
-using JosephM.XRM.VSIX.Commands.DeployWebResource;
+using JosephM.Xrm.Vsix.Module.DeployWebResource;
 using JosephM.XRM.VSIX.Dialogs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
@@ -27,14 +27,14 @@ namespace JosephM.Xrm.Vsix.Test
 
             var packageSettings = GetTestPackageSettings();
 
-            var deployResourcesService = new DeployWebResourcesService(XrmRecordService, packageSettings);
+            var deployResourcesService = new DeployWebResourceService(XrmRecordService, packageSettings);
 
             Assert.IsTrue(javaScriptFiles.Any());
-            var request = new DeployWebResourcesRequest()
+            var request = new DeployWebResourceRequest()
             {
                 Files = javaScriptFiles
             };
-            var dialog = new VsixServiceDialog<DeployWebResourcesService, DeployWebResourcesRequest, DeployWebResourcesResponse, DeployWebResourcesResponseItem>(
+            var dialog = new VsixServiceDialog<DeployWebResourceService, DeployWebResourceRequest, DeployWebResourceResponse, DeployWebResourceResponseItem>(
                 deployResourcesService,
                 request,
                 new DialogController(new FakeApplicationController()));
@@ -43,7 +43,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.AreEqual(GetJavaScriptFiles().Count(), GetJavaScriptFileRecords().Count());
 
-            dialog = new VsixServiceDialog<DeployWebResourcesService, DeployWebResourcesRequest, DeployWebResourcesResponse, DeployWebResourcesResponseItem>(
+            dialog = new VsixServiceDialog<DeployWebResourceService, DeployWebResourceRequest, DeployWebResourceResponse, DeployWebResourceResponseItem>(
                 deployResourcesService,
                 request,
                 new DialogController(new FakeApplicationController()));

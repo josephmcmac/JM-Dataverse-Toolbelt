@@ -1,11 +1,13 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Prism.Infrastructure.Module.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,11 @@ namespace JosephM.Prism.XrmModule.Crud
         public override void InitialiseModule()
         {
             base.InitialiseModule();
+            AddBrowseButtonToSavedConnectionsGrid();
+        }
+
+        private void AddBrowseButtonToSavedConnectionsGrid()
+        {
             var customGridFunction = new CustomGridFunction("CRUD", "Browse Selected", (g) =>
             {
                 if (g.SelectedRows.Count() != 1)
@@ -37,10 +44,7 @@ namespace JosephM.Prism.XrmModule.Crud
                     }
                 }
             }, (g) => g.GridRecords != null && g.GridRecords.Any());
-            var functions = new CustomGridFunctions();
-            functions.AddFunction(customGridFunction);
-            //todo this should add the function not just inject it
-            ApplicationController.RegisterInstance(typeof(CustomGridFunctions), typeof(SavedXrmRecordConfiguration).AssemblyQualifiedName, functions);
+            this.AddCustomGridFunction(customGridFunction, typeof(SavedXrmRecordConfiguration));
         }
 
         protected override string MainOperationName

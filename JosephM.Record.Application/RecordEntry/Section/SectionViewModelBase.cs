@@ -82,9 +82,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
         {
             ApplicationController.DoOnMainThread(() =>
             {
-                
-                _customFunctions =
-                    new ObservableCollection<XrmButtonViewModel>(CustomFunctionsToXrmButtons(FormSection.CustomFunctions));
+
+                _customFunctions = new ObservableCollection<XrmButtonViewModel>(RecordForm is RecordEntryFormViewModel
+                        ? ((RecordEntryFormViewModel)RecordForm).FormFunctionsToXrmButtons(FormSection.CustomFunctions)
+                        : new XrmButtonViewModel[0]);
 
                 OnPropertyChanged(nameof(CustomFunctions));
             });
@@ -102,24 +103,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                 }
                 return _customFunctions;
             }
-        }
-
-        private IEnumerable<XrmButtonViewModel> CustomFunctionsToXrmButtons(IEnumerable<CustomFormFunction> functions)
-        {
-            var buttons = new List<XrmButtonViewModel>();
-            foreach (var cf in functions)
-            {
-                if (cf.ChildFunctions != null && cf.ChildFunctions.Any())
-                {
-                    var childButtons = CustomFunctionsToXrmButtons(cf.ChildFunctions);
-                    buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, childButtons, ApplicationController));
-                }
-                else
-                {
-                    buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(RecordForm), ApplicationController));
-                }
-            }
-            return buttons;
         }
     }
 }

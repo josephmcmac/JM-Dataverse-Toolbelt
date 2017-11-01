@@ -15,14 +15,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
     {
         private IRecord _record;
 
-        public CreateOrUpdateViewModel(IRecord record, FormController formController, Action postSave, Action onCancel)
+        public CreateOrUpdateViewModel(IRecord record, FormController formController, Action postSave, Action onCancel, bool explicitIsCreate = false)
             : base(formController)
         {
             _record = record;
             RecordType = record.Type;
             OnSave = () =>
             {
-                if (GetRecord().Id == null)
+                if (GetRecord().Id == null || explicitIsCreate)
                     GetRecord().Id = RecordService.Create(GetRecord());
                 else
                     RecordService.Update(GetRecord(), ChangedPersistentFields);

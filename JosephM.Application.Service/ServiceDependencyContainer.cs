@@ -41,5 +41,15 @@ namespace JosephM.Record.Application.Fakes
         {
             UnityContainer.RegisterType(typeof(object), typeof(T), typeof(T).FullName);
         }
+
+        public void RegisterInstance(Type type, string key, object instance)
+        {
+            UnityContainer.RegisterInstance(type, key, instance);
+        }
+
+        public object ResolveInstance(Type type, string key)
+        {
+            return UnityContainer.Resolve(type, key);
+        }
     }
 }

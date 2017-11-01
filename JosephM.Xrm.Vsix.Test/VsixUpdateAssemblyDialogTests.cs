@@ -1,5 +1,5 @@
 ﻿using JosephM.Application.ViewModel.Fakes;
-using JosephM.XRM.VSIX.Commands.UpdateAssembly;
+using JosephM.Xrm.Vsix.Module.UpdateAssembly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JosephM.Xrm.Vsix.Test
@@ -15,7 +15,7 @@ namespace JosephM.Xrm.Vsix.Test
             DeployAssembly(packageSettings);
             packageSettings.AddToSolution = true;
             var dialog = new UpdateAssemblyDialog(new FakeDialogController(new FakeApplicationController()),
-                GetTestPluginAssemblyFile(), XrmRecordService, packageSettings);
+                new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
         }

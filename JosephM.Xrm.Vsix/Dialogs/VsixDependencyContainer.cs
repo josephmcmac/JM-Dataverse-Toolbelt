@@ -13,6 +13,7 @@ using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Prism.Infrastructure.Module.Crud;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Service;
+using JosephM.Xrm.Vsix.Utilities;
 
 namespace JosephM.XRM.VSIX.Dialogs
 {

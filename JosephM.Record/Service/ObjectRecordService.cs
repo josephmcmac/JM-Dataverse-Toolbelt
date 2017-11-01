@@ -171,7 +171,10 @@ namespace JosephM.Record.Service
                 }
             }
             if (type == null)
-                throw new NullReferenceException(string.Format("Could Not Resolve Class Of Type {0}", recordType));
+            {
+                type = Type.GetType(recordType);
+            }
+
             return type;
         }
 

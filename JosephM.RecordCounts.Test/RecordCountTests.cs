@@ -28,17 +28,12 @@ namespace JosephM.RecordCounts.Test
             //create test application with module loaded
             var testApplication = CreateAndLoadTestApplication<RecordCountsModule>();
 
-            FileUtility.DeleteFiles(TestingFolder);
-            Assert.IsFalse(FileUtility.GetFiles(TestingFolder).Any());
-
             var request = new RecordCountsRequest();
             request.AllRecordTypes = true;
             request.GroupCountsByOwner = false;
-            request.Folder = new Folder(TestingFolder);
 
             //verify dialog processes
             testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
-            Assert.AreEqual(1, FileUtility.GetFiles(TestingFolder).Count());
             //verify response counts
             var service = new RecordCountsService(XrmRecordService);
             var response = service.Execute(request, Controller);
@@ -48,16 +43,11 @@ namespace JosephM.RecordCounts.Test
             var accountCount = response.RecordCounts.First(r => r.RecordType == accountLabel);
             Assert.AreEqual(3, accountCount.Count);
 
-            FileUtility.DeleteFiles(TestingFolder);
-            Assert.IsFalse(FileUtility.GetFiles(TestingFolder).Any());
-
             request = new RecordCountsRequest();
             request.AllRecordTypes = true;
             request.GroupCountsByOwner = true;
-            request.Folder = new Folder(TestingFolder);
             //verify dialog processes
             testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
-            Assert.AreEqual(1, FileUtility.GetFiles(TestingFolder).Count());
 
             //verify response counts
             service = new RecordCountsService(XrmRecordService);
@@ -78,7 +68,6 @@ namespace JosephM.RecordCounts.Test
             request.RecordTypes = new[] { new RecordTypeSetting(Entities.account, Entities.account) };
             //verify dialog processes
             testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
-            Assert.AreEqual(1, FileUtility.GetFiles(TestingFolder).Count());
             //verify response counts
             service = new RecordCountsService(XrmRecordService);
             response = service.Execute(request, Controller);
@@ -91,15 +80,11 @@ namespace JosephM.RecordCounts.Test
             Assert.AreEqual(1, accountCounts.Where(r => r.Count == 1).Count());
             Assert.AreEqual(1, accountCounts.Where(r => r.Count == 2).Count());
 
-            FileUtility.DeleteFiles(TestingFolder);
-            Assert.IsFalse(FileUtility.GetFiles(TestingFolder).Any());
-
             request.AllRecordTypes = true;
             request.OnlyIncludeSelectedOwner = true;
             request.Owner = new Lookup(Entities.systemuser, CurrentUserId.ToString(), "Current User");
             //verify dialog processes
             testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
-            Assert.AreEqual(1, FileUtility.GetFiles(TestingFolder).Count());
             //verify response counts
             service = new RecordCountsService(XrmRecordService);
             response = service.Execute(request, Controller);

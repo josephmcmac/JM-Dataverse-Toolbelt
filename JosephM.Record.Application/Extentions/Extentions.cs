@@ -16,11 +16,29 @@ using JosephM.Core.AppConfig;
 using JosephM.Record.Service;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.Modules;
 
 namespace JosephM.Application.ViewModel.Extentions
 {
     public static class Extentions
     {
+        public static void AddCustomFormFunction(this ModuleBase module, CustomFormFunction customFormFunction, Type type)
+        {
+            //okay this one is autmatically created by the unity container 
+            //but iteratively add and resolve 2 items and verify they are retained in the resolved list
+            var customFormFunctions = (CustomFormFunctions)module.ApplicationController.ResolveInstance(typeof(CustomFormFunctions), type.AssemblyQualifiedName);
+            customFormFunctions.AddFunction(customFormFunction);
+            module.ApplicationController.RegisterInstance(typeof(CustomFormFunctions), type.AssemblyQualifiedName, customFormFunctions);
+        }
+        public static void AddCustomGridFunction(this ModuleBase module, CustomGridFunction customGridFunction, Type type)
+        {
+            //okay this one is autmatically created by the unity container 
+            //but iteratively add and resolve 2 items and verify they are retained in the resolved list
+            var customGridFunctions = (CustomGridFunctions)module.ApplicationController.ResolveInstance(typeof(CustomGridFunctions), type.AssemblyQualifiedName);
+            customGridFunctions.AddFunction(customGridFunction);
+            module.ApplicationController.RegisterInstance(typeof(CustomGridFunctions), type.AssemblyQualifiedName, customGridFunctions);
+        }
+
         public static IEnumerable<GridFieldMetadata> GetGridFields(this IRecordService recordService, string recordType,
             ViewType preferredViewType)
         {
@@ -85,45 +103,6 @@ namespace JosephM.Application.ViewModel.Extentions
             }
             var uri = new Uri(type.FullName + prismQuery, UriKind.Relative);
             return uri;
-        }
-
-        public static void SaveSettingObject(this TabAreaViewModelBase viewModel, object theObject)
-        {
-            var theObjectType = theObject.GetType();
-            if (!theObjectType.IsTypeOf(typeof(IAllowSaveAndLoad)))
-                throw new Exception(string.Format("type {0} is not of type {1}", theObjectType.Name, typeof(IAllowSaveAndLoad).Name));
-
-            //this is an object specifically for entering the name and autoload properties
-            //they are mapped into the IAllowSaveAndLoad object after entry then it is saved
-            var saveObject = new SaveAndLoadFields();
-
-            Action saveSettings = () =>
-            {
-                var mapper = new ClassSelfMapper();
-                mapper.Map(saveObject, theObject);
-
-                var settingsManager = viewModel.ApplicationController.ResolveType<ISettingsManager>();
-                var settings = settingsManager.Resolve<SavedSettings>(theObjectType);
-
-                if (saveObject.Autoload)
-                {
-                    foreach (var item in settings.SavedRequests.Cast<IAllowSaveAndLoad>())
-                        item.Autoload = false;
-                }
-
-                settings.SavedRequests = settings.SavedRequests.Union(new[] { theObject }).ToArray();
-                settingsManager.SaveSettingsObject(settings, theObjectType);
-
-                viewModel.ClearChildForm();
-
-                viewModel.ApplicationController.UserMessage("Saved!");
-            };
-
-            var os = new ObjectRecordService(saveObject, viewModel.ApplicationController, null);
-            var ofs = new ObjectFormService(saveObject, os, null);
-            var fc = new FormController(os, ofs, viewModel.ApplicationController);
-            var vm = new ObjectEntryViewModel(saveSettings, () => viewModel.ClearChildForm(), saveObject, fc);
-            viewModel.LoadChildForm(vm);
         }
     }
 }

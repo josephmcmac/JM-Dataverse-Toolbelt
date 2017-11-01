@@ -156,7 +156,7 @@
         <Setter Property="StaysOpen" Value="False" />
     </Style>
     <Style x:Key="MainMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
-        <Setter Property="Width" Value="200px" />
+        <Setter Property="Width" Value="160px" />
         <Setter Property="Height" Value="30px" />
         <Setter Property="Margin" Value="8,8,8,8" />
     </Style>

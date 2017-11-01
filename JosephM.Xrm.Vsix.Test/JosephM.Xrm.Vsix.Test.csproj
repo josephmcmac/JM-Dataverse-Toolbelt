@@ -39,6 +39,14 @@
     <Reference Include="Microsoft.Practices.Prism">
       <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="microsoft.xrm.sdk, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\microsoft.xrm.sdk.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -55,8 +63,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="FakeVisualStudioService.cs" />
+    <Compile Include="FakeVisualStudioProjectItem.cs" />
+    <Compile Include="FakeVisualStudioSolutionFolder.cs" />
+    <Compile Include="FakeVsixApplicationController.cs" />
+    <Compile Include="thrownew.cs" />
     <Compile Include="VsixManagePluginTriggersTests.cs" />
-    <Compile Include="VsixGetSolutionDialogTests.cs" />
     <Compile Include="VsixCreateAndDeployPackageTests.cs" />
     <Compile Include="VsixRefreshSettingsDialogTests.cs" />
     <Compile Include="VsixUpdateAssemblyDialogTests.cs" />
@@ -72,11 +83,21 @@
     <Content Include="TestFiles\JavaScript\testxrmsolution_pageutility.js" />
     <Content Include="TestFiles\JavaScript\testxrmsolution_sdk.rest.js" />
     <Content Include="TestFiles\JavaScript\testxrmsolution_webserviceutility.js" />
-    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Crm.Sdk.Proxy.dll" />
-    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Client.dll" />
-    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Sdk.dll" />
-    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Sdk.Workflow.dll" />
-    <Content Include="TestFiles\PluginAssemblyBin\TestXrmSolution.Plugins.dll" />
+    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Crm.Sdk.Proxy.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Client.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Sdk.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Sdk.Workflow.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\PluginAssemblyBin\TestXrmSolution.Plugins.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\PluginAssemblyBin\TestXrmSolution.Plugins.pdb" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +123,18 @@
     <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
       <Name>JosephM.ObjectMapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Prism.Test.csproj">
+      <Project>{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}</Project>
+      <Name>JosephM.Application.Prism.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+      <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
+      <Name>JosephM.Application.Prism</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.Prism.XrmModule.Test.csproj">
+      <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
+      <Name>JosephM.Prism.XrmModule.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>

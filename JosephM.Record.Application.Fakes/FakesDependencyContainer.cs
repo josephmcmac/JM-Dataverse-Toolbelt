@@ -41,12 +41,12 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public void RegisterInstance(Type type, string key, object instance)
         {
-            throw new NotImplementedException();
+            UnityContainer.RegisterInstance(type, key, instance);
         }
 
         public object ResolveInstance(Type type, string key)
         {
-            throw new NotImplementedException();
+            return UnityContainer.Resolve(type, key);
         }
     }
 }

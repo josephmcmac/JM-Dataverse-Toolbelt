@@ -139,14 +139,6 @@
           <ButtonText>Refresh Schema.cs</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="RefreshConnectionCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
-        <Strings>
-          <ButtonText>Refresh XRM Connection</ButtonText>
-        </Strings>
-      </Button>
       <Button guid="guidXrmPackageCmdSet" id="DeployWebResourceCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
@@ -188,13 +180,6 @@
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Package Settings</ButtonText>
-        </Strings>
-      </Button>
-      <Button guid="guidXrmPackageCmdSet" id="GetSolutionCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
-        <Strings>
-          <ButtonText>Get Solution</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="ImportCsvsCommandId" priority="0x0100" type="Button">
@@ -308,13 +293,11 @@
       <IDSymbol name="XrmSolutionFolderMenuGroup" value="0x1030" />
       <IDSymbol name="xrmSolutionFolderMenu" value="0x1031" />
       <IDSymbol name="RefreshSchemaCommandId" value="0x0100" />
-      <IDSymbol name="RefreshConnectionCommandId" value="0x0101" />
       <IDSymbol name="DeployWebResourceCommandId" value="0x0102" />
       <IDSymbol name="DeployPluginAssemblyCommandId" value="0x0103" />
       <IDSymbol name="ManagePluginTriggersCommandId" value="0x0104" />
       <IDSymbol name="UpdatePluginAssemblyCommandId" value="0x0105" />
       <IDSymbol name="RefreshSettingsCommandId" value="0x0106" />
-      <IDSymbol name="GetSolutionCommandId" value="0x0107" />
       <IDSymbol name="ImportCsvsCommandId" value="0x0108" />
       <IDSymbol name="ClearCacheCommandId" value="0x0109" />
       <IDSymbol name="ImportCustomisationsCommandId" value="0x010A" />
