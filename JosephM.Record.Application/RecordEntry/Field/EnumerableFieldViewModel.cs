@@ -55,7 +55,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         RecordForm.OnSectionLoaded();
                     },
                     OnlyValidate = recordForm.OnlyValidate,
-                    MaxHeight = 300,
+                    MaxHeight = 600,
                     LoadDialog = (d) => { RecordEntryViewModel.LoadChildForm(d); }
                 };
                 DynamicGridViewModel.AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);

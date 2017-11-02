@@ -53,7 +53,7 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 Enabled = false
             };
-            MaxHeight = 1000;
+            MaxHeight = 600;
             LoadDialog = (d) => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(LoadDialog))); };
         }
 

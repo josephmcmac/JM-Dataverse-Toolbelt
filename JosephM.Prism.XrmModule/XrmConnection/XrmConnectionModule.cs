@@ -8,6 +8,7 @@ using JosephM.Core.Log;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
+using System;
 using System.Configuration;
 
 #endregion
@@ -42,8 +43,36 @@ namespace JosephM.Prism.XrmModule.XrmConnection
         public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller)
         {
             controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
-            controller.RegisterInstance(new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>(), formService: new XrmFormService()));
-            controller.AddNotification("XRMCONNECTION", string.Format("Connected To Instance '{0}'", xrmConfiguration));
+            var serviceConnection = new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>(), formService: new XrmFormService());
+            controller.RegisterInstance(serviceConnection);
+
+            if (xrmConfiguration.OrganizationUniqueName == null)
+                controller.AddNotification("XRMCONNECTION", "Not Connected");
+            else
+            {
+                controller.DoOnAsyncThread(() =>
+                {
+                    try
+                    {
+                        controller.AddNotification("XRMCONNECTION","Connecting...");
+                        var verify = serviceConnection.VerifyConnection();
+                        if(verify.IsValid)
+                        {
+                            controller.AddNotification("XRMCONNECTION", string.Format("Connected To Instance '{0}'", xrmConfiguration));
+                            var preLoadRecordTypes = serviceConnection.GetAllRecordTypes();
+                        }
+                        else
+                        {
+                            controller.AddNotification("XRMCONNECTION", string.Format("Error Connecting To Instance '{0}'", xrmConfiguration));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        controller.AddNotification("XRMCONNECTION", ex.Message);
+                        controller.ThrowException(ex);
+                    }
+                });
+            }
         }
 
         public override void InitialiseModule()

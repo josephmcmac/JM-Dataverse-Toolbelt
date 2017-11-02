@@ -10,6 +10,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
     {
         public override void InitialiseModule()
         {
+            //todo should maybe do in base class
+            AddOption("Plugins", "Manage Plugin Triggers", DialogCommand);
         }
 
         public override void RegisterTypes()
