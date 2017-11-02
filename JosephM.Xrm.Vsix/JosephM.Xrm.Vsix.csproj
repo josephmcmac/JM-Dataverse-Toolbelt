@@ -70,15 +70,19 @@
     <Content Include="_readme.txt" />
     <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Entity JavaScript.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Entity Plugin.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Test.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM WorkflowActivity.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="JosephM.XRM.VSIX.snk" />
     <None Include="packages.config" />
