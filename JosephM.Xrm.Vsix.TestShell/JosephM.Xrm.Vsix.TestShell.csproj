@@ -118,6 +118,10 @@
       <Project>{ed23e8ef-1623-491e-a30f-ba55c8f65ce7}</Project>
       <Name>JosephM.Wpf</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.Vsix.App\JosephM.Xrm.Vsix.App.csproj">
+      <Project>{98D77F01-114B-4130-8C7C-2FF58425C34B}</Project>
+      <Name>JosephM.Xrm.Vsix.App</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.Vsix.Test\JosephM.Xrm.Vsix.Test.csproj">
       <Project>{f5ec8e25-2152-448d-9459-8f0ef9933b3b}</Project>
       <Name>JosephM.Xrm.Vsix.Test</Name>

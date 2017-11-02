@@ -8,7 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("JosephM.Xrm.Vsix")]
 [assembly: AssemblyCompany("JosephM")]
 [assembly: AssemblyProduct("JosephM.Xrm.Vsix")]
-[assembly: AssemblyVersion("2.0.*")]
+
+//WARNING!! DON:T CHANGE THIS UNLESS ALSO CHANGING THE REFERENCING .vstemplate files
+[assembly: AssemblyVersion("2.0.0.0")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

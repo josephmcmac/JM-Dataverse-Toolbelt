@@ -34,16 +34,21 @@ namespace JosephM.XRM.VSIX.Dialogs
 
         public override void RequestNavigate(string regionName, Type type, UriQuery uriQuery)
         {
-            uriQuery = uriQuery ?? new UriQuery();
             var navigationObject = ResolveType(type);
+            RequestNavigate(regionName, navigationObject, uriQuery);
+        }
+
+        public void RequestNavigate(string regionName, object navigationObject, UriQuery uriQuery, bool showCompletionScreen = true, bool isModal = false)
+        {
+            uriQuery = uriQuery ?? new UriQuery();
 
             if (navigationObject is DialogViewModel)
             {
                 var dialog = navigationObject as DialogViewModel;
-                foreach(var arg in uriQuery.Arguments)
+                foreach (var arg in uriQuery.Arguments)
                 {
                     var dialogProperty = dialog.GetType().GetProperty(arg.Key);
-                    if(dialogProperty != null)
+                    if (dialogProperty != null)
                     {
                         if (dialogProperty.PropertyType == typeof(bool))
                             dialog.SetPropertyValue(dialogProperty.Name, bool.Parse(arg.Value));
@@ -57,18 +62,18 @@ namespace JosephM.XRM.VSIX.Dialogs
                     }
                 }
 
-                LoadDialog(dialog);
+                LoadDialog(dialog, showCompletionScreen: showCompletionScreen, isModal: isModal);
             }
             else
-                throw new NotImplementedException("Not implemented for type " + type.Name);
+                throw new NotImplementedException("Not implemented for type " + navigationObject?.GetType().Name);
         }
 
-        public virtual void LoadDialog(DialogViewModel dialog)
+        public virtual void LoadDialog(DialogViewModel dialog, bool showCompletionScreen = true, bool isModal = false)
         {
-            LoadDialogIntoWindow(dialog);
+            LoadDialogIntoWindow(dialog, showCompletionScreen, isModal);
         }
 
-        public static void LoadDialogIntoWindow(DialogViewModel dialog, bool showCompletion = true, bool isModal = false)
+        public static void LoadDialogIntoWindow(DialogViewModel dialog, bool showCompletionScreen = true, bool isModal = false)
         {
             var window = new Window
             {
@@ -97,7 +102,7 @@ namespace JosephM.XRM.VSIX.Dialogs
                         closeMethod();
                 });
             }
-            if (!showCompletion)
+            if (!showCompletionScreen)
                 dialog.OverideCompletionScreenMethod = closeMethod;
 
             if (isModal)

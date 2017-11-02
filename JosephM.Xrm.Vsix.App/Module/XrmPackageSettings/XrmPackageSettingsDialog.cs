@@ -15,21 +15,39 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
     public class XrmPackageSettingsDialog : AppSettingsDialog<XrmPackageSettings, XrmPackageSettings>
     {
         public IVisualStudioService VisualStudioService { get; set; }
-        public bool SaveSettings { get; set; }
+
+        private bool _saveSettings = true;
+        public bool SaveSettings
+        {
+            get
+            {
+                return _saveSettings;
+            }
+            set
+            {
+                _saveSettings = value;
+                //if this is being set we need to ensure the connection has its equivalent
+                if(SubDialogs != null && SubDialogs.First() is ConnectionEntryDialog)
+                {
+                    ((ConnectionEntryDialog)SubDialogs.First()).AddToSolution = SaveSettings;
+                }
+            }
+        }
+
         private XrmRecordService XrmRecordService { get; set; }
 
         public XrmPackageSettingsDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService)
-        : base(dialogController, xrmRecordService)
+        : base(dialogController, xrmRecordService, objectToEnter)
         {
             XrmRecordService = xrmRecordService;
             VisualStudioService = visualStudioService;
-            SaveSettings = true;
 
             if(string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
             {
                 //if there was no connection then lets redirect to the connection entry first
                 var newConnection = new SavedXrmRecordConfiguration();
                 Action refreshChildDialogConnection = () => {
+                    newConnection.Active = true;
                     XrmRecordService.XrmRecordConfiguration = newConnection;
                     SettingsObject.Connections = new[] { newConnection };
                 };

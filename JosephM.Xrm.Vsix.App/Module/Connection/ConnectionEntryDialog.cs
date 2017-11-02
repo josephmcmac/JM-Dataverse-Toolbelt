@@ -8,7 +8,7 @@ namespace JosephM.XRM.VSIX.Commands.RefreshConnection
     public class ConnectionEntryDialog : DialogViewModel
     {
         private XrmRecordConfiguration ObjectToEnter { get; set; }
-        private bool AddToSolution { get; set; }
+        public bool AddToSolution { get; set; }
         public IVisualStudioService VisualStudioService { get; set; }
         public Action DoPostEntry { get; private set; }
 

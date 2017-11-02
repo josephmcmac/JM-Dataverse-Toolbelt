@@ -18,7 +18,7 @@ namespace JosephM.Xrm.Vsix.Test
              
         }
 
-        public override void LoadDialog(DialogViewModel dialog)
+        public override void LoadDialog(DialogViewModel dialog, bool showCompletionScreen = true, bool isModal = false)
         {
             ClearTabs();
             _regions.Add(dialog);

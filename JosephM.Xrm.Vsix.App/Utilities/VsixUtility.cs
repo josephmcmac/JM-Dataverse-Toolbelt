@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
 using JosephM.Core.Extentions;
 using JosephM.Core.Serialisation;
-using JosephM.Core.Utility;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
-using Microsoft.VisualStudio.Shell.Interop;
-using Condition = JosephM.Record.Query.Condition;
 using JosephM.Xrm.Schema;
-using Microsoft.Crm.Sdk.Messages;
 using JosephM.Xrm.Vsix.Utilities;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Condition = JosephM.Record.Query.Condition;
 
 namespace JosephM.XRM.VSIX.Utilities
 {

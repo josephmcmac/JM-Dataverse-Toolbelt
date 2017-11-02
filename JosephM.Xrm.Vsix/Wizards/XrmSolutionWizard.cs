@@ -1,20 +1,26 @@
 ﻿using EnvDTE;
+using JosephM.Application;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Record.Application.Fakes;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.Xrm.Vsix.Utilities;
 using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using JosephM.XRM.VSIX.Dialogs;
 using JosephM.XRM.VSIX.Utilities;
+using Microsoft.Practices.Unity;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VSLangProj;
 
 namespace JosephM.XRM.VSIX.Wizards
 {
     public class XrmSolutionWizard : MyWizardBase
     {
-        public XrmRecordConfiguration XrmRecordConfiguration { get; set; }
         public XrmPackageSettings XrmPackageSettings { get; set; }
         public string DestinationDirectory { get; private set; }
         public string SafeProjectName { get; private set; }
@@ -22,35 +28,15 @@ namespace JosephM.XRM.VSIX.Wizards
         public override void RunStartedExtention(Dictionary<string, string> replacementsDictionary)
         {
             //get a xrm connection and package setting by loading the entry dialogs
-            var xrmConfig = new XrmRecordConfiguration();
-            #if DEBUG
-                        xrmConfig.AuthenticationProviderType = XrmRecordAuthenticationProviderType.ActiveDirectory;
-                        xrmConfig.DiscoveryServiceAddress = "http://qa2012/XRMServices/2011/Discovery.svc";
-                        xrmConfig.Name = "TEST";
-                        xrmConfig.OrganizationUniqueName = "TEST";
-                        xrmConfig.Username = "joseph";
-                        xrmConfig.Domain = "auqa2012";
-            #endif
-            var dialog = new ConnectionEntryDialog(DialogUtility.CreateDialogController(), xrmConfig,
-                VisualStudioService, false);
-
-            VsixApplicationController.LoadDialogIntoWindow(dialog, showCompletion: false, isModal: true);
-            XrmRecordConfiguration = xrmConfig;
-
             XrmPackageSettings = new XrmPackageSettings();
             #if DEBUG
                 XrmPackageSettings.SolutionDynamicsCrmPrefix = "template";
                 XrmPackageSettings.SolutionObjectPrefix = "Template";
             #endif
-            var savedConnection = SavedXrmRecordConfiguration.CreateNew(XrmRecordConfiguration);
-            savedConnection.Active = true;
-            XrmPackageSettings.Connections = new[]
-            {
-                savedConnection
-            };
-            var settingsDialog = new XrmPackageSettingsDialog(DialogUtility.CreateDialogController(), XrmPackageSettings, VisualStudioService, new XrmRecordService(XrmRecordConfiguration, formService: new XrmFormService()));
-            settingsDialog.SaveSettings = false;
-            VsixApplicationController.LoadDialogIntoWindow(settingsDialog, showCompletion: false, isModal: true);
+
+            var container = new PrismDependencyContainer(new UnityContainer());
+            var applicationController = new VsixApplicationController(container);
+            RunWizardSettingsEntry(XrmPackageSettings, applicationController);
 
             //add token replacements for the template projects
             AddReplacements(replacementsDictionary, XrmPackageSettings);
@@ -58,6 +44,20 @@ namespace JosephM.XRM.VSIX.Wizards
             //used later
             DestinationDirectory = replacementsDictionary["$destinationdirectory$"];
             SafeProjectName = replacementsDictionary["$safeprojectname$"];
+        }
+
+        public static void RunWizardSettingsEntry(XrmPackageSettings packageSettings, VsixApplicationController applicationController)
+        {
+            //ensure the package settings resolves when the app settings dialog runs
+            var resolvePackageSettings = applicationController.ResolveType(typeof(XrmPackageSettings));
+            if (resolvePackageSettings == null)
+                applicationController.RegisterInstance(typeof(XrmPackageSettings), new XrmPackageSettings());
+
+            var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, new XrmRecordService(new XrmRecordConfiguration(), formService: new XrmFormService()));
+            settingsDialog.SaveSettings = false;
+            var uriQuery = new UriQuery();
+            uriQuery.Add("Modal", true.ToString());
+            applicationController.RequestNavigate("Main", settingsDialog, uriQuery, showCompletionScreen: false, isModal: true);
         }
 
         public override void RunFinishedExtention()
@@ -125,10 +125,13 @@ namespace JosephM.XRM.VSIX.Wizards
                 File.WriteAllText(consoleFileName, read);
             }
 
+            var visualStudioService = new VisualStudioService(DTE, useSolutionDirectory: DestinationDirectory);
             //add xrm connection and package settings to solution items
-            VisualStudioService.AddSolutionItem("xrmpackage.xrmsettings", XrmPackageSettings);
-            VsixUtility.AddXrmConnectionToSolution(XrmRecordConfiguration, VisualStudioService);
+            visualStudioService.AddSolutionItem("xrmpackage.xrmsettings", XrmPackageSettings);
+            if (XrmPackageSettings.Connections.Any())
+                VsixUtility.AddXrmConnectionToSolution(XrmPackageSettings.Connections.First(), visualStudioService);
             VisualStudioService.CloseAllDocuments();
+            //tod ensure the connection added to test project
         }
     }
 }
