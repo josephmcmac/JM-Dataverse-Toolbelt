@@ -203,12 +203,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             ErrorMessage = null;
             var isValid = true;
-            if (IsVisible && DynamicGridViewModel != null)
+            if (IsVisible)
             {
-                foreach (var gridRowViewModel in DynamicGridViewModel.GridRecords)
+                if (DynamicGridViewModel != null)
                 {
-                    if (!gridRowViewModel.Validate())
-                        isValid = false;
+                    foreach (var gridRowViewModel in DynamicGridViewModel.GridRecords)
+                    {
+                        if (!gridRowViewModel.Validate())
+                            isValid = false;
+                    }
+                }
+                else
+                {
+                    isValid = base.Validate();
                 }
                 var onlyValidate = GetRecordForm().OnlyValidate;
                 if (onlyValidate == null ||

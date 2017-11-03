@@ -9,9 +9,15 @@ namespace JosephM.Deployment.ExportXml
 {
     [BulkAddRecordTypeFunction]
     [Group(Sections.Main, true, 10)]
+    [Group(Sections.Fields, true, 15)]
     [Group(Sections.Fetch, false, 20)]
     public class ExportRecordType
     {
+        public ExportRecordType()
+        {
+            IncludeAllFields = true;
+        }
+
         [DisplayOrder(0)]
         [Group(Sections.Main)]
         [RequiredProperty]
@@ -22,7 +28,7 @@ namespace JosephM.Deployment.ExportXml
         [Group(Sections.Main)]
         [RequiredProperty]
         [ReadOnlyWhenSet]
-        [RecordTypeFor(nameof(ExcludeTheseFieldsInExportedRecords) + "." + nameof(RecordField))]
+        [RecordTypeFor(nameof(IncludeOnlyTheseFieldsInExportedRecords) + "." + nameof(RecordField))]
         [RecordTypeFor(nameof(SpecificRecordsToExport) + "." + nameof(LookupSetting.Record))]
         public RecordType RecordType { get; set; }
 
@@ -36,8 +42,14 @@ namespace JosephM.Deployment.ExportXml
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         public IEnumerable<LookupSetting> SpecificRecordsToExport { get; set; }
 
+        [Group(Sections.Fields)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        public IEnumerable<FieldSetting> ExcludeTheseFieldsInExportedRecords { get; set; }
+        public bool IncludeAllFields { get; set; }
+
+        [Group(Sections.Fields)]
+        [PropertyInContextByPropertyValue(nameof(IncludeAllFields), false)]
+        [RequiredProperty]
+        public IEnumerable<FieldSetting> IncludeOnlyTheseFieldsInExportedRecords { get; set; }
 
         [DisplayOrder(100)]
         [Group(Sections.Fetch)]
@@ -55,6 +67,7 @@ namespace JosephM.Deployment.ExportXml
         private static class Sections
         {
             public const string Main = "Export Type Details";
+            public const string Fields = "Fields To Include";
             public const string Fetch = "Fetch XML - Note Attributes in The Entered XML Will Be Ignored. All fields Will Be Included Apart From Those Selected For Exclusion";
         }
     }

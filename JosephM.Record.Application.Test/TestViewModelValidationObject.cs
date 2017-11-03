@@ -21,6 +21,12 @@ namespace JosephM.Record.Application.Test
             public string RequiredString { get; set; }
 
             public string NotRequiredString { get; set; }
+
+            public bool RequireRecordsInTheGrid { get; set; }
+
+            [PropertyInContextByPropertyValue(nameof(RequireRecordsInTheGrid), true)]
+            [RequiredProperty]
+            public IEnumerable<TestEnumerablePropertyObject> RequiredEnumerableInTheGrid { get; set; }
         }
     }
 

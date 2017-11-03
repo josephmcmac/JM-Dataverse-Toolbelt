@@ -153,7 +153,7 @@
             Height="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
                                        AncestorType=Border,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=1}">
             <recordEntry:RecordEntryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>

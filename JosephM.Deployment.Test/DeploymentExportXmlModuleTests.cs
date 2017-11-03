@@ -5,6 +5,7 @@ using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
+using JosephM.Deployment.ImportXml;
 using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
@@ -21,6 +22,10 @@ namespace JosephM.Deployment.Test
         [TestMethod]
         public void DeploymentExportXmlModuleTest()
         {
+            //script 2 exports
+
+            //first one with only one specific field
+
             var account = CreateAccount();
             FileUtility.DeleteFiles(TestingFolder);
 
@@ -36,13 +41,54 @@ namespace JosephM.Deployment.Test
                 {
                     Type = ExportType.AllRecords,
                     RecordType = new RecordType(Entities.account, Entities.account),
-                    ExcludeTheseFieldsInExportedRecords = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.accountcategorycode, Fields.account_.accountcategorycode)}}
+                    IncludeAllFields = false,
+                    IncludeOnlyTheseFieldsInExportedRecords = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.createdby, Fields.account_.createdby) }}
                 }
             };
 
             application.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog>(instance);
 
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
+
+            var importXmlService = new ImportXmlService(XrmRecordService);
+            var loaded = importXmlService.LoadEntitiesFromXmlFiles(TestingFolder);
+            foreach(var item in loaded)
+            {
+                Assert.IsNull(item.GetField(Fields.account_.createdon));
+                Assert.IsNotNull(item.GetField(Fields.account_.createdby));
+                Assert.IsNotNull(item.GetField(Fields.account_.name));
+            }
+
+            FileUtility.DeleteFiles(TestingFolder);
+
+            //first verify when all fields selected
+            application = CreateAndLoadTestApplication<ExportXmlModule>();
+
+            instance = new ExportXmlRequest();
+            instance.IncludeNotes = true;
+            instance.IncludeNNRelationshipsBetweenEntities = true;
+            instance.Folder = new Folder(TestingFolder);
+            instance.RecordTypesToExport = new[]
+            {
+                new ExportRecordType()
+                {
+                    Type = ExportType.AllRecords,
+                    RecordType = new RecordType(Entities.account, Entities.account),
+                    IncludeAllFields = true
+                }
+            };
+
+            application.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog>(instance);
+
+            Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
+
+            loaded = importXmlService.LoadEntitiesFromXmlFiles(TestingFolder);
+            foreach (var item in loaded)
+            {
+                Assert.IsNotNull(item.GetField(Fields.account_.createdon));
+                Assert.IsNotNull(item.GetField(Fields.account_.createdby));
+                Assert.IsNotNull(item.GetField(Fields.account_.name));
+            }
         }
 
         [TestMethod]
@@ -131,7 +177,8 @@ namespace JosephM.Deployment.Test
             bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
             Assert.IsTrue(specificRecordsGrid.GridRecords.Any());
 
-            var excludeFieldsGrid = specificRecordEntry.GetSubGridViewModel(nameof(ExportRecordType.ExcludeTheseFieldsInExportedRecords));
+            specificRecordEntry.GetBooleanFieldFieldViewModel(nameof(ExportRecordType.IncludeAllFields)).Value = false;
+            var excludeFieldsGrid = specificRecordEntry.GetSubGridViewModel(nameof(ExportRecordType.IncludeOnlyTheseFieldsInExportedRecords));
             //now add using the add multiple option
             excludeFieldsGrid.DynamicGridViewModel.AddMultipleRowButton.Invoke();
             bulkAddForm = specificRecordEntry.ChildForms.First() as QueryViewModel;
