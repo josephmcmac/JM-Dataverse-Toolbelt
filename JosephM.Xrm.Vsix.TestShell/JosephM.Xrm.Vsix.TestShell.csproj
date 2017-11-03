@@ -126,10 +126,6 @@
       <Project>{f5ec8e25-2152-448d-9459-8f0ef9933b3b}</Project>
       <Name>JosephM.Xrm.Vsix.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.Vsix\JosephM.Xrm.Vsix.csproj">
-      <Project>{c034f8d0-95c6-44dc-97d1-3647d9463149}</Project>
-      <Name>JosephM.Xrm.Vsix</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

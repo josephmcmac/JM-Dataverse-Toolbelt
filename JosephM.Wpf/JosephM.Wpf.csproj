@@ -170,6 +170,7 @@
     <Compile Include="Converters\FileRefToStringConverter.cs" />
     <Compile Include="Converters\NullOrEmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\LengthConverter.cs" />
+    <Compile Include="Converters\TabbedApplicationHeightConverter.cs" />
     <Compile Include="Grid\DynamicGridView.xaml.cs">
       <DependentUpon>DynamicGridView.xaml</DependentUpon>
     </Compile>

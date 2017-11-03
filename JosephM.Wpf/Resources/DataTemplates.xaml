@@ -182,10 +182,10 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="QueryViewTemplateWindowMinimum">
-        <Grid MinHeight="{Binding Path=ActualHeight,
+        <Grid MaxHeight="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Window,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}" >
+                                       AncestorType=application:WindowShell,
+                                       AncestorLevel=1}}" >
             <grid1:GridQueryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -271,14 +271,6 @@
         DecimalFieldTemplate="{StaticResource DecimalFieldTemplate}"
         UrlFieldTemplate="{StaticResource UrlFieldTemplate}"
         x:Key="fieldTemplateSelector" />
-    <!--<DataTemplate x:Key="labelledFieldTemplate" >
-        <WrapPanel>
-            <field:FieldLabelView DataContext="{Binding}" />
-            <ContentControl
-                    Content="{Binding}"
-                    ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
-        </WrapPanel>
-    </DataTemplate>-->
     <DataTemplate x:Key="labelledFieldTemplate">
         <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>

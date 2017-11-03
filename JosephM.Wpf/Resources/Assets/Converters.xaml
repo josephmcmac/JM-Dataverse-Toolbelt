@@ -11,6 +11,7 @@
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     <converters:NullToHiddenConverter x:Key="NullToHiddenConverter" />
     <converters:NullOrEmptyStringToVisibilityConverter x:Key="NullOrEmptyStringToVisibilityConverter" />
+    <converters:TabbedApplicationHeightConverter x:Key="TabbedApplicationHeightConverter" />
     <converters:ToUpperConverter x:Key="ToUpperConverter" />
     <converters:ToLowerConverter x:Key="ToLowerConverter" />
     <converters:WidthConverter x:Key="WidthConverter" />

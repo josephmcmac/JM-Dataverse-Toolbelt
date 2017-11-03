@@ -67,7 +67,7 @@
                 </WrapPanel>
             </Grid>
             <Grid Grid.Row="1" >
-                <DataGrid MaxHeight="{Binding MaxHeight}"
+                <DataGrid MaxHeight="{Binding MaxHeight, ElementName=tabBorder}"
             
                 controlExtentions:FocusExtension.IsFocused="{Binding IsFocused, Mode=TwoWay}"
                 CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"

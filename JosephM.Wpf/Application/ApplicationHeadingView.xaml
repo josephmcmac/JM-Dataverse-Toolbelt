@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
     mc:Ignorable="d"
-    d:DesignHeight="300"
+    d:DesignHeight="55"
+    Height="55"
     d:DesignWidth="600"
     DataContextChanged="OnDataContextChanged"
     d:DataContext="{d:DesignInstance Type=fakes:FakeApplicationController, IsDesignTimeCreatable=True}">

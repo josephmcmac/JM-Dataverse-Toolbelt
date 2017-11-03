@@ -151,7 +151,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dialogs\DialogUtility.cs" />
     <Compile Include="Dialogs\VsixApplicationController.cs" />
     <Compile Include="Dialogs\VsixDependencyContainer.cs" />
     <Compile Include="Dialogs\VsixEntryDialog.cs" />
