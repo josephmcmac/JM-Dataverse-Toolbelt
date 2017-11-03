@@ -90,46 +90,6 @@ namespace JosephM.XRM.VSIX
             app.AddModule<VsixDeployPackageModule> (0x0110); 
         }
 
-        private XrmRecordService _xrmRecordService;
-
-        private object _lockObject = new Object();
-
-        public XrmRecordService GetXrmRecordService()
-        {
-            //simple cache + if configuration has change then create new
-            var xrmConfig = VsixUtility.GetXrmConfig(this);
-            lock (_lockObject)
-            {
-                if (_xrmRecordService != null)
-                {
-                    //if something in the config different clear the service
-                    var oldConfig = _xrmRecordService.XrmRecordConfiguration;
-                    if (oldConfig.AuthenticationProviderType != xrmConfig.AuthenticationProviderType
-                        || oldConfig.DiscoveryServiceAddress != xrmConfig.DiscoveryServiceAddress
-                        || oldConfig.OrganizationUniqueName != xrmConfig.OrganizationUniqueName
-                        || oldConfig.Domain != xrmConfig.Domain
-                        || oldConfig.Username != xrmConfig.Username
-                        || oldConfig.Password == null && xrmConfig.Password != null
-                        || oldConfig.Password != null && xrmConfig.Password == null
-                        ||
-                        (oldConfig.Password != null && xrmConfig.Password != null &&
-                         oldConfig.Password.GetRawPassword() != xrmConfig.Password.GetRawPassword())
-                        )
-                        _xrmRecordService = null;
-                }
-                if (_xrmRecordService == null)
-                {
-                    _xrmRecordService = new XrmRecordService(xrmConfig, formService: new XrmFormService());
-                }
-                return _xrmRecordService;
-            }
-        }
-
-        public VisualStudioService GetVisualStudioService()
-        {
-            var dte = GetService(typeof(SDTE)) as DTE2;
-            return new VisualStudioService(dte);
-        }
         #endregion
     }
 }
