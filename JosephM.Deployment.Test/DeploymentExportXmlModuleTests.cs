@@ -46,7 +46,8 @@ namespace JosephM.Deployment.Test
                 }
             };
 
-            application.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog>(instance);
+            var response = application.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog, ExportXmlResponse>(instance);
+            Assert.IsFalse(response.HasError);
 
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
@@ -78,7 +79,8 @@ namespace JosephM.Deployment.Test
                 }
             };
 
-            application.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog>(instance);
+            response = application.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog, ExportXmlResponse>(instance);
+            Assert.IsFalse(response.HasError);
 
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 

@@ -5,9 +5,8 @@ using JosephM.CustomisationImporter.Prism;
 using JosephM.CustomisationImporter.Service;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.Xrm.Vsix.Utilities;
-using JosephM.XRM.VSIX;
 using System;
 using System.Linq;
 

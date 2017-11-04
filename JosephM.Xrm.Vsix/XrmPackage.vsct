@@ -256,6 +256,12 @@
           <ButtonText>Browse/Update Data</ButtonText>
         </Strings>
       </Button>
+       <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>About</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -308,6 +314,7 @@
       <IDSymbol name="DeployPackageCommandId" value="0x0110" />
     <IDSymbol name="InstanceComparisonCommandId" value="0x0111" />
     <IDSymbol name="CrudCommandId" value="0x0112" />
+    <IDSymbol name="AboutCommandId" value="0x0113" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

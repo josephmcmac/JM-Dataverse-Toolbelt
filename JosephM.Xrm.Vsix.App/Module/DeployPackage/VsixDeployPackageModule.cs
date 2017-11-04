@@ -2,7 +2,7 @@
 using JosephM.Application.Modules;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Prism.XrmModule.XrmConnection;
-using JosephM.Xrm.Vsix.Utilities;
+using JosephM.Xrm.Vsix.Application;
 using System;
 
 namespace JosephM.Xrm.Vsix.Module.DeployPackage

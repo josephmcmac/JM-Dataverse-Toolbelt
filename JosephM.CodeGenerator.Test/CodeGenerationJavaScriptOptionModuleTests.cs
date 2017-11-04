@@ -28,8 +28,8 @@ namespace JosephM.CodeGenerator.Test
             };
 
             testApplication.ClearTabs();
-            testApplication.NavigateAndProcessDialog<JavaScriptOptionsModule, JavaScriptOptionsDialog>(request);
-            //todo get the response object and verify contains javascript
+            var response = testApplication.NavigateAndProcessDialog<JavaScriptOptionsModule, JavaScriptOptionsDialog, JavaScriptOptionsResponse>(request);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(response.Javascript));
 
             FileUtility.DeleteFiles(TestingFolder);
         }

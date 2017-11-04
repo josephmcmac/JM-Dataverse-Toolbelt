@@ -1,8 +1,9 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
+using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.Xrm.Vsix.Utilities;
+using JosephM.Xrm.Vsix.Application;
 using System;
 
 namespace JosephM.Xrm.Vsix.Module.DeployWebResource
@@ -10,16 +11,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
     [DeployWebResourceMenuItemVisible]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
-    public class DeployWebResourceModule : ActionModuleBase
+    public class DeployWebResourceModule : ServiceRequestModule<DeployWebResourceDialog, DeployWebResourceService, DeployWebResourceRequest, DeployWebResourceResponse, DeployWebResourceResponseItem>
     {
-        public override void InitialiseModule()
-        {
-        }
-
-        public override void RegisterTypes()
-        {
-        }
-
         public override void DialogCommand()
         {
             var visualStudioService = ApplicationController.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService;

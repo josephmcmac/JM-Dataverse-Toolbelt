@@ -1,7 +1,6 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.XrmConnection;
-using JosephM.XRM.VSIX;
 
 namespace JosephM.Xrm.Vsix.Module.PackageSettings
 {

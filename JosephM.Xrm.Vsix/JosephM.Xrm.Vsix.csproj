@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wizards\MyProjectItemWizard.cs" />
-    <Compile Include="Wizards\MyWizardBase.cs" />
     <Compile Include="Wizards\XrmEntityJavaScriptWizard.cs" />
     <Compile Include="Wizards\XrmEntityPluginWizard.cs" />
     <Compile Include="Wizards\XrmSolutionWizard.cs" />

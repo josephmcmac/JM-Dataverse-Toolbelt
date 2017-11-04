@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JosephM.Application.Application;
 using JosephM.Core.AppConfig;
-using Microsoft.Practices.Unity;
-using JosephM.Application.Application;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.XRM.VSIX.Utilities;
-using JosephM.Application.ViewModel.Grid;
-using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Prism.Infrastructure.Module.Crud;
-using JosephM.Application.ViewModel.Dialog;
-using JosephM.Record.Service;
-using JosephM.Xrm.Vsix.Utilities;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
+using Microsoft.Practices.Unity;
+using System;
 
-namespace JosephM.XRM.VSIX.Dialogs
+namespace JosephM.Xrm.Vsix.Application
 {
     public class VsixDependencyContainer : IDependencyResolver
     {

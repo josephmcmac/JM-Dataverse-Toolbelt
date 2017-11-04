@@ -2,9 +2,8 @@
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
-using JosephM.Xrm.Vsix.Utilities;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Utilities;
+using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.IO;
 using System.Linq;
@@ -62,7 +61,7 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
                 assemblyRecord.SetField(Fields.pluginassembly_.content, assemblyContent, Service);
                 var matchField = Fields.pluginassembly_.pluginassemblyid;
 
-                var assemblyLoadResponse = VsixUtility.LoadIntoCrm(Service, new[] { assemblyRecord }, matchField);
+                var assemblyLoadResponse = Service.LoadIntoCrm(new[] { assemblyRecord }, matchField);
                 if (assemblyLoadResponse.Errors.Any())
                 {
                     throw new Exception("Error Updating Assembly", assemblyLoadResponse.Errors.Values.First());
@@ -70,7 +69,8 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
                 //add plugin assembly to the solution
                 var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
                 var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
-                VsixUtility.AddSolutionComponents(Service, PackageSettings, componentType, itemsToAdd);
+                if (PackageSettings.AddToSolution)
+                    Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd);
             }
             CompletionMessage = "Assembly Updated";
             LoadingViewModel.IsLoading = false;

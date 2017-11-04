@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace JosephM.Xrm.Vsix.Utilities
+namespace JosephM.Xrm.Vsix.Application
 {
     public class VisualStudioProjectBase
     {

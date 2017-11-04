@@ -7,9 +7,8 @@ using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
-using JosephM.Xrm.Vsix.Utilities;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Utilities;
+using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -202,7 +201,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             assemblyRecord.SetField(Fields.pluginassembly_.isolationmode, (int)PluginAssembly.IsolationMode, service);
             var matchField = Fields.pluginassembly_.pluginassemblyid;
 
-            var assemblyLoadResponse = VsixUtility.LoadIntoCrm(service, new[] { assemblyRecord }, matchField);
+            var assemblyLoadResponse = service.LoadIntoCrm(new[] { assemblyRecord }, matchField);
             if (assemblyLoadResponse.Errors.Any())
             {
                 throw new Exception("Error Updating Assembly", assemblyLoadResponse.Errors.Values.First());
@@ -225,7 +224,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                 pluginTypes.Add(pluginTypeRecord);
             }
 
-            var pluginTypeLoadResponse = VsixUtility.LoadIntoCrm(service, pluginTypes, Fields.plugintype_.plugintypeid);
+            var pluginTypeLoadResponse = service.LoadIntoCrm(pluginTypes, Fields.plugintype_.plugintypeid);
 
             foreach (var item in pluginTypeLoadResponse.Errors)
             {
@@ -243,7 +242,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             //add plugin assembly to the solution
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
             var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
-            VsixUtility.AddSolutionComponents(service, PackageSettings, componentType, itemsToAdd);
+            if (PackageSettings.AddToSolution)
+                service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd);
 
             if (responses.Any())
                 CompletionMessage = "There Were Errors Thrown Updating The Plugins";

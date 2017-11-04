@@ -2,10 +2,8 @@
 using JosephM.Prism.Infrastructure.Dialog;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.Vsix.Utilities;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Commands.RefreshConnection;
-using JosephM.XRM.VSIX.Utilities;
+using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.Connection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,7 +91,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     if (activeConnections.Any())
                     {
                         var activeConnection = activeConnections.First();
-                        VsixUtility.AddXrmConnectionToSolution(activeConnection, VisualStudioService);
+                        VisualStudioService.AddSolutionItem("solution.xrmconnection", activeConnection);
                     }
                 }
             }

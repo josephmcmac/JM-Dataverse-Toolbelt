@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace JosephM.XRM.VSIX
+namespace JosephM.Xrm.Vsix
 {
     public class PluginAssemblyReader : MarshalByRefObject
     {

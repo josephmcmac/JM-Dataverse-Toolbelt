@@ -7,7 +7,7 @@ using JosephM.Record.Query;
 using JosephM.Xrm.Schema;
 using System.Collections.Generic;
 
-namespace JosephM.XRM.VSIX
+namespace JosephM.Xrm.Vsix.Module.PackageSettings
 {
     [Group(Sections.ObjectPrefixes, true, 20)]
     [Group(Sections.Solution, true, 10)]

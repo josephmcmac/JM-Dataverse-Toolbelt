@@ -23,6 +23,11 @@ namespace JosephM.Prism.XrmModule.Crud
             AddBrowseButtonToSavedConnectionsGrid();
         }
 
+        public override string MainOperationName
+        {
+            get { return "Browse/Update Data"; }
+        }
+
         private void AddBrowseButtonToSavedConnectionsGrid()
         {
             var customGridFunction = new CustomGridFunction("CRUD", "Browse Selected", (g) =>
@@ -45,11 +50,6 @@ namespace JosephM.Prism.XrmModule.Crud
                 }
             }, (g) => g.GridRecords != null && g.GridRecords.Any());
             this.AddCustomGridFunction(customGridFunction, typeof(SavedXrmRecordConfiguration));
-        }
-
-        protected override string MainOperationName
-        {
-            get { return "Browse/Update Data"; }
         }
     }
 }

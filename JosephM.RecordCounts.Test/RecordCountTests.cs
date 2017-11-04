@@ -33,10 +33,8 @@ namespace JosephM.RecordCounts.Test
             request.GroupCountsByOwner = false;
 
             //verify dialog processes
-            testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
+            var response = testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog, RecordCountsResponse>(request);
             //verify response counts
-            var service = new RecordCountsService(XrmRecordService);
-            var response = service.Execute(request, Controller);
 
             Assert.IsTrue(response.RecordCounts.Count() > 10);
             Assert.AreEqual(1, response.RecordCounts.Count(r => r.RecordType == accountLabel));
@@ -47,12 +45,9 @@ namespace JosephM.RecordCounts.Test
             request.AllRecordTypes = true;
             request.GroupCountsByOwner = true;
             //verify dialog processes
-            testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
+            response = testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog, RecordCountsResponse>(request);
 
             //verify response counts
-            service = new RecordCountsService(XrmRecordService);
-            response = service.Execute(request, Controller);
-
             Assert.IsTrue(response.RecordCounts.Count() > 10);
             var accountCounts = response.RecordCounts.Where(r => r.RecordType == accountLabel);
             Assert.AreEqual(2, accountCounts.Count());
@@ -67,11 +62,8 @@ namespace JosephM.RecordCounts.Test
             request.AllRecordTypes = false;
             request.RecordTypes = new[] { new RecordTypeSetting(Entities.account, Entities.account) };
             //verify dialog processes
-            testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
+            response = testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog, RecordCountsResponse>(request);
             //verify response counts
-            service = new RecordCountsService(XrmRecordService);
-            response = service.Execute(request, Controller);
-
             Assert.IsTrue(response.RecordCounts.All(r => r.RecordType == accountLabel));
             accountCounts = response.RecordCounts.Where(r => r.RecordType == accountLabel);
             Assert.AreEqual(2, accountCounts.Count());
@@ -84,11 +76,8 @@ namespace JosephM.RecordCounts.Test
             request.OnlyIncludeSelectedOwner = true;
             request.Owner = new Lookup(Entities.systemuser, CurrentUserId.ToString(), "Current User");
             //verify dialog processes
-            testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog>(request);
+            response = testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog, RecordCountsResponse>(request);
             //verify response counts
-            service = new RecordCountsService(XrmRecordService);
-            response = service.Execute(request, Controller);
-
             var userName = (string)XrmService.LookupField(Entities.systemuser, CurrentUserId, Fields.systemuser_.fullname);
             Assert.IsTrue(response.RecordCounts.Any());
             Assert.IsTrue(response.RecordCounts.All(rc => rc is RecordCountByOwner));

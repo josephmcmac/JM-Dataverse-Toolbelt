@@ -1,16 +1,12 @@
-﻿using JosephM.Application.Options;
-using JosephM.Prism.XrmModule.Crud;
+﻿using JosephM.Prism.XrmModule.Crud;
 using JosephM.Record.Application.Fakes;
+using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.Xrm.Vsix.Test;
-using JosephM.Xrm.Vsix.Utilities;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Dialogs;
 using Microsoft.Practices.Unity;
 using System;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace JosephM.Xrm.Vsix.TestShell
 {
@@ -23,11 +19,9 @@ namespace JosephM.Xrm.Vsix.TestShell
         {
             base.OnStartup(e);
 
-            //okay lets try load a window with the module buttons and fake things to spawn the vsix dialogs
-            //todo decouple this from the vsix so it doesn't have to bul
+            //load an application with the module buttons and fake things to spawn the vsix dialogs
 
             var container = new PrismDependencyContainer(new UnityContainer());
-
 
             var visualStudioService = new FakeVisualStudioService();
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);

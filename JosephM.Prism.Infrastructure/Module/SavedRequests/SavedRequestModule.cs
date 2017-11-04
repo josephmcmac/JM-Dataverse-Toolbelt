@@ -28,6 +28,7 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
 
         public override void RegisterTypes()
         {
+            //todo autoload logic should be in this module class
             AddSavedRequestsFormFunctions();
             AddSavedRequestLoadFunction();
         }
@@ -156,6 +157,12 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
                         { nameof(SavedSettings.SavedRequests), theObjectType }
                     };
 
+                    //this tells the form to only validate the name property of saved requests
+                    var onlyValidate = new Dictionary<string, IEnumerable<string>>()
+                    {
+                        { theObjectType.AssemblyQualifiedName, new [] { nameof(IAllowSaveAndLoad.Name) } }
+                    };
+
                     //on save any changes should be saved in the settings
                     Action savedLoadForm = () =>
                     {
@@ -169,7 +176,7 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
                     var recordService = new ObjectRecordService(savedSettings, null, null, ApplicationController, objectTypeMaps);
                     var formService = new ObjectFormService(savedSettings, recordService, objectTypeMaps);
                     var vm = new ObjectEntryViewModel(savedLoadForm, oevm.ClearChildForms, savedSettings, 
-                        new FormController(recordService, formService, ApplicationController), re, "LOADING");
+                        new FormController(recordService, formService, ApplicationController), re, "LOADING", onlyValidate: onlyValidate);
 
                     oevm.LoadChildForm(vm);
                 }
@@ -232,7 +239,6 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
                     var ofs = new ObjectFormService(saveObject, os, null);
                     var fc = new FormController(os, ofs, viewModel.ApplicationController);
 
-                    //todo the grid should perhaps be read only
                     var vm = new ObjectEntryViewModel(saveSettings, () => viewModel.ClearChildForms(), saveObject, fc);
                     viewModel.LoadChildForm(vm);
                 }

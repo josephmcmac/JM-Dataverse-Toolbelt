@@ -5,9 +5,8 @@ using JosephM.Deployment;
 using JosephM.Deployment.CreatePackage;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.Xrm.Vsix.Utilities;
-using JosephM.XRM.VSIX;
 using System;
 
 namespace JosephM.Xrm.Vsix.Module.CreatePackage

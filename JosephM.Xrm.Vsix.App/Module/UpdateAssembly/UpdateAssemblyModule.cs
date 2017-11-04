@@ -6,15 +6,11 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 {
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
-    public class UpdateAssemblyModule : ActionModuleBase
+    public class UpdateAssemblyModule : OptionActionModule
     {
-        public override void InitialiseModule()
-        {
-        }
+        public override string MainOperationName => "Update Assembly";
 
-        public override void RegisterTypes()
-        {
-        }
+        public override string MenuGroup => "Plugins";
 
         public override void DialogCommand()
         {

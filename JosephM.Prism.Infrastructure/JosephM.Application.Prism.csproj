@@ -97,6 +97,8 @@
   <ItemGroup>
     <Compile Include="Dialog\SavedRequestDialog.cs" />
     <Compile Include="Dialog\AppSettingDialog.cs" />
+    <Compile Include="Module\AboutModule\About.cs" />
+    <Compile Include="Module\AboutModule\AboutDialog.cs" />
     <Compile Include="Module\Crud\BulkDelete\BulkDeleteDialog.cs" />
     <Compile Include="Module\Crud\BulkDelete\BulkDeleteRequest.cs" />
     <Compile Include="Module\Crud\BulkDelete\BulkDeleteResponse.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="Module\Crud\CrudModule.cs" />
     <Compile Include="Module\DialogModule.cs" />
     <Compile Include="Module\SavedRequests\SavedRequestModule.cs" />
+    <Compile Include="Module\AboutModule\AboutModule.cs" />
     <Compile Include="Module\SettingsModule.cs" />
     <Compile Include="Constants\MenuNames.cs" />
     <Compile Include="Prism\PrismDependencyContainer.cs" />

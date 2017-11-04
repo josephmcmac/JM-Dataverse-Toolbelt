@@ -11,6 +11,7 @@ using JosephM.Record.Query;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
@@ -1043,6 +1044,173 @@ namespace JosephM.Record.Xrm.XrmRecord
         public void SetFormService(IFormService formService)
         {
             _formService = formService;
+        }
+
+        public void AddSolutionComponents(string solutionId, int componentType, IEnumerable<IRecord> itemsToAdd)
+        {
+            var solution = Get(Entities.solution, solutionId);
+
+            var currentComponentIds = RetrieveAllAndClauses(Entities.solutioncomponent, new[]
+                {
+                        new Condition(Fields.solutioncomponent_.componenttype, ConditionType.Equal, componentType),
+                        new Condition(Fields.solutioncomponent_.solutionid, ConditionType.Equal, solution.Id)
+                    }, null)
+                        .Select(r => r.GetIdField(Fields.solutioncomponent_.objectid))
+                        .ToList();
+            foreach (var item in itemsToAdd)
+            {
+
+                if (!currentComponentIds.Contains(item.Id))
+                {
+                    var addRequest = new AddSolutionComponentRequest()
+                    {
+                        AddRequiredComponents = false,
+                        ComponentType = componentType,
+                        ComponentId = new Guid(item.Id),
+                        SolutionUniqueName = solution.GetStringField(Fields.solution_.uniquename)
+                    };
+                    XrmService.Execute(addRequest);
+                    currentComponentIds.Add(item.Id);
+                }
+            }
+        }
+
+        public LoadToCrmResponse LoadIntoCrm(IEnumerable<IRecord> records, string matchField)
+        {
+            var response = new LoadToCrmResponse();
+            if (records.Any())
+            {
+                var type = records.First().Type;
+                var matchFields =
+                    records.Select(r => r.GetField(matchField))
+                            .Where(f => f != null)
+                            .Select(f => ConvertToQueryValue(matchField, type, f))
+                            .ToArray();
+
+                var matchingRecords = !matchFields.Any()
+                     ? new IRecord[0]
+                     : RetrieveAllOrClauses(type,
+                     matchFields.Select(s => new Condition(matchField, ConditionType.Equal, s)))
+                     .ToArray();
+
+                foreach (var record in records)
+                {
+
+                    try
+                    {
+                        var matchingItems =
+                            matchingRecords.Where(r => FieldsEqual(r.GetField(matchField), record.GetField(matchField)))
+                        .ToArray();
+                        if (matchingItems.Any())
+                        {
+                            var matchingItem = matchingItems.First();
+                            record.Id = matchingItem.Id;
+                            var changedFields = record
+                                .GetFieldsInEntity()
+                                .Where(f => !FieldsEqual(record.GetField(f), matchingItem.GetField(f)))
+                                .ToList();
+
+                            //added this for plugin types where workflow activity
+                            //do not update the in/out arguments
+                            //explicitly setting the pluginassemblyid seems to refresh them
+                            if (record.Type == "plugintype"
+                                && record.GetBoolField("isworkflowactivity")
+                                && record.ContainsField("pluginassemblyid")
+                                && !changedFields.Contains("pluginassemblyid"))
+                            {
+                                changedFields.Add("pluginassemblyid");
+                            }
+
+                            if (changedFields.Any())
+                            {
+                                Update(record, changedFields);
+                                response.AddUpdated(record);
+                            }
+                        }
+                        else
+                        {
+                            record.Id = Create(record, null);
+                            response.AddCreated(record);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        response.AddError(record, ex);
+                    }
+                }
+            }
+
+            return response;
+        }
+
+        public class LoadToCrmResponse
+        {
+            private List<IRecord> _updated = new List<IRecord>();
+            private List<IRecord> _created = new List<IRecord>();
+            private Dictionary<IRecord, Exception> _errors = new Dictionary<IRecord, Exception>();
+
+            public void AddCreated(IRecord record)
+            {
+                _created.Add(record);
+            }
+            public void AddUpdated(IRecord record)
+            {
+                _updated.Add(record);
+            }
+
+            public void AddError(IRecord record, Exception ex)
+            {
+                _errors[record] = ex;
+            }
+
+            public IEnumerable<IRecord> Updated { get { return _updated; } }
+
+            public IEnumerable<IRecord> Created { get { return _created; } }
+
+            public Dictionary<IRecord, Exception> Errors { get { return _errors; } }
+        }
+
+        public DeleteInCrmResponse DeleteInCrm(IEnumerable<IRecord> records)
+        {
+            var response = new DeleteInCrmResponse();
+            if (records.Any())
+            {
+                foreach (var record in records)
+                {
+
+                    try
+                    {
+                        Delete(record);
+                        response.AddDeleted(record);
+                    }
+                    catch (Exception ex)
+                    {
+                        response.AddError(record, ex);
+                    }
+                }
+            }
+
+            return response;
+        }
+
+        public class DeleteInCrmResponse
+        {
+            private List<IRecord> _deleted = new List<IRecord>();
+            private Dictionary<IRecord, Exception> _errors = new Dictionary<IRecord, Exception>();
+
+            public void AddDeleted(IRecord record)
+            {
+                _deleted.Add(record);
+            }
+
+            public void AddError(IRecord record, Exception ex)
+            {
+                _errors[record] = ex;
+            }
+
+            public IEnumerable<IRecord> Deleted { get { return _deleted; } }
+
+            public Dictionary<IRecord, Exception> Errors { get { return _errors; } }
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using JosephM.Application;
-using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Test;
-using JosephM.XRM.VSIX.Dialogs;
+using JosephM.Xrm.Vsix.Application;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

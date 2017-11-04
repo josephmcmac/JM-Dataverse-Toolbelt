@@ -1,18 +1,35 @@
-﻿using System.Collections.Generic;
-using EnvDTE;
-using EnvDTE80;
-using JosephM.XRM.VSIX.Utilities;
-using Microsoft.VisualStudio.TemplateWizard;
+﻿using EnvDTE;
+using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.Xrm.Vsix.Wizards;
+using System;
+using System.Collections.Generic;
 
 namespace JosephM.XRM.VSIX.Wizards
 {
     public class MyProjectItemWizard : MyWizardBase
     {
+        private VisualStudioService _visualStudioService;
+        protected VisualStudioService VisualStudioService
+        {
+            get
+            {
+                if (_visualStudioService == null)
+                {
+                    _visualStudioService = new VisualStudioService(DTE);
+                }
+                return _visualStudioService;
+            }
+        }
+
         public override void RunStartedExtention(Dictionary<string, string> replacementsDictionary)
         {
             AddRootNamespaceReplacement(replacementsDictionary);
 
-            var packageSettings = VsixUtility.GetPackageSettings(DTE);
+            var vsixSettingsManager = new VsixSettingsManager(VisualStudioService);
+            var packageSettings = vsixSettingsManager.Resolve<XrmPackageSettings>();
+            if (packageSettings == null)
+                throw new NullReferenceException("packageSettings");
 
             AddReplacements(replacementsDictionary, packageSettings);
         }
@@ -25,7 +42,7 @@ namespace JosephM.XRM.VSIX.Wizards
                 var project = item.Project ?? item.ProjectItem.ContainingProject;
                 if (project != null)
                 {
-                    var theNamespace = VsixUtility.GetProperty(project.Properties, "RootNamespace");
+                    var theNamespace = new VisualStudioProject(project).GetProperty("RootNamespace");
                     if (!replacementsDictionary.ContainsKey("$josephmrootnamespace$"))
                         replacementsDictionary.Add("$josephmrootnamespace$", theNamespace);
                 }

@@ -82,22 +82,28 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
 
         private void AddToCollection(ApplicationOption option, ObservableCollection<ApplicationOption> options)
         {
-            var index = -1;
-            if (!option.Label.IsNullOrWhiteSpace())
+            var forceLastLabel = "About";
+            if (option.Label == forceLastLabel)
+                options.Add(option);
+            else
             {
-                foreach (var item in options)
+                var index = -1;
+                if (!option.Label.IsNullOrWhiteSpace())
                 {
-                    if (String.Compare(option.Label, item.Label, StringComparison.Ordinal) < 0)
+                    foreach (var item in options)
                     {
-                        index = options.IndexOf(item);
-                        break;
+                        if (item.Label == forceLastLabel || String.Compare(option.Label, item.Label, StringComparison.Ordinal) < 0)
+                        {
+                            index = options.IndexOf(item);
+                            break;
+                        }
                     }
                 }
+                if (index != -1)
+                    options.Insert(index, option);
+                else
+                    options.Add(option);
             }
-            if (index != -1)
-                options.Insert(index, option);
-            else
-                options.Add(option);
         }
 
         public DelegateCommand SettingsClick { get; set; }

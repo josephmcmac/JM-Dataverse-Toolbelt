@@ -1,8 +1,9 @@
 using JosephM.Core.Test;
-using JosephM.Xrm.Vsix.Utilities;
+using JosephM.Xrm.Vsix.Application;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace JosephM.Xrm.Vsix.Test
@@ -40,7 +41,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public override IEnumerable<string> GetSelectedFileNamesQualified()
         {
-            throw new NotImplementedException();
+            return _selectedItems.Cast<FakeVisualStudioProjectItem>().Select(i => i.FileName).ToArray();
         }
 
         public override IEnumerable<IVisualStudioItem> GetSelectedItems()
@@ -64,6 +65,12 @@ namespace JosephM.Xrm.Vsix.Test
         {
             _selectedItems.Clear();
             _selectedItems.Add(item);
+        }
+
+        internal void SetSelectedItems(IEnumerable<IVisualStudioItem> items)
+        {
+            _selectedItems.Clear();
+            _selectedItems.AddRange(items);
         }
 
         protected override ISolutionFolder AddSolutionFolder(string name)

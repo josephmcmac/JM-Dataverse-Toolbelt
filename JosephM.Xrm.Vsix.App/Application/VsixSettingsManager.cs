@@ -3,15 +3,11 @@ using JosephM.Core.Extentions;
 using JosephM.Core.Serialisation;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.Vsix.Utilities;
-using JosephM.XRM.VSIX.Utilities;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JosephM.XRM.VSIX.Dialogs
+namespace JosephM.Xrm.Vsix.Application
 {
     public class VsixSettingsManager : ISettingsManager
     {

@@ -17,8 +17,15 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid MinWidth="200">
+    <Grid MinWidth="200" Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
+        <TextBlock
+            Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+            TextWrapping="WrapWithOverflow"
+            Text="{Binding Mode=TwoWay, Path=ValueObject}"
+            Style="{StaticResource StringFieldDisplayStyle}"
+            />
         <TextBox
+            Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BoolToVis}}"
             VerticalScrollBarVisibility="Visible"
             TextWrapping="WrapWithOverflow"
             AcceptsReturn="{Binding IsMultiline}"
@@ -30,6 +37,6 @@
             Text="{Binding Mode=TwoWay, Path=ValueObject}"
             Style="{StaticResource FieldEntryStyle}"
             IsReadOnly="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToFalseConverter}}"
-            Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}" />
+             />
     </Grid>
 </field:FieldControlBase>

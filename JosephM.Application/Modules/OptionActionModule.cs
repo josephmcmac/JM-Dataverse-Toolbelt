@@ -13,10 +13,17 @@ namespace JosephM.Application.Modules
     /// <summary>
     ///     Base Class For Implementing Modules To Plug Into The Application Framework
     /// </summary>
-    public abstract class ActionModuleBase : ModuleBase
+    public abstract class OptionActionModule : ActionModuleBase
     {
-        public abstract string MainOperationName { get; }
+        public override void InitialiseModule()
+        {
+            AddOption(MenuGroup, MainOperationName, DialogCommand);
+        }
 
-        public abstract void DialogCommand();
+        public override void RegisterTypes()
+        {
+        }
+
+        public abstract string MenuGroup { get; }
     }
 }

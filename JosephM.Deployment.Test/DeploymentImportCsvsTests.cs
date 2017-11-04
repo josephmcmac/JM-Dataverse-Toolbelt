@@ -46,7 +46,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 DateFormat = DateFormat.American
             };
 
-            application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog>(request);
+            var response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
+            Assert.IsFalse(response.HasError);
 
             application = CreateAndLoadTestApplication<ImportCsvsModule>();
 
@@ -57,7 +58,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
                 CsvsToImport = new[] { new ImportCsvsRequest.CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } }
             };
-            application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog>(request);
+            response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
+            Assert.IsFalse(response.HasError);
 
             File.Copy(@"jmcg_testentity.csv", Path.Combine(workFolder, @"jmcg_testentity.csv"));
 
@@ -93,8 +95,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 CsvsToImport = new[] { new ImportCsvsRequest.CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"jmcg_testentity.csv")) } }
             };
 
-            application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog>(request);
-            //todo verify no errors
+            response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
+            Assert.IsFalse(response.HasError);
 
             var entity = XrmService.GetFirst(Entities.jmcg_testentity, Fields.jmcg_testentity_.jmcg_name, "BLAH 2");
             Assert.AreEqual(XrmPicklists.State.Inactive, entity.GetOptionSetValue(Fields.jmcg_testentity_.statecode));

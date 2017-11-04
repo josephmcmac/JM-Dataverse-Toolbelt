@@ -7,16 +7,17 @@ using JosephM.Core.Serialisation;
 using JosephM.ObjectMapping;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Wpf.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace JosephM.XRM.VSIX.Dialogs
+namespace JosephM.Xrm.Vsix.Application
 {
     public class VsixApplicationController : ApplicationControllerBase
     {
-        public VsixApplicationController(IDependencyResolver dependencyResolver) : base("VSIX", dependencyResolver)
+        public VsixApplicationController(IDependencyResolver dependencyResolver) : base("JosephM.Xrm.Vsix", dependencyResolver)
         {
         }
 

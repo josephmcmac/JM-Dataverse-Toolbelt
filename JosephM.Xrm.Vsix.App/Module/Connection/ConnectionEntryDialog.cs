@@ -1,9 +1,9 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.Vsix.Utilities;
+using JosephM.Xrm.Vsix.Application;
 using System;
 
-namespace JosephM.XRM.VSIX.Commands.RefreshConnection
+namespace JosephM.Xrm.Vsix.Module.Connection
 {
     public class ConnectionEntryDialog : DialogViewModel
     {

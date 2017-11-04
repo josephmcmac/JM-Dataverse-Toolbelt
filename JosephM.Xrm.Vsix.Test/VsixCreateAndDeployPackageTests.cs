@@ -1,5 +1,7 @@
 ﻿using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.Core.Utility;
+using JosephM.Deployment;
 using JosephM.Deployment.CreatePackage;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Deployment.ExportXml;
@@ -44,7 +46,8 @@ namespace JosephM.Xrm.Vsix.Test
             };
 
             var createTestApplication = CreateAndLoadTestApplication<VsixCreatePackageModule>();
-            createTestApplication.NavigateAndProcessDialog<VsixCreatePackageModule, VsixCreatePackageDialog>(request);
+            var createResponse = createTestApplication.NavigateAndProcessDialog<VsixCreatePackageModule, VsixCreatePackageDialog, ServiceResponseBase<DataImportResponseItem>>(request);
+            Assert.IsFalse(createResponse.HasError);
 
             var folder = Directory.GetDirectories(Path.Combine(VisualStudioService.SolutionDirectory, "Releases")).First();
             Assert.IsTrue(FileUtility.GetFiles(folder).First().EndsWith(".zip"));
@@ -63,7 +66,8 @@ namespace JosephM.Xrm.Vsix.Test
             VisualStudioService.SetSelectedItem(new FakeVisualStudioSolutionFolder(folder));
 
             var deployTestApplication = CreateAndLoadTestApplication<VsixDeployPackageModule>();
-            deployTestApplication.NavigateAndProcessDialog<VsixDeployPackageModule, DeployPackageDialog>(deployRequest);
+            var deployResponse = deployTestApplication.NavigateAndProcessDialog<VsixDeployPackageModule, DeployPackageDialog, ServiceResponseBase<DataImportResponseItem>>(deployRequest);
+            Assert.IsFalse(deployResponse.HasError);
 
             solution = XrmRecordService.Get(packageSettings.Solution.RecordType, packageSettings.Solution.Id);
             Assert.AreEqual("3.0.0.0", solution.GetStringField(Fields.solution_.version));

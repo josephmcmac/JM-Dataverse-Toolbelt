@@ -53,6 +53,8 @@
     <Compile Include="Application\ISettingsManager.cs" />
     <Compile Include="Application\PrismSettingsManager.cs" />
     <Compile Include="Application\SavedSettings.cs" />
+    <Compile Include="Modules\OptionActionModule.cs" />
+    <Compile Include="Modules\SettingsModuleBase.cs" />
     <Compile Include="Modules\ActionModuleBase.cs" />
     <Compile Include="Modules\ModuleController.cs" />
     <Compile Include="Options\ApplicationOptions.cs" />

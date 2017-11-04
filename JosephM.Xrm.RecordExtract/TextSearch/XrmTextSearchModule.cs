@@ -12,7 +12,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         ServiceRequestModule
             <XrmTextSearchDialog, XrmTextSearchService, TextSearchRequest, TextSearchResponse, TextSearchResponseItem>
     {
-        protected override string MainOperationName
+        public override string MainOperationName
         {
             get { return "CRM Record Text Search"; }
         }

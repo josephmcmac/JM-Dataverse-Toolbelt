@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using EnvDTE;
 
-namespace JosephM.Xrm.Vsix.Utilities
+namespace JosephM.Xrm.Vsix.Application
 {
     public interface IVisualStudioService
     {

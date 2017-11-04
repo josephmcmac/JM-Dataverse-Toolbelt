@@ -15,7 +15,9 @@ namespace JosephM.CustomisationImporter.Prism
     public class CustomisationImportModule
         : ServiceRequestModule<XrmCustomisationImportDialog, XrmCustomisationImportService, CustomisationImportRequest, CustomisationImportResponse, CustomisationImportResponseItem>
     {
-        protected override string MainOperationName { get { return "Import Customisations"; } }
+        public override string MainOperationName { get { return "Import Customisations"; } }
+
+        public override string MenuGroup => "Customisations";
 
         public override void InitialiseModule()
         {
@@ -30,7 +32,5 @@ namespace JosephM.CustomisationImporter.Prism
                 "Customisations Import Template.xlsx");
             ApplicationController.StartProcess(templateName);
         }
-
-        public override string MenuGroup => "Customisations";
     }
 }

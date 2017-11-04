@@ -2,8 +2,7 @@
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Application.Fakes;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Wizards;
+using JosephM.Xrm.Vsix.Wizards;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace JosephM.Xrm.Vsix.Test
             //okay spawn the wizards entry method with a fake controller
             var container = new PrismDependencyContainer(new UnityContainer());
             var applicationController = new FakeVsixApplicationController(container);
-            XrmSolutionWizard.RunWizardSettingsEntry(packageSettings, applicationController);
+            XrmSolutionWizardBase.RunWizardSettingsEntry(packageSettings, applicationController);
 
             //fake applcation simply to use its navigation and entry methods
             var fakeVsixApplication = TestApplication.CreateTestApplication(applicationController);

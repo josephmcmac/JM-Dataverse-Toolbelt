@@ -27,8 +27,8 @@ namespace JosephM.CodeGenerator.Test
             };
 
             testApplication.ClearTabs();
-            testApplication.NavigateAndProcessDialog<FetchToJavascriptModule, FetchToJavascriptDialog>(request);
-            //todo get the response object and verify contains javascript
+            var response = testApplication.NavigateAndProcessDialog<FetchToJavascriptModule, FetchToJavascriptDialog, FetchToJavascriptResponse>(request);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(response.Javascript));
 
             FileUtility.DeleteFiles(TestingFolder);
         }

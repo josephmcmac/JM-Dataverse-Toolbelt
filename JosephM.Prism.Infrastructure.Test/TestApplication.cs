@@ -18,6 +18,7 @@ using JosephM.Application.Options;
 using JosephM.Core.AppConfig;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Prism.Infrastructure.Dialog;
+using JosephM.Core.Service;
 
 namespace JosephM.Prism.Infrastructure.Test
 {
@@ -127,11 +128,13 @@ namespace JosephM.Prism.Infrastructure.Test
             }
         }
 
-        public void NavigateAndProcessDialog<TDialogModule, TDialog>(object instanceEntered)
+        public TResponse NavigateAndProcessDialog<TDialogModule, TDialog, TResponse>(object instanceEntered)
             where TDialogModule : DialogModule<TDialog>, new()
             where TDialog : DialogViewModel
+            where TResponse : class
         {
-            var entryForm = NavigateToDialogModuleEntryForm<TDialogModule, TDialog>();
+            var dialog = NavigateToDialog<TDialogModule, TDialog>();
+            var entryForm = GetSubObjectEntryViewModel(dialog);
 
             var saveRequest = false;
             Type savedRequestType = null;
@@ -161,6 +164,8 @@ namespace JosephM.Prism.Infrastructure.Test
                 }
                 oevm.SaveButtonViewModel.Invoke();
             }
+
+            return dialog.CompletionItem as TResponse;
         }
 
         public ObjectEntryViewModel LoadSavedRequestsEntryForm(Type savedRequestType)

@@ -3,7 +3,7 @@ using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
 using JosephM.Deployment.ImportCsvs;
 using JosephM.Prism.XrmModule.XrmConnection;
-using JosephM.Xrm.Vsix.Utilities;
+using JosephM.Xrm.Vsix.Application;
 using System;
 using System.Linq;
 

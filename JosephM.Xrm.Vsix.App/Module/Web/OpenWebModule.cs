@@ -7,15 +7,11 @@ using JosephM.Prism.XrmModule.XrmConnection;
 namespace JosephM.Xrm.Vsix.Module.Web
 {
     [DependantModule(typeof(XrmConnectionModule))]
-    public class OpenWebModule : ActionModuleBase
+    public class OpenWebModule : OptionActionModule
     {
-        public override void InitialiseModule()
-        {
-        }
+        public override string MainOperationName => "Open Web";
 
-        public override void RegisterTypes()
-        {
-        }
+        public override string MenuGroup => "Web";
 
         public override void DialogCommand()
         {

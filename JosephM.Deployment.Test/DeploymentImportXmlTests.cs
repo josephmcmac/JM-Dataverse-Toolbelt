@@ -54,10 +54,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 Folder = new Folder(workFolder)
             };
 
-            application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog>(importRequest);
-
-
-            //todo verify no response error
+            var importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importResponse.HasError);
         }
 
         [TestMethod]
@@ -93,7 +91,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 Folder = new Folder(workFolder)
             };
 
-            application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog>(importRequest);
+            var response = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(response.HasError);
 
             var createdRecord = XrmService.Retrieve(type, createdEntity.Id);
 
@@ -115,7 +114,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
             };
 
             application = CreateAndLoadTestApplication<ImportXmlModule>();
-            application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog>(importRequest);
+            response = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(response.HasError);
+
             var updatedRecord = XrmService.Retrieve(type, record.Id);
 
             foreach (var updateField in updateFields)
@@ -218,8 +219,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 RecordTypesToExport = new [] { accountsExport }
             };
             var exportService = new ExportXmlService(XrmRecordService);
-            var response = exportService.Execute(exportRequest, Controller);
-            Assert.IsFalse(response.HasError);
+            var ecxportResponse = exportService.Execute(exportRequest, Controller);
+            Assert.IsFalse(ecxportResponse.HasError);
 
             var importRequest = new ImportXmlRequest
             {
@@ -227,7 +228,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 MaskEmails = true
             };
             var application = CreateAndLoadTestApplication<ImportXmlModule>();
-            application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog>(importRequest);
+            var immportResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(immportResponse.HasError);
 
             entity = XrmService.GetFirst(Entities.account);
             Assert.IsTrue(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
@@ -238,7 +240,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 MaskEmails = false
             };
             application = CreateAndLoadTestApplication<ImportXmlModule>();
-            application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog>(importRequest);
+            immportResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(immportResponse.HasError);
 
             entity = XrmService.GetFirst(Entities.account);
             Assert.IsFalse(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));

@@ -5,9 +5,8 @@ using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
+using JosephM.Xrm.Vsix.Module.Connection;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Commands.RefreshConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
@@ -84,8 +83,9 @@ namespace JosephM.Xrm.Vsix.Test
             SubmitEntryForm(dialog);
 
             var completionScreen = dialog.Controller.UiItems.First() as CompletionScreenViewModel;
-            //todo add an assert no error in response
+
             completionScreen.CloseButton.Invoke();
+            Assert.IsNull(dialog.FatalException);
 
             //verify the package settings now have the solution we created when resolved
             var settingsManager = testApplication.Controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;

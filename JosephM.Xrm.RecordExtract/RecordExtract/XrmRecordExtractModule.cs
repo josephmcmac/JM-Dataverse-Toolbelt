@@ -7,7 +7,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         ServiceRequestModule
             <XrmRecordExtractDialog, XrmRecordExtractService, RecordExtractRequest, RecordExtractResponse, RecordExtractResponseItem>
     {
-        protected override string MainOperationName
+        public override string MainOperationName
         {
             get { return "Record Report"; }
         }

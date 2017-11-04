@@ -1,4 +1,4 @@
-﻿using JosephM.Xrm.Vsix.Utilities;
+﻿using JosephM.Xrm.Vsix.Application;
 using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.DeployPackage

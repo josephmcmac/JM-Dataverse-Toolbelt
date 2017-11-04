@@ -7,15 +7,11 @@ using JosephM.Prism.XrmModule.XrmConnection;
 namespace JosephM.Xrm.Vsix.Module
 {
     [DependantModule(typeof(XrmConnectionModule))]
-    public class ClearCacheModule : ActionModuleBase
+    public class ClearCacheModule : OptionActionModule
     {
-        public override void InitialiseModule()
-        {
-        }
+        public override string MainOperationName => "Cache Cleared";
 
-        public override void RegisterTypes()
-        {
-        }
+        public override string MenuGroup => "Settings";
 
         public override void DialogCommand()
         {

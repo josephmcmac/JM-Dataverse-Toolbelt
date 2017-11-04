@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
-using JosephM.XRM.VSIX.Utilities;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using Microsoft.VisualStudio.TemplateWizard;
-using JosephM.Xrm.Vsix.Utilities;
+using System.Collections.Generic;
 
-namespace JosephM.XRM.VSIX.Wizards
+namespace JosephM.Xrm.Vsix.Wizards
 {
     public class MyWizardBase : IWizard
     {
@@ -26,18 +25,13 @@ namespace JosephM.XRM.VSIX.Wizards
 
         protected DTE2 DTE { get; set; }
 
-        public VisualStudioService VisualStudioService { get; set; }
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
             var directory = replacementsDictionary.ContainsKey("$solutiondirectory$")
                 ? replacementsDictionary["$solutiondirectory$"]
                 : null;
 
-            //SolutionName = replacementsDictionary.ContainsKey("$specifiedsolutionname$")
-            //    ? replacementsDictionary["$specifiedsolutionname$"]
-            //    : replacementsDictionary["safeprojectname"];
             DTE = automationObject as DTE2;
-            VisualStudioService = new VisualStudioService(DTE, directory);
             RunStartedExtention(replacementsDictionary);
         }
 

@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.ObjectMapping;
 using JosephM.Record.Xrm.Mappers;
-using JosephM.XRM.VSIX.Commands.RefreshConnection;
+using JosephM.Xrm.Vsix.Module.Connection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 

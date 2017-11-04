@@ -4,7 +4,7 @@ using JosephM.CodeGenerator.CSharp;
 using JosephM.Core.FieldType;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.Vsix.Utilities;
+using JosephM.Xrm.Vsix.Application;
 using System;
 using System.IO;
 using System.Linq;
@@ -13,15 +13,11 @@ namespace JosephM.Xrm.Vsix.Module.RefreshSchema
 {
     [MenuItemVisibleSchemaCs]
     [DependantModule(typeof(XrmConnectionModule))]
-    public class RefreshSchemaModule : ActionModuleBase
+    public class RefreshSchemaModule : OptionActionModule
     {
-        public override void InitialiseModule()
-        {
-        }
+        public override string MainOperationName => "Refresh Schema";
 
-        public override void RegisterTypes()
-        {
-        }
+        public override string MenuGroup => "Code Generation";
 
         public override void DialogCommand()
         {

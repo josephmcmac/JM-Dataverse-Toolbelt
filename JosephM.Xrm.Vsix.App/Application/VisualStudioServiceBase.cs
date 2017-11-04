@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace JosephM.Xrm.Vsix.Utilities
+namespace JosephM.Xrm.Vsix.Application
 {
     public abstract class VisualStudioServiceBase : IVisualStudioService
     {
@@ -66,7 +66,17 @@ namespace JosephM.Xrm.Vsix.Utilities
                 name = "solution.xrmconnection";
                 var serialised = JsonHelper.ObjectToJsonString(dictionary);
 
-                return AddSolutionItem(name, serialised);
+                var solutionItemFile = AddSolutionItem(name, serialised);
+
+                foreach (var item in GetSolutionProjects())
+                {
+                    if (item.Name.EndsWith(".Test"))
+                    {
+                        var linkedConnectionItem = item.AddProjectItem(solutionItemFile);
+                        linkedConnectionItem.SetProperty("CopyToOutputDirectory", 1);
+                    }
+                }
+                return solutionItemFile;
             }
             else
             {

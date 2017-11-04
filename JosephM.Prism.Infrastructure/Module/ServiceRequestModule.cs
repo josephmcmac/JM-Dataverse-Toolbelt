@@ -24,18 +24,13 @@ namespace JosephM.Prism.Infrastructure.Module
         where TResponse : ServiceResponseBase<TResponseItem>, new()
         where TResponseItem : ServiceResponseItem
     {
-        protected override string MainOperationName
+        public override string MainOperationName
         {
             get
             {
                 var typeName = (typeof(TRequest)).GetDisplayName();
                 return typeName.EndsWith(" Request") ? typeName.Substring(0, typeName.Length - 8) : typeName;
             }
-        }
-
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
         }
     }
 }

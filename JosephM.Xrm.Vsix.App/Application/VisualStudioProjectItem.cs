@@ -1,8 +1,8 @@
 ﻿using EnvDTE;
-using JosephM.XRM.VSIX.Utilities;
+using System;
 using System.IO;
 
-namespace JosephM.Xrm.Vsix.Utilities
+namespace JosephM.Xrm.Vsix.Application
 {
     public class VisualStudioProjectItem : IProjectItem
     {
@@ -15,7 +15,15 @@ namespace JosephM.Xrm.Vsix.Utilities
 
         public void SetProperty(string propertyName, object value)
         {
-            VsixUtility.SetProperty(ProjectItem.Properties, propertyName, value);
+            foreach (Property prop in ProjectItem.Properties)
+            {
+                if (prop.Name == propertyName)
+                {
+                    prop.Value = value;
+                    return;
+                }
+            }
+            throw new NullReferenceException(string.Format("Could not find property {0}", propertyName));
         }
 
         public bool HasFile

@@ -3,19 +3,14 @@ using JosephM.Core.Extentions;
 
 namespace JosephM.Prism.Infrastructure.Module
 {
-    public class DialogModule<TDialog> : ActionModuleBase
+    public class DialogModule<TDialog> : OptionActionModule
     {
         public override void RegisterTypes()
         {
             RegisterTypeForNavigation<TDialog>();
         }
 
-        public override void InitialiseModule()
-        {
-            AddOption(MenuGroup, MainOperationName, DialogCommand);
-        }
-
-        protected virtual string MainOperationName
+        public override string MainOperationName
         {
             get { return (typeof(TDialog)).GetDisplayName(); }
         }
@@ -25,6 +20,6 @@ namespace JosephM.Prism.Infrastructure.Module
             NavigateTo<TDialog>();
         }
 
-        public virtual string MenuGroup => MainOperationName;
+        public override string MenuGroup => MainOperationName;
     }
 }

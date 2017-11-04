@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.CreatePackage;
 using JosephM.Deployment.DeployPackage;
@@ -39,7 +40,8 @@ namespace JosephM.Deployment.Test
                 }
             };
             var createApplication = CreateAndLoadTestApplication<CreatePackageModule>();
-            createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog>(createDeploymentPackageRequest);
+            var response = createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog, ServiceResponseBase<DataImportResponseItem>>(createDeploymentPackageRequest);
+            Assert.IsFalse(response.HasError);
 
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).First().EndsWith(".zip"));
             Assert.IsTrue(FileUtility.GetFolders(TestingFolder).First().EndsWith("Data"));
@@ -57,7 +59,8 @@ namespace JosephM.Deployment.Test
             deployRequest.Connection = GetSavedXrmRecordConfiguration();
 
             var deployApplication = CreateAndLoadTestApplication<DeployPackageModule>();
-            deployApplication.NavigateAndProcessDialog<DeployPackageModule, DeployPackageDialog>(deployRequest);
+            response = deployApplication.NavigateAndProcessDialog<DeployPackageModule, DeployPackageDialog, ServiceResponseBase<DataImportResponseItem>>(deployRequest);
+            Assert.IsFalse(response.HasError);
 
             solution = XrmRecordService.Get(solution.Type, solution.Id);
             Assert.AreEqual("3.0.0.0", solution.GetStringField(Fields.solution_.version));
@@ -83,7 +86,7 @@ namespace JosephM.Deployment.Test
             createApplication = CreateAndLoadTestApplication<CreatePackageModule>();
             try
             {
-                createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog>(createDeploymentPackageRequest);
+                createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog, ServiceResponseBase<DataImportResponseItem>>(createDeploymentPackageRequest);
                 Assert.Fail();
             }
             catch(Exception ex)
@@ -92,7 +95,8 @@ namespace JosephM.Deployment.Test
             }
             FileUtility.DeleteFiles(TestingFolder);
             FileUtility.DeleteSubFolders(TestingFolder);
-            createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog>(createDeploymentPackageRequest);
+            response = createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog, ServiceResponseBase<DataImportResponseItem>>(createDeploymentPackageRequest);
+            Assert.IsFalse(response.HasError);
 
             solution = XrmRecordService.Get(solution.Type, solution.Id);
             Assert.AreEqual("3.0.0.0", solution.GetStringField(Fields.solution_.version));

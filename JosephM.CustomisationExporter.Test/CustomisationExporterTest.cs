@@ -36,7 +36,8 @@ namespace JosephM.CustomisationExporter.Test
             request.IncludeOneToManyRelationships = true;
             request.SaveToFolder = new Folder(TestingFolder);
 
-            testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog>(request);
+            var response = testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog, CustomisationExporterResponse>(request);
+            Assert.IsFalse(response.HasError);
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
             request.IncludeAllRecordTypes = true;
@@ -51,7 +52,8 @@ namespace JosephM.CustomisationExporter.Test
             Thread.Sleep(1000);
             FileUtility.DeleteFiles(TestingFolder);
             
-            testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog>(request);
+            response = testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog, CustomisationExporterResponse>(request);
+            Assert.IsFalse(response.HasError);
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
             request.IncludeAllRecordTypes = false;

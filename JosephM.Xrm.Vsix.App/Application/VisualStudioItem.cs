@@ -1,7 +1,6 @@
 ﻿using EnvDTE;
-using JosephM.Xrm.Vsix.Utilities;
 
-namespace JosephM.XRM.VSIX.Utilities
+namespace JosephM.Xrm.Vsix.Application
 {
     public class VisualStudioItem : IVisualStudioItem
     {

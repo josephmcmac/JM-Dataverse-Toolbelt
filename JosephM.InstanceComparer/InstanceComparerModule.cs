@@ -14,7 +14,7 @@ namespace JosephM.InstanceComparer
             base.InitialiseModule();
             AddHelpUrl("Instance Comparison", "CrmInstanceComparison");
         }
-        protected override string MainOperationName
+        public override string MainOperationName
         {
             get { return "Instance Comparison"; }
         }

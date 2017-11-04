@@ -8,9 +8,8 @@ using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
-using JosephM.Xrm.Vsix.Utilities;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Utilities;
+using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -144,7 +143,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             var removedPlugins = SdkMessageStepsPre.Where(smsp => EntryObject.Triggers.All(pt => pt.Id != smsp.Id)).ToArray();
 
-            var deletions = VsixUtility.DeleteInCrm(XrmRecordService, removedPlugins);
+            var deletions = XrmRecordService.DeleteInCrm(removedPlugins);
             foreach (var trigger in deletions.Errors)
             {
                 var error = new PluginTriggerError()
@@ -194,7 +193,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 unloadedObjects.Add(record);
             }
 
-            var triggerLoads = VsixUtility.LoadIntoCrm(XrmRecordService, unloadedObjects,
+            var triggerLoads = XrmRecordService.LoadIntoCrm(unloadedObjects,
                 Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid);
 
             var updatesAndDeletes =
@@ -215,7 +214,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.imagetype, OptionSets.SdkMessageProcessingStepImage.ImageType.PreImage, XrmRecordService);
                 images.Add(imageRecord);
             }
-            var imageLoads = VsixUtility.LoadIntoCrm(XrmRecordService, images,
+            var imageLoads = XrmRecordService.LoadIntoCrm(images,
                 Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid);
 
             foreach (var trigger in triggerLoads.Errors)
@@ -242,7 +241,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
             //add plugin steps to the solution
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.SDKMessageProcessingStep;
             var itemsToAdd = triggerLoads.Created.Union(triggerLoads.Updated);
-            VsixUtility.AddSolutionComponents(XrmRecordService, PackageSettings, componentType, itemsToAdd);
+            if (PackageSettings.AddToSolution)
+                XrmRecordService.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd);
 
             CompletionItem = new Completionresponse { Errors = responses };
 

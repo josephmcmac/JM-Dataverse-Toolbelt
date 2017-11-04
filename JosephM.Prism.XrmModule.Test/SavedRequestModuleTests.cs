@@ -1,27 +1,23 @@
-﻿using System.Linq;
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.AppConfig;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Core.Test;
-using JosephM.Core.Utility;
+using JosephM.Core.Attributes;
+using JosephM.Core.FieldType;
+using JosephM.Core.Log;
+using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Dialog;
 using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Prism;
-using JosephM.Record.Application.Fakes;
-using JosephM.Core.Service;
-using JosephM.Core.Attributes;
-using JosephM.Core.Log;
-using System;
 using JosephM.Prism.Infrastructure.Module.SavedRequests;
-using JosephM.Record.Attributes;
-using JosephM.Xrm.Schema;
-using JosephM.Core.FieldType;
-using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Application.Modules;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Record.Attributes;
 using JosephM.Record.Extentions;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Schema;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace JosephM.Prism.XrmModule.Test
 {
@@ -34,18 +30,15 @@ namespace JosephM.Prism.XrmModule.Test
         [TestMethod]
         public void SavedRequestModuleTest()
         {
-
-
             var testApplication = CreateAndLoadTestApplication<SavedRequestModule>();
             testApplication.AddModule<TestSavedRequestModule>();
 
             //set to no previously saved ones
             var savedRequests = new SavedSettings();
             var settingsManager = testApplication.Controller.ResolveType<ISettingsManager>();
-            //todo doesn't verify if not previously saved
             settingsManager.SaveSettingsObject(savedRequests, typeof(TestSavedRequestDialogRequest));
 
-            //navigate to the request and polulate the string field
+            //navigate to the request and populate the string field
             var entryForm = testApplication.NavigateToDialogModuleEntryForm<TestSavedRequestModule, TestSavedRequestDialog>();
             var request = new TestSavedRequestDialogRequest()
             {
@@ -72,7 +65,7 @@ namespace JosephM.Prism.XrmModule.Test
             testApplication = CreateAndLoadTestApplication<SavedRequestModule>();
             testApplication.AddModule<TestSavedRequestModule>();
             entryForm = testApplication.NavigateToDialogModuleEntryForm<TestSavedRequestModule, TestSavedRequestDialog>();
-            //todo not sure where this is done - should move into the module if possible
+
             Assert.AreEqual(nameof(TestSavedRequestDialogRequest.SomeArbitraryString), entryForm.GetStringFieldFieldViewModel(nameof(TestSavedRequestDialogRequest.SomeArbitraryString)).Value);
 
             //clear the loaded string value
@@ -142,7 +135,7 @@ namespace JosephM.Prism.XrmModule.Test
                 Assert.IsTrue(ex is FakeUserMessageException);
             }
 
-            //verify saved requests load when a saved request has a deled solution
+            //verify saved requests load when a saved request has a deleted solution
 
             //create a saved request with a solution
             solution = ReCreateTestSolution();
@@ -185,8 +178,52 @@ namespace JosephM.Prism.XrmModule.Test
             {
                 Assert.IsTrue(ex is FakeUserMessageException);
             }
+        }
 
-            //todo maybe check validations run on the saved requests
+        /// <summary>
+        /// heck validations are not run on the saved requests
+        /// </summary>
+        [TestMethod]
+        public void SavedRequestModuleTestFieldsNotValidatedInSavedRequests()
+        {
+            //only the name should be required on a saved request
+            var testApplication = CreateAndLoadTestApplication<SavedRequestModule>();
+            testApplication.AddModule<TestSavedRequestModule>();
+
+            //set to no previously saved ones
+            var savedRequests = new SavedSettings()
+            {
+                SavedRequests = new[]
+                {
+                    new TestSavedRequestDialogRequest()
+                    {
+                         DoNotValidateString = nameof(TestSavedRequestDialogRequest.DoNotValidateString),
+                         Name = nameof(TestSavedRequestDialogRequest.DoNotValidateString)
+                    }
+                }
+            };
+            var settingsManager = testApplication.Controller.ResolveType<ISettingsManager>();
+            settingsManager.SaveSettingsObject(savedRequests, typeof(TestSavedRequestDialogRequest));
+
+            var entryForm = testApplication.NavigateToDialogModuleEntryForm<TestSavedRequestModule, TestSavedRequestDialog>();
+            entryForm.GetButton("LOADREQUEST").Invoke();
+
+            var savedRequestsForm = testApplication.GetSubObjectEntryViewModel(entryForm);
+
+            var saveRequestsGrid = savedRequestsForm.GetSubGridViewModel(nameof(SavedSettings.SavedRequests));
+            Assert.AreEqual(1, saveRequestsGrid.GridRecords.Count());
+
+            var firstgridRecord = saveRequestsGrid.GridRecords.First();
+            var nameField = firstgridRecord.GetStringFieldFieldViewModel(nameof(TestSavedRequestDialogRequest.Name));
+            var doNotValidateField = firstgridRecord.GetStringFieldFieldViewModel(nameof(TestSavedRequestDialogRequest.DoNotValidateString));
+
+            nameField.Value = null;
+            doNotValidateField.Value = null;
+
+            Assert.IsFalse(savedRequestsForm.Validate());
+
+            nameField.Value = "Arbitrary Name";
+            Assert.IsTrue(savedRequestsForm.Validate());
         }
 
         [AllowSaveAndLoad]

@@ -7,15 +7,11 @@ using JosephM.Prism.XrmModule.XrmConnection;
 namespace JosephM.Xrm.Vsix.Module.Web
 {
     [DependantModule(typeof(XrmConnectionModule))]
-    public class OpenAdvancedFindModule : ActionModuleBase
+    public class OpenAdvancedFindModule : OptionActionModule
     {
-        public override void InitialiseModule()
-        {
-        }
+        public override string MainOperationName => "Open Advanced Find";
 
-        public override void RegisterTypes()
-        {
-        }
+        public override string MenuGroup => "Web";
 
         public override void DialogCommand()
         {

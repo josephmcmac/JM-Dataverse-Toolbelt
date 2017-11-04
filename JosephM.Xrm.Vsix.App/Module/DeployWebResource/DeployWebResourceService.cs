@@ -3,8 +3,7 @@ using JosephM.Core.Service;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
-using JosephM.XRM.VSIX;
-using JosephM.XRM.VSIX.Utilities;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +46,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
 
             var matchField = Fields.webresource_.name;
             controller.UpdateProgress(2, 3, "Deploying Files");
-            var loadResponse = VsixUtility.LoadIntoCrm(Service, records, matchField);
+            var loadResponse = Service.LoadIntoCrm(records, matchField);
             foreach (var item in records)
             {
                 var responseItem = new DeployWebResourceResponseItem();
@@ -73,7 +72,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
             //add plugin assembly to the solution
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.WebResource;
             var itemsToAdd = loadResponse.Created.Union(loadResponse.Updated);
-            VsixUtility.AddSolutionComponents(Service, PackageSettings, componentType, itemsToAdd);
+            if (PackageSettings.AddToSolution)
+                Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd);
 
         }
 

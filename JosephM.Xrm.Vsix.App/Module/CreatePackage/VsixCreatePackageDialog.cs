@@ -2,7 +2,7 @@
 using JosephM.Core.Utility;
 using JosephM.Deployment.CreatePackage;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.Vsix.Utilities;
+using JosephM.Xrm.Vsix.Application;
 using System.IO;
 
 namespace JosephM.Xrm.Vsix.Module.CreatePackage

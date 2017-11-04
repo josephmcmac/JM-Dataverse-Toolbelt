@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
-using JosephM.Core.Serialisation;
-using JosephM.Core.Utility;
 using System;
-using System.Linq;
-using JosephM.XRM.VSIX.Utilities;
+using System.Collections.Generic;
+using System.IO;
 
-namespace JosephM.Xrm.Vsix.Utilities
+namespace JosephM.Xrm.Vsix.Application
 {
     public partial class VisualStudioService : VisualStudioServiceBase
     {

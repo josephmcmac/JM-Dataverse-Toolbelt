@@ -34,7 +34,8 @@ namespace JosephM.CodeGenerator.Test
                 Namespace = "Schema"
             };
 
-            testApplication.NavigateAndProcessDialog<CSharpModule, CSharpDialog>(request);
+            var response = testApplication.NavigateAndProcessDialog<CSharpModule, CSharpDialog, CSharpResponse>(request);
+            Assert.IsFalse(response.HasError);
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
             FileUtility.DeleteFiles(TestingFolder);
@@ -54,7 +55,8 @@ namespace JosephM.CodeGenerator.Test
                 RecordTypes = new[] {new RecordTypeSetting(Entities.account, Entities.account)}
             };
 
-            testApplication.NavigateAndProcessDialog<CSharpModule, CSharpDialog>(request);
+            response = testApplication.NavigateAndProcessDialog<CSharpModule, CSharpDialog, CSharpResponse>(request);
+            Assert.IsFalse(response.HasError);
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
         }
     }

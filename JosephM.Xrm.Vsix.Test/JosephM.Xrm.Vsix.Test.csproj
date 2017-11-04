@@ -168,10 +168,6 @@
       <Project>{98d77f01-114b-4130-8c7c-2ff58425c34b}</Project>
       <Name>JosephM.Xrm.Vsix.App</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.Vsix\JosephM.Xrm.Vsix.csproj">
-      <Project>{c034f8d0-95c6-44dc-97d1-3647d9463149}</Project>
-      <Name>JosephM.Xrm.Vsix</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
       <Project>{7f69213d-3efb-4736-9962-0151f92fa7d4}</Project>
       <Name>JosephM.Xrm</Name>

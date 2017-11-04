@@ -1,17 +1,15 @@
-﻿using System;
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.XRM.VSIX.Dialogs;
-using System.ComponentModel.Design;
-using Microsoft.VisualStudio.Shell;
-using JosephM.Application.Modules;
-using JosephM.XRM.VSIX.Utilities;
-using System.Reflection;
+using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
-using JosephM.Xrm.Vsix.Utilities;
+using Microsoft.VisualStudio.Shell;
+using System;
+using System.ComponentModel.Design;
+using System.Reflection;
 
-namespace JosephM.XRM.VSIX
+namespace JosephM.Xrm.Vsix
 {
     public class VsixApplication : ApplicationBase
     {

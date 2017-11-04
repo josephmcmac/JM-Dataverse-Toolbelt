@@ -1,25 +1,20 @@
-﻿using System;
+﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
-using JosephM.Record.Xrm.XrmRecord;
-using System.Diagnostics;
 using JosephM.Prism.XrmModule.XrmConnection;
-using JosephM.Application.Application;
-using JosephM.XRM.VSIX;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using System;
+using System.Diagnostics;
 
 namespace JosephM.Xrm.Vsix.Module.Web
 {
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
-    public class OpenSolutionModule : ActionModuleBase
+    public class OpenSolutionModule : OptionActionModule
     {
-        public override void InitialiseModule()
-        {
-        }
+        public override string MainOperationName => "Open Solution";
 
-        public override void RegisterTypes()
-        {
-        }
+        public override string MenuGroup => "Web";
 
         public override void DialogCommand()
         {

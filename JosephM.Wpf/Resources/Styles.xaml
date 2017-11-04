@@ -124,6 +124,13 @@
         <Setter Property="MinHeight" Value="25" />
         <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
     </Style>
+    <Style x:Key="StringFieldDisplayStyle" TargetType="TextBlock">
+        <!--<Setter Property="HorizontalAlignment" Value="Left" />-->
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="MinHeight" Value="25" />
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
+    </Style>
     <Style x:Key="GridFieldEntryStyle" TargetType="Control">
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
