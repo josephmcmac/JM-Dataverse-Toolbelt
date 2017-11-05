@@ -407,6 +407,8 @@ namespace JosephM.Record.Service
                     {
                         if (dependantValue == null)
                             return new RecordField[0];
+
+                        var options = new List<PicklistOption>();
                         var type = dependantValue;
                         string parentReference = null;
                         if (dependantValue != null && dependantValue.Contains(':'))

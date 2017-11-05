@@ -46,7 +46,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 .Where(i => i.Select)
                 .Select(i => i.PicklistItem)
                 .ToArray();
-            OnPropertyChanged(nameof(SelectedDisplay));
+            OnPropertyChanged(nameof(StringDisplay));
         }
 
 
@@ -62,7 +62,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public string SelectedDisplay
+        public string StringDisplay
         {
             get { return Value == null ? null : string.Join(",", Value.OrderBy(p => p.Value).Select(p => p.Value)); }
         }
@@ -102,7 +102,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             DoOnAsynchThread(() => {
                 DynamicGridViewModel.GridRecords = GridRowViewModel.LoadRows(getRecordsFunc(), DynamicGridViewModel);
                 OnPropertyChanged(nameof(DynamicGridViewModel));
-                OnPropertyChanged(nameof(SelectedDisplay));
+                OnPropertyChanged(nameof(StringDisplay));
             });
         }
 

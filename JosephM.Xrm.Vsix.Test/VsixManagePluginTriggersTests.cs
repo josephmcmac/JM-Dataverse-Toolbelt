@@ -43,6 +43,7 @@ namespace JosephM.Xrm.Vsix.Test
             var triggers = GetPluginTriggers(assemblyRecord);
             Assert.AreEqual(1, triggers.Count());
             Assert.IsTrue(triggers.First().GetBoolField(Fields.sdkmessageprocessingstep_.asyncautodelete));
+            Assert.IsNotNull(triggers.First().GetStringField(Fields.sdkmessageprocessingstep_.filteringattributes));
 
             //verify preimage created for update
             var image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage,
@@ -105,6 +106,13 @@ namespace JosephM.Xrm.Vsix.Test
                     {
                         var typeFieldViewModel = (RecordTypeFieldViewModel) field;
                         typeFieldViewModel.Value = typeFieldViewModel.ItemsSource.First();
+                    }
+                    if (field.FieldName == nameof(PluginTrigger.FilteringFields) && message == "Update")
+                    {
+                        var multiSelectField = newRow.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
+                        multiSelectField.MultiSelectsVisible = true;
+                        multiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+                        multiSelectField.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
                     }
                 }
             }

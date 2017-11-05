@@ -83,6 +83,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 var name = item.GetStringField(Fields.sdkmessageprocessingstep_.name);
                 var stage = item.GetOptionKey(Fields.sdkmessageprocessingstep_.stage);
                 var mode = item.GetOptionKey(Fields.sdkmessageprocessingstep_.mode);
+                var filteringAttributesString = item.GetStringField(Fields.sdkmessageprocessingstep_.filteringattributes);
 
                 var trigger = new PluginTrigger();
                 trigger.Id = item.Id;
@@ -96,6 +97,12 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 trigger.Stage = stage.ParseEnum<PluginTrigger.PluginStage>();
                 trigger.Mode = mode.ParseEnum<PluginTrigger.PluginMode>();
                 trigger.Rank = rank;
+                trigger.FilteringFields = filteringAttributesString == null ? new RecordField[0]
+                    : filteringAttributesString.Split(',')
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Select(s => new RecordField(s, s))
+                    .ToArray();
+
 
                 triggers.Add(trigger);
             }
@@ -190,6 +197,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 if (item.Id != null)
                     record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid, item.Id, XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.asyncautodelete, item.Mode == PluginTrigger.PluginMode.Asynchronous, XrmRecordService);
+                record.SetField(Fields.sdkmessageprocessingstep_.filteringattributes, item.FilteringFields != null && item.FilteringFields.Any() ? string.Join(",", item.FilteringFields.OrderBy(r => r.Key).Select(r => r.Key)) : null, XrmRecordService);
                 unloadedObjects.Add(record);
             }
 

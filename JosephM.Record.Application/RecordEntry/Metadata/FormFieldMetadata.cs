@@ -206,20 +206,32 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     case RecordFieldType.RecordField:
                     {
-                        //okay need to use recordForm.ParentReference for grid rows
-                        //to get the correct lookup service property
-                        var dependantValue = recordForm.FormService.GetDependantValue(field, recordType, recordForm);
-
-                        fieldVm = new RecordFieldFieldViewModel(field, label, recordForm)
-                        {
-                            IsRecordServiceField = isRecordServiceField,
-                            ItemsSource =
-                                recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference == null
-                                        ? dependantValue
-                                        : dependantValue + ":" + recordForm.ParentFormReference, recordForm.GetRecord()).Select(r => new RecordField(r.Key, r.Value))
-                                        
-                        };
-                        break;
+                            //okay need to use recordForm.ParentReference for grid rows
+                            //to get the correct lookup service property
+                            var dependantValue = recordForm.FormService.GetDependantValue(field, recordType, recordForm);
+                            var fieldMetadata = recordService.GetFieldMetadata(field, recordType);
+                            var itemsSource = recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference == null
+                                            ? dependantValue
+                                            : dependantValue + ":" + recordForm.ParentFormReference, recordForm.GetRecord())
+                                                .Select(r => new RecordField(r.Key, r.Value))
+                                                .ToArray();
+                            if (fieldMetadata.IsMultiSelect)
+                            {
+                                fieldVm = new RecordFieldMultiSelectFieldViewModel(field, label, recordForm)
+                                {
+                                    IsRecordServiceField = isRecordServiceField
+                                };
+                                ((RecordFieldMultiSelectFieldViewModel)fieldVm).SetItemsSource(itemsSource);
+                            }
+                            else
+                            {
+                                fieldVm = new RecordFieldFieldViewModel(field, label, recordForm)
+                                {
+                                    IsRecordServiceField = isRecordServiceField,
+                                    ItemsSource = itemsSource
+                                };
+                            }
+                            break;
                     }
                     case RecordFieldType.Enumerable:
                     {

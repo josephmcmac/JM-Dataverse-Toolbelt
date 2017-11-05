@@ -29,7 +29,7 @@
                 Name="DisplayTextBlock"
                 TabIndex="1"
                 DataContext="{Binding NotifyOnValidationError=True}"
-                Text="{Binding SelectedDisplay, Mode=OneWay}"
+                Text="{Binding StringDisplay, Mode=OneWay}"
                 Style="{StaticResource FieldEntryStyle}"
                 IsReadOnly="True"
                 PreviewMouseLeftButtonUp="DisplayTextBlock_MouseDown"

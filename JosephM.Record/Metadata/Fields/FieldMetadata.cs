@@ -135,6 +135,10 @@ namespace JosephM.Record.Metadata
                         options.Add(new PicklistOption(item.ToString(), item.GetDisplayString()));
                     fm = new PicklistFieldMetadata(recordType, internalName, label, options) { IsMultiSelect = true };
                 }
+                else if (enumeratedType == typeof(RecordField))
+                {
+                    fm = new RecordFieldFieldMetadata(internalName, label) { IsMultiSelect = true };
+                }
                 else if (objectTypeMaps != null && objectTypeMaps.ContainsKey(internalName))
                 {
                     fm = new EnumerableFieldMetadata(internalName, label, objectTypeMaps[internalName].AssemblyQualifiedName);

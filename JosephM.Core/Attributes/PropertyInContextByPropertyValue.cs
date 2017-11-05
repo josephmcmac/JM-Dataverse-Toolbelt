@@ -1,4 +1,5 @@
 ﻿using JosephM.Core.Extentions;
+using JosephM.Core.FieldType;
 using System;
 
 namespace JosephM.Core.Attributes
@@ -27,6 +28,8 @@ namespace JosephM.Core.Attributes
                 return false;
             else
             {
+                if (propertyValue is Lookup && ValidValue is string && ((Lookup)propertyValue).Name.ToLower() == ValidValue.ToString().ToLower())
+                    return true;
                 return propertyValue.Equals(ValidValue);
             }
         }
