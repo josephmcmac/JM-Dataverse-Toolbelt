@@ -15,30 +15,5 @@ namespace JosephM.RecordCounts.Exporter
             : base(service, dialogController, recordService)
         {
         }
-
-        protected override void ProcessCompletionExtention()
-        {
-            if (!Response.RecordCountsFileName.IsNullOrWhiteSpace())
-                AddCompletionOption("Open Record Counts", OpenRecordCountsFile);
-            if (!Response.RecordCountsByOwnerFileName.IsNullOrWhiteSpace())
-                AddCompletionOption("Open Record Counts By Owner", OpenRecordCountsByOwnerFile);
-            AddCompletionOption("Open Folder", OpenFolder);
-            CompletionMessage = "Document Successfully Generated";
-        }
-
-        public void OpenFolder()
-        {
-            ApplicationController.StartProcess("explorer", Response.Folder);
-        }
-
-        public void OpenRecordCountsFile()
-        {
-            ApplicationController.StartProcess(Response.RecordCountsFileNameQualified);
-        }
-
-        public void OpenRecordCountsByOwnerFile()
-        {
-            ApplicationController.StartProcess(Response.RecordCountsByOwnerFileNameQualified);
-        }
     }
 }

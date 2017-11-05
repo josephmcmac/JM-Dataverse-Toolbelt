@@ -14,6 +14,8 @@ namespace JosephM.Core.Extentions
         /// </summary>
         public static string DisplayString(this Exception ex)
         {
+            if (ex == null)
+                return "An unidentified error occured";
             var result = "";
             if (ex != null)
             {

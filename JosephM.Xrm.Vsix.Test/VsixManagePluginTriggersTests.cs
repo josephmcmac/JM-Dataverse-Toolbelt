@@ -2,7 +2,7 @@
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.Extentions;
-using JosephM.XRM.VSIX.Commands.ManagePluginTriggers;
+using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using Entities = JosephM.Xrm.Schema.Entities;
@@ -24,7 +24,7 @@ namespace JosephM.Xrm.Vsix.Test
             DeletePluginTriggers(assemblyRecord);
 
             //add one trigger
-            var dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService, packageSettings);
+            var dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -50,7 +50,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNotNull(image);
 
             //add second trigger
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService, packageSettings);
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -66,7 +66,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual(2, triggers.Count());
 
             //delete a trigger
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), GetTestPluginAssemblyName(), XrmRecordService, packageSettings);
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

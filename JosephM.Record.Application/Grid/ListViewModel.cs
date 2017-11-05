@@ -28,7 +28,7 @@ namespace JosephM.Application.ViewModel.Grid
                 FormController = new FormController(recordService, null, controller),
                 GetGridRecords = GetGridRecords
             };
-            DynamicGridViewModel.LoadGridButtons(customFunctions);
+            DynamicGridViewModel.AddGridButtons(customFunctions);
             DynamicGridViewModel.ReloadGrid();
         }
 

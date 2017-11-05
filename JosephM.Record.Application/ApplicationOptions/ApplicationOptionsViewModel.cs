@@ -20,51 +20,90 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         public ApplicationOptionsViewModel(IApplicationController controller)
             : base(controller)
         {
-            Options = new ObservableCollection<ApplicationOption>();
+            Options = new ObservableCollection<MenuGroupViewModel>();
             Settings = new ObservableCollection<ApplicationOption>();
             Helps = new ObservableCollection<ApplicationOption>();
             SettingsClick = new DelegateCommand(() => { OpenSettings = true; });
             HelpClick = new DelegateCommand(() => { OpenHelp = true; });
         }
 
-        public ObservableCollection<ApplicationOption> Options { get; private set; }
+        public ObservableCollection<MenuGroupViewModel> Options { get; private set; }
 
         public ObservableCollection<ApplicationOption> Settings { get; private set; }
 
         public ObservableCollection<ApplicationOption> Helps { get; private set; }
 
-        public void AddOption(string optionLabel, Action action, ApplicationOptionType type)
+        public void AddOption(string group, string optionLabel, Action action)
         {
-            var option = new ApplicationOption(optionLabel, action, type);
-            if (type == ApplicationOptionType.Help)
+            var option = new ApplicationOption(optionLabel, action);
+            if (group == "Help")
                 AddToCollection(option, Helps);
-            else if (type == ApplicationOptionType.Setting)
+            else if (group == "Setting")
                 AddToCollection(option, Settings);
             else
-                AddToCollection(option, Options);
+            {
+                if(!Options.Any(o => o.Label == group))
+                {
+                    AddToCollection(new MenuGroupViewModel(group, ApplicationController), Options);
+                }
+                var groupMenu = Options.First(o => o.Label == group);
+                groupMenu.AddOption(option);
+            }
 
             OnPropertyChanged("HasSettings");
             OnPropertyChanged("HasHelp");
         }
 
-        private void AddToCollection(ApplicationOption option, ObservableCollection<ApplicationOption> options)
+        private void AddToCollection(MenuGroupViewModel menuGroup, ObservableCollection<MenuGroupViewModel> menuGroups)
         {
-            var index = -1;
-            if (!option.Label.IsNullOrWhiteSpace())
+            var forceLastLabel = "Other";
+            if (menuGroup.Label == forceLastLabel)
+                menuGroups.Add(menuGroup);
+            else
             {
-                foreach (var item in options)
+                var index = -1;
+                if (!menuGroup.Label.IsNullOrWhiteSpace())
                 {
-                    if (String.Compare(option.Label, item.Label, StringComparison.Ordinal) < 0)
+                    foreach (var item in menuGroups)
                     {
-                        index = options.IndexOf(item);
-                        break;
+                        if (item.Label == forceLastLabel || String.Compare(menuGroup.Label, item.Label, StringComparison.Ordinal) < 0)
+                        {
+                            index = menuGroups.IndexOf(item);
+                            break;
+                        }
                     }
                 }
+                if (index != -1)
+                    menuGroups.Insert(index, menuGroup);
+                else
+                    menuGroups.Add(menuGroup);
             }
-            if (index != -1)
-                options.Insert(index, option);
-            else
+        }
+
+        private void AddToCollection(ApplicationOption option, ObservableCollection<ApplicationOption> options)
+        {
+            var forceLastLabel = "About";
+            if (option.Label == forceLastLabel)
                 options.Add(option);
+            else
+            {
+                var index = -1;
+                if (!option.Label.IsNullOrWhiteSpace())
+                {
+                    foreach (var item in options)
+                    {
+                        if (item.Label == forceLastLabel || String.Compare(option.Label, item.Label, StringComparison.Ordinal) < 0)
+                        {
+                            index = options.IndexOf(item);
+                            break;
+                        }
+                    }
+                }
+                if (index != -1)
+                    options.Insert(index, option);
+                else
+                    options.Add(option);
+            }
         }
 
         public DelegateCommand SettingsClick { get; set; }

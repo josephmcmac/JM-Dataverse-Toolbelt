@@ -58,7 +58,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="XrmCodeGeneratorModuleTest.cs" />
+    <Compile Include="CodeGenerationCSharpModuleTest.cs" />
+    <Compile Include="CodeGenerationFetchToJavaScriptModuleTests.cs" />
+    <Compile Include="CodeGenerationJavaScriptOptionModuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -24,25 +24,12 @@ namespace JosephM.Prism.Infrastructure.Module
         where TResponse : ServiceResponseBase<TResponseItem>, new()
         where TResponseItem : ServiceResponseItem
     {
-        protected override string MainOperationName
+        public override string MainOperationName
         {
-            get { return (typeof(TRequest)).GetDisplayName(); }
-        }
-
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-
-            //add setting option for accessing saved requests
-            //requests may be saved during the dialog
-            if (typeof(TRequest).GetCustomAttribute<AllowSaveAndLoad>() != null)
+            get
             {
-                AddSetting("Saved " + typeof(TRequest).GetDisplayName(), () =>
-                {
-                    var uri = new UriQuery();
-                    uri.Add("Type", typeof(TRequest).AssemblyQualifiedName);
-                    ApplicationController.NavigateTo(typeof(SavedRequestDialog), uri);
-                });
+                var typeName = (typeof(TRequest)).GetDisplayName();
+                return typeName.EndsWith(" Request") ? typeName.Substring(0, typeName.Length - 8) : typeName;
             }
         }
     }

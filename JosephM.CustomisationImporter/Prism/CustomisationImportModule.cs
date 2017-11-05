@@ -15,13 +15,15 @@ namespace JosephM.CustomisationImporter.Prism
     public class CustomisationImportModule
         : ServiceRequestModule<XrmCustomisationImportDialog, XrmCustomisationImportService, CustomisationImportRequest, CustomisationImportResponse, CustomisationImportResponseItem>
     {
-        protected override string MainOperationName { get { return "Import Customisations"; } }
+        public override string MainOperationName { get { return "Import Customisations"; } }
+
+        public override string MenuGroup => "Customisations";
 
         public override void InitialiseModule()
         {
             base.InitialiseModule();
             AddHelpUrl("Import Customisations", "CustomisationImporter");
-            AddOption("Import Customisation Template", OpenTemplateCommand);
+            AddOption(MenuGroup, "Download Template", OpenTemplateCommand);
         }
 
         public void OpenTemplateCommand()

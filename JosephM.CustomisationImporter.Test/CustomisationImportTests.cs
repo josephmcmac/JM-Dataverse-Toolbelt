@@ -34,10 +34,8 @@ namespace JosephM.CustomisationImporter.Test
             //first script generation of C# entities and fields
             var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).First();
 
-            testApplication.NavigateAndProcessDialog<CustomisationImportModule, XrmCustomisationImportDialog>(request);
-
-            //var module = testApplication.GetModule<CustomisationImportModule>();
-            //module.OpenTemplateCommand();
+            var response = testApplication.NavigateAndProcessDialog<CustomisationImportModule, XrmCustomisationImportDialog, CustomisationImportResponse>(request);
+            Assert.IsFalse(response.HasError);
         }
 
         [TestMethod]

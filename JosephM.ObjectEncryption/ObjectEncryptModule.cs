@@ -13,7 +13,7 @@ namespace JosephM.ObjectEncryption
         where TDialog : ObjectEncryptDialog<TTypeToEnter>
         where TTypeToEnter : new()
     {
-        protected override string MainOperationName
+        public override string MainOperationName
         {
             get { return string.Format("Encrypt {0}", typeof(TTypeToEnter).Name); }
         }

@@ -7,17 +7,19 @@
              xmlns:constants="clr-namespace:JosephM.Application;assembly=JosephM.Application"
              mc:Ignorable="d"
              d:DesignHeight="300"
-             d:DesignWidth="700">
+             d:DesignWidth="700"
+            xmlns:converters="clr-namespace:JosephM.Wpf.Converters">
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:TabbedApplicationHeightConverter x:Key="TabbedApplicationHeightConverter" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.Light.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
+            <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+            <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+            <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.xaml" />
+            <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.Light.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+        </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -36,7 +38,21 @@
                 ContentTemplate="{StaticResource applicationMenuViewTemplate}" />
             </ScrollViewer>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2"
+               Name="MyMainContent"
+              MinHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Window,
+                                       AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}"
+              MaxHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Window,
+                                       AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}"
+              Height="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Window,
+                                       AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}"
+              >
             <TabControl
                 prism:RegionManager.RegionName="{x:Static constants:RegionNames.MainTabRegion}"
                 ContentTemplate="{StaticResource TabItemTemplate}">

@@ -2,6 +2,7 @@
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Core.FieldType;
+using JosephM.Prism.Infrastructure.Module.Crud.BulkDelete;
 using JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -84,6 +85,17 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
                                     {
                                         TriggerBulkUpdate(false);
                                     }, (g) => g.GridRecords != null && g.GridRecords.Any()),
+                                }),
+                                new CustomGridFunction("DELETE", "Bulk Delete", new []
+                                {
+                                    new CustomGridFunction("BULKDELETESELECTED", "Selected Only", (g) =>
+                                    {
+                                        TriggerBulkDelete(true);
+                                    }, (g) => g.SelectedRows.Any()),
+                                    new CustomGridFunction("BULKDELETEALL", "All Results", (g) =>
+                                    {
+                                        TriggerBulkDelete(false);
+                                    }, (g) => g.GridRecords != null && g.GridRecords.Any()),
                                 })
                             };
 
@@ -111,13 +123,21 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
 
         private void TriggerBulkUpdate(bool selectedOnly)
         {
-            var recordType = QueryViewModel.RecordType;
+            var recordsToUpdate = GetRecordsToProcess(selectedOnly);
+
+            var request = new BulkUpdateRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+            var bulkUpdateDialog = new BulkUpdateDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+            LoadChildForm(bulkUpdateDialog);
+        }
+
+        private IEnumerable<IRecord> GetRecordsToProcess(bool selectedOnly)
+        {
             IEnumerable<IRecord> recordsToUpdate = null;
-            var fieldsToGet = new[] { RecordService.GetPrimaryField(recordType) };
+            var fieldsToGet = new[] { RecordService.GetPrimaryField(QueryViewModel.RecordType) };
             if (selectedOnly)
             {
                 var ids = QueryViewModel.DynamicGridViewModel.SelectedRows.Select(r => r.Record.Id).ToArray();
-                recordsToUpdate = RecordService.RetrieveAllOrClauses(recordType, ids.Select(i => new Condition(RecordService.GetPrimaryKey(recordType), ConditionType.Equal, i)), fieldsToGet);
+                recordsToUpdate = RecordService.RetrieveAllOrClauses(QueryViewModel.RecordType, ids.Select(i => new Condition(RecordService.GetPrimaryKey(QueryViewModel.RecordType), ConditionType.Equal, i)), fieldsToGet);
             }
             else
             {
@@ -127,10 +147,17 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
                 recordsToUpdate = RecordService.RetreiveAll(query);
             }
 
-            var request = new BulkUpdateRequest(new RecordType(recordType, RecordService.GetDisplayName(recordType)), recordsToUpdate);
-            var bulkUpdateDialog = new BulkUpdateDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
-            LoadChildForm(bulkUpdateDialog);
-
+            return recordsToUpdate;
         }
+
+        private void TriggerBulkDelete(bool selectedOnly)
+        {
+            var recordsToUpdate = GetRecordsToProcess(selectedOnly);
+
+            var request = new BulkDeleteRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+            var bulkUpdateDialog = new BulkDeleteDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+            LoadChildForm(bulkUpdateDialog);
+        }
+
     }
 }

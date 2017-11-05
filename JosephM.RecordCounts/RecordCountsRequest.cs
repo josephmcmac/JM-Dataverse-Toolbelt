@@ -8,17 +8,11 @@ using JosephM.Xrm.Schema;
 namespace JosephM.RecordCounts.Exporter
 {
     [AllowSaveAndLoad]
-    [Group(Sections.Folder, true, 10)]
     [Group(Sections.RecordOwnerOptions, true, 20)]
     [Group(Sections.RecordTypes, true, 30)]
     [DisplayName("Record Count")]
     public class RecordCountsRequest : ServiceRequestBase
     {
-        [DisplayOrder(10)]
-        [Group(Sections.Folder)]
-        [RequiredProperty]
-        public Folder Folder { get; set; }
-
         [DisplayOrder(100)]
         [DisplayName("Only Count Records Owned By Specific User")]
         [Group(Sections.RecordOwnerOptions)]
@@ -54,7 +48,6 @@ namespace JosephM.RecordCounts.Exporter
 
         private static class Sections
         {
-            public const string Folder = "Select The Folder to Save The Generated CSV To";
             public const string RecordOwnerOptions = "Record Owner Options";
             public const string RecordTypes = "Record Types";
         }

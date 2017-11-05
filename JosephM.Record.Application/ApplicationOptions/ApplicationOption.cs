@@ -14,18 +14,10 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
     public class ApplicationOption
     {
         public ApplicationOption(string label, Action action)
-            : this(label, action, ApplicationOptionType.Main)
-        {
-        }
-
-        public ApplicationOption(string label, Action action, ApplicationOptionType type)
         {
             Label = label;
             DelegateCommand = new DelegateCommand(action);
-            Type = type;
         }
-
-        public ApplicationOptionType Type { get; set; }
 
         public string Label { get; private set; }
 

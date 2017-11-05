@@ -25,17 +25,19 @@ namespace JosephM.Prism.XrmModule.Test
             XrmRecordService.SetFormService(new XrmFormService());
         }
 
-        protected TestApplication CreateAndLoadTestApplication<TModule>()
+        protected virtual TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null, bool loadXrmConnection = true)
             where TModule : ModuleBase, new()
         {
-
-            var testApplication = TestApplication.CreateTestApplication();
+            var testApplication = TestApplication.CreateTestApplication(applicationController, settingsManager);
             testApplication.AddModule<TModule>();
-            XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), testApplication.Controller);
-            testApplication.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections.SavedXrmConnections
+            if (loadXrmConnection)
             {
-                Connections = new[] { GetSavedXrmRecordConfiguration() }
-            });
+                XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), testApplication.Controller);
+                testApplication.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections.SavedXrmConnections
+                {
+                    Connections = new[] { GetSavedXrmRecordConfiguration() }
+                });
+            }
             return testApplication;
         }
 

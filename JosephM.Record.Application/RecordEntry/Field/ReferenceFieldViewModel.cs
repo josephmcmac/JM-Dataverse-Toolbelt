@@ -60,7 +60,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             _itemsSource = new ReferencePicklistItem[0];
             if (LookupService != null)
             {
-                ItemsSource = GetPicklistOptions().OrderBy(p => p.Name);
+                ItemsSource = (FormService?.OrderPicklistItems(FieldName, GetRecordType(), GetPicklistOptions()) ?? GetPicklistOptions().OrderBy(p => p.Name)).ToArray();
+                if (Value == null && ItemsSource.Count() == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordType()) ?? false))
+                    SelectedItem = ItemsSource.First();
             }
             var matchingItem = MatchSelectedItemInItemsSourceToValue();
             if (matchingItem == null)
@@ -253,7 +255,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 _lookupGridVisible = value;
-                OnPropertyChanged("LookupGridVisible");
+                OnPropertyChanged(nameof(LookupGridVisible));
             }
         }
 
@@ -265,7 +267,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 _lookupGridViewModel = value;
-                OnPropertyChanged("LookupGridViewModel");
+                OnPropertyChanged(nameof(LookupGridViewModel));
             }
         }
 
@@ -277,7 +279,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 _searching = value;
-                OnPropertyChanged("Searching");
+                OnPropertyChanged(nameof(Searching));
             }
         }
 
@@ -298,7 +300,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         try
                         {
                             LookupGridViewModel.DynamicGridViewModel.GridRecords = GridRowViewModel.LoadRows(records, LookupGridViewModel.DynamicGridViewModel);
-                            OnPropertyChanged("LookupGridViewModel");
+                            OnPropertyChanged(nameof(LookupGridViewModel));
                             Searching = false;
                             LookupGridVisible = LookupGridViewModel.DynamicGridViewModel.GridRecords.Any();
                         }

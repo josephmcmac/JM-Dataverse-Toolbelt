@@ -1,7 +1,7 @@
 ﻿using $safeprojectname$.Services;
 using $safeprojectname$.Xrm;
 
-namespace $safeprojectname$.Workflow
+namespace $safeprojectname$.Workflows
 {
     //base class for services or settings used across all workflow activities
     public abstract class $ext_jmobjprefix$WorkflowActivity<T> : XrmWorkflowActivityInstance<T>

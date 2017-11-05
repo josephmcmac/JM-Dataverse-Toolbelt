@@ -16,42 +16,47 @@ using JosephM.Application.ViewModel.RecordEntry.Metadata;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    //todo the different lookup classes need more verification scripts
-    //settings/readonly/query/owner/grid/lookupgrid etc
     public class LookupFieldViewModel : ReferenceFieldViewModel<Lookup>
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,
                  string referencedRecordType, bool usePicklist, bool isEditable)
                  : base(fieldName, fieldLabel, recordForm, usePicklist)
         {
-            if (referencedRecordType != null)
+            try
             {
-                var splitIt = referencedRecordType.Split(',');
-                if (splitIt.Count() == 1)
+                if (referencedRecordType != null)
                 {
-                    SelectedRecordType = new RecordType(splitIt.First(), splitIt.First());
+                    var splitIt = referencedRecordType.Split(',');
+                    if (splitIt.Count() == 1)
+                    {
+                        SelectedRecordType = new RecordType(splitIt.First(), splitIt.First());
+                    }
+                    else
+                    {
+                        var recordTypes = splitIt
+                            .Select(s => LookupService.GetRecordTypeMetadata(s))
+                            .Select(r => new RecordType(r.SchemaName, r.DisplayName))
+                            .ToArray();
+                        RecordTypeItemsSource = recordTypes;
+                    }
                 }
-                else
+                if (Value != null)
                 {
-                    var recordTypes = splitIt
-                        .Select(s => LookupService.GetRecordTypeMetadata(s))
-                        .Select(r => new RecordType(r.SchemaName, r.DisplayName))
-                        .ToArray();
-                    RecordTypeItemsSource = recordTypes;
+                    if (Value.Name.IsNullOrWhiteSpace())
+                        Value.Name = "Record Name Not Set";
+                    SetEnteredTestWithoutClearingValue(Value.Name);
+                    RecordTypeToLookup = Value.RecordType;
+                }
+                if (isEditable && SelectedRecordType != null)
+                {
+                    SetNewAction();
+                    if (!UsePicklist)
+                        LoadLookupGrid();
                 }
             }
-            if (Value != null)
+            catch(Exception ex)
             {
-                if (Value.Name.IsNullOrWhiteSpace())
-                    Value.Name = "Record Name Not Set";
-                SetEnteredTestWithoutClearingValue(Value.Name);
-                RecordTypeToLookup = Value.RecordType;
-            }
-            if (isEditable && SelectedRecordType != null)
-            {
-                SetNewAction();
-                if (!UsePicklist)
-                    LoadLookupGrid();
+                recordForm.ApplicationController.UserMessage(string.Format("Warning! A Fatal Error Was Encountered Loading The {0} Field - {1}", Label, ex.DisplayString()));
             }
         }
 

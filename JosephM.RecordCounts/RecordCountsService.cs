@@ -30,8 +30,6 @@ namespace JosephM.RecordCounts.Exporter
             RecordCountsResponse response,
             LogController controller)
         {
-            response.Folder = request.Folder.FolderPath;
-
             controller.LogLiteral("Loading Types");
 
             var recordTypes = request.AllRecordTypes
@@ -118,9 +116,6 @@ namespace JosephM.RecordCounts.Exporter
                 {
                     totals.Add(new RecordCount(Service.GetDisplayName(dictionary.Key), dictionary.Value.Sum(kv => kv.Value)));
                 }
-                var fileName = string.Format("RecordCounts_{0}.csv", DateTime.Now.ToFileTime());
-                CsvUtility.CreateCsv(response.Folder, fileName, totals);
-                response.RecordCountsFileName = fileName;
                 response.RecordCounts = totals;
             }
             if (groupByOwner)
@@ -171,9 +166,6 @@ namespace JosephM.RecordCounts.Exporter
                     }
                     
                 }
-                var fileName = string.Format("RecordCountsByOwner_{0}.csv", DateTime.Now.ToFileTime());
-                CsvUtility.CreateCsv(response.Folder, fileName, ownerTotals);
-                response.RecordCountsByOwnerFileName = fileName;
                 response.RecordCounts = ownerTotals;
             }
         }

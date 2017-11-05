@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.Query;
-using JosephM.XRM.VSIX.Commands.DeployAssembly;
+using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using Entities = JosephM.Xrm.Schema.Entities;
@@ -25,7 +25,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.IsFalse(GetTestPluginAssemblyRecords().Any());
 
-            var dialog = new DeployAssemblyDialog(CreateDialogController(), pluginAssembly, XrmRecordService, packageSettings);
+            var dialog = new DeployAssemblyDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             var objectEntry = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -33,7 +33,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.AreEqual(1, GetTestPluginAssemblyRecords().Count());
 
-            dialog = new DeployAssemblyDialog(CreateDialogController(), pluginAssembly, XrmRecordService, packageSettings);
+            dialog = new DeployAssemblyDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             objectEntry = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

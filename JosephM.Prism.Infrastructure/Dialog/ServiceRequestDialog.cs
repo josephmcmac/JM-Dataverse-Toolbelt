@@ -49,13 +49,15 @@ namespace JosephM.Prism.Infrastructure.Dialog
             if (request != null)
                 Request = request;
 
-            var configEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose);
-            SubDialogs = new DialogViewModel[] { configEntryDialog };
+            ConfigEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose);
+            SubDialogs = new DialogViewModel[] { ConfigEntryDialog };
         }
+
+        public bool SkipObjectEntry { get; set; }
 
         protected TService Service { get; set; }
 
-        protected TRequest Request { get; set; }
+        public TRequest Request { get; set; }
 
         protected TResponse Response { get; set; }
 
@@ -78,7 +80,12 @@ namespace JosephM.Prism.Infrastructure.Dialog
                     mapper.Map(autoLoads.First(), Request);
                 }
             }
-
+            if(SkipObjectEntry)
+            {
+                var subDialogs = new List<DialogViewModel>(SubDialogs);
+                subDialogs.Remove(ConfigEntryDialog);
+                SubDialogs = subDialogs;
+            }
             StartNextAction();
         }
 
@@ -104,14 +111,6 @@ namespace JosephM.Prism.Infrastructure.Dialog
             //    CompletionItems.Add(responseItem);
             //}
 
-
-            if (ApplicationController.AllowSaveRequests
-                && Request.GetType().IsTypeOf(typeof(IAllowSaveAndLoad))
-                && Request.GetType().GetCustomAttribute<AllowSaveAndLoad>() != null)
-            {
-                AddCompletionOption("Save Request", SaveRequest);
-            }
-
             if (Response.Success)
                 ProcessCompletionExtention();
 
@@ -123,11 +122,6 @@ namespace JosephM.Prism.Infrastructure.Dialog
                 CompletionMessage = "Process Finished";
         }
 
-        private void SaveRequest()
-        {
-            this.SaveSettingObject(Request);
-        }
-
         protected virtual void ProcessCompletionExtention()
         {
         }
@@ -136,6 +130,8 @@ namespace JosephM.Prism.Infrastructure.Dialog
         {
             get { return typeof(TRequest).GetDisplayName(); }
         }
+
+        public ObjectEntryDialog ConfigEntryDialog { get; private set; }
 
         public void OpenFolder(string folder)
         {

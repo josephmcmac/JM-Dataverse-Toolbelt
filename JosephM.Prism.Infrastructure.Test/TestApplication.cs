@@ -18,19 +18,23 @@ using JosephM.Application.Options;
 using JosephM.Core.AppConfig;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Prism.Infrastructure.Dialog;
+using JosephM.Core.Service;
 
 namespace JosephM.Prism.Infrastructure.Test
 {
     public class TestApplication : ApplicationBase
     {
-        public static TestApplication CreateTestApplication()
+        public static TestApplication CreateTestApplication(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null)
         {
-            var applicationController = new FakeApplicationController();
-            return new TestApplication(applicationController);
+            if(applicationController == null)
+                applicationController = new FakeApplicationController();
+            if (settingsManager == null)
+                settingsManager = new PrismSettingsManager(applicationController);
+            return new TestApplication(applicationController, settingsManager);
         }
 
-        private TestApplication(FakeApplicationController applicationController)
-            : base(applicationController, new ApplicationOptionsViewModel(applicationController))
+        private TestApplication(ApplicationControllerBase applicationController, ISettingsManager settingsManager)
+            : base(applicationController, new ApplicationOptionsViewModel(applicationController), settingsManager)
         {
             Controller.RegisterType<IDialogController, FakeDialogController>();
         }
@@ -55,66 +59,82 @@ namespace JosephM.Prism.Infrastructure.Test
             foreach (var property in objectToEnter.GetType().GetReadWriteProperties())
             {
                 var proprtyValue = objectToEnter.GetPropertyValue(property.Name);
-                if (property.PropertyType.Name == "IEnumerable`1")
+                if (proprtyValue != null)
                 {
-                    if (viewModel is RecordEntryFormViewModel)
+                    if (property.PropertyType.Name == "IEnumerable`1")
                     {
-                        var subGrid = ((RecordEntryFormViewModel)viewModel).GetSubGridViewModel(property.Name);
-                        subGrid.ClearRows();
-                        if (proprtyValue != null)
+                        if (viewModel is RecordEntryFormViewModel)
                         {
-                            foreach (var item in (IEnumerable)proprtyValue)
+                            var subGrid = ((RecordEntryFormViewModel)viewModel).GetSubGridViewModel(property.Name);
+                            subGrid.ClearRows();
+                            if (proprtyValue != null)
                             {
-                                subGrid.AddRow();
-                                var newRow = subGrid.GridRecords.First();
-                                EnterObject(item, newRow);
+                                foreach (var item in (IEnumerable)proprtyValue)
+                                {
+                                    subGrid.AddRow();
+                                    if(viewModel.ChildForms.Any())
+                                    {
+                                        var childForm = viewModel.ChildForms.First() as ObjectEntryViewModel;
+                                        if (childForm == null)
+                                            throw new NullReferenceException();
+                                        childForm.LoadFormSections();
+                                        EnterAndSaveObject(item, childForm);
+                                    }
+                                    else
+                                    {
+                                        var newRow = subGrid.GridRecords.First();
+                                        EnterObject(item, newRow);
+                                    }
+                                }
                             }
                         }
-                    }
-                    else if (viewModel is GridRowViewModel)
-                    {
-                        var gridRow = (GridRowViewModel)viewModel;
-                        gridRow.EditRow();
-                        var parentForm = gridRow.GridViewModel.ParentForm as RecordEntryFormViewModel;
-                        Assert.IsNotNull(parentForm);
-                        Assert.AreEqual(1, parentForm.ChildForms.Count);
-                        var childForm = parentForm.ChildForms.First();
-                        if (childForm is RecordEntryFormViewModel)
+                        else if (viewModel is GridRowViewModel)
                         {
-                            var tChildForm = childForm as RecordEntryFormViewModel;
-                            tChildForm.LoadFormSections();
-                            EnterAndSaveObject(objectToEnter, tChildForm);
+                            var gridRow = (GridRowViewModel)viewModel;
+                            gridRow.EditRow();
+                            var parentForm = gridRow.GridViewModel.ParentForm as RecordEntryFormViewModel;
+                            Assert.IsNotNull(parentForm);
+                            Assert.AreEqual(1, parentForm.ChildForms.Count);
+                            var childForm = parentForm.ChildForms.First();
+                            if (childForm is RecordEntryFormViewModel)
+                            {
+                                var tChildForm = childForm as RecordEntryFormViewModel;
+                                tChildForm.LoadFormSections();
+                                EnterAndSaveObject(objectToEnter, tChildForm);
+                            }
+                            else
+                                throw new NotImplementedException("Havent implemented for type " + childForm.GetType().Name);
                         }
                         else
-                            throw new NotImplementedException("Havent implemented for type " + childForm.GetType().Name);
+                            throw new NotImplementedException("Unexpected type " + viewModel.GetType().Name);
                     }
                     else
-                        throw new NotImplementedException("Unexpected type " + viewModel.GetType().Name);
-                }
-                else
-                {
-                    if (viewModel.FieldViewModels.Any(f => f.FieldName == property.Name))
                     {
-                        var fieldViewModel = viewModel.GetFieldViewModel(property.Name);
-                        if (proprtyValue != null && fieldViewModel is PicklistFieldViewModel)
+                        if (viewModel.FieldViewModels.Any(f => f.FieldName == property.Name))
                         {
-                            Assert.IsTrue(((PicklistFieldViewModel)fieldViewModel).ItemsSource.Any());
-                            fieldViewModel.ValueObject = proprtyValue;
+                            var fieldViewModel = viewModel.GetFieldViewModel(property.Name);
+                            if (proprtyValue != null && fieldViewModel is PicklistFieldViewModel)
+                            {
+                                Assert.IsTrue(((PicklistFieldViewModel)fieldViewModel).ItemsSource.Any());
+                                fieldViewModel.ValueObject = proprtyValue;
+                            }
+                            else
+                                fieldViewModel.ValueObject = proprtyValue;
                         }
                         else
-                            fieldViewModel.ValueObject = proprtyValue;
+                            viewModel.GetRecord()[property.Name] = proprtyValue;
                     }
-                    else
-                        viewModel.GetRecord()[property.Name] = proprtyValue;
                 }
             }
         }
 
-        public void NavigateAndProcessDialog<TDialogModule, TDialog>(object instanceEntered)
+        public TResponse NavigateAndProcessDialog<TDialogModule, TDialog, TResponse>(object instanceEntered)
             where TDialogModule : DialogModule<TDialog>, new()
             where TDialog : DialogViewModel
+            where TResponse : class
         {
-            var entryForm = NavigateToDialogModuleEntryForm<TDialogModule, TDialog>();
+            var dialog = NavigateToDialog<TDialogModule, TDialog>();
+            var entryForm = GetSubObjectEntryViewModel(dialog);
 
             var saveRequest = false;
             Type savedRequestType = null;
@@ -128,26 +148,6 @@ namespace JosephM.Prism.Infrastructure.Test
                     if (grid.DynamicGridViewModel.LoadedCallback != null)
                         grid.DynamicGridViewModel.LoadedCallback();
 
-                if (oevm.SaveRequestButtonViewModel.IsVisible)
-                {
-                    saveRequest = true;
-                    savedRequestType = oevm.GetObject().GetType();
-                    //okay this part is for the save request
-                    //if configured then save the request and afterwards we will navigate to it and delete it
-                    oevm.SaveRequestButtonViewModel.Invoke();
-                    Assert.AreEqual(1, oevm.ChildForms.Count());
-                    var childForm = oevm.ChildForms.First();
-                    if (childForm is RecordEntryFormViewModel)
-                    {
-                        var tChildForm = childForm as ObjectEntryViewModel;
-                        tChildForm.LoadFormSections();
-                        var childObject = tChildForm.GetObject();
-                        CoreTest.PopulateObject(childObject);
-                        EnterAndSaveObject(childObject, tChildForm);
-                    }
-                    else
-                        throw new NotImplementedException("Havent implemented for type " + childForm.GetType().Name);
-                }
             }
 
             EnterAndSaveObject(instanceEntered, entryForm);
@@ -164,6 +164,8 @@ namespace JosephM.Prism.Infrastructure.Test
                 }
                 oevm.SaveButtonViewModel.Invoke();
             }
+
+            return dialog.CompletionItem as TResponse;
         }
 
         public ObjectEntryViewModel LoadSavedRequestsEntryForm(Type savedRequestType)
@@ -230,6 +232,20 @@ namespace JosephM.Prism.Infrastructure.Test
             var viewModel = typeSelection.ViewModel;
             viewModel.LoadFormSections();
             return viewModel;
+        }
+
+        public ObjectEntryViewModel GetSubObjectEntryViewModel(RecordEntryFormViewModel entryForm)
+        {
+            var subEntry = entryForm.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(subEntry);
+            subEntry.LoadFormSections();
+            return subEntry;
+        }
+
+
+        public DialogViewModel GetSubDialog(DialogViewModel addDialog, int index = 0)
+        {
+            return addDialog.SubDialogs.ElementAt(index);
         }
 
         public void ClearTabs()

@@ -117,15 +117,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Service\CodeGeneratorResponseItem.cs" />
-    <Compile Include="Service\CodeGeneratorRequest.cs" />
-    <Compile Include="Service\CodeGeneratorResponse.cs" />
-    <Compile Include="Service\CodeGeneratorService.cs" />
-    <Compile Include="Service\CodeGeneratorType.cs" />
+    <Compile Include="CodeGeneratorModule.cs" />
+    <Compile Include="CodeGeneratorServiceBase.cs" />
+    <Compile Include="CSharp\CSharpDialog.cs" />
+    <Compile Include="CSharp\CSharpModule.cs" />
+    <Compile Include="CSharp\CSharpRequest.cs" />
+    <Compile Include="CSharp\CSharpResponse.cs" />
+    <Compile Include="CSharp\CSharpService.cs" />
+    <Compile Include="FetchToJavaScript\FetchToJavascriptDialog.cs" />
+    <Compile Include="FetchToJavaScript\FetchToJavascriptModule.cs" />
+    <Compile Include="FetchToJavaScript\FetchToJavascriptRequest.cs" />
+    <Compile Include="FetchToJavaScript\FetchToJavascriptResponse.cs" />
+    <Compile Include="FetchToJavaScript\FetchToJavascriptService.cs" />
+    <Compile Include="JavaScriptOptions\JavaScriptOptionsDialog.cs" />
+    <Compile Include="JavaScriptOptions\JavaScriptOptionsModule.cs" />
+    <Compile Include="JavaScriptOptions\JavaScriptOptionsRequest.cs" />
+    <Compile Include="JavaScriptOptions\JavaScriptOptionsResponse.cs" />
+    <Compile Include="JavaScriptOptions\JavaScriptOptionsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Xrm\XrmCodeGeneratorDialog.cs" />
-    <Compile Include="Xrm\XrmCodeGeneratorModule.cs" />
-    <Compile Include="Xrm\XrmCodeGeneratorService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

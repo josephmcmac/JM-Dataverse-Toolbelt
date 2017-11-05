@@ -69,7 +69,17 @@ namespace JosephM.Application.Application
             Dispatcher.BeginInvoke(
                 DispatcherPriority.Background,
                 (SendOrPostCallback)
-                    delegate { action(); },
+                    delegate
+                    {
+                        try
+                        {
+                            action();
+                        }
+                        catch(Exception ex)
+                        {
+                            ThrowException(ex);
+                        }
+                    },
                 null);
         }
 
@@ -92,8 +102,7 @@ namespace JosephM.Application.Application
                     }
                     catch (Exception ex)
                     {
-                        UserMessage(string.Concat("Warning unhandled exception:\n",
-                            ex.DisplayString()));
+                        ThrowException(ex);
                     }
                 });
             thread.IsBackground = true;
@@ -157,7 +166,7 @@ namespace JosephM.Application.Application
 
         public IDependencyResolver Container { get; set; }
 
-        public object ResolveType(Type type)
+        public virtual object ResolveType(Type type)
         {
             return Container == null ? null : Container.ResolveType(type);
         }

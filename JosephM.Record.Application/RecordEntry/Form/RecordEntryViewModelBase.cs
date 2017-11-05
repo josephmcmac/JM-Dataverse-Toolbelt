@@ -9,6 +9,7 @@ using JosephM.Application.ViewModel.TabArea;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.IService;
 using JosephM.Application.ViewModel.RecordEntry.Section;
+using JosephM.Application.ViewModel.Shared;
 
 #endregion
 
@@ -164,7 +165,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             {
                 foreach (var field in FieldViewModels)
                 {
-                    field.IsVisible = FormService.IsFieldInContext(field.FieldName, GetRecord());
+                    field.IsVisible = FormService?.IsFieldInContext(field.FieldName, GetRecord()) ?? true;
                 }
             }
             RefreshVisibilityExtention();
@@ -178,7 +179,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         {
         }
 
-        internal abstract RecordEntryViewModelBase ParentForm { get; }
+        public abstract RecordEntryViewModelBase ParentForm { get; }
 
         internal abstract string ParentFormReference { get; }
 

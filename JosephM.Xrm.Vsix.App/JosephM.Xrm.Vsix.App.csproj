@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{98D77F01-114B-4130-8C7C-2FF58425C34B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JosephM.Xrm.Vsix.App</RootNamespace>
+    <AssemblyName>JosephM.Xrm.Vsix.App</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JosephM.XRM.VSIX.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte100, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy">
+      <HintPath>..\Lib\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="microsoft.xrm.sdk">
+      <HintPath>..\Lib\microsoft.xrm.sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.15.0.26201\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Imaging, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Imaging.15.0.26201\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.OLE.Interop.7.10.6070\lib\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.15.0.15.0.26201\lib\Microsoft.VisualStudio.Shell.15.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Framework, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Framework.15.0.26201\lib\net45\Microsoft.VisualStudio.Shell.Framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.7.10.6071\lib\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.10.0.10.0.30319\lib\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.11.0.11.0.61030\lib\Microsoft.VisualStudio.Shell.Interop.11.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.12.0.12.0.30110\lib\Microsoft.VisualStudio.Shell.Interop.12.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.8.0.8.0.50727\lib\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.9.0.9.0.30729\lib\Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.TemplateWizardInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.7.10.6070\lib\Microsoft.VisualStudio.TextManager.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.8.0.8.0.50727\lib\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Threading, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Threading.15.0.240\lib\net45\Microsoft.VisualStudio.Threading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Utilities, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Utilities.15.0.26201\lib\net45\Microsoft.VisualStudio.Utilities.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Validation, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Validation.15.0.82\lib\net45\Microsoft.VisualStudio.Validation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application\VsixApplicationController.cs" />
+    <Compile Include="Application\VsixDependencyContainer.cs" />
+    <Compile Include="Application\VsixSettingsManager.cs" />
+    <Compile Include="Module\ClearCacheModule.cs" />
+    <Compile Include="Module\Connection\ConnectionEntryDialog.cs" />
+    <Compile Include="Module\CreatePackage\VsixCreatePackageDialog.cs" />
+    <Compile Include="Module\CreatePackage\VsixCreatePackageModule.cs" />
+    <Compile Include="Module\CustomisationImport\MenuItemVisibleXlsx.cs" />
+    <Compile Include="Module\CustomisationImport\VsixCustomisationImportModule.cs" />
+    <Compile Include="Module\DeployAssembly\DeployAssemblyDialog.cs" />
+    <Compile Include="Module\DeployAssembly\DeployAssemblyModule.cs" />
+    <Compile Include="Module\DeployAssembly\PluginAssembly.cs" />
+    <Compile Include="Module\DeployPackage\MenuItemVisibleDeployPackage.cs" />
+    <Compile Include="Module\DeployPackage\VsixDeployPackageModule.cs" />
+    <Compile Include="Module\DeployWebResource\DeployWebResourceDialog.cs" />
+    <Compile Include="Module\DeployWebResource\DeployWebResourceMenuItemVisible.cs" />
+    <Compile Include="Module\DeployWebResource\DeployWebResourceModule.cs" />
+    <Compile Include="Module\DeployWebResource\DeployWebResourceRequest.cs" />
+    <Compile Include="Module\DeployWebResource\DeployWebResourceResponse.cs" />
+    <Compile Include="Module\DeployWebResource\DeployWebResourceResponseItem.cs" />
+    <Compile Include="Module\DeployWebResource\DeployWebResourceService.cs" />
+    <Compile Include="Module\ImportCsvs\MenuItemVisibleCsvs.cs" />
+    <Compile Include="Module\ImportCsvs\VsixImportCsvsModule.cs" />
+    <Compile Include="Module\MenuItemVisible.cs" />
+    <Compile Include="Module\MenuItemVisibleForFileTypes.cs" />
+    <Compile Include="Module\PluginTriggers\ManagePluginTriggersDialog.cs" />
+    <Compile Include="Module\PluginTriggers\ManagePluginTriggersModule.cs" />
+    <Compile Include="Module\PluginTriggers\PluginTrigger.cs" />
+    <Compile Include="Module\RefreshSchema\MenuItemVisibleSchemaCs.cs" />
+    <Compile Include="Module\RefreshSchema\RefreshSchemaModule.cs" />
+    <Compile Include="Module\UpdateAssembly\UpdateAssemblyDialog.cs" />
+    <Compile Include="Module\UpdateAssembly\UpdateAssemblyModule.cs" />
+    <Compile Include="Module\Web\OpenAdvancedFindModule.cs" />
+    <Compile Include="Module\Web\OpenSolutionModule.cs" />
+    <Compile Include="Module\Web\OpenWebModule.cs" />
+    <Compile Include="Module\XrmPackageSettings\XrmPackageSettingsDialog.cs" />
+    <Compile Include="Module\XrmPackageSettings\XrmPackageSettingsModule.cs" />
+    <Compile Include="Module\PluginAssemblyReader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Application\IVisualStudioService.cs" />
+    <Compile Include="Application\VisualStudioItem.cs" />
+    <Compile Include="Application\VisualStudioProject.cs" />
+    <Compile Include="Application\VisualStudioProjectBase.cs" />
+    <Compile Include="Application\VisualStudioProjectItem.cs" />
+    <Compile Include="Application\VisualStudioService.cs" />
+    <Compile Include="Application\VisualStudioServiceBase.cs" />
+    <Compile Include="Application\VisualStudioSolutionFolder.cs" />
+    <Compile Include="Application\VsixApplication.cs" />
+    <Compile Include="Module\XrmPackageSettings\XrmPackageSettings.cs" />
+    <Compile Include="Wizards\MyWizardBase.cs" />
+    <Compile Include="Wizards\XrmSolutionWizardBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.CodeGenerator\JosephM.CodeGenerator.csproj">
+      <Project>{0902CBF9-E77C-4B69-8021-3DA8E3999CCA}</Project>
+      <Name>JosephM.CodeGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj">
+      <Project>{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}</Project>
+      <Name>JosephM.CustomisationImporter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Deployment\JosephM.Deployment.csproj">
+      <Project>{82118987-FB76-4E70-81A0-06D0B062D89C}</Project>
+      <Name>JosephM.Deployment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
+      <Project>{EB4443BD-DEAD-4546-9C8C-BFC2A807AF3A}</Project>
+      <Name>JosephM.ObjectMapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+      <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
+      <Name>JosephM.Application.Prism</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+      <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
+      <Name>JosephM.Prism.XrmModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+      <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
+      <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
+      <Project>{59CAC082-C1A8-474C-B73C-BC79267C9B51}</Project>
+      <Name>JosephM.Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Wpf\JosephM.Wpf.csproj">
+      <Project>{ED23E8EF-1623-491E-A30F-BA55C8F65CE7}</Project>
+      <Name>JosephM.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
+      <Name>JosephM.Xrm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="JosephM.XRM.VSIX.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

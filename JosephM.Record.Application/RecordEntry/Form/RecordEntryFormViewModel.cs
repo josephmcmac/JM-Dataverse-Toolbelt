@@ -49,16 +49,67 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             {
                 IsVisible = false
             };
-            LoadRequestButtonViewModel = new XrmButtonViewModel("Load Saved Details", LoadObject, ApplicationController)
-            {
-                IsVisible = false
-            };
-            SaveRequestButtonViewModel = new XrmButtonViewModel("Save Entered Details", SaveObject, ApplicationController)
-            {
-                IsVisible = false
-            };
             ChangedPersistentFields = new List<string>();
             LoadingViewModel.IsLoading = true;
+        }
+
+        public XrmButtonViewModel GetButton(string id)
+        {
+            if (CustomFunctions.Any(b => b.Id == id))
+                return CustomFunctions.First(b => b.Id == id);
+            if (CustomFunctions.Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).Any(b => b.Id == id))
+                return CustomFunctions.Where(b => b.HasChildOptions).SelectMany(b => b.ChildButtons).First(b => b.Id == id);
+            throw new ArgumentOutOfRangeException("id", "No Button Found With Id Of " + id);
+        }
+
+        public void LoadCustomFunctions()
+        {
+            var customFunctions = FormService.GetCustomFunctions(GetRecordType(), this);
+            LoadFormButtons(customFunctions);
+        }
+
+        private IEnumerable<CustomFormFunction> _loadedFormButtons;
+        public void LoadFormButtons(IEnumerable<CustomFormFunction> functions)
+        {
+            ApplicationController.DoOnMainThread(() =>
+            {
+                if (functions == null)
+                    functions = new CustomFormFunction[0];
+                _loadedFormButtons = functions;
+                _customFunctions =
+                    new ObservableCollection<XrmButtonViewModel>(FormFunctionsToXrmButtons(functions));
+
+                OnPropertyChanged("CustomFunctions");
+            });
+        }
+
+        private ObservableCollection<XrmButtonViewModel> _customFunctions;
+
+        public ObservableCollection<XrmButtonViewModel> CustomFunctions
+        {
+            get { return _customFunctions; }
+        }
+
+        public IEnumerable<XrmButtonViewModel> FormFunctionsToXrmButtons(IEnumerable<CustomFormFunction> functions)
+        {
+            var buttons = new List<XrmButtonViewModel>();
+            foreach (var cf in functions)
+            {
+                var isVisible = cf.VisibleFunction(this);
+                if (isVisible)
+                {
+                    if (cf.ChildFormFunctions != null && cf.ChildFormFunctions.Any())
+                    {
+                        var childButtons = FormFunctionsToXrmButtons(cf.ChildFormFunctions);
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, childButtons, ApplicationController));
+                    }
+                    else
+                    {
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(this), ApplicationController));
+                    }
+                }
+            }
+            return buttons;
         }
 
         public List<string> ChangedPersistentFields { get; private set; }
@@ -90,7 +141,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        protected void Reload()
+        public void Reload()
         {
             _formSections = new ObservableCollection<SectionViewModelBase>();
             StartNewAction(LoadFormSections);
@@ -99,10 +150,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         public XrmButtonViewModel SaveButtonViewModel { get; private set; }
 
         public XrmButtonViewModel CancelButtonViewModel { get; private set; }
-
-        public XrmButtonViewModel SaveRequestButtonViewModel { get; private set; }
-
-        public XrmButtonViewModel LoadRequestButtonViewModel { get; private set; }
 
         public string RecordIdName { get; set; }
 
@@ -132,6 +179,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             set
             {
                 _recordType = value;
+                if (value != null)
+                    LoadCustomFunctions();
                 OnPropertyChanged("TabLabel");
             }
         }
@@ -191,16 +240,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         }
 
         public Action OnCancel { get; set; }
-
-        public virtual void SaveObject()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void LoadObject()
-        {
-            throw new NotImplementedException();
-        }
 
         private bool ConfirmClose()
         {
@@ -411,7 +450,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         }
 
         private readonly RecordEntryViewModelBase _parentForm;
-        internal override RecordEntryViewModelBase ParentForm
+        public override RecordEntryViewModelBase ParentForm
         {
             get { return _parentForm; }
         }
@@ -436,10 +475,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
                 SaveButtonViewModel.IsVisible = OnSave != null;
                 CancelButtonViewModel.IsVisible = OnCancel != null;
-                if (AllowSaveAndLoad)
-                    SaveRequestButtonViewModel.IsVisible = true;
-                if (AllowSaveAndLoad)
-                    LoadRequestButtonViewModel.IsVisible = true;
 
                 PostLoading();
 

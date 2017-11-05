@@ -55,12 +55,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         RecordForm.OnSectionLoaded();
                     },
                     OnlyValidate = recordForm.OnlyValidate,
-                    MaxHeight = 300,
+                    MaxHeight = 600,
                     LoadDialog = (d) => { RecordEntryViewModel.LoadChildForm(d); }
                 };
                 DynamicGridViewModel.AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);
-                var customFunctions = FormService.GetCustomFunctionsFor(ReferenceName, (RecordEntryFormViewModel) GetRecordForm()).ToList();
-                DynamicGridViewModel.LoadGridButtons(customFunctions);
             }
         }
 
@@ -157,8 +155,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     LinkedRecordLookup, RecordForm.RecordId));
         }
 
-
-
         public void InsertRecord(IRecord record, int index)
         {
             DoOnAsynchThread(() =>
@@ -198,23 +194,29 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get { return LinkedRecordType; }
         }
 
-
         public DynamicGridViewModel DynamicGridViewModel { get; set; }
 
         public override bool Validate()
         {
             ErrorMessage = null;
             var isValid = true;
-            if (IsVisible && DynamicGridViewModel != null)
+            if (IsVisible)
             {
-                foreach (var gridRowViewModel in DynamicGridViewModel.GridRecords)
+                if (DynamicGridViewModel != null)
                 {
-                    if (!gridRowViewModel.Validate())
-                        isValid = false;
+                    foreach (var gridRowViewModel in DynamicGridViewModel.GridRecords)
+                    {
+                        if (!gridRowViewModel.Validate())
+                            isValid = false;
+                    }
+                }
+                else
+                {
+                    isValid = base.Validate();
                 }
                 var onlyValidate = GetRecordForm().OnlyValidate;
                 if (onlyValidate == null ||
-                    (onlyValidate.ContainsKey(RecordType) && onlyValidate[RecordType].Contains(FieldName)))
+                    (RecordType != null && onlyValidate.ContainsKey(RecordType) && onlyValidate[RecordType].Contains(FieldName)))
                 {
                     var thisValidators = FormService.GetSectionValidationRules(SectionIdentifier);
 

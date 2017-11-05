@@ -87,7 +87,6 @@
     <Compile Include="XrmTest\XrmTestFormService.cs" />
     <Compile Include="XrmTest\XrmTestReadViewModel.cs" />
     <Compile Include="XrmTest\XrmTestFormServiceController.cs" />
-    <Compile Include="Prism\XrmTestModuleModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

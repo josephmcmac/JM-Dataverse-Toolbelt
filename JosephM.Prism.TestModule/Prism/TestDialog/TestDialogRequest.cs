@@ -6,10 +6,12 @@ using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Application.ViewModel.Attributes;
 using JosephM.Prism.TestModule.Prism.TestSettings;
+using JosephM.Application.ViewModel.Fakes;
 
 namespace JosephM.Prism.TestModule.Prism.TestDialog
 {
     [AllowSaveAndLoad]
+    [Group(Sections.DisplayFirst, true, 5)]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.SelectAll, true, order: 20, selectAll: true)]
     [Group(Sections.TypesAndLookups, true, order: 30)]
@@ -21,6 +23,8 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
         {
             Items = new[] {new TestDialogRequestItem()};
         }
+
+        public IEnumerable<TestEnum> MultiSelect { get; set; }
 
         [Group(Sections.Main)]
         public bool ThrowResponseErrors { get; set; }
@@ -44,6 +48,12 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
         public RecordType RecordType { get; set; }
 
         [Group(Sections.TypesAndLookups)]
+        [ReferencedType(FakeConstants.RecordType)]
+        [UsePicklist]
+        [OrderPriority(FakeConstants.MainRecordName, "TestingString")]
+        public Lookup LookupField { get; set; }
+
+        [Group(Sections.TypesAndLookups)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         public IEnumerable<FieldSetting> Fields { get; set; }
 
@@ -54,12 +64,13 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
         [Group(Sections.TypesAndLookups)]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
 
-
+        [Group(Sections.DisplayFirst)]
         [DoNotAllowAdd]
         public IEnumerable<TestDialogRequestItem> Items { get; set; }
 
         private static class Sections
         {
+            public const string DisplayFirst = "DisplayFirst";
             public const string Main = "Main";
             public const string Setting = "Setting";
             public const string TypesAndLookups = "TypesAndLookups";
@@ -73,8 +84,17 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
                 ReadOnlyProp = "I Read Only";
             }
 
+            public IEnumerable<TestEnum> MultiSelect { get; set; }
+
             [ReadOnlyWhenSet]
             public string ReadOnlyProp { get; set; }
+        }
+
+        public enum TestEnum
+        {
+            Option1,
+            Option2,
+            Option3
         }
     }
 } ;

@@ -1,28 +1,36 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.RecordCounts.Exporter
 {
     public class RecordCountsResponse : ServiceResponseBase<RecordCountsResponseItem>
     {
-        [Hidden]
-        public string Folder { get; set; }
-        [Hidden]
-        public string RecordCountsByOwnerFileName { get; set; }
-        [Hidden]
-        public string RecordCountsByOwnerFileNameQualified
-        {
-            get { return string.Format("{0}/{1}", Folder, RecordCountsByOwnerFileName); }
-        }
-        [Hidden]
-        public string RecordCountsFileName { get; set; }
-        [Hidden]
-        public string RecordCountsFileNameQualified
-        {
-            get { return string.Format("{0}/{1}", Folder, RecordCountsFileName); }
-        }
-        [Hidden]
+        [AllowDownload]
+        [PropertyInContextByPropertyValue(nameof(AreRecordCountsByOwner), false)]
         public IEnumerable<RecordCount> RecordCounts { get; set; }
+
+        [Hidden]
+        public bool AreRecordCountsByOwner
+        {
+            get
+            {
+                return RecordCountsByOwner.Any();
+            }
+        }
+
+        [AllowDownload]
+        [PropertyInContextByPropertyValue(nameof(AreRecordCountsByOwner), true)]
+        public IEnumerable<RecordCountByOwner> RecordCountsByOwner
+        {
+            get
+            {
+                return RecordCounts
+                    .Where(rc => rc is RecordCountByOwner)
+                    .Cast<RecordCountByOwner>()
+                    .ToArray();
+            }
+        }
     }
 }

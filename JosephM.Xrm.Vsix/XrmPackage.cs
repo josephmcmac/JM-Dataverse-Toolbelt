@@ -4,64 +4,45 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
+using EnvDTE80;
+using JosephM.Application.Prism.Module.AboutModule;
+using JosephM.InstanceComparer;
+using JosephM.Prism.XrmModule.Crud;
+using JosephM.Record.Application.Fakes;
+using JosephM.Xrm.Vsix;
+using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module;
+using JosephM.Xrm.Vsix.Module.CreatePackage;
+using JosephM.Xrm.Vsix.Module.CustomisationImport;
+using JosephM.Xrm.Vsix.Module.DeployAssembly;
+using JosephM.Xrm.Vsix.Module.DeployPackage;
+using JosephM.Xrm.Vsix.Module.DeployWebResource;
+using JosephM.Xrm.Vsix.Module.ImportCsvs;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.Xrm.Vsix.Module.PluginTriggers;
+using JosephM.Xrm.Vsix.Module.RefreshSchema;
+using JosephM.Xrm.Vsix.Module.UpdateAssembly;
+using JosephM.Xrm.Vsix.Module.Web;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
-using JosephM.Record.Xrm.XrmRecord;
-using JosephM.XRM.VSIX.Utilities;
-using EnvDTE80;
-using JosephM.Prism.XrmModule.Crud;
+using System;
+using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace JosephM.XRM.VSIX
 {
-    /// <summary>
-    /// This is the class that implements the package exposed by this assembly.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The minimum requirement for a class to be considered a valid package for Visual Studio
-    /// is to implement the IVsPackage interface and register itself with the shell.
-    /// This package uses the helper classes defined inside the Managed Package Framework (MPF)
-    /// to do it: it derives from the Package class that provides the implementation of the
-    /// IVsPackage interface and uses the registration attributes defined in the framework to
-    /// register itself and its components with the shell. These attributes tell the pkgdef creation
-    /// utility what data to put into .pkgdef file.
-    /// </para>
-    /// <para>
-    /// To get loaded into VS, the package must be referred by &lt;Asset Type="Microsoft.VisualStudio.VsPackage" ...&gt; in .vsixmanifest file.
-    /// </para>
-    /// </remarks>
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
-    [Guid(XrmPackage.PackageGuidString)]
+    [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class XrmPackage : Package
     {
-        /// <summary>
-        /// XrmPackage GUID string.
-        /// </summary>
         public const string PackageGuidString = "e6f49165-430c-4175-b821-b126db4d680e";
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XrmPackage"/> class.
-        /// </summary>
-        public XrmPackage()
-        {
-            // Inside this method you can place any initialization code that does not require
-            // any Visual Studio service because at this point the package object is created but
-            // not sited yet inside Visual Studio environment. The place to do all the other
-            // initialization is the Initialize method.
-        }
 
         #region Package Members
 
@@ -72,65 +53,55 @@ namespace JosephM.XRM.VSIX
         protected override void Initialize()
         {
             base.Initialize();
-            //Commands.RefreshConnection.RefreshConnectionCommand.Initialize(this);
-            Commands.DeployWebResource.DeployWebResourceCommand.Initialize(this);
-            Commands.DeployAssembly.DeployAssemblyCommand.Initialize(this);
-            Commands.ManagePluginTriggers.ManagePluginTriggersCommand.Initialize(this);
-            Commands.UpdateAssembly.UpdateAssemblyCommand.Initialize(this);
-            Commands.RefreshSchema.RefreshSchemaCommand.Initialize(this);
-            Commands.RefreshSettings.RefreshSettingsCommand.Initialize(this);
-            Commands.GetSolution.GetSolutionCommand.Initialize(this);
-            Commands.ImportCsvs.ImportCsvsCommand.Initialize(this);
-            Commands.ClearCache.ClearCacheCommand.Initialize(this);
-            Commands.ImportCustomisations.ImportCustomisationsCommand.Initialize(this);
-            Commands.OpenWeb.OpenCrmWebCommand.Initialize(this);
-            Commands.OpenWeb.OpenCrmSolutionCommand.Initialize(this);
-            Commands.OpenWeb.OpenCrmAdvancedFindCommand.Initialize(this);
-            Commands.CreateDeploymentPackage.CreateDeploymentPackageCommand.Initialize(this);
-            Commands.DeployPackage.DeployPackageCommand.Initialize(this);
-            Commands.InstanceComparison.InstanceComparisonCommand.Initialize(this);
-            Commands.CrudCommand.CrudCommand.Initialize(this);
-        }
 
-        private XrmRecordService _xrmRecordService;
+            var container = new PrismDependencyContainer(new UnityContainer());
 
-        private object _lockObject = new Object();
+            var commandService = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            container.RegisterInstance(typeof(IMenuCommandService), commandService);
 
-        public XrmRecordService GetXrmRecordService()
-        {
-            //simple cache + if configuration has change then create new
-            var xrmConfig = VsixUtility.GetXrmConfig(this);
-            lock (_lockObject)
-            {
-                if (_xrmRecordService != null)
-                {
-                    //if something in the config different clear the service
-                    var oldConfig = _xrmRecordService.XrmRecordConfiguration;
-                    if (oldConfig.AuthenticationProviderType != xrmConfig.AuthenticationProviderType
-                        || oldConfig.DiscoveryServiceAddress != xrmConfig.DiscoveryServiceAddress
-                        || oldConfig.OrganizationUniqueName != xrmConfig.OrganizationUniqueName
-                        || oldConfig.Domain != xrmConfig.Domain
-                        || oldConfig.Username != xrmConfig.Username
-                        || oldConfig.Password == null && xrmConfig.Password != null
-                        || oldConfig.Password != null && xrmConfig.Password == null
-                        ||
-                        (oldConfig.Password != null && xrmConfig.Password != null &&
-                         oldConfig.Password.GetRawPassword() != xrmConfig.Password.GetRawPassword())
-                        )
-                        _xrmRecordService = null;
-                }
-                if (_xrmRecordService == null)
-                {
-                    _xrmRecordService = new XrmRecordService(xrmConfig, formService: new XrmFormService());
-                }
-                return _xrmRecordService;
-            }
-        }
 
-        public VisualStudioService GetVisualStudioService()
-        {
             var dte = GetService(typeof(SDTE)) as DTE2;
-            return new VisualStudioService(dte);
+            var visualStudioService = new VisualStudioService(dte);
+            container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
+
+            var applicationController = new VsixApplicationController(container);
+            var app = new VsixApplication(applicationController, new VsixSettingsManager(visualStudioService), new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
+
+            app.AddModule<OpenWebModule>(0x010B);
+            app.AddModule<OpenSolutionModule>(0x010C);
+            app.AddModule<OpenAdvancedFindModule>(0x010D);
+            app.AddModule<ClearCacheModule>(0x0109);
+            app.AddModule<XrmCrudModule>(0x0112);
+            app.AddModule<InstanceComparerModule>(0x0111);
+            app.AddModule<UpdateAssemblyModule>(0x0105);
+            app.AddModule<XrmPackageSettingsModule>(0x0106);
+            app.AddModule<DeployAssemblyModule>(0x0103);
+            app.AddModule<ManagePluginTriggersModule>(0x0104);
+            app.AddModule<VsixCustomisationImportModule>(0x010A);
+            app.AddModule<VsixCreatePackageModule>(0x010E);
+            app.AddModule<RefreshSchemaModule>(0x0100);
+            app.AddModule<DeployWebResourceModule>(0x0102);
+            app.AddModule<VsixImportCsvsModule>(0x0108);
+            app.AddModule<VsixDeployPackageModule> (0x0110);
+            app.AddModule<XrmPackageAboutModule>(0x0113); 
+        }
+
+        public class XrmPackageAboutModule : AboutModule
+        {
+            public override string CodeLink => "https://github.com/josephmcmac/XRM-Developer-Tool";
+
+            public override string CreateIssueLink => "https://github.com/josephmcmac/XRM-Developer-Tool/issues/new";
+
+            public override Core.FieldType.Url OtherLink => new Core.FieldType.Url("https://github.com/josephmcmac/XRM-Developer-Tool/releases", "Download Desktop App");
+
+            //public override Assembly MainAssembly => Assembly.GetExecutingAssembly();
+
+            public override string AboutDetail =>
+                "This extention has been created to improve productivity developing, customising, and deploying solutions in Miscrosoft Dynamics CRM (now know as Dynamics 365)\n" +
+                "\n" +
+                "My desktop application also shares many of these features, as well includes others. It can be download at the link shown below\n" +
+                "\n" +
+                "If you use this extention and experience issues, or have any suggestions for improvement, create an issue in github with the link shown below and I will look into it when I get a chance";
         }
         #endregion
     }

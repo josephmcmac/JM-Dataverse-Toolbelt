@@ -95,7 +95,11 @@
         </DockPanel>
     </DataTemplate>
     <DataTemplate x:Key="OptionTemplate">
-        <Button Style="{StaticResource MainMenuButton}" Content="{Binding Label}" Command="{Binding DelegateCommand}" />
+        <application:ApplicationMenuGroupView Content="{Binding Label}"  />
+    </DataTemplate>
+    <DataTemplate x:Key="OptionDropdownTemplate" DataType="applicationOptions:ApplicationOption" >
+        <Button Margin="0,0,0,0" Content="{Binding Label}"
+                Command="{Binding DelegateCommand}" Style="{StaticResource MainMenuButton}"  />
     </DataTemplate>
     <DataTemplate x:Key="NotificationTemplate">
         <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />
@@ -149,7 +153,7 @@
             Height="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
                                        AncestorType=Border,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=1}">
             <recordEntry:RecordEntryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -178,10 +182,10 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="QueryViewTemplateWindowMinimum">
-        <Grid MinHeight="{Binding Path=ActualHeight,
+        <Grid MaxHeight="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Window,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}" >
+                                       AncestorType=application:WindowShell,
+                                       AncestorLevel=1}}" >
             <grid1:GridQueryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -249,6 +253,9 @@
     <DataTemplate x:Key="UrlFieldTemplate">
         <field:UrlFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="MultiSelectFieldTemplate">
+        <field:MultiSelectView DataContext="{Binding}" />
+    </DataTemplate>
     <templateSelector:FieldTemplateSelector
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
@@ -266,15 +273,8 @@
         EnumerableFieldTemplate="{StaticResource EnumerableFieldTemplate}"
         DecimalFieldTemplate="{StaticResource DecimalFieldTemplate}"
         UrlFieldTemplate="{StaticResource UrlFieldTemplate}"
+        MultiSelectFieldTemplate="{StaticResource MultiSelectFieldTemplate}"
         x:Key="fieldTemplateSelector" />
-    <!--<DataTemplate x:Key="labelledFieldTemplate" >
-        <WrapPanel>
-            <field:FieldLabelView DataContext="{Binding}" />
-            <ContentControl
-                    Content="{Binding}"
-                    ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
-        </WrapPanel>
-    </DataTemplate>-->
     <DataTemplate x:Key="labelledFieldTemplate">
         <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>

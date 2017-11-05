@@ -25,17 +25,18 @@ namespace JosephM.Prism.Infrastructure.Dialog
         {
         }
 
+        protected AppSettingsDialog(IDialogController dialogController,  IRecordService lookupService)
+            //map the existing config to the new record
+            : this(dialogController, lookupService, new InterfaceMapperFor<TSettingsInterface, TSettingsObject>().Map(dialogController.ApplicationController.ResolveType<TSettingsInterface>()))
+        {
+            
+        }
+
         protected AppSettingsDialog(IDialogController dialogController,
-            IRecordService lookupService)
+            IRecordService lookupService, TSettingsObject objectToEnter)
             : base(dialogController)
         {
-            //map the existing config to the new record
-            var settingsInterface = ApplicationController.ResolveType<TSettingsInterface>();
-            var configMapper = new InterfaceMapperFor<TSettingsInterface, TSettingsObject>();
-            SettingsObject = configMapper.Map(settingsInterface);
-
-
-
+            SettingsObject = objectToEnter;
             var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, lookupService,
                 null, OnSave, null);
 

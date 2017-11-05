@@ -386,7 +386,7 @@ namespace JosephM.Xrm.Test
         {
             var contact = new Entity("contact");
             contact.SetField("firstname", "TESTSCRIPT");
-            contact.SetField("lastname", "CONTACT - X");
+            contact.SetField("lastname", "CONTACT " + DateTime.UtcNow.ToFileTimeUtc().ToString());
             return CreateAndRetrieve(contact);
         }
 

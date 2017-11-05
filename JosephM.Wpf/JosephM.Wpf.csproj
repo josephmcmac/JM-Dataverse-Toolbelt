@@ -155,6 +155,9 @@
     <Compile Include="Application\ApplicationHeadingView.xaml.cs">
       <DependentUpon>ApplicationHeadingView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Application\ApplicationMenuGroupView.xaml.cs">
+      <DependentUpon>ApplicationMenuGroupView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Application\WindowShell.xaml.cs">
       <DependentUpon>WindowShell.xaml</DependentUpon>
     </Compile>
@@ -167,6 +170,7 @@
     <Compile Include="Converters\FileRefToStringConverter.cs" />
     <Compile Include="Converters\NullOrEmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\LengthConverter.cs" />
+    <Compile Include="Converters\TabbedApplicationHeightConverter.cs" />
     <Compile Include="Grid\DynamicGridView.xaml.cs">
       <DependentUpon>DynamicGridView.xaml</DependentUpon>
     </Compile>
@@ -202,6 +206,10 @@
       <DependentUpon>EditRowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\EditRowColumn.cs" />
+    <Compile Include="Grid\GridMultiSelectFieldView.xaml.cs">
+      <DependentUpon>GridMultiSelectFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridMultiSelectColumn.cs" />
     <Compile Include="Grid\GridQueryView.xaml.cs">
       <DependentUpon>GridQueryView.xaml</DependentUpon>
     </Compile>
@@ -262,6 +270,9 @@
     </Compile>
     <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
       <DependentUpon>LookupPicklistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\MultiSelectView.xaml.cs">
+      <DependentUpon>MultiSelectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\RecordFieldView.xaml.cs">
       <DependentUpon>RecordFieldView.xaml</DependentUpon>
@@ -385,6 +396,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Application\ApplicationMenuGroupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Application\WindowShell.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -422,6 +437,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grid\EditRowView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\GridMultiSelectFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -494,6 +513,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\LookupPicklistView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\MultiSelectView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

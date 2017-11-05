@@ -36,6 +36,7 @@ namespace JosephM.Application.ViewModel.Grid
             ApplicationController = applicationController;
             LoadingViewModel = new LoadingViewModel(applicationController);
             OnDoubleClick = () => { };
+            OnClick = () => { };
             OnKeyDown = () => { };
             PreviousPageButton = new XrmButtonViewModel("Prev", () =>
             {
@@ -53,7 +54,7 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 Enabled = false
             };
-            MaxHeight = 1000;
+            MaxHeight = 600;
             LoadDialog = (d) => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(LoadDialog))); };
         }
 
@@ -70,24 +71,21 @@ namespace JosephM.Application.ViewModel.Grid
 
         public LoadingViewModel LoadingViewModel { get; set; }
 
-        public void LoadGridButtons(IEnumerable<CustomGridFunction> functions)
+        public void RefreshGridButtons()
         {
             ApplicationController.DoOnMainThread(() =>
             {
-                if (functions == null)
-                    functions = new CustomGridFunction[0];
-                _loadedGridButtons = functions;
                 _customFunctions =
-                    new ObservableCollection<XrmButtonViewModel>(GridsFunctionsToXrmButtons(functions));
+                    new ObservableCollection<XrmButtonViewModel>(GridsFunctionsToXrmButtons(_loadedGridButtons.ToArray()));
                 
-                OnPropertyChanged("CustomFunctions");
+                OnPropertyChanged(nameof(CustomFunctions));
             });
         }
 
         private IEnumerable<XrmButtonViewModel> GridsFunctionsToXrmButtons(IEnumerable<CustomGridFunction> functions)
         {
             var buttons = new List<XrmButtonViewModel>();
-            foreach(var cf in functions)
+            foreach(var cf in functions.ToArray())
             {
                 var isVisible = cf.VisibleFunction(this);
                 if (isVisible)
@@ -106,11 +104,19 @@ namespace JosephM.Application.ViewModel.Grid
             return buttons;
         }
 
-        private IEnumerable<CustomGridFunction> _loadedGridButtons;
+        public void AddGridButtons(IEnumerable<CustomGridFunction> gridButtons)
+        {
+            _loadedGridButtons.AddRange(gridButtons);
+            RefreshGridButtons();
+        }
+
+        private List<CustomGridFunction> _loadedGridButtons = new List<CustomGridFunction>();
 
         public void OnSelectionsChanged()
         {
-            LoadGridButtons(_loadedGridButtons);
+            OnClick();
+            RefreshGridButtons();
+
         }
 
         private ObservableCollection<XrmButtonViewModel> _customFunctions;
@@ -212,6 +218,7 @@ namespace JosephM.Application.ViewModel.Grid
         public Action<GridRowViewModel> DeleteRow { get; set; }
         public Action<GridRowViewModel> EditRow { get; set; }
         public Action OnDoubleClick { get; set; }
+        public Action OnClick { get; set; }
         public Action OnKeyDown { get; set; }
 
         private bool _isFocused;
@@ -235,6 +242,8 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 _addRow = value;
                 AddRowButton = _addRow == null ? null : new XrmButtonViewModel("Add", _addRow, ApplicationController);
+                OnPropertyChanged(nameof(CanAddRow));
+                OnPropertyChanged(nameof(AddRowButton));
             }
         }
         public XrmButtonViewModel AddRowButton { get; set; }
@@ -442,8 +451,8 @@ namespace JosephM.Application.ViewModel.Grid
             set
             {
                 _records = value;
-                OnPropertyChanged("GridRecords");
-                LoadGridButtons(_loadedGridButtons);
+                OnPropertyChanged(nameof(GridRecords));
+                RefreshGridButtons();
             }
         }
 

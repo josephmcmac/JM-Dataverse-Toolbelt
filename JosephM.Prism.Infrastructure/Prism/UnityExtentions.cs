@@ -27,7 +27,7 @@ namespace JosephM.Prism.Infrastructure.Prism
                 bootstrapper.Container.Resolve<IRegionManager>(),
                 applicationName, new PrismDependencyContainer(bootstrapper.Container));
 
-            applicationController.RegisterInfrastructure(new ApplicationOptionsViewModel(applicationController));
+            applicationController.RegisterInfrastructure(new ApplicationOptionsViewModel(applicationController), new PrismSettingsManager(applicationController));
             applicationController.RegisterTypeForNavigation<HtmlFileModel>();
             applicationController.RegisterType<IDialogController, DialogController>();
             applicationController.RegisterTypeForNavigation<SavedRequestDialog>();

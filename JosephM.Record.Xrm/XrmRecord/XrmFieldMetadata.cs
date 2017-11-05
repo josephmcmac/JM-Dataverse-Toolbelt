@@ -238,5 +238,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return 0;
             }
         }
+
+        public bool IsMultiSelect => false;
     }
 }

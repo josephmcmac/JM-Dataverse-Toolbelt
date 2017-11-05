@@ -1,11 +1,6 @@
 ﻿#region
 
-using System;
-using System.CodeDom;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -15,14 +10,15 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.ObjectMapping;
 using JosephM.Record.Attributes;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
-using JosephM.Record.Extentions;
-using JosephM.Application.ViewModel.Attributes;
-using JosephM.Core.Utility;
-using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 #endregion
 
@@ -268,10 +264,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             if (lookupService != null)
                             {
                                 var lookupRecord = lookupService.Get(changedViewModelLookup.RecordType, changedViewModelLookup.Id);
-                                var sourceFieldValue = lookupRecord.GetField(attribute.SourceRecordField);
-                                if (matchingFields.Any())
+                                if (lookupRecord == null)
                                 {
-                                    matchingFields.First().ValueObject = sourceFieldValue;
+                                    changedViewModel.ValueObject = null;
+                                    re.ApplicationController.UserMessage(string.Format("The {0} Was Not Found And The Value Has Been Cleared", changedViewModel.Label));
+                                }
+                                else
+                                {
+                                    var sourceFieldValue = lookupRecord.GetField(attribute.SourceRecordField);
+                                    if (matchingFields.Any())
+                                    {
+                                        matchingFields.First().ValueObject = sourceFieldValue;
+                                    }
                                 }
                             }
                         }
@@ -325,7 +329,28 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendDisplayNameAttributes(fieldName, recordType, methods);
             AppendConnectionForChanges(fieldName, recordType, methods, true);
             AppendLookupFieldCascadeChanges(fieldName, recordType, methods);
+            AppendSubGridButtons(fieldName, recordType, methods);
             return methods;
+        }
+
+        private void AppendSubGridButtons(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> methods)
+        {
+            var fieldMetadata = ObjectRecordService.GetFieldMetadata(fieldName, recordType);
+            if(fieldMetadata.FieldType == RecordFieldType.Enumerable)
+            {
+                methods.Add(
+                    re => re.StartNewAction(() =>
+                    {
+                        if (re is RecordEntryFormViewModel)
+                        {
+                            var refvm = re as RecordEntryFormViewModel;
+                            var customFunctions = GetCustomFunctionsFor(fieldName, refvm).ToList();
+                            var fieldVm = refvm.GetSubGridViewModel(fieldName);
+                            fieldVm.DynamicGridViewModel.AddGridButtons(customFunctions);
+                        }
+                    }));
+            }
+
         }
 
         private void AppendReadOnlyWhenSetAttributes(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
@@ -346,7 +371,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
-        internal override bool AllowAddRow(string subGridName)
+        public override bool AllowAddRow(string subGridName)
         {
             var prop = GetPropertyInfo(subGridName, ObjectType.AssemblyQualifiedName);
             return prop.GetCustomAttribute<DoNotAllowAdd>() == null;
@@ -753,6 +778,25 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
+        internal override IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> OrderPicklistItems<T>(string fieldName, string recordType, IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> picklistItems)
+        {
+            var orderPriority = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<OrderPriority>();
+            if (orderPriority == null)
+                return picklistItems.OrderBy(p => p.Name).ToArray();
+
+            return picklistItems.ToList().OrderBy(p =>
+            {
+                return orderPriority.PriorityValues.Contains(p.Name)
+                ? orderPriority.PriorityValues.ToList().IndexOf(p.Name)
+                : 999999;
+            }).ThenBy(p => p.Name).ToArray();
+        }
+
+        internal override bool InitialisePicklistIfOneOption(string fieldName, string recordType)
+        {
+            return GetPropertyInfo(fieldName, recordType).GetCustomAttribute<InitialiseIfOneOption>() != null;
+        }
+
         internal override string GetPicklistDisplayField(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
         {
             var picklistAttribute = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<UsePicklist>();
@@ -764,7 +808,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
         {
             var functions = new Dictionary<string, Action>();
-            var enumeratedType = ObjectRecordService.GetPropertyType(referenceName, recordForm.GetRecordType()).GenericTypeArguments[0];
+            var recordType = recordForm.GetSubGridViewModel(referenceName).RecordType;
+            if (recordType == null)
+                return new CustomGridFunction[0];
+
+            var enumeratedType = ObjectRecordService.GetClassType(recordType);
             var customFunctions = enumeratedType.GetCustomAttributes<CustomFunction>();
             if (customFunctions != null)
             {
@@ -779,10 +827,31 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 functions.Add("Download CSV", () => { recordForm.GetSubGridViewModel(referenceName).DynamicGridViewModel.DownloadCsv(); });
             }
             var customGridFunctions = functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToList();
-            var injectedFunctions = recordForm.ApplicationController.ResolveInstance(typeof(CustomGridFunctions), enumeratedType.AssemblyQualifiedName) as CustomGridFunctions;
-            if (injectedFunctions != null)
+            var typesToResolve = GetTypesToResolve(enumeratedType);
+            foreach (var typeToResolve in typesToResolve)
+            {
+                var injectedFunctions = recordForm.ApplicationController.ResolveInstance(typeof(CustomGridFunctions), typeToResolve.AssemblyQualifiedName) as CustomGridFunctions;
                 customGridFunctions.AddRange(injectedFunctions.CustomFunctions);
+            }
             return customGridFunctions;
+        }
+
+        internal override IEnumerable<CustomFormFunction> GetCustomFunctions(string recordType, RecordEntryFormViewModel recordForm)
+        {
+            var type = ObjectRecordService.GetClassType(recordType);
+            var customGridFunctions = new List<CustomFormFunction>();
+            var typesToResolve = GetTypesToResolve(type);
+            foreach (var typeToResolve in typesToResolve)
+            {
+                var injectedFunctions = recordForm.ApplicationController.ResolveInstance(typeof(CustomFormFunctions), typeToResolve.AssemblyQualifiedName) as CustomFormFunctions;
+                customGridFunctions.AddRange(injectedFunctions.CustomFunctions);
+            }
+            return customGridFunctions;
+        }
+
+        private static List<Type> GetTypesToResolve(Type type)
+        {
+            return type.GetInterfaces().Union(new[] { type }).ToList();
         }
 
         public override Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)

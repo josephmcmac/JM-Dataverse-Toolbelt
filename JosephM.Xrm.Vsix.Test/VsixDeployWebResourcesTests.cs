@@ -1,9 +1,6 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.Application.ViewModel.Fakes;
-using JosephM.Record.IService;
+﻿using JosephM.Record.IService;
 using JosephM.Record.Query;
-using JosephM.XRM.VSIX.Commands.DeployWebResource;
-using JosephM.XRM.VSIX.Dialogs;
+using JosephM.Xrm.Vsix.Module.DeployWebResource;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
@@ -16,39 +13,28 @@ namespace JosephM.Xrm.Vsix.Test
     [TestClass]
     public class VsixDeployWebResourcesTests : JosephMVsixTests
     {
+        /// <summary>
+        /// Scripts through the deploy web resources dialog
+        /// </summary>
         [TestMethod]
         public void VsixDeployWebResourcesTest()
         {
+            //first delete all the test deployed javascriot files
             var javaScriptFiles = GetJavaScriptFiles();
-
             DeleteJavaScriptFileRecords();
-
             Assert.IsFalse(GetJavaScriptFileRecords().Any());
 
-            var packageSettings = GetTestPackageSettings();
-
-            var deployResourcesService = new DeployWebResourcesService(XrmRecordService, packageSettings);
-
-            Assert.IsTrue(javaScriptFiles.Any());
-            var request = new DeployWebResourcesRequest()
-            {
-                Files = javaScriptFiles
-            };
-            var dialog = new VsixServiceDialog<DeployWebResourcesService, DeployWebResourcesRequest, DeployWebResourcesResponse, DeployWebResourcesResponseItem>(
-                deployResourcesService,
-                request,
-                new DialogController(new FakeApplicationController()));
-
-            dialog.Controller.BeginDialog();
-
+            //create an app, deploy and verify created
+            VisualStudioService.SetSelectedItems(GetJavaScriptFiles().Select(f => new FakeVisualStudioProjectItem(f)).ToArray());
+            var testApplication = CreateAndLoadTestApplication<DeployWebResourceModule>();
+            var dialog = testApplication.NavigateToDialog<DeployWebResourceModule, DeployWebResourceDialog>();
+            
             Assert.AreEqual(GetJavaScriptFiles().Count(), GetJavaScriptFileRecords().Count());
 
-            dialog = new VsixServiceDialog<DeployWebResourcesService, DeployWebResourcesRequest, DeployWebResourcesResponse, DeployWebResourcesResponseItem>(
-                deployResourcesService,
-                request,
-                new DialogController(new FakeApplicationController()));
-
-            dialog.Controller.BeginDialog();
+            //create an app, deploy againb and verify not duplicated
+            VisualStudioService.SetSelectedItems(GetJavaScriptFiles().Select(f => new FakeVisualStudioProjectItem(f)).ToArray());
+            testApplication = CreateAndLoadTestApplication<DeployWebResourceModule>();
+            dialog = testApplication.NavigateToDialog<DeployWebResourceModule, DeployWebResourceDialog>();
 
             Assert.AreEqual(GetJavaScriptFiles().Count(), GetJavaScriptFileRecords().Count());
         }

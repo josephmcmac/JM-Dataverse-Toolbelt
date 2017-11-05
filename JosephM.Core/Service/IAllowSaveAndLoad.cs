@@ -6,6 +6,9 @@ namespace JosephM.Core.Service
     {
         bool Autoload { get; set; }
         string Name { get; set; }
+
+        [Hidden]
+        bool DisplaySavedSettingFields { get; set; }
     }
 
     public class SaveAndLoadFields : IAllowSaveAndLoad
@@ -17,5 +20,8 @@ namespace JosephM.Core.Service
         [RequiredProperty]
         [DisplayOrder(2)]
         public string Name { get; set; }
+
+        [Hidden]
+        public bool DisplaySavedSettingFields { get; set; }
     }
 }

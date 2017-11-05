@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using System.Collections.Generic;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {

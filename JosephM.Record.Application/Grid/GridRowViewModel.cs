@@ -93,7 +93,7 @@ namespace JosephM.Application.ViewModel.Grid
             get { return _gridFields; }
         }
 
-        internal override RecordEntryViewModelBase ParentForm
+        public override RecordEntryViewModelBase ParentForm
         {
             get
             {

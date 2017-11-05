@@ -15,7 +15,8 @@ namespace JosephM.InstanceComparer.Test
             request.ConnectionTwo = GetSavedXrmRecordConfiguration();
 
             var application = CreateAndLoadTestApplication<InstanceComparerModule>();
-            application.NavigateAndProcessDialog<InstanceComparerModule, InstanceComparerDialog>(request);
+            var response = application.NavigateAndProcessDialog<InstanceComparerModule, InstanceComparerDialog, InstanceComparerResponse>(request);
+            Assert.IsFalse(response.HasError);
         }
     }
 }
