@@ -16,8 +16,6 @@ using JosephM.Application.ViewModel.RecordEntry.Metadata;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    //todo the different lookup classes need more verification scripts
-    //settings/readonly/query/owner/grid/lookupgrid etc
     public class LookupFieldViewModel : ReferenceFieldViewModel<Lookup>
     {
         public LookupFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm,

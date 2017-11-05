@@ -206,6 +206,7 @@ namespace JosephM.Deployment
                     var importFieldsForEntity = GetFieldsToImport(thisTypeEntities, recordType).ToArray();
                     var fieldsDontExist = GetFieldsInEntities(thisTypeEntities)
                         .Where(f => !XrmService.FieldExists(f, thisRecordType))
+                        .Where(f => !HardcodedIgnoreFields.Contains(f))
                         .Distinct()
                         .ToArray();
                     foreach (var field in fieldsDontExist)
@@ -610,11 +611,7 @@ namespace JosephM.Deployment
 
         public bool IsIncludeField(string fieldName, string entityType)
         {
-            var hardcodeInvalidFields = new[]
-            {
-                "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
-                "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules"
-            };
+            var hardcodeInvalidFields = HardcodedIgnoreFields;
             if (hardcodeInvalidFields.Contains(fieldName))
                 return false;
             //these are just hack since they are not updateable fields (IsWriteable)
@@ -629,6 +626,18 @@ namespace JosephM.Deployment
             return
                 XrmRecordService.FieldExists(fieldName, entityType) && XrmRecordService.GetFieldMetadata(fieldName, entityType).Writeable;
 
+        }
+
+        private static IEnumerable<string> HardcodedIgnoreFields
+        {
+            get
+            {
+                return new[]
+                {
+                "yomifullname", "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
+                "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules"
+            };
+            }
         }
     }
 }

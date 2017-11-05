@@ -253,6 +253,9 @@
     <DataTemplate x:Key="UrlFieldTemplate">
         <field:UrlFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="MultiSelectFieldTemplate">
+        <field:MultiSelectView DataContext="{Binding}" />
+    </DataTemplate>
     <templateSelector:FieldTemplateSelector
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
@@ -270,6 +273,7 @@
         EnumerableFieldTemplate="{StaticResource EnumerableFieldTemplate}"
         DecimalFieldTemplate="{StaticResource DecimalFieldTemplate}"
         UrlFieldTemplate="{StaticResource UrlFieldTemplate}"
+        MultiSelectFieldTemplate="{StaticResource MultiSelectFieldTemplate}"
         x:Key="fieldTemplateSelector" />
     <DataTemplate x:Key="labelledFieldTemplate">
         <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">

@@ -77,6 +77,8 @@ namespace JosephM.Record.Metadata
             }
         }
 
+        public bool IsMultiSelect { get; set; }
+
         public static FieldMetadata Create(PropertyInfo propertyInfo, IDictionary<string, Type> objectTypeMaps = null)
         {
             var recordType = propertyInfo.ReflectedType != null ? propertyInfo.ReflectedType.Name : null;
@@ -125,17 +127,31 @@ namespace JosephM.Record.Metadata
                 fm = new DateFieldMetadata(internalName, label);
             else if (type.IsIEnumerableOfT())
             {
-                if (objectTypeMaps != null && objectTypeMaps.ContainsKey(internalName))
+                var enumeratedType = type.GetGenericArguments()[0];
+                if (enumeratedType.IsEnum)
+                {
+                    var options = new List<PicklistOption>();
+                    foreach (Enum item in enumeratedType.GetEnumValues())
+                        options.Add(new PicklistOption(item.ToString(), item.GetDisplayString()));
+                    fm = new PicklistFieldMetadata(recordType, internalName, label, options) { IsMultiSelect = true };
+                }
+                else if (objectTypeMaps != null && objectTypeMaps.ContainsKey(internalName))
                 {
                     fm = new EnumerableFieldMetadata(internalName, label, objectTypeMaps[internalName].AssemblyQualifiedName);
                 }
                 else
-                    fm = new EnumerableFieldMetadata(internalName, label, type.GetGenericArguments()[0].AssemblyQualifiedName);
+                    fm = new EnumerableFieldMetadata(internalName, label, enumeratedType.AssemblyQualifiedName);
             }
             else if (type == typeof(decimal))
                 fm = new DecimalFieldMetadata(internalName, label);
             else if (type == typeof(Url))
                 fm = new UrlFieldMetadata(internalName, label);
+            else if (type == typeof(Money))
+                fm = new MoneyFieldMetadata(recordType, internalName, label);
+            else if (type == typeof(long))
+                fm = new BigIntFieldMetadata(recordType, internalName, label);
+            else if (type == typeof(double))
+                fm = new DoubleFieldMetadata(recordType, internalName, label);
             else
                 fm = new ObjectFieldMetadata(recordType, internalName, label, propertyInfo.ReflectedType);
             if (fm == null)

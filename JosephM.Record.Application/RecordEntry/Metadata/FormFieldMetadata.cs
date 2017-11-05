@@ -116,13 +116,25 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     case RecordFieldType.Status:
                     case RecordFieldType.State:
                         {
-                        fieldVm = new PicklistFieldViewModel(field, label, recordForm)
-                        {
-                            ItemsSource = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType),
-                            IsRecordServiceField = isRecordServiceField
-                        };
-                        break;
-                    }
+                            var fieldMetadata = recordService.GetFieldMetadata(field, recordType);
+                            if (fieldMetadata.IsMultiSelect)
+                            {
+                                fieldVm = new PicklistMultiSelectFieldViewModel(field, label, recordForm)
+                                {
+                                    IsRecordServiceField = isRecordServiceField
+                                };
+                                ((PicklistMultiSelectFieldViewModel)fieldVm).SetItemsSource(recordService.GetPicklistKeyValues(field, recordType));
+                            }
+                            else
+                            {
+                                fieldVm = new PicklistFieldViewModel(field, label, recordForm)
+                                {
+                                    ItemsSource = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType),
+                                    IsRecordServiceField = isRecordServiceField
+                                };
+                            }
+                            break;
+                        }
                     case RecordFieldType.Date:
                     {
                         fieldVm = new DateFieldViewModel(field, label, recordForm)

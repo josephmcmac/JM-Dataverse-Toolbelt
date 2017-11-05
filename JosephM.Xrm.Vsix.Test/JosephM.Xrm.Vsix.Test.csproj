@@ -78,11 +78,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestFiles\JavaScript\testxrmsolution_entity.js" />
-    <Content Include="TestFiles\JavaScript\testxrmsolution_jquery.js" />
-    <Content Include="TestFiles\JavaScript\testxrmsolution_pageutility.js" />
-    <Content Include="TestFiles\JavaScript\testxrmsolution_sdk.rest.js" />
-    <Content Include="TestFiles\JavaScript\testxrmsolution_webserviceutility.js" />
+    <Content Include="TestFiles\JavaScript\testxrmsolution_entity.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\JavaScript\testxrmsolution_jquery.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\JavaScript\testxrmsolution_pageutility.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\JavaScript\testxrmsolution_sdk.rest.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\JavaScript\testxrmsolution_webserviceutility.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Crm.Sdk.Proxy.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

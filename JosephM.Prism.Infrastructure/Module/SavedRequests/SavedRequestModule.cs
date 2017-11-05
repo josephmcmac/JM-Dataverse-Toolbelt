@@ -83,7 +83,7 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
                 //get the selected object
                 var selectionSubGrid = parentForm.GetSubGridViewModel(nameof(SavedSettings.SavedRequests));
                 var selectedObjectRecord = selectionSubGrid.DynamicGridViewModel.SelectedRows.Count() == 1
-                    ? selectionSubGrid.DynamicGridViewModel.GridRecords.First().GetRecord() as ObjectRecord : null;
+                    ? selectionSubGrid.DynamicGridViewModel.SelectedRows.First().GetRecord() as ObjectRecord : null;
                 var selectedObject = selectedObjectRecord == null ? null : selectedObjectRecord.Instance;
 
                 if (selectedObject != null)

@@ -206,6 +206,10 @@
       <DependentUpon>EditRowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\EditRowColumn.cs" />
+    <Compile Include="Grid\GridMultiSelectFieldView.xaml.cs">
+      <DependentUpon>GridMultiSelectFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\GridMultiSelectColumn.cs" />
     <Compile Include="Grid\GridQueryView.xaml.cs">
       <DependentUpon>GridQueryView.xaml</DependentUpon>
     </Compile>
@@ -266,6 +270,9 @@
     </Compile>
     <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
       <DependentUpon>LookupPicklistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\MultiSelectView.xaml.cs">
+      <DependentUpon>MultiSelectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\RecordFieldView.xaml.cs">
       <DependentUpon>RecordFieldView.xaml</DependentUpon>
@@ -433,6 +440,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\GridMultiSelectFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\GridQueryView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -502,6 +513,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\LookupPicklistView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\MultiSelectView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -36,6 +36,7 @@ namespace JosephM.Application.ViewModel.Grid
             ApplicationController = applicationController;
             LoadingViewModel = new LoadingViewModel(applicationController);
             OnDoubleClick = () => { };
+            OnClick = () => { };
             OnKeyDown = () => { };
             PreviousPageButton = new XrmButtonViewModel("Prev", () =>
             {
@@ -113,7 +114,9 @@ namespace JosephM.Application.ViewModel.Grid
 
         public void OnSelectionsChanged()
         {
+            OnClick();
             RefreshGridButtons();
+
         }
 
         private ObservableCollection<XrmButtonViewModel> _customFunctions;
@@ -215,6 +218,7 @@ namespace JosephM.Application.ViewModel.Grid
         public Action<GridRowViewModel> DeleteRow { get; set; }
         public Action<GridRowViewModel> EditRow { get; set; }
         public Action OnDoubleClick { get; set; }
+        public Action OnClick { get; set; }
         public Action OnKeyDown { get; set; }
 
         private bool _isFocused;

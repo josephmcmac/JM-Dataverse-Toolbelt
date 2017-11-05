@@ -165,7 +165,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             {
                 foreach (var field in FieldViewModels)
                 {
-                    field.IsVisible = FormService.IsFieldInContext(field.FieldName, GetRecord());
+                    field.IsVisible = FormService?.IsFieldInContext(field.FieldName, GetRecord()) ?? true;
                 }
             }
             RefreshVisibilityExtention();

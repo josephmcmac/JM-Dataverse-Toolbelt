@@ -22,6 +22,8 @@ namespace JosephM.Xrm.Vsix.Test
         public void VsixCreateAndDeployPackageTest()
         {
             DeleteAll(Entities.account);
+            DeleteAll(Entities.contact);
+
             var account = CreateAccount();
 
             var tempFolder = Path.Combine(TestingFolder, "TEMP");
@@ -42,6 +44,10 @@ namespace JosephM.Xrm.Vsix.Test
                 new ExportRecordType()
                 {
                      RecordType = new RecordType(Entities.account, Entities.account), Type = ExportType.AllRecords
+                },
+                new ExportRecordType()
+                {
+                     RecordType = new RecordType(Entities.contact, Entities.contact), Type = ExportType.AllRecords
                 }
             };
 

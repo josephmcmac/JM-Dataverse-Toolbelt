@@ -442,6 +442,8 @@ namespace JosephM.Record.Service
                     {
                         var type = GetPropertyType(fieldName, recordType);
                         var options = new List<PicklistOption>();
+                        if (type.Name == "IEnumerable`1")
+                            type = type.GenericTypeArguments[0];
                         foreach (Enum item in type.GetEnumValues())
                         {
                             var enumMember = item.GetType().GetMember(item.ToString()).First();
@@ -697,6 +699,15 @@ namespace JosephM.Record.Service
                         Enum.Parse(
                             GetPropertyType(fieldName, recordType),
                             ((PicklistOption)value).Key);
+                if (value is IEnumerable<PicklistOption>)
+                {
+                    var enumType = GetPropertyType(fieldName, recordType).GenericTypeArguments[0];
+                    value =
+                        ((IEnumerable<PicklistOption>)value).Select(p => Enum.Parse(
+                            enumType,
+                            (p.Key))).ToArray();
+                    value = enumType.ToNewTypedEnumerable((IEnumerable<object>)value);
+                }
                 return value;
             }
             if (fieldType == RecordFieldType.Integer && value is string)
@@ -708,6 +719,12 @@ namespace JosephM.Record.Service
                             : (int?)null;
                 else
                     return int.Parse((string)value);
+            }
+            if (fieldType == RecordFieldType.Money)
+            {
+                if (value is decimal)
+                    value = new Money((decimal)value);
+                return value;
             }
             return base.ParseField(fieldName, recordType, value);
         }

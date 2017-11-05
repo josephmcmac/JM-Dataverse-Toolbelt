@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-using JosephM.Core.Extentions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -33,7 +32,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         _itemsSource = new[] { Value };
                     }
                 }
-                OnPropertyChanged("ItemsSource");
+                OnPropertyChanged(nameof(ItemsSource));
             }
         }
     }

@@ -285,9 +285,9 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 newValue = ((Guid)newValue).ToString();
             }
-            else if (newValue is Money)
+            else if (newValue is Microsoft.Xrm.Sdk.Money)
             {
-                newValue = ((Money)newValue).Value;
+                newValue = ((Microsoft.Xrm.Sdk.Money)newValue).Value;
             }
             return newValue;
         }
@@ -985,8 +985,8 @@ namespace JosephM.Record.Xrm.XrmRecord
                 parsedValue = ((EntityReference)parsedValue).Id;
             else if (parsedValue is OptionSetValue)
                 parsedValue = ((OptionSetValue)parsedValue).Value;
-            else if (parsedValue is Money)
-                parsedValue = ((Money)parsedValue).Value;
+            else if (parsedValue is Microsoft.Xrm.Sdk.Money)
+                parsedValue = ((Microsoft.Xrm.Sdk.Money)parsedValue).Value;
             return parsedValue;
         }
 

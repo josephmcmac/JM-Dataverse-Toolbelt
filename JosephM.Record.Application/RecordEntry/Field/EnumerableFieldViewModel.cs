@@ -155,8 +155,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     LinkedRecordLookup, RecordForm.RecordId));
         }
 
-
-
         public void InsertRecord(IRecord record, int index)
         {
             DoOnAsynchThread(() =>
@@ -196,7 +194,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get { return LinkedRecordType; }
         }
 
-
         public DynamicGridViewModel DynamicGridViewModel { get; set; }
 
         public override bool Validate()
@@ -219,7 +216,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 var onlyValidate = GetRecordForm().OnlyValidate;
                 if (onlyValidate == null ||
-                    (onlyValidate.ContainsKey(RecordType) && onlyValidate[RecordType].Contains(FieldName)))
+                    (RecordType != null && onlyValidate.ContainsKey(RecordType) && onlyValidate[RecordType].Contains(FieldName)))
                 {
                     var thisValidators = FormService.GetSectionValidationRules(SectionIdentifier);
 

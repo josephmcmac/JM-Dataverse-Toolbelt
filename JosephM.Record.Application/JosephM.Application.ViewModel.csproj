@@ -103,6 +103,7 @@
     <Compile Include="HTML\HtmlFileModel.cs" />
     <Compile Include="Query\ConditionViewModel.cs" />
     <Compile Include="Query\FilterConditionsViewModel.cs" />
+    <Compile Include="RecordEntry\Field\MultiSelectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\MoneyFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DoubleFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DropdownFieldViewModel.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="RecordEntry\Field\DecimalFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\IReferenceFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\ObjectFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\PicklistMultiSelectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\ReferenceFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\UrlFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />

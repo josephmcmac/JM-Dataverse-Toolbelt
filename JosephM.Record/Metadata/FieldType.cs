@@ -26,6 +26,7 @@
         RecordType,
         RecordField,
         Enumerable,
+        MultiSelect,
         Virtual,
         State,
         Image,

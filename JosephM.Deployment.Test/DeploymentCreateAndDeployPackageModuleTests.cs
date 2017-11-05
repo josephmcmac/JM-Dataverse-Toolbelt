@@ -21,6 +21,9 @@ namespace JosephM.Deployment.Test
         public void DeploymentCreateAndDeployPackageModuleTest()
         {
 
+            DeleteAll(Entities.account);
+            DeleteAll(Entities.contact);
+
             var account = CreateAccount();
             var solution = XrmRecordService.GetFirst("solution", XrmRecordService.GetPrimaryField("solution"), "Test Components");
             Assert.IsNotNull(solution);
@@ -36,7 +39,11 @@ namespace JosephM.Deployment.Test
             {
                 new ExportRecordType()
                 {
-                     RecordType = new RecordType(Entities.account, Entities.account), Type = ExportType.AllRecords
+                     RecordType = new RecordType(Entities.account, Entities.account), Type = ExportType.AllRecords,
+                },
+                new ExportRecordType()
+                {
+                     RecordType = new RecordType(Entities.contact, Entities.contact), Type = ExportType.AllRecords
                 }
             };
             var createApplication = CreateAndLoadTestApplication<CreatePackageModule>();
@@ -79,6 +86,10 @@ namespace JosephM.Deployment.Test
                 new ExportRecordType()
                 {
                      RecordType = new RecordType(Entities.account, Entities.account), Type = ExportType.AllRecords
+                },
+                new ExportRecordType()
+                {
+                     RecordType = new RecordType(Entities.contact, Entities.contact), Type = ExportType.AllRecords
                 }
             };
             //error if already .zips on the folder

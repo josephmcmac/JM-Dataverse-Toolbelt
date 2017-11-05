@@ -128,6 +128,7 @@
     <Compile Include="Extentions\DateTimeExtentions.cs" />
     <Compile Include="Extentions\StreamExtentions.cs" />
     <Compile Include="FieldType\FileReference.cs" />
+    <Compile Include="FieldType\Money.cs" />
     <Compile Include="FieldType\Url.cs" />
     <Compile Include="FieldType\Lookup.cs" />
     <Compile Include="FieldType\RecordField.cs" />

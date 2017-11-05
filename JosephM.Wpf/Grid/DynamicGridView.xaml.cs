@@ -13,6 +13,7 @@ using JosephM.Record.Metadata;
 using System.Windows.Media;
 using System;
 using System.ComponentModel;
+using JosephM.Core.Extentions;
 
 #endregion
 
@@ -28,7 +29,8 @@ namespace JosephM.Wpf.Grid
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;
             MouseDoubleClick += OnMouseDoubleClick;
-            MouseDown += OnMouseClick;
+            MouseLeftButtonUp += OnMouseClick;
+            MouseUp += OnMouseClick;
             KeyDown += OnKeyDown;
 
             var dp = DependencyPropertyDescriptor.FromProperty(TextBlock.TextProperty, typeof(TextBlock));
@@ -162,11 +164,21 @@ namespace JosephM.Wpf.Grid
                                 };
                             else if (column.FieldType == RecordFieldType.Picklist)
                             {
-
-                                dataGridField = new GridPicklistColumn()
+                                var metadata = gridSectionViewModel.RecordService.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType);
+                                if (metadata.IsMultiSelect)
                                 {
-                                    Binding = cellBinding
-                                };
+                                    dataGridField = new GridMultiSelectColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else
+                                {
+                                    dataGridField = new GridPicklistColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
                             }
                             else if (column.FieldType == RecordFieldType.Lookup)
                             {
@@ -299,6 +311,7 @@ namespace JosephM.Wpf.Grid
 
         public void OnMouseClick(object sender, MouseButtonEventArgs e)
         {
+            //GridSectionViewModel.OnClick();
         }
 
         private class ColumnMetadata
@@ -320,25 +333,42 @@ namespace JosephM.Wpf.Grid
             public bool IsEditable { get; private set; }
         }
 
+        private object _lockObject = new object();
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.AddedItems != null)
+            lock (_lockObject)
             {
-                foreach(var item in e.AddedItems)
+                try
                 {
-                    if(item is GridRowViewModel)
-                        ((GridRowViewModel)item).IsSelected = true;
+                    if (GridSectionViewModel != null)
+                    {
+                        if (e != null)
+                        {
+                            if (e.AddedItems != null)
+                            {
+                                foreach (var item in e.AddedItems)
+                                {
+                                    if (item is GridRowViewModel)
+                                        ((GridRowViewModel)item).IsSelected = true;
+                                }
+                            }
+                            if (e.RemovedItems != null)
+                            {
+                                foreach (var item in e.RemovedItems)
+                                {
+                                    if (item is GridRowViewModel)
+                                        ((GridRowViewModel)item).IsSelected = false;
+                                }
+                            }
+                        }
+                        GridSectionViewModel.OnSelectionsChanged();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.DisplayString());
                 }
             }
-            if (e.RemovedItems != null)
-            {
-                foreach (var item in e.RemovedItems)
-                {
-                    if (item is GridRowViewModel)
-                        ((GridRowViewModel)item).IsSelected = false;
-                }
-            }
-            GridSectionViewModel.OnSelectionsChanged();
         }
     }
 }

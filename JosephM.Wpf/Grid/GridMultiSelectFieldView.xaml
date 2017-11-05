@@ -1,4 +1,4 @@
-﻿<field:FieldControlBase x:Class="JosephM.Wpf.Grid.GridPicklistFieldView"
+﻿<field:FieldControlBase x:Class="JosephM.Wpf.Grid.GridMultiSelectFieldView"
                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,11 +13,5 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ComboBox
-        Name="ComboBox"
-        Style="{StaticResource GridFieldEntryStyle}"
-        DisplayMemberPath="Value"
-        ItemsSource="{Binding ItemsSource, Mode=TwoWay}"
-        IsReadOnly="{Binding IsVisibleAndEditable}"
-        SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}" />
+    <field:MultiSelectView></field:MultiSelectView>
 </field:FieldControlBase>

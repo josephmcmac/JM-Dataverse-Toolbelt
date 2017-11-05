@@ -62,5 +62,7 @@ namespace JosephM.Record.IService
         int Order { get; }
         [Hidden]
         string RecordType { get; }
+        [Hidden]
+        bool IsMultiSelect { get; }
     }
 }
