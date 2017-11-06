@@ -15,7 +15,7 @@ namespace JosephM.Core.Attributes
         public string PropertyDependency { get; set; }
         public object[] ValidValues { get; set; }
 
-        public PropertyInContextByPropertyValues(string propertyDependency, object[] validValues)
+        public PropertyInContextByPropertyValues(string propertyDependency, params object[] validValues)
         {
             PropertyDependency = propertyDependency;
             ValidValues = validValues;
@@ -24,8 +24,7 @@ namespace JosephM.Core.Attributes
         public override bool IsInContext(object instance)
         {
             var propertyValue = instance.GetPropertyValue(PropertyDependency);
-            return
-                propertyValue != null && ValidValues.Contains(instance.GetPropertyValue(PropertyDependency));
+            return ValidValues.Any(v => PropertyInContextByPropertyValue.InContextMatch(propertyValue, v));
         }
     }
 }

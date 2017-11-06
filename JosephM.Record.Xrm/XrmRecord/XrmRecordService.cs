@@ -1120,6 +1120,11 @@ namespace JosephM.Record.Xrm.XrmRecord
                             {
                                 changedFields.Add("pluginassemblyid");
                             }
+                            //for some obscure reason the matching entity loads the lookup as a different type despite the id being the same
+                            //so lets just remove if the id matches the existing record
+                            if (changedFields.Contains(Fields.sdkmessageprocessingstep_.plugintypeid)
+                                && record.GetLookupId(Fields.sdkmessageprocessingstep_.plugintypeid) == matchingItem.GetLookupId(Fields.sdkmessageprocessingstep_.plugintypeid))
+                                changedFields.Remove(Fields.sdkmessageprocessingstep_.plugintypeid);
 
                             if (changedFields.Any())
                             {

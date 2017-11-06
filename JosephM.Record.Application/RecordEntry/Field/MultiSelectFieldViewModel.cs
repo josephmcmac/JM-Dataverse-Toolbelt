@@ -20,12 +20,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected MultiSelectFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            MultiSelectButton = new XrmButtonViewModel("MultiSelect", MultiSelect, ApplicationController);
-        }
-
-        private void MultiSelect()
-        {
-            MultiSelectsVisible = true;
         }
 
         private bool _multiSelectsVisible;
@@ -66,8 +60,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get { return Value == null ? null : string.Join(",", Value.OrderBy(p => p.Value).Select(p => p.Value)); }
         }
-
-        public XrmButtonViewModel MultiSelectButton { get; private set; }
 
         internal void SetItemsSource(IEnumerable<T> items)
         {

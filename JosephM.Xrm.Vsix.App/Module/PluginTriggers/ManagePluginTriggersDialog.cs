@@ -59,6 +59,13 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                             new Condition(Fields.sdkmessagefilter_.sdkmessagefilterid, ConditionType.Equal,
                                 sms.GetLookupId(Fields.sdkmessageprocessingstep_.sdkmessagefilterid))));
 
+            var preImages = SdkMessageStepsPre.Any()
+                ? XrmRecordService.RetrieveAllOrClauses(Entities.sdkmessageprocessingstepimage, SdkMessageStepsPre.Select(m => new Condition(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, ConditionType.Equal, m.Id)))
+                .Where(i => i.GetOptionKey(Fields.sdkmessageprocessingstepimage_.imagetype) == OptionSets.SdkMessageProcessingStepImage.ImageType.PreImage.ToString())
+                .GroupBy(i => i.GetLookupField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid))
+                .Where(g => g.Key != null && g.Key.Id != null)
+                .ToDictionary(i => i.Key.Id, g => g.First())
+                : new Dictionary<string, IRecord>();
 
             _entryObject = new PluginTriggers();
             var triggers = new List<PluginTrigger>();
@@ -97,12 +104,29 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 trigger.Stage = stage.ParseEnum<PluginTrigger.PluginStage>();
                 trigger.Mode = mode.ParseEnum<PluginTrigger.PluginMode>();
                 trigger.Rank = rank;
-                trigger.FilteringFields = filteringAttributesString == null ? new RecordField[0]
+                trigger.FilteringFields = filteringAttributesString == null
+                    ? new RecordField[0]
                     : filteringAttributesString.Split(',')
+                    .Select(s => s.Trim())
                     .Where(s => !string.IsNullOrWhiteSpace(s))
                     .Select(s => new RecordField(s, s))
                     .ToArray();
-
+                if (preImages.ContainsKey(item.Id))
+                {
+                    var preImage = preImages[item.Id];
+                    var attributes = preImage.GetStringField(Fields.sdkmessageprocessingstepimage_.attributes);
+                    trigger.PreImageAllFields = string.IsNullOrWhiteSpace(attributes);
+                    trigger.PreImageFields = attributes == null
+                        ? new RecordField[0]
+                        : attributes
+                        .Split(',')
+                        .Select(s => s.Trim())
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .Select(s => new RecordField(s, s))
+                        .ToArray();
+                    trigger.PreImageName = preImage.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias);
+                    trigger.PreImageId = preImage.Id;
+                }
 
                 triggers.Add(trigger);
             }
@@ -162,7 +186,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 responses.Add(error);
             }
 
-            var unloadedObjects = new List<IRecord>();
+            var unloadedObjects = new Dictionary<IRecord, PluginTrigger>();
 
             var filters = EntryObject.Triggers.Select(t =>
             {
@@ -198,32 +222,43 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                     record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid, item.Id, XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.asyncautodelete, item.Mode == PluginTrigger.PluginMode.Asynchronous, XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.filteringattributes, item.FilteringFields != null && item.FilteringFields.Any() ? string.Join(",", item.FilteringFields.OrderBy(r => r.Key).Select(r => r.Key)) : null, XrmRecordService);
-                unloadedObjects.Add(record);
+                unloadedObjects.Add(record, item);
             }
 
-            var triggerLoads = XrmRecordService.LoadIntoCrm(unloadedObjects,
+            var triggerLoads = XrmRecordService.LoadIntoCrm(unloadedObjects.Keys,
                 Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid);
 
             var updatesAndDeletes =
-                unloadedObjects.Where(
+                unloadedObjects.Keys.Where(
                     r =>
                         new[] {"Update", "Delete"}.Contains(
                             r.GetLookupName(Fields.sdkmessageprocessingstep_.sdkmessageid)))
                             .ToArray();
 
             var images = new List<IRecord>();
-            foreach (var item in updatesAndDeletes)
+            foreach (var item in updatesAndDeletes
+                .Where(i => !triggerLoads.Errors.Keys.Contains(CompletionItem)))
             {
+                var matchingPluginTrigger = unloadedObjects[item];
+                //todo doesn't delete or exclude preimage entirely
+                var isUpdate = triggerLoads.Updated.Contains(item);
                 var imageRecord = XrmRecordService.NewRecord(Entities.sdkmessageprocessingstepimage);
-                imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.name, "PreImage", XrmRecordService);
-                imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.entityalias, "PreImage", XrmRecordService);
+                imageRecord.Id = matchingPluginTrigger.PreImageId;
+                if(matchingPluginTrigger.PreImageId != null)
+                    imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageid, matchingPluginTrigger.PreImageId, XrmRecordService);
+                imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.name, matchingPluginTrigger.PreImageName, XrmRecordService);
+                imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.entityalias, matchingPluginTrigger.PreImageName, XrmRecordService);
                 imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.messagepropertyname, "Target", XrmRecordService);
                 imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, XrmRecordService.ToLookup(item), XrmRecordService);
                 imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.imagetype, OptionSets.SdkMessageProcessingStepImage.ImageType.PreImage, XrmRecordService);
+                var attributesString = matchingPluginTrigger.PreImageAllFields || matchingPluginTrigger.PreImageFields == null || !matchingPluginTrigger.PreImageFields.Any()
+                    ? null
+                    : string.Join(",", matchingPluginTrigger.PreImageFields.Select(f => f.Key).OrderBy(s => s).ToArray());
+                imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.attributes, attributesString, XrmRecordService);
                 images.Add(imageRecord);
             }
             var imageLoads = XrmRecordService.LoadIntoCrm(images,
-                Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid);
+                Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageid);
 
             foreach (var trigger in triggerLoads.Errors)
             {

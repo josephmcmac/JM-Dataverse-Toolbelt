@@ -24,13 +24,18 @@ namespace JosephM.Core.Attributes
         public override bool IsInContext(object instance)
         {
             var propertyValue = instance.GetPropertyValue(PropertyDependency);
+            return InContextMatch(propertyValue, ValidValue);
+        }
+
+        public static bool InContextMatch(object propertyValue, object validValue)
+        {
             if (propertyValue == null)
                 return false;
             else
             {
-                if (propertyValue is Lookup && ValidValue is string && ((Lookup)propertyValue).Name.ToLower() == ValidValue.ToString().ToLower())
+                if (propertyValue is Lookup && validValue is string && ((Lookup)propertyValue).Name.ToLower() == validValue.ToString().ToLower())
                     return true;
-                return propertyValue.Equals(ValidValue);
+                return propertyValue.Equals(validValue);
             }
         }
     }

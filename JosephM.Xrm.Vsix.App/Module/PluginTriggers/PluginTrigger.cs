@@ -18,6 +18,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         public PluginTrigger()
         {
             Mode = PluginMode.Synchronous;
+            PreImageAllFields = true;
+            PreImageName = "PreImage";
         }
 
         [Hidden]
@@ -44,6 +46,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [DisplayOrder(30)]
         [GridWidth(150)]
         [RecordTypeFor(nameof(FilteringFields))]
+        [RecordTypeFor(nameof(PreImageFields))]
         public RecordType RecordType { get; set; }
 
         [DisplayOrder(40)]
@@ -56,13 +59,37 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [GridWidth(100)]
         public PluginMode? Mode { get; set; }
 
+        [DisplayOrder(60)]
+        [GridWidth(125)]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
+        public bool PreImageAllFields { get; set; }
+
+        [DisplayOrder(70)]
+        [GridWidth(300)]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
+        [PropertyInContextByPropertyValue(nameof(PreImageAllFields), false)]
+        public IEnumerable<RecordField> PreImageFields { get; set; }
+
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
+        [RequiredProperty]
         [DisplayOrder(80)]
+        [GridWidth(100)]
+        public string PreImageName { get; set; }
+
+        [DisplayOrder(55)]
         [GridWidth(300)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         [PropertyInContextByPropertyValue(nameof(Message), "Update")]
         public IEnumerable<RecordField> FilteringFields { get; set; }
 
-        [DisplayOrder(100)]
+        [Hidden]
+        public string PreImageId { get; set; }
+
+        [DisplayOrder(52)]
+        [GridWidth(75)]
         [RequiredProperty]
         public int Rank { get; set; }
 

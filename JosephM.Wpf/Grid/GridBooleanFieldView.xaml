@@ -7,12 +7,13 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel VerticalAlignment="Center">
+    <DockPanel VerticalAlignment="Center" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <CheckBox
         IsEnabled="{Binding IsEditable}"
         IsChecked="{Binding ValueObject, Mode=TwoWay}" />
