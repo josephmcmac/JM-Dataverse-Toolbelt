@@ -322,6 +322,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
+        //todo not sure why this is trigger in refresheditability function
         internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
         {
             var methods = new List<Action<RecordEntryViewModelBase>>();
