@@ -2,6 +2,7 @@
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.Extentions;
+using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
@@ -159,7 +160,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
 
-            //verify stillno image
+            //verify still no image
             image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage, Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, updatedTrigger.Id);
             Assert.IsNull(image);
 
@@ -181,9 +182,8 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNotNull(image);
             Assert.IsNull(image.GetStringField(Fields.sdkmessageprocessingstepimage_.attributes));
 
-            //todo if image deleted add to solution
-
-            //todo could add verify adding to solution as well
+            var solutionComponents = XrmRecordService.GetSolutionComponents(packageSettings.Solution.Id, OptionSets.SolutionComponent.ObjectTypeCode.SDKMessageProcessingStep);
+            Assert.IsTrue(triggers.All(t => solutionComponents.Contains(t.Id)));
         }
 
         private void RunDialogAndAddMessage(string message)

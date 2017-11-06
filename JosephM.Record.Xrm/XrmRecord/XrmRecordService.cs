@@ -1050,13 +1050,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             var solution = Get(Entities.solution, solutionId);
 
-            var currentComponentIds = RetrieveAllAndClauses(Entities.solutioncomponent, new[]
-                {
-                        new Condition(Fields.solutioncomponent_.componenttype, ConditionType.Equal, componentType),
-                        new Condition(Fields.solutioncomponent_.solutionid, ConditionType.Equal, solution.Id)
-                    }, null)
-                        .Select(r => r.GetIdField(Fields.solutioncomponent_.objectid))
-                        .ToList();
+            var currentComponentIds = GetSolutionComponents(solutionId, componentType).ToList();
             foreach (var item in itemIds)
             {
 
@@ -1073,6 +1067,17 @@ namespace JosephM.Record.Xrm.XrmRecord
                     currentComponentIds.Add(item);
                 }
             }
+        }
+
+        public IEnumerable<string> GetSolutionComponents(string solutionId, int componentType)
+        {
+            return RetrieveAllAndClauses(Entities.solutioncomponent, new[]
+                {
+                        new Condition(Fields.solutioncomponent_.componenttype, ConditionType.Equal, componentType),
+                        new Condition(Fields.solutioncomponent_.solutionid, ConditionType.Equal, solutionId)
+                    }, null)
+                        .Select(r => r.GetIdField(Fields.solutioncomponent_.objectid))
+                        .ToList();
         }
 
         public LoadToCrmResponse LoadIntoCrm(IEnumerable<IRecord> records, string matchField)

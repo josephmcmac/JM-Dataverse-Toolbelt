@@ -244,6 +244,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                             r.GetLookupName(Fields.sdkmessageprocessingstep_.sdkmessageid)))
                             .ToArray();
 
+            var solutionItemsToAdd = new List<string>();
             //update/delete pre-images
             var imagesToCreateOrUpdate = new List<IRecord>();
             var imagesToDelete = new List<IRecord>();
@@ -261,6 +262,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                         try
                         {
                             imagesToDelete.Add(XrmRecordService.Get(Entities.sdkmessageprocessingstepimage, matchingPluginTrigger.PreImageId));
+                            solutionItemsToAdd.Add(matchingPluginTrigger.Id);
                         }
                         catch (Exception ex)
                         {
@@ -335,14 +337,14 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             //add plugin steps to the solution
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.SDKMessageProcessingStep;
-            var itemsToAdd = triggerLoads.Created.Union(triggerLoads.Updated).Select(r => r.Id).ToList();
+            solutionItemsToAdd.AddRange(triggerLoads.Created.Union(triggerLoads.Updated).Select(r => r.Id).ToList());
             var imagesReferences = imageLoads.Created.Union(imageLoads.Updated)
                 .Select(i => i.GetLookupId(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid))
                 .Where(id => !string.IsNullOrWhiteSpace(id));
-            itemsToAdd.AddRange(imagesReferences);
+            solutionItemsToAdd.AddRange(imagesReferences);
 
             if (PackageSettings.AddToSolution)
-                XrmRecordService.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd);
+                XrmRecordService.AddSolutionComponents(PackageSettings.Solution.Id, componentType, solutionItemsToAdd);
 
             CompletionItem = new Completionresponse { Errors = responses };
 
