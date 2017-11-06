@@ -13,6 +13,10 @@ namespace JosephM.Xrm.Vsix.Test
     [TestClass]
     public class VsixManagePluginTriggersTests : JosephMVsixTests
     {
+        /// <summary>
+        /// Scripts through several scenarios for changing the plugin triggers
+        /// create, delete, configuring filtering attributes, pre images etc
+        /// </summary>
         [TestMethod]
         public void VsixManagePluginTriggersTest()
         {
@@ -124,6 +128,62 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNotNull(image);
             Assert.IsNotNull(image.GetStringField(Fields.sdkmessageprocessingstepimage_.attributes));
             Assert.AreEqual("FooOthername", image.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias));
+
+            //now lets verify deletion of an image if changed to not have one (image deleted)
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog.Controller.BeginDialog();
+            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            triggersSubGrid = entryViewModel.SubGrids.First();
+
+            letsAdjustThisOne = triggersSubGrid.GridRecords.First(r => r.GetRecord().GetStringField(nameof(PluginTrigger.Id)) == updatedTrigger.Id);
+            //set no not all preimage fields
+            letsAdjustThisOne.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = false;
+            //set no fields on the preimage
+            preImageFieldsField = letsAdjustThisOne.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
+            preImageFieldsField.MultiSelectsVisible = true;
+            foreach (var field in preImageFieldsField.DynamicGridViewModel.GridRecords)
+            {
+                field.GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = false;
+            }
+            //save
+            Assert.IsTrue(entryViewModel.Validate());
+            entryViewModel.OnSave();
+            //verify no image
+            image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage, Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, updatedTrigger.Id);
+            Assert.IsNull(image);
+
+            //lets just verify if we go through te dialog without touching the record still doesn't have one
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog.Controller.BeginDialog();
+            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            Assert.IsTrue(entryViewModel.Validate());
+            entryViewModel.OnSave();
+
+            //verify stillno image
+            image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage, Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, updatedTrigger.Id);
+            Assert.IsNull(image);
+
+            //add the image again
+            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog.Controller.BeginDialog();
+            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            triggersSubGrid = entryViewModel.SubGrids.First();
+
+            letsAdjustThisOne = triggersSubGrid.GridRecords.First(r => r.GetRecord().GetStringField(nameof(PluginTrigger.Id)) == updatedTrigger.Id);
+            //set no not all preimage fields
+            letsAdjustThisOne.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = true;
+            //save
+            Assert.IsTrue(entryViewModel.Validate());
+            entryViewModel.OnSave();
+
+            //verify image created
+            image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage, Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, updatedTrigger.Id);
+            Assert.IsNotNull(image);
+            Assert.IsNull(image.GetStringField(Fields.sdkmessageprocessingstepimage_.attributes));
+
+            //todo if image deleted add to solution
+
+            //todo could add verify adding to solution as well
         }
 
         private void RunDialogAndAddMessage(string message)

@@ -73,7 +73,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.WebResource;
             var itemsToAdd = loadResponse.Created.Union(loadResponse.Updated);
             if (PackageSettings.AddToSolution)
-                Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd);
+                Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
 
         }
 

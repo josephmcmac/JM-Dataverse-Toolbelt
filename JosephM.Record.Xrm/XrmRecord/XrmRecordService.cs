@@ -1046,7 +1046,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             _formService = formService;
         }
 
-        public void AddSolutionComponents(string solutionId, int componentType, IEnumerable<IRecord> itemsToAdd)
+        public void AddSolutionComponents(string solutionId, int componentType, IEnumerable<string> itemIds)
         {
             var solution = Get(Entities.solution, solutionId);
 
@@ -1057,20 +1057,20 @@ namespace JosephM.Record.Xrm.XrmRecord
                     }, null)
                         .Select(r => r.GetIdField(Fields.solutioncomponent_.objectid))
                         .ToList();
-            foreach (var item in itemsToAdd)
+            foreach (var item in itemIds)
             {
 
-                if (!currentComponentIds.Contains(item.Id))
+                if (!currentComponentIds.Contains(item))
                 {
                     var addRequest = new AddSolutionComponentRequest()
                     {
                         AddRequiredComponents = false,
                         ComponentType = componentType,
-                        ComponentId = new Guid(item.Id),
+                        ComponentId = new Guid(item),
                         SolutionUniqueName = solution.GetStringField(Fields.solution_.uniquename)
                     };
                     XrmService.Execute(addRequest);
-                    currentComponentIds.Add(item.Id);
+                    currentComponentIds.Add(item);
                 }
             }
         }
