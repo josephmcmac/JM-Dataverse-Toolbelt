@@ -65,6 +65,8 @@
     <Compile Include="DateTimeExtentionsTests.cs" />
     <Compile Include="DebugUserInterface.cs" />
     <Compile Include="LogControllerTests.cs" />
+    <Compile Include="PropertyInContextByPropertyValuesTests.cs" />
+    <Compile Include="PropertyInContextByPropertyValueTests.cs" />
     <Compile Include="RecordTypeForTests.cs" />
     <Compile Include="StringFormatTests.cs" />
     <Compile Include="RegularExpressionsTests.cs" />

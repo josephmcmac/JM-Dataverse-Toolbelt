@@ -31,7 +31,8 @@ namespace JosephM.Application.ViewModel.Dialog
             if (completionObject != null)
             {
                 var formController = FormController.CreateForObject(completionObject, ApplicationController, null);
-                CompletionDetails = new ObjectDisplayViewModel(completionObject, formController);
+                CompletionDetails = new ObjectEntryViewModel(null, null, completionObject, formController);
+                CompletionDetails.IsReadOnly = true;
                 CompletionDetails.PropertyChanged += CompletionDetails_PropertyChanged;
             }
 
@@ -41,7 +42,7 @@ namespace JosephM.Application.ViewModel.Dialog
 
         private void CompletionDetails_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ObjectDisplayViewModel.MainFormInContext))
+            if (e.PropertyName == nameof(ObjectEntryViewModel.MainFormInContext))
                 OnPropertyChanged(nameof(DisplayCompletionHeading));
         }
 
@@ -55,7 +56,7 @@ namespace JosephM.Application.ViewModel.Dialog
             get { return CompletionDetails != null; }
         }
 
-        public ObjectDisplayViewModel CompletionDetails { get; set; }
+        public ObjectEntryViewModel CompletionDetails { get; set; }
 
         public XrmButtonViewModel CloseButton { get; private set; }
 

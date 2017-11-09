@@ -1,10 +1,7 @@
 ﻿using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
-<<<<<<< HEAD
 using JosephM.Deployment;
-=======
->>>>>>> ba9d54bb5377d23b0fded98829549d99481a34a9
 using JosephM.Deployment.CreatePackage;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Deployment.ExportXml;
@@ -25,11 +22,7 @@ namespace JosephM.Xrm.Vsix.Test
         public void VsixCreateAndDeployPackageTest()
         {
             DeleteAll(Entities.account);
-<<<<<<< HEAD
             DeleteAll(Entities.contact);
-
-=======
->>>>>>> ba9d54bb5377d23b0fded98829549d99481a34a9
             var account = CreateAccount();
 
             var tempFolder = Path.Combine(TestingFolder, "TEMP");
@@ -86,25 +79,6 @@ namespace JosephM.Xrm.Vsix.Test
 
             //should be recreated
             account = Refresh(account);
-<<<<<<< HEAD
-=======
-
-            //todo something for this script verifies lookup field populate and cacade fields
-            //var entryForm = GetEntryForm(dialogCreate);
-            //var thisVersionField = entryForm.GetStringFieldFieldViewModel(nameof(CreatePackageRequest.ThisReleaseVersion));
-            //var nextVersionField = entryForm.GetStringFieldFieldViewModel(nameof(CreatePackageRequest.SetVersionPostRelease));
-            //Assert.AreEqual("2.0.0.0", nextVersionField.Value);
-            //Assert.AreEqual("2.0.0.0", thisVersionField.Value);
-            //thisVersionField.Value = "3.0.0.0";
-            //Assert.AreEqual("3.0.0.0", nextVersionField.Value);
-            //nextVersionField.Value = "4.0.0.0";
-            //var dataToExportField = entryForm.GetSubGridViewModel(nameof(CreatePackageRequest.DataToInclude));
-            //dataToExportField.AddRow();
-            //var dataToExportRow = dataToExportField.GridRecords.First();
-            //dataToExportRow.GetRecordTypeFieldViewModel(nameof(ExportRecordType.RecordType)).Value = new RecordType(Entities.account, Entities.account);
-            //dataToExportRow.GetPicklistFieldFieldViewModel(nameof(ExportRecordType.Type)).Value = new PicklistOption(ExportType.AllRecords.ToString(), ExportType.AllRecords.ToString());
-            //SubmitEntryForm(dialogCreate);
->>>>>>> ba9d54bb5377d23b0fded98829549d99481a34a9
         }
     }
 }

@@ -158,10 +158,23 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             else if (column.FieldType == RecordFieldType.RecordField)
-                                dataGridField = new GridPicklistColumn()
+                            {
+                                var metadata = gridSectionViewModel.RecordService.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType);
+                                if (metadata.IsMultiSelect)
                                 {
-                                    Binding = cellBinding
-                                };
+                                    dataGridField = new GridMultiSelectColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else
+                                {
+                                    dataGridField = new GridPicklistColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                            }
                             else if (column.FieldType == RecordFieldType.Picklist)
                             {
                                 var metadata = gridSectionViewModel.RecordService.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType);

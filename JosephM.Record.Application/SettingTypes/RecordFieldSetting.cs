@@ -7,7 +7,7 @@ namespace JosephM.Application.ViewModel.SettingTypes
     {
         [DisplayOrder(10)]
         [RequiredProperty]
-        [RecordTypeFor("RecordField")]
+        [RecordTypeFor(nameof(RecordField))]
         public RecordType RecordType { get; set; }
 
         [DisplayOrder(20)]

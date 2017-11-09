@@ -166,6 +166,15 @@
         <application:CompletionScreen Height="{Binding ActualHeight, ElementName=tabBorder}"
             DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="CompletionTemplateWindowMinimum">
+        <Grid MaxHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=application:WindowShell,
+                                       AncestorLevel=1}}" >
+            <application:CompletionScreen 
+            DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <DataTemplate x:Key="ListViewTemplate">
         <Grid>
             <grid1:GridListView DataContext="{Binding}" />
@@ -199,6 +208,7 @@
         RecordEntryTemplateWindowMinimum="{StaticResource RecordEntryTemplateWindowMinimum}"
         ProgressTemplate="{StaticResource ProgressControlTemplate}"
         CompletionTemplate="{StaticResource CompletionTemplate}"
+        CompletionTemplateWindowMinimum="{StaticResource CompletionTemplateWindowMinimum}"
         LoadingTemplate="{StaticResource LoadingTemplate}"
         ListViewTemplate="{StaticResource ListViewTemplate}"
         QueryViewTemplate="{StaticResource QueryViewTemplate}"

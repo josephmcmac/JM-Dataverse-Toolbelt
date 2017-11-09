@@ -70,7 +70,7 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
                 var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
                 var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
                 if (PackageSettings.AddToSolution)
-                    Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd);
+                    Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
             }
             CompletionMessage = "Assembly Updated";
             LoadingViewModel.IsLoading = false;

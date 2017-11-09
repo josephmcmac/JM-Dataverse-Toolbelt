@@ -20,12 +20,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected MultiSelectFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            MultiSelectButton = new XrmButtonViewModel("MultiSelect", MultiSelect, ApplicationController);
-        }
-
-        private void MultiSelect()
-        {
-            MultiSelectsVisible = true;
         }
 
         private bool _multiSelectsVisible;
@@ -46,7 +40,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 .Where(i => i.Select)
                 .Select(i => i.PicklistItem)
                 .ToArray();
-            OnPropertyChanged(nameof(SelectedDisplay));
+            OnPropertyChanged(nameof(StringDisplay));
         }
 
 
@@ -62,12 +56,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public string SelectedDisplay
+        public string StringDisplay
         {
             get { return Value == null ? null : string.Join(",", Value.OrderBy(p => p.Value).Select(p => p.Value)); }
         }
-
-        public XrmButtonViewModel MultiSelectButton { get; private set; }
 
         internal void SetItemsSource(IEnumerable<T> items)
         {
@@ -102,7 +94,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             DoOnAsynchThread(() => {
                 DynamicGridViewModel.GridRecords = GridRowViewModel.LoadRows(getRecordsFunc(), DynamicGridViewModel);
                 OnPropertyChanged(nameof(DynamicGridViewModel));
-                OnPropertyChanged(nameof(SelectedDisplay));
+                OnPropertyChanged(nameof(StringDisplay));
             });
         }
 

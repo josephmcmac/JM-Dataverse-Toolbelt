@@ -1047,33 +1047,38 @@ namespace JosephM.Record.Xrm.XrmRecord
             _formService = formService;
         }
 
-        public void AddSolutionComponents(string solutionId, int componentType, IEnumerable<IRecord> itemsToAdd)
+        public void AddSolutionComponents(string solutionId, int componentType, IEnumerable<string> itemIds)
         {
             var solution = Get(Entities.solution, solutionId);
 
-            var currentComponentIds = RetrieveAllAndClauses(Entities.solutioncomponent, new[]
-                {
-                        new Condition(Fields.solutioncomponent_.componenttype, ConditionType.Equal, componentType),
-                        new Condition(Fields.solutioncomponent_.solutionid, ConditionType.Equal, solution.Id)
-                    }, null)
-                        .Select(r => r.GetIdField(Fields.solutioncomponent_.objectid))
-                        .ToList();
-            foreach (var item in itemsToAdd)
+            var currentComponentIds = GetSolutionComponents(solutionId, componentType).ToList();
+            foreach (var item in itemIds)
             {
 
-                if (!currentComponentIds.Contains(item.Id))
+                if (!currentComponentIds.Contains(item))
                 {
                     var addRequest = new AddSolutionComponentRequest()
                     {
                         AddRequiredComponents = false,
                         ComponentType = componentType,
-                        ComponentId = new Guid(item.Id),
+                        ComponentId = new Guid(item),
                         SolutionUniqueName = solution.GetStringField(Fields.solution_.uniquename)
                     };
                     XrmService.Execute(addRequest);
-                    currentComponentIds.Add(item.Id);
+                    currentComponentIds.Add(item);
                 }
             }
+        }
+
+        public IEnumerable<string> GetSolutionComponents(string solutionId, int componentType)
+        {
+            return RetrieveAllAndClauses(Entities.solutioncomponent, new[]
+                {
+                        new Condition(Fields.solutioncomponent_.componenttype, ConditionType.Equal, componentType),
+                        new Condition(Fields.solutioncomponent_.solutionid, ConditionType.Equal, solutionId)
+                    }, null)
+                        .Select(r => r.GetIdField(Fields.solutioncomponent_.objectid))
+                        .ToList();
         }
 
         public LoadToCrmResponse LoadIntoCrm(IEnumerable<IRecord> records, string matchField)
@@ -1121,6 +1126,11 @@ namespace JosephM.Record.Xrm.XrmRecord
                             {
                                 changedFields.Add("pluginassemblyid");
                             }
+                            //for some obscure reason the matching entity loads the lookup as a different type despite the id being the same
+                            //so lets just remove if the id matches the existing record
+                            if (changedFields.Contains(Fields.sdkmessageprocessingstep_.plugintypeid)
+                                && record.GetLookupId(Fields.sdkmessageprocessingstep_.plugintypeid) == matchingItem.GetLookupId(Fields.sdkmessageprocessingstep_.plugintypeid))
+                                changedFields.Remove(Fields.sdkmessageprocessingstep_.plugintypeid);
 
                             if (changedFields.Any())
                             {

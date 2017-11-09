@@ -38,9 +38,9 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
         [Group(Sections.SelectAll)]
         public bool Bool3 { get; set; }
 
-        [Group(Sections.Setting)]
-        [SettingsLookup(typeof(ITestSettings), nameof(ITestSettings.Settings))]
-        public TestSetting TestSetting { get; set; }
+        //[Group(Sections.Setting)]
+        //[SettingsLookup(typeof(ITestSettings), nameof(ITestSettings.Settings))]
+        //public TestSetting TestSetting { get; set; }
 
         [Group(Sections.TypesAndLookups)]
         [RecordTypeFor(nameof(Fields) + "." + nameof(FieldSetting.RecordField))]

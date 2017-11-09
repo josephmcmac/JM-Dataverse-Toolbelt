@@ -1,4 +1,5 @@
 ﻿using JosephM.Core.Extentions;
+using JosephM.Core.FieldType;
 using System;
 
 namespace JosephM.Core.Attributes
@@ -23,11 +24,18 @@ namespace JosephM.Core.Attributes
         public override bool IsInContext(object instance)
         {
             var propertyValue = instance.GetPropertyValue(PropertyDependency);
+            return InContextMatch(propertyValue, ValidValue);
+        }
+
+        public static bool InContextMatch(object propertyValue, object validValue)
+        {
             if (propertyValue == null)
                 return false;
             else
             {
-                return propertyValue.Equals(ValidValue);
+                if (propertyValue is Lookup && validValue is string && ((Lookup)propertyValue).Name.ToLower() == validValue.ToString().ToLower())
+                    return true;
+                return propertyValue.Equals(validValue);
             }
         }
     }

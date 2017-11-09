@@ -243,7 +243,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
             var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
             if (PackageSettings.AddToSolution)
-                service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd);
+                service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
 
             if (responses.Any())
                 CompletionMessage = "There Were Errors Thrown Updating The Plugins";

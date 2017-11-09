@@ -37,7 +37,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         [DisplayOrder(100)]
         [Group(Sections.RecordToReport)]
         [RequiredProperty]
-        [RecordTypeFor("RecordLookup")]
+        [RecordTypeFor(nameof(RecordLookup))]
         public RecordType RecordType { get; set; }
 
         [DisplayOrder(110)]

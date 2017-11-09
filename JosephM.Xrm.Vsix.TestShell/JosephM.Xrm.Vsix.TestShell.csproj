@@ -110,6 +110,10 @@
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Prism</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.TestModule\JosephM.Prism.TestModule.csproj">
+      <Project>{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}</Project>
+      <Name>JosephM.Prism.TestModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
       <Name>JosephM.Prism.XrmModule</Name>

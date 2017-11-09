@@ -1,6 +1,8 @@
 ﻿#region
 
 using JosephM.Application.ViewModel.RecordEntry.Field;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using Binding = System.Windows.Data.Binding;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -26,7 +28,7 @@ namespace JosephM.Wpf.RecordEntry.Field
 
         protected override Binding GetValidationBinding()
         {
-            return null;
+            return BindingOperations.GetBinding(DisplayTextBlock, TextBox.TextProperty);
         }
 
         private void DisplayTextBlock_MouseDown(object sender, MouseButtonEventArgs e)

@@ -1,4 +1,5 @@
-﻿using JosephM.Prism.XrmModule.Crud;
+﻿using JosephM.Prism.TestModule.Prism.TestDialog;
+using JosephM.Prism.XrmModule.Crud;
 using JosephM.Record.Application.Fakes;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
@@ -32,6 +33,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication.AddModule<OpenWebModule>();
             VsixApplication.AddModule<ManagePluginTriggersModule>();
             VsixApplication.AddModule<XrmCrudModule>();
+            VsixApplication.AddModule<TestDialogModule>();
         }
 
         public VsixApplication VsixApplication { get; set; }

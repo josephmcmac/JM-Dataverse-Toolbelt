@@ -145,6 +145,15 @@ namespace JosephM.Record.Application.Test
             entryViewModel.GetRecordTypeFieldViewModel(nameof(TestAllFieldTypes.RecordTypeField)).Value = entryViewModel.GetRecordTypeFieldViewModel(nameof(TestAllFieldTypes.RecordTypeField)).ItemsSource.First();
             entryViewModel.GetRecordFieldFieldViewModel(nameof(TestAllFieldTypes.RecordFieldField)).Value = entryViewModel.GetRecordFieldFieldViewModel(nameof(TestAllFieldTypes.RecordFieldField)).ItemsSource.First();
 
+            var recordFieldMultiSelectField = entryViewModel.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(TestAllFieldTypes.RecordFieldMultiSelectField));
+            recordFieldMultiSelectField.MultiSelectsVisible = true;
+            recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            Assert.IsNotNull(recordFieldMultiSelectField.DisplayLabel);
+            Assert.AreEqual(2, recordFieldMultiSelectField.Value.Count());
+            Assert.IsTrue(recordFieldMultiSelectField.Value.Any(p => p.Value == recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetStringFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Item)).Value));
+            Assert.IsTrue(recordFieldMultiSelectField.Value.Any(p => p.Value == recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(2).GetStringFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Item)).Value));
+
             var lookupField = entryViewModel.GetLookupFieldFieldViewModel(nameof(TestAllFieldTypes.LookupField));
             lookupField.Search();
             lookupField.OnRecordSelected(lookupField.LookupGridViewModel.DynamicGridViewModel.GridRecords.First().Record);
@@ -178,50 +187,6 @@ namespace JosephM.Record.Application.Test
             //todo multi lookup type e.g. owner
 
             //todo add query script for this type as well
-        }
-
-        public class TestAllFieldTypes
-        {
-            public long BigIntField { get; set; }
-            public bool BooleanField { get; set; }
-            public DateTime DateField { get; set; }
-            public decimal DecimalField { get; set; }
-            public double DoubleField { get; set; }
-            public IEnumerable<TestAllFieldTypes> EnumerableField { get; set; }
-            public FileReference FileField { get; set; }
-            public Folder FolderField { get; set; }
-            public int Integerield { get; set; }
-            public Money MoneyField { get; set; }
-            public IEnumerable<TestEnum> PicklistMultiSelectField { get; set; }
-            [SettingsLookup(typeof(SettingsTestAllFieldTypes), nameof(SettingsTestAllFieldTypes.SavedInstances))]
-            public TestAllFieldTypes ObjectField { get; set; }
-            public Password PasswordField { get; set; }
-            public TestEnum PicklistField { get; set; }
-            [ReferencedType(FakeConstants.RecordType)]
-            [RecordTypeFor(nameof(RecordFieldField))]
-            [RecordTypeFor(nameof(LookupField))]
-            public RecordType RecordTypeField { get; set; }
-            public RecordField RecordFieldField { get; set; }
-            public Lookup LookupField { get; set; }
-            public string StringField { get; set; }
-            public Url UrlField { get; set; }
-
-            public override string ToString()
-            {
-                return StringField;
-            }
-        }
-
-        public class SettingsTestAllFieldTypes
-        {
-            public IEnumerable<TestAllFieldTypes> SavedInstances { get; set; }
-        }
-
-            public enum TestEnum
-        {
-            Option1,
-            Option2,
-            Option3
         }
     }
 }

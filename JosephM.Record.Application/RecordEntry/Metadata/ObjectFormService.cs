@@ -212,7 +212,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType)
         {
             var onChanges = new List<Action<RecordEntryViewModelBase>>();
-            AppendLookupForChanges(fieldName, recordType, onChanges);
+            AppendRecordTypeForChanges(fieldName, recordType, onChanges);
             AppendConnectionForChanges(fieldName, recordType, onChanges, false);
             AppendInitialiseAttributes(fieldName, recordType, onChanges);
             AppendUniqueOnAttributes(fieldName, recordType, onChanges);
@@ -322,6 +322,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
+        //todo not sure why this is trigger in refresheditability function
         internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
         {
             var methods = new List<Action<RecordEntryViewModelBase>>();
@@ -462,7 +463,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
-        private void AppendLookupForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        private void AppendRecordTypeForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
         {
             var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType)
                 .GetCustomAttributes(typeof(RecordTypeFor), true).Cast<RecordTypeFor>();
@@ -488,6 +489,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             else if (fieldViewModel is RecordFieldFieldViewModel)
                             {
                                 var typedViewModel = (RecordFieldFieldViewModel)fieldViewModel;
+                                var selectedRecordType = recordTypeViewModel.Value == null
+                                    ? null
+                                    : recordTypeViewModel.Value.Key;
+                                typedViewModel.RecordTypeForField = selectedRecordType;
+                            }
+                            else if (fieldViewModel is RecordFieldMultiSelectFieldViewModel)
+                            {
+                                var typedViewModel = (RecordFieldMultiSelectFieldViewModel)fieldViewModel;
                                 var selectedRecordType = recordTypeViewModel.Value == null
                                     ? null
                                     : recordTypeViewModel.Value.Key;

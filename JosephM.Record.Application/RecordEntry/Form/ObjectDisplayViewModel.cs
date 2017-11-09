@@ -56,5 +56,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 grid.DynamicGridViewModel.ReloadGrid();
             }
         }
+
+        internal override void RefreshEditabilityExtention()
+        {
+            base.RefreshEditabilityExtention();
+        }
     }
 }
