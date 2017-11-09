@@ -18,6 +18,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate RecordEntryTemplateWindowMinimum { get; set; }
         public DataTemplate ProgressTemplate { get; set; }
         public DataTemplate CompletionTemplate { get; set; }
+        public DataTemplate CompletionTemplateWindowMinimum { get; set; }
         public DataTemplate LoadingTemplate { get; set; }
         public DataTemplate ListViewTemplate { get; set; }
         public DataTemplate QueryViewTemplate { get; set; }
@@ -38,7 +39,13 @@ namespace JosephM.Wpf.TemplateSelector
                     return RecordEntryTemplate;
             }
             if (item is CompletionScreenViewModel)
-                return CompletionTemplate;
+            {
+                var cs = (CompletionScreenViewModel)item;
+                if (cs.ApplicationController?.ForceElementWindowHeight ?? false)
+                    return CompletionTemplateWindowMinimum;
+                else
+                    return CompletionTemplate;
+            }
             if (item is ListViewModel)
                 return ListViewTemplate;
             if (item is LoadingViewModel)
