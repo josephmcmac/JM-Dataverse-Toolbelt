@@ -14,10 +14,6 @@ namespace JosephM.Xrm.Vsix.Test
         [TestMethod]
         public void VsixDeployAssemblyDialogTest()
         {
-            //todo location  of assemblies etc. sometimes copied to different directory and doesn't locate the TestFiles
-            //maybe use the DeploymentItem attribute
-            //throw new Exception(Assembly.GetExecutingAssembly().CodeBase + " - " + Assembly.GetExecutingAssembly().Location);
-
             var pluginAssembly = GetTestPluginAssemblyFile();
             var packageSettings = GetTestPackageSettings();
 

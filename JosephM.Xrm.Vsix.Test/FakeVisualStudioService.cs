@@ -19,8 +19,8 @@ namespace JosephM.Xrm.Vsix.Test
 
         public static string GetTestPluginAssemblyFile()
         {
-            var rootFolder = GetRootFolder();
-            var pluginAssembly = Path.Combine(rootFolder.FullName, "TestFiles", "PluginAssemblyBin",
+            var rootFolder = GetActualSolutionRootFolder();
+            var pluginAssembly = Path.Combine(rootFolder.FullName, "SolutionItems", "TestPluginAssemblyBin",
                 PluginAssemblyName + ".dll");
             return pluginAssembly;
         }
@@ -30,13 +30,18 @@ namespace JosephM.Xrm.Vsix.Test
             get { return "TestXrmSolution.Plugins"; }
         }
 
-        public static DirectoryInfo GetRootFolder()
+        public static DirectoryInfo GetActualSolutionRootFolder()
         {
-
-            var assemblyLocation = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
-            var fileInfo = new FileInfo(assemblyLocation);
-            var rootFolder = fileInfo.Directory.Parent.Parent;
-            return rootFolder;
+            var rootFolderName = "XRM-Developer-Tool";
+            var fileInfo = new FileInfo(Assembly.GetExecutingAssembly().CodeBase.Substring(8));
+            var directory = fileInfo.Directory;
+            while (directory.Name != rootFolderName)
+            {
+                directory = directory.Parent;
+                if (directory == null)
+                    throw new NullReferenceException("Could not find solution root folder of name '" + rootFolderName + "' in " + fileInfo.FullName);
+            }
+            return directory;
         }
 
         public override IEnumerable<string> GetSelectedFileNamesQualified()

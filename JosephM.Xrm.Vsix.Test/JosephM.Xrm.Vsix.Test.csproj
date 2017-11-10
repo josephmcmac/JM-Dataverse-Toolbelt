@@ -93,25 +93,6 @@
     <Content Include="TestFiles\JavaScript\testxrmsolution_webserviceutility.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Crm.Sdk.Proxy.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Client.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Sdk.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\PluginAssemblyBin\Microsoft.Xrm.Sdk.Workflow.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\PluginAssemblyBin\TestXrmSolution.Plugins.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\PluginAssemblyBin\TestXrmSolution.Plugins.pdb" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TestFiles\PluginAssemblyBin\TestXrmSolution.Plugins.dll.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
