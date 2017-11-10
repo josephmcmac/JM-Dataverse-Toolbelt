@@ -57,7 +57,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         private static string[] GetJavaScriptFiles()
         {
-            var javaScriptFiles = Directory.GetFiles(Path.Combine(GetRootFolder().FullName, "TestFiles", "JavaScript"));
+            var javaScriptFiles = Directory.GetFiles(Path.Combine(GetSolutionRootFolder().FullName, "SolutionItems", "TestFiles", "JavaScript"));
             return javaScriptFiles;
         }
     }

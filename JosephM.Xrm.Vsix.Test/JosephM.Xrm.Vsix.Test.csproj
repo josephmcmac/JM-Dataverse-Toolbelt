@@ -78,23 +78,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestFiles\JavaScript\testxrmsolution_entity.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\JavaScript\testxrmsolution_jquery.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\JavaScript\testxrmsolution_pageutility.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\JavaScript\testxrmsolution_sdk.rest.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\JavaScript\testxrmsolution_webserviceutility.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7bf3e622-67ca-4e67-a9ca-f3b334c954fd}</Project>
       <Name>JosephM.Application</Name>

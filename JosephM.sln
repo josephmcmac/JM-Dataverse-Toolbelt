@@ -193,6 +193,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestPluginAssemblyBin", "Te
 		SolutionItems\TestPluginAssemblyBin\TestXrmSolution.Plugins.dll.config = SolutionItems\TestPluginAssemblyBin\TestXrmSolution.Plugins.dll.config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestFiles", "TestFiles", "{750AC5D1-B85A-4912-8F27-1BC6541F79AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JavaScript", "JavaScript", "{27A28916-7E62-4060-B79F-EC23944F71F4}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionItems\TestFiles\JavaScript\testxrmsolution_entity.js = SolutionItems\TestFiles\JavaScript\testxrmsolution_entity.js
+		SolutionItems\TestFiles\JavaScript\testxrmsolution_jquery.js = SolutionItems\TestFiles\JavaScript\testxrmsolution_jquery.js
+		SolutionItems\TestFiles\JavaScript\testxrmsolution_pageutility.js = SolutionItems\TestFiles\JavaScript\testxrmsolution_pageutility.js
+		SolutionItems\TestFiles\JavaScript\testxrmsolution_sdk.rest.js = SolutionItems\TestFiles\JavaScript\testxrmsolution_sdk.rest.js
+		SolutionItems\TestFiles\JavaScript\testxrmsolution_webserviceutility.js = SolutionItems\TestFiles\JavaScript\testxrmsolution_webserviceutility.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -2723,9 +2734,11 @@ Global
 		{D87A6C55-1732-41E1-A005-23ED646A2278} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 		{98D77F01-114B-4130-8C7C-2FF58425C34B} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 		{18224EDC-517B-4B50-8E12-5CAB49DA70DA} = {D0951EBD-01E1-465A-8CE4-4026FF36D400}
+		{750AC5D1-B85A-4912-8F27-1BC6541F79AA} = {D0951EBD-01E1-465A-8CE4-4026FF36D400}
+		{27A28916-7E62-4060-B79F-EC23944F71F4} = {750AC5D1-B85A-4912-8F27-1BC6541F79AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal
