@@ -22,6 +22,7 @@ namespace JosephM.Xrm.MetadataImportExport
             public const string DisplayInRelated = "Display In Related";
             public const string MaxLength = "Max Length";
             public const string TextFormat = "Text Format";
+            public const string DateBehaviour = "Date Behaviour";
             public const string IncludeTime = "Include Time";
             public const string Minimum = "Minimum";
             public const string Maximum = "Maximum";

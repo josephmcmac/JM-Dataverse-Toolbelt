@@ -36,6 +36,8 @@ namespace JosephM.Record.IService
         [Hidden]
         TextFormat TextFormat { get; }
         [Hidden]
+        string DateBehaviour { get; }
+        [Hidden]
         bool IncludeTime { get; }
         [Hidden]
         int DecimalPrecision { get; }

@@ -72,6 +72,20 @@ namespace JosephM.Record.Xrm.XrmRecord
             get { return XrmService.IsFieldSearchable(FieldName, RecordType); }
         }
 
+        public string DateBehaviour
+        {
+            get
+            {
+                if (FieldType != RecordFieldType.Date)
+                    return "N/A";
+                var format = ((DateTimeAttributeMetadata)XrmService.GetFieldMetadata(FieldName, RecordType)).DateTimeBehavior;
+
+                if(format == null)
+                    return "UserLocal";
+                return format.Value;
+            }
+        }
+
         public bool IncludeTime
         {
             get

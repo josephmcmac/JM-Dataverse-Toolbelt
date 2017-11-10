@@ -317,6 +317,8 @@ namespace JosephM.CustomisationImporter.Test
                 {
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).IncludeTime ==
                                   ((DateFieldMetadata)field).IncludeTime);
+                    Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).DateBehaviour ==
+                                ((DateFieldMetadata)field).DateBehaviour);
                 }
                 if (field.FieldType == RecordFieldType.Picklist)
                 {

@@ -66,8 +66,8 @@
     <Compile Include="FakeVisualStudioProjectItem.cs" />
     <Compile Include="FakeVisualStudioSolutionFolder.cs" />
     <Compile Include="FakeVsixApplicationController.cs" />
-    <Compile Include="VsixManagePluginTriggersTests.cs" />
     <Compile Include="VsixCreateAndDeployPackageTests.cs" />
+    <Compile Include="VsixManagePluginTriggersTests.cs" />
     <Compile Include="VsixRefreshSettingsDialogTests.cs" />
     <Compile Include="VsixSolutionWizardTests.cs" />
     <Compile Include="VsixUpdateAssemblyDialogTests.cs" />

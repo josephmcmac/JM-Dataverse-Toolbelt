@@ -414,6 +414,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                             typedField.Audit,
                             typedField.Searchable,
                             recordType,
+                            typedField.DateBehaviour,
                             typedField.IncludeTime
                             );
                         break;

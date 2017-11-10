@@ -18,7 +18,18 @@ namespace JosephM.Xrm.Test
 
         private void DeleteOnlineSampleData()
         {
-            throw new NotImplementedException("need to turn off plugins for actuals and quote line details");
+            //throw new NotImplementedException("need to turn off plugins for actuals and quote line details");
+
+            var sdkStep = XrmService.GetFirst(Schema.Entities.sdkmessageprocessingstep, Schema.Fields.sdkmessageprocessingstep_.name, "bab1a7b6-0259-4334-98f6-e3cd2afe336a");
+            XrmService.Deactivate(sdkStep);
+            sdkStep = XrmService.GetFirst(Schema.Entities.sdkmessageprocessingstep, Schema.Fields.sdkmessageprocessingstep_.name, "21af5c99-5189-4421-b897-c33d5e671be2");
+            XrmService.Deactivate(sdkStep);
+            sdkStep = XrmService.GetFirst(Schema.Entities.sdkmessageprocessingstep, Schema.Fields.sdkmessageprocessingstep_.name, "d53a8d81-bbee-4b9e-ac71-09acca7d6042");
+            XrmService.Deactivate(sdkStep);
+            sdkStep = XrmService.GetFirst(Schema.Entities.sdkmessageprocessingstep, Schema.Fields.sdkmessageprocessingstep_.name, "487de386-972a-4323-9def-1a1044de3a24");
+            XrmService.Deactivate(sdkStep);
+            sdkStep = XrmService.GetFirst(Schema.Entities.sdkmessageprocessingstep, Schema.Fields.sdkmessageprocessingstep_.name, "b3d9415e-0532-4654-a6a8-c6047beec413");
+            XrmService.Deactivate(sdkStep);
 
             var toDelete = new[]
             {

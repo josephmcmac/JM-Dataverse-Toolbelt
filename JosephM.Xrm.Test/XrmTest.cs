@@ -32,12 +32,23 @@ namespace JosephM.Xrm.Test
             }
         }
 
-        public void PrepareTests()
+        public void PrepareTests(bool testComponentsRequired = false)
         {
             var verifyConnection = XrmService.VerifyConnection();
             if (!verifyConnection.IsValid)
                 Assert.Inconclusive("Could Not Connect To Crm Instance To Execute Tests {0}",
                     verifyConnection.GetErrorString());
+
+            if (testComponentsRequired)
+            {
+                var testComponentSolutionName = "TestComponents";
+                var solution = XrmService.GetFirst("solution", "uniquename", testComponentSolutionName);
+                if (solution == null)
+                    throw new NullReferenceException(
+                        string.Format(
+                            "Required solution {0} located in Solution Items is not installed in the CRM instance. You will need to install it and rerun the test",
+                            testComponentSolutionName));
+            }
         }
 
         private XrmService _xrmService;
@@ -257,7 +268,7 @@ namespace JosephM.Xrm.Test
                                 var typesToExlcude = new[]
                             {
                                 "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
-                                "campaign", "territory", "sla"
+                                "campaign", "territory", "sla", "bookableresource", "msdyn_taxcode"
                             };
                                 if (!typesToExlcude.Contains(target))
                                     entity.SetField(field, CreateTestRecord(target).ToEntityReference());
