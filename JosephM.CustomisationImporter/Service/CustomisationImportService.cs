@@ -291,6 +291,8 @@ namespace JosephM.CustomisationImporter.Service
                                             optionSet = picklistOptionSets.First(p => p.DisplayName == optionSetName);
                                     }
                                     pFieldMetadata.PicklistOptionSet = optionSet;
+                                    pFieldMetadata.IsMultiSelect = row.GetColumnNames().Contains(Headings.Fields.IsMultiSelect)
+                                        && row.GetFieldAsBoolean(Headings.Fields.IsMultiSelect);
                                     break;
                                 }
                             case (RecordFieldType.String):

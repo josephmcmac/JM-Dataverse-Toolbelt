@@ -472,7 +472,8 @@ namespace JosephM.Record.Xrm.XrmRecord
                                 typedField.Searchable,
                                 recordType,
                                 typedField.PicklistOptionSet
-                                    .SchemaName);
+                                    .SchemaName, typedField.IsMultiSelect
+                                );
                         }
                         else
                         {
@@ -486,7 +487,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                                 typedField.PicklistOptions.Select(
                                     p =>
                                         new KeyValuePair<int, string>(
-                                            int.Parse(p.Key), p.Value)));
+                                            int.Parse(p.Key), p.Value)), typedField.IsMultiSelect);
                         }
                         break;
                     }

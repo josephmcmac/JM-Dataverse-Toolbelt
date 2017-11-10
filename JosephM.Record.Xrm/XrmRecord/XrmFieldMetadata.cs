@@ -28,7 +28,12 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public RecordFieldType FieldType
         {
-            get { return new FieldTypeMapper().Map(XrmService.GetFieldType(FieldName, RecordType)); }
+            get
+            {
+                return XrmService.GetFieldMetadata(FieldName, RecordType) is MultiSelectPicklistAttributeMetadata
+                ? RecordFieldType.Picklist
+                : new FieldTypeMapper().Map(XrmService.GetFieldType(FieldName, RecordType));
+            }
         }
 
         public bool IsMandatory
@@ -164,7 +169,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             get
             {
-                return FieldType == RecordFieldType.Picklist && (((PicklistAttributeMetadata)XrmService.GetFieldMetadata(FieldName, RecordType)).OptionSet.IsGlobal ?? false);
+                return FieldType == RecordFieldType.Picklist && (((EnumAttributeMetadata)XrmService.GetFieldMetadata(FieldName, RecordType)).OptionSet.IsGlobal ?? false);
             }
         }
 
@@ -174,7 +179,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 if (!IsSharedPicklist)
                     return null;
-                var name = ((PicklistAttributeMetadata)XrmService.GetFieldMetadata(FieldName, RecordType)).OptionSet.Name;
+                var name = ((EnumAttributeMetadata)XrmService.GetFieldMetadata(FieldName, RecordType)).OptionSet.Name;
                 return XrmService.GetSharedPicklistDisplayName(name);
             }
         }
@@ -239,6 +244,12 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
-        public bool IsMultiSelect => false;
+        public bool IsMultiSelect
+        {
+            get
+            {
+                return XrmService.GetFieldMetadata(FieldName, RecordType) is MultiSelectPicklistAttributeMetadata;
+            }
+        }
     }
 }

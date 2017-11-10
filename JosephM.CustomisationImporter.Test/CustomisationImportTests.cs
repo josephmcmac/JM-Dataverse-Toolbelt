@@ -1,5 +1,6 @@
 ﻿#region
 
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.CustomisationImporter.Prism;
 using JosephM.CustomisationImporter.Service;
@@ -7,14 +8,11 @@ using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using JosephM.Xrm;
+using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Xrm.Schema;
-using Microsoft.Xrm.Sdk;
-using JosephM.Xrm;
-using JosephM.Record.IService;
 
 #endregion
 
@@ -326,6 +324,7 @@ namespace JosephM.CustomisationImporter.Test
                         field.RecordType);
                     var expectedOption = ((PicklistFieldMetadata)field).PicklistOptions;
                     VerifyOptionSetsEqual(actualOptions, expectedOption);
+                    Assert.AreEqual(field.IsMultiSelect, XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).IsMultiSelect);
                 }
                 if (field.FieldType == RecordFieldType.Double)
                 {
@@ -468,8 +467,8 @@ namespace JosephM.CustomisationImporter.Test
                                 .Any(r => r.SchemaName == metadata.SchemaName))
                             XrmRecordService.DeleteRelationship(metadata.SchemaName);
                         Assert.IsFalse(
-                            XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
-                                .Any(r => r.SchemaName == metadata.SchemaName));
+                                                XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
+                                                    .Any(r => r.SchemaName == metadata.SchemaName));
                     }
                 }
             }

@@ -2527,16 +2527,21 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
         /// </summary>
         public void CreateOrUpdatePicklistAttribute(string schemaName, string displayName, string description,
             bool isRequired, bool audit, bool searchable,
-            string recordType, string sharedOptionSetName)
+            string recordType, string sharedOptionSetName, bool isMultiSelect)
         {
             lock (LockObject)
             {
-                PicklistAttributeMetadata metadata;
+                EnumAttributeMetadata metadata;
                 var exists = FieldExists(schemaName, recordType);
                 if (exists)
-                    metadata = (PicklistAttributeMetadata)GetFieldMetadata(schemaName, recordType);
+                    metadata = (EnumAttributeMetadata)GetFieldMetadata(schemaName, recordType);
                 else
-                    metadata = new PicklistAttributeMetadata();
+                {
+                    if (isMultiSelect)
+                        metadata = new MultiSelectPicklistAttributeMetadata();
+                    else
+                        metadata = new PicklistAttributeMetadata();
+                }
 
                 SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
 
@@ -2548,7 +2553,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public void CreateOrUpdatePicklistAttribute(string schemaName, string displayName, string description,
             bool isRequired, bool audit, bool searchable,
-            string recordType, IEnumerable<KeyValuePair<int, string>> options)
+            string recordType, IEnumerable<KeyValuePair<int, string>> options, bool isMultiSelect)
         {
             lock (LockObject)
             {
@@ -2559,12 +2564,17 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 };
                 optionSet.Options.AddRange(options.Select(o => new OptionMetadata(new Label(o.Value, 1033), o.Key)));
 
-                PicklistAttributeMetadata metadata;
+                EnumAttributeMetadata metadata;
                 var exists = FieldExists(schemaName, recordType);
                 if (exists)
                     metadata = (PicklistAttributeMetadata)GetFieldMetadata(schemaName, recordType);
                 else
-                    metadata = new PicklistAttributeMetadata();
+                {
+                    if (isMultiSelect)
+                        metadata = new MultiSelectPicklistAttributeMetadata();
+                    else
+                        metadata = new PicklistAttributeMetadata();
+                }
 
                 SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
 

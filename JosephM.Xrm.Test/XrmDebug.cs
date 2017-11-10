@@ -14,6 +14,15 @@ namespace JosephM.Xrm.Test
         {
             var blah = XrmService.WhoAmI();
 
+            //var config = new XrmConfiguration()
+            //{
+            //    AuthenticationProviderType = Microsoft.Xrm.Sdk.Client.AuthenticationProviderType.LiveId,
+            //    DiscoveryServiceAddress = "https://disco.crm6.dynamics.com/XRMServices/2011/Discovery.svc",
+            //    OrganizationUniqueName = "org5d9bc2c3",
+            //    Username = "joseph@mcmac2017.onmicrosoft.com",
+            //    Password = ""
+            //};
+            //var service = new XrmService(config);
         }
 
         private void DeleteOnlineSampleData()
