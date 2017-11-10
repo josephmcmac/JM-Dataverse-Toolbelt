@@ -108,10 +108,11 @@ namespace JosephM.CustomisationExporter.Exporter
                                 var relationship = oneTorelationships.ElementAt(j);
                                 try
                                 {
+                                    var isCustomRelationship = Service.FieldExists(relationship.ReferencingAttribute, relationship.ReferencingEntity)
+                                        && Service.GetFieldMetadata(relationship.ReferencingAttribute, relationship.ReferencingEntity).IsCustomField;
                                     allRelationship.Add(new RelationshipExport(relationship.SchemaName,
                                         relationship.ReferencedEntity, relationship.ReferencingEntity,
-                                        Service.GetFieldMetadata(relationship.ReferencingAttribute,
-                                            relationship.ReferencingEntity).IsCustomField, false,
+                                        isCustomRelationship, false,
                                         relationship.DisplayRelated
                                         , null, relationship.ReferencingAttribute,
                                         RelationshipExport.RelationshipType.OneToMany, false, relationship.IsCustomLabel,

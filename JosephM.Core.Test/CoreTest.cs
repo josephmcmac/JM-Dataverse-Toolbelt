@@ -17,6 +17,7 @@ namespace JosephM.Core.Test
         public CoreTest()
         {
             FileUtility.DeleteFiles(TestingFolder);
+            FileUtility.DeleteSubFolders(TestingFolder);
             Controller = new LogController();
             Controller.AddUi(new DebugUserInterface());
         }
