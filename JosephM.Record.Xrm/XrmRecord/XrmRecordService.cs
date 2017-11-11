@@ -910,13 +910,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                     ? ToIRecords(_xrmService.GetAssociatedEntities(relationship.RecordType1,
                         _xrmService.GetPrimaryKeyField(relationship.RecordType1),
                         relationship.Entity1IntersectAttribute, new Guid(record.Id), relationship.IntersectEntityName,
-                        relationship.RecordType2, relationship.Entity2IntersectAttribute,
-                        _xrmService.GetPrimaryKeyField(relationship.RecordType2)))
+                        relationship.RecordType2, _xrmService.GetPrimaryKeyField(relationship.RecordType2),
+                        relationship.Entity2IntersectAttribute))
                     : ToIRecords(_xrmService.GetAssociatedEntities(relationship.RecordType2,
                         _xrmService.GetPrimaryKeyField(relationship.RecordType2),
                         relationship.Entity2IntersectAttribute, new Guid(record.Id), relationship.IntersectEntityName,
-                        relationship.RecordType1, relationship.Entity1IntersectAttribute,
-                        _xrmService.GetPrimaryKeyField(relationship.RecordType1)));
+                        relationship.RecordType1, _xrmService.GetPrimaryKeyField(relationship.RecordType1),
+                        relationship.Entity1IntersectAttribute));
         }
 
         public IEnumerable<IRecord> RetrieveAllOrClauses(string entityType, IEnumerable<Condition> orConditions,

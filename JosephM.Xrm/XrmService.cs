@@ -1389,7 +1389,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             string relationshipName, string relatedEntity, string relatedEntityId, string intersectId2)
         {
             var query = new QueryExpression(relatedEntity);
-            var link = query.AddLink(relationshipName, intersectId2, intersectId2);
+            var link = query.AddLink(relationshipName, relatedEntityId, intersectId2);
             var link2 = link.AddLink(entity, intersectId1, entityId);
             link2.LinkCriteria.AddCondition(new ConditionExpression(entityId, ConditionOperator.Equal, intersectGuid));
             query.ColumnSet = CreateColumnSet(null);

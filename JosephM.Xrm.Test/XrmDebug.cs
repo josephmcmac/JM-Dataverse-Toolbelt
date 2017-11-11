@@ -13,7 +13,6 @@ namespace JosephM.Xrm.Test
         public void XrmDebug()
         {
             var blah = XrmService.WhoAmI();
-
             //var config = new XrmConfiguration()
             //{
             //    AuthenticationProviderType = Microsoft.Xrm.Sdk.Client.AuthenticationProviderType.LiveId,
