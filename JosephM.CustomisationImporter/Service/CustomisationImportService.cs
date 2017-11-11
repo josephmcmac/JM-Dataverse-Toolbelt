@@ -68,20 +68,26 @@ namespace JosephM.CustomisationImporter.Service
                 createdRecordTypes.AddRange(importRecordsResponse.CreatedRecordTypes);
             }
             if (request.SharedOptionSets)
+            {
                 ImportSharedOptionSets(optionSets, controller, response);
+            }
             if (request.Fields)
             {
                 var importFieldsResponse = ImportFieldTypes(fieldMetadataToImport, controller, response, createdRecordTypes);
                 createdFields.AddRange(importFieldsResponse.CreatedFields);
             }
             if (request.FieldOptionSets)
+            {
                 ImportFieldOptionSets(fieldMetadataToImport.Values, controller, response, createdFields);
+            }
             if (request.Views)
+            {
                 ImportViews(recordMetadataToImport.Values, controller, response, createdRecordTypes);
+            }
             if (request.Relationships)
+            {
                 ImportRelationships(relationshipMetadataToImport, controller, response);
-            controller.LogLiteral("Publishing Changes");
-            RecordService.Publish();
+            }
 
             if (request.AddToSolution)
             {
@@ -420,6 +426,11 @@ namespace JosephM.CustomisationImporter.Service
                     }
                 }
             }
+            if (numberCompleted > 0)
+            {
+                controller.LogLiteral("Publishing Field Option Sets");
+                RecordService.Publish();
+            }
         }
 
         private void ImportSharedOptionSets(IEnumerable<PicklistOptionSet> optionSets, LogController controller,
@@ -447,6 +458,11 @@ namespace JosephM.CustomisationImporter.Service
                 {
                     importResponse.AddResponseItem(sharedOptionSet, ex);
                 }
+            }
+            if (numberCompleted > 0)
+            {
+                controller.LogLiteral("Publishing Option Sets");
+                RecordService.Publish();
             }
         }
 
@@ -476,6 +492,11 @@ namespace JosephM.CustomisationImporter.Service
                 {
                     response.AddResponseItem(viewImport, ex);
                 }
+            }
+            if (numberCompleted > 0)
+            {
+                controller.LogLiteral("Publishing Views");
+                RecordService.Publish();
             }
         }
 
@@ -507,12 +528,19 @@ namespace JosephM.CustomisationImporter.Service
                     response.AddResponseItem(excelRow, recordMetadata, ex);
                 }
             }
+            if (numberCompleted > 0)
+            {
+                controller.LogLiteral("Publishing Relationships");
+                RecordService.Publish();
+            }
         }
 
         private ImportFieldsResponse ImportFieldTypes(IDictionary<int, FieldMetadata> metadata, LogController controller,
             CustomisationImportResponse response, IEnumerable<string> createdRecordTypes)
         {
             var importFieldsResponse = new ImportFieldsResponse();
+
+            var lookupFieldsCreated = new Dictionary<int, FieldMetadata>();
 
             var numberToDo = metadata.Count();
             var numberCompleted = 0;
@@ -539,6 +567,8 @@ namespace JosephM.CustomisationImporter.Service
                         && RecordService.FieldExists(field.SchemaName, field.RecordType);
 
                     RecordService.CreateOrUpdate(field, field.RecordType);
+                    if (!isUpdate && field is LookupFieldMetadata)
+                        lookupFieldsCreated.Add(excelRow, field);
                     response.AddResponseItem(excelRow, field, isUpdate);
                     if (!isUpdate)
                         importFieldsResponse.AddCreatedField(field);
@@ -547,6 +577,33 @@ namespace JosephM.CustomisationImporter.Service
                 {
                     response.AddResponseItem(excelRow, field, ex);
                 }
+            }
+            if (numberCompleted > 0)
+            {
+                controller.LogLiteral("Publishing Fields");
+                RecordService.Publish();
+            }
+            numberToDo = lookupFieldsCreated.Count();
+            numberCompleted = 0;
+            for (var i = 0; i < lookupFieldsCreated.Count(); i++)
+            {
+                var keyValue = lookupFieldsCreated.ElementAt(i);
+                var excelRow = keyValue.Key;
+                var field = keyValue.Value;
+                try
+                {
+                    controller.UpdateProgress(numberCompleted++, numberToDo, "Delta Updates For New Lookup Fields");
+                    RecordService.CreateOrUpdate(field, field.RecordType);
+                }
+                catch (Exception ex)
+                {
+                    response.AddResponseItem(excelRow, field, ex);
+                }
+            }
+            if (numberCompleted > 0)
+            {
+                controller.LogLiteral("Publishing Fields");
+                RecordService.Publish();
             }
             return importFieldsResponse;
         }
@@ -579,6 +636,11 @@ namespace JosephM.CustomisationImporter.Service
                 {
                     response.AddResponseItem(excelRow, recordMetadata, ex);
                 }
+            }
+            if (numberCompleted > 0)
+            {
+                controller.LogLiteral("Publishing Record Types");
+                RecordService.Publish();
             }
             return thisResponse;
         }

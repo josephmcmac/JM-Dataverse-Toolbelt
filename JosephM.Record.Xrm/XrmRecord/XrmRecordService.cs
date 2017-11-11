@@ -100,14 +100,9 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
-            var type = _xrmService.GetFieldType(field, recordType);
-            return type == AttributeTypeCode.Picklist
-                || type == AttributeTypeCode.State
-                || type == AttributeTypeCode.Status
-                ? _xrmService.GetPicklistKeyValues(recordType, field)
+            return _xrmService.GetPicklistKeyValues(recordType, field)
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value))
-                .ToArray()
-                : null;
+                .ToArray();
         }
 
         public IRecord NewRecord(string recordType)
@@ -619,6 +614,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         public void Publish(string xml = null)
         {
             _xrmService.Publish(xml);
+            _xrmService.ClearCache();
         }
 
         private readonly SortedDictionary<string, IEnumerable<ViewMetadata>> _recordViews =

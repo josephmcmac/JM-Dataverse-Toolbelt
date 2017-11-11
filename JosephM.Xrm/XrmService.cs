@@ -341,29 +341,10 @@ namespace JosephM.Xrm
         public IEnumerable<KeyValuePair<int, string>> GetPicklistKeyValues(string entityType, string fieldName)
         {
             var fieldType = GetFieldType(fieldName, entityType);
-            switch (fieldType)
-            {
-                case AttributeTypeCode.Picklist:
-                    {
-                        var metadata = (PicklistAttributeMetadata)GetFieldMetadata(fieldName, entityType);
-                        return OptionSetToKeyValues(metadata.OptionSet.Options);
-                    }
-                case AttributeTypeCode.Status:
-                    {
-                        var metadata = (StatusAttributeMetadata)GetFieldMetadata(fieldName, entityType);
-                        return
-                            OptionSetToKeyValues(
-                                metadata.OptionSet.Options);
-                    }
-                case AttributeTypeCode.State:
-                    {
-                        var metadata = (StateAttributeMetadata)GetFieldMetadata(fieldName, entityType);
-                        return
-                            OptionSetToKeyValues(
-                                metadata.OptionSet.Options);
-                    }
-            }
-            throw new ArgumentException("Field type not implemented: " + fieldType);
+            var fieldMetadata = GetFieldMetadata(fieldName, entityType);
+            if (!(fieldMetadata is EnumAttributeMetadata))
+                return new KeyValuePair<int, string>[0];
+            return OptionSetToKeyValues(((EnumAttributeMetadata)fieldMetadata).OptionSet.Options);
         }
 
         public bool IsMandatory(string field, string entity)
@@ -2200,25 +2181,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                         HasNotes = notes
                     };
                     Execute(request);
-                    RefreshFieldMetadata(primaryFieldSchemaName, schemaName);
                 }
-                RefreshEntityMetadata(schemaName);
-            }
-        }
-
-        private void RefreshEntityMetadata(string schemaName)
-        {
-            lock (LockObject)
-            {
-                var request = new RetrieveEntityRequest
-                {
-                    EntityFilters = EntityFilters.Attributes,
-                    LogicalName = schemaName
-                };
-                var response = (RetrieveEntityResponse)Execute(request);
-                if (EntityExists(schemaName))
-                    GetAllEntityMetadata().Remove(GetAllEntityMetadata().First(m => m.LogicalName == schemaName));
-                GetAllEntityMetadata().Add(response.EntityMetadata);
             }
         }
 
@@ -2243,25 +2206,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 var req = new PublishXmlRequest();
                 req.ParameterXml = xml;
                 Execute(req);
-            }
-        }
-
-        private void RefreshFieldMetadata(string schemaName, string entityType)
-        {
-            lock (LockObject)
-            {
-                var fieldMetadata = GetEntityFieldMetadata(entityType);
-                if (fieldMetadata.Any(m => m.SchemaName == schemaName))
-                    fieldMetadata.Remove(fieldMetadata.Single(m => m.SchemaName == schemaName));
-
-                var request = new RetrieveAttributeRequest
-                {
-                    EntityLogicalName = entityType,
-                    LogicalName = schemaName,
-                    RetrieveAsIfPublished = true
-                };
-                var response = (RetrieveAttributeResponse)Execute(request);
-                fieldMetadata.Add(response.AttributeMetadata);
             }
         }
 
@@ -2316,7 +2260,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                         Attribute = metadata,
                     };
                     Execute(request);
-                    RefreshFieldMetadata(schemaName, recordType);
                 }
                 else
                 {
@@ -2326,7 +2269,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                         Attribute = metadata
                     };
                     Execute(request);
-                    RefreshFieldMetadata(schemaName, recordType);
                 }
             }
         }
@@ -2477,8 +2419,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                 Relationship = relationship
                             };
                             Execute(request);
-                            RefreshEntityMetadata(recordType);
-                            RefreshEntityMetadata(referencedEntityType);
                         }
                     }
                 }
@@ -2506,10 +2446,9 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     };
 
                     Execute(request);
-                    RefreshFieldMetadata(schemaName, recordType);
-                    CreateOrUpdateAttribute(schemaName, recordType, metadata);
-                    RefreshEntityMetadata(recordType);
-                    RefreshEntityMetadata(referencedEntityType);
+
+                    //todo need to publish the relationship then do this update
+                    //CreateOrUpdateAttribute(schemaName, recordType, metadata);
                 }
             }
         }
@@ -2567,7 +2506,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 EnumAttributeMetadata metadata;
                 var exists = FieldExists(schemaName, recordType);
                 if (exists)
-                    metadata = (PicklistAttributeMetadata)GetFieldMetadata(schemaName, recordType);
+                    metadata = (EnumAttributeMetadata)GetFieldMetadata(schemaName, recordType);
                 else
                 {
                     if (isMultiSelect)
@@ -2633,8 +2572,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                         itemUpdated = true;
                     }
                 }
-                if (itemUpdated)
-                    RefreshFieldMetadata(fieldName, recordType);
             }
         }
 
@@ -2653,9 +2590,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             metadata.Format = stringFormat;
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
-
-            if (GetEntityMetadata(recordType).PrimaryNameAttribute == schemaName)
-                RefreshEntityMetadata(recordType);
         }
 
         public void CreateOrUpdateMemoAttribute(string schemaName, string displayName, string description,
@@ -2672,9 +2606,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             metadata.MaxLength = maxLength;
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
-
-            if (GetEntityMetadata(recordType).PrimaryNameAttribute == schemaName)
-                RefreshEntityMetadata(recordType);
         }
 
         public void CreateOrUpdateStatusAttribute(string schemaName, string displayName, string description,
@@ -2689,9 +2620,6 @@ string recordType)
             SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
-
-            if (GetEntityMetadata(recordType).PrimaryNameAttribute == schemaName)
-                RefreshEntityMetadata(recordType);
         }
 
         public void CreateOrUpdateCustomerAttribute(string schemaName, string displayName, string description,
@@ -2759,9 +2687,6 @@ string recordType)
                 metadata = new AttributeMetadata();
             SetCommon(metadata, schemaName, displayName, description, isRequired, audit, searchable);
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
-
-            if (GetEntityMetadata(recordType).PrimaryNameAttribute == schemaName)
-                RefreshEntityMetadata(recordType);
         }
 
         /// <summary>
@@ -2831,7 +2756,6 @@ string recordType)
                     };
                     Execute(request);
                 }
-                RefreshRelationshipMetadata(schemaName);
             }
         }
 
@@ -2850,23 +2774,6 @@ string recordType)
             if (associatedMenuConfiguration.Behavior != AssociatedMenuBehavior.DoNotDisplay)
                 associatedMenuConfiguration.Order = displayOrder;
             return associatedMenuConfiguration;
-        }
-
-        private void RefreshRelationshipMetadata(string schemaName)
-        {
-            lock (LockObject)
-            {
-                var metadata = AllRelationshipMetadata;
-                if (metadata.Any(m => m.SchemaName == schemaName))
-                    metadata.Remove(metadata.Single(m => m.SchemaName == schemaName));
-
-                var request = new RetrieveRelationshipRequest
-                {
-                    Name = schemaName
-                };
-                var response = (RetrieveRelationshipResponse)Execute(request);
-                metadata.Add((ManyToManyRelationshipMetadata)response.RelationshipMetadata);
-            }
         }
 
         public bool RelationshipExists(string schemaName)
@@ -2978,23 +2885,6 @@ string recordType)
 
                 var request = new CreateOptionSetRequest { OptionSet = optionSetMetadata };
                 Execute(request);
-            }
-            RefreshSharedOptionValues(schemaName);
-        }
-
-        private void RefreshSharedOptionValues(string schemaName)
-        {
-            lock (LockObject)
-            {
-                if (SharedOptionSets.Any(m => m.Name == schemaName))
-                    SharedOptionSets.Remove(SharedOptionSets.Single(m => m.Name == schemaName));
-
-                var request = new RetrieveOptionSetRequest
-                {
-                    Name = schemaName
-                };
-                var response = (RetrieveOptionSetResponse)Execute(request);
-                SharedOptionSets.Add((OptionSetMetadata)response.OptionSetMetadata);
             }
         }
 

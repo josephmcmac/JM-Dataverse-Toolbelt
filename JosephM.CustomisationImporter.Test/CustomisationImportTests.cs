@@ -11,6 +11,7 @@ using JosephM.Record.Query;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -143,6 +144,8 @@ namespace JosephM.CustomisationImporter.Test
             DeleteRelationships(requests);
             DeleteEntities(requests);
             DeleteOptionSets(requests);
+
+            XrmRecordService.Publish();
 
             var importService =
                 new XrmCustomisationImportService(XrmRecordService);
@@ -417,11 +420,20 @@ namespace JosephM.CustomisationImporter.Test
                         Controller, response);
                 foreach (var metadata in optionMetadata)
                 {
-                    if (metadata.IsSharedOptionSet &&
+                    try
+                    {
+                        if (metadata.IsSharedOptionSet &&
                         XrmRecordService.GetSharedPicklists().Any(p => p.SchemaName == metadata.SchemaName))
-                        XrmRecordService.DeleteSharedOptionSet(metadata.SchemaName);
-                    Assert.IsFalse(XrmRecordService.GetSharedPicklists().Any(p => p.SchemaName == metadata.SchemaName));
+                        {
+                            XrmRecordService.DeleteSharedOptionSet(metadata.SchemaName);
+                        }
+                    }
+                    catch(Exception)
+                    {
+
+                    }
                 }
+                
             }
         }
 
@@ -442,9 +454,17 @@ namespace JosephM.CustomisationImporter.Test
                 foreach (
                     var metadata in recordMetadata)
                 {
-                    if (XrmRecordService.RecordTypeExists(metadata.SchemaName))
-                        XrmRecordService.DeleteRecordType(metadata.SchemaName);
-                    Assert.IsFalse(XrmRecordService.RecordTypeExists(metadata.SchemaName));
+                    try
+                    {
+                        if (XrmRecordService.RecordTypeExists(metadata.SchemaName))
+                        {
+                            XrmRecordService.DeleteRecordType(metadata.SchemaName);
+                        }
+                    }
+                    catch(Exception)
+                    {
+
+                    }
                 }
             }
         }
@@ -455,6 +475,7 @@ namespace JosephM.CustomisationImporter.Test
 
             foreach (var request in requests)
             {
+
                 foreach (
                     var metadata in
                         CustomisationImportService.ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName,
@@ -462,13 +483,19 @@ namespace JosephM.CustomisationImporter.Test
                 {
                     if (XrmRecordService.RecordTypeExists(metadata.RecordType1))
                     {
-                        if (
-                            XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
-                                .Any(r => r.SchemaName == metadata.SchemaName))
-                            XrmRecordService.DeleteRelationship(metadata.SchemaName);
-                        Assert.IsFalse(
-                                                XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
-                                                    .Any(r => r.SchemaName == metadata.SchemaName));
+                        try
+                        {
+                            if (
+                                XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
+                                    .Any(r => r.SchemaName == metadata.SchemaName))
+                            {
+                                XrmRecordService.DeleteRelationship(metadata.SchemaName);
+                            }
+                        }
+                        catch(Exception)
+                        {
+
+                        }
                     }
                 }
             }
