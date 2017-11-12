@@ -260,16 +260,8 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
             else if (newValue is OptionSetValue)
             {
-                var key = ((OptionSetValue)newValue).Value;
-                try
-                {
-                    newValue = new PicklistOption(key.ToString(), _xrmService.GetOptionLabel(key, fieldName, recordType));
-                }
-                catch (Exception)
-                {
-                    //if no match on the option value just set null
-                    newValue = null;
-                }
+                var optionSetValue = (OptionSetValue)newValue;
+                newValue = OptionValueToPicklist(fieldName, recordType, optionSetValue);
             }
             else if (newValue is EntityCollection)
             {
@@ -283,6 +275,25 @@ namespace JosephM.Record.Xrm.XrmRecord
             else if (newValue is Microsoft.Xrm.Sdk.Money)
             {
                 newValue = ((Microsoft.Xrm.Sdk.Money)newValue).Value;
+            }
+            else if (newValue is OptionSetValueCollection)
+            {
+                newValue = ((OptionSetValueCollection)newValue).Select(o => OptionValueToPicklist(fieldName, recordType, o)).ToArray();
+            }
+            return newValue;
+        }
+
+        private PicklistOption OptionValueToPicklist(string fieldName, string recordType, OptionSetValue optionSetValue)
+        {
+            PicklistOption newValue;
+            var key = optionSetValue.Value;
+            try
+            {
+                newValue = new PicklistOption(key.ToString(), _xrmService.GetOptionLabel(key, fieldName, recordType));
+            }
+            catch (Exception)
+            {
+                newValue = new PicklistOption(key.ToString(), key.ToString());
             }
             return newValue;
         }
@@ -327,6 +338,8 @@ namespace JosephM.Record.Xrm.XrmRecord
                 temp = ((Password)temp).GetRawPassword();
             else if (temp is IEnumerable<IRecord>)
                 temp = ToEntities((IEnumerable<IRecord>)temp).ToArray();
+            else if (temp is IEnumerable<PicklistOption>)
+                temp = new OptionSetValueCollection(((IEnumerable<PicklistOption>)temp).Select(p => new OptionSetValue(int.Parse(((PicklistOption)p).Key))).ToList());
             return temp;
         }
 

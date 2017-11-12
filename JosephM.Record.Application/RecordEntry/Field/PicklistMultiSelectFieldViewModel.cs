@@ -24,10 +24,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 if (ValueObject != null)
                 {
-                    var objectList = new List<object>();
-                    foreach (var item in (IEnumerable)ValueObject)
-                        objectList.Add(PicklistOption.EnumToPicklistOption((Enum)item));
-                    return (IEnumerable<PicklistOption>)typeof(PicklistOption).ToNewTypedEnumerable(objectList);
+                    if (ValueObject is IEnumerable<PicklistOption>)
+                        return ValueObject as IEnumerable<PicklistOption>;
+                    else
+                    {
+                        var objectList = new List<object>();
+                        foreach (var item in (IEnumerable)ValueObject)
+                            objectList.Add(PicklistOption.EnumToPicklistOption((Enum)item));
+                        return (IEnumerable<PicklistOption>)typeof(PicklistOption).ToNewTypedEnumerable(objectList);
+                    }
                 }
                 return new PicklistOption[0];
             }
