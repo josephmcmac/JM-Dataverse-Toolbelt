@@ -26,7 +26,7 @@ namespace JosephM.Xrm.DeveloperTool
         {
             base.OnStartup(e);
 
-            var prism = new PrismApplication("JosephM Xrm Developer Tool 2016");
+            var prism = new PrismApplication("JosephM Dynamics 365 Dev App");
             prism.AddModule<XrmModuleModule>();
             prism.AddModule<SavedXrmConnectionsModule>();
             prism.AddModule<DeploymentModule>();

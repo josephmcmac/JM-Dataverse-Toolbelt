@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -167,8 +167,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.SolutionTemplat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix.Test", "JosephM.Xrm.Vsix.Test\JosephM.Xrm.Vsix.Test.csproj", "{F5EC8E25-2152-448D-9459-8F0EF9933B3B}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "JosephM.XrmDeveloperTool.Installer", "JosephM.XrmDeveloperTool.Installer\JosephM.XrmDeveloperTool.Installer.vdproj", "{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Plugins", "JosephM.Xrm.SolutionTemplate\JosephM.Xrm.Plugins\JosephM.Xrm.Plugins.csproj", "{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Console", "JosephM.Xrm.SolutionTemplate\JosephM.Xrm.Console\JosephM.Xrm.Console.csproj", "{147ACA64-2605-4157-9AED-B512B3E327CC}"
@@ -191,9 +189,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestPluginAssemblyBin", "Te
 		SolutionItems\TestPluginAssemblyBin\TestXrmSolution.Plugins.dll.config = SolutionItems\TestPluginAssemblyBin\TestXrmSolution.Plugins.dll.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Prism.XrmDeveloperTool2016", "JosephM.Prism.XrmDeveloperTool\JosephM.Prism.XrmDeveloperTool2016.csproj", "{F303560E-2FD6-4198-BE27-3EAC2446103C}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "JosephM.XrmDeveloperTool2016.Installer", "JosephM.XrmDeveloperTool2016.Installer\JosephM.XrmDeveloperTool2016.Installer.vdproj", "{DD12A10E-1C69-4C64-89C2-5503292C9920}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Dynamics365DevApp", "JosephM.Prism.XrmDeveloperTool\JosephM.Dynamics365DevApp.csproj", "{F303560E-2FD6-4198-BE27-3EAC2446103C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestFiles", "TestFiles", "{D3E985F5-BAF5-4CBA-870D-0EE2F27F7854}"
 EndProject
@@ -205,6 +201,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JavaScript", "JavaScript", 
 		SolutionItems\TestFiles\JavaScript\testxrmsolution_sdk.rest.js = SolutionItems\TestFiles\JavaScript\testxrmsolution_sdk.rest.js
 		SolutionItems\TestFiles\JavaScript\testxrmsolution_webserviceutility.js = SolutionItems\TestFiles\JavaScript\testxrmsolution_webserviceutility.js
 	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "JosephM.Dynamics365DevApp.Installer", "JosephM.Dynamics365DevApp.Installer\JosephM.Dynamics365DevApp.Installer.vdproj", "{EC9D1CA0-A430-4463-A1CC-6744264A04FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -2315,30 +2313,6 @@ Global
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B}.Stage|Mixed Platforms.Build.0 = Release|Any CPU
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B}.Stage|x86.ActiveCfg = Release|Any CPU
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B}.Stage|x86.Build.0 = Release|Any CPU
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.CD_ROM|Any CPU.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.CD_ROM|Mixed Platforms.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.CD_ROM|x86.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Debug|Any CPU.ActiveCfg = Debug
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Debug|x86.ActiveCfg = Debug
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.DVD-5|Any CPU.ActiveCfg = Debug
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.DVD-5|Mixed Platforms.ActiveCfg = Debug
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.DVD-5|x86.ActiveCfg = Debug
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.LazyWeb|Any CPU.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.LazyWeb|Mixed Platforms.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.LazyWeb|x86.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Live|Any CPU.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Live|Mixed Platforms.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Live|x86.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Release|Any CPU.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Release|Mixed Platforms.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Release|x86.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.SingleImage|Any CPU.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.SingleImage|Mixed Platforms.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.SingleImage|x86.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Stage|Any CPU.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Stage|Mixed Platforms.ActiveCfg = Release
-		{E749D196-1F6A-4C26-9BEA-BAA8ABD55AD1}.Stage|x86.ActiveCfg = Release
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.CD_ROM|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -2663,53 +2637,30 @@ Global
 		{F303560E-2FD6-4198-BE27-3EAC2446103C}.Stage|Mixed Platforms.Build.0 = LazyWeb|x86
 		{F303560E-2FD6-4198-BE27-3EAC2446103C}.Stage|x86.ActiveCfg = LazyWeb|x86
 		{F303560E-2FD6-4198-BE27-3EAC2446103C}.Stage|x86.Build.0 = LazyWeb|x86
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.CD_ROM|Any CPU.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.CD_ROM|Any CPU.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.CD_ROM|Mixed Platforms.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.CD_ROM|Mixed Platforms.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.CD_ROM|x86.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.CD_ROM|x86.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Debug|Any CPU.ActiveCfg = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Debug|Any CPU.Build.0 = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Debug|x86.ActiveCfg = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Debug|x86.Build.0 = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.DVD-5|Any CPU.ActiveCfg = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.DVD-5|Any CPU.Build.0 = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.DVD-5|Mixed Platforms.ActiveCfg = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.DVD-5|Mixed Platforms.Build.0 = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.DVD-5|x86.ActiveCfg = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.DVD-5|x86.Build.0 = Debug
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.LazyWeb|Any CPU.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.LazyWeb|Any CPU.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.LazyWeb|Mixed Platforms.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.LazyWeb|Mixed Platforms.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.LazyWeb|x86.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.LazyWeb|x86.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Live|Any CPU.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Live|Any CPU.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Live|Mixed Platforms.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Live|Mixed Platforms.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Live|x86.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Live|x86.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Release|Any CPU.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Release|Any CPU.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Release|Mixed Platforms.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Release|Mixed Platforms.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Release|x86.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Release|x86.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.SingleImage|Any CPU.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.SingleImage|Any CPU.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.SingleImage|Mixed Platforms.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.SingleImage|Mixed Platforms.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.SingleImage|x86.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.SingleImage|x86.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Stage|Any CPU.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Stage|Any CPU.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Stage|Mixed Platforms.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Stage|Mixed Platforms.Build.0 = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Stage|x86.ActiveCfg = Release
-		{DD12A10E-1C69-4C64-89C2-5503292C9920}.Stage|x86.Build.0 = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.CD_ROM|Any CPU.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.CD_ROM|Mixed Platforms.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.CD_ROM|x86.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Debug|Any CPU.ActiveCfg = Debug
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Debug|x86.ActiveCfg = Debug
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.DVD-5|Any CPU.ActiveCfg = Debug
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.DVD-5|Mixed Platforms.ActiveCfg = Debug
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.DVD-5|x86.ActiveCfg = Debug
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.LazyWeb|Any CPU.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.LazyWeb|Mixed Platforms.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.LazyWeb|x86.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Live|Any CPU.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Live|Mixed Platforms.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Live|x86.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Release|Any CPU.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Release|Mixed Platforms.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Release|x86.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.SingleImage|Any CPU.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.SingleImage|Mixed Platforms.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.SingleImage|x86.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Stage|Any CPU.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Stage|Mixed Platforms.ActiveCfg = Release
+		{EC9D1CA0-A430-4463-A1CC-6744264A04FA}.Stage|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2787,7 +2738,7 @@ Global
 		{C0C7CB02-2B43-424F-8FBB-5C42392A20EA} = {D3E985F5-BAF5-4CBA-870D-0EE2F27F7854}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 	EndGlobalSection
 EndGlobal

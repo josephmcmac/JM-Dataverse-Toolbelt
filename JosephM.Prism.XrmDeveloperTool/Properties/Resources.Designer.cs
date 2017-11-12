@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JosephM.Xrm.DeveloperTool2016.Properties {
+namespace JosephM.Dynamics365DevApp.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace JosephM.Xrm.DeveloperTool2016.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JosephM.Xrm.DeveloperTool2016.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JosephM.Dynamics365DevApp.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

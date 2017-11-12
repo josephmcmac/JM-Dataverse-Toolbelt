@@ -2446,9 +2446,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     };
 
                     Execute(request);
-
-                    //todo need to publish the relationship then do this update
-                    //CreateOrUpdateAttribute(schemaName, recordType, metadata);
                 }
             }
         }
