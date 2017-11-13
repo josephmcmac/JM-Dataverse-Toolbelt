@@ -23,7 +23,7 @@ namespace JosephM.CustomisationImporter.Test
     public class CustomisationImportTests : XrmModuleTest
     {
         [TestMethod]
-        [DeploymentItem("TestCustomisations.xlsx")]
+        [DeploymentItem("TestCustomisationsUpdate.xlsx")]
         [DeploymentItem(@"ContentFiles\Customisations Import Template.xlsx")]
         public void CustomisationImportTestImportModule()
         {
@@ -31,7 +31,7 @@ namespace JosephM.CustomisationImporter.Test
             var testApplication = CreateAndLoadTestApplication<CustomisationImportModule>();
 
             //first script generation of C# entities and fields
-            var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).First();
+            var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).ElementAt(1);
 
             var response = testApplication.NavigateAndProcessDialog<CustomisationImportModule, XrmCustomisationImportDialog, CustomisationImportResponse>(request);
             Assert.IsFalse(response.HasError);

@@ -342,7 +342,7 @@ namespace JosephM.Xrm.Test
             {
                 if (!_notCurrentUserId.HasValue)
                 {
-                    var conditions = new[] { new ConditionExpression("systemuserid", ConditionOperator.NotEqual, CurrentUserId) };
+                    var conditions = new[] { new ConditionExpression("systemuserid", ConditionOperator.NotEqual, CurrentUserId), new ConditionExpression("isdisabled", ConditionOperator.Equal, false), new ConditionExpression("fullname", ConditionOperator.NotEqual, "Support User") };
                     var user = XrmService.RetrieveFirst(XrmService.BuildQuery("systemuser", new string[0], conditions, null));
                     if (user == null)
                         throw new NullReferenceException("Could not find other user");

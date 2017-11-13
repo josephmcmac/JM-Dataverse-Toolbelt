@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -2343,7 +2343,6 @@ Global
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Live|x86.Build.0 = Release|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Release|x86.ActiveCfg = Release|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.Release|x86.Build.0 = Release|Any CPU
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2388,7 +2387,6 @@ Global
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Live|x86.Build.0 = Release|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{147ACA64-2605-4157-9AED-B512B3E327CC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Release|x86.ActiveCfg = Release|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.Release|x86.Build.0 = Release|Any CPU
 		{147ACA64-2605-4157-9AED-B512B3E327CC}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2433,7 +2431,6 @@ Global
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Live|x86.Build.0 = Release|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Release|x86.ActiveCfg = Release|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.Release|x86.Build.0 = Release|Any CPU
 		{8BC56C3D-4289-4507-B0D9-321DF90F3E1E}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2478,7 +2475,6 @@ Global
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Live|x86.Build.0 = Release|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Release|x86.ActiveCfg = Release|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.Release|x86.Build.0 = Release|Any CPU
 		{F59E6AEF-2023-472F-988B-23B5FBBE3322}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2738,7 +2734,7 @@ Global
 		{C0C7CB02-2B43-424F-8FBB-5C42392A20EA} = {D3E985F5-BAF5-4CBA-870D-0EE2F27F7854}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal
