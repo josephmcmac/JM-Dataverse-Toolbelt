@@ -40,12 +40,14 @@ namespace JosephM.Prism.XrmModule.XrmConnection
             //RegisterType<XrmFormService>();
         }
 
+        private static IXrmRecordConfiguration LastXrmConfiguration { get; set; }
+
         public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller)
         {
             controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
             var serviceConnection = new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>(), formService: new XrmFormService());
             controller.RegisterInstance(serviceConnection);
-
+            LastXrmConfiguration = xrmConfiguration;
             if (xrmConfiguration.OrganizationUniqueName == null)
                 controller.AddNotification("XRMCONNECTION", "Not Connected");
             else
@@ -54,9 +56,11 @@ namespace JosephM.Prism.XrmModule.XrmConnection
                 {
                     try
                     {
-                        controller.AddNotification("XRMCONNECTION","Connecting...");
+                        controller.AddNotification("XRMCONNECTION", "Connecting...");
                         var verify = serviceConnection.VerifyConnection();
-                        if(verify.IsValid)
+                        if (LastXrmConfiguration != xrmConfiguration)
+                            return;
+                        if (verify.IsValid)
                         {
                             controller.AddNotification("XRMCONNECTION", string.Format("Connected To Instance '{0}'", xrmConfiguration));
                             var preLoadRecordTypes = serviceConnection.GetAllRecordTypes();
@@ -68,6 +72,8 @@ namespace JosephM.Prism.XrmModule.XrmConnection
                     }
                     catch (Exception ex)
                     {
+                        if (LastXrmConfiguration != xrmConfiguration)
+                            return;
                         controller.AddNotification("XRMCONNECTION", ex.Message);
                         controller.ThrowException(ex);
                     }
