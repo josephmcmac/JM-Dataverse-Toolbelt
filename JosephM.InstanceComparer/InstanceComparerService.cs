@@ -564,7 +564,7 @@ namespace JosephM.InstanceComparer
                                 displayValue1 = (string)field1;
                                 displayValue2 = (string)field2;
 
-                                var charsToDisplay = 40;
+                                var charsToDisplay = 250;
                                 if (field1 == null)
                                     displayValue2 = displayValue2.Left(charsToDisplay) + (displayValue2.Length > charsToDisplay ? "..." : "");
                                 else if (field2 == null)
@@ -804,7 +804,7 @@ namespace JosephM.InstanceComparer
                     //strips out id
                     theString = StripStartToEnd(theString, "PropertyType.Guid,", "UniqueIdentifier");
                     //strips out id
-                    theString = StripStartToEnd(theString, "Default=", "Name=\"stepLabelLabelId");
+                    theString = StripStartToEnd(theString, "TypeArguments=\"x:String\"Default=", "Name=\"stepLabelLabelId");
                     //strips target parts missing in some for unknown reason
                     theString = StripStartToEnd(theString, "<x:PropertyName=\"Target\"",
                         "</x:Property.Attributes></x:Property>");
