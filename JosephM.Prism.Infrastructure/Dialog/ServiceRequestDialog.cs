@@ -98,27 +98,24 @@ namespace JosephM.Prism.Infrastructure.Dialog
             Controller.LoadToUi(progressControlViewModel);
             var progressControlViewModelLevel2 = new ProgressControlViewModel(ApplicationController);
             Controller.LoadToUi(progressControlViewModelLevel2);
-            var controller = new LogController(progressControlViewModel);
-            controller.AddLevel2Ui(progressControlViewModelLevel2);
+            LogController = new LogController(progressControlViewModel);
+            LogController.AddLevel2Ui(progressControlViewModelLevel2);
 
-            Response = Service.Execute(Request, controller);
-            Controller.RemoveFromUi(progressControlViewModel);
-            Controller.RemoveFromUi(progressControlViewModelLevel2);
+            Response = Service.Execute(Request, LogController);
 
             CompletionItem = Response;
-            //foreach (var responseItem in Response.ResponseItems)
-            //{
-            //    CompletionItems.Add(responseItem);
-            //}
 
             if (Response.Success)
                 ProcessCompletionExtention();
+
+            Controller.RemoveFromUi(progressControlViewModel);
+            Controller.RemoveFromUi(progressControlViewModelLevel2);
 
             IsProcessing = false;
 
             if (!Response.Success)
                 ProcessError(Response.Exception);
-            else if(CompletionMessage.IsNullOrWhiteSpace())
+            else if (CompletionMessage.IsNullOrWhiteSpace())
                 CompletionMessage = "Process Finished";
         }
 
@@ -132,6 +129,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
         }
 
         public ObjectEntryDialog ConfigEntryDialog { get; private set; }
+        public LogController LogController { get; private set; }
 
         public void OpenFolder(string folder)
         {

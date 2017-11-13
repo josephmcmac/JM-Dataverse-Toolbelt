@@ -45,7 +45,7 @@ namespace JosephM.Deployment.CreatePackage
             var folderPath = request.FolderPath.FolderPath;
 
             var tasksDone = 0;
-            var totalTasks = 3;
+            var totalTasks = 4;
 
             var xrmRecordService = XrmRecordService;
             var service = xrmRecordService.XrmService;

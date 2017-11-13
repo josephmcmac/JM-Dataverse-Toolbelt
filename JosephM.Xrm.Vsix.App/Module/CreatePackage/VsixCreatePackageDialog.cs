@@ -24,16 +24,20 @@ namespace JosephM.Xrm.Vsix.Module.CreatePackage
             base.LoadDialogExtention();
         }
 
-        protected override void CompleteDialogExtention()
+        protected override void ProcessCompletionExtention()
         {
-            base.CompleteDialogExtention();
+            base.ProcessCompletionExtention();
+
+            LogController.UpdateProgress(7, 8, "Moving Package Into Solution Folder");
 
             var folder = Request.FolderPath.FolderPath;
 
             //!! NOTE THE Releases Folder name is repeated in the DeployPackageCommand visibility criteria + test scripts !!
-            var solutionFolder = Path.Combine(VisualStudioService.SolutionDirectory,"Releases", Request.ThisReleaseVersion);
+            var solutionFolder = Path.Combine(VisualStudioService.SolutionDirectory, "Releases", Request.ThisReleaseVersion);
 
             FileUtility.MoveWithReplace(folder, solutionFolder);
+
+            LogController.UpdateProgress(3, 3, "Adding Package To Solution");
 
             VisualStudioService.AddFolder(solutionFolder);
         }
