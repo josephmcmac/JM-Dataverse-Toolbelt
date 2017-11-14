@@ -24,16 +24,23 @@ namespace JosephM.Xrm.Vsix.TestShell
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
 
             var theApplication = System.Windows.Application.Current as App;
             var myApplication = theApplication.VsixApplication;
 
+            headingView.DataContext = myApplication.Controller;
 
             var applicationOptions = myApplication.Controller.ResolveType(typeof(IApplicationOptions)) as IApplicationOptions;
             if (applicationOptions == null)
                 throw new NullReferenceException("applicationOptions");
+            optionsView.DataContext = applicationOptions;
 
-            DataContext = applicationOptions;
+
         }
     }
 }

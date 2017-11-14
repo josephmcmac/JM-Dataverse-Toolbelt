@@ -10,7 +10,13 @@ namespace JosephM.Xrm.Vsix.Test
 {
     public class FakeVisualStudioService : VisualStudioServiceBase
     {
-        public override string SolutionDirectory { get { return Path.Combine(TestConstants.TestFolder, "FakeVSSolutionFolder"); } }
+        public FakeVisualStudioService(string solutionDirectory = null)
+        {
+            _solutionDirectory = solutionDirectory ?? Path.Combine(TestConstants.TestFolder, "FakeVSSolutionFolder");
+        }
+
+        private string _solutionDirectory;
+        public override string SolutionDirectory { get { return _solutionDirectory; } }
 
         public override string BuildSelectedProjectAndGetAssemblyName()
         {

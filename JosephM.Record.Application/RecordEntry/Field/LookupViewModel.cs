@@ -56,7 +56,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
             catch(Exception ex)
             {
-                recordForm.ApplicationController.UserMessage(string.Format("Warning! A Fatal Error Was Encountered Loading The {0} Field - {1}", Label, ex.DisplayString()));
+                recordForm.ApplicationController.ThrowException(ex);
             }
         }
 

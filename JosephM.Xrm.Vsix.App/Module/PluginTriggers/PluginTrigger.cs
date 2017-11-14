@@ -59,13 +59,31 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [GridWidth(100)]
         public PluginMode? Mode { get; set; }
 
+        [DisplayOrder(52)]
+        [GridWidth(75)]
+        [RequiredProperty]
+        public int Rank { get; set; }
+
+        [DisplayName("Run In User Context (Optional)")]
+        [ReferencedType(Entities.systemuser)]
         [DisplayOrder(60)]
+        [UsePicklist]
+        [DoNotAllowAdd]
+        public Lookup SpecificUserContext { get; set; }
+
+        [DisplayOrder(65)]
+        [GridWidth(300)]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        [PropertyInContextByPropertyValue(nameof(Message), "Update")]
+        public IEnumerable<RecordField> FilteringFields { get; set; }
+
+        [DisplayOrder(70)]
         [GridWidth(125)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
         public bool PreImageAllFields { get; set; }
 
-        [DisplayOrder(70)]
+        [DisplayOrder(75)]
         [GridWidth(300)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
@@ -79,25 +97,9 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [GridWidth(100)]
         public string PreImageName { get; set; }
 
-        [ReferencedType(Entities.systemuser)]
-        [DisplayOrder(100)]
-        [UsePicklist]
-        [DoNotAllowAdd]
-        public Lookup SpecificUserContext { get; set; }
-
-        [DisplayOrder(55)]
-        [GridWidth(300)]
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        [PropertyInContextByPropertyValue(nameof(Message), "Update")]
-        public IEnumerable<RecordField> FilteringFields { get; set; }
 
         [Hidden]
         public string PreImageId { get; set; }
-
-        [DisplayOrder(52)]
-        [GridWidth(75)]
-        [RequiredProperty]
-        public int Rank { get; set; }
 
         public enum PluginStage
         {

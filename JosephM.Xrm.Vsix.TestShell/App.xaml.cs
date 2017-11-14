@@ -8,6 +8,7 @@ using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.Xrm.Vsix.Test;
 using Microsoft.Practices.Unity;
 using System;
+using System.IO;
 using System.Windows;
 
 namespace JosephM.Xrm.Vsix.TestShell
@@ -25,10 +26,14 @@ namespace JosephM.Xrm.Vsix.TestShell
 
             var container = new PrismDependencyContainer(new UnityContainer());
 
-            var visualStudioService = new FakeVisualStudioService();
+            var applicationName = "Vsix Test Shell";
+
+            var settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "JosephM Xrm", applicationName);
+            var visualStudioService = new FakeVisualStudioService(solutionDirectory: settingsFolder);
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
 
-            var applicationController = new VsixApplicationController(container);
+            var applicationController = new VsixApplicationController(container, applicationName: applicationName);
             VsixApplication = new VsixApplication(applicationController, new VsixSettingsManager(visualStudioService), new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
 
             VsixApplication.AddModule<OpenWebModule>();
