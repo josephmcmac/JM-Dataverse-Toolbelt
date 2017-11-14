@@ -8,6 +8,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Viewbox:ApplicationOptionsView></Viewbox:ApplicationOptionsView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Viewbox:ApplicationHeadingView Name="headingView"></Viewbox:ApplicationHeadingView>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Viewbox:ApplicationOptionsView Name="optionsView"></Viewbox:ApplicationOptionsView>
+        </Grid>
     </Grid>
 </Window>

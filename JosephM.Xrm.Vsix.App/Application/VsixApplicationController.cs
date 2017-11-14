@@ -17,7 +17,7 @@ namespace JosephM.Xrm.Vsix.Application
 {
     public class VsixApplicationController : ApplicationControllerBase
     {
-        public VsixApplicationController(IDependencyResolver dependencyResolver) : base("JosephM.Xrm.Vsix", dependencyResolver)
+        public VsixApplicationController(IDependencyResolver dependencyResolver, string applicationName = null) : base(applicationName ?? "JosephM.Xrm.Vsix", dependencyResolver)
         {
         }
 
