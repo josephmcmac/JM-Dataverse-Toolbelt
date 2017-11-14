@@ -8,6 +8,7 @@ using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.Xrm.Vsix.Test;
 using Microsoft.Practices.Unity;
 using System;
+using System.IO;
 using System.Windows;
 
 namespace JosephM.Xrm.Vsix.TestShell
@@ -25,6 +26,8 @@ namespace JosephM.Xrm.Vsix.TestShell
 
             var container = new PrismDependencyContainer(new UnityContainer());
 
+            var settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "JosephM Xrm", "Vsix Test Shell");
             var visualStudioService = new FakeVisualStudioService();
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
 
