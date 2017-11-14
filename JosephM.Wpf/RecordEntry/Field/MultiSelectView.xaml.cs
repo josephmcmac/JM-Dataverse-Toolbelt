@@ -33,7 +33,7 @@ namespace JosephM.Wpf.RecordEntry.Field
 
         private void DisplayTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (IMultiSelectFieldViewModel != null)
+            if (IMultiSelectFieldViewModel != null && !IMultiSelectFieldViewModel.IsReadOnly)
             {
                 IMultiSelectFieldViewModel.MultiSelectsVisible = !IMultiSelectFieldViewModel.MultiSelectsVisible;
             }

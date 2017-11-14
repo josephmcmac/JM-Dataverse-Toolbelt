@@ -33,14 +33,16 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public override void AddSelectedItem(GridRowViewModel selectedRow, RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            var gridField = GetObjectFormService(recordForm).GetSubGridViewModel(subGridReference);
+            var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
             var newRecord = recordForm.RecordService.NewRecord(GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName);
             var lookup = GetLookupService(recordForm, subGridReference).ToLookup(selectedRow.GetRecord());
-            if (gridField.GridRecords.Any(g => g.GetLookupFieldFieldViewModel(targetPropertyname).Value == lookup))
-                return;
+
             newRecord.SetField(targetPropertyname, lookup, recordForm.RecordService);
-            gridField.InsertRecord(newRecord, 0);
+            //if (gridField.GridRecords.Any(g => g.GetLookupFieldFieldViewModel(targetPropertyname).Value == lookup))
+            //    return;
+            //gridField.InsertRecord(newRecord, 0);
+            InsertNewItem(recordForm, subGridReference, newRecord);
         }
     }
 }

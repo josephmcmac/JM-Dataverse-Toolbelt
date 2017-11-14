@@ -49,7 +49,7 @@ namespace JosephM.Xrm.Vsix.Test
             var solutionPicklistField = packageSettingsEntry.GetLookupFieldFieldViewModel(nameof(XrmPackageSettings.Solution));
             solutionPicklistField.SelectedItem = solutionPicklistField.ItemsSource.First();
 
-            var connectionsubGrid = packageSettingsEntry.GetSubGridViewModel(nameof(XrmPackageSettings.Connections));
+            var connectionsubGrid = packageSettingsEntry.GetEnumerableFieldViewModel(nameof(XrmPackageSettings.Connections));
             Assert.IsTrue(connectionsubGrid.GridRecords.Any());
             Assert.AreEqual(connectionToEnter.OrganizationUniqueName, connectionsubGrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).Value);
 

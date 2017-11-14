@@ -346,7 +346,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         {
                             var refvm = re as RecordEntryFormViewModel;
                             var customFunctions = GetCustomFunctionsFor(fieldName, refvm).ToList();
-                            var fieldVm = refvm.GetSubGridViewModel(fieldName);
+                            var fieldVm = refvm.GetEnumerableFieldViewModel(fieldName);
                             fieldVm.DynamicGridViewModel.AddGridButtons(customFunctions);
                         }
                     }));
@@ -630,9 +630,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         private string GetRecordTypeFor(string field, RecordEntryViewModelBase viewModel)
         {
-            var propertyInfo = GetPropertyInfo(field, viewModel.GetRecord().Type);
+            var split = field?.Split('.') ?? new string[0];
+            if (!split.Any())
+                return null;
+            var propertyInfo = GetPropertyInfo(split.First(), viewModel.GetRecord().Type);
             if (propertyInfo != null)
             {
+                if(propertyInfo.GetType().Name == "IEnumerable`1" && split.Count() > 1)
+                {
+                    var enumeratedType = propertyInfo.GetType().GenericTypeArguments[0];
+                    propertyInfo = enumeratedType.GetProperty(split.ElementAt(1)) ?? propertyInfo;
+                }
                 var attribute = propertyInfo.GetCustomAttribute<ReferencedType>();
                 if (attribute != null)
                     return attribute.Type;
@@ -645,7 +653,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 {
                     if (lookupForAttribute.LookupProperty == field)
                     {
-                        //can;t use the fiueld view model as called on load and may trigger infinite loop loading field list
+                        //can't use the field view model as called on load and may trigger infinite loop loading field list
                         var record = viewModel.GetRecord();
                         if(record is ObjectRecord)
                         {
@@ -817,7 +825,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
         {
             var functions = new Dictionary<string, Action>();
-            var recordType = recordForm.GetSubGridViewModel(referenceName).RecordType;
+            var recordType = recordForm.GetEnumerableFieldViewModel(referenceName).RecordType;
             if (recordType == null)
                 return new CustomGridFunction[0];
 
@@ -833,7 +841,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var allowDownloadAttribute = ObjectRecordService.GetPropertyInfo(referenceName, recordForm.RecordType).GetCustomAttribute<AllowDownload>();
             if (allowDownloadAttribute != null)
             {
-                functions.Add("Download CSV", () => { recordForm.GetSubGridViewModel(referenceName).DynamicGridViewModel.DownloadCsv(); });
+                functions.Add("Download CSV", () => { recordForm.GetEnumerableFieldViewModel(referenceName).DynamicGridViewModel.DownloadCsv(); });
             }
             var customGridFunctions = functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToList();
             var typesToResolve = GetTypesToResolve(enumeratedType);

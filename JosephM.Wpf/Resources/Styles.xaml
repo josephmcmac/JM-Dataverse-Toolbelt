@@ -16,6 +16,7 @@
     <Image x:Key="CloseButtonImageKey" Source="../Images/CloseButton.gif" />
     <Image x:Key="NextImageKey" Source="../Images/Next.png" Height="15" Width="15" />
     <Image x:Key="PreviousImageKey" Source="../Images/Previous.png" />
+    <!--<Image x:Key="DropdownArrowKeyKey" Source="../Images/DropdownArrow.png" Height="25" Width="25" />-->
     <ImageSource x:Key="ErrorIconImageSourceKey">
         ../Images/ErrorIcon.png
     </ImageSource>

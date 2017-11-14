@@ -35,7 +35,7 @@ namespace JosephM.Application.ViewModel.Attributes
                 {
                     objectFormService.LoadSubgridsToObject();
                     thisMethod();
-                    var subGrid = objectFormService.GetSubGridViewModel(subGridReference);
+                    var subGrid = objectFormService.GetEnumerableFieldViewModel(subGridReference);
                     subGrid.DynamicGridViewModel.ReloadGrid();
                 };
         }

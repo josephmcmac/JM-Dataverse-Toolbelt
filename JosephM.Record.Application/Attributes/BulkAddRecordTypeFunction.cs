@@ -27,7 +27,7 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public override IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            var gridField = GetObjectFormService(recordForm).GetSubGridViewModel(subGridReference);
+            var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
             var gridRecords = gridField.GridRecords;
 
@@ -55,7 +55,7 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public override void AddSelectedItem(GridRowViewModel selectedRow, RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            var gridField = GetObjectFormService(recordForm).GetSubGridViewModel(subGridReference);
+            var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
             var newRecord = recordForm.RecordService.NewRecord(GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName);
 
@@ -67,10 +67,10 @@ namespace JosephM.Application.ViewModel.Attributes
                 newRecordType.Value = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IRecordTypeMetadata.DisplayName));
 
                 newRecord.SetField(targetPropertyname, newRecordType, recordForm.RecordService);
-                if (gridField.GridRecords.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value == newRecordType))
-                    return;
-                newRecord.SetField(targetPropertyname, newRecordType, recordForm.RecordService);
-                gridField.InsertRecord(newRecord, 0);
+                //if (gridField.GridRecords.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value == newRecordType))
+                //    return;
+                InsertNewItem(recordForm, subGridReference, newRecord);
+                //gridField.InsertRecord(newRecord, 0);
             }
         }
 

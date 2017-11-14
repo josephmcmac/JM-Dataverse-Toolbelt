@@ -76,7 +76,7 @@ namespace JosephM.Prism.XrmModule.Test
             loadRequestButton.Invoke();
             var loadRequestForm = testApplication.GetSubObjectEntryViewModel(entryForm);
             //select and load the saved request
-            var subGrid = loadRequestForm.GetSubGridViewModel(nameof(SavedSettings.SavedRequests));
+            var subGrid = loadRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
             Assert.IsTrue(subGrid.GridRecords.Count() == 1);
             subGrid.GridRecords.First().IsSelected = true;
             var loadButton = subGrid.DynamicGridViewModel.GetButton("LOADREQUEST");
@@ -93,7 +93,7 @@ namespace JosephM.Prism.XrmModule.Test
             loadRequestButton.Invoke();
             loadRequestForm = testApplication.GetSubObjectEntryViewModel(entryForm);
             //delete the saved request in the grid
-            subGrid = loadRequestForm.GetSubGridViewModel(nameof(SavedSettings.SavedRequests));
+            subGrid = loadRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
             subGrid.DynamicGridViewModel.DeleteRow(subGrid.GridRecords.First());
             loadRequestForm.SaveButtonViewModel.Invoke();
             Assert.IsFalse(entryForm.ChildForms.Any());
@@ -165,7 +165,7 @@ namespace JosephM.Prism.XrmModule.Test
 
             //veirfy a user message is thrown if try to load the one with the deleted solution
             loadRequestForm = testApplication.GetSubObjectEntryViewModel(entryForm);
-            subGrid = loadRequestForm.GetSubGridViewModel(nameof(SavedSettings.SavedRequests));
+            subGrid = loadRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
             Assert.IsTrue(subGrid.GridRecords.Count() == 1);
             subGrid.GridRecords.First().IsSelected = true;
             loadButton = subGrid.DynamicGridViewModel.GetButton("LOADREQUEST");
@@ -210,7 +210,7 @@ namespace JosephM.Prism.XrmModule.Test
 
             var savedRequestsForm = testApplication.GetSubObjectEntryViewModel(entryForm);
 
-            var saveRequestsGrid = savedRequestsForm.GetSubGridViewModel(nameof(SavedSettings.SavedRequests));
+            var saveRequestsGrid = savedRequestsForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
             Assert.AreEqual(1, saveRequestsGrid.GridRecords.Count());
 
             var firstgridRecord = saveRequestsGrid.GridRecords.First();

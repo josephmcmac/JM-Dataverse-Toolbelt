@@ -16,6 +16,7 @@ using System.Diagnostics;
 using JosephM.Record.Extentions;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Record.Metadata;
+using JosephM.Application.ViewModel.Shared;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -60,7 +61,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 };
                 DynamicGridViewModel.AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);
             }
+            else
+            {
+                var bulkAddFunction = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);
+                if (bulkAddFunction != null)
+                    BulkAddButton = new XrmButtonViewModel("BULKADD", "BULK ADD", bulkAddFunction, ApplicationController);
+            }
         }
+
+        public XrmButtonViewModel BulkAddButton { get; set; }
 
         private bool _isLoaded;
         public override bool IsLoaded { get { return _isLoaded; } }
@@ -329,6 +338,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public IEnumerable Enumerable
         {
             get { return ValueObject == null ? null : (IEnumerable) ValueObject; }
+        }
+
+        public override IEnumerable Value
+        {
+            get
+            {
+                return base.Value;
+            }
+            set
+            {
+                base.Value = value;
+                OnPropertyChanged(nameof(StringDisplay));
+            }
         }
     }
 }

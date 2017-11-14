@@ -30,7 +30,7 @@ namespace JosephM.Record.Application.Test
 
             var viewModel = LoadToObjectEntryViewModel(testObject);
 
-            var gridObjects = viewModel.GetSubGridViewModel("EnumerableObjects");
+            var gridObjects = viewModel.GetEnumerableFieldViewModel("EnumerableObjects");
             gridObjects.DynamicGridViewModel.SortIt("Bool");
             Assert.IsFalse(gridObjects.GridRecords.First().GetBooleanFieldFieldViewModel("Bool").Value);
             Assert.IsFalse(gridObjects.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel("Bool").Value);

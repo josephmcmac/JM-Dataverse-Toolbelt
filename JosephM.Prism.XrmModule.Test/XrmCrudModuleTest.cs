@@ -168,13 +168,16 @@ namespace JosephM.Prism.XrmModule.Test
             bulkUpdateDialog.LoadDialog();
             var bulkUpdateEntry = bulkUpdateDialog.Controller.UiItems.First() as ObjectEntryViewModel;
             Assert.IsNotNull(bulkUpdateEntry);
+            bulkUpdateEntry.LoadFormSections();
             var fieldField = bulkUpdateEntry.GetRecordFieldFieldViewModel(nameof(BulkUpdateRequest.FieldToSet));
             fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == field);
             var valueField = bulkUpdateEntry.GetStringFieldFieldViewModel(nameof(BulkUpdateRequest.ValueToSet));
             valueField.Value = newValue;
             bulkUpdateEntry.SaveButtonViewModel.Invoke();
             var completionScreen = bulkUpdateDialog.Controller.UiItems.First() as CompletionScreenViewModel;
-            Assert.IsFalse(completionScreen.CompletionDetails.GetSubGridViewModel(nameof(BulkUpdateResponse.ResponseItems)).GetGridRecords(false).Records.Any());
+            Assert.IsNotNull(completionScreen);
+            completionScreen.CompletionDetails.LoadFormSections();
+            Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkUpdateResponse.ResponseItems)).GetGridRecords(false).Records.Any());
             completionScreen.CloseButton.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }
@@ -184,11 +187,14 @@ namespace JosephM.Prism.XrmModule.Test
             var bulkDeleteDialog = crudDialog.ChildForms.First() as BulkDeleteDialog;
             Assert.IsNotNull(bulkDeleteDialog);
             bulkDeleteDialog.LoadDialog();
+            bulkDeleteDialog.LoadDialog();
             var bulkUpdateEntry = bulkDeleteDialog.Controller.UiItems.First() as ObjectEntryViewModel;
             Assert.IsNotNull(bulkDeleteDialog);
             bulkUpdateEntry.SaveButtonViewModel.Invoke();
             var completionScreen = bulkDeleteDialog.Controller.UiItems.First() as CompletionScreenViewModel;
-            Assert.IsFalse(completionScreen.CompletionDetails.GetSubGridViewModel(nameof(BulkDeleteResponse.ResponseItems)).GetGridRecords(false).Records.Any());
+            Assert.IsNotNull(completionScreen);
+            completionScreen.CompletionDetails.LoadFormSections();
+            Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkDeleteResponse.ResponseItems)).GetGridRecords(false).Records.Any());
             completionScreen.CloseButton.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }
