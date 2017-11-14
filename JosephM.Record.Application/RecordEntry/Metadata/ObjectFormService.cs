@@ -372,9 +372,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
-        public override bool AllowAddRow(string subGridName)
+        public override bool AllowAddNew(string fieldName, string recordType)
         {
-            var prop = GetPropertyInfo(subGridName, ObjectType.AssemblyQualifiedName);
+            var prop = GetPropertyInfo(fieldName, recordType);
             return prop.GetCustomAttribute<DoNotAllowAdd>() == null;
         }
 
@@ -799,14 +799,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             var orderPriority = GetPropertyInfo(fieldName, recordType).GetCustomAttribute<OrderPriority>();
             if (orderPriority == null)
-                return picklistItems.OrderBy(p => p.Name).ToArray();
+                return picklistItems.OrderBy(p => { return p.Record == null ? 0 : 1; }).ThenBy(p => p.Name).ToArray();
 
-            return picklistItems.ToList().OrderBy(p =>
-            {
-                return orderPriority.PriorityValues.Contains(p.Name)
-                ? orderPriority.PriorityValues.ToList().IndexOf(p.Name)
-                : 999999;
-            }).ThenBy(p => p.Name).ToArray();
+            return picklistItems.ToList()
+                .OrderBy(p => { return p.Record == null ? 0 : 1; })
+                .ThenBy(p =>
+                {
+                    return orderPriority.PriorityValues.Contains(p.Name)
+                    ? orderPriority.PriorityValues.ToList().IndexOf(p.Name)
+                    : 999999;
+                }).ThenBy(p => p.Name).ToArray();
         }
 
         internal override bool InitialisePicklistIfOneOption(string fieldName, string recordType)

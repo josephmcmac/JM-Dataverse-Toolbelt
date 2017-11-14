@@ -62,7 +62,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         private void SetNewAction()
         {
-            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null && LookupFormService.GetFormMetadata(RecordTypeToLookup, LookupService) != null)
+            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null && LookupFormService.GetFormMetadata(RecordTypeToLookup, LookupService) != null && FormService.AllowAddNew(FieldName, GetRecordType()))
             {
                 NewAction = () =>
                 {
@@ -169,7 +169,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 foreach (var item in ItemsSource)
                 {
-                    if (item.Record.ToLookup() == Value)
+                    if (item.Record != null && item.Record.ToLookup() == Value)
                     {
                         return item;
                     }
@@ -190,7 +190,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected override void MatchValueToSelectedItems()
         {
             Lookup newValue = null;
-            if (SelectedItem != null)
+            if (SelectedItem != null && SelectedItem.Record != null)
                 newValue = LookupService.ToLookup(SelectedItem.Record);
             if (newValue != Value)
                 Value = newValue;
@@ -200,6 +200,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             return GetSearchResults()
                 .Select(r => new ReferencePicklistItem(r, r.GetStringField(FormService.GetPicklistDisplayField(FieldName, GetRecordType(), LookupService, RecordTypeToLookup))))
+                .Union(new[] { new ReferencePicklistItem(null, null) })
                 .ToArray();
         }
 

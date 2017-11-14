@@ -79,6 +79,12 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [GridWidth(100)]
         public string PreImageName { get; set; }
 
+        [ReferencedType(Entities.systemuser)]
+        [DisplayOrder(100)]
+        [UsePicklist]
+        [DoNotAllowAdd]
+        public Lookup SpecificUserContext { get; set; }
+
         [DisplayOrder(55)]
         [GridWidth(300)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]

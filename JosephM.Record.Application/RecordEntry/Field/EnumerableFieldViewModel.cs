@@ -36,7 +36,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     ViewType = ViewType.AssociatedView,
                     DeleteRow = recordForm.IsReadOnly ? (Action<GridRowViewModel>)null : RemoveRow,
                     EditRow = EditRow,
-                    AddRow = !recordForm.IsReadOnly && FormService.AllowAddRow(ReferenceName) ? AddRow : (Action)null,
+                    AddRow = !recordForm.IsReadOnly && FormService.AllowAddNew(ReferenceName, GetRecordType()) ? AddRow : (Action)null,
                     AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel),
                     IsReadOnly = recordForm.IsReadOnly,
                     ParentForm = recordForm,

@@ -14,6 +14,7 @@ namespace JosephM.Xrm.Test
         {
             var blah = XrmService.WhoAmI();
 
+            var metadata = XrmService.GetFieldMetadata("impersonatinguserid", "sdkmessageprocessingstep");
         }
 
         private void DeleteOnlineSampleData()
