@@ -61,8 +61,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             if (LookupService != null)
             {
                 ItemsSource = (FormService?.OrderPicklistItems(FieldName, GetRecordType(), GetPicklistOptions()) ?? GetPicklistOptions().OrderBy(p => p.Name)).ToArray();
-                if (Value == null && ItemsSource.Count() == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordType()) ?? false))
-                    SelectedItem = ItemsSource.First();
+                if (Value == null && ItemsSource.Count(i => i.Record != null) == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordType()) ?? false))
+                    SelectedItem = ItemsSource.First(i => i.Record != null);
             }
             var matchingItem = MatchSelectedItemInItemsSourceToValue();
             if (matchingItem == null)

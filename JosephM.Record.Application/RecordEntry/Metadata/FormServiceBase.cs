@@ -50,7 +50,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         internal virtual IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> OrderPicklistItems<T>(string fieldName, string recordType, IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> picklistItems)
         {
-            return picklistItems.OrderBy(p => p.Name);
+            return picklistItems.OrderBy(p => { return p.Record == null ? 0 : 1; }).ThenBy(p => p.Name);
         }
 
         internal virtual bool InitialisePicklistIfOneOption(string fieldName, string recordType)
@@ -113,7 +113,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new CustomGridFunction[0];
         }
 
-        public virtual bool AllowAddRow(string subGridName)
+        public virtual bool AllowAddNew(string fieldName, string recordType)
         {
             return true;
         }

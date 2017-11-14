@@ -112,6 +112,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                     .Where(s => !string.IsNullOrWhiteSpace(s))
                     .Select(s => new RecordField(s, s))
                     .ToArray();
+                trigger.SpecificUserContext = item.GetLookupField(Fields.sdkmessageprocessingstep_.impersonatinguserid);
                 //load image details if there is one
                 if (trigger.Id != null)
                 {
@@ -226,6 +227,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 record.SetField(Fields.sdkmessageprocessingstep_.plugintypeid, item.Plugin, XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.sdkmessagefilterid, !matchingPluginFilters.Any() ? null : matchingPluginFilters.First().ToLookup(), XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageid, item.Message, XrmRecordService);
+                record.SetField(Fields.sdkmessageprocessingstep_.impersonatinguserid, item.SpecificUserContext == null || item.SpecificUserContext.Id == null ? null : item.SpecificUserContext, XrmRecordService);
                 if (item.Id != null)
                     record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid, item.Id, XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.asyncautodelete, item.Mode == PluginTrigger.PluginMode.Asynchronous, XrmRecordService);

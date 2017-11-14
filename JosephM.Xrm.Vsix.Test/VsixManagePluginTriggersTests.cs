@@ -36,6 +36,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual(1, triggers.Count());
             Assert.IsTrue(triggers.First().GetBoolField(Fields.sdkmessageprocessingstep_.asyncautodelete));
             Assert.IsNull(triggers.First().GetStringField(Fields.sdkmessageprocessingstep_.filteringattributes));
+            Assert.IsNull(triggers.First().GetStringField(Fields.sdkmessageprocessingstep_.impersonatinguserid));
 
             //verify preimage created for update with all fields
             var image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage,
@@ -73,7 +74,7 @@ namespace JosephM.Xrm.Vsix.Test
             triggers = GetPluginTriggers(assemblyRecord);
             Assert.AreEqual(3, triggers.Count());
 
-            //okay now lets inspect and adjust the filtering attributes and preimages in one of the update messages
+            //okay now lets inspect and adjust the filtering attributes and preimages and impersonating user in one of the update messages
             dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -95,6 +96,10 @@ namespace JosephM.Xrm.Vsix.Test
             filteringAttributesField.MultiSelectsVisible = true;
             filteringAttributesField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
             filteringAttributesField.DynamicGridViewModel.GridRecords.ElementAt(3).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            //set impersonating user
+            var impersonatingUserField = letsAdjustThisOne.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext));
+            impersonatingUserField.SelectedItem = impersonatingUserField.ItemsSource.First(p => p.Record?.Id == CurrentUserId.ToString());
+
 
             //save
             Assert.IsTrue(entryViewModel.Validate());
@@ -110,6 +115,7 @@ namespace JosephM.Xrm.Vsix.Test
             var updatedTrigger = updatedTriggerMatches.First();
             //verify the filtering and image fields we set got saved correctly
             Assert.IsNotNull(updatedTrigger.GetStringField(Fields.sdkmessageprocessingstep_.filteringattributes));
+            Assert.AreEqual(CurrentUserId.ToString(), updatedTrigger.GetLookupId(Fields.sdkmessageprocessingstep_.impersonatinguserid));
             image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage,
                 Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, updatedTrigger.Id);
             Assert.IsNotNull(image);
@@ -125,18 +131,21 @@ namespace JosephM.Xrm.Vsix.Test
 
             updatedTrigger = XrmRecordService.Get(updatedTrigger.Type, updatedTrigger.Id);
             Assert.IsNotNull(updatedTrigger.GetStringField(Fields.sdkmessageprocessingstep_.filteringattributes));
+            Assert.AreEqual(CurrentUserId.ToString(), updatedTrigger.GetLookupId(Fields.sdkmessageprocessingstep_.impersonatinguserid));
             XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage, Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, triggers.First().Id);
             Assert.IsNotNull(image);
             Assert.IsNotNull(image.GetStringField(Fields.sdkmessageprocessingstepimage_.attributes));
             Assert.AreEqual("FooOthername", image.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias));
 
-            //now lets verify deletion of an image if changed to not have one (image deleted)
+            //now lets verify deletion of an image if changed to not have one (image deleted) as well as clear impersonating user
             dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             triggersSubGrid = entryViewModel.SubGrids.First();
 
             letsAdjustThisOne = triggersSubGrid.GridRecords.First(r => r.GetRecord().GetStringField(nameof(PluginTrigger.Id)) == updatedTrigger.Id);
+            impersonatingUserField = letsAdjustThisOne.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext));
+            impersonatingUserField.SelectedItem = impersonatingUserField.ItemsSource.First(p => p.Record == null);
             //set no not all preimage fields
             letsAdjustThisOne.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = false;
             //set no fields on the preimage
@@ -149,6 +158,11 @@ namespace JosephM.Xrm.Vsix.Test
             //save
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
+
+            //verify now no impersonation
+            updatedTrigger = XrmRecordService.Get(updatedTrigger.Type, updatedTrigger.Id);
+            Assert.IsNull(updatedTrigger.GetLookupId(Fields.sdkmessageprocessingstep_.impersonatinguserid));
+
             //verify no image
             image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage, Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, updatedTrigger.Id);
             Assert.IsNull(image);
@@ -160,6 +174,9 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
 
+            //verify still no impersonation
+            updatedTrigger = XrmRecordService.Get(updatedTrigger.Type, updatedTrigger.Id);
+            Assert.IsNull(updatedTrigger.GetLookupId(Fields.sdkmessageprocessingstep_.impersonatinguserid));
             //verify still no image
             image = XrmRecordService.GetFirst(Entities.sdkmessageprocessingstepimage, Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, updatedTrigger.Id);
             Assert.IsNull(image);
@@ -220,7 +237,7 @@ namespace JosephM.Xrm.Vsix.Test
                             typeFieldViewModel.Value = typeFieldViewModel.LookupService.ToLookup(typeFieldViewModel.ItemsSource.First(m => m.Name == message).Record);
                         }
                         else if (typeFieldViewModel.UsePicklist)
-                            typeFieldViewModel.Value = typeFieldViewModel.LookupService.ToLookup(typeFieldViewModel.ItemsSource.First().Record); ;
+                            typeFieldViewModel.Value = typeFieldViewModel.LookupService.ToLookup(typeFieldViewModel.ItemsSource.First(p => p.Record != null).Record); ;
                     }
                     if (field is PicklistFieldViewModel)
                     {
@@ -255,6 +272,7 @@ namespace JosephM.Xrm.Vsix.Test
             newRow.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Mode)).ValueObject = PluginTrigger.PluginMode.Asynchronous;
             newRow.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Stage)).ValueObject = PluginTrigger.PluginStage.PostEvent;
             newRow.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = true;
+            newRow.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext)).Value = null;
             var filteringAttributesField = newRow.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
             filteringAttributesField.MultiSelectsVisible = true;
             foreach (var field in filteringAttributesField.DynamicGridViewModel.GridRecords)
