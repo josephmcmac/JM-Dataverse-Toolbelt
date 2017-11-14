@@ -93,11 +93,15 @@ namespace JosephM.Deployment.Test
             }
         }
 
+        /// <summary>
+        /// This test scripts through the bulk add function on a subgrid
+        /// as well as running a query on all fields in the account type
+        /// the bulk add was added to this function to bulk add record types, fields and lookup records
+        /// rather than selecting them oine by one in the grid
+        /// </summary>
         [TestMethod]
-        public void DeploymentExportXmlModuleTestExportSpecificRecordsWithQuery()
+        public void DeploymentExportXmlModuleTestExportWithBulkAddToGridAndQuery()
         {
-            //okay this test is for the new bulk add
-            //for lookups in specific record grid, record types and data to export, and fields in fields to exclude
             DeleteAll(Entities.account);
 
             var account = CreateRecordAllFieldsPopulated(Entities.account);
@@ -105,8 +109,8 @@ namespace JosephM.Deployment.Test
 
             var accountRecord = XrmRecordService.Get(account.LogicalName, account.Id.ToString());
 
+            //okay create/navigate to a new entry form entering an ExportXmlRequest
             var application = CreateAndLoadTestApplication<ExportXmlModule>();
-
             var instance = new ExportXmlRequest();
             instance.IncludeNotes = true;
             instance.IncludeNNRelationshipsBetweenEntities = true;
@@ -120,28 +124,33 @@ namespace JosephM.Deployment.Test
                     SpecificRecordsToExport = new [] { new LookupSetting() {  Record = accountRecord.ToLookup()} }
                 }
             };
-
             var entryForm = application.NavigateToDialogModuleEntryForm<ExportXmlModule, ExportXmlDialog>();
             application.EnterObject(instance, entryForm);
-            var recordTypesGrid = entryForm.GetSubGridViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
+
+            //get the record types subgrid
+            var recordTypesGrid = entryForm.GetEnumerableFieldViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
             var row = recordTypesGrid.GridRecords.First();
 
-            //edit the accounts export record
+            //edit the accounts export record row
             row.EditRow();
             var specificRecordEntry = entryForm.ChildForms.First() as RecordEntryFormViewModel;
-            var specificRecordsGrid = specificRecordEntry.GetSubGridViewModel(nameof(ExportRecordType.SpecificRecordsToExport));
+            specificRecordEntry.LoadFormSections();
+            var specificRecordsGrid = specificRecordEntry.GetEnumerableFieldViewModel(nameof(ExportRecordType.SpecificRecordsToExport));
             //delete the row we added
             specificRecordsGrid.GridRecords.First().DeleteRow();
             Assert.IsFalse(specificRecordsGrid.GridRecords.Any());
+            
             //now add using the add multiple option
             var customFunction = specificRecordsGrid.DynamicGridViewModel.AddMultipleRowButton;
             customFunction.Invoke();
             var bulkAddForm = specificRecordEntry.ChildForms.First() as QueryViewModel;
+
             //verify a quickfind finds a record
             bulkAddForm.QuickFindText = account.GetStringField(Fields.account_.name);
             bulkAddForm.QuickFind();
             Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
             Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
+
             //now do an and query on every field in the entity and verify it works
             bulkAddForm.QueryTypeButton.Invoke();
 
@@ -177,10 +186,17 @@ namespace JosephM.Deployment.Test
             bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
             //this is supposed to be the add selected button
             bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
+
+            //and verify the row was added to the records for export
             Assert.IsTrue(specificRecordsGrid.GridRecords.Any());
 
+            //okay now lets do the equivalent for a grid of fields
+
+            //set this false so the selection of fields is in context
             specificRecordEntry.GetBooleanFieldFieldViewModel(nameof(ExportRecordType.IncludeAllFields)).Value = false;
-            var excludeFieldsGrid = specificRecordEntry.GetSubGridViewModel(nameof(ExportRecordType.IncludeOnlyTheseFieldsInExportedRecords));
+
+            //get the fields grid and trigger bulk add function
+            var excludeFieldsGrid = specificRecordEntry.GetEnumerableFieldViewModel(nameof(ExportRecordType.IncludeOnlyTheseFieldsInExportedRecords));
             //now add using the add multiple option
             excludeFieldsGrid.DynamicGridViewModel.AddMultipleRowButton.Invoke();
             bulkAddForm = specificRecordEntry.ChildForms.First() as QueryViewModel;
@@ -198,11 +214,14 @@ namespace JosephM.Deployment.Test
             //this is supposed to be the add selected button
             bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
             Assert.IsFalse(specificRecordEntry.ChildForms.Any());
+            //and verify the row was added to the records for export
+            Assert.IsTrue(excludeFieldsGrid.GridRecords.Any());
 
             specificRecordEntry.SaveButtonViewModel.Invoke();
             Assert.IsFalse(entryForm.ChildForms.Any());
 
-            var subGrid = entryForm.GetSubGridViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
+            //okay now lets to bulk add on the record types grid
+            var subGrid = entryForm.GetEnumerableFieldViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
             subGrid.DynamicGridViewModel.AddMultipleRowButton.Invoke();
 
             bulkAddForm = entryForm.ChildForms.First() as QueryViewModel;
@@ -222,6 +241,94 @@ namespace JosephM.Deployment.Test
             bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
 
             Assert.IsFalse(entryForm.ChildForms.Any());
+        }
+
+        /// <summary>
+        /// This test scripts through the bulk add function on a subgrid's enumerbale field
+        /// the bulk add was added to the enumerable field in the grid so you don't have to open/edit the row
+        /// to bulk add items to it
+        /// </summary>
+        [TestMethod]
+        public void DeploymentExportXmlModuleTestExportWithBulkAddToGridField()
+        {
+            DeleteAll(Entities.account);
+
+            var account = CreateRecordAllFieldsPopulated(Entities.account);
+            FileUtility.DeleteFiles(TestingFolder);
+
+            var accountRecord = XrmRecordService.Get(account.LogicalName, account.Id.ToString());
+
+            var application = CreateAndLoadTestApplication<ExportXmlModule>();
+
+            var instance = new ExportXmlRequest();
+            instance.IncludeNotes = true;
+            instance.IncludeNNRelationshipsBetweenEntities = true;
+            instance.Folder = new Folder(TestingFolder);
+            instance.RecordTypesToExport = new[]
+            {
+                new ExportRecordType()
+                {
+                    Type = ExportType.AllRecords,
+                    RecordType = new RecordType(Entities.account, Entities.account),
+                    SpecificRecordsToExport = new LookupSetting[0]
+                }
+            };
+
+            var entryForm = application.NavigateToDialogModuleEntryForm<ExportXmlModule, ExportXmlDialog>();
+            application.EnterObject(instance, entryForm);
+            var recordTypesGrid = entryForm.GetEnumerableFieldViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
+
+            //okay so we will be doing bulk adds on fields in this grid row
+            var row = recordTypesGrid.GridRecords.First();
+            row.GetPicklistFieldFieldViewModel(nameof(ExportRecordType.Type)).Value = PicklistOption.EnumToPicklistOption(ExportType.SpecificRecords);
+            //first do it for an Enumerable lookup field (specific records for export)
+            var specificRecordsGridField = row.GetEnumerableFieldViewModel(nameof(ExportRecordType.SpecificRecordsToExport));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(specificRecordsGridField.StringDisplay));
+            Assert.IsNull(specificRecordsGridField.DynamicGridViewModel);
+            Assert.IsNotNull(specificRecordsGridField.BulkAddButton);
+           
+            //trigger the add multiple option
+            specificRecordsGridField.BulkAddButton.Invoke();
+            var bulkAddForm = entryForm.ChildForms.First() as QueryViewModel;
+            
+            //verify a quickfind finds a record
+            bulkAddForm.QuickFindText = account.GetStringField(Fields.account_.name);
+            bulkAddForm.QuickFind();
+
+            //select and add
+            bulkAddForm.DynamicGridViewModel.GridRecords.First().IsSelected = true;
+            //this triggered by the grid event
+            bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
+            //this is supposed to be the add selected button
+            bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
+            //verify we now have a record selected and displayed for the field
+            Assert.IsFalse(string.IsNullOrWhiteSpace(specificRecordsGridField.StringDisplay));
+
+            //now do it for an Enumerable field (fields for inlcusion)
+            //this sets it in context
+            row.GetBooleanFieldFieldViewModel(nameof(ExportRecordType.IncludeAllFields)).Value = false;
+            var excludeFieldsGrid = row.GetEnumerableFieldViewModel(nameof(ExportRecordType.IncludeOnlyTheseFieldsInExportedRecords));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(excludeFieldsGrid.StringDisplay));
+           
+            //trigger the add multiple option
+            excludeFieldsGrid.BulkAddButton.Invoke();
+            bulkAddForm = entryForm.ChildForms.First() as QueryViewModel;
+            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
+
+            bulkAddForm.QuickFindText = Fields.account_.name;
+            bulkAddForm.QuickFind();
+
+            Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
+            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
+
+            bulkAddForm.DynamicGridViewModel.GridRecords.First().IsSelected = true;
+            //this triggered by the grid event
+            bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
+            //this is supposed to be the add selected button
+            bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
+            Assert.IsFalse(entryForm.ChildForms.Any());
+            //verify we now have a record selected and displayed for the field
+            Assert.IsFalse(string.IsNullOrWhiteSpace(excludeFieldsGrid.StringDisplay));
         }
     }
 }

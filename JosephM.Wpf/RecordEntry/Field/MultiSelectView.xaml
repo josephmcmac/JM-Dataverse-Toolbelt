@@ -24,16 +24,29 @@
             <RowDefinition />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
-            <TextBox
-                Name="DisplayTextBlock"
-                TabIndex="1"
-                DataContext="{Binding NotifyOnValidationError=True}"
-                Text="{Binding StringDisplay, Mode=OneWay}"
-                Style="{StaticResource FieldEntryStyle}"
-                IsReadOnly="True"
-                PreviewMouseLeftButtonUp="DisplayTextBlock_MouseDown"
-                 />
+        <Grid Row="0"  Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
+            <Grid                         PreviewMouseLeftButtonUp="DisplayTextBlock_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <!--<ColumnDefinition Width="Auto" />-->
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" >
+                    <TextBox
+                        Name="DisplayTextBlock"
+                        TabIndex="1"
+                        DataContext="{Binding NotifyOnValidationError=True}"
+                        Text="{Binding StringDisplay, Mode=OneWay}"
+                        Style="{StaticResource FieldEntryStyle}"
+                        IsReadOnly="True"
+                        BorderThickness="0"
+                         />
+                </Grid>
+                <!--<Grid Grid.Column="1" >
+                    <ContentControl Content="{StaticResource DropdownArrowKeyKey}">
+
+                    </ContentControl>
+                </Grid>-->
+            </Grid>
         </Grid>
         <Grid Name="PopupGrid" Row="1">
             <Popup  PlacementTarget="{Binding ElementName=DisplayTextBlock}" IsOpen="{Binding MultiSelectsVisible}">

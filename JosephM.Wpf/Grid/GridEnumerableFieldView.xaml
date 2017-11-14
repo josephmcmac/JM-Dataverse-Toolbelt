@@ -16,7 +16,20 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <TextBlock
-        Style="{StaticResource GridEnumerableField}"
-        Text="{Binding StringDisplay, NotifyOnValidationError=True}" />
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <TextBlock
+                Style="{StaticResource GridEnumerableField}"
+                Text="{Binding StringDisplay, NotifyOnValidationError=True}" />
+        </Grid>
+        <Grid Grid.Column="1" Visibility="{Binding BulkAddButton, Converter={StaticResource NullToHiddenConverter}}">
+            <Button DataContext="{Binding Path=BulkAddButton}" 
+                        Style="{StaticResource AddMultipleRowButton}"
+                            Command="{Binding Command}" ToolTip="Click To Add Multiple Items" />
+        </Grid>
+    </Grid>
 </UserControl>

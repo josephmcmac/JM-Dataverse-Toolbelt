@@ -27,15 +27,18 @@ namespace JosephM.Application.ViewModel.Attributes
         {
             var targetPropertyInfo = GetTargetProperty(recordForm, subGridReference);
 
-            var gridField = GetObjectFormService(recordForm).GetSubGridViewModel(subGridReference);
-            var gridRecords = gridField.GridRecords;
-            
+            var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
+
+            var alreadySelected = gridField.DynamicGridViewModel != null
+                ? gridField.GridRecords.Select(g => g.GetRecordFieldFieldViewModel(targetPropertyInfo.Name)?.Value.Key).ToArray()
+                : gridField.Value == null ? new string[0] : gridField.Value.AsQueryable().Cast<RecordField>().Select(f => f.Key).ToArray();
+
             var recordType = recordForm.FormService.GetDependantValue(subGridReference + "." + targetPropertyInfo.Name, GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName, recordForm);
             var lookupService = GetLookupService(recordForm, subGridReference);
 
             //removed field searchable as inadvertently left out fields
             var fields = lookupService.GetFieldMetadata(recordType)
-                .Where(f => (!gridRecords?.Any(g => g.GetRecordFieldFieldViewModel(targetPropertyInfo.Name)?.Value.Key == f.SchemaName) ?? true))
+                .Where(f => (!alreadySelected?.Any(k => k == f.SchemaName) ?? true))
                 .OrderBy(r => r.DisplayName)
                 .ToArray();
 
@@ -57,7 +60,7 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public override void AddSelectedItem(GridRowViewModel selectedRow, RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            var gridField = GetObjectFormService(recordForm).GetSubGridViewModel(subGridReference);
+            var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
             var newRecord = recordForm.RecordService.NewRecord(GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName);
 
@@ -67,12 +70,11 @@ namespace JosephM.Application.ViewModel.Attributes
                 var newRecordType = new RecordField();
                 newRecordType.Key = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IFieldMetadata.SchemaName));
                 newRecordType.Value = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IFieldMetadata.DisplayName));
+                newRecord.SetField(targetPropertyname, newRecordType, recordForm.RecordService);
 
-                newRecord.SetField(targetPropertyname, newRecordType, recordForm.RecordService);
-                if (gridField.GridRecords.Any(g => g.GetRecordFieldFieldViewModel(targetPropertyname).Value == newRecordType))
-                    return;
-                newRecord.SetField(targetPropertyname, newRecordType, recordForm.RecordService);
-                gridField.InsertRecord(newRecord, 0);
+                //if (gridField.GridRecords.Any(g => g.GetRecordFieldFieldViewModel(targetPropertyname).Value == newRecordType))
+                //    return;
+                InsertNewItem(recordForm, subGridReference, newRecord);
             }
         }
 

@@ -1,14 +1,14 @@
 ﻿using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
 using JosephM.Record.IService;
+using JosephM.Record.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Record.Extentions;
 using System.Reflection;
 using System.Threading;
+using System.Collections;
+using JosephM.Core.Extentions;
 
 namespace JosephM.Application.ViewModel.Attributes
 {
@@ -72,7 +72,10 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public static Type GetEnumeratedType(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            var theObject = GetObjectFormService(recordForm).GetObject();
+            var theRecord = GetEntryViewModel(recordForm).GetRecord() as ObjectRecord;
+            if (theRecord == null)
+                throw new NullReferenceException(string.Format("Expected Object Of Type {0}. Actual Type Is {1}", typeof(ObjectRecord).Name, GetEntryViewModel(recordForm).GetRecord()?.GetType()?.Name ?? "(null)"));
+            var theObject = theRecord.Instance;
 
             var type = theObject.GetType();
             var property = type.GetProperty(subGridReference);
@@ -80,15 +83,16 @@ namespace JosephM.Application.ViewModel.Attributes
             return enumeratedType;
         }
 
-        public static ObjectEntryViewModel GetObjectFormService(RecordEntryViewModelBase recordForm)
+        public static RecordEntryViewModelBase GetEntryViewModel(RecordEntryViewModelBase recordForm)
         {
-            var objectFormService = recordForm as ObjectEntryViewModel;
-            if (objectFormService == null)
-            {
-                throw new ArgumentOutOfRangeException(nameof(recordForm), string.Format("Required To Be Type Of {0}. Actual Type Is {1}", typeof(ObjectEntryViewModel).Name, recordForm.GetType().Name));
-            }
+            return recordForm;
+            //var objectFormService = recordForm as ObjectEntryViewModel;
+            //if (objectFormService == null)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(recordForm), string.Format("Required To Be Type Of {0}. Actual Type Is {1}", typeof(ObjectEntryViewModel).Name, recordForm.GetType().Name));
+            //}
 
-            return objectFormService;
+            //return objectFormService;
         }
 
         public void Load(RecordEntryViewModelBase recordForm, string subGridReference)
@@ -97,7 +101,11 @@ namespace JosephM.Application.ViewModel.Attributes
             {
                 try
                 {
-                    var closeFunction = new CustomGridFunction("RETURN", "Return", () => recordForm.ClearChildForm());
+                    var mainFormInContext = recordForm;
+                    if (recordForm is GridRowViewModel)
+                        mainFormInContext = recordForm.ParentForm;
+
+                    var closeFunction = new CustomGridFunction("RETURN", "Return", () => mainFormInContext.ClearChildForm());
                     var targetType = GetTargetType(recordForm, subGridReference);
 
                     var selectedFunction = new CustomGridFunction("ADDSELECTED", "Add Selected", (g) => AddSelectedItems(g, recordForm, subGridReference)
@@ -105,7 +113,7 @@ namespace JosephM.Application.ViewModel.Attributes
 
                     var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, customFunctions: new[] { selectedFunction });
                     childForm.TypeAhead = TypeAhead;
-                    recordForm.LoadChildForm(childForm);
+                    mainFormInContext.LoadChildForm(childForm);
                 }
                 catch (Exception ex)
                 {
@@ -124,9 +132,12 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public void AddSelectedItems(DynamicGridViewModel grid, RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            recordForm.ApplicationController.DoOnAsyncThread(() =>
+            var mainFormInContext = recordForm;
+            if (recordForm is GridRowViewModel)
+                mainFormInContext = recordForm.ParentForm;
+            mainFormInContext.ApplicationController.DoOnAsyncThread(() =>
             {
-                recordForm.LoadingViewModel.IsLoading = true;
+                mainFormInContext.LoadingViewModel.IsLoading = true;
                 try
                 {
                     Thread.Sleep(100);
@@ -134,19 +145,49 @@ namespace JosephM.Application.ViewModel.Attributes
                     {
                         AddSelectedItem(selectedRow, recordForm, subGridReference);
                     }
-                    recordForm.ClearChildForm();
+                    mainFormInContext.ClearChildForm();
                 }
                 catch(Exception ex)
                 {
-                    recordForm.ApplicationController.ThrowException(ex);
+                    mainFormInContext.ApplicationController.ThrowException(ex);
                 }
                 finally
                 {
-                    recordForm.LoadingViewModel.IsLoading = false;
+                    mainFormInContext.LoadingViewModel.IsLoading = false;
                 }
             });
         }
 
         public abstract void AddSelectedItem(GridRowViewModel gridRow, RecordEntryViewModelBase recordForm, string subGridReference);
+
+        public void InsertNewItem(RecordEntryViewModelBase recordForm, string subGridReference, IRecord recordToInsert)
+        {
+            //todo consider adding duplicates logic
+
+            //if the grid field is a subgrid then we add to the grid
+            //otherwise if it is within a subgrid, it is just a display string
+            //in which case lets just add it to the object
+            var enumerableField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
+
+            if (enumerableField.DynamicGridViewModel == null)
+            {
+                var objectRecord = recordToInsert as ObjectRecord;
+                if (objectRecord == null)
+                    throw new ArgumentOutOfRangeException(nameof(recordToInsert), string.Format("Expected Object of Type {0}. Actual Type Was {1}", typeof(ObjectRecord).Name, recordToInsert?.GetType()?.Name ?? "(null)"));
+                var items = new List<object>();
+                if(enumerableField.ValueObject as IEnumerable != null)
+                {
+                    foreach (var item in enumerableField.ValueObject as IEnumerable)
+                        items.Add(item);
+                }
+                items.Add(objectRecord.Instance);
+                enumerableField.Value = (IEnumerable)GetEnumeratedType(recordForm, subGridReference).ToNewTypedEnumerable(items);
+            }
+            else
+            {
+                var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
+                enumerableField.InsertRecord(recordToInsert, 0);
+            }
+        }
     }
 }

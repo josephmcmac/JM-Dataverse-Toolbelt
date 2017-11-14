@@ -439,16 +439,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        public EnumerableFieldViewModel GetSubGridViewModel(string subgridName)
-        {
-            var matchingFields = FieldSections.SelectMany(s => s.Fields).Where(g => g.FieldName == subgridName);
-            if (matchingFields.Any())
-            {
-                return (EnumerableFieldViewModel)matchingFields.First();
-            }
-            throw new ArgumentOutOfRangeException("subgridName", "No SubGrid In Has The SectionIdentifier: " + subgridName);
-        }
-
         private readonly RecordEntryViewModelBase _parentForm;
         public override RecordEntryViewModelBase ParentForm
         {

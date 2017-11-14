@@ -308,13 +308,15 @@ namespace JosephM.Record.Service
 
         public override IEnumerable<IFieldMetadata> GetFieldMetadata(string recordType)
         {
-            if (FieldMetadata.ContainsKey(recordType))
+            lock (_lockObject)
             {
-                var fieldMetadata = FieldMetadata[recordType];
-                return fieldMetadata;
+                if (!FieldMetadata.ContainsKey(recordType))
+                {
+                    FieldMetadata.Add(recordType, RecordMetadataFactory.GetClassFieldMetadata(Type.GetType(recordType)));
+                    var fieldMetadata = FieldMetadata[recordType];
+                }
+                return FieldMetadata[recordType];
             }
-            throw new ArgumentOutOfRangeException("recordType",
-                "No Field Metadata Has Been Created For Type " + recordType);
         }
 
         public override void Update(IRecord record, IEnumerable<string> changedPersistentFields)

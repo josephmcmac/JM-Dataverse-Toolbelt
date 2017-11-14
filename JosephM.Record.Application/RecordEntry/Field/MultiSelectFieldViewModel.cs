@@ -145,5 +145,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get; set;
         }
+
+        bool IsReadOnly
+        {
+            get;
+        }
     }
 }

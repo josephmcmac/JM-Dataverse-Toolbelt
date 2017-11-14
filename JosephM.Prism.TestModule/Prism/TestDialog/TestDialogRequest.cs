@@ -86,6 +86,9 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
 
             public IEnumerable<TestEnum> MultiSelect { get; set; }
 
+            [ReferencedType(FakeConstants.RecordType)]
+            public IEnumerable<LookupSetting> Lookups { get; set; }
+
             [ReadOnlyWhenSet]
             public string ReadOnlyProp { get; set; }
         }

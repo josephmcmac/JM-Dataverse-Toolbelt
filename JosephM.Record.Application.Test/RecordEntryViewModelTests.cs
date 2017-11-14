@@ -44,9 +44,9 @@ namespace JosephM.Record.Application.Test
             Assert.AreEqual(propertyAttribute.GetErrorMessage("Required String"), requiredStringViewModel.GetErrorsString());
 
             //check the subgrid validates as required
-            var notRequiredSubGrid = viewModel.GetSubGridViewModel(nameof(TestViewModelValidationObject.NotRequiredIEnumerableProperty));
+            var notRequiredSubGrid = viewModel.GetEnumerableFieldViewModel(nameof(TestViewModelValidationObject.NotRequiredIEnumerableProperty));
             Assert.IsFalse(notRequiredSubGrid.HasError);
-            var requiredSubGrid = viewModel.GetSubGridViewModel(nameof(TestViewModelValidationObject.RequiredIEnumerableProperty));
+            var requiredSubGrid = viewModel.GetEnumerableFieldViewModel(nameof(TestViewModelValidationObject.RequiredIEnumerableProperty));
             Assert.IsTrue(requiredSubGrid.HasError);
             var subGridAttribute = objectToEnter.GetType().GetProperty(nameof(TestViewModelValidationObject.RequiredIEnumerableProperty)).GetCustomAttribute<RequiredProperty>();
             Assert.AreEqual(subGridAttribute.GetErrorMessage("Required I Enumerable Property"), requiredSubGrid.ErrorMessage);
@@ -78,7 +78,7 @@ namespace JosephM.Record.Application.Test
             Assert.IsNotNull(childForm);
             childForm.LoadFormSections();
             childForm.GetStringFieldFieldViewModel(nameof(TestViewModelValidationObject.TestEnumerablePropertyObject.RequiredString)).Value = "Something";
-            var subGrid = childForm.GetSubGridViewModel(nameof(TestViewModelValidationObject.TestEnumerablePropertyObject.RequiredEnumerableInTheGrid));
+            var subGrid = childForm.GetEnumerableFieldViewModel(nameof(TestViewModelValidationObject.TestEnumerablePropertyObject.RequiredEnumerableInTheGrid));
             subGrid.AddRow();
             subGrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(TestViewModelValidationObject.TestEnumerablePropertyObject.RequiredString)).Value = "Something";
             Assert.IsTrue(childForm.Validate());
@@ -171,7 +171,7 @@ namespace JosephM.Record.Application.Test
 
             if (entryViewModel is RecordEntryFormViewModel && populateSubgrids)
             {
-                var gridField = ((RecordEntryFormViewModel)entryViewModel).GetSubGridViewModel(nameof(TestAllFieldTypes.EnumerableField));
+                var gridField = ((RecordEntryFormViewModel)entryViewModel).GetEnumerableFieldViewModel(nameof(TestAllFieldTypes.EnumerableField));
                 gridField.AddRow();
                 var row = gridField.GridRecords.First();
                 PopulateRecordEntry(row, populateSubgrids: false);

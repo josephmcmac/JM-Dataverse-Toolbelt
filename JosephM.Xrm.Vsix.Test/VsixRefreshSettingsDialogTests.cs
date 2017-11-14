@@ -113,7 +113,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             var packageentryForm = testApplication.GetSubObjectEntryViewModel(dialog, 1);
             //verify that the connection was passed into the cponnecitons grid
-            var subgrid = packageentryForm.GetSubGridViewModel(nameof(XrmPackageSettings.Connections));
+            var subgrid = packageentryForm.GetEnumerableFieldViewModel(nameof(XrmPackageSettings.Connections));
             Assert.IsNotNull(subgrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(SavedXrmRecordConfiguration.OrganizationUniqueName)).Value);
             //verify that the solution picklist was populated (uses the entered conneciton to populate)
             var solutionPicklist = packageentryForm.GetLookupFieldFieldViewModel(nameof(XrmPackageSettings.Solution));

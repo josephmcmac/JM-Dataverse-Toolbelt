@@ -81,7 +81,7 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
                     throw new NullReferenceException(string.Format("Error parent form is not of type {0}", typeof(ObjectEntryViewModel)));
 
                 //get the selected object
-                var selectionSubGrid = parentForm.GetSubGridViewModel(nameof(SavedSettings.SavedRequests));
+                var selectionSubGrid = parentForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
                 var selectedObjectRecord = selectionSubGrid.DynamicGridViewModel.SelectedRows.Count() == 1
                     ? selectionSubGrid.DynamicGridViewModel.SelectedRows.First().GetRecord() as ObjectRecord : null;
                 var selectedObject = selectedObjectRecord == null ? null : selectedObjectRecord.Instance;

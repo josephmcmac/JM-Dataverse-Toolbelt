@@ -135,6 +135,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             return GetFieldViewModel<StringFieldViewModel>(fieldName);
         }
 
+        public EnumerableFieldViewModel GetEnumerableFieldViewModel(string fieldName)
+        {
+            var matchingFields = FieldViewModels.Where(g => g.FieldName == fieldName);
+            if (matchingFields.Any())
+            {
+                return (EnumerableFieldViewModel)matchingFields.First();
+            }
+            throw new ArgumentOutOfRangeException(nameof(fieldName), "No Field Has The Name: " + fieldName);
+        }
+
         public abstract IEnumerable<FieldViewModelBase> FieldViewModels { get; }
 
         public virtual IEnumerable<FieldSectionViewModel> FieldSections

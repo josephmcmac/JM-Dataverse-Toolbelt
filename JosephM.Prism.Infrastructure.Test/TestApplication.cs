@@ -65,7 +65,7 @@ namespace JosephM.Prism.Infrastructure.Test
                     {
                         if (viewModel is RecordEntryFormViewModel)
                         {
-                            var subGrid = ((RecordEntryFormViewModel)viewModel).GetSubGridViewModel(property.Name);
+                            var subGrid = ((RecordEntryFormViewModel)viewModel).GetEnumerableFieldViewModel(property.Name);
                             subGrid.ClearRows();
                             if (proprtyValue != null)
                             {
