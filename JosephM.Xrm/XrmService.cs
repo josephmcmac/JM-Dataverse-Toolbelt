@@ -329,11 +329,14 @@ namespace JosephM.Xrm
         protected IEnumerable<KeyValuePair<int, string>> OptionSetToKeyValues(IEnumerable<OptionMetadata> options)
         {
             var result = new List<KeyValuePair<int, string>>();
-            foreach (var item in options)
+            if (options != null)
             {
-                var option = item.Value;
-                if (option != null)
-                    result.Add(new KeyValuePair<int, string>(option.Value, GetOptionLabel(item)));
+                foreach (var item in options)
+                {
+                    var option = item.Value;
+                    if (option != null)
+                        result.Add(new KeyValuePair<int, string>(option.Value, GetOptionLabel(item)));
+                }
             }
             return result;
         }
@@ -341,29 +344,10 @@ namespace JosephM.Xrm
         public IEnumerable<KeyValuePair<int, string>> GetPicklistKeyValues(string entityType, string fieldName)
         {
             var fieldType = GetFieldType(fieldName, entityType);
-            switch (fieldType)
-            {
-                case AttributeTypeCode.Picklist:
-                    {
-                        var metadata = (PicklistAttributeMetadata)GetFieldMetadata(fieldName, entityType);
-                        return OptionSetToKeyValues(metadata.OptionSet.Options);
-                    }
-                case AttributeTypeCode.Status:
-                    {
-                        var metadata = (StatusAttributeMetadata)GetFieldMetadata(fieldName, entityType);
-                        return
-                            OptionSetToKeyValues(
-                                metadata.OptionSet.Options);
-                    }
-                case AttributeTypeCode.State:
-                    {
-                        var metadata = (StateAttributeMetadata)GetFieldMetadata(fieldName, entityType);
-                        return
-                            OptionSetToKeyValues(
-                                metadata.OptionSet.Options);
-                    }
-            }
-            throw new ArgumentException("Field type not implemented: " + fieldType);
+            var fieldMetadata = GetFieldMetadata(fieldName, entityType);
+            if (fieldMetadata is EnumAttributeMetadata && ((EnumAttributeMetadata)fieldMetadata).OptionSet != null)
+                return OptionSetToKeyValues(((EnumAttributeMetadata)fieldMetadata).OptionSet.Options);
+            return new KeyValuePair<int, string>[0];
         }
 
         public bool IsMandatory(string field, string entity)
