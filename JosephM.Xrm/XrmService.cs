@@ -329,11 +329,14 @@ namespace JosephM.Xrm
         protected IEnumerable<KeyValuePair<int, string>> OptionSetToKeyValues(IEnumerable<OptionMetadata> options)
         {
             var result = new List<KeyValuePair<int, string>>();
-            foreach (var item in options)
+            if (options != null)
             {
-                var option = item.Value;
-                if (option != null)
-                    result.Add(new KeyValuePair<int, string>(option.Value, GetOptionLabel(item)));
+                foreach (var item in options)
+                {
+                    var option = item.Value;
+                    if (option != null)
+                        result.Add(new KeyValuePair<int, string>(option.Value, GetOptionLabel(item)));
+                }
             }
             return result;
         }
@@ -342,9 +345,9 @@ namespace JosephM.Xrm
         {
             var fieldType = GetFieldType(fieldName, entityType);
             var fieldMetadata = GetFieldMetadata(fieldName, entityType);
-            if (!(fieldMetadata is EnumAttributeMetadata))
-                return new KeyValuePair<int, string>[0];
-            return OptionSetToKeyValues(((EnumAttributeMetadata)fieldMetadata).OptionSet.Options);
+            if (fieldMetadata is EnumAttributeMetadata && ((EnumAttributeMetadata)fieldMetadata).OptionSet != null)
+                return OptionSetToKeyValues(((EnumAttributeMetadata)fieldMetadata).OptionSet.Options);
+            return new KeyValuePair<int, string>[0];
         }
 
         public bool IsMandatory(string field, string entity)
