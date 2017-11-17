@@ -18,12 +18,13 @@
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
     <Grid MinWidth="200" Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
-        <TextBlock
-            Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
-            TextWrapping="WrapWithOverflow"
-            Text="{Binding Mode=TwoWay, Path=ValueObject}"
-            Style="{StaticResource StringFieldDisplayStyle}"
-            />
+        <TextBox Background="Transparent"
+             Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+             BorderThickness="0"
+             Text="{Binding Mode=TwoWay, Path=ValueObject}"
+             IsReadOnly="True"
+             TextWrapping="WrapWithOverflow"
+             Style="{StaticResource FieldEntryStyle}" />
         <TextBox
             Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BoolToVis}}"
             VerticalScrollBarVisibility="Visible"
