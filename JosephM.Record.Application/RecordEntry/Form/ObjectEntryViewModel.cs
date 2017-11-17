@@ -29,7 +29,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
     {
         private ObjectRecord _objectRecord;
 
-        public override int GridPageSize { get { return 0; } }
+        public override int GridPageSize { get { return IsReadOnly ? 25 : 0; } }
 
         public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null)
             : this(onSave, onCancel, objectToEnter, formController, null, null, onlyValidate)
