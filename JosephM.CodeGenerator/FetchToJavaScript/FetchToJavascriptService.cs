@@ -16,13 +16,17 @@ namespace JosephM.CodeGenerator.FetchToJavascript
 
         private string WriteFetchToJavascript(FetchToJavascriptRequest request, LogController controller)
         {
+
+
+            var stringCharacter = "\"";
+            var variableName = "xml";
+
             var fetch = request.Fetch;
+            if (fetch != null)
+                fetch = fetch.Replace("\"", "\\\"");
             var splitLines = fetch
                 .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                 .ToArray();
-
-            var stringCharacter = "'";
-            var variableName = "fetchXml";
 
             var conversionList = new List<string>();
             for (var i = 0; i < splitLines.Length; i++)

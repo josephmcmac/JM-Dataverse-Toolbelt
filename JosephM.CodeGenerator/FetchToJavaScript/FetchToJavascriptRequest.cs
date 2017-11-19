@@ -1,11 +1,5 @@
-﻿using JosephM.Application.ViewModel.SettingTypes;
-using JosephM.Core.Attributes;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
-using JosephM.Record.Attributes;
-using JosephM.Record.Metadata;
-using JosephM.Record.Query;
-using System.Collections.Generic;
 
 namespace JosephM.CodeGenerator.FetchToJavascript
 {

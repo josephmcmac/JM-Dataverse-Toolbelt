@@ -107,6 +107,7 @@ namespace JosephM.Record.Metadata
             else if (type == typeof(string))
             {
                 fm = new StringFieldMetadata(recordType, internalName, label);
+                fm.MaxLength = int.MaxValue;
                 if (propertyInfo.GetCustomAttribute<Multiline>() != null)
                     fm.TextFormat = TextFormat.TextArea;
             }
