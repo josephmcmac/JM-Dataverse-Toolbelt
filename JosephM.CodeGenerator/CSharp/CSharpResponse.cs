@@ -9,5 +9,7 @@ namespace JosephM.CodeGenerator.CSharp
         public string Folder { get; set; }
         [Hidden]
         public string FileName { get; set; }
+        [Hidden]
+        public string CSharpCode { get; set; }
     }
 }

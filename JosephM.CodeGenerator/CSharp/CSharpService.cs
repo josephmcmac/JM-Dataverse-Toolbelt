@@ -50,6 +50,7 @@ namespace JosephM.CodeGenerator.CSharp
             stringBuilder.AppendLine("}");
             var fileName = request.FileName.EndsWith(".cs") ? request.FileName : request.FileName + ".cs";
             FileUtility.WriteToFile(request.Folder.FolderPath, fileName, stringBuilder.ToString());
+            response.CSharpCode = stringBuilder.ToString();
             response.Folder = request.Folder?.FolderPath;
             response.FileName = Path.Combine(response.Folder, fileName);
         }
@@ -302,7 +303,7 @@ namespace JosephM.CodeGenerator.CSharp
                 {
                     controller.UpdateProgress(countOptionsDone, countOptionsToDo,
                         string.Format("Processing Shared Options ({0})", item.DisplayName));
-                    var optionSetLabel = CreateCodeLabel(item.DisplayName);
+                    var optionSetLabel = CreateCodeLabel(string.IsNullOrWhiteSpace(item.DisplayName) ? item.SchemaName : item.DisplayName);
                     if (duplicateSharedLabels.Contains(optionSetLabel))
                         optionSetLabel = optionSetLabel + "_" + item.SchemaName;
                     stringBuilder.AppendLine("\t\t\tpublic static class " + optionSetLabel);
@@ -318,7 +319,7 @@ namespace JosephM.CodeGenerator.CSharp
                             var optionLabel = CreateCodeLabel(option.Value);
                             var isDuplicateLabel = labelCounts.First(g => g.Key == optionLabel).Count() > 1;
 
-                            if (isDuplicateLabel)
+                            if (isDuplicateLabel || optionLabel == optionSetLabel)
                                 optionLabel = optionLabel + "_" + option.Key;
 
                             stringBuilder.AppendLine(
