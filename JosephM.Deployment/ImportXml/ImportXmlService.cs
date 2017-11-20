@@ -40,6 +40,7 @@ namespace JosephM.Deployment.ImportXml
         public void ImportXml(string folder, LogController controller,
             ImportXmlResponse response, bool maskEmails = false)
         {
+            controller.UpdateProgress(0, 1, "Loading XML Files");
             var entities = LoadEntitiesFromXmlFiles(folder);
             var importResponses = DoImport(entities, controller, maskEmails);
             foreach (var item in importResponses)
