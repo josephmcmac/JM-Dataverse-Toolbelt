@@ -93,10 +93,11 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
                     if (parentParentForm == null)
                         throw new NullReferenceException(string.Format("Error parent parent form is not of type {0}", typeof(ObjectEntryViewModel)));
 
+                    var parentFormObject = parentParentForm.GetObject();
                     var mapper = new ClassSelfMapper();
-                    mapper.Map(selectedObject, parentParentForm.GetObject());
-                    if (selectedObject is ServiceRequestBase)
-                        ((ServiceRequestBase)selectedObject).DisplaySavedSettingFields = false;
+                    mapper.Map(selectedObject, parentFormObject);
+                    if (parentFormObject is ServiceRequestBase)
+                        ((ServiceRequestBase)parentFormObject).DisplaySavedSettingFields = false;
 
                     parentParentForm.LoadingViewModel.IsLoading = true;
                     //allow loading to display
