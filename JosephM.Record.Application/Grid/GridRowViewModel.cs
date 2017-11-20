@@ -43,9 +43,16 @@ namespace JosephM.Application.ViewModel.Grid
         {
             foreach (var field in GridFields)
             {
-                var viewModel = field.CreateFieldViewModel(RecordType, RecordService, this, ApplicationController);
-                viewModel.IsEditable = !GridViewModel.IsReadOnly && FormService.AllowGridFieldEditEdit(ParentFormReference);
-                AddField(viewModel);
+                try
+                {
+                    var viewModel = field.CreateFieldViewModel(RecordType, RecordService, this, ApplicationController);
+                    viewModel.IsEditable = !GridViewModel.IsReadOnly && FormService.AllowGridFieldEditEdit(ParentFormReference);
+                    AddField(viewModel);
+                }
+                catch (Exception ex)
+                {
+                    ApplicationController.ThrowException(ex);
+                }
             }
         }
 
