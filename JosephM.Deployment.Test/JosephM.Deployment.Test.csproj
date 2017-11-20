@@ -69,6 +69,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DeploymentMigrateRecordsModuleTests.cs" />
     <Compile Include="DeploymentExportXmlModuleTests.cs" />
     <Compile Include="DeploymentImportCsvsTests.cs" />
     <Compile Include="DeploymentImportXmlTests.cs" />

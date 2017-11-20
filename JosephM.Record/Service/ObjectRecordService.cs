@@ -420,7 +420,7 @@ namespace JosephM.Record.Service
                         }
                         var lookupService = GetLookupService(fieldName, recordType, parentReference, record);
 
-                        var allFieldsMetadata = type.IsNullOrWhiteSpace()
+                        var allFieldsMetadata = type.IsNullOrWhiteSpace() || lookupService == null
                             ? new IFieldMetadata[0]
                             : lookupService
                                 .GetFieldMetadata(type);

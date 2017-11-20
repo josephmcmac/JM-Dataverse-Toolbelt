@@ -220,7 +220,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendDisplayNameAttributes(fieldName, recordType, onChanges);
             AppendLookupFieldCascadeChanges(fieldName, recordType, onChanges);
             AppendCascadeOnChanges(fieldName, recordType, onChanges);
-            AppendFieldForChanges(fieldName, recordType, onChanges);
+            AppendFieldForChanges(fieldName, recordType, onChanges, clearValue: true);
             return base.GetOnChanges(fieldName, recordType).Union(onChanges);
         }
 
@@ -331,6 +331,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendConnectionForChanges(fieldName, recordType, methods, true);
             AppendLookupFieldCascadeChanges(fieldName, recordType, methods);
             AppendSubGridButtons(fieldName, recordType, methods);
+            AppendFieldForChanges(fieldName, recordType, methods);
             return methods;
         }
 
@@ -522,7 +523,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
-        private void AppendFieldForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        private void AppendFieldForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges, bool clearValue = false)
         {
             var lookupForAttributes = ObjectRecordService.GetPropertyInfo(fieldName, recordType)
                 .GetCustomAttributes(typeof(RecordFieldFor), true).Cast<RecordFieldFor>();
@@ -567,7 +568,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                             //if target is an enum then filter the items source for the field type
                                             var picklistFieldViewModel = fieldViewModel as PicklistFieldViewModel;
                                             var picklistOptions = ObjectRecordService.GetPicklistKeyValues(picklistFieldViewModel.FieldName, picklistFieldViewModel.GetRecordType(), fieldType.ToString(), picklistFieldViewModel.RecordEntryViewModel.GetRecord());
-                                            picklistFieldViewModel.Value = null;
+                                            if (clearValue)
+                                                picklistFieldViewModel.Value = null;
                                             picklistFieldViewModel.ItemsSource = picklistOptions;
                                         }
                                         else
@@ -583,7 +585,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                                                         || fieldType == RecordFieldType.State
                                                 ? lookupService.GetPicklistKeyValues(selectedFieldName, selectedFieldRecordType)
                                                 : null;
-                                            fieldViewModel.ValueObject = null;
+                                            if (clearValue)
+                                                fieldViewModel.ValueObject = null;
                                             var newFieldViewModel = fieldMetadata.CreateFieldViewModel(re.GetRecordType(), re.RecordService, re, re.ApplicationController, explicitFieldType: fieldType, explicitLookupTargetType: explicitTargetType, explicitPicklistOptions: explicitPicklistOptions);
                                             var section = re.FieldSections.First(s => s.SectionLabel == sectionName);
                                             var index = section.Fields.Count;
@@ -601,7 +604,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                                 if (section.Fields.Count > index)
                                                     section.Fields.RemoveAt(index);
 
-                                                fieldViewModel.ValueObject = null;
+                                                if (clearValue)
+                                                    fieldViewModel.ValueObject = null;
                                                 section.Fields.Insert(index, newFieldViewModel);
                                                 re.RefreshVisibility();
                                             });
@@ -708,7 +712,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var fieldMetadata = (EnumerableFieldMetadata)ObjectRecordService.GetFieldMetadata(propertyInfo.Name, ObjectToEnter.GetType().AssemblyQualifiedName);
                 var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(fieldMetadata.EnumeratedTypeQualifiedName);
                 var newObject = newRecord.Instance;
-                var recordService = new ObjectRecordService(newObject, parentForm.ApplicationController);
+                var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName, parentForm.ApplicationController);
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
@@ -719,6 +723,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             //if the object specifies use a form then use the form/dialog
             else
                 return null;
+        }
+
+        public override bool AllowGridFieldEditEdit(string fieldName)
+        {
+            var propertyInfo = ObjectToEnter.GetType().GetProperty(fieldName);
+            return propertyInfo == null || !propertyInfo.PropertyType.GenericTypeArguments.Any() || propertyInfo.PropertyType.GenericTypeArguments[0].GetCustomAttribute<DoNotAllowGridEdit>() == null;
         }
 
         public override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)

@@ -16,6 +16,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     public abstract class FormServiceBase : IFormService
     {
+        public virtual bool AllowGridFieldEditEdit(string fieldName)
+        {
+            return true;
+        }
+
         public abstract FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null); 
 
         public virtual bool IsFieldInContext(string fieldName, IRecord record)

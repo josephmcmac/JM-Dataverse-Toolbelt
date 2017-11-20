@@ -133,7 +133,7 @@ namespace JosephM.Deployment
             throw new NullReferenceException(string.Format("No Unique Record Type Or Relationship Matched (Label Or Name) For CSV Name Of {0}", name));
         }
 
-        protected IEnumerable<DataImportResponseItem> DoImport(IEnumerable<Entity> entities, LogController controller, bool maskEmails)
+        public IEnumerable<DataImportResponseItem> DoImport(IEnumerable<Entity> entities, LogController controller, bool maskEmails)
         {
             controller.LogLiteral("Preparing Import");
             var response = new List<DataImportResponseItem>();
@@ -553,6 +553,10 @@ namespace JosephM.Deployment
             if (!existingMatches.Any())
             {
                 var matchByNameEntities = new[] { "businessunit", "team", "pricelevel", "uomschedule", "uom", "entitlementtemplate" };
+                var matchBySpecificFieldEntities = new Dictionary<string, string>()
+                {
+                    {  "knowledgearticle", "articlepublicnumber" }
+                };
                 if (thisEntity.LogicalName == "businessunit" && thisEntity.GetField("parentbusinessunitid") == null)
                 {
                     existingMatches = XrmService.RetrieveAllAndClauses("businessunit",
@@ -568,6 +572,17 @@ namespace JosephM.Deployment
                     if (existingMatches.Count() > 1)
                         throw new Exception(string.Format("More Than One Record Match To The {0} Of {1} When Matching The Name",
                             "Name", name));
+                }
+                else if (matchBySpecificFieldEntities.ContainsKey(thisEntity.LogicalName))
+                {
+                    var matchField = matchBySpecificFieldEntities[thisEntity.LogicalName];
+                    var valueToMatch = thisEntity.GetStringField(matchField);
+                    if (matchField.IsNullOrWhiteSpace())
+                        throw new NullReferenceException(string.Format("{0} Is Required On The {1}", XrmService.GetFieldLabel(matchField, thisEntity.LogicalName), XrmService.GetEntityLabel(thisEntity.LogicalName)));
+                    existingMatches = GetMatchingEntities(thisEntity.LogicalName, matchField, valueToMatch);
+                    if (existingMatches.Count() > 1)
+                        throw new Exception(string.Format("More Than One Record Match To The {0} Of {1}",
+                            matchField, valueToMatch));
                 }
             }
             return existingMatches;
@@ -634,9 +649,9 @@ namespace JosephM.Deployment
             {
                 return new[]
                 {
-                "yomifullname", "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
-                "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules"
-            };
+                    "yomifullname", "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
+                    "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid"
+                };
             }
         }
     }
