@@ -317,7 +317,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             return entity;
         }
 
-        private object ToEntityValue(object recordValue)
+        public object ToEntityValue(object recordValue)
         {
             var temp = recordValue;
             if (temp is string)
