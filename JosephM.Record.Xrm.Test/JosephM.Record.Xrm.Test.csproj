@@ -75,7 +75,7 @@
     <Compile Include="StringFormatMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XrmRecordServiceTests.cs" />
-    <Compile Include="XrmRecordTest - Copy.cs" />
+    <Compile Include="XrmRecordTest.cs" />
     <Compile Include="XrmRecordDebugTests.cs" />
   </ItemGroup>
   <ItemGroup>
