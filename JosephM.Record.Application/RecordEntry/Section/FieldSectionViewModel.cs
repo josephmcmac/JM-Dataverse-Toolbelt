@@ -49,11 +49,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             var fieldViewModels = new ObservableCollection<FieldViewModelBase>();
             foreach (var formField in formFields.OrderBy(f => f.Order))
             {
-                var fieldVm = formField.CreateFieldViewModel(RecordType, RecordService, RecordForm,
-                    ApplicationController);
-                if (IsReadOnly)
-                    fieldVm.IsEditable = false;
-                fieldViewModels.Add(fieldVm);
+                try
+                {
+                    var fieldVm = formField.CreateFieldViewModel(RecordType, RecordService, RecordForm,
+                        ApplicationController);
+                    if (IsReadOnly)
+                        fieldVm.IsEditable = false;
+                    fieldViewModels.Add(fieldVm);
+                }
+                catch (Exception ex)
+                {
+                    ApplicationController.ThrowException(ex);
+                }
             }
             return fieldViewModels;
         }

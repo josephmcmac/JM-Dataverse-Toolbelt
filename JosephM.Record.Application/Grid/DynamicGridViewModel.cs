@@ -106,7 +106,14 @@ namespace JosephM.Application.ViewModel.Grid
 
         public void AddGridButtons(IEnumerable<CustomGridFunction> gridButtons)
         {
-            _loadedGridButtons.AddRange(gridButtons);
+            if(gridButtons != null)
+            {
+                foreach (var button in gridButtons)
+                {
+                    if (!_loadedGridButtons.Any(b => b.Id == button.Id))
+                        _loadedGridButtons.Add(button);
+                }
+            }
             RefreshGridButtons();
         }
 

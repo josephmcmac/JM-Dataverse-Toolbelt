@@ -1,14 +1,15 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Dialog;
+using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.CodeGenerator.CSharp
 {
     public class CSharpDialog :
         ServiceRequestDialog<CSharpService, CSharpRequest, CSharpResponse, ServiceResponseItem>
     {
-        public CSharpDialog(CSharpService service, IDialogController dialogController)
-            : base(service, dialogController)
+        public CSharpDialog(CSharpService service, IDialogController dialogController, XrmRecordService lookupService)
+            : base(service, dialogController, lookupService)
         {
         }
 
