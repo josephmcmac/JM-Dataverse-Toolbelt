@@ -7,6 +7,8 @@ using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Utility;
 using JosephM.Core.Service;
+using System.Collections.Generic;
+using JosephM.Core.FieldType;
 
 #endregion
 
@@ -61,26 +63,37 @@ namespace JosephM.Application.Application
         {
             TSettingsObject settingsObject;
             var type = typeof(TSettingsObject);
-            //read from serializer
-            var serializer = settingsType == null
-                ? new DataContractSerializer(type)
-                : new DataContractSerializer(type, new[] { settingsType });
+            var knownTypes = GetKnownTypes(settingsType);
+            var serializer = new DataContractSerializer(type, knownTypes);
 
             using (var fileStream = new FileStream(settingsFilename, FileMode.Open))
             {
-                settingsObject = (TSettingsObject) serializer.ReadObject(fileStream);
+                settingsObject = (TSettingsObject)serializer.ReadObject(fileStream);
             }
             return settingsObject;
+        }
+
+        private static List<Type> GetKnownTypes(Type settingsType)
+        {
+            //adding these in because some have object fields
+            //which are a different type depending on the field
+            var knownTypes = new List<Type>(new[]
+            {
+                typeof(Lookup),
+                typeof(PicklistOption),
+            });
+            if (settingsType != null)
+                knownTypes.Add(settingsType);
+            return knownTypes;
         }
 
         public void SaveSettingsObject(object settingsObject, Type settingsType = null)
         {
             // save to the setting exists in the settings folder then get it
             var type = settingsObject.GetType();
-            var serializer = settingsType == null
-                ? new DataContractSerializer(type)
-                : new DataContractSerializer(type, new[] { settingsType });
-            
+            var knownTypes = GetKnownTypes(settingsType);
+            var serializer = new DataContractSerializer(type, knownTypes);
+
 
             var folder = ApplicationController.SettingsPath;
             FileUtility.CheckCreateFolder(folder);
