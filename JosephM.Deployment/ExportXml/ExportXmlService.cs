@@ -131,9 +131,10 @@ namespace JosephM.Deployment.ExportXml
                 {
                     foreach (var field in exportType.ExplicitValuesToSet)
                     {
+                        var parseFieldValue = XrmRecordService.ToEntityValue(field.ClearValue ? null : field.ValueToSet);
                         foreach (var entity in entities)
                         {
-                            entity.SetField(field.FieldToSet.Key, field.ClearValue ? null : field.ValueToSet, XrmService);
+                            entity.SetField(field.FieldToSet.Key, parseFieldValue, XrmService);
                         }
                         if (excludeFields.Contains(field.FieldToSet.Key))
                             excludeFields = excludeFields.Except(new[] { field.FieldToSet.Key }).ToArray();
