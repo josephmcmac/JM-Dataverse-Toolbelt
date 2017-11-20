@@ -47,17 +47,25 @@ namespace JosephM.Deployment.ExportXml
         }
 
 
+
         public void ExportXml(IEnumerable<ExportRecordType> exports, Folder folder, bool includeNotes, bool incoldeNNBetweenEntities, LogController controller)
         {
             if (!Directory.Exists(folder.FolderPath))
                 Directory.CreateDirectory(folder.FolderPath);
+
+            ProcessExport(exports, includeNotes, incoldeNNBetweenEntities, controller
+                , (entity) => WriteToXml(entity, folder.FolderPath, false)
+                , (entity) => WriteToXml(entity, folder.FolderPath, true));
+        }
+
+        public void ProcessExport(IEnumerable<ExportRecordType> exports, bool includeNotes, bool incoldeNNBetweenEntities, LogController controller
+            , Action<Entity> processEntity, Action<Entity> processAssociation)
+        {
             if (exports == null || !exports.Any())
                 throw new Exception("Error No Record Types To Export");
             var countToExport = exports.Count();
             var countsExported = 0;
             var exported = new Dictionary<string, List<Entity>>();
-
-            //this distinct is a bit inconsistent with actually allowing duplicates
             foreach (var exportType in exports)
             {
                 var type = exportType.RecordType == null ? null : exportType.RecordType.Key;
@@ -119,6 +127,18 @@ namespace JosephM.Deployment.ExportXml
                 if (excludeFields.Contains(primaryField))
                     excludeFields = excludeFields.Except(new[] { primaryField }).ToArray();
 
+                if (exportType.ExplicitValuesToSet != null)
+                {
+                    foreach (var field in exportType.ExplicitValuesToSet)
+                    {
+                        foreach (var entity in entities)
+                        {
+                            entity.SetField(field.FieldToSet.Key, field.ClearValue ? null : field.ValueToSet, XrmService);
+                        }
+                        if (excludeFields.Contains(field.FieldToSet.Key))
+                            excludeFields = excludeFields.Except(new[] { field.FieldToSet.Key }).ToArray();
+                    }
+                }
 
                 var fieldsAlwaysExclude = new[] { "calendarrules" };
                 excludeFields = excludeFields.Union(fieldsAlwaysExclude).ToArray();
@@ -126,7 +146,7 @@ namespace JosephM.Deployment.ExportXml
                 foreach (var entity in entities)
                 {
                     entity.RemoveFields(excludeFields);
-                    WriteToXml(entity, folder.FolderPath, false);
+                    processEntity(entity);
                 }
                 if (!exported.ContainsKey(type))
                     exported.Add(type, new List<Entity>());
@@ -141,7 +161,7 @@ namespace JosephM.Deployment.ExportXml
                         var objectId = note.GetLookupGuid("objectid");
                         if (objectId.HasValue && entities.Select(e => e.Id).Contains(objectId.Value))
                         {
-                            WriteToXml(note, folder.FolderPath, false);
+                            processEntity(note);
                         }
                     }
                 }
@@ -166,7 +186,7 @@ namespace JosephM.Deployment.ExportXml
                             {
                                 if (exported[type1].Any(e => e.Id == association.GetGuidField(item.Entity1IntersectAttribute))
                                     && exported[type2].Any(e => e.Id == association.GetGuidField(item.Entity2IntersectAttribute)))
-                                    WriteToXml(association, folder.FolderPath, true);
+                                    processAssociation(association);
                             }
                             relationshipsDone.Add(item.SchemaName);
                         }

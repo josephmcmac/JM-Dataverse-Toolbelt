@@ -118,6 +118,16 @@ namespace JosephM.Prism.Infrastructure.Test
                                 Assert.IsTrue(((PicklistFieldViewModel)fieldViewModel).ItemsSource.Any());
                                 fieldViewModel.ValueObject = proprtyValue;
                             }
+                            else if(proprtyValue != null && fieldViewModel is RecordFieldFieldViewModel)
+                            {
+                                Assert.IsTrue(((RecordFieldFieldViewModel)fieldViewModel).ItemsSource.Any());
+                                fieldViewModel.ValueObject = proprtyValue;
+                            }
+                            else if(proprtyValue != null && fieldViewModel is RecordTypeFieldViewModel)
+                            {
+                                Assert.IsTrue(((RecordTypeFieldViewModel)fieldViewModel).ItemsSource.Any());
+                                fieldViewModel.ValueObject = proprtyValue;
+                            }
                             else
                                 fieldViewModel.ValueObject = proprtyValue;
                         }

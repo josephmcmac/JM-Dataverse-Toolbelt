@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Query;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
@@ -329,6 +330,105 @@ namespace JosephM.Deployment.Test
             Assert.IsFalse(entryForm.ChildForms.Any());
             //verify we now have a record selected and displayed for the field
             Assert.IsFalse(string.IsNullOrWhiteSpace(excludeFieldsGrid.StringDisplay));
+        }
+
+        /// <summary>
+        /// This test scripts through the setting explicit field values in the exported records
+        /// as of the implementation need to add a row to the grid and enter into the entry form
+        /// as cannot do dynamic field type in a grid when the field to set is selected
+        /// </summary>
+        [TestMethod]
+        public void DeploymentExportXmlModuleTestExportWithSpecificValues()
+        {
+            DeleteAll(Entities.account);
+
+            var account = CreateRecordAllFieldsPopulated(Entities.account);
+            FileUtility.DeleteFiles(TestingFolder);
+
+            var accountRecord = XrmRecordService.Get(account.LogicalName, account.Id.ToString());
+
+            var application = CreateAndLoadTestApplication<ExportXmlModule>();
+
+            var instance = new ExportXmlRequest();
+            instance.IncludeNotes = true;
+            instance.IncludeNNRelationshipsBetweenEntities = true;
+            instance.Folder = new Folder(TestingFolder);
+            instance.RecordTypesToExport = new[]
+            {
+                new ExportRecordType()
+                {
+                    Type = ExportType.AllRecords,
+                    RecordType = new RecordType(Entities.account, Entities.account),
+                    SpecificRecordsToExport = new LookupSetting[0]
+                }
+            };
+
+            var entryForm = application.NavigateToDialogModuleEntryForm<ExportXmlModule, ExportXmlDialog>();
+            application.EnterObject(instance, entryForm);
+            var recordTypesGrid = entryForm.GetEnumerableFieldViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
+
+            var row = recordTypesGrid.GridRecords.First();
+            row.EditRow();
+
+            var exportTypeEntry = entryForm.ChildForms.First() as RecordEntryFormViewModel;
+            Assert.IsNotNull(exportTypeEntry);
+            exportTypeEntry.LoadFormSections();
+
+            //okay so at this point we aere in the export type form
+            //need to add a row to the explicit value grid which will open the form
+            var specificValuesGrid = exportTypeEntry.GetEnumerableFieldViewModel(nameof(ExportRecordType.ExplicitValuesToSet));
+            specificValuesGrid.AddRow();
+            var specificValueEntry = exportTypeEntry.ChildForms.First() as RecordEntryFormViewModel;
+            Assert.IsNotNull(specificValueEntry);
+            specificValueEntry.LoadFormSections();
+
+
+            var fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.FieldToSet));
+            var clearValueViewModel = specificValueEntry.GetBooleanFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ClearValue));
+
+            //select several field types and verify the field control changes to the correct type for that field
+            fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.customertypecode);
+            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)) is PicklistFieldViewModel);
+            Assert.IsTrue(specificValueEntry.GetPicklistFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)).ItemsSource.Any());
+
+            fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.primarycontactid);
+            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)) is LookupFieldViewModel);
+            specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)).Search();
+            Assert.IsTrue(specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)).LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
+
+            //verify the field value hidden if we select to clear the value
+            clearValueViewModel.Value = true;
+            Assert.IsFalse(specificValueEntry.GetFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)).IsVisible);
+            clearValueViewModel.Value = false;
+
+            //okay so this is the specific field and value we will set
+            var fakeExplicitExportValue = "fakeExplicitExportValue";
+            fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.address1_line1);
+            Assert.IsTrue(specificValueEntry.GetFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet)) is StringFieldViewModel);
+            var descriptionViewModel = specificValueEntry.GetStringFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet));
+            descriptionViewModel.Value = fakeExplicitExportValue;
+
+            //save up the tree
+            Assert.IsTrue(specificValueEntry.Validate());
+            specificValueEntry.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(exportTypeEntry.ChildForms.Any());
+
+            Assert.IsTrue(exportTypeEntry.Validate());
+            exportTypeEntry.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(entryForm.ChildForms.Any());
+
+            //this one will invoke the export
+            Assert.IsTrue(entryForm.Validate());
+            entryForm.SaveButtonViewModel.Invoke();
+
+            //verify the exported records had the explicit value we set in them
+            var importServoice = new ImportXmlService(XrmRecordService);
+            var loadEntities = importServoice.LoadEntitiesFromXmlFiles(TestingFolder);
+
+            foreach(var entity in loadEntities)
+            {
+                Assert.AreEqual(fakeExplicitExportValue, entity.GetStringField(Fields.account_.address1_line1));
+            }
         }
     }
 }

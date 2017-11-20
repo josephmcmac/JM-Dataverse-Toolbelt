@@ -47,7 +47,7 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
         public RecordField FieldToSet { get; set; }
 
         [Group(Sections.FieldUpdate)]
-        [DisplayOrder(20)]
+        [DisplayOrder(25)]
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull(nameof(FieldToSet))]
         public bool ClearValue { get; set; }

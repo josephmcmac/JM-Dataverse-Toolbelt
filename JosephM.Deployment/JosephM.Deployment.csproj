@@ -140,6 +140,11 @@
     <Compile Include="ImportXml\ImportXmlRequest.cs" />
     <Compile Include="ImportXml\ImportXmlResponse.cs" />
     <Compile Include="ImportXml\ImportXmlService.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsDialog.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsModule.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsRequest.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsResponse.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataImportResponseItem.cs" />
   </ItemGroup>
