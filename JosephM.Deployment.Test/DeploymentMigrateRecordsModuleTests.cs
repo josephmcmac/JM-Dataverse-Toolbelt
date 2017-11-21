@@ -24,8 +24,6 @@ namespace JosephM.Deployment.Test
         [TestMethod]
         public void DeploymentMigrateRecordsModuleTest()
         {
-            //todo this for migrate records including some explicit values
-
             var account = CreateAccount();
             FileUtility.DeleteFiles(TestingFolder);
 

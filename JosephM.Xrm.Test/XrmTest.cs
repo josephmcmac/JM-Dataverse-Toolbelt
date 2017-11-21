@@ -195,7 +195,7 @@ namespace JosephM.Xrm.Test
         public Entity CreateRecordAllFieldsPopulated(string type)
         {
             var entity = new Entity(type);
-            var fieldsToExlcude = new[] { "traversedpath" };
+            var fieldsToExlcude = new[] { "traversedpath", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid" };
             var fields = XrmService.GetFields(type)
                 .Where(f => !fieldsToExlcude.Contains(f));
             foreach (var field in fields)
@@ -257,7 +257,7 @@ namespace JosephM.Xrm.Test
                                 var typesToExlcude = new[]
                             {
                                 "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
-                                "campaign", "territory", "sla"
+                                "campaign", "territory", "sla", "languagelocale"
                             };
                                 if (!typesToExlcude.Contains(target))
                                     entity.SetField(field, CreateTestRecord(target).ToEntityReference());
@@ -302,7 +302,7 @@ namespace JosephM.Xrm.Test
                             }
                         case AttributeTypeCode.String:
                             {
-                                entity.SetField(field, "1234");
+                                entity.SetField(field, PopulateStringValue);
                                 break;
                             }
                         case AttributeTypeCode.Uniqueidentifier:
@@ -317,6 +317,14 @@ namespace JosephM.Xrm.Test
                 }
             }
             return CreateAndRetrieve(entity);
+        }
+
+        public string PopulateStringValue
+        {
+            get
+            {
+                return "1234";
+            }
         }
 
         public Guid CurrentUserId

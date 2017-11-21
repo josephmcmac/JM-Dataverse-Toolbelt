@@ -1,12 +1,15 @@
-﻿using JosephM.Application.ViewModel.Grid;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportXml;
+using JosephM.Prism.Infrastructure.Module.SavedRequests;
 using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
@@ -348,6 +351,7 @@ namespace JosephM.Deployment.Test
             var accountRecord = XrmRecordService.Get(account.LogicalName, account.Id.ToString());
 
             var application = CreateAndLoadTestApplication<ExportXmlModule>();
+            application.AddModule<SavedRequestModule>();
 
             var instance = new ExportXmlRequest();
             instance.IncludeNotes = true;
@@ -382,7 +386,6 @@ namespace JosephM.Deployment.Test
             Assert.IsNotNull(specificValueEntry);
             specificValueEntry.LoadFormSections();
 
-
             var fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.FieldToSet));
             var clearValueViewModel = specificValueEntry.GetBooleanFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ClearValue));
 
@@ -408,7 +411,42 @@ namespace JosephM.Deployment.Test
             var descriptionViewModel = specificValueEntry.GetStringFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet));
             descriptionViewModel.Value = fakeExplicitExportValue;
 
-            //save up the tree
+            Assert.IsTrue(specificValueEntry.Validate());
+            specificValueEntry.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(exportTypeEntry.ChildForms.Any());
+
+            //okay lets add an explicit lookup value as well
+            specificValuesGrid = exportTypeEntry.GetEnumerableFieldViewModel(nameof(ExportRecordType.ExplicitValuesToSet));
+            specificValuesGrid.AddRow();
+            specificValueEntry = exportTypeEntry.ChildForms.First() as RecordEntryFormViewModel;
+            Assert.IsNotNull(specificValueEntry);
+            specificValueEntry.LoadFormSections();
+
+            fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.FieldToSet));
+            fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.primarycontactid);
+            var lookupFieldViewModel = specificValueEntry.GetLookupFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet));
+            lookupFieldViewModel.Search();
+            Assert.IsTrue(lookupFieldViewModel.LookupGridViewModel.DynamicGridViewModel.GridRecords.Any());
+            lookupFieldViewModel.LookupGridViewModel.DynamicGridViewModel.SelectedRow = lookupFieldViewModel.LookupGridViewModel.DynamicGridViewModel.GridRecords.First();
+            lookupFieldViewModel.OnRecordSelected(lookupFieldViewModel.LookupGridViewModel.DynamicGridViewModel.GridRecords.First().Record);
+
+            Assert.IsTrue(specificValueEntry.Validate());
+            specificValueEntry.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(exportTypeEntry.ChildForms.Any());
+
+            //okay lets add an explicit picklist value as well
+            specificValuesGrid = exportTypeEntry.GetEnumerableFieldViewModel(nameof(ExportRecordType.ExplicitValuesToSet));
+            specificValuesGrid.AddRow();
+            specificValueEntry = exportTypeEntry.ChildForms.First() as RecordEntryFormViewModel;
+            Assert.IsNotNull(specificValueEntry);
+            specificValueEntry.LoadFormSections();
+
+            fieldSelectionViewModel = specificValueEntry.GetRecordFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.FieldToSet));
+            fieldSelectionViewModel.Value = fieldSelectionViewModel.ItemsSource.First(f => f.Key == Fields.account_.customertypecode);
+            var picklistFieldViewModel = specificValueEntry.GetPicklistFieldFieldViewModel(nameof(ExportRecordType.ExplicitFieldValues.ValueToSet));
+            Assert.IsTrue(picklistFieldViewModel.ItemsSource.Any());
+            picklistFieldViewModel.Value = picklistFieldViewModel.ItemsSource.First();
+
             Assert.IsTrue(specificValueEntry.Validate());
             specificValueEntry.SaveButtonViewModel.Invoke();
             Assert.IsFalse(exportTypeEntry.ChildForms.Any());
@@ -416,6 +454,38 @@ namespace JosephM.Deployment.Test
             Assert.IsTrue(exportTypeEntry.Validate());
             exportTypeEntry.SaveButtonViewModel.Invoke();
             Assert.IsFalse(entryForm.ChildForms.Any());
+
+            //okay lets verify save and load object as well
+            //initially the dynamic object property for setting san explicit type
+            //did not seralise due to known types in the serialiser
+
+            //trigger save request
+            var saveRequestButton = entryForm.GetButton("SAVEREQUEST");
+            saveRequestButton.Invoke();
+
+            //enter and save details
+            var saveRequestForm = application.GetSubObjectEntryViewModel(entryForm);
+            var detailsEntered = new SaveAndLoadFields()
+            {
+                Name = "TestName"
+            };
+            application.EnterAndSaveObject(detailsEntered, saveRequestForm);
+            Assert.IsFalse(entryForm.ChildForms.Any());
+            Assert.IsFalse(entryForm.LoadingViewModel.IsLoading);
+
+            //trigger load request
+            var loadRequestButton = entryForm.GetButton("LOADREQUEST");
+            loadRequestButton.Invoke();
+            var loadRequestForm = application.GetSubObjectEntryViewModel(entryForm);
+            //select and load the saved request
+            var subGrid = loadRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
+            Assert.IsTrue(subGrid.GridRecords.Count() == 1);
+            subGrid.GridRecords.First().IsSelected = true;
+            var loadButton = subGrid.DynamicGridViewModel.GetButton("LOADREQUEST");
+            loadButton.Invoke();
+            //verify loads
+            Assert.IsFalse(entryForm.ChildForms.Any());
+            Assert.IsFalse(entryForm.LoadingViewModel.IsLoading);
 
             //this one will invoke the export
             Assert.IsTrue(entryForm.Validate());
