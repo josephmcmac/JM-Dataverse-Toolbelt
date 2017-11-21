@@ -32,12 +32,23 @@ namespace JosephM.Xrm.Test
             }
         }
 
-        public void PrepareTests()
+        public void PrepareTests(bool testComponentsRequired = false)
         {
             var verifyConnection = XrmService.VerifyConnection();
             if (!verifyConnection.IsValid)
                 Assert.Inconclusive("Could Not Connect To Crm Instance To Execute Tests {0}",
                     verifyConnection.GetErrorString());
+
+            if (testComponentsRequired)
+            {
+                var testComponentSolutionName = "TestComponents";
+                var solution = XrmService.GetFirst("solution", "uniquename", testComponentSolutionName);
+                if (solution == null)
+                    throw new NullReferenceException(
+                        string.Format(
+                            "Required solution {0} located in Solution Items is not installed in the CRM instance. You will need to install it and rerun the test",
+                            testComponentSolutionName));
+            }
         }
 
         private XrmService _xrmService;
@@ -255,10 +266,10 @@ namespace JosephM.Xrm.Test
                             {
                                 var target = XrmService.GetLookupTargetEntity(field, type);
                                 var typesToExlcude = new[]
-                            {
-                                "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
-                                "campaign", "territory", "sla", "languagelocale"
-                            };
+                                {
+                                    "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
+                                    "campaign", "territory", "sla", "bookableresource", "msdyn_taxcode", "languagelocale"
+                                };
                                 if (!typesToExlcude.Contains(target))
                                     entity.SetField(field, CreateTestRecord(target).ToEntityReference());
                                 break;
@@ -339,7 +350,7 @@ namespace JosephM.Xrm.Test
             {
                 if (!_notCurrentUserId.HasValue)
                 {
-                    var conditions = new[] { new ConditionExpression("systemuserid", ConditionOperator.NotEqual, CurrentUserId) };
+                    var conditions = new[] { new ConditionExpression("systemuserid", ConditionOperator.NotEqual, CurrentUserId), new ConditionExpression("isdisabled", ConditionOperator.Equal, false), new ConditionExpression("fullname", ConditionOperator.NotEqual, "Support User") };
                     var user = XrmService.RetrieveFirst(XrmService.BuildQuery("systemuser", new string[0], conditions, null));
                     if (user == null)
                         throw new NullReferenceException("Could not find other user");
