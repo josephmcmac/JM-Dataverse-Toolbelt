@@ -214,12 +214,17 @@ namespace JosephM.InstanceComparer
                         nameof(IFieldMetadata.MetadataId)
                     }), parentLinkProperty: nameof(IFieldMetadata.RecordType));
 
-
+            var ignoreOptionFieldNames = new[]
+            {
+                //these ones are system sets reference object type codes so lets ignore them
+                //may be a better way to identify them but this will do for now
+                "objecttypecode", "targetentity", "baseentitytypecode", "matchingentitytypecode", "baseentitytypecode", "matchingentitytypecode"
+            };
             var fieldsOptionParams = new ProcessCompareParams("Field Options", typeof(PicklistOption),
                 (field, recordType, service) =>
                 {
                     var picklist = service.GetPicklistKeyValues(field, recordType);
-                    return picklist == null ? new PicklistOption[0] : picklist.ToArray();
+                    return picklist == null || ignoreOptionFieldNames.Contains(field) ? new PicklistOption[0] : picklist.ToArray();
                 },
                 nameof(PicklistOption.Key),
                 GetReadableProperties(typeof(PicklistOption), null));
