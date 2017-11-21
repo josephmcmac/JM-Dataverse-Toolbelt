@@ -5,6 +5,7 @@ using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportXml;
 using JosephM.Prism.XrmModule.Test;
+using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Test;
@@ -24,7 +25,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
         public void DeploymentImportXmlMultipleTest()
         {
             PrepareTests();
-            var types = new[] {Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity };
+            var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity };
             var workFolder = ClearFilesAndData(types);
 
             var importService = new ImportXmlService(XrmRecordService);
@@ -77,7 +78,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var exportRequest = new ExportXmlRequest
             {
                 Folder = new Folder(workFolder),
-                RecordTypesToExport = new [] { new ExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
+                RecordTypesToExport = new[] { new ExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
             };
             var exportResponse = exportService.Execute(exportRequest, Controller);
             Assert.IsTrue(exportResponse.Success);
@@ -128,7 +129,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
         /// Test just verifies that an export xml for the various different types executes
         /// </summary>
         [TestMethod]
-        public void DeploymentExportXmlTypesTest()
+        public void DeploymentImportXmlTypesTest()
         {
             var query = new QueryExpression();
 
@@ -178,7 +179,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var exportRequest = new ExportXmlRequest
             {
                 Folder = new Folder(workFolder),
-                RecordTypesToExport = new [] { t1RequestAll, t2RequestFetch, t3RequestSpecific}
+                RecordTypesToExport = new[] { t1RequestAll, t2RequestFetch, t3RequestSpecific }
             };
             var exportService = new ExportXmlService(XrmRecordService);
             var exportResponse = exportService.Execute(exportRequest, Controller);
@@ -196,9 +197,8 @@ namespace JosephM.Xrm.ImporterExporter.Test
             Assert.IsFalse(importResponse.HasError);
         }
 
-        [DeploymentItem(@"Files\Account.csv")]
         [TestMethod]
-        public void DeploymentExportImportMaskEmailsTest()
+        public void DeploymentImportXmlMaskEmailsTest()
         {
             PrepareTests();
             var workFolder = ClearFilesAndData();
@@ -216,7 +216,7 @@ namespace JosephM.Xrm.ImporterExporter.Test
             var exportRequest = new ExportXmlRequest
             {
                 Folder = new Folder(workFolder),
-                RecordTypesToExport = new [] { accountsExport }
+                RecordTypesToExport = new[] { accountsExport }
             };
             var exportService = new ExportXmlService(XrmRecordService);
             var ecxportResponse = exportService.Execute(exportRequest, Controller);
@@ -247,6 +247,74 @@ namespace JosephM.Xrm.ImporterExporter.Test
             Assert.IsFalse(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
 
         }
+        /// <summary>
+        /// Test just verifies knowledge articles import both create and update
+        /// Initially was throwing various including one existed with the same article number
+        /// </summary>
+        [TestMethod]
+        public void DeploymentImportXmlKnowledgeArticleTest()
+        {
+            PrepareTests();
+
+            var type = "knowledgearticle";
+            if (XrmRecordService.RecordTypeExists(type))
+            {
+                DeleteAll(type);
+
+                var workFolder = ClearFilesAndData();
+
+                //create or get a knowledge article
+                var knowledgeArticle = XrmService.GetFirst(type, "articlepublicnumber", PopulateStringValue);
+                if (knowledgeArticle == null)
+                    knowledgeArticle = CreateRecordAllFieldsPopulated("knowledgearticle");
+
+                //export to xml
+                var export = new ExportRecordType()
+                {
+                    Type = ExportType.AllRecords,
+                    RecordType = new RecordType(type, type)
+                };
+
+                var exportRequest = new ExportXmlRequest
+                {
+                    Folder = new Folder(workFolder),
+                    RecordTypesToExport = new[] { export }
+                };
+                var exportService = new ExportXmlService(XrmRecordService);
+                var ecxportResponse = exportService.Execute(exportRequest, Controller);
+                Assert.IsFalse(ecxportResponse.HasError);
+
+                //okay we will delete then create one with the same article number
+                XrmService.Delete(knowledgeArticle);
+                knowledgeArticle = CreateRecordAllFieldsPopulated("knowledgearticle");
+
+                var kaCount = XrmService.RetrieveAllEntityType(type).Count();
+
+                //import should match them
+                var importRequest = new ImportXmlRequest
+                {
+                    Folder = new Folder(workFolder),
+                    MaskEmails = true
+                };
+                var application = CreateAndLoadTestApplication<ImportXmlModule>();
+                var immportResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+                Assert.IsFalse(immportResponse.HasError);
+                Assert.AreEqual(kaCount, XrmService.RetrieveAllEntityType(type).Count());
+
+                //now lets just verify for create (delete it prioor to import)
+                XrmService.Delete(knowledgeArticle);
+                importRequest = new ImportXmlRequest
+                {
+                    Folder = new Folder(workFolder),
+                    MaskEmails = true
+                };
+                application = CreateAndLoadTestApplication<ImportXmlModule>();
+                immportResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+                Assert.IsFalse(immportResponse.HasError);
+                Assert.AreEqual(kaCount, XrmService.RetrieveAllEntityType(type).Count());
+            }
+        }
+
 
         private Entity CreateTestRecord(string type, ImportXmlService importService)
         {

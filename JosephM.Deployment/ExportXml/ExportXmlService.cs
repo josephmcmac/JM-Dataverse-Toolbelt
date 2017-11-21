@@ -229,7 +229,7 @@ namespace JosephM.Deployment.ExportXml
                     if (entity.LogicalName == "knowledgearticle")
                     {
                         activeStates.Clear();
-                        activeStates.AddRange(new[] { 1, 2, 3 });//draft and under revision for latest crm releases
+                        activeStates.AddRange(new[] { 0, 1, 2, 3 });//draft and under revision for latest crm releases
                     }
                     if (!activeStates.Contains(entity.GetOptionSetValue("statecode")))
                         return true;

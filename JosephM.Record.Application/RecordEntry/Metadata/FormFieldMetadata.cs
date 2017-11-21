@@ -90,6 +90,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }
                         break;
                     }
+                    case RecordFieldType.Memo:
                     case RecordFieldType.String:
                     {
                         fieldVm = new StringFieldViewModel(field, label, recordForm)
