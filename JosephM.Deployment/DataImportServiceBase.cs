@@ -330,7 +330,7 @@ namespace JosephM.Deployment
                                 CheckThrowValidForCreate(thisEntity, fieldsToSet);
                                 thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
                             }
-                            if (!isUpdate && thisEntity.GetOptionSetValue("statecode") == XrmPicklists.State.Inactive)
+                            if (!isUpdate && thisEntity.GetOptionSetValue("statecode") > 0)
                                 XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
                             else if (isUpdate && existingMatchingIds.Any())
                             {
