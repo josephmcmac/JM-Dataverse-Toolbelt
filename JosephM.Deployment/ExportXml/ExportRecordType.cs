@@ -104,12 +104,14 @@ namespace JosephM.Deployment.ExportXml
             [RecordFieldFor(nameof(ValueToSet))]
             public RecordField FieldToSet { get; set; }
 
+            [GridWidth(75)]
             [Group(Sections.FieldUpdate)]
             [DisplayOrder(20)]
             [RequiredProperty]
             [PropertyInContextByPropertyNotNull(nameof(FieldToSet))]
             public bool ClearValue { get; set; }
 
+            [GridWidth(300)]
             [Group(Sections.FieldUpdate)]
             [DisplayOrder(30)]
             [RequiredProperty]
