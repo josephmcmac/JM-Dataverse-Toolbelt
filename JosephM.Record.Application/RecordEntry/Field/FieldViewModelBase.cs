@@ -288,5 +288,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public LoadingViewModel LoadingViewModel { get; set; }
         public bool DisplayLabel { get; set; }
         public virtual bool IsLoaded { get { return true; } }
+
+        public string Description { get; set; }
     }
 }

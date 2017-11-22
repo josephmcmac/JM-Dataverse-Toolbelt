@@ -26,6 +26,7 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
 
         public IEnumerable<TestEnum> MultiSelect { get; set; }
 
+        [MyDescription("If set this will log a heap of errors in the service response")]
         [Group(Sections.Main)]
         public bool ThrowResponseErrors { get; set; }
 

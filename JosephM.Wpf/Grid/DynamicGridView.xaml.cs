@@ -294,6 +294,10 @@ namespace JosephM.Wpf.Grid
                             dataGridField.Width = new DataGridLength(column.WidthPart,
                                 DataGridLengthUnitType.Pixel);
                             dataGridField.IsReadOnly = gridSectionViewModel.IsReadOnly;
+                            var description = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Description;
+                            var style = new Style(typeof(DataGridColumnHeader));
+                            style.Setters.Add(new Setter(ToolTipService.ToolTipProperty, description));
+                            dataGridField.HeaderStyle = style;
                             dynamicDataGrid.Columns.Add(dataGridField);
                         }
                         var dataGridBinding = new Binding

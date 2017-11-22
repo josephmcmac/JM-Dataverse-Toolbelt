@@ -286,7 +286,7 @@
         MultiSelectFieldTemplate="{StaticResource MultiSelectFieldTemplate}"
         x:Key="fieldTemplateSelector" />
     <DataTemplate x:Key="labelledFieldTemplate">
-        <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+        <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" ToolTip="{Binding Description}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />

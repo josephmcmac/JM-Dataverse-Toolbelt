@@ -171,6 +171,9 @@ namespace JosephM.Record.Metadata
                 fm.Order = orderAttribute.Order;
             else
                 fm.Order = 100000;
+            var descriptionAttribute = propertyInfo.GetCustomAttribute<MyDescription>();
+            if (descriptionAttribute != null)
+                fm.Description = descriptionAttribute.Text;
             return fm;
         }
     }
