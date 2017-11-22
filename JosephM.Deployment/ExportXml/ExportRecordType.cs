@@ -18,6 +18,7 @@ namespace JosephM.Deployment.ExportXml
             IncludeAllFields = true;
         }
 
+        [GridWidth(140)]
         [DisplayOrder(0)]
         [Group(Sections.Main)]
         [RequiredProperty]
@@ -28,29 +29,36 @@ namespace JosephM.Deployment.ExportXml
         [Group(Sections.Main)]
         [RequiredProperty]
         [ReadOnlyWhenSet]
-        [RecordTypeFor(nameof(IncludeOnlyTheseFieldsInExportedRecords) + "." + nameof(RecordField))]
+        [RecordTypeFor(nameof(IncludeOnlyTheseFields) + "." + nameof(RecordField))]
         [RecordTypeFor(nameof(SpecificRecordsToExport) + "." + nameof(LookupSetting.Record))]
         [RecordTypeFor(nameof(ExplicitValuesToSet) + "." + nameof(ExplicitFieldValues.FieldToSet))]
         public RecordType RecordType { get; set; }
 
-        [DisplayOrder(20)]
-        [PropertyInContextByPropertyNotNull(nameof(Type))]
-        [Group(Sections.Main)]
-        public bool IncludeInactiveRecords { get; set; }
-
-        [RequiredProperty]
-        [PropertyInContextByPropertyValue(nameof(Type), ExportType.SpecificRecords)]
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        public IEnumerable<LookupSetting> SpecificRecordsToExport { get; set; }
-
+        [GridWidth(100)]
+        [DisplayOrder(30)]
         [Group(Sections.Fields)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         public bool IncludeAllFields { get; set; }
 
+        [GridWidth(300)]
+        [DisplayOrder(40)]
         [Group(Sections.Fields)]
         [PropertyInContextByPropertyValue(nameof(IncludeAllFields), false)]
         [RequiredProperty]
-        public IEnumerable<FieldSetting> IncludeOnlyTheseFieldsInExportedRecords { get; set; }
+        public IEnumerable<FieldSetting> IncludeOnlyTheseFields { get; set; }
+
+        [GridWidth(300)]
+        [DisplayOrder(45)]
+        [FormEntry]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; }
+
+        [GridWidth(300)]
+        [DisplayOrder(50)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(Type), ExportType.SpecificRecords)]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        public IEnumerable<LookupSetting> SpecificRecordsToExport { get; set; }
 
         [DisplayOrder(100)]
         [Group(Sections.Fetch)]
@@ -60,9 +68,11 @@ namespace JosephM.Deployment.ExportXml
         [PropertyInContextByPropertyValue(nameof(Type), ExportType.FetchXml)]
         public string FetchXml { get; set; }
 
-        [FormEntry]
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; }
+        [GridWidth(100)]
+        [DisplayOrder(110)]
+        [PropertyInContextByPropertyNotNull(nameof(Type))]
+        [Group(Sections.Main)]
+        public bool IncludeInactive { get; set; }
 
         public override string ToString()
         {

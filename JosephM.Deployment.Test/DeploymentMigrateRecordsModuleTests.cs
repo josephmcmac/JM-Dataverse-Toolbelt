@@ -41,7 +41,7 @@ namespace JosephM.Deployment.Test
                     Type = ExportType.AllRecords,
                     RecordType = new RecordType(Entities.account, Entities.account),
                     IncludeAllFields = true,
-                    IncludeOnlyTheseFieldsInExportedRecords = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.createdby, Fields.account_.createdby) }},
+                    IncludeOnlyTheseFields = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.createdby, Fields.account_.createdby) }},
                     ExplicitValuesToSet = new []
                     {
                         new ExportRecordType.ExplicitFieldValues() { FieldToSet = new RecordField(Fields.account_.address1_line1, Fields.account_.address1_line1), ClearValue = true},
