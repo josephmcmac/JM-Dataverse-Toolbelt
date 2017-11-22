@@ -518,7 +518,7 @@ namespace JosephM.Record.Service
             if (record != null && (!(record is ObjectRecord)))
                 throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name, typeof(ObjectRecord).Name));
 
-            var resolveAttributeReference = GetReferencingAttribute<ConnectionFor>("Property", fieldName, recordType, reference, record);
+            var resolveAttributeReference = GetReferencingAttribute<ConnectionFor>(nameof(ConnectionFor.Property), fieldName, recordType, reference, record);
             if (resolveAttributeReference != null && resolveAttributeReference.ReferencingProperty != null)
             {
                 return GetLookupServiceForConnectionFor(resolveAttributeReference);
@@ -539,22 +539,39 @@ namespace JosephM.Record.Service
 
             //may be object in a grid where have to check other properties for object in that row
             //or property of object in main form
-            GetReferencingAttributeResponse response = null;
-            if (record != null)
+
+            //need to inspect one of several objects with one of several combinations of the reference and field name
+
+            var objectsToInspect = new List<object>();
+            objectsToInspect.Add(ObjectToEnter);
+            if (record != null && ((ObjectRecord)record).Instance != ObjectToEnter)
+                objectsToInspect.Add(((ObjectRecord)record).Instance);
+
+            var referencesToResolve = new List<string>();
+            referencesToResolve.Add(fieldName);
+            if (reference != null)
             {
-                response = GetReferencingAttribute<T>(attributeFieldNameProperty, fieldName, ((ObjectRecord)record).Instance);
-                if (response != null)
-                    return response;
+                var splitReference = reference.Split('.');
+                for(var index = splitReference.Length - 1; index >= 0; index--)
+                {
+                    referencesToResolve.Add(string.Join(".", splitReference.Skip(index)) + "." + fieldName);
+                    for (var index2 = splitReference.Length - 1; index2 >= index; index2--)
+                    {
+                        referencesToResolve.Add(string.Join(".", splitReference.Skip(index).Take((index2 - index) + 1)));
+                    }
+                }
             }
-            //try all valid combinations of reference and field name
-            response = GetReferencingAttribute<T>(attributeFieldNameProperty, reference, ObjectToEnter);
-            if (response != null)
-                return response;
-            response = GetReferencingAttribute<T>(attributeFieldNameProperty, reference + "." + fieldName, ObjectToEnter);
-            if (response != null)
-                return response;
-            response = GetReferencingAttribute<T>(attributeFieldNameProperty, fieldName, ObjectToEnter);
-            return response;
+
+            foreach(var objectToInspect in objectsToInspect)
+            {
+                foreach(var referenceToResolve in referencesToResolve)
+                {
+                    var response = GetReferencingAttribute<T>(attributeFieldNameProperty, referenceToResolve, objectToInspect);
+                    if (response != null)
+                        return response;
+                }
+            }
+            return null;
         }
 
         private GetReferencingAttributeResponse GetReferencingAttribute<T>(string attributeFieldNameProperty, string fieldName, object objectToEnter)

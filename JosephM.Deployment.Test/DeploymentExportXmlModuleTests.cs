@@ -46,7 +46,7 @@ namespace JosephM.Deployment.Test
                     Type = ExportType.AllRecords,
                     RecordType = new RecordType(Entities.account, Entities.account),
                     IncludeAllFields = false,
-                    IncludeOnlyTheseFieldsInExportedRecords = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.createdby, Fields.account_.createdby) }}
+                    IncludeOnlyTheseFields = new [] { new FieldSetting() { RecordField = new RecordField(Fields.account_.createdby, Fields.account_.createdby) }}
                 }
             };
 
@@ -200,7 +200,7 @@ namespace JosephM.Deployment.Test
             specificRecordEntry.GetBooleanFieldFieldViewModel(nameof(ExportRecordType.IncludeAllFields)).Value = false;
 
             //get the fields grid and trigger bulk add function
-            var excludeFieldsGrid = specificRecordEntry.GetEnumerableFieldViewModel(nameof(ExportRecordType.IncludeOnlyTheseFieldsInExportedRecords));
+            var excludeFieldsGrid = specificRecordEntry.GetEnumerableFieldViewModel(nameof(ExportRecordType.IncludeOnlyTheseFields));
             //now add using the add multiple option
             excludeFieldsGrid.DynamicGridViewModel.AddMultipleRowButton.Invoke();
             bulkAddForm = specificRecordEntry.ChildForms.First() as QueryViewModel;
@@ -311,7 +311,7 @@ namespace JosephM.Deployment.Test
             //now do it for an Enumerable field (fields for inlcusion)
             //this sets it in context
             row.GetBooleanFieldFieldViewModel(nameof(ExportRecordType.IncludeAllFields)).Value = false;
-            var excludeFieldsGrid = row.GetEnumerableFieldViewModel(nameof(ExportRecordType.IncludeOnlyTheseFieldsInExportedRecords));
+            var excludeFieldsGrid = row.GetEnumerableFieldViewModel(nameof(ExportRecordType.IncludeOnlyTheseFields));
             Assert.IsTrue(string.IsNullOrWhiteSpace(excludeFieldsGrid.StringDisplay));
            
             //trigger the add multiple option

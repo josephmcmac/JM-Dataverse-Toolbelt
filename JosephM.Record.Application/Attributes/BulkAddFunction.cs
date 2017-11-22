@@ -53,7 +53,11 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public IRecordService GetLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            return recordForm.RecordService.GetLookupService(GetTargetProperty(recordForm, subGridReference).Name, GetEnumeratedType(recordForm, subGridReference).FullName, subGridReference, recordForm.GetRecord());
+            //todo this does not work when it is a field in an enumerable field in a grid
+            //and we have a connection for or other reference type
+            var reference = string.Format("{0}{1}", (recordForm.ParentFormReference == null ? null : recordForm.ParentFormReference + "."), subGridReference);
+
+            return recordForm.RecordService.GetLookupService(GetTargetProperty(recordForm, subGridReference).Name, GetEnumeratedType(recordForm, subGridReference).FullName, reference, recordForm.GetRecord());
         }
 
         public PropertyInfo GetTargetProperty(RecordEntryViewModelBase recordForm, string subGridReference)

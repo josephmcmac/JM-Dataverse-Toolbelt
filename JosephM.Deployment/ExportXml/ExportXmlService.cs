@@ -122,7 +122,7 @@ namespace JosephM.Deployment.ExportXml
 
                 var excludeFields = exportType.IncludeAllFields
                     ? new string[0]
-                    : XrmService.GetFields(exportType.RecordType.Key).Except(exportType.IncludeOnlyTheseFieldsInExportedRecords.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray());
+                    : XrmService.GetFields(exportType.RecordType.Key).Except(exportType.IncludeOnlyTheseFields.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray());
                 var primaryField = XrmService.GetPrimaryNameField(exportType.RecordType.Key);
                 if (excludeFields.Contains(primaryField))
                     excludeFields = excludeFields.Except(new[] { primaryField }).ToArray();
@@ -221,7 +221,7 @@ namespace JosephM.Deployment.ExportXml
         {
             if (XrmService.FieldExists("statecode", entity.LogicalName))
             {
-                if (!exportType.IncludeInactiveRecords)
+                if (!exportType.IncludeInactive)
                 {
                     var activeStates = new List<int>(new[] { XrmPicklists.State.Active });
                     if (entity.LogicalName == "product")
