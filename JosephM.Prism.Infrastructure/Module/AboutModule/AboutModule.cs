@@ -1,10 +1,12 @@
 ﻿using JosephM.Application.Modules;
+using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using System;
 using System.Reflection;
 
 namespace JosephM.Application.Prism.Module.AboutModule
 {
+    [MyDescription("About This Application")]
     /// <summary>
     ///     Base Class For A Module Which Plugs A Settings Type Into The Application
     /// </summary>

@@ -31,7 +31,8 @@
             <Button DataContext="{Binding FirstOption}"
                     Style="{StaticResource MainMenuButton}"
             Content="{Binding Label}"
-            Command="{Binding DelegateCommand}" />
+            Command="{Binding DelegateCommand}"
+            ToolTip="{Binding Description}" />
         </Grid>
         <Grid Grid.Row="1" Visibility="{Binding HasOneOption, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" VerticalAlignment="Top">
             <Grid  VerticalAlignment="Top">

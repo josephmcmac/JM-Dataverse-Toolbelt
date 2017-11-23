@@ -9,7 +9,8 @@ namespace JosephM.Record.Xrm.XrmRecord
     [ServiceConnection(typeof(XrmRecordService))]
     public class XrmRecordConfiguration : IXrmRecordConfiguration, IValidatableObject
     {
-
+        [GridWidth(150)]
+        [MyDescription("Name For Your Connection")]
         [DisplayOrder(2)]
         public string Name { get; set; }
 
@@ -18,19 +19,25 @@ namespace JosephM.Record.Xrm.XrmRecord
             return Name ?? OrganizationUniqueName;
         }
 
+        [GridWidth(175)]
+        [MyDescription("The User Authentication Type For The CRM Instance")]
         [DisplayOrder(20)]
         [RequiredProperty]
         public XrmRecordAuthenticationProviderType AuthenticationProviderType { get; set; }
 
+        [MyDescription("The Discovery Service Address For The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(30)]
         [RequiredProperty]
         [GridWidth(400)]
         public string DiscoveryServiceAddress { get; set; }
 
+        [MyDescription("The Unique Name Of The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(40)]
         [RequiredProperty]
+        [GridWidth(160)]
         public string OrganizationUniqueName { get; set; }
 
+        [MyDescription("If Active Directory Authentication The Domain For Your Login")]
         [DisplayOrder(50)]
         [RequiredProperty]
         [GridWidth(100)]
@@ -41,9 +48,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             })]
         public string Domain { get; set; }
 
+        [GridWidth(300)]
+        [MyDescription("The Username Used To Login To The Instance")]
         [DisplayOrder(60)]
         [RequiredProperty]
-        [GridWidth(100)]
         [PropertyInContextByPropertyValues("AuthenticationProviderType",
             new object[]
             {
@@ -53,9 +61,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             })]
         public string Username { get; set; }
 
+        [GridWidth(150)]
+        [MyDescription("The Password For Your User")]
         [DisplayOrder(70)]
         [RequiredProperty]
-        [GridWidth(100)]
         [PropertyInContextByPropertyValues("AuthenticationProviderType",
             new object[]
             {

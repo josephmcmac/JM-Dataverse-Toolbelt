@@ -67,6 +67,7 @@
     <Style x:Key="IconButton" TargetType="{x:Type Button}">
         <Setter Property="Margin" Value="1,1,1,1" />
         <Setter Property="Height" Value="20" />
+        <Setter Property="ToolTip"  Value="{Binding Description}" />
     </Style>
     <Style x:Key="DeleteRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource DeleteButtonImageKey}" />

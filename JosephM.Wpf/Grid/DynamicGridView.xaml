@@ -58,11 +58,11 @@
                 <WrapPanel Orientation="Horizontal">
                     <Button DataContext="{Binding Path=AddRowButton}"
                         Style="{StaticResource AddRowButton}"
-                            Command="{Binding Command}" ToolTip="Click To Add A Row" />
+                            Command="{Binding Command}" ToolTip="Add New" />
                     <Grid Grid.Row="0" Visibility="{Binding CanAddMultipleRow, Converter={StaticResource BoolToVis}}">
                         <Button DataContext="{Binding Path=AddMultipleRowButton}" 
                         Style="{StaticResource AddMultipleRowButton}"
-                            Command="{Binding Command}" ToolTip="Click To Add Multiple Items" />
+                            Command="{Binding Command}" ToolTip="Add Multiple" />
                     </Grid>
                 </WrapPanel>
             </Grid>

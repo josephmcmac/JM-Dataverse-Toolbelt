@@ -66,14 +66,14 @@ namespace JosephM.Application.Modules
             return Container.ResolveType<T>();
         }
 
-        public void AddOption(string group, string label, Action action)
+        public void AddOption(string group, string label, Action action, string description = null)
         {
-            ApplicationOptions.AddOption(group, label, action);
+            ApplicationOptions.AddOption(group, label, action, description: description);
         }
 
-        public void AddSetting(string label, Action action)
+        public void AddSetting(string label, Action action, string description = null)
         {
-            ApplicationOptions.AddOption("Setting", label, action);
+            ApplicationOptions.AddOption("Setting", label, action, description: description);
         }
 
         public void AddHelpUrl(string optionLabel, string htmlFileName)

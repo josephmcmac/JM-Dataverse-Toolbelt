@@ -19,18 +19,19 @@ namespace JosephM.Application.ViewModel.Shared
 
         public Action ClickAction { get; set; }
 
-        public XrmButtonViewModel(string label, Action clickAction, IApplicationController applicationController)
-            : this(label, label, clickAction, applicationController)
+        public XrmButtonViewModel(string label, Action clickAction, IApplicationController applicationController, string description = null)
+            : this(label, label, clickAction, applicationController, description)
         {
         }
 
-        public XrmButtonViewModel(string id, string label, Action clickAction, IApplicationController applicationController)
+        public XrmButtonViewModel(string id, string label, Action clickAction, IApplicationController applicationController, string description = null)
     : base(applicationController)
         {
             Id = id;
             Label = label;
             ClickAction = clickAction;
             Command = new DelegateCommand(clickAction);
+            Description = description;
         }
 
         public XrmButtonViewModel(string id, string label, IEnumerable<XrmButtonViewModel> childButtons, IApplicationController applicationController)
@@ -102,6 +103,17 @@ namespace JosephM.Application.ViewModel.Shared
         public void Invoke()
         {
             Command.Execute(null);
+        }
+
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set
+            {
+                _description = value;
+                OnPropertyChanged(nameof(Description));
+            }
         }
     }
 }

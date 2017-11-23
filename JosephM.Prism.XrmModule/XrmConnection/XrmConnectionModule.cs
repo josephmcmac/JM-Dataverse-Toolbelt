@@ -3,6 +3,7 @@
 using JosephM.Application.Application;
 using JosephM.Application.Modules;
 using JosephM.Core.AppConfig;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Prism.XrmModule.Crud;
@@ -15,7 +16,8 @@ using System.Configuration;
 
 namespace JosephM.Prism.XrmModule.XrmConnection
 {
-    public class XrmConnectionModule : ModuleBase
+    [MyDescription("Connect To A CRM Instance")]
+    public class XrmConnectionModule : ActionModuleBase
     {
         public override void RegisterTypes()
         {
@@ -36,8 +38,6 @@ namespace JosephM.Prism.XrmModule.XrmConnection
             RegisterTypeForNavigation<XrmMaintainViewModel>();
             RegisterTypeForNavigation<XrmCreateViewModel>();
             RegisterTypeForNavigation<XrmConnectionDialog>();
-            //RegisterType<XrmFormController>();
-            //RegisterType<XrmFormService>();
         }
 
         private static IXrmRecordConfiguration LastXrmConfiguration { get; set; }
@@ -83,11 +83,13 @@ namespace JosephM.Prism.XrmModule.XrmConnection
 
         public override void InitialiseModule()
         {
-            AddSetting("Connect To Crm", ConnectToCrm);
+            AddSetting(MainOperationName, DialogCommand, OperationDescription);
             AddHelpUrl("Connect To Crm", "ConnectToCrm");
         }
 
-        private void ConnectToCrm()
+        public override string MainOperationName => "Connect To Crm";
+
+        public override void DialogCommand()
         {
             NavigateTo<XrmConnectionDialog>();
         }

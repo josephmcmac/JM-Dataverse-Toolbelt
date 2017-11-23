@@ -25,7 +25,9 @@
             Name="MainButton"
             Style="{StaticResource SettingsMenuButton}"
             Content="Settings"
-            Command="{Binding SettingsClick}" />
+            Command="{Binding SettingsClick}"
+            ToolTip="{Binding Description}"
+            />
         <Popup
             PlacementTarget="{Binding ElementName=MainButton}"
             IsOpen="{Binding OpenSettings}"

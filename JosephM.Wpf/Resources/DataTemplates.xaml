@@ -99,18 +99,19 @@
     </DataTemplate>
     <DataTemplate x:Key="OptionDropdownTemplate" DataType="applicationOptions:ApplicationOption" >
         <Button Margin="0,0,0,0" Content="{Binding Label}"
-                Command="{Binding DelegateCommand}" Style="{StaticResource MainMenuButton}"  />
+                Command="{Binding DelegateCommand}" Style="{StaticResource MainMenuButton}" 
+                ToolTip="{Binding Description}" />
     </DataTemplate>
     <DataTemplate x:Key="NotificationTemplate">
         <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />
     </DataTemplate>
     <DataTemplate x:Key="ButtonDropdownTemplate" DataType="applicationOptions:ApplicationOption">
         <Button Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
-                Command="{Binding DelegateCommand}" />
+                Command="{Binding DelegateCommand}" ToolTip="{Binding Description}" />
     </DataTemplate>
     <DataTemplate x:Key="XrmButtonDropdownTemplate" DataType="shared:XrmButtonViewModel">
         <Button Style="{StaticResource XrmDropdownButton}" Margin="0,0,0,0" Content="{Binding Label}"
-                Command="{Binding Command}" />
+                Command="{Binding Command}" ToolTip="{Binding Description}" />
     </DataTemplate>
     <DataTemplate x:Key="HeadingTemplate">
         <shared:HeadingView DataContext="{Binding}" />

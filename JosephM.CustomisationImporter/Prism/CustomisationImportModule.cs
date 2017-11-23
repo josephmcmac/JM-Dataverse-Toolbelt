@@ -1,6 +1,7 @@
 ﻿#region
 
 using JosephM.Application.Modules;
+using JosephM.Core.Attributes;
 using JosephM.CustomisationImporter.Service;
 using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
@@ -11,6 +12,7 @@ using System.IO;
 
 namespace JosephM.CustomisationImporter.Prism
 {
+    [MyDescription("Import Customisations Defined In An Excel Spreadsheet Into A CRM Instance (Create or Update)")]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class CustomisationImportModule
         : ServiceRequestModule<XrmCustomisationImportDialog, XrmCustomisationImportService, CustomisationImportRequest, CustomisationImportResponse, CustomisationImportResponseItem>
@@ -23,7 +25,7 @@ namespace JosephM.CustomisationImporter.Prism
         {
             base.InitialiseModule();
             AddHelpUrl("Import Customisations", "CustomisationImporter");
-            AddOption(MenuGroup, "Download Template", OpenTemplateCommand);
+            AddOption(MenuGroup, "Download Template", OpenTemplateCommand, "Get An Excel File With The Tabs And Columns For Importing Customisations");
         }
 
         public void OpenTemplateCommand()

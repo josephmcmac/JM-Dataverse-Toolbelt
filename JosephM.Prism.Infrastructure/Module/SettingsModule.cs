@@ -22,7 +22,7 @@ namespace JosephM.Prism.Infrastructure.Module
 
         public override void InitialiseModule()
         {
-            AddSetting(typeof(TSettingsGetSetClass).GetDisplayName(), DialogCommand);
+            AddSetting(typeof(TSettingsGetSetClass).GetDisplayName(), DialogCommand, OperationDescription);
         }
     }
 }
