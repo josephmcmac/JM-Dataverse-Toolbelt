@@ -213,5 +213,25 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             else
                 return Value.ToString();
         }
+
+        public override bool Validate()
+        {
+            var isValid = base.Validate();
+            if (!isValid && IsVisible)
+            {
+                if(Value is IValidatableObject)
+                {
+                    var objectValidation = ((IValidatableObject)Value).Validate();
+                    if(!objectValidation.IsValid && objectValidation.InvalidReasons.Any())
+                    {
+                        isValid = false;
+                        AddError(objectValidation.InvalidReasons.First());
+                    }
+                }
+                
+            }
+
+            return isValid;
+        }
     }
 }

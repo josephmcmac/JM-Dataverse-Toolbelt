@@ -249,6 +249,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public void AddError(string error)
         {
             _errors.Add(error);
+            foreach (var validationPropertyName in ValidationPropertyNames)
+                NotifyErrorsChanged(validationPropertyName);
         }
 
         public void NotifyErrorsChanged(string propertyName)
