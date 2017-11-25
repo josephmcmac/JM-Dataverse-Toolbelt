@@ -27,7 +27,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         [PropertyInContextByPropertyValue(nameof(AddToSolution), true)]
         public Lookup Solution { get; set; }
 
-        //todo get rid of these somehow
         [Group(Sections.ObjectPrefixes)]
         [RequiredProperty]
         public string SolutionObjectPrefix { get; set; }

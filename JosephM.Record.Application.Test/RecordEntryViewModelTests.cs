@@ -183,10 +183,6 @@ namespace JosephM.Record.Application.Test
             var objectFieldViewModel = entryViewModel.GetObjectFieldFieldViewModel(nameof(TestAllFieldTypes.ObjectField));
             objectFieldViewModel.SelectedItem = objectFieldViewModel.ItemsSource.First();
             Assert.IsNotNull(objectFieldViewModel.Value);
-
-            //todo multi lookup type e.g. owner
-
-            //todo add query script for this type as well
         }
     }
 }

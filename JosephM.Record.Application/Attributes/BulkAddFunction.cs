@@ -53,8 +53,6 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public IRecordService GetLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            //todo this does not work when it is a field in an enumerable field in a grid
-            //and we have a connection for or other reference type
             var reference = string.Format("{0}{1}", (recordForm.ParentFormReference == null ? null : recordForm.ParentFormReference + "."), subGridReference);
 
             return recordForm.RecordService.GetLookupService(GetTargetProperty(recordForm, subGridReference).Name, GetEnumeratedType(recordForm, subGridReference).FullName, reference, recordForm.GetRecord());
@@ -166,8 +164,6 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public void InsertNewItem(RecordEntryViewModelBase recordForm, string subGridReference, IRecord recordToInsert)
         {
-            //todo consider adding duplicates logic
-
             //if the grid field is a subgrid then we add to the grid
             //otherwise if it is within a subgrid, it is just a display string
             //in which case lets just add it to the object

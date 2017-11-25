@@ -21,8 +21,6 @@ namespace JosephM.Prism.XrmModule.Test
         [TestMethod]
         public void XrmCrudModuleTestScript()
         {
-            //todo consider anything else necessary e.g. change other field types
-
             // this script runs through several scenarios in the crud module
             // opening and running quickfind
             // opening a record updating a field and saving
