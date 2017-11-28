@@ -28,7 +28,6 @@ namespace JosephM.Prism.Infrastructure.Module.SavedRequests
 
         public override void RegisterTypes()
         {
-            //todo autoload logic should be in this module class
             AddSavedRequestsFormFunctions();
             AddSavedRequestLoadFunction();
         }

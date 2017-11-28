@@ -249,6 +249,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public void AddError(string error)
         {
             _errors.Add(error);
+            foreach (var validationPropertyName in ValidationPropertyNames)
+                NotifyErrorsChanged(validationPropertyName);
         }
 
         public void NotifyErrorsChanged(string propertyName)
@@ -288,5 +290,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public LoadingViewModel LoadingViewModel { get; set; }
         public bool DisplayLabel { get; set; }
         public virtual bool IsLoaded { get { return true; } }
+
+        public string Description { get; set; }
     }
 }

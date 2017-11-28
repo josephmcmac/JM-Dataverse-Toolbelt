@@ -13,7 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel VerticalAlignment="Center" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <CheckBox
         IsEnabled="{Binding IsEditable}"
         IsChecked="{Binding ValueObject, Mode=TwoWay}" />

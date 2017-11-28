@@ -342,6 +342,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     };
                 fieldVm.IsEditable = isEditable;
                 fieldVm.DisplayLabel = DisplayLabel;
+                if (!explicitFieldType.HasValue)
+                {
+                    var metadata = recordService.GetFieldMetadata(field, recordType);
+                    fieldVm.Description = metadata.Description;
+                }
                 return fieldVm;
             }
             catch (Exception ex)

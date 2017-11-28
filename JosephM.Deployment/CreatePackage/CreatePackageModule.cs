@@ -1,5 +1,6 @@
 ﻿#region
 
+using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Module;
 
@@ -7,6 +8,7 @@ using JosephM.Prism.Infrastructure.Module;
 
 namespace JosephM.Deployment.CreatePackage
 {
+    [MyDescription("Create A Folder Containing A Solution File And Optionally Including A Set Of Records For Deploying Into A Target CRM Instance")]
     public class CreatePackageModule
         : ServiceRequestModule<CreatePackageDialog, CreatePackageService, CreatePackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
     {

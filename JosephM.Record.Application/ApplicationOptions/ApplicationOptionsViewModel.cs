@@ -33,9 +33,9 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
 
         public ObservableCollection<ApplicationOption> Helps { get; private set; }
 
-        public void AddOption(string group, string optionLabel, Action action)
+        public void AddOption(string group, string optionLabel, Action action, string description = null)
         {
-            var option = new ApplicationOption(optionLabel, action);
+            var option = new ApplicationOption(optionLabel, action, description);
             if (group == "Help")
                 AddToCollection(option, Helps);
             else if (group == "Setting")

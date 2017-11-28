@@ -10,11 +10,13 @@ using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Diagnostics;
 using System.Linq;
+using JosephM.Core.Attributes;
 
 #endregion
 
 namespace JosephM.Prism.XrmModule.SavedXrmConnections
 {
+    [MyDescription("Multiple Saved Connections To CRM Instances")]
     [DependantModule(typeof(XrmConnectionModule))]
     public class SavedXrmConnectionsModule : SettingsModule<SavedXrmConnectionsDialog, ISavedXrmConnections, SavedXrmConnections>
     {

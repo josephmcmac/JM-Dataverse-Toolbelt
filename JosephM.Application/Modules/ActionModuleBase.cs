@@ -3,8 +3,10 @@
 using JosephM.Application.Application;
 using JosephM.Application.Options;
 using JosephM.Core.AppConfig;
+using JosephM.Core.Attributes;
 using System;
 using System.IO;
+using System.Reflection;
 
 #endregion
 
@@ -18,5 +20,14 @@ namespace JosephM.Application.Modules
         public abstract string MainOperationName { get; }
 
         public abstract void DialogCommand();
+
+        public string OperationDescription
+        {
+            get
+            {
+                var attribute = GetType().GetCustomAttribute<MyDescription>();
+                return attribute?.Text;
+            }
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace JosephM.Application.Modules
     {
         public override void InitialiseModule()
         {
-            AddOption(MenuGroup, MainOperationName, DialogCommand);
+            AddOption(MenuGroup, MainOperationName, DialogCommand, description: OperationDescription);
         }
 
         public override void RegisterTypes()

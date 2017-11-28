@@ -7,6 +7,7 @@ namespace JosephM.Prism.XrmModule.SavedXrmConnections
 {
     public class SavedXrmRecordConfiguration : XrmRecordConfiguration
     {
+        [MyDescription("Set This Connection As Active")]
         [DisplayOrder(1)]
         [UniqueOn]
         [GridWidth(60)]

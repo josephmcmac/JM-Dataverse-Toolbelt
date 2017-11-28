@@ -853,7 +853,6 @@ namespace JosephM.CustomisationImporter.Service
             }
             catch (Exception ex)
             {
-                //todo fix this maybe should be a view import error
                 response.AddResponseItem(recordMetadata, ex);
             }
             return new ViewMetadata(viewFields);
