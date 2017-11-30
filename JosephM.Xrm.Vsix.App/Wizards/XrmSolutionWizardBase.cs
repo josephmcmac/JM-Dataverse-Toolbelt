@@ -61,6 +61,8 @@ namespace JosephM.Xrm.Vsix.Wizards
             {
                 //The projects were created under a seperate folder -- lets fix it
 
+                //todo this appears to do something incorrect if create directory for solutoon was notselected
+
                 //first move each projects up a directory
                 var projectsObjects = new List<Project>();
                 foreach (Project childProject in DTE.Solution.Projects)
