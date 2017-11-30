@@ -31,6 +31,8 @@ using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using JosephM.Xrm.Vsix.Module.ImportSolution;
+using JosephM.Xrm.Vsix.Module.ImportRecords;
 
 namespace JosephM.XRM.VSIX
 {
@@ -83,7 +85,9 @@ namespace JosephM.XRM.VSIX
             app.AddModule<DeployWebResourceModule>(0x0102);
             app.AddModule<VsixImportCsvsModule>(0x0108);
             app.AddModule<VsixDeployPackageModule> (0x0110);
-            app.AddModule<XrmPackageAboutModule>(0x0113); 
+            app.AddModule<XrmPackageAboutModule>(0x0113);
+            app.AddModule<ImportSolutionModule>(0x0114);
+            app.AddModule<ImportRecordsModule>(0x0115);
         }
 
         public class XrmPackageAboutModule : AboutModule

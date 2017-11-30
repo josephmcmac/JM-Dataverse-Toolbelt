@@ -262,6 +262,22 @@
           <ButtonText>About</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ImportSolutionCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Solution</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ImportRecordsCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Records</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -312,9 +328,11 @@
       <IDSymbol name="OpenCrmAdvancedFindCommandId" value="0x010D" />
       <IDSymbol name="CreateDeploymentPackageCommandId" value="0x010E" />
       <IDSymbol name="DeployPackageCommandId" value="0x0110" />
-    <IDSymbol name="InstanceComparisonCommandId" value="0x0111" />
-    <IDSymbol name="CrudCommandId" value="0x0112" />
-    <IDSymbol name="AboutCommandId" value="0x0113" />
+      <IDSymbol name="InstanceComparisonCommandId" value="0x0111" />
+      <IDSymbol name="CrudCommandId" value="0x0112" />
+      <IDSymbol name="AboutCommandId" value="0x0113" />
+      <IDSymbol name="ImportSolutionCommandId" value="0x0114" />
+      <IDSymbol name="ImportRecordsCommandId" value="0x0115" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

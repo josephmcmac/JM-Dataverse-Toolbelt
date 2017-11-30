@@ -177,6 +177,19 @@
     <Compile Include="Module\DeployWebResource\DeployWebResourceService.cs" />
     <Compile Include="Module\ImportCsvs\MenuItemVisibleCsvs.cs" />
     <Compile Include="Module\ImportCsvs\VsixImportCsvsModule.cs" />
+    <Compile Include="Module\ImportRecords\ImportRecordsDialog.cs" />
+    <Compile Include="Module\ImportRecords\ImportRecordsModule.cs" />
+    <Compile Include="Module\ImportRecords\ImportRecordsRequest.cs" />
+    <Compile Include="Module\ImportRecords\ImportRecordsResponse.cs" />
+    <Compile Include="Module\ImportRecords\ImportRecordsService.cs" />
+    <Compile Include="Module\ImportRecords\MenuItemVisibleXml.cs" />
+    <Compile Include="Module\ImportSolution\ImportSolutionDialog.cs" />
+    <Compile Include="Module\ImportSolution\ImportSolutionModule.cs" />
+    <Compile Include="Module\ImportSolution\ImportSolutionRequest.cs" />
+    <Compile Include="Module\ImportSolution\ImportSolutionResponse.cs" />
+    <Compile Include="Module\ImportSolution\ImportSolutionResponseItem.cs" />
+    <Compile Include="Module\ImportSolution\ImportSolutionService.cs" />
+    <Compile Include="Module\ImportSolution\MenuItemVisibleZip.cs" />
     <Compile Include="Module\MenuItemVisible.cs" />
     <Compile Include="Module\MenuItemVisibleForFileTypes.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersDialog.cs" />
@@ -263,5 +276,6 @@
   <ItemGroup>
     <None Include="JosephM.XRM.VSIX.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

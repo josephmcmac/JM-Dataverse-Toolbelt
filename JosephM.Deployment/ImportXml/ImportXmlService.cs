@@ -42,6 +42,7 @@ namespace JosephM.Deployment.ImportXml
         {
             controller.UpdateProgress(0, 1, "Loading XML Files");
             var entities = LoadEntitiesFromXmlFiles(folder);
+
             var importResponses = DoImport(entities, controller, maskEmails);
             foreach (var item in importResponses)
                 response.AddResponseItem(item);
@@ -49,10 +50,15 @@ namespace JosephM.Deployment.ImportXml
 
         public IEnumerable<Entity> LoadEntitiesFromXmlFiles(string folder)
         {
-            var lateBoundSerializer = new DataContractSerializer(typeof(Entity));
+            var filesToImport = Directory.GetFiles(folder, "*.xml");
+            return LoadEntitiesFromXmlFiles(filesToImport);
+        }
 
+        public IEnumerable<Entity> LoadEntitiesFromXmlFiles(IEnumerable<string> filesToImport)
+        {
+            var lateBoundSerializer = new DataContractSerializer(typeof(Entity));
             var entities = new List<Entity>();
-            foreach (var file in Directory.GetFiles(folder, "*.xml"))
+            foreach (var file in filesToImport)
             {
                 using (var fileStream = new FileStream(file, FileMode.Open))
                 {
