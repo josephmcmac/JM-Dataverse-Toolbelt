@@ -93,7 +93,7 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$Service.cs">$ext_jmobjprefix$Service.cs</ProjectItem>
       </Folder>
       <Folder Name="Workflows" TargetFolderName="Workflows">
-        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$WorkflowActivityBase.cs">$ext_jmobjprefix$WorkflowActivityBase.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$WorkflowActivity.cs">$ext_jmobjprefix$WorkflowActivity.cs</ProjectItem>
       </Folder>
       <Folder Name="Xrm" TargetFolderName="Xrm">
         <ProjectItem ReplaceParameters="true" TargetFileName="DeviceIdManager.cs">DeviceIdManager.cs</ProjectItem>
