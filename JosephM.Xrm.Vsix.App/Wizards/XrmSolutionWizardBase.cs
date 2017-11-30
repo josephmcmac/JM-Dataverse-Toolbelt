@@ -126,7 +126,6 @@ namespace JosephM.Xrm.Vsix.Wizards
             if (XrmPackageSettings.Connections.Any())
                 visualStudioService.AddSolutionItem("solution.xrmconnection", XrmPackageSettings.Connections.First());
             visualStudioService.CloseAllDocuments();
-            //tod ensure the connection added to test project
         }
     }
 }
