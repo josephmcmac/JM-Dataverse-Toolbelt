@@ -12,7 +12,7 @@ namespace JosephM.Core.Service
 {
     [Group(Sections.FatalError, false, 0)]
     [Group(Sections.ResponseItems, false, 1)]
-    public class ServiceResponseBase<TResponseItem>
+    public class ServiceResponseBase<TResponseItem> : IProcessCompletion
         where TResponseItem : ServiceResponseItem
     {
         private readonly List<TResponseItem> _errors = new List<TResponseItem>();
@@ -58,6 +58,11 @@ namespace JosephM.Core.Service
             return ResponseItems.Where(e => e.HasError);
         }
 
+        IEnumerable<object> IProcessCompletion.GetResponseItemsWithError()
+        {
+            return GetResponseItemsWithError();
+        }
+
         [Hidden]
         public bool HasResponseItems
         {
@@ -75,6 +80,10 @@ namespace JosephM.Core.Service
         {
             get { return Exception != null || HasResponseItemError; }
         }
+
+        bool IProcessCompletion.Success => Success;
+
+        Exception IProcessCompletion.Exception => Exception;
 
         private static class Sections
         {

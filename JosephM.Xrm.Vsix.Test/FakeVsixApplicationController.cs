@@ -12,6 +12,7 @@ namespace JosephM.Xrm.Vsix.Test
 {
     public class FakeVsixApplicationController : VsixApplicationController
     {
+        public override bool RunThreadsAsynch => false;
         public FakeVsixApplicationController(IDependencyResolver dependencyResolver) : base(dependencyResolver)
         {
              
@@ -42,16 +43,6 @@ namespace JosephM.Xrm.Vsix.Test
         public override bool UserConfirmation(string message)
         {
             return true;
-        }
-
-        public override void DoOnMainThread(Action action)
-        {
-            action();
-        }
-
-        public override void DoOnAsyncThread(Action action)
-        {
-            action();
         }
 
         public override void ThrowException(Exception ex)

@@ -139,6 +139,7 @@
     <Compile Include="Log\LogFileUserInterface.cs" />
     <Compile Include="Serialisation\JsonHelper.cs" />
     <Compile Include="Service\IAllowSaveAndLoad.cs" />
+    <Compile Include="Service\IProcessCompletion.cs" />
     <Compile Include="Service\ServiceResponseItem.cs" />
     <Compile Include="Service\IsValidResponse.cs" />
     <Compile Include="Service\ServiceResponseBase.cs" />

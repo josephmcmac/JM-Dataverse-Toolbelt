@@ -13,6 +13,7 @@ namespace JosephM.Application.Application
     /// </summary>
     public interface IApplicationController : IDependencyResolver
     {
+        bool RunThreadsAsynch { get; }
         /// <summary>
         ///     The Name Of The Application
         /// </summary>
@@ -59,9 +60,9 @@ namespace JosephM.Application.Application
         string SettingsPath { get; }
 
         /// <summary>
-        ///     The Folder Where The Application Is Installed
+        ///     The Folder Where The Log Should Be Output
         /// </summary>
-        string ApplicationPath { get; }
+        string LogPath { get; set; }
 
         void ThrowException(Exception ex);
 

@@ -3,7 +3,7 @@ using JosephM.Core.Extentions;
 
 namespace JosephM.Prism.Infrastructure.Module
 {
-    public class DialogModule<TDialog> : OptionActionModule
+    public abstract class DialogModule<TDialog> : OptionActionModule
     {
         public override void RegisterTypes()
         {

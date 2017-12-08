@@ -22,6 +22,14 @@ namespace JosephM.Application.Application
     /// </summary>
     public abstract class ApplicationControllerBase : IApplicationController
     {
+        public virtual bool RunThreadsAsynch
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         protected ApplicationControllerBase(string applicationName, IDependencyResolver container)
         {
             Container = container;
@@ -64,23 +72,30 @@ namespace JosephM.Application.Application
 
         public abstract bool UserConfirmation(string message);
 
-        public virtual void DoOnMainThread(Action action)
+        public void DoOnMainThread(Action action)
         {
-            Dispatcher.BeginInvoke(
-                DispatcherPriority.Background,
-                (SendOrPostCallback)
-                    delegate
-                    {
-                        try
+            if (!RunThreadsAsynch)
+            {
+                action();
+            }
+            else
+            {
+                Dispatcher.BeginInvoke(
+                    DispatcherPriority.Background,
+                    (SendOrPostCallback)
+                        delegate
                         {
-                            action();
-                        }
-                        catch(Exception ex)
-                        {
-                            ThrowException(ex);
-                        }
-                    },
-                null);
+                            try
+                            {
+                                action();
+                            }
+                            catch (Exception ex)
+                            {
+                                ThrowException(ex);
+                            }
+                        },
+                    null);
+            }
         }
 
         public abstract void OpenRecord(string recordType, string fieldMatch, string fieldValue,
@@ -91,9 +106,15 @@ namespace JosephM.Application.Application
             throw new NotImplementedException();
         }
 
-        public virtual void DoOnAsyncThread(Action action)
+        public void DoOnAsyncThread(Action action)
         {
-            var thread = new Thread(
+            if (!RunThreadsAsynch)
+            {
+                action();
+            }
+            else
+            {
+                var thread = new Thread(
                 () =>
                 {
                     try
@@ -105,8 +126,9 @@ namespace JosephM.Application.Application
                         ThrowException(ex);
                     }
                 });
-            thread.IsBackground = true;
-            thread.Start();
+                thread.IsBackground = true;
+                thread.Start();
+            }
         }
 
         public string SettingsPath
@@ -120,9 +142,9 @@ namespace JosephM.Application.Application
 
         public string ApplicationName { get; set; }
 
-        public string ApplicationPath
+        public string LogPath
         {
-            get { return AppDomain.CurrentDomain.BaseDirectory; }
+            get; set;
         }
 
         public virtual void ThrowException(Exception ex)

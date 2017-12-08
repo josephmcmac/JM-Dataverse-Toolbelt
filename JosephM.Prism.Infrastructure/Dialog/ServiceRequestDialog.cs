@@ -45,7 +45,7 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
             Service = service;
             
-            Request = new TRequest();
+            Request = ApplicationController.ResolveType<TRequest>();
             if (request != null)
                 Request = request;
 
