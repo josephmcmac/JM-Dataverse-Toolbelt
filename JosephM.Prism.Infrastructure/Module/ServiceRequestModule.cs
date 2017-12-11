@@ -36,16 +36,18 @@ namespace JosephM.Prism.Infrastructure.Module
         string ICommandLineExecutable.CommandName { get => MainOperationName; }
         string ICommandLineExecutable.Description { get => OperationDescription; }
 
+        Type ICommandLineExecutable.RequestType { get => typeof(TRequest); }
+
         void ICommandLineExecutable.Command()
         {
             DialogCommand();
         }
 
-        IDictionary<string, Action<string>> ICommandLineExecutable.GetArgs()
+        IEnumerable<CommandLineArgument> ICommandLineExecutable.GetArgs()
         {
-            return new Dictionary<string, Action<string>>
+            return new CommandLineArgument[]
                 {
-                    { "Request", (s) =>
+                    new CommandLineArgument("Request", "name Of The Saved Reequiest To Process", (s) =>
                         {
                             //load the saved object into the unity container
                             //so when the request dialog runs it loads it
@@ -62,9 +64,8 @@ namespace JosephM.Prism.Infrastructure.Module
                                 throw new NullReferenceException(string.Format("Could Not Find Saved {0} Object With {1} = '{2}'", typeof(TRequest).Name, nameof(ServiceRequestBase.Name), s));
                             }
                             ApplicationController.RegisterInstance(typeof(TRequest), matchingName.First());
-                        }
-                    },
-                    { "LogPath", (s) => { ApplicationController.LogPath = s; } }
+                        }),
+                    new CommandLineArgument("LogPath", "Path To Output Any Logs Into", (s) => { ApplicationController.LogPath = s; })
                 };
         }
     }

@@ -60,18 +60,28 @@ namespace JosephM.Prism.Infrastructure.Console
                     else
                     {
                         var matchingOption = matchingOptions.First();
-                        Dictionary<string, string> arguments = ParseCommandLineArguments(args);
-
-                        var commandArgs = matchingOption.GetArgs();
-                        foreach (var arg in arguments.Where(a => !StandardCommandArguments.ContainsKey(a.Key)))
+                        var arguments = ParseCommandLineArguments(args);
+                        if (!arguments.Any() || arguments.First().Key == "?" || arguments.First().Key == "help")
                         {
-                            if (!commandArgs.ContainsKey(arg.Key))
-                            {
-                                throw new ArgumentOutOfRangeException(arg.Key, string.Format("'{0}' is not a valid argument name for the command. The valid arguments are {1}", arg.Key, commandArgs.Keys.JoinGrammarAnd()));
-                            }
-                            commandArgs[arg.Key](arg.Value);
+                            ConsoleApplicationController.WriteToConsole("The Commands Arguments Are");
+                            ConsoleApplicationController.WriteToConsole(GetCommandLineArgumentsString(command));
                         }
-                        matchingOption.Command();
+                        else
+                        {
+
+                            var commandArgs = matchingOption.GetArgs();
+
+                            foreach (var arg in arguments.Where(a => !StandardCommandArguments.Any(sca => sca.CommandName == a.Key)))
+                            {
+                                var matchingCommand = commandArgs.Where(c => c.CommandName == arg.Key);
+                                if (!matchingCommand.Any())
+                                {
+                                    throw new ArgumentOutOfRangeException(arg.Key, string.Format("'{0}' is not a valid argument name for the command. The valid arguments are\n{1}", arg.Key, GetCommandLineArgumentsString(command)));
+                                }
+                                matchingCommand.First().LoadAction(arg.Value);
+                            }
+                            matchingOption.Command();
+                        }
                     }
                 }
             }
@@ -98,6 +108,26 @@ namespace JosephM.Prism.Infrastructure.Console
             }
 
             return arguments;
+        }
+
+        public string GetCommandLineArgumentsString(string command)
+        {
+            var matchingOptions = GetCommandOptions().Where(o => o.CommandName.ToLower() == command.ToLower());
+            if (!matchingOptions.Any())
+            {
+                throw new NullReferenceException(string.Format("No Matching Command Found For '{0}'", command));
+            }
+            else
+            {
+                var matchingOption = matchingOptions.First();
+
+                var commandSwitchesString = new StringBuilder();
+                foreach (var option in matchingOption.GetArgs().Union(StandardCommandArguments))
+                {
+                    commandSwitchesString.AppendLine(string.Format("\t{0} : {1}", option.CommandName, option.Description));
+                }
+                return commandSwitchesString.ToString();
+            }
         }
 
         private static string RemoveKeyPrefix(string key)
@@ -132,13 +162,13 @@ namespace JosephM.Prism.Infrastructure.Console
                 .ToArray();
         }
 
-        private static Dictionary<string,string> StandardCommandArguments
+        private static IEnumerable<CommandLineArgument> StandardCommandArguments
         {
             get
             {
-                return new Dictionary<string, string>
+                return new CommandLineArgument[]
                 {
-                    { "SettingsFolderName", "The Folder Containing The Saved Settings For The Application" }
+                    new CommandLineArgument("SettingsFolderName", "The Folder Containing The Saved Settings For The Application")
                 };
             }
         }
@@ -153,7 +183,7 @@ namespace JosephM.Prism.Infrastructure.Console
 
         public void LoadModulesInExcecutionFolder()
         {
-            var codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            var codeBase = Assembly.GetExecutingAssembly().Location;
             var uri = new UriBuilder(codeBase);
             string path = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
 
@@ -167,16 +197,6 @@ namespace JosephM.Prism.Infrastructure.Console
                         AddModule(type);
                     }
                 }
-            }
-        }
-
-        private class CommandOption
-        {
-            private ModuleBase value;
-
-            public CommandOption(ModuleBase value)
-            {
-                this.value = value;
             }
         }
     }

@@ -3,19 +3,11 @@
 using JosephM.Application;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Application.ViewModel.HTML;
-using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.AppConfig;
-using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using Microsoft.Practices.Prism.Regions;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Windows;
-using System.Windows.Forms;
-using Extentions = JosephM.Application.ViewModel.Extentions.Extentions;
-using MessageBox = System.Windows.MessageBox;
 
 #endregion
 

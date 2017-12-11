@@ -1,26 +1,16 @@
 ﻿#region
 
-using JosephM.Application;
 using JosephM.Application.Application;
-using JosephM.Application.ViewModel.Dialog;
-using JosephM.Application.ViewModel.HTML;
-using JosephM.Application.ViewModel.Navigation;
-using JosephM.Core.AppConfig;
-using JosephM.Core.Extentions;
-using JosephM.Core.Log;
-using Microsoft.Practices.Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Windows;
-using System.Windows.Forms;
-using Extentions = JosephM.Application.ViewModel.Extentions.Extentions;
-using MessageBox = System.Windows.MessageBox;
 using JosephM.Application.ViewModel;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Service;
-using System.Linq;
 using JosephM.Core.Utility;
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 
 #endregion
 
@@ -36,10 +26,10 @@ namespace JosephM.Prism.Infrastructure.Console
         {
         }
 
+
+        private object _lockObject = new object();
         public override void LoadToUi(ViewModelBase viewModel)
         {
-            //todo need to somehow have the progress control log into the console
-
             if(viewModel is ObjectEntryViewModel)
             {
                 var oeVm = (ObjectEntryViewModel)viewModel;
@@ -75,6 +65,42 @@ namespace JosephM.Prism.Infrastructure.Console
                         }
                     }
                 }
+            }
+            if (viewModel is ProgressControlViewModel)
+            {
+                var progressVm = (ProgressControlViewModel)viewModel;
+                var lastPercentProgress = 0;
+                var lastMessage = "";
+                progressVm.PropertyChanged += (s, e) => {
+                    if (e.PropertyName == nameof(ProgressControlViewModel.FractionCompleted))
+                    {
+                        lock (_lockObject)
+                        {
+                            var percentProgress = (progressVm.FractionCompleted / 1) * 100;
+                            if (percentProgress == 0)
+                                lastPercentProgress = 0;
+                            while (lastPercentProgress < percentProgress)
+                            {
+                                lastPercentProgress++;
+                                if (lastPercentProgress % 10 == 0)
+                                    System.Console.WriteLine(lastPercentProgress + "%");
+                                //else
+                                //    System.Console.Write(".");
+                            }
+                        }
+                    }
+                    if (e.PropertyName == nameof(ProgressControlViewModel.Message))
+                    {
+                        lock (_lockObject)
+                        {
+                            if(progressVm.Message != lastMessage)
+                            {
+                                lastMessage = progressVm.Message;
+                                System.Console.WriteLine(lastMessage);
+                            }
+                        }
+                    }
+                };
             }
         }
     }

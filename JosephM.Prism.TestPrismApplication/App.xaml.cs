@@ -1,6 +1,7 @@
 ﻿#region
 
 using JosephM.ObjectEncryption;
+using JosephM.Prism.Infrastructure.Console;
 using JosephM.Prism.Infrastructure.Module.SavedRequests;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.TestModule.ObjectEncrypt;
@@ -38,6 +39,7 @@ namespace JosephM.Prism.TestPrismApplication
             prism.AddModule<TestSettingsModule>();
             prism.AddModule<TestCrudModule>();
             prism.AddModule<SavedRequestModule>();
+            prism.AddModule<ConsoleApplicationModule>();
             prism.Run();
         }
     }

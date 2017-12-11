@@ -95,9 +95,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Console\ConsoleApplication.cs" />
-    <Compile Include="Console\ConsoleDialogController.cs" />
-    <Compile Include="Console\ConsoleApplicationController.cs" />
     <Compile Include="Dialog\SavedRequestDialog.cs" />
     <Compile Include="Dialog\AppSettingDialog.cs" />
     <Compile Include="Module\AboutModule\About.cs" />
@@ -115,6 +112,7 @@
     <Compile Include="Module\Crud\CrudDialog.cs" />
     <Compile Include="Module\Crud\CrudModule.cs" />
     <Compile Include="Module\DialogModule.cs" />
+    <Compile Include="Module\CommandLineArgument.cs" />
     <Compile Include="Module\ICommandLineExecutable.cs" />
     <Compile Include="Module\SavedRequests\SavedRequestModule.cs" />
     <Compile Include="Module\AboutModule\AboutModule.cs" />

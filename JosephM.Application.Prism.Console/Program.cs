@@ -16,12 +16,11 @@ namespace JosephM.Application.Prism.Console
             try
             {
                 var arguments = ConsoleApplication.ParseCommandLineArguments(args);
-                if (!arguments.ContainsKey("SettingsFolderName"))
-                    throw new NullReferenceException(string.Format("The {0} Argument Is Missing. This Is Required For Loading The Settings", "SettingsFolderName"));
+                var applicationName = arguments.ContainsKey("SettingsFolderName") ? arguments["SettingsFolderName"] : "Unknown Console Context";
 
                 //okay need to create app
                 var dependencyResolver = new PrismDependencyContainer(new UnityContainer());
-                var controller = new ConsoleApplicationController(arguments["SettingsFolderName"], dependencyResolver);
+                var controller = new ConsoleApplicationController(applicationName, dependencyResolver);
                 var settingsManager = new PrismSettingsManager(controller);
                 var applicationOptions = new ApplicationOptionsViewModel(controller);
                 var app = new ConsoleApplication(controller, applicationOptions, settingsManager);

@@ -7,7 +7,8 @@ namespace JosephM.Application.Prism.Module
     {
         string CommandName { get; }
         string Description { get; }
-        IDictionary<string, Action<string>> GetArgs();
+        IEnumerable<CommandLineArgument> GetArgs();
         void Command();
+        Type RequestType { get; }
     }
 }

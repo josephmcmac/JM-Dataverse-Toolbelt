@@ -60,6 +60,7 @@ namespace JosephM.Application.Application
             theModule.RegisterTypes();
             theModule.InitialiseModule();
             Modules.Add(moduleType, theModule);
+            moduleController.AddLoadedModule(theModule);
             return theModule;
         }
 

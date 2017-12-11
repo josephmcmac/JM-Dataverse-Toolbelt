@@ -1,6 +1,5 @@
 ﻿using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
 using System;
 using System.Threading;
 
@@ -21,6 +20,11 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
                         new NotSupportedException("The Request Explicitly requested Errors",
                             new Exception("This Is The Inner Expection Text"))));
                 }
+            }
+            for (var i = 0; i < 100; i++)
+            {
+                controller.UpdateProgress(i, 100, "Fake Progress");
+                Thread.Sleep(10);
             }
         }
     }
