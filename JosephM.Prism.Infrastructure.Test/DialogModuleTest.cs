@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
-using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.AppConfig;
-using JosephM.Core.Extentions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Core.Service;
 using JosephM.Core.Test;
-using JosephM.Core.Utility;
-using JosephM.Prism.Infrastructure.Dialog;
 using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Record.Application.Fakes;
 
 namespace JosephM.Prism.Infrastructure.Test

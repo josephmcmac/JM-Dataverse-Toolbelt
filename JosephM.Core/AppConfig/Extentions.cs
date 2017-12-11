@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace JosephM.Core.AppConfig
+﻿namespace JosephM.Core.AppConfig
 {
     public static class Extentions
     {

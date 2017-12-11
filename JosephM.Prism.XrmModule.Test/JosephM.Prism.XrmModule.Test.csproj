@@ -73,9 +73,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="FakeXrmApplicationController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ConsoleApplicationModuleTests.cs" />
     <Compile Include="SavedRequestModuleTests.cs" />
     <Compile Include="XrmLookupServiceTests.cs" />
     <Compile Include="XrmCrudModuleTest.cs" />

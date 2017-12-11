@@ -135,7 +135,13 @@ namespace JosephM.Application.ViewModel.Dialog
                     }
                     catch (Exception ex)
                     {
-                        ProcessError(ex);
+                        //if we have an application which does not spawn async threads
+                        //and a fatal error has been thrown at completion processing
+                        //then allow that error to find its way up the stack
+                        if (DialogCompletionCommit)
+                            throw;
+                        else
+                            ProcessError(ex);
                     }
                 });
         }
@@ -178,7 +184,13 @@ namespace JosephM.Application.ViewModel.Dialog
                     }
                     catch (Exception ex)
                     {
-                        ProcessError(ex);
+                        //if we have an application which does not spawn async threads
+                        //and a fatal error has been thrown at completion processing
+                        //then allow that error to find its way up the stack
+                        if (DialogCompletionCommit)
+                            throw;
+                        else
+                            ProcessError(ex);
                     }
                     LoadingViewModel.IsLoading = false;
                 }

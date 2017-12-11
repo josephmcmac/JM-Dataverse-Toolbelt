@@ -206,6 +206,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JavaScript", "JavaScript", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Prism.Console", "JosephM.Application.Prism.Console\JosephM.Application.Prism.Console.csproj", "{69B9950E-85BE-4AA4-9D8F-FE21639F124F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Prism.Console.Test", "JosephM.Application.Prism.Console.Test\JosephM.Application.Prism.Console.Test.csproj", "{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -833,6 +835,18 @@ Global
 		{69B9950E-85BE-4AA4-9D8F-FE21639F124F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{69B9950E-85BE-4AA4-9D8F-FE21639F124F}.Release|x86.ActiveCfg = Release|Any CPU
 		{69B9950E-85BE-4AA4-9D8F-FE21639F124F}.Release|x86.Build.0 = Release|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Debug|x86.Build.0 = Debug|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Release|x86.ActiveCfg = Release|Any CPU
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -909,9 +923,10 @@ Global
 		{750AC5D1-B85A-4912-8F27-1BC6541F79AA} = {D0951EBD-01E1-465A-8CE4-4026FF36D400}
 		{27A28916-7E62-4060-B79F-EC23944F71F4} = {750AC5D1-B85A-4912-8F27-1BC6541F79AA}
 		{69B9950E-85BE-4AA4-9D8F-FE21639F124F} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
+		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 	EndGlobalSection
 EndGlobal
