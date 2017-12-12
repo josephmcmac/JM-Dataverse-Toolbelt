@@ -14,6 +14,7 @@ using JosephM.Xrm.RecordExtract.RecordExtract;
 using System.Windows;
 using System;
 using JosephM.Core.FieldType;
+using JosephM.Prism.Infrastructure.Console;
 
 namespace JosephM.Xrm.DeveloperTool
 {
@@ -38,6 +39,7 @@ namespace JosephM.Xrm.DeveloperTool
             prism.AddModule<RecordCountsModule>();
             prism.AddModule<XrmCrudModule>();
             prism.AddModule<SavedRequestModule>();
+            prism.AddModule<ConsoleApplicationModule>();
             prism.AddModule<XrmDeveloperToolAboutModule>();
             prism.Run();
         }
