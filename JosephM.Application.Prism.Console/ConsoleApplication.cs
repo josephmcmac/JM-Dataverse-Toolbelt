@@ -35,7 +35,6 @@ namespace JosephM.Prism.Infrastructure.Console
         public void Run(string[] args)
         {
             //need to run as per the arguments or display the console options
-
             if (args == null || !args.Any())
             {
                 ConsoleApplicationController.WriteToConsole("The Valid Commands For This Application Are\n");
@@ -68,7 +67,7 @@ namespace JosephM.Prism.Infrastructure.Console
                         }
                         else
                         {
-
+                            ConsoleApplicationController.WriteToConsole(string.Format("Loading {0} Command", command));
                             var commandArgs = matchingOption.GetArgs();
 
                             foreach (var arg in arguments.Where(a => !StandardCommandArguments.Any(sca => sca.CommandName == a.Key)))
@@ -80,6 +79,7 @@ namespace JosephM.Prism.Infrastructure.Console
                                 }
                                 matchingCommand.First().LoadAction(arg.Value);
                             }
+                            ConsoleApplicationController.WriteToConsole(string.Format("Starting {0} Process", command));
                             matchingOption.Command();
                         }
                     }
@@ -183,6 +183,7 @@ namespace JosephM.Prism.Infrastructure.Console
 
         public void LoadModulesInExcecutionFolder()
         {
+            ConsoleApplicationController.WriteToConsole("Loading Modules");
             var codeBase = Assembly.GetExecutingAssembly().Location;
             var uri = new UriBuilder(codeBase);
             string path = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
