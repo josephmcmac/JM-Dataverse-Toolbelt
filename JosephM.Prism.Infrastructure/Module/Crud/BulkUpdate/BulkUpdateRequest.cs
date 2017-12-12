@@ -1,9 +1,7 @@
-﻿using JosephM.Application.ViewModel.Attributes;
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.IService;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

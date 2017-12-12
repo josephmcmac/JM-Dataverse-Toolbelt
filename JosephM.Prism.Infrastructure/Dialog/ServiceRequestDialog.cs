@@ -1,19 +1,16 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Shared;
-using JosephM.Core.Attributes;
+using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.ObjectMapping;
 using JosephM.Record.IService;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using JosephM.Core.AppConfig;
-using JosephM.ObjectMapping;
-using JosephM.Application.ViewModel.Extentions;
-using System.Reflection;
 
 namespace JosephM.Prism.Infrastructure.Dialog
 {
@@ -45,9 +42,10 @@ namespace JosephM.Prism.Infrastructure.Dialog
 
             Service = service;
             
-            Request = ApplicationController.ResolveType<TRequest>();
             if (request != null)
                 Request = request;
+            else
+                Request = ApplicationController.ResolveType<TRequest>();
 
             ConfigEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose);
             SubDialogs = new DialogViewModel[] { ConfigEntryDialog };
