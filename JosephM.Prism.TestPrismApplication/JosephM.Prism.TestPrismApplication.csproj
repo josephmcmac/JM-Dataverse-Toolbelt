@@ -163,6 +163,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application.Prism.Console\JosephM.Application.Prism.Console.csproj">
+      <Project>{69b9950e-85be-4aa4-9d8f-fe21639f124f}</Project>
+      <Name>JosephM.Application.Prism.Console</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
       <Name>JosephM.Application</Name>

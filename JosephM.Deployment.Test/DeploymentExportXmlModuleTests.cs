@@ -4,6 +4,7 @@ using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.SettingTypes;
+using JosephM.Core.AppConfig;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
@@ -458,6 +459,15 @@ namespace JosephM.Deployment.Test
             //okay lets verify save and load object as well
             //initially the dynamic object property for setting san explicit type
             //did not seralise due to known types in the serialiser
+
+            //lets remove any saved requests as this part relies on it being the only saved one
+            var savedRequests = new SavedSettings()
+            {
+                SavedRequests = new object[0]
+            };
+            var settingsManager = application.Controller.ResolveType<ISettingsManager>();
+            settingsManager.SaveSettingsObject(savedRequests, typeof(ExportXmlRequest));
+
 
             //trigger save request
             var saveRequestButton = entryForm.GetButton("SAVEREQUEST");

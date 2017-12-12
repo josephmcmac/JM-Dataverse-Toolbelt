@@ -19,7 +19,7 @@ namespace JosephM.Application.Application
             Controller.RegisterInfrastructure(applicationOptions, settingsManager);
         }
 
-        private IDictionary<Type, ModuleBase> Modules { get; set; }
+        public IDictionary<Type, ModuleBase> Modules { get; set; }
 
         public T AddModule<T>()
             where T : ModuleBase, new()
@@ -35,7 +35,7 @@ namespace JosephM.Application.Application
             return (T)Modules[typeof (T)];
         }
 
-        private object AddModule(Type moduleType)
+        public object AddModule(Type moduleType)
         {
             if (Modules.ContainsKey(moduleType))
                 return Modules[moduleType];
@@ -60,6 +60,7 @@ namespace JosephM.Application.Application
             theModule.RegisterTypes();
             theModule.InitialiseModule();
             Modules.Add(moduleType, theModule);
+            moduleController.AddLoadedModule(theModule);
             return theModule;
         }
 

@@ -8,7 +8,7 @@ namespace JosephM.Prism.Infrastructure.Module
     /// <summary>
     ///     Base Class For A Module Which Plugs A Settings Type Into The Application
     /// </summary>
-    public class SettingsModule<TSettingsDialog, TSettingsInterface, TSettingsGetSetClass> : DialogModule<TSettingsDialog>
+    public abstract class SettingsModule<TSettingsDialog, TSettingsInterface, TSettingsGetSetClass> : DialogModule<TSettingsDialog>
         where TSettingsDialog : AppSettingsDialog<TSettingsInterface, TSettingsGetSetClass>
         where TSettingsGetSetClass : TSettingsInterface, new()
     {

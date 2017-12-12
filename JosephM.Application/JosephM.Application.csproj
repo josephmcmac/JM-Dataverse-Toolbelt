@@ -60,6 +60,7 @@
     <Compile Include="Options\ApplicationOptions.cs" />
     <Compile Include="Options\ApplicationOptionType.cs" />
     <Compile Include="Application\IApplicationController.cs" />
+    <Compile Include="Options\IApplicationOption.cs" />
     <Compile Include="Options\IApplicationOptions.cs" />
     <Compile Include="Modules\DependantModule.cs" />
     <Compile Include="Modules\ModuleBase.cs" />

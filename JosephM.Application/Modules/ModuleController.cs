@@ -3,6 +3,7 @@
 using JosephM.Application.Application;
 using JosephM.Application.Options;
 using JosephM.Core.AppConfig;
+using System.Collections.Generic;
 
 #endregion
 
@@ -22,6 +23,7 @@ namespace JosephM.Application.Modules
             ApplicationOptions = applicationOptions;
             ApplicationController = applicationController;
             SettingsManager = settingsManager;
+            LoadedModules = new List<ModuleBase>();
         }
 
         public IDependencyResolver Container
@@ -34,5 +36,17 @@ namespace JosephM.Application.Modules
         public ISettingsManager SettingsManager { get; private set; }
 
         public IApplicationController ApplicationController { get; private set; }
+
+        private List<ModuleBase> LoadedModules { get; set; }
+
+        public void AddLoadedModule(ModuleBase module)
+        {
+            LoadedModules.Add(module);
+        }
+
+        public IEnumerable<ModuleBase> GetLoadedModules()
+        {
+            return LoadedModules;
+        }
     }
 }

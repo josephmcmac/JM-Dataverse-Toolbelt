@@ -20,6 +20,7 @@ namespace JosephM.Application.ViewModel.Fakes
     /// </summary>
     public class FakeApplicationController : ApplicationControllerBase
     {
+        public override bool RunThreadsAsynch => false;
         public FakeApplicationController(IDependencyResolver dependencyResolver)
             : base("Test Script Application", dependencyResolver)
         {
@@ -83,16 +84,6 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public void OpenRecord(string entityType, string fieldMatch, string fieldValue)
         {
-        }
-
-        public override void DoOnMainThread(Action action)
-        {
-            action();
-        }
-
-        public override void DoOnAsyncThread(Action action)
-        {
-            action();
         }
 
         public override void ThrowException(Exception ex)

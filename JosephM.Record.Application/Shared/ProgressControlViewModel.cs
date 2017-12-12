@@ -44,7 +44,7 @@ namespace JosephM.Application.ViewModel.Shared
             set
             {
                 _fractionCompleted = value;
-                OnPropertyChanged("FractionCompleted");
+                OnPropertyChanged(nameof(FractionCompleted));
             }
         }
 
@@ -54,7 +54,7 @@ namespace JosephM.Application.ViewModel.Shared
             set
             {
                 _message = value;
-                OnPropertyChanged("Message");
+                OnPropertyChanged(nameof(Message));
                 if (!UiActive)
                     UiActive = true;
             }
@@ -73,7 +73,7 @@ namespace JosephM.Application.ViewModel.Shared
             set
             {
                 _uiActive = value;
-                OnPropertyChanged("UiActive");
+                OnPropertyChanged(nameof(UiActive));
             }
         }
     }

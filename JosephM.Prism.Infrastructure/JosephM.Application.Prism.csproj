@@ -112,6 +112,8 @@
     <Compile Include="Module\Crud\CrudDialog.cs" />
     <Compile Include="Module\Crud\CrudModule.cs" />
     <Compile Include="Module\DialogModule.cs" />
+    <Compile Include="Module\CommandLineArgument.cs" />
+    <Compile Include="Module\ICommandLineExecutable.cs" />
     <Compile Include="Module\SavedRequests\SavedRequestModule.cs" />
     <Compile Include="Module\AboutModule\AboutModule.cs" />
     <Compile Include="Module\SettingsModule.cs" />
