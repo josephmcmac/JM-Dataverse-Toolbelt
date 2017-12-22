@@ -38,7 +38,7 @@ namespace JosephM.Prism.Infrastructure.Console
             if (args == null || !args.Any())
             {
                 ConsoleApplicationController.WriteToConsole("The Valid Commands For This Application Are\n");
-                ConsoleApplicationController.UserMessage(GetCommandLineSwitchString());
+                ConsoleApplicationController.WriteToConsole(GetCommandLineSwitchString());
             }
             else
             {
@@ -46,7 +46,7 @@ namespace JosephM.Prism.Infrastructure.Console
                 if (command == "?" || command.ToLower() == "help")
                 {
                     ConsoleApplicationController.WriteToConsole("The Valid Commands For This Application Are\n");
-                    ConsoleApplicationController.UserMessage(GetCommandLineSwitchString());
+                    ConsoleApplicationController.WriteToConsole(GetCommandLineSwitchString());
                 }
                 else
                 {
@@ -54,7 +54,7 @@ namespace JosephM.Prism.Infrastructure.Console
                     if (!matchingOptions.Any())
                     {
                         ConsoleApplicationController.WriteToConsole(string.Format("No Matching Command Found For '{0}'\n", command));
-                        ConsoleApplicationController.UserMessage(GetCommandLineSwitchString());
+                        ConsoleApplicationController.WriteToConsole(GetCommandLineSwitchString());
                     }
                     else
                     {
@@ -181,7 +181,7 @@ namespace JosephM.Prism.Infrastructure.Console
             }
         }
 
-        public void LoadModulesInExcecutionFolder()
+        public void LoadModulesInExecutionFolder()
         {
             ConsoleApplicationController.WriteToConsole("Loading Modules");
             var codeBase = Assembly.GetExecutingAssembly().Location;
@@ -199,6 +199,10 @@ namespace JosephM.Prism.Infrastructure.Console
                     }
                 }
             }
+
+            var commands = GetCommandOptions();
+            if (!commands.Any())
+                throw new NullReferenceException(string.Format("No {0} Implementing {1} Was Found In The Execution Folder '{2}'", nameof(ModuleBase), nameof(ICommandLineExecutable), codeBase));
         }
     }
 }

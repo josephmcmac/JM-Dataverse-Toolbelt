@@ -9,7 +9,6 @@ using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 

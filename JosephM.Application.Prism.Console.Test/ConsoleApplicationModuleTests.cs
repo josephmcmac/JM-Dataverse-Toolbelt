@@ -102,7 +102,7 @@ namespace JosephM.Prism.XrmModule.Test
             var applicationOptions = new ApplicationOptionsViewModel(controller);
             var app = new ConsoleApplication(controller, applicationOptions, settingsManager);
             //load modules in folder path
-            app.LoadModulesInExcecutionFolder();
+            app.LoadModulesInExecutionFolder();
             //run app
             app.Run(args);
         }
