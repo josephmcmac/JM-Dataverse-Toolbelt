@@ -5,7 +5,6 @@ using JosephM.Prism.Infrastructure.Console;
 using JosephM.Record.Application.Fakes;
 using Microsoft.Practices.Unity;
 using System;
-using System.Threading;
 
 namespace JosephM.Application.Prism.Console
 {
@@ -25,17 +24,15 @@ namespace JosephM.Application.Prism.Console
                 var applicationOptions = new ApplicationOptionsViewModel(controller);
                 var app = new ConsoleApplication(controller, applicationOptions, settingsManager);
                 //load modules in folder path
-                app.LoadModulesInExcecutionFolder();
+                app.LoadModulesInExecutionFolder();
                 //run app
                 app.Run(args);
-                System.Console.WriteLine("Process Completed. Finishing In 10 Seconds");
-                Thread.Sleep(10000);
             }
             catch (Exception ex)
             {
                 System.Console.WriteLine(ex.DisplayString());
-                System.Console.WriteLine("Press Any Key To Close");
-                System.Console.ReadKey();
+                System.Console.WriteLine("Fatal Error");
+                throw;
             }
         }
     }

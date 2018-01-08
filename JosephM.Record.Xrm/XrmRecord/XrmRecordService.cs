@@ -309,8 +309,9 @@ namespace JosephM.Record.Xrm.XrmRecord
             if (!iRecord.Id.IsNullOrWhiteSpace())
                 entity.Id = new Guid(iRecord.Id);
 
-            //map all the fields
-            foreach (var field in iRecord.GetFieldsInEntity())
+            //map only the fields with metadata - yomi fields through an error at pone point as there was no metadata returned
+            var fieldsWithMetadata = XrmService.GetFields(iRecord.Type);
+            foreach (var field in iRecord.GetFieldsInEntity().Where(s => fieldsWithMetadata.Contains(s)))
             {
                 var originalValue = ToEntityValue(iRecord.GetField(field));
                 if (originalValue is string && !string.IsNullOrWhiteSpace(originalValue.ToString()) && _xrmService.GetFieldType(field, iRecord.Type) == AttributeTypeCode.Uniqueidentifier)

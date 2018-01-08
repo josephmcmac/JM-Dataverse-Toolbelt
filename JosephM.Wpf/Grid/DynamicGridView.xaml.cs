@@ -296,9 +296,10 @@ namespace JosephM.Wpf.Grid
                                 DataGridLengthUnitType.Pixel);
                             dataGridField.IsReadOnly = gridSectionViewModel.IsReadOnly;
                             var description = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Description;
-                            var style = new Style(typeof(DataGridColumnHeader));
-                            style.Setters.Add(new Setter(ToolTipService.ToolTipProperty, description));
-                            dataGridField.HeaderStyle = style;
+                            //todo this removes the standard xaml setters including the click to sort
+                            //var style = new Style(typeof(DataGridColumnHeader));
+                            //style.Setters.Add(new Setter(ToolTipService.ToolTipProperty, description));
+                            //dataGridField.HeaderStyle = style;
                             dynamicDataGrid.Columns.Add(dataGridField);
                         }
                         var dataGridBinding = new Binding

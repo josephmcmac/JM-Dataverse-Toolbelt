@@ -5,10 +5,10 @@ using JosephM.Application.ViewModel;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
@@ -24,8 +24,10 @@ namespace JosephM.Prism.Infrastructure.Console
         public ConsoleDialogController(IApplicationController applicationController)
             : base(applicationController)
         {
+            UserInterface = new ConsoleUserInterface(true);
         }
 
+        public IUserInterface UserInterface { get; set; }
 
         private object _lockObject = new object();
         public override void LoadToUi(ViewModelBase viewModel)
@@ -33,12 +35,15 @@ namespace JosephM.Prism.Infrastructure.Console
             if(viewModel is ObjectEntryViewModel)
             {
                 var oeVm = (ObjectEntryViewModel)viewModel;
+                UserInterface.LogMessage(string.Format("Loading {0}", oeVm.RecordType));
                 oeVm.LoadFormSections();
+                UserInterface.LogMessage(string.Format("Validating {0}", oeVm.RecordType));
                 var validate = oeVm.Validate();
                 if(!validate)
                 {
                     throw new Exception(string.Format("The {0} Object Could Not Be Validated For Processing: {1}", oeVm.GetObject().GetType().Name, oeVm.GetValidationSummary()));
                 }
+                UserInterface.LogMessage("Validation Complete");
                 oeVm.OnSave();
             }
 
@@ -48,6 +53,7 @@ namespace JosephM.Prism.Infrastructure.Console
                 var completionObject = completion.CompletionDetails?.GetObject();
                 if(completionObject is IProcessCompletion)
                 {
+                    UserInterface.LogMessage("Processing Completion");
                     var processCompletion = (IProcessCompletion)completionObject;
                     if (!processCompletion.Success)
                     {
@@ -84,8 +90,6 @@ namespace JosephM.Prism.Infrastructure.Console
                                 lastPercentProgress++;
                                 if (lastPercentProgress % 10 == 0)
                                     System.Console.WriteLine(lastPercentProgress + "%");
-                                //else
-                                //    System.Console.Write(".");
                             }
                         }
                     }

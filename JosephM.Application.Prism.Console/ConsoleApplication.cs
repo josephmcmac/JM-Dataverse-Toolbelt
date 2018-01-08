@@ -35,11 +35,10 @@ namespace JosephM.Prism.Infrastructure.Console
         public void Run(string[] args)
         {
             //need to run as per the arguments or display the console options
-
             if (args == null || !args.Any())
             {
                 ConsoleApplicationController.WriteToConsole("The Valid Commands For This Application Are\n");
-                ConsoleApplicationController.UserMessage(GetCommandLineSwitchString());
+                ConsoleApplicationController.WriteToConsole(GetCommandLineSwitchString());
             }
             else
             {
@@ -47,7 +46,7 @@ namespace JosephM.Prism.Infrastructure.Console
                 if (command == "?" || command.ToLower() == "help")
                 {
                     ConsoleApplicationController.WriteToConsole("The Valid Commands For This Application Are\n");
-                    ConsoleApplicationController.UserMessage(GetCommandLineSwitchString());
+                    ConsoleApplicationController.WriteToConsole(GetCommandLineSwitchString());
                 }
                 else
                 {
@@ -55,7 +54,7 @@ namespace JosephM.Prism.Infrastructure.Console
                     if (!matchingOptions.Any())
                     {
                         ConsoleApplicationController.WriteToConsole(string.Format("No Matching Command Found For '{0}'\n", command));
-                        ConsoleApplicationController.UserMessage(GetCommandLineSwitchString());
+                        ConsoleApplicationController.WriteToConsole(GetCommandLineSwitchString());
                     }
                     else
                     {
@@ -68,7 +67,7 @@ namespace JosephM.Prism.Infrastructure.Console
                         }
                         else
                         {
-
+                            ConsoleApplicationController.WriteToConsole(string.Format("Loading {0} Command", command));
                             var commandArgs = matchingOption.GetArgs();
 
                             foreach (var arg in arguments.Where(a => !StandardCommandArguments.Any(sca => sca.CommandName == a.Key)))
@@ -80,6 +79,7 @@ namespace JosephM.Prism.Infrastructure.Console
                                 }
                                 matchingCommand.First().LoadAction(arg.Value);
                             }
+                            ConsoleApplicationController.WriteToConsole(string.Format("Starting {0} Process", command));
                             matchingOption.Command();
                         }
                     }
@@ -181,8 +181,9 @@ namespace JosephM.Prism.Infrastructure.Console
             }
         }
 
-        public void LoadModulesInExcecutionFolder()
+        public void LoadModulesInExecutionFolder()
         {
+            ConsoleApplicationController.WriteToConsole("Loading Modules");
             var codeBase = Assembly.GetExecutingAssembly().Location;
             var uri = new UriBuilder(codeBase);
             string path = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
@@ -198,6 +199,10 @@ namespace JosephM.Prism.Infrastructure.Console
                     }
                 }
             }
+
+            var commands = GetCommandOptions();
+            if (!commands.Any())
+                throw new NullReferenceException(string.Format("No {0} Implementing {1} Was Found In The Execution Folder '{2}'", nameof(ModuleBase), nameof(ICommandLineExecutable), codeBase));
         }
     }
 }
