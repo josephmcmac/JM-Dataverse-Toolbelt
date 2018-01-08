@@ -31,7 +31,7 @@ namespace JosephM.Application.ViewModel.Attributes
 
             var alreadySelected = gridField.DynamicGridViewModel != null
                 ? gridField.GridRecords.Select(g => g.GetRecordFieldFieldViewModel(targetPropertyInfo.Name)?.Value.Key).ToArray()
-                : gridField.Value == null ? new string[0] : gridField.Value.AsQueryable().Cast<RecordField>().Select(f => f.Key).ToArray();
+                : gridField.Value == null ? new string[0] : gridField.Value.Cast<object>().Select(o => o.GetPropertyValue(targetPropertyInfo.Name)).Cast<RecordField>().Select(f => f.Key).ToArray();
 
             var recordType = recordForm.FormService.GetDependantValue(subGridReference + "." + targetPropertyInfo.Name, GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName, recordForm);
             var lookupService = GetLookupService(recordForm, subGridReference);
