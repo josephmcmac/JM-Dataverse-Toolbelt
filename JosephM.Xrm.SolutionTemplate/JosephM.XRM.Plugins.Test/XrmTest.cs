@@ -244,6 +244,11 @@ namespace $safeprojectname$
             get { return XrmService.WhoAmI(); }
         }
 
+        public Guid CurrentUserIdAdmin
+        {
+            get { return XrmServiceAdmin.WhoAmI(); }
+        }
+
         public void DeleteMyToday()
         {
             foreach (var entity in EntitiesToDelete)
@@ -252,21 +257,27 @@ namespace $safeprojectname$
 
         public void DeleteMyToday(string entityType)
         {
-            var query = XrmService.BuildQuery(entityType, new string[] { },
-                new[]
-                {
-                    new ConditionExpression("createdby", ConditionOperator.Equal, CurrentUserId),
-                    new ConditionExpression("createdon", ConditionOperator.Today)
-                }, null);
-            var entities = XrmServiceAdmin.RetrieveAll(query);
-            foreach (var entity in entities)
+            var userIds = new List<Guid>() { CurrentUserId };
+            if (CurrentUserId != CurrentUserIdAdmin)
+                userIds.Add(CurrentUserIdAdmin);
+            foreach (var userId in userIds)
             {
-                try
+                var query = XrmService.BuildQuery(entityType, new string[] { },
+                    new[]
+                    {
+                        new ConditionExpression("createdby", ConditionOperator.Equal, userId),
+                        new ConditionExpression("createdon", ConditionOperator.Today)
+                    }, null);
+                var entities = XrmServiceAdmin.RetrieveAll(query);
+                foreach (var entity in entities)
                 {
-                    XrmServiceAdmin.Delete(entity);
-                }
-                catch (Exception)
-                {
+                    try
+                    {
+                        XrmServiceAdmin.Delete(entity);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
             }
         }
