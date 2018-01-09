@@ -35,6 +35,8 @@ namespace JosephM.Application.ViewModel.Grid
         {
             ApplicationController = applicationController;
             LoadingViewModel = new LoadingViewModel(applicationController);
+            //this one a bit of a hack as loading/display controlled in code behind so set the vm as always loading
+            SortLoadingViewModel = new LoadingViewModel(applicationController) { LoadingMessage = "Please Wait While Reloading Sorted Items", IsLoading = true };
             OnDoubleClick = () => { };
             OnClick = () => { };
             OnKeyDown = () => { };
@@ -70,6 +72,7 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
         public LoadingViewModel LoadingViewModel { get; set; }
+        public LoadingViewModel SortLoadingViewModel { get; set; }
 
         public void RefreshGridButtons()
         {
@@ -354,14 +357,10 @@ namespace JosephM.Application.ViewModel.Grid
                     }
                     else
                     {
-                        //due to the heavy xaml structure for the view model views
-                        //they sometimes take an eternity to sort
-                        //especially if lookup, and multiselect fields and heap of rows
-                        //so do this hack to display loading while it sorts
-                        //the row load event in the view will decrease the sort count until loaded
+                        //used in code behind when displaying loading
                         SortCount = newList.Count;
-                        LoadingViewModel.IsLoading = true;
                         Thread.Sleep(50);
+
                         ApplicationController.DoOnMainThread(() =>
                         {
                             GridRecords.Clear();
