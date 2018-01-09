@@ -81,9 +81,21 @@
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Prism</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+      <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
+      <Name>JosephM.Prism.XrmModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
+      <Name>JosephM.Xrm</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

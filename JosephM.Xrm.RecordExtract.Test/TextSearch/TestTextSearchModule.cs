@@ -1,6 +1,5 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.Infrastructure.Test;
 using JosephM.Xrm.RecordExtract.Test.RecordExtract;
 using JosephM.Xrm.RecordExtract.TextSearch;

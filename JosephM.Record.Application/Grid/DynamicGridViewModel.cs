@@ -552,7 +552,7 @@ namespace JosephM.Application.ViewModel.Grid
                         var fileName = Path.GetFileName(newFileName);
                         var fields = FieldMetadata.Select(rf => rf.FieldName);
                         CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records, fields, (f) => RecordService.GetFieldLabel(f, RecordType), (r, f) => { return RecordService.GetFieldAsDisplayString((IRecord)r, f); });
-                        ApplicationController.StartProcess(folder);
+                        ApplicationController.StartProcess("explorer.exe", "/select, \"" + Path.Combine(folder, fileName) + "\"");
                     }
                 }
                 catch (Exception ex)

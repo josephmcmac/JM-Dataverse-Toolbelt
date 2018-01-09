@@ -1,15 +1,11 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
-using JosephM.Application.ViewModel.Fakes;
-using JosephM.Application.ViewModel.RecordEntry;
-using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
 using JosephM.Prism.Infrastructure.Test;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.XrmConnection;
-using JosephM.Record.IService;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Xrm.Sdk.Client;
@@ -52,7 +48,8 @@ namespace JosephM.Prism.XrmModule.Test
                 Domain = xrmConfig.Domain,
                 OrganizationUniqueName = OverrideOrganisation ?? xrmConfig.OrganizationUniqueName,
                 Password = xrmConfig.Password,
-                Username = xrmConfig.Username
+                Username = xrmConfig.Username,
+                Name = "TESTSCRIPTCONNECTION"
             };
             return savedConfig;
         }
@@ -67,7 +64,8 @@ namespace JosephM.Prism.XrmModule.Test
                 Domain = saved.Domain,
                 OrganizationUniqueName = OverrideOrganisation ?? saved.OrganizationUniqueName,
                 Password = saved.Password,
-                Username = saved.Username
+                Username = saved.Username,
+                Name = "TESTSCRIPTCONNECTION"
             };
         }
     }

@@ -1,20 +1,21 @@
 ﻿#region
 
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.CustomisationImporter.Prism;
 using JosephM.CustomisationImporter.Service;
 using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
+using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Xrm.Schema;
-using Microsoft.Xrm.Sdk;
-using JosephM.Xrm;
-using JosephM.Record.IService;
 
 #endregion
 
