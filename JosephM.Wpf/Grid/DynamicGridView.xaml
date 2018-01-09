@@ -48,48 +48,50 @@
                     Text="{Binding ErrorMessage}"
                      Style="{StaticResource ValidationMessage}"  />
         </Grid>
-        <Grid Grid.Row="3"  Visibility="{Binding GridLoaded, Converter={StaticResource BoolToVis}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto"  />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Visibility="{Binding CanAddRow, Converter={StaticResource BoolToVis}}">
-                <WrapPanel Orientation="Horizontal">
-                    <Button DataContext="{Binding Path=AddRowButton}"
-                        Style="{StaticResource AddRowButton}"
-                            Command="{Binding Command}" ToolTip="Add New" />
-                    <Grid Grid.Row="0" Visibility="{Binding CanAddMultipleRow, Converter={StaticResource BoolToVis}}">
-                        <Button DataContext="{Binding Path=AddMultipleRowButton}" 
-                        Style="{StaticResource AddMultipleRowButton}"
-                            Command="{Binding Command}" ToolTip="Add Multiple" />
-                    </Grid>
-                </WrapPanel>
-            </Grid>
-            <Grid Grid.Row="1" >
-                <DataGrid MaxHeight="{Binding MaxHeight, ElementName=tabBorder}"
+        <Grid Grid.Row="3"   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenNotCollapsedConverter}, Mode=OneWay}" >
+            <Grid  Visibility="{Binding GridLoaded, Converter={StaticResource BoolToVis}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"  />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Visibility="{Binding CanAddRow, Converter={StaticResource BoolToVis}}">
+                    <WrapPanel Orientation="Horizontal">
+                        <Button DataContext="{Binding Path=AddRowButton}"
+                            Style="{StaticResource AddRowButton}"
+                                Command="{Binding Command}" ToolTip="Add New" />
+                        <Grid Grid.Row="0" Visibility="{Binding CanAddMultipleRow, Converter={StaticResource BoolToVis}}">
+                            <Button DataContext="{Binding Path=AddMultipleRowButton}" 
+                            Style="{StaticResource AddMultipleRowButton}"
+                                Command="{Binding Command}" ToolTip="Add Multiple" />
+                        </Grid>
+                    </WrapPanel>
+                </Grid>
+                <Grid Grid.Row="1" >
+                    <DataGrid MaxHeight="{Binding MaxHeight, ElementName=tabBorder}"
             
-                controlExtentions:FocusExtension.IsFocused="{Binding IsFocused, Mode=TwoWay}"
-                CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"
-                CanUserAddRows="True" SelectionChanged="DataGrid_SelectionChanged" SelectionMode="{Binding MultiSelect, Converter={StaticResource BoolToMulti}}"
-                >
-                    <DataGrid.ColumnHeaderStyle>
-                        <Style TargetType="DataGridColumnHeader">
-                            <EventSetter Event="Click" Handler="columnHeader_Click" />
-                        </Style>
-                    </DataGrid.ColumnHeaderStyle>
-                </DataGrid>
-            </Grid>
-            <Grid  Grid.Row="2" Visibility="{Binding HasPaging, Converter={StaticResource BoolToVis}}">
-                <WrapPanel Orientation="Horizontal">
-                    <Grid Visibility="{Binding IsNotFirstPage, Converter={StaticResource BoolToVis}}" >
-                        <Button DataContext="{Binding PreviousPageButton}" Style="{StaticResource PreviousButton}" Command="{Binding Command}" />
-                    </Grid>
-                    <TextBlock Name="PageDescriptionTextBlock" Text="{Binding PageDescription}"></TextBlock>
-                    <Grid Visibility="{Binding HasMoreRows, Converter={StaticResource BoolToVis}}" >
-                        <Button DataContext="{Binding NextPageButton}" Style="{StaticResource NextButton}" Command="{Binding Command}" />
-                    </Grid>
-                </WrapPanel>
+                    controlExtentions:FocusExtension.IsFocused="{Binding IsFocused, Mode=TwoWay}"
+                    CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"
+                    CanUserAddRows="True" SelectionChanged="DataGrid_SelectionChanged" SelectionMode="{Binding MultiSelect, Converter={StaticResource BoolToMulti}}"
+                    >
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <EventSetter Event="Click" Handler="columnHeader_Click" />
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                    </DataGrid>
+                </Grid>
+                <Grid  Grid.Row="2" Visibility="{Binding HasPaging, Converter={StaticResource BoolToVis}}">
+                    <WrapPanel Orientation="Horizontal">
+                        <Grid Visibility="{Binding IsNotFirstPage, Converter={StaticResource BoolToVis}}" >
+                            <Button DataContext="{Binding PreviousPageButton}" Style="{StaticResource PreviousButton}" Command="{Binding Command}" />
+                        </Grid>
+                        <TextBlock Name="PageDescriptionTextBlock" Text="{Binding PageDescription}"></TextBlock>
+                        <Grid Visibility="{Binding HasMoreRows, Converter={StaticResource BoolToVis}}" >
+                            <Button DataContext="{Binding NextPageButton}" Style="{StaticResource NextButton}" Command="{Binding Command}" />
+                        </Grid>
+                    </WrapPanel>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

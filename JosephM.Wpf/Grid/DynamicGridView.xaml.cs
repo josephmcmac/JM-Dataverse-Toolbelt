@@ -72,6 +72,8 @@ namespace JosephM.Wpf.Grid
 
         private void LoadingRow(object sender, DataGridRowEventArgs e)
         {
+            if (DynamicGridViewModel != null && DynamicGridViewModel.SortCount > 0)
+                DynamicGridViewModel.SortCount--;
         }
 
         protected void columnHeader_Click(object sender, RoutedEventArgs e)

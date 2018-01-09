@@ -163,6 +163,7 @@
     </Compile>
     <Compile Include="Controls\DecimalTextBox.cs" />
     <Compile Include="Converters\BooleanToMultiSelectConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityHiddenNotCollapsedConverter.cs" />
     <Compile Include="Converters\BooleanToZeroOrStarConverter.cs" />
     <Compile Include="Converters\BooleanToStarOrZeroConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />

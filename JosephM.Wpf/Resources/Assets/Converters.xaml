@@ -6,6 +6,7 @@
     <converters:BooleanToFontWeightConverter x:Key="BooleanToFontWeightConverter" />
     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
+    <converters:BooleanToVisibilityHiddenNotCollapsedConverter x:Key="BooleanToVisibilityHiddenNotCollapsedConverter" />
     <converters:BooleanToStarOrZeroConverter x:Key="BooleanToStarOrZeroConverter" />
     <converters:BooleanToZeroOrStarConverter x:Key="BooleanToZeroOrStarConverter" />
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
