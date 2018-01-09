@@ -1,11 +1,14 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Core.AppConfig;
+using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Prism.Infrastructure.Console;
 using JosephM.Prism.Infrastructure.Test;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Test;
+using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Application.Fakes;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,14 +18,14 @@ using System.Linq;
 namespace JosephM.Application.Prism.Console.Test
 {
     [TestClass]
-    public class ConsoleApplicationModuleTests : ModuleTest
+    public class ConsoleApplicationModuleWithXrmConnectionTests : XrmModuleTest
     {
         /// <summary>
-        /// Scripts through generation of a .bat for executing a dialog in the command line
-        /// Then uses that .bat contents to run the console application
+        /// Variation of ConsoleApplicationModuleTests where the module's dialog uses the active xrm connection in it's service constructor
+        /// and therefore adds it to the command line arguments for loading as the active connection in the console
         /// </summary>
         [TestMethod]
-        public void ConsoleApplicationModuleGenerateBatAndExecuteTest()
+        public void ConsoleApplicationModuleWithXrmConnectionGenerateBatAndExecuteTest()
         {
             //this is done in the load.edit saved request form
             //a button is added the the saved request grid whiuch generates the .bat
@@ -35,13 +38,13 @@ namespace JosephM.Application.Prism.Console.Test
             //set to no previously saved ones
             var savedRequests = new SavedSettings();
             var settingsManager = testApplication.Controller.ResolveType<ISettingsManager>();
-            settingsManager.SaveSettingsObject(savedRequests, typeof(TestSavedRequestDialogRequest));
+            settingsManager.SaveSettingsObject(savedRequests, typeof(TestSavedRequestWithXrmConnectionDialogRequest));
 
             //navigate to the request and populate the string field
-            var entryForm = testApplication.NavigateToDialogModuleEntryForm<TestSavedRequestModule, TestSavedRequestDialog>();
-            var request = new TestSavedRequestDialogRequest()
+            var entryForm = testApplication.NavigateToDialogModuleEntryForm<TestSavedRequestWithXrmConnectionModule, TestSavedRequestWithXrmConnectionDialog>();
+            var request = new TestSavedRequestWithXrmConnectionDialogRequest()
             {
-                SomeArbitraryString = nameof(TestSavedRequestDialogRequest.SomeArbitraryString)
+                SomeArbitraryString = nameof(TestSavedRequestWithXrmConnectionDialogRequest.SomeArbitraryString)
             };
             testApplication.EnterObject(request, entryForm);
 
@@ -61,7 +64,7 @@ namespace JosephM.Application.Prism.Console.Test
 
             //reopen app/dialog
             testApplication = CreateThisApp();
-            entryForm = testApplication.NavigateToDialogModuleEntryForm<TestSavedRequestModule, TestSavedRequestDialog>();
+            entryForm = testApplication.NavigateToDialogModuleEntryForm<TestSavedRequestWithXrmConnectionModule, TestSavedRequestWithXrmConnectionDialog>();
 
             //invoke load request dialog
             var loadRequestButton = entryForm.GetButton("LOADREQUEST");
@@ -97,13 +100,35 @@ namespace JosephM.Application.Prism.Console.Test
             var app = new ConsoleApplication(controller, applicationOptions, settingsManager);
             //load modules in folder path
             app.LoadModulesInExecutionFolder();
+
+            //for this we will register saved connections in the console
+            //in reality they would have been created on disk by the app and loaded by the module\
+
+            //this was just debugging an invalid connection
+            //var c1 = GetXrmRecordConfiguration();
+            //var c2 = GetSavedXrmRecordConfiguration();
+            //c1.Password = new Password("Nope", false, true);
+            //c2.Password = new Password("Nope", false, true);
+            //XrmConnectionModule.RefreshXrmServices(c1, app.Controller);
+            //app.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections
+            //{
+            //    Connections = new[] { c2 }
+            //});
+
+            XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), app.Controller);
+            app.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections
+            {
+                Connections = new[] { GetSavedXrmRecordConfiguration() }
+            });
+
             //run app
             app.Run(args);
         }
 
+
         private TestApplication CreateThisApp()
         {
-            var testApplication = CreateAndLoadTestApplication<TestSavedRequestModule>();
+            var testApplication = CreateAndLoadTestApplication<TestSavedRequestWithXrmConnectionModule>();
             testApplication.AddModule<ConsoleApplicationModule>();
             return testApplication;
         }

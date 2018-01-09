@@ -1,10 +1,13 @@
-﻿using JosephM.Application.Modules;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Modules;
 using JosephM.Application.Prism.Module;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Prism.Infrastructure.Module.SavedRequests;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Record.Xrm.XrmRecord;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -70,12 +73,26 @@ namespace JosephM.Prism.Infrastructure.Console
                     .Cast<ICommandLineExecutable>()
                     .ToArray();
 
-                if(!matchingModules.Any())
+                if (!matchingModules.Any())
                     throw new NullReferenceException(string.Format("Could Not Find {0} Implementing {1} With {2} {3}", typeof(ModuleBase).Name, typeof(ICommandLineExecutable).Name, nameof(ICommandLineExecutable.RequestType), grid.RecordType));
                 if (matchingModules.Count() > 1)
                     throw new NullReferenceException(string.Format("Error Multiple {0} Found Implementing {1} With {2} {3}", typeof(ModuleBase).Name, typeof(ICommandLineExecutable).Name, nameof(ICommandLineExecutable.RequestType), grid.RecordType));
 
                 var executableModule = matchingModules.First();
+
+                //okay so since some of the dialogs use the active xrm connection
+                //then we should use that specific connection in the generated bat
+                if(RequiresActiveConnection(executableModule.GetType()))
+                {
+                    var savedConnection = Controller.Container.ResolveType(typeof(IXrmRecordConfiguration)) as XrmRecordConfiguration;
+                    if (savedConnection == null)
+                        throw new NullReferenceException("The Active Connection Must Be A Saved Connection");
+
+                    arguments.Add("ActiveXrmConnection", savedConnection.Name);
+                }
+
+                //var blah = module.BaseType.GenericTypeArguments[1].GetConstructors().First().GetParameters().Any(p => p.ParameterType == typeof(XrmRecordService));
+
 
                 var commandLine = string.Format("\"{0}\" \"{1}\" {2}", executableConsoleApp, executableModule.CommandName, string.Join(" ", arguments.Select(kv => string.Format("-\"{0}\" \"{1}\"", kv.Key, kv.Value))));
 
@@ -86,8 +103,48 @@ namespace JosephM.Prism.Infrastructure.Console
                     var folder = Path.GetDirectoryName(newFileName);
                     var fileName = Path.GetFileName(newFileName);
                     FileUtility.WriteToFile(folder, fileName, commandLine);
+                    ApplicationController.StartProcess("explorer.exe", "/select, \"" + Path.Combine(folder, fileName) + "\"");
                 }
             }
+        }
+
+
+        private static bool RequiresActiveConnection(Type moduleType)
+        {
+            //okay just a hack to determine if the module uses the active connection
+            //basically get the service which the module loads
+            //check if its constructor takes a XrmRecordService argument
+            //if it does then we will add it to the command line and load it when the console application runs
+            while (moduleType != null)
+            {
+                var genericTypeArguments = moduleType.GenericTypeArguments;
+                foreach (var item in moduleType.GenericTypeArguments)
+                {
+                    if (IsSubclassOfRawGeneric(typeof(ServiceBase<,,>), item))
+                    {
+                        if (item.GetConstructors().First().GetParameters().Any(p => p.ParameterType == typeof(XrmRecordService)))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                moduleType = moduleType.BaseType;
+            }
+            return false;
+        }
+
+        static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
+        {
+            while (toCheck != null && toCheck != typeof(object))
+            {
+                var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+                if (generic == cur)
+                {
+                    return true;
+                }
+                toCheck = toCheck.BaseType;
+            }
+            return false;
         }
     }
 }

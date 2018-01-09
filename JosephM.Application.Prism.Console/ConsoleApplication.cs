@@ -6,6 +6,9 @@ using JosephM.Application.Options;
 using JosephM.Application.Prism.Module;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.Record.Xrm.XrmRecord;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -79,11 +82,53 @@ namespace JosephM.Prism.Infrastructure.Console
                                 }
                                 matchingCommand.First().LoadAction(arg.Value);
                             }
+                            //this needs to run after others which load the log path
+                            LoadActiveXrmConnection(arguments);
+
                             ConsoleApplicationController.WriteToConsole(string.Format("Starting {0} Process", command));
                             matchingOption.Command();
                         }
                     }
                 }
+            }
+        }
+
+        private void LoadActiveXrmConnection(Dictionary<string, string> arguments)
+        {
+            //if we have an active connection in the command line then we need to load it
+            if (arguments.ContainsKey("ActiveXrmConnection"))
+            {
+                var savedConnection = arguments["ActiveXrmConnection"];
+                if (string.IsNullOrWhiteSpace(savedConnection))
+                    throw new NullReferenceException("Command Argument ActiveXrmConnection Is Empty");
+
+                ConsoleApplicationController.WriteToConsole($"Loading ActiveXrmConnection: '{savedConnection}'");
+                //var settingsManager = Controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
+                //if (settingsManager == null)
+                //    throw new NullReferenceException(nameof(settingsManager));
+
+                //var savedConnections = settingsManager
+                //    .Resolve<SavedSettings>(typeof(IXrmRecordConfiguration))
+                //    .SavedRequests
+                //    .Cast<XrmRecordConfiguration>()
+                //    .ToArray();
+                var savedConnections = Controller.ResolveType(typeof(ISavedXrmConnections)) as ISavedXrmConnections;
+                if (savedConnections == null)
+                    throw new NullReferenceException(nameof(savedConnections));
+
+                var matchingConnections = savedConnections
+                    .Connections
+                    .Where(c => c.Name == savedConnection)
+                    .ToArray();
+                if (!matchingConnections.Any())
+                    throw new NullReferenceException("No saved Connection Found With Name Of " + savedConnection);
+
+                var setConnectionActive = matchingConnections.First();
+                var validate = setConnectionActive.Validate();
+                if (!validate.IsValid)
+                    throw new Exception($"Error Loading ActiveXrmConnection '{savedConnection}': {validate.GetErrorString()}");
+
+                XrmConnectionModule.RefreshXrmServices(matchingConnections.First(), Controller);
             }
         }
 
@@ -168,7 +213,8 @@ namespace JosephM.Prism.Infrastructure.Console
             {
                 return new CommandLineArgument[]
                 {
-                    new CommandLineArgument("SettingsFolderName", "The Folder Containing The Saved Settings For The Application")
+                    new CommandLineArgument("SettingsFolderName", "The Folder Containing The Saved Settings For The Application"),
+                    new CommandLineArgument("ActiveXrmConnection", "Saved Xrm Connection To Load If The Dialog Uses The Current Active Xrm Connection")
                 };
             }
         }

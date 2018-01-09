@@ -50,18 +50,21 @@ namespace JosephM.Prism.Infrastructure.Console
             if (viewModel is CompletionScreenViewModel)
             {
                 var completion = (CompletionScreenViewModel)viewModel;
-                var completionObject = completion.CompletionDetails?.GetObject();
-                if(completionObject is IProcessCompletion)
+                var completionObject = completion.CompletionDetails?.GetObject() as IProcessCompletion;
+                if(completionObject == null)
+                {
+                    throw new Exception($"The Process Failed To Complete: {completion.CompletionHeadingText}");
+                }
+                else
                 {
                     UserInterface.LogMessage("Processing Completion");
-                    var processCompletion = (IProcessCompletion)completionObject;
-                    if (!processCompletion.Success)
+                    if (!completionObject.Success)
                     {
-                        throw processCompletion.Exception;
+                        throw completionObject.Exception;
                     }
                     else
                     {
-                        var errors = processCompletion.GetResponseItemsWithError();
+                        var errors = completionObject.GetResponseItemsWithError();
                         if (errors.Any())
                         {
                             var folder = ApplicationController.LogPath;
