@@ -24,8 +24,8 @@
             <RowDefinition />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Row="0"  Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
-            <Grid                         PreviewMouseLeftButtonUp="DisplayTextBlock_MouseDown">
+        <Grid Row="0">
+            <Grid PreviewMouseLeftButtonUp="DisplayTextBlock_MouseDown">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <!--<ColumnDefinition Width="Auto" />-->
