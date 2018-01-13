@@ -11,7 +11,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
     /// <summary>
     ///     An Option Available In Menus For The Appplication
     /// </summary>
-    public class ApplicationOption
+    public class ApplicationOption : IApplicationOption
     {
         public ApplicationOption(string label, Action action, string description = null)
         {
@@ -25,6 +25,11 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         public string Description { get; private set; }
 
         public DelegateCommand DelegateCommand { get; private set; }
+
+        public void InvokeMethod()
+        {
+            DelegateCommand.Execute();
+        }
 
         public override string ToString()
         {

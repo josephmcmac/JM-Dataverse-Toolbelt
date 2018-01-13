@@ -46,7 +46,7 @@ namespace JosephM.Deployment.DeployPackage
             var packageFolder = request.FolderContainingPackage.FolderPath;
             var solutionFiles = Directory.GetFiles(packageFolder, "*.zip");
 
-            ImportSolutions(solutionFiles, controller, response, xrmRecordService.XrmService);
+            ImportSolutions(solutionFiles, controller, xrmRecordService.XrmService);
 
             foreach (var childFolder in Directory.GetDirectories(packageFolder))
             {
@@ -65,7 +65,7 @@ namespace JosephM.Deployment.DeployPackage
 
         private object _lockObject = new object();
 
-        private void ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, ServiceResponseBase<DataImportResponseItem> response, XrmService xrmService)
+        public void ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmService xrmService)
         {
             var countToDo = solutionFiles.Count();
             var countRecordsImported = 0;

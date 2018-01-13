@@ -5,6 +5,8 @@ using JosephM.Application.Options;
 using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Commands;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -25,6 +27,11 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
             Helps = new ObservableCollection<ApplicationOption>();
             SettingsClick = new DelegateCommand(() => { OpenSettings = true; });
             HelpClick = new DelegateCommand(() => { OpenHelp = true; });
+        }
+
+        public IEnumerable<IApplicationOption> GetAllOptions()
+        {
+            return Options.SelectMany(mg => mg.Options).ToArray();
         }
 
         public ObservableCollection<MenuGroupViewModel> Options { get; private set; }

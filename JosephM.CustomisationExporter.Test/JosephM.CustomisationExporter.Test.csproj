@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.CustomisationExporter.Test</RootNamespace>
     <AssemblyName>JosephM.CustomisationExporter.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -40,6 +40,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -59,6 +63,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application.Prism.Console\JosephM.Application.Prism.Console.csproj">
+      <Project>{69B9950E-85BE-4AA4-9D8F-FE21639F124F}</Project>
+      <Name>JosephM.Application.Prism.Console</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
       <Name>JosephM.Application</Name>
@@ -82,6 +90,10 @@
     <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.Prism.XrmModule.Test.csproj">
       <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
       <Name>JosephM.Prism.XrmModule.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+      <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
+      <Name>JosephM.Prism.XrmModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>

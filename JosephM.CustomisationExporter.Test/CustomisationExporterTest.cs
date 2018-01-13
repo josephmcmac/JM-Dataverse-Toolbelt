@@ -1,12 +1,12 @@
-﻿using System.Linq;
-using System.Threading;
-using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.CustomisationExporter.Exporter;
 using JosephM.Prism.XrmModule.Test;
 using JosephM.Xrm.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using System.Threading;
 
 namespace JosephM.CustomisationExporter.Test
 {

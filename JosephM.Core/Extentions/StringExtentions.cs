@@ -12,6 +12,22 @@ namespace JosephM.Core.Extentions
 {
     public static class StringExtentions
     {
+        public static string JoinGrammarAnd(this IEnumerable<string> strings)
+        {
+            var stringBuilder = new StringBuilder();
+            var n = strings.Count();
+            for (var i = 0; i < n; i++)
+            {
+                if (i == n - 1)
+                    stringBuilder.Append(strings.ElementAt(i));
+                else if (i < n - 2)
+                    stringBuilder.Append(strings.ElementAt(i) + ", ");
+                else
+                    stringBuilder.Append(strings.ElementAt(i) + " and ");
+            }
+            return stringBuilder.ToString();
+        }
+
         public static T ParseEnum<T>(this string enumString)
         {
             return (T) Enum.Parse(typeof (T), enumString);

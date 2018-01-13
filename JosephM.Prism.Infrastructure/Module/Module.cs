@@ -25,6 +25,7 @@ namespace JosephM.Prism.Infrastructure.Module
         {
             PrismModuleBase.RegisterTypes();
             PrismModuleBase.InitialiseModule();
+            PrismModuleBase.Controller.AddLoadedModule(PrismModuleBase);
         }
     }
 }

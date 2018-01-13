@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.Prism.XrmModule.Test</RootNamespace>
     <AssemblyName>JosephM.Prism.XrmModule.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -73,7 +73,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="FakeXrmApplicationController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SavedRequestModuleTests.cs" />
     <Compile Include="XrmLookupServiceTests.cs" />
@@ -82,6 +81,10 @@
     <Compile Include="XrmRecordConfigurationMapperTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application.Prism.Console\JosephM.Application.Prism.Console.csproj">
+      <Project>{69B9950E-85BE-4AA4-9D8F-FE21639F124F}</Project>
+      <Name>JosephM.Application.Prism.Console</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
       <Name>JosephM.Application</Name>

@@ -50,7 +50,7 @@ namespace JosephM.Prism.XrmModule.XrmConnection
             LastXrmConfiguration = xrmConfiguration;
             if (xrmConfiguration.OrganizationUniqueName == null)
                 controller.AddNotification("XRMCONNECTION", "Not Connected");
-            else
+            else if (controller.RunThreadsAsynch)
             {
                 controller.DoOnAsyncThread(() =>
                 {

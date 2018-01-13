@@ -35,6 +35,8 @@ namespace JosephM.Application.ViewModel.Grid
         {
             ApplicationController = applicationController;
             LoadingViewModel = new LoadingViewModel(applicationController);
+            //this one a bit of a hack as loading/display controlled in code behind so set the vm as always loading
+            SortLoadingViewModel = new LoadingViewModel(applicationController) { LoadingMessage = "Please Wait While Reloading Sorted Items", IsLoading = true };
             OnDoubleClick = () => { };
             OnClick = () => { };
             OnKeyDown = () => { };
@@ -70,6 +72,7 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
         public LoadingViewModel LoadingViewModel { get; set; }
+        public LoadingViewModel SortLoadingViewModel { get; set; }
 
         public void RefreshGridButtons()
         {
@@ -291,71 +294,97 @@ namespace JosephM.Application.ViewModel.Grid
         /// <param name="sortField"></param>
         public void SortIt(string sortField)
         {
-            //just copy all into a new list (sorting as go), clear the collection then add each sorted item
-            if (GridRecords.Any())
+            ApplicationController.DoOnAsyncThread(() =>
             {
-                var newList = new List<GridRowViewModel>();
-                foreach (var item in GridRecords)
+                //just copy all into a new list (sorting as go), clear the collection then add each sorted item
+                if (GridRecords.Any())
                 {
-                    var value1 = item.GetFieldViewModel(sortField).ValueObject;
-                    if (value1 == null)
+                    var newList = new List<GridRowViewModel>();
+                    foreach (var item in GridRecords)
                     {
-                        newList.Insert(0, item);
-                        continue;
-                    }
-                    foreach (var item2 in newList)
-                    {
-                        var value2 = item2.GetFieldViewModel(sortField).ValueObject;
-                        if (value2 == null)
+                        var value1 = item.GetFieldViewModel(sortField).ValueObject;
+                        if (value1 == null)
                         {
+                            newList.Insert(0, item);
                             continue;
                         }
-                        else if (!(value1 is Enum) && value1 is IComparable)
+                        foreach (var item2 in newList)
                         {
-                            if (((IComparable)value1).CompareTo(value2) < 0)
+                            var value2 = item2.GetFieldViewModel(sortField).ValueObject;
+                            if (value2 == null)
+                            {
+                                continue;
+                            }
+                            else if (!(value1 is Enum) && value1 is IComparable)
+                            {
+                                if (((IComparable)value1).CompareTo(value2) < 0)
+                                {
+                                    newList.Insert(newList.IndexOf(item2), item);
+                                    break;
+                                }
+                                else
+                                    continue;
+                            }
+                            var sortString1 = value1.ToString();
+                            var sortString2 = value2.ToString();
+                            if (value1 is Enum)
+                                sortString1 = ((Enum)value1).GetDisplayString();
+                            if (value2 is Enum)
+                                sortString2 = ((Enum)value2).GetDisplayString();
+                            if (String.Compare(sortString1, sortString2, StringComparison.Ordinal) < 0)
                             {
                                 newList.Insert(newList.IndexOf(item2), item);
                                 break;
                             }
-                            else
-                                continue;
                         }
-                        var sortString1 = value1.ToString();
-                        var sortString2 = value2.ToString();
-                        if (value1 is Enum)
-                            sortString1 = ((Enum) value1).GetDisplayString();
-                        if (value2 is Enum)
-                            sortString2 = ((Enum)value2).GetDisplayString();
-                        if (String.Compare(sortString1, sortString2, StringComparison.Ordinal) < 0)
-                        {
-                            newList.Insert(newList.IndexOf(item2), item);
-                            break;
-                        }
+                        if (!newList.Contains(item))
+                            newList.Add(item);
                     }
-                    if(!newList.Contains(item))
-                        newList.Add(item);
-                }
-                //just a check for already sorted ascending the sort descending
-                if (LastSortField != sortField)
-                    LastSortAscending = true;
-                else
-                {
-                    if (LastSortAscending)
-                        newList.Reverse();
-                    LastSortAscending = !LastSortAscending;
-                }
-                LastSortField = sortField;
+                    //just a check for already sorted ascending the sort descending
+                    if (LastSortField != sortField)
+                        LastSortAscending = true;
+                    else
+                    {
+                        if (LastSortAscending)
+                            newList.Reverse();
+                        LastSortAscending = !LastSortAscending;
+                    }
+                    LastSortField = sortField;
 
-                if (HasPaging)
-                {
-                    CurrentPage = 1;
+                    if (HasPaging)
+                    {
+                        CurrentPage = 1;
+                    }
+                    else
+                    {
+                        //used in code behind when displaying loading
+                        SortCount = newList.Count;
+                        Thread.Sleep(50);
+
+                        ApplicationController.DoOnMainThread(() =>
+                        {
+                            GridRecords.Clear();
+                            foreach (var item in newList)
+                                GridRecords.Add(item);
+                        });
+                    }
                 }
-                else
-                {
-                    GridRecords.Clear();
-                    foreach (var item in newList)
-                        GridRecords.Add(item);
-                }
+            });
+        }
+
+        private int _sortCount = 0;
+        public int SortCount
+        {
+            get
+            {
+                return _sortCount;
+            }
+            set
+            {
+                if (value == 0 && _sortCount > 0)
+                    LoadingViewModel.IsLoading = false;
+                _sortCount = value;
+
             }
         }
 
@@ -552,7 +581,7 @@ namespace JosephM.Application.ViewModel.Grid
                         var fileName = Path.GetFileName(newFileName);
                         var fields = FieldMetadata.Select(rf => rf.FieldName);
                         CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records, fields, (f) => RecordService.GetFieldLabel(f, RecordType), (r, f) => { return RecordService.GetFieldAsDisplayString((IRecord)r, f); });
-                        ApplicationController.StartProcess(folder);
+                        ApplicationController.StartProcess("explorer.exe", "/select, \"" + Path.Combine(folder, fileName) + "\"");
                     }
                 }
                 catch (Exception ex)

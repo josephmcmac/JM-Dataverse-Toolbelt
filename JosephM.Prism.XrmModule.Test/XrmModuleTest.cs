@@ -1,19 +1,14 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
-using JosephM.Application.ViewModel.Fakes;
-using JosephM.Application.ViewModel.RecordEntry;
-using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
-using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.Infrastructure.Test;
+using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Xrm.Sdk.Client;
-using JosephM.Record.IService;
-using JosephM.Prism.XrmModule.Crud;
 
 namespace JosephM.Prism.XrmModule.Test
 {
@@ -41,16 +36,6 @@ namespace JosephM.Prism.XrmModule.Test
             return testApplication;
         }
 
-        public FakeXrmApplicationController CreateFakeApplicationController()
-        {
-            var savedConfig = GetSavedXrmRecordConfiguration();
-            var savedConfigs = new SavedXrmConnections.SavedXrmConnections()
-            {
-                Connections = new[] { savedConfig }
-            };
-            return new FakeXrmApplicationController(savedConfigs);
-        }
-
         public SavedXrmRecordConfiguration GetSavedXrmRecordConfiguration()
         {
             var xrmConfig = GetSavedTestEncryptedXrmConfiguration();
@@ -63,7 +48,8 @@ namespace JosephM.Prism.XrmModule.Test
                 Domain = xrmConfig.Domain,
                 OrganizationUniqueName = OverrideOrganisation ?? xrmConfig.OrganizationUniqueName,
                 Password = xrmConfig.Password,
-                Username = xrmConfig.Username
+                Username = xrmConfig.Username,
+                Name = "TESTSCRIPTCONNECTION"
             };
             return savedConfig;
         }
@@ -78,26 +64,9 @@ namespace JosephM.Prism.XrmModule.Test
                 Domain = saved.Domain,
                 OrganizationUniqueName = OverrideOrganisation ?? saved.OrganizationUniqueName,
                 Password = saved.Password,
-                Username = saved.Username
+                Username = saved.Username,
+                Name = "TESTSCRIPTCONNECTION"
             };
-        }
-
-        public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject, IApplicationController applicationController)
-        {
-            return CreateObjectEntryViewModel(viewModelObject, applicationController, XrmRecordService);
-        }
-
-        public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject, IApplicationController applicationController, IRecordService lookupService)
-        {
-            var viewModel = new ObjectEntryViewModel(() => { }, () => { }, viewModelObject,
-                FormController.CreateForObject(viewModelObject, applicationController, lookupService));
-            viewModel.LoadFormSections();
-            return viewModel;
-        }
-
-        public ObjectEntryViewModel CreateObjectEntryViewModel(object viewModelObject)
-        {
-            return CreateObjectEntryViewModel(viewModelObject, new FakeApplicationController());
         }
     }
 }

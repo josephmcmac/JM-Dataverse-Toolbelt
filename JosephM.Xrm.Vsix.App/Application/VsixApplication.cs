@@ -2,8 +2,11 @@
 using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
@@ -40,6 +43,7 @@ namespace JosephM.Xrm.Vsix
             {
                 try
                 {
+                    CheckRefreshActiveSettings();
                     module.DialogCommand();
                 }
                 catch (Exception ex)
@@ -57,6 +61,33 @@ namespace JosephM.Xrm.Vsix
                 EventHandler clickHandler = (o, e) => menuItemVisibleAttribute.Process(Controller.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService, menuItem);
                 menuItem.BeforeQueryStatus += clickHandler;
             }
+        }
+
+
+        public void CheckRefreshActiveSettings()
+        {
+            //todo review this and see if could trigger the module loading code 
+            //or somehting when solution inttially opened
+
+            //okay so I could not subscribe to when a solution is opened
+            //at which point I would need to load these settings into the unity container
+            //so each time a button is clicked I will just ensure the objects in unity
+            //are consistent with the active solutions settings
+
+            var settingsManager = (ISettingsManager)Controller.ResolveType(typeof(ISettingsManager));
+            var settingsConnection = settingsManager.Resolve<XrmRecordConfiguration>();
+            var containerConnection = (IXrmRecordConfiguration)Controller.ResolveType(typeof(IXrmRecordConfiguration));
+            if (settingsConnection.AuthenticationProviderType != containerConnection.AuthenticationProviderType
+                || settingsConnection.DiscoveryServiceAddress != containerConnection.DiscoveryServiceAddress
+                || settingsConnection.OrganizationUniqueName != containerConnection.OrganizationUniqueName
+                || settingsConnection.Domain != containerConnection.Domain
+                || settingsConnection.Username != containerConnection.Username
+                || settingsConnection.Password?.GetRawPassword() != containerConnection.Password?.GetRawPassword())
+            {
+                XrmConnectionModule.RefreshXrmServices(settingsConnection, Controller);
+            }
+            var packageSettings = settingsManager.Resolve<XrmPackageSettings>();
+            Controller.RegisterInstance(typeof(XrmPackageSettings), packageSettings);
         }
     }
 }

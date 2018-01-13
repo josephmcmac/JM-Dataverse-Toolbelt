@@ -100,13 +100,23 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         private object MapGridToEnumerableValue(EnumerableFieldViewModel grid)
         {
             var objectRecordService = GetObjectRecordService();
-            var records = grid.DynamicGridViewModel.GridRecords.Select(g => g.Record);
-            if (records.Any(r => !(r is ObjectRecord)))
-                throw new TypeLoadException(string.Format("Expected {0} Of Type {1} Created By {2}",
-                    typeof (IRecord).Name, typeof (ObjectRecord).Name, typeof (ObjectRecordService).Name));
-            var type = objectRecordService.GetClassType(grid.RecordType);
-            var objectEnumerable = records.Cast<ObjectRecord>().Select(r => r.Instance);
-            return type.ToNewTypedEnumerable(objectEnumerable);
+
+            try
+            {
+                var records = grid.DynamicGridViewModel.GridRecords.Select(g => g.Record);
+                if (records.Any(r => !(r is ObjectRecord)))
+                    throw new TypeLoadException(string.Format("Expected {0} Of Type {1} Created By {2}",
+                        typeof(IRecord).Name, typeof(ObjectRecord).Name, typeof(ObjectRecordService).Name));
+                var type = objectRecordService.GetClassType(grid.RecordType);
+                var objectEnumerable = records.Cast<ObjectRecord>().Select(r => r.Instance);
+                return type.ToNewTypedEnumerable(objectEnumerable);
+            }
+            catch(Exception ex)
+            {
+                if (grid.DynamicGridViewModel.GridLoadError)
+                    throw new NullReferenceException($"There Was An Error Loading The {grid.FieldName} Property's {nameof(EnumerableFieldViewModel.DynamicGridViewModel)}: {grid.DynamicGridViewModel.ErrorMessage}", ex);
+                throw;
+            }
         }
 
         public override IsValidResponse ValidateFinal()

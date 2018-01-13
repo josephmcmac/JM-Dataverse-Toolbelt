@@ -72,6 +72,20 @@ namespace JosephM.Wpf.Grid
 
         private void LoadingRow(object sender, DataGridRowEventArgs e)
         {
+            if (DynamicGridViewModel != null)
+            {
+                if (DynamicGridViewModel.SortCount > 0)
+                {
+                    DynamicGridViewModel.SortCount--;
+                }
+                if (DynamicGridViewModel.SortCount == 0)
+                {
+                    if (SortingLoadGrid.Visibility == Visibility.Visible)
+                        SortingLoadGrid.Visibility = Visibility.Collapsed;
+                    if (SortingMainGrid.Visibility == Visibility.Hidden)
+                        SortingMainGrid.Visibility = Visibility.Visible;
+                }
+            }
         }
 
         protected void columnHeader_Click(object sender, RoutedEventArgs e)
@@ -84,7 +98,19 @@ namespace JosephM.Wpf.Grid
                 var sortMember = columnHeader.Column.SortMemberPath;
                 if (sortMember != null)
                 {
-                    DynamicGridViewModel.SortIt(sortMember.Trim(new[] { '[', ']' }));
+                    if (DynamicGridViewModel.GridRecords.Any())
+                    {
+                        //due to the heavy xaml structure for the view model views
+                        //they sometimes take an eternity to sort
+                        //especially if lookup, and multiselect fields and heap of rows
+                        //so do this hack to display loading while it sorts
+                        //the row load event in the view will decrease the sort count until loaded
+                        //could not use bindings for this as they were not processing into the ui thread in correct sequence
+                        //so have just hacked this way in code behind which seems to take immediate effect
+                        SortingLoadGrid.Visibility = Visibility.Visible;
+                        SortingMainGrid.Visibility = Visibility.Hidden;
+                        DynamicGridViewModel.SortIt(sortMember.Trim(new[] { '[', ']' }));
+                    }
                 }
             }
         }
@@ -296,9 +322,10 @@ namespace JosephM.Wpf.Grid
                                 DataGridLengthUnitType.Pixel);
                             dataGridField.IsReadOnly = gridSectionViewModel.IsReadOnly;
                             var description = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Description;
-                            var style = new Style(typeof(DataGridColumnHeader));
-                            style.Setters.Add(new Setter(ToolTipService.ToolTipProperty, description));
-                            dataGridField.HeaderStyle = style;
+                            //todo this removes the standard xaml setters including the click to sort
+                            //var style = new Style(typeof(DataGridColumnHeader));
+                            //style.Setters.Add(new Setter(ToolTipService.ToolTipProperty, description));
+                            //dataGridField.HeaderStyle = style;
                             dynamicDataGrid.Columns.Add(dataGridField);
                         }
                         var dataGridBinding = new Binding

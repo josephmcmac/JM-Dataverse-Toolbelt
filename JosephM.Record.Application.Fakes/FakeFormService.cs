@@ -36,8 +36,6 @@ namespace JosephM.Application.ViewModel.Fakes
                     new FormFieldMetadata[]
                     {
                         new PersistentFormField(FakeConstants.DateOfBirthField),
-                        new NonPersistentFormField(FakeConstants.AgeField, "Age",
-                            RecordFieldType.Integer)
                     });
             }
         }
