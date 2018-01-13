@@ -30,12 +30,12 @@ namespace $safeprojectname$.Xrm
 
         public void LogMessage(string message)
         {
-            _trace.Trace(message);
+            _trace.Trace(message, new object[0]);
         }
 
         private void Output(string literal)
         {
-            _trace.Trace(literal);
-        }
+            _trace.Trace(literal, new object[0]);
+    }
     }
 }
