@@ -167,7 +167,7 @@ namespace $safeprojectname$.Xrm
 
         public void Trace(string message)
         {
-            TracingService.Trace(message);
+            TracingService.Trace(message, new object[0]);
         }
 
         private Guid? _initiatingUserId;
