@@ -303,7 +303,8 @@ namespace JosephM.Xrm
 
         public string GetFieldLabel(string field, string entity)
         {
-            return GetLabelDisplay(GetFieldMetadata(field, entity).DisplayName);
+            var label = GetLabelDisplay(GetFieldMetadata(field, entity).DisplayName);
+            return string.IsNullOrWhiteSpace(label) ? field : label;
         }
 
         public string GetFieldDescription(string field, string entity)
