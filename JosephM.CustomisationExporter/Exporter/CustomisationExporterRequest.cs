@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 
@@ -9,10 +11,10 @@ namespace JosephM.CustomisationExporter.Exporter
     [AllowSaveAndLoad]
     [DisplayName("Export Customisations")]
     [Group(Sections.Folder, true, 10)]
-    [Group(Sections.RecordsFieldsoptions, true, 20)]
+    [Group(Sections.RecordsFieldsoptions, true, 20, selectAll: true)]
     [Group(Sections.Relationships, true, 30)]
     [Group(Sections.RecordTypes, true, 40)]
-    public class CustomisationExporterRequest : ServiceRequestBase
+    public class CustomisationExporterRequest : ServiceRequestBase, IValidatableObject
     {
         [DisplayOrder(10)]
         [Group(Sections.Folder)]
@@ -62,6 +64,20 @@ namespace JosephM.CustomisationExporter.Exporter
         [PropertyInContextByPropertyValue(nameof(IncludeAllRecordTypes), false)]
         [PropertyInContextForAny(nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(Relationships))]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
+
+        public IsValidResponse Validate()
+        {
+            //lets just ensure at leats one valid oiton is selected
+            var validProperties = new[] { nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(SharedOptionSets), nameof(Relationships) };
+            var isOneSelected = validProperties.Any(p => (bool)this.GetPropertyValue(p));
+            var isValidResponse = new IsValidResponse();
+            if(!isOneSelected)
+            {
+                var thisType = GetType();
+                isValidResponse.AddInvalidReason($"At Least One Of {validProperties.Select(p => thisType.GetProperty(p).GetDisplayName()).JoinGrammarAnd()} Is Required To Be Selected");
+            }
+            return isValidResponse;
+        }
 
         private static class Sections
         {

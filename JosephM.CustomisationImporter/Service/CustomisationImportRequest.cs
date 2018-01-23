@@ -2,11 +2,12 @@
 
 using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Attributes;
 using JosephM.Record.Query;
-using JosephM.Xrm.Schema;
+using System.Linq;
 
 #endregion
 
@@ -17,7 +18,7 @@ namespace JosephM.CustomisationImporter.Service
     [Group(Sections.File, true, 10)]
     [Group(Sections.Solution, true, 20)]
     [Group(Sections.Include, true, order: 30, selectAll: true)]
-    public class CustomisationImportRequest : ServiceRequestBase
+    public class CustomisationImportRequest : ServiceRequestBase, IValidatableObject
     {
         [DisplayOrder(10)]
         [Group(Sections.File)]
@@ -68,6 +69,20 @@ namespace JosephM.CustomisationImporter.Service
         [DisplayOrder(250)]
         [Group(Sections.Include)]
         public bool Views { get; set; }
+
+        public IsValidResponse Validate()
+        {
+            //lets just ensure at leats one valid oiton is selected
+            var validProperties = new[] { nameof(Entities), nameof(Fields), nameof(Relationships), nameof(FieldOptionSets), nameof(SharedOptionSets), nameof(Views) };
+            var isOneSelected = validProperties.Any(p => (bool)this.GetPropertyValue(p));
+            var isValidResponse = new IsValidResponse();
+            if (!isOneSelected)
+            {
+                var thisType = GetType();
+                isValidResponse.AddInvalidReason($"At Least One Of {validProperties.Select(p => thisType.GetProperty(p).GetDisplayName()).JoinGrammarAnd()} Is Required To Be Selected");
+            }
+            return isValidResponse;
+        }
 
         private static class Sections
         {
