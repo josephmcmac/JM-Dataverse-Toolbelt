@@ -119,6 +119,8 @@
     <Compile Include="ExportXml\ExportType.cs" />
     <Compile Include="ExportXml\ExportRecordType.cs" />
     <Compile Include="ImportCsvs\DateFormat.cs" />
+    <Compile Include="ImportCsvs\GenerateTemplateConfiguration.cs" />
+    <Compile Include="ImportCsvs\GenerateTemplatesRequest.cs" />
     <Compile Include="ImportCsvs\ImportCsvsDialog.cs" />
     <Compile Include="ImportCsvs\ImportCsvsModule.cs" />
     <Compile Include="ImportCsvs\ImportCsvsRequest.cs" />
