@@ -51,6 +51,7 @@ namespace JosephM.CustomisationExporter.Exporter
 
         [DisplayOrder(300)]
         [RequiredProperty]
+        [PropertyInContextForAny(nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(Relationships))]
         [Group(Sections.RecordTypes)]
         public bool IncludeAllRecordTypes { get; set; }
 
@@ -58,7 +59,8 @@ namespace JosephM.CustomisationExporter.Exporter
         [Group(Sections.RecordTypes)]
         [RequiredProperty]
         [DisplayName("Include These Specific Record Types")]
-        [PropertyInContextByPropertyValue("IncludeAllRecordTypes", false)]
+        [PropertyInContextByPropertyValue(nameof(IncludeAllRecordTypes), false)]
+        [PropertyInContextForAny(nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(Relationships))]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
 
         private static class Sections
