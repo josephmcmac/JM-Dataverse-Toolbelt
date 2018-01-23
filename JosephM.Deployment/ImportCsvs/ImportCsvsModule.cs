@@ -68,7 +68,8 @@ namespace JosephM.Deployment.ImportCsvs
                                 : config.FieldsToInclude.Select(f => f.RecordField.Key).Intersect(fieldsInEntity).ToArray();
 
                             var columnHeadings = templatesRequest.UseSchemaNames ? fieldsToInclude : fieldsToInclude.Select(f => serviceConnection.GetFieldLabel(f, recordType)).ToArray();
-                            var csvText = string.Join(",", columnHeadings);
+
+                            var csvText = string.Join(",", columnHeadings.OrderBy(s => s));
                             var fileNameNoExt = templatesRequest.UseSchemaNames ? recordType : serviceConnection.GetCollectionName(recordType);
                             FileUtility.WriteToFile(templatesRequest.FolderToSaveInto.FolderPath, fileNameNoExt + ".csv", csvText);
                         }
