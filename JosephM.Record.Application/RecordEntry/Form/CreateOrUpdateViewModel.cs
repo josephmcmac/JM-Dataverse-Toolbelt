@@ -22,12 +22,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             RecordType = record.Type;
             OnSave = () =>
             {
-                if (GetRecord().Id == null || explicitIsCreate)
-                    GetRecord().Id = RecordService.Create(GetRecord());
-                else
-                    RecordService.Update(GetRecord(), ChangedPersistentFields);
-                if (postSave != null)
-                    postSave();
+                LoadingViewModel.IsLoading = true;
+                try
+                {
+                    if (GetRecord().Id == null || explicitIsCreate)
+                        GetRecord().Id = RecordService.Create(GetRecord());
+                    else
+                        RecordService.Update(GetRecord(), ChangedPersistentFields);
+                    if (postSave != null)
+                        postSave();
+                    LoadingViewModel.IsLoading = true;
+                }
+                finally
+                {
+                    LoadingViewModel.IsLoading = false;
+                }
             };
             OnCancel = onCancel;
         }

@@ -133,7 +133,12 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
         private IEnumerable<IRecord> GetRecordsToProcess(bool selectedOnly)
         {
             IEnumerable<IRecord> recordsToUpdate = null;
-            var fieldsToGet = new[] { RecordService.GetPrimaryField(QueryViewModel.RecordType) };
+
+            var fieldsToGet = new List<string>();
+            var primaryField = RecordService.GetPrimaryField(QueryViewModel.RecordType);
+            if (string.IsNullOrWhiteSpace(primaryField))
+                fieldsToGet.Add(primaryField);
+
             if (selectedOnly)
             {
                 var ids = QueryViewModel.DynamicGridViewModel.SelectedRows.Select(r => r.Record.Id).ToArray();

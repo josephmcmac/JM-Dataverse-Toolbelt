@@ -1,4 +1,6 @@
-﻿using JosephM.Core.Extentions;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.SettingTypes;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportCsvs;
@@ -143,6 +145,63 @@ namespace JosephM.Xrm.ImporterExporter.Test
 
             entity = XrmService.GetFirst(Entities.account);
             Assert.IsFalse(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
+        }
+
+
+        /// <summary>
+        /// Scripts through generation of csv import templates
+        /// which is a custom button option during the import csv dialog
+        /// </summary>
+        [DeploymentItem(@"Files\Account.csv")]
+        [TestMethod]
+        public void DeploymentImportCsvsDownloadTemplateTests()
+        {
+            //navigate to the download csv templates form
+            var application = CreateAndLoadTestApplication<ImportCsvsModule>();
+            var csvImportForm = application.NavigateToDialogModuleEntryForm<ImportCsvsModule, ImportCsvsDialog>();
+            var downloadButton = csvImportForm.GetButton("DOWNLOADCSVTEMPLATES");
+            downloadButton.Invoke();
+            var downloadTemplatesForm = application.GetSubObjectEntryViewModel(csvImportForm);
+
+            //okay now lets add an export for account selected fields
+            //and for contact specific fields
+            //this one will use labels 
+            var entry = new GenerateTemplatesRequest
+            {
+                UseSchemaNames = false,
+                FolderToSaveInto = new Folder(TestingFolder),
+                CsvsToGenerate = new[]
+                 {
+                     new GenerateTemplateConfiguration
+                     {
+                          RecordType = new RecordType(Entities.account, Entities.account),
+                          FieldsToInclude = new []
+                          {
+                              new FieldSetting { RecordField = new RecordField(Fields.account_.name, Fields.account_.name) },
+                              new FieldSetting { RecordField = new RecordField(Fields.account_.accountnumber, Fields.account_.accountnumber) },
+                              new FieldSetting { RecordField = new RecordField(Fields.account_.customertypecode, Fields.account_.customertypecode) },
+                          }
+                     },
+                     new GenerateTemplateConfiguration
+                     {
+                          RecordType = new RecordType(Entities.contact, Entities.contact),
+                          AllFields = true
+                     }
+                 }
+            };
+            //verify saves, creates the files, and returns to main form
+            application.EnterAndSaveObject(entry, downloadTemplatesForm);
+            Assert.AreEqual(2, FileUtility.GetFiles(TestingFolder).Count());
+            Assert.IsFalse(csvImportForm.ChildForms.Any());
+
+            //okay lets just verify it works for schema names as well
+            entry.UseSchemaNames = true;
+            downloadButton = csvImportForm.GetButton("DOWNLOADCSVTEMPLATES");
+            downloadButton.Invoke();
+            downloadTemplatesForm = application.GetSubObjectEntryViewModel(csvImportForm);
+            application.EnterAndSaveObject(entry, downloadTemplatesForm);
+            Assert.AreEqual(4, FileUtility.GetFiles(TestingFolder).Count());
+            Assert.IsFalse(csvImportForm.ChildForms.Any());
         }
 
         private string ClearFilesAndData(params string[] typesToDelete)

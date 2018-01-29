@@ -13,5 +13,7 @@ namespace JosephM.Prism.XrmModule.Crud
         {
 
         }
+
+        public override IEnumerable<string> AdditionalExplicitTypes => new[] { Entities.activitymimeattachment, Entities.organization, Entities.usersettings, Entities.productpricelevel };
     }
 }
