@@ -21,9 +21,10 @@ namespace JosephM.Application.ViewModel.Grid
     /// </summary>
     public class GridRowViewModel : RecordEntryViewModelBase
     {
-        public GridRowViewModel(IRecord record, DynamicGridViewModel gridViewModel)
+        public GridRowViewModel(IRecord record, DynamicGridViewModel gridViewModel, bool isReadOnly = false)
             : base(gridViewModel.FormController, gridViewModel.OnlyValidate)
         {
+            IsReadOnly = isReadOnly;
             Record = record;
             GridViewModel = gridViewModel;
             LoadFields();
@@ -121,13 +122,13 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
         public static ObservableCollection<GridRowViewModel> LoadRows(IEnumerable<IRecord> records,
-            DynamicGridViewModel gridVm)
+            DynamicGridViewModel gridVm, bool isReadOnly = false)
         {
             var gridRows = new ObservableCollection<GridRowViewModel>();
 
             foreach (var record in records)
             {
-                gridRows.Add(new GridRowViewModel(record, gridVm));
+                gridRows.Add(new GridRowViewModel(record, gridVm, isReadOnly: isReadOnly));
             }
 
             return gridRows;
