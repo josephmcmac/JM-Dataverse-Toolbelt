@@ -79,7 +79,7 @@ namespace JosephM.Wpf.TemplateSelector
                 return DecimalFieldTemplate;
             if (item is UrlFieldViewModel)
                 return UrlFieldTemplate;
-            if (item is PicklistMultiSelectFieldViewModel)
+            if (item is IMultiSelectFieldViewModel)
                 return MultiSelectFieldTemplate;
             else
                 return StringFieldTemplate;

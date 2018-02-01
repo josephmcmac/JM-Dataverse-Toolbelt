@@ -123,6 +123,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return true;
         }
 
+        public virtual bool AllowDelete(string fieldName, string recordType)
+        {
+            return true;
+        }
+
         public virtual bool UsePicklist(string fieldName, string recordType)
         {
             return false;

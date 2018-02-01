@@ -30,13 +30,5 @@ namespace JosephM.Wpf.RecordEntry.Field
         {
             return BindingOperations.GetBinding(DisplayTextBlock, TextBox.TextProperty);
         }
-
-        private void DisplayTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (IMultiSelectFieldViewModel != null && !IMultiSelectFieldViewModel.IsReadOnly)
-            {
-                IMultiSelectFieldViewModel.MultiSelectsVisible = !IMultiSelectFieldViewModel.MultiSelectsVisible;
-            }
-        }
     }
 }

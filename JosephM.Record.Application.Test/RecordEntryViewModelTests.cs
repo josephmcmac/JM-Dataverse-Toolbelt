@@ -128,6 +128,8 @@ namespace JosephM.Record.Application.Test
 
         private void PopulateRecordEntry(RecordEntryViewModelBase entryViewModel, bool populateSubgrids = true)
         {
+            var mainForminContent = entryViewModel.ParentForm ?? entryViewModel;
+
             entryViewModel.GetFieldViewModel<BigIntFieldViewModel>(nameof(TestAllFieldTypes.BigIntField)).Value = 100;
             entryViewModel.GetBooleanFieldFieldViewModel(nameof(TestAllFieldTypes.BooleanField)).Value = true;
             entryViewModel.GetFieldViewModel<DateFieldViewModel>(nameof(TestAllFieldTypes.DateField)).Value = new DateTime(1990, 11, 15);
@@ -146,9 +148,17 @@ namespace JosephM.Record.Application.Test
             entryViewModel.GetRecordFieldFieldViewModel(nameof(TestAllFieldTypes.RecordFieldField)).Value = entryViewModel.GetRecordFieldFieldViewModel(nameof(TestAllFieldTypes.RecordFieldField)).ItemsSource.First();
 
             var recordFieldMultiSelectField = entryViewModel.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(TestAllFieldTypes.RecordFieldMultiSelectField));
-            recordFieldMultiSelectField.MultiSelectsVisible = true;
-            recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-            recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            recordFieldMultiSelectField.EditAction();
+            //multiselection is done in a child form so select several and invoke save
+            Assert.IsTrue(mainForminContent.ChildForms.Any());
+            var multiSelectEntry = mainForminContent.ChildForms.First() as ObjectEntryViewModel;
+            multiSelectEntry.LoadFormSections(); //this trigger by ui binding
+            var selectionGrid = multiSelectEntry.GetEnumerableFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOptions.Options));
+            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            multiSelectEntry.OnSave();
+            Assert.IsFalse(mainForminContent.ChildForms.Any());
+            //verify values selected have been applied to the multiselect field
             Assert.IsNotNull(recordFieldMultiSelectField.DisplayLabel);
             Assert.AreEqual(2, recordFieldMultiSelectField.Value.Count());
             Assert.IsTrue(recordFieldMultiSelectField.Value.Any(p => p.Value == recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetStringFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Item)).Value));
@@ -161,9 +171,17 @@ namespace JosephM.Record.Application.Test
             Assert.AreEqual(lookupField.Value.Name, lookupField.EnteredText);
 
             var multiSelectField = entryViewModel.GetFieldViewModel<PicklistMultiSelectFieldViewModel>(nameof(TestAllFieldTypes.PicklistMultiSelectField));
-            multiSelectField.MultiSelectsVisible = true;
-            multiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(PicklistMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-            multiSelectField.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(PicklistMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            multiSelectField.EditAction();
+            //multiselection is done in a child form so select several and invoke save
+            Assert.IsTrue(mainForminContent.ChildForms.Any());
+            multiSelectEntry = mainForminContent.ChildForms.First() as ObjectEntryViewModel;
+            multiSelectEntry.LoadFormSections(); //this trigger by ui binding
+            selectionGrid = multiSelectEntry.GetEnumerableFieldViewModel(nameof(PicklistMultiSelectFieldViewModel.SelectablePicklistOptions.Options));
+            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(PicklistMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(PicklistMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            multiSelectEntry.OnSave();
+            Assert.IsFalse(mainForminContent.ChildForms.Any());
+            //verify values selected have been applied to the multiselect field
             Assert.IsNotNull(multiSelectField.DisplayLabel);
             Assert.AreEqual(2, multiSelectField.Value.Count());
             Assert.IsTrue(multiSelectField.Value.Any(p => p == PicklistOption.EnumToPicklistOption(TestEnum.Option2)));

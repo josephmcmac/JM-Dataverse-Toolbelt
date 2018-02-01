@@ -3,13 +3,10 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.IService;
+using JosephM.Record.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Record.Extentions;
-using JosephM.Application.ViewModel.SettingTypes;
-using JosephM.Record.Service;
-using System.Threading;
 
 namespace JosephM.Application.ViewModel.Attributes
 {

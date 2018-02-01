@@ -5,6 +5,7 @@ using JosephM.Record.Extentions;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq;
 using Entities = JosephM.Xrm.Schema.Entities;
 using Fields = JosephM.Xrm.Schema.Fields;
@@ -88,14 +89,10 @@ namespace JosephM.Xrm.Vsix.Test
             letsAdjustThisOne.GetStringFieldFieldViewModel(nameof(PluginTrigger.PreImageName)).Value = "FooOthername";
             //set some specific fields in the preimage
             var preImageFieldsField = letsAdjustThisOne.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
-            preImageFieldsField.MultiSelectsVisible = true;
-            preImageFieldsField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-            preImageFieldsField.DynamicGridViewModel.GridRecords.ElementAt(3).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            SelectItems(preImageFieldsField, 1, 3);
             //set some specific filtering attributes
             var filteringAttributesField = letsAdjustThisOne.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
-            filteringAttributesField.MultiSelectsVisible = true;
-            filteringAttributesField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-            filteringAttributesField.DynamicGridViewModel.GridRecords.ElementAt(3).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            SelectItems(filteringAttributesField, 1, 3);
             //set impersonating user
             var impersonatingUserField = letsAdjustThisOne.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext));
             impersonatingUserField.SelectedItem = impersonatingUserField.ItemsSource.First(p => p.Record?.Id == CurrentUserId.ToString());
@@ -150,11 +147,7 @@ namespace JosephM.Xrm.Vsix.Test
             letsAdjustThisOne.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = false;
             //set no fields on the preimage
             preImageFieldsField = letsAdjustThisOne.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
-            preImageFieldsField.MultiSelectsVisible = true;
-            foreach (var field in preImageFieldsField.DynamicGridViewModel.GridRecords)
-            {
-                field.GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = false;
-            }
+            DeselectAll(preImageFieldsField);
             //save
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
@@ -210,28 +203,30 @@ namespace JosephM.Xrm.Vsix.Test
             dialog.Controller.BeginDialog();
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             var triggersSubGrid = entryViewModel.SubGrids.First();
-            var newRow = AddtriggerForMessage(triggersSubGrid, message);
+            AddtriggerForMessage(triggersSubGrid, message);
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
         }
 
-        private static GridRowViewModel AddtriggerForMessage(EnumerableFieldViewModel triggersSubGrid, string message)
+        private static void AddtriggerForMessage(EnumerableFieldViewModel triggersSubGrid, string message)
         {
             triggersSubGrid.AddRow();
-            var newRow = triggersSubGrid.GridRecords.First();
-            PopulateRowForMessage(newRow, message);
-            return newRow;
+            var entryForm = triggersSubGrid.GetRecordForm().ChildForms.First() as ObjectEntryViewModel;
+            entryForm.LoadFormSections();
+            PopulateRowForMessage(entryForm, message);
+            Assert.IsTrue(entryForm.Validate());
+            entryForm.SaveButtonViewModel.Invoke();
         }
 
-        private static void PopulateRowForMessage(GridRowViewModel newRow, string message)
+        private static void PopulateRowForMessage(ObjectEntryViewModel triggerEntry, string message)
         {
-            foreach (var field in newRow.FieldViewModels)
+            foreach (var field in triggerEntry.FieldViewModels)
             {
                 if (field.ValueObject == null)
                 {
                     if (field is LookupFieldViewModel)
                     {
-                        var typeFieldViewModel = (LookupFieldViewModel) field;
+                        var typeFieldViewModel = (LookupFieldViewModel)field;
                         if (field.FieldName == "Message")
                         {
                             typeFieldViewModel.Value = typeFieldViewModel.LookupService.ToLookup(typeFieldViewModel.ItemsSource.First(m => m.Name == message).Record);
@@ -241,44 +236,74 @@ namespace JosephM.Xrm.Vsix.Test
                     }
                     if (field is PicklistFieldViewModel)
                     {
-                        var typeFieldViewModel = (PicklistFieldViewModel) field;
+                        var typeFieldViewModel = (PicklistFieldViewModel)field;
                         typeFieldViewModel.Value = typeFieldViewModel.ItemsSource.First();
                     }
                     if (field is RecordTypeFieldViewModel)
                     {
-                        var typeFieldViewModel = (RecordTypeFieldViewModel) field;
+                        var typeFieldViewModel = (RecordTypeFieldViewModel)field;
                         typeFieldViewModel.Value = typeFieldViewModel.ItemsSource.First();
                     }
                     if (field.FieldName == nameof(PluginTrigger.FilteringFields) && message == "Update")
                     {
-                        var multiSelectField = newRow.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
-                        multiSelectField.MultiSelectsVisible = true;
-                        multiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-                        multiSelectField.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+                        var multiSelectField = triggerEntry.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
+                        SelectItems(multiSelectField, 1, 2);
                     }
                     if (field.FieldName == nameof(PluginTrigger.PreImageAllFields) && message == "Update")
                     {
-                        newRow.GetFieldViewModel<BooleanFieldViewModel>(nameof(PluginTrigger.PreImageAllFields)).Value = false;
+                        triggerEntry.GetFieldViewModel<BooleanFieldViewModel>(nameof(PluginTrigger.PreImageAllFields)).Value = false;
                     }
                     if (field.FieldName == nameof(PluginTrigger.PreImageFields) && message == "Update")
                     {
-                        var multiSelectField = newRow.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
-                        multiSelectField.MultiSelectsVisible = true;
-                        multiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-                        multiSelectField.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+                        var multiSelectField = triggerEntry.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
+                        SelectItems(multiSelectField, 1, 2);
                     }
                 }
             }
-            newRow.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Mode)).ValueObject = PluginTrigger.PluginMode.Asynchronous;
-            newRow.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Stage)).ValueObject = PluginTrigger.PluginStage.PostEvent;
-            newRow.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = true;
-            newRow.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext)).Value = null;
-            var filteringAttributesField = newRow.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
-            filteringAttributesField.MultiSelectsVisible = true;
-            foreach (var field in filteringAttributesField.DynamicGridViewModel.GridRecords)
+            triggerEntry.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Mode)).ValueObject = PluginTrigger.PluginMode.Asynchronous;
+            triggerEntry.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Stage)).ValueObject = PluginTrigger.PluginStage.PostEvent;
+            triggerEntry.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = true;
+            triggerEntry.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext)).Value = null;
+            var filteringAttributesField = triggerEntry.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
+            DeselectAll(filteringAttributesField);
+        }
+
+        private static void DeselectAll(RecordFieldMultiSelectFieldViewModel filteringAttributesField)
+        {
+            var mainForminContent = filteringAttributesField.GetRecordForm();
+            if (mainForminContent is GridRowViewModel)
+                mainForminContent = mainForminContent.ParentForm;
+
+            filteringAttributesField.EditAction();
+            //multiselection is done in a child form so select several and invoke save
+            Assert.IsTrue(mainForminContent.ChildForms.Any());
+            var filteringAttributesEntry = mainForminContent.ChildForms.First() as ObjectEntryViewModel;
+            filteringAttributesEntry.LoadFormSections(); //this trigger by ui binding
+            var filteringAttributesSelectionGrid = filteringAttributesEntry.GetEnumerableFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOptions.Options));
+            foreach (var field in filteringAttributesSelectionGrid.DynamicGridViewModel.GridRecords)
             {
                 field.GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = false;
             }
+            filteringAttributesEntry.OnSave();
+            Assert.IsFalse(mainForminContent.ChildForms.Any());
+        }
+
+        private static void SelectItems(RecordFieldMultiSelectFieldViewModel multiSelectField, params int[] indexes)
+        {
+            var mainForminContent = multiSelectField.GetRecordForm();
+            if (mainForminContent is GridRowViewModel)
+                mainForminContent = mainForminContent.ParentForm;
+
+            multiSelectField.EditAction();
+            //multiselection is done in a child form so select several and invoke save
+            Assert.IsTrue(mainForminContent.ChildForms.Any());
+            var multiSelectEntry = mainForminContent.ChildForms.First() as ObjectEntryViewModel;
+            multiSelectEntry.LoadFormSections(); //this trigger by ui binding
+            var selectionGrid = multiSelectEntry.GetEnumerableFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOptions.Options));
+            foreach(var index in indexes)
+            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(index).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
+            multiSelectEntry.OnSave();
+            Assert.IsFalse(mainForminContent.ChildForms.Any());
         }
     }
 }

@@ -317,10 +317,12 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             dataGridField.Header = column.FieldLabel;
-                            dataGridField.IsReadOnly = !column.IsEditable;
                             dataGridField.Width = new DataGridLength(column.WidthPart,
                                 DataGridLengthUnitType.Pixel);
-                            dataGridField.IsReadOnly = gridSectionViewModel.IsReadOnly;
+                            var isFormReadonly = gridSectionViewModel.IsReadOnly;
+                            var isWriteable = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Createable == true
+                                || gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Writeable == true;
+                            dataGridField.IsReadOnly = isFormReadonly || !isWriteable;
                             var description = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Description;
                             //todo this removes the standard xaml setters including the click to sort
                             //var style = new Style(typeof(DataGridColumnHeader));

@@ -9,6 +9,7 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.Validation;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 
 #endregion
@@ -20,9 +21,10 @@ namespace JosephM.Application.ViewModel.Grid
     /// </summary>
     public class GridRowViewModel : RecordEntryViewModelBase
     {
-        public GridRowViewModel(IRecord record, DynamicGridViewModel gridViewModel)
+        public GridRowViewModel(IRecord record, DynamicGridViewModel gridViewModel, bool isReadOnly = false)
             : base(gridViewModel.FormController, gridViewModel.OnlyValidate)
         {
+            IsReadOnly = isReadOnly;
             Record = record;
             GridViewModel = gridViewModel;
             LoadFields();
@@ -46,7 +48,10 @@ namespace JosephM.Application.ViewModel.Grid
                 try
                 {
                     var viewModel = field.CreateFieldViewModel(RecordType, RecordService, this, ApplicationController);
-                    viewModel.IsEditable = !GridViewModel.IsReadOnly && FormService.AllowGridFieldEditEdit(ParentFormReference);
+                    var isWriteable = RecordService?.GetFieldMetadata(field.FieldName, RecordType).Createable == true
+                        || RecordService?.GetFieldMetadata(field.FieldName, RecordType).Writeable == true;
+
+                    viewModel.IsEditable = !IsReadOnly && isWriteable;
                     AddField(viewModel);
                 }
                 catch (Exception ex)
@@ -117,13 +122,13 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
         public static ObservableCollection<GridRowViewModel> LoadRows(IEnumerable<IRecord> records,
-            DynamicGridViewModel gridVm)
+            DynamicGridViewModel gridVm, bool isReadOnly = false)
         {
             var gridRows = new ObservableCollection<GridRowViewModel>();
 
             foreach (var record in records)
             {
-                gridRows.Add(new GridRowViewModel(record, gridVm));
+                gridRows.Add(new GridRowViewModel(record, gridVm, isReadOnly: isReadOnly));
             }
 
             return gridRows;

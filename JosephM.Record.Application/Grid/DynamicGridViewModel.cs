@@ -415,7 +415,7 @@ namespace JosephM.Application.ViewModel.Grid
                     {
                         try
                         {
-                            GridRecords = GridRowViewModel.LoadRows(records, this);
+                            GridRecords = GridRowViewModel.LoadRows(records, this, isReadOnly: IsReadOnly);
                             OnPropertyChanged(nameof(PageDescription));
                             HasMoreRows = getRecordsResponse.HasMoreRecords;
                         }

@@ -2,7 +2,7 @@
 
 namespace JosephM.Core.Attributes
 {
-    public class DoNotAllowAdd : Attribute
+    public class DoNotAllowDelete : Attribute
     {
     }
 }
