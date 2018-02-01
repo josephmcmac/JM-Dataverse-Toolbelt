@@ -9,6 +9,7 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.Validation;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 
 #endregion
@@ -46,7 +47,10 @@ namespace JosephM.Application.ViewModel.Grid
                 try
                 {
                     var viewModel = field.CreateFieldViewModel(RecordType, RecordService, this, ApplicationController);
-                    viewModel.IsEditable = !GridViewModel.IsReadOnly && FormService.AllowGridFieldEditEdit(ParentFormReference);
+                    var isWriteable = RecordService?.GetFieldMetadata(field.FieldName, RecordType).Createable == true
+                        || RecordService?.GetFieldMetadata(field.FieldName, RecordType).Writeable == true;
+
+                    viewModel.IsEditable = !IsReadOnly && isWriteable;
                     AddField(viewModel);
                 }
                 catch (Exception ex)

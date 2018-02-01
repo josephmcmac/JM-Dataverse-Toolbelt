@@ -69,8 +69,6 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             _entryObject = new PluginTriggers();
             var triggers = new List<PluginTrigger>();
-            EntryObject.Triggers = triggers;
-            EntryObject.Assembly = assemblyRecord.ToLookup();
             foreach (var item in SdkMessageStepsPre)
             {
                 var filterId = item.GetLookupId(Fields.sdkmessageprocessingstep_.sdkmessagefilterid);
@@ -139,7 +137,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 }
                 triggers.Add(trigger);
             }
-            //since I had to correct the target type for this fieldsw lookup need to populate the name
+            //since I had to correct the target type for this fields lookup need to populate the name
             if (triggers.Any())
             {
                 XrmRecordService.PopulateLookups(new Dictionary<string,List<Lookup>>()
@@ -147,6 +145,13 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                     { Fields.sdkmessageprocessingstep_.plugintypeid, triggers.Select(t => t.Plugin).ToList() }
                 }, null);
             }
+            triggers = triggers
+                .OrderBy(t => t.RecordType?.Value)
+                .ThenBy(t => t.Message?.Name)
+                .ThenByDescending(t => t.Stage)
+                .ThenByDescending(t => t.Mode).ToList();
+            EntryObject.Triggers = triggers;
+            EntryObject.Assembly = assemblyRecord.ToLookup();
         }
 
         public IEnumerable<IRecord> SdkMessageStepsPre { get; set; }

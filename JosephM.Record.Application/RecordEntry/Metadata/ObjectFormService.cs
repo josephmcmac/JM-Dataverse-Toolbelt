@@ -378,6 +378,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return prop.GetCustomAttribute<DoNotAllowAdd>() == null;
         }
 
+        public override bool AllowDelete(string fieldName, string recordType)
+        {
+            var prop = GetPropertyInfo(fieldName, recordType);
+            return prop.GetCustomAttribute<DoNotAllowDelete>() == null;
+        }
+
         public override bool UsePicklist(string fieldName, string recordType)
         {
             var prop = GetPropertyInfo(fieldName, recordType);

@@ -20,61 +20,23 @@
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
     <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" MinWidth="250">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid Row="0">
-            <Grid PreviewMouseLeftButtonUp="DisplayTextBlock_MouseDown">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <!--<ColumnDefinition Width="Auto" />-->
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" >
-                    <TextBox
-                        Name="DisplayTextBlock"
-                        TabIndex="1"
-                        DataContext="{Binding NotifyOnValidationError=True}"
-                        Text="{Binding StringDisplay, Mode=OneWay}"
-                        Style="{StaticResource FieldEntryStyle}"
-                        IsReadOnly="True"
-                        BorderThickness="0"
-                         />
-                </Grid>
-                <!--<Grid Grid.Column="1" >
-                    <ContentControl Content="{StaticResource DropdownArrowKeyKey}">
-
-                    </ContentControl>
-                </Grid>-->
-            </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1">
+            <TextBox
+                Name="DisplayTextBlock"
+                TabIndex="1"
+                DataContext="{Binding NotifyOnValidationError=True}"
+                Text="{Binding StringDisplay, Mode=OneWay}"
+                Style="{StaticResource FieldEntryStyle}"
+                IsReadOnly="True"
+                BorderThickness="0"
+                    />
         </Grid>
-        <Grid Name="PopupGrid" Row="1">
-            <Popup  PlacementTarget="{Binding ElementName=DisplayTextBlock}" IsOpen="{Binding MultiSelectsVisible}">
-                <Border>
-                    <grid:DynamicGridView                     Background="WhiteSmoke" DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
-                    <!--<ItemsControl 
-                        x:Name="sectionControl"
-                        ItemsSource="{Binding ItemsSource}"
-                        HorizontalContentAlignment="Stretch" >
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid Grid.Column="0">
-                                        <CheckBox IsChecked="{Binding IsSelected}" ></CheckBox>
-                                    </Grid>
-                                    <Grid Grid.Column="1">
-                                        <TextBlock Text="{Binding PicklistOption.Value}" />
-                                    </Grid>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>-->
-                </Border>
-            </Popup>
+        <Grid Grid.Column="0" >
+            <Button Style="{StaticResource EditRowButton}" Command="{Binding EditButton.Command}" />
         </Grid>
     </Grid>
 </field:FieldControlBase>

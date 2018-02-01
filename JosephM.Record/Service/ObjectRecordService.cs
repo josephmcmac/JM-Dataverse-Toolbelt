@@ -501,7 +501,7 @@ namespace JosephM.Record.Service
                     return new Condition(attr2.FieldName, ConditionType.Equal, objectValue);
                 }
             }
-            //check for reference inj parent form
+            //check for reference in parent form
             else if (ParentService != null)
             {
                 return ParentService.GetLookupConditionFors(reference + "." + fieldName, ObjectType.Name, ParentServiceReference, new ObjectRecord(ObjectToEnter));

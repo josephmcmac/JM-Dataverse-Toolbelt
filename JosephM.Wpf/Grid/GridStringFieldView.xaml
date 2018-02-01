@@ -16,15 +16,30 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <TextBox
-        AcceptsReturn="{Binding IsMultiline}"
-            MinLines ="1"
-            MaxLines ="1"
-            TabIndex="1"
-            Name="TextBox"
-            DataContext="{Binding NotifyOnValidationError=True}"
-            Text="{Binding Mode=TwoWay, Path=ValueObject}"
-            Style="{StaticResource FieldEntryStyle}"
-            IsReadOnly="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToFalseConverter}}"
-            Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}" />
+    <Grid>
+        <Grid Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+            <TextBox
+            AcceptsReturn="{Binding IsMultiline}"
+                MinLines ="1"
+                MaxLines ="1"
+                TabIndex="1"
+                DataContext="{Binding NotifyOnValidationError=True}"
+                Text="{Binding Mode=TwoWay, Path=ValueObject}"
+                Style="{StaticResource FieldEntryStyle}"
+                IsReadOnly="True"
+                Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}" />
+        </Grid>
+        <Grid Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BoolToVis}}" >
+            <TextBox 
+            AcceptsReturn="{Binding IsMultiline}"
+                MinLines ="1"
+                MaxLines ="1"
+                TabIndex="1"
+                DataContext="{Binding NotifyOnValidationError=True}"
+                Text="{Binding Mode=TwoWay, Path=ValueObject}"
+                Style="{StaticResource FieldEntryStyle}"
+                IsReadOnly="False"
+                Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}" />
+        </Grid>
+    </Grid>
 </UserControl>

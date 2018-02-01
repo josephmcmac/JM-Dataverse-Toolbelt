@@ -10,7 +10,9 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
     {
         [Hidden]
         [LookupConditionFor(nameof(PluginTrigger.Plugin), Fields.plugintype_.pluginassemblyid)]
+        [LookupConditionFor(nameof(Triggers) + "." + nameof(PluginTrigger.Plugin), Fields.plugintype_.pluginassemblyid)]
         public Lookup Assembly { get; set; }
+        [FormEntry]
         public IEnumerable<PluginTrigger> Triggers { get; set; } 
     }
     public class PluginTrigger
