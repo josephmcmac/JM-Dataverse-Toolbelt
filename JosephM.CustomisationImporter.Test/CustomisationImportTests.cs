@@ -36,7 +36,8 @@ namespace JosephM.CustomisationImporter.Test
             var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).First();
 
             var response = testApplication.NavigateAndProcessDialog<CustomisationImportModule, XrmCustomisationImportDialog, CustomisationImportResponse>(request);
-            Assert.IsFalse(response.HasError);
+            if (response.HasError)
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
         }
 
         [TestMethod]
