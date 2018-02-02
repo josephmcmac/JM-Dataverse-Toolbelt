@@ -51,18 +51,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public void RefreshSelectedItemsIntoValue()
+        public void RefreshSelectedItemsIntoValue(IEnumerable<T> selectedOptions)
         {
-            Value = ItemsSource == null ? new T[0] : ItemsSource
-                .Where(i => i.Select)
-                .Select(i => i.PicklistItem)
-                .ToArray();
+            Value = selectedOptions?.ToArray() ?? new T[0];
             OnPropertyChanged(nameof(StringDisplay));
         }
 
-        private IEnumerable<SelectablePicklistOption> _itemsSource;
+        private IEnumerable<T> _itemsSource;
 
-        public IEnumerable<SelectablePicklistOption> ItemsSource
+        public IEnumerable<T> ItemsSource
         {
             get { return _itemsSource; }
             set
@@ -79,49 +76,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         internal void SetItemsSource(IEnumerable<T> items)
         {
-            ItemsSource = items == null ? new SelectablePicklistOption[0] : items.Select(i => new SelectablePicklistOption(i, RefreshSelectedItemsIntoValue, Value != null && Value.Any(v => v == i))).ToArray();
-            var optionsObject = new SelectablePicklistOptions()
-            {
-                Options = ItemsSource
-            };
-            var recordService = new ObjectRecordService(optionsObject, ApplicationController);
-            Func<IEnumerable<IRecord>> getRecordsFunc = () => recordService.RetreiveAll(new QueryDefinition(typeof(SelectablePicklistOption).AssemblyQualifiedName));
-
-            DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
-            {
-                ViewType = ViewType.LookupView,
-                FormController = new FormController(recordService, null, ApplicationController),
-                RecordType = typeof(SelectablePicklistOption).AssemblyQualifiedName,
-                RecordService = recordService,
-                GetGridRecords = (b) => new GetGridRecordsResponse(getRecordsFunc()),
-                IsReadOnly = true
-            };
-            Action onClick = () =>
-            {
-                var selectedItem = DynamicGridViewModel.SelectedRow;
-                if (selectedItem != null)
-                {
-                    var isSelectedField = selectedItem.GetBooleanFieldFieldViewModel(nameof(SelectablePicklistOption.Select));
-                    isSelectedField.Value = !isSelectedField.Value;
-                    DynamicGridViewModel.SelectedRow = null;
-                }
-            };
-            DynamicGridViewModel.OnClick = onClick;
-            DoOnAsynchThread(() => {
-                DynamicGridViewModel.GridRecords = GridRowViewModel.LoadRows(getRecordsFunc(), DynamicGridViewModel);
-                OnPropertyChanged(nameof(DynamicGridViewModel));
-                OnPropertyChanged(nameof(StringDisplay));
-            });
+            ItemsSource = items;
         }
 
         public DynamicGridViewModel DynamicGridViewModel { get; set; }
-
-        public class SelectablePicklistOptions
-        {
-            [DoNotAllowDelete]
-            [DoNotAllowAdd]
-            public IEnumerable<SelectablePicklistOption> Options { get; set; }
-        }
 
         public void LoadMultiSelectDialog()
         {
@@ -139,19 +97,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
                     //okay i need to load a dialog
                     //displaying a grid of the selectable options with a checkbox
-                    //used a child object entry form which worked well enough
-                    var mapper = new ClassSelfMapper();
-                    var dialogObject = new SelectablePicklistOptions()
+                    Action<IEnumerable<T>> onSave = (selectedOptions) =>
                     {
-                        Options = ItemsSource.Select(i => mapper.Map(i)).ToArray()
-                    };
-                    Action onSave = () => {
                         //copy into the
                         mainFormInContext.LoadingViewModel.IsLoading = true;
                         try
                         {
-                            ItemsSource = dialogObject.Options;
-                            RefreshSelectedItemsIntoValue();
+                            RefreshSelectedItemsIntoValue(selectedOptions);
                             mainFormInContext.ClearChildForm();
                         }
                         catch (Exception ex)
@@ -164,9 +116,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         }
                     };
 
-                    var recordService = new ObjectRecordService(dialogObject, ApplicationController);
-                    var formController = FormController.CreateForObject(dialogObject, ApplicationController, null);
-                    var childForm = new ObjectEntryViewModel(onSave, () => mainFormInContext.ClearChildForm(), dialogObject, formController);
+                    var childForm = new MultiSelectDialogViewModel<T>(ItemsSource, Value, onSave, () => mainFormInContext.ClearChildForm(), ApplicationController);
                     mainFormInContext.LoadChildForm(childForm);
                 }
                 catch (Exception ex)
@@ -178,39 +128,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     RecordEntryViewModel.LoadingViewModel.IsLoading = false;
                 }
             });
-        }
-
-        public class SelectablePicklistOption
-        {
-            public SelectablePicklistOption()
-            {
-                    
-            }            
-
-            public SelectablePicklistOption(T item, Action onSelectionChanged, bool isSelected)
-            {
-                _isselected = isSelected;
-                PicklistItem = item;
-            }
-
-            private bool _isselected;
-            [DisplayOrder(10)]
-            [GridWidth(75)]
-            public bool Select
-            {
-                get
-                {
-                    return _isselected;
-                }
-                set
-                {
-                    _isselected = value;
-                }
-            }
-            [DisplayOrder(20)]
-            public string Item { get { return PicklistItem?.Value; } }
-            [Hidden]
-            public T PicklistItem { get; set; }
         }
     }
 

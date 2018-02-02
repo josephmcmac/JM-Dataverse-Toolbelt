@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FakeGridViewModel.cs" />
+    <Compile Include="FakeMultiSelectDialogViewModel.cs" />
     <Compile Include="FakeQueryViewModel.cs" />
     <Compile Include="FakesDependencyContainer.cs" />
     <Compile Include="FakeApplicationController.cs" />

@@ -103,6 +103,7 @@
     <Compile Include="HTML\HtmlFileModel.cs" />
     <Compile Include="Query\ConditionViewModel.cs" />
     <Compile Include="Query\FilterConditionsViewModel.cs" />
+    <Compile Include="RecordEntry\Field\MultiSelectDialogViewModel.cs" />
     <Compile Include="RecordEntry\Field\MultiSelectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\MoneyFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DoubleFieldViewModel.cs" />

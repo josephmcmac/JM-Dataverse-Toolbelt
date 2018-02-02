@@ -272,6 +272,9 @@
     <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
       <DependentUpon>LookupPicklistView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\MultiSelectDialogView.xaml.cs">
+      <DependentUpon>MultiSelectDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\MultiSelectView.xaml.cs">
       <DependentUpon>MultiSelectView.xaml</DependentUpon>
     </Compile>
@@ -514,6 +517,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\LookupPicklistView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\MultiSelectDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
