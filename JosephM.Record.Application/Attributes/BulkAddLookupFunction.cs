@@ -1,20 +1,17 @@
 ﻿using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using JosephM.Record.Extentions;
-using System.Threading;
 
 namespace JosephM.Application.ViewModel.Attributes
 {
     [AttributeUsage(
         AttributeTargets.Class,
         AllowMultiple = false)]
-    public class BulkAddLookupFunction : BulkAddFunction
+    public class BulkAddLookupFunction : BulkAddQueryFunction
     {
         public override Type TargetPropertyType
         {

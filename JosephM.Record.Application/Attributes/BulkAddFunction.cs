@@ -1,61 +1,23 @@
-﻿using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
 using System.Collections;
-using JosephM.Core.Extentions;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace JosephM.Application.ViewModel.Attributes
 {
     public abstract class BulkAddFunction : Attribute
     {
-        public string GetFunctionLabel()
-        {
-            return "Add Multiple";
-        }
-
-        public abstract IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference);
-
-        public IRecordService GetLookupservice(RecordEntryViewModelBase recordForm, string subGridReference)
-        {
-            return recordForm.RecordService.GetLookupService(GetTargetProperty(recordForm, subGridReference).Name, GetEnumeratedType(recordForm, subGridReference).FullName, subGridReference, recordForm.GetRecord());
-        }
-
-        public Action GetCustomFunction(RecordEntryViewModelBase recordForm, string subGridReference)
-        {
-            return () =>
-            {
-                recordForm.LoadingViewModel.IsLoading = true;
-                recordForm.DoOnAsynchThread(() =>
-                {
-                    try
-                    {
-                        Thread.Sleep(100);
-                        Load(recordForm, subGridReference);
-                    }
-                    catch (Exception ex)
-                    {
-                        recordForm.ApplicationController.ThrowException(ex);
-                        recordForm.LoadingViewModel.IsLoading = false;
-                    }
-                });
-            };
-        }
-
-        public virtual bool AllowQuery { get { return true; } }
+        public abstract Action GetCustomFunction(RecordEntryViewModelBase recordForm, string subGridReference);
 
         public abstract Type TargetPropertyType { get; }
 
-        public IRecordService GetLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
+        public static RecordEntryViewModelBase GetEntryViewModel(RecordEntryViewModelBase recordForm)
         {
-            var reference = string.Format("{0}{1}", (recordForm.ParentFormReference == null ? null : recordForm.ParentFormReference + "."), subGridReference);
-
-            return recordForm.RecordService.GetLookupService(GetTargetProperty(recordForm, subGridReference).Name, GetEnumeratedType(recordForm, subGridReference).FullName, reference, recordForm.GetRecord());
+            return recordForm;
         }
 
         public PropertyInfo GetTargetProperty(RecordEntryViewModelBase recordForm, string subGridReference)
@@ -85,82 +47,12 @@ namespace JosephM.Application.ViewModel.Attributes
             return enumeratedType;
         }
 
-        public static RecordEntryViewModelBase GetEntryViewModel(RecordEntryViewModelBase recordForm)
+        public IRecordService GetLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            return recordForm;
-            //var objectFormService = recordForm as ObjectEntryViewModel;
-            //if (objectFormService == null)
-            //{
-            //    throw new ArgumentOutOfRangeException(nameof(recordForm), string.Format("Required To Be Type Of {0}. Actual Type Is {1}", typeof(ObjectEntryViewModel).Name, recordForm.GetType().Name));
-            //}
+            var reference = string.Format("{0}{1}", (recordForm.ParentFormReference == null ? null : recordForm.ParentFormReference + "."), subGridReference);
 
-            //return objectFormService;
+            return recordForm.RecordService.GetLookupService(GetTargetProperty(recordForm, subGridReference).Name, GetEnumeratedType(recordForm, subGridReference).FullName, reference, recordForm.GetRecord());
         }
-
-        public void Load(RecordEntryViewModelBase recordForm, string subGridReference)
-        {
-            recordForm.DoOnMainThread(() =>
-            {
-                try
-                {
-                    var mainFormInContext = recordForm;
-                    if (recordForm is GridRowViewModel)
-                        mainFormInContext = recordForm.ParentForm;
-
-                    var closeFunction = new CustomGridFunction("RETURN", "Return", () => mainFormInContext.ClearChildForm());
-                    var targetType = GetTargetType(recordForm, subGridReference);
-
-                    var selectedFunction = new CustomGridFunction("ADDSELECTED", "Add Selected", (g) => AddSelectedItems(g, recordForm, subGridReference)
-                    , visibleFunction: (g) => g.SelectedRows.Any());
-
-                    var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, customFunctions: new[] { selectedFunction });
-                    childForm.TypeAhead = TypeAhead;
-                    mainFormInContext.LoadChildForm(childForm);
-                }
-                catch (Exception ex)
-                {
-                    recordForm.ApplicationController.ThrowException(ex);
-                }
-                finally
-                {
-                    recordForm.LoadingViewModel.IsLoading = false;
-                }
-            });
-        }
-
-        public virtual bool TypeAhead { get { return false; } }
-
-        public abstract string GetTargetType(RecordEntryViewModelBase recordForm, string subGridReference);
-
-        public void AddSelectedItems(DynamicGridViewModel grid, RecordEntryViewModelBase recordForm, string subGridReference)
-        {
-            var mainFormInContext = recordForm;
-            if (recordForm is GridRowViewModel)
-                mainFormInContext = recordForm.ParentForm;
-            mainFormInContext.ApplicationController.DoOnAsyncThread(() =>
-            {
-                mainFormInContext.LoadingViewModel.IsLoading = true;
-                try
-                {
-                    Thread.Sleep(100);
-                    foreach (var selectedRow in grid.SelectedRows)
-                    {
-                        AddSelectedItem(selectedRow, recordForm, subGridReference);
-                    }
-                    mainFormInContext.ClearChildForm();
-                }
-                catch(Exception ex)
-                {
-                    mainFormInContext.ApplicationController.ThrowException(ex);
-                }
-                finally
-                {
-                    mainFormInContext.LoadingViewModel.IsLoading = false;
-                }
-            });
-        }
-
-        public abstract void AddSelectedItem(GridRowViewModel gridRow, RecordEntryViewModelBase recordForm, string subGridReference);
 
         public void InsertNewItem(RecordEntryViewModelBase recordForm, string subGridReference, IRecord recordToInsert)
         {
@@ -175,7 +67,7 @@ namespace JosephM.Application.ViewModel.Attributes
                 if (objectRecord == null)
                     throw new ArgumentOutOfRangeException(nameof(recordToInsert), string.Format("Expected Object of Type {0}. Actual Type Was {1}", typeof(ObjectRecord).Name, recordToInsert?.GetType()?.Name ?? "(null)"));
                 var items = new List<object>();
-                if(enumerableField.ValueObject as IEnumerable != null)
+                if (enumerableField.ValueObject as IEnumerable != null)
                 {
                     foreach (var item in enumerableField.ValueObject as IEnumerable)
                         items.Add(item);

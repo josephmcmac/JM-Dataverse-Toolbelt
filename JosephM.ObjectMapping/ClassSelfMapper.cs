@@ -1,5 +1,4 @@
-﻿using System;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 
 namespace JosephM.ObjectMapping
 {
