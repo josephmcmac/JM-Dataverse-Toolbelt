@@ -202,23 +202,16 @@ namespace JosephM.Deployment.Test
 
             //get the fields grid and trigger bulk add function
             var excludeFieldsGrid = specificRecordEntry.GetEnumerableFieldViewModel(nameof(ExportRecordType.IncludeOnlyTheseFields));
-            //now add using the add multiple option
+            
+            //now add using the multi select dialog option
             excludeFieldsGrid.DynamicGridViewModel.AddMultipleRowButton.Invoke();
-            bulkAddForm = specificRecordEntry.ChildForms.First() as QueryViewModel;
-            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
 
-            bulkAddForm.QuickFindText = Fields.account_.name;
-            bulkAddForm.QuickFind();
-
-            Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
-            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
-
-            bulkAddForm.DynamicGridViewModel.GridRecords.First().IsSelected = true;
-            //this triggered by the grid event
-            bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
-            //this is supposed to be the add selected button
-            bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
+            var multiSelectForm = specificRecordEntry.ChildForms.First() as MultiSelectDialogViewModel<PicklistOption>;
+            Assert.IsTrue(multiSelectForm.ItemsSource.Any());
+            Assert.IsTrue(multiSelectForm.ItemsSource.First(i => i.PicklistItem.Key == Fields.account_.name).Select = true);
+            multiSelectForm.ApplyButtonViewModel.Invoke();
             Assert.IsFalse(specificRecordEntry.ChildForms.Any());
+
             //and verify the row was added to the records for export
             Assert.IsTrue(excludeFieldsGrid.GridRecords.Any());
 
@@ -229,22 +222,10 @@ namespace JosephM.Deployment.Test
             var subGrid = entryForm.GetEnumerableFieldViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
             subGrid.DynamicGridViewModel.AddMultipleRowButton.Invoke();
 
-            bulkAddForm = entryForm.ChildForms.First() as QueryViewModel;
-
-            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
-
-            bulkAddForm.QuickFindText = Entities.contact;
-            bulkAddForm.QuickFind();
-
-            Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
-            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
-
-            bulkAddForm.DynamicGridViewModel.GridRecords.First().IsSelected = true;
-            //this triggered by the grid event
-            bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
-            //this is supposed to be the add selected button
-            bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
-
+            multiSelectForm = entryForm.ChildForms.First() as MultiSelectDialogViewModel<PicklistOption>;
+            Assert.IsTrue(multiSelectForm.ItemsSource.Any());
+            Assert.IsTrue(multiSelectForm.ItemsSource.First(i => i.PicklistItem.Key == Entities.contact).Select = true);
+            multiSelectForm.ApplyButtonViewModel.Invoke();
             Assert.IsFalse(entryForm.ChildForms.Any());
         }
 
@@ -294,8 +275,9 @@ namespace JosephM.Deployment.Test
            
             //trigger the add multiple option
             specificRecordsGridField.BulkAddButton.Invoke();
+
             var bulkAddForm = entryForm.ChildForms.First() as QueryViewModel;
-            
+
             //verify a quickfind finds a record
             bulkAddForm.QuickFindText = account.GetStringField(Fields.account_.name);
             bulkAddForm.QuickFind();
@@ -315,22 +297,13 @@ namespace JosephM.Deployment.Test
             var excludeFieldsGrid = row.GetEnumerableFieldViewModel(nameof(ExportRecordType.IncludeOnlyTheseFields));
             Assert.IsTrue(string.IsNullOrWhiteSpace(excludeFieldsGrid.StringDisplay));
            
-            //trigger the add multiple option
+            //trigger the select multiple option
             excludeFieldsGrid.BulkAddButton.Invoke();
-            bulkAddForm = entryForm.ChildForms.First() as QueryViewModel;
-            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
 
-            bulkAddForm.QuickFindText = Fields.account_.name;
-            bulkAddForm.QuickFind();
-
-            Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
-            Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
-
-            bulkAddForm.DynamicGridViewModel.GridRecords.First().IsSelected = true;
-            //this triggered by the grid event
-            bulkAddForm.DynamicGridViewModel.OnSelectionsChanged();
-            //this is supposed to be the add selected button
-            bulkAddForm.DynamicGridViewModel.CustomFunctions.Last().Invoke();
+            var multiSelectForm = entryForm.ChildForms.First() as MultiSelectDialogViewModel<PicklistOption>;
+            Assert.IsTrue(multiSelectForm.ItemsSource.Any());
+            Assert.IsTrue(multiSelectForm.ItemsSource.First(i => i.PicklistItem.Key == Fields.account_.name).Select = true);
+            multiSelectForm.ApplyButtonViewModel.Invoke();
             Assert.IsFalse(entryForm.ChildForms.Any());
             //verify we now have a record selected and displayed for the field
             Assert.IsFalse(string.IsNullOrWhiteSpace(excludeFieldsGrid.StringDisplay));

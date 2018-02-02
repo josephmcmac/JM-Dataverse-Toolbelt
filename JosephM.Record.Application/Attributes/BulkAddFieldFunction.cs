@@ -1,9 +1,6 @@
-﻿using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
-using JosephM.Record.IService;
-using JosephM.Record.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +10,14 @@ namespace JosephM.Application.ViewModel.Attributes
     [AttributeUsage(
         AttributeTargets.Class,
         AllowMultiple = false)]
-    public class BulkAddFieldFunction : BulkAddFunction
+    public class BulkAddFieldFunction : BulkAddMultiSelectFunction
     {
         public override Type TargetPropertyType
         {
             get { return typeof(RecordField); }
         }
 
-        public override IRecordService GetQueryLookupService(RecordEntryViewModelBase recordForm, string subGridReference)
+        public override IEnumerable<PicklistOption> GetSelectionOptions(RecordEntryViewModelBase recordForm, string subGridReference)
         {
             var targetPropertyInfo = GetTargetProperty(recordForm, subGridReference);
 
@@ -39,45 +36,9 @@ namespace JosephM.Application.ViewModel.Attributes
                 .OrderBy(r => r.DisplayName)
                 .ToArray();
 
-            var queryTypesObject = new FieldsObject
-            {
-                Fields = fields
-            };
-            return new ObjectRecordService(queryTypesObject, recordForm.ApplicationController);
-        }
-
-        public override string GetTargetType(RecordEntryViewModelBase recordForm, string subGridReference)
-        {
-            return typeof(IFieldMetadata).AssemblyQualifiedName;
-        }
-
-        public override bool TypeAhead {  get { return true; } }
-
-        public override bool AllowQuery { get { return false; } }
-
-        public override void AddSelectedItem(GridRowViewModel selectedRow, RecordEntryViewModelBase recordForm, string subGridReference)
-        {
-            var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
-            var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
-            var newRecord = recordForm.RecordService.NewRecord(GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName);
-
-            var selectedRowrecord = selectedRow.GetRecord() as ObjectRecord;
-            if (selectedRowrecord != null)
-            {
-                var newRecordType = new RecordField();
-                newRecordType.Key = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IFieldMetadata.SchemaName));
-                newRecordType.Value = (string)selectedRowrecord.Instance.GetPropertyValue(nameof(IFieldMetadata.DisplayName));
-                newRecord.SetField(targetPropertyname, newRecordType, recordForm.RecordService);
-
-                //if (gridField.GridRecords.Any(g => g.GetRecordFieldFieldViewModel(targetPropertyname).Value == newRecordType))
-                //    return;
-                InsertNewItem(recordForm, subGridReference, newRecord);
-            }
-        }
-
-        public class FieldsObject
-        {
-            public IEnumerable<IFieldMetadata> Fields { get; set; }
+            return fields
+                .Select(f => new PicklistOption(f.SchemaName, f.DisplayName))
+                .ToArray();
         }
     }
 }
