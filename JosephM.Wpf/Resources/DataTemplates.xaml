@@ -204,6 +204,23 @@
             <application:DialogForm DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="MultiSelectDialogTemplate">
+        <Grid MinHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=TabControl,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
+           
+            Height="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Border,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
+            MaxWidth="{Binding Path=ActualWidth,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Border,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.98}">
+            <field:MultiSelectDialogView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <templateSelector:DialogTemplateSelector
         RecordEntryTemplate="{StaticResource RecordEntryTemplate}"
         RecordEntryTemplateWindowMinimum="{StaticResource RecordEntryTemplateWindowMinimum}"
@@ -215,6 +232,7 @@
         QueryViewTemplate="{StaticResource QueryViewTemplate}"
         QueryViewTemplateWindowMinimum="{StaticResource QueryViewTemplateWindowMinimum}"
         DialogTemplate="{StaticResource DialogDialogTemplate}"
+        MultiSelectDialogTemplate="{StaticResource MultiSelectDialogTemplate}"
         x:Key="DialogTemplateSelector" />
     <DataTemplate x:Key="booleanFieldTemplate">
         <field:BooleanFieldView DataContext="{Binding}" />

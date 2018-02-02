@@ -149,20 +149,19 @@ namespace JosephM.Record.Application.Test
 
             var recordFieldMultiSelectField = entryViewModel.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(TestAllFieldTypes.RecordFieldMultiSelectField));
             recordFieldMultiSelectField.EditAction();
-            //multiselection is done in a child form so select several and invoke save
+            //multiselection is done in a child dialog so select several and invoke save
             Assert.IsTrue(mainForminContent.ChildForms.Any());
-            var multiSelectEntry = mainForminContent.ChildForms.First() as ObjectEntryViewModel;
-            multiSelectEntry.LoadFormSections(); //this trigger by ui binding
-            var selectionGrid = multiSelectEntry.GetEnumerableFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOptions.Options));
-            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-            multiSelectEntry.OnSave();
+            var multiSelectFieldEntry = mainForminContent.ChildForms.First() as MultiSelectDialogViewModel<RecordField>;
+            multiSelectFieldEntry.ItemsSource.ElementAt(1).Select = true;
+            multiSelectFieldEntry.ItemsSource.ElementAt(2).Select = true;
+            multiSelectFieldEntry.ApplyButtonViewModel.Invoke();
+
             Assert.IsFalse(mainForminContent.ChildForms.Any());
             //verify values selected have been applied to the multiselect field
             Assert.IsNotNull(recordFieldMultiSelectField.DisplayLabel);
             Assert.AreEqual(2, recordFieldMultiSelectField.Value.Count());
-            Assert.IsTrue(recordFieldMultiSelectField.Value.Any(p => p.Value == recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(1).GetStringFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Item)).Value));
-            Assert.IsTrue(recordFieldMultiSelectField.Value.Any(p => p.Value == recordFieldMultiSelectField.DynamicGridViewModel.GridRecords.ElementAt(2).GetStringFieldFieldViewModel(nameof(RecordFieldMultiSelectFieldViewModel.SelectablePicklistOption.Item)).Value));
+            Assert.IsTrue(recordFieldMultiSelectField.Value.Any(p => p.Value == multiSelectFieldEntry.ItemsSource.ElementAt(1).Item));
+            Assert.IsTrue(recordFieldMultiSelectField.Value.Any(p => p.Value == multiSelectFieldEntry.ItemsSource.ElementAt(1).Item));
 
             var lookupField = entryViewModel.GetLookupFieldFieldViewModel(nameof(TestAllFieldTypes.LookupField));
             lookupField.Search();
@@ -174,12 +173,10 @@ namespace JosephM.Record.Application.Test
             multiSelectField.EditAction();
             //multiselection is done in a child form so select several and invoke save
             Assert.IsTrue(mainForminContent.ChildForms.Any());
-            multiSelectEntry = mainForminContent.ChildForms.First() as ObjectEntryViewModel;
-            multiSelectEntry.LoadFormSections(); //this trigger by ui binding
-            selectionGrid = multiSelectEntry.GetEnumerableFieldViewModel(nameof(PicklistMultiSelectFieldViewModel.SelectablePicklistOptions.Options));
-            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(1).GetBooleanFieldFieldViewModel(nameof(PicklistMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-            selectionGrid.DynamicGridViewModel.GridRecords.ElementAt(2).GetBooleanFieldFieldViewModel(nameof(PicklistMultiSelectFieldViewModel.SelectablePicklistOption.Select)).Value = true;
-            multiSelectEntry.OnSave();
+            var multiSelectOptionEntry = mainForminContent.ChildForms.First() as MultiSelectDialogViewModel<PicklistOption>;
+            multiSelectOptionEntry.ItemsSource.ElementAt(1).Select = true;
+            multiSelectOptionEntry.ItemsSource.ElementAt(2).Select = true;
+            multiSelectOptionEntry.ApplyButtonViewModel.Invoke();
             Assert.IsFalse(mainForminContent.ChildForms.Any());
             //verify values selected have been applied to the multiselect field
             Assert.IsNotNull(multiSelectField.DisplayLabel);

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 
@@ -24,6 +25,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate QueryViewTemplate { get; set; }
         public DataTemplate QueryViewTemplateWindowMinimum { get; set; }
         public DataTemplate DialogTemplate { get; set; }
+        public DataTemplate MultiSelectDialogTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -60,6 +62,8 @@ namespace JosephM.Wpf.TemplateSelector
             }
             if (item is DialogViewModel)
                 return DialogTemplate;
+            if (item is IMultiSelectDialog)
+                return MultiSelectDialogTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }

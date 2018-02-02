@@ -40,7 +40,10 @@
             <AdornedElementPlaceholder Name="AdornedFieldElement" />
         </DockPanel>
     </ControlTemplate>
-
+    <Style x:Key="BorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness"  Value=".5" />
+        <Setter Property="BorderBrush" Value="LightGray" />
+    </Style>
     <Style x:Key="NotificationTextBlock" TargetType="{x:Type TextBlock}">
         <Setter Property="FontWeight"  Value="Bold" />
         <Setter Property="Margin" Value="8,8,8,8" />
