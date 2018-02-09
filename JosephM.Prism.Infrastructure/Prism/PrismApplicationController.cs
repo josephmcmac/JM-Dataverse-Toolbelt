@@ -2,14 +2,12 @@
 
 using JosephM.Application;
 using JosephM.Application.Application;
-using JosephM.Application.ViewModel.HTML;
 using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using Microsoft.Practices.Prism.Regions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using Extentions = JosephM.Application.ViewModel.Extentions.Extentions;
@@ -121,26 +119,6 @@ namespace JosephM.Prism.Infrastructure.Prism
             catch (Exception ex)
             {
                 UserMessage(string.Format("Error Saving Object\n{0}", ex.DisplayString()));
-            }
-        }
-
-
-        public override void OpenHelp(string fileName)
-        {
-            if (!File.Exists(fileName))
-            {
-                UserMessage(string.Format("Error File Does Not Exist '{0}'", fileName));
-            }
-            var info = new FileInfo(fileName);
-            if (info.Extension == "htm" || info.Extension == "html")
-            {
-                var query = new UriQuery();
-                query.Add("path", fileName);
-                NavigateTo(typeof(HtmlFileModel), query);
-            }
-            else
-            {
-                OpenFile(fileName);
             }
         }
     }

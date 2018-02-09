@@ -261,7 +261,7 @@ namespace JosephM.Xrm.Vsix.Test
                     }
                 }
             }
-            triggerEntry.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Mode)).ValueObject = PluginTrigger.PluginMode.Asynchronous;
+            triggerEntry.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Mode)).ValueObject = PluginTrigger.PluginMode.Asynch;
             triggerEntry.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Stage)).ValueObject = PluginTrigger.PluginStage.PostEvent;
             triggerEntry.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = true;
             triggerEntry.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext)).Value = null;

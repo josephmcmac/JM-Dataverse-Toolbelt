@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Module.Crud.BulkDelete;

@@ -101,8 +101,7 @@
     <Compile Include="ApplicationOptions\ApplicationOption.cs" />
     <Compile Include="ApplicationOptions\ApplicationOptionsViewModel.cs" />
     <Compile Include="Dialog\CompletionScreenViewModel.cs" />
-    <Compile Include="Grid\QueryViewModel.cs" />
-    <Compile Include="HTML\HtmlFileModel.cs" />
+    <Compile Include="Query\QueryViewModel.cs" />
     <Compile Include="Query\ConditionViewModel.cs" />
     <Compile Include="Query\FilterConditionsViewModel.cs" />
     <Compile Include="RecordEntry\Field\MultiSelectDialogViewModel.cs" />
@@ -126,7 +125,6 @@
     <Compile Include="RecordEntry\Form\CustomFormFunctions.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />
     <Compile Include="Grid\CustomGridFunction.cs" />
-    <Compile Include="Grid\ListViewModel.cs" />
     <Compile Include="SettingTypes\LookupSetting.cs" />
     <Compile Include="SettingTypes\FieldSetting.cs" />
     <Compile Include="SettingTypes\RecordFieldSetting.cs" />
@@ -134,7 +132,6 @@
     <Compile Include="Shared\ProgressControlViewModel.cs" />
     <Compile Include="Shared\HeadingViewModel.cs" />
     <Compile Include="Shared\XrmButtonViewModel.cs" />
-    <Compile Include="Grid\ObjectsGridSectionViewModel.cs" />
     <Compile Include="Dialog\DialogViewModel.cs" />
     <Compile Include="Dialog\DialogController.cs" />
     <Compile Include="Dialog\ObjectEntryDialog.cs" />

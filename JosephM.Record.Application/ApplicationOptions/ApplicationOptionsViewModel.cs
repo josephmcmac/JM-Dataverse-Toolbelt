@@ -43,6 +43,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         public void AddOption(string group, string optionLabel, Action action, string description = null)
         {
             var option = new ApplicationOption(optionLabel, action, description);
+            
             if (group == "Help")
                 AddToCollection(option, Helps);
             else if (group == "Setting")

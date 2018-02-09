@@ -87,6 +87,12 @@
     <Compile Include="ObjectEncrypt\TestObjectEncryptDialog.cs" />
     <Compile Include="Prism\TestCrud\TestCrudDialog.cs" />
     <Compile Include="Prism\TestCrud\TestCrudModule.cs" />
+    <Compile Include="Prism\TestGridEdit\TestDialogBase.cs" />
+    <Compile Include="Prism\TestGridEdit\TestDialogModule.cs" />
+    <Compile Include="Prism\TestGridEdit\TestDialogRequest.cs" />
+    <Compile Include="Prism\TestGridEdit\TestDialogResponse.cs" />
+    <Compile Include="Prism\TestGridEdit\TestDialogResponseItem.cs" />
+    <Compile Include="Prism\TestGridEdit\TestDialogService.cs" />
     <Compile Include="Prism\TestDialog\TestDialogModule.cs" />
     <Compile Include="Prism\TestDialog\TestDialogBase.cs" />
     <Compile Include="Prism\TestDialog\TestDialogRequest.cs" />

@@ -6,25 +6,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
     mc:Ignorable="d" d:DesignHeight="40" d:DesignWidth="300">
-    <field:FieldControlBase.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </field:FieldControlBase.Resources>
-    <Grid MinWidth="150" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
-        <ComboBox
-            VerticalAlignment="Top"
-            TabIndex="1"
-            Name="ComboBox"
-            Style="{StaticResource FieldEntryStyle}"
-            Tag="Key"
-            DisplayMemberPath="Value"
-            ItemsSource="{Binding ItemsSource}"
-            SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}"
-            IsEnabled="{Binding IsEditable}"
-             />
-    </Grid>
+    </UserControl.Resources>
+    <ComboBox
+        Style="{StaticResource  PicklistFieldEntryStyle}"
+        Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}"
+        Name="ComboBox"
+        DisplayMemberPath="Value"
+        ItemsSource="{Binding ItemsSource}"
+        IsEnabled="{Binding IsEditable}"
+        SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}" />
 </field:FieldControlBase>

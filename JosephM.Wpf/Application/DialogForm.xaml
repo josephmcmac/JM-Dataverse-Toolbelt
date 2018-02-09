@@ -1,20 +1,17 @@
 ﻿<UserControl x:Class="JosephM.Wpf.Application.DialogForm"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
-             xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
              DataContextChanged="OnDataContextChanged">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:BooleanToStarOrZeroConverter x:Key="BoolToStar" />
-            <converters:BooleanToZeroOrStarConverter x:Key="BoolToZero" />
-            <converters:LengthConverter x:Key="LengthConverter" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources/DataTemplates.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Dialogs.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -23,7 +20,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*"  />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" >
+        <Grid Grid.Row="0"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToVis}, Mode=OneWay}" >
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
         <Grid Grid.Row="1"
@@ -31,13 +28,13 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToStar}, Mode=OneWay}" />
-                <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToZero}, Mode=OneWay}" />
+                <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BooleanToZeroOrStar}, Mode=OneWay}" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Visibility="{Binding ShowProgressControlViewModel, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
                 <shared:ProgressControl
                 DataContext="{Binding ProgressControlViewModel}" />
             </Grid>
-            <Grid Grid.Row="1"  Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <Grid Grid.Row="1"  Visibility="{Binding MainFormInContext, Converter={StaticResource BoolToVis}, Mode=OneWay}">
                 <ItemsControl
                 Name="DialogPanel"
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"

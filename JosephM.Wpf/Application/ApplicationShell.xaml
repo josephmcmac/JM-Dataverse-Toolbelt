@@ -13,14 +13,12 @@
         <ResourceDictionary>
             <converters:TabbedApplicationHeightConverter x:Key="TabbedApplicationHeightConverter" />
             <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
-            <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
-            <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.xaml" />
-            <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.Light.xaml" />
-        </ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Tabs.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Application.xaml" />
+            </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
         </UserControl.Resources>
-    <Grid>
+    <Grid Style="{StaticResource AppContainerStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

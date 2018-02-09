@@ -112,6 +112,11 @@ namespace JosephM.Application.ViewModel.Fakes
             return null;
         }
 
+        public override void OpenFile(string fileName)
+        {
+            //nope
+        }
+
         public override void NavigateTo(Type type, UriQuery uriQuery)
         {
             RequestNavigate(RegionNames.MainTabRegion, type, uriQuery);

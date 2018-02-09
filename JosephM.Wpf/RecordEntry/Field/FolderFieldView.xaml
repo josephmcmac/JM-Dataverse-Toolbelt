@@ -8,7 +8,8 @@
             <converters:FolderToStringConverter x:Key="FolderToString" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
@@ -26,10 +27,10 @@
                 Style="{StaticResource FieldEntryStyle}"
                 IsReadOnly="False" />
         </Grid>
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1"  Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}">
             <Button
+                Style="{StaticResource SearchButton}" 
                 TabIndex="1"
-                Content="Select"
                 Name="selectButton"
                 Click="selectButtonClick"
                 IsEnabled="{Binding IsEditable}" />

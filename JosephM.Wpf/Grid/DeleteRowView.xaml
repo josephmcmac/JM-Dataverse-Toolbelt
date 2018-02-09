@@ -9,11 +9,11 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid VerticalAlignment="Top" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <Button Style="{StaticResource DeleteRowButton}" Command="{Binding Command}" />
     </Grid>
 </UserControl>

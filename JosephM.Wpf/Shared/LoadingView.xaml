@@ -13,8 +13,8 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernProgressRing.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -25,7 +25,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid Row="0">
-            <TextBlock Text="{Binding LoadingMessage}" />
+            <TextBlock Style="{StaticResource HeadingStyle}" Text="{Binding LoadingMessage}" />
         </Grid>
         <Grid Row="1">
             <shared:ModernProgressRing IsActive="{Binding IsLoading}"

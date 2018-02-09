@@ -10,34 +10,35 @@
                         d:DesignHeight="40" d:DesignWidth="300">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
-            <converters:BooleanToFalseConverter x:Key="BooleanToFalseConverter" />
+            <converters:BooleanToVisibilityHiddenConverter x:Key="BoolToHidden" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid MinWidth="200" Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
-        <TextBox Background="Transparent"
-             Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
-             BorderThickness="0"
-             Text="{Binding Mode=TwoWay, Path=ValueObject}"
-             IsReadOnly="True"
-             TextWrapping="WrapWithOverflow"
-             Style="{StaticResource FieldEntryStyle}" />
-        <TextBox
-            Visibility="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BoolToVis}}"
-            VerticalScrollBarVisibility="Visible"
-            TextWrapping="WrapWithOverflow"
-            AcceptsReturn="{Binding IsMultiline}"
-            MinLines ="{Binding NumberOfLines}"
-            MaxLines ="{Binding NumberOfLines}"
-            TabIndex="1"
-            Name="TextBox"
-            DataContext="{Binding NotifyOnValidationError=True}"
-            Text="{Binding Mode=TwoWay, Path=ValueObject}"
-            Style="{StaticResource FieldEntryStyle}"
-            IsReadOnly="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToFalseConverter}}"
-             />
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToHidden}}" >
+            <TextBox
+                Style="{StaticResource  FieldEntryStyle}"
+                AcceptsReturn="{Binding IsMultiline}"
+                MinLines ="{Binding NumberOfLines}"
+                MaxLines ="{Binding NumberOfLines}"
+                TabIndex="1"
+                Text="{Binding Mode=TwoWay, Path=ValueObject}"
+                IsReadOnly="True" />
+        </Grid>
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+            <TextBox 
+                Style="{StaticResource  StringFieldEntryStyle}"
+                Name="TextBox"
+                AcceptsReturn="{Binding IsMultiline}"
+                MinLines ="{Binding NumberOfLines}"
+                MaxLines ="{Binding NumberOfLines}"
+                TabIndex="1"
+                Text="{Binding Mode=TwoWay, Path=ValueObject}"
+                DataContext="{Binding NotifyOnValidationError=True}"
+                IsReadOnly="False" />
+        </Grid>
     </Grid>
 </field:FieldControlBase>

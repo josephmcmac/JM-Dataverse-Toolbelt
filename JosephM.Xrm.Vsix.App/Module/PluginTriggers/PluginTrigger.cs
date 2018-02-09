@@ -19,7 +19,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
     {
         public PluginTrigger()
         {
-            Mode = PluginMode.Synchronous;
+            Mode = PluginMode.Synch;
             PreImageAllFields = true;
             PreImageName = "PreImage";
         }
@@ -112,8 +112,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
         public enum PluginMode
         {
-            Synchronous = 0,
-            Asynchronous = 1
+            Synch = 0,
+            Asynch = 1
         }
     }
 }

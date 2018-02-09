@@ -36,7 +36,7 @@ namespace JosephM.Prism.Infrastructure.Console
         /// </summary>
         private void AddGenerateBatFunction()
         {
-            var customGridFunction = new CustomGridFunction("GENERATEBAT", "Generate Bat Executable", GenerateBat, (re) => { return true; });
+            var customGridFunction = new CustomGridFunction("GENERATEBAT", "Create Bat Exe", GenerateBat, (re) => { return true; });
             this.AddCustomGridFunction(customGridFunction, typeof(IAllowSaveAndLoad));
         }
 

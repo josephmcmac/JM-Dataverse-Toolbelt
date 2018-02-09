@@ -7,6 +7,7 @@ using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.TestModule.ObjectEncrypt;
 using JosephM.Prism.TestModule.Prism.TestCrud;
 using JosephM.Prism.TestModule.Prism.TestDialog;
+using JosephM.Prism.TestModule.Prism.TestGridEdit;
 using JosephM.Prism.TestModule.Prism.TestSettings;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Xrm;
@@ -40,6 +41,7 @@ namespace JosephM.Prism.TestPrismApplication
             prism.AddModule<TestCrudModule>();
             prism.AddModule<SavedRequestModule>();
             prism.AddModule<ConsoleApplicationModule>();
+            prism.AddModule<TestGridEditModule>();
             prism.Run();
         }
     }

@@ -149,9 +149,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\ApplicationHelpView.xaml.cs">
-      <DependentUpon>ApplicationHelpView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Application\ApplicationHeadingView.xaml.cs">
       <DependentUpon>ApplicationHeadingView.xaml</DependentUpon>
     </Compile>
@@ -175,78 +172,75 @@
     <Compile Include="Grid\DynamicGridView.xaml.cs">
       <DependentUpon>DynamicGridView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridDateFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridDateFieldView.xaml.cs">
       <DependentUpon>GridDateFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridDateColumn.cs" />
-    <Compile Include="Grid\GridMoneyFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridDateColumn.cs" />
+    <Compile Include="Grid\Fields\GridMoneyFieldView.xaml.cs">
       <DependentUpon>GridMoneyFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridDoubleFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridDoubleFieldView.xaml.cs">
       <DependentUpon>GridDoubleFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridDecimalFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridDecimalFieldView.xaml.cs">
       <DependentUpon>GridDecimalFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridMoneyColumn.cs" />
-    <Compile Include="Grid\GridDoubleColumn.cs" />
-    <Compile Include="Grid\GridDecimalColumn.cs" />
-    <Compile Include="Grid\GridIntFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridMoneyColumn.cs" />
+    <Compile Include="Grid\Fields\GridDoubleColumn.cs" />
+    <Compile Include="Grid\Fields\GridDecimalColumn.cs" />
+    <Compile Include="Grid\Fields\GridIntFieldView.xaml.cs">
       <DependentUpon>GridIntFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridIntColumn.cs" />
-    <Compile Include="Grid\GridFileRefColumn.cs" />
-    <Compile Include="Grid\GridFileRefFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridIntColumn.cs" />
+    <Compile Include="Grid\Fields\GridFileRefColumn.cs" />
+    <Compile Include="Grid\Fields\GridFileRefFieldView.xaml.cs">
       <DependentUpon>GridFileRefFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridEnumerableFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridEnumerableFieldView.xaml.cs">
       <DependentUpon>GridEnumerableFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridEnumerableColumn.cs" />
+    <Compile Include="Grid\Fields\GridEnumerableColumn.cs" />
     <Compile Include="Grid\EditRowView.xaml.cs">
       <DependentUpon>EditRowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\EditRowColumn.cs" />
-    <Compile Include="Grid\GridMultiSelectFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridMultiSelectFieldView.xaml.cs">
       <DependentUpon>GridMultiSelectFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridMultiSelectColumn.cs" />
-    <Compile Include="Grid\GridQueryView.xaml.cs">
+    <Compile Include="Grid\Fields\GridMultiSelectColumn.cs" />
+    <Compile Include="Query\GridQueryView.xaml.cs">
       <DependentUpon>GridQueryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridLookupColumn.cs" />
-    <Compile Include="Grid\GridLookupPicklistFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridLookupColumn.cs" />
+    <Compile Include="Grid\Fields\GridLookupPicklistFieldView.xaml.cs">
       <DependentUpon>GridLookupPicklistFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridPasswordColumn.cs" />
-    <Compile Include="Grid\GridPasswordFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridPasswordColumn.cs" />
+    <Compile Include="Grid\Fields\GridPasswordFieldView.xaml.cs">
       <DependentUpon>GridPasswordFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\DeleteRowColumn.cs" />
     <Compile Include="Grid\DeleteRowView.xaml.cs">
       <DependentUpon>DeleteRowView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridBooleanColumn.cs" />
-    <Compile Include="Grid\GridBooleanFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridBooleanColumn.cs" />
+    <Compile Include="Grid\Fields\GridBooleanFieldView.xaml.cs">
       <DependentUpon>GridBooleanFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridUrlFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridUrlFieldView.xaml.cs">
       <DependentUpon>GridUrlFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridUrlColumn.cs" />
-    <Compile Include="Grid\GridStringColumn.cs" />
-    <Compile Include="Grid\GridStringFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridUrlColumn.cs" />
+    <Compile Include="Grid\Fields\GridStringColumn.cs" />
+    <Compile Include="Grid\Fields\GridStringFieldView.xaml.cs">
       <DependentUpon>GridStringFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridPicklistColumn.cs" />
-    <Compile Include="Grid\GridPicklistFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridPicklistColumn.cs" />
+    <Compile Include="Grid\Fields\GridPicklistFieldView.xaml.cs">
       <DependentUpon>GridPicklistFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Grid\GridLookupFieldView.xaml.cs">
+    <Compile Include="Grid\Fields\GridLookupFieldView.xaml.cs">
       <DependentUpon>GridLookupFieldView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Html\HtmlFileView.xaml.cs">
-      <DependentUpon>HtmlFileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Query\ConditionView.xaml.cs">
       <DependentUpon>ConditionView.xaml</DependentUpon>
@@ -314,18 +308,9 @@
     <Compile Include="Converters\ToUpperConverter.cs" />
     <Compile Include="Converters\WidthConverter.cs" />
     <Compile Include="ControlExtentions\FocusExtension.cs" />
-    <Compile Include="Grid\GridLookupPicklistColumn.cs" />
-    <Compile Include="RecordEntry\Field\ConnectionView.xaml.cs">
-      <DependentUpon>ConnectionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Grid\GridListView.xaml.cs">
-      <DependentUpon>GridListView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Grid\Fields\GridLookupPicklistColumn.cs" />
     <Compile Include="RecordEntry\Field\UrlFieldView.xaml.cs">
       <DependentUpon>UrlFieldView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Shared\FieldLoadingView.xaml.cs">
-      <DependentUpon>FieldLoadingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shared\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
@@ -347,9 +332,6 @@
     </Compile>
     <Compile Include="Shared\HeadingView.xaml.cs">
       <DependentUpon>HeadingView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Grid\ObjectsGridSectionView.xaml.cs">
-      <DependentUpon>ObjectsGridSectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Application\CompletionScreen.xaml.cs">
       <DependentUpon>CompletionScreen.xaml</DependentUpon>
@@ -385,17 +367,12 @@
     <Compile Include="RecordEntry\RecordEntryView.xaml.cs">
       <DependentUpon>RecordEntryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TemplateSelector\CompletionItemTemplateSelector.cs" />
     <Compile Include="TemplateSelector\ConditionTemplateSelector.cs" />
     <Compile Include="TemplateSelector\DialogTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FieldTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FormSectionTemplateSelector.cs" />
     <Compile Include="TemplateSelector\LabelledFieldTemplateSelector.cs" />
     <Compile Include="TemplateSelector\MainTabRegionDataTemplateSelector.cs" />
-    <Page Include="Application\ApplicationHelpView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Application\ApplicationHeadingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -412,31 +389,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridDateFieldView.xaml">
+    <Page Include="Grid\Fields\GridDateFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridMoneyFieldView.xaml">
+    <Page Include="Grid\Fields\GridMoneyFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridDoubleFieldView.xaml">
+    <Page Include="Grid\Fields\GridDoubleFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridDecimalFieldView.xaml">
+    <Page Include="Grid\Fields\GridDecimalFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridIntFieldView.xaml">
+    <Page Include="Grid\Fields\GridIntFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridFileRefFieldView.xaml">
+    <Page Include="Grid\Fields\GridFileRefFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridEnumerableFieldView.xaml">
+    <Page Include="Grid\Fields\GridEnumerableFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -444,19 +421,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridMultiSelectFieldView.xaml">
+    <Page Include="Grid\Fields\GridMultiSelectFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridQueryView.xaml">
+    <Page Include="Query\GridQueryView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridLookupPicklistFieldView.xaml">
+    <Page Include="Grid\Fields\GridLookupPicklistFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridPasswordFieldView.xaml">
+    <Page Include="Grid\Fields\GridPasswordFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -464,27 +441,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridBooleanFieldView.xaml">
+    <Page Include="Grid\Fields\GridBooleanFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridUrlFieldView.xaml">
+    <Page Include="Grid\Fields\GridUrlFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridStringFieldView.xaml">
+    <Page Include="Grid\Fields\GridStringFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridPicklistFieldView.xaml">
+    <Page Include="Grid\Fields\GridPicklistFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Grid\GridLookupFieldView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Html\HtmlFileView.xaml">
+    <Page Include="Grid\Fields\GridLookupFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -556,19 +529,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="RecordEntry\Field\ConnectionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Grid\GridListView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="RecordEntry\Field\UrlFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Shared\FieldLoadingView.xaml">
+    <Page Include="Resources\Base.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\DataGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Application.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Tabs.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Query.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Forms.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Fields.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Dialogs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -600,10 +597,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Grid\ObjectsGridSectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Application\CompletionScreen.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -627,25 +620,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Resources\Assets\Button.xaml">
+    <Page Include="Resources\Converters.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Resources\Assets\Converters.xaml">
+    <Page Include="Resources\ModernProgressRing.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Assets\DataGrid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Assets\ModernProgressRing.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\DataTemplates.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Application\DialogForm.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -668,14 +649,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\ModernUI.Light.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\ModernUI.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

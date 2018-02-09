@@ -53,7 +53,7 @@ namespace JosephM.Application.Application
             });
         }
 
-        public void OpenFile(string fileName)
+        public virtual void OpenFile(string fileName)
         {
             Process.Start(fileName);
         }
