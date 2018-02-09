@@ -42,6 +42,7 @@ namespace JosephM.Application.ViewModel.Fakes
             var associated2 = CreateFakeRecord(FakeConstants.RecordType, "Associated 2");
             Associate(nnNRelationship, mainRecord, associated2);
             CreateFakeRecord(FakeConstants.RecordType2, "I Am A " + FakeConstants.RecordType2);
+            CreateFakeRecord(FakeConstants.RecordType2, "Update");
             Create100DummyRecords();
             CreateTextSearchRecords();
         }

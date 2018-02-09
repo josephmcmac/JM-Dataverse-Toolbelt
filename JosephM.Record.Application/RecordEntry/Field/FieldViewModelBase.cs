@@ -195,7 +195,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             //could be in extended classes - is used to notify the ui of validation error
             //as sometimes it is a different property displayed in ui for different view model types
-            get { return new[] { "ValueObject", "Value", "StringDisplay", "EnteredText", "SelectedItem" }; }
+            get { return new[] { "ValueObject", "Value", "StringDisplay", "EnteredText", "SelectedItem", "ValueString" }; }
         }
 
         public IEnumerable GetErrors(string propertyName)

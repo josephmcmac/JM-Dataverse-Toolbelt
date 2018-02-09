@@ -78,7 +78,7 @@ namespace JosephM.Xrm.Vsix.Application
         {
             var window = new Window
             {
-                Title = "XRM Dialog"
+                Title = dialog.TabLabel
             };
             var content = new WindowShell();
             window.Content = content;

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
@@ -21,7 +22,6 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate CompletionTemplate { get; set; }
         public DataTemplate CompletionTemplateWindowMinimum { get; set; }
         public DataTemplate LoadingTemplate { get; set; }
-        public DataTemplate ListViewTemplate { get; set; }
         public DataTemplate QueryViewTemplate { get; set; }
         public DataTemplate QueryViewTemplateWindowMinimum { get; set; }
         public DataTemplate DialogTemplate { get; set; }
@@ -48,8 +48,6 @@ namespace JosephM.Wpf.TemplateSelector
                 else
                     return CompletionTemplate;
             }
-            if (item is ListViewModel)
-                return ListViewTemplate;
             if (item is LoadingViewModel)
                 return LoadingTemplate;
             if (item is QueryViewModel)

@@ -51,7 +51,7 @@ namespace JosephM.Application.ViewModel.Grid
                     var isWriteable = RecordService?.GetFieldMetadata(field.FieldName, RecordType).Createable == true
                         || RecordService?.GetFieldMetadata(field.FieldName, RecordType).Writeable == true;
 
-                    viewModel.IsEditable = !IsReadOnly && isWriteable;
+                    viewModel.IsEditable = !IsReadOnly && isWriteable && FormService != null && FormService.AllowGridFieldEditEdit(ParentFormReference );
                     AddField(viewModel);
                 }
                 catch (Exception ex)

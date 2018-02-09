@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JosephM.Application.Application;
-using System.Collections.ObjectModel;
-using JosephM.Record.IService;
-using JosephM.Application.ViewModel.RecordEntry;
+﻿using JosephM.Application.Application;
 using JosephM.Core.FieldType;
+using JosephM.Record.IService;
 using JosephM.Record.Query;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace JosephM.Application.ViewModel.Query
 {

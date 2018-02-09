@@ -22,5 +22,10 @@ namespace JosephM.Wpf.Shared
             get { return DataContext as XrmButtonViewModel; }
             set { DataContext = value; }
         }
+
+        private void Popup_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+
+        }
     }
 }

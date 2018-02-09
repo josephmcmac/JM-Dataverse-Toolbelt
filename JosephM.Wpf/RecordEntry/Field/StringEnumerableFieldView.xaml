@@ -12,18 +12,18 @@
             <converters:StringToEnumerableStringConverter x:Key="StringToEnumerableString" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid>
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <TextBox
             TabIndex="1"
             Name="TextBox"
             DataContext="{Binding NotifyOnValidationError=True}"
             Text="{Binding Mode=TwoWay, Path=ValueObject, Converter={StaticResource StringToEnumerableString}}"
             Style="{StaticResource FieldEntryStyle}"
-            IsEnabled="{Binding IsEditable, Mode=TwoWay}"
-            Visibility="{Binding IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVis}}" />
+            IsEnabled="{Binding IsEditable}"
+             />
     </Grid>
 </field:FieldControlBase>

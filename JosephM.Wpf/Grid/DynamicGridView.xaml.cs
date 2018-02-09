@@ -312,10 +312,12 @@ namespace JosephM.Wpf.Grid
                                 };
                             }
                             else
+                            {
                                 dataGridField = new GridStringColumn()
                                 {
                                     Binding = cellBinding
                                 };
+                            }
                             dataGridField.Header = column.FieldLabel;
                             dataGridField.Width = new DataGridLength(column.WidthPart,
                                 DataGridLengthUnitType.Pixel);

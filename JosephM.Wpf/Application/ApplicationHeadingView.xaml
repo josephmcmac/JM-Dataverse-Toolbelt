@@ -14,7 +14,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Application.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

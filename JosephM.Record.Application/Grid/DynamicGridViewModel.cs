@@ -251,11 +251,32 @@ namespace JosephM.Application.ViewModel.Grid
             set
             {
                 _addRow = value;
-                AddRowButton = _addRow == null ? null : new XrmButtonViewModel("Add", _addRow, ApplicationController);
+                
+                AddRowButton = _addRow == null ? null : new XrmButtonViewModel("Add", () => DoAsyncWhileLoading(_addRow), ApplicationController);
                 OnPropertyChanged(nameof(CanAddRow));
                 OnPropertyChanged(nameof(AddRowButton));
             }
         }
+
+        public void DoAsyncWhileLoading(Action action)
+        {
+            if (action != null)
+            {
+                ApplicationController.DoOnAsyncThread(() =>
+                {
+                    LoadingViewModel.IsLoading = true;
+                    try
+                    {
+                        action();
+                    }
+                    finally
+                    {
+                        LoadingViewModel.IsLoading = false;
+                    }
+                });
+            }
+        }
+
         public XrmButtonViewModel AddRowButton { get; set; }
 
         public bool CanAddMultipleRow { get { return AddMultipleRow != null; } }

@@ -1,6 +1,7 @@
 ﻿#region
 
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.Extentions;
 

@@ -10,7 +10,7 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
@@ -31,7 +31,7 @@
             TabIndex="1"
             Text="{Binding FormattedDate, Mode=OneWay}"
             Style="{StaticResource FieldEntryStyle}"
-            IsEnabled="False"
+            IsReadOnly="True"
             Visibility="{Binding IsVisibleAndReadonly, Converter={StaticResource BoolToVis}}"
              />
     </Grid>

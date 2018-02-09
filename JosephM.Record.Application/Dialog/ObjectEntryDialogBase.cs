@@ -55,6 +55,7 @@ namespace JosephM.Application.ViewModel.Dialog
 
         protected override void LoadDialogExtention()
         {
+            LoadingViewModel.LoadingMessage = "Loading Entry Form";
             var recordService = new ObjectRecordService(ObjectToEnter, LookupService, OptionsetLimitedValues, ApplicationController, ObjectTypeMaps);
             var formService = new ObjectFormService(ObjectToEnter, recordService, ObjectTypeMaps);
             ViewModel = new ObjectEntryViewModel(StartNextAction, OnCancel, ObjectToEnter,
@@ -68,6 +69,7 @@ namespace JosephM.Application.ViewModel.Dialog
 
         protected override void CompleteDialogExtention()
         {
+            LoadingViewModel.LoadingMessage = "Please Wait While Processing";
             try
             {
                 if (SaveMethod != null)

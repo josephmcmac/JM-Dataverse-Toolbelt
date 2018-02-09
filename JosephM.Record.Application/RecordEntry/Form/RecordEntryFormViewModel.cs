@@ -51,6 +51,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             };
             ChangedPersistentFields = new List<string>();
             LoadingViewModel.IsLoading = true;
+            LoadingViewModel.LoadingMessage = "Loading Entry Form";
         }
 
         public XrmButtonViewModel GetButton(string id)
@@ -469,6 +470,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 PostLoading();
 
                 LoadingViewModel.IsLoading = false;
+                LoadingViewModel.LoadingMessage = "Please Wait Whil Processing";
             }
         }
 

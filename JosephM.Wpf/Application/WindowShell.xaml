@@ -23,18 +23,16 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernUI.Light.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Tabs.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Application.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" >
             <ContentControl Name="Content"
                 ContentTemplate="{StaticResource TabItemTemplate}">
             </ContentControl>

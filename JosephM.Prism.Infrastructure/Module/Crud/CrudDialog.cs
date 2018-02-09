@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.Query;
 using JosephM.Core.FieldType;
 using JosephM.Prism.Infrastructure.Module.Crud.BulkDelete;
 using JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate;
@@ -10,8 +10,6 @@ using JosephM.Record.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace JosephM.Prism.Infrastructure.Module.Crud
@@ -55,70 +53,60 @@ namespace JosephM.Prism.Infrastructure.Module.Crud
 
         protected override void LoadDialogExtention()
         {
-            LoadingViewModel.IsLoading = true;
-            Thread.Sleep(100);
-            //this bit messy because may take a while to load the record types
-            //so spawn on async thread, then back to the main thread for th ui objects
-            DoOnAsynchThread(() =>
+            try
             {
-                try
-                {
-                    var recordTypesForBrowsing = RecordService.GetAllRecordTypes()
-                        .Where(r =>
-                        RecordService.GetRecordTypeMetadata(r).Searchable)
-                        .Union(AdditionalExplicitTypes)
-                        .ToArray();
+                //this bit messy because may take a while to load the record types
+                //so spawn on async thread, then back to the main thread for th ui objects
+                LoadingViewModel.LoadingMessage = "Loading Types";
+                var recordTypesForBrowsing = Task.Run<IEnumerable<string>>(() => RecordService.GetAllRecordTypes()
+                    .Where(r =>
+                    RecordService.GetRecordTypeMetadata(r).Searchable)
+                    .Union(AdditionalExplicitTypes)
+                    .ToArray()).Result;
 
-                    DoOnMainThread(() =>
+                DoOnMainThread(() =>
+                {
+                    try
                     {
-                        try
+                        var customFunctionList = new List<CustomGridFunction>()
                         {
-                            var customFunctionList = new List<CustomGridFunction>()
+                            new CustomGridFunction("BULKUPDATE", "Bulk Update", new []
                             {
-                                new CustomGridFunction("BULKUPDATE", "Bulk Update", new []
+                                new CustomGridFunction("BULKUPDATESELECTED", "Selected Only", (g) =>
                                 {
-                                    new CustomGridFunction("BULKUPDATESELECTED", "Selected Only", (g) =>
-                                    {
-                                        TriggerBulkUpdate(true);
-                                    }, (g) => g.SelectedRows.Any()),
-                                    new CustomGridFunction("BULKUPDATEALL", "All Results", (g) =>
-                                    {
-                                        TriggerBulkUpdate(false);
-                                    }, (g) => g.GridRecords != null && g.GridRecords.Any()),
-                                }),
-                                new CustomGridFunction("DELETE", "Bulk Delete", new []
+                                    TriggerBulkUpdate(true);
+                                }, (g) => g.SelectedRows.Any()),
+                                new CustomGridFunction("BULKUPDATEALL", "All Results", (g) =>
                                 {
-                                    new CustomGridFunction("BULKDELETESELECTED", "Selected Only", (g) =>
-                                    {
-                                        TriggerBulkDelete(true);
-                                    }, (g) => g.SelectedRows.Any()),
-                                    new CustomGridFunction("BULKDELETEALL", "All Results", (g) =>
-                                    {
-                                        TriggerBulkDelete(false);
-                                    }, (g) => g.GridRecords != null && g.GridRecords.Any()),
-                                })
-                            };
+                                    TriggerBulkUpdate(false);
+                                }, (g) => g.GridRecords != null && g.GridRecords.Any()),
+                            }),
+                            new CustomGridFunction("DELETE", "Bulk Delete", new []
+                            {
+                                new CustomGridFunction("BULKDELETESELECTED", "Selected Only", (g) =>
+                                {
+                                    TriggerBulkDelete(true);
+                                }, (g) => g.SelectedRows.Any()),
+                                new CustomGridFunction("BULKDELETEALL", "All Results", (g) =>
+                                {
+                                    TriggerBulkDelete(false);
+                                }, (g) => g.GridRecords != null && g.GridRecords.Any()),
+                            })
+                        };
 
-                            QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
-                            Controller.LoadToUi(QueryViewModel);
-                        }
-                        catch (Exception ex)
-                        {
-                            ApplicationController.ThrowException(ex);
-                        }
-                        finally
-                        {
-                            LoadingViewModel.IsLoading = false;
-                        }
-                    });
-                }
-                catch(Exception ex)
-                {
-                    ApplicationController.ThrowException(ex);
-                    LoadingViewModel.IsLoading = false;
-                }
-
-            });
+                        QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
+                        Controller.LoadToUi(QueryViewModel);
+                    }
+                    catch (Exception ex)
+                    {
+                        ApplicationController.ThrowException(ex);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.ThrowException(ex);
+            }
         }
 
         private void TriggerBulkUpdate(bool selectedOnly)

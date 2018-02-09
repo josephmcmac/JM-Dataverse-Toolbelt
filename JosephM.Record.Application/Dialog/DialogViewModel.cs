@@ -129,6 +129,7 @@ namespace JosephM.Application.ViewModel.Dialog
             ApplicationController.DoOnAsyncThread(
                 () =>
                 {
+                    LoadingViewModel.IsLoading = true;
                     try
                     {
                         LoadDialogExtention();
@@ -142,6 +143,10 @@ namespace JosephM.Application.ViewModel.Dialog
                             throw;
                         else
                             ProcessError(ex);
+                    }
+                    finally
+                    {
+                        LoadingViewModel.IsLoading = false;
                     }
                 });
         }

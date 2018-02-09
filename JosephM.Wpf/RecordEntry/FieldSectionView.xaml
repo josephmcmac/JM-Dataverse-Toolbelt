@@ -12,8 +12,8 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Forms.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

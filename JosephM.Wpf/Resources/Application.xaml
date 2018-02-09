@@ -1,0 +1,57 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:applicationOptions="clr-namespace:JosephM.Application.ViewModel.ApplicationOptions;assembly=JosephM.Application.ViewModel"
+                    xmlns:application="clr-namespace:JosephM.Wpf.Application">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/modernui.light.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <Style x:Key="AppContainerStyle" TargetType="{x:Type Grid}">
+        <Setter Property="Margin" Value="20" />
+    </Style>
+    <Style TargetType="{x:Type ProgressBar}">
+        <Setter Property="Height" Value="25px" />
+        <Setter Property="Margin" Value="13,13,13,13" />
+    </Style>
+    <Style  x:Key="ApplicationTitle" TargetType="{x:Type TextBlock}" >
+        <Setter Property="Margin" Value="8,8,8,8"  />
+        <Setter Property="FontWeight" Value="Bold"></Setter>
+        <Setter Property="FontStyle" Value="Italic"></Setter>
+        <Setter Property="FontSize" Value="24px"></Setter>
+    </Style>
+    <Style x:Key="NotificationTextBlock" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontWeight"  Value="Bold" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+    </Style>
+    <Style x:Key="MainMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
+        <Setter Property="Width" Value="160px" />
+        <Setter Property="Height" Value="30px" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+    </Style>
+    <Style x:Key="SettingsMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
+        <Setter Property="Width" Value="240px" />
+        <Setter Property="Height" Value="30px" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+    </Style>
+    <DataTemplate x:Key="OptionDropdownTemplate" DataType="applicationOptions:ApplicationOption" >
+        <Button Margin="0,0,0,0" Content="{Binding Label}"
+                Command="{Binding DelegateCommand}" Style="{StaticResource MainMenuButton}" 
+                ToolTip="{Binding Description}" />
+    </DataTemplate>
+    <DataTemplate x:Key="NotificationTemplate">
+        <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />
+    </DataTemplate>
+    <DataTemplate x:Key="applicationHeadingTemplate">
+        <application:ApplicationHeadingView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="applicationMenuViewTemplate">
+        <application:ApplicationOptionsView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate x:Key="OptionTemplate">
+        <application:ApplicationMenuGroupView Content="{Binding Label}"  />
+    </DataTemplate>
+    <DataTemplate x:Key="ButtonDropdownTemplate" DataType="applicationOptions:ApplicationOption">
+        <Button Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
+                Command="{Binding DelegateCommand}" ToolTip="{Binding Description}" />
+    </DataTemplate>
+</ResourceDictionary>

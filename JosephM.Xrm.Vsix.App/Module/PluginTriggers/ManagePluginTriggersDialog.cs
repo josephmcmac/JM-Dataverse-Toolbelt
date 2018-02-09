@@ -35,21 +35,29 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
         private void Load(string assemblyName)
         {
+            LoadingViewModel.LoadingMessage = "Loading Assembly";
+
             var assemblyRecord = XrmRecordService.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name,
                 assemblyName);
             if (assemblyRecord == null)
                 throw new NullReferenceException("Assembly Not Deployed");
+
+            LoadingViewModel.LoadingMessage = "Loading Plugin Types";
 
             var pluginTypes = XrmRecordService.RetrieveAllAndClauses(Entities.plugintype,
                 new[] {new Condition(Fields.plugintype_.pluginassemblyid, ConditionType.Equal, assemblyRecord.Id)});
             if (!pluginTypes.Any())
                 throw new NullReferenceException("Not Plugin Types Deployed For Assembly");
 
+            LoadingViewModel.LoadingMessage = "Loading Plugin Triggers";
+
             SdkMessageStepsPre = XrmRecordService.RetrieveAllOrClauses(Entities.sdkmessageprocessingstep,
                 pluginTypes.Select(
                     pt => new Condition(Fields.sdkmessageprocessingstep_.plugintypeid, ConditionType.Equal, pt.Id)));
             var sdkMessageStepsWithFilter = SdkMessageStepsPre
                 .Where(sms => sms.GetField(Fields.sdkmessageprocessingstep_.sdkmessagefilterid) != null);
+
+            LoadingViewModel.LoadingMessage = "Loading Plugin Filters";
 
             var filters = !sdkMessageStepsWithFilter.Any()
                 ? new IRecord[0]
@@ -58,6 +66,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                         sms =>
                             new Condition(Fields.sdkmessagefilter_.sdkmessagefilterid, ConditionType.Equal,
                                 sms.GetLookupId(Fields.sdkmessageprocessingstep_.sdkmessagefilterid))));
+
+            LoadingViewModel.LoadingMessage = "Loading Plugin Images";
 
             var preImages = SdkMessageStepsPre.Any()
                 ? XrmRecordService.RetrieveAllOrClauses(Entities.sdkmessageprocessingstepimage, SdkMessageStepsPre.Select(m => new Condition(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, ConditionType.Equal, m.Id)))
@@ -75,9 +85,11 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 var matchingFilters = filters.Where(f => f.Id == filterId);
                 var filter = matchingFilters.Any() ? matchingFilters.First() : null;
                 var recordType = filter == null ? null : filter.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode);
+                LoadingViewModel.LoadingMessage = $"Loading {XrmRecordService.GetDisplayName(recordType)} Type";
                 RecordType recordTypeObj = null;
                 try
                 {
+
                     recordTypeObj = new RecordType(recordType, XrmRecordService.GetDisplayName(recordType));
                 }
                 catch (Exception)
@@ -108,7 +120,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                     : filteringAttributesString.Split(',')
                     .Select(s => s.Trim())
                     .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .Select(s => new RecordField(s, s))
+                    .Select(s => new RecordField(s, XrmRecordService.GetFieldLabel(s, recordType)))
                     .ToArray();
                 trigger.SpecificUserContext = item.GetLookupField(Fields.sdkmessageprocessingstep_.impersonatinguserid);
                 //load image details if there is one
@@ -129,7 +141,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                             .Split(',')
                             .Select(s => s.Trim())
                             .Where(s => !string.IsNullOrWhiteSpace(s))
-                            .Select(s => new RecordField(s, s))
+                            .Select(s => new RecordField(s, XrmRecordService.GetFieldLabel(s, recordType)))
                             .ToArray();
                         trigger.PreImageName = preImage.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias);
                         trigger.PreImageId = preImage.Id;
@@ -137,6 +149,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 }
                 triggers.Add(trigger);
             }
+            LoadingViewModel.LoadingMessage = "Loading Plugin Names";
             //since I had to correct the target type for this fields lookup need to populate the name
             if (triggers.Any())
             {
@@ -152,6 +165,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 .ThenByDescending(t => t.Mode).ToList();
             EntryObject.Triggers = triggers;
             EntryObject.Assembly = assemblyRecord.ToLookup();
+
+            LoadingViewModel.LoadingMessage = "Loading Plugins Into Grid";
         }
 
         public IEnumerable<IRecord> SdkMessageStepsPre { get; set; }
@@ -173,6 +188,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         public string AssemblyName { get; private set; }
         protected override void LoadDialogExtention()
         {
+            LoadingViewModel.LoadingMessage = "Getting Assembly Name";
             AssemblyName = VisualStudioService.GetSelectedProjectAssemblyName();
             if (string.IsNullOrWhiteSpace(AssemblyName))
             {
@@ -235,7 +251,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 record.SetField(Fields.sdkmessageprocessingstep_.impersonatinguserid, item.SpecificUserContext == null || item.SpecificUserContext.Id == null ? null : item.SpecificUserContext, XrmRecordService);
                 if (item.Id != null)
                     record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid, item.Id, XrmRecordService);
-                record.SetField(Fields.sdkmessageprocessingstep_.asyncautodelete, item.Mode == PluginTrigger.PluginMode.Asynchronous, XrmRecordService);
+                record.SetField(Fields.sdkmessageprocessingstep_.asyncautodelete, item.Mode == PluginTrigger.PluginMode.Asynch, XrmRecordService);
                 record.SetField(Fields.sdkmessageprocessingstep_.filteringattributes, item.FilteringFields != null && item.FilteringFields.Any() ? string.Join(",", item.FilteringFields.OrderBy(r => r.Key).Select(r => r.Key)) : null, XrmRecordService);
                 unloadedObjects.Add(record, item);
             }

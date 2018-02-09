@@ -14,7 +14,7 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DataTemplates.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Application.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -31,6 +31,7 @@
         <Popup
             PlacementTarget="{Binding ElementName=MainButton}"
             IsOpen="{Binding OpenSettings}"
+            StaysOpen="False"
             d:IsHidden="false">
             <ItemsControl
                 ItemsSource="{Binding Settings}"

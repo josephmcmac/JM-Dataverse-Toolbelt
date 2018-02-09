@@ -63,14 +63,12 @@
     <Compile Include="FakeFieldSectionViewModel.cs" />
     <Compile Include="FakeFormController.cs" />
     <Compile Include="FakeFormService.cs" />
-    <Compile Include="FakeHtmlFileModel.cs" />
     <Compile Include="FakeLoadingViewModel.cs" />
     <Compile Include="FakeLookupViewModel.cs" />
     <Compile Include="FakeMaintainViewModel.cs" />
     <Compile Include="FakeObjectEntryClass.cs" />
     <Compile Include="FakeObjectEntryViewModel.cs" />
     <Compile Include="FakeObjectFormController.cs" />
-    <Compile Include="FakeObjectsGridViewModelcs.cs" />
     <Compile Include="FakeProgressControlViewModel.cs" />
     <Compile Include="FakeRecordEntryViewModel.cs" />
     <Compile Include="FakeRecordService.cs" />

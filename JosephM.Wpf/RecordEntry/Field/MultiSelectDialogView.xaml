@@ -12,8 +12,10 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Assets/Converters.xaml" />
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -58,15 +60,13 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
-                                    <CheckBox IsChecked="{Binding Select}" Style="{StaticResource FieldEntryStyle}"></CheckBox>
+                                        <CheckBox IsChecked="{Binding Select}" Style="{StaticResource BooleanFieldEntryStyle}"></CheckBox>
                                 </Grid>
                                     <Grid Grid.Column="1">
-                                        <TextBox
+                                        <TextBlock
                                         Background="Transparent" 
-                                        BorderThickness="0"
-                                        IsReadOnly="True"
                                         Text="{Binding Item, Mode=OneTime}"
-                                        Style="{StaticResource FieldEntryStyle}"></TextBox>
+                                        Style="{StaticResource FieldLabelStyle}"></TextBlock>
                                     </Grid>
                                 </Grid>
                             </Border>

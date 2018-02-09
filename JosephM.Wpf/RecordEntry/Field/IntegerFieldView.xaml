@@ -13,7 +13,7 @@
             <converters:BooleanToFalseConverter x:Key="BooleanToFalseConverter" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
@@ -24,7 +24,7 @@
             DataContext="{Binding NotifyOnValidationError=True}"
             Text="{Binding ValueObject, Mode=TwoWay}"
             Style="{StaticResource FieldEntryStyle}"
-            IsReadOnly="{Binding IsEditable, Mode=TwoWay, Converter={StaticResource BooleanToFalseConverter}}"
+            IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
             Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
     </Grid>
 </field:FieldControlBase>
