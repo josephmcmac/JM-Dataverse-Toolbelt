@@ -59,7 +59,7 @@
                                     Tag="Key"
                                     DisplayMemberPath="Value"
                                     ItemsSource="{Binding RecordTypeItemsSource}"
-                                    SelectedItem="{Binding SelectedRecordType, Mode=TwoWay}"
+                                    SelectedItem="{Binding SelectedRecordType, Mode=TwoWay, IsAsync=True}"
                                      />
                             </WrapPanel>
                         </Grid>

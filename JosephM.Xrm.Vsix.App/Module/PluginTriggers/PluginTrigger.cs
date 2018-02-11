@@ -59,6 +59,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [DisplayOrder(50)]
         [RequiredProperty]
         [GridWidth(100)]
+        [PropertyInContextByPropertyValue(nameof(Stage), PluginStage.PostEvent)]
         public PluginMode? Mode { get; set; }
 
         [DisplayOrder(52)]

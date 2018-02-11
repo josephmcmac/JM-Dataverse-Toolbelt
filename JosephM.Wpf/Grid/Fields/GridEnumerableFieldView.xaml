@@ -22,9 +22,9 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
-            <TextBlock
-                Style="{StaticResource GridEnumerableField}"
-                Text="{Binding StringDisplay, NotifyOnValidationError=True}" />
+            <TextBox
+                Style="{StaticResource StringFieldEntryStyleReadOnly}"
+                Text="{Binding StringDisplay, Mode=OneWay, NotifyOnValidationError=True}" />
         </Grid>
         <Grid Grid.Column="1" Visibility="{Binding BulkAddButton, Converter={StaticResource NullToHiddenConverter}}">
             <Button DataContext="{Binding Path=BulkAddButton}" 

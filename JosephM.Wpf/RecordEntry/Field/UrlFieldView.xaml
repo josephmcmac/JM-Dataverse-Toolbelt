@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
     <Grid MinWidth="200">
-        <TextBlock Name="TextBlock">           
+        <TextBlock Name="TextBlock" Style="{StaticResource UrlFieldStyle}">           
             <Hyperlink NavigateUri="{Binding LinkUri}" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None" >
                 <TextBlock Text="{Binding LinkName}" />
             </Hyperlink>

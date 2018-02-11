@@ -3,7 +3,13 @@
                     xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
                     xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector"
                     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
+    </ResourceDictionary.MergedDictionaries>
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    <Style x:Key="SectionHeadingStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadingStyle}" >
+        <Setter Property="TextDecorations" Value="Underline" />
+    </Style>
     <DataTemplate x:Key="FieldSectionTemplate">
         <Grid Grid.Row="1">
             <recordEntry:FieldSectionView DataContext="{Binding}" />

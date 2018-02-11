@@ -25,16 +25,17 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="1">
             <TextBox
-                Style="{StaticResource FieldEntryStyle}"
+                Style="{StaticResource StringFieldEntryStyleReadOnly}"
                 Name="DisplayTextBlock"
                 TabIndex="1"
                 DataContext="{Binding NotifyOnValidationError=True}"
                 Text="{Binding StringDisplay, Mode=OneWay}"
-                IsReadOnly="True"
-                BorderThickness="0"
                     />
         </Grid>
-        <Grid Grid.Column="0" Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}">
+        <Grid
+            Grid.Column="0" Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}"
+            Style="{StaticResource FieldEntryButtonGridStyle}"
+            >
             <Button  Command="{Binding EditButton.Command}" Style="{StaticResource EditRowButton}" />
         </Grid>
     </Grid>

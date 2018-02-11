@@ -17,9 +17,15 @@ namespace JosephM.Prism.TestModule.Prism.TestGridEdit
         public TestGridEditRequest()
         {
             var list = new List<TestGridEditRequestItem>();
-            for(var i = 1; i < 50; i++)
+            for(var i = 1; i < 15; i++)
             {
-                list.Add(new TestGridEditRequestItem() { PreImageName = "Item " + i });
+                list.Add(new TestGridEditRequestItem() {
+                    PreImageName = "Item " + i,
+                    Multline = @"dzfbvzdffgnxfgnxfnxfgnfgnxgfdnbxgfxgbxnbxgnbgx
+                    sfv
+                    dzf",
+                    Url = new Url("www.google.com", "Open Google")
+                });
             }
             Items = list;
         }
@@ -31,6 +37,18 @@ namespace JosephM.Prism.TestModule.Prism.TestGridEdit
         {
             [Hidden]
             public string Id { get; set; }
+
+
+            [DisplayOrder(10)]
+            [GridWidth(300)]
+            [RequiredProperty]
+            [Multiline]
+            public string Multline { get; set; }
+
+            [DisplayOrder(10)]
+            [GridWidth(300)]
+            [RequiredProperty]
+            public Url Url { get; set; }
 
             [DisplayOrder(10)]
             [GridWidth(300)]
@@ -63,6 +81,7 @@ namespace JosephM.Prism.TestModule.Prism.TestGridEdit
             [DisplayOrder(50)]
             [RequiredProperty]
             [GridWidth(100)]
+            [PropertyInContextByPropertyValue(nameof(Stage), PluginStage.PostEvent)]
             public PluginMode? Mode { get; set; }
 
             [DisplayOrder(52)]
@@ -117,8 +136,8 @@ namespace JosephM.Prism.TestModule.Prism.TestGridEdit
 
             public enum PluginMode
             {
-                Synchronous = 0,
-                Asynchronous = 1
+                Synch = 0,
+                Asynch = 1
             }
         }
 
