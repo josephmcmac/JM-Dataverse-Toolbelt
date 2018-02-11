@@ -17,13 +17,13 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid MinWidth="100">
+    <Grid>
         <controls:IntegerTextBox
             TabIndex="1"
             x:Name="IntegerTextBox"
             DataContext="{Binding NotifyOnValidationError=True}"
             Text="{Binding ValueObject, Mode=TwoWay}"
-            Style="{StaticResource FieldEntryStyle}"
+            Style="{StaticResource IntegerFieldEntryStyle}"
             IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
             Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
     </Grid>

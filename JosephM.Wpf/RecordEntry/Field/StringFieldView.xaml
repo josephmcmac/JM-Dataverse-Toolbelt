@@ -20,13 +20,12 @@
     <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToHidden}}" >
             <TextBox
-                Style="{StaticResource  FieldEntryStyle}"
+                Style="{StaticResource  StringFieldEntryStyleReadOnly}"
                 AcceptsReturn="{Binding IsMultiline}"
                 MinLines ="{Binding NumberOfLines}"
                 MaxLines ="{Binding NumberOfLines}"
                 TabIndex="1"
-                Text="{Binding Mode=TwoWay, Path=ValueObject}"
-                IsReadOnly="True" />
+                Text="{Binding Mode=OneWay, Path=ValueObject}"  />
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
             <TextBox 

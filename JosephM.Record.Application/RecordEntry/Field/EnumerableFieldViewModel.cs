@@ -81,17 +81,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public void AddRow()
         {
+            LoadingViewModel.IsLoading = true;
             try
             {
                 var viewModel = FormService.GetLoadRowViewModel(SectionIdentifier, RecordForm, (record) =>
-                DoOnMainThread(() =>
-                {
-                    InsertRecord(record, 0);
-                    RecordForm.ClearChildForm();
-                }), () => RecordForm.ClearChildForm());
+                    DoOnMainThread(() =>
+                    {
+                        InsertRecord(record, 0);
+                        RecordForm.ClearChildForm();
+                    }), () => RecordForm.ClearChildForm());
                 if (viewModel == null)
                 {
-
                     InsertRecord(GetRecordService().NewRecord(RecordType), 0);
                 }
                 else
@@ -103,6 +103,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 ApplicationController.UserMessage(string.Format("Error Adding Row: {0}", ex.DisplayString()));
             }
+            finally
+            {
+                LoadingViewModel.IsLoading = false;
+            }
         }
 
         private void RemoveRow(GridRowViewModel row)
@@ -112,23 +116,33 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         private void EditRow(GridRowViewModel row)
         {
-            try
+            DoOnAsynchThread(() =>
             {
-                var viewModel = GetEditRowViewModel(row);
-                if (viewModel == null)
+                LoadingViewModel.IsLoading = true;
+                LoadingViewModel.LoadingMessage = "Please Wait While Loading";
+                try
                 {
-                    throw new NotImplementedException("No Form For Type");
+
+                    var viewModel = GetEditRowViewModel(row);
+                    if (viewModel == null)
+                    {
+                        throw new NotImplementedException("No Form For Type");
+                    }
+                    else
+                    {
+                        viewModel.IsReadOnly = IsReadOnly;
+                        RecordForm.LoadChildForm(viewModel);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    viewModel.IsReadOnly = IsReadOnly;
-                    RecordForm.LoadChildForm(viewModel);
+                    ApplicationController.UserMessage(string.Format("Error Adding Row: {0}", ex.DisplayString()));
                 }
-            }
-            catch (Exception ex)
-            {
-                ApplicationController.UserMessage(string.Format("Error Adding Row: {0}", ex.DisplayString()));
-            }
+                finally
+                {
+                    LoadingViewModel.IsLoading = false;
+                }
+            });
         }
 
         public RecordEntryFormViewModel GetEditRowViewModel(GridRowViewModel row)

@@ -15,34 +15,43 @@
     </ControlTemplate>
     <Style x:Key="FieldEntryStyle" TargetType="Control">
         <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Padding" Value="4,4,4,4" />
         <Setter Property="Margin" Value="8,8,8,8" />
         <Setter Property="MinHeight" Value="25" />
         <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
     </Style>
     <Style x:Key="FieldEntryButtonGridStyle" TargetType="Grid">
         <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="Margin" Value="8,8,8,8" />
-        <Setter Property="MinHeight" Value="25" />
+
     </Style>
     <Style x:Key="StringFieldEntryStyle" TargetType="TextBox" BasedOn="{StaticResource FieldEntryStyle}" >
         <Setter Property="MinWidth" Value="200" />
+    </Style>
+    <Style x:Key="IntegerFieldEntryStyle" TargetType="TextBox" BasedOn="{StaticResource FieldEntryStyle}" >
+        <Setter Property="MinWidth" Value="55" />
     </Style>
     <Style x:Key="BooleanFieldEntryStyle" TargetType="CheckBox" BasedOn="{StaticResource FieldEntryStyle}" >
         <Setter Property="Margin" Value="8,14,8,8" />
     </Style>
     <Style x:Key="PicklistFieldEntryStyle" TargetType="ComboBox" BasedOn="{StaticResource FieldEntryStyle}" >
-        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="MinWidth" Value="75" />
     </Style>
-    <Style x:Key="GridEnumerableField" TargetType="{x:Type TextBlock}">
+    <Style x:Key="StringFieldEntryStyleReadOnly" TargetType="TextBox" BasedOn="{StaticResource FieldEntryStyle}" >
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style x:Key="UrlFieldStyle" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
         <Setter Property="Margin" Value="0" />
-        <Setter Property="Height" Value="20" />
-        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
+
     </Style>
     <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
         <Setter Property="Margin" Value="13,13,13,13" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
-        <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="MinHeight" Value="20" />
     </Style>
 </ResourceDictionary>

@@ -31,16 +31,16 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BoolToVis}}">
             <ComboBox
-            MinWidth="150"
-            VerticalAlignment="Top"
-            TabIndex="1"
-            Name="ComboBox"
-            Style="{StaticResource FieldEntryStyle}"
-            Tag="Key"
-            DisplayMemberPath="Value"
-            ItemsSource="{Binding RecordTypeItemsSource}"
-            SelectedItem="{Binding SelectedRecordType, Mode=TwoWay}"
-            IsEnabled="{Binding IsEditable}"
+                MinWidth="150"
+                VerticalAlignment="Top"
+                TabIndex="1"
+                Name="ComboBox"
+                Style="{StaticResource FieldEntryStyle}"
+                Tag="Key"
+                DisplayMemberPath="Value"
+                ItemsSource="{Binding RecordTypeItemsSource}"
+                SelectedItem="{Binding SelectedRecordType, Mode=TwoWay}"
+                IsEnabled="{Binding IsEditable}"
              />
         </Grid>
         <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
@@ -54,14 +54,21 @@
                 IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
                 PreviewKeyDown="OnPreviewKeyDown" />
         </Grid>
-        <Grid Grid.Column="2" Row="0" Visibility="{Binding EditableAndTypePopulated, Converter={StaticResource BoolToVis}}">
+        <Grid
+            Style="{StaticResource FieldEntryButtonGridStyle}"
+            Grid.Column="2"
+            Row="0"
+            Visibility="{Binding EditableAndTypePopulated, Converter={StaticResource BoolToVis}}">
             <Button DataContext="{Binding Path=XrmButton}"
                         Style="{StaticResource SearchButton}"
                             Command="{Binding Command}" ToolTip="Click To Search" />
         </Grid>
-        <Grid Grid.Column="3" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" >
+        <Grid
+            Style="{StaticResource FieldEntryButtonGridStyle}"
+            Grid.Column="3"
+            Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" >
             <Button DataContext="{Binding Path=NewButton}"
-                        Style="{StaticResource AddRowButton}"
+                        Style="{StaticResource AddNewButton}"
                             Command="{Binding Command}" ToolTip="Click To Create New" />
         </Grid>
         <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="4" Row="1" >

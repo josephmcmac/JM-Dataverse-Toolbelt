@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JosephM.Application.ViewModel.Query
@@ -426,8 +427,14 @@ namespace JosephM.Application.ViewModel.Query
             }
             set
             {
+                LoadingViewModel.IsLoading = true;
                 try
                 {
+                    if(value != null)
+                    {
+                        LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(value)} Fields";
+                        var fieldNames = Task.Run(() => RecordService.GetFields(value)).Result;
+                    }
                     _recordType = value;
                     if (_recordType != null && AllowQuery)
                         FilterConditions = CreateFilterCondition();
@@ -438,6 +445,10 @@ namespace JosephM.Application.ViewModel.Query
                 catch (Exception ex)
                 {
                     ApplicationController.ThrowException(ex);
+                }
+                finally
+                {
+                    LoadingViewModel.IsLoading = false;
                 }
             }
         }

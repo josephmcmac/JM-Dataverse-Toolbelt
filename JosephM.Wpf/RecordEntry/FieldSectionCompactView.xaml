@@ -33,7 +33,7 @@
                 <Grid Grid.Column="0">
                     <TextBlock
                             Text="{Binding SectionLabel}"
-                            Style="{StaticResource HeadingStyle}" />
+                            Style="{StaticResource SectionHeadingStyle}" />
                 </Grid>
                 <Grid Grid.Column="1">
                     <ItemsControl

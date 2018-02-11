@@ -42,7 +42,7 @@
                     Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
             </Grid>
             <Grid Grid.Column="1" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" Style="{StaticResource FieldEntryButtonGridStyle}">
-                <Button DataContext="{Binding Path=NewButton}" Style="{StaticResource AddRowButton}"
+                <Button DataContext="{Binding Path=NewButton}" Style="{StaticResource AddNewButton}"
                             Command="{Binding Command}" ToolTip="Click To Create New" />
             </Grid>
         </Grid>
