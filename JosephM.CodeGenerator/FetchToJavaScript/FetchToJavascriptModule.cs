@@ -10,5 +10,7 @@ namespace JosephM.CodeGenerator.FetchToJavascript
             <FetchToJavascriptDialog, FetchToJavascriptService, FetchToJavascriptRequest, FetchToJavascriptResponse, ServiceResponseItem>
     {
         public override string MenuGroup => "Code Generation";
+
+        public override string MainOperationName => "Fetch 2 Javascript";
     }
 }

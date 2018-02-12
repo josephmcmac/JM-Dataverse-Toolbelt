@@ -3,6 +3,7 @@
                     xmlns:applicationOptions="clr-namespace:JosephM.Application.ViewModel.ApplicationOptions;assembly=JosephM.Application.ViewModel"
                     xmlns:application="clr-namespace:JosephM.Wpf.Application">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/modernui.light.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -24,14 +25,16 @@
         <Setter Property="Margin" Value="8,8,8,8" />
     </Style>
     <Style x:Key="MainMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
-        <Setter Property="Width" Value="160px" />
+        <Setter Property="Width" Value="{Binding Path=ActualWidth,ElementName=MainMenuGrid, Converter={StaticResource LengthConverter}, ConverterParameter=.12}" />
         <Setter Property="Height" Value="30px" />
         <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Padding" Value="0" />
     </Style>
     <Style x:Key="SettingsMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
-        <Setter Property="Width" Value="240px" />
+        <Setter Property="Width" Value="{Binding Path=ActualWidth,ElementName=MainMenuGrid, Converter={StaticResource LengthConverter}, ConverterParameter=.12}" />
         <Setter Property="Height" Value="30px" />
         <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Padding" Value="0" />
     </Style>
     <DataTemplate x:Key="OptionDropdownTemplate" DataType="applicationOptions:ApplicationOption" >
         <Button Margin="0,0,0,0" Content="{Binding Label}"

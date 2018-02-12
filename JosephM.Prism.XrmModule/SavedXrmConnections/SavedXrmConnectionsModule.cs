@@ -26,6 +26,8 @@ namespace JosephM.Prism.XrmModule.SavedXrmConnections
             AddHelpUrl("Saved XRM Connections", "SavedXrmConnections");
         }
 
+        public override string MainOperationName => "Saved Connections";
+
         public override void RegisterTypes()
         {
             base.RegisterTypes();

@@ -18,7 +18,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Name="MainMenuGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
@@ -35,7 +35,32 @@
             </ItemsControl>
         </Grid>
         <Grid Column="1">
-            <application:ApplicationSettingsView />
+            <Grid
+        Visibility="{Binding HasSettings, Converter={StaticResource BoolToVis}}"
+        VerticalAlignment="Top">
+                <Button
+            Name="MainButton"
+            Style="{StaticResource SettingsMenuButton}"
+            Content="Settings"
+            Command="{Binding SettingsClick}"
+            ToolTip="{Binding Description}"
+            />
+                <Popup
+            PlacementTarget="{Binding ElementName=MainButton}"
+            IsOpen="{Binding OpenSettings}"
+            StaysOpen="False"
+            d:IsHidden="false">
+                    <ItemsControl
+                ItemsSource="{Binding Settings}"
+                ItemTemplate="{StaticResource ButtonDropdownTemplate}" d:IsLocked="True">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Popup>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

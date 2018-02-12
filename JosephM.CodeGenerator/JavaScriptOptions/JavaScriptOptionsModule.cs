@@ -13,5 +13,7 @@ namespace JosephM.CodeGenerator.JavaScriptOptions
             <JavaScriptOptionsDialog, JavaScriptOptionsService, JavaScriptOptionsRequest, JavaScriptOptionsResponse, ServiceResponseItem>
     {
         public override string MenuGroup => "Code Generation";
+
+        public override string MainOperationName => "JavaScript Options";
     }
 }

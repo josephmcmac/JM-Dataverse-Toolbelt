@@ -24,7 +24,7 @@ namespace JosephM.Prism.XrmModule.Crud
 
         public override string MainOperationName
         {
-            get { return "Browse/Update Data"; }
+            get { return "Browse/Update"; }
         }
 
         private void AddBrowseButtonToSavedConnectionsGrid()

@@ -15,6 +15,8 @@ namespace JosephM.CustomisationExporter.Exporter
             AddHelpUrl("Customisation Exporter", "CustomisationExport");
         }
 
+        public override string MainOperationName { get { return "Export"; } }
+
         public override string MenuGroup => "Customisations";
     }
 }

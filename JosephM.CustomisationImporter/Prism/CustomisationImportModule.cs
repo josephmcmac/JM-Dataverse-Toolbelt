@@ -17,7 +17,7 @@ namespace JosephM.CustomisationImporter.Prism
     public class CustomisationImportModule
         : ServiceRequestModule<XrmCustomisationImportDialog, XrmCustomisationImportService, CustomisationImportRequest, CustomisationImportResponse, CustomisationImportResponseItem>
     {
-        public override string MainOperationName { get { return "Import Customisations"; } }
+        public override string MainOperationName { get { return "Import"; } }
 
         public override string MenuGroup => "Customisations";
 
@@ -25,7 +25,7 @@ namespace JosephM.CustomisationImporter.Prism
         {
             base.InitialiseModule();
             AddHelpUrl("Import Customisations", "CustomisationImporter");
-            AddOption(MenuGroup, "Download Template", OpenTemplateCommand, "Get An Excel File With The Tabs And Columns For Importing Customisations");
+            AddOption(MenuGroup, "Open Template", OpenTemplateCommand, "Get An Excel File With The Tabs And Columns For Importing Customisations");
         }
 
         public void OpenTemplateCommand()
