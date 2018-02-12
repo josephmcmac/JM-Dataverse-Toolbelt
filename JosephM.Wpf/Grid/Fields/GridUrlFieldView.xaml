@@ -6,5 +6,5 @@
              xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
              mc:Ignorable="d"
              d:DesignHeight="50" d:DesignWidth="400">
-    <field:UrlFieldView  />
+    <field:UrlFieldView  HorizontalAlignment="Center" />
 </UserControl>

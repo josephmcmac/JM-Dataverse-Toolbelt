@@ -7,18 +7,6 @@
              d:DesignHeight="300"
              d:DesignWidth="700"
              Name="MyMainContent"
-             MinHeight="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Border,
-                                       AncestorLevel=1}}"
-              MaxHeight="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Border,
-                                       AncestorLevel=1}}"
-              Height="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Border,
-                                       AncestorLevel=1}}"
              >
     <UserControl.Resources>
         <ResourceDictionary>

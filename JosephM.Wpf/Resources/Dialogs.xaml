@@ -1,41 +1,42 @@
-﻿<ResourceDictionary 
+﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
     xmlns:application="clr-namespace:JosephM.Wpf.Application"
-    xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
-    xmlns:grid="clr-namespace:JosephM.Wpf.Grid"
-    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector"
+    xmlns:query="clr-namespace:JosephM.Wpf.Query"
+    xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
-    xmlns:query="clr-namespace:JosephM.Wpf.Query">
+    xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <DataTemplate x:Key="RecordEntryTemplateWindowMinimum">
-
-        <Grid
-            MinHeight="{Binding Path=ActualHeight,
+    <Style x:Key="WindowGridStyle" TargetType="Grid" >
+        <Setter Property="MinHeight" Value="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
                                        AncestorType=Window,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
-            Height="{Binding Path=ActualHeight,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}" />
+        <Setter Property="Height" Value="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Border,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
+                                       AncestorType=Window,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.97}" />
+    </Style>
+    <Style x:Key="TabGridStyle" TargetType="Grid" >
+        <Setter Property="MinHeight" Value="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=TabControl,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}" />
+        <Setter Property="Height" Value="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=TabControl,
+                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.1}" />
+    </Style>
+    <DataTemplate x:Key="RecordEntryTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
             <recordEntry:RecordEntryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="RecordEntryTemplate">
-        <Grid
-            MinHeight="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=TabControl,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
-           
-            Height="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Border,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=1}">
+    <DataTemplate x:Key="RecordEntryTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
             <recordEntry:RecordEntryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -44,17 +45,14 @@
             <shared:ProgressControl DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="CompletionTemplate">
-        <application:CompletionScreen Height="{Binding ActualHeight, ElementName=tabBorder}"
-            DataContext="{Binding}" />
+    <DataTemplate x:Key="CompletionTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
+            <application:CompletionScreen DataContext="{Binding}" />
+        </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="CompletionTemplateWindowMinimum">
-        <Grid MaxHeight="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=application:WindowShell,
-                                       AncestorLevel=1}}" >
-            <application:CompletionScreen 
-            DataContext="{Binding}" />
+    <DataTemplate x:Key="CompletionTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
+            <application:CompletionScreen  DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="LoadingTemplate">
@@ -62,16 +60,13 @@
             <shared:LoadingView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="QueryViewTemplate">
-        <Grid>
+    <DataTemplate x:Key="QueryViewTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
             <query:GridQueryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="QueryViewTemplateWindowMinimum">
-        <Grid MaxHeight="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=application:WindowShell,
-                                       AncestorLevel=1}}" >
+    <DataTemplate x:Key="QueryViewTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
             <query:GridQueryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -80,33 +75,27 @@
             <application:DialogForm DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="MultiSelectDialogTemplate">
-        <Grid MinHeight="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=TabControl,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
-           
-            Height="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Border,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.92}"
-            MaxWidth="{Binding Path=ActualWidth,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Border,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.98}">
+    <DataTemplate x:Key="MultiSelectDialogTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
+            <field:MultiSelectDialogView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="MultiSelectDialogTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
             <field:MultiSelectDialogView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
     <templateSelector:DialogTemplateSelector
-        RecordEntryTemplate="{StaticResource RecordEntryTemplate}"
-        RecordEntryTemplateWindowMinimum="{StaticResource RecordEntryTemplateWindowMinimum}"
+        RecordEntryTemplateTabSize="{StaticResource RecordEntryTemplateTabSize}"
+        RecordEntryTemplateWindowSize="{StaticResource RecordEntryTemplateWindowSize}"
         ProgressTemplate="{StaticResource ProgressControlTemplate}"
-        CompletionTemplate="{StaticResource CompletionTemplate}"
-        CompletionTemplateWindowMinimum="{StaticResource CompletionTemplateWindowMinimum}"
+        CompletionTemplateTabSize="{StaticResource CompletionTemplateTabSize}"
+        CompletionTemplateWindowSize="{StaticResource CompletionTemplateWindowSize}"
         LoadingTemplate="{StaticResource LoadingTemplate}"
-        QueryViewTemplate="{StaticResource QueryViewTemplate}"
-        QueryViewTemplateWindowMinimum="{StaticResource QueryViewTemplateWindowMinimum}"
+        QueryViewTemplateTabSize="{StaticResource QueryViewTemplateTabSize}"
+        QueryViewTemplateWindowSize="{StaticResource QueryViewTemplateWindowSize}"
         DialogTemplate="{StaticResource DialogDialogTemplate}"
-        MultiSelectDialogTemplate="{StaticResource MultiSelectDialogTemplate}"
+        MultiSelectDialogTemplateTabSize="{StaticResource MultiSelectDialogTemplateTabSize}"
+        MultiSelectDialogTemplateWindowSize="{StaticResource MultiSelectDialogTemplateWindowSize}"
         x:Key="DialogTemplateSelector" />
 </ResourceDictionary>
