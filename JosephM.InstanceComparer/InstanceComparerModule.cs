@@ -18,7 +18,7 @@ namespace JosephM.InstanceComparer
         }
         public override string MainOperationName
         {
-            get { return "Instance Comparison"; }
+            get { return "Instance Compare"; }
         }
     }
 }
