@@ -261,20 +261,28 @@ namespace JosephM.Application.ViewModel.Query
 
         public void QuickFind()
         {
+            var anyNotValid = ValidateCurrentSearch();
+            if (anyNotValid)
+                return;
+            DynamicGridViewModel.ReloadGrid();
+        }
+
+        private bool ValidateCurrentSearch()
+        {
+            var result = false;
             if (!IsQuickFind)
             {
-                var anyNotValid = false;
+
                 foreach (var condition in FilterConditions.Conditions)
                 {
                     if (!condition.Validate())
                     {
-                        anyNotValid = true;
+                        result = true;
                     }
                 }
-                if (anyNotValid)
-                    return;
             }
-            DynamicGridViewModel.ReloadGrid();
+
+            return result;
         }
 
         private string _heading = "Query";
@@ -310,6 +318,9 @@ namespace JosephM.Application.ViewModel.Query
 
         public GetGridRecordsResponse GetGridRecords(bool ignorePages)
         {
+            var anyNotValid = ValidateCurrentSearch();
+            if (anyNotValid)
+                return new GetGridRecordsResponse(new IRecord[0]);
             var query = GenerateQuery();
 
             if (!DynamicGridViewModel.HasPaging || ignorePages)

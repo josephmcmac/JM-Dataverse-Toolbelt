@@ -15,7 +15,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Name="MainGrid" Height="{Binding ActualHeight, ElementName=tabBorder, Converter={StaticResource LengthConverter}, ConverterParameter=.97}">
+    <Grid Name="MainGrid" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*"  />

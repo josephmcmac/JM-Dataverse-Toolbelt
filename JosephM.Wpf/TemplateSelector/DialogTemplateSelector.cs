@@ -3,6 +3,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using JosephM.Application.ViewModel;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Query;
@@ -16,52 +17,54 @@ namespace JosephM.Wpf.TemplateSelector
 {
     public class DialogTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate RecordEntryTemplate { get; set; }
-        public DataTemplate RecordEntryTemplateWindowMinimum { get; set; }
+        public DataTemplate RecordEntryTemplateTabSize { get; set; }
+        public DataTemplate RecordEntryTemplateWindowSize { get; set; }
         public DataTemplate ProgressTemplate { get; set; }
-        public DataTemplate CompletionTemplate { get; set; }
-        public DataTemplate CompletionTemplateWindowMinimum { get; set; }
+        public DataTemplate CompletionTemplateTabSize { get; set; }
+        public DataTemplate CompletionTemplateWindowSize { get; set; }
         public DataTemplate LoadingTemplate { get; set; }
-        public DataTemplate QueryViewTemplate { get; set; }
-        public DataTemplate QueryViewTemplateWindowMinimum { get; set; }
+        public DataTemplate QueryViewTemplateTabSize { get; set; }
+        public DataTemplate QueryViewTemplateWindowSize { get; set; }
         public DataTemplate DialogTemplate { get; set; }
-        public DataTemplate MultiSelectDialogTemplate { get; set; }
+        public DataTemplate MultiSelectDialogTemplateTabSize { get; set; }
+        public DataTemplate MultiSelectDialogTemplateWindowSize { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
+            if(item is ViewModelBase)
+            {
+                var viewModel = (ViewModelBase)item;
+                if (viewModel.ApplicationController?.ForceElementWindowHeight ?? false)
+                {
+                    if (item is RecordEntryFormViewModel)
+                        return RecordEntryTemplateWindowSize;
+                    if (item is CompletionScreenViewModel)
+                        return CompletionTemplateWindowSize;
+                    if (item is QueryViewModel)
+                        return QueryViewTemplateWindowSize;
+                    if (item is IMultiSelectDialog)
+                        return MultiSelectDialogTemplateWindowSize;
+                }
+                else
+                {
+                    if (item is RecordEntryFormViewModel)
+                        return RecordEntryTemplateTabSize;
+                    if (item is CompletionScreenViewModel)
+                        return CompletionTemplateTabSize;
+                    if (item is QueryViewModel)
+                        return QueryViewTemplateTabSize;
+                    if (item is IMultiSelectDialog)
+                        return MultiSelectDialogTemplateTabSize;
+                }
+            }
             if (item is ProgressControlViewModel)
                 return ProgressTemplate;
-            if (item is RecordEntryFormViewModel)
-            {
-                var re = (RecordEntryFormViewModel)item;
-                if (re.ApplicationController?.ForceElementWindowHeight ?? false)
-                    return RecordEntryTemplateWindowMinimum;
-                else
-                    return RecordEntryTemplate;
-            }
-            if (item is CompletionScreenViewModel)
-            {
-                var cs = (CompletionScreenViewModel)item;
-                if (cs.ApplicationController?.ForceElementWindowHeight ?? false)
-                    return CompletionTemplateWindowMinimum;
-                else
-                    return CompletionTemplate;
-            }
             if (item is LoadingViewModel)
                 return LoadingTemplate;
-            if (item is QueryViewModel)
-            {
-                var qv = (QueryViewModel)item;
-                if (qv.ApplicationController?.ForceElementWindowHeight ?? false)
-                    return QueryViewTemplateWindowMinimum;
-                else
-                    return QueryViewTemplate;
-            }
             if (item is DialogViewModel)
                 return DialogTemplate;
-            if (item is IMultiSelectDialog)
-                return MultiSelectDialogTemplate;
+
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }
