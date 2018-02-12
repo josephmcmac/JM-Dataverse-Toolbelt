@@ -349,9 +349,6 @@
     <Compile Include="Application\ApplicationOptionsView.xaml.cs">
       <DependentUpon>ApplicationOptionsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Application\ApplicationSettingsView.xaml.cs">
-      <DependentUpon>ApplicationSettingsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Application\Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
@@ -609,10 +606,6 @@
       <DependentUpon>ProgressControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Application\ApplicationOptionsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Application\ApplicationSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
