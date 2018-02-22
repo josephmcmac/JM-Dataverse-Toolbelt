@@ -89,6 +89,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
@@ -97,6 +98,8 @@
   <ItemGroup>
     <Compile Include="Dialog\SavedRequestDialog.cs" />
     <Compile Include="Dialog\AppSettingDialog.cs" />
+    <Compile Include="Module\ReleaseCheckModule\GithubRelease.cs" />
+    <Compile Include="Module\ReleaseCheckModule\GitHubReleaseCheckModule.cs" />
     <Compile Include="Module\AboutModule\About.cs" />
     <Compile Include="Module\AboutModule\AboutDialog.cs" />
     <Compile Include="Module\Crud\BulkDelete\BulkDeleteDialog.cs" />
@@ -114,6 +117,8 @@
     <Compile Include="Module\DialogModule.cs" />
     <Compile Include="Module\CommandLineArgument.cs" />
     <Compile Include="Module\ICommandLineExecutable.cs" />
+    <Compile Include="Module\ReleaseCheckModule\UpdateSettings.cs" />
+    <Compile Include="Module\ReleaseCheckModule\UpdateSettingsDialog.cs" />
     <Compile Include="Module\SavedRequests\SavedRequestModule.cs" />
     <Compile Include="Module\AboutModule\AboutModule.cs" />
     <Compile Include="Module\SettingsModule.cs" />

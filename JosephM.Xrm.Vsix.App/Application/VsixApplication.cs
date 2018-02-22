@@ -66,9 +66,6 @@ namespace JosephM.Xrm.Vsix
 
         public void CheckRefreshActiveSettings()
         {
-            //todo review this and see if could trigger the module loading code 
-            //or somehting when solution inttially opened
-
             //okay so I could not subscribe to when a solution is opened
             //at which point I would need to load these settings into the unity container
             //so each time a button is clicked I will just ensure the objects in unity
