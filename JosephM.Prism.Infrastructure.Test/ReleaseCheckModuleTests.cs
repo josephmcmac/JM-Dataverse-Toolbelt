@@ -21,6 +21,8 @@ namespace JosephM.Prism.Infrastructure.Test
             Assert.IsFalse(module.IsNewerVersion("2", "3.4.6.8"));
             Assert.IsTrue(module.IsNewerVersion("11.0.0.0", "2.0.0.0"));
             Assert.IsFalse(module.IsNewerVersion("9.0.0.0", "19.0.0.0"));
+            Assert.IsFalse(module.IsNewerVersion("2.0.3.0", "2.0.3"));
+            Assert.IsFalse(module.IsNewerVersion("2.0.3", "2.0.3.0"));
             try
             {
                 Assert.IsFalse(module.IsNewerVersion("what the", "19.0.0.0"));

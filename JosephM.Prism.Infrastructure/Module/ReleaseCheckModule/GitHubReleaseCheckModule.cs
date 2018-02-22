@@ -122,9 +122,16 @@ namespace JosephM.Application.Prism.Module.ReleaseCheckModule
         private bool IsNewerVersion(IEnumerable<int> latestNumbers, IEnumerable<int> thisNumbers)
         {
             if (!latestNumbers.Any())
+            {
                 return false;
+            }
             else if (!thisNumbers.Any())
-                return true;
+            {
+                if (latestNumbers.All(i => i == 0))
+                    return false;
+                else
+                    return true;
+            }
             else if (thisNumbers.First() > latestNumbers.First())
                 return false;
             else if (latestNumbers.First() > thisNumbers.First())
