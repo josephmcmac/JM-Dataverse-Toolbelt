@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Log;
+﻿using JosephM.Core.Extentions;
+using JosephM.Core.Log;
 using JosephM.Core.Service;
 using System;
 using System.Threading;
@@ -11,6 +12,11 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
         public override void ExecuteExtention(TestDialogRequest request, TestDialogResponse response,
             LogController controller)
         {
+            if(request.ThrowFatalErrors)
+            {
+                throw new Exception("Nope " + "Nope\n".ReplicateString(100));
+            }
+
             response.AddResponseItem(new TestDialogResponseItem("Dummy Response", null));
             if (request.ThrowResponseErrors)
             {

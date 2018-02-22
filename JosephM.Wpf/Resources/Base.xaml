@@ -10,6 +10,13 @@
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
+    <Style x:Key="HeadingStyleTextBox" TargetType="TextBox" >
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="13,13,13,13" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
     <Style x:Key="BorderStyle" TargetType="{x:Type Border}">
         <Setter Property="BorderThickness"  Value=".5" />
         <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
