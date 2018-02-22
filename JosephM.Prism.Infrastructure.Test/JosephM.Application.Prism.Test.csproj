@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="AutoDialogController.cs" />
     <Compile Include="DialogModuleTest.cs" />
+    <Compile Include="ReleaseCheckModuleTests.cs" />
     <Compile Include="PrismSettingsManagerTests.cs" />
     <Compile Include="PrismDependencyControllerTests.cs" />
     <Compile Include="SettingsModuleTest.cs" />

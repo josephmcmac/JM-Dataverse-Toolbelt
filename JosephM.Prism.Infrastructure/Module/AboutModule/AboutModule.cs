@@ -1,7 +1,10 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
+using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace JosephM.Application.Prism.Module.AboutModule
@@ -37,7 +40,39 @@ namespace JosephM.Application.Prism.Module.AboutModule
 
         private string GetVersionString()
         {
+            var installedVersion = GetInstalledApplicationVersion();
+            if (installedVersion != null)
+                return installedVersion;
             return MainAssembly == null ? null : "v " + AssemblyName.GetAssemblyName(MainAssembly.Location).Version?.ToSt‌​ring();
+        }
+
+        public string GetInstalledApplicationVersion()
+        {
+            var rKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall");
+
+            var insApplication = new List<string>();
+
+            if (rKey != null && rKey.SubKeyCount > 0)
+            {
+                insApplication = rKey.GetSubKeyNames().ToList();
+            }
+
+            int i = 0;
+
+            foreach (string appName in insApplication)
+            {
+
+                RegistryKey finalKey = rKey.OpenSubKey(insApplication[i]);
+
+                string installedApp = finalKey.GetValue("DisplayName")?.ToString();
+
+                if (installedApp == ApplicationController.ApplicationName)
+                {
+                    return finalKey.GetValue("DisplayVersion").ToString();
+                }
+                i++;
+            }
+            return null;
         }
 
         public virtual string CreateIssueLink { get; }
