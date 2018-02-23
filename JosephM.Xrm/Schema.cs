@@ -10607,6 +10607,7 @@ namespace JosephM.Xrm.Schema
                 public const int Mobile = 5;
                 public const int QuickViewForm = 6;
                 public const int QuickCreate = 7;
+                public const int InteractionCentric = 10;
                 public const int Other = 100;
                 public const int MainBackup = 101;
                 public const int AppointmentBookBackup = 102;

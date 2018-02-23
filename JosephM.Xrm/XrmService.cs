@@ -1036,7 +1036,11 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     }
                 case Entities.systemform:
                     {
-                        result = string.Format("{0}/main.aspx?etn={1}&extraqs=formtype%3dmain%26formId%3d{2}%26action%3d-1&pagetype=formeditor", WebUrl, recordType, id);
+                        var systemForm = Retrieve(Entities.systemform, id, new[] { Fields.systemform_.type });
+                        if (systemForm.GetOptionSetValue(Fields.systemform_.type) == OptionSets.SystemForm.FormType.Dashboard)
+                            result = string.Format("{0}/main.aspx?extraqs=%26formId%3d%7b{1}%7d%26dashboardType%3d1030&pagetype=dashboardeditor", WebUrl, id);
+                        else
+                            result = string.Format("{0}/main.aspx?etn={1}&extraqs=formtype%3dmain%26formId%3d{2}%26action%3d-1&pagetype=formeditor", WebUrl, recordType, id);
                         break;
                         //main.aspx?appSolutionId=%7b06E9A3A9-FD45-E511-80D2-000C29634D55%7d&etc=10018&extraqs=formtype%3dmain%26formId%3dAD395571-0EC9-4AE2-BB86-BF6B00C087BD%26action%3d-1&pagetype=formeditor
                         //http://qa2012/WorkflowScheduler/main.aspx?appSolutionId=%7bFD140AAF-4DF4-11DD-BD17-0019B9312238%7d&etc=1&extraqs=formtype%3dmain%26formId%3d8448B78F-8F42-454E-8E2A-F8196B0419AF%26action%3d-1&pagetype=formeditor
@@ -1052,6 +1056,11 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 case Entities.role:
                     {
                         result = string.Format("{0}/biz/roles/edit.aspx?id={1}", WebUrl, id);
+                        break;
+                    }
+                case Entities.report:
+                    {
+                        result = string.Format("{0}/CRMReports/reportproperty.aspx?id=%7b{1}%7d", WebUrl, id); 
                         break;
                     }
                 case "entity":

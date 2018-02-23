@@ -34,13 +34,58 @@ namespace JosephM.InstanceComparer
             AppendPlugins(processContainer);
             AppendOptions(processContainer);
             AppendSecurityRoles(processContainer);
+            AppendDashboards(processContainer);
+            AppendReports(processContainer);
             AppendCaseCreationRules(processContainer);
+
             AppendData(processContainer);
 
             processContainer.NumberOfProcesses = processContainer.Comparisons.Sum(GetProcessCount);
 
             foreach (var item in processContainer.Comparisons)
                 ProcessCompare(item, processContainer);
+        }
+
+        private void AppendReports(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.Reports)
+                return;
+
+            var dashboardCompareParams = new ProcessCompareParams("Report",
+                Entities.report,
+                Fields.report_.name,
+                Fields.report_.name,
+                new[]
+                {
+                    new Condition(Fields.report_.ispersonal, ConditionType.NotEqual, true)
+                },
+                new[]
+                {
+                    Fields.report_.isscheduledreport, Fields.report_.bodytext, Fields.report_.customreportxml, Fields.report_.defaultfilter, Fields.report_.description, Fields.report_.originalbodytext, Fields.report_.queryinfo, Fields.report_.schedulexml
+                });
+
+            processContainer.Comparisons.Add(dashboardCompareParams);
+        }
+
+        private void AppendDashboards(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.Dashboards)
+                return;
+
+            var dashboardCompareParams = new ProcessCompareParams("Dashboard",
+                Entities.systemform,
+                Fields.systemform_.name,
+                Fields.systemform_.name,
+                new[]
+                {
+                    new Condition(Fields.systemform_.type, ConditionType.Equal, OptionSets.SystemForm.FormType.Dashboard)
+                },
+                new[]
+                {
+                    Fields.systemform_.formxml, Fields.systemform_.formpresentation, Fields.systemform_.formactivationstate, Fields.systemform_.description
+                });
+
+            processContainer.Comparisons.Add(dashboardCompareParams);
         }
 
         public int GetProcessCount(ProcessCompareParams compare)
@@ -601,11 +646,17 @@ namespace JosephM.InstanceComparer
 
         private static bool FieldsEqual(object field1, object field2)
         {
-            if ((field1 == null && field2 != null)
-                || (field1 != null && field2 == null)
-                || (field1 != null && !field1.Equals(field2)))
-                return false;
-            return true;
+            if (field1 == null && field2 == null)
+                return true;
+            else if (field1 == null || field2 == null)
+            {
+                if (field1 is string || field2 is string)
+                    return String.IsNullOrEmpty((string)field1) && String.IsNullOrEmpty((string)field2);
+                else
+                    return false;
+            }
+            else
+                return field1.Equals(field2);
         }
 
         public class ProcessCompareParams

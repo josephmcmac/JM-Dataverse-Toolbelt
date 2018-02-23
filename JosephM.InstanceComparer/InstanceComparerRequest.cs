@@ -49,6 +49,13 @@ namespace JosephM.InstanceComparer
         public bool SecurityRoles { get; set; }
         [Group(Sections.CompareOptions)]
         [DisplayOrder(80)]
+        public bool Dashboards { get; set; }
+        [Group(Sections.CompareOptions)]
+        [DisplayOrder(85)]
+
+        public bool Reports { get; set; }
+        [Group(Sections.CompareOptions)]
+        [DisplayOrder(87)]
         public bool CaseCreationRules { get; set; }
         [Group(Sections.CompareOptions)]
         [DisplayOrder(90)]
