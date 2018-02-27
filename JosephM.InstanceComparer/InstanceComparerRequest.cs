@@ -52,10 +52,12 @@ namespace JosephM.InstanceComparer
         public bool Dashboards { get; set; }
         [Group(Sections.CompareOptions)]
         [DisplayOrder(85)]
-
-        public bool Reports { get; set; }
+        public bool EmailTemplates { get; set; }
         [Group(Sections.CompareOptions)]
         [DisplayOrder(87)]
+        public bool Reports { get; set; }
+        [Group(Sections.CompareOptions)]
+        [DisplayOrder(88)]
         public bool CaseCreationRules { get; set; }
         [Group(Sections.CompareOptions)]
         [DisplayOrder(90)]

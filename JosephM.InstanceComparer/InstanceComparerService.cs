@@ -35,6 +35,7 @@ namespace JosephM.InstanceComparer
             AppendOptions(processContainer);
             AppendSecurityRoles(processContainer);
             AppendDashboards(processContainer);
+            AppendEmailTemplates(processContainer);
             AppendReports(processContainer);
             AppendCaseCreationRules(processContainer);
 
@@ -44,6 +45,27 @@ namespace JosephM.InstanceComparer
 
             foreach (var item in processContainer.Comparisons)
                 ProcessCompare(item, processContainer);
+        }
+
+        private void AppendEmailTemplates(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.EmailTemplates)
+                return;
+
+            var dashboardCompareParams = new ProcessCompareParams("Email Templates",
+                Entities.template,
+                Fields.template_.title,
+                Fields.template_.title,
+                new[]
+                {
+                    new Condition(Fields.template_.ispersonal, ConditionType.NotEqual, true)
+                },
+                new[]
+                {
+                    Fields.template_.subject, Fields.template_.body, Fields.template_.description
+                });
+            dashboardCompareParams.AddConversionObject(Fields.template_.body, new ProcessCompareParams.RemoveMiscEmailTemplateXml(), new ProcessCompareParams.RemoveMiscEmailTemplateXml());
+            processContainer.Comparisons.Add(dashboardCompareParams);
         }
 
         private void AppendReports(ProcessContainer processContainer)
@@ -899,6 +921,39 @@ namespace JosephM.InstanceComparer
                     //strips out id in e.g. id="{0ae8f26b-f7b6-4ad8-933e-7c972b297624}"
                     theString = StripStartToEnd(theString, "id=\"{", "}");
                     theString = theString.Replace("<row></row>", "<row />");
+                    return theString;
+                }
+            }
+
+            public class RemoveMiscEmailTemplateXml : ConvertField
+            {
+                public override object Convert(object sourceValue)
+                {
+                    if (sourceValue == null)
+                        return null;
+
+                    var theString = (string)sourceValue;
+                    theString = RemoveUrlPart(theString, "import/edit.aspx");
+                    theString = RemoveUrlPart(theString, "tools/asyncoperation/");
+                    theString = RemoveUrlPart(theString, "import/edit.aspx");
+                    theString = RemoveUrlPart(theString, "tools/asyncoperation/");
+                    theString = RemoveUrlPart(theString, "import/edit.aspx");
+                    theString = RemoveUrlPart(theString, "tools/asyncoperation/");
+
+                    return theString;
+                }
+
+                private static string RemoveUrlPart(object sourceValue, string urlPart)
+                {
+                    var theString = (string)sourceValue;
+                    var linkIndex = theString.IndexOf(urlPart);
+                    if (linkIndex != -1)
+                    {
+                        var httpIndex = ((string)sourceValue).Substring(0, linkIndex).LastIndexOf("http");
+                        if (httpIndex != -1 && httpIndex < linkIndex)
+                            theString = theString.Substring(0, httpIndex) + ((string)sourceValue).Substring(linkIndex + (urlPart.Length - 1));
+                    }
+
                     return theString;
                 }
             }
