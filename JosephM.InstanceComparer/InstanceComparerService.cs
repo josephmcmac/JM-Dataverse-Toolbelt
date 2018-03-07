@@ -38,6 +38,7 @@ namespace JosephM.InstanceComparer
             AppendEmailTemplates(processContainer);
             AppendReports(processContainer);
             AppendCaseCreationRules(processContainer);
+            AppendSlas(processContainer);
 
             AppendData(processContainer);
 
@@ -45,6 +46,31 @@ namespace JosephM.InstanceComparer
 
             foreach (var item in processContainer.Comparisons)
                 ProcessCompare(item, processContainer);
+        }
+
+        private void AppendSlas(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.SLAs)
+                return;
+
+            var slaCompareParams = new ProcessCompareParams("SLAs",
+                Entities.sla,
+                Fields.sla_.name,
+                Fields.sla_.name,
+                null,
+                new[]
+                {
+                    Fields.sla_.description, Fields.sla_.applicablefrom, Fields.sla_.businesshoursid, Fields.sla_.statuscode, Fields.sla_.slatype, Fields.sla_.allowpauseresume
+                });
+
+            var slaItemCompareParams = new ProcessCompareParams("SLA Items",
+                Entities.slaitem, Fields.slaitem_.name, Fields.slaitem_.name, null,
+                new[] { Fields.slaitem_.description, Fields.slaitem_.warnafter, Fields.slaitem_.failureafter, Fields.slaitem_.applicablewhenxml, Fields.slaitem_.relatedfield, Fields.slaitem_.sequencenumber, Fields.slaitem_.successconditionsxml },
+                Fields.slaitem_.slaid, ParentLinkType.Lookup);
+
+            slaCompareParams.ChildCompares = new[] { slaItemCompareParams };
+
+            processContainer.Comparisons.Add(slaCompareParams);
         }
 
         private void AppendEmailTemplates(ProcessContainer processContainer)
@@ -676,6 +702,12 @@ namespace JosephM.InstanceComparer
                     return String.IsNullOrEmpty((string)field1) && String.IsNullOrEmpty((string)field2);
                 else
                     return false;
+            }
+            else if(field1 is Lookup && field2 is Lookup)
+            {
+                //for lookups in comparison lets just use display names
+                //in case the ids are not consistent
+                return ((Lookup)field1).Name == ((Lookup)field2).Name;
             }
             else
                 return field1.Equals(field2);

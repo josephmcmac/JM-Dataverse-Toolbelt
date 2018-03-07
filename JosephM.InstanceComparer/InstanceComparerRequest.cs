@@ -59,8 +59,14 @@ namespace JosephM.InstanceComparer
         [Group(Sections.CompareOptions)]
         [DisplayOrder(88)]
         public bool CaseCreationRules { get; set; }
+
         [Group(Sections.CompareOptions)]
-        [DisplayOrder(90)]
+        [DisplayName("SLAs")]
+        [DisplayOrder(89)]
+        public bool SLAs { get; set; }
+
+        [Group(Sections.CompareOptions)]
+        [DisplayOrder(9000)]
         public bool Data { get; set; }
 
         [RequiredProperty]
