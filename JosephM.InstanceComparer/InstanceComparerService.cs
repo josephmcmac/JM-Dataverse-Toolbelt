@@ -109,7 +109,7 @@ namespace JosephM.InstanceComparer
                 },
                 new[]
                 {
-                    Fields.report_.isscheduledreport, Fields.report_.bodytext, Fields.report_.customreportxml, Fields.report_.defaultfilter, Fields.report_.description, Fields.report_.originalbodytext, Fields.report_.queryinfo, Fields.report_.schedulexml
+                    Fields.report_.parentreportid, Fields.report_.isscheduledreport, Fields.report_.bodytext, Fields.report_.customreportxml, Fields.report_.defaultfilter, Fields.report_.description, Fields.report_.originalbodytext, Fields.report_.queryinfo, Fields.report_.schedulexml
                 });
 
             processContainer.Comparisons.Add(dashboardCompareParams);
