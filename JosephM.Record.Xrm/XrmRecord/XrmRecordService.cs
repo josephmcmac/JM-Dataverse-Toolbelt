@@ -1061,6 +1061,8 @@ namespace JosephM.Record.Xrm.XrmRecord
         public void AddSolutionComponents(string solutionId, int componentType, IEnumerable<string> itemIds)
         {
             var solution = Get(Entities.solution, solutionId);
+            if (solution == null)
+                throw new NullReferenceException($"No solution was found with id {solutionId}");
 
             var currentComponentIds = GetSolutionComponents(solutionId, componentType).ToList();
             foreach (var item in itemIds)

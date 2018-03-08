@@ -34,13 +34,166 @@ namespace JosephM.InstanceComparer
             AppendPlugins(processContainer);
             AppendOptions(processContainer);
             AppendSecurityRoles(processContainer);
+            AppendDashboards(processContainer);
+            AppendEmailTemplates(processContainer);
+            AppendReports(processContainer);
             AppendCaseCreationRules(processContainer);
+            AppendSlas(processContainer);
+            AppendApps(processContainer);
+            AppendRoutingRules(processContainer);
+
             AppendData(processContainer);
 
             processContainer.NumberOfProcesses = processContainer.Comparisons.Sum(GetProcessCount);
 
             foreach (var item in processContainer.Comparisons)
                 ProcessCompare(item, processContainer);
+        }
+
+        private void AppendRoutingRules(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.RoutingRules)
+                return;
+            var processCompareParams = new ProcessCompareParams("Routing Rule",
+                Entities.routingrule, Fields.routingrule_.name, Fields.routingrule_.name,
+                null,
+                new[] {Fields.routingrule_.description,
+                    Fields.routingrule_.statuscode }
+                )
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.routingrule_.routingruleid, OptionSets.SolutionComponent.ObjectTypeCode.RoutingRule)
+            };
+
+            var itemCompareParams = new ProcessCompareParams("Routing Rule Item",
+                Entities.routingruleitem, Fields.routingruleitem_.name, Fields.routingruleitem_.name, null,
+                new[] { Fields.routingruleitem_.name, Fields.routingruleitem_.conditionxml, Fields.routingruleitem_.routedqueueid, Fields.routingruleitem_.assignobjectid },
+                Fields.routingruleitem_.routingruleid, ParentLinkType.Lookup);
+
+            processCompareParams.ChildCompares = new[] { itemCompareParams };
+
+            if (processContainer.ServiceOne.RecordTypeExists(processCompareParams.RecordType))
+                processContainer.Comparisons.Add(processCompareParams);
+        }
+
+        private void AppendApps(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.Apps)
+                return;
+
+            var appCompareParams = new ProcessCompareParams("Apps",
+                Entities.appmodule,
+                Fields.appmodule_.uniquename,
+                Fields.appmodule_.uniquename,
+                null,
+                new[]
+                {
+                    Fields.appmodule_.description, Fields.appmodule_.clienttype, Fields.appmodule_.formfactor, Fields.appmodule_.isdefault, Fields.appmodule_.name
+                });
+
+            var appComponentCompareParams = new ProcessCompareParams("App Components",
+                Entities.appmodulecomponent, Fields.appmodulecomponent_.objectid, Fields.appmodulecomponent_.objectid, null,
+                new[] { Fields.appmodulecomponent_.objectid },
+                Fields.appmodulecomponent_.appmoduleidunique, ParentLinkType.Lookup)
+            {
+                OverrideParentId = Fields.appmodule_.appmoduleidunique
+            };
+
+            var appRoleCompareParams = new ProcessCompareParams("App Roles",
+                Relationships.appmodule_.appmoduleroles_association.EntityName, Fields.role_.roleid, Fields.role_.roleid, null,
+                new[] { "roleid" },
+                Fields.appmodule_.appmoduleid, ParentLinkType.Lookup);
+
+            appCompareParams.ChildCompares = new[] { appRoleCompareParams, appComponentCompareParams };
+
+            processContainer.Comparisons.Add(appCompareParams);
+        }
+
+        private void AppendSlas(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.SLAs)
+                return;
+
+            var slaCompareParams = new ProcessCompareParams("SLAs",
+                Entities.sla,
+                Fields.sla_.name,
+                Fields.sla_.name,
+                null,
+                new[]
+                {
+                    Fields.sla_.description, Fields.sla_.applicablefrom, Fields.sla_.businesshoursid, Fields.sla_.statuscode, Fields.sla_.slatype, Fields.sla_.allowpauseresume
+                });
+
+            var slaItemCompareParams = new ProcessCompareParams("SLA Items",
+                Entities.slaitem, Fields.slaitem_.name, Fields.slaitem_.name, null,
+                new[] { Fields.slaitem_.description, Fields.slaitem_.warnafter, Fields.slaitem_.failureafter, Fields.slaitem_.applicablewhenxml, Fields.slaitem_.relatedfield, Fields.slaitem_.sequencenumber, Fields.slaitem_.successconditionsxml },
+                Fields.slaitem_.slaid, ParentLinkType.Lookup);
+
+            slaCompareParams.ChildCompares = new[] { slaItemCompareParams };
+
+            processContainer.Comparisons.Add(slaCompareParams);
+        }
+
+        private void AppendEmailTemplates(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.EmailTemplates)
+                return;
+
+            var dashboardCompareParams = new ProcessCompareParams("Email Templates",
+                Entities.template,
+                Fields.template_.title,
+                Fields.template_.title,
+                new[]
+                {
+                    new Condition(Fields.template_.ispersonal, ConditionType.NotEqual, true)
+                },
+                new[]
+                {
+                    Fields.template_.subject, Fields.template_.body, Fields.template_.description
+                });
+            dashboardCompareParams.AddConversionObject(Fields.template_.body, new ProcessCompareParams.RemoveMiscEmailTemplateXml(), new ProcessCompareParams.RemoveMiscEmailTemplateXml());
+            processContainer.Comparisons.Add(dashboardCompareParams);
+        }
+
+        private void AppendReports(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.Reports)
+                return;
+
+            var dashboardCompareParams = new ProcessCompareParams("Report",
+                Entities.report,
+                Fields.report_.name,
+                Fields.report_.name,
+                new[]
+                {
+                    new Condition(Fields.report_.ispersonal, ConditionType.NotEqual, true)
+                },
+                new[]
+                {
+                    Fields.report_.parentreportid, Fields.report_.isscheduledreport, Fields.report_.bodytext, Fields.report_.customreportxml, Fields.report_.defaultfilter, Fields.report_.description, Fields.report_.originalbodytext, Fields.report_.queryinfo, Fields.report_.schedulexml
+                });
+
+            processContainer.Comparisons.Add(dashboardCompareParams);
+        }
+
+        private void AppendDashboards(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.Dashboards)
+                return;
+
+            var dashboardCompareParams = new ProcessCompareParams("Dashboard",
+                Entities.systemform,
+                Fields.systemform_.name,
+                Fields.systemform_.name,
+                new[]
+                {
+                    new Condition(Fields.systemform_.type, ConditionType.Equal, OptionSets.SystemForm.FormType.Dashboard)
+                },
+                new[]
+                {
+                    Fields.systemform_.formxml, Fields.systemform_.formpresentation, Fields.systemform_.formactivationstate, Fields.systemform_.description
+                });
+
+            processContainer.Comparisons.Add(dashboardCompareParams);
         }
 
         public int GetProcessCount(ProcessCompareParams compare)
@@ -364,7 +517,7 @@ namespace JosephM.InstanceComparer
                                         .Select(
                                             r =>
                                                 new Condition(processCompareParams.ParentLink, ConditionType.Equal,
-                                                    GetParentReference(parentCompareParams, r))),
+                                                    GetParentReference(parentCompareParams, r, processCompareParams.OverrideParentId))),
                                     null);
                             processContainer.Controller.UpdateLevel2Progress(2, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionTwo.Name));
                             var serviceTwoItems =
@@ -373,7 +526,7 @@ namespace JosephM.InstanceComparer
                                         .Select(
                                             r =>
                                                 new Condition(processCompareParams.ParentLink, ConditionType.Equal,
-                                                   GetParentReference(parentCompareParams, r))),
+                                                   GetParentReference(parentCompareParams, r, processCompareParams.OverrideParentId))),
                                     null);
                             processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
                             foreach (var item in serviceOneItems)
@@ -383,7 +536,7 @@ namespace JosephM.InstanceComparer
                                     referringField = ((Lookup)referringField).Id;
                                 foreach (var parent in groupThem)
                                 {
-                                    if (FieldsEqual(GetParentReference(parentCompareParams, parent.Keys.First()),
+                                    if (FieldsEqual(GetParentReference(parentCompareParams, parent.Keys.First(), processCompareParams.OverrideParentId),
                                         referringField))
                                         parent.Values.First().Add(item);
                                 }
@@ -395,7 +548,7 @@ namespace JosephM.InstanceComparer
                                     referringField = ((Lookup)referringField).Id;
                                 foreach (var parent in groupThem)
                                 {
-                                    if (FieldsEqual(GetParentReference(parentCompareParams, parent.Keys.Last()),
+                                    if (FieldsEqual(GetParentReference(parentCompareParams, parent.Keys.Last(), processCompareParams.OverrideParentId),
                                         referringField))
                                         parent.Values.Last().Add(item);
                                 }
@@ -478,9 +631,25 @@ namespace JosephM.InstanceComparer
             }
         }
 
-        private static string GetParentReference(ProcessCompareParams parentCompareParams, IRecord parentRecord)
+        private static string GetParentReference(ProcessCompareParams parentCompareParams, IRecord parentRecord, string overrideParentId)
         {
-            return parentCompareParams.Type == ProcessCompareType.Objects ? parentRecord.GetStringField(parentCompareParams.MatchField) : parentRecord.Id;
+            if (parentCompareParams.Type == ProcessCompareType.Objects)
+                return parentRecord.GetStringField(parentCompareParams.MatchField);
+            else
+            {
+                if(overrideParentId != null)
+                {
+                    var otherId = parentRecord.GetField(overrideParentId);
+                    if (otherId != null)
+                    {
+                        if (otherId is Lookup)
+                            return ((Lookup)otherId).Id;
+                        else
+                            return otherId.ToString();
+                    }
+                }
+                return parentRecord.Id;
+            }
         }
 
         private static string GetParentId(ProcessCompareParams parentCompareParams, IRecord parentRecord)
@@ -601,11 +770,23 @@ namespace JosephM.InstanceComparer
 
         private static bool FieldsEqual(object field1, object field2)
         {
-            if ((field1 == null && field2 != null)
-                || (field1 != null && field2 == null)
-                || (field1 != null && !field1.Equals(field2)))
-                return false;
-            return true;
+            if (field1 == null && field2 == null)
+                return true;
+            else if (field1 == null || field2 == null)
+            {
+                if (field1 is string || field2 is string)
+                    return String.IsNullOrEmpty((string)field1) && String.IsNullOrEmpty((string)field2);
+                else
+                    return false;
+            }
+            else if(field1 is Lookup && field2 is Lookup)
+            {
+                //for lookups in comparison lets just use display names
+                //in case the ids are not consistent
+                return ((Lookup)field1).Name == ((Lookup)field2).Name;
+            }
+            else
+                return field1.Equals(field2);
         }
 
         public class ProcessCompareParams
@@ -740,6 +921,7 @@ namespace JosephM.InstanceComparer
 
             public ParentLinkType? ParentLinkType { get; set; }
             public string ParentLinkProperty { get; private set; }
+            public string OverrideParentId { get; internal set; }
 
             public abstract class ConvertField
             {
@@ -848,6 +1030,39 @@ namespace JosephM.InstanceComparer
                     //strips out id in e.g. id="{0ae8f26b-f7b6-4ad8-933e-7c972b297624}"
                     theString = StripStartToEnd(theString, "id=\"{", "}");
                     theString = theString.Replace("<row></row>", "<row />");
+                    return theString;
+                }
+            }
+
+            public class RemoveMiscEmailTemplateXml : ConvertField
+            {
+                public override object Convert(object sourceValue)
+                {
+                    if (sourceValue == null)
+                        return null;
+
+                    var theString = (string)sourceValue;
+                    theString = RemoveUrlPart(theString, "import/edit.aspx");
+                    theString = RemoveUrlPart(theString, "tools/asyncoperation/");
+                    theString = RemoveUrlPart(theString, "import/edit.aspx");
+                    theString = RemoveUrlPart(theString, "tools/asyncoperation/");
+                    theString = RemoveUrlPart(theString, "import/edit.aspx");
+                    theString = RemoveUrlPart(theString, "tools/asyncoperation/");
+
+                    return theString;
+                }
+
+                private static string RemoveUrlPart(object sourceValue, string urlPart)
+                {
+                    var theString = (string)sourceValue;
+                    var linkIndex = theString.IndexOf(urlPart);
+                    if (linkIndex != -1)
+                    {
+                        var httpIndex = ((string)sourceValue).Substring(0, linkIndex).LastIndexOf("http");
+                        if (httpIndex != -1 && httpIndex < linkIndex)
+                            theString = theString.Substring(0, httpIndex) + ((string)sourceValue).Substring(linkIndex + (urlPart.Length - 1));
+                    }
+
                     return theString;
                 }
             }
@@ -1013,6 +1228,13 @@ namespace JosephM.InstanceComparer
                 if (linkRecordType == Relationships.role_.roleprivileges_association.EntityName)
                 {
                     linkRecordType = Entities.role;
+                    linkId1 = parentId1;
+                    linkId2 = parentId2;
+                }
+                else if (linkRecordType == Relationships.appmodule_.appmoduleroles_association.EntityName
+                    || linkRecordType == Entities.appmodulecomponent)
+                {
+                    linkRecordType = Entities.appmodule;
                     linkId1 = parentId1;
                     linkId2 = parentId2;
                 }

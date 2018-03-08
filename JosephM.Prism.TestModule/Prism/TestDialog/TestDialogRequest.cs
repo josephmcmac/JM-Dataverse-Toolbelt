@@ -28,6 +28,10 @@ namespace JosephM.Prism.TestModule.Prism.TestDialog
 
         [MyDescription("If set this will log a heap of errors in the service response")]
         [Group(Sections.Main)]
+        public bool ThrowFatalErrors { get; set; }
+
+        [MyDescription("If set this will log a heap of errors in the service response")]
+        [Group(Sections.Main)]
         public bool ThrowResponseErrors { get; set; }
 
         [Group(Sections.SelectAll)]

@@ -26,10 +26,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0"  Visibility="{Binding DisplayCompletionHeading, Converter={StaticResource BoolToVis}}">
-            <TextBlock Background="Transparent"
+            <ScrollViewer MaxHeight="400px" VerticalScrollBarVisibility="Auto">
+            <TextBox 
                 Text="{Binding CompletionHeadingText}"
-                Style="{StaticResource HeadingStyle}"
-                TextWrapping="Wrap" />
+                Style="{StaticResource HeadingStyleTextBox}"
+                >
+            </TextBox>
+            </ScrollViewer>
         </Grid>
         <Grid Grid.Row="1"  Visibility="{Binding DisplayCompletionHeading, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>

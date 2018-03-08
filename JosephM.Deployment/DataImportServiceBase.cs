@@ -154,8 +154,16 @@ namespace JosephM.Deployment
 
             #region tryordertypes
 
+            //lets put team first because some other records
+            //may reference the queue which only gets created
+            //when the team does
+            typesToImport = typesToImport.OrderBy(s => s == Entities.team ? 0 : 1).ToArray();
+
             foreach (var type in typesToImport)
             {
+                //iterate through the types and if any of them have a lookup which references this type
+                //then insert this one before it for import first
+                //otherwise just append to the end
                 foreach (var type2 in orderedTypes)
                 {
                     var thatType = type2;
