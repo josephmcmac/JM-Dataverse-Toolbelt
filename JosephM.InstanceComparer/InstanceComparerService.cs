@@ -40,6 +40,7 @@ namespace JosephM.InstanceComparer
             AppendCaseCreationRules(processContainer);
             AppendSlas(processContainer);
             AppendApps(processContainer);
+            AppendRoutingRules(processContainer);
 
             AppendData(processContainer);
 
@@ -47,6 +48,31 @@ namespace JosephM.InstanceComparer
 
             foreach (var item in processContainer.Comparisons)
                 ProcessCompare(item, processContainer);
+        }
+
+        private void AppendRoutingRules(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.RoutingRules)
+                return;
+            var processCompareParams = new ProcessCompareParams("Routing Rule",
+                Entities.routingrule, Fields.routingrule_.name, Fields.routingrule_.name,
+                null,
+                new[] {Fields.routingrule_.description,
+                    Fields.routingrule_.statuscode }
+                )
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.routingrule_.routingruleid, OptionSets.SolutionComponent.ObjectTypeCode.RoutingRule)
+            };
+
+            var itemCompareParams = new ProcessCompareParams("Routing Rule Item",
+                Entities.routingruleitem, Fields.routingruleitem_.name, Fields.routingruleitem_.name, null,
+                new[] { Fields.routingruleitem_.name, Fields.routingruleitem_.conditionxml, Fields.routingruleitem_.routedqueueid, Fields.routingruleitem_.assignobjectid },
+                Fields.routingruleitem_.routingruleid, ParentLinkType.Lookup);
+
+            processCompareParams.ChildCompares = new[] { itemCompareParams };
+
+            if (processContainer.ServiceOne.RecordTypeExists(processCompareParams.RecordType))
+                processContainer.Comparisons.Add(processCompareParams);
         }
 
         private void AppendApps(ProcessContainer processContainer)

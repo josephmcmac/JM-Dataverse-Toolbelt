@@ -68,6 +68,11 @@ namespace JosephM.InstanceComparer
         [Group(Sections.CompareOptions)]
         [DisplayOrder(95)]
         public bool Apps { get; set; }
+        
+
+        [Group(Sections.CompareOptions)]
+        [DisplayOrder(100)]
+        public bool RoutingRules { get; set; }
 
         [Group(Sections.CompareOptions)]
         [DisplayOrder(9000)]
