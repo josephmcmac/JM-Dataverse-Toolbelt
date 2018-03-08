@@ -90,6 +90,8 @@ namespace JosephM.Application.Prism.Module.ReleaseCheckModule
 
             int i = 0;
 
+            string result = null;
+
             foreach (string appName in insApplication)
             {
 
@@ -99,11 +101,13 @@ namespace JosephM.Application.Prism.Module.ReleaseCheckModule
 
                 if (installedApp == ApplicationController.ApplicationName)
                 {
-                    return finalKey.GetValue("DisplayVersion").ToString();
+                    var thisOne = finalKey.GetValue("DisplayVersion").ToString();
+                    if (result == null || IsNewerVersion(thisOne, result))
+                        result = thisOne;
                 }
                 i++;
             }
-            return null;
+            return result;
         }
 
         public bool IsNewerVersion(string latestVersionString, string thisVersionString)
