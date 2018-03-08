@@ -39,6 +39,7 @@ namespace JosephM.InstanceComparer
             AppendReports(processContainer);
             AppendCaseCreationRules(processContainer);
             AppendSlas(processContainer);
+            AppendApps(processContainer);
 
             AppendData(processContainer);
 
@@ -46,6 +47,39 @@ namespace JosephM.InstanceComparer
 
             foreach (var item in processContainer.Comparisons)
                 ProcessCompare(item, processContainer);
+        }
+
+        private void AppendApps(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.Apps)
+                return;
+
+            var appCompareParams = new ProcessCompareParams("Apps",
+                Entities.appmodule,
+                Fields.appmodule_.uniquename,
+                Fields.appmodule_.uniquename,
+                null,
+                new[]
+                {
+                    Fields.appmodule_.description, Fields.appmodule_.clienttype, Fields.appmodule_.formfactor, Fields.appmodule_.isdefault, Fields.appmodule_.name
+                });
+
+            var appComponentCompareParams = new ProcessCompareParams("App Components",
+                Entities.appmodulecomponent, Fields.appmodulecomponent_.objectid, Fields.appmodulecomponent_.objectid, null,
+                new[] { Fields.appmodulecomponent_.objectid },
+                Fields.appmodulecomponent_.appmoduleidunique, ParentLinkType.Lookup)
+            {
+                OverrideParentId = Fields.appmodule_.appmoduleidunique
+            };
+
+            var appRoleCompareParams = new ProcessCompareParams("App Roles",
+                Relationships.appmodule_.appmoduleroles_association.EntityName, Fields.role_.roleid, Fields.role_.roleid, null,
+                new[] { "roleid" },
+                Fields.appmodule_.appmoduleid, ParentLinkType.Lookup);
+
+            appCompareParams.ChildCompares = new[] { appRoleCompareParams, appComponentCompareParams };
+
+            processContainer.Comparisons.Add(appCompareParams);
         }
 
         private void AppendSlas(ProcessContainer processContainer)
@@ -457,7 +491,7 @@ namespace JosephM.InstanceComparer
                                         .Select(
                                             r =>
                                                 new Condition(processCompareParams.ParentLink, ConditionType.Equal,
-                                                    GetParentReference(parentCompareParams, r))),
+                                                    GetParentReference(parentCompareParams, r, processCompareParams.OverrideParentId))),
                                     null);
                             processContainer.Controller.UpdateLevel2Progress(2, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionTwo.Name));
                             var serviceTwoItems =
@@ -466,7 +500,7 @@ namespace JosephM.InstanceComparer
                                         .Select(
                                             r =>
                                                 new Condition(processCompareParams.ParentLink, ConditionType.Equal,
-                                                   GetParentReference(parentCompareParams, r))),
+                                                   GetParentReference(parentCompareParams, r, processCompareParams.OverrideParentId))),
                                     null);
                             processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
                             foreach (var item in serviceOneItems)
@@ -476,7 +510,7 @@ namespace JosephM.InstanceComparer
                                     referringField = ((Lookup)referringField).Id;
                                 foreach (var parent in groupThem)
                                 {
-                                    if (FieldsEqual(GetParentReference(parentCompareParams, parent.Keys.First()),
+                                    if (FieldsEqual(GetParentReference(parentCompareParams, parent.Keys.First(), processCompareParams.OverrideParentId),
                                         referringField))
                                         parent.Values.First().Add(item);
                                 }
@@ -488,7 +522,7 @@ namespace JosephM.InstanceComparer
                                     referringField = ((Lookup)referringField).Id;
                                 foreach (var parent in groupThem)
                                 {
-                                    if (FieldsEqual(GetParentReference(parentCompareParams, parent.Keys.Last()),
+                                    if (FieldsEqual(GetParentReference(parentCompareParams, parent.Keys.Last(), processCompareParams.OverrideParentId),
                                         referringField))
                                         parent.Values.Last().Add(item);
                                 }
@@ -571,9 +605,25 @@ namespace JosephM.InstanceComparer
             }
         }
 
-        private static string GetParentReference(ProcessCompareParams parentCompareParams, IRecord parentRecord)
+        private static string GetParentReference(ProcessCompareParams parentCompareParams, IRecord parentRecord, string overrideParentId)
         {
-            return parentCompareParams.Type == ProcessCompareType.Objects ? parentRecord.GetStringField(parentCompareParams.MatchField) : parentRecord.Id;
+            if (parentCompareParams.Type == ProcessCompareType.Objects)
+                return parentRecord.GetStringField(parentCompareParams.MatchField);
+            else
+            {
+                if(overrideParentId != null)
+                {
+                    var otherId = parentRecord.GetField(overrideParentId);
+                    if (otherId != null)
+                    {
+                        if (otherId is Lookup)
+                            return ((Lookup)otherId).Id;
+                        else
+                            return otherId.ToString();
+                    }
+                }
+                return parentRecord.Id;
+            }
         }
 
         private static string GetParentId(ProcessCompareParams parentCompareParams, IRecord parentRecord)
@@ -845,6 +895,7 @@ namespace JosephM.InstanceComparer
 
             public ParentLinkType? ParentLinkType { get; set; }
             public string ParentLinkProperty { get; private set; }
+            public string OverrideParentId { get; internal set; }
 
             public abstract class ConvertField
             {
@@ -1151,6 +1202,13 @@ namespace JosephM.InstanceComparer
                 if (linkRecordType == Relationships.role_.roleprivileges_association.EntityName)
                 {
                     linkRecordType = Entities.role;
+                    linkId1 = parentId1;
+                    linkId2 = parentId2;
+                }
+                else if (linkRecordType == Relationships.appmodule_.appmoduleroles_association.EntityName
+                    || linkRecordType == Entities.appmodulecomponent)
+                {
+                    linkRecordType = Entities.appmodule;
                     linkId1 = parentId1;
                     linkId2 = parentId2;
                 }

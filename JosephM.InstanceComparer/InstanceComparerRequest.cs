@@ -66,6 +66,10 @@ namespace JosephM.InstanceComparer
         public bool SLAs { get; set; }
 
         [Group(Sections.CompareOptions)]
+        [DisplayOrder(95)]
+        public bool Apps { get; set; }
+
+        [Group(Sections.CompareOptions)]
         [DisplayOrder(9000)]
         public bool Data { get; set; }
 

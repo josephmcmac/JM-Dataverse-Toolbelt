@@ -1063,6 +1063,11 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                         result = string.Format("{0}/CRMReports/reportproperty.aspx?id=%7b{1}%7d", WebUrl, id); 
                         break;
                     }
+                case Entities.appmodule:
+                    {
+                        result = string.Format("{0}/designer/app/fd140aaf-4df4-11dd-bd17-0019b9312238/{1}#/AppDesignerCanvas/{1}", WebUrl, id);
+                        break;
+                    }
                 case "entity":
                     {
                         result = string.Format("{0}/tools/solution/edit.aspx?id={1}", WebUrl, DefaultSolutionId);
