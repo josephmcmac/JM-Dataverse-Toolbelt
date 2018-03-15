@@ -19,7 +19,9 @@ namespace $ext_safeprojectname$
                     var xrmSetting = settings.Resolve<XrmSetting>();
                     var controller = new LogController();
                     controller.AddUi(new ConsoleUserInterface(false));
-                }
+                    var xrmService = new XrmService(xrmSetting, controller);
+                    var me = xrmService.WhoAmI();
+            }
             }
             catch (Exception ex)
             {

@@ -1,6 +1,4 @@
-﻿#region
-
-using Microsoft.Crm.Sdk.Messages;
+﻿using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
@@ -8,12 +6,9 @@ using Microsoft.Xrm.Sdk.Query;
 using $safeprojectname$.Core;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
-
-#endregion
 
 namespace $safeprojectname$.Xrm
 {
@@ -106,7 +101,11 @@ namespace $safeprojectname$.Xrm
                 lock (_lockObject)
                 {
                     if (_service == null)
+                    {
+                        UIController.LogLiteral("Initialising Dynamics Connection");
                         _service = XrmConnection.GetOrgServiceProxy(XrmConfiguration);
+                        UIController.LogLiteral("Dynamics Connection Created");
+                    }
                 }
                 return _service;
             }

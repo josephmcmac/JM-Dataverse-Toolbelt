@@ -1,12 +1,6 @@
-﻿#region
-
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using $safeprojectname$.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-
-#endregion
 
 namespace $safeprojectname$.Xrm
 {

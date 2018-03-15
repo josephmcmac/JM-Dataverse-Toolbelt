@@ -16,6 +16,7 @@
   <TemplateContent>
     <Project TargetFileName="JosephM.Xrm.Plugins.csproj" File="JosephM.Xrm.Plugins.csproj" ReplaceParameters="true">
       <Folder Name="Core" TargetFolderName="Core">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleSettings.cs">ConsoleSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleUserInterface.cs">ConsoleUserInterface.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ExceptionExtentions.cs">ExceptionExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="IUserInterface.cs">IUserInterface.cs</ProjectItem>
@@ -23,7 +24,8 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="LogController.cs">LogController.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ObjectExtentions.cs">ObjectExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="Password.cs">Password.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="SettingsFile.cs">SettingsFile.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="PropertyInContext.cs">PropertyInContext.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="PropertyInContextByPropertyValues.cs">PropertyInContextByPropertyValues.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="StringEncryptor.cs">StringEncryptor.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="StringExtentions.cs">StringExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="TypeExtentions.cs">TypeExtentions.cs</ProjectItem>

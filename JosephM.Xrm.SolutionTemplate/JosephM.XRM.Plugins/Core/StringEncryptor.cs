@@ -1,12 +1,8 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
-
-#endregion
 
 namespace $safeprojectname$.Core
 {

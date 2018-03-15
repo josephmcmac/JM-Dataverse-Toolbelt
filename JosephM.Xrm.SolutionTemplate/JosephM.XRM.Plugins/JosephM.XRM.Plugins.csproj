@@ -67,7 +67,9 @@
     <Compile Include="Core\LogController.cs" />
     <Compile Include="Core\ObjectExtentions.cs" />
     <Compile Include="Core\Password.cs" />
-    <Compile Include="Core\SettingsFile.cs" />
+    <Compile Include="Core\ConsoleSettings.cs" />
+    <Compile Include="Core\PropertyInContext.cs" />
+    <Compile Include="Core\PropertyInContextByPropertyValues.cs" />
     <Compile Include="Core\StringEncryptor.cs" />
     <Compile Include="Core\StringExtentions.cs" />
     <Compile Include="Core\TypeExtentions.cs" />

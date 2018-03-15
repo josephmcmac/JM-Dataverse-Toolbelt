@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using $ext_safeprojectname$.Plugins.Core;
 using $ext_safeprojectname$.Plugins.Xrm;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using Schema;
 
@@ -51,7 +48,7 @@ namespace $safeprojectname$
         /// </summary>
         public XrmService XrmServiceAdmin { get; private set; }
 
-        public virtual IXrmConfiguration XrmConfigurationAdmin
+        public IXrmConfiguration XrmConfigurationAdmin
         {
             get
             {
@@ -146,7 +143,7 @@ namespace $safeprojectname$
                         {
                             XrmServiceAdmin.Delete(entity);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
                     }

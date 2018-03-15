@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace $safeprojectname$.Core
 {
@@ -63,6 +64,18 @@ namespace $safeprojectname$.Core
                 newValue = rawConfigString;
 
             theObject.SetPropertyValue(propertyName, newValue);
+        }
+
+        public static bool IsInContext(this object instance, string propertyName)
+        {
+            var inContextAttributes =
+                instance.GetType()
+                    .GetProperty(propertyName)
+                    .GetCustomAttributes(typeof(PropertyInContext), true)
+                    .Cast<PropertyInContext>();
+            if (!inContextAttributes.Any())
+                return true;
+            return inContextAttributes.All(a => a.IsInContext(instance));
         }
     }
 }
