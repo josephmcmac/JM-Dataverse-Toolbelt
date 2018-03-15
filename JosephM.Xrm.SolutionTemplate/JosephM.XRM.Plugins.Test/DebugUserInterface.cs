@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using XRM24.Plugins.Core;
+using $ext_safeprojectname$.Plugins.Core;
 
 namespace $safeprojectname$
 {

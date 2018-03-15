@@ -109,7 +109,7 @@ namespace $safeprojectname$.Core
                 var props = Type.GetWritableProperties();
                 foreach (var prop in props)
                 {
-                    Console.Write("Please enter the " + prop.GetDisplayName() + ":");
+                    Console.Write("Please enter the " + prop.Name + ":");
                     var value = Console.ReadLine();
                     newObject.SetPropertyByString(prop.Name, value);
                 }

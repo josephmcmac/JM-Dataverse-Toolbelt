@@ -2,10 +2,10 @@
 
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using $safeprojectname$.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Schema;
 
 #endregion
 

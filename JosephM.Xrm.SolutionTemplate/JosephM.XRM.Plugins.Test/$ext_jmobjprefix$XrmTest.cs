@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace $safeprojectname$
 {
     [TestClass]
-    public class abcXrmTest : XrmTest
+    public class $ext_jmobjprefix$XrmTest : XrmTest
     {
         //USE THIS IF NEED TO VERIFY SCRIPTS FOR A PARTICULAR SECURITY ROLE
         //private XrmService _xrmService;
@@ -37,24 +37,24 @@ namespace $safeprojectname$
             }
         }
 
-        private abcSettings _settings;
-        public abcSettings abcSettings
+        private $ext_jmobjprefix$Settings _settings;
+        public $ext_jmobjprefix$Settings abcSettings
         {
             get
             {
                 if (_settings == null)
-                    _settings = new abcSettings(XrmService);
+                    _settings = new $ext_jmobjprefix$Settings(XrmService);
                 return _settings;
             }
         }
 
-        private abcService _service;
-        public abcService abcService
+        private $ext_jmobjprefix$Service _service;
+        public $ext_jmobjprefix$Service abcService
         {
             get
             {
                 if (_service == null)
-                    _service = new abcService(XrmService, abcSettings);
+                    _service = new $ext_jmobjprefix$Service(XrmService, abcSettings);
                 return _service;
             }
         }
