@@ -6,7 +6,7 @@ namespace $safeprojectname$.Services
     /// A service class for performing logic
     /// </summary>
     public class $ext_jmobjprefix$Service
-{
+    {
         private XrmService XrmService { get; set; }
         private $ext_jmobjprefix$Settings $ext_jmobjprefix$Settings { get; set; }
 

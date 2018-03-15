@@ -12,30 +12,17 @@ using System.Linq;
 namespace $safeprojectname$.Xrm
 {
     /// <summary>
-    ///     Class with re-usable generic methods on a Entity
+    /// Class with static and extension methods to simplify operations on an Entity object
     /// </summary>
     public static class XrmEntity
     {
         /// <summary>
-        ///     If entity is not null and contains the field returns the field value else returns null
+        /// Gets the value of the field in an entity. If not populated in the entity returns null, if an alaissed value unboxes it
         /// </summary>
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="fieldName">Name of the field</param>
+        /// <returns>The value of the field in an entity</returns>
         public static object GetField(this Entity entity, string fieldName)
-        {
-            if (string.IsNullOrEmpty(fieldName))
-                throw new ArgumentNullException("fieldName");
-            if (entity != null && entity.Contains(fieldName))
-            {
-                return entity[fieldName];
-            }
-            else
-                return null;
-        }
-
-        /// <summary>
-        ///     If alias returns alias value - if entity is not null and contains the field returns the field value else returns
-        ///     null
-        /// </summary>
-        public static object GetFieldValue(this Entity entity, string fieldName)
         {
             if (string.IsNullOrEmpty(fieldName))
                 throw new ArgumentNullException("fieldName");
@@ -51,35 +38,33 @@ namespace $safeprojectname$.Xrm
                 return null;
         }
 
+        /// <summary>
+        /// Gets the value of a string field cast as a string
+        /// </summary>
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="stringFieldName">Name of the string field</param>
+        /// <returns>The field value cast as string</returns>
         public static string GetStringField(this Entity entity, string fieldName)
         {
             return (string)GetField(entity, fieldName);
         }
 
-        public static IEnumerable<string> GetFieldsInEntity(this Entity entity)
+        /// <summary>
+        ///  Gets the value of an option set field in the entity. If null returns -1
+        /// </summary>
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="optionSetFieldName">Name of the option set field</param>
+        /// <returns>The picklist option key. If null -1</returns>
+        public static int GetOptionSetValue(this Entity entity, string optionSetFieldName)
         {
-            return Enumerable.Select<KeyValuePair<string, object>, string>(entity.Attributes, a => a.Key);
+            return GetOptionSetValue(GetField(entity, optionSetFieldName));
         }
 
         /// <summary>
-        ///     Returns a function which will call the GetFieldCrmTarget method for the input record
+        /// Unboxes the picklist value of a option set field. If null returns -1
         /// </summary>
-        public static Func<string, object> GetFieldDelegate(this Entity entity)
-        {
-            return entity.GetField;
-        }
-
-        /// <summary>
-        ///     -1 if the entity is null, does not contain the field or the field is null
-        /// </summary>
-        public static int GetOptionSetValue(this Entity entity, string fieldName)
-        {
-            return GetOptionSetValue(GetField(entity, fieldName));
-        }
-
-        /// <summary>
-        ///     -1 if fieldValue is null
-        /// </summary>
+        /// <param name="fieldValue">The option set field value</param>
+        /// <returns>The picklist option key. If null -1</returns>
         public static int GetOptionSetValue(object fieldValue)
         {
             if (fieldValue != null)
@@ -89,16 +74,21 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     false if the entity is null, does not contain the field or the field is null
+        /// Returns the field value as a boolean. False is returned if not populated
         /// </summary>
-        public static bool GetBoolean(this Entity entity, string fieldName)
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="booleanFieldName">Name of the boolean field<</param>
+        /// <returns>The field value as a boolean. False is returned if not populated</returns>
+        public static bool GetBoolean(this Entity entity, string booleanFieldName)
         {
-            return GetBoolean(GetField(entity, fieldName));
+            return GetBoolean(GetField(entity, booleanFieldName));
         }
 
         /// <summary>
-        ///     false if fieldValue is null
+        /// Returns the field value as a boolean. False is returned if not populated
         /// </summary>
+        /// <param name="fieldValue">Value of the boolean field</param>
+        /// <returns>The field value as a boolean. False is returned if not populated</returns>
         public static bool GetBoolean(object fieldValue)
         {
             if (fieldValue != null)
@@ -108,22 +98,33 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     null if the entity is null, does not contain the field or the field is null
+        /// Get the id in a lookup field value if it is populated otherwise null
         /// </summary>
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="lookupFieldName">Name of the lookup field<</param>
+        /// <returns>The id in a lookup field value if it is populated otherwise null</returns>
         public static Guid? GetLookupGuid(this Entity entity, string fieldName)
         {
             return GetLookupGuid(GetField(entity, fieldName));
         }
 
-        public static string GetLookupName(this Entity entity, string fieldName)
+        /// <summary>
+        /// Get the name populated in a lookup field value if it is populated otherwise null
+        /// </summary>
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="lookupFieldName">Name of the lookup field<</param>
+        /// <returns>The name in lookup field value if it is populated otherwise null</returns>
+        public static string GetLookupName(this Entity entity, string lookupFieldName)
         {
-            return GetLookupName(GetField(entity, fieldName));
+            return GetLookupName(GetField(entity, lookupFieldName));
         }
 
 
         /// <summary>
-        ///     null if fieldValue is null
+        /// Get the target tyoe of a lookup field value if it is populated otherwise null
         /// </summary>
+        /// <param name="fieldValue">Value of the lookup field</param>
+        /// <returns>The id of a lookup field value if it is populated otherwise null</returns>
         public static Guid? GetLookupGuid(object fieldValue)
         {
             if (fieldValue != null)
@@ -132,7 +133,11 @@ namespace $safeprojectname$.Xrm
                 return null;
         }
 
-
+        /// <summary>
+        /// Get the target tyoe of a lookup field value if it is populated otherwise null
+        /// </summary>
+        /// <param name="fieldValue">Value of the lookup field</param>
+        /// <returns>The target tyoe of a lookup field value if it is populated otherwise null</returns>
         public static string GetLookupName(object fieldValue)
         {
             if (fieldValue != null)
@@ -142,16 +147,21 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     empty string if the entity is null, does not contain the field or the field is null
+        /// Get the target tyoe of a lookup field value if it is populated otherwise null
         /// </summary>
-        public static string GetLookupType(this Entity entity, string fieldName)
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="lookupFieldName">Name of the lookup field<</param>
+        /// <returns>The target tyoe of a lookup field value if it is populated otherwise null</returns>
+        public static string GetLookupType(this Entity entity, string lookupFieldName)
         {
-            return GetLookupType(GetField(entity, fieldName));
+            return GetLookupType(GetField(entity, lookupFieldName));
         }
 
         /// <summary>
-        ///     empty string if fieldValue is null
+        /// Get the target tyoe of a lookup field value if it is populated otherwise null
         /// </summary>
+        /// <param name="fieldValue">Value of the lookup field</param>
+        /// <returns>The target tyoe of a lookup field value if it is populated otherwise null</returns>
         public static string GetLookupType(object fieldValue)
         {
             if (fieldValue != null)
@@ -161,16 +171,21 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     0 if the entity is null, does not contain the field or the field is null
+        /// Gets the value of a decimal field in the entity. If null return zero
         /// </summary>
-        public static decimal GetDecimalValue(this Entity entity, string fieldName)
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="decimalFieldName">Name of the decimal field</param>
+        /// <returns>The field value as decimal</returns>
+        public static decimal GetDecimalValue(this Entity entity, string decimalFieldName)
         {
-            return GetDecimalValue(GetField(entity, fieldName));
+            return GetDecimalValue(GetField(entity, decimalFieldName));
         }
 
         /// <summary>
-        ///     0 if fieldValue is null
+        /// Returns a field value as decimal. If null return decimal zero<
         /// </summary>
+        /// <param name="fieldValue">Value of the decimal field</param>
+        /// <returns>fieldValue as decimal. If null return decimal zero</returns>
         public static decimal GetDecimalValue(object fieldValue)
         {
             if (fieldValue != null)
@@ -180,16 +195,21 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     0 if the entity is null, does not contain the field or the field is null
+        ///  Gets the value of a money field in the entity. If null return zero
         /// </summary>
-        public static decimal GetMoneyValue(this Entity entity, string fieldName)
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="moneyFieldName">Name of the money field</param>
+        /// <returns>The money value as decimal</returns>
+        public static decimal GetMoneyValue(this Entity entity, string moneyFieldName)
         {
-            return GetMoneyValue(GetField(entity, fieldName));
+            return GetMoneyValue(GetField(entity, moneyFieldName));
         }
 
         /// <summary>
-        ///     0 if the fieldValue is null
+        /// Unboxes the decimal value of a money field. If null returns decimal zero
         /// </summary>
+        /// <param name="fieldValue">The money field value</param>
+        /// <returns>Decimal value of a money field. If null returns decimal zero</returns>
         public static decimal GetMoneyValue(object fieldValue)
         {
             if (fieldValue != null)
@@ -199,16 +219,21 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     0 if the fieldValue is null
+        ///  Gets the value of a int field in the entity. If null return zero
         /// </summary>
-        public static int GetInt(this Entity entity, string fieldName)
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="intFieldName">Name of the int field</param>
+        /// <returns>The field value as integer</returns>
+        public static int GetInt(this Entity entity, string intFieldName)
         {
-            return GetInt(GetField(entity, fieldName));
+            return GetInt(GetField(entity, intFieldName));
         }
 
         /// <summary>
-        ///     0 if the fieldValue is null
+        /// Returns a field value as int. If null return int zero<
         /// </summary>
+        /// <param name="fieldValue">Value of the int field</param>
+        /// <returns>fieldValue as int. If null return int zero</returns>
         public static int GetInt(object fieldValue)
         {
             if (fieldValue != null)
@@ -217,67 +242,47 @@ namespace $safeprojectname$.Xrm
                 return 0;
         }
 
-        public static string GetFieldAsDisplayString(object fieldValue)
-        {
-            string displayString;
-            if (fieldValue == null)
-                displayString = "";
-            else if (fieldValue is decimal)
-            {
-                const string format = StringFormats.DecimalFormat;
-                displayString = (decimal.Parse(fieldValue.ToString())).ToString(format);
-            }
-            else if (fieldValue is Money)
-            {
-                var amount = GetMoneyValue(fieldValue);
-                displayString = amount.ToString(StringFormats.MoneyFormat);
-            }
-            else
-                displayString = fieldValue.ToString();
-
-            return displayString;
-        }
-
-        public static string GetFieldAsDisplayString(Entity entity, string fieldName)
-        {
-            return GetFieldAsDisplayString(GetField(entity, fieldName));
-        }
 
         /// <summary>
-        ///     Sets the field in the entity
+        /// Sets a field value in the entity
         /// </summary>
+        /// <param name="entity">Entity object to set the field value in</param>
+        /// <param name="fieldName">Name of the field</param>
+        /// <param name="value">Value to set the field to</param>
         public static void SetField(this Entity entity, string fieldName, object value)
         {
             entity[fieldName] = value;
         }
 
         /// <summary>
-        ///     Parses and sets the field in the entity
+        ///  Sets a option set field to value for the index
         /// </summary>
-        public static void SetField(this Entity entity, string fieldName, object value, XrmService service)
-        {
-            entity[fieldName] = service.ParseField(fieldName, entity.LogicalName, value);
-        }
-
-        /// <summary>
-        ///     Sets the field in the entity to an option set of the given index
-        /// </summary>
+        /// <param name="entity">Entity object to set the field value in</param>
+        /// <param name="fieldName">Name of the lookup field</param>
+        /// <param name="value">Index of the option set value</param>
         public static void SetOptionSetField(this Entity entity, string fieldName, int value)
         {
             SetField(entity, fieldName, new OptionSetValue(value));
         }
 
         /// <summary>
-        ///     Sets the field in the entity to an entity reference of the input type and id
+        /// Sets a lookup field to a entity reference value for the type and id
         /// </summary>
+        /// <param name="entity">Entity object to set the field value in</param>
+        /// <param name="fieldName">Name of the lookup field</param>
+        /// <param name="guid">Id of the entity to reference</param>
+        /// <param name="entityType">Type of the entity to reference</param>
         public static void SetLookupField(this Entity entity, string fieldName, Guid guid, string entityType)
         {
             SetField(entity, fieldName, new EntityReference(entityType, guid));
         }
 
         /// <summary>
-        ///     Sets the field in the entity to an entity reference to the input record
+        /// Sets a lookup field to a entity reference value for the entity
         /// </summary>
+        /// <param name="entity">Entity object to set the field value in</param>
+        /// <param name="fieldName">Name of the lookup field</param>
+        /// <param name="lookupTo">Entity to reference</param>
         public static void SetLookupField(this Entity entity, string fieldName, Entity lookupTo)
         {
             if (lookupTo == null)
@@ -287,16 +292,22 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     Sets the money field to the input value
+        /// Sets a money field to a money value for the decimal amount
         /// </summary>
+        /// <param name="entity">Entity object to set the field value in</param>
+        /// <param name="fieldName">Name of the money field</param>
+        /// <param name="value">Decimal amount of the money value</param>
         public static void SetMoneyField(this Entity entity, string fieldName, Decimal value)
         {
             SetField(entity, fieldName, new Money(value));
         }
 
         /// <summary>
-        ///     Returns if two fields are logically equal. Note an int may be equal to an option set
+        /// Returns if two fields are logically equal. Note an int may be equal to an option set
         /// </summary>
+        /// <param name="field1">One value to compare</param>
+        /// <param name="field2">The other value to compare</param>
+        /// <returns>True if the values are logically equal</returns>
         public static bool FieldsEqual(object field1, object field2)
         {
             if (field1 == null && field2 == null)
@@ -354,45 +365,10 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     Returns if the field is logically equal in the two input entities matching
+        /// Returns the sum of an array of field values. Will return null if no non-null values are found in the array
         /// </summary>
-        public static bool FieldsEqualCrmTarget(Entity entity1, Entity entity2, string fieldName)
-        {
-            var field1 = GetField(entity1, fieldName);
-            var field2 = GetField(entity2, fieldName);
-            return FieldsEqual(field1, field2);
-        }
-
-        /// <summary>
-        ///     Returns the primary key field name of the input entity type
-        /// </summary>
-        public static string GetPrimaryKeyName(string entityType)
-        {
-            if (entityType == "phonecall" || entityType == "appointment")
-                return "activityid";
-            return entityType + "id";
-        }
-
-        /// <summary>
-        ///     Returns the sum of an array of nullable decimal objects. Will return null if no Decimal values are found in the
-        ///     array
-        /// </summary>
-        public static object SumDecimalFields(object[] fields)
-        {
-            object result = null;
-            foreach (var item in fields)
-            {
-                if (item != null)
-                {
-                    if (result != null)
-                        result = Decimal.Add((Decimal)item, (Decimal)result);
-                    else
-                        result = (Decimal)item;
-                }
-            }
-            return result;
-        }
-
+        /// <param name="fieldValues">Field values to sum</param>
+        /// <returns>The sum of the field values with a matching type, otherwise null if no non null vlaues are found</returns>
         public static object SumFields(IEnumerable<object> fieldValues)
         {
             object result = null;
@@ -420,8 +396,11 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     Returns the sum of a field in an array of entities. Will return null if no non-null values are found in the array
+        /// Returns the sum of a field in an array of entities. Will return null if no non-null values are found in the array
         /// </summary>
+        /// <param name="fieldName">Name of the field to sum</param>
+        /// <param name="recordsToSum">Entity records containing the field to sum</param>
+        /// <returns>The sum of the field values with a matching type, otherwise null if no non null vlaues are found</returns>
         public static object SumField(string fieldName, IEnumerable<Entity> recordsToSum)
         {
             object result = null;
@@ -451,35 +430,11 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     Removes the given field from then entity if it exists
+        ///  Returns true if all conditions resolve to true for the field values returned by the getFieldDelegate function
         /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="field"></param>
-        public static void RemoveField(Entity entity, string field)
-        {
-            if (entity.Contains(field))
-                entity.Attributes.Remove(field);
-        }
-
-        /// <summary>
-        ///     Warning!! Creates a new Entity object containing all fields with the same value from the input entity. Currently
-        ///     keeps field object references and doesn't replicate state/status
-        /// </summary>
-        public static Entity ReplicateToNewEntity(Entity entity)
-        {
-            var result = new Entity(entity.LogicalName);
-            foreach (var field in entity.Attributes)
-            {
-                if (field.Key != "statuscode" && field.Key != "statecode" &&
-                    field.Key != GetPrimaryKeyName(entity.LogicalName))
-                    SetField(result, field.Key, field.Value);
-            }
-            return result;
-        }
-
-        /// <summary>
-        ///     Returns true if all conditions resolve to true with the value returned by the getFieldDelegate function
-        /// </summary>
+        /// <param name="getFieldDelegate">Func to get a field value</param>
+        /// <param name="conditions">Conditions to resolve</param>
+        /// <returns>True if all conditions are met</returns>
         public static bool MeetsConditions(Func<string, object> getFieldDelegate,
             IEnumerable<ConditionExpression> conditions)
         {
@@ -497,26 +452,12 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     Returns true if the condition resolves to true for the fieldValue
+        ///  Returns true if the condition resolves to true for the field value
         /// </summary>
+        /// <param name="fieldValue">Value of the field</param>
+        /// <param name="condition">The condition to check</param>
+        /// <returns>True of the condition is true for the field value</returns>
         public static bool MeetsCondition(object fieldValue, ConditionExpression condition)
-        {
-            return FieldValueMeetsCondition(fieldValue, condition);
-        }
-
-        /// <summary>
-        ///     Returns true if all conditions resolve to true with the value returned by the getFieldDelegate function
-        /// </summary>
-        public static bool MeetsCondition(Func<string, object> getFieldDelegate, ConditionExpression condition)
-        {
-            var fieldValue = getFieldDelegate(condition.AttributeName);
-            return FieldValueMeetsCondition(fieldValue, condition);
-        }
-
-        /// <summary>
-        ///     Returns true if the condition resolves to true for the fieldValue
-        /// </summary>
-        public static bool FieldValueMeetsCondition(object fieldValue, ConditionExpression condition)
         {
             switch (condition.Operator)
             {
@@ -634,86 +575,22 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     If the input condtions include a condition for the statecode field returns ite nothing
+        ///  Gets the value of a date field in the entity
         /// </summary>
-        public static ConditionExpression GetStateCondition(ConditionExpression[] conditions)
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="dateFieldName">Name of the date field</param>
+        /// <returns>The field value cast as nullable date</returns>
+        public static DateTime? GetDateTimeField(this Entity entity, string dateFieldName)
         {
-            ConditionExpression result = null;
-            foreach (var condition in conditions)
-            {
-                if (condition.AttributeName == "statecode")
-                    result = condition;
-            }
-            return result;
+            return (DateTime?)GetField(entity, dateFieldName);
         }
 
         /// <summary>
-        ///     Converts an array of Entities to an early bound array of T Entities
+        /// Returns a list of all the activity party entities in an activity party field
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public static T[] ConvertEntitiesTo<T>(Entity[] entities) where T : Entity
-        {
-            var convertedEntities = new T[entities.Length];
-
-            for (var i = 0; i < entities.Length; i++)
-            {
-                convertedEntities[i] = entities[i].ToEntity<T>();
-            }
-            return convertedEntities;
-        }
-
-        public static EntityReference CreateLookup(Entity entity)
-        {
-            return new EntityReference(entity.LogicalName, entity.Id);
-        }
-
-        public static EntityReference CreateLookup(string entityType, Guid id)
-        {
-            return new EntityReference(entityType, id);
-        }
-
-        public static OptionSetValue CreateOptionSet(int value)
-        {
-            return new OptionSetValue(value);
-        }
-
-        /// <summary>
-        ///     return field names where newitem contains the field and it is not (crm) logically equal to the field in
-        ///     existingItem
-        /// </summary>
-        public static string[] GetChangingFields(Entity newItem, Entity existingItem)
-        {
-            return Enumerable.Where<string>(newItem.Attributes.Keys, field => newItem.Contains(field) &&
-                                                                              !FieldsEqual(GetField(newItem, field),
-                                                                                  GetField(existingItem, field)))
-                .ToArray();
-        }
-
-        public static DateTime? GetDateTimeField(this Entity updatedEntity, string fieldName)
-        {
-            return (DateTime?)GetField(updatedEntity, fieldName);
-        }
-
-        public static Entity New(string entityType, Guid id)
-        {
-            return new Entity(entityType) { Id = id };
-        }
-
-        public static object CreateMoney(decimal value)
-        {
-            return new Money(value);
-        }
-
-        /// <summary>
-        ///     If entity is not null and contains the field returns the field value else returns null
-        /// </summary>
-        public static void ClearFields(this Entity entity)
-        {
-            entity.Attributes.Clear();
-        }
-
+        /// <param name="entity">Entity object containing the field</param>
+        /// <param name="fieldName">Name of the activity party field</param>
+        /// <returns>IEnumerable of activity party entities</returns>
         public static IEnumerable<Entity> GetActivityParties(this Entity entity, string fieldName)
         {
             var fieldValue = GetField(entity, fieldName);
@@ -725,16 +602,13 @@ namespace $safeprojectname$.Xrm
             }
         }
 
-        public static void AddFromParty(this Entity entity, string type, Guid id)
-        {
-            AddActivityParty(entity, "from", type, id);
-        }
-
-        public static void AddToParty(this Entity entity, string type, Guid id)
-        {
-            AddActivityParty(entity, "to", type, id);
-        }
-
+        /// <summary>
+        /// Adds a new party to a field of type activity party
+        /// </summary>
+        /// <param name="entity">Entity object containing the field to add the party to</param>
+        /// <param name="fieldName">Name of the activity party field being added to</param>
+        /// <param name="type">The type of the entity which is a party to the activity</param>
+        /// <param name="id">The id of the entity which is a party to the activity</param>
         public static void AddActivityParty(this Entity entity, string fieldName, string type, Guid id)
         {
             var parties = new List<Entity>();
@@ -745,60 +619,13 @@ namespace $safeprojectname$.Xrm
                     parties.AddRange((Entity[])currentParties);
                 else if (currentParties is EntityCollection)
                     parties.AddRange(((EntityCollection)currentParties).Entities);
-                else throw new Exception("No Add Logic Implemented For Type " + currentParties.GetType().Name);
+                else throw new NotImplementedException("Not Implemented Where Existing Value Of Type " + currentParties.GetType().Name);
             }
             var entityReference = new EntityReference(type, id);
-            var partyEntity = CreatePartyEntity(entityReference);
+            var partyEntity = new Entity(Entities.activityparty);
+            SetField(partyEntity, Fields.activityparty_.partyid, entityReference);
             parties.Add(partyEntity);
             SetField(entity, fieldName, parties.ToArray());
-        }
-
-        public static Entity CreatePartyEntity(EntityReference entityReference)
-        {
-            var partyEntity = new Entity("activityparty");
-            SetField(partyEntity, "partyid", entityReference);
-            return partyEntity;
-        }
-
-        public static IEnumerable<EntityReference> GetActivityPartyReferences(this Entity entity, string fieldName)
-        {
-            var parties = GetActivityParties(entity, fieldName);
-            return parties.Select(p => (EntityReference)GetField(p, "partyid"));
-        }
-
-        public static Guid GetGuidField(this Entity entity, string fieldName)
-        {
-            return (Guid)GetField(entity, fieldName);
-        }
-
-        public static IEnumerable<Entity> GetEntitiesField(this Entity entity, string fieldName)
-        {
-            var value = entity.GetField(fieldName);
-            if (value == null)
-                return new Entity[0];
-            if (value is EntityCollection)
-            {
-                var collection = (EntityCollection)value;
-                if (collection.Entities.Any())
-                {
-                    return collection.Entities.ToList();
-                }
-                return null;
-            }
-            throw new Exception(string.Format("Field {0} Of Unexpected Type For Method {1}", fieldName,
-                value.GetType().Name));
-        }
-
-        public static void RemoveFields(this Entity entity, IEnumerable<string> fieldNames)
-        {
-            if (fieldNames != null)
-            {
-                foreach (var field in fieldNames)
-                {
-                    if (entity.Contains(field))
-                        entity.Attributes.Remove(field);
-                }
-            }
         }
     }
 }

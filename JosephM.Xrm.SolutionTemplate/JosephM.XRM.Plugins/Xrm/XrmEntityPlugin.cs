@@ -13,18 +13,8 @@ namespace $safeprojectname$.Xrm
     ///     Class storing properties and methods common for plugins on all entity types
     ///     A specific entity may extend this class to implement plugins specific for that entity type
     /// </summary>
-    public class XrmEntityPlugin : XrmPlugin
+    public abstract class XrmEntityPlugin : XrmPlugin
     {
-        public override sealed void Go()
-        {
-            GoExtention();
-        }
-
-        public virtual void GoExtention()
-        {
-            Trace("In base plugin Go not overridden for type");
-        }
-
         #region instance properties
 
         /// <summary>
@@ -35,39 +25,8 @@ namespace $safeprojectname$.Xrm
             get { return ((OptionSetValue)Context.InputParameters["State"]).Value; }
         }
 
-        public EntityReference Assignee
-        {
-            get
-            {
-                if (Context.InputParameters.Contains("Assignee") &&
-                    Context.InputParameters["Assignee"] is EntityReference)
-                    return (EntityReference)Context.InputParameters["Assignee"];
-                throw new InvalidPluginExecutionException("Error Getting Assignee");
-            }
-        }
-
-        public Guid ListId
-        {
-            get
-            {
-                if (Context.InputParameters.Contains("ListId") && Context.InputParameters["ListId"] is Guid)
-                    return (Guid)Context.InputParameters["ListId"];
-                throw new InvalidPluginExecutionException("Error Getting ListId");
-            }
-        }
-
-        public IEnumerable<Guid> MemberIds
-        {
-            get
-            {
-                if (Context.InputParameters.Contains("MemberIds") && Context.InputParameters["MemberIds"] is Guid[])
-                    return (IEnumerable<Guid>)Context.InputParameters["MemberIds"];
-                throw new InvalidPluginExecutionException("Error Getting MemberIds");
-            }
-        }
-
         /// <summary>
-        ///     The user the plugin is firing on
+        /// The id of the target record
         /// </summary>
         public Guid TargetId
         {
@@ -80,7 +39,7 @@ namespace $safeprojectname$.Xrm
                     return TargetEntityReference.Id;
                 else if (Context.InputParameters.Contains("EmailId") && Context.InputParameters["EmailId"] is Guid)
                     return (Guid)Context.InputParameters["EmailId"];
-                else if(MessageName == PluginMessage.Cancel)
+                else if (MessageName == PluginMessage.Cancel)
                 {
                     var orderClose = Context.InputParameters["OrderClose"] as Entity;
                     if (orderClose == null)
@@ -127,7 +86,7 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     The target in a SetStateDynamicEntity, Merge or Delete message
+        ///     The input entity reference if a valid message type
         /// </summary>
         public EntityReference TargetEntityReference
         {
@@ -146,7 +105,7 @@ namespace $safeprojectname$.Xrm
         }
 
         /// <summary>
-        ///     The target entity in a Create or Update message
+        ///     The target entity in a Create or Update message else null
         /// </summary>
         public Entity TargetEntity
         {
@@ -195,11 +154,17 @@ namespace $safeprojectname$.Xrm
                                                           MessageName);
         }
 
+        /// <summary>
+        /// Return if the boolean fields value is changing to true
+        /// </summary>
         public bool BooleanChangingToTrue(string field)
         {
             return FieldChanging(field) && GetBoolean(field);
         }
 
+        /// <summary>
+        /// Return if the boolean fields value is changing to not true
+        /// </summary>
         public bool BooleanChangingToFalse(string field)
         {
             return !GetBoolean(field) && GetBooleanPreImage(field);
@@ -431,13 +396,13 @@ namespace $safeprojectname$.Xrm
                     }
                 case PluginMessage.Update:
                     {
-                        metPrePlugin = XrmEntity.MeetsConditions(PreImageEntity.GetFieldDelegate(), conditions);
+                        metPrePlugin = XrmEntity.MeetsConditions(PreImageEntity.GetField, conditions);
                         metPostPlugin = XrmEntity.MeetsConditions(GetField, conditions);
                         break;
                     }
                 case PluginMessage.Delete:
                     {
-                        metPrePlugin = XrmEntity.MeetsConditions(XrmEntity.GetFieldDelegate(PreImageEntity), conditions);
+                        metPrePlugin = XrmEntity.MeetsConditions(PreImageEntity.GetField, conditions);
                         break;
                     }
                 default:
@@ -472,10 +437,10 @@ namespace $safeprojectname$.Xrm
 
         public string GetEntityLabel()
         {
-            return XrmService.GetEntityLabel(TargetType);
+            return XrmService.GetEntityDisplayName(TargetType);
         }
 
-        public string GetTargetEntityCollectionLabel()
+        public string GetEntityCollectionLabel()
         {
             return XrmService.GetEntityCollectionName(TargetType);
         }
@@ -483,25 +448,6 @@ namespace $safeprojectname$.Xrm
         public string GetOptionLabel(int value, string field)
         {
             return XrmService.GetOptionLabel(value, field, TargetType);
-        }
-
-        protected void DerivedConcatenatedField(string fieldToSet, string[] fields, string separator)
-        {
-            if (IsMessage(PluginMessage.Create, PluginMessage.Update)
-                && Stage == PluginStage.PreOperationEvent)
-            {
-                if (FieldChanging(fields))
-                {
-                    var values = new List<object>();
-                    foreach (var field in fields)
-                    {
-                        var value = XrmEntity.GetFieldAsDisplayString(GetField(field));
-                        if (!String.IsNullOrWhiteSpace(value))
-                            values.Add(value);
-                    }
-                    SetField(fieldToSet, String.Join(separator, values));
-                }
-            }
         }
 
         #endregion

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace $safeprojectname$.Core
 {
@@ -37,45 +35,12 @@ namespace $safeprojectname$.Core
                 .Invoke(instance, new object[] { value });
         }
 
-        public static bool IsInContext(this object instance, string propertyName)
-        {
-            var inContextAttributes =
-                instance.GetType()
-                    .GetProperty(propertyName)
-                    .GetCustomAttributes(typeof(PropertyInContext), true)
-                    .Cast<PropertyInContext>();
-            if (!inContextAttributes.Any())
-                return true;
-            return inContextAttributes.All(a => a.IsInContext(instance));
-        }
-
-
-        /// <summary>
-        ///     Returns if the object value is considered empty. Note an enumerable of no objects is considered empty
-        /// </summary>
-        public static bool IsEmpty(this object instance)
-        {
-            if (instance is string)
-                return ((string)instance).IsNullOrWhiteSpace();
-            if (instance is IEnumerable)
-            {
-                var any = ((IEnumerable)instance).GetEnumerator().MoveNext();
-                return !any;
-            }
-            return instance == null;
-        }
-
-        public static bool IsNotEmpty(this object instance)
-        {
-            return !instance.IsEmpty();
-        }
-
         /// <summary>
         ///     Sets The Property Value Of The Object From The Raw String Value Loaded From app.config
         /// </summary>
         public static void SetPropertyByString(this object theObject, string propertyName, string rawConfigString)
         {
-            if (rawConfigString.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(rawConfigString))
                 theObject.SetPropertyValue(propertyName, null);
 
             var property = theObject.GetType().GetProperty(propertyName);

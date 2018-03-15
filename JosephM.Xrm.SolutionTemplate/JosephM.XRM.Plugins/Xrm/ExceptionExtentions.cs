@@ -4,8 +4,14 @@ using Microsoft.Xrm.Sdk;
 
 namespace $safeprojectname$.Xrm
 {
-    public static class ExceptionExtentions
+    /// <summary>
+    /// Extention methods for xrm related objects
+    /// </summary>
+    public static class XrmExtentions
     {
+        /// <summary>
+        /// Outputs a detailed string for an exception including the trace details for an OrganizationServiceFault
+        /// </summary>
         public static string XrmDisplayString(this Exception ex)
         {
             var result = "";

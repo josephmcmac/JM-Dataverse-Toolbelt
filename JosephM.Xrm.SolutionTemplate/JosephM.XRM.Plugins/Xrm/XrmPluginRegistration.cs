@@ -10,8 +10,6 @@ namespace $safeprojectname$.Xrm
 {
     public abstract class XrmPluginRegistration : IPlugin
     {
-        #region IPlugin Members
-
         protected const string XRMRETRIEVEMULTIPLEFAKESCHEMANAME = "XRMRETRIEVEMULTIPLE";
 
         public void Execute(IServiceProvider serviceProvider)
@@ -28,7 +26,6 @@ namespace $safeprojectname$.Xrm
             if (plugin != null)
             {
                 plugin.ServiceProvider = serviceProvider;
-                RegisterTypes(plugin);
                 XrmPlugin.Go(plugin);
             }
         }
@@ -80,18 +77,6 @@ namespace $safeprojectname$.Xrm
             return entityType;
         }
 
-        #endregion
-
-        public virtual XrmPlugin CreateEntityPlugin(string entityType, bool isRelationship)
-        {
-            if (isRelationship)
-                return new XrmNNPlugin();
-            else
-                return new XrmEntityPlugin();
-        }
-
-        public virtual void RegisterTypes(XrmPlugin plugin)
-        {
-        }
+        public abstract XrmPlugin CreateEntityPlugin(string entityType, bool isRelationship);
     }
 }

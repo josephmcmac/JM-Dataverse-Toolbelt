@@ -17,7 +17,8 @@ namespace $ext_safeprojectname$
                 if (!settings.ConsoleArgs(args))
                 {
                     var xrmSetting = settings.Resolve<XrmSetting>();
-                    var controller = new LogController(new ConsoleUserInterface(false));
+                    var controller = new LogController();
+                    controller.AddUi(new ConsoleUserInterface(false));
                 }
             }
             catch (Exception ex)

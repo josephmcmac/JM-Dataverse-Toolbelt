@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Debug.cs" />
     <Compile Include="$ext_jmobjprefix$XrmTest.cs" />
+    <Compile Include="DebugUserInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XrmTest.cs" />
   </ItemGroup>

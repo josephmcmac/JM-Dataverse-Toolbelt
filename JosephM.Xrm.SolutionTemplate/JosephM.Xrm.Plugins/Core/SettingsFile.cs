@@ -68,7 +68,7 @@ namespace $safeprojectname$.Core
                     var serialise = JsonHelper.ObjectToJsonString(settingsObject);
                     if (File.Exists(setting.FileName))
                         File.Delete(setting.FileName);
-                    FileUtility.WriteToFile(null, setting.FileName, serialise);
+                    File.WriteAllText(setting.FileName, serialise);
                     matched = true;
                 }
             }

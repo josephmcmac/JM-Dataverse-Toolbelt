@@ -7,11 +7,15 @@ using Microsoft.Xrm.Sdk.Discovery;
 
 namespace $safeprojectname$.Xrm
 {
+    /// <summary>
+    /// Class to create a service connection to a Dynamics instance
+    /// Copied out of SDK and ajdusted for the IXrmConfiguration class to simplfy
+    /// </summary>
     public class XrmConnection
     {
         private readonly IXrmConfiguration CrmConfig;
 
-        public XrmConnection(IXrmConfiguration crmConfig)
+        private XrmConnection(IXrmConfiguration crmConfig)
         {
             CrmConfig = crmConfig;
         }
@@ -20,7 +24,17 @@ namespace $safeprojectname$.Xrm
         ///     Return Organisation Service Proxy
         /// </summary>
         /// <returns></returns>
-        public OrganizationServiceProxy GetOrgServiceProxy()
+        public static OrganizationServiceProxy GetOrgServiceProxy(IXrmConfiguration crmConfig)
+        {
+            var connection = new XrmConnection(crmConfig);
+            return connection.GetOrgServiceProxy();
+        }
+
+        /// <summary>
+        ///     Return Organisation Service Proxy
+        /// </summary>
+        /// <returns></returns>
+        private OrganizationServiceProxy GetOrgServiceProxy()
         {
             try
             {
@@ -71,20 +85,6 @@ namespace $safeprojectname$.Xrm
             }
         }
 
-        public DiscoveryServiceProxy GetDiscoveryService()
-        {
-            var authenticationType = CrmConfig.AuthenticationProviderType;
-
-            var serviceManagement =
-                ServiceConfigurationFactory.CreateManagement<IDiscoveryService>(
-                    new Uri(CrmConfig.DiscoveryServiceAddress));
-
-            // Set the credentials.
-            var authCredentials = GetCredentials(authenticationType);
-
-            return GetProxy<IDiscoveryService, DiscoveryServiceProxy>(serviceManagement, authCredentials);
-        }
-
         /// <summary>
         ///     Obtain the AuthenticationCredentials based on AuthenticationProviderType.
         /// </summary>
@@ -132,7 +132,7 @@ namespace $safeprojectname$.Xrm
         ///     Array containing detailed information on each organization that
         ///     the user belongs to.
         /// </returns>
-        public OrganizationDetailCollection DiscoverOrganizations(IDiscoveryService service)
+        private OrganizationDetailCollection DiscoverOrganizations(IDiscoveryService service)
         {
             if (service == null) throw new ArgumentNullException("service");
             var orgRequest = new RetrieveOrganizationsRequest();
@@ -149,7 +149,7 @@ namespace $safeprojectname$.Xrm
         /// <param name="orgUniqueName">The unique name of the organization to find.</param>
         /// <param name="orgDetails">Array of organization detail object returned from the discovery service.</param>
         /// <returns>Organization details or null if the organization was not found.</returns>
-        public OrganizationDetail FindOrganization(string orgUniqueName, OrganizationDetail[] orgDetails)
+        private OrganizationDetail FindOrganization(string orgUniqueName, OrganizationDetail[] orgDetails)
         {
             if (String.IsNullOrWhiteSpace(orgUniqueName))
                 throw new ArgumentNullException("orgUniqueName");
@@ -198,8 +198,8 @@ namespace $safeprojectname$.Xrm
                 return (TProxy)classType
                     .GetConstructor(new[]
                     {
-                        typeof (IServiceManagement<TService>),
-                        typeof (SecurityTokenResponse)
+                            typeof (IServiceManagement<TService>),
+                            typeof (SecurityTokenResponse)
                     })
                     .Invoke(new object[] { serviceManagement, tokenCredentials.SecurityTokenResponse });
             }
