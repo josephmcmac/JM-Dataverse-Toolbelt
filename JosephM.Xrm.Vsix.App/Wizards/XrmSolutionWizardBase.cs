@@ -31,6 +31,12 @@ namespace JosephM.Xrm.Vsix.Wizards
 
             var container = new PrismDependencyContainer(new UnityContainer());
             var applicationController = new VsixApplicationController(container);
+            if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && replacementsDictionary["$specifiedsolutionname$"] != null)
+            {
+                applicationController.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");
+            }
+
+
             RunWizardSettingsEntry(XrmPackageSettings, applicationController);
 
             //add token replacements for the template projects
