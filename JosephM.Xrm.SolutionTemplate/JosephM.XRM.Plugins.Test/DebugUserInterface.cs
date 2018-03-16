@@ -1,7 +1,7 @@
-﻿using JosephM.Core.Log;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using $ext_safeprojectname$.Plugins.Core;
 
-namespace JosephM.Core.Test
+namespace $safeprojectname$
 {
     public class DebugUserInterface : IUserInterface
     {

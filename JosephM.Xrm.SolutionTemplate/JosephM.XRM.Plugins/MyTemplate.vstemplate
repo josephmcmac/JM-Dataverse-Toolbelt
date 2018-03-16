@@ -15,65 +15,20 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="JosephM.Xrm.Plugins.csproj" File="JosephM.Xrm.Plugins.csproj" ReplaceParameters="true">
-      <Folder Name="Aggregate" TargetFolderName="Aggregate">
-        <ProjectItem ReplaceParameters="true" TargetFileName="AggregateType.cs">AggregateType.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="XrmAggregate.cs">XrmAggregate.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="XrmLookupAggregate.cs">XrmLookupAggregate.cs</ProjectItem>
-      </Folder>
       <Folder Name="Core" TargetFolderName="Core">
-        <ProjectItem ReplaceParameters="true" TargetFileName="AppConfigManager.cs">AppConfigManager.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleSettings.cs">ConsoleSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleUserInterface.cs">ConsoleUserInterface.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="CsvUtility.cs">CsvUtility.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="CustomConfigurationSectiion.cs">CustomConfigurationSectiion.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="DecimalExtentions.cs">DecimalExtentions.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="DisplayName.cs">DisplayName.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="DisplayOrder.cs">DisplayOrder.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="EnumExtentions.cs">EnumExtentions.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ExcelFile.cs">ExcelFile.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ExcelUtility.cs">ExcelUtility.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ExceptionExtentions.cs">ExceptionExtentions.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="File.cs">File.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="FileMasks.cs">FileMasks.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="FileUtility.cs">FileUtility.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="Folder.cs">Folder.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="GuidExtentions.cs">GuidExtentions.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ILogConfiguration.cs">ILogConfiguration.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="InitialiseFor.cs">InitialiseFor.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="IsValidResponse.cs">IsValidResponse.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="IUserInterface.cs">IUserInterface.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="JsonHelper.cs">JsonHelper.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="LogConfiguration.cs">LogConfiguration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="LogController.cs">LogController.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="LogFileUserInterface.cs">LogFileUserInterface.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="Lookup.cs">Lookup.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ObjectExtentions.cs">ObjectExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="Password.cs">Password.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="PropertyInContext.cs">PropertyInContext.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="PropertyInContextByPropertyNotNull.cs">PropertyInContextByPropertyNotNull.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="PropertyInContextByPropertyValue.cs">PropertyInContextByPropertyValue.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="PropertyInContextByPropertyValues.cs">PropertyInContextByPropertyValues.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="PropertyValidator.cs">PropertyValidator.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="QueryRow.cs">QueryRow.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="RecordTypeFor.cs">RecordTypeFor.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="RegularExpressions.cs">RegularExpressions.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="RequiredProperty.cs">RequiredProperty.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="SettingsFile.cs">SettingsFile.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="SqlException.cs">SqlException.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="SqlProvider.cs">SqlProvider.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="StreamExtentions.cs">StreamExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="StringEncryptor.cs">StringEncryptor.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="StringExtentions.cs">StringExtentions.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="StringFormats.cs">StringFormats.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="StringLocker.cs">StringLocker.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="TypeExtentions.cs">TypeExtentions.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="WebConfigManager.cs">WebConfigManager.cs</ProjectItem>
-      </Folder>
-      <Folder Name="Extentions" TargetFolderName="Extentions">
-        <ProjectItem ReplaceParameters="true" TargetFileName="XrmServiceExtentions.cs">XrmServiceExtentions.cs</ProjectItem>
-      </Folder>
-      <Folder Name="HtmlEmails" TargetFolderName="HtmlEmails">
-        <ProjectItem ReplaceParameters="true" TargetFileName="HtmlEmailGenerator.cs">HtmlEmailGenerator.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ProcessEntityResponseBase.cs">ProcessEntityResponseBase.cs</ProjectItem>
       </Folder>
       <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$PluginRegistration.cs">$ext_jmobjprefix$PluginRegistration.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$Settings.cs">$ext_jmobjprefix$Settings.cs</ProjectItem>
@@ -99,13 +54,11 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="DeviceIdManager.cs">DeviceIdManager.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ExceptionExtentions.cs">ExceptionExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="IXrmConfiguration.cs">IXrmConfiguration.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="OrganisationSettings.cs">OrganisationSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConfiguration.cs">XrmConfiguration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConnection.cs">XrmConnection.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmEntity.cs">XrmEntity.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmEntityPlugin.cs">XrmEntityPlugin.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmNNPlugin.cs">XrmNNPlugin.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="XrmPicklists.cs">XrmPicklists.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmPlugin.cs">XrmPlugin.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmPluginRegistration.cs">XrmPluginRegistration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmService.cs">XrmService.cs</ProjectItem>

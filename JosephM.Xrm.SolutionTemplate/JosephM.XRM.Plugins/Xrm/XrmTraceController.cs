@@ -1,9 +1,5 @@
-﻿#region
-
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using $safeprojectname$.Core;
-
-#endregion
 
 namespace $safeprojectname$.Xrm
 {

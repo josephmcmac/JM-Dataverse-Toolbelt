@@ -1,19 +1,11 @@
-﻿#region
-
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using System;
 using System.Linq;
-
-#endregion
 
 namespace $safeprojectname$.Xrm
 {
     public abstract class XrmPluginRegistration : IPlugin
     {
-        #region IPlugin Members
-
-        protected const string XRMRETRIEVEMULTIPLEFAKESCHEMANAME = "XRMRETRIEVEMULTIPLE";
-
         public void Execute(IServiceProvider serviceProvider)
         {
             string entityType;
@@ -28,7 +20,6 @@ namespace $safeprojectname$.Xrm
             if (plugin != null)
             {
                 plugin.ServiceProvider = serviceProvider;
-                RegisterTypes(plugin);
                 XrmPlugin.Go(plugin);
             }
         }
@@ -38,8 +29,6 @@ namespace $safeprojectname$.Xrm
             string entityType;
             if (isRelationship)
                 entityType = ((Relationship)context.InputParameters["Relationship"]).SchemaName;
-            else if (context.MessageName == PluginMessage.RetrieveMultiple)
-                entityType = XRMRETRIEVEMULTIPLEFAKESCHEMANAME;
             else if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity)
                 entityType = ((Entity)context.InputParameters["Target"]).LogicalName;
             else if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is EntityReference)
@@ -80,18 +69,6 @@ namespace $safeprojectname$.Xrm
             return entityType;
         }
 
-        #endregion
-
-        public virtual XrmPlugin CreateEntityPlugin(string entityType, bool isRelationship)
-        {
-            if (isRelationship)
-                return new XrmNNPlugin();
-            else
-                return new XrmEntityPlugin();
-        }
-
-        public virtual void RegisterTypes(XrmPlugin plugin)
-        {
-        }
+        public abstract XrmPlugin CreateEntityPlugin(string entityType, bool isRelationship);
     }
 }

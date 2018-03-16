@@ -1,12 +1,6 @@
-﻿#region
-
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using $safeprojectname$.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-
-#endregion
 
 namespace $safeprojectname$.Xrm
 {
@@ -16,25 +10,13 @@ namespace $safeprojectname$.Xrm
     /// </summary>
     public abstract class XrmPlugin
     {
-        private readonly SortedDictionary<string, object> _registeredTypes = new SortedDictionary<string, object>();
         public abstract string TargetType { get; }
-
-        public void RegisterType<T>(Func<T> constructor)
-        {
-            _registeredTypes.Add(typeof(T).FullName, constructor);
-        }
-
-        public T Resolve<T>()
-        {
-            var constructor = (Func<T>)_registeredTypes[typeof(T).FullName];
-            return constructor();
-        }
 
         public static void Go(XrmPlugin plugin)
         {
             try
             {
-                plugin.Go();
+                plugin.GoExtention();
             }
             catch (InvalidPluginExecutionException ex)
             {
@@ -50,14 +32,13 @@ namespace $safeprojectname$.Xrm
             }
         }
 
-        public abstract void Go();
+        public abstract void GoExtention();
 
         #region instance properties
 
         private IPluginExecutionContext _context;
 
         private LogController _controller;
-        private string[] _securityRoles;
 
         private XrmService _service;
         public IServiceProvider ServiceProvider { get; set; }
@@ -83,7 +64,8 @@ namespace $safeprojectname$.Xrm
                 if (_controller == null)
                 {
                     var trace = (ITracingService)ServiceProvider.GetService(typeof(ITracingService));
-                    _controller = new LogController(new XrmTraceUserInterface(trace));
+                    _controller = new LogController();
+                    _controller.AddUi(new XrmTraceUserInterface(trace));
                 }
                 return _controller;
             }
@@ -130,60 +112,6 @@ namespace $safeprojectname$.Xrm
         public int Mode
         {
             get { return Context.Mode; }
-        }
-
-        /// <summary>
-        ///     The user the plugin is firing on
-        /// </summary>
-        public Guid InitiatingUserId
-        {
-            get
-            {
-                return Context.InitiatingUserId;
-            }
-        }
-
-        /// <summary>
-        ///     The secure config of the step
-        /// </summary>
-        public string SecureConfig { get; set; }
-
-        /// <summary>
-        ///     The unsecure config of the step
-        /// </summary>
-        public string UnsecureConfig { get; set; }
-
-        /// <summary>
-        ///     Gets the Subordinate Id from the input parameters.  Will only be there if is a Merge Message otherwise it is
-        ///     GUid.empty
-        /// </summary>
-        public Guid SubordinateId
-        {
-            get
-            {
-                if (Context.InputParameters.Contains("SubordinateId") &&
-                    Context.InputParameters["SubordinateId"] is Guid)
-                    return (Guid)Context.InputParameters["SubordinateId"];
-                else
-                    return Guid.Empty;
-            }
-        }
-
-        public DateTime OperationCreatedOn
-        {
-            get { return Context.OperationCreatedOn; }
-        }
-
-        private string[] SecurityRoles
-        {
-            get
-            {
-                if (_securityRoles == null)
-                    _securityRoles =
-                        XrmService.GetUserRoles(InitiatingUserId, new[] { "name" }).Select(
-                            delegate (Entity entity) { return entity.GetStringField("name"); }).ToArray();
-                return _securityRoles;
-            }
         }
 
         #endregion

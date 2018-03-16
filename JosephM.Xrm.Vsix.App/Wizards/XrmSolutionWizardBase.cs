@@ -31,6 +31,12 @@ namespace JosephM.Xrm.Vsix.Wizards
 
             var container = new PrismDependencyContainer(new UnityContainer());
             var applicationController = new VsixApplicationController(container);
+            if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && (replacementsDictionary["$specifiedsolutionname$"] == null || replacementsDictionary["$specifiedsolutionname$"] == ""))
+            {
+                applicationController.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");
+            }
+
+
             RunWizardSettingsEntry(XrmPackageSettings, applicationController);
 
             //add token replacements for the template projects
@@ -128,6 +134,24 @@ namespace JosephM.Xrm.Vsix.Wizards
             if (XrmPackageSettings.Connections.Any())
                 visualStudioService.AddSolutionItem("solution.xrmconnection", XrmPackageSettings.Connections.First());
             visualStudioService.CloseAllDocuments();
+
+            RemoveEmptyFolders(DestinationDirectory);
+        }
+
+        public void RemoveEmptyFolders(string directory)
+        {
+            if (Directory.Exists(directory))
+            {
+                foreach(var subDirectory in Directory.GetDirectories(directory))
+                {
+                    RemoveEmptyFolders(subDirectory);
+                }
+                if (!Directory.GetFiles(directory).Any() && !Directory.GetDirectories(directory).Any())
+                {
+                    Directory.Delete(directory);
+                }
+            }
+
         }
     }
 }

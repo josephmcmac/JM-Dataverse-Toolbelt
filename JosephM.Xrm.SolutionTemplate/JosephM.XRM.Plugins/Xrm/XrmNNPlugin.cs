@@ -1,11 +1,7 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xrm.Sdk;
-
-#endregion
 
 namespace $safeprojectname$.Xrm
 {
@@ -20,7 +16,7 @@ namespace $safeprojectname$.Xrm
                 relationshipSchemaName = ((Relationship)context.InputParameters["Relationship"]).SchemaName;
             var plugin = CreateNNPlugin(relationshipSchemaName);
             plugin.ServiceProvider = serviceProvider;
-            plugin.Go();
+            plugin.GoExtention();
         }
 
         public abstract XrmNNPlugin CreateNNPlugin(string relationshipName);
@@ -30,21 +26,11 @@ namespace $safeprojectname$.Xrm
     ///     Class storing properties and methods common for plugins on all entity types
     ///     A specific entity may extend this class to implement plugins specific for that entity type
     /// </summary>
-    public class XrmNNPlugin : XrmPlugin
+    public abstract class XrmNNPlugin : XrmPlugin
     {
         public override string TargetType
         {
             get { return Target.LogicalName; }
-        }
-
-        public override void Go()
-        {
-            GoExtention();
-        }
-
-        public virtual void GoExtention()
-        {
-            Trace("In base nnplugin Go not overridden for type");
         }
 
         #region instance properties

@@ -37,10 +37,8 @@ namespace $safeprojectname$
             }
         }
 
-        //class for shared services or settings objects for tests
-        //or extending base class logic
         private $ext_jmobjprefix$Settings _settings;
-        public $ext_jmobjprefix$Settings $ext_jmobjprefix$Settings
+        public $ext_jmobjprefix$Settings abcSettings
         {
             get
             {
@@ -51,12 +49,12 @@ namespace $safeprojectname$
         }
 
         private $ext_jmobjprefix$Service _service;
-        public $ext_jmobjprefix$Service $ext_jmobjprefix$Service
+        public $ext_jmobjprefix$Service abcService
         {
             get
             {
                 if (_service == null)
-                    _service = new $ext_jmobjprefix$Service(XrmService, $ext_jmobjprefix$Settings);
+                    _service = new $ext_jmobjprefix$Service(XrmService, abcSettings);
                 return _service;
             }
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace $safeprojectname$.Core
 {
@@ -33,7 +32,7 @@ namespace $safeprojectname$.Core
                 : SettingsFiles.Where(s => s.Name == name);
             if (!matchingOnes.Any())
                 throw new NullReferenceException(string.Format("None of the settings matched for {0}", name == null ? typeof(T).Name : name));
-            return (T) matchingOnes.First().ResolveObject(RootFolder);
+            return (T)matchingOnes.First().ResolveObject(RootFolder);
         }
 
         public bool ConsoleArgs(IEnumerable<string> args)
@@ -47,14 +46,14 @@ namespace $safeprojectname$.Core
             }
             var matched = false;
             var argument = args.First();
-            foreach(var item in ValidArgPrefixes)
+            foreach (var item in ValidArgPrefixes)
             {
-                while(argument.StartsWith(item))
+                while (argument.StartsWith(item))
                 {
                     argument = argument.Substring(item.Length);
                 }
             }
-            if(argument == "?" || argument.ToLower() == "help")
+            if (argument == "?" || argument.ToLower() == "help")
             {
                 matched = true;
                 Console.WriteLine();
@@ -68,7 +67,7 @@ namespace $safeprojectname$.Core
                     var serialise = JsonHelper.ObjectToJsonString(settingsObject);
                     if (File.Exists(setting.FileName))
                         File.Delete(setting.FileName);
-                    FileUtility.WriteToFile(null, setting.FileName, serialise);
+                    File.WriteAllText(setting.FileName, serialise);
                     matched = true;
                 }
             }
@@ -109,9 +108,19 @@ namespace $safeprojectname$.Core
                 var props = Type.GetWritableProperties();
                 foreach (var prop in props)
                 {
-                    Console.Write("Please enter the " + prop.GetDisplayName() + ":");
-                    var value = Console.ReadLine();
-                    newObject.SetPropertyByString(prop.Name, value);
+                    if (newObject.IsInContext(prop.Name))
+                    {
+                        if (prop.PropertyType.IsEnum)
+                        {
+                            foreach (var item in prop.PropertyType.GetEnumValues())
+                            {
+                                Console.WriteLine((int)item + " = " + item);
+                            }
+                        }
+                        Console.Write("Please enter the " + prop.Name + ":");
+                        var value = Console.ReadLine();
+                        newObject.SetPropertyByString(prop.Name, value);
+                    }
                 }
                 return newObject;
             }
@@ -138,4 +147,3 @@ namespace $safeprojectname$.Core
         }
     }
 }
-

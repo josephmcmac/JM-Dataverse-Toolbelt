@@ -3,9 +3,11 @@ using $safeprojectname$.Xrm;
 
 namespace $safeprojectname$.Plugins
 {
-    public class $ext_jmobjprefix$EntityPluginBase : XrmEntityPlugin
+    /// <summary>
+    /// class for shared services or settings objects for plugins
+    /// </summary>
+    public abstract class $ext_jmobjprefix$EntityPluginBase : XrmEntityPlugin
     {
-    //class for shared services or settings objects for plugins
         private $ext_jmobjprefix$Settings _settings;
         public $ext_jmobjprefix$Settings $ext_jmobjprefix$Settings
         {

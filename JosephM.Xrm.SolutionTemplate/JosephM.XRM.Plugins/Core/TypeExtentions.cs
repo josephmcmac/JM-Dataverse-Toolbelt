@@ -1,16 +1,11 @@
-﻿#region
-
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-#endregion
-
 namespace $safeprojectname$.Core
 {
-    public static class TypeExtentions
+     public static class TypeExtentions
     {
         public static bool HasStringConstructor(this Type type)
         {
@@ -52,31 +47,6 @@ namespace $safeprojectname$.Core
                     c => c.GetParameters().Count() == 1 && c.GetParameters()[0].ParameterType == typeof(string));
         }
 
-        public static string GetPropertyDisplayName(this Type type, string property)
-        {
-            return type.GetProperty(property).GetDisplayName();
-        }
-
-        public static string GetDisplayName(this PropertyInfo info)
-        {
-            var displayNameProperties =
-                info.GetCustomAttributes(typeof(DisplayNameAttribute), true).Cast<DisplayNameAttribute>();
-            if (displayNameProperties.Any())
-                return displayNameProperties.First().Label;
-            else
-                return info.Name.SplitCamelCase();
-        }
-
-        public static string GetDisplayName(this Type type)
-        {
-            var displayNameProperties =
-                type.GetCustomAttributes(typeof(DisplayNameAttribute), true).Cast<DisplayNameAttribute>();
-            if (displayNameProperties.Any())
-                return displayNameProperties.First().Label;
-            else
-                return type.Name.SplitCamelCase();
-        }
-
         public static IEnumerable<PropertyInfo> GetReadWriteProperties(this Type type)
         {
             return
@@ -93,34 +63,6 @@ namespace $safeprojectname$.Core
         {
             return
                 type.GetProperties().Where(p => p.CanRead);
-        }
-
-        public static IEnumerable<PropertyValidator> GetValidatorAttributes(this Type type, string propertyName)
-        {
-            var validatorAttributes =
-                type
-                    .GetProperty(propertyName)
-                    .GetCustomAttributes(typeof(PropertyValidator), true)
-                    .Cast<PropertyValidator>();
-            return validatorAttributes;
-        }
-
-        public static bool IsIEnumerableOfT(this Type type)
-        {
-            return type.Name == "IEnumerable`1";
-        }
-
-        public static object ToNewTypedEnumerable(this Type genericType, IEnumerable<object> objectEnumerable)
-        {
-            var typedEnumerable = typeof(Enumerable)
-                .GetMethod("Cast", new[] { typeof(IEnumerable) })
-                .MakeGenericMethod(genericType)
-                .Invoke(null, new object[] { objectEnumerable });
-            typedEnumerable = typeof(Enumerable)
-                .GetMethod("ToArray")
-                .MakeGenericMethod(genericType)
-                .Invoke(null, new object[] { typedEnumerable });
-            return typedEnumerable;
         }
     }
 }

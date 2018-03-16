@@ -101,7 +101,8 @@ namespace $safeprojectname$.Xrm
             {
                 if (_logController == null)
                 {
-                    _logController = new LogController(new XrmTraceUserInterface(TracingService));
+                    _logController = new LogController();
+                    _logController.AddUi(new XrmTraceUserInterface(TracingService));
                 }
                 return _logController;
             }
