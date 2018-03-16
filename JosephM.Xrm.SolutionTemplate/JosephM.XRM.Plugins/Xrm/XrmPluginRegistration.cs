@@ -6,8 +6,6 @@ namespace $safeprojectname$.Xrm
 {
     public abstract class XrmPluginRegistration : IPlugin
     {
-        protected const string XRMRETRIEVEMULTIPLEFAKESCHEMANAME = "XRMRETRIEVEMULTIPLE";
-
         public void Execute(IServiceProvider serviceProvider)
         {
             string entityType;
@@ -31,8 +29,6 @@ namespace $safeprojectname$.Xrm
             string entityType;
             if (isRelationship)
                 entityType = ((Relationship)context.InputParameters["Relationship"]).SchemaName;
-            else if (context.MessageName == PluginMessage.RetrieveMultiple)
-                entityType = XRMRETRIEVEMULTIPLEFAKESCHEMANAME;
             else if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity)
                 entityType = ((Entity)context.InputParameters["Target"]).LogicalName;
             else if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is EntityReference)
