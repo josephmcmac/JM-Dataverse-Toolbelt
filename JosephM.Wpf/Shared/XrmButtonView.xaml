@@ -30,6 +30,7 @@
                     Command="{Binding Command}"
                     ToolTip="{Binding Description}" />
                 <Popup
+                    Style="{StaticResource ButtonDropDownPopup}"
                     PlacementTarget="{Binding ElementName=ParentButton}"
                     StaysOpen="False"
                     IsOpen="{Binding OpenChildButtons}"

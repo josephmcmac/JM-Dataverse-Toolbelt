@@ -35,10 +35,10 @@ namespace JosephM.Application.Application
             Container = container;
             Dispatcher = Dispatcher.CurrentDispatcher;
             ApplicationName = applicationName;
-            Notifications = new ObservableCollection<KeyValuePair<string, string>>();
+            Notifications = new ObservableCollection<Notification>();
         }
 
-        public void AddNotification(string id, string notification)
+        public void AddNotification(string id, string notification, bool isLoading = false)
         {
             DoOnMainThread(() =>
             {
@@ -49,7 +49,7 @@ namespace JosephM.Application.Application
                 {
                     Notifications.Remove(item);
                 }
-                Notifications.Add(new KeyValuePair<string, string>(id, notification));
+                Notifications.Add(new Notification(id, notification, isLoading));
             });
         }
 
@@ -58,7 +58,7 @@ namespace JosephM.Application.Application
             Process.Start(fileName);
         }
 
-        public ObservableCollection<KeyValuePair<string, string>> Notifications { get; private set; }
+        public ObservableCollection<Notification> Notifications { get; private set; }
 
         public abstract void Remove(string regionName, object item);
 
@@ -236,5 +236,19 @@ namespace JosephM.Application.Application
         public virtual bool AllowSaveRequests { get { return true; } }
 
         public virtual bool ForceElementWindowHeight {  get { return false; } }
+
+        public class Notification
+        {
+            public Notification(string key, string value, bool isLoading)
+            {
+                Key = key;
+                Value = value;
+                IsLoading = isLoading;
+            }
+
+            public string Key { get; set; }
+            public string Value { get; set; }
+            public bool IsLoading { get; set; }
+        }
     }
 }
