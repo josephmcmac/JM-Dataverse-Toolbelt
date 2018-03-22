@@ -62,6 +62,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TaskEstimatorTests.cs" />
     <Compile Include="DateTimeExtentionsTests.cs" />
     <Compile Include="DebugUserInterface.cs" />
     <Compile Include="LogControllerTests.cs" />
