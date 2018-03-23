@@ -187,6 +187,7 @@ namespace JosephM.Deployment
             }
 
             #endregion tryordertypes
+            var estimator = new TaskEstimator(1);
 
             var countToImport = orderedTypes.Count;
             var countImported = 0;
@@ -195,7 +196,9 @@ namespace JosephM.Deployment
                 try
                 {
                     var thisRecordType = recordType;
+                    var displayPrefix = $"Importing {recordType} Records ({countImported + 1}/{countToImport})";
                     controller.UpdateProgress(countImported++, countToImport, string.Format("Importing {0} Records", recordType));
+                    controller.UpdateLevel2Progress(0, 1, "Loading");
                     var primaryField = XrmService.GetPrimaryNameField(recordType);
                     var thisTypeEntities = entities.Where(e => e.LogicalName == recordType).ToList();
 
@@ -245,14 +248,16 @@ namespace JosephM.Deployment
                     }
 
                     #endregion tryorderentities
+
                     var countRecordsToImport = orderedEntities.Count;
                     var countRecordsImported = 0;
+                    estimator = new TaskEstimator(countRecordsToImport);
+
                     foreach (var entity in orderedEntities)
                     {
                         var thisEntity = entity;
                         try
                         {
-                            controller.UpdateLevel2Progress(countRecordsImported++, countRecordsToImport, string.Format("Importing {0} Records", recordType));
                             var existingMatchingIds = GetMatchForExistingRecord(existingEntities, thisEntity);
                             if (existingMatchingIds.Any())
                             {
@@ -363,6 +368,8 @@ namespace JosephM.Deployment
                                     string.Format("Error Importing Record Id={0}", entity.Id),
                                     ex));
                         }
+                        countRecordsImported++;
+                        controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
                     }
                 }
                 catch (Exception ex)
@@ -374,6 +381,8 @@ namespace JosephM.Deployment
             controller.TurnOffLevel2();
             countToImport = fieldsToRetry.Count;
             countImported = 0;
+            controller.UpdateProgress(countImported, countToImport, "Retrying Unresolved Fields");
+            estimator = new TaskEstimator(countToImport);
             foreach (var item in fieldsToRetry)
             {
                 var thisEntity = item.Key;
@@ -440,21 +449,24 @@ namespace JosephM.Deployment
                             string.Format("Error Importing Record Id={0}", thisEntity.Id),
                             ex));
                 }
+                countImported++;
+                controller.UpdateProgress(countImported, countToImport, estimator.GetProgressString(countImported, taskName: $"Retrying Unresolved Fields {thisEntity.LogicalName}"));
             }
             countToImport = associationTypes.Count();
             countImported = 0;
             foreach (var relationshipEntityName in associationTypes)
             {
                 var thisEntityName = relationshipEntityName;
-                controller.UpdateProgress(countImported++, countToImport, string.Format("Associating {0} Records", thisEntityName));
+                controller.UpdateProgress(countImported++, countToImport, $"Associating {thisEntityName} Records");
+                controller.UpdateLevel2Progress(0, 1, "Loading");
                 var thisTypeEntities = entities.Where(e => e.LogicalName == thisEntityName).ToList();
                 var countRecordsToImport = thisTypeEntities.Count;
                 var countRecordsImported = 0;
+                estimator = new TaskEstimator(countRecordsToImport);
                 foreach (var thisEntity in thisTypeEntities)
                 {
                     try
                     {
-                        controller.UpdateLevel2Progress(countRecordsImported++, countRecordsToImport, string.Format("Associating {0} Records", thisEntityName));
                         var relationship = XrmService.GetRelationshipMetadataForEntityName(thisEntityName);
                         var type1 = relationship.Entity1LogicalName;
                         var field1 = relationship.Entity1IntersectAttribute;
@@ -489,6 +501,8 @@ namespace JosephM.Deployment
                                     thisEntity.Id),
                                 ex));
                     }
+                    countRecordsImported++;
+                    controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
                 }
             }
             return response;

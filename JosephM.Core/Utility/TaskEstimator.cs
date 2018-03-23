@@ -49,7 +49,7 @@ namespace JosephM.Core.Utility
             return number == 1 ? "" : "s";
         }
 
-        public string GetProgressString(int countUpdated, string taskName)
+        public string GetProgressString(int countUpdated, string taskName = null)
         {
             return $"{(string.IsNullOrWhiteSpace(taskName) ? null : (taskName + " - "))}{ToDo - countUpdated} Remaining - Estimated Time {GetEstimateRemainingDisplayString(countUpdated)}";
         }

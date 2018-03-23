@@ -22,6 +22,76 @@ namespace JosephM.Xrm.ImporterExporter.Test
     public class DeploymentImportXmlTests : XrmModuleTest
     {
         [TestMethod]
+        public void DeploymentImportXmlAssociationsAndNotesTest()
+        {
+            PrepareTests();
+            var types = new[] { Entities.jmcg_testentity };
+            var workFolder = ClearFilesAndData(types);
+
+            var importService = new ImportXmlService(XrmRecordService);
+
+            var createRecords = new List<Entity>();
+            foreach (var type in types)
+            {
+                for (var i = 0; i < 2; i++)
+                {
+                    createRecords.Add(CreateTestRecord(type, importService));
+                }
+            }
+            //if throws error ensure the test entity allows notes
+            XrmService.Associate(Relationships.jmcg_testentity_.jmcg_testentity_jmcg_testentity.Name, Entities.jmcg_testentity, createRecords[0].Id, true, Entities.jmcg_testentity, createRecords[1].Id);
+            var aNote = CreateTestRecord(Schema.Entities.annotation, new Dictionary<string, object>
+            {
+                { Schema.Fields.annotation_.objectid, createRecords[0].ToEntityReference() },
+                { Schema.Fields.annotation_.subject, "Test Scripting" },
+                { Schema.Fields.annotation_.notetext, "Just For Importing Testing" },
+            });
+
+
+            var exportService = new ExportXmlService(XrmRecordService);
+            var exportRequest = new ExportXmlRequest
+            {
+                Folder = new Folder(workFolder),
+                RecordTypesToExport = types.Select(t => new ExportRecordType() { RecordType = new RecordType(t, t) }),
+                IncludeNNRelationshipsBetweenEntities = true,
+                IncludeNotes = true
+            };
+            var response = exportService.Execute(exportRequest, Controller);
+            Assert.IsFalse(response.HasError);
+
+            foreach (var type in types)
+                DeleteAll(type);
+
+            var application = CreateAndLoadTestApplication<ImportXmlModule>();
+
+            var importRequest = new ImportXmlRequest
+            {
+                Folder = new Folder(workFolder)
+            };
+
+            var importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importResponse.HasError);
+
+            var rMetadata = XrmService.GetRelationshipMetadata(Relationships.jmcg_testentity_.jmcg_testentity_jmcg_testentity.Name);
+
+            foreach (var record in createRecords)
+            {
+                var loaded = Refresh(record);
+                if(createRecords[0].Id == loaded.Id)
+                {
+                    var notes = XrmService.RetrieveAllAndClauses(Schema.Entities.annotation, new[]
+                    {
+                        new ConditionExpression(Schema.Fields.annotation_.objectid, ConditionOperator.Equal, loaded.Id)
+                    });
+                    Assert.AreEqual(1, notes.Count());
+                    var associated = XrmService.GetAssociatedIds(rMetadata.SchemaName, rMetadata.Entity1IntersectAttribute, loaded.Id, rMetadata.Entity2IntersectAttribute);
+                    Assert.AreEqual(1, associated.Count());
+                    Assert.AreEqual(createRecords[1].Id, associated.First());
+                }
+            }
+        }
+
+        [TestMethod]
         public void DeploymentImportXmlMultipleTest()
         {
             PrepareTests();

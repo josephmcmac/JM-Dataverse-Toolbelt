@@ -17,7 +17,7 @@ namespace JosephM.Core.Test
             for(var i = 0; i < iterations; i++)
             {
                 Thread.Sleep(1000);
-                Debug.WriteLine($"Remaining {taskEstimator.GetProgressString(i + 1, "Executing Test")}");
+                Debug.WriteLine($"Remaining {taskEstimator.GetProgressString(i + 1, taskName: "Executing Test")}");
             }
         }
     }

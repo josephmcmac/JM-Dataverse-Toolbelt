@@ -36,7 +36,7 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkDelete
                     response.AddResponseItem(new BulkDeleteResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
                 }
                 countUpdated++;
-                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, "Executing Deletions"));
+                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Deletions"));
             }
         }
     }
