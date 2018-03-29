@@ -2,6 +2,18 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:query="clr-namespace:JosephM.Wpf.Query"
                     xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <Style x:Key="QueryChildIndent" TargetType="{x:Type Grid}">
+        <Setter Property="Margin" Value="30,0,0,0" />
+    </Style>
+    <Style x:Key="QueryIndentBorder" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="1,0,0,0" />
+        <Setter Property="BorderBrush" Value="LightGray" />
+    </Style>
     <DataTemplate x:Key="conditionTemplate">
         <Grid>
             <query:ConditionView DataContext="{Binding}" />
@@ -12,9 +24,32 @@
             <query:FilterConditionsView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="joinTemplate">
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Button
+                    Style="{StaticResource IconButton}"
+                    Command="{Binding Remove}" 
+                    Visibility="{Binding SelectedItem, Converter={StaticResource NullToHiddenConverter}}" >
+                    <Image Source="../Images/DeleteIcon.jpg" Height="15" Width="15" />
+                </Button>
+                <TextBlock VerticalAlignment="Center">Join</TextBlock>
+                <ComboBox
+                            Width="Auto"
+                            Style="{StaticResource  PicklistFieldEntryStyle}"
+                            DisplayMemberPath="Value"
+                            ItemsSource="{Binding LinkSelections}"
+                            SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}" />
+                <TextBlock Visibility="{Binding SelectedItem, Converter={StaticResource NullToHiddenConverter}}" VerticalAlignment="Center">Where</TextBlock>
+            </StackPanel>
+            <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
+            <query:JoinsView DataContext="{Binding Joins}" />
+        </StackPanel>
+    </DataTemplate>
     <templateSelector:ConditionTemplateSelector
         ConditionTemplate="{StaticResource conditionTemplate}"
         FilterConditionsTemplate="{StaticResource filterConditionsTemplate}" 
+        JoinTemplate="{StaticResource joinTemplate}" 
          x:Key="conditionTemplateSelector"
         />
 </ResourceDictionary>

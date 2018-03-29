@@ -16,7 +16,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             get { return GetMetadata().Entity1IntersectAttribute; }
         }
 
-        public string RecordType1 { get; set; }
+        public string RecordType1
+        {
+            get { return GetMetadata().Entity1LogicalName; }
+        }
 
         public string Entity2IntersectAttribute
         {
@@ -62,16 +65,17 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
-        public XrmManyToManyRelationshipMetadata(string name, XrmService xrmService, string recordType1)
+        public XrmManyToManyRelationshipMetadata(string name, XrmService xrmService, string recordType)
             : base(xrmService)
         {
-            RecordType1 = recordType1;
+            _recordTypeForLoading = recordType;
             SchemaName = name;
         }
 
+        private string _recordTypeForLoading;
         private ManyToManyRelationshipMetadata GetMetadata()
         {
-            return XrmService.GetManyToManyRelationship(RecordType1, SchemaName);
+            return XrmService.GetManyToManyRelationship(_recordTypeForLoading, SchemaName);
         }
 
         public bool IsManyToManyDisplayRelated(bool forRecordType2)
