@@ -15,7 +15,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Border Style="{StaticResource QueryIndentBorder}">
+    <Grid Style="{StaticResource QueryChildIndent}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -32,12 +33,14 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
+                        <Border Style="{StaticResource QueryIndentBorder}">
                     <ItemsControl 
                 ItemsSource="{Binding FilterConditions}"
                 HorizontalContentAlignment="Stretch"
                 ItemTemplateSelector="{StaticResource conditionTemplateSelector}" >
                     </ItemsControl>
-                </Grid>
+                        </Border>
+                    </Grid>
                 <Grid Grid.Row="1">
                     <ItemsControl 
                         ItemsSource="{Binding Conditions}"
@@ -48,4 +51,5 @@
             </Grid>
         </Grid>
     </Grid>
+    </Border>
 </UserControl>

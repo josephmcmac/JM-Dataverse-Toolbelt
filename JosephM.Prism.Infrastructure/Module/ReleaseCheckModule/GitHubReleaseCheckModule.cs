@@ -32,14 +32,17 @@ namespace JosephM.Application.Prism.Module.ReleaseCheckModule
         {
             base.InitialiseModule();
 
-            ApplicationController.DoOnAsyncThread(() =>
+            if (ApplicationController.RunThreadsAsynch)
             {
-                var updateSettings = (UpdateSettings)ApplicationController.ResolveType(typeof(UpdateSettings));
-                if (updateSettings.CheckForNewReleaseOnStartup)
+                ApplicationController.DoOnAsyncThread(() =>
                 {
-                    CheckNewForRelease(displayNoUpdate: false);
-                }
-            });
+                    var updateSettings = (UpdateSettings)ApplicationController.ResolveType(typeof(UpdateSettings));
+                    if (updateSettings.CheckForNewReleaseOnStartup)
+                    {
+                        CheckNewForRelease(displayNoUpdate: false);
+                    }
+                });
+            }
         }
 
         public override string MainOperationName => "Update Settings";

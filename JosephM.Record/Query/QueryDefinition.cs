@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace JosephM.Record.Query
 {
@@ -13,6 +9,7 @@ namespace JosephM.Record.Query
             RecordType = recordType;
             RootFilter = new Filter();
             Sorts = new List<SortExpression>();
+            Joins = new List<Join>();
             Top = -1;
         }
 
@@ -34,6 +31,8 @@ namespace JosephM.Record.Query
         public Filter RootFilter { get; set; }
 
         public List<SortExpression> Sorts { get; set; }
+
+        public List<Join> Joins { get; set; }
 
         public int Top { get; set; }
     }

@@ -64,5 +64,97 @@ namespace JosephM.Application.ViewModel.Query
                     .ToList();
             return filter;
         }
+
+        public bool Validate()
+        {
+            var result = true;
+            foreach (var condition in Conditions)
+            {
+                if (!condition.Validate())
+                {
+                    result = false;
+                }
+            }
+            if (FilterConditions != null)
+            {
+                foreach (var childFilter in FilterConditions)
+                {
+                    if (!childFilter.Validate())
+                    {
+                        result = false;
+                    }
+                }
+            }
+            return result;
+        }
+
+        private void CheckRemoveFilter(FilterConditionsViewModel parentFilterConditions)
+        {
+            if (Conditions.Count == 1
+                && FilterConditions.Count == 0
+                    && parentFilterConditions != null)
+                parentFilterConditions.FilterConditions.Remove(this);
+        }
+
+        public void DeleteSelected(FilterConditionsViewModel parentFilterConditions)
+        {
+            var isRootFilter = parentFilterConditions == null;
+            foreach (var item in Conditions.Where(c => c.QueryConditionObject.IsSelected).ToArray())
+            {
+                Conditions.Remove(item);
+            }
+            foreach (var item in FilterConditions.ToArray())
+            {
+                item.DeleteSelected(this);
+            }
+            CheckRemoveFilter(parentFilterConditions);
+        }
+
+        public void UnGroupSelected(FilterConditionsViewModel parentFilterConditions)
+        {
+            var isRootFilter = parentFilterConditions == null;
+            var selectedConditions = SelectedConditions;
+            if (selectedConditions.Count() > 0
+                && parentFilterConditions != null)
+            {
+                foreach (var item in selectedConditions)
+                {
+                    Conditions.Remove(item);
+                    parentFilterConditions.Conditions.Insert(0, item);
+                }
+            }
+            foreach (var item in FilterConditions.ToArray())
+            {
+                item.UnGroupSelected(this);
+            }
+            CheckRemoveFilter(parentFilterConditions);
+        }
+
+        public void GroupSelected(FilterOperator filterOperator, FilterConditionsViewModel parentFilterConditions = null)
+        {
+            var isRootFilter = parentFilterConditions == null;
+            var selectedConditions = SelectedConditions;
+            if (selectedConditions.Count() > 1
+                && FilterOperator != filterOperator)
+            {
+                var newFilterCondition = CreateFilterCondition();
+                newFilterCondition.FilterOperator = filterOperator;
+                foreach (var item in selectedConditions)
+                {
+                    Conditions.Remove(item);
+                    newFilterCondition.Conditions.Insert(0, item);
+                }
+                FilterConditions.Add(newFilterCondition);
+            }
+            foreach (var item in FilterConditions.ToArray())
+            {
+                item.GroupSelected(filterOperator, this);
+            }
+        }
+
+        private FilterConditionsViewModel CreateFilterCondition()
+        {
+            return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController, OnConditionSelectedChanged);
+        }
     }
 }

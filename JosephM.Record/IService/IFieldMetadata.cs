@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using JosephM.Record.Metadata;
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Record.Attributes;
+using JosephM.Record.Metadata;
 
 namespace JosephM.Record.IService
 {

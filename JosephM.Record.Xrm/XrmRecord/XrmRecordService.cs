@@ -1024,10 +1024,34 @@ namespace JosephM.Record.Xrm.XrmRecord
             var queryExpression = new QueryExpression(query.RecordType);
             queryExpression.ColumnSet = XrmService.CreateColumnSet(query.Fields);
             queryExpression.Criteria = ToFilterExpression(query.RootFilter, query.RecordType);
+            if(query.Joins != null)
+            {
+                foreach(var join in query.Joins)
+                {
+                    var link = queryExpression.AddLink(join.TargetType, join.SourceField, join.TargetField);
+                    MapIntoLink(link, join);
+                }
+            }
             //if (query.Top > -1)
             //    queryExpression.TopCount = query.Top;
             queryExpression.Orders.AddRange(ToOrderExpressions(query.Sorts));
             return ToIRecords(XrmService.RetrieveFirstX(queryExpression, query.Top));
+        }
+
+        private void MapIntoLink(LinkEntity link, Join join)
+        {
+            if (join.RootFilter != null)
+            {
+                link.LinkCriteria = ToFilterExpression(join.RootFilter, join.TargetType);
+            }
+            if (join.Joins != null)
+            {
+                foreach(var childJoin in join.Joins)
+                {
+                    var childLink = link.AddLink(childJoin.TargetType, childJoin.SourceField, childJoin.TargetField);
+                    MapIntoLink(childLink, childJoin);
+                }
+            }
         }
 
         public string WebUrl

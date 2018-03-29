@@ -1,13 +1,12 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
-using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Service;
 using JosephM.Prism.Infrastructure.Module.Crud.BulkDelete;
 using JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Record.Extentions;
+using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,6 +18,123 @@ namespace JosephM.Prism.XrmModule.Test
     [TestClass]
     public class XrmCrudModuleTest : XrmModuleTest
     {
+        /// <summary>
+        /// scripts through running a query with joins and conditions
+        /// </summary>
+        [TestMethod]
+        public void XrmCrudQueryTestScript()
+        {
+            var count = XrmRecordService.GetFirstX(Entities.account, 3, null, null).Count();
+            while (count < 3)
+            {
+                CreateAccount();
+                count++;
+            }
+
+            //Create test app and load query
+            var app = CreateAndLoadTestApplication<XrmCrudModule>();
+            var dialog = app.NavigateToDialog<XrmCrudModule, XrmCrudDialog>();
+            var queryViewModel = dialog.Controller.UiItems[0] as QueryViewModel;
+            Assert.IsNotNull(queryViewModel);
+
+            //select account type and run query
+            queryViewModel.SelectedRecordType = queryViewModel.RecordTypeItemsSource.First(r => r.Key == Entities.account);
+            queryViewModel.DynamicGridViewModel.GetButton("QUERY").Invoke();
+            Assert.IsTrue(queryViewModel.GridRecords.Any());
+
+            //change to query entry
+            queryViewModel.QueryTypeButton.Invoke();
+
+            //okay well lets do a query which has
+
+            //grouped conditions
+            var lastCondition = queryViewModel.FilterConditions.Conditions.Last();
+            var fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First();
+            var conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
+            conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Key == ((int)ConditionType.NotNull).ToString());
+            lastCondition.GetBooleanFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.IsSelected)).Value = true;
+
+            lastCondition = queryViewModel.FilterConditions.Conditions.Last();
+            fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First();
+            conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
+            conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Key == ((int)ConditionType.NotNull).ToString());
+            lastCondition.GetBooleanFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.IsSelected)).Value = true;
+
+            queryViewModel.GroupSelectedConditionsOr.Invoke();
+            Assert.AreEqual(1, queryViewModel.FilterConditions.Conditions.Count());
+            Assert.AreEqual(3, queryViewModel.FilterConditions.FilterConditions.First().Conditions.Count());
+
+            queryViewModel.UngroupSelectedConditions.Invoke();
+            Assert.AreEqual(3, queryViewModel.FilterConditions.Conditions.Count());
+            Assert.IsFalse( queryViewModel.FilterConditions.FilterConditions.Any());
+
+            //a join
+            var lastjoin = queryViewModel.Joins.Joins.Last();
+            lastjoin.SelectedItem = lastjoin.LinkSelections.First();
+            Assert.AreEqual(2, queryViewModel.Joins.Joins.Count());
+
+            // conditions in the join
+            lastCondition = lastjoin.FilterConditions.Conditions.Last();
+            fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First();
+            conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
+            conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Key == ((int)ConditionType.NotNull).ToString());
+            lastCondition.GetBooleanFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.IsSelected)).Value = true;
+
+            lastCondition = lastjoin.FilterConditions.Conditions.Last();
+            fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First();
+            conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
+            conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Key == ((int)ConditionType.NotNull).ToString());
+            lastCondition.GetBooleanFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.IsSelected)).Value = true;
+
+            queryViewModel.GroupSelectedConditionsOr.Invoke();
+            Assert.AreEqual(1, lastjoin.FilterConditions.Conditions.Count());
+            Assert.AreEqual(3, lastjoin.FilterConditions.FilterConditions.First().Conditions.Count());
+
+            queryViewModel.UngroupSelectedConditions.Invoke();
+            Assert.AreEqual(3, lastjoin.FilterConditions.Conditions.Count());
+            Assert.IsFalse(lastjoin.FilterConditions.FilterConditions.Any());
+
+            //a child join
+
+            var lastJoinLastjoin = lastjoin.Joins.Joins.Last();
+            lastJoinLastjoin.SelectedItem = lastJoinLastjoin.LinkSelections.First();
+            Assert.AreEqual(2, lastjoin.Joins.Joins.Count());
+
+            // conditions in the child join
+            lastCondition = lastJoinLastjoin.FilterConditions.Conditions.Last();
+            fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First();
+            conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
+            conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Key == ((int)ConditionType.NotNull).ToString());
+            lastCondition.GetBooleanFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.IsSelected)).Value = true;
+
+            lastCondition = lastJoinLastjoin.FilterConditions.Conditions.Last();
+            fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First();
+            conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
+            conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Key == ((int)ConditionType.NotNull).ToString());
+            lastCondition.GetBooleanFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.IsSelected)).Value = true;
+
+            queryViewModel.GroupSelectedConditionsOr.Invoke();
+            Assert.AreEqual(1, lastJoinLastjoin.FilterConditions.Conditions.Count());
+            Assert.AreEqual(3, lastJoinLastjoin.FilterConditions.FilterConditions.First().Conditions.Count());
+
+            queryViewModel.UngroupSelectedConditions.Invoke();
+            Assert.AreEqual(3, lastJoinLastjoin.FilterConditions.Conditions.Count());
+            Assert.IsFalse(lastJoinLastjoin.FilterConditions.FilterConditions.Any());
+
+            var query = queryViewModel.GenerateQuery();
+
+            queryViewModel.QuickFind();
+        }
+
+        /// <summary>
+        /// runs through several xrm crud scenarios - quickfind, edit, bulk update, bulk delete, create
+        /// </summary>
         [TestMethod]
         public void XrmCrudModuleTestScript()
         {

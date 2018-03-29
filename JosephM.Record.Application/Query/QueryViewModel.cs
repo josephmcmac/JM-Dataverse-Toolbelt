@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace JosephM.Application.ViewModel.Query
@@ -52,6 +51,38 @@ namespace JosephM.Application.ViewModel.Query
 
         public bool TypeAhead { get; set; }
 
+        private bool _queryRun;
+        public bool QueryRun
+        {
+            get
+            {
+                return _queryRun;
+            }
+            set
+            {
+                _queryRun = value;
+                OnPropertyChanged(nameof(QueryRun));
+                OnPropertyChanged(nameof(QuickFindOrNotQueryRun));
+                OnPropertyChanged(nameof(QueryAndNotRun));
+            }
+        }
+
+        public bool QueryAndNotRun
+        {
+            get
+            {
+                return !IsQuickFind && !QueryRun;
+            }
+        }
+
+        public bool QuickFindOrNotQueryRun
+        {
+            get
+            {
+                return IsQuickFind || !QueryRun;
+            }
+        }
+
         public void RecreateGrid()
         {
             if (RecordType != null)
@@ -70,7 +101,8 @@ namespace JosephM.Application.ViewModel.Query
                 };
                 var customFunctionList = new List<CustomGridFunction>()
                 {
-                    new CustomGridFunction("QUERY", "Run Query", QuickFind)
+                    new CustomGridFunction("QUERY", "Run Query", QuickFind),
+                    new CustomGridFunction("BACKTOQUERY", "Back To Query", (g) => { ResetToQueryEntry(); }, (g) => !IsQuickFind && QueryRun)
                 };
                 if (FormService != null)
                 {
@@ -118,7 +150,15 @@ namespace JosephM.Application.ViewModel.Query
                     DynamicGridViewModel.ReloadGrid();
 
                 RefreshConditionButtons();
+
+                QueryRun = false;
             }
+        }
+
+        private void ResetToQueryEntry()
+        {
+            QueryRun = false;
+            RecreateGrid();
         }
 
         private bool AllowQuery { get; set; }
@@ -128,35 +168,27 @@ namespace JosephM.Application.ViewModel.Query
             return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons());
         }
 
-        private void GroupSelected(FilterOperator filterOperator, FilterConditionsViewModel filterConditions = null, FilterConditionsViewModel parentFilterConditions = null)
+        private JoinsViewModel CreateJoins()
         {
-            var isRootFilter = filterConditions == null;
-            if (filterConditions == null)
-                filterConditions = FilterConditions;
-            var selectedConditions = filterConditions.SelectedConditions;
-            if(selectedConditions.Count() > 1 
-                && filterConditions.FilterOperator != filterOperator)
-            {
-                var newFilterCondition = CreateFilterCondition();
-                newFilterCondition.FilterOperator = filterOperator;
-                foreach (var item in selectedConditions)
-                {
-                    filterConditions.Conditions.Remove(item);
-                    newFilterCondition.Conditions.Insert(0, item);
-                }
-                filterConditions.FilterConditions.Add(newFilterCondition);
-            }
-            foreach (var item in filterConditions.FilterConditions.ToArray())
-            {
-                GroupSelected(filterOperator, item, filterConditions);
-            }
-            if (isRootFilter)
-                RefreshConditionButtons();
+            return new JoinsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons());
         }
 
-        public void RefreshConditionButtons(FilterConditionsViewModel filter = null)
+        private void GroupSelected(FilterOperator filterOperator)
         {
-            var isRootFilter = filter == null;
+            FilterConditions?.GroupSelected(filterOperator);
+            if (Joins != null && Joins.Joins != null)
+            {
+                foreach (var join in Joins.Joins)
+                {
+                    join.GroupSelected(filterOperator);
+                }
+            }
+            RefreshConditionButtons();
+        }
+
+        public void RefreshConditionButtons(FilterConditionsViewModel filter = null, bool isRootFilter = true, bool processJoins = true, JoinsViewModel joins = null)
+        {
+            joins = joins ?? Joins;
             if (filter == null)
             {
                 DeleteSelectedConditionsButton.IsVisible = false;
@@ -180,7 +212,17 @@ namespace JosephM.Application.ViewModel.Query
                     GroupSelectedConditionsAnd.IsVisible = true;
                 foreach (var item in filter.FilterConditions)
                 {
-                    RefreshConditionButtons(item);
+                    RefreshConditionButtons(item, isRootFilter: false, processJoins: false);
+                }
+                if (processJoins && joins != null && joins.Joins != null)
+                {
+                    foreach (var join in joins.Joins)
+                    {
+                        if (join.FilterConditions != null)
+                        {
+                            RefreshConditionButtons(join.FilterConditions, isRootFilter: true, processJoins: join.Joins != null, joins: join.Joins);
+                        }
+                    }
                 }
             }
         }
@@ -188,26 +230,15 @@ namespace JosephM.Application.ViewModel.Query
 
         private void UnGroupSelected(FilterConditionsViewModel filterConditions = null, FilterConditionsViewModel parentFilterConditions = null)
         {
-            var isRootFilter = filterConditions == null;
-            if (filterConditions == null)
-                filterConditions = FilterConditions;
-            var selectedConditions = filterConditions.SelectedConditions;
-            if (selectedConditions.Count() > 0
-                && parentFilterConditions != null)
+            FilterConditions?.UnGroupSelected(null);
+            if (Joins != null && Joins.Joins != null)
             {
-                foreach (var item in selectedConditions)
+                foreach (var join in Joins.Joins)
                 {
-                    filterConditions.Conditions.Remove(item);
-                    parentFilterConditions.Conditions.Insert(0, item);
+                    join.UngroupSelectedConditions();
                 }
             }
-            foreach (var item in filterConditions.FilterConditions.ToArray())
-            {
-                UnGroupSelected(item, filterConditions);
-            }
-            CheckRemoveFilter(filterConditions, parentFilterConditions);
-            if (isRootFilter)
-                RefreshConditionButtons();
+            RefreshConditionButtons();
         }
 
         private static void CheckRemoveFilter(FilterConditionsViewModel filterConditions, FilterConditionsViewModel parentFilterConditions)
@@ -218,23 +249,17 @@ namespace JosephM.Application.ViewModel.Query
                 parentFilterConditions.FilterConditions.Remove(filterConditions);
         }
 
-        private void DeleteSelected(FilterConditionsViewModel filterConditions = null, FilterConditionsViewModel parentFilterConditions = null)
+        private void DeleteSelected()
         {
-            var isRootFilter = filterConditions == null;
-            if (filterConditions == null)
-                filterConditions = FilterConditions;
-            var selectedConditions = filterConditions.SelectedConditions;
-            foreach (var item in filterConditions.Conditions.Where(c => c.QueryConditionObject.IsSelected).ToArray())
+            FilterConditions?.DeleteSelected(null);
+            if(Joins != null && Joins.Joins != null)
             {
-                filterConditions.Conditions.Remove(item);
+                foreach(var join in Joins.Joins)
+                {
+                    join.DeleteSelectedConditions();
+                }
             }
-            foreach (var item in filterConditions.FilterConditions.ToArray())
-            {
-                DeleteSelected(item, filterConditions);
-            }
-            CheckRemoveFilter(filterConditions, parentFilterConditions);
-            if(isRootFilter)
-                RefreshConditionButtons();
+            RefreshConditionButtons();
         }
 
         private bool _isQuickFind;
@@ -248,6 +273,10 @@ namespace JosephM.Application.ViewModel.Query
             {
                 _isQuickFind = value;
                 OnPropertyChanged(nameof(IsQuickFind));
+                if (!IsQuickFind)
+                    ResetToQueryEntry();
+                OnPropertyChanged(nameof(QuickFindOrNotQueryRun));
+                OnPropertyChanged(nameof(QueryAndNotRun));
             }
         }
 
@@ -256,30 +285,30 @@ namespace JosephM.Application.ViewModel.Query
             IsQuickFind = !IsQuickFind;
             QueryTypeButton.Label = IsQuickFind ? "Use Query" : "Use Quick Find";
             if (!IsQuickFind)
+            {
                 CreateFilterCondition();
+                CreateJoins();
+            }
         }
 
         public void QuickFind()
         {
-            var anyNotValid = ValidateCurrentSearch();
-            if (anyNotValid)
+            var isValid = ValidateCurrentSearch();
+            if (!isValid)
                 return;
             DynamicGridViewModel.ReloadGrid();
+            QueryRun = true;
         }
 
         private bool ValidateCurrentSearch()
         {
-            var result = false;
+            var result = true;
             if (!IsQuickFind)
             {
-
-                foreach (var condition in FilterConditions.Conditions)
-                {
-                    if (!condition.Validate())
-                    {
-                        result = true;
-                    }
-                }
+                result = FilterConditions.Validate();
+                var joinValidate = Joins.Validate();
+                if (!joinValidate)
+                    result = false;
             }
 
             return result;
@@ -318,8 +347,8 @@ namespace JosephM.Application.ViewModel.Query
 
         public GetGridRecordsResponse GetGridRecords(bool ignorePages)
         {
-            var anyNotValid = ValidateCurrentSearch();
-            if (anyNotValid)
+            var isValid = ValidateCurrentSearch();
+            if (!isValid)
                 return new GetGridRecordsResponse(new IRecord[0]);
             var query = GenerateQuery();
 
@@ -349,6 +378,7 @@ namespace JosephM.Application.ViewModel.Query
             else
             {
                 query.RootFilter = FilterConditions.GetAsFilter();
+                query.Joins = Joins.GetAsJoins().ToList();
             }
             var view = DynamicGridViewModel.RecordService.GetView(DynamicGridViewModel.RecordType, DynamicGridViewModel.ViewType);
             query.Sorts = view.Sorts.ToList();
@@ -385,6 +415,20 @@ namespace JosephM.Application.ViewModel.Query
                 _filterConditions = value;
                 OnPropertyChanged(nameof(FilterConditions));
                 RefreshConditionButtons();
+            }
+        }
+
+        private JoinsViewModel _joins;
+        public JoinsViewModel Joins
+        {
+            get
+            {
+                return _joins;
+            }
+            set
+            {
+                _joins = value;
+                OnPropertyChanged(nameof(Joins));
             }
         }
 
@@ -448,7 +492,10 @@ namespace JosephM.Application.ViewModel.Query
                     }
                     _recordType = value;
                     if (_recordType != null && AllowQuery)
+                    {
                         FilterConditions = CreateFilterCondition();
+                        Joins = CreateJoins();
+                    }
                     OnPropertyChanged(nameof(RecordTypeSelected));
                     if (_recordType != null)
                         RecreateGrid();

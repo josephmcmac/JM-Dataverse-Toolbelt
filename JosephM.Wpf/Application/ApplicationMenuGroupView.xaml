@@ -16,6 +16,7 @@
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <converters:BooleanToVisibilityHiddenConverter x:Key="BoolToHidden" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Application.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -40,7 +41,7 @@
                     Content="{Binding Label}"
                     Command="{Binding DelegateCommand}" />
                 <Popup
-                    StaysOpen="False"
+                    Style="{StaticResource ButtonDropDownPopup}"
                     PlacementTarget="{Binding ElementName=ParentButton}"
                     IsOpen="{Binding OpenChildButtons}"
                     d:IsHidden="false">

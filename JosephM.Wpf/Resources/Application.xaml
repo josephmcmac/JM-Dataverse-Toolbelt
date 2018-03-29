@@ -1,11 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:applicationOptions="clr-namespace:JosephM.Application.ViewModel.ApplicationOptions;assembly=JosephM.Application.ViewModel"
-                    xmlns:application="clr-namespace:JosephM.Wpf.Application">
+                    xmlns:application="clr-namespace:JosephM.Wpf.Application"
+                    xmlns:shared="clr-namespace:JosephM.Wpf.Shared">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/modernui.light.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernProgressRing.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="AppContainerStyle" TargetType="{x:Type Grid}">
         <Setter Property="Margin" Value="20" />
@@ -23,6 +25,10 @@
     <Style x:Key="NotificationTextBlock" TargetType="{x:Type TextBlock}">
         <Setter Property="FontWeight"  Value="Bold" />
         <Setter Property="Margin" Value="8,8,8,8" />
+    </Style>
+    <Style x:Key="NotificationProgressRing" TargetType="{x:Type shared:ModernProgressRing}" BasedOn="{StaticResource CircleProgressRingStyle}" >
+        <Setter Property="MinHeight"  Value="20px" />
+        <Setter Property="MinWidth" Value="20px" />
     </Style>
     <Style x:Key="MainMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="Width" Value="{Binding Path=ActualWidth,ElementName=MainMenuGrid, Converter={StaticResource LengthConverter}, ConverterParameter=.12}" />
@@ -42,7 +48,10 @@
                 ToolTip="{Binding Description}" />
     </DataTemplate>
     <DataTemplate x:Key="NotificationTemplate">
-        <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />
+            <shared:ModernProgressRing  Style="{StaticResource NotificationProgressRing}" IsActive="{Binding IsLoading}" />
+        </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="applicationHeadingTemplate">
         <application:ApplicationHeadingView DataContext="{Binding}" />

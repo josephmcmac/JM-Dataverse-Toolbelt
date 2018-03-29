@@ -1,5 +1,6 @@
 using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
@@ -20,11 +21,13 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
         {
             var countToUpdate = request.RecordCount;
             var countUpdated = 0;
+            controller.UpdateProgress(0, countToUpdate, "Executing Updates");
+            var estimator = new TaskEstimator(countToUpdate);
             foreach (var record in request.GetRecordsToUpdate())
             {
                 try
                 {
-                    controller.UpdateProgress(countUpdated++, countToUpdate, "Executing Updates");
+
                     var newRecord = RecordService.NewRecord(request.RecordType.Key);
                     newRecord.Id = record.Id;
                     if (request.ClearValue)
@@ -37,6 +40,8 @@ namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
                 {
                     response.AddResponseItem(new BulkUpdateResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
                 }
+                countUpdated++;
+                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Updates"));
             }
         }
     }

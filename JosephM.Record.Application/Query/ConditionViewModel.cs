@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Application.ViewModel.Validation;
+using JosephM.Core.Attributes;
+using JosephM.Core.FieldType;
 using JosephM.Record.IService;
-using System.Collections.ObjectModel;
+using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
-using JosephM.Application.ViewModel.RecordEntry.Metadata;
-using JosephM.Core.FieldType;
-using JosephM.Application.ViewModel.RecordEntry.Section;
-using JosephM.Core.Attributes;
-using JosephM.Record.Metadata;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Application.ViewModel.Query
 {
@@ -184,7 +181,7 @@ namespace JosephM.Application.ViewModel.Query
             [RequiredProperty]
             [DisplayOrder(30)]
             [Group(Sections.Main)]
-            [PropertyInContextByPropertyValues(nameof(ConditionType), new object[] { Record.Query.ConditionType.BeginsWith, Record.Query.ConditionType.Equal, Record.Query.ConditionType.NotEqual, Record.Query.ConditionType.Like, Record.Query.ConditionType.LessEqual, Record.Query.ConditionType.LessThan, Record.Query.ConditionType.GreaterEqual, Record.Query.ConditionType.GreaterThan, Record.Query.ConditionType.In })]
+            [PropertyInContextByPropertyValues(nameof(ConditionType), new object[] { Record.Query.ConditionType.BeginsWith, Record.Query.ConditionType.Equal, Record.Query.ConditionType.NotEqual, Record.Query.ConditionType.Like, Record.Query.ConditionType.LessEqual, Record.Query.ConditionType.LessThan, Record.Query.ConditionType.GreaterEqual, Record.Query.ConditionType.GreaterThan, Record.Query.ConditionType.In, Record.Query.ConditionType.EndsWith })]
             public object Value { get; set; }
 
             private Action OnFieldSelected { get; set; }

@@ -49,25 +49,25 @@ namespace JosephM.Prism.XrmModule.XrmConnection
             controller.RegisterInstance(serviceConnection);
             LastXrmConfiguration = xrmConfiguration;
             if (xrmConfiguration.OrganizationUniqueName == null)
-                controller.AddNotification("XRMCONNECTION", "Not Connected");
+                controller.AddNotification("XRMCONNECTION", "No Active Connection");
             else if (controller.RunThreadsAsynch)
             {
                 controller.DoOnAsyncThread(() =>
                 {
                     try
                     {
-                        controller.AddNotification("XRMCONNECTION", "Connecting...");
+                        controller.AddNotification("XRMCONNECTION", $"Connecting To '{xrmConfiguration}'", isLoading: true);
                         var verify = serviceConnection.VerifyConnection();
                         if (LastXrmConfiguration != xrmConfiguration)
                             return;
                         if (verify.IsValid)
                         {
-                            controller.AddNotification("XRMCONNECTION", string.Format("Connected To Instance '{0}'", xrmConfiguration));
+                            controller.AddNotification("XRMCONNECTION", string.Format("Connected To '{0}'", xrmConfiguration));
                             var preLoadRecordTypes = serviceConnection.GetAllRecordTypes();
                         }
                         else
                         {
-                            controller.AddNotification("XRMCONNECTION", string.Format("Error Connecting To Instance '{0}'", xrmConfiguration));
+                            controller.AddNotification("XRMCONNECTION", string.Format("Error Connecting To '{0}'", xrmConfiguration));
                         }
                     }
                     catch (Exception ex)

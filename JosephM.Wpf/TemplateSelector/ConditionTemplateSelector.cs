@@ -17,6 +17,7 @@ namespace JosephM.Wpf.TemplateSelector
     {
         public DataTemplate ConditionTemplate { get; set; }
         public DataTemplate FilterConditionsTemplate { get; set; }
+        public DataTemplate JoinTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -25,6 +26,8 @@ namespace JosephM.Wpf.TemplateSelector
                 return ConditionTemplate;
             if (item is FilterConditionsViewModel)
                 return FilterConditionsTemplate;
+            if (item is JoinViewModel)
+                return JoinTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));
         }

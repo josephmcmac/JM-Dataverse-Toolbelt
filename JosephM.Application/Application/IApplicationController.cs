@@ -77,7 +77,7 @@ namespace JosephM.Application.Application
         Process StartProcess(string fileName, string arguments = null);
 
         void OpenHelp(string fileName);
-        void AddNotification(string id, string notification);
+        void AddNotification(string id, string notification, bool isLoading = false);
 
         void OpenFile(string fileName);
 

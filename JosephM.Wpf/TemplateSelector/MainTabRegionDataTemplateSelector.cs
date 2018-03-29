@@ -15,7 +15,8 @@ namespace JosephM.Wpf.TemplateSelector
 {
     public class MainTabRegionDataTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate QueryViewTemplate { get; set; }
+        public DataTemplate QueryViewTemplateTabSize { get; set; }
+        public DataTemplate QueryViewTemplateWindowSize { get; set; }
         public DataTemplate RecordEntryViewTemplate { get; set; }
         public DataTemplate DialogTemplate { get; set; }
         public DataTemplate NavigationErrorTemplate { get; set; }
@@ -23,8 +24,19 @@ namespace JosephM.Wpf.TemplateSelector
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
+
             if (item is QueryViewModel)
-                return QueryViewTemplate;
+            {
+                var viewModel = (QueryViewModel)item;
+                if (viewModel.ApplicationController?.ForceElementWindowHeight ?? false)
+                {
+                    return QueryViewTemplateWindowSize;
+                }
+                else
+                {
+                    return QueryViewTemplateTabSize;
+                }
+            }
             if (item is RecordEntryFormViewModel)
                 return RecordEntryViewTemplate;
             if (item is NavigationErrorViewModel)

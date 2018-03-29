@@ -101,6 +101,8 @@
     <Compile Include="ApplicationOptions\ApplicationOption.cs" />
     <Compile Include="ApplicationOptions\ApplicationOptionsViewModel.cs" />
     <Compile Include="Dialog\CompletionScreenViewModel.cs" />
+    <Compile Include="Query\JoinViewModel.cs" />
+    <Compile Include="Query\JoinsViewModel.cs" />
     <Compile Include="Query\QueryViewModel.cs" />
     <Compile Include="Query\ConditionViewModel.cs" />
     <Compile Include="Query\FilterConditionsViewModel.cs" />

@@ -9,14 +9,15 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </ResourceDictionary>
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Dialogs.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="CloseTabButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="Height" Value="15" />
-        <Setter Property="Width" Value="15" />
+        <Setter Property="Height" Value="18" />
+        <Setter Property="Width" Value="18" />
         <Setter Property="Margin" Value="3,3,3,3" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Content" Value="{StaticResource CloseButtonImageKey}" />
     </Style>
     <Style x:Key="TabLabelStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Margin" Value="3,3,3,3" />
@@ -28,8 +29,13 @@
     <DataTemplate x:Key="applicationHeadingTemplate">
         <application:ApplicationHeadingView DataContext="{Binding}" />
     </DataTemplate>
-    <DataTemplate x:Key="QueryViewTemplate">
-        <Grid>
+    <DataTemplate x:Key="QueryViewTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
+            <query:GridQueryView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="QueryViewTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
             <query:GridQueryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -47,7 +53,8 @@
         <application:NavigationErrorView DataContext="{Binding}" />
     </DataTemplate>
     <templateSelector:MainTabRegionDataTemplateSelector
-        QueryViewTemplate="{StaticResource QueryViewTemplate}"
+        QueryViewTemplateTabSize="{StaticResource QueryViewTemplateTabSize}"
+        QueryViewTemplateWindowSize="{StaticResource QueryViewTemplateWindowSize}"
         RecordEntryViewTemplate="{StaticResource RecordEntryViewTemplate}"
         DialogTemplate="{StaticResource DialogTemplate}"
         NavigationErrorTemplate="{StaticResource NavigationErrorTemplate}"
@@ -68,7 +75,9 @@
     <DataTemplate x:Key="TabItemHeaderTemplate">
         <DockPanel>
             <TextBlock Style="{StaticResource TabLabelStyle}" Text="{Binding TabLabel}" />
-            <Button Style="{StaticResource CloseTabButtonStyle}" Command="{Binding TabCloseCommand}" />
+            <Button Style="{StaticResource CloseTabButtonStyle}" Command="{Binding TabCloseCommand}" >
+                <Image Source="../Images/CloseButton.gif" Height="15" Width="15" />
+            </Button>
         </DockPanel>
     </DataTemplate>
 </ResourceDictionary>
