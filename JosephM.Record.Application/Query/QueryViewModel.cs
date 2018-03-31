@@ -366,6 +366,7 @@ namespace JosephM.Application.ViewModel.Query
         public QueryDefinition GenerateQuery()
         {
             var query = new QueryDefinition(RecordType);
+            query.Distinct = true;
             if (IsQuickFind)
             {
                 query.IsQuickFind = true;

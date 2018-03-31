@@ -1011,6 +1011,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         public IEnumerable<IRecord> RetreiveAll(QueryDefinition query)
         {
             var queryExpression = new QueryExpression(query.RecordType);
+            queryExpression.Distinct = query.Distinct;
             queryExpression.ColumnSet = XrmService.CreateColumnSet(query.Fields);
             queryExpression.Criteria = ToFilterExpression(query.RootFilter, query.RecordType);
             if(query.Joins != null)

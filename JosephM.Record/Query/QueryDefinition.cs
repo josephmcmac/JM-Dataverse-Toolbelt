@@ -20,6 +20,8 @@ namespace JosephM.Record.Query
             QuickFindText = quickFindText;
         }
 
+        public bool Distinct { get; set; }
+
         public bool IsQuickFind { get; set; }
 
         public string QuickFindText { get; set; }
