@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -6,7 +7,6 @@ using JosephM.Record.Query;
 using Microsoft.Practices.Prism.Commands;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace JosephM.Application.ViewModel.Query
@@ -23,6 +23,7 @@ namespace JosephM.Application.ViewModel.Query
             LinkSelections = GetSelections();
             OnPopulated = onPopulated;
             Remove = new DelegateCommand(() => remove(this));
+            LoadingViewModel = new LoadingViewModel(ApplicationController);
         }
 
         private IEnumerable<PicklistOption> GetSelections()
@@ -122,8 +123,24 @@ namespace JosephM.Application.ViewModel.Query
                 }
                 if (isChanging && value != null)
                 {
-                    FilterConditions = CreateFilterCondition();
-                    Joins = new JoinsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged);
+                    DoOnAsynchThread(() =>
+                    {
+                        try
+                        {
+                            LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(SelectedRelationshipTarget)} Fields";
+                            LoadingViewModel.IsLoading = true;
+                            FilterConditions = CreateFilterCondition();
+                            Joins = new JoinsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged);
+                        }
+                        catch(Exception ex)
+                        {
+                            ApplicationController.ThrowException(ex);
+                        }
+                        finally
+                        {
+                            LoadingViewModel.IsLoading = false;
+                        }
+                    });
                 }
                 OnPropertyChanged(nameof(SelectedItem));
             }
@@ -142,6 +159,7 @@ namespace JosephM.Application.ViewModel.Query
         public IEnumerable<PicklistOption> LinkSelections { get; set; }
         public Action OnPopulated { get; }
         public DelegateCommand Remove { get; }
+        public LoadingViewModel LoadingViewModel { get; private set; }
 
         private JoinsViewModel _joins;
         public JoinsViewModel Joins
@@ -227,7 +245,7 @@ namespace JosephM.Application.ViewModel.Query
                     var joinThrough = new Join(RecordService.GetPrimaryKey(SourceType), IntersectEntity, IntersectJoinTo);
                     var join = new Join(IntersectOtherSide, OtherType, RecordService.GetPrimaryKey(OtherType));
                     joinThrough.Joins = new List<Join> { join };
-                    return join;
+                    return joinThrough;
                 }
                 if (RelationshipType == "1n")
                 {
