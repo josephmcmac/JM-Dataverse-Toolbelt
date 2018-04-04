@@ -133,11 +133,11 @@ namespace $safeprojectname$.Core
                 if (!File.Exists(qualifiedFileName))
                     throw new NullReferenceException("Could not find " + qualifiedFileName + ". To generate it run the command exe with the " + ValidArgPrefixes.First() + Type.Name + " switch");
 
-                var smartSettingsJson = File.ReadAllText(qualifiedFileName);
-                if (string.IsNullOrWhiteSpace(smartSettingsJson))
+                var settingsJson = File.ReadAllText(qualifiedFileName);
+                if (string.IsNullOrWhiteSpace(settingsJson))
                     throw new NullReferenceException(qualifiedFileName + " is empty. To generate it run the command exe with the " + ValidArgPrefixes.First() + Type.Name + " switch");
 
-                return JsonHelper.JsonStringToObject(smartSettingsJson, Type);
+                return JsonHelper.JsonStringToObject(settingsJson, Type);
             }
 
             public string FileName

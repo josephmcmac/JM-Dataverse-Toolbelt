@@ -1,15 +1,20 @@
 ﻿using EnvDTE;
 using JosephM.Application;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Core.Extentions;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Record.Application.Fakes;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using Microsoft.Practices.Unity;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
+using System.Text;
+using System.Windows;
 using VSLangProj;
 
 namespace JosephM.Xrm.Vsix.Wizards
@@ -120,12 +125,31 @@ namespace JosephM.Xrm.Vsix.Wizards
             if (DestinationDirectory.EndsWith(SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName))
                 DestinationDirectory = DestinationDirectory.Substring(0, DestinationDirectory.Length - (Path.DirectorySeparatorChar + SafeProjectName).Length);
 
-            var consoleFileName = DestinationDirectory + Path.DirectorySeparatorChar + SafeProjectName + ".Console" + Path.DirectorySeparatorChar + "Encrypt XRM Connection.bat";
-            if(File.Exists(consoleFileName))
+            //okay so lets update the encrypt connection bat and the xrmsetting.txt files in the console project
+            var consoleProjectPath = DestinationDirectory + Path.DirectorySeparatorChar + SafeProjectName + ".Console";
+            var encryptBatFileName = consoleProjectPath + Path.DirectorySeparatorChar + "Encrypt XRM Connection.bat";
+            if(File.Exists(encryptBatFileName))
             {
-                var read = File.ReadAllText(consoleFileName);
+                var read = File.ReadAllText(encryptBatFileName);
                 read = read.Replace("$ext_safeprojectname$", SafeProjectName);
-                File.WriteAllText(consoleFileName, read);
+                File.WriteAllText(encryptBatFileName, read);
+            }
+            var consoleConnectionFileName = consoleProjectPath + Path.DirectorySeparatorChar + "XrmSetting.txt";
+            if (File.Exists(consoleConnectionFileName))
+            {
+                if(XrmPackageSettings != null && XrmPackageSettings.Connections != null && XrmPackageSettings.Connections.Any())
+                {
+                    try
+                    {
+                        var connection = XrmPackageSettings.Connections.First();
+                        var serialise = ObjectToJsonString(connection);
+                        File.WriteAllText(consoleConnectionFileName, serialise);
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show("Error setting console application connection: " + ex.DisplayString());
+                    }
+                }
             }
 
             var visualStudioService = new VisualStudioService(DTE, useSolutionDirectory: DestinationDirectory);
@@ -152,6 +176,16 @@ namespace JosephM.Xrm.Vsix.Wizards
                 }
             }
 
+        }
+
+        public static string ObjectToJsonString<T>(T objectValue)
+        {
+            var serializer = new DataContractJsonSerializer(typeof(T));
+            using (var stream = new MemoryStream())
+            {
+                serializer.WriteObject(stream, objectValue);
+                return Encoding.Default.GetString(stream.ToArray());
+            }
         }
     }
 }
