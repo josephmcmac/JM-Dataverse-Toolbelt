@@ -70,7 +70,7 @@ namespace $safeprojectname$
             }
         }
 
-        public Entity CreateContact(Entity account)
+        public Entity CreateContact(Entity account = null)
         {
             var entity = new Entity(Entities.contact);
             entity.SetField(Fields.contact_.firstname, "Test Script");
