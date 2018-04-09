@@ -66,17 +66,24 @@
     <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.Prism">
-      <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Wpf, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Wpf.6.3.0\lib\net45\Prism.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Wpf.6.3.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -156,19 +163,14 @@
     <Compile Include="RecordEntry\Field\StringEnumerableFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\StringFieldViewModel.cs" />
     <Compile Include="RecordEntry\Form\RecordEntryViewModelBase.cs" />
-    <Compile Include="RecordEntry\Form\ReadViewModel.cs" />
-    <Compile Include="RecordEntry\Form\OpenViewModel.cs" />
     <Compile Include="Validation\IValidatableObjectValidationRule.cs" />
     <Compile Include="Validation\IValidatable.cs" />
     <Compile Include="ViewModelBase.cs" />
-    <Compile Include="RecordEntry\Form\CreateViewModel.cs" />
     <Compile Include="RecordEntry\Section\FieldSectionViewModel.cs" />
-    <Compile Include="RecordEntry\Form\MaintainViewModel.cs" />
     <Compile Include="RecordEntry\Form\ObjectEntryViewModel.cs" />
     <Compile Include="RecordEntry\Form\RecordEntryFormViewModel.cs" />
     <Compile Include="RecordEntry\Section\SectionViewModelBase.cs" />
     <Compile Include="TabArea\TabAreaViewModelBase.cs" />
-    <Compile Include="Navigation\NavigationParameters.cs" />
     <Compile Include="RecordEntry\FormController.cs" />
     <Compile Include="RecordEntry\Metadata\FormFieldMetadata.cs" />
     <Compile Include="RecordEntry\Metadata\FormFieldSection.cs" />
@@ -185,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="JosephM.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

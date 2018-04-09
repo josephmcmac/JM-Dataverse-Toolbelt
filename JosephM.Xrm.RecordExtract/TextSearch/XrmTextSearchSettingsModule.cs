@@ -1,11 +1,10 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.XrmModule.Xrm;
-using JosephM.Xrm.RecordExtract.RecordExtract;
+using JosephM.Prism.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {
-    [DependantModule(typeof(XrmModuleModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class XrmTextSearchSettingsModule :
         SettingsModule<XrmTextSearchSettingsDialog, ITextSearchSettings, TextSearchSettings>
     {

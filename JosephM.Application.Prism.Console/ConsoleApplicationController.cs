@@ -5,7 +5,6 @@ using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Log;
-using Microsoft.Practices.Prism.Regions;
 using System;
 using System.Collections.Generic;
 
@@ -55,11 +54,6 @@ namespace JosephM.Prism.Infrastructure.Console
             }
         }
 
-        private void ProcessNavigationResult(NavigationResult navigationResult)
-        {
-        }
-
-
         public override void UserMessage(string message)
         {
             UserInterface.LogMessage(message);
@@ -70,11 +64,6 @@ namespace JosephM.Prism.Infrastructure.Console
         public override bool UserConfirmation(string message)
         {
             throw new NotImplementedException();
-        }
-
-        public override void OpenRecord(string recordType, string fieldMatch, string fieldValue,
-            Type maintainViewModelType)
-        {
         }
 
         public override void NavigateTo(Type type, UriQuery uriQuery)

@@ -1,6 +1,6 @@
 ﻿using JosephM.Core.Extentions;
 using JosephM.Core.Serialisation;
-using Microsoft.Practices.Prism.Regions;
+using Prism.Regions;
 
 namespace JosephM.Application.ViewModel.Navigation
 {
@@ -15,7 +15,7 @@ namespace JosephM.Application.ViewModel.Navigation
 
         public string GetValue(string key)
         {
-            return NavigationContext.Parameters[key];
+            return NavigationContext.Parameters[key]?.ToString();
         }
 
         public bool HasValue(string key)

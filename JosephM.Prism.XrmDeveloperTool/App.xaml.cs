@@ -11,7 +11,6 @@ using JosephM.Prism.Infrastructure.Module.SavedRequests;
 using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.Xrm;
 using JosephM.RecordCounts.Exporter;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using System.Windows;
@@ -28,7 +27,6 @@ namespace JosephM.Xrm.DeveloperTool
             base.OnStartup(e);
 
             var prism = new PrismApplication("JosephM Xrm Developer Tool");
-            prism.AddModule<XrmModuleModule>();
             prism.AddModule<SavedXrmConnectionsModule>();
             prism.AddModule<DeploymentModule>();
             prism.AddModule<CodeGeneratorModule>();

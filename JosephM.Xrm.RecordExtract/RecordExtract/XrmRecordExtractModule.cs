@@ -1,9 +1,11 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Core.Attributes;
 using JosephM.Prism.Infrastructure.Module;
+using JosephM.Prism.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
+    [DependantModule(typeof(XrmConnectionModule))]
     [MyDescription("Generate A Document Detailing The Field Values And Related Records For A Specific Record In The CRM Instance")]
     public class XrmRecordExtractModule :
         ServiceRequestModule

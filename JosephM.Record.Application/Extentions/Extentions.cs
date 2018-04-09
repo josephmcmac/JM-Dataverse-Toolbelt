@@ -92,17 +92,5 @@ namespace JosephM.Application.ViewModel.Extentions
             records = records.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();
             return new GetGridRecordsResponse(records, hasMoreRows);
         }
-
-        public static Uri ToPrismNavigationUriType(Type type, UriQuery uriQuery)
-        {
-            var prismQuery = new Microsoft.Practices.Prism.UriQuery();
-            if (uriQuery != null)
-            {
-                foreach (var arg in uriQuery.Arguments)
-                    prismQuery.Add(arg.Key, arg.Value);
-            }
-            var uri = new Uri(type.FullName + prismQuery, UriKind.Relative);
-            return uri;
-        }
     }
 }

@@ -7,7 +7,6 @@ using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Prism.XrmModule.Crud;
-using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using System;
 using System.Configuration;
@@ -35,8 +34,6 @@ namespace JosephM.Prism.XrmModule.XrmConnection
                         ex.DisplayString()));
             }
 
-            RegisterTypeForNavigation<XrmMaintainViewModel>();
-            RegisterTypeForNavigation<XrmCreateViewModel>();
             RegisterTypeForNavigation<XrmConnectionDialog>();
         }
 

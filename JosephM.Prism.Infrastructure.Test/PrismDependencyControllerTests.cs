@@ -1,6 +1,5 @@
 ﻿using JosephM.Application.ViewModel.Grid;
 using JosephM.Record.Application.Fakes;
-using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
@@ -15,7 +14,7 @@ namespace JosephM.Prism.Infrastructure.Test
             //this is a test to verify for a module injecting custom grid functions for a type 
 
             //create unity container
-            var container = new PrismDependencyContainer(new UnityContainer());
+            var container = new PrismDependencyContainer();
 
             //verify each type gets its dedicated list of custom functions returned
             var type1List = new CustomGridFunctions();

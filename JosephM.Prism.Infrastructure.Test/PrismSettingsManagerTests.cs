@@ -1,11 +1,7 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Fakes;
-using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.Utility;
-using JosephM.Record.Application.Fakes;
-using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace JosephM.Prism.Infrastructure.Test
 {

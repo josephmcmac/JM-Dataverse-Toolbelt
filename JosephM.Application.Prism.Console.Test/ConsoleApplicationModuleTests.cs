@@ -7,7 +7,6 @@ using JosephM.Prism.Infrastructure.Console;
 using JosephM.Prism.Infrastructure.Test;
 using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Application.Fakes;
-using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Linq;
@@ -90,7 +89,7 @@ namespace JosephM.Application.Prism.Console.Test
             var applicationName = arguments.ContainsKey("SettingsFolderName") ? arguments["SettingsFolderName"] : "Unknown Console Context";
 
             //okay need to create app
-            var dependencyResolver = new PrismDependencyContainer(new UnityContainer());
+            var dependencyResolver = new PrismDependencyContainer();
             var controller = new ConsoleApplicationController(applicationName, dependencyResolver);
             settingsManager = new PrismSettingsManager(controller);
             var applicationOptions = new ApplicationOptionsViewModel(controller);

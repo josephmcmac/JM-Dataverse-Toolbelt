@@ -1,12 +1,10 @@
 ﻿using JosephM.Prism.TestModule.Prism.TestDialog;
 using JosephM.Prism.XrmModule.Crud;
-using JosephM.Record.Application.Fakes;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.Xrm.Vsix.Test;
-using Microsoft.Practices.Unity;
 using System;
 using System.IO;
 using System.Windows;
@@ -24,7 +22,7 @@ namespace JosephM.Xrm.Vsix.TestShell
 
             //load an application with the module buttons and fake things to spawn the vsix dialogs
 
-            var container = new PrismDependencyContainer(new UnityContainer());
+            var container = new VsixDependencyContainer();
 
             var applicationName = "Vsix Test Shell";
 

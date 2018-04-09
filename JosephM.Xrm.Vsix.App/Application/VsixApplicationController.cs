@@ -129,11 +129,6 @@ namespace JosephM.Xrm.Vsix.Application
             return result == MessageBoxResult.Yes;
         }
 
-        public override void OpenRecord(string recordType, string fieldMatch, string fieldValue, Type maintainViewModelType)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string GetSaveFileName(string initialFileName, string extention)
         {
             var selectFolderDialog = new SaveFileDialog() { DefaultExt = extention, FileName = initialFileName, Filter = string.Format("{0} files |*{0}", extention) };

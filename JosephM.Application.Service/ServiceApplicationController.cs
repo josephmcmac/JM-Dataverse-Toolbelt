@@ -43,11 +43,6 @@ namespace JosephM.Prism.Infrastructure.Prism
             throw new NotImplementedException();
         }
 
-        public override void OpenRecord(string recordType, string fieldMatch, string fieldValue, Type maintainViewModelType)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string GetSaveFileName(string initialFileName, string extention)
         {
             throw new NotImplementedException();

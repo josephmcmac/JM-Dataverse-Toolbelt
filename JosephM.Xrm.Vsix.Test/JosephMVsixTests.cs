@@ -8,7 +8,6 @@ using JosephM.Prism.Infrastructure.Test;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Test;
-using JosephM.Record.Application.Fakes;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
@@ -17,7 +16,6 @@ using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -44,7 +42,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public ApplicationControllerBase CreateTestVsixApplicationController()
         {
-            var container = new PrismDependencyContainer(new UnityContainer());
+            var container = new VsixDependencyContainer();
             var visualStudioService = VisualStudioService;
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
             container.RegisterInstance(typeof(ISettingsManager), new VsixSettingsManager(visualStudioService));

@@ -1,11 +1,16 @@
-﻿using System;
-using Microsoft.Practices.Prism.Regions;
+﻿using Prism.Regions;
+using System;
 
 namespace JosephM.Application.ViewModel.Fakes
 {
     class FakeRegionNavigationService : IRegionNavigationService
     {
         public void RequestNavigate(Uri target, Action<NavigationResult> navigationCallback)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RequestNavigate(Uri target, Action<NavigationResult> navigationCallback, NavigationParameters navigationParameters)
         {
             throw new NotImplementedException();
         }

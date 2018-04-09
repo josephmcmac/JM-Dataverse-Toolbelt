@@ -3,9 +3,8 @@
 using JosephM.Application.Application;
 using JosephM.Application.Options;
 using JosephM.Core.Extentions;
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

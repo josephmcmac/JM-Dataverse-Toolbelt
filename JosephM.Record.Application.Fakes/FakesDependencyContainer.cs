@@ -8,9 +8,9 @@ namespace JosephM.Application.ViewModel.Fakes
     {
         private UnityContainer UnityContainer { get; set; }
 
-        public FakesDependencyContainer(UnityContainer unityContainer)
+        public FakesDependencyContainer()
         {
-            UnityContainer = unityContainer;
+            UnityContainer = new UnityContainer();
         }
 
         public object ResolveType(Type type)

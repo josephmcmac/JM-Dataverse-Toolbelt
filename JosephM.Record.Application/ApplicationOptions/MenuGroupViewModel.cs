@@ -1,10 +1,9 @@
 ﻿#region
 
-using System;
-using JosephM.Application.Options;
-using Microsoft.Practices.Prism.Commands;
-using System.Collections.ObjectModel;
 using JosephM.Application.Application;
+using Prism.Commands;
+using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 #endregion

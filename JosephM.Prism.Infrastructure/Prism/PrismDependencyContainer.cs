@@ -13,6 +13,13 @@ namespace JosephM.Record.Application.Fakes
             UnityContainer = unityContainer;
         }
 
+        public PrismDependencyContainer()
+            : this(new UnityContainer())
+        {
+        }
+
+        
+
         public object ResolveType(Type type)
         {
             return UnityContainer.Resolve(type);

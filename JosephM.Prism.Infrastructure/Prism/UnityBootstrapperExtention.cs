@@ -1,12 +1,12 @@
 ﻿#region
 
+using JosephM.Wpf.Application;
+using Microsoft.Practices.Unity;
+using Prism.Modularity;
+using Prism.Unity;
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using Microsoft.Practices.Prism.Modularity;
-using Microsoft.Practices.Prism.UnityExtensions;
-using Microsoft.Practices.Unity;
-using JosephM.Wpf.Application;
 
 #endregion
 

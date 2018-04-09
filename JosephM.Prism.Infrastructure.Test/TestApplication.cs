@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using JosephM.Application;
+﻿using JosephM.Application;
 using JosephM.Application.Application;
+using JosephM.Application.Options;
+using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Extentions;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Prism;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Core.Test;
-using JosephM.Application.Options;
 using JosephM.Core.AppConfig;
-using JosephM.Application.ViewModel.ApplicationOptions;
+using JosephM.Core.Extentions;
 using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Core.Service;
+using JosephM.Prism.Infrastructure.Module;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Prism.Infrastructure.Test
 {
@@ -184,7 +181,7 @@ namespace JosephM.Prism.Infrastructure.Test
 
             //get the setting which has the label - hope this doesn't break
             var savedSettingsOption = applicationOptions.Settings.First(o => o.Label.EndsWith(savedRequestType.GetDisplayName()));
-            savedSettingsOption.DelegateCommand.Execute();
+            savedSettingsOption.InvokeMethod();
 
             var items = Controller.GetObjects(RegionNames.MainTabRegion);
             var dialog = items.First();

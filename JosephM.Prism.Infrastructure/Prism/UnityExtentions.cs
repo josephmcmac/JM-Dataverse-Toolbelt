@@ -7,9 +7,8 @@ using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Prism.Infrastructure.Dialog;
 using JosephM.Record.Application.Fakes;
-using Microsoft.Practices.Prism.Regions;
-using Microsoft.Practices.Prism.UnityExtensions;
-using Microsoft.Practices.Unity;
+using Prism.Regions;
+using Prism.Unity;
 
 #endregion
 
@@ -23,7 +22,7 @@ namespace JosephM.Prism.Infrastructure.Prism
         public static void RegisterInfrastructure(this UnityBootstrapper bootstrapper, string applicationName)
         {
             var applicationController = new PrismApplicationController(
-                bootstrapper.Container.Resolve<IRegionManager>(),
+                bootstrapper.Container.TryResolve<IRegionManager>(),
                 applicationName, new PrismDependencyContainer(bootstrapper.Container));
 
             applicationController.RegisterInfrastructure(new ApplicationOptionsViewModel(applicationController), new PrismSettingsManager(applicationController));
@@ -38,12 +37,12 @@ namespace JosephM.Prism.Infrastructure.Prism
         /// <param name="bootstrapper"></param>
         public static void InitialiseLoadShell(this UnityBootstrapper bootstrapper)
         {
-            var applicationOptionsViewModel = bootstrapper.Container.Resolve<IApplicationOptions>();
-            bootstrapper.Container.Resolve<IRegionManager>()
+            var applicationOptionsViewModel = bootstrapper.Container.TryResolve<IApplicationOptions>();
+            bootstrapper.Container.TryResolve<IRegionManager>()
                 .RegisterViewWithRegion(RegionNames.ApplicationOptions,
                     () => applicationOptionsViewModel);
-            var applicationViewModel = (ApplicationOptionsViewModel)bootstrapper.Container.Resolve<IApplicationOptions>();
-            bootstrapper.Container.Resolve<IRegionManager>()
+            var applicationViewModel = (ApplicationOptionsViewModel)bootstrapper.Container.TryResolve<IApplicationOptions>();
+            bootstrapper.Container.TryResolve<IRegionManager>()
                 .RegisterViewWithRegion(RegionNames.Heading,
                     () => applicationViewModel.ApplicationController);
         }

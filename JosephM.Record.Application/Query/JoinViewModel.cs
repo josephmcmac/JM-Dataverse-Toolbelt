@@ -4,7 +4,7 @@ using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -7,7 +7,6 @@ using JosephM.Record.Application.Fakes;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +33,7 @@ namespace JosephM.Xrm.Vsix.Wizards
                 XrmPackageSettings.SolutionObjectPrefix = "Template";
             #endif
 
-            var container = new PrismDependencyContainer(new UnityContainer());
+            var container = new PrismDependencyContainer();
             var applicationController = new VsixApplicationController(container);
             if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && (replacementsDictionary["$specifiedsolutionname$"] == null || replacementsDictionary["$specifiedsolutionname$"] == ""))
             {

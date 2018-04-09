@@ -386,12 +386,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public void OnNavigatedTo(INavigationProvider navigationProvider)
         {
-            if (!navigationProvider.GetValue(NavigationParameters.RecordType).IsNullOrWhiteSpace())
-                RecordType = navigationProvider.GetValue(NavigationParameters.RecordType);
-            if (!navigationProvider.GetValue(NavigationParameters.RecordIdName).IsNullOrWhiteSpace())
-                RecordIdName = navigationProvider.GetValue(NavigationParameters.RecordIdName);
-            if (!navigationProvider.GetValue(NavigationParameters.RecordId).IsNullOrWhiteSpace())
-                RecordId = navigationProvider.GetValue(NavigationParameters.RecordId);
         }
 
         public string GetValidationSummary()

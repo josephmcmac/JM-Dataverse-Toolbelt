@@ -1,7 +1,7 @@
 ﻿#region
 
 using JosephM.Application.Modules;
-using Microsoft.Practices.Prism.Modularity;
+using Prism.Modularity;
 
 #endregion
 

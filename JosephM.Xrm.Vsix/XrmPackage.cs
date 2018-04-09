@@ -18,21 +18,19 @@ using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using JosephM.Xrm.Vsix.Module.DeployPackage;
 using JosephM.Xrm.Vsix.Module.DeployWebResource;
 using JosephM.Xrm.Vsix.Module.ImportCsvs;
+using JosephM.Xrm.Vsix.Module.ImportRecords;
+using JosephM.Xrm.Vsix.Module.ImportSolution;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using JosephM.Xrm.Vsix.Module.RefreshSchema;
 using JosephM.Xrm.Vsix.Module.UpdateAssembly;
 using JosephM.Xrm.Vsix.Module.Web;
-using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using System.Reflection;
-using JosephM.Xrm.Vsix.Module.ImportSolution;
-using JosephM.Xrm.Vsix.Module.ImportRecords;
 
 namespace JosephM.XRM.VSIX
 {
@@ -56,7 +54,7 @@ namespace JosephM.XRM.VSIX
         {
             base.Initialize();
 
-            var container = new PrismDependencyContainer(new UnityContainer());
+            var container = new PrismDependencyContainer();
 
             var commandService = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             container.RegisterInstance(typeof(IMenuCommandService), commandService);

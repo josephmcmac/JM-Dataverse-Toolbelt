@@ -93,9 +93,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism">
-      <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
-    </Reference>
     <Reference Include="microsoft.xrm.sdk">
       <HintPath>..\Lib\microsoft.xrm.sdk.dll</HintPath>
     </Reference>

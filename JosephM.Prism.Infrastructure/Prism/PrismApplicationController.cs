@@ -5,12 +5,11 @@ using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
-using Microsoft.Practices.Prism.Regions;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
-using Extentions = JosephM.Application.ViewModel.Extentions.Extentions;
 using MessageBox = System.Windows.MessageBox;
 
 #endregion
@@ -43,8 +42,16 @@ namespace JosephM.Prism.Infrastructure.Prism
 
         public override void RequestNavigate(string regionName, Type type, UriQuery uriQuery)
         {
-            var uri = Extentions.ToPrismNavigationUriType(type, uriQuery);
-            RegionManager.RequestNavigate(regionName, uri, ProcessNavigationResult);
+            var uri = new Uri(type.FullName, UriKind.Relative);
+            var navigationParameters = new NavigationParameters();
+            if (uriQuery != null && uriQuery.Arguments != null)
+            {
+                foreach (var item in uriQuery.Arguments)
+                {
+                    navigationParameters.Add(item.Key, item.Value);
+                }
+            }
+            RegionManager.RequestNavigate(regionName, uri, ProcessNavigationResult, navigationParameters);
         }
 
         private void ProcessNavigationResult(NavigationResult navigationResult)
@@ -75,15 +82,15 @@ namespace JosephM.Prism.Infrastructure.Prism
             return result == MessageBoxResult.Yes;
         }
 
-        public override void OpenRecord(string recordType, string fieldMatch, string fieldValue,
-            Type maintainViewModelType)
-        {
-            var uriQuery = new UriQuery();
-            uriQuery.Add(NavigationParameters.RecordType, recordType);
-            uriQuery.Add(NavigationParameters.RecordIdName, fieldMatch);
-            uriQuery.Add(NavigationParameters.RecordId, fieldValue);
-            RequestNavigate(RegionNames.MainTabRegion, maintainViewModelType, uriQuery);
-        }
+        //public override void OpenRecord(string recordType, string fieldMatch, string fieldValue,
+        //    Type maintainViewModelType)
+        //{
+        //    var uriQuery = new UriQuery();
+        //    uriQuery.Add("RecordType", recordType);
+        //    uriQuery.Add(NavigationParameters.RecordIdName, fieldMatch);
+        //    uriQuery.Add(NavigationParameters.RecordId, fieldValue);
+        //    RequestNavigate(RegionNames.MainTabRegion, maintainViewModelType, uriQuery);
+        //}
 
         public override void NavigateTo(Type type, UriQuery uriQuery)
         {

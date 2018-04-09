@@ -3,14 +3,9 @@ using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Prism.Infrastructure.Console;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Application.Fakes;
-using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Plugins;
-using Microsoft.Practices.Unity;
 using System;
-using System.Linq;
 
 namespace JosephM.Application.Prism.Console
 {
@@ -22,7 +17,7 @@ namespace JosephM.Application.Prism.Console
             var applicationName = arguments.ContainsKey("SettingsFolderName") ? arguments["SettingsFolderName"] : "Unknown Console Context";
 
             //okay need to create app
-            var dependencyResolver = new PrismDependencyContainer(new UnityContainer());
+            var dependencyResolver = new PrismDependencyContainer();
             var controller = new ConsoleApplicationController(applicationName, dependencyResolver);
             try
             {

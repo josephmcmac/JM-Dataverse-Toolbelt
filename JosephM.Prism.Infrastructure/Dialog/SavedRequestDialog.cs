@@ -6,10 +6,7 @@ using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
-using JosephM.ObjectMapping;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Record.IService;
-using Microsoft.Practices.Prism.Regions;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +16,7 @@ using System.Linq;
 namespace JosephM.Prism.Infrastructure.Dialog
 {
     public class SavedRequestDialog
-        : DialogViewModel
+        : DialogViewModel, INavigationAware
     {
         public SavedRequestDialog(IDialogController dialogController)
             : base(dialogController)
@@ -82,15 +79,24 @@ namespace JosephM.Prism.Infrastructure.Dialog
                 CompletionMessage = "The Settings Have Been Saved";
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            base.OnNavigatedTo(navigationContext);
             var navigationProvider = new PrismNavigationProvider(navigationContext);
             if (string.IsNullOrWhiteSpace(navigationProvider.GetValue("Type")))
                 throw new NullReferenceException("Error missing type argument in query");
 
             var typename = navigationProvider.GetValue("Type");
             RequestType = Type.GetType(typename);
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            throw new NotImplementedException();
         }
     }
 }

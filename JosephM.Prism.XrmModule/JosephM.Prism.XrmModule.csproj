@@ -67,9 +67,6 @@
     <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.Prism">
-      <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
-    </Reference>
     <Reference Include="microsoft.xrm.sdk">
       <HintPath>..\Lib\microsoft.xrm.sdk.dll</HintPath>
     </Reference>
@@ -78,7 +75,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -95,12 +91,7 @@
     <Compile Include="SavedXrmConnections\ISavedXrmConnections.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmConnections.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmConnectionsModule.cs" />
-    <Compile Include="Xrm\XrmModuleModule.cs" />
     <Compile Include="XrmConnection\XrmConnectionModule.cs" />
-    <Compile Include="Xrm\XrmReadViewModel.cs" />
-    <Compile Include="Xrm\XrmFormServiceController.cs" />
-    <Compile Include="Xrm\XrmCreateViewModel.cs" />
-    <Compile Include="Xrm\XrmMaintainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
