@@ -5,10 +5,10 @@
 //------------------------------------------------------------------------------
 
 using EnvDTE80;
+using JosephM.Application.Prism.Application;
 using JosephM.Application.Prism.Module.AboutModule;
 using JosephM.InstanceComparer;
 using JosephM.Prism.XrmModule.Crud;
-using JosephM.Record.Application.Fakes;
 using JosephM.Xrm.Vsix;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;

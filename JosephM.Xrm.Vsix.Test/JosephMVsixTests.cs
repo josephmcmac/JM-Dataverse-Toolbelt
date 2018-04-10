@@ -1,10 +1,10 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Prism.Test;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Utility;
 using JosephM.ObjectMapping;
-using JosephM.Prism.Infrastructure.Test;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.Test;

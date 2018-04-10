@@ -1,6 +1,4 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Prism.Infrastructure.Constants;
-using JosephM.Prism.Infrastructure.Module;
 
 namespace JosephM.Prism.XrmTestModule.TestXrmSettingsDialog
 {

@@ -1,5 +1,7 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.SavedRequests;
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.AppConfig;
@@ -7,9 +9,6 @@ using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Module.SavedRequests;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Attributes;
 using JosephM.Record.Extentions;

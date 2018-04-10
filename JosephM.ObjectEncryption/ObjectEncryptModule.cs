@@ -1,11 +1,6 @@
-﻿#region
+﻿
 
-
-
-#endregion
-
-using JosephM.Prism.Infrastructure.Constants;
-using JosephM.Prism.Infrastructure.Module;
+using JosephM.Application.Prism.Module.Dialog;
 
 namespace JosephM.ObjectEncryption
 {

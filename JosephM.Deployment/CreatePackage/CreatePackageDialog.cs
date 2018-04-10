@@ -1,11 +1,8 @@
-﻿#region
-
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Service;
-using JosephM.Prism.Infrastructure.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
 
-#endregion
 
 namespace JosephM.Deployment.CreatePackage
 {

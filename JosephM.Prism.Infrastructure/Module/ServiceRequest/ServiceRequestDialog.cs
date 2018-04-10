@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace JosephM.Prism.Infrastructure.Dialog
+namespace JosephM.Application.Prism.Module.ServiceRequest
 {
     /// <summary>
     ///     Base Class implementing A Dialog Which Executes The Main Method Provided By A Service

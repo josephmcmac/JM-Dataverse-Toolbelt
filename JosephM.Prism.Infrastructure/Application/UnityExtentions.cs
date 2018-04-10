@@ -1,18 +1,11 @@
-﻿#region
-
-using JosephM.Application;
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Application.Options;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Record.Application.Fakes;
 using Prism.Regions;
 using Prism.Unity;
 
-#endregion
-
-namespace JosephM.Prism.Infrastructure.Prism
+namespace JosephM.Application.Prism.Application
 {
     /// <summary>
     ///     Extention Methods On Unity Classes
@@ -27,7 +20,6 @@ namespace JosephM.Prism.Infrastructure.Prism
 
             applicationController.RegisterInfrastructure(new ApplicationOptionsViewModel(applicationController), new PrismSettingsManager(applicationController));
             applicationController.RegisterType<IDialogController, DialogController>();
-            applicationController.RegisterTypeForNavigation<SavedRequestDialog>();
         }
 
 

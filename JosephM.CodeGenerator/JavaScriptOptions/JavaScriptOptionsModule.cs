@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Core.Attributes;
 using JosephM.Core.Service;
-using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.XrmConnection;
 
 namespace JosephM.CodeGenerator.JavaScriptOptions

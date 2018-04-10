@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace JosephM.Prism.Infrastructure.Test
+namespace JosephM.Application.Prism.Test
 {
     [TestClass]
     public class ReleaseCheckModuleTests

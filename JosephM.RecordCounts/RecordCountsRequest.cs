@@ -5,7 +5,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Xrm.Schema;
 
-namespace JosephM.RecordCounts.Exporter
+namespace JosephM.RecordCounts
 {
     [AllowSaveAndLoad]
     [Group(Sections.RecordOwnerOptions, true, 20)]

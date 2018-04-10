@@ -1,5 +1,5 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.Infrastructure.Dialog;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.Prism.XrmTestModule.DebugModule

@@ -10,7 +10,7 @@ using System.Windows;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Prism
+namespace JosephM.Application.Prism.Application
 {
     /// <summary>
     ///     Extention Of The UnityBootstrapper To Load The Custom Modules And Infrastucture Required by The Application

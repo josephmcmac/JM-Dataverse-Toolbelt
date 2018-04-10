@@ -1,13 +1,13 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Prism.Module;
+using JosephM.Application.Prism.Module.CommandLine;
+using JosephM.Application.Prism.Module.Dialog;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
-using JosephM.Prism.Infrastructure.Dialog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Prism.Infrastructure.Module
+namespace JosephM.Application.Prism.Module.ServiceRequest
 {
     /// <summary>
     ///     Base Class For A Module Which Plugs An Implemented Services Main Operation Into The Application

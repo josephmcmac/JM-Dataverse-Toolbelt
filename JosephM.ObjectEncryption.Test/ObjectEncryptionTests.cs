@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using JosephM.Application.Prism.Test;
 using JosephM.Core.FieldType;
 using JosephM.Core.Test;
 using JosephM.Core.Utility;
-using JosephM.Prism.Infrastructure.Test;
 using JosephM.Prism.TestModule.ObjectEncrypt;
 using JosephM.Record.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace JosephM.ObjectEncryption.Test
 {

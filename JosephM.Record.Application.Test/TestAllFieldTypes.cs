@@ -3,11 +3,8 @@ using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JosephM.Record.Application.Test
+namespace JosephM.Application.ViewModel.Test
 {
     public class TestAllFieldTypes
     {

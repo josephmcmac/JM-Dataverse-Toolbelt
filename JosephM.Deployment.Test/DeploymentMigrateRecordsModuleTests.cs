@@ -12,6 +12,7 @@ using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
 using JosephM.Xrm;
+using JosephM.Xrm.Schema;
 using JosephM.Xrm.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;

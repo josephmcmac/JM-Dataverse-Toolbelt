@@ -1,7 +1,7 @@
 ﻿#region
 
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Core.Attributes;
-using JosephM.Prism.Infrastructure.Module;
 
 #endregion
 

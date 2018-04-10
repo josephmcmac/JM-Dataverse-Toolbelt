@@ -1,5 +1,5 @@
-﻿using JosephM.Core.Attributes;
-using JosephM.Prism.Infrastructure.Module;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Core.Attributes;
 
 namespace JosephM.Prism.TestModule.Prism.TestGridEdit
 {

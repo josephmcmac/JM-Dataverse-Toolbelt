@@ -1,13 +1,13 @@
 ﻿using JosephM.Application.ViewModel.SettingTypes;
-using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportXml;
 using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
-using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
+using JosephM.Xrm.Schema;
 using JosephM.Xrm.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace JosephM.Xrm.ImporterExporter.Test
+namespace JosephM.Deployment.Test
 {
     [TestClass]
     public class DeploymentImportXmlTests : XrmModuleTest
@@ -40,11 +40,11 @@ namespace JosephM.Xrm.ImporterExporter.Test
             }
             //if throws error ensure the test entity allows notes
             XrmService.Associate(Relationships.jmcg_testentity_.jmcg_testentity_jmcg_testentity.Name, Entities.jmcg_testentity, createRecords[0].Id, true, Entities.jmcg_testentity, createRecords[1].Id);
-            var aNote = CreateTestRecord(Schema.Entities.annotation, new Dictionary<string, object>
+            var aNote = CreateTestRecord(Entities.annotation, new Dictionary<string, object>
             {
-                { Schema.Fields.annotation_.objectid, createRecords[0].ToEntityReference() },
-                { Schema.Fields.annotation_.subject, "Test Scripting" },
-                { Schema.Fields.annotation_.notetext, "Just For Importing Testing" },
+                { Fields.annotation_.objectid, createRecords[0].ToEntityReference() },
+                { Fields.annotation_.subject, "Test Scripting" },
+                { Fields.annotation_.notetext, "Just For Importing Testing" },
             });
 
 
@@ -79,9 +79,9 @@ namespace JosephM.Xrm.ImporterExporter.Test
                 var loaded = Refresh(record);
                 if(createRecords[0].Id == loaded.Id)
                 {
-                    var notes = XrmService.RetrieveAllAndClauses(Schema.Entities.annotation, new[]
+                    var notes = XrmService.RetrieveAllAndClauses(Entities.annotation, new[]
                     {
-                        new ConditionExpression(Schema.Fields.annotation_.objectid, ConditionOperator.Equal, loaded.Id)
+                        new ConditionExpression(Fields.annotation_.objectid, ConditionOperator.Equal, loaded.Id)
                     });
                     Assert.AreEqual(1, notes.Count());
                     var associated = XrmService.GetAssociatedIds(rMetadata.SchemaName, rMetadata.Entity1IntersectAttribute, loaded.Id, rMetadata.Entity2IntersectAttribute);

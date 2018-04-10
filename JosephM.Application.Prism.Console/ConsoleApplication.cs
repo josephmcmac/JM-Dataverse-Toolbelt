@@ -3,12 +3,11 @@
 using JosephM.Application.Application;
 using JosephM.Application.Modules;
 using JosephM.Application.Options;
-using JosephM.Application.Prism.Module;
+using JosephM.Application.Prism.Module.CommandLine;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.XrmConnection;
-using JosephM.Record.Xrm.XrmRecord;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +18,7 @@ using System.Text;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Console
+namespace JosephM.Application.Prism.Console
 {
     /// <summary>
     ///     Class For A Prism Application Instance To Load Modules The Run

@@ -14,7 +14,7 @@ using System.Linq;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Console
+namespace JosephM.Application.Prism.Console
 {
     /// <summary>
     ///     Implementation Of IApplicationController For The Prism Application

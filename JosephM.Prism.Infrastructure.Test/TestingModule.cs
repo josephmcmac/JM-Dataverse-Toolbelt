@@ -2,12 +2,10 @@
 
 using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Fakes;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Record.Application.Fakes;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Test
+namespace JosephM.Application.Prism.Test
 {
     public class TestingModule : ModuleBase
     {

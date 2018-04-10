@@ -1,9 +1,9 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Core.Service;
 using JosephM.Deployment;
 using JosephM.Deployment.CreatePackage;
-using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;

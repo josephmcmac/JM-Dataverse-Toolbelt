@@ -1,6 +1,5 @@
 ﻿#region
 
-using JosephM.Application;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Console
+namespace JosephM.Application.Prism.Console
 {
     /// <summary>
     ///     Implementation Of IApplicationController For The Prism Application

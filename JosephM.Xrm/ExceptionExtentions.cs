@@ -2,7 +2,7 @@
 using System.ServiceModel;
 using Microsoft.Xrm.Sdk;
 
-namespace JosephM.Xrm.Plugins
+namespace JosephM.Xrm
 {
     public static class ExceptionExtentions
     {

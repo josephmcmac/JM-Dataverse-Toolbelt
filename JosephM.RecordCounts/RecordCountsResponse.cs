@@ -3,7 +3,7 @@ using JosephM.Core.Service;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.RecordCounts.Exporter
+namespace JosephM.RecordCounts
 {
     public class RecordCountsResponse : ServiceResponseBase<RecordCountsResponseItem>
     {

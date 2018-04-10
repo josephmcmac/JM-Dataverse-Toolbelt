@@ -3,7 +3,7 @@ using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace JosephM.Prism.Infrastructure.Test
+namespace JosephM.Application.Prism.Test
 {
     [TestClass]
     public class PrismSettingsManagerTests

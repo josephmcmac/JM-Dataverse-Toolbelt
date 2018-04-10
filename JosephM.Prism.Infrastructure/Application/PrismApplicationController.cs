@@ -14,7 +14,7 @@ using MessageBox = System.Windows.MessageBox;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Prism
+namespace JosephM.Application.Prism.Application
 {
     /// <summary>
     ///     Implementation Of IApplicationController For The Prism Application

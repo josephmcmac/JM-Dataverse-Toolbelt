@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Core.Attributes;
-using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
@@ -17,11 +17,5 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         }
 
         public override string MenuGroup => "Reports";
-
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-            //AddHelp("Record Report", "Record Extract Help.docx");
-        }
     }
 }

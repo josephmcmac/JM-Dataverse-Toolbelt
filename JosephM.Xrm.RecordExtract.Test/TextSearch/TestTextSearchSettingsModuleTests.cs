@@ -1,7 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Prism.Infrastructure.Test;
-using JosephM.Xrm.RecordExtract.Test.RecordExtract;
+﻿using JosephM.Application.Prism.Test;
 using JosephM.Xrm.RecordExtract.TextSearch;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JosephM.Xrm.RecordExtract.Test.TextSearch
 {

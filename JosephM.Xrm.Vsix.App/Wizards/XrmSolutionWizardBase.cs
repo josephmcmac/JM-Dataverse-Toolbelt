@@ -1,9 +1,9 @@
 ﻿using EnvDTE;
 using JosephM.Application;
+using JosephM.Application.Prism.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
 using JosephM.Prism.XrmModule.Crud;
-using JosephM.Record.Application.Fakes;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;

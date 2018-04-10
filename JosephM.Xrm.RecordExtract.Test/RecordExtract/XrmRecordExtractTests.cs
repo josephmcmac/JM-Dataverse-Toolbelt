@@ -1,13 +1,11 @@
 ﻿using JosephM.Application.ViewModel.Fakes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
-using JosephM.Record.Application.Fakes;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.Test;
-using JosephM.Xrm.RecordExtract.DocumentWriter;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.Xrm.Schema;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
 {

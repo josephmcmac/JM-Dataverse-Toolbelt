@@ -2,7 +2,7 @@
 using Microsoft.Practices.Unity;
 using System;
 
-namespace JosephM.Record.Application.Fakes
+namespace JosephM.Application.Prism.Application
 {
     public class PrismDependencyContainer : IDependencyResolver
     {

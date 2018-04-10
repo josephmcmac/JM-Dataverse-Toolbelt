@@ -1,9 +1,9 @@
-﻿using JosephM.Application.ViewModel.Grid;
-using JosephM.Record.Application.Fakes;
+﻿using JosephM.Application.Prism.Application;
+using JosephM.Application.ViewModel.Grid;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-namespace JosephM.Prism.Infrastructure.Test
+namespace JosephM.Application.Prism.Test
 {
     [TestClass]
     public class PrismDependencyControllerTests

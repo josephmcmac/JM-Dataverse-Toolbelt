@@ -4,7 +4,6 @@ using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Extentions;
 using Prism.Commands;
-using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;

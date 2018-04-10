@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
-using JosephM.Prism.Infrastructure.Dialog;
 using JosephM.Record.IService;
+using System;
+using System.Diagnostics;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {

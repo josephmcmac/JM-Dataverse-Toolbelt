@@ -1,6 +1,5 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.Infrastructure.Dialog;
-using System.Linq;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Dialog;
 
 namespace JosephM.InstanceComparer
 {

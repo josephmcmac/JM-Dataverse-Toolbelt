@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using JosephM.Application.ViewModel.SettingTypes;
+using System.Collections.Generic;
 using System.Linq;
-using JosephM.Application.ViewModel.SettingTypes;
-using JosephM.Record.Application;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {

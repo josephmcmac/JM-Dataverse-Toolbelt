@@ -12,6 +12,7 @@ using Microsoft.Xrm.Sdk.Metadata;
 using JosephM.Core.Log;
 using JosephM.Core.Test;
 using Microsoft.Xrm.Sdk.Query;
+using JosephM.Xrm.Schema;
 
 #endregion
 

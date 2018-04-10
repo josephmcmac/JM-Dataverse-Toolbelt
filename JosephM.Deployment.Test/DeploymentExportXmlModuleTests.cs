@@ -1,5 +1,5 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.Prism.Module.SavedRequests;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -10,12 +10,11 @@ using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportXml;
-using JosephM.Prism.Infrastructure.Module.SavedRequests;
 using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
 using JosephM.Xrm;
-using JosephM.Xrm.Test;
+using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 

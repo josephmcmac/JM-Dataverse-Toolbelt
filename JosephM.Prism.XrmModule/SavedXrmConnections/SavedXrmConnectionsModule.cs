@@ -1,16 +1,15 @@
 ﻿#region
 
-using System;
 using JosephM.Application.Modules;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.Application.Prism.Module.Settings;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Core.Attributes;
+using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Diagnostics;
 using System.Linq;
-using JosephM.Core.Attributes;
 
 #endregion
 

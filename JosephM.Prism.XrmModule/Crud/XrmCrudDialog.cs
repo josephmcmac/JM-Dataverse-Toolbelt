@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using JosephM.Application.Prism.Module.Crud;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.Infrastructure.Module.Crud;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
+using System.Collections.Generic;
 
 namespace JosephM.Prism.XrmModule.Crud
 {

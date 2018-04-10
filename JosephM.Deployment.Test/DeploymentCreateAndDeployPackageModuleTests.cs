@@ -1,5 +1,4 @@
-﻿using JosephM.Application.ViewModel.SettingTypes;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.CreatePackage;

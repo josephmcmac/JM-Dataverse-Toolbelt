@@ -1,10 +1,9 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Prism.Application;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
-using JosephM.Prism.Infrastructure.Console;
-using JosephM.Record.Application.Fakes;
-using JosephM.Xrm.Plugins;
+using JosephM.Xrm;
 using System;
 
 namespace JosephM.Application.Prism.Console

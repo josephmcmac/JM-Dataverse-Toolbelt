@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Core.Attributes;
-using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 
 namespace JosephM.InstanceComparer

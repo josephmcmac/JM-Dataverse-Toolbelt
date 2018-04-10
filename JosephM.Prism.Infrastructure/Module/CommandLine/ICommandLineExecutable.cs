@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace JosephM.Application.Prism.Module
+namespace JosephM.Application.Prism.Module.CommandLine
 {
     public interface ICommandLineExecutable
     {

@@ -1,4 +1,4 @@
-﻿using JosephM.Prism.Infrastructure.Test;
+﻿using JosephM.Application.Prism.Test;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;

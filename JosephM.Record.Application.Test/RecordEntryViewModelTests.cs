@@ -1,21 +1,17 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Fakes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Core.Attributes;
-using JosephM.Record.Service;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Record.Metadata;
-using System;
-using System.Collections.Generic;
-using JosephM.Core.FieldType;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Attributes;
+using JosephM.Core.FieldType;
 using JosephM.Core.Test;
-using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.Application;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
+using System.Reflection;
 
-namespace JosephM.Record.Application.Test
+namespace JosephM.Application.ViewModel.Test
 {
     [TestClass]
     public class RecordEntryViewModelTests : RecordApplicationTests

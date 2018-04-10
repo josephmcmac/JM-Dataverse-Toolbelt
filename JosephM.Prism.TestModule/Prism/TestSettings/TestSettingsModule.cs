@@ -1,8 +1,4 @@
-﻿#region
-
-using JosephM.Prism.Infrastructure.Module;
-
-#endregion
+﻿using JosephM.Application.Prism.Module.Settings;
 
 namespace JosephM.Prism.TestModule.Prism.TestSettings
 {

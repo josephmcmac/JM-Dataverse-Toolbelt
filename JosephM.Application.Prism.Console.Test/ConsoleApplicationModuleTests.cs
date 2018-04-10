@@ -1,12 +1,10 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Prism.Application;
+using JosephM.Application.Prism.Test;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
-using JosephM.Prism.Infrastructure.Console;
-using JosephM.Prism.Infrastructure.Test;
-using JosephM.Prism.XrmModule.Test;
-using JosephM.Record.Application.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Linq;

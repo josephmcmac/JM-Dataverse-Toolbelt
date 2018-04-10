@@ -1,9 +1,9 @@
 ﻿#region
 
+using JosephM.Application.Prism.Application;
+using JosephM.Application.Prism.Console;
+using JosephM.Application.Prism.Module.SavedRequests;
 using JosephM.ObjectEncryption;
-using JosephM.Prism.Infrastructure.Console;
-using JosephM.Prism.Infrastructure.Module.SavedRequests;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.TestModule.ObjectEncrypt;
 using JosephM.Prism.TestModule.Prism.TestCrud;
 using JosephM.Prism.TestModule.Prism.TestDialog;

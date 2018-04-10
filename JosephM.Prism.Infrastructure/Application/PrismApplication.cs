@@ -1,15 +1,14 @@
 ﻿#region
 
+using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Application.Modules;
-using JosephM.Core.Extentions;
-using JosephM.Prism.Infrastructure.Module;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Prism
+namespace JosephM.Application.Prism.Application
 {
     /// <summary>
     ///     Class For A Prism Application Instance To Load Modules The Run

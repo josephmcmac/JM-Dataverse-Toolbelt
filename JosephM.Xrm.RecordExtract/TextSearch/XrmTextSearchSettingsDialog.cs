@@ -1,7 +1,6 @@
 ﻿#region
 
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Record.Xrm.XrmRecord;
 
 #endregion

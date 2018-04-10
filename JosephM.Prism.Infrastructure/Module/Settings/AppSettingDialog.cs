@@ -8,7 +8,7 @@ using JosephM.Record.IService;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Dialog
+namespace JosephM.Application.Prism.Module.Settings
 {
     /// <summary>
     ///     Base Class Implementing A Dialog To Enter And Save User Defined Settings

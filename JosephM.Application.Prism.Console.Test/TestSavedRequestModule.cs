@@ -1,9 +1,8 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Attributes;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Prism.Infrastructure.Module;
 
 namespace JosephM.Application.Prism.Console.Test
 {

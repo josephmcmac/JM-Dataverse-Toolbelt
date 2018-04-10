@@ -1,10 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JosephM.Application.ViewModel.Fakes;
+﻿using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
@@ -12,7 +6,7 @@ using JosephM.Core.Test;
 using JosephM.Record.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace JosephM.Record.Application.Test
+namespace JosephM.Application.ViewModel.Test
 {
     public class RecordApplicationTests : CoreTest
     {
