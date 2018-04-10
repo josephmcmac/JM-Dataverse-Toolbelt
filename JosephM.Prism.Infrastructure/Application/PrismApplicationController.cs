@@ -1,7 +1,4 @@
-﻿#region
-
-using JosephM.Application;
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
@@ -11,8 +8,6 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
-
-#endregion
 
 namespace JosephM.Application.Prism.Application
 {

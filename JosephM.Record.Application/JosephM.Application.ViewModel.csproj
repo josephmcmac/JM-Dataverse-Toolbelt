@@ -147,8 +147,6 @@
     <Compile Include="Dialog\ObjectEntryDialog.cs" />
     <Compile Include="Navigation\NavigationErrorViewModel.cs" />
     <Compile Include="Shared\LoadingViewModel.cs" />
-    <Compile Include="Navigation\INavigationProvider.cs" />
-    <Compile Include="Navigation\PrismNavigationProvider.cs" />
     <Compile Include="RecordEntry\Field\BooleanFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DateFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\FieldViewModel.cs" />
