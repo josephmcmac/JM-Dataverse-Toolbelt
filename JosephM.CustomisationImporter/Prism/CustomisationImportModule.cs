@@ -24,7 +24,6 @@ namespace JosephM.CustomisationImporter.Prism
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelpUrl("Import Customisations", "CustomisationImporter");
             AddOption(MenuGroup, "Open Template", OpenTemplateCommand, "Get An Excel File With The Tabs And Columns For Importing Customisations");
         }
 

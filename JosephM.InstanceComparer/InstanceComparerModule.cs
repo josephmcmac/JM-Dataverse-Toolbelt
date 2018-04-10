@@ -11,11 +11,6 @@ namespace JosephM.InstanceComparer
         ServiceRequestModule
             <InstanceComparerDialog, InstanceComparerService, InstanceComparerRequest, InstanceComparerResponse, InstanceComparerResponseItem>
     {
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-            AddHelpUrl("Instance Comparison", "CrmInstanceComparison");
-        }
         public override string MainOperationName
         {
             get { return "Instance Compare"; }

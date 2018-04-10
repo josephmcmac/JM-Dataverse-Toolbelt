@@ -20,12 +20,6 @@ namespace JosephM.Prism.XrmModule.SavedXrmConnections
     [DependantModule(typeof(XrmConnectionModule))]
     public class SavedXrmConnectionsModule : SettingsModule<SavedXrmConnectionsDialog, ISavedXrmConnections, SavedXrmConnections>
     {
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-            AddHelpUrl("Saved XRM Connections", "SavedXrmConnections");
-        }
-
         public override string MainOperationName => "Saved Connections";
 
         public override void RegisterTypes()

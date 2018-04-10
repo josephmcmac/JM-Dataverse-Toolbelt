@@ -9,12 +9,6 @@ namespace JosephM.CustomisationExporter.Exporter
             <CustomisationExporterDialog, CustomisationExporterService, CustomisationExporterRequest,
                 CustomisationExporterResponse, CustomisationExporterResponseItem>
     {
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-            AddHelpUrl("Customisation Exporter", "CustomisationExport");
-        }
-
         public override string MainOperationName { get { return "Export"; } }
 
         public override string MenuGroup => "Customisations";

@@ -9,12 +9,6 @@ namespace JosephM.RecordCounts.Exporter
             <RecordCountsDialog, RecordCountsService, RecordCountsRequest,
                 RecordCountsResponse, RecordCountsResponseItem>
     {
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-            AddHelpUrl("Record Counts", "RecordCounts");
-        }
-
         public override string MenuGroup => "Reports";
     }
 }
