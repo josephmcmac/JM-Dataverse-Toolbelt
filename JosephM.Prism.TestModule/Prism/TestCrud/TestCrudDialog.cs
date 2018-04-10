@@ -1,6 +1,6 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Prism.Module.Crud;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
-using JosephM.Prism.Infrastructure.Module.Crud;
 
 namespace JosephM.Prism.TestModule.Prism.TestCrud
 {

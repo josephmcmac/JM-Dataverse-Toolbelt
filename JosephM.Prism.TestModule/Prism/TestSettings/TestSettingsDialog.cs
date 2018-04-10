@@ -1,9 +1,6 @@
-﻿#region
-
+﻿using JosephM.Application.Prism.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.Infrastructure.Dialog;
 
-#endregion
 
 namespace JosephM.Prism.TestModule.Prism.TestSettings
 {

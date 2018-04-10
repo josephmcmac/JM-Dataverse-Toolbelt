@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -122,8 +122,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application", "JosephM.Application\JosephM.Application.csproj", "{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Service", "JosephM.Application.Service\JosephM.Application.Service.csproj", "{245EE7A0-478E-419A-8DC1-E1D201CC55C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.ViewModel.Fakes", "JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj", "{9D3EB2D4-EC55-4080-938F-EA409162171D}"
 EndProject
@@ -546,16 +544,6 @@ Global
 		{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}.Release|x86.ActiveCfg = Release|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2}.Release|x86.ActiveCfg = Release|Any CPU
 		{9D3EB2D4-EC55-4080-938F-EA409162171D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9D3EB2D4-EC55-4080-938F-EA409162171D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D3EB2D4-EC55-4080-938F-EA409162171D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -875,7 +863,6 @@ Global
 		{53651F05-D505-4D59-8FED-E723D26E491F} = {67CE8CD0-4F37-4A0B-897A-E126AF300F8D}
 		{EA89F426-09BA-4F87-B5C5-17CFFB6A89F8} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 		{7BF3E622-67CA-4E67-A9CA-F3B334C954FD} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
-		{245EE7A0-478E-419A-8DC1-E1D201CC55C2} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
 		{9D3EB2D4-EC55-4080-938F-EA409162171D} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
 		{0902CBF9-E77C-4B69-8021-3DA8E3999CCA} = {F9B7BDB4-5B16-499F-830C-36BE12EC665E}
 		{B3005F0C-ACFC-4C16-8379-46B6DECA302A} = {F9B7BDB4-5B16-499F-830C-36BE12EC665E}
@@ -909,8 +896,8 @@ Global
 		{301B6CDF-DC9C-42BA-874A-EBA0C05214A3} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

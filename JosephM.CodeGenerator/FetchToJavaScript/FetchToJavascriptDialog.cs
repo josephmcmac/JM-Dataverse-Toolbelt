@@ -1,6 +1,6 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Service;
-using JosephM.Prism.Infrastructure.Dialog;
 
 namespace JosephM.CodeGenerator.FetchToJavascript
 {

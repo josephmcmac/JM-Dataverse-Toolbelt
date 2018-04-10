@@ -1,16 +1,15 @@
 ﻿#region
 
+using JosephM.Application.Prism.Application;
+using JosephM.Application.Prism.Console;
+using JosephM.Application.Prism.Module.SavedRequests;
 using JosephM.ObjectEncryption;
-using JosephM.Prism.Infrastructure.Console;
-using JosephM.Prism.Infrastructure.Module.SavedRequests;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.TestModule.ObjectEncrypt;
 using JosephM.Prism.TestModule.Prism.TestCrud;
 using JosephM.Prism.TestModule.Prism.TestDialog;
 using JosephM.Prism.TestModule.Prism.TestGridEdit;
 using JosephM.Prism.TestModule.Prism.TestSettings;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Prism.XrmTestModule.DebugModule;
 using JosephM.Prism.XrmTestModule.TestXrmSettingsDialog;
 using JosephM.Xrm.RecordExtract.Test.TextSearch;
@@ -30,7 +29,7 @@ namespace JosephM.Prism.TestPrismApplication
             base.OnStartup(e);
 
             var prism = new PrismApplication("Test Prism Application");
-            prism.AddModule<XrmModuleModule>();
+            prism.AddModule<SavedXrmConnectionsModule>();
             prism.AddModule<TestTextSearchModule>();
             prism.AddModule<TestDialogModule>();
             prism.AddModule<SavedXrmConnectionsModule>();

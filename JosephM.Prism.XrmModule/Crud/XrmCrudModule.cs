@@ -1,9 +1,9 @@
 ﻿using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.Crud;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.Attributes;
-using JosephM.Prism.Infrastructure.Module.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Service;

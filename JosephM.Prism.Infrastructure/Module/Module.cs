@@ -1,11 +1,11 @@
 ﻿#region
 
 using JosephM.Application.Modules;
-using Microsoft.Practices.Prism.Modularity;
+using Prism.Modularity;
 
 #endregion
 
-namespace JosephM.Prism.Infrastructure.Module
+namespace JosephM.Application.Prism.Module
 {
     /// <summary>
     ///     Class Maps A Custom PrismModuleBase Type Into The Module Type Required By The Prism Unity Engine

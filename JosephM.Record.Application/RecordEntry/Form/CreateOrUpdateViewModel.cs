@@ -1,11 +1,8 @@
 ﻿#region
 
-using System;
-using JosephM.Application.ViewModel.Navigation;
-using JosephM.Core.Extentions;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
-using Microsoft.Practices.Prism.Regions;
+using System;
 
 #endregion
 

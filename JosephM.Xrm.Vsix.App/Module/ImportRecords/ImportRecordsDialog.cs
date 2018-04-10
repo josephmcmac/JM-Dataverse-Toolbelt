@@ -1,6 +1,6 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Deployment;
-using JosephM.Prism.Infrastructure.Dialog;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {

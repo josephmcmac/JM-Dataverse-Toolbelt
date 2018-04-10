@@ -7,7 +7,6 @@ using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Prism.XrmModule.Crud;
-using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using System;
 using System.Configuration;
@@ -19,6 +18,18 @@ namespace JosephM.Prism.XrmModule.XrmConnection
     [MyDescription("Connect To A CRM Instance")]
     public class XrmConnectionModule : ActionModuleBase
     {
+        public override void InitialiseModule()
+        {
+            AddSetting(MainOperationName, DialogCommand, OperationDescription);
+        }
+
+        public override string MainOperationName => "Connect To Crm";
+
+        public override void DialogCommand()
+        {
+            NavigateTo<XrmConnectionDialog>();
+        }
+
         public override void RegisterTypes()
         {
             var configManager = Resolve<ISettingsManager>();
@@ -35,8 +46,6 @@ namespace JosephM.Prism.XrmModule.XrmConnection
                         ex.DisplayString()));
             }
 
-            RegisterTypeForNavigation<XrmMaintainViewModel>();
-            RegisterTypeForNavigation<XrmCreateViewModel>();
             RegisterTypeForNavigation<XrmConnectionDialog>();
         }
 
@@ -79,19 +88,6 @@ namespace JosephM.Prism.XrmModule.XrmConnection
                     }
                 });
             }
-        }
-
-        public override void InitialiseModule()
-        {
-            AddSetting(MainOperationName, DialogCommand, OperationDescription);
-            AddHelpUrl("Connect To Crm", "ConnectToCrm");
-        }
-
-        public override string MainOperationName => "Connect To Crm";
-
-        public override void DialogCommand()
-        {
-            NavigateTo<XrmConnectionDialog>();
         }
     }
 }

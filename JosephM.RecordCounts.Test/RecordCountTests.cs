@@ -1,12 +1,10 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Prism.XrmModule.Test;
-using JosephM.Core.Utility;
-using System.Linq;
-using JosephM.RecordCounts.Exporter;
+﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
-using JosephM.Application.ViewModel.SettingTypes;
+using JosephM.Core.Utility;
+using JosephM.Prism.XrmModule.Test;
 using JosephM.Xrm.Schema;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace JosephM.RecordCounts.Test
 {

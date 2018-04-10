@@ -45,11 +45,6 @@ namespace JosephM.Application.Application
         void DoOnMainThread(Action action);
 
         /// <summary>
-        ///     Invokes A Request To Open A Record In Its Maintain Record Entry Form
-        /// </summary>
-        void OpenRecord(string entityType, string fieldMatch, string fieldValue, Type maintainViewModelType);
-
-        /// <summary>
         ///     Invokes An Action To Be Started Asynchronously To The Current Thread
         /// </summary>
         void DoOnAsyncThread(Action action);

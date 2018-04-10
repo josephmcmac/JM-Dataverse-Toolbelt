@@ -1,9 +1,9 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.Infrastructure.Dialog;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.IService;
 using System;
 
-namespace JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate
+namespace JosephM.Application.Prism.Module.Crud.BulkUpdate
 {
     public class BulkUpdateDialog :
         ServiceRequestDialog<BulkUpdateService, BulkUpdateRequest, BulkUpdateResponse, BulkUpdateResponseItem>

@@ -1,7 +1,7 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Shared;
-using JosephM.Prism.Infrastructure.Dialog;
 
 namespace JosephM.Prism.TestModule.Prism.TestDialog
 {

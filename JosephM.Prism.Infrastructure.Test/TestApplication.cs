@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using JosephM.Application;
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Options;
+using JosephM.Application.Prism.Module.Dialog;
+using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Extentions;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Prism;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Core.Test;
-using JosephM.Application.Options;
 using JosephM.Core.AppConfig;
-using JosephM.Application.ViewModel.ApplicationOptions;
-using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Core.Service;
+using JosephM.Core.Extentions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace JosephM.Prism.Infrastructure.Test
+namespace JosephM.Application.Prism.Test
 {
     public class TestApplication : ApplicationBase
     {
@@ -146,13 +141,10 @@ namespace JosephM.Prism.Infrastructure.Test
             var dialog = NavigateToDialog<TDialogModule, TDialog>();
             var entryForm = GetSubObjectEntryViewModel(dialog);
 
-            var saveRequest = false;
-            Type savedRequestType = null;
-
             if (entryForm is ObjectEntryViewModel)
             {
                 entryForm.LoadFormSections();
-                    var oevm = (ObjectEntryViewModel)entryForm;
+                var oevm = (ObjectEntryViewModel)entryForm;
 
                 foreach (var grid in oevm.SubGrids)
                     if (grid.DynamicGridViewModel.LoadedCallback != null)
@@ -162,37 +154,7 @@ namespace JosephM.Prism.Infrastructure.Test
 
             EnterAndSaveObject(instanceEntered, entryForm);
 
-
-            if(saveRequest)
-            {
-                //okay lets delete the request we saved earlier (and any others)
-                ObjectEntryViewModel oevm = LoadSavedRequestsEntryForm(savedRequestType);
-                foreach (var grid in oevm.SubGrids)
-                {
-                    while (grid.GridRecords.Any())
-                        grid.GridRecords.First().DeleteRow();
-                }
-                oevm.SaveButtonViewModel.Invoke();
-            }
-
             return dialog.CompletionItem as TResponse;
-        }
-
-        public ObjectEntryViewModel LoadSavedRequestsEntryForm(Type savedRequestType)
-        {
-            var applicationOptions = (ApplicationOptionsViewModel)Controller.Container.ResolveType<IApplicationOptions>();
-
-            //get the setting which has the label - hope this doesn't break
-            var savedSettingsOption = applicationOptions.Settings.First(o => o.Label.EndsWith(savedRequestType.GetDisplayName()));
-            savedSettingsOption.DelegateCommand.Execute();
-
-            var items = Controller.GetObjects(RegionNames.MainTabRegion);
-            var dialog = items.First();
-            Assert.IsTrue(dialog is SavedRequestDialog);
-            var srd = (SavedRequestDialog)dialog;
-            srd.Controller.BeginDialog();
-            var oevm = GetSubObjectEntryViewModel(srd);
-            return oevm;
         }
 
         public void NavigateAndProcessDialog<TDialogModule, TDialog>(IEnumerable<object> instancesEntered)

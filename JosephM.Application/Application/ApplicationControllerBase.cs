@@ -98,9 +98,6 @@ namespace JosephM.Application.Application
             }
         }
 
-        public abstract void OpenRecord(string recordType, string fieldMatch, string fieldValue,
-            Type maintainViewModelType);
-
         public virtual void NavigateTo(Type type)
         {
             throw new NotImplementedException();

@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Core.Attributes;
-using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 
 namespace JosephM.InstanceComparer
@@ -11,11 +11,6 @@ namespace JosephM.InstanceComparer
         ServiceRequestModule
             <InstanceComparerDialog, InstanceComparerService, InstanceComparerRequest, InstanceComparerResponse, InstanceComparerResponseItem>
     {
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-            AddHelpUrl("Instance Comparison", "CrmInstanceComparison");
-        }
         public override string MainOperationName
         {
             get { return "Instance Compare"; }

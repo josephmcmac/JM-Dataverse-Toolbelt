@@ -1,9 +1,8 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
 using JosephM.Core.Test;
-using JosephM.Prism.Infrastructure.Test;
 
-namespace JosephM.Prism.XrmModule.Test
+namespace JosephM.Application.Prism.Test
 {
     public class ModuleTest : CoreTest
     {

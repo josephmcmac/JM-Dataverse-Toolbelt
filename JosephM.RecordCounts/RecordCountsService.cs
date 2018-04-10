@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
-using JosephM.Record.Metadata;
+using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
-using JosephM.Record.Query;
-using System.Threading;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace JosephM.RecordCounts.Exporter
+namespace JosephM.RecordCounts
 {
     public class RecordCountsService :
         ServiceBase<RecordCountsRequest, RecordCountsResponse, RecordCountsResponseItem>

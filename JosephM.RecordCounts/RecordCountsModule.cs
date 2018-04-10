@@ -1,7 +1,7 @@
-﻿using JosephM.Core.Attributes;
-using JosephM.Prism.Infrastructure.Module;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Core.Attributes;
 
-namespace JosephM.RecordCounts.Exporter
+namespace JosephM.RecordCounts
 {
     [MyDescription("Generate Counts Of Records In The CRM Instance Either Globally Or Per User/Owner")]
     public class RecordCountsModule :
@@ -9,12 +9,6 @@ namespace JosephM.RecordCounts.Exporter
             <RecordCountsDialog, RecordCountsService, RecordCountsRequest,
                 RecordCountsResponse, RecordCountsResponseItem>
     {
-        public override void InitialiseModule()
-        {
-            base.InitialiseModule();
-            AddHelpUrl("Record Counts", "RecordCounts");
-        }
-
         public override string MenuGroup => "Reports";
     }
 }

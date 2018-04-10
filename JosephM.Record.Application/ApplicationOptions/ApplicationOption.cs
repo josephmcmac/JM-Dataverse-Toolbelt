@@ -1,8 +1,8 @@
 ﻿#region
 
-using System;
 using JosephM.Application.Options;
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
+using System;
 
 #endregion
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JosephM.Application.Prism.Module.Dialog;
 
-namespace JosephM.Prism.Infrastructure.Module.Crud
+namespace JosephM.Application.Prism.Module.Crud
 {
     public abstract class CrudModule<T> : DialogModule<T>
         where T : CrudDialog

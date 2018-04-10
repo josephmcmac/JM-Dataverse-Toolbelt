@@ -1,9 +1,9 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
-using JosephM.Prism.Infrastructure.Module;
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Prism.XrmModule.XrmConnection;
-using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 
 namespace JosephM.Xrm.Vsix.Module.DeployWebResource

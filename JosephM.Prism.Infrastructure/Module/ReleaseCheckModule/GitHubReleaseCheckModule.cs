@@ -1,15 +1,14 @@
-﻿using JosephM.Application.ViewModel.Extentions;
+﻿using JosephM.Application.Prism.Module.Settings;
+using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.Serialisation;
-using JosephM.Prism.Infrastructure.Module;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 
 namespace JosephM.Application.Prism.Module.ReleaseCheckModule
 {

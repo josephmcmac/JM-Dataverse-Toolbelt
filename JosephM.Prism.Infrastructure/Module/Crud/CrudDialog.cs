@@ -1,9 +1,9 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Prism.Module.Crud.BulkDelete;
+using JosephM.Application.Prism.Module.Crud.BulkUpdate;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Core.FieldType;
-using JosephM.Prism.Infrastructure.Module.Crud.BulkDelete;
-using JosephM.Prism.Infrastructure.Module.Crud.BulkUpdate;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JosephM.Prism.Infrastructure.Module.Crud
+namespace JosephM.Application.Prism.Module.Crud
 {
     public class CrudDialog : DialogViewModel
     {

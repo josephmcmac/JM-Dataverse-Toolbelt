@@ -1,9 +1,9 @@
 ﻿#region
 
 using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Core.Attributes;
 using JosephM.CustomisationImporter.Service;
-using JosephM.Prism.Infrastructure.Module;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using System;
 using System.IO;
@@ -24,7 +24,6 @@ namespace JosephM.CustomisationImporter.Prism
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddHelpUrl("Import Customisations", "CustomisationImporter");
             AddOption(MenuGroup, "Open Template", OpenTemplateCommand, "Get An Excel File With The Tabs And Columns For Importing Customisations");
         }
 

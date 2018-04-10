@@ -1,18 +1,14 @@
-﻿#region
-
-using System;
-using System.Linq;
+﻿using JosephM.Application.Prism.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Core.Attributes;
 using JosephM.Core.Utility;
-using JosephM.Prism.Infrastructure.Module;
 using JosephM.Record.Extentions;
 using JosephM.Record.Service;
-
-#endregion
+using System;
+using System.Linq;
 
 namespace JosephM.Deployment.ImportCsvs
 {

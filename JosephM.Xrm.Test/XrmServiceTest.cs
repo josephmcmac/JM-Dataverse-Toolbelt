@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel.Security;
 using System.Text;
+using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;

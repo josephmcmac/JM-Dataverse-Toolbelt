@@ -1,18 +1,17 @@
-﻿using JosephM.Application.Prism.Module.AboutModule;
+﻿using JosephM.Application.Prism.Application;
+using JosephM.Application.Prism.Console;
+using JosephM.Application.Prism.Module.AboutModule;
 using JosephM.Application.Prism.Module.ReleaseCheckModule;
+using JosephM.Application.Prism.Module.SavedRequests;
 using JosephM.CodeGenerator.Xrm;
 using JosephM.Core.FieldType;
 using JosephM.CustomisationExporter.Exporter;
 using JosephM.CustomisationImporter.Prism;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
-using JosephM.Prism.Infrastructure.Console;
-using JosephM.Prism.Infrastructure.Module.SavedRequests;
-using JosephM.Prism.Infrastructure.Prism;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.Xrm;
-using JosephM.RecordCounts.Exporter;
+using JosephM.RecordCounts;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using System.Windows;
 
@@ -28,7 +27,6 @@ namespace JosephM.Xrm.DeveloperTool
             base.OnStartup(e);
 
             var prism = new PrismApplication("JosephM Dynamics 365 Dev App");
-            prism.AddModule<XrmModuleModule>();
             prism.AddModule<SavedXrmConnectionsModule>();
             prism.AddModule<DeploymentModule>();
             prism.AddModule<CodeGeneratorModule>();

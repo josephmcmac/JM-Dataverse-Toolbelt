@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using JosephM.Record.Test;
+﻿using JosephM.Record.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
 
 
-namespace JosephM.Record.Application.Test
+namespace JosephM.Application.ViewModel.Test
 {
     [TestClass]
     public class DynamicsGridViewModelItemsTests : RecordApplicationTests

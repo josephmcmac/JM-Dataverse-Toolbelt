@@ -4,8 +4,7 @@ using JosephM.Application.Application;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Test;
-using Microsoft.Practices.Prism.Regions;
-using Microsoft.Practices.Unity;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,7 +27,7 @@ namespace JosephM.Application.ViewModel.Fakes
         }
 
         public FakeApplicationController()
-            : this(new FakesDependencyContainer(new UnityContainer()))
+            : this(new FakesDependencyContainer())
         {
         }
 
@@ -60,8 +59,16 @@ namespace JosephM.Application.ViewModel.Fakes
 
             if (type.IsTypeOf(typeof(INavigationAware)))
             {
-                var uri = Extentions.Extentions.ToPrismNavigationUriType(type, uriQuery);
-                var navigationContext = new NavigationContext(new FakeRegionNavigationService(), uri);
+                var uri = new Uri(type.FullName, UriKind.Relative);
+                var navigationParameters = new NavigationParameters();
+                if (uriQuery.Arguments != null)
+                {
+                    foreach (var item in uriQuery.Arguments)
+                    {
+                        navigationParameters.Add(item.Key, item.Value);
+                    }
+                }
+                var navigationContext = new NavigationContext(new FakeRegionNavigationService(), uri, navigationParameters);
                 ((INavigationAware)resolvedType).OnNavigatedTo(navigationContext);
             }
         }
@@ -74,16 +81,6 @@ namespace JosephM.Application.ViewModel.Fakes
         public override bool UserConfirmation(string message)
         {
             return true;
-        }
-
-        public override void OpenRecord(string recordType, string fieldMatch, string fieldValue,
-            Type maintainViewModelType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OpenRecord(string entityType, string fieldMatch, string fieldValue)
-        {
         }
 
         public override void ThrowException(Exception ex)

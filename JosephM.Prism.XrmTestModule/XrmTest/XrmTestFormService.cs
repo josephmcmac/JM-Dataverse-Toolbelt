@@ -1,11 +1,10 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Validation;
-using JosephM.Prism.XrmModule.Xrm;
 using JosephM.Record.IService;
+using System;
+using System.Collections.Generic;
 
 #endregion
 

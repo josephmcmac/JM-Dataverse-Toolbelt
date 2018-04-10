@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JosephM.Record.Extentions;
-using JosephM.Record.Xrm.Test;
+﻿using JosephM.Record.Extentions;
 using JosephM.Xrm;
+using JosephM.Xrm.Schema;
 using JosephM.Xrm.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using System.Linq;
 
-namespace JosephM.Record.Xrm
+namespace JosephM.Record.Xrm.Test
 {
     public class RecordExtentionTests : XrmRecordTest
     {

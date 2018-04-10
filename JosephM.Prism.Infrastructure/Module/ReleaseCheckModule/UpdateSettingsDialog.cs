@@ -1,5 +1,5 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.Infrastructure.Dialog;
+﻿using JosephM.Application.Prism.Module.Settings;
+using JosephM.Application.ViewModel.Dialog;
 
 namespace JosephM.Application.Prism.Module.ReleaseCheckModule
 {

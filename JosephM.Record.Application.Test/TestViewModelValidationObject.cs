@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JosephM.Core.Attributes;
 
-namespace JosephM.Record.Application.Test
+namespace JosephM.Application.ViewModel.Test
 {
     public class TestViewModelValidationObject
     {

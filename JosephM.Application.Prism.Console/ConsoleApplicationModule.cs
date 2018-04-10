@@ -1,12 +1,10 @@
-﻿using JosephM.Application.Application;
-using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module;
+﻿using JosephM.Application.Modules;
+using JosephM.Application.Prism.Module.CommandLine;
+using JosephM.Application.Prism.Module.SavedRequests;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
-using JosephM.Prism.Infrastructure.Module.SavedRequests;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
 using System;
 using System.Collections.Generic;
@@ -14,7 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace JosephM.Prism.Infrastructure.Console
+namespace JosephM.Application.Prism.Console
 {
     [DependantModule(typeof(SavedRequestModule))]
     /// <summary>

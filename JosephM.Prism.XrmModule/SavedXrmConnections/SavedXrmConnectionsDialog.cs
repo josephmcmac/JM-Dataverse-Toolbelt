@@ -1,9 +1,9 @@
 ﻿#region
 
 using JosephM.Application.Application;
+using JosephM.Application.Prism.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
-using JosephM.Prism.Infrastructure.Dialog;
 using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Linq;

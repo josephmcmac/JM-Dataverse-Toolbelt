@@ -1,17 +1,13 @@
-﻿using System.Linq;
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Prism.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
-using JosephM.Core.AppConfig;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Core.Test;
 using JosephM.Core.Utility;
-using JosephM.Prism.Infrastructure.Dialog;
-using JosephM.Prism.Infrastructure.Module;
-using JosephM.Prism.Infrastructure.Prism;
-using JosephM.Record.Application.Fakes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
-namespace JosephM.Prism.Infrastructure.Test
+namespace JosephM.Application.Prism.Test
 {
     public class SettingsModuleTest<TSettingsModule, TDialog, TInterface, TClass> : CoreTest
         where TSettingsModule : SettingsModule<TDialog, TInterface, TClass>, new()

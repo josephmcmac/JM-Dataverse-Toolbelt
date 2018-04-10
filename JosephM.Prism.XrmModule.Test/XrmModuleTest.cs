@@ -1,8 +1,8 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
+using JosephM.Application.Prism.Test;
 using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
-using JosephM.Prism.Infrastructure.Test;
 using JosephM.Prism.XrmModule.Crud;
 using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Prism.XrmModule.XrmConnection;

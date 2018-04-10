@@ -1,17 +1,18 @@
-﻿using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportCsvs;
 using JosephM.Prism.XrmModule.Test;
+using JosephM.Xrm;
+using JosephM.Xrm.Schema;
 using JosephM.Xrm.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace JosephM.Xrm.ImporterExporter.Test
+namespace JosephM.Deployment.Test
 {
     [TestClass]
     public class DeploymentImportCsvsTests : XrmModuleTest

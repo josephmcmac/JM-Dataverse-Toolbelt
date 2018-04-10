@@ -1,7 +1,7 @@
 ﻿using System;
 using JosephM.Core.Service;
 
-namespace JosephM.RecordCounts.Exporter
+namespace JosephM.RecordCounts
 {
     public class RecordCountsResponseItem : ServiceResponseItem
     {
