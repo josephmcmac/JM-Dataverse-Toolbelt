@@ -1,7 +1,7 @@
 ﻿#region
 
 using JosephM.Application.Application;
-using Prism.Commands;
+using JosephM.Application.ViewModel.Shared;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         {
             Label = label;
             Options = new ObservableCollection<ApplicationOption>();
-            DelegateCommand = new DelegateCommand(OpenChildren);
+            DelegateCommand = new MyCommand(OpenChildren);
         }
 
         private void OpenChildren()
@@ -60,7 +60,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
 
         public ObservableCollection<ApplicationOption> Options { get; private set; }
 
-        public DelegateCommand DelegateCommand { get; private set; }
+        public MyCommand DelegateCommand { get; private set; }
 
         public string Label { get; private set; }
 

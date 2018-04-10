@@ -1,11 +1,9 @@
 ﻿#region
 
 using JosephM.Application.Application;
-using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 
 #endregion
 
@@ -28,7 +26,7 @@ namespace JosephM.Application.ViewModel.Shared
             Id = id;
             Label = label;
             ClickAction = clickAction;
-            Command = new DelegateCommand(clickAction);
+            Command = new MyCommand(clickAction);
             Description = description;
         }
 
@@ -37,11 +35,11 @@ namespace JosephM.Application.ViewModel.Shared
         {
             Id = id;
             Label = label;
-            Command = new DelegateCommand(() => { OpenChildButtons = true; });
+            Command = new MyCommand(() => { OpenChildButtons = true; });
             ChildButtons = childButtons;
             foreach(var button in childButtons)
             {
-                button.Command = new DelegateCommand(() => { OpenChildButtons = false; button.ClickAction(); });
+                button.Command = new MyCommand(() => { OpenChildButtons = false; button.ClickAction(); });
             }
         }
 
@@ -75,7 +73,7 @@ namespace JosephM.Application.ViewModel.Shared
             }
         }
 
-        public ICommand Command { get; private set; }
+        public MyCommand Command { get; private set; }
 
         public bool IsVisible
         {
@@ -100,7 +98,7 @@ namespace JosephM.Application.ViewModel.Shared
 
         public void Invoke()
         {
-            Command.Execute(null);
+            Command.Execute();
         }
 
         private string _description;

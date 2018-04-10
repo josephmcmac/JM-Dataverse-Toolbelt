@@ -82,16 +82,6 @@ namespace JosephM.Application.Prism.Application
             return result == MessageBoxResult.Yes;
         }
 
-        //public override void OpenRecord(string recordType, string fieldMatch, string fieldValue,
-        //    Type maintainViewModelType)
-        //{
-        //    var uriQuery = new UriQuery();
-        //    uriQuery.Add("RecordType", recordType);
-        //    uriQuery.Add(NavigationParameters.RecordIdName, fieldMatch);
-        //    uriQuery.Add(NavigationParameters.RecordId, fieldValue);
-        //    RequestNavigate(RegionNames.MainTabRegion, maintainViewModelType, uriQuery);
-        //}
-
         public override void NavigateTo(Type type, UriQuery uriQuery)
         {
             RequestNavigate(RegionNames.MainTabRegion, type, uriQuery);
