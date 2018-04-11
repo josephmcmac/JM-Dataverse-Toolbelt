@@ -2,7 +2,7 @@
 using JosephM.Application.Modules;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Diagnostics;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.Vsix.Module.Web
 {

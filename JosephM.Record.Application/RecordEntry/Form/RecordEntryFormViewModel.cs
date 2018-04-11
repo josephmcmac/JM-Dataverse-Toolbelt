@@ -254,7 +254,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     if (Validate())
                     {
                         OnSave();
-                        ApplicationController.Remove(RegionNames.MainTabRegion, this);
+                        ApplicationController.Remove(this);
                     }
                 }
                 catch (Exception ex)

@@ -1,10 +1,6 @@
-﻿#region
-
-using JosephM.Application.Prism.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
-
-#endregion
 
 namespace JosephM.Deployment.ExportXml
 {

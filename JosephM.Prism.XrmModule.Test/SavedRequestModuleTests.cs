@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.SavedRequests;
-using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.Desktop.Module.SavedRequests;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.AppConfig;
@@ -9,16 +9,16 @@ using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Attributes;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.SavedXrmConnections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
-namespace JosephM.Prism.XrmModule.Test
+namespace JosephM.XrmModule.Test
 {
     [TestClass]
     public class SavedRequestModuleTests : XrmModuleTest

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JosephM.Prism.XrmModule.SavedXrmConnections
+namespace JosephM.XrmModule.SavedXrmConnections
 {
     public interface ISavedXrmConnections
     {

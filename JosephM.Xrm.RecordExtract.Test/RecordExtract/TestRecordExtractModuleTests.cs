@@ -1,4 +1,4 @@
-﻿using JosephM.Application.Prism.Test;
+﻿using JosephM.Application.Desktop.Test;
 using JosephM.Core.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;

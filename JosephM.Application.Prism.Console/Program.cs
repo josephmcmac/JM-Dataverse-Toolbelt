@@ -1,12 +1,12 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Prism.Application;
+using JosephM.Application.Desktop.Application;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Xrm;
 using System;
 
-namespace JosephM.Application.Prism.Console
+namespace JosephM.Application.Desktop.Console
 {
     class Program
     {
@@ -16,11 +16,11 @@ namespace JosephM.Application.Prism.Console
             var applicationName = arguments.ContainsKey("SettingsFolderName") ? arguments["SettingsFolderName"] : "Unknown Console Context";
 
             //okay need to create app
-            var dependencyResolver = new PrismDependencyContainer();
+            var dependencyResolver = new DependencyContainer();
             var controller = new ConsoleApplicationController(applicationName, dependencyResolver);
             try
             {
-                var settingsManager = new PrismSettingsManager(controller);
+                var settingsManager = new DesktopSettingsManager(controller);
                 var applicationOptions = new ApplicationOptionsViewModel(controller);
                 var app = new ConsoleApplication(controller, applicationOptions, settingsManager);
                 //load modules in folder path

@@ -5,7 +5,7 @@ using JosephM.Record.IService;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Application.Prism.Module.Crud.BulkUpdate
+namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
 {
     [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalWrap, 10)]
     [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalWrap, 20)]

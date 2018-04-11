@@ -1,8 +1,7 @@
-﻿using System;
-using JosephM.Application.Modules;
+﻿using JosephM.Application.Modules;
 using JosephM.Record.Xrm.XrmRecord;
-using System.Diagnostics;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
+using System;
 
 namespace JosephM.Xrm.Vsix.Module
 {

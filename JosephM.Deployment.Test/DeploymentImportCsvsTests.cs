@@ -3,7 +3,7 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportCsvs;
-using JosephM.Prism.XrmModule.Test;
+using JosephM.XrmModule.Test;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Test;

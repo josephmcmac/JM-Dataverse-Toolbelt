@@ -1,21 +1,21 @@
-﻿using JosephM.Application.Prism.Application;
-using JosephM.Application.Prism.Console;
-using JosephM.Application.Prism.Module.AboutModule;
-using JosephM.Application.Prism.Module.ReleaseCheckModule;
-using JosephM.Application.Prism.Module.SavedRequests;
+﻿using JosephM.Application.Desktop.Application;
+using JosephM.Application.Desktop.Console;
+using JosephM.Application.Desktop.Module.AboutModule;
+using JosephM.Application.Desktop.Module.ReleaseCheckModule;
+using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.CodeGenerator.Xrm;
 using JosephM.Core.FieldType;
 using JosephM.CustomisationExporter.Exporter;
-using JosephM.CustomisationImporter.Prism;
+using JosephM.CustomisationImporter;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
-using JosephM.Prism.XrmModule.Crud;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.RecordCounts;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using System.Windows;
 
-namespace JosephM.Xrm.DeveloperTool
+namespace JosephM.XrmDeveloperTool
 {
     /// <summary>
     ///     Interaction logic for App.xaml
@@ -26,21 +26,21 @@ namespace JosephM.Xrm.DeveloperTool
         {
             base.OnStartup(e);
 
-            var prism = new PrismApplication("JosephM Xrm Developer Tool");
-            prism.AddModule<SavedXrmConnectionsModule>();
-            prism.AddModule<DeploymentModule>();
-            prism.AddModule<CodeGeneratorModule>();
-            prism.AddModule<XrmRecordExtractModule>();
-            prism.AddModule<CustomisationExporterModule>();
-            prism.AddModule<CustomisationImportModule>();
-            prism.AddModule<InstanceComparerModule>();
-            prism.AddModule<RecordCountsModule>();
-            prism.AddModule<XrmCrudModule>();
-            prism.AddModule<SavedRequestModule>();
-            prism.AddModule<ConsoleApplicationModule>();
-            prism.AddModule<XrmDeveloperToolAboutModule>();
-            prism.AddModule<DevAppReleaseCheckModule>();
-            prism.Run();
+            var app = DesktopApplication.Create("JosephM Xrm Developer Tool");
+            app.AddModule<SavedXrmConnectionsModule>();
+            app.AddModule<DeploymentModule>();
+            app.AddModule<CodeGeneratorModule>();
+            app.AddModule<XrmRecordExtractModule>();
+            app.AddModule<CustomisationExporterModule>();
+            app.AddModule<CustomisationImportModule>();
+            app.AddModule<InstanceComparerModule>();
+            app.AddModule<RecordCountsModule>();
+            app.AddModule<XrmCrudModule>();
+            app.AddModule<SavedRequestModule>();
+            app.AddModule<ConsoleApplicationModule>();
+            app.AddModule<XrmDeveloperToolAboutModule>();
+            app.AddModule<DevAppReleaseCheckModule>();
+            app.Run();
         }
 
         public class XrmDeveloperToolAboutModule : AboutModule

@@ -1,9 +1,5 @@
-﻿#region
-
-using JosephM.Application.Prism.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.Attributes;
-
-#endregion
 
 namespace JosephM.Deployment.MigrateRecords
 {

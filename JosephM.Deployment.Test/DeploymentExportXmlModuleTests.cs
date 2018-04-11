@@ -1,5 +1,5 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Prism.Module.SavedRequests;
+using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -10,7 +10,7 @@ using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportXml;
-using JosephM.Prism.XrmModule.Test;
+using JosephM.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
 using JosephM.Xrm;

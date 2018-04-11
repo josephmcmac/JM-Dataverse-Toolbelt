@@ -1,10 +1,10 @@
-﻿using JosephM.Application.Prism.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Attributes;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 
-namespace JosephM.Application.Prism.Console.Test
+namespace JosephM.Application.Desktop.Console.Test
 {
     /// <summary>
     /// module for saving a request and running in the console application

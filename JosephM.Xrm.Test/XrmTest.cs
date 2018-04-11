@@ -90,7 +90,7 @@ namespace JosephM.Xrm.Test
             if (!File.Exists(TestXrmConnectionFileName))
                 throw new NullReferenceException(
                     string.Format(
-                        "Error The Xrm Test Settings File Was Not Found At {0}. Create It Using The Save Xrm Connection Option In The Test Prism Application",
+                        "Error The Xrm Test Settings File Was Not Found At {0}. Create It Using The Save Xrm Connection Option In The Test Desktop Application",
                         TestXrmConnectionFileName));
             using (var fileStream = new FileStream(TestXrmConnectionFileName, FileMode.Open))
             {

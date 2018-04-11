@@ -1,10 +1,10 @@
-﻿using JosephM.Application.Prism.Module.Crud.BulkDelete;
-using JosephM.Application.Prism.Module.Crud.BulkUpdate;
+﻿using JosephM.Application.Desktop.Module.Crud.BulkDelete;
+using JosephM.Application.Desktop.Module.Crud.BulkUpdate;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Prism.XrmModule.Crud;
+using JosephM.XrmModule.Crud;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
-namespace JosephM.Prism.XrmModule.Test
+namespace JosephM.XrmModule.Test
 {
     [TestClass]
     public class XrmCrudModuleTest : XrmModuleTest

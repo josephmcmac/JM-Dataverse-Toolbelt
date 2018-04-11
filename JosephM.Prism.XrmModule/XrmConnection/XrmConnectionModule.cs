@@ -1,23 +1,20 @@
-﻿#region
-
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
-using JosephM.Prism.XrmModule.Crud;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.XrmModule.Crud;
 using System;
 using System.Configuration;
 
-#endregion
-
-namespace JosephM.Prism.XrmModule.XrmConnection
+namespace JosephM.XrmModule.XrmConnection
 {
     [MyDescription("Connect To A CRM Instance")]
     public class XrmConnectionModule : ActionModuleBase
     {
+
         public override void InitialiseModule()
         {
             AddSetting(MainOperationName, DialogCommand, OperationDescription);

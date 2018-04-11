@@ -247,13 +247,13 @@
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
       <Name>JosephM.ObjectMapping</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
-      <Name>JosephM.Application.Prism</Name>
+      <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.XrmModule.csproj">
       <Project>{ca2bb834-77fa-43db-8ddc-b0d1b5f519b9}</Project>
-      <Name>JosephM.Prism.XrmModule</Name>
+      <Name>JosephM.XrmModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>

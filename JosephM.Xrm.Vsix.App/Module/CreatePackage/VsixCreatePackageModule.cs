@@ -1,10 +1,10 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.Service;
 using JosephM.Deployment;
 using JosephM.Deployment.CreatePackage;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
@@ -36,7 +36,7 @@ namespace JosephM.Xrm.Vsix.Module.CreatePackage
 
             var uri = new UriQuery();
             uri.AddObject(nameof(CreatePackageDialog.Request), request);
-            ApplicationController.RequestNavigate("Main", typeof(VsixCreatePackageDialog), uri);
+            ApplicationController.NavigateTo(typeof(VsixCreatePackageDialog), uri);
         }
     }
 }

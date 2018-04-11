@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JosephM.Core.Service;
 using JosephM.Core.Attributes;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Core.FieldType;
 using JosephM.Core.Constants;
 

@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using JosephM.Core.AppConfig;
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Attributes;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.SavedXrmConnections;
+using System.Collections.Generic;
 
-namespace JosephM.Prism.XrmTestModule.DebugModule
+namespace JosephM.XrmTestModule.DebugModule
 {
     [AllowSaveAndLoad]
     public class DebugDialogRequest : ServiceRequestBase

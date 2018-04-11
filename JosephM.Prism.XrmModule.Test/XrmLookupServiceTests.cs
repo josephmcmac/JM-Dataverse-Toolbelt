@@ -10,7 +10,7 @@ using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-namespace JosephM.Prism.XrmModule.Test
+namespace JosephM.XrmModule.Test
 {
     [TestClass]
     public class XrmLookupServiceTests : XrmModuleTest

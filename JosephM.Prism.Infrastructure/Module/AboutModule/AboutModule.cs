@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace JosephM.Application.Prism.Module.AboutModule
+namespace JosephM.Application.Desktop.Module.AboutModule
 {
     [MyDescription("About This Application")]
     /// <summary>

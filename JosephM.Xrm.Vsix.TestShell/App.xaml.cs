@@ -1,5 +1,5 @@
-﻿using JosephM.Prism.TestModule.Prism.TestDialog;
-using JosephM.Prism.XrmModule.Crud;
+﻿using JosephM.TestModule.TestDialog;
+using JosephM.XrmModule.Crud;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;

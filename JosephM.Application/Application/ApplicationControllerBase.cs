@@ -60,11 +60,9 @@ namespace JosephM.Application.Application
 
         public ObservableCollection<Notification> Notifications { get; private set; }
 
-        public abstract void Remove(string regionName, object item);
+        public abstract void Remove(object item);
 
-        public abstract IEnumerable<object> GetObjects(string regionName);
-
-        public abstract void RequestNavigate(string regionName, Type type, UriQuery uriQuery);
+        public abstract IEnumerable<object> GetObjects();
 
         public Dispatcher Dispatcher { get; private set; }
 
@@ -96,11 +94,6 @@ namespace JosephM.Application.Application
                         },
                     null);
             }
-        }
-
-        public virtual void NavigateTo(Type type)
-        {
-            throw new NotImplementedException();
         }
 
         public void DoOnAsyncThread(Action action)
@@ -149,25 +142,11 @@ namespace JosephM.Application.Application
             UserMessage(ex.DisplayString());
         }
 
-        public virtual void NavigateTo(Type type, UriQuery uriQuery)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void NavigateTo(Type type, UriQuery uriQuery = null);
 
         public abstract string GetSaveFileName(string initialFileName, string extention);
 
         public abstract string GetSaveFolderName();
-
-        public virtual void SeralializeObjectToFile(object theObject, string fileName)
-        {
-            var serializer = new DataContractSerializer(theObject.GetType());
-            FileUtility.CheckCreateFolder(Path.GetDirectoryName(fileName));
-            using (
-                var fileStream = new FileStream(fileName, FileMode.Create))
-            {
-                serializer.WriteObject(fileStream, theObject);
-            }
-        }
 
         public virtual Process StartProcess(string fileName, string arguments = null)
         {
@@ -211,11 +190,6 @@ namespace JosephM.Application.Application
         }
 
         public virtual void ClearTabs()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void OpenHelp(string fileName)
         {
             throw new NotImplementedException();
         }

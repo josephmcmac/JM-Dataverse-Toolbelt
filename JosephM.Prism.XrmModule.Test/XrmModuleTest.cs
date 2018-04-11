@@ -1,16 +1,16 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
-using JosephM.Application.Prism.Test;
+using JosephM.Application.Desktop.Test;
 using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
-using JosephM.Prism.XrmModule.Crud;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.XrmConnection;
 using Microsoft.Xrm.Sdk.Client;
 
-namespace JosephM.Prism.XrmModule.Test
+namespace JosephM.XrmModule.Test
 {
     public class XrmModuleTest : XrmRecordTest
     {

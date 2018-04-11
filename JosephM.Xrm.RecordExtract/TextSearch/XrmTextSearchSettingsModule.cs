@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.Settings;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.Application.Desktop.Module.Settings;
+using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {

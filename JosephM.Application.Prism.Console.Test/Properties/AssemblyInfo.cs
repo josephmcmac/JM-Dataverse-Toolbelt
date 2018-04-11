@@ -1,12 +1,11 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("JosephM.Application.Prism.Console.Test")]
+[assembly: AssemblyTitle("JosephM.Application.Desktop.Console.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("JosephM.Application.Prism.Console.Test")]
+[assembly: AssemblyProduct("JosephM.Application.Desktop.Console.Test")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -1,13 +1,9 @@
-﻿#region
-
-using System.Windows.Controls;
-
-#endregion
+﻿using System.Windows.Controls;
 
 namespace JosephM.Wpf.Application
 {
     /// <summary>
-    ///     Interaction logic for PrismApplicationShell.xaml
+    ///     Interaction logic for ApplicationShell.xaml
     /// </summary>
     public partial class ApplicationShell : UserControl
     {

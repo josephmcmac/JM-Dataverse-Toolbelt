@@ -2,7 +2,7 @@
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 
-namespace JosephM.Application.Prism.Module.AboutModule
+namespace JosephM.Application.Desktop.Module.AboutModule
 {
     public class AboutDialog : DialogViewModel
     {

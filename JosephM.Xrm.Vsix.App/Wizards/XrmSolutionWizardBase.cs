@@ -1,9 +1,9 @@
 ﻿using EnvDTE;
 using JosephM.Application;
-using JosephM.Application.Prism.Application;
+using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
-using JosephM.Prism.XrmModule.Crud;
+using JosephM.XrmModule.Crud;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
@@ -33,7 +33,7 @@ namespace JosephM.Xrm.Vsix.Wizards
                 XrmPackageSettings.SolutionObjectPrefix = "Template";
             #endif
 
-            var container = new PrismDependencyContainer();
+            var container = new DependencyContainer();
             var applicationController = new VsixApplicationController(container);
             if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && (replacementsDictionary["$specifiedsolutionname$"] == null || replacementsDictionary["$specifiedsolutionname$"] == ""))
             {
@@ -62,7 +62,7 @@ namespace JosephM.Xrm.Vsix.Wizards
             settingsDialog.SaveSettings = false;
             var uriQuery = new UriQuery();
             uriQuery.Add("Modal", true.ToString());
-            applicationController.RequestNavigate("Main", settingsDialog, uriQuery, showCompletionScreen: false, isModal: true);
+            applicationController.NavigateTo(settingsDialog, uriQuery, showCompletionScreen: false, isModal: true);
         }
 
         public override void RunFinishedExtention()

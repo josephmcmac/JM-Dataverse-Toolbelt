@@ -1,7 +1,7 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 
-namespace JosephM.Application.Prism.Module.AboutModule
+namespace JosephM.Application.Desktop.Module.AboutModule
 {
     [Group(Sections.Application, Group.DisplayLayoutEnum.HorizontalInputOnly, 10)]
     [Group(Sections.Links, Group.DisplayLayoutEnum.HorizontalInputOnly, 40)]

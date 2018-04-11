@@ -1,8 +1,8 @@
-﻿using JosephM.Application.Prism.Module.ReleaseCheckModule;
+﻿using JosephM.Application.Desktop.Module.ReleaseCheckModule;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace JosephM.Application.Prism.Test
+namespace JosephM.Application.Desktop.Test
 {
     [TestClass]
     public class ReleaseCheckModuleTests

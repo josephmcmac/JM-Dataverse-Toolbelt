@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Prism.Module.Settings;
+using JosephM.Application.Desktop.Application;
+using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.Test;
@@ -7,7 +8,7 @@ using JosephM.Core.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-namespace JosephM.Application.Prism.Test
+namespace JosephM.Application.Desktop.Test
 {
     public class SettingsModuleTest<TSettingsModule, TDialog, TInterface, TClass> : CoreTest
         where TSettingsModule : SettingsModule<TDialog, TInterface, TClass>, new()
@@ -28,8 +29,8 @@ namespace JosephM.Application.Prism.Test
 
             var settingsFiles = FileUtility.GetFiles(fakeApplicationController.SettingsPath);
             Assert.AreEqual(1, settingsFiles.Count());
-            var prismSettingsManager = new PrismSettingsManager(fakeApplicationController);
-            var settings = prismSettingsManager.Resolve<TClass>();
+            var settingsManager = new DesktopSettingsManager(fakeApplicationController);
+            var settings = settingsManager.Resolve<TClass>();
             Assert.IsNotNull(settings);
 
             module.DialogCommand();
@@ -37,8 +38,8 @@ namespace JosephM.Application.Prism.Test
 
             settingsFiles = FileUtility.GetFiles(fakeApplicationController.SettingsPath);
             Assert.AreEqual(1, settingsFiles.Count());
-            prismSettingsManager = new PrismSettingsManager(fakeApplicationController);
-            settings = prismSettingsManager.Resolve<TClass>();
+            settingsManager = new DesktopSettingsManager(fakeApplicationController);
+            settings = settingsManager.Resolve<TClass>();
             Assert.IsNotNull(settings);
         }
     }

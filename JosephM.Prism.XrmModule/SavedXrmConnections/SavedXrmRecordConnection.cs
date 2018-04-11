@@ -1,9 +1,8 @@
-﻿using System;
-using JosephM.Core.Attributes;
-using JosephM.Record.Xrm.XrmRecord;
+﻿using JosephM.Core.Attributes;
 using JosephM.ObjectMapping;
+using JosephM.Record.Xrm.XrmRecord;
 
-namespace JosephM.Prism.XrmModule.SavedXrmConnections
+namespace JosephM.XrmModule.SavedXrmConnections
 {
     public class SavedXrmRecordConfiguration : XrmRecordConfiguration
     {

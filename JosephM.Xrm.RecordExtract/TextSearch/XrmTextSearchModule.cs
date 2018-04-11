@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.ServiceRequest;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch

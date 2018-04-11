@@ -55,9 +55,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JosephM.Application.Prism.Console\JosephM.Application.Prism.Console.csproj">
+    <ProjectReference Include="..\JosephM.Application.Prism.Console\JosephM.Application.Desktop.Console.csproj">
       <Project>{69B9950E-85BE-4AA4-9D8F-FE21639F124F}</Project>
-      <Name>JosephM.Application.Prism.Console</Name>
+      <Name>JosephM.Application.Desktop.Console</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
@@ -71,21 +71,21 @@
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Prism.Test.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Desktop.Test.csproj">
       <Project>{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}</Project>
-      <Name>JosephM.Application.Prism.Test</Name>
+      <Name>JosephM.Application.Desktop.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
-      <Name>JosephM.Application.Prism</Name>
+      <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.Prism.XrmModule.Test.csproj">
+    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.XrmModule.Test.csproj">
       <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
-      <Name>JosephM.Prism.XrmModule.Test</Name>
+      <Name>JosephM.XrmModule.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
-      <Name>JosephM.Prism.XrmModule</Name>
+      <Name>JosephM.XrmModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>

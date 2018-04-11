@@ -71,21 +71,21 @@
       <Project>{9D2F8F1B-CB77-46F2-A32B-AA7D7959A1D0}</Project>
       <Name>JosephM.InstanceComparer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Prism.Test.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Desktop.Test.csproj">
       <Project>{c0618fc1-e1ca-4b95-a8d1-0359594da1b4}</Project>
-      <Name>JosephM.Application.Prism.Test</Name>
+      <Name>JosephM.Application.Desktop.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
-      <Name>JosephM.Application.Prism</Name>
+      <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.Prism.XrmModule.Test.csproj">
+    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.XrmModule.Test.csproj">
       <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
-      <Name>JosephM.Prism.XrmModule.Test</Name>
+      <Name>JosephM.XrmModule.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.XrmModule.csproj">
       <Project>{ca2bb834-77fa-43db-8ddc-b0d1b5f519b9}</Project>
-      <Name>JosephM.Prism.XrmModule</Name>
+      <Name>JosephM.XrmModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>

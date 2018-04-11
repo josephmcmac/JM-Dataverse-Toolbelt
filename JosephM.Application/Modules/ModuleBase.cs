@@ -43,7 +43,7 @@ namespace JosephM.Application.Modules
 
         public void NavigateTo<T>(UriQuery uriQuery)
         {
-            ApplicationController.RequestNavigate(RegionNames.MainTabRegion, typeof(T), uriQuery);
+            ApplicationController.NavigateTo(typeof(T), uriQuery);
         }
 
         public void RegisterTypeForNavigation<T>()

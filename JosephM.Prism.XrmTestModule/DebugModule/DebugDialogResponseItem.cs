@@ -1,7 +1,7 @@
 ﻿using System;
 using JosephM.Core.Service;
 
-namespace JosephM.Prism.XrmTestModule.DebugModule
+namespace JosephM.XrmTestModule.DebugModule
 {
     public class DebugDialogResponseItem : ServiceResponseItem
     {

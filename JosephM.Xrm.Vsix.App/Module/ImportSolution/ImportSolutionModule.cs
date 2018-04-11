@@ -1,8 +1,8 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.FieldType;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
@@ -33,7 +33,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
             };
             var uri = new UriQuery();
             uri.AddObject(nameof(ImportSolutionDialog.Request), request);
-            ApplicationController.RequestNavigate("Main", typeof(ImportSolutionDialog), uri);
+            ApplicationController.NavigateTo(typeof(ImportSolutionDialog), uri);
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using JosephM.Application.Prism.Module.Dialog;
+﻿using JosephM.Application.Desktop.Module.Dialog;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.Test;
 
-namespace JosephM.Application.Prism.Test
+namespace JosephM.Application.Desktop.Test
 {
     public class DialogModuleTest<TModule, TDialog>
         : CoreTest

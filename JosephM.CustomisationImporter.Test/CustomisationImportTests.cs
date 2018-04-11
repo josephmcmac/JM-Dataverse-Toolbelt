@@ -1,23 +1,16 @@
-﻿#region
-
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
-using JosephM.Core.Service;
-using JosephM.CustomisationImporter.Prism;
 using JosephM.CustomisationImporter.Service;
-using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.CustomisationImporter.Test
 {
@@ -35,7 +28,7 @@ namespace JosephM.CustomisationImporter.Test
             //first script generation of C# entities and fields
             var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).First();
 
-            var response = testApplication.NavigateAndProcessDialog<CustomisationImportModule, XrmCustomisationImportDialog, CustomisationImportResponse>(request);
+            var response = testApplication.NavigateAndProcessDialog<CustomisationImportModule, CustomisationImportDialog, CustomisationImportResponse>(request);
             if (response.HasError)
                 Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
         }

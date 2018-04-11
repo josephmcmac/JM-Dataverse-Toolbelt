@@ -5,7 +5,7 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
 
-namespace JosephM.Application.Prism.Module.Crud.BulkDelete
+namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 {
     public class BulkDeleteService :
         ServiceBase<BulkDeleteRequest, BulkDeleteResponse, BulkDeleteResponseItem>

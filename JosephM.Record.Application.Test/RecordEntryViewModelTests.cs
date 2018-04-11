@@ -98,8 +98,6 @@ namespace JosephM.Application.ViewModel.Test
             };
             applicationController.RegisterInstance(typeof(SettingsTestAllFieldTypes), settingsObject);
 
-            var prismSettingsManager = new PrismSettingsManager(applicationController);
-
             //create the form
             var testObject = new TestAllFieldTypes();
 

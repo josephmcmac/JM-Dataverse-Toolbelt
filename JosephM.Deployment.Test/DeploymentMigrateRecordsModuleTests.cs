@@ -1,21 +1,12 @@
-﻿using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.Query;
-using JosephM.Application.ViewModel.RecordEntry.Field;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
-using JosephM.Deployment.ImportXml;
 using JosephM.Deployment.MigrateRecords;
-using JosephM.Prism.XrmModule.Test;
-using JosephM.Record.Extentions;
-using JosephM.Record.Query;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
-using JosephM.Xrm.Test;
+using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace JosephM.Deployment.Test
 {

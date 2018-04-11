@@ -1,4 +1,4 @@
-﻿using JosephM.Application.Prism.Test;
+﻿using JosephM.Application.Desktop.Test;
 using JosephM.Xrm.RecordExtract.TextSearch;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

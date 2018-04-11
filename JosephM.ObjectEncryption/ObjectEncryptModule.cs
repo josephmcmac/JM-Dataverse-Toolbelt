@@ -1,6 +1,6 @@
 ﻿
 
-using JosephM.Application.Prism.Module.Dialog;
+using JosephM.Application.Desktop.Module.Dialog;
 
 namespace JosephM.ObjectEncryption
 {

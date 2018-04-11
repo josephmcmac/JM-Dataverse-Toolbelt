@@ -14,10 +14,10 @@ using System.Linq;
 
 #endregion
 
-namespace JosephM.Application.Prism.Console
+namespace JosephM.Application.Desktop.Console
 {
     /// <summary>
-    ///     Implementation Of IApplicationController For The Prism Application
+    ///     Implementation Of IApplicationController For The Console Application
     /// </summary>
     public class ConsoleDialogController : DialogController
     {

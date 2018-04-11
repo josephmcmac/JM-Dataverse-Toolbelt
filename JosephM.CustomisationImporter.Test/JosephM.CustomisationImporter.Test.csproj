@@ -104,17 +104,17 @@
       <Project>{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}</Project>
       <Name>JosephM.CustomisationImporter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Prism.Test.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Desktop.Test.csproj">
       <Project>{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}</Project>
-      <Name>JosephM.Application.Prism.Test</Name>
+      <Name>JosephM.Application.Desktop.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
-      <Name>JosephM.Application.Prism</Name>
+      <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.Prism.XrmModule.Test.csproj">
+    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.XrmModule.Test.csproj">
       <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
-      <Name>JosephM.Prism.XrmModule.Test</Name>
+      <Name>JosephM.XrmModule.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>

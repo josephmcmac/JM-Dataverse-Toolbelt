@@ -1,5 +1,4 @@
-﻿using JosephM.Core.FieldType;
-using JosephM.Prism.XrmModule.Test;
+﻿using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JosephM.InstanceComparer.Test

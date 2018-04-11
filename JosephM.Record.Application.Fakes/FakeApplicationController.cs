@@ -4,7 +4,6 @@ using JosephM.Application.Application;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Test;
-using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,50 +26,31 @@ namespace JosephM.Application.ViewModel.Fakes
         }
 
         public FakeApplicationController()
-            : this(new FakesDependencyContainer())
+            : this(new DependencyContainer())
         {
         }
 
-        public override void Remove(string regionName, object item)
+        public override void Remove(object item)
         {
-            if (_regions.ContainsKey(regionName) && _regions[regionName].Contains(item))
-                _regions[regionName].Remove(item);
+            if( _loadedObjects.Contains(item))
+                _loadedObjects.Remove(item);
         }
 
-        public override IEnumerable<object> GetObjects(string regionName)
+        public override IEnumerable<object> GetObjects()
         {
-            return _regions.ContainsKey(regionName)
-                ? _regions[regionName]
-                : new List<object>();
+            return _loadedObjects;
         }
 
-        private readonly IDictionary<string, List<object>> _regions = new Dictionary<string, List<object>>();
+        private readonly List<object> _loadedObjects = new List<object>();
 
 
-        public override void RequestNavigate(string regionName, Type type, UriQuery uriQuery)
+        private void RequestNavigate(Type type, UriQuery uriQuery)
         {
             ClearTabs();
 
             var resolvedType = Container.ResolveType(type);
 
-            if (!_regions.ContainsKey(regionName))
-                _regions.Add(regionName, new List<object>());
-            _regions[regionName].Add(resolvedType);
-
-            if (type.IsTypeOf(typeof(INavigationAware)))
-            {
-                var uri = new Uri(type.FullName, UriKind.Relative);
-                var navigationParameters = new NavigationParameters();
-                if (uriQuery.Arguments != null)
-                {
-                    foreach (var item in uriQuery.Arguments)
-                    {
-                        navigationParameters.Add(item.Key, item.Value);
-                    }
-                }
-                var navigationContext = new NavigationContext(new FakeRegionNavigationService(), uri, navigationParameters);
-                ((INavigationAware)resolvedType).OnNavigatedTo(navigationContext);
-            }
+            _loadedObjects.Add(resolvedType);
         }
 
         public override void UserMessage(string message)
@@ -100,8 +80,7 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public override void ClearTabs()
         {
-            if (_regions.ContainsKey(RegionNames.MainTabRegion))
-                _regions[RegionNames.MainTabRegion].Clear();
+            _loadedObjects.Clear();
         }
 
         public override Process StartProcess(string fileName, string arguments = null)
@@ -116,7 +95,7 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public override void NavigateTo(Type type, UriQuery uriQuery)
         {
-            RequestNavigate(RegionNames.MainTabRegion, type, uriQuery);
+            RequestNavigate(type, uriQuery);
         }
     }
 }

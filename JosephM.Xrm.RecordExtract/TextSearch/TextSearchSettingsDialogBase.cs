@@ -1,10 +1,6 @@
-﻿#region
-
-using JosephM.Application.Prism.Module.Settings;
+﻿using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.IService;
-
-#endregion
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {

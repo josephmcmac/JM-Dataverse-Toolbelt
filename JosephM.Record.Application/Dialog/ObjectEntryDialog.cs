@@ -1,11 +1,7 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JosephM.Application.Application;
 using JosephM.Record.IService;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.Dialog
 {

@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Modules;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;

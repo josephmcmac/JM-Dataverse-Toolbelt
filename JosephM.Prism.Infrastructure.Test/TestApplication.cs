@@ -1,13 +1,12 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Options;
-using JosephM.Application.Prism.Module.Dialog;
+using JosephM.Application.Desktop.Application;
+using JosephM.Application.Desktop.Module.Dialog;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -15,7 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Application.Prism.Test
+namespace JosephM.Application.Desktop.Test
 {
     public class TestApplication : ApplicationBase
     {
@@ -24,7 +23,7 @@ namespace JosephM.Application.Prism.Test
             if(applicationController == null)
                 applicationController = new FakeApplicationController();
             if (settingsManager == null)
-                settingsManager = new PrismSettingsManager(applicationController);
+                settingsManager = new DesktopSettingsManager(applicationController);
             return new TestApplication(applicationController, settingsManager);
         }
 
@@ -38,7 +37,7 @@ namespace JosephM.Application.Prism.Test
             where T : DialogViewModel
         {
             var objects = Controller
-                            .GetObjects(RegionNames.MainTabRegion)
+                            .GetObjects()
                             .Where(o => o.GetType().IsTypeOf(typeof(T)))
                             .ToList();
             if (index == 0)

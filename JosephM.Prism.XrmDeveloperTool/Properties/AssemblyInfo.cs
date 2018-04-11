@@ -10,9 +10,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("JosephM.Xrm.DeveloperTool")]
+[assembly: AssemblyTitle("JosephM.XrmDeveloperTool")]
 [assembly: AssemblyCompany("JosephM")]
-[assembly: AssemblyProduct("JosephM.Xrm.DeveloperTool")]
+[assembly: AssemblyProduct("JosephM.XrmDeveloperTool")]
 [assembly: AssemblyVersion("2.0.*")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

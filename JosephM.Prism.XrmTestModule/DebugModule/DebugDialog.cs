@@ -1,8 +1,8 @@
-﻿using JosephM.Application.Prism.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
 
-namespace JosephM.Prism.XrmTestModule.DebugModule
+namespace JosephM.XrmTestModule.DebugModule
 {
     public class DebugDialog :
         ServiceRequestDialog<DebugDialogService, DebugDialogRequest, DebugDialogResponse, DebugDialogResponseItem>

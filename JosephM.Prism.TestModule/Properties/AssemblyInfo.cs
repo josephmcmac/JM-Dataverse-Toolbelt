@@ -8,11 +8,11 @@ using System.Reflection;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("JosephM.Prism.TestModule")]
+[assembly: AssemblyTitle("JosephM.TestModule")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("JosephM")]
-[assembly: AssemblyProduct("JosephM.Prism.TestModule")]
+[assembly: AssemblyProduct("JosephM.TestModule")]
 [assembly: AssemblyCopyright("Copyright © JosephM 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

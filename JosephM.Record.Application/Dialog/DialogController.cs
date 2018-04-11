@@ -26,7 +26,7 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public void Close()
         {
-            ApplicationController.Remove(RegionNames.MainTabRegion, MainDialog);
+            ApplicationController.Remove(MainDialog);
             if (MainDialog.OverideCompletionScreenMethod != null)
                 MainDialog.OverideCompletionScreenMethod();
         }

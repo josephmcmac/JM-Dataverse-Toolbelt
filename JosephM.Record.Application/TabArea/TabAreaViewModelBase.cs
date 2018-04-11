@@ -3,7 +3,6 @@
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Extentions;
-using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -14,7 +13,7 @@ namespace JosephM.Application.ViewModel.TabArea
     /// <summary>
     ///     Base Class For A ViewModel Object Displayed In The Main Tab Area Region Of The Application
     /// </summary>
-    public abstract class TabAreaViewModelBase : ViewModelBase, INavigationAware
+    public abstract class TabAreaViewModelBase : ViewModelBase
     {
         protected TabAreaViewModelBase(IApplicationController controller)
             : base(controller)
@@ -35,7 +34,7 @@ namespace JosephM.Application.ViewModel.TabArea
         protected void OnTabClose()
         {
             if (ConfirmTabClose())
-                ApplicationController.Remove(RegionNames.MainTabRegion, this);
+                ApplicationController.Remove(this);
         }
 
         public LoadingViewModel LoadingViewModel { get; set; }
@@ -95,22 +94,5 @@ namespace JosephM.Application.ViewModel.TabArea
                 return !ChildForms.Any();
             }
         }
-
-        #region INavigationAware Members
-
-        public virtual bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return false;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-        }
-
-        public virtual void OnNavigatedTo(NavigationContext navigationContext)
-        {
-        }
-
-        #endregion
     }
 }

@@ -54,10 +54,10 @@
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="applicationHeadingTemplate">
-        <application:ApplicationHeadingView DataContext="{Binding}" />
+        <application:ApplicationHeadingView DataContext="{Binding ApplicationController}" />
     </DataTemplate>
     <DataTemplate x:Key="applicationMenuViewTemplate">
-        <application:ApplicationOptionsView DataContext="{Binding}" />
+        <application:ApplicationOptionsView DataContext="{Binding ApplicationOptions}" />
     </DataTemplate>
     <DataTemplate x:Key="OptionTemplate">
         <application:ApplicationMenuGroupView Content="{Binding Label}"  />

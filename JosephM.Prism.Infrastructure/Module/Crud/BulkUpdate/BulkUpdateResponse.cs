@@ -1,6 +1,6 @@
 ﻿using JosephM.Core.Service;
 
-namespace JosephM.Application.Prism.Module.Crud.BulkUpdate
+namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
 {
     public class BulkUpdateResponse : ServiceResponseBase<BulkUpdateResponseItem>
     {

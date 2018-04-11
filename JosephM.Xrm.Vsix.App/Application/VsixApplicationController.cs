@@ -5,7 +5,7 @@ using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Serialisation;
 using JosephM.ObjectMapping;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Wpf.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
@@ -27,19 +27,19 @@ namespace JosephM.Xrm.Vsix.Application
         {
             _remove = action;
         }
-        public override void Remove(string regionName, object item)
+        public override void Remove(object item)
         {
             if (_remove != null)
                 _remove(item);
         }
 
-        public override void RequestNavigate(string regionName, Type type, UriQuery uriQuery)
+        public override void NavigateTo(Type type, UriQuery uriQuery = null)
         {
             var navigationObject = ResolveType(type);
-            RequestNavigate(regionName, navigationObject, uriQuery);
+            NavigateTo(navigationObject, uriQuery, showCompletionScreen: true, isModal: false);
         }
 
-        public void RequestNavigate(string regionName, object navigationObject, UriQuery uriQuery, bool showCompletionScreen = true, bool isModal = false)
+        public void NavigateTo(object navigationObject, UriQuery uriQuery, bool showCompletionScreen = true, bool isModal = false)
         {
             uriQuery = uriQuery ?? new UriQuery();
 
@@ -149,7 +149,7 @@ namespace JosephM.Xrm.Vsix.Application
                 : null;
         }
 
-        public override IEnumerable<object> GetObjects(string regionName)
+        public override IEnumerable<object> GetObjects()
         {
             throw new NotImplementedException();
         }

@@ -1,9 +1,9 @@
-﻿using JosephM.Application.Prism.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.IService;
 using System;
 
-namespace JosephM.Application.Prism.Module.Crud.BulkDelete
+namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 {
     public class BulkDeleteDialog :
         ServiceRequestDialog<BulkDeleteService, BulkDeleteRequest, BulkDeleteResponse, BulkDeleteResponseItem>

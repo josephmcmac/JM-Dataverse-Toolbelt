@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Core.Extentions;
 using JosephM.Core.Serialisation;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
@@ -27,7 +27,7 @@ namespace JosephM.Xrm.Vsix.Application
             string read = fileName != null ? VisualStudioService.GetSolutionItemText(fileName) : null;
 
             if (string.IsNullOrEmpty(read))
-                return (TSettingsObject)type.CreateFromParameterlessConstructor();
+                return new TSettingsObject();
             else
             {
                 if (type == typeof(XrmRecordConfiguration))
@@ -70,6 +70,10 @@ namespace JosephM.Xrm.Vsix.Application
             if (type == typeof(XrmRecordConfiguration))
                 return "solution.xrmconnection";
             return null;
+        }
+
+        void ISettingsManager.ProcessNamespaceChange(string newNamespace, string oldNamespace)
+        {
         }
     }
 }

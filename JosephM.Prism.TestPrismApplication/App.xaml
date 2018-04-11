@@ -1,6 +1,6 @@
-﻿<Application x:Class="JosephM.Prism.TestPrismApplication.App"
+﻿<Application x:Class="JosephM.TestDesktopApplication.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:prism="http://www.codeplex.com/prism">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources></Application.Resources>
 
 </Application>

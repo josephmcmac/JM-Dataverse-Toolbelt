@@ -1,6 +1,6 @@
 ﻿using System;
 using JosephM.Application.Modules;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
@@ -15,7 +15,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
         public override void DialogCommand()
         {
-            ApplicationController.RequestNavigate("Main", typeof(ManagePluginTriggersDialog), null);
+            ApplicationController.NavigateTo(typeof(ManagePluginTriggersDialog), null);
         }
     }
 }

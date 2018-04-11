@@ -2,7 +2,7 @@
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.SavedXrmConnections;
 using System.Collections.Generic;
 
 namespace JosephM.InstanceComparer

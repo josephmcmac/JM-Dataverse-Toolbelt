@@ -2,7 +2,7 @@
 using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
 using JosephM.Deployment.ImportCsvs;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
 using System;
 using System.Linq;
@@ -40,7 +40,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportCsvs
             var uri = new UriQuery();
             uri.AddObject(nameof(ImportCsvsDialog.Request), request);
             uri.AddObject(nameof(ImportCsvsDialog.SkipObjectEntry), true);
-            ApplicationController.RequestNavigate("Main", typeof(ImportCsvsDialog), uri);
+            ApplicationController.NavigateTo(typeof(ImportCsvsDialog), uri);
         }
     }
 }

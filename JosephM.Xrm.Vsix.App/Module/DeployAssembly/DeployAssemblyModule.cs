@@ -1,7 +1,6 @@
-﻿using System;
-using JosephM.Application.Modules;
-using JosephM.Prism.XrmModule.XrmConnection;
+﻿using JosephM.Application.Modules;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 {
@@ -15,7 +14,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
         public override void DialogCommand()
         {
-            ApplicationController.RequestNavigate("Main", typeof(DeployAssemblyDialog), null);
+            ApplicationController.NavigateTo(typeof(DeployAssemblyDialog), null);
         }
     }
 }
