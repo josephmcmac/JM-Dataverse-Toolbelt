@@ -1,8 +1,8 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Prism.Module.Dialog;
+using JosephM.Application.Desktop.Module.Dialog;
 using JosephM.Core.AppConfig;
 
-namespace JosephM.Application.Prism.Module.Settings
+namespace JosephM.Application.Desktop.Module.Settings
 {
     /// <summary>
     ///     Base Class For A Module Which Plugs A Settings Type Into The Application

@@ -1,9 +1,9 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
-using JosephM.CustomisationImporter.Prism;
+using JosephM.CustomisationImporter;
 using JosephM.CustomisationImporter.Service;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
@@ -46,8 +46,8 @@ namespace JosephM.Xrm.Vsix.Module.CustomisationImport
             xrmService.ClearCache();
 
             var uri = new UriQuery();
-            uri.AddObject(nameof(XrmCustomisationImportDialog.Request), request);
-            ApplicationController.RequestNavigate("Main", typeof(XrmCustomisationImportDialog), uri);
+            uri.AddObject(nameof(CustomisationImportDialog.Request), request);
+            ApplicationController.NavigateTo(typeof(CustomisationImportDialog), uri);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 using JosephM.ObjectEncryption;
 
-namespace JosephM.Prism.TestModule.ObjectEncrypt
+namespace JosephM.TestModule.ObjectEncrypt
 {
     public class TestObjectEncryptDialog : ObjectEncryptDialog<TestClassToEncrypt>
     {

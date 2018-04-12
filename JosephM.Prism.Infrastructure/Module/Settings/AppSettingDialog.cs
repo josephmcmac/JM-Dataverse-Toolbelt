@@ -1,14 +1,10 @@
-﻿#region
-
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
 using JosephM.ObjectMapping;
 using JosephM.Record.IService;
 
-#endregion
-
-namespace JosephM.Application.Prism.Module.Settings
+namespace JosephM.Application.Desktop.Module.Settings
 {
     /// <summary>
     ///     Base Class Implementing A Dialog To Enter And Save User Defined Settings

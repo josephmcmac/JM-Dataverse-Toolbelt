@@ -1,7 +1,7 @@
 ﻿using JosephM.Core.Service;
 using System;
 
-namespace JosephM.Application.Prism.Module.Crud.BulkDelete
+namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 {
     public class BulkDeleteResponseItem : ServiceResponseItem
     {

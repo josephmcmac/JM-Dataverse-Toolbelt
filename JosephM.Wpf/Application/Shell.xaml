@@ -4,6 +4,6 @@
         xmlns:application="clr-namespace:JosephM.Wpf.Application"
         Title="{Binding ApplicationName}" Height="600" Width="800" WindowState="Maximized">
     <Grid>
-        <application:ApplicationShell />
+        <application:ApplicationShell DataContext="{Binding}" />
     </Grid>
 </Window>

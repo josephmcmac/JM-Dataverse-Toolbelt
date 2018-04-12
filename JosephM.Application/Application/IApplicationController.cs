@@ -22,12 +22,7 @@ namespace JosephM.Application.Application
         /// <summary>
         ///     Removes An Object From The UI Region In The Application
         /// </summary>
-        void Remove(string regionName, object item);
-
-        /// <summary>
-        ///     Invokes A Request To Open Something defined by The Uri In The UI Region
-        /// </summary>
-        void RequestNavigate(string regionName, Type type, UriQuery uriQuery);
+        void Remove(object item);
 
         /// <summary>
         ///     Invokes A Popup With A Message For The User
@@ -67,11 +62,8 @@ namespace JosephM.Application.Application
 
         string GetSaveFolderName();
 
-        void SeralializeObjectToFile(object theObject, string fileName);
-
         Process StartProcess(string fileName, string arguments = null);
 
-        void OpenHelp(string fileName);
         void AddNotification(string id, string notification, bool isLoading = false);
 
         void OpenFile(string fileName);

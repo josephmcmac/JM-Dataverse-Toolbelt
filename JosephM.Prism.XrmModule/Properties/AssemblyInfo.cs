@@ -9,9 +9,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("JosephM.Prism.XrmModule")]
+[assembly: AssemblyTitle("JosephM.XrmModule")]
 [assembly: AssemblyCompany("JosephM")]
-[assembly: AssemblyProduct("JosephM.Prism.XrmModule")]
+[assembly: AssemblyProduct("JosephM.XrmModule")]
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM

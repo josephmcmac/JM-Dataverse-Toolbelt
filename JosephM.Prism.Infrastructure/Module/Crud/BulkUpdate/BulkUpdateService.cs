@@ -5,7 +5,7 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
 
-namespace JosephM.Application.Prism.Module.Crud.BulkUpdate
+namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
 {
     public class BulkUpdateService :
         ServiceBase<BulkUpdateRequest, BulkUpdateResponse, BulkUpdateResponseItem>

@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace JosephM.Application.Prism.Module.SavedRequests
+namespace JosephM.Application.Desktop.Module.SavedRequests
 {
     /// <summary>
     /// This module adds a function to save (and subsequently load) details entered into a service request object

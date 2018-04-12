@@ -1,14 +1,8 @@
-﻿#region
-
-using JosephM.Core.Attributes;
-using JosephM.Core.Constants;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using JosephM.Deployment.ExportXml;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.SavedXrmConnections;
 using System.Collections.Generic;
-
-#endregion
 
 namespace JosephM.Deployment.MigrateRecords
 {

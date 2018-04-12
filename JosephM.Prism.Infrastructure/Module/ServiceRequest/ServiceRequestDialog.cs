@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace JosephM.Application.Prism.Module.ServiceRequest
+namespace JosephM.Application.Desktop.Module.ServiceRequest
 {
     /// <summary>
     ///     Base Class implementing A Dialog Which Executes The Main Method Provided By A Service
@@ -62,7 +62,7 @@ namespace JosephM.Application.Prism.Module.ServiceRequest
         protected override void LoadDialogExtention()
         {
             var savedRequests = ApplicationController
-                .ResolveType<PrismSettingsManager>()
+                .ResolveType<ISettingsManager>()
                 .Resolve<SavedSettings>(typeof(TRequest));
 
             if (savedRequests != null && savedRequests.SavedRequests != null)

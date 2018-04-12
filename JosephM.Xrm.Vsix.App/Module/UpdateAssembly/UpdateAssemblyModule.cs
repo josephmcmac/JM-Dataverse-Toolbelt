@@ -1,5 +1,5 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 
 namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
@@ -14,7 +14,7 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 
         public override void DialogCommand()
         {
-            ApplicationController.RequestNavigate("Main", typeof(UpdateAssemblyDialog), null);
+            ApplicationController.NavigateTo(typeof(UpdateAssemblyDialog), null);
         }
     }
 }

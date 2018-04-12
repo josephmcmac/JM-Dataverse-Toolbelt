@@ -1,4 +1,4 @@
-﻿using JosephM.Application.Prism.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;

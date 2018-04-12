@@ -24,12 +24,12 @@ namespace JosephM.Xrm.Vsix.Test
             _regions.Add(dialog);
         }
 
-        public override void Remove(string regionName, object item)
+        public override void Remove(object item)
         {
             _regions.Remove(item);
         }
 
-        public override IEnumerable<object> GetObjects(string regionName)
+        public override IEnumerable<object> GetObjects()
         {
             return _regions;
         }

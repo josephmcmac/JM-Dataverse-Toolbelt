@@ -2,8 +2,8 @@
 
 using JosephM.Application.Application;
 using JosephM.Application.Options;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Extentions;
-using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,8 +24,8 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
             Options = new ObservableCollection<MenuGroupViewModel>();
             Settings = new ObservableCollection<ApplicationOption>();
             Helps = new ObservableCollection<ApplicationOption>();
-            SettingsClick = new DelegateCommand(() => { OpenSettings = true; });
-            HelpClick = new DelegateCommand(() => { OpenHelp = true; });
+            SettingsClick = new MyCommand(() => { OpenSettings = true; });
+            HelpClick = new MyCommand(() => { OpenHelp = true; });
         }
 
         public IEnumerable<IApplicationOption> GetAllOptions()
@@ -113,7 +113,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
             }
         }
 
-        public DelegateCommand SettingsClick { get; set; }
+        public MyCommand SettingsClick { get; set; }
 
         private bool _openSettings;
 
@@ -132,7 +132,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
             get { return Settings.Any(); }
         }
 
-        public DelegateCommand HelpClick { get; set; }
+        public MyCommand HelpClick { get; set; }
 
         private bool _openHelp;
 

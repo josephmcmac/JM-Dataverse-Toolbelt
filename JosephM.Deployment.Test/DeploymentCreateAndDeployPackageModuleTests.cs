@@ -4,7 +4,7 @@ using JosephM.Core.Utility;
 using JosephM.Deployment.CreatePackage;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Deployment.ExportXml;
-using JosephM.Prism.XrmModule.Test;
+using JosephM.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

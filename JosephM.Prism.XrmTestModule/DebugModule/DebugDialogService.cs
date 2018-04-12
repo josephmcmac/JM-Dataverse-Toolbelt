@@ -2,7 +2,7 @@
 using JosephM.Core.Service;
 using JosephM.Record.Xrm.XrmRecord;
 
-namespace JosephM.Prism.XrmTestModule.DebugModule
+namespace JosephM.XrmTestModule.DebugModule
 {
     public class DebugDialogService :
         ServiceBase<DebugDialogRequest, DebugDialogResponse, DebugDialogResponseItem>

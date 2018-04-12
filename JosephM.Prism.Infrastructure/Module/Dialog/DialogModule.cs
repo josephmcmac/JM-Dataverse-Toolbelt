@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Core.Extentions;
 
-namespace JosephM.Application.Prism.Module.Dialog
+namespace JosephM.Application.Desktop.Module.Dialog
 {
     public abstract class DialogModule<TDialog> : OptionActionModule
     {

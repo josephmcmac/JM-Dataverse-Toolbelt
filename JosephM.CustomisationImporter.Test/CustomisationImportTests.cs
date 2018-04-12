@@ -1,21 +1,16 @@
-﻿#region
-
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
-using JosephM.CustomisationImporter.Prism;
 using JosephM.CustomisationImporter.Service;
-using JosephM.Prism.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.CustomisationImporter.Test
 {
@@ -31,9 +26,9 @@ namespace JosephM.CustomisationImporter.Test
             var testApplication = CreateAndLoadTestApplication<CustomisationImportModule>();
 
             //first script generation of C# entities and fields
-            var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).ElementAt(1);
+            var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).First();
 
-            var response = testApplication.NavigateAndProcessDialog<CustomisationImportModule, XrmCustomisationImportDialog, CustomisationImportResponse>(request);
+            var response = testApplication.NavigateAndProcessDialog<CustomisationImportModule, CustomisationImportDialog, CustomisationImportResponse>(request);
             if (response.HasError)
                 Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
         }
@@ -421,20 +416,11 @@ namespace JosephM.CustomisationImporter.Test
                         Controller, response);
                 foreach (var metadata in optionMetadata)
                 {
-                    try
-                    {
-                        if (metadata.IsSharedOptionSet &&
+                    if (metadata.IsSharedOptionSet &&
                         XrmRecordService.GetSharedPicklists().Any(p => p.SchemaName == metadata.SchemaName))
-                        {
-                            XrmRecordService.DeleteSharedOptionSet(metadata.SchemaName);
-                        }
-                    }
-                    catch(Exception)
-                    {
-
-                    }
+                        XrmRecordService.DeleteSharedOptionSet(metadata.SchemaName);
+                    Assert.IsFalse(XrmRecordService.GetSharedPicklists().Any(p => p.SchemaName == metadata.SchemaName));
                 }
-                
             }
         }
 
@@ -455,17 +441,9 @@ namespace JosephM.CustomisationImporter.Test
                 foreach (
                     var metadata in recordMetadata)
                 {
-                    try
-                    {
-                        if (XrmRecordService.RecordTypeExists(metadata.SchemaName))
-                        {
-                            XrmRecordService.DeleteRecordType(metadata.SchemaName);
-                        }
-                    }
-                    catch(Exception)
-                    {
-
-                    }
+                    if (XrmRecordService.RecordTypeExists(metadata.SchemaName))
+                        XrmRecordService.DeleteRecordType(metadata.SchemaName);
+                    Assert.IsFalse(XrmRecordService.RecordTypeExists(metadata.SchemaName));
                 }
             }
         }
@@ -476,7 +454,6 @@ namespace JosephM.CustomisationImporter.Test
 
             foreach (var request in requests)
             {
-
                 foreach (
                     var metadata in
                         CustomisationImportService.ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName,
@@ -484,19 +461,13 @@ namespace JosephM.CustomisationImporter.Test
                 {
                     if (XrmRecordService.RecordTypeExists(metadata.RecordType1))
                     {
-                        try
-                        {
-                            if (
-                                XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
-                                    .Any(r => r.SchemaName == metadata.SchemaName))
-                            {
-                                XrmRecordService.DeleteRelationship(metadata.SchemaName);
-                            }
-                        }
-                        catch(Exception)
-                        {
-
-                        }
+                        if (
+                            XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
+                                .Any(r => r.SchemaName == metadata.SchemaName))
+                            XrmRecordService.DeleteRelationship(metadata.SchemaName);
+                        Assert.IsFalse(
+                            XrmRecordService.GetManyToManyRelationships(metadata.RecordType1)
+                                .Any(r => r.SchemaName == metadata.SchemaName));
                     }
                 }
             }

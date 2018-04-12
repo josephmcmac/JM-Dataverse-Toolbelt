@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace JosephM.Application.Modules
 {
     /// <summary>
-    /// Container Object For The Required Objects For A Prism Module To Initialise
+    /// Container Object For The Required Objects For A Module To Initialise
     /// </summary>
     public class ModuleController
     {

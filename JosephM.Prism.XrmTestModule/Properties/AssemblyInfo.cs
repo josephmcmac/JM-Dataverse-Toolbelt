@@ -9,9 +9,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("JosephM.Prism.XrmTestModule")]
+[assembly: AssemblyTitle("JosephM.XrmTestModule")]
 [assembly: AssemblyCompany("JosephM")]
-[assembly: AssemblyProduct("JosephM.Prism.XrmTestModule")]
+[assembly: AssemblyProduct("JosephM.XrmTestModule")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

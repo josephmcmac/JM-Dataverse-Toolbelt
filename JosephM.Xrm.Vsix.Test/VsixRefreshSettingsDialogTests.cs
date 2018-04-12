@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;

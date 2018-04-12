@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
-using JosephM.Prism.XrmModule.Test;
+using JosephM.XrmModule.Test;
 using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;

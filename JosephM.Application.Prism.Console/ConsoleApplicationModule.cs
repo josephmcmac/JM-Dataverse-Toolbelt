@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.CommandLine;
-using JosephM.Application.Prism.Module.SavedRequests;
+using JosephM.Application.Desktop.Module.CommandLine;
+using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.Service;
@@ -12,7 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace JosephM.Application.Prism.Console
+namespace JosephM.Application.Desktop.Console
 {
     [DependantModule(typeof(SavedRequestModule))]
     /// <summary>

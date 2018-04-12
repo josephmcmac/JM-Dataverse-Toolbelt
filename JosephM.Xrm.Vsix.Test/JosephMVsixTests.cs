@@ -1,13 +1,13 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Prism.Test;
+using JosephM.Application.Desktop.Test;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Utility;
 using JosephM.ObjectMapping;
-using JosephM.Prism.XrmModule.Crud;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.Test;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;

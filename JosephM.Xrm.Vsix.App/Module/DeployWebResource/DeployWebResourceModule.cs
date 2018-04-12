@@ -1,10 +1,10 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.ServiceRequest;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 
 namespace JosephM.Xrm.Vsix.Module.DeployWebResource
 {
@@ -27,7 +27,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
             var uri = new UriQuery();
             uri.AddObject(nameof(DeployWebResourceDialog.Request), request);
             uri.AddObject(nameof(DeployWebResourceDialog.SkipObjectEntry), true);
-            ApplicationController.RequestNavigate("Main", typeof(DeployWebResourceDialog), uri);
+            ApplicationController.NavigateTo(typeof(DeployWebResourceDialog), uri);
         }
     }
 }

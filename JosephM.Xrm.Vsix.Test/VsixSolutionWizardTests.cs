@@ -1,5 +1,5 @@
-﻿using JosephM.Application.Prism.Test;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+﻿using JosephM.Application.Desktop.Test;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Wizards;
@@ -57,7 +57,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsTrue(packageSettings.Connections.Any());
             Assert.AreEqual(connectionToEnter.OrganizationUniqueName, packageSettings.Connections.First().OrganizationUniqueName);
 
-            if(applicationController.GetObjects("Main").Any())
+            if(applicationController.GetObjects().Any())
                 Assert.Inconclusive("Haven't verified closure of the form after entry instead of navigation to completion screen");
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JosephM.Application.Prism.Module.CommandLine
+namespace JosephM.Application.Desktop.Module.CommandLine
 {
     public class CommandLineArgument
     {

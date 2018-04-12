@@ -58,8 +58,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>JosephM.XrmDeveloperTool.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -112,14 +111,7 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.Prism, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Microsoft.Practices.Prism.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -168,15 +160,14 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Developer Tool Read Me.docx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JosephM.Application.Prism.Console\JosephM.Application.Prism.Console.csproj">
+    <ProjectReference Include="..\JosephM.Application.Prism.Console\JosephM.Application.Desktop.Console.csproj">
       <Project>{69B9950E-85BE-4AA4-9D8F-FE21639F124F}</Project>
-      <Name>JosephM.Application.Prism.Console</Name>
+      <Name>JosephM.Application.Desktop.Console</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
@@ -206,13 +197,13 @@
       <Project>{9D2F8F1B-CB77-46F2-A32B-AA7D7959A1D0}</Project>
       <Name>JosephM.InstanceComparer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Prism.csproj">
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
-      <Name>JosephM.Application.Prism</Name>
+      <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.Prism.XrmModule.csproj">
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
-      <Name>JosephM.Prism.XrmModule</Name>
+      <Name>JosephM.XrmModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>

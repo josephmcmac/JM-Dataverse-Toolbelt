@@ -1,10 +1,10 @@
 ﻿
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Attributes;
 using JosephM.Record.Query;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.SavedXrmConnections;
 using System.Collections.Generic;
 
 namespace JosephM.Xrm.Vsix.Module.PackageSettings

@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.Settings;
-using JosephM.Application.Prism.Test;
+using JosephM.Application.Desktop.Module.Settings;
+using JosephM.Application.Desktop.Test;
 using JosephM.Xrm.RecordExtract.TextSearch;
 
 namespace JosephM.Xrm.RecordExtract.Test.TextSearch

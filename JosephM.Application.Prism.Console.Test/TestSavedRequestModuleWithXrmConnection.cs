@@ -1,14 +1,14 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Attributes;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
 using System;
 
-namespace JosephM.Application.Prism.Console.Test
+namespace JosephM.Application.Desktop.Console.Test
 {
     /// <summary>
     /// module for saving a request and running in the console application

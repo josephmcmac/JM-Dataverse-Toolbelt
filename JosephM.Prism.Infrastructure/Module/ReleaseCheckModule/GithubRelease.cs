@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JosephM.Application.Prism.Module.ReleaseCheckModule
+namespace JosephM.Application.Desktop.Module.ReleaseCheckModule
 {
     public class GithubRelease
     {

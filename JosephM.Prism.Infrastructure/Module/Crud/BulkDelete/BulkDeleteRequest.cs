@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Application.Prism.Module.Crud.BulkDelete
+namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 {
     [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalWrap, 10)]
     public class BulkDeleteRequest : ServiceRequestBase

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JosephM.Application.Prism.Console.Test
+namespace JosephM.Application.Desktop.Console.Test
 {
     public class ConsoleTestUtility
     {

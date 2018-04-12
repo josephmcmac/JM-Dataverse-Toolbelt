@@ -9,7 +9,7 @@ using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Core.FieldType;
 using JosephM.Core.Test;
 
-namespace JosephM.Application.Prism.Test
+namespace JosephM.Application.Desktop.Test
 {
     public class AutoDialogController : FakeDialogController
     {

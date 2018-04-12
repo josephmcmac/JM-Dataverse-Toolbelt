@@ -1,13 +1,9 @@
-﻿#region
-
-using JosephM.Application.Application;
-using JosephM.Application.ViewModel.Navigation;
+﻿using JosephM.Application.ViewModel.Navigation;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.Validation;
-using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using System;
@@ -15,11 +11,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using JosephM.Core.AppConfig;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using JosephM.Application.ViewModel.TabArea;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
@@ -263,7 +254,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     if (Validate())
                     {
                         OnSave();
-                        ApplicationController.Remove(RegionNames.MainTabRegion, this);
+                        ApplicationController.Remove(this);
                     }
                 }
                 catch (Exception ex)
@@ -382,10 +373,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         protected internal override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
             return FormService.GetValidationRules(fieldName, GetRecordType());
-        }
-
-        public void OnNavigatedTo(INavigationProvider navigationProvider)
-        {
         }
 
         public string GetValidationSummary()

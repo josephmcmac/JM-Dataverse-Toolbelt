@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JosephM.TestModule</RootNamespace>
+    <AssemblyName>JosephM.TestModule</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\LazyWeb\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\LazyWeb\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ObjectEncrypt\TestClassToEncrypt.cs" />
+    <Compile Include="ObjectEncrypt\TestObjectEncryptDialog.cs" />
+    <Compile Include="TestCrud\TestCrudDialog.cs" />
+    <Compile Include="TestCrud\TestCrudModule.cs" />
+    <Compile Include="TestGridEdit\TestDialogBase.cs" />
+    <Compile Include="TestGridEdit\TestDialogModule.cs" />
+    <Compile Include="TestGridEdit\TestDialogRequest.cs" />
+    <Compile Include="TestGridEdit\TestDialogResponse.cs" />
+    <Compile Include="TestGridEdit\TestDialogResponseItem.cs" />
+    <Compile Include="TestGridEdit\TestDialogService.cs" />
+    <Compile Include="TestDialog\TestDialogModule.cs" />
+    <Compile Include="TestDialog\TestDialogBase.cs" />
+    <Compile Include="TestDialog\TestDialogRequest.cs" />
+    <Compile Include="TestDialog\TestDialogResponse.cs" />
+    <Compile Include="TestDialog\TestDialogResponseItem.cs" />
+    <Compile Include="TestDialog\TestDialogService.cs" />
+    <Compile Include="TestSettings\ITestSettings.cs" />
+    <Compile Include="TestSettings\TestSettings.cs" />
+    <Compile Include="TestSettings\TestSettingsDialog.cs" />
+    <Compile Include="TestSettings\TestSettingsModule.cs" />
+    <Compile Include="TestSettings\TestSetting.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="TestViewModel.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Core.Test\JosephM.Core.Test.csproj">
+      <Project>{7A4CE94B-1F3B-46F0-9C7F-9F2CB5B3C5E8}</Project>
+      <Name>JosephM.Core.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.ObjectEncryption\JosephM.ObjectEncryption.csproj">
+      <Project>{2FE73DC9-7959-4944-B594-29E73AA79604}</Project>
+      <Name>JosephM.ObjectEncryption</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
+      <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
+      <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
+      <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>
+      <Name>JosephM.Application.ViewModel.Fakes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
+      <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
+      <Name>JosephM.Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7f69213d-3efb-4736-9962-0151f92fa7d4}</Project>
+      <Name>JosephM.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+      <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
+      <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

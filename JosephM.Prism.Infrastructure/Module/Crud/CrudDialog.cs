@@ -1,5 +1,5 @@
-﻿using JosephM.Application.Prism.Module.Crud.BulkDelete;
-using JosephM.Application.Prism.Module.Crud.BulkUpdate;
+﻿using JosephM.Application.Desktop.Module.Crud.BulkDelete;
+using JosephM.Application.Desktop.Module.Crud.BulkUpdate;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.Query;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JosephM.Application.Prism.Module.Crud
+namespace JosephM.Application.Desktop.Module.Crud
 {
     public class CrudDialog : DialogViewModel
     {

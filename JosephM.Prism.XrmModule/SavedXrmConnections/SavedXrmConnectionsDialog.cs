@@ -1,16 +1,12 @@
-﻿#region
-
-using JosephM.Application.Application;
-using JosephM.Application.Prism.Module.Settings;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Linq;
 
-#endregion
-
-namespace JosephM.Prism.XrmModule.SavedXrmConnections
+namespace JosephM.XrmModule.SavedXrmConnections
 {
     public class SavedXrmConnectionsDialog : AppSettingsDialog<ISavedXrmConnections, SavedXrmConnections>
     {

@@ -1,17 +1,14 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Metadata;
-using JosephM.Record.IService;
-using JosephM.Record.Query;
-using JosephM.Xrm.Schema;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Attributes;
 using JosephM.Record.Extentions;
+using JosephM.Record.IService;
+using JosephM.Record.Query;
+using JosephM.Xrm.Schema;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace JosephM.Prism.XrmModule.Crud
+namespace JosephM.XrmModule.Crud
 {
     public class XrmFormService : FormServiceBase
     {

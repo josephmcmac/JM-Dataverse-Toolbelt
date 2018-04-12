@@ -224,12 +224,30 @@ namespace JosephM.Deployment.ExportXml
                 if (!exportType.IncludeInactive)
                 {
                     var activeStates = new List<int>(new[] { XrmPicklists.State.Active });
-                    if (entity.LogicalName == "product")
-                        activeStates.AddRange(new[] { 2, 3 });//draft and under revision for latest crm releases
-                    if (entity.LogicalName == "knowledgearticle")
+                    if (entity.LogicalName == Entities.product)
+                        activeStates.AddRange(new[] {
+                            OptionSets.Product.Status.Draft,
+                            OptionSets.Product.Status.UnderRevision });
+                    if (entity.LogicalName == Entities.knowledgearticle)
                     {
                         activeStates.Clear();
-                        activeStates.AddRange(new[] { 0, 1, 2, 3 });//draft and under revision for latest crm releases
+                        activeStates.AddRange(new[] {
+                            OptionSets.KnowledgeArticle.Status.Draft,
+                            OptionSets.KnowledgeArticle.Status.Approved,
+                            OptionSets.KnowledgeArticle.Status.Scheduled,
+                            OptionSets.KnowledgeArticle.Status.Published });
+                    }
+                    if (entity.LogicalName == Entities.email
+                        || entity.LogicalName == Entities.appointment
+                        || entity.LogicalName == Entities.task
+                        || entity.LogicalName == Entities.phonecall
+                        || entity.LogicalName == Entities.letter)
+                    {
+                        activeStates.Clear();
+                        activeStates.AddRange(new[] {
+                            OptionSets.Activity.ActivityStatus.Open,
+                            OptionSets.Activity.ActivityStatus.Completed,
+                            OptionSets.Activity.ActivityStatus.Scheduled});
                     }
                     if (!activeStates.Contains(entity.GetOptionSetValue("statecode")))
                         return true;

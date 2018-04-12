@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JosephM.Core.Attributes;
 
-namespace JosephM.Prism.XrmModule.SavedXrmConnections
+namespace JosephM.XrmModule.SavedXrmConnections
 {
     public class SavedXrmConnections : ISavedXrmConnections
     {

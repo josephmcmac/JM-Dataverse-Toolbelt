@@ -44,7 +44,7 @@ namespace JosephM.Application.ViewModel
 
         public void NavigateTo<T>(UriQuery uriQuery)
         {
-            ApplicationController.RequestNavigate(RegionNames.MainTabRegion, typeof(T), uriQuery);
+            ApplicationController.NavigateTo(typeof(T), uriQuery);
         }
     }
 }

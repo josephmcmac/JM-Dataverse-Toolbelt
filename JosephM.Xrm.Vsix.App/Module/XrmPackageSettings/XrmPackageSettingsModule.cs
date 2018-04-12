@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.Settings;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.Application.Desktop.Module.Settings;
+using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.Vsix.Module.PackageSettings
 {
@@ -9,7 +9,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
     {
         public override void DialogCommand()
         {
-            ApplicationController.RequestNavigate("Main", typeof(XrmPackageSettingsDialog), null);
+            ApplicationController.NavigateTo(typeof(XrmPackageSettingsDialog), null);
         }
     }
 }

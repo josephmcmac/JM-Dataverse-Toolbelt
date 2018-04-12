@@ -2,7 +2,7 @@
 using JosephM.Application.Modules;
 using JosephM.Core.Test;
 
-namespace JosephM.Application.Prism.Test
+namespace JosephM.Application.Desktop.Test
 {
     public class ModuleTest : CoreTest
     {

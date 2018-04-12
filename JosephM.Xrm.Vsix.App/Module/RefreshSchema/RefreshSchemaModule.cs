@@ -2,7 +2,7 @@
 using JosephM.Application.Modules;
 using JosephM.CodeGenerator.CSharp;
 using JosephM.Core.FieldType;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using System;
@@ -62,7 +62,7 @@ namespace JosephM.Xrm.Vsix.Module.RefreshSchema
             var uri = new UriQuery();
             uri.AddObject(nameof(CSharpDialog.Request), request);
             uri.AddObject(nameof(CSharpDialog.SkipObjectEntry), true);
-            ApplicationController.RequestNavigate("Main", typeof(CSharpDialog), uri);
+            ApplicationController.NavigateTo(typeof(CSharpDialog), uri);
         }
     }
 }

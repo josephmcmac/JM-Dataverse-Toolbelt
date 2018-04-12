@@ -3,14 +3,13 @@
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.Extentions;
-using Prism.Regions;
 using System;
 
 #endregion
 
 namespace JosephM.Application.ViewModel.Navigation
 {
-    public class NavigationErrorViewModel : TabAreaViewModelBase//, INavigationAware
+    public class NavigationErrorViewModel : TabAreaViewModelBase
     {
         public NavigationErrorViewModel(Exception exception, IApplicationController controller)
             : base(controller)

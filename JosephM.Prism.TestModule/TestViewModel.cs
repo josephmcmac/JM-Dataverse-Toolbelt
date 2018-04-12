@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JosephM.Prism.TestModule
+namespace JosephM.TestModule
 {
     public class TestViewModel
     {

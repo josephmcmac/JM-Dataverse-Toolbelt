@@ -4,7 +4,6 @@ using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
-using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +21,7 @@ namespace JosephM.Application.ViewModel.Query
             //need to somehow have a relationship selections
             LinkSelections = GetSelections();
             OnPopulated = onPopulated;
-            Remove = new DelegateCommand(() => remove(this));
+            Remove = new MyCommand(() => remove(this));
             LoadingViewModel = new LoadingViewModel(ApplicationController);
         }
 
@@ -158,7 +157,7 @@ namespace JosephM.Application.ViewModel.Query
 
         public IEnumerable<PicklistOption> LinkSelections { get; set; }
         public Action OnPopulated { get; }
-        public DelegateCommand Remove { get; }
+        public MyCommand Remove { get; }
         public LoadingViewModel LoadingViewModel { get; private set; }
 
         private JoinsViewModel _joins;

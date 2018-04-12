@@ -5,7 +5,7 @@ using JosephM.Application.ViewModel.Fakes;
 
 #endregion
 
-namespace JosephM.Application.Prism.Test
+namespace JosephM.Application.Desktop.Test
 {
     public class TestingModule : ModuleBase
     {

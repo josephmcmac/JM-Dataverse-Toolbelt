@@ -1,10 +1,6 @@
-﻿using JosephM.Application.ViewModel.SettingTypes;
-using JosephM.CodeGenerator.FetchToJavascript;
-using JosephM.CodeGenerator.JavaScriptOptions;
-using JosephM.Core.FieldType;
+﻿using JosephM.CodeGenerator.FetchToJavascript;
 using JosephM.Core.Utility;
-using JosephM.Prism.XrmModule.Test;
-using JosephM.Xrm.Test;
+using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 

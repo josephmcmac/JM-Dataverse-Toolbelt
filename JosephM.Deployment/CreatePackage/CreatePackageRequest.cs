@@ -1,20 +1,15 @@
-﻿#region
-
-using JosephM.Core.Attributes;
-using JosephM.Core.Constants;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
 using JosephM.Record.Attributes;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.SavedXrmConnections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.Deployment.CreatePackage
 {

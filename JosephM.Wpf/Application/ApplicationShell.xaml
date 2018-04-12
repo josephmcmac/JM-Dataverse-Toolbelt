@@ -1,14 +1,13 @@
 ﻿<UserControl x:Class="JosephM.Wpf.Application.ApplicationShell"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:prism="http://www.codeplex.com/prism"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:constants="clr-namespace:JosephM.Application;assembly=JosephM.Application"
+             xmlns:application="clr-namespace:JosephM.Wpf.Application"
+             xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
              mc:Ignorable="d"
              d:DesignHeight="300"
-             d:DesignWidth="700"
-            xmlns:converters="clr-namespace:JosephM.Wpf.Converters">
+             d:DesignWidth="700">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:TabbedApplicationHeightConverter x:Key="TabbedApplicationHeightConverter" />
@@ -25,15 +24,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <ContentControl
-                prism:RegionManager.RegionName="{x:Static constants:RegionNames.Heading}"
-                ContentTemplate="{StaticResource applicationHeadingTemplate}" />
+            <application:ApplicationHeadingView DataContext="{Binding ApplicationController}" />
         </Grid>
         <Grid Grid.Row="1" MaxHeight="190" >
             <ScrollViewer>
-            <ContentControl
-                prism:RegionManager.RegionName="{x:Static constants:RegionNames.ApplicationOptions}"
-                ContentTemplate="{StaticResource applicationMenuViewTemplate}" />
+                <application:ApplicationOptionsView DataContext="{Binding ApplicationOptions}" />
             </ScrollViewer>
         </Grid>
         <Grid Grid.Row="2"
@@ -52,7 +47,8 @@
                                        AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}"
               >
             <TabControl
-                prism:RegionManager.RegionName="{x:Static constants:RegionNames.MainTabRegion}"
+                ItemsSource="{Binding ApplicationController.LoadedObjects}"
+                SelectedItem="{Binding ApplicationController.ActiveTabItem, Mode=TwoWay}"
                 ContentTemplate="{StaticResource TabItemTemplate}">
                 <TabControl.ItemContainerStyle>
                     <Style TargetType="{x:Type TabItem}">

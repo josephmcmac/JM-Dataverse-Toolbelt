@@ -10,9 +10,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("JosephM.Prism.Application")]
+[assembly: AssemblyTitle("JosephM.TestDesktopApplication")]
 [assembly: AssemblyCompany("JosephM")]
-[assembly: AssemblyProduct("JosephM.Prism.Application")]
+[assembly: AssemblyProduct("JosephM.TestDesktopApplication")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

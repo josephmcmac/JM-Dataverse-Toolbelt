@@ -1,7 +1,7 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
 using JosephM.Deployment.DeployPackage;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
 using System;
 
@@ -51,7 +51,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployPackage
 
             var uri = new UriQuery();
             uri.AddObject(nameof(DeployPackageDialog.Request), request);
-            ApplicationController.RequestNavigate("Main", typeof(DeployPackageDialog), uri);
+            ApplicationController.NavigateTo(typeof(DeployPackageDialog), uri);
         }
     }
 }

@@ -5,10 +5,11 @@
 //------------------------------------------------------------------------------
 
 using EnvDTE80;
-using JosephM.Application.Prism.Application;
-using JosephM.Application.Prism.Module.AboutModule;
+using JosephM.Application.Application;
+using JosephM.Application.Desktop.Application;
+using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.InstanceComparer;
-using JosephM.Prism.XrmModule.Crud;
+using JosephM.XrmModule.Crud;
 using JosephM.Xrm.Vsix;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
@@ -54,7 +55,7 @@ namespace JosephM.XRM.VSIX
         {
             base.Initialize();
 
-            var container = new PrismDependencyContainer();
+            var container = new DependencyContainer();
 
             var commandService = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             container.RegisterInstance(typeof(IMenuCommandService), commandService);

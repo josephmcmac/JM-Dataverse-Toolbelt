@@ -1,6 +1,6 @@
 ﻿using JosephM.Core.Service;
 
-namespace JosephM.Prism.XrmTestModule.DebugModule
+namespace JosephM.XrmTestModule.DebugModule
 {
     public class DebugDialogResponse : ServiceResponseBase<DebugDialogResponseItem>
     {

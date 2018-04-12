@@ -68,22 +68,12 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
-    </Reference>
-    <Reference Include="Prism.Wpf, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Wpf.6.3.0\lib\net45\Prism.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Wpf.6.3.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -138,6 +128,7 @@
     <Compile Include="SettingTypes\FieldSetting.cs" />
     <Compile Include="SettingTypes\RecordFieldSetting.cs" />
     <Compile Include="SettingTypes\RecordTypeSetting.cs" />
+    <Compile Include="Shared\MyCommand.cs" />
     <Compile Include="Shared\ProgressControlViewModel.cs" />
     <Compile Include="Shared\HeadingViewModel.cs" />
     <Compile Include="Shared\XrmButtonViewModel.cs" />
@@ -146,8 +137,6 @@
     <Compile Include="Dialog\ObjectEntryDialog.cs" />
     <Compile Include="Navigation\NavigationErrorViewModel.cs" />
     <Compile Include="Shared\LoadingViewModel.cs" />
-    <Compile Include="Navigation\INavigationProvider.cs" />
-    <Compile Include="Navigation\PrismNavigationProvider.cs" />
     <Compile Include="RecordEntry\Field\BooleanFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\DateFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\FieldViewModel.cs" />
@@ -187,7 +176,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="JosephM.snk" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

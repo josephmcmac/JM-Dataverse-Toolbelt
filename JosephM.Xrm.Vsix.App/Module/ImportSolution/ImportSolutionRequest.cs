@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using JosephM.Core.Service;
-using JosephM.Core.Attributes;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
+using JosephM.Core.FieldType;
+using JosephM.Core.Service;
+using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.Vsix.Module.ImportSolution
 {

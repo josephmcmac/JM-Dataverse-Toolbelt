@@ -1,18 +1,14 @@
-﻿#region
-
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Log;
 using System;
 using System.Collections.Generic;
 
-#endregion
-
-namespace JosephM.Application.Prism.Console
+namespace JosephM.Application.Desktop.Console
 {
     /// <summary>
-    ///     Implementation Of IApplicationController For The Prism Application
+    ///     Implementation Of IApplicationController For The Console Application
     /// </summary>
     public class ConsoleApplicationController : ApplicationControllerBase
     {
@@ -32,17 +28,17 @@ namespace JosephM.Application.Prism.Console
         }
 
 
-        public override void Remove(string regionName, object item)
+        public override void Remove(object item)
         {
             
         }
 
-        public override IEnumerable<object> GetObjects(string regionName)
+        public override IEnumerable<object> GetObjects()
         {
             throw new NotImplementedException();
         }
 
-        public override void RequestNavigate(string regionName, Type type, UriQuery uriQuery)
+        public override void NavigateTo(Type type, UriQuery uriQuery = null)
         {
             var resolvedType = Container.ResolveType(type);
             //at this stage for a consol4e application this will only happen
@@ -65,10 +61,6 @@ namespace JosephM.Application.Prism.Console
             throw new NotImplementedException();
         }
 
-        public override void NavigateTo(Type type, UriQuery uriQuery)
-        {
-        }
-
         public override string GetSaveFileName(string initialFileName, string extention)
         {
             throw new NotImplementedException();
@@ -77,15 +69,6 @@ namespace JosephM.Application.Prism.Console
         public override string GetSaveFolderName()
         {
             throw new NotImplementedException();
-        }
-
-        public override void SeralializeObjectToFile(object theObject, string fileName)
-        {
-        }
-
-
-        public override void OpenHelp(string fileName)
-        {
         }
 
         public override void ThrowException(Exception ex)

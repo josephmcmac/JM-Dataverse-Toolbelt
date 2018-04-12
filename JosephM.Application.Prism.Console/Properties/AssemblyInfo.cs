@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("JosephM.Application.Prism.Console")]
+[assembly: AssemblyTitle("JosephM.Application.Desktop.Console")]
 [assembly: AssemblyCompany("JosephM")]
-[assembly: AssemblyProduct("JosephM.Application.Prism.Console")]
+[assembly: AssemblyProduct("JosephM.Application.Desktop.Console")]
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM

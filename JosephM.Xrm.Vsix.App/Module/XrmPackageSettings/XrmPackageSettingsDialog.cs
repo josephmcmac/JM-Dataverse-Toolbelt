@@ -1,6 +1,6 @@
-﻿using JosephM.Application.Prism.Module.Settings;
+﻿using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.Connection;

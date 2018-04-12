@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Application.Prism.Module.ServiceRequest;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.Attributes;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {

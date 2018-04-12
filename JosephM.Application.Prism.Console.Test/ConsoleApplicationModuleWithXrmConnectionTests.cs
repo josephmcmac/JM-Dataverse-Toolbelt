@@ -1,18 +1,18 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Prism.Application;
-using JosephM.Application.Prism.Test;
+using JosephM.Application.Desktop.Application;
+using JosephM.Application.Desktop.Test;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
-using JosephM.Prism.XrmModule.SavedXrmConnections;
-using JosephM.Prism.XrmModule.Test;
-using JosephM.Prism.XrmModule.XrmConnection;
+using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.Test;
+using JosephM.XrmModule.XrmConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Linq;
 
-namespace JosephM.Application.Prism.Console.Test
+namespace JosephM.Application.Desktop.Console.Test
 {
     [TestClass]
     public class ConsoleApplicationModuleWithXrmConnectionTests : XrmModuleTest
@@ -90,9 +90,9 @@ namespace JosephM.Application.Prism.Console.Test
             var applicationName = arguments.ContainsKey("SettingsFolderName") ? arguments["SettingsFolderName"] : "Unknown Console Context";
 
             //okay need to create app
-            var dependencyResolver = new PrismDependencyContainer();
+            var dependencyResolver = new DependencyContainer();
             var controller = new ConsoleApplicationController(applicationName, dependencyResolver);
-            settingsManager = new PrismSettingsManager(controller);
+            settingsManager = new DesktopSettingsManager(controller);
             var applicationOptions = new ApplicationOptionsViewModel(controller);
             var app = new ConsoleApplication(controller, applicationOptions, settingsManager);
             //load modules in folder path

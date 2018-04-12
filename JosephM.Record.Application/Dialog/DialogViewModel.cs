@@ -19,9 +19,6 @@ namespace JosephM.Application.ViewModel.Dialog
     {
         public Action OverideCompletionScreenMethod { get; set; }
 
-        //private readonly ObservableCollection<object> _completionItems =
-        //    new ObservableCollection<object>();
-
         private readonly ObservableCollection<XrmButtonViewModel> _completionOptions =
             new ObservableCollection<XrmButtonViewModel>();
 
@@ -222,7 +219,7 @@ namespace JosephM.Application.ViewModel.Dialog
             set
             {
                 _showProgressControlViewModel = value;
-                OnPropertyChanged("ShowProgressControlViewModel");
+                OnPropertyChanged(nameof(ShowProgressControlViewModel));
             }
         }
     }
