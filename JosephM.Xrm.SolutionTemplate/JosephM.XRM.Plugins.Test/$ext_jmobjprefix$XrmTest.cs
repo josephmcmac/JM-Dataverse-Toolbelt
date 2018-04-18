@@ -38,7 +38,7 @@ namespace $safeprojectname$
         }
 
         private $ext_jmobjprefix$Settings _settings;
-        public $ext_jmobjprefix$Settings abcSettings
+        public $ext_jmobjprefix$Settings $ext_jmobjprefix$Settings
         {
             get
             {
@@ -49,12 +49,12 @@ namespace $safeprojectname$
         }
 
         private $ext_jmobjprefix$Service _service;
-        public $ext_jmobjprefix$Service abcService
+        public $ext_jmobjprefix$Service $ext_jmobjprefix$Service
         {
             get
             {
                 if (_service == null)
-                    _service = new $ext_jmobjprefix$Service(XrmService, abcSettings);
+                    _service = new $ext_jmobjprefix$Service(XrmService, $ext_jmobjprefix$Settings);
                 return _service;
             }
         }
