@@ -33,18 +33,6 @@
         </Grid>
         <Grid Grid.Row="2"
                Name="MyMainContent"
-              MinHeight="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Window,
-                                       AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}"
-              MaxHeight="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Window,
-                                       AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}"
-              Height="{Binding Path=ActualHeight,
-                       RelativeSource={RelativeSource FindAncestor,
-                                       AncestorType=Window,
-                                       AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}"
               >
             <TabControl
                 ItemsSource="{Binding ApplicationController.LoadedObjects}"

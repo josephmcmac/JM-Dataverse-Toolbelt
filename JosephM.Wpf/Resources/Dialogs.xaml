@@ -24,11 +24,11 @@
         <Setter Property="MinHeight" Value="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
                                        AncestorType=TabControl,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.90}" />
+                                       AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}" />
         <Setter Property="Height" Value="{Binding Path=ActualHeight,
                        RelativeSource={RelativeSource FindAncestor,
                                        AncestorType=TabControl,
-                                       AncestorLevel=1}, Converter={StaticResource LengthConverter}, ConverterParameter=.1}" />
+                                       AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}" />
     </Style>
     <DataTemplate x:Key="RecordEntryTemplateWindowSize">
         <Grid Style="{StaticResource WindowGridStyle}">

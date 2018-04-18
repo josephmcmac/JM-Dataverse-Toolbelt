@@ -60,11 +60,10 @@
         NavigationErrorTemplate="{StaticResource NavigationErrorTemplate}"
         x:Key="TabTemplateSelector" />
     <DataTemplate x:Key="TabItemTemplate">
-        <Grid Margin="15">
+        <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
             <Border Grid.Row="0" Name="tabBorder">
             <ContentControl
                 Content="{Binding}"

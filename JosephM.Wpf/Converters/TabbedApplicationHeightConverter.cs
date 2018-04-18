@@ -11,7 +11,7 @@ namespace JosephM.Wpf.Converters
             if(value is double)
             {
                 var theDouble = (double)value;
-                return (theDouble - 228); 
+                return (theDouble - 55); 
             }
             return (double)500;
 
