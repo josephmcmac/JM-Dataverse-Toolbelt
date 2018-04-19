@@ -24,7 +24,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ScrollViewer>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

@@ -27,7 +27,7 @@
             <application:ApplicationHeadingView DataContext="{Binding ApplicationController}" />
         </Grid>
         <Grid Grid.Row="1" MaxHeight="190" >
-            <ScrollViewer>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <application:ApplicationOptionsView DataContext="{Binding ApplicationOptions}" />
             </ScrollViewer>
         </Grid>
@@ -37,7 +37,9 @@
             <TabControl
                 ItemsSource="{Binding ApplicationController.LoadedObjects}"
                 SelectedItem="{Binding ApplicationController.ActiveTabItem, Mode=TwoWay}"
-                ContentTemplate="{StaticResource TabItemTemplate}">
+                ContentTemplate="{StaticResource TabItemTemplate}"
+                Template="{StaticResource TabControlTemplate}"
+                >
                 <TabControl.ItemContainerStyle>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="HeaderTemplate" Value="{StaticResource TabItemHeaderTemplate}" />
