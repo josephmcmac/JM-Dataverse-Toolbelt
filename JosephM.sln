@@ -120,9 +120,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Record.Sql", "JosephM.Record.Sql\JosephM.Record.Sql.csproj", "{53651F05-D505-4D59-8FED-E723D26E491F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}"
-	ProjectSection(SolutionItems) = preProject
-		JosephM.Prism.XrmDeveloperTool\JosephM.Dynamics365DevApp.csproj = JosephM.Prism.XrmDeveloperTool\JosephM.Dynamics365DevApp.csproj
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application", "JosephM.Application\JosephM.Application.csproj", "{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}"
 EndProject
@@ -909,8 +906,8 @@ Global
 		{F303560E-2FD6-4198-BE27-3EAC2446103C} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
