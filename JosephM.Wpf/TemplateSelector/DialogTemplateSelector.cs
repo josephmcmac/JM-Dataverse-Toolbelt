@@ -28,6 +28,8 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate DialogTemplate { get; set; }
         public DataTemplate MultiSelectDialogTemplateTabSize { get; set; }
         public DataTemplate MultiSelectDialogTemplateWindowSize { get; set; }
+        public DataTemplate ColumnEditDialogTemplateTabSize { get; set; }
+        public DataTemplate ColumnEditDialogTemplateWindowSize { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -45,6 +47,8 @@ namespace JosephM.Wpf.TemplateSelector
                         return QueryViewTemplateWindowSize;
                     if (item is IMultiSelectDialog)
                         return MultiSelectDialogTemplateWindowSize;
+                    if (item is ColumnEditDialogViewModel)
+                        return ColumnEditDialogTemplateWindowSize;
                 }
                 else
                 {
@@ -56,6 +60,8 @@ namespace JosephM.Wpf.TemplateSelector
                         return QueryViewTemplateTabSize;
                     if (item is IMultiSelectDialog)
                         return MultiSelectDialogTemplateTabSize;
+                    if (item is ColumnEditDialogViewModel)
+                        return ColumnEditDialogTemplateTabSize;
                 }
             }
             if (item is ProgressControlViewModel)

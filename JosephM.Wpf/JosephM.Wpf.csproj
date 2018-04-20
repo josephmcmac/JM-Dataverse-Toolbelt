@@ -203,6 +203,9 @@
       <DependentUpon>GridMultiSelectFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\Fields\GridMultiSelectColumn.cs" />
+    <Compile Include="Query\ColumnEditDialogView.xaml.cs">
+      <DependentUpon>ColumnEditDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Query\JoinsView.xaml.cs">
       <DependentUpon>JoinsView.xaml</DependentUpon>
     </Compile>
@@ -417,6 +420,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grid\Fields\GridMultiSelectFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Query\ColumnEditDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

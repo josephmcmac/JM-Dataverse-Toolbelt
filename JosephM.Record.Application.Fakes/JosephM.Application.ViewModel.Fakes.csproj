@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeColumnEditDialogViewModel.cs" />
     <Compile Include="FakeGridViewModel.cs" />
     <Compile Include="FakeMultiSelectDialogViewModel.cs" />
     <Compile Include="FakeQueryViewModel.cs" />

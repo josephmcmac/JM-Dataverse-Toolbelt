@@ -85,6 +85,16 @@
             <field:MultiSelectDialogView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="ColumnEditDialogTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
+            <query:ColumnEditDialogView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="ColumnEditDialogTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
+            <query:ColumnEditDialogView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <templateSelector:DialogTemplateSelector
         RecordEntryTemplateTabSize="{StaticResource RecordEntryTemplateTabSize}"
         RecordEntryTemplateWindowSize="{StaticResource RecordEntryTemplateWindowSize}"
@@ -97,5 +107,7 @@
         DialogTemplate="{StaticResource DialogDialogTemplate}"
         MultiSelectDialogTemplateTabSize="{StaticResource MultiSelectDialogTemplateTabSize}"
         MultiSelectDialogTemplateWindowSize="{StaticResource MultiSelectDialogTemplateWindowSize}"
+        ColumnEditDialogTemplateTabSize="{StaticResource ColumnEditDialogTemplateTabSize}"
+        ColumnEditDialogTemplateWindowSize="{StaticResource ColumnEditDialogTemplateWindowSize}"
         x:Key="DialogTemplateSelector" />
 </ResourceDictionary>

@@ -98,6 +98,7 @@
     <Compile Include="ApplicationOptions\ApplicationOption.cs" />
     <Compile Include="ApplicationOptions\ApplicationOptionsViewModel.cs" />
     <Compile Include="Dialog\CompletionScreenViewModel.cs" />
+    <Compile Include="Query\ColumnEditDialogViewModel.cs" />
     <Compile Include="Query\JoinViewModel.cs" />
     <Compile Include="Query\JoinsViewModel.cs" />
     <Compile Include="Query\QueryViewModel.cs" />

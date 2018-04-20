@@ -1,0 +1,115 @@
+﻿<UserControl
+    x:Class="JosephM.Wpf.Query.ColumnEditDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
+    xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
+    mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="500"
+    d:DataContext="{d:DesignInstance Type=fakes:FakeColumnEditDialogViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock
+                Text="Select Columns"
+                Style="{StaticResource HeadingStyle}" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <WrapPanel>
+                <shared:XrmButton DataContext="{Binding CancelButtonViewModel}" />
+                <shared:XrmButton DataContext="{Binding ApplyButtonViewModel}" />
+            </WrapPanel>
+        </Grid>
+        <Grid Grid.Row="2" Margin="8">
+            <ScrollViewer
+                VerticalScrollBarVisibility="Disabled"
+                          HorizontalScrollBarVisibility="Auto"
+                          >
+                <ItemsControl
+                   BorderThickness="0"
+                    ItemsSource="{Binding CurrentColumns}" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Grid Width="5" AllowDrop="True" Drop="SelectDropBefore">
+
+                                    <GroupBox Background="WhiteSmoke" Width="5">
+                                    </GroupBox>
+                                </Grid>
+                                <Border Style="{StaticResource BorderStyleLight}"  Width="{Binding Width}" >
+                                    <Grid MouseMove="SelectMouseMoveEvent">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"  />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="1"
+                                        Text="{Binding FieldLabel}"
+                                        Style="{StaticResource FieldLabelStyle}" />
+                                        <Button HorizontalAlignment="Right" Grid.Row="0"  Style="{StaticResource RemoveButtonStyle}"  Command="{Binding RemoveCommand}" >
+                                            <Image Source="../Images/CloseButton.gif" Height="15" Width="15" />
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                                <Grid Width="5" AllowDrop="True" Drop="SelectDropAfter">
+                                    <GroupBox Background="WhiteSmoke" Width="5">
+                                    </GroupBox>
+                                </Grid>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Row="3" Margin="8">
+            <ScrollViewer
+                VerticalScrollBarVisibility="Disabled"
+                          HorizontalScrollBarVisibility="Auto"
+                          >
+                <ItemsControl 
+                    x:Name="sectionControl"
+                    ItemsSource="{Binding SelectableColumns}"
+                    HorizontalContentAlignment="Stretch" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel  Orientation="Vertical"  />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource BorderStyleLight}" >
+                                <Grid MouseMove="SelectMouseMoveEvent">
+                                    <TextBlock
+                                        Text="{Binding FieldLabel}"
+                                        Style="{StaticResource FieldLabelStyle}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>
