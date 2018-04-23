@@ -311,6 +311,13 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             }
+                            else if (column.FieldType == RecordFieldType.ActivityParty)
+                            {
+                                dataGridField = new GridActivityPartyColumn()
+                                {
+                                    Binding = cellBinding
+                                };
+                            }
                             else
                             {
                                 dataGridField = new GridStringColumn()

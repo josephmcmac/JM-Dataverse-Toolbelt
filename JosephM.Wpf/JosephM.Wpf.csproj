@@ -167,6 +167,10 @@
     <Compile Include="Grid\DynamicGridView.xaml.cs">
       <DependentUpon>DynamicGridView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Grid\Fields\GridActivityPartyColumn.cs" />
+    <Compile Include="Grid\Fields\GridActivityPartyFieldView.xaml.cs">
+      <DependentUpon>GridActivityPartyFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\Fields\GridDateFieldView.xaml.cs">
       <DependentUpon>GridDateFieldView.xaml</DependentUpon>
     </Compile>
@@ -293,6 +297,9 @@
     <Compile Include="RecordEntry\Field\RecordTypeView.xaml.cs">
       <DependentUpon>RecordTypeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\ActivityPartyFieldView.xaml.cs">
+      <DependentUpon>ActivityPartyFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\StringEnumerableFieldView.xaml.cs">
       <DependentUpon>StringEnumerableFieldView.xaml</DependentUpon>
     </Compile>
@@ -384,6 +391,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grid\DynamicGridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\Fields\GridActivityPartyFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -528,6 +539,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\RecordTypeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\ActivityPartyFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

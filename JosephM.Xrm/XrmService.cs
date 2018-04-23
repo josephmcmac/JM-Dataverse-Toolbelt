@@ -3108,9 +3108,11 @@ string recordType)
                     var namesToOutput = new List<string>();
                     foreach (var party in (Entity[])value)
                     {
-                        namesToOutput.Add(party.GetLookupName("partyid"));
+                        var displayIt = party.GetLookupName(Fields.activityparty_.partyid);
+                        displayIt = displayIt ?? party.GetStringField(Fields.activityparty_.addressused);
+                        namesToOutput.Add(displayIt);
                     }
-                    return string.Join(", ", namesToOutput.Where(f => !f.IsNullOrWhiteSpace()));
+                    return string.Join("; ", namesToOutput.Where(f => !f.IsNullOrWhiteSpace()));
                 }
             }
             return value.ToString();

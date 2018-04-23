@@ -104,15 +104,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }
                         break;
                     }
-                    //case RecordFieldType.Enum:
-                    //    {
-                    //        fieldVm = new EnumFieldViewModel(field, label, recordForm)
-                    //        {
-                    //            ItemsSource = recordService.GetPicklistKeyValues(field, recordType),
-                    //            IsRecordServiceField = isRecordServiceField
-                    //        };
-                    //        break;
-                    //    }
                     case RecordFieldType.Picklist:
                     case RecordFieldType.Status:
                     case RecordFieldType.State:
@@ -329,6 +320,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     case RecordFieldType.Url:
                         {
                             fieldVm = new UrlFieldViewModel(field, label, recordForm)
+                            {
+                                IsRecordServiceField = isRecordServiceField
+                            };
+                            break;
+                        }
+                    case RecordFieldType.ActivityParty:
+                        {
+                            fieldVm = new ActivityPartyFieldViewModel(field, label, recordForm)
                             {
                                 IsRecordServiceField = isRecordServiceField
                             };

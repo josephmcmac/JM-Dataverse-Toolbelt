@@ -29,6 +29,8 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate DecimalFieldTemplate { get; set; }
         public DataTemplate UrlFieldTemplate { get; set; }
         public DataTemplate MultiSelectFieldTemplate { get; set; }
+        public DataTemplate ActivityPartyFieldTemplate { get; set; }
+        
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -81,6 +83,8 @@ namespace JosephM.Wpf.TemplateSelector
                 return UrlFieldTemplate;
             if (item is IMultiSelectFieldViewModel)
                 return MultiSelectFieldTemplate;
+            if (item is ActivityPartyFieldViewModel)
+                return ActivityPartyFieldTemplate;
             else
                 return StringFieldTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",

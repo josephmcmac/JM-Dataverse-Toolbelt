@@ -81,7 +81,11 @@
     <DataTemplate x:Key="MultiSelectFieldTemplate">
         <field:MultiSelectView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="ActivityPartyFieldTemplate">
+        <field:ActivityPartyFieldView DataContext="{Binding}" />
+    </DataTemplate>
     <templateSelector:FieldTemplateSelector
+        ActivityPartyFieldTemplate="{StaticResource ActivityPartyFieldTemplate}"
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
         DateFieldTemplate="{StaticResource dateFieldTemplate}"
