@@ -44,7 +44,7 @@ namespace JosephM.Wpf.Query
                 var draggedItem = (ColumnEditDialogViewModel.SelectableColumn)e.Data.GetData(typeof(ColumnEditDialogViewModel.SelectableColumn));
                 var thisItem = sender as FrameworkElement;
                 var target = thisItem.DataContext as ColumnEditDialogViewModel.SelectableColumn;
-                AddCurrentItem(draggedItem, target, false);
+                ColumnEditDialogViewModel.AddCurrentItem(draggedItem, target: target, isAfter: false);
             }
         }
 
@@ -55,15 +55,8 @@ namespace JosephM.Wpf.Query
                 var draggedItem = (ColumnEditDialogViewModel.SelectableColumn)e.Data.GetData(typeof(ColumnEditDialogViewModel.SelectableColumn));
                 var thisItem = sender as FrameworkElement;
                 var target = thisItem.DataContext as ColumnEditDialogViewModel.SelectableColumn;
-                AddCurrentItem(draggedItem, target, true);
+                ColumnEditDialogViewModel.AddCurrentItem(draggedItem, target: target, isAfter: true);
             }
-        }
-
-        private void AddCurrentItem(ColumnEditDialogViewModel.SelectableColumn draggedItem, ColumnEditDialogViewModel.SelectableColumn target, bool isAfter)
-        {
-            ColumnEditDialogViewModel.SelectableColumns.Remove(draggedItem);
-            ColumnEditDialogViewModel.CurrentColumns.Remove(draggedItem);
-            ColumnEditDialogViewModel.CurrentColumns.Insert(ColumnEditDialogViewModel.CurrentColumns.IndexOf(target) + (isAfter ? 1 : 0), draggedItem);
         }
     }
 }

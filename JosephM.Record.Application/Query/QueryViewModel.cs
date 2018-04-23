@@ -104,7 +104,7 @@ namespace JosephM.Application.ViewModel.Query
                 {
                     new CustomGridFunction("QUERY", "Run Query", QuickFind),
                     new CustomGridFunction("BACKTOQUERY", "Back To Query", (g) => { ResetToQueryEntry(); }, (g) => !IsQuickFind && QueryRun),
-                    new CustomGridFunction("EDITDOLUMNS", "Edit Columns", (g) => LoadColumnEdit(), (g) => DynamicGridViewModel != null)
+                    new CustomGridFunction("EDITCOLUMNS", "Edit Columns", (g) => LoadColumnEdit(), (g) => DynamicGridViewModel != null)
                 };
                 if (FormService != null)
                 {

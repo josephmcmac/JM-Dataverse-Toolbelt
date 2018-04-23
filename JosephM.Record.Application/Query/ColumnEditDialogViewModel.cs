@@ -24,19 +24,60 @@ namespace JosephM.Application.ViewModel.Query
             ApplySelections = applySelections;
             //todo somehow to this asynch while loading
             var columnsCurrenltySelected =
-                currentColumns.Select(si => new SelectableColumn(si.Key, RecordService.GetFieldLabel(si.Key, RecordType), si.Value, RemoveCurrentField))
+                currentColumns.Select(si => new SelectableColumn(si.Key, RecordService.GetFieldLabel(si.Key, RecordType), si.Value, RemoveCurrentField, AddCurrentField, ApplicationController))
                 .ToArray();
             CurrentColumns = new ObservableCollection<SelectableColumn>(columnsCurrenltySelected);
             var selectableFields = RecordService
                 .GetFields(RecordType)
                 .Where(f => !CurrentColumns.Any(c => c.FieldName == f))
-                .Select(f => new SelectableColumn(f, RecordService.GetFieldLabel(f, RecordType), 200, RemoveCurrentField))
+                .Select(f => new SelectableColumn(f, RecordService.GetFieldLabel(f, RecordType), 200, RemoveCurrentField, AddCurrentField, ApplicationController))
                 .OrderBy(sc => sc.FieldLabel)
                 .ToArray();
             SelectableColumns = new ObservableCollection<SelectableColumn>(selectableFields);
 
             ApplyButtonViewModel = new XrmButtonViewModel("Apply Changes", ApplyChanges, ApplicationController, "Apply The Selection Changes");
             CancelButtonViewModel = new XrmButtonViewModel("Cancel Changes", onCancel, ApplicationController, "Cancel The Selection Changes And Return");
+
+            RefreshIsFirstColumn();
+        }
+
+        public void AddCurrentItem(SelectableColumn draggedItem, SelectableColumn target = null, bool isAfter = true)
+        {
+            DoOnMainThread(() =>
+            {
+                SelectableColumns.Remove(draggedItem);
+                CurrentColumns.Remove(draggedItem);
+                if (target != null && CurrentColumns.Contains(target))
+                    CurrentColumns.Insert(CurrentColumns.IndexOf(target) + (isAfter ? 1 : 0), draggedItem);
+                else
+                    CurrentColumns.Add(draggedItem);
+                RefreshIsFirstColumn();
+            });
+        }
+
+        public void RefreshIsFirstColumn()
+        {
+            if(CurrentColumns != null)
+            {
+                foreach(var column in CurrentColumns.ToArray().Skip(1))
+                {
+                    if (column.IsFirstColumn)
+                        column.IsFirstColumn = false;
+                }
+                if(CurrentColumns.Any())
+                {
+                    CurrentColumns.First().IsFirstColumn = true;
+                }
+            }
+        }
+
+        public void AddCurrentField(string fieldName)
+        {
+            var selectedResults = SelectableColumns.Where(c => c.FieldName == fieldName).ToArray();
+            foreach (var result in selectedResults)
+            {
+                AddCurrentItem(result);
+            }
         }
 
         public void RemoveCurrentField(string fieldName)
@@ -75,21 +116,38 @@ namespace JosephM.Application.ViewModel.Query
             ApplySelections(CurrentColumns);
         }
 
-        public class SelectableColumn
+        public class SelectableColumn : ViewModelBase
         {
-            public SelectableColumn(string fieldName, string fieldLabel, double width, Action<string> removeField)
+            public SelectableColumn(string fieldName, string fieldLabel, double width, Action<string> removeField, Action<string> addField, IApplicationController controller)
+                : base(controller)
             {
                 FieldName = fieldName;
                 FieldLabel = fieldLabel;
                 Width = width;
                 RemoveCommand = new MyCommand(() => removeField(FieldName));
+                AddCommand = new MyCommand(() => addField(FieldName));
             }
 
             public string FieldName { get; set; }
             public string FieldLabel { get; set; }
             public double Width { get; set; }
-
             public MyCommand RemoveCommand { get; set; }
+
+            public MyCommand AddCommand { get; set; }
+
+            private bool _isFirstColumn;
+            public bool IsFirstColumn
+            {
+                get
+                {
+                    return _isFirstColumn;
+                }
+                set
+                {
+                    _isFirstColumn = value;
+                    OnPropertyChanged(nameof(IsFirstColumn));
+                }
+            }
 
         }
     }
