@@ -118,4 +118,11 @@
             <shared:XrmButton DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <Style x:Key="RemoveButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Height" Value="18" />
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Margin" Value="3,3,3,3" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
 </ResourceDictionary>

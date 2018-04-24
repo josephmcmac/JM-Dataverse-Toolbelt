@@ -83,7 +83,7 @@ namespace JosephM.Application.ViewModel.Query
             }
         }
 
-        public void RecreateGrid()
+        public void RecreateGrid(bool resetQueryRun = true)
         {
             if (RecordType != null)
             {
@@ -97,19 +97,21 @@ namespace JosephM.Application.ViewModel.Query
                     FormController = new FormController(RecordService, null, ApplicationController),
                     GetGridRecords = GetGridRecords,
                     MultiSelect = true,
-                    GridLoaded = false
+                    GridLoaded = false,
+                    FieldMetadata = ExplicitlySelectedColumns
                 };
                 var customFunctionList = new List<CustomGridFunction>()
                 {
                     new CustomGridFunction("QUERY", "Run Query", QuickFind),
-                    new CustomGridFunction("BACKTOQUERY", "Back To Query", (g) => { ResetToQueryEntry(); }, (g) => !IsQuickFind && QueryRun)
+                    new CustomGridFunction("BACKTOQUERY", "Back To Query", (g) => { ResetToQueryEntry(); }, (g) => !IsQuickFind && QueryRun),
+                    new CustomGridFunction("EDITCOLUMNS", "Edit Columns", (g) => LoadColumnEdit(), (g) => DynamicGridViewModel != null)
                 };
                 if (FormService != null)
                 {
                     DynamicGridViewModel.EditRow = (g) =>
                     {
                         var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
-                        var formController = new FormController(this.RecordService, FormService, ApplicationController);
+                        var formController = new FormController(RecordService, FormService, ApplicationController);
                         var selectedRow = g;
                         if (selectedRow != null)
                         {
@@ -151,8 +153,46 @@ namespace JosephM.Application.ViewModel.Query
 
                 RefreshConditionButtons();
 
-                QueryRun = false;
+                if (resetQueryRun)
+                    QueryRun = false;
             }
+        }
+
+        private void LoadColumnEdit()
+        {
+            DoOnMainThread(() =>
+            {
+                //okay lets spawn a dialog for editing the columns in the grid
+                var currentColumns = DynamicGridViewModel.FieldMetadata
+                    .OrderBy(f => f.Order)
+                    .Select(f => new KeyValuePair<string,double>(f.FieldName, f.WidthPart))
+                    .ToArray();
+
+                Action<IEnumerable<ColumnEditDialogViewModel.SelectableColumn>> letsLoadTheColumns = (newColumnSet) =>
+                {
+                    DoOnMainThread(() =>
+                    {
+                        ExplicitlySelectedColumns = new List<GridFieldMetadata>();
+                        for (var i = 1; i <= newColumnSet.Count(); i++)
+                        {
+                            var thisOne = newColumnSet.ElementAt(i - 1);
+                            ExplicitlySelectedColumns.Add(new GridFieldMetadata(new ViewField(thisOne.FieldName, i, Convert.ToInt32(thisOne.Width))));
+                        }
+                        ClearChildForm();
+                        RecreateGrid();
+                        QuickFind();
+                    });
+                };
+
+                var columnEditDialog = new ColumnEditDialogViewModel(RecordType, currentColumns, RecordService, letsLoadTheColumns, ClearChildForm, ApplicationController);
+                LoadChildForm(columnEditDialog);
+            });
+        }
+
+
+        private List<GridFieldMetadata> ExplicitlySelectedColumns
+        {
+            get; set;
         }
 
         private void ResetToQueryEntry()
@@ -492,6 +532,7 @@ namespace JosephM.Application.ViewModel.Query
                         var fieldNames = Task.Run(() => RecordService.GetFields(value)).Result;
                     }
                     _recordType = value;
+                    ExplicitlySelectedColumns = null;
                     if (_recordType != null && AllowQuery)
                     {
                         FilterConditions = CreateFilterCondition();

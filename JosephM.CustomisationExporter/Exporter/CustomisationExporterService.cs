@@ -278,6 +278,9 @@ namespace JosephM.CustomisationExporter.Exporter
                                     : null;
                                 var includeTime = false;
                                 var dateBehaviour = "N/A";
+                                var integerFormat = thisFieldType == RecordFieldType.Integer
+                                    ? Service.GetFieldMetadata(field, thisType).IntegerFormat.ToString()
+                                    : null;
                                 var minValue = "-1";
                                 var maxValue = "-1";
                                 var precision = "-1";
@@ -336,7 +339,7 @@ namespace JosephM.CustomisationExporter.Exporter
                                     Service.GetFieldMetadata(field, thisType).Description, primaryField == field,
                                     Service.GetFieldMetadata(field, thisType).Audit,
                                     Service.GetFieldMetadata(field, thisType).Searchable
-                                    , displayRelated, referencedType, maxLength, textFormat, dateBehaviour, includeTime, minValue,
+                                    , displayRelated, referencedType, maxLength, textFormat, integerFormat, dateBehaviour, includeTime, minValue,
                                     maxValue, precision, picklist, Service.GetFieldMetadata(field, thisType).MetadataId, Service.GetFieldMetadata(field, thisType).IsMultiSelect);
                                 if (Service.IsString(field, thisType))
                                     fieldExport.MaxLength = Service.GetMaxLength(field, thisType);

@@ -167,10 +167,18 @@
     <Compile Include="Grid\DynamicGridView.xaml.cs">
       <DependentUpon>DynamicGridView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Grid\Fields\GridActivityPartyColumn.cs" />
+    <Compile Include="Grid\Fields\GridActivityPartyFieldView.xaml.cs">
+      <DependentUpon>GridActivityPartyFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\Fields\GridDateFieldView.xaml.cs">
       <DependentUpon>GridDateFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\Fields\GridDateColumn.cs" />
+    <Compile Include="Grid\Fields\GridIntPicklistFieldView.xaml.cs">
+      <DependentUpon>GridIntPicklistFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\Fields\GridIntPicklistColumn.cs" />
     <Compile Include="Grid\Fields\GridMoneyFieldView.xaml.cs">
       <DependentUpon>GridMoneyFieldView.xaml</DependentUpon>
     </Compile>
@@ -203,6 +211,9 @@
       <DependentUpon>GridMultiSelectFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\Fields\GridMultiSelectColumn.cs" />
+    <Compile Include="Query\ColumnEditDialogView.xaml.cs">
+      <DependentUpon>ColumnEditDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Query\JoinsView.xaml.cs">
       <DependentUpon>JoinsView.xaml</DependentUpon>
     </Compile>
@@ -261,6 +272,9 @@
     <Compile Include="RecordEntry\Field\DecimalFieldView.xaml.cs">
       <DependentUpon>DecimalFieldView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\IntegerPicklistFieldView.xaml.cs">
+      <DependentUpon>IntegerPicklistFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
       <DependentUpon>LookupPicklistView.xaml</DependentUpon>
     </Compile>
@@ -289,6 +303,9 @@
     </Compile>
     <Compile Include="RecordEntry\Field\RecordTypeView.xaml.cs">
       <DependentUpon>RecordTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\ActivityPartyFieldView.xaml.cs">
+      <DependentUpon>ActivityPartyFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\StringEnumerableFieldView.xaml.cs">
       <DependentUpon>StringEnumerableFieldView.xaml</DependentUpon>
@@ -384,7 +401,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\Fields\GridActivityPartyFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\Fields\GridDateFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\Fields\GridIntPicklistFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -417,6 +442,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Grid\Fields\GridMultiSelectFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Query\ColumnEditDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -488,6 +517,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="RecordEntry\Field\IntegerPicklistFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="RecordEntry\Field\LookupPicklistView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -521,6 +554,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\RecordTypeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\ActivityPartyFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

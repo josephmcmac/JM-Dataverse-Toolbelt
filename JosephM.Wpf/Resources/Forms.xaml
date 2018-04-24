@@ -48,6 +48,9 @@
     <DataTemplate x:Key="integerFieldTemplate">
         <field:IntegerFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="IntegerPicklistFieldTemplate">
+        <field:IntegerPicklistFieldView DataContext="{Binding}" />
+    </DataTemplate>
     <DataTemplate x:Key="fileRefFieldTemplate">
         <field:FileRefFieldView DataContext="{Binding}" />
     </DataTemplate>
@@ -81,12 +84,17 @@
     <DataTemplate x:Key="MultiSelectFieldTemplate">
         <field:MultiSelectView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="ActivityPartyFieldTemplate">
+        <field:ActivityPartyFieldView DataContext="{Binding}" />
+    </DataTemplate>
     <templateSelector:FieldTemplateSelector
+        ActivityPartyFieldTemplate="{StaticResource ActivityPartyFieldTemplate}"
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
         DateFieldTemplate="{StaticResource dateFieldTemplate}"
         StringFieldTemplate="{StaticResource stringFieldTemplate}"
         IntegerFieldTemplate="{StaticResource integerFieldTemplate}"
+        IntegerPicklistFieldTemplate="{StaticResource IntegerPicklistFieldTemplate}"
         FileRefFieldTemplate="{StaticResource fileRefFieldTemplate}"
         LookupFieldTemplate="{StaticResource LookupFieldTemplate}"
         LookupFieldPicklistTemplate="{StaticResource LookupFieldPicklistTemplate}"

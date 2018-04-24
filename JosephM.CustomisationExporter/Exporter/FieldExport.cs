@@ -9,7 +9,7 @@ namespace JosephM.CustomisationExporter.Exporter
         public FieldExport(string recordTypeLabel, string recordTypeSchemaName, string fieldLabel,
             string fieldSchemaName, RecordFieldType fieldType, bool isCustomField, bool isMandatory, string description,
             bool isPrimaryField, bool audit, bool searchable, bool displayInRelated, string referencedType,
-            int maxLength, string textFormat, string dateBehaviour, bool includeTime, string minValue, string maxValue,
+            int maxLength, string textFormat, string integerFormat, string dateBehaviour, bool includeTime, string minValue, string maxValue,
             string decimalPrecision, string picklistOptions, string metadataId, bool isMultiSelect)
         {
             DecimalPrecision = decimalPrecision;
@@ -26,6 +26,7 @@ namespace JosephM.CustomisationExporter.Exporter
             DisplayInRelated = displayInRelated;
             MaxLength = maxLength;
             TextFormat = textFormat;
+            IntegerFormat = integerFormat;
             DateBehaviour = dateBehaviour;
             IncludeTime = includeTime;
             MinValue = minValue;
@@ -84,6 +85,9 @@ namespace JosephM.CustomisationExporter.Exporter
 
         [DisplayName(Headings.Fields.TextFormat)]
         public string TextFormat { get; set; }
+
+        [DisplayName(Headings.Fields.IntegerFormat)]
+        public string IntegerFormat { get; set; }
 
         [DisplayName(Headings.Fields.DateBehaviour)]
         public string DateBehaviour { get; set; }

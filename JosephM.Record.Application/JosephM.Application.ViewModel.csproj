@@ -98,11 +98,13 @@
     <Compile Include="ApplicationOptions\ApplicationOption.cs" />
     <Compile Include="ApplicationOptions\ApplicationOptionsViewModel.cs" />
     <Compile Include="Dialog\CompletionScreenViewModel.cs" />
+    <Compile Include="Query\ColumnEditDialogViewModel.cs" />
     <Compile Include="Query\JoinViewModel.cs" />
     <Compile Include="Query\JoinsViewModel.cs" />
     <Compile Include="Query\QueryViewModel.cs" />
     <Compile Include="Query\ConditionViewModel.cs" />
     <Compile Include="Query\FilterConditionsViewModel.cs" />
+    <Compile Include="RecordEntry\Field\ActivityPartyFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\MultiSelectDialogViewModel.cs" />
     <Compile Include="RecordEntry\Field\MultiSelectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\MoneyFieldViewModel.cs" />

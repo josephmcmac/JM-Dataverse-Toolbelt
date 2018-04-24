@@ -13,13 +13,6 @@
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Dialogs.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <Style x:Key="CloseTabButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="Height" Value="18" />
-        <Setter Property="Width" Value="18" />
-        <Setter Property="Margin" Value="3,3,3,3" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-    </Style>
     <Style x:Key="TabLabelStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Margin" Value="3,3,3,3" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -75,7 +68,7 @@
     <DataTemplate x:Key="TabItemHeaderTemplate">
         <DockPanel>
             <TextBlock Style="{StaticResource TabLabelStyle}" Text="{Binding TabLabel}" />
-            <Button Style="{StaticResource CloseTabButtonStyle}" Command="{Binding TabCloseCommand}" >
+            <Button Style="{StaticResource RemoveButtonStyle}" Command="{Binding TabCloseCommand}" >
                 <Image Source="../Images/CloseButton.gif" Height="15" Width="15" />
             </Button>
         </DockPanel>

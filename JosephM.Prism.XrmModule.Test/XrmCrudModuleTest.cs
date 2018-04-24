@@ -22,6 +22,77 @@ namespace JosephM.XrmModule.Test
         /// scripts through running a query with joins and conditions
         /// </summary>
         [TestMethod]
+        public void XrmCrudQueryEditColumnsTestScript()
+        {
+            var count = XrmRecordService.GetFirstX(Entities.account, 3, null, null).Count();
+            while (count < 3)
+            {
+                CreateAccount();
+                count++;
+            }
+
+            //Create test app and load query
+            var app = CreateAndLoadTestApplication<XrmCrudModule>();
+            var crudDialog = app.NavigateToDialog<XrmCrudModule, XrmCrudDialog>();
+            var queryViewModel = crudDialog.Controller.UiItems[0] as QueryViewModel;
+            Assert.IsNotNull(queryViewModel);
+
+            //select account type then edit columns button
+            queryViewModel.SelectedRecordType = queryViewModel.RecordTypeItemsSource.First(r => r.Key == Entities.account);
+
+            var initialColumnCount = queryViewModel.DynamicGridViewModel.FieldMetadata.Count();
+
+            queryViewModel.DynamicGridViewModel.GetButton("EDITCOLUMNS").Invoke();
+
+            Assert.AreEqual(1, queryViewModel.ChildForms.Count);
+            var editColumnsDialog = queryViewModel.ChildForms.First() as ColumnEditDialogViewModel;
+            Assert.IsNotNull(editColumnsDialog);
+
+            //okay lets do some moving of columns
+            var currentCount = editColumnsDialog.CurrentColumns.Count;
+            var selectableCount = editColumnsDialog.SelectableColumns.Count;
+
+            Assert.IsTrue(currentCount > 0);
+            Assert.IsTrue(selectableCount > 0);
+
+            //add column button
+            editColumnsDialog.SelectableColumns.Last().AddCommand.Execute();
+            Assert.AreEqual(++currentCount, editColumnsDialog.CurrentColumns.Count);
+            Assert.AreEqual(--selectableCount, editColumnsDialog.SelectableColumns.Count);
+            //drag column
+            editColumnsDialog.AddCurrentItem(editColumnsDialog.SelectableColumns.Last(), target: editColumnsDialog.SelectableColumns.First(), isAfter: false);
+            Assert.AreEqual(++currentCount, editColumnsDialog.CurrentColumns.Count);
+            Assert.AreEqual(--selectableCount, editColumnsDialog.SelectableColumns.Count);
+
+            //remove column
+            editColumnsDialog.CurrentColumns.Last().RemoveCommand.Execute();
+            Assert.AreEqual(--currentCount, editColumnsDialog.CurrentColumns.Count);
+            Assert.AreEqual(++selectableCount, editColumnsDialog.SelectableColumns.Count);
+
+            //reorder colummn
+            editColumnsDialog.AddCurrentItem(editColumnsDialog.CurrentColumns.First(), target: editColumnsDialog.CurrentColumns.Last(), isAfter: true);
+            Assert.AreEqual(currentCount, editColumnsDialog.CurrentColumns.Count);
+            Assert.AreEqual(selectableCount, editColumnsDialog.SelectableColumns.Count);
+
+            editColumnsDialog.AddCurrentItem(editColumnsDialog.CurrentColumns.First(), target: editColumnsDialog.CurrentColumns.First(), isAfter: false);
+            Assert.AreEqual(currentCount, editColumnsDialog.CurrentColumns.Count);
+            Assert.AreEqual(selectableCount, editColumnsDialog.SelectableColumns.Count);
+
+            Assert.AreNotEqual(initialColumnCount, currentCount);
+
+            editColumnsDialog.ApplyChanges();
+
+            Assert.AreEqual(0, queryViewModel.ChildForms.Count);
+
+            Assert.AreEqual(currentCount, queryViewModel.DynamicGridViewModel.FieldMetadata.Count());
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.GridRecords.Any());
+            Assert.AreEqual(currentCount, queryViewModel.DynamicGridViewModel.GridRecords.First().FieldViewModels.Count());
+        }
+
+        /// <summary>
+        /// scripts through running a query with joins and conditions
+        /// </summary>
+        [TestMethod]
         public void XrmCrudQueryTestScript()
         {
             var count = XrmRecordService.GetFirstX(Entities.account, 3, null, null).Count();

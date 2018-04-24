@@ -451,7 +451,9 @@ namespace JosephM.Record.Xrm.XrmRecord
                             typedField.Audit,
                             typedField.Searchable,
                             recordType,
-                            Convert.ToInt32(typedField.MinValue), Convert.ToInt32(typedField.MaxValue));
+                            Convert.ToInt32(typedField.MinValue), Convert.ToInt32(typedField.MaxValue),
+                            new IntegerTypeMapper().Map(
+                                typedField.IntegerFormat));
                         break;
                     }
                 case (RecordFieldType.Lookup):

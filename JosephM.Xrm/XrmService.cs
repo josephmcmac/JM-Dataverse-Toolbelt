@@ -58,6 +58,9 @@ namespace JosephM.Xrm
         private readonly List<ManyToManyRelationshipMetadata> _relationshipMetadata = new
             List<ManyToManyRelationshipMetadata>();
 
+
+        private Dictionary<IntegerFormat, Dictionary<int, string>> _intPicklistCache = new Dictionary<IntegerFormat, Dictionary<int, string>>();
+
         protected LogController Controller;
 
 
@@ -342,12 +345,58 @@ namespace JosephM.Xrm
             return result;
         }
 
+        private IDictionary<int,string> GetIntPicklistCache(IntegerFormat integerFormat)
+        {
+            lock(_lockObject)
+            {
+                if (!_intPicklistCache.ContainsKey(integerFormat))
+                {
+                    if (integerFormat == IntegerFormat.TimeZone)
+                    {
+                        var dictionary = new Dictionary<int, string>();
+                        foreach (var tz in RetrieveAllEntityType(Entities.timezonedefinition))
+                        {
+                            if (!dictionary.ContainsKey(tz.GetInt(Fields.timezonedefinition_.timezonecode)))
+                                dictionary.Add(tz.GetInt(Fields.timezonedefinition_.timezonecode), tz.GetStringField(Fields.timezonedefinition_.userinterfacename));
+                        }
+                        _intPicklistCache.Add(integerFormat, dictionary);
+                    }
+                    else if (integerFormat == IntegerFormat.Language)
+                    {
+                        var dictionary = new Dictionary<int, string>();
+
+                        var req = new RetrieveAvailableLanguagesRequest();
+                        var res = (RetrieveAvailableLanguagesResponse)Execute(req);
+
+                        foreach (var tz in RetrieveAllEntityType(Entities.languagelocale))
+                        {
+                            var localeId = tz.GetInt(Fields.languagelocale_.localeid);
+                            if (res.LocaleIds.Contains(localeId) && !dictionary.ContainsKey(localeId))
+                                dictionary.Add(localeId, tz.GetStringField(Fields.languagelocale_.language));
+                        }
+                        _intPicklistCache.Add(integerFormat, dictionary);
+                    }
+                    else
+                        _intPicklistCache.Add(integerFormat, new Dictionary<int, string>());
+                }
+                return _intPicklistCache[integerFormat];
+            }
+        }
+
+
         public IEnumerable<KeyValuePair<int, string>> GetPicklistKeyValues(string entityType, string fieldName)
         {
             var fieldType = GetFieldType(fieldName, entityType);
             var fieldMetadata = GetFieldMetadata(fieldName, entityType);
             if (fieldMetadata is EnumAttributeMetadata && ((EnumAttributeMetadata)fieldMetadata).OptionSet != null)
+            {
                 return OptionSetToKeyValues(((EnumAttributeMetadata)fieldMetadata).OptionSet.Options);
+            }
+            if (fieldMetadata is IntegerAttributeMetadata)
+            {
+                var intMt = fieldMetadata as IntegerAttributeMetadata;
+                return GetIntPicklistCache(intMt.Format ?? IntegerFormat.None);
+            }
             return new KeyValuePair<int, string>[0];
         }
 
@@ -725,6 +774,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 AllRelationshipMetadata = null;
                 SharedOptionSets = null;
                 _loadedAllEntities = false;
+                _intPicklistCache.Clear();
             }
         }
 
@@ -2388,7 +2438,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public void CreateOrUpdateIntegerAttribute(string schemaName, string displayName, string description,
             bool isRequired, bool audit, bool searchable,
-            string recordType, int minimum, int maximum)
+            string recordType, int minimum, int maximum, IntegerFormat integerFormat)
         {
             IntegerAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
@@ -2400,6 +2450,8 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
             metadata.MinValue = minimum;
             metadata.MaxValue = maximum;
+
+            metadata.Format = integerFormat;
 
             CreateOrUpdateAttribute(schemaName, recordType, metadata);
         }
@@ -3065,9 +3117,11 @@ string recordType)
                     var namesToOutput = new List<string>();
                     foreach (var party in (Entity[])value)
                     {
-                        namesToOutput.Add(party.GetLookupName("partyid"));
+                        var displayIt = party.GetLookupName(Fields.activityparty_.partyid);
+                        displayIt = displayIt ?? party.GetStringField(Fields.activityparty_.addressused);
+                        namesToOutput.Add(displayIt);
                     }
-                    return string.Join(", ", namesToOutput.Where(f => !f.IsNullOrWhiteSpace()));
+                    return string.Join("; ", namesToOutput.Where(f => !f.IsNullOrWhiteSpace()));
                 }
             }
             return value.ToString();

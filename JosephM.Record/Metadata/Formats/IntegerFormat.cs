@@ -3,6 +3,9 @@
     public enum IntegerType
     {
         None,
-        TimeZone
+        Duration,
+        TimeZone,
+        Language,
+        Locale
     }
 }

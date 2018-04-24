@@ -39,7 +39,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         private object DeltaValue { get; set; }
 
-        private IRecord Record
+        protected IRecord Record
         {
             get { return GetRecordForm().GetRecord(); }
         }

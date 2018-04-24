@@ -625,9 +625,7 @@ namespace JosephM.Record.Sql
         {
             var fieldMetadata = this.GetFieldMetadata(fieldName, recordType);
             var picklist = fieldMetadata as PicklistFieldMetadata;
-            if (picklist == null)
-                throw new NullReferenceException(string.Format("Error {0} metadata object for type {1} not of type {2}", fieldName, recordType, typeof(PicklistFieldMetadata)));
-            return picklist.PicklistOptions;
+            return picklist?.PicklistOptions;
         }
 
         private string GetOptionLabel(string optionKey, string fieldName, string recordType)

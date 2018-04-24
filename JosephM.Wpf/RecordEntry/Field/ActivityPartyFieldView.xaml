@@ -1,0 +1,27 @@
+﻿<field:FieldControlBase x:Class="JosephM.Wpf.RecordEntry.Field.ActivityPartyFieldView"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+                        mc:Ignorable="d"
+                        d:DesignHeight="40" d:DesignWidth="300">
+    <field:FieldControlBase.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </field:FieldControlBase.Resources>
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+        <TextBox
+            TabIndex="1"
+            Name="TextBox"
+            DataContext="{Binding NotifyOnValidationError=True}"
+            Text="{Binding DisplayString, Mode=OneWay}"
+            Style="{StaticResource FieldEntryStyle}"
+            IsEnabled="False"
+             />
+    </Grid>
+</field:FieldControlBase>
