@@ -197,8 +197,8 @@ namespace JosephM.Record.Service
 
         public virtual IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
-            return
-                ((PicklistFieldMetadata)this.GetFieldMetadata(field, recordType)).PicklistOptions;
+            var metadata = this.GetFieldMetadata(field, recordType) as PicklistFieldMetadata;
+            return metadata?.PicklistOptions;
         }
 
         public virtual IEnumerable<IRecord> GetLinkedRecords(string linkedEntityType, string entityTypeFrom,

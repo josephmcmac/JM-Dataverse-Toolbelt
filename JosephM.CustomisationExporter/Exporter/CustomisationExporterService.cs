@@ -276,6 +276,9 @@ namespace JosephM.CustomisationExporter.Exporter
                                 var textFormat = thisFieldType == RecordFieldType.String
                                     ? Service.GetFieldMetadata(field, thisType).TextFormat.ToString()
                                     : null;
+                                var integerFormat = thisFieldType == RecordFieldType.Integer
+                                    ? Service.GetFieldMetadata(field, thisType).IntegerFormat.ToString()
+                                    : null;
                                 var includeTime = thisFieldType == RecordFieldType.Date &&
                                                   Service.GetFieldMetadata(field, thisType).IncludeTime;
                                 var minValue = "-1";
@@ -331,7 +334,7 @@ namespace JosephM.CustomisationExporter.Exporter
                                     Service.GetFieldMetadata(field, thisType).Description, primaryField == field,
                                     Service.GetFieldMetadata(field, thisType).Audit,
                                     Service.GetFieldMetadata(field, thisType).Searchable
-                                    , displayRelated, referencedType, maxLength, textFormat, includeTime, minValue,
+                                    , displayRelated, referencedType, maxLength, textFormat, integerFormat, includeTime, minValue,
                                     maxValue, precision, picklist, Service.GetFieldMetadata(field, thisType).MetadataId);
                                 if (Service.IsString(field, thisType))
                                     fieldExport.MaxLength = Service.GetMaxLength(field, thisType);

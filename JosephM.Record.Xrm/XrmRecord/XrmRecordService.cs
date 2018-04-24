@@ -104,6 +104,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             return type == AttributeTypeCode.Picklist
                 || type == AttributeTypeCode.State
                 || type == AttributeTypeCode.Status
+                || type == AttributeTypeCode.Integer
                 ? _xrmService.GetPicklistKeyValues(recordType, field)
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value))
                 .ToArray()
@@ -442,7 +443,9 @@ namespace JosephM.Record.Xrm.XrmRecord
                             typedField.Audit,
                             typedField.Searchable,
                             recordType,
-                            Convert.ToInt32(typedField.MinValue), Convert.ToInt32(typedField.MaxValue));
+                            Convert.ToInt32(typedField.MinValue), Convert.ToInt32(typedField.MaxValue),
+                            new IntegerTypeMapper().Map(
+                                typedField.IntegerFormat));
                         break;
                     }
                 case (RecordFieldType.Lookup):

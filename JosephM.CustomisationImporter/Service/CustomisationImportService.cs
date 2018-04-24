@@ -243,7 +243,7 @@ namespace JosephM.CustomisationImporter.Service
                                 {
                                     fieldMetadata = new DecimalFieldMetadata(recordTypeSchemaName, fieldSchemaName,
                                         displayName);
-                                    fieldMetadata.MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum);
+                                        fieldMetadata.MinValue = row.GetFieldAsDecimal(Headings.Fields.Minimum);
                                         fieldMetadata.MaxValue = row.GetFieldAsDecimal(Headings.Fields.Maximum);
                                         fieldMetadata.DecimalPrecision = row.GetFieldAsInteger(Headings.Fields.DecimalPrecision);
                                     break;
@@ -252,8 +252,12 @@ namespace JosephM.CustomisationImporter.Service
                                 {
                                     fieldMetadata = new IntegerFieldMetadata(recordTypeSchemaName, fieldSchemaName,
                                         displayName);
-                            fieldMetadata.MinValue = row.GetFieldAsInteger(Headings.Fields.Minimum);
+                                        fieldMetadata.MinValue = row.GetFieldAsInteger(Headings.Fields.Minimum);
                                         fieldMetadata.MaxValue = row.GetFieldAsInteger(Headings.Fields.Maximum);
+                                        fieldMetadata.IntegerFormat =
+                                            !row.GetColumnNames().Contains(Headings.Fields.IntegerFormat) ||  string.IsNullOrWhiteSpace(row.GetFieldAsString(Headings.Fields.IntegerFormat))
+                                                ? IntegerType.None
+                                                : row.GetFieldAsEnum<IntegerType>(Headings.Fields.IntegerFormat);
                                     break;
                                 }
                             case (RecordFieldType.Lookup):

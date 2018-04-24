@@ -377,5 +377,10 @@ namespace JosephM.Record.Extentions
         {
             return recordService.GetSharedPicklist(name).PicklistOptions;
         }
+
+        public static IntegerType GetIntegerFormat(this IRecordService recordService, string fieldName, string recordType)
+        {
+            return recordService.GetFieldMetadata(fieldName, recordType).IntegerFormat;
+        }
     }
 }

@@ -478,9 +478,7 @@ namespace JosephM.Record.Service
                         return options;
                     }
             }
-            throw new ArgumentOutOfRangeException(
-                string.Format("GetPicklistOptions Not Implemented For Fiel Of Type {0} Field: {1} Type {2}", fieldType,
-                    fieldName, recordType));
+            return null;
         }
 
         public Condition GetLookupConditionFors(string fieldName, string recordType, string reference, IRecord record)

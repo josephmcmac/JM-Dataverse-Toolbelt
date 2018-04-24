@@ -268,8 +268,26 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             }
-                            else if (column.FieldType == RecordFieldType.Integer ||
-                                     column.FieldType == RecordFieldType.BigInt)
+                            else if (column.FieldType == RecordFieldType.Integer)
+                            {
+                                var format = gridSectionViewModel.RecordService.GetIntegerFormat(column.FieldName,
+                                        gridSectionViewModel.RecordType);
+                                if(format == IntegerType.TimeZone || format == IntegerType.Language)
+                                {
+                                    dataGridField = new GridIntPicklistColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else
+                                {
+                                    dataGridField = new GridIntColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                            }
+                            else if (column.FieldType == RecordFieldType.BigInt)
                             {
                                 dataGridField = new GridIntColumn()
                                 {

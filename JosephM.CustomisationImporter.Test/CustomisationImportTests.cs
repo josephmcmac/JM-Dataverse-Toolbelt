@@ -298,6 +298,8 @@ namespace JosephM.CustomisationImporter.Test
                                   ((IntegerFieldMetadata)field).MinValue);
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).MaxValue ==
                                   ((IntegerFieldMetadata)field).MaxValue);
+                    Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).IntegerFormat ==
+                                    ((IntegerFieldMetadata)field).IntegerFormat);
                 }
                 if (field.FieldType == RecordFieldType.Decimal)
                 {
