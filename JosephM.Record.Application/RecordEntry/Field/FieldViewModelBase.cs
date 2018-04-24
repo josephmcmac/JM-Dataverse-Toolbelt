@@ -155,9 +155,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 _isVisible = value;
-                OnPropertyChanged("IsVisible");
-                OnPropertyChanged("IsVisibleAndEditable");
-                OnPropertyChanged("IsVisibleAndReadonly");
+                OnPropertyChanged(nameof(IsVisible));
+                OnPropertyChanged(nameof(IsVisibleAndEditable));
+                OnPropertyChanged(nameof(IsVisibleAndReadonly));
             }
         }
 
@@ -177,10 +177,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 _isEditable = value;
-                OnPropertyChanged("IsEditable");
-                OnPropertyChanged("IsReadOnly");
-                OnPropertyChanged("IsVisibleAndEditable");
-                OnPropertyChanged("IsVisibleAndReadonly");
+                OnPropertyChanged(nameof(IsEditable));
+                OnPropertyChanged(nameof(IsReadOnly));
+                OnPropertyChanged(nameof(IsVisibleAndEditable));
+                OnPropertyChanged(nameof(IsVisibleAndReadonly));
             }
         }
 
