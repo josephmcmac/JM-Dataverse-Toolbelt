@@ -74,7 +74,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     case RecordFieldType.Integer:
                     {
-                        var picklist = recordService.GetPicklistKeyValues(field, recordType);
+                        var picklist = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType);
                         fieldVm = new IntegerFieldViewModel(field, label, recordForm, picklist)
                         {
                             IsRecordServiceField = isRecordServiceField

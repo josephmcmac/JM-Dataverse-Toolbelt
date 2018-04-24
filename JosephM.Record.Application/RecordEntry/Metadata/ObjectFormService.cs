@@ -588,6 +588,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                             var explicitPicklistOptions = fieldType == RecordFieldType.Picklist
                                                                         || fieldType == RecordFieldType.Status
                                                                         || fieldType == RecordFieldType.State
+                                                                        || fieldType == RecordFieldType.Integer
                                                 ? lookupService.GetPicklistKeyValues(selectedFieldName, selectedFieldRecordType)
                                                 : null;
                                             if (clearValue)
