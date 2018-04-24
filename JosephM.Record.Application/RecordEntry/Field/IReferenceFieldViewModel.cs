@@ -23,5 +23,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         bool Searching { get; }
 
         string EnteredText { get; set; }
+
+        bool IsEditable { get; }
     }
 }

@@ -260,7 +260,15 @@ namespace JosephM.Xrm.Test
                             }
                         case AttributeTypeCode.Integer:
                             {
-                                entity.SetField(field, 1);
+                                var options = XrmService.GetPicklistKeyValues(type, field);
+                                if (options != null && options.Any())
+                                {
+                                    entity.SetField(field, options.First().Key);
+                                }
+                                else
+                                {
+                                    entity.SetField(field, 1);
+                                }
                                 break;
                             }
                         case AttributeTypeCode.Lookup:
