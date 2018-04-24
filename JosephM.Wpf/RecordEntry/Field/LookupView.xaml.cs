@@ -29,6 +29,8 @@ namespace JosephM.Wpf.RecordEntry.Field
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (ViewModel == null || !ViewModel.IsEditable)
+                return;
             if (e.Key == Key.Enter)
                 ViewModel.Search();
             if (e.Key == Key.Down)
