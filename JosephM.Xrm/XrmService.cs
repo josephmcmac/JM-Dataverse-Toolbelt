@@ -359,6 +359,13 @@ namespace JosephM.Xrm
                             if (!dictionary.ContainsKey(tz.GetInt(Fields.timezonedefinition_.timezonecode)))
                                 dictionary.Add(tz.GetInt(Fields.timezonedefinition_.timezonecode), tz.GetStringField(Fields.timezonedefinition_.userinterfacename));
                         }
+                        dictionary = dictionary
+                            .OrderBy(kv => kv.Value == null ? 0 : kv.Value.Contains("GMT-") ? 1 : kv.Value.Contains("GMT+") ? 3 : 2)
+                            .ThenByDescending(kv => kv.Value == null ? "" : (kv.Value.Contains("GMT-") && kv.Value.IndexOf(")") > 0) ? kv.Value.Substring(0, kv.Value.IndexOf(")")) :"")
+                            .ThenBy(kv => kv.Value == null ? "" : (kv.Value.Contains("GMT+") && kv.Value.IndexOf(")") > 0) ? kv.Value.Substring(0, kv.Value.IndexOf(")")) : "")
+                            .ThenBy(kv => kv.Value)
+
+                            .ToDictionary(kv => kv.Key, kv => kv.Value);
                         _intPicklistCache.Add(integerFormat, dictionary);
                     }
                     else if (integerFormat == IntegerFormat.Language)
@@ -374,6 +381,9 @@ namespace JosephM.Xrm
                             if (res.LocaleIds.Contains(localeId) && !dictionary.ContainsKey(localeId))
                                 dictionary.Add(localeId, tz.GetStringField(Fields.languagelocale_.language));
                         }
+                        dictionary = dictionary
+                            .OrderBy(kv => kv.Value)
+                            .ToDictionary(kv => kv.Key, kv => kv.Value);
                         _intPicklistCache.Add(integerFormat, dictionary);
                     }
                     else
