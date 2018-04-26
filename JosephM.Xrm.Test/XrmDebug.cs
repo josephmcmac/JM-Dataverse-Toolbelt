@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using JosephM.Xrm.Schema;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -14,7 +15,7 @@ namespace JosephM.Xrm.Test
         {
             var blah = XrmService.WhoAmI();
 
-            var metadata = XrmService.GetFieldMetadata("impersonatinguserid", "sdkmessageprocessingstep");
+            var metadata = XrmService.GetFields(Entities.account);
         }
 
         private void DeleteOnlineSampleData()

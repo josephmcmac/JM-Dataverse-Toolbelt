@@ -1,22 +1,21 @@
+using JosephM.Application.ViewModel.Extentions;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Application.ViewModel.Shared;
+using JosephM.Core.Extentions;
+using JosephM.Core.Utility;
+using JosephM.Record.Extentions;
+using JosephM.Record.IService;
+using JosephM.Record.Metadata;
+using JosephM.Record.Query;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.ViewModel.Grid;
-using System;
-using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Application.ViewModel.RecordEntry.Metadata;
-using JosephM.Record.IService;
-using JosephM.Record.Query;
 using System.Collections.ObjectModel;
-using System.Threading;
-using JosephM.Core.Utility;
 using System.IO;
-using System.Diagnostics;
-using JosephM.Record.Extentions;
-using JosephM.Application.ViewModel.Extentions;
-using JosephM.Record.Metadata;
-using JosephM.Application.ViewModel.Shared;
+using System.Linq;
+using System.Threading;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -316,7 +315,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                                 , GetRecordService().GetFields(RecordType),
                                 (f) => GetRecordService().GetFieldLabel(f, RecordType),
                                 (r, f) => GetRecordService().GetFieldAsDisplayString((IRecord)r, f));
-                            Process.Start(fileName);
+                            ApplicationController.StartProcess(fileName);
                         }
                         catch (Exception ex)
                         {

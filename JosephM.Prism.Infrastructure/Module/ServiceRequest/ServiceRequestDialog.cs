@@ -9,7 +9,6 @@ using JosephM.ObjectMapping;
 using JosephM.Record.IService;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace JosephM.Application.Desktop.Module.ServiceRequest
@@ -133,7 +132,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
         {
             try
             {
-                Process.Start(folder);
+                ApplicationController.StartProcess(folder);
             }
             catch (Exception ex)
             {
