@@ -3,7 +3,6 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
 using JosephM.Record.IService;
 using System;
-using System.Diagnostics;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {
@@ -28,7 +27,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         {
             try
             {
-                Process.Start(Response.FileNameQualified);
+                ApplicationController.StartProcess(Response.FileNameQualified);
             }
             catch (Exception ex)
             {
@@ -40,7 +39,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         {
             try
             {
-                Process.Start(Response.Folder);
+                ApplicationController.StartProcess(Response.Folder);
             }
             catch (Exception ex)
             {
