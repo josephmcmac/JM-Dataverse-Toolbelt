@@ -6,6 +6,7 @@ using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
@@ -112,7 +113,11 @@ namespace JosephM.Application.ViewModel.Query
 
         public Condition GetAsCondition()
         {
-            return new Condition(_queryCondition.FieldName?.Key, _queryCondition.ConditionType.HasValue ? _queryCondition.ConditionType.Value : ConditionType.Equal, _queryCondition.Value);
+            var condition = new Condition(_queryCondition.FieldName?.Key, _queryCondition.ConditionType.HasValue ? _queryCondition.ConditionType.Value : ConditionType.Equal, _queryCondition.Value);
+            //clear any condition value if the operator does not require one
+            if (!_queryCondition.IsInContext(nameof(QueryCondition.Value)))
+                condition.Value = null;
+            return condition;
         }
 
         public override bool AllowNewLookup { get { return false; } }
