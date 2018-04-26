@@ -26,7 +26,7 @@ namespace JosephM.CustomisationImporter
         public void OpenTemplateCommand()
         {
             var templateName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ContentFiles",
-                "Customisations Import Template.xlsx");
+                "Customisations Import Template V2.xlsx");
             ApplicationController.StartProcess(templateName);
         }
     }
