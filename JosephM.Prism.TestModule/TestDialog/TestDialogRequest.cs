@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
+using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using System.Collections.Generic;
@@ -30,6 +31,21 @@ namespace JosephM.TestModule.TestDialog
         [MyDescription("If set this will log a heap of errors in the service response")]
         [Group(Sections.Main)]
         public bool ThrowResponseErrors { get; set; }
+
+        [Group(Sections.Main)]
+        [FileMask(FileMasks.ExcelFile)]
+        public FileReference ExcelFile { get; set; }
+
+        [Group(Sections.Main)]
+        [FileMask(FileMasks.ZipFile)]
+        public FileReference ZipFile { get; set; }
+
+        [Group(Sections.Main)]
+        [FileMask(FileMasks.XmlFile)]
+        public FileReference XmlFile { get; set; }
+
+        [Group(Sections.Main)]
+        public Folder Folder { get; set; }
 
         [Group(Sections.SelectAll)]
         public bool Bool1 { get; set; }
@@ -96,6 +112,9 @@ namespace JosephM.TestModule.TestDialog
 
             [ReadOnlyWhenSet]
             public string ReadOnlyProp { get; set; }
+
+            [FileMask(FileMasks.CsvFile)]
+            public FileReference CsvFile { get; set; }
         }
 
         public enum TestEnum

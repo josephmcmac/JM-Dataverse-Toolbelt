@@ -1,13 +1,8 @@
-﻿#region
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using Microsoft.Win32;
-using JosephM.Core.Constants;
-
-#endregion
 
 namespace JosephM.Wpf.RecordEntry.Field
 {
@@ -45,6 +40,27 @@ namespace JosephM.Wpf.RecordEntry.Field
         protected override Binding GetValidationBinding()
         {
             return BindingOperations.GetBinding(FileNameTextBox, TextBox.TextProperty);
+        }
+
+        private void DropFile(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var data = e.Data.GetData(DataFormats.FileDrop) as string[];
+                if (data != null)
+                {
+                    foreach(var item in data)
+                    {
+                        FileNameTextBox.Text = item;
+                    }
+                }
+            }
+        }
+
+        private void TextBoxDragOver(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.All;
+            e.Handled = true;
         }
     }
 }

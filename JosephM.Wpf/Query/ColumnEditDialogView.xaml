@@ -10,29 +10,9 @@
     d:DataContext="{d:DesignInstance Type=fakes:FakeColumnEditDialogViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style TargetType="{x:Type GroupBox}" x:Key="HighlightDropZone">
-                <Setter Property="Width" Value="15" />
-                <Setter Property="Background" Value="WhiteSmoke" />
-                <Style.Triggers>
-                    <EventTrigger RoutedEvent="GroupBox.DragEnter">
-                        <BeginStoryboard x:Name="DropZoneBeginStoryboard">
-                            <Storyboard>
-                                <ColorAnimation To="Red" 
-                                Storyboard.TargetProperty="(GroupBox.Background).(SolidColorBrush.Color)" 
-                                Duration="0:0:0"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="GroupBox.DragLeave">
-                        <StopStoryboard BeginStoryboardName="DropZoneBeginStoryboard"/>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="GroupBox.Drop">
-                        <StopStoryboard BeginStoryboardName="DropZoneBeginStoryboard"/>
-                    </EventTrigger>
-                </Style.Triggers>
-            </Style>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DragDrop.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
