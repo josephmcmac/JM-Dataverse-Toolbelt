@@ -6,7 +6,7 @@ using JosephM.XrmModule.XrmConnection;
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
     [DependantModule(typeof(XrmConnectionModule))]
-    [MyDescription("Generate A Document Detailing The Field Values And Related Records For A Specific Record In The CRM Instance")]
+    [MyDescription("Generate A Document Detailing The Field Values And Related Records For A Specific Record In The Dynamics Instance")]
     public class XrmRecordExtractModule :
         ServiceRequestModule
             <XrmRecordExtractDialog, XrmRecordExtractService, RecordExtractRequest, RecordExtractResponse, RecordExtractResponseItem>

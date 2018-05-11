@@ -2,19 +2,13 @@
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace JosephM.Xrm.RecordExtract
 {
     public static class ExtractUtility
     {
-        public static string CheckStripHtml(this string value, string field)
-        {
-            if (new [] { "description", "content" }.Contains(field))
-                value = value.StripHtml();
-            return value;
-        }
+        public static int TextSearchSetSize { get { return 5000; } }
 
         public static string CheckStripFormatting(string value, string recordType, string field)
         {
@@ -47,7 +41,7 @@ namespace JosephM.Xrm.RecordExtract
                 "fieldpermission", "stringmap", "systemform", "customerrelationship", "timezonerule",
                 "partnerapplication", "calendarrule", "customeropportunityrole", "multientitysearch", "wizardpage",
                 "authorizationserver", "complexcontrol", "workflowwaitsubscription", "sdkmessagerequestfield",
-                "untrackedemail", "mailboxtrackingfolder", "sharepointdocument"
+                "untrackedemail", "mailboxtrackingfolder", "sharepointdocument", "pluginassembly", "sdkmessageprocessingstep", "sdkmessageprocessingstepimage", "plugintracelog"
             };
         }
 

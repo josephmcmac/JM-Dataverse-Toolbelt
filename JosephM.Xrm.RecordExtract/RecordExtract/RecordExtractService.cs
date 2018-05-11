@@ -360,7 +360,6 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                 {
                     var label = Service.GetFieldLabel(field, record.Type);
                     var display = Service.GetFieldAsDisplayString(record, field);
-                    display = display.CheckStripHtml(field);
                     if (!label.IsNullOrWhiteSpace() && !display.IsNullOrWhiteSpace() &&
                         !GetStringValuesToExclude().Contains(display))
                         table.AddFieldToTable(label, display);

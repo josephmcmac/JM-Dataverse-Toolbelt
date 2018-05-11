@@ -14,6 +14,7 @@ using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.RecordCounts;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using System.Windows;
+using JosephM.Xrm.RecordExtract.TextSearch;
 
 namespace JosephM.XrmDeveloperTool
 {
@@ -31,6 +32,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<DeploymentModule>();
             app.AddModule<CodeGeneratorModule>();
             app.AddModule<XrmRecordExtractModule>();
+            app.AddModule<XrmTextSearchModule>();
             app.AddModule<CustomisationExporterModule>();
             app.AddModule<CustomisationImportModule>();
             app.AddModule<InstanceComparerModule>();

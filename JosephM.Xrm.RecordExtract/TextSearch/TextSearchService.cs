@@ -17,19 +17,16 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
     public class TextSearchService :
         ServiceBase<TextSearchRequest, TextSearchResponse, TextSearchResponseItem>
     {
-        public TextSearchService(IRecordService service, ITextSearchSettings settings,
+        public TextSearchService(IRecordService service,
             DocumentWriter.DocumentWriter documentWriter,
             RecordExtractService recordExtractService)
         {
             Service = service;
-            Settings = settings;
             DocumentWriter = documentWriter;
             RecordExtractService = recordExtractService;
         }
 
         private DocumentWriter.DocumentWriter DocumentWriter { get; set; }
-
-        private ITextSearchSettings Settings { get; set; }
 
         private RecordExtractService RecordExtractService { get; set; }
 
@@ -45,7 +42,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             var container = new TextSearchContainer(request, response, controller, nextSection);
             ProcessRecordsContainedInName(container);
             ProcessRecordsReferencingTheWord(container);
-            ProcessEntireRecordExtracts(container);
             //insert title/summary
             firstSection.AddTitle("Text Search");
             var table = firstSection.Add2ColumnTable();
@@ -64,52 +60,52 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             container.Response.FileName = fileName;
         }
 
-        private void ProcessEntireRecordExtracts(TextSearchContainer container)
-        {
-            //for each record with exact match on name do record extract
-            //3. foreachrecord with name output them through recordextract
-            var done = 0;
-            var count = container.NameMatches.Count;
-            var typesWithExactNameMatch = container.NameMatches.Select(r => r.Type).Distinct();
-            var bookmark = container.AddHeadingWithBookmark("Detail of Records With Name Match");
-            foreach (var type in typesWithExactNameMatch.OrderBy(Service.GetDisplayName))
-            {
-                var thisType = type;
-                var thisBookmark = container.Section.AddHeading2WithBookmark(Service.GetCollectionName(thisType));
-                bookmark.AddChildBookmark(thisBookmark);
-                foreach (var record in container.NameMatches.Where(r => r.Type == thisType))
-                {
-                    try
-                    {
-                        container.Controller.UpdateProgress(done++, count,
-                            string.Format("Extracting Detail For {0} {1}", Service.GetDisplayName(type),
-                                record.GetStringField(Service.GetPrimaryField(type))));
-                        var thisResponse =
-                            RecordExtractService.ExtractRecordToDocument(container.Controller.GetLevel2Controller(),
-                                record.ToLookup(),
-                                container.Section, container.Request.DetailOfRecordsRelatedToMatches);
-                        container.Response.AddResponseItems(
-                            thisResponse.ResponseItems.Select(r => new TextSearchResponseItem(r)));
-                        if (!thisResponse.Success)
-                            throw thisResponse.Exception;
-                        thisBookmark.AddChildBookmarks(thisResponse.Bookmarks);
-                    }
-                    catch (Exception ex)
-                    {
-                        container.Response.AddResponseItem(new TextSearchResponseItem("Error Extracting Record",
-                            thisType, ex));
-                    }
-                }
-            }
-        }
+        //private void ProcessEntireRecordExtracts(TextSearchContainer container)
+        //{
+        //    //for each record with exact match on name do record extract
+        //    //3. foreachrecord with name output them through recordextract
+        //    var done = 0;
+        //    var count = container.NameMatches.Count;
+        //    var typesWithExactNameMatch = container.NameMatches.Select(r => r.Type).Distinct();
+        //    var bookmark = container.AddHeadingWithBookmark("Detail of Records With Name Match");
+        //    foreach (var type in typesWithExactNameMatch.OrderBy(Service.GetDisplayName))
+        //    {
+        //        var thisType = type;
+        //        var thisBookmark = container.Section.AddHeading2WithBookmark(Service.GetCollectionName(thisType));
+        //        bookmark.AddChildBookmark(thisBookmark);
+        //        foreach (var record in container.NameMatches.Where(r => r.Type == thisType))
+        //        {
+        //            try
+        //            {
+        //                container.Controller.UpdateProgress(done++, count,
+        //                    string.Format("Extracting Detail For {0} {1}", Service.GetDisplayName(type),
+        //                        record.GetStringField(Service.GetPrimaryField(type))));
+        //                var thisResponse =
+        //                    RecordExtractService.ExtractRecordToDocument(container.Controller.GetLevel2Controller(),
+        //                        record.ToLookup(),
+        //                        container.Section, container.Request.DetailOfRecordsRelatedToMatches);
+        //                container.Response.AddResponseItems(
+        //                    thisResponse.ResponseItems.Select(r => new TextSearchResponseItem(r)));
+        //                if (!thisResponse.Success)
+        //                    throw thisResponse.Exception;
+        //                thisBookmark.AddChildBookmarks(thisResponse.Bookmarks);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                container.Response.AddResponseItem(new TextSearchResponseItem("Error Extracting Record",
+        //                    thisType, ex));
+        //            }
+        //        }
+        //    }
+        //}
 
         private void ProcessRecordsReferencingTheWord(TextSearchContainer container)
         {
             //Search For String Field Matches
             //Append The Search For Records Referencing Records Which ZHad Name Matches
             //Then Output The Matching Fields From Those RecordTypes
-            var bookmark = container.AddHeadingWithBookmark("Field Matches");
-            var recordTypes = GetSearchRecordTypes().ToArray();
+            var bookmark = container.AddHeadingWithBookmark("Records With Field Matches");
+            var recordTypes = GetSearchRecordTypes(container).ToArray();
             var count = recordTypes.Count();
             var done = 0;
             //load all the activity party references
@@ -146,7 +142,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 var primaryField = Service.GetPrimaryField(recordType);
 
                 var fieldsToExclude = new List<string>();
-                fieldsToExclude.AddRange(Settings.GetFieldsToExclude());
+                fieldsToExclude.AddRange(ExtractUtility.GetSystemFieldsToExclude());
 
                 foreach (var field in Service.GetFields(recordType))
                 {
@@ -161,7 +157,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 }
 
                 //some lookup names don;t get loaded into the record so will load them all now so i don't have to field by field
-                recordsToOutput.Values.PopulateEmptyLookups(Service, Settings.GetRecordTypesToExclude());
+                recordsToOutput.Values.PopulateEmptyLookups(Service, ExtractUtility.GetSystemRecordTypesToExclude());
 
                 var primaryFieldLabel = Service.GetFieldLabel(primaryField, recordType);
                 var recordTypeCollectionLabel = Service.GetCollectionName(recordType);
@@ -178,8 +174,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         var value = Service.GetFieldAsDisplayString(match, field);
                         if (value != null)
                         {
-                            var stringValue = value.CheckStripHtml(field);
-                            if (IsSearchMatch(stringValue, container))
+                            if (IsSearchMatch(value, container))
                                 fieldsToDisplay.Add(field);
                         }
                     }
@@ -200,10 +195,9 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                             var value = Service.GetFieldAsDisplayString(match, field);
                             if (value != null)
                             {
-                                var stringValue = value.CheckStripHtml(field);
-                                if (IsSearchMatch(stringValue, container))
+                                if (IsSearchMatch(value, container))
                                     table.AddFieldToTable(Service.GetFieldLabel(field, recordType),
-                                        stringValue);
+                                        value);
                             }
                         }
                     }
@@ -227,7 +221,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     .ToArray();
                 if (nonPrimaryStringFields.Any())
                 {
-                    var setSearchFields = Settings.GetTextSearchSetFields()
+                    var setSearchFields = ExtractUtility.GetSystemTextSearchSetFields()
                         .Where(f => f.RecordType.Key == recordType)
                         .Select(f => f.RecordField.Key)
                         .ToArray();
@@ -310,9 +304,9 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                         string.Format("Searching {0}", label));
                                     var remaining = thisFieldSortedDates.Count;
                                     var first = thisFieldSortedDates.First();
-                                    var i = remaining < Settings.TextSearchSetSize
+                                    var i = remaining < ExtractUtility.TextSearchSetSize
                                         ? remaining - 1
-                                        : Settings.TextSearchSetSize - 1;
+                                        : ExtractUtility.TextSearchSetSize - 1;
                                     var limit = thisFieldSortedDates.ElementAt(i);
                                     if (first.Equals(limit) && thisFieldSortedDates.Any(l => l > first))
                                     {
@@ -457,15 +451,15 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         private
             void ProcessRecordsContainedInName(TextSearchContainer container)
         {
-            var bookmark = container.AddHeadingWithBookmark("Records With Matching Name");
-            var recordTypes = GetSearchRecordTypes().ToArray();
+            var bookmark = container.AddHeadingWithBookmark("Records With Name Match");
+            var recordTypes = GetSearchRecordTypes(container).ToArray();
             var count = recordTypes.Count();
             var done = 0;
             foreach (var recordType in recordTypes)
             {
                 try
                 {
-                    var progressTextPrefix = string.Format("Searching Record Names In {0}",
+                    var progressTextPrefix = string.Format("Searching Names In {0}",
                         Service.GetCollectionName(recordType));
                     container.Controller.UpdateProgress(done++, count, progressTextPrefix);
                     var primaryField = Service.GetPrimaryField(recordType);
@@ -517,12 +511,32 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             }
         }
 
-        private IEnumerable<string> GetSearchRecordTypes()
+        private IEnumerable<string> GetSearchRecordTypes(TextSearchContainer container)
         {
-            var recordTypes = Service.GetAllRecordTypes().Where(r => Service.GetRecordTypeMetadata(r).Searchable).OrderBy(n => Service.GetDisplayName(n));
-            return Settings.GetRecordTypesToExclude() != null
-                ? recordTypes.Except(Settings.GetRecordTypesToExclude())
-                : recordTypes;
+            var typesToSearch = new List<string>();
+            if (!container.Request.SearchAllTypes)
+            {
+                typesToSearch.AddRange(container.Request.TypesToSearch.Select(r => r.RecordType.Key));
+            }
+            else
+            {
+
+                typesToSearch.AddRange(Service.GetAllRecordTypes().Where(r => Service.GetRecordTypeMetadata(r).Searchable));
+                var systemExcludes = ExtractUtility.GetSystemRecordTypesToExclude();
+                if(systemExcludes != null)
+                {
+                    typesToSearch = typesToSearch.Except(systemExcludes).ToList();
+                }
+                if (container.Request.OtherExclusions != null)
+                {
+                    typesToSearch = typesToSearch.Except(container.Request.OtherExclusions.Select(r => r.RecordType.Key)).ToList();
+                }
+                if (container.Request.ExcludeEmails)
+                    typesToSearch.RemoveAll(s => s == "email");
+                if (container.Request.ExcludeEmails)
+                    typesToSearch.RemoveAll(s => s == "post");
+            }
+            return typesToSearch.OrderBy(n => Service.GetDisplayName(n)).ToArray();
         }
 
         internal bool IsSearchMatch(string stringValue, TextSearchContainer container)
