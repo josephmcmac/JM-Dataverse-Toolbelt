@@ -5,9 +5,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 {
     public class XrmTextSearchService : TextSearchService
     {
-        public XrmTextSearchService(XrmRecordService service, ITextSearchSettings textSearchSettings,
-            DocumentWriter.DocumentWriter documentWriter, XrmRecordExtractService recordExtractService)
-            : base(service, textSearchSettings, documentWriter, recordExtractService)
+        public XrmTextSearchService(XrmRecordService service, DocumentWriter.DocumentWriter documentWriter, XrmRecordExtractService recordExtractService)
+            : base(service, documentWriter, recordExtractService)
         {
         }
     }

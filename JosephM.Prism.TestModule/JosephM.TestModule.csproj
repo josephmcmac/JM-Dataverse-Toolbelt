@@ -97,7 +97,6 @@
     <Compile Include="TestSettings\ITestSettings.cs" />
     <Compile Include="TestSettings\TestSettings.cs" />
     <Compile Include="TestSettings\TestSettingsDialog.cs" />
-    <Compile Include="TestSettings\TestSettingsModule.cs" />
     <Compile Include="TestSettings\TestSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -112,6 +111,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="TestSettings\TestSettingsModule.cs" />
     <Compile Include="TestViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

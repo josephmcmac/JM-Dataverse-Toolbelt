@@ -83,17 +83,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordExtract\XrmRecordExtractDialog.cs" />
     <Compile Include="RecordExtract\XrmRecordExtractModule.cs" />
-    <Compile Include="TextSearch\XrmTextSearchSettingsModule.cs" />
-    <Compile Include="TextSearch\XrmTextSearchSettingsDialog.cs" />
-    <Compile Include="TextSearch\ITextSearchSettings.cs" />
     <Compile Include="TextSearch\TextSearchContainer.cs" />
     <Compile Include="TextSearch\TextSearchDialogBase.cs" />
     <Compile Include="TextSearch\TextSearchRequest.cs" />
     <Compile Include="TextSearch\TextSearchResponse.cs" />
     <Compile Include="TextSearch\TextSearchResponseItem.cs" />
     <Compile Include="TextSearch\TextSearchService.cs" />
-    <Compile Include="TextSearch\TextSearchSettings.cs" />
-    <Compile Include="TextSearch\TextSearchSettingsDialogBase.cs" />
     <Compile Include="TextSearch\XrmTextSearchDialog.cs" />
     <Compile Include="TextSearch\XrmTextSearchModule.cs" />
     <Compile Include="TextSearch\XrmTextSearchService.cs" />

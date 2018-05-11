@@ -70,13 +70,9 @@
     <Compile Include="RecordExtract\TestRecordExtractModule.cs" />
     <Compile Include="RecordExtract\TestRecordExtractService.cs" />
     <Compile Include="TextSearch\TestTextSearchModuleTests.cs" />
-    <Compile Include="TextSearch\TestTextSearchSettingsModule.cs" />
-    <Compile Include="TextSearch\TestTextSearchSettingsModuleTests.cs" />
     <Compile Include="TextSearch\TestTextSearchDialog.cs" />
     <Compile Include="TextSearch\TestTextSearchModule.cs" />
     <Compile Include="TextSearch\TestTextSearchService.cs" />
-    <Compile Include="TextSearch\TestTextSearchSettingsDialog.cs" />
-    <Compile Include="TextSearch\TextSearchSettingsTests.cs" />
     <Compile Include="TextSearch\TextSearchTests.cs" />
   </ItemGroup>
   <ItemGroup>
