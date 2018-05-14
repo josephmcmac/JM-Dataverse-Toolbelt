@@ -122,6 +122,10 @@
       <Project>{59CAC082-C1A8-474C-B73C-BC79267C9B51}</Project>
       <Name>JosephM.Record</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
+      <Name>JosephM.Xrm</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="JosephM.snk" />

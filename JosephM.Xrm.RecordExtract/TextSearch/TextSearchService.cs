@@ -46,7 +46,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             firstSection.AddTitle("Text Search");
             var table = firstSection.Add2ColumnTable();
             table.AddFieldToTable("Execution Time", DateTime.Now.ToString(StringFormats.DateTimeFormat));
-            table.AddFieldToTable("Search Text", request.SearchText);
+            table.AddFieldToTable("Search Operator", request.Operator.ToString());
+            table.AddFieldToTable("Search Terms", string.Join(", ", request.SearchTerms.Select(s => "\"" + s.Text + "\"")));
             firstSection.AddTableOfContents(container.Bookmarks);
 
             //save document
@@ -117,7 +118,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 try
                 {
                     AppendStringFieldMatches(container, recordType, done, count, recordsToOutput);
-                    AppendReferenceMatches(container, done, count, recordType, recordsToOutput);
+                    //if (container.Request.IncludeSearchReferenceFields)
+                    //    AppendReferenceMatches(container, done, count, recordType, recordsToOutput);
                     AppendFieldMatchesToDocument(container, recordsToOutput, recordType, bookmark);
                 }
                 catch (Exception ex)
@@ -134,6 +136,9 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             Dictionary<string, IRecord> recordsToOutput, string recordType,
             ContentBookmark bookmark)
         {
+            Table2Column fieldCountTable = null;
+            var fieldsDictionary = new Dictionary<string, int>();
+
             if (recordsToOutput.Any())
             {
                 var recordOutput = false;
@@ -141,22 +146,9 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 var todoCount = recordsToOutput.Count;
                 var primaryField = Service.GetPrimaryField(recordType);
 
-                var fieldsToExclude = new List<string>();
-                fieldsToExclude.AddRange(ExtractUtility.GetSystemFieldsToExclude());
+                var fieldsToExclude = GetFieldsToExlcude(container, recordType);
 
-                foreach (var field in Service.GetFields(recordType))
-                {
-                    var fieldType = Service.GetFieldType(field, recordType);
-                    if (fieldType == RecordFieldType.Uniqueidentifier)
-                        fieldsToExclude.Add(field);
-                    else if (Service.GetFieldType(field, recordType) == RecordFieldType.String &&
-                             Service.GetFieldMetadata(field, recordType).TextFormat == TextFormat.PhoneticGuide)
-                        fieldsToExclude.Add(field);
-                    if (field.EndsWith("_base") && fieldType == RecordFieldType.Money)
-                        fieldsToExclude.Add(field);
-                }
-
-                //some lookup names don;t get loaded into the record so will load them all now so i don't have to field by field
+                //some lookup names dont get loaded into the record so will load them all now so i don't have to field by field
                 recordsToOutput.Values.PopulateEmptyLookups(Service, ExtractUtility.GetSystemRecordTypesToExclude());
 
                 var primaryFieldLabel = Service.GetFieldLabel(primaryField, recordType);
@@ -171,11 +163,22 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         var field in
                             match.GetFieldsInEntity().Where(f => f != primaryField && !fieldsToExclude.Contains(f)))
                     {
-                        var value = Service.GetFieldAsDisplayString(match, field);
-                        if (value != null)
+                        if (Service.IsString(field, recordType))
                         {
-                            if (IsSearchMatch(value, container))
-                                fieldsToDisplay.Add(field);
+                            var value = Service.GetFieldAsDisplayString(match, field);
+                            if (container.Request.StripHtmlTagsPriorToSearch
+                                && ExtractUtility.GetSystemHtmlFields().Where(rf => rf.RecordType.Key == recordType).Any(rf => rf.RecordField.Key == field))
+                                value = value.StripHtml();
+                            if (value != null)
+                            {
+                                if (IsSearchMatch(value, container))
+                                {
+                                    fieldsToDisplay.Add(field);
+                                    if (!fieldsDictionary.ContainsKey(field))
+                                        fieldsDictionary.Add(field, 0);
+                                    fieldsDictionary[field]++;
+                                }
+                            }
                         }
                     }
 
@@ -187,12 +190,16 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                 container.Section.AddHeading2WithBookmark(string.Format("{0} ({1})", Service.GetCollectionName(recordType), recordsToOutput.Count()));
                             bookmark.AddChildBookmark(thisBookmark);
                             recordOutput = true;
+                            fieldCountTable = container.Section.Add2ColumnTable();
                         }
                         var table = container.Section.Add2ColumnTable();
                         table.AddFieldToTable(primaryFieldLabel, match.GetStringField(primaryField));
                         foreach (var field in fieldsToDisplay)
                         {
                             var value = Service.GetFieldAsDisplayString(match, field);
+                            if (container.Request.StripHtmlTagsPriorToSearch
+                                && ExtractUtility.GetSystemHtmlFields().Where(rf => rf.RecordType.Key == recordType).Any(rf => rf.RecordField.Key == field))
+                                value = value.StripHtml();
                             if (value != null)
                             {
                                 if (IsSearchMatch(value, container))
@@ -202,7 +209,41 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         }
                     }
                 }
+                //uh huh
+                if (fieldsDictionary.Any())
+                {
+                    foreach (var field in fieldsDictionary
+                        .OrderBy(f => Service.GetFieldLabel(f.Key, recordType)))
+                    {
+
+                        fieldCountTable.AddFieldToTable(Service.GetFieldLabel(field.Key, recordType), field.Value.ToString());
+                    }
+                }
             }
+        }
+
+        private List<string> GetFieldsToExlcude(TextSearchContainer container, string recordType)
+        {
+            var fieldsToExclude = new List<string>();
+            fieldsToExclude.AddRange(ExtractUtility.GetSystemFieldsToExclude());
+            if (container.Request.FieldExclusions != null)
+            {
+                fieldsToExclude.AddRange(container.Request.FieldExclusions.Where(fe => fe.RecordType.Key == recordType).Select(fe => fe.RecordField.Key));
+            }
+
+            foreach (var field in Service.GetFields(recordType))
+            {
+                var fieldType = Service.GetFieldType(field, recordType);
+                if (fieldType == RecordFieldType.Uniqueidentifier)
+                    fieldsToExclude.Add(field);
+                else if (Service.GetFieldType(field, recordType) == RecordFieldType.String &&
+                         Service.GetFieldMetadata(field, recordType).TextFormat == TextFormat.PhoneticGuide)
+                    fieldsToExclude.Add(field);
+                if (field.EndsWith("_base") && fieldType == RecordFieldType.Money)
+                    fieldsToExclude.Add(field);
+            }
+
+            return fieldsToExclude;
         }
 
         private void AppendStringFieldMatches(TextSearchContainer container, string recordType, int done, int count,
@@ -214,18 +255,102 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 string.Format("Searching String Fields In {0}", Service.GetCollectionName(recordType)));
             try
             {
+                var fieldsToExclude = GetFieldsToExlcude(container, recordType);
+
                 var nonPrimaryStringFields = Service.GetFields(recordType)
                     .Where(f => Service.IsString(f, recordType))
                     .Where(f => f != primaryField)
                     .Where(f => Service.IsString(f, thisRecordType))
+                    .Except(fieldsToExclude)
                     .ToArray();
+
                 if (nonPrimaryStringFields.Any())
                 {
-                    var setSearchFields = ExtractUtility.GetSystemTextSearchSetFields()
+
+
+                    var htmlSearchFields = container.Request.StripHtmlTagsPriorToSearch
+                        ? nonPrimaryStringFields
+                        .Intersect((ExtractUtility.GetSystemHtmlFields())
+                        .Where(rf => rf.RecordType.Key == recordType)
+                        .Select(rf => rf.RecordField.Key)).ToArray()
+                        : new string[0];
+                    var setSearchFields = nonPrimaryStringFields
+                        .Intersect(ExtractUtility.GetSystemTextSearchSetFields()
                         .Where(f => f.RecordType.Key == recordType)
                         .Select(f => f.RecordField.Key)
+                        .Except(htmlSearchFields))
                         .ToArray();
-                    var nonSetSearchFields = nonPrimaryStringFields.Where(f => !setSearchFields.Contains(f)).ToArray();
+                    var nonSetSearchFields = nonPrimaryStringFields
+                        .Except(setSearchFields)
+                        .Except(htmlSearchFields)
+                        .ToArray();
+
+
+
+                    if (htmlSearchFields.Any())
+                    {
+                        //this code written as the crm web service / sql timedout when doing text searches over the entire record table
+                        //i thus split all the records into sets defined by a date range and query the text in each set iteratively
+                        //this way I limit the volume of text being searched in each crm web service query by a approximate number of records defined in the settings
+                        container.Controller.UpdateLevel2Progress(0, 1, string.Format("Configuring Html Search Sets"));
+                        int totalCount = 0;
+                        var sortedDatesTemplate = GetDateRangesForSetSearches(recordType, out totalCount);
+                        var totalDone = 0;
+                        foreach (var field in htmlSearchFields)
+                        {
+                            try
+                            {
+                                var thisFieldSortedDates = sortedDatesTemplate.ToList();
+
+                                var label = Service.GetFieldLabel(field, recordType);
+
+                                //now query the text in each date range set
+                                while (thisFieldSortedDates.Any())
+                                {
+                                    var first = thisFieldSortedDates.First();
+                                    var limit = thisFieldSortedDates.Count > 1 ? thisFieldSortedDates[1] : (DateTime?)null;
+                                    if (first.Equals(limit) && thisFieldSortedDates.Any(l => l > first))
+                                    {
+                                        limit = thisFieldSortedDates.First(l => l > first);
+                                    }
+
+                                    var query = new QueryDefinition(recordType);
+                                    query.RootFilter = new Filter();
+                                    query.RootFilter.ConditionOperator = container.Request.Operator == TextSearchRequest.SearchTermOperator.And ? FilterOperator.And : FilterOperator.Or;
+                                    query.RootFilter.SubFilters = container.Request.SearchTerms.Select(s =>
+                                    {
+                                        var searchTermFilter = new Filter();
+                                        searchTermFilter.Conditions = new List<Condition>();
+                                        searchTermFilter.Conditions.Add(new Condition("createdon", ConditionType.GreaterEqual, first));
+                                        if(limit.HasValue)
+                                            searchTermFilter.Conditions.Add(new Condition("createdon", ConditionType.LessThan, limit.Value));
+                                        return searchTermFilter;
+                                    }).ToList();
+
+
+                                    var allOfType = Service.RetreiveAll(query);
+                                    foreach (var item in allOfType)
+                                    {
+                                        container.Controller.UpdateLevel2Progress(totalDone++, totalCount, string.Format("Searching Html {0}", label));
+                                        var fieldValue = item.GetStringField(field);
+                                        if(fieldValue != null)
+                                        {
+                                            var stripHtml = fieldValue.StripHtml();
+                                            if(IsSearchMatch(stripHtml, container))
+                                                recordsToOutput.Add(item.Id, item);
+                                        }
+                                    }
+                                    thisFieldSortedDates.RemoveAt(0);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                container.Response.AddResponseItem(
+                                    new TextSearchResponseItem("Error Searching String Fields", recordType, field, ex));
+                            }
+                        }
+                    }
+
                     var fieldsTodo = nonSetSearchFields.Count();
                     var fieldsDone = 0;
                     foreach (var field in nonSetSearchFields)
@@ -234,13 +359,13 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         try
                         {
                             var conditions =
-                                new[]
-                                {
-                                    new Condition(field, ConditionType.Like,
-                                        string.Format("%{0}%", container.Request.SearchText))
-                                };
-                            var stringFieldMatches =
-                                Service.RetrieveAllOrClauses(recordType, conditions, null).ToArray();
+                                container.Request.SearchTerms.Select(s => 
+                                 new Condition(field, ConditionType.Like, string.Format("%{0}%", s.Text)))
+                                 .ToArray();
+                            var stringFieldMatches = (container.Request.Operator == TextSearchRequest.SearchTermOperator.And
+                                ? Service.RetrieveAllOrClauses(recordType, conditions, null)
+                                : Service.RetrieveAllOrClauses(recordType, conditions, null))
+                                .ToArray();
                             foreach (var stringFieldMatch in stringFieldMatches)
                             {
                                 if (!recordsToOutput.ContainsKey(stringFieldMatch.Id))
@@ -258,74 +383,43 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         //this code written as the crm web service / sql timedout when doing text searches over the entire record table
                         //i thus split all the records into sets defined by a date range and query the text in each set iteratively
                         //this way I limit the volume of text being searched in each crm web service query by a approximate number of records defined in the settings
-                        const int initialQuerySetSize = 5000;
                         container.Controller.UpdateLevel2Progress(0, 1, string.Format("Configuring Search Sets"));
-                        var startDate = new DateTime(1901, 01, 01);
-                        var sortedDatesTemplate = new List<DateTime>();
-                        //query the created dates of all records in the table
-                        //this does iterative queries sorting by created date
-                        //to avoid crm requerying the entire table for each iterative request
-                        while (true)
-                        {
-                            var records =
-                                Service.GetFirstX(recordType, initialQuerySetSize, new[] { "createdon" },
-                                    new[]
-                                            {
-                                                new Condition("createdon", ConditionType.GreaterThan, startDate)
-                                            },
-                                    new[] { new SortExpression("createdon", SortType.Ascending) }).ToArray();
-
-                            if (!records.Any())
-                                break;
-                            var theseDates =
-                                records.Where(r => r.GetDateTime("createdon").HasValue)
-                                    .Select(r => r.GetDateTime("createdon"))
-                                    .Cast<DateTime>()
-                                    .ToList();
-                            theseDates.Sort();
-                            startDate = theseDates.Last();
-                            sortedDatesTemplate.AddRange(theseDates);
-                            if (records.Count() < initialQuerySetSize)
-                                break;
-                        }
-                        sortedDatesTemplate.Sort();
-                        var fieldSetsTodo = sortedDatesTemplate.Count;
+                        var fieldSetsTodo = 0;
+                        var sortedDatesTemplate = GetDateRangesForSetSearches(recordType, out fieldSetsTodo);
                         foreach (var field in setSearchFields)
                         {
                             try
                             {
                                 var thisFieldSortedDates = sortedDatesTemplate.ToList();
+                                var fieldSetsDone = 0;
                                 var label = Service.GetFieldLabel(field, recordType);
                                 //now query the text in each date range set
                                 while (thisFieldSortedDates.Any())
                                 {
-                                    var fieldSetsDone = fieldSetsTodo - thisFieldSortedDates.Count;
-                                    container.Controller.UpdateLevel2Progress(fieldSetsDone, fieldSetsTodo,
+                                    container.Controller.UpdateLevel2Progress(fieldSetsDone + ExtractUtility.TextSearchSetSize, fieldSetsTodo,
                                         string.Format("Searching {0}", label));
-                                    var remaining = thisFieldSortedDates.Count;
                                     var first = thisFieldSortedDates.First();
-                                    var i = remaining < ExtractUtility.TextSearchSetSize
-                                        ? remaining - 1
-                                        : ExtractUtility.TextSearchSetSize - 1;
-                                    var limit = thisFieldSortedDates.ElementAt(i);
-                                    if (first.Equals(limit) && thisFieldSortedDates.Any(l => l > first))
+                                    var limit = thisFieldSortedDates.Count > 1 ? thisFieldSortedDates[1] : (DateTime?)null;
+                                    var query = new QueryDefinition(recordType);
+                                    query.RootFilter = new Filter();
+                                    query.RootFilter.ConditionOperator = container.Request.Operator == TextSearchRequest.SearchTermOperator.And ? FilterOperator.And : FilterOperator.Or;
+                                    query.RootFilter.SubFilters = container.Request.SearchTerms.Select(s =>
                                     {
-                                        limit = thisFieldSortedDates.First(l => l > first);
-                                    }
+                                        var searchTermFilter = new Filter();
+                                        searchTermFilter.Conditions = new List<Condition>();
+                                        searchTermFilter.Conditions.Add(new Condition("createdon", ConditionType.GreaterEqual, first));
+                                        if(limit.HasValue)
+                                            searchTermFilter.Conditions.Add(new Condition("createdon", ConditionType.LessThan, limit.Value));
+                                        return searchTermFilter;
+                                    }).ToList();
 
-                                    var conditions = new[]
-                                    {
-                                        new Condition("createdon", ConditionType.GreaterEqual, first),
-                                        new Condition("createdon", ConditionType.LessEqual, limit),
-                                        new Condition(field, ConditionType.Like,
-                                            string.Format("%{0}%", container.Request.SearchText))
-                                    };
-                                    var stringFieldMatches = Service.RetrieveAllAndClauses(recordType, conditions, null);
+
+                                    var stringFieldMatches = Service.RetreiveAll(query);
                                     foreach (var stringFieldMatch in stringFieldMatches)
                                     {
                                         recordsToOutput.Add(stringFieldMatch.Id, stringFieldMatch);
                                     }
-                                    thisFieldSortedDates = thisFieldSortedDates.Where(d => d > limit).ToList();
+                                    thisFieldSortedDates.RemoveAt(0);
                                 }
                             }
                             catch (Exception ex)
@@ -345,111 +439,145 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             }
         }
 
-        private void AppendReferenceMatches(TextSearchContainer container, int done, int count, string recordType,
-            Dictionary<string, IRecord> recordsToOutput)
+        private List<DateTime> GetDateRangesForSetSearches(string recordType, out int totalCount)
         {
-            try
+            totalCount = 0;
+            var startDate = new DateTime(1901, 01, 01);
+            var sortedDatesTemplate = new List<DateTime>();
+            //query the created dates of all records in the table
+            //this does iterative queries sorting by created date
+            //to avoid crm requerying the entire table for each iterative request
+            while (true)
             {
-                var progressPrefix = string.Format("Searching Reference Fields In {0}",
-                    Service.GetCollectionName(recordType));
-                container.Controller.UpdateProgress(done, count, progressPrefix);
-                var recordTypesWithNameMatch = container.GetRecordTypesWithNameMatch().ToArray();
-                var oneToManyRelationships =
-                    recordTypesWithNameMatch
-                        .SelectMany(r => Service.GetOneToManyRelationships(r))
-                        .Where(r => r.ReferencingEntity == recordType)
-                        .ToArray();
-                var level2Done = 0;
-                var level2Count = oneToManyRelationships.Count();
-
-                // get the activity party references
-                if (Service.GetRecordTypeMetadata(recordType).IsActivityType)
-                {
-                    var activityPartyReferences = new List<IRecord>();
-                    //need to the activities which have an activity party match
-                    foreach (var match in container.NameMatches)
-                    {
-                        if (Service.GetRecordTypeMetadata(match.Type).IsActivityParticipant)
-                        {
-                            var conditions = new[]
-                            {
-                                new Condition("partyid", ConditionType.Equal, match.Id)
-                            };
-                            //need conditions where the party is a type match and the activity is this type
-                            //simpler just get for all types inititally
-                            var activityParties = Service.RetrieveAllAndClauses(
-                                "activityparty",
-                                conditions
-                                , null);
-                            activityPartyReferences.AddRange(
-                                activityParties.Where(ap => ap.GetLookupType("partyid") == match.Type));
-                        }
-                    }
-                    if (activityPartyReferences.Any())
-                    {
-                        var conditions = activityPartyReferences
-                            .Select(
-                                ap =>
-                                    new Condition(Service.GetPrimaryKey(recordType), ConditionType.Equal,
-                                        ap.GetLookupId("activityid")));
-                        var activities = Service.RetrieveAllOrClauses(recordType, conditions, null);
-                        foreach (var activity in activities)
-                        {
-                            if (!recordsToOutput.ContainsKey(activity.Id))
-                                recordsToOutput.Add(activity.Id, activity);
-                        }
-                    }
-                }
-
-                foreach (var recordTypeWithNameMatch in recordTypesWithNameMatch)
-                {
-                    var thisRecordTypeNameMatch = recordTypeWithNameMatch;
-
-                    foreach (
-                        var one2ManyRelationshipMetadata in
-                            oneToManyRelationships.Where(r => r.ReferencedEntity == thisRecordTypeNameMatch))
-                    {
-                        var thisMetadata = one2ManyRelationshipMetadata;
-                        try
-                        {
-                            container.Controller.UpdateLevel2Progress(level2Done++, level2Count,
-                                string.Format("Searching {0} {1}",
-                                    Service.GetFieldLabel(one2ManyRelationshipMetadata.ReferencingAttribute,
-                                        one2ManyRelationshipMetadata.ReferencingEntity),
-                                    Service.GetDisplayName(one2ManyRelationshipMetadata.ReferencedEntity)));
-                            var conditions = container.NameMatches
-                                .Where(r => r.Type == thisRecordTypeNameMatch)
-                                .Select(
-                                    m =>
-                                        new Condition(thisMetadata.ReferencingAttribute,
-                                            ConditionType.Equal,
-                                            m.Id));
-                            var relatedEntities = Service.RetrieveAllOrClauses(recordType, conditions, null);
-                            foreach (var relatedEntity in relatedEntities)
-                            {
-                                if (!recordsToOutput.ContainsKey(relatedEntity.Id))
-                                    recordsToOutput.Add(relatedEntity.Id, relatedEntity);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            container.Response.AddResponseItem(
-                                new TextSearchResponseItem("Error Searching Reference Fields", recordType,
-                                    one2ManyRelationshipMetadata.ReferencingAttribute, ex));
-                        }
-                    }
-                }
+                var records =
+                    Service.GetFirstX(recordType, ExtractUtility.TextSearchSetSize, new[] { "createdon" },
+                        new[]
+                                {
+                                     new Condition("createdon", ConditionType.GreaterThan, startDate)
+                                },
+                        new[] { new SortExpression("createdon", SortType.Ascending) }).ToArray();
+                totalCount = totalCount + records.Count();
+                if (!records.Any())
+                    break;
+                var theseDates =
+                    records.Where(r => r.GetDateTime("createdon").HasValue)
+                        .Select(r => r.GetDateTime("createdon"))
+                        .Cast<DateTime>()
+                        .ToList();
+                theseDates.Sort();
+                sortedDatesTemplate.Add(startDate);
+                startDate = theseDates.First();
+                if (records.Count() < ExtractUtility.TextSearchSetSize)
+                    break;
             }
-            catch (Exception ex)
-            {
-                container.Response.AddResponseItem(
-                    new TextSearchResponseItem("Error Searching Reference Fields",
-                        recordType, ex));
-            }
+            sortedDatesTemplate.Sort();
+            return sortedDatesTemplate;
         }
 
-        private
-            void ProcessRecordsContainedInName(TextSearchContainer container)
+        //private void AppendReferenceMatches(TextSearchContainer container, int done, int count, string recordType,
+        //    Dictionary<string, IRecord> recordsToOutput)
+        //{
+        //    try
+        //    {
+        //        var progressPrefix = string.Format("Searching Reference Fields In {0}",
+        //            Service.GetCollectionName(recordType));
+        //        container.Controller.UpdateProgress(done, count, progressPrefix);
+        //        var recordTypesWithNameMatch = container.GetRecordTypesWithNameMatch().ToArray();
+        //        var oneToManyRelationships =
+        //            recordTypesWithNameMatch
+        //                .SelectMany(r => Service.GetOneToManyRelationships(r))
+        //                .Where(r => r.ReferencingEntity == recordType)
+        //                .ToArray();
+        //        var level2Done = 0;
+        //        var level2Count = oneToManyRelationships.Count();
+
+        //        // get the activity party references
+        //        if (Service.GetRecordTypeMetadata(recordType).IsActivityType)
+        //        {
+        //            var activityPartyReferences = new List<IRecord>();
+        //            //need to the activities which have an activity party match
+        //            foreach (var match in container.NameMatches)
+        //            {
+        //                if (Service.GetRecordTypeMetadata(match.Type).IsActivityParticipant)
+        //                {
+        //                    var conditions = new[]
+        //                    {
+        //                        new Condition("partyid", ConditionType.Equal, match.Id)
+        //                    };
+        //                    //need conditions where the party is a type match and the activity is this type
+        //                    //simpler just get for all types inititally
+        //                    var activityParties = Service.RetrieveAllAndClauses(
+        //                        "activityparty",
+        //                        conditions
+        //                        , null);
+        //                    activityPartyReferences.AddRange(
+        //                        activityParties.Where(ap => ap.GetLookupType("partyid") == match.Type));
+        //                }
+        //            }
+        //            if (activityPartyReferences.Any())
+        //            {
+        //                var conditions = activityPartyReferences
+        //                    .Select(
+        //                        ap =>
+        //                            new Condition(Service.GetPrimaryKey(recordType), ConditionType.Equal,
+        //                                ap.GetLookupId("activityid")));
+        //                var activities = Service.RetrieveAllOrClauses(recordType, conditions, null);
+        //                foreach (var activity in activities)
+        //                {
+        //                    if (!recordsToOutput.ContainsKey(activity.Id))
+        //                        recordsToOutput.Add(activity.Id, activity);
+        //                }
+        //            }
+        //        }
+
+        //        foreach (var recordTypeWithNameMatch in recordTypesWithNameMatch)
+        //        {
+        //            var thisRecordTypeNameMatch = recordTypeWithNameMatch;
+
+        //            foreach (
+        //                var one2ManyRelationshipMetadata in
+        //                    oneToManyRelationships.Where(r => r.ReferencedEntity == thisRecordTypeNameMatch))
+        //            {
+        //                var thisMetadata = one2ManyRelationshipMetadata;
+        //                try
+        //                {
+        //                    container.Controller.UpdateLevel2Progress(level2Done++, level2Count,
+        //                        string.Format("Searching {0} {1}",
+        //                            Service.GetFieldLabel(one2ManyRelationshipMetadata.ReferencingAttribute,
+        //                                one2ManyRelationshipMetadata.ReferencingEntity),
+        //                            Service.GetDisplayName(one2ManyRelationshipMetadata.ReferencedEntity)));
+        //                    var conditions = container.NameMatches
+        //                        .Where(r => r.Type == thisRecordTypeNameMatch)
+        //                        .Select(
+        //                            m =>
+        //                                new Condition(thisMetadata.ReferencingAttribute,
+        //                                    ConditionType.Equal,
+        //                                    m.Id));
+        //                    var relatedEntities = Service.RetrieveAllOrClauses(recordType, conditions, null);
+        //                    foreach (var relatedEntity in relatedEntities)
+        //                    {
+        //                        if (!recordsToOutput.ContainsKey(relatedEntity.Id))
+        //                            recordsToOutput.Add(relatedEntity.Id, relatedEntity);
+        //                    }
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    container.Response.AddResponseItem(
+        //                        new TextSearchResponseItem("Error Searching Reference Fields", recordType,
+        //                            one2ManyRelationshipMetadata.ReferencingAttribute, ex));
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        container.Response.AddResponseItem(
+        //            new TextSearchResponseItem("Error Searching Reference Fields",
+        //                recordType, ex));
+        //    }
+        //}
+
+        private void ProcessRecordsContainedInName(TextSearchContainer container)
         {
             var bookmark = container.AddHeadingWithBookmark("Records With Name Match");
             var recordTypes = GetSearchRecordTypes(container).ToArray();
@@ -465,13 +593,14 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     var primaryField = Service.GetPrimaryField(recordType);
                     if (!primaryField.IsNullOrWhiteSpace())
                     {
-                        var conditions = new[]
-                        {
-                            new Condition(primaryField, ConditionType.Like,
-                                string.Format("%{0}%", container.Request.SearchText))
-                        };
-                        var matches =
-                            Service.RetrieveAllAndClauses(recordType, conditions, new[] {primaryField}).ToArray();
+                        var conditions =
+                            container.Request.SearchTerms.Select(s =>
+                             new Condition(primaryField, ConditionType.Like, string.Format("%{0}%", s.Text)))
+                             .ToArray();
+                        var matches = (container.Request.Operator == TextSearchRequest.SearchTermOperator.And
+                            ? Service.RetrieveAllOrClauses(recordType, conditions, null)
+                            : Service.RetrieveAllOrClauses(recordType, conditions, null))
+                            .ToArray();
                         if (matches.Any())
                         {
                             try
@@ -541,7 +670,19 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         internal bool IsSearchMatch(string stringValue, TextSearchContainer container)
         {
-            return stringValue != null && stringValue.ToLower().Contains(container.Request.SearchText.ToLower());
+            var match = false;
+            if(stringValue != null)
+            {
+                foreach(var term in container.Request.SearchTerms)
+                {
+                    if (stringValue.ToLower().Contains(term.Text.ToLower()))
+                    {
+                        match = true;
+                        break;
+                    }
+                }
+            }
+            return match;
         }
     }
 }
