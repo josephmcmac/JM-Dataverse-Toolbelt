@@ -11,8 +11,9 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         public TextSearchRequest Request { get; set; }
         public TextSearchResponse Response { get; set; }
         public LogController Controller { get; set; }
-        public List<IRecord> NameMatches { get; private set; }
         public Section Section { get; private set; }
+
+        private Dictionary<string, Dictionary<string, List<string>>> Matches { get; set; }
 
         public TextSearchContainer(TextSearchRequest request, TextSearchResponse response, LogController controller,
             Section section)
@@ -20,14 +21,20 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             Request = request;
             Response = response;
             Controller = controller;
-            NameMatches = new List<IRecord>();
             Section = section;
+            Matches = new Dictionary<string, Dictionary<string, List<string>>>();
+            Response.SetMatchDictionary(Matches);
         }
 
-        public void AddNameMatch(IRecord record)
+        public void AddMatchedRecord(string matchedField, IRecord record)
         {
-            NameMatches.Add(record);
+            if (!Matches.ContainsKey(record.Type))
+                Matches.Add(record.Type, new Dictionary<string, List<string>>());
+            if (!Matches[record.Type].ContainsKey(matchedField))
+                Matches[record.Type].Add(matchedField, new List<string>());
+            Matches[record.Type][matchedField].Add(record.Id);
         }
+
 
         private readonly List<ContentBookmark> _bookmarks = new List<ContentBookmark>();
 
@@ -46,13 +53,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             var bookmark = Section.AddHeading1WithBookmark(heading);
             AddBookmark(bookmark);
             return bookmark;
-        }
-
-        public IEnumerable<string> GetRecordTypesWithNameMatch()
-        {
-            return NameMatches != null
-                ? NameMatches.Select(r => r.Type).Distinct()
-                : new string[] {};
         }
     }
 }

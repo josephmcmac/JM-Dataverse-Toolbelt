@@ -15,6 +15,7 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
         {
             var request = new TextSearchRequest()
             {
+                GenerateDocument = true,
                 DocumentFormat = DocumentType.Rtf,
                 SaveToFolder = new Folder(TestingFolder),
                 SearchTerms = new[] { new TextSearchRequest.SearchTerm() { Text = TestingString } }

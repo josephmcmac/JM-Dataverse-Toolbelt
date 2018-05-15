@@ -29,11 +29,11 @@ namespace JosephM.Application.ViewModel.Grid
     ///     Container For Properties Required By A IDynamicGridViewModel Without Having To Implement Them For Each Concrete
     ///     Type
     /// </summary>
-    public class DynamicGridViewModel : INotifyPropertyChanged
+    public class DynamicGridViewModel : ViewModelBase, INotifyPropertyChanged
     {
         public DynamicGridViewModel(IApplicationController applicationController)
+            : base(applicationController)
         {
-            ApplicationController = applicationController;
             LoadingViewModel = new LoadingViewModel(applicationController);
             //this one a bit of a hack as loading/display controlled in code behind so set the vm as always loading
             SortLoadingViewModel = new LoadingViewModel(applicationController) { LoadingMessage = "Please Wait While Reloading Sorted Items", IsLoading = true };
@@ -58,6 +58,7 @@ namespace JosephM.Application.ViewModel.Grid
             };
             MaxHeight = 600;
             LoadDialog = (d) => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(LoadDialog))); };
+            RemoveParentDialog = () => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(RemoveParentDialog))); };
         }
 
         public int MaxHeight { get; set; }
@@ -307,8 +308,6 @@ namespace JosephM.Application.ViewModel.Grid
                     LastSortAscending ? SortType.Ascending : SortType.Descending);
         }
 
-        public IApplicationController ApplicationController { get; set; }
-
         /// <summary>
         /// sorts the grid
         /// </summary>
@@ -407,14 +406,6 @@ namespace JosephM.Application.ViewModel.Grid
                 _sortCount = value;
 
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void ReloadGrid()
@@ -586,6 +577,7 @@ namespace JosephM.Application.ViewModel.Grid
 
         public IDictionary<string, IEnumerable<string>> OnlyValidate { get; internal set; }
         public Action<DialogViewModel> LoadDialog { get; set; }
+        public Action RemoveParentDialog { get; set; }
 
         public void DownloadCsv()
         {

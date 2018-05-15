@@ -39,9 +39,11 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             var document = DocumentWriter.NewDocument();
             var firstSection = document.AddSection();
             var nextSection = document.AddSection();
+
             var container = new TextSearchContainer(request, response, controller, nextSection);
-            ProcessRecordsContainedInName(container);
+
             ProcessRecordsReferencingTheWord(container);
+
             //insert title/summary
             firstSection.AddTitle("Text Search");
             var table = firstSection.Add2ColumnTable();
@@ -56,49 +58,14 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             var folder = container.Request.SaveToFolder;
             var fileName = string.Format("Record Extract - {0} - {1}", "TextSearch",
                 DateTime.Now.ToString("yyyyMMddHHmmss"));
-            fileName = document.Save(folder, fileName, container.Request.DocumentFormat);
-            container.Response.Folder = container.Request.SaveToFolder.FolderPath;
-            container.Response.FileName = fileName;
+            if (container.Request.GenerateDocument)
+            {
+                fileName = document.Save(folder, fileName, container.Request.DocumentFormat);
+                container.Response.Folder = container.Request.SaveToFolder.FolderPath;
+                container.Response.FileName = fileName;
+            }
+            container.Response.GenerateSummaryItems(Service);
         }
-
-        //private void ProcessEntireRecordExtracts(TextSearchContainer container)
-        //{
-        //    //for each record with exact match on name do record extract
-        //    //3. foreachrecord with name output them through recordextract
-        //    var done = 0;
-        //    var count = container.NameMatches.Count;
-        //    var typesWithExactNameMatch = container.NameMatches.Select(r => r.Type).Distinct();
-        //    var bookmark = container.AddHeadingWithBookmark("Detail of Records With Name Match");
-        //    foreach (var type in typesWithExactNameMatch.OrderBy(Service.GetDisplayName))
-        //    {
-        //        var thisType = type;
-        //        var thisBookmark = container.Section.AddHeading2WithBookmark(Service.GetCollectionName(thisType));
-        //        bookmark.AddChildBookmark(thisBookmark);
-        //        foreach (var record in container.NameMatches.Where(r => r.Type == thisType))
-        //        {
-        //            try
-        //            {
-        //                container.Controller.UpdateProgress(done++, count,
-        //                    string.Format("Extracting Detail For {0} {1}", Service.GetDisplayName(type),
-        //                        record.GetStringField(Service.GetPrimaryField(type))));
-        //                var thisResponse =
-        //                    RecordExtractService.ExtractRecordToDocument(container.Controller.GetLevel2Controller(),
-        //                        record.ToLookup(),
-        //                        container.Section, container.Request.DetailOfRecordsRelatedToMatches);
-        //                container.Response.AddResponseItems(
-        //                    thisResponse.ResponseItems.Select(r => new TextSearchResponseItem(r)));
-        //                if (!thisResponse.Success)
-        //                    throw thisResponse.Exception;
-        //                thisBookmark.AddChildBookmarks(thisResponse.Bookmarks);
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                container.Response.AddResponseItem(new TextSearchResponseItem("Error Extracting Record",
-        //                    thisType, ex));
-        //            }
-        //        }
-        //    }
-        //}
 
         private void ProcessRecordsReferencingTheWord(TextSearchContainer container)
         {
@@ -118,9 +85,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 try
                 {
                     AppendStringFieldMatches(container, recordType, done, count, recordsToOutput);
-                    //if (container.Request.IncludeSearchReferenceFields)
-                    //    AppendReferenceMatches(container, done, count, recordType, recordsToOutput);
-                    AppendFieldMatchesToDocument(container, recordsToOutput, recordType, bookmark);
+                    if (container.Request.GenerateDocument)
+                        AppendFieldMatchesToDocument(container, recordsToOutput, recordType, bookmark);
                 }
                 catch (Exception ex)
                 {
@@ -159,9 +125,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         string.Format("Appending {0} To Document", recordTypeCollectionLabel));
 
                     var fieldsToDisplay = new List<string>();
-                    foreach (
-                        var field in
-                            match.GetFieldsInEntity().Where(f => f != primaryField && !fieldsToExclude.Contains(f)))
+                    foreach (var field in match.GetFieldsInEntity().Where(f => !fieldsToExclude.Contains(f)))
                     {
                         if (Service.IsString(field, recordType))
                         {
@@ -203,13 +167,15 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                             if (value != null)
                             {
                                 if (IsSearchMatch(value, container))
+                                {
                                     table.AddFieldToTable(Service.GetFieldLabel(field, recordType),
                                         value);
+                                }
                             }
                         }
                     }
                 }
-                //uh huh
+                //insert field count summary
                 if (fieldsDictionary.Any())
                 {
                     foreach (var field in fieldsDictionary
@@ -249,7 +215,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         private void AppendStringFieldMatches(TextSearchContainer container, string recordType, int done, int count,
             Dictionary<string, IRecord> recordsToOutput)
         {
-            var primaryField = Service.GetPrimaryField(recordType);
             var thisRecordType = recordType;
             container.Controller.UpdateProgress(done, count,
                 string.Format("Searching String Fields In {0}", Service.GetCollectionName(recordType)));
@@ -257,30 +222,29 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             {
                 var fieldsToExclude = GetFieldsToExlcude(container, recordType);
 
-                var nonPrimaryStringFields = Service.GetFields(recordType)
+                var stringFields = Service.GetFields(recordType)
                     .Where(f => Service.IsString(f, recordType))
-                    .Where(f => f != primaryField)
                     .Where(f => Service.IsString(f, thisRecordType))
                     .Except(fieldsToExclude)
                     .ToArray();
 
-                if (nonPrimaryStringFields.Any())
+                if (stringFields.Any())
                 {
 
 
                     var htmlSearchFields = container.Request.StripHtmlTagsPriorToSearch
-                        ? nonPrimaryStringFields
+                        ? stringFields
                         .Intersect((ExtractUtility.GetSystemHtmlFields())
                         .Where(rf => rf.RecordType.Key == recordType)
                         .Select(rf => rf.RecordField.Key)).ToArray()
                         : new string[0];
-                    var setSearchFields = nonPrimaryStringFields
+                    var setSearchFields = stringFields
                         .Intersect(ExtractUtility.GetSystemTextSearchSetFields()
                         .Where(f => f.RecordType.Key == recordType)
                         .Select(f => f.RecordField.Key)
                         .Except(htmlSearchFields))
                         .ToArray();
-                    var nonSetSearchFields = nonPrimaryStringFields
+                    var nonSetSearchFields = stringFields
                         .Except(setSearchFields)
                         .Except(htmlSearchFields)
                         .ToArray();
@@ -336,8 +300,11 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                         if(fieldValue != null)
                                         {
                                             var stripHtml = fieldValue.StripHtml();
-                                            if(IsSearchMatch(stripHtml, container))
+                                            if (IsSearchMatch(stripHtml, container))
+                                            {
                                                 recordsToOutput.Add(item.Id, item);
+                                                container.AddMatchedRecord(field, item);
+                                            }
                                         }
                                     }
                                     thisFieldSortedDates.RemoveAt(0);
@@ -368,6 +335,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                 .ToArray();
                             foreach (var stringFieldMatch in stringFieldMatches)
                             {
+                                container.AddMatchedRecord(field, stringFieldMatch);
                                 if (!recordsToOutput.ContainsKey(stringFieldMatch.Id))
                                     recordsToOutput.Add(stringFieldMatch.Id, stringFieldMatch);
                             }
@@ -417,7 +385,9 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                     var stringFieldMatches = Service.RetreiveAll(query);
                                     foreach (var stringFieldMatch in stringFieldMatches)
                                     {
-                                        recordsToOutput.Add(stringFieldMatch.Id, stringFieldMatch);
+                                        container.AddMatchedRecord(field, stringFieldMatch);
+                                        if (!recordsToOutput.ContainsKey(stringFieldMatch.Id))
+                                            recordsToOutput.Add(stringFieldMatch.Id, stringFieldMatch);
                                     }
                                     thisFieldSortedDates.RemoveAt(0);
                                 }
@@ -472,172 +442,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             }
             sortedDatesTemplate.Sort();
             return sortedDatesTemplate;
-        }
-
-        //private void AppendReferenceMatches(TextSearchContainer container, int done, int count, string recordType,
-        //    Dictionary<string, IRecord> recordsToOutput)
-        //{
-        //    try
-        //    {
-        //        var progressPrefix = string.Format("Searching Reference Fields In {0}",
-        //            Service.GetCollectionName(recordType));
-        //        container.Controller.UpdateProgress(done, count, progressPrefix);
-        //        var recordTypesWithNameMatch = container.GetRecordTypesWithNameMatch().ToArray();
-        //        var oneToManyRelationships =
-        //            recordTypesWithNameMatch
-        //                .SelectMany(r => Service.GetOneToManyRelationships(r))
-        //                .Where(r => r.ReferencingEntity == recordType)
-        //                .ToArray();
-        //        var level2Done = 0;
-        //        var level2Count = oneToManyRelationships.Count();
-
-        //        // get the activity party references
-        //        if (Service.GetRecordTypeMetadata(recordType).IsActivityType)
-        //        {
-        //            var activityPartyReferences = new List<IRecord>();
-        //            //need to the activities which have an activity party match
-        //            foreach (var match in container.NameMatches)
-        //            {
-        //                if (Service.GetRecordTypeMetadata(match.Type).IsActivityParticipant)
-        //                {
-        //                    var conditions = new[]
-        //                    {
-        //                        new Condition("partyid", ConditionType.Equal, match.Id)
-        //                    };
-        //                    //need conditions where the party is a type match and the activity is this type
-        //                    //simpler just get for all types inititally
-        //                    var activityParties = Service.RetrieveAllAndClauses(
-        //                        "activityparty",
-        //                        conditions
-        //                        , null);
-        //                    activityPartyReferences.AddRange(
-        //                        activityParties.Where(ap => ap.GetLookupType("partyid") == match.Type));
-        //                }
-        //            }
-        //            if (activityPartyReferences.Any())
-        //            {
-        //                var conditions = activityPartyReferences
-        //                    .Select(
-        //                        ap =>
-        //                            new Condition(Service.GetPrimaryKey(recordType), ConditionType.Equal,
-        //                                ap.GetLookupId("activityid")));
-        //                var activities = Service.RetrieveAllOrClauses(recordType, conditions, null);
-        //                foreach (var activity in activities)
-        //                {
-        //                    if (!recordsToOutput.ContainsKey(activity.Id))
-        //                        recordsToOutput.Add(activity.Id, activity);
-        //                }
-        //            }
-        //        }
-
-        //        foreach (var recordTypeWithNameMatch in recordTypesWithNameMatch)
-        //        {
-        //            var thisRecordTypeNameMatch = recordTypeWithNameMatch;
-
-        //            foreach (
-        //                var one2ManyRelationshipMetadata in
-        //                    oneToManyRelationships.Where(r => r.ReferencedEntity == thisRecordTypeNameMatch))
-        //            {
-        //                var thisMetadata = one2ManyRelationshipMetadata;
-        //                try
-        //                {
-        //                    container.Controller.UpdateLevel2Progress(level2Done++, level2Count,
-        //                        string.Format("Searching {0} {1}",
-        //                            Service.GetFieldLabel(one2ManyRelationshipMetadata.ReferencingAttribute,
-        //                                one2ManyRelationshipMetadata.ReferencingEntity),
-        //                            Service.GetDisplayName(one2ManyRelationshipMetadata.ReferencedEntity)));
-        //                    var conditions = container.NameMatches
-        //                        .Where(r => r.Type == thisRecordTypeNameMatch)
-        //                        .Select(
-        //                            m =>
-        //                                new Condition(thisMetadata.ReferencingAttribute,
-        //                                    ConditionType.Equal,
-        //                                    m.Id));
-        //                    var relatedEntities = Service.RetrieveAllOrClauses(recordType, conditions, null);
-        //                    foreach (var relatedEntity in relatedEntities)
-        //                    {
-        //                        if (!recordsToOutput.ContainsKey(relatedEntity.Id))
-        //                            recordsToOutput.Add(relatedEntity.Id, relatedEntity);
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    container.Response.AddResponseItem(
-        //                        new TextSearchResponseItem("Error Searching Reference Fields", recordType,
-        //                            one2ManyRelationshipMetadata.ReferencingAttribute, ex));
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        container.Response.AddResponseItem(
-        //            new TextSearchResponseItem("Error Searching Reference Fields",
-        //                recordType, ex));
-        //    }
-        //}
-
-        private void ProcessRecordsContainedInName(TextSearchContainer container)
-        {
-            var bookmark = container.AddHeadingWithBookmark("Records With Name Match");
-            var recordTypes = GetSearchRecordTypes(container).ToArray();
-            var count = recordTypes.Count();
-            var done = 0;
-            foreach (var recordType in recordTypes)
-            {
-                try
-                {
-                    var progressTextPrefix = string.Format("Searching Names In {0}",
-                        Service.GetCollectionName(recordType));
-                    container.Controller.UpdateProgress(done++, count, progressTextPrefix);
-                    var primaryField = Service.GetPrimaryField(recordType);
-                    if (!primaryField.IsNullOrWhiteSpace())
-                    {
-                        var conditions =
-                            container.Request.SearchTerms.Select(s =>
-                             new Condition(primaryField, ConditionType.Like, string.Format("%{0}%", s.Text)))
-                             .ToArray();
-                        var matches = (container.Request.Operator == TextSearchRequest.SearchTermOperator.And
-                            ? Service.RetrieveAllOrClauses(recordType, conditions, null)
-                            : Service.RetrieveAllOrClauses(recordType, conditions, null))
-                            .ToArray();
-                        if (matches.Any())
-                        {
-                            try
-                            {
-                                var thisBookmark =
-                                    container.Section.AddHeading2WithBookmark(string.Format("{0} ({1})", Service.GetCollectionName(recordType), matches.Count()));
-                                bookmark.AddChildBookmark(thisBookmark);
-                                var table = container.Section.Add1ColumnTable();
-                                var matchCount = matches.Count();
-                                var matchCountDone = 0;
-                                foreach (var match in matches)
-                                {
-                                    container.Controller.UpdateProgress(done, count,
-                                        string.Format("{0} (Adding {1} Of {2})", progressTextPrefix, ++matchCountDone,
-                                            matchCount));
-                                    container.AddNameMatch(match);
-                                    var outputText = match.GetStringField(primaryField);
-                                    outputText = ExtractUtility.CheckStripFormatting(outputText, recordType,
-                                        primaryField);
-                                    table.AddRow(outputText);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                container.Response.AddResponseItem(
-                                    new TextSearchResponseItem("Error Adding Matched Record",
-                                        recordType, ex));
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    container.Response.AddResponseItem(new TextSearchResponseItem("Error Adding Match Records",
-                        recordType, ex));
-                }
-            }
         }
 
         private IEnumerable<string> GetSearchRecordTypes(TextSearchContainer container)

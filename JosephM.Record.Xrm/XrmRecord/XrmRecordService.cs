@@ -982,9 +982,14 @@ namespace JosephM.Record.Xrm.XrmRecord
         public object ConvertToQueryValue(string fieldName, string entityType, object value)
         {
             var temp = ToEntityValue(value);
-            var parsedValue = _xrmService.ParseField(fieldName,
-                entityType,
-                temp);
+            var parsedValue = temp;
+            //if is a string don't parse as already correct type and may throw max length error
+            if (!(_xrmService.IsString(fieldName, entityType) && parsedValue is string))
+            {
+                parsedValue = _xrmService.ParseField(fieldName,
+                    entityType,
+                    parsedValue);
+            }
             if (parsedValue is EntityReference)
                 parsedValue = ((EntityReference)parsedValue).Id;
             else if (parsedValue is OptionSetValue)

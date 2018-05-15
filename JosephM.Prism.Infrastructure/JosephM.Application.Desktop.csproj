@@ -87,6 +87,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\DesktopSettingsManager.cs" />
+    <Compile Include="Module\Crud\BulkReplace\BulkReplaceDialog.cs" />
+    <Compile Include="Module\Crud\BulkReplace\BulkReplaceRequest.cs" />
+    <Compile Include="Module\Crud\BulkReplace\BulkReplaceResponse.cs" />
+    <Compile Include="Module\Crud\BulkReplace\BulkReplaceResponseItem.cs" />
+    <Compile Include="Module\Crud\BulkReplace\BulkReplaceService.cs" />
     <Compile Include="Module\Settings\AppSettingDialog.cs" />
     <Compile Include="Module\ReleaseCheckModule\GithubRelease.cs" />
     <Compile Include="Module\ReleaseCheckModule\GitHubReleaseCheckModule.cs" />

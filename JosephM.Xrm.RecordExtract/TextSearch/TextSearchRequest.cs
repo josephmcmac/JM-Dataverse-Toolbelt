@@ -9,7 +9,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 {
     [Group(Sections.Document, true, 10)]
     [Group(Sections.SearchTerm, true, 20)]
-    [Group(Sections.Types, true, 30)]
+    [Group(Sections.SearchOptions, true, 30)]
+    [Group(Sections.Types, true, 40)]
     [DisplayName("Text Search")]
     public class TextSearchRequest : ServiceRequestBase
     {
@@ -24,13 +25,20 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             };
         }
 
+        [DisplayOrder(5)]
+        [Group(Sections.Document)]
+        [RequiredProperty]
+        public bool GenerateDocument { get; set; }
+
         [DisplayOrder(10)]
         [Group(Sections.Document)]
+        [PropertyInContextByPropertyValue(nameof(GenerateDocument), true)]
         [RequiredProperty]
         public DocumentType DocumentFormat { get; set; }
 
         [DisplayOrder(20)]
         [Group(Sections.Document)]
+        [PropertyInContextByPropertyValue(nameof(GenerateDocument), true)]
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
 

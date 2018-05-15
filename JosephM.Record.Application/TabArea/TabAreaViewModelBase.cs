@@ -53,7 +53,7 @@ namespace JosephM.Application.ViewModel.TabArea
             });
         }
 
-        internal void ClearChildForm()
+        public void ClearChildForm()
         {
             ApplicationController.DoOnMainThread(() =>
             {

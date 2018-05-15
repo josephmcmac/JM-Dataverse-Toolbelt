@@ -1,8 +1,7 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.Application.Desktop.Module.ServiceRequest;
-using JosephM.XrmModule.XrmConnection;
-using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.Core.Attributes;
+using JosephM.Xrm.RecordExtract.RecordExtract;
+using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {
@@ -10,8 +9,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
     [DependantModule(typeof(XrmRecordExtractModule))]
     [MyDescription("Search Records In Dynamics For A Specific Piece Of Text")]
     public class XrmTextSearchModule :
-        ServiceRequestModule
-            <XrmTextSearchDialog, XrmTextSearchService, TextSearchRequest, TextSearchResponse, TextSearchResponseItem>
+        TextSearchModuleBase
+            <XrmTextSearchDialog, XrmTextSearchService>
     {
         public override string MainOperationName
         {

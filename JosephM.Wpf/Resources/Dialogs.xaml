@@ -6,7 +6,8 @@
     xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
     xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
-    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector">
+    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector"
+    xmlns:query1="clr-namespace:JosephM.Wpf.Grid">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -95,6 +96,16 @@
             <query:ColumnEditDialogView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="DynamicGridTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
+            <query1:DynamicGridView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="DynamicGridTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
+            <query1:DynamicGridView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <templateSelector:DialogTemplateSelector
         RecordEntryTemplateTabSize="{StaticResource RecordEntryTemplateTabSize}"
         RecordEntryTemplateWindowSize="{StaticResource RecordEntryTemplateWindowSize}"
@@ -109,5 +120,7 @@
         MultiSelectDialogTemplateWindowSize="{StaticResource MultiSelectDialogTemplateWindowSize}"
         ColumnEditDialogTemplateTabSize="{StaticResource ColumnEditDialogTemplateTabSize}"
         ColumnEditDialogTemplateWindowSize="{StaticResource ColumnEditDialogTemplateWindowSize}"
+        DynamicGridTemplateTabSize="{StaticResource DynamicGridTemplateTabSize}"
+        DynamicGridTemplateWindowSize="{StaticResource DynamicGridTemplateWindowSize}"
         x:Key="DialogTemplateSelector" />
 </ResourceDictionary>
