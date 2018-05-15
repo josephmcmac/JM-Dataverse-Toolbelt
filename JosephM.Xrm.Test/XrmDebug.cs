@@ -13,9 +13,6 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            var blah = XrmService.WhoAmI();
-
-            var metadata = XrmService.GetFields(Entities.account);
         }
 
         private void DeleteOnlineSampleData()

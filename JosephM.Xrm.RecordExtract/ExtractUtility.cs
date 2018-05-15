@@ -102,6 +102,16 @@ namespace JosephM.Xrm.RecordExtract
                 {
                     RecordField = new RecordField("notetext", "notetext"),
                     RecordType = new RecordType("annotation", "annotation")
+                },
+                new RecordFieldSetting()
+                {
+                    RecordField = new RecordField("description", "description"),
+                    RecordType = new RecordType("annotation", "annotation")
+                },
+                new RecordFieldSetting()
+                {
+                    RecordField = new RecordField("incident", "incident"),
+                    RecordType = new RecordType("description", "description")
                 }
             };
         }

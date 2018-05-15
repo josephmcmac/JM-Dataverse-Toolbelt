@@ -93,7 +93,7 @@ namespace JosephM.Application.ViewModel.Extentions
             return new GetGridRecordsResponse(records, hasMoreRows);
         }
 
-        public static GetGridRecordsResponse GetGridRecordPage(this DynamicGridViewModel gridViewModel, IEnumerable<IRecord> allRecords)
+        public static GetGridRecordsResponse GetGridRecord(this DynamicGridViewModel gridViewModel, IEnumerable<IRecord> allRecords, bool ignorePaging)
         {
             var hasMoreRows = allRecords.Count() > gridViewModel.CurrentPageCeiling;
             var sortExpression = gridViewModel.GetLastSortExpression();
@@ -145,7 +145,8 @@ namespace JosephM.Application.ViewModel.Extentions
                     newList.Reverse();
                 allRecords = newList;
             }
-            allRecords = allRecords.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();
+            if (!ignorePaging)
+                allRecords = allRecords.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();
             return new GetGridRecordsResponse(allRecords, hasMoreRows);
         }
     }

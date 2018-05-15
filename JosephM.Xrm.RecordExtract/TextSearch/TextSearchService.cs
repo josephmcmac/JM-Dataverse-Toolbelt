@@ -256,9 +256,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         //this code written as the crm web service / sql timedout when doing text searches over the entire record table
                         //i thus split all the records into sets defined by a date range and query the text in each set iteratively
                         //this way I limit the volume of text being searched in each crm web service query by a approximate number of records defined in the settings
-                        container.Controller.UpdateLevel2Progress(0, 1, string.Format("Configuring Html Search Sets"));
                         int totalCount = 0;
-                        var sortedDatesTemplate = GetDateRangesForSetSearches(recordType, out totalCount);
+                        var sortedDatesTemplate = GetDateRangesForSetSearches(recordType, container, out totalCount);
                         var totalDone = 0;
                         foreach (var field in htmlSearchFields)
                         {
@@ -313,16 +312,16 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                             catch (Exception ex)
                             {
                                 container.Response.AddResponseItem(
-                                    new TextSearchResponseItem("Error Searching String Fields", recordType, field, ex));
+                                    new TextSearchResponseItem("Error Searching Html Fields", recordType, field, ex));
                             }
                         }
                     }
 
                     var fieldsTodo = nonSetSearchFields.Count();
                     var fieldsDone = 0;
-                    foreach (var field in nonSetSearchFields)
+                    foreach (var field in nonSetSearchFields.OrderBy(f => Service.GetFieldLabel(f, recordType)))
                     {
-                        container.Controller.UpdateLevel2Progress(fieldsDone++, fieldsTodo, "Searching String Fields");
+                        container.Controller.UpdateLevel2Progress(fieldsDone++, fieldsTodo, $"Searching {Service.GetFieldLabel(field, recordType)}");
                         try
                         {
                             var conditions =
@@ -330,7 +329,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                  new Condition(field, ConditionType.Like, string.Format("%{0}%", s.Text)))
                                  .ToArray();
                             var stringFieldMatches = (container.Request.Operator == TextSearchRequest.SearchTermOperator.And
-                                ? Service.RetrieveAllOrClauses(recordType, conditions, null)
+                                ? Service.RetrieveAllAndClauses(recordType, conditions, null)
                                 : Service.RetrieveAllOrClauses(recordType, conditions, null))
                                 .ToArray();
                             foreach (var stringFieldMatch in stringFieldMatches)
@@ -353,7 +352,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         //this way I limit the volume of text being searched in each crm web service query by a approximate number of records defined in the settings
                         container.Controller.UpdateLevel2Progress(0, 1, string.Format("Configuring Search Sets"));
                         var fieldSetsTodo = 0;
-                        var sortedDatesTemplate = GetDateRangesForSetSearches(recordType, out fieldSetsTodo);
+                        var sortedDatesTemplate = GetDateRangesForSetSearches(recordType, container, out fieldSetsTodo);
                         foreach (var field in setSearchFields)
                         {
                             try
@@ -409,11 +408,12 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             }
         }
 
-        private List<DateTime> GetDateRangesForSetSearches(string recordType, out int totalCount)
+        private List<DateTime> GetDateRangesForSetSearches(string recordType, TextSearchContainer container, out int totalCount)
         {
             totalCount = 0;
             var startDate = new DateTime(1901, 01, 01);
             var sortedDatesTemplate = new List<DateTime>();
+            container.Controller.UpdateLevel2Progress(1, 2, string.Format("Loading Search Sets For {0}", Service.GetCollectionName(recordType)));
             //query the created dates of all records in the table
             //this does iterative queries sorting by created date
             //to avoid crm requerying the entire table for each iterative request
@@ -427,6 +427,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                 },
                         new[] { new SortExpression("createdon", SortType.Ascending) }).ToArray();
                 totalCount = totalCount + records.Count();
+                container.Controller.UpdateLevel2Progress(1, 2, string.Format("Loading Search Sets For {0} ({1} Processed)", Service.GetCollectionName(recordType), totalCount));
                 if (!records.Any())
                     break;
                 var theseDates =
@@ -436,7 +437,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         .ToList();
                 theseDates.Sort();
                 sortedDatesTemplate.Add(startDate);
-                startDate = theseDates.First();
+                startDate = theseDates.Last();
                 if (records.Count() < ExtractUtility.TextSearchSetSize)
                     break;
             }

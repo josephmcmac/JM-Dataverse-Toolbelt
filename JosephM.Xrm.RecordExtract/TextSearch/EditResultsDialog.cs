@@ -60,7 +60,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     GetGridRecords = (b) =>
                     {
                         //todo consider the ordering etc and when paging etc
-                        return DynamicGridViewModel.GetGridRecordPage(GetAllTheseRecords());
+                        return DynamicGridViewModel.GetGridRecord(GetAllTheseRecords(), b);
                     },
                     MultiSelect = true,
                     GridLoaded = false,
