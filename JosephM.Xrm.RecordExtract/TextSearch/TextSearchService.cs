@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
@@ -131,7 +132,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         {
                             var value = Service.GetFieldAsDisplayString(match, field);
                             if (container.Request.StripHtmlTagsPriorToSearch
-                                && ExtractUtility.GetSystemHtmlFields().Where(rf => rf.RecordType.Key == recordType).Any(rf => rf.RecordField.Key == field))
+                                && IsHtmlField(recordType, field, container))
                                 value = value.StripHtml();
                             if (value != null)
                             {
@@ -162,7 +163,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         {
                             var value = Service.GetFieldAsDisplayString(match, field);
                             if (container.Request.StripHtmlTagsPriorToSearch
-                                && ExtractUtility.GetSystemHtmlFields().Where(rf => rf.RecordType.Key == recordType).Any(rf => rf.RecordField.Key == field))
+                                && IsHtmlField(recordType, field, container))
                                 value = value.StripHtml();
                             if (value != null)
                             {
@@ -186,6 +187,12 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     }
                 }
             }
+        }
+
+        private bool IsHtmlField(string recordType, string fieldName, TextSearchContainer container)
+        {
+            var fields = ExtractUtility.GetSystemHtmlFields().Union(container.Request.CustomHtmlFields ?? new RecordFieldSetting[0]);
+            return fields.Any(f => f.RecordType.Key == recordType && f.RecordField.Key == fieldName);
         }
 
         private List<string> GetFieldsToExlcude(TextSearchContainer container, string recordType)
@@ -234,9 +241,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
                     var htmlSearchFields = container.Request.StripHtmlTagsPriorToSearch
                         ? stringFields
-                        .Intersect((ExtractUtility.GetSystemHtmlFields())
-                        .Where(rf => rf.RecordType.Key == recordType)
-                        .Select(rf => rf.RecordField.Key)).ToArray()
+                        .Where(s => IsHtmlField(recordType, s, container)).ToArray()
                         : new string[0];
                     var setSearchFields = stringFields
                         .Intersect(ExtractUtility.GetSystemTextSearchSetFields()

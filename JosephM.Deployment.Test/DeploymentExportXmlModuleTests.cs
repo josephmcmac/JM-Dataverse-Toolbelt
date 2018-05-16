@@ -161,7 +161,12 @@ namespace JosephM.Deployment.Test
             var lastCondition = bulkAddForm.FilterConditions.Conditions.Last();
             Assert.AreEqual(Entities.account, lastCondition.GetRecordTypeFieldViewModel(nameof(ConditionViewModel.QueryCondition.RecordType)).Value.Key);
             var fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
-            var validSearchFields = fieldViewModel.ItemsSource.Select(i => i.Key).ToArray();
+
+            var validSearchFields = fieldViewModel.ItemsSource
+                .Select(i => i.Key)
+                //lets just exclude non searchable fields here - some system ones e.g. opendeals_date don;t seem to work
+                .Where(f => XrmRecordService.GetFieldMetadata(f, Entities.account).Searchable)
+                .ToArray();
 
             foreach (var field in validSearchFields)
             {
@@ -176,11 +181,15 @@ namespace JosephM.Deployment.Test
                     conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Value == ConditionType.Equal.ToString());
                     var valueViewModel = lastCondition.GetFieldViewModel(nameof(ConditionViewModel.QueryCondition.Value));
                     valueViewModel.ValueObject = fieldvalue;
-                    //bulkAddForm.QuickFind();
-                    //Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
-                    //Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
+
+                    //use this to break on a sepcific field which doesn;t work
+                    bulkAddForm.QuickFind();
+                    Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
+                    Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
                 }
             }
+
+
             bulkAddForm.QuickFind();
             Assert.IsFalse(bulkAddForm.DynamicGridViewModel.GridLoadError, bulkAddForm.DynamicGridViewModel.ErrorMessage);
             Assert.IsTrue(bulkAddForm.DynamicGridViewModel.GridRecords.Any());
@@ -226,6 +235,13 @@ namespace JosephM.Deployment.Test
             Assert.IsTrue(multiSelectForm.ItemsSource.First(i => i.PicklistItem.Key == Entities.contact).Select = true);
             multiSelectForm.ApplyButtonViewModel.Invoke();
             Assert.IsFalse(entryForm.ChildForms.Any());
+        }
+
+        public class Temp
+        {
+            public string Field { get; set; }
+            public string QValue { get; set; }
+            public string RValue { get; set; }
         }
 
         /// <summary>

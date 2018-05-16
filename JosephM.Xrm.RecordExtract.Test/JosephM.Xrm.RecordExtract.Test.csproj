@@ -46,6 +46,9 @@
     <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="microsoft.xrm.sdk">
+      <HintPath>..\Lib\microsoft.xrm.sdk.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -69,7 +72,7 @@
     <Compile Include="RecordExtract\TestRecordExtractDialog.cs" />
     <Compile Include="RecordExtract\TestRecordExtractModule.cs" />
     <Compile Include="RecordExtract\TestRecordExtractService.cs" />
-    <Compile Include="TextSearch\TestTextSearchModuleTests.cs" />
+    <Compile Include="TextSearch\XrmTextSearchModuleTests.cs" />
     <Compile Include="TextSearch\TestTextSearchDialog.cs" />
     <Compile Include="TextSearch\TestTextSearchModule.cs" />
     <Compile Include="TextSearch\TestTextSearchService.cs" />
@@ -95,6 +98,10 @@
     <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.XrmModule.Test.csproj">
+      <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
+      <Name>JosephM.XrmModule.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.XrmModule.csproj">
       <Project>{ca2bb834-77fa-43db-8ddc-b0d1b5f519b9}</Project>

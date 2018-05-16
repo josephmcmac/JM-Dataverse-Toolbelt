@@ -137,23 +137,46 @@ namespace JosephM.Application.Desktop.Test
             where TDialog : DialogViewModel
             where TResponse : class
         {
+            TDialog dialog = NavigateAndProcessDialog<TDialogModule, TDialog>(instanceEntered);
+
+            return dialog.CompletionItem as TResponse;
+        }
+
+        public ObjectEntryViewModel NavigateAndProcessDialogGetResponseViewModel<TDialogModule, TDialog>(object instanceEntered)
+            where TDialogModule : DialogModule<TDialog>, new()
+            where TDialog : DialogViewModel
+        {
+            TDialog dialog = NavigateAndProcessDialog<TDialogModule, TDialog>(instanceEntered);
+
+            var completionScreen = dialog.Controller.UiItems.First() as CompletionScreenViewModel;
+            Assert.IsNotNull(completionScreen);
+            Assert.IsNotNull(completionScreen.CompletionDetails);
+            LoadForm(completionScreen.CompletionDetails);
+            return completionScreen.CompletionDetails;
+        }
+
+        private TDialog NavigateAndProcessDialog<TDialogModule, TDialog>(object instanceEntered)
+            where TDialogModule : DialogModule<TDialog>, new()
+            where TDialog : DialogViewModel
+        {
             var dialog = NavigateToDialog<TDialogModule, TDialog>();
             var entryForm = GetSubObjectEntryViewModel(dialog);
 
             if (entryForm is ObjectEntryViewModel)
             {
-                entryForm.LoadFormSections();
-                var oevm = (ObjectEntryViewModel)entryForm;
-
-                foreach (var grid in oevm.SubGrids)
-                    if (grid.DynamicGridViewModel.LoadedCallback != null)
-                        grid.DynamicGridViewModel.LoadedCallback();
-
+                LoadForm(entryForm);
             }
 
             EnterAndSaveObject(instanceEntered, entryForm);
+            return dialog;
+        }
 
-            return dialog.CompletionItem as TResponse;
+        private static void LoadForm(ObjectEntryViewModel entryForm)
+        {
+            entryForm.LoadFormSections();
+
+            foreach (var grid in entryForm.SubGrids)
+                Assert.IsNotNull(grid.DynamicGridViewModel.GridRecords);
         }
 
         public void NavigateAndProcessDialog<TDialogModule, TDialog>(IEnumerable<object> instancesEntered)

@@ -43,20 +43,21 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             {
                 var typeSchemaName = item.Key;
                 var typeLabel = service.GetDisplayName(typeSchemaName);
-                _summaryItems.Add(new SummaryItem(typeSchemaName, typeLabel, "All", item.Value.SelectMany(kv => kv.Value).Distinct().ToArray(), service));
+                _summaryItems.Add(new SummaryItem(typeSchemaName, typeLabel, "any", "Any Match", item.Value.SelectMany(kv => kv.Value).Distinct().ToArray(), service));
                 foreach(var fieldMatch in item.Value.OrderBy(kv => service.GetFieldLabel(kv.Key, typeSchemaName)))
                 {
-                    _summaryItems.Add(new SummaryItem(typeSchemaName, typeLabel, service.GetFieldLabel(fieldMatch.Key, typeSchemaName), fieldMatch.Value, service));
+                    _summaryItems.Add(new SummaryItem(typeSchemaName, typeLabel, fieldMatch.Key, service.GetFieldLabel(fieldMatch.Key, typeSchemaName), fieldMatch.Value, service));
                 }
             }
         }
 
         public class SummaryItem
         {
-            public SummaryItem(string typeSchemaName, string typeLabel, string matchedField, IEnumerable<string> ids, IRecordService recordService)
+            public SummaryItem(string typeSchemaName, string typeLabel, string matchedFieldSchemaName, string matchedField, IEnumerable<string> ids, IRecordService recordService)
             {
                 RecordTypeSchemaName = typeSchemaName;
                 RecordType = typeLabel;
+                MatchedFieldSchemaName = matchedFieldSchemaName;
                 MatchedField = matchedField;
                 Ids = ids;
                 RecordService = recordService;
@@ -78,6 +79,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             public string RecordTypeSchemaName { get; set; }
 
             public string RecordType { get; set; }
+
+            public string MatchedFieldSchemaName { get; set; }
 
             public string MatchedField { get; set; }
 
