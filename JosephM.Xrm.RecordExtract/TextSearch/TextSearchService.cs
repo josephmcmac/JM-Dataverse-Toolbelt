@@ -19,17 +19,13 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         ServiceBase<TextSearchRequest, TextSearchResponse, TextSearchResponseItem>
     {
         public TextSearchService(IRecordService service,
-            DocumentWriter.DocumentWriter documentWriter,
-            RecordExtractService recordExtractService)
+            DocumentWriter.DocumentWriter documentWriter)
         {
             Service = service;
             DocumentWriter = documentWriter;
-            RecordExtractService = recordExtractService;
         }
 
         private DocumentWriter.DocumentWriter DocumentWriter { get; set; }
-
-        private RecordExtractService RecordExtractService { get; set; }
 
         private IRecordService Service { get; set; }
 

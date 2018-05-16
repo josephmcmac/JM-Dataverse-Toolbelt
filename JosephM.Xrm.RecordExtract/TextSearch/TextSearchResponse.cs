@@ -80,6 +80,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
             public string RecordType { get; set; }
 
+            [Hidden]
             public string MatchedFieldSchemaName { get; set; }
 
             public string MatchedField { get; set; }

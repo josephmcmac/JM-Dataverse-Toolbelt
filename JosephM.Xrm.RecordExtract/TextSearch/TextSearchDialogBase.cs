@@ -16,6 +16,20 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         {
         }
 
+        private string _tabLabel = "Text Search";
+        public override string TabLabel
+        {
+            get
+            {
+                return _tabLabel;
+            }
+        }
+
+        public void SetTabLabel(string newLabel)
+        {
+            _tabLabel = newLabel;
+        }
+
         protected override void ProcessCompletionExtention()
         {
             if (Request.GenerateDocument)

@@ -7,8 +7,8 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
     public class TestTextSearchService : TextSearchService
     {
         public TestTextSearchService(FakeRecordService service, 
-            DocumentWriter.DocumentWriter documentWriter, TestRecordExtractService recordExtractService)
-            : base(service, documentWriter, recordExtractService)
+            DocumentWriter.DocumentWriter documentWriter)
+            : base(service, documentWriter)
         {
         }
     }
