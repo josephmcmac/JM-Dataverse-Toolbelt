@@ -28,7 +28,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     g.ApplicationController.UserMessage("1 Row Must Be Selected For Loading Records");
                 else
                 {
-                    var selectedItem = g.SelectedRow.GetRecord() as ObjectRecord;
+                    var selectedItem = g.SelectedRows.First().GetRecord() as ObjectRecord;
                     if(selectedItem == null)
                         throw new Exception($"Error selected item is not of type {typeof(ObjectRecord).Name}");
                     var summaryItem = selectedItem.Instance as TextSearchResponse.SummaryItem;

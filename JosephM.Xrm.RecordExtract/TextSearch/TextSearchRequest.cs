@@ -56,6 +56,11 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         [Group(Sections.SearchOptions)]
         public bool StripHtmlTagsPriorToSearch { get; set; }
 
+        [DisplayOrder(170)]
+        [Group(Sections.SearchOptions)]
+        [PropertyInContextByPropertyValue(nameof(StripHtmlTagsPriorToSearch), true)]
+        public IEnumerable<RecordFieldSetting> CustomHtmlFields { get; set; }
+
         [DisplayOrder(210)]
         [Group(Sections.Types)]
         public bool SearchAllTypes { get; set; }
@@ -95,6 +100,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         public class SearchTerm
         {
+            [RequiredProperty]
             public string Text { get; set; }
         }
 
