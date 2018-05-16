@@ -47,5 +47,7 @@ namespace JosephM.Record.IService
         string RecordTypeCode { get; }
         [Hidden]
         bool HasOwner { get; }
+        [Hidden]
+        bool ChangeTracking { get; }
     }
 }

@@ -117,5 +117,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return SchemaName;
             }
         }
+
+        public bool ChangeTracking
+        {
+            get
+            {
+                return XrmService.GetEntityMetadata(SchemaName).ChangeTrackingEnabled ?? false;
+            }
+        }
     }
 }

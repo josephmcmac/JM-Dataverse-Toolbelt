@@ -111,5 +111,13 @@ namespace JosephM.Record.Metadata
                 return SchemaName ?? DisplayName;
             }
         }
+
+        public bool ChangeTracking
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }
