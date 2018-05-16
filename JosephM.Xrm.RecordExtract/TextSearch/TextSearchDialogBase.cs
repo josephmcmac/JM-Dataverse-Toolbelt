@@ -18,9 +18,12 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         protected override void ProcessCompletionExtention()
         {
-            AddCompletionOption("Open Document", OpenFile);
-            AddCompletionOption("Open Folder", OpenFolder);
-            CompletionMessage = "Document Successfully Generated";
+            if (Request.GenerateDocument)
+            {
+                AddCompletionOption("Open Document", OpenFile);
+                AddCompletionOption("Open Folder", OpenFolder);
+            }
+            CompletionMessage = "Search Completed";
         }
 
         public void OpenFile()

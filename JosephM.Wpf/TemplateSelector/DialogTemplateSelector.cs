@@ -30,6 +30,8 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate MultiSelectDialogTemplateWindowSize { get; set; }
         public DataTemplate ColumnEditDialogTemplateTabSize { get; set; }
         public DataTemplate ColumnEditDialogTemplateWindowSize { get; set; }
+        public DataTemplate DynamicGridTemplateTabSize { get; set; }
+        public DataTemplate DynamicGridTemplateWindowSize { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -49,6 +51,8 @@ namespace JosephM.Wpf.TemplateSelector
                         return MultiSelectDialogTemplateWindowSize;
                     if (item is ColumnEditDialogViewModel)
                         return ColumnEditDialogTemplateWindowSize;
+                    if (item is DynamicGridViewModel)
+                        return DynamicGridTemplateWindowSize;
                 }
                 else
                 {
@@ -62,6 +66,8 @@ namespace JosephM.Wpf.TemplateSelector
                         return MultiSelectDialogTemplateTabSize;
                     if (item is ColumnEditDialogViewModel)
                         return ColumnEditDialogTemplateTabSize;
+                    if (item is DynamicGridViewModel)
+                        return DynamicGridTemplateTabSize;
                 }
             }
             if (item is ProgressControlViewModel)

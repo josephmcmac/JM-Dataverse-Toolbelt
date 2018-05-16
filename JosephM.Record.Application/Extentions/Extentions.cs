@@ -92,5 +92,62 @@ namespace JosephM.Application.ViewModel.Extentions
             records = records.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();
             return new GetGridRecordsResponse(records, hasMoreRows);
         }
+
+        public static GetGridRecordsResponse GetGridRecord(this DynamicGridViewModel gridViewModel, IEnumerable<IRecord> allRecords, bool ignorePaging)
+        {
+            var hasMoreRows = allRecords.Count() > gridViewModel.CurrentPageCeiling;
+            var sortExpression = gridViewModel.GetLastSortExpression();
+            if (sortExpression != null)
+            {
+                var sortField = sortExpression.FieldName;
+                var newList = new List<IRecord>();
+                foreach (var item in allRecords)
+                {
+                    var value1 = item.GetField(sortField);
+                    if (value1 == null)
+                    {
+                        newList.Insert(0, item);
+                        continue;
+                    }
+                    foreach (var item2 in newList)
+                    {
+                        var value2 = item2.GetField(sortField);
+                        if (value2 == null)
+                        {
+                            continue;
+                        }
+                        else if (!(value1 is Enum) && value1 is IComparable)
+                        {
+                            if (((IComparable)value1).CompareTo(value2) < 0)
+                            {
+                                newList.Insert(newList.IndexOf(item2), item);
+                                break;
+                            }
+                            else
+                                continue;
+                        }
+                        var sortString1 = value1.ToString();
+                        var sortString2 = value2.ToString();
+                        if (value1 is Enum)
+                            sortString1 = ((Enum)value1).GetDisplayString();
+                        if (value2 is Enum)
+                            sortString2 = ((Enum)value2).GetDisplayString();
+                        if (String.Compare(sortString1, sortString2, StringComparison.Ordinal) < 0)
+                        {
+                            newList.Insert(newList.IndexOf(item2), item);
+                            break;
+                        }
+                    }
+                    if (!newList.Contains(item))
+                        newList.Add(item);
+                }
+                if (sortExpression.SortType == SortType.Descending)
+                    newList.Reverse();
+                allRecords = newList;
+            }
+            if (!ignorePaging)
+                allRecords = allRecords.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();
+            return new GetGridRecordsResponse(allRecords, hasMoreRows);
+        }
     }
 }

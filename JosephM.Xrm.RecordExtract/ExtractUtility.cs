@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
+using JosephM.Xrm.Schema;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -9,6 +10,23 @@ namespace JosephM.Xrm.RecordExtract
     public static class ExtractUtility
     {
         public static int TextSearchSetSize { get { return 5000; } }
+
+        public static IEnumerable<RecordFieldSetting> GetSystemHtmlFields()
+        {
+            return new[]
+            {
+                new RecordFieldSetting()
+                {
+                    RecordField = new RecordField(Fields.email_.description, Fields.email_.description),
+                    RecordType = new RecordType(Entities.email, Entities.email)
+                },
+                new RecordFieldSetting()
+                {
+                    RecordField = new RecordField(Fields.knowledgearticle_.content, Fields.knowledgearticle_.content),
+                    RecordType = new RecordType(Entities.knowledgearticle, Entities.knowledgearticle)
+                }
+            };
+        }
 
         public static string CheckStripFormatting(string value, string recordType, string field)
         {
@@ -84,6 +102,16 @@ namespace JosephM.Xrm.RecordExtract
                 {
                     RecordField = new RecordField("notetext", "notetext"),
                     RecordType = new RecordType("annotation", "annotation")
+                },
+                new RecordFieldSetting()
+                {
+                    RecordField = new RecordField("description", "description"),
+                    RecordType = new RecordType("annotation", "annotation")
+                },
+                new RecordFieldSetting()
+                {
+                    RecordField = new RecordField("incident", "incident"),
+                    RecordType = new RecordType("description", "description")
                 }
             };
         }

@@ -9,7 +9,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 {
     [Group(Sections.Document, true, 10)]
     [Group(Sections.SearchTerm, true, 20)]
-    [Group(Sections.Types, true, 30)]
+    [Group(Sections.SearchOptions, true, 30)]
+    [Group(Sections.Types, true, 40)]
     [DisplayName("Text Search")]
     public class TextSearchRequest : ServiceRequestBase
     {
@@ -18,22 +19,42 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             SearchAllTypes = true;
             ExcludeEmails = true;
             ExcludePosts = true;
+            SearchTerms = new[]
+            {
+                new SearchTerm()
+            };
         }
+
+        [DisplayOrder(5)]
+        [Group(Sections.Document)]
+        [RequiredProperty]
+        public bool GenerateDocument { get; set; }
 
         [DisplayOrder(10)]
         [Group(Sections.Document)]
+        [PropertyInContextByPropertyValue(nameof(GenerateDocument), true)]
         [RequiredProperty]
         public DocumentType DocumentFormat { get; set; }
 
         [DisplayOrder(20)]
         [Group(Sections.Document)]
+        [PropertyInContextByPropertyValue(nameof(GenerateDocument), true)]
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
+
+        [DisplayOrder(105)]
+        [Group(Sections.SearchTerm)]
+        [RequiredProperty]
+        public SearchTermOperator Operator { get; set; }
 
         [DisplayOrder(110)]
         [Group(Sections.SearchTerm)]
         [RequiredProperty]
-        public string SearchText { get; set; }
+        public IEnumerable<SearchTerm> SearchTerms { get; set; }
+
+        [DisplayOrder(160)]
+        [Group(Sections.SearchOptions)]
+        public bool StripHtmlTagsPriorToSearch { get; set; }
 
         [DisplayOrder(210)]
         [Group(Sections.Types)]
@@ -60,11 +81,27 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         [PropertyInContextByPropertyValue(nameof(SearchAllTypes), true)]
         public IEnumerable<RecordTypeSetting> OtherExclusions { get; set; }
 
+        [DisplayOrder(260)]
+        [Group(Sections.Types)]
+        public IEnumerable<RecordFieldSetting> FieldExclusions { get; set; }
+
         private static class Sections
         {
             public const string Document = "Document";
             public const string SearchTerm = "Search Term";
+            public const string SearchOptions = "Search Options";
             public const string Types = "Types to Search - note if All Types is selected some system object types are excluded in the searches";
+        }
+
+        public class SearchTerm
+        {
+            public string Text { get; set; }
+        }
+
+        public enum SearchTermOperator
+        {
+            Or,
+            And
         }
     }
 }
