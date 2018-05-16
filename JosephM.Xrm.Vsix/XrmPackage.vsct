@@ -119,20 +119,9 @@
       </Group>
     </Groups>
 
-    <!--Buttons section. -->
-    <!--This section defines the elements the user can interact with, like a menu command or a button
-        or combo box in a toolbar. -->
     <Buttons>
-      <!--To define a menu group you have to specify its ID, the parent menu and its display priority.
-          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
-          the CommandFlag node.
-          You can add more than one CommandFlag node e.g.:
-              <CommandFlag>DefaultInvisible</CommandFlag>
-              <CommandFlag>DynamicVisibility</CommandFlag>
-          If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidXrmPackageCmdSet" id="RefreshSchemaCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -141,7 +130,6 @@
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="DeployWebResourceCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -150,34 +138,24 @@
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="DeployPluginAssemblyCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
-        <!--<CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>-->
         <Strings>
           <ButtonText>Deploy Plugin Assembly</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="UpdatePluginAssemblyCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
-        <!--<CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>-->
         <Strings>
           <ButtonText>Update Plugin Assembly (Assembly Only)</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="ManagePluginTriggersCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
-        <!--<CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>-->
         <Strings>
           <ButtonText>Manage Plugin Triggers</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="RefreshSettingsCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Package Settings</ButtonText>
         </Strings>
@@ -186,14 +164,12 @@
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Import Csvs</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="ClearCacheCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="ClearCacheCommandId" priority="0x0109" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Clear Cache</ButtonText>
         </Strings>
@@ -202,61 +178,55 @@
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Import Customisations</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="OpenCrmWebCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmWebCommandId" priority="0x0108" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
-          <ButtonText>Open CRM Web</ButtonText>
+          <ButtonText>Open Dynamics in Browser</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="OpenCrmSolutionCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmSolutionCommandId" priority="0x0108" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
-          <ButtonText>Open Solution</ButtonText>
+          <ButtonText>Open Solution in Browser</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="OpenCrmAdvancedFindCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmAdvancedFindCommandId" priority="0x0108" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
-          <ButtonText>Open Advanced Find</ButtonText>
+          <ButtonText>Open Advanced Find in Browser</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="CreateDeploymentPackageCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="CreateDeploymentPackageCommandId" priority="0x0101" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Create Deployment Package</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="DeployPackageCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="DeployPackageCommandId" priority="0x0101" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Deploy Package</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="InstanceComparisonCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="InstanceComparisonCommandId" priority="0x0103" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>Instance Comparison</ButtonText>
         </Strings>
       </Button>
-          <Button guid="guidXrmPackageCmdSet" id="CrudCommandId" priority="0x0100" type="Button">
+          <Button guid="guidXrmPackageCmdSet" id="CrudCommandId" priority="0x0102" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>Browse/Update Data</ButtonText>
         </Strings>
       </Button>
-       <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x0100" type="Button">
+       <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x0109" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>About</ButtonText>
@@ -278,7 +248,7 @@
           <ButtonText>Deploy Records</ButtonText>
         </Strings>
       </Button>
-          <Button guid="guidXrmPackageCmdSet" id="TextSearchCommandId" priority="0x0100" type="Button">
+          <Button guid="guidXrmPackageCmdSet" id="TextSearchCommandId" priority="0x0102" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>Text Search</ButtonText>
