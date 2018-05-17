@@ -25,8 +25,7 @@ namespace JosephM.Xrm.RecordExtract.Test
         {
             get
             {
-                return new TestTextSearchService(FakeRecordService.Get(), DocumentWriter,
-                    TestRecordExtractService);
+                return new TestTextSearchService(FakeRecordService.Get(), DocumentWriter);
             }
         }
     }
