@@ -7,13 +7,16 @@ using System.Linq;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
+    /// <summary>
+    /// This type is currently redundant but would require refactor
+    /// </summary>
     public class RecordExtractToDocumentRequest
     {
         public RecordExtractToDocumentRequest(Lookup lookup, Section section, LogController controller, DetailLevel relatedDetail
-            , IEnumerable<string> typesOnlyDisplayName = null
-            , IEnumerable<RecordFieldSetting> extendedFieldsToExclude = null
-            , IEnumerable<string> extendedRecordTypesToExclude = null
-            , bool includeCreatedByAndOn = false, bool includeModifiedByAndOn = false, bool includeCrmOwner = false, bool includeState = false, bool includeStatus = false)
+            , IEnumerable<string> typesOnlyDisplayName
+            , IEnumerable<RecordFieldSetting> extendedFieldsToExclude
+            , IEnumerable<string> extendedRecordTypesToExclude
+            , bool includeCreatedByAndOn, bool includeModifiedByAndOn, bool includeCrmOwner, bool includeState, bool includeStatus, bool stripHtmlTags, IEnumerable<RecordFieldSetting> customHtmlFields)
         {
             RecordLookup = lookup;
             Section = section;
@@ -27,6 +30,8 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             IncludeCrmOwner = includeCrmOwner;
             IncludeState = includeState;
             IncludeStatus = includeStatus;
+            StripHtmlTags = stripHtmlTags;
+            CustomHtmlFields = customHtmlFields;
         }
 
         public Lookup RecordLookup { get; set; }
@@ -41,10 +46,12 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         public bool IncludeCrmOwner { get; private set; }
         public bool IncludeState { get; private set; }
         public bool IncludeStatus { get; private set; }
+        public bool StripHtmlTags { get; set; }
+        public IEnumerable<RecordFieldSetting> CustomHtmlFields { get; set; }
 
         public bool OnlyDisplayName(string recordType)
         {
-            return TypesOnlyDisplayName == null || !TypesOnlyDisplayName.Any(r => r == recordType);
+            return TypesOnlyDisplayName != null && TypesOnlyDisplayName.Any(r => r == recordType);
         }
 
         public IEnumerable<string> GetAllFieldsToExclude(string recordType)
