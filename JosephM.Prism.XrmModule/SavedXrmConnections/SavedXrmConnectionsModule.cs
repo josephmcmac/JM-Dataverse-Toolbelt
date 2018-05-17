@@ -35,14 +35,21 @@ namespace JosephM.XrmModule.SavedXrmConnections
         {
             var customGridFunction = new CustomGridFunction("WEB", "Open In Web", (g) =>
             {
-                var selectedRow = g.SelectedRows.First();
-                var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
-                if (instance != null)
+                if (g.SelectedRows.Count() != 1)
                 {
-                    var xrmRecordService = new XrmRecordService(instance);
-                    Process.Start(xrmRecordService.WebUrl);
+                    g.ApplicationController.UserMessage("Please Select One Row To Browse The Connection");
                 }
-            }, (g) => g.GridRecords != null && g.SelectedRows.Count() == 1);
+                else
+                {
+                    var selectedRow = g.SelectedRows.First();
+                    var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
+                    if (instance != null)
+                    {
+                        var xrmRecordService = new XrmRecordService(instance);
+                        Process.Start(xrmRecordService.WebUrl);
+                    }
+                }
+            }, (g) => g.GridRecords != null && g.GridRecords.Any());
             this.AddCustomGridFunction(customGridFunction, typeof(SavedXrmRecordConfiguration));
         }
     }

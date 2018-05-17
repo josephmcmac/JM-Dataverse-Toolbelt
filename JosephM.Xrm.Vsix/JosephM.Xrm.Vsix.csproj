@@ -297,6 +297,10 @@
       <Project>{ed23e8ef-1623-491e-a30f-ba55c8f65ce7}</Project>
       <Name>JosephM.Wpf</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj">
+      <Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>
+      <Name>JosephM.Xrm.RecordExtract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.SolutionTemplate\JosephM.Xrm.SolutionTemplate.csproj">
       <Project>{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}</Project>
       <Name>JosephM.Xrm.SolutionTemplate</Name>

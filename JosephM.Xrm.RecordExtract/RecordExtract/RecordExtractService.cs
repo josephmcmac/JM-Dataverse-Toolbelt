@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Record.Extentions;
@@ -11,6 +8,9 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Xrm.RecordExtract.DocumentWriter;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
@@ -37,7 +37,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                 controller, request.DetailOfRelatedRecords
                 , request.RecordTypesOnlyDisplayName.Where(r => r.RecordType != null).Select(r => r.RecordType.Key).ToArray()
                  , request.FieldsToExclude, request.RecordTypesToExclude.Where(r => r.RecordType != null).Select(r => r.RecordType.Key).ToArray()
-                 , request.IncludeCreatedByAndOn, request.IncludeModifiedByAndOn, request.IncludeCrmOwner, request.IncludeState, request.IncludeStatus);
+                 , request.IncludeCreatedByAndOn, request.IncludeModifiedByAndOn, request.IncludeCrmOwner, request.IncludeState, request.IncludeStatus, request.StripHtmlTags, request.CustomHtmlFields);
             var extractResponse = ExtractRecordToDocument(extractToDocumentRequest);
             response.AddResponseItems(extractResponse.ResponseItems);
             //insert title/summary
@@ -59,14 +59,6 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
 
             response.Folder = request.SaveToFolder.FolderPath;
             response.FileName = fileName;
-        }
-
-        public RecordExtractToDocumentResponse ExtractRecordToDocument(LogController controller, Lookup lookup,
-            Section section, DetailLevel relatedDetail)
-        {
-            var request = new RecordExtractToDocumentRequest(lookup, section, controller, relatedDetail);
-            var response = ExtractRecordToDocument(request);
-            return response;
         }
 
         private RecordExtractToDocumentResponse ExtractRecordToDocument(RecordExtractToDocumentRequest request)
@@ -327,10 +319,10 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             table.AddFieldToTable(Service.GetFieldLabel(primaryField, record.Type),
                 ExtractUtility.CheckStripFormatting(recordName, record.Type, primaryField));
 
-            if (detailLevel == DetailLevel.Names || request.OnlyDisplayName(recordName))
+            if (detailLevel == DetailLevel.Names || request.OnlyDisplayName(record.Type))
                 return;
 
-            var fields = record.GetFieldsInEntity();
+            var fields = Service.GetFields(record.Type).Intersect(record.GetFieldsInEntity()).ToArray();
             if (fields.Any())
             {
                 var primaryKey = Service.GetPrimaryKey(record.Type);
@@ -360,11 +352,19 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
                 {
                     var label = Service.GetFieldLabel(field, record.Type);
                     var display = Service.GetFieldAsDisplayString(record, field);
+                    if (request.StripHtmlTags && IsHtmlField(record.Type, field, request))
+                        display = display.StripHtml();
                     if (!label.IsNullOrWhiteSpace() && !display.IsNullOrWhiteSpace() &&
                         !GetStringValuesToExclude().Contains(display))
                         table.AddFieldToTable(label, display);
                 }
             }
+        }
+
+        private bool IsHtmlField(string recordType, string fieldName, RecordExtractToDocumentRequest request)
+        {
+            var fields = ExtractUtility.GetSystemHtmlFields().Union(request.CustomHtmlFields ?? new RecordFieldSetting[0]);
+            return fields.Any(f => f.RecordType.Key == recordType && f.RecordField.Key == fieldName);
         }
 
         public IEnumerable<string> GetStringValuesToExclude()

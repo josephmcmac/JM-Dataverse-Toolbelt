@@ -17,11 +17,13 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         public override void RegisterTypes()
         {
             base.RegisterTypes();
-            AddWebBrowseGridFunction();
+            AddLoadResultItemToGridFunction();
         }
 
-        private void AddWebBrowseGridFunction()
+        private void AddLoadResultItemToGridFunction()
         {
+            //adds a button the search results summary
+            //to load the matches for a particular type and/or field to a grid for editing
             var customGridFunction = new CustomGridFunction("LOADTOGRID", "Load Matches To Grid", (DynamicGridViewModel g) =>
             {
                 if (g.SelectedRows.Count() != 1)

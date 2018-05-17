@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
@@ -11,7 +8,9 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Xrm.RecordExtract.DocumentWriter;
-using JosephM.Xrm.RecordExtract.RecordExtract;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {
@@ -19,17 +18,13 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         ServiceBase<TextSearchRequest, TextSearchResponse, TextSearchResponseItem>
     {
         public TextSearchService(IRecordService service,
-            DocumentWriter.DocumentWriter documentWriter,
-            RecordExtractService recordExtractService)
+            DocumentWriter.DocumentWriter documentWriter)
         {
             Service = service;
             DocumentWriter = documentWriter;
-            RecordExtractService = recordExtractService;
         }
 
         private DocumentWriter.DocumentWriter DocumentWriter { get; set; }
-
-        private RecordExtractService RecordExtractService { get; set; }
 
         private IRecordService Service { get; set; }
 
