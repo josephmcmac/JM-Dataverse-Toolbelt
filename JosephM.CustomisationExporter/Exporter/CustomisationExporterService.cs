@@ -393,18 +393,27 @@ namespace JosephM.CustomisationExporter.Exporter
                     controller.UpdateProgress(i, count, "Exporting Record Type " + thisTypeLabel);
                     try
                     {
-                        allEntities.Add(new EntityExport(thisTypeLabel, thisType,
-                            Service.GetRecordTypeMetadata(thisType).IsCustomType,
-                            Service.GetRecordTypeMetadata(thisType).RecordTypeCode, Service.GetCollectionName(thisType),
-                            Service.GetRecordTypeMetadata(thisType).Description
-                            , Service.GetRecordTypeMetadata(thisType).Audit,
-                            Service.GetRecordTypeMetadata(thisType).IsActivityType,
-                            Service.GetRecordTypeMetadata(thisType).Notes,
-                            Service.GetRecordTypeMetadata(thisType).Activities
-                            , Service.GetRecordTypeMetadata(thisType).Connections,
-                            Service.GetRecordTypeMetadata(thisType).MailMerge,
-                            Service.GetRecordTypeMetadata(thisType).Queues,
-                            Service.GetRecordTypeMetadata(thisType).MetadataId));
+                        var mt = Service.GetRecordTypeMetadata(thisType);
+                        allEntities.Add(new EntityExport(
+                            mt.DisplayName,
+                            thisType,
+                            mt.IsCustomType,
+                            mt.RecordTypeCode,
+                            mt.CollectionName,
+                            mt.Description,
+                            mt.Audit,
+                            mt.IsActivityType,
+                            mt.Notes,
+                            mt.Activities,
+                            mt.Connections,
+                            mt.MailMerge,
+                            mt.Queues,
+                            mt.MetadataId,
+                            mt.ChangeTracking,
+                            mt.EntitySetName,
+                            mt.DocumentManagement,
+                            mt.QuickCreate
+                            ));
                     }
                     catch (Exception ex)
                     {

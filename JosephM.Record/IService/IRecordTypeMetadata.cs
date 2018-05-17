@@ -49,5 +49,11 @@ namespace JosephM.Record.IService
         bool HasOwner { get; }
         [Hidden]
         bool ChangeTracking { get; }
+        [Hidden]
+        string EntitySetName { get; }
+        [Hidden]
+        bool DocumentManagement { get; }
+        [Hidden]
+        bool QuickCreate { get; }
     }
 }

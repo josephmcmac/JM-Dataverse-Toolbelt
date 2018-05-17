@@ -1,10 +1,8 @@
-﻿using System;
+﻿using JosephM.Core.Attributes;
 using JosephM.Record.IService;
 using JosephM.Xrm;
-using JosephM.Record.Attributes;
 using JosephM.Xrm.Schema;
 using System.Linq;
-using JosephM.Core.Attributes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -123,6 +121,30 @@ namespace JosephM.Record.Xrm.XrmRecord
             get
             {
                 return XrmService.GetEntityMetadata(SchemaName).ChangeTrackingEnabled ?? false;
+            }
+        }
+
+        public string EntitySetName
+        {
+            get
+            {
+                return XrmService.GetEntityMetadata(SchemaName).EntitySetName;
+            }
+        }
+
+        public bool DocumentManagement
+        {
+            get
+            {
+                return XrmService.GetEntityMetadata(SchemaName).IsDocumentManagementEnabled ?? false;
+            }
+        }
+
+        public bool QuickCreate
+        {
+            get
+            {
+                return XrmService.GetEntityMetadata(SchemaName).IsQuickCreateEnabled ?? false;
             }
         }
     }

@@ -119,5 +119,26 @@ namespace JosephM.Record.Metadata
                 return false;
             }
         }
+
+        public string EntitySetName
+        {
+            get { return SchemaName; }
+        }
+
+        public bool DocumentManagement
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool QuickCreate
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }
