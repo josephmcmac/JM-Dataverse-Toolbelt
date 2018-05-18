@@ -351,10 +351,6 @@ namespace JosephM.Wpf.Grid
                                 || gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Writeable == true;
                             dataGridField.IsReadOnly = isFormReadonly || !isWriteable;
                             var description = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Description;
-                            //todo this removes the standard xaml setters including the click to sort
-                            //var style = new Style(typeof(DataGridColumnHeader));
-                            //style.Setters.Add(new Setter(ToolTipService.ToolTipProperty, description));
-                            //dataGridField.HeaderStyle = style;
                             dynamicDataGrid.Columns.Add(dataGridField);
                         }
                         var dataGridBinding = new Binding
