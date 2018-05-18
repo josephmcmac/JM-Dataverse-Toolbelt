@@ -52,14 +52,13 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 //which loads a dynamic grid - similar to query but no query - 
                 DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
                 {
-                    PageSize = 25, //todo this standard
+                    PageSize = 25,
                     RecordService = RecordService,
                     RecordType = SummaryItem.RecordTypeSchemaName,
                     IsReadOnly = true,
                     FormController = new FormController(RecordService, null, ApplicationController),
                     GetGridRecords = (b) =>
                     {
-                        //todo consider the ordering etc and when paging etc
                         return DynamicGridViewModel.GetGridRecord(GetAllTheseRecords(), b);
                     },
                     MultiSelect = true,

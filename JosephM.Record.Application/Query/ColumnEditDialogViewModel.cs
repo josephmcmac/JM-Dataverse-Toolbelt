@@ -22,7 +22,6 @@ namespace JosephM.Application.ViewModel.Query
             RecordService = recordService;
             RecordType = recordType;
             ApplySelections = applySelections;
-            //todo somehow to this asynch while loading
             var columnsCurrenltySelected =
                 currentColumns.Select(si => new SelectableColumn(si.Key, RecordService.GetFieldLabel(si.Key, RecordType), si.Value, RemoveCurrentField, AddCurrentField, ApplicationController))
                 .ToArray();
