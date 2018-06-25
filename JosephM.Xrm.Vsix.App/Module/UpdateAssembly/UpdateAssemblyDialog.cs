@@ -71,8 +71,9 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
                 var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
                 if (PackageSettings.AddToSolution)
                     Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
+
+                CompletionMessage = "Assembly Updated";
             }
-            CompletionMessage = "Assembly Updated";
             LoadingViewModel.IsLoading = false;
         }
     }
