@@ -14,7 +14,7 @@ namespace JosephM.TestModule.TestDialog
         {
             if(request.ThrowFatalErrors)
             {
-                throw new Exception("Nope " + "Nope\n".ReplicateString(100));
+                throw new Exception("Nope " + "Nope ".ReplicateString(1000));
             }
 
             response.AddResponseItem(new TestDialogResponseItem("Dummy Response", null));
