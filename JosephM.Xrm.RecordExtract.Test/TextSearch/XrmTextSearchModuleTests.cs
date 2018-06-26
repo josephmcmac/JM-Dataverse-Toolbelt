@@ -73,7 +73,7 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
             //okay we also have a feature where we load the results into a grid
             var summaryGrid = responseViewModel.GetEnumerableFieldViewModel(nameof(TextSearchResponse.Summary));
             Assert.AreEqual(4, summaryGrid.GridRecords.Count);
-            summaryGrid.DynamicGridViewModel.GridRecords.First(gr => gr.GetStringFieldFieldViewModel(nameof(TextSearchResponse.SummaryItem.MatchedFieldSchemaName)).Value == Fields.account_.name).IsSelected = true;
+            summaryGrid.DynamicGridViewModel.GridRecords.First(gr => gr.GetStringFieldFieldViewModel(nameof(TextSearchResponse.SummaryItem.MatchedField)).Value == XrmService.GetFieldLabel(Fields.account_.name, Entities.account)).IsSelected = true;
             summaryGrid.DynamicGridViewModel.GetButton("LOADTOGRID").Invoke();
 
             var editResultsDialog = responseViewModel.ChildForms.First() as EditResultsDialog;
