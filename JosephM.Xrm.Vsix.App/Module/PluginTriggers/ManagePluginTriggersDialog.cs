@@ -40,14 +40,14 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
             var assemblyRecord = XrmRecordService.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name,
                 assemblyName);
             if (assemblyRecord == null)
-                throw new NullReferenceException("Assembly Not Deployed");
+                throw new NullReferenceException("There is no plugin assembly deployed in the dynamics instance with a matching name. Try the deploy assembly option to deploy a new plugin assembly, or rename the assembly to match an existing assembly deployed to the instance");
 
             LoadingViewModel.LoadingMessage = "Loading Plugin Types";
 
             var pluginTypes = XrmRecordService.RetrieveAllAndClauses(Entities.plugintype,
                 new[] {new Condition(Fields.plugintype_.pluginassemblyid, ConditionType.Equal, assemblyRecord.Id)});
             if (!pluginTypes.Any())
-                throw new NullReferenceException("Not Plugin Types Deployed For Assembly");
+                throw new NullReferenceException("There No Plugin Types Deployed In This Assembly So No Triggers Can Be Created For Them");
 
             LoadingViewModel.LoadingMessage = "Loading Plugin Triggers";
 

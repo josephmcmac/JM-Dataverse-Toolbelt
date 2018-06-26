@@ -173,82 +173,89 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
         protected override void CompleteDialogExtention()
         {
-
-            var responses = new List<PluginTypeErrors>();
-
-            var service = Service;
-
-            var removedPlugins = PreTypeRecords.Where(ptr => PluginAssembly.PluginTypes.All(pt => pt.Id != ptr.Id)).ToArray();
-            foreach (var record in removedPlugins)
+            try
             {
-                try
+                var responses = new List<PluginTypeErrors>();
+
+
+                var service = Service;
+
+                var removedPlugins = PreTypeRecords.Where(ptr => PluginAssembly.PluginTypes.All(pt => pt.Id != ptr.Id)).ToArray();
+                foreach (var record in removedPlugins)
                 {
-                    service.Delete(record);
+                    try
+                    {
+                        service.Delete(record);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(string.Format("Error deleting plugin {0}", record.GetStringField(Fields.plugintype_.name)), ex);
+                    }
                 }
-                catch (Exception ex)
+
+                //okay first create/update the plugin assembly
+                var assemblyRecord = service.NewRecord(Entities.pluginassembly);
+                assemblyRecord.Id = PluginAssembly.Id;
+                if (PluginAssembly.Id != null)
+                    assemblyRecord.SetField(Fields.pluginassembly_.pluginassemblyid, PluginAssembly.Id, service);
+                assemblyRecord.SetField(Fields.pluginassembly_.name, PluginAssembly.Name, service);
+                assemblyRecord.SetField(Fields.pluginassembly_.content, PluginAssembly.Content, service);
+                assemblyRecord.SetField(Fields.pluginassembly_.isolationmode, (int)PluginAssembly.IsolationMode, service);
+                var matchField = Fields.pluginassembly_.pluginassemblyid;
+
+                var assemblyLoadResponse = service.LoadIntoCrm(new[] { assemblyRecord }, matchField);
+                if (assemblyLoadResponse.Errors.Any())
                 {
-                    throw new Exception(string.Format("Error deleting plugin {0}", record.GetStringField(Fields.plugintype_.name)), ex);
+                    throw new Exception("Error Deploying Assembly", assemblyLoadResponse.Errors.Values.First());
                 }
+                //okay create/update the plugin types
+                var pluginTypes = new List<IRecord>();
+                foreach (var pluginType in PluginAssembly.PluginTypes)
+                {
+                    var pluginTypeRecord = service.NewRecord(Entities.plugintype);
+                    pluginTypeRecord.Id = pluginType.Id;
+                    if (pluginType.Id != null)
+                        pluginTypeRecord.SetField(Fields.plugintype_.plugintypeid, pluginType.Id, service);
+                    pluginTypeRecord.SetField(Fields.plugintype_.typename, pluginType.TypeName, service);
+                    pluginTypeRecord.SetField(Fields.plugintype_.name, pluginType.Name, service);
+                    pluginTypeRecord.SetField(Fields.plugintype_.friendlyname, pluginType.FriendlyName, service);
+                    pluginTypeRecord.SetField(Fields.plugintype_.assemblyname, PluginAssembly.Name, service);
+                    pluginTypeRecord.SetLookup(Fields.plugintype_.pluginassemblyid, assemblyRecord.Id, assemblyRecord.Type);
+                    pluginTypeRecord.SetField(Fields.plugintype_.isworkflowactivity, pluginType.IsWorkflowActivity, service);
+                    pluginTypeRecord.SetField(Fields.plugintype_.workflowactivitygroupname, pluginType.GroupName, service);
+                    pluginTypes.Add(pluginTypeRecord);
+                }
+
+                var pluginTypeLoadResponse = service.LoadIntoCrm(pluginTypes, Fields.plugintype_.plugintypeid);
+
+                foreach (var item in pluginTypeLoadResponse.Errors)
+                {
+                    var responseItem = new PluginTypeErrors();
+                    responseItem.Name = item.Key.GetStringField(Fields.plugintype_.typename);
+                    responseItem.Exception = item.Value;
+                    responses.Add(responseItem);
+                }
+                CompletionItem = new PluginTypeDeployResponse()
+                {
+                    Responses = responses
+                };
+                //CompletionItems.AddRange(responses);
+
+                //add plugin assembly to the solution
+                var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
+                var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
+                if (PackageSettings.AddToSolution)
+                    service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
+
+                if (responses.Any())
+                    CompletionMessage = "There Were Errors Thrown Updating The Plugins";
+                else
+                    CompletionMessage = "Plugins Updated";
             }
-
-            //okay first create/update the plugin assembly
-            var assemblyRecord = service.NewRecord(Entities.pluginassembly);
-            assemblyRecord.Id = PluginAssembly.Id;
-            if (PluginAssembly.Id != null)
-                assemblyRecord.SetField(Fields.pluginassembly_.pluginassemblyid, PluginAssembly.Id, service);
-            assemblyRecord.SetField(Fields.pluginassembly_.name, PluginAssembly.Name, service);
-            assemblyRecord.SetField(Fields.pluginassembly_.content, PluginAssembly.Content, service);
-            assemblyRecord.SetField(Fields.pluginassembly_.isolationmode, (int)PluginAssembly.IsolationMode, service);
-            var matchField = Fields.pluginassembly_.pluginassemblyid;
-
-            var assemblyLoadResponse = service.LoadIntoCrm(new[] { assemblyRecord }, matchField);
-            if (assemblyLoadResponse.Errors.Any())
+            catch(Exception ex)
             {
-                throw new Exception("Error Updating Assembly", assemblyLoadResponse.Errors.Values.First());
+                CompletionMessage = "Fatal Error: " + ex.Message + Environment.NewLine + ex.XrmDisplayString();
             }
-            //okay create/update the plugin types
-            var pluginTypes = new List<IRecord>();
-            foreach (var pluginType in PluginAssembly.PluginTypes)
-            {
-                var pluginTypeRecord = service.NewRecord(Entities.plugintype);
-                pluginTypeRecord.Id = pluginType.Id;
-                if (pluginType.Id != null)
-                    pluginTypeRecord.SetField(Fields.plugintype_.plugintypeid, pluginType.Id, service);
-                pluginTypeRecord.SetField(Fields.plugintype_.typename, pluginType.TypeName, service);
-                pluginTypeRecord.SetField(Fields.plugintype_.name, pluginType.Name, service);
-                pluginTypeRecord.SetField(Fields.plugintype_.friendlyname, pluginType.FriendlyName, service);
-                pluginTypeRecord.SetField(Fields.plugintype_.assemblyname, PluginAssembly.Name, service);
-                pluginTypeRecord.SetLookup(Fields.plugintype_.pluginassemblyid, assemblyRecord.Id, assemblyRecord.Type);
-                pluginTypeRecord.SetField(Fields.plugintype_.isworkflowactivity, pluginType.IsWorkflowActivity, service);
-                pluginTypeRecord.SetField(Fields.plugintype_.workflowactivitygroupname, pluginType.GroupName, service);
-                pluginTypes.Add(pluginTypeRecord);
-            }
-
-            var pluginTypeLoadResponse = service.LoadIntoCrm(pluginTypes, Fields.plugintype_.plugintypeid);
-
-            foreach (var item in pluginTypeLoadResponse.Errors)
-            {
-                var responseItem = new PluginTypeErrors();
-                responseItem.Name = item.Key.GetStringField(Fields.plugintype_.typename);
-                responseItem.Exception = item.Value;
-                responses.Add(responseItem);
-            }
-            CompletionItem = new PluginTypeDeployResponse()
-            {
-                Responses = responses
-            };
-            //CompletionItems.AddRange(responses);
-
-            //add plugin assembly to the solution
-            var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
-            var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
-            if (PackageSettings.AddToSolution)
-                service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
-
-            if (responses.Any())
-                CompletionMessage = "There Were Errors Thrown Updating The Plugins";
-            else
-                CompletionMessage = "Plugins Updated";
         }
 
         //code copied - http://weblog.west-wind.com/posts/2009/Jan/19/Assembly-Loading-across-AppDomains
