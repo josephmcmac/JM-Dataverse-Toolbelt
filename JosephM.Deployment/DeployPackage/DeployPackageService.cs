@@ -69,12 +69,16 @@ namespace JosephM.Deployment.DeployPackage
         {
             var countToDo = solutionFiles.Count();
             var countRecordsImported = 0;
+
+            controller.LogLiteral($"Loading Active {xrmService.GetEntityCollectionName(Entities.duplicaterule)}");
+            var duplicateRules = xrmService.RetrieveAllAndClauses(Entities.duplicaterule, new[] { new ConditionExpression(Fields.duplicaterule_.statecode, ConditionOperator.Equal, OptionSets.DuplicateDetectionRule.Status.Active) }, new string[0]);
+
             foreach (var solutionFile in solutionFiles)
             {
                 try
                 {
                     controller.UpdateProgress(++countRecordsImported, countToDo + 1,
-                        "Importing Solution " + solutionFile);
+                        "Importing Solution " + new FileInfo(solutionFile).Name);
                     var importId = Guid.NewGuid();
                     var req = new ImportSolutionRequest();
                     req.ImportJobId = importId;
@@ -115,6 +119,20 @@ namespace JosephM.Deployment.DeployPackage
             controller.TurnOffLevel2();
             controller.LogLiteral("Publishing Customisations");
             xrmService.Publish();
+
+            controller.LogLiteral($"Checking Deactivated {xrmService.GetEntityCollectionName(Entities.duplicaterule)}");
+            duplicateRules = xrmService.Retrieve(Entities.duplicaterule, duplicateRules.Select(e => e.Id), new[] { Fields.duplicaterule_.statecode, Fields.duplicaterule_.name });
+            foreach(var rule in duplicateRules)
+            {
+                if(rule.GetOptionSetValue(Fields.duplicaterule_.statecode) == OptionSets.DuplicateDetectionRule.Status.Inactive)
+                {
+                    controller.LogLiteral($"Republishing {xrmService.GetEntityLabel(Entities.duplicaterule)} '{rule.GetStringField(Fields.duplicaterule_.name)}'");
+                    xrmService.Execute(new PublishDuplicateRuleRequest()
+                    {
+                        DuplicateRuleId = rule.Id
+                    });
+                }
+            }
         }
 
         public class Processor
