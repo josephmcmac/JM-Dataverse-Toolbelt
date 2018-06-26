@@ -1546,32 +1546,10 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             }
         }
 
-        internal void SetFieldsIfChanging(string recordType, string fieldName,
-            SortedDictionary<Guid, object> idFieldSwitches)
-        {
-            var existingValues = new SortedDictionary<Guid, object>();
-            var ids = idFieldSwitches.Keys.Select(guid => (object)guid).ToArray();
-            var items = Retrieve(recordType, ids, new[] { fieldName });
-            foreach (var item in items)
-            {
-                existingValues.Add(item.Id, item.GetField(fieldName));
-            }
-
-            foreach (var id in idFieldSwitches.Keys)
-            {
-                if (existingValues.ContainsKey(id) && XrmEntity.FieldsEqual(existingValues[id], idFieldSwitches[id]))
-                {
-                    //if the value not changing for this record don't bother updating
-                }
-                else
-                    SetField(recordType, id, fieldName, idFieldSwitches[id]);
-            }
-        }
-
-        public IEnumerable<Entity> Retrieve(string entityType, object[] ids, IEnumerable<string> fields)
+        public IEnumerable<Entity> Retrieve(string entityType, IEnumerable<Guid> ids, IEnumerable<string> fields)
         {
             var query = new QueryExpression(entityType);
-            query.Criteria.AddCondition(XrmEntity.GetPrimaryKeyName(entityType), ConditionOperator.In, ids);
+            query.Criteria.AddCondition(XrmEntity.GetPrimaryKeyName(entityType), ConditionOperator.In, ids.Cast<object>().ToArray());
             if (fields != null)
                 query.ColumnSet = new ColumnSet(fields.ToArray());
             else

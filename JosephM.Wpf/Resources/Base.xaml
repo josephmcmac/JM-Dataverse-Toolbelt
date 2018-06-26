@@ -12,6 +12,7 @@
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
     <Style x:Key="HeadingStyleTextBox" TargetType="TextBox" >
+        <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="MinWidth" Value="100" />
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="BorderThickness" Value="0" />

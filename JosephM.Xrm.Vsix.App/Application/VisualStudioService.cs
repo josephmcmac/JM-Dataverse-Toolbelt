@@ -149,32 +149,38 @@ namespace JosephM.Xrm.Vsix.Application
 
         public override string BuildSelectedProjectAndGetAssemblyName()
         {
+            var selectedProject = GetSelectedProject();
             var build = DTE.Solution.SolutionBuild;
-            build.Clean(true);
-            build.Build(true);
+            build.BuildProject(selectedProject.ConfigurationManager.ActiveConfiguration.ConfigurationName, selectedProject.UniqueName, WaitForBuildToFinish: true);
             var info = build.LastBuildInfo;
 
             if (info == 0)
             {
-                var selectedItems = DTE.SelectedItems;
-                foreach (SelectedItem item in selectedItems)
-                {
-                    var project = item.Project;
-                    if (project.Name != null)
-                    {
-                        var assemblyName = GetProperty(project.Properties, "AssemblyName");
-                        var outputPath =
-                            GetProperty(project.ConfigurationManager.ActiveConfiguration.Properties,
-                                "OutputPath");
-                        var fileInfo = new FileInfo(project.FullName);
-                        var rootFolder = fileInfo.DirectoryName;
-                        var outputFolder = Path.Combine(rootFolder ?? "", outputPath);
-                        var assemblyFile = Path.Combine(outputFolder, assemblyName) + ".dll";
-                        return assemblyFile;
-                    }
-                }
+                var assemblyName = GetProperty(selectedProject.Properties, "AssemblyName");
+                var outputPath =
+                    GetProperty(selectedProject.ConfigurationManager.ActiveConfiguration.Properties,
+                        "OutputPath");
+                var fileInfo = new FileInfo(selectedProject.FullName);
+                var rootFolder = fileInfo.DirectoryName;
+                var outputFolder = Path.Combine(rootFolder ?? "", outputPath);
+                var assemblyFile = Path.Combine(outputFolder, assemblyName) + ".dll";
+                return assemblyFile;
             }
             return null;
+        }
+
+        private Project GetSelectedProject()
+        {
+            var selectedItems = DTE.SelectedItems;
+            foreach (SelectedItem item in selectedItems)
+            {
+                var project = item.Project;
+                if (project.Name != null)
+                {
+                    return project;
+                }
+            }
+            throw new NullReferenceException("Could not identify a selected project");
         }
 
         private string GetProperty(Properties properties, string name)
