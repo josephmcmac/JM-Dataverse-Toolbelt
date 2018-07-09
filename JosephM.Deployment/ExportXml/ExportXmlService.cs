@@ -69,6 +69,7 @@ namespace JosephM.Deployment.ExportXml
             foreach (var exportType in exports)
             {
                 var type = exportType.RecordType == null ? null : exportType.RecordType.Key;
+                var thisTypeConfig = XrmTypeConfigs.GetFor(type);
                 controller.UpdateProgress(countsExported++, countToExport, string.Format("Exporting {0} Records", type));
                 var conditions = new List<ConditionExpression>();
                 if (type == "list")
@@ -123,6 +124,36 @@ namespace JosephM.Deployment.ExportXml
                 var excludeFields = exportType.IncludeAllFields
                     ? new string[0]
                     : XrmService.GetFields(exportType.RecordType.Key).Except(exportType.IncludeOnlyTheseFields.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray());
+
+                if (thisTypeConfig != null)
+                {
+                    //which need to include the fields if they are needed for parentchild configs
+                    excludeFields = excludeFields.Except(new[] { thisTypeConfig.ParentLookupField }).ToArray();
+                    if(thisTypeConfig.UniqueChildFields != null)
+                        excludeFields = excludeFields.Except(thisTypeConfig.UniqueChildFields).ToArray();
+
+                    var thisTypesParentsConfig = XrmTypeConfigs.GetFor(thisTypeConfig.ParentLookupType);
+                    if(thisTypesParentsConfig != null && thisTypesParentsConfig.Type != thisTypeConfig.ParentLookupType)
+                    {
+                        //if the parent also has a config then we need to use it when matching the parent
+                        //e.g. portal web page access rules -> web page where the web page may be a master or child web page
+                        //so lets include the parents config fields as aliased fields in the exported entity
+                        var fieldsToIncludeInParent = new List<string> { thisTypesParentsConfig.ParentLookupField };
+                        if (thisTypesParentsConfig.UniqueChildFields != null)
+                            fieldsToIncludeInParent.AddRange(thisTypesParentsConfig.UniqueChildFields);
+
+                        foreach(var item in entities)
+                        {
+                            var parentId = item.GetLookupGuid(thisTypeConfig.ParentLookupField);
+                            if(parentId.HasValue)
+                            {
+                                var parent = XrmService.Retrieve(thisTypeConfig.ParentLookupType, parentId.Value, fieldsToIncludeInParent);
+                                item.Attributes.AddRange(parent.Attributes.Select(f => new KeyValuePair<string,object>($"{thisTypeConfig.ParentLookupField}.{f.Key}", new AliasedValue(thisTypeConfig.ParentLookupType, f.Key, f.Value))));
+                            }
+                        }
+                    }
+                }
+
                 var primaryField = XrmService.GetPrimaryNameField(exportType.RecordType.Key);
                 if (excludeFields.Contains(primaryField))
                     excludeFields = excludeFields.Except(new[] { primaryField }).ToArray();
