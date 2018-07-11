@@ -30,7 +30,7 @@ namespace JosephM.Deployment
                     Type = "adx_entityformmetadata",
                     ParentLookupField = "adx_entityform",
                     ParentLookupType = "adx_entityform",
-                    UniqueChildFields = new [] { "adx_type", "adx_sectionname", "adx_attributelogicalname" }
+                    UniqueChildFields = new [] { "adx_type", "adx_sectionname", "adx_attributelogicalname", "adx_tabname", "adx_subgrid_name" }
                 },
             new XrmTypeConfigs()
                 {
