@@ -33,6 +33,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using JosephM.Xrm.RecordExtract.TextSearch;
+using JosephM.Xrm.Vsix.Module.DeployIntoField;
 
 namespace JosephM.XRM.VSIX
 {
@@ -89,6 +90,7 @@ namespace JosephM.XRM.VSIX
             app.AddModule<XrmPackageAboutModule>(0x0113);
             app.AddModule<ImportSolutionModule>(0x0114);
             app.AddModule<ImportRecordsModule>(0x0115);
+            app.AddModule<DeployIntoFieldModule>(0x0117);
         }
 
         public class XrmPackageAboutModule : AboutModule

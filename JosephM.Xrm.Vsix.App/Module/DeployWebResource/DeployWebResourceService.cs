@@ -32,11 +32,13 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
 
             var publishIds = new List<string>();
 
-            controller.UpdateProgress(2, 3, "Deploying Files");
+            var totalTasks = request.Files.Count() + 1;
+            var tasksCompleted = 0;
             foreach (var file in request.Files)
             {
                 var fileInfo = new FileInfo(file);
                 var fileName = fileInfo.Name;
+                controller.UpdateProgress(++tasksCompleted, totalTasks, "Deploying " + fileName);
 
                 var responseItem = new DeployWebResourceResponseItem();
                 responseItem.Name = fileName;
@@ -84,7 +86,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
 
             if (publishIds.Any())
             {
-                controller.UpdateProgress(3, 3, "Publising Files");
+                controller.UpdateProgress(totalTasks, totalTasks, "Publising Files");
                 var xml = new StringBuilder();
                 xml.Append("<importexportxml><webresources>");
                 foreach (var id in publishIds)
