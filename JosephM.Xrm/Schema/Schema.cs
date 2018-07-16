@@ -1941,7 +1941,10 @@ namespace JosephM.Xrm.Schema
 		}
 		public static class jmcg_testentity_
 		{
-			public const string jmcg_float = "jmcg_float";
+            public const string jmcg_source = "jmcg_source";
+            public const string jmcg_javascript = "jmcg_javascript";
+            public const string jmcg_css = "jmcg_css";
+            public const string jmcg_float = "jmcg_float";
 			public const string owninguser = "owninguser";
 			public const string statecode = "statecode";
 			public const string jmcg_boolean = "jmcg_boolean";

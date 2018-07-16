@@ -189,6 +189,13 @@
     <Compile Include="Module\DeployAssembly\PluginAssembly.cs" />
     <Compile Include="Module\DeployPackage\MenuItemVisibleDeployPackage.cs" />
     <Compile Include="Module\DeployPackage\VsixDeployPackageModule.cs" />
+    <Compile Include="Module\DeployIntoField\DeployIntoFieldDialog.cs" />
+    <Compile Include="Module\DeployIntoField\DeployIntoFieldMenuItemVisible.cs" />
+    <Compile Include="Module\DeployIntoField\DeployIntoFieldModule.cs" />
+    <Compile Include="Module\DeployIntoField\DeployIntoFieldRequest.cs" />
+    <Compile Include="Module\DeployIntoField\DeployIntoFieldResponse.cs" />
+    <Compile Include="Module\DeployIntoField\DeployIntoFieldResponseItem.cs" />
+    <Compile Include="Module\DeployIntoField\DeployIntoFieldService.cs" />
     <Compile Include="Module\DeployWebResource\DeployWebResourceDialog.cs" />
     <Compile Include="Module\DeployWebResource\DeployWebResourceMenuItemVisible.cs" />
     <Compile Include="Module\DeployWebResource\DeployWebResourceModule.cs" />

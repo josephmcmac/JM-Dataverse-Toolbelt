@@ -1,5 +1,7 @@
-﻿using JosephM.Record.IService;
+﻿using JosephM.Record.Extentions;
+using JosephM.Record.IService;
 using JosephM.Record.Query;
+using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Module.DeployWebResource;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
@@ -31,7 +33,21 @@ namespace JosephM.Xrm.Vsix.Test
             
             Assert.AreEqual(GetJavaScriptFiles().Count(), GetJavaScriptFileRecords().Count());
 
-            //create an app, deploy againb and verify not duplicated
+            //okay the code also allows match by display name
+            //so I will add this to verify that too
+            //basically change ones display name and file name then verify it still matches
+            var files = GetJavaScriptFiles();
+            var records = GetJavaScriptFileRecords();
+            var firstFileInfo = new FileInfo(files.First());
+            var record = records.First(e => e.GetStringField(Fields.webresource_.name) == firstFileInfo.Name);
+            XrmRecordService.Delete(record);
+            var newRecord = XrmRecordService.NewRecord(Entities.webresource);
+            newRecord.SetField(Fields.webresource_.name, "jrm_fakescriptname", XrmRecordService);
+            newRecord.SetField(Fields.webresource_.displayname, firstFileInfo.Name, XrmRecordService);
+            newRecord.SetField(Fields.webresource_.webresourcetype, OptionSets.WebResource.Type.ScriptJScript, XrmRecordService);
+            XrmRecordService.Create(newRecord);
+
+            //create an app, deploy again and verify not duplicated
             VisualStudioService.SetSelectedItems(GetJavaScriptFiles().Select(f => new FakeVisualStudioProjectItem(f)).ToArray());
             testApplication = CreateAndLoadTestApplication<DeployWebResourceModule>();
             dialog = testApplication.NavigateToDialog<DeployWebResourceModule, DeployWebResourceDialog>();
@@ -51,7 +67,7 @@ namespace JosephM.Xrm.Vsix.Test
         {
             var deployed = XrmRecordService.RetrieveAllOrClauses(Entities.webresource,
                 GetJavaScriptFiles().Select(
-                    j => new Condition(Fields.webresource_.name, ConditionType.Equal, new FileInfo(j).Name)));
+                    j => new Condition(Fields.webresource_.displayname, ConditionType.Equal, new FileInfo(j).Name)));
             return deployed;
         }
 

@@ -39,12 +39,17 @@ namespace JosephM.Wpf.Grid
 
         private void TextBlock_SourceUpdated(object sender, EventArgs e)
         {
-            var border = VisualTreeHelper.GetChild(DataGrid, 0) as Decorator;
-            if (border != null)
+            //the point of this is to scroll to the top of the grid
+            //when the user navigates to a different page
+            if (VisualTreeHelper.GetChildrenCount(DataGrid) > 0)
             {
-                var scrollViewer = border.Child as ScrollViewer;
-                if (scrollViewer != null)
-                    scrollViewer.ScrollToTop();
+                var border = VisualTreeHelper.GetChild(DataGrid, 0) as Decorator;
+                if (border != null)
+                {
+                    var scrollViewer = border.Child as ScrollViewer;
+                    if (scrollViewer != null)
+                        scrollViewer.ScrollToTop();
+                }
             }
         }
 

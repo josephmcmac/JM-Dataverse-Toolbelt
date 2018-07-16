@@ -2,9 +2,12 @@
 
 using System;
 using System.Linq;
+using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
+using JosephM.Record.Query;
 
 #endregion
 
@@ -17,15 +20,45 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             : base(referenceField.RecordEntryViewModel.ApplicationController)
         {
             OnRecordSelected = onRecordSelected;
+
+            Func<bool, GetGridRecordsResponse> getGridRecords = (ignorePages) =>
+                {
+                    var query = new QueryDefinition(referenceField.RecordTypeToLookup);
+                    query.IsQuickFind = true;
+                    query.QuickFindText = referenceField.EnteredText;
+                    if (!string.IsNullOrWhiteSpace(referenceField.EnteredText))
+                    {
+                        query.RootFilter.Conditions.Add(new Condition(referenceField.LookupService.GetPrimaryField(referenceField.RecordTypeToLookup), ConditionType.BeginsWith, referenceField.EnteredText));
+                    }
+
+                    if (!DynamicGridViewModel.HasPaging || ignorePages)
+                    {
+                        var records = DynamicGridViewModel.RecordService.RetreiveAll(query);
+                        return new GetGridRecordsResponse(records);
+                    }
+                    else
+                    {
+                        return DynamicGridViewModel.GetGridRecordPage(query);
+                    }
+                };
+
             DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
             {
+                PageSize = MaxRecordsForLookup,
+                GetGridRecords = getGridRecords,
                 OnDoubleClick = OnDoubleClick,
                 ViewType = ViewType.LookupView,
                 RecordService = referenceField.LookupService,
                 FormController = new FormController(referenceField.LookupService, null, referenceField.RecordEntryViewModel.ApplicationController),
+
                 RecordType = referenceField.RecordTypeToLookup,
                 IsReadOnly = true,
             };
+        }
+
+        protected int MaxRecordsForLookup
+        {
+            get { return 11; }
         }
 
         private Action<IRecord> OnRecordSelected { get; set; }

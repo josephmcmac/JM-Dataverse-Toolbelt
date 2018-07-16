@@ -1,5 +1,6 @@
 ﻿using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
@@ -28,53 +29,76 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
             LogController controller)
         {
             var records = new List<IRecord>();
-            var type = Entities.webresource;
 
-            controller.UpdateProgress(1, 3, "Loading Files");
+            var publishIds = new List<string>();
+
+            var totalTasks = request.Files.Count() + 1;
+            var tasksCompleted = 0;
             foreach (var file in request.Files)
             {
                 var fileInfo = new FileInfo(file);
+                var fileName = fileInfo.Name;
+                controller.UpdateProgress(++tasksCompleted, totalTasks, "Deploying " + fileName);
 
-                var record = Service.NewRecord(type);
-                var content = File.ReadAllBytes(file);
-                record.SetField(Fields.webresource_.name, fileInfo.Name, Service);
-                record.SetField(Fields.webresource_.displayname, fileInfo.Name, Service);
-                record.SetField(Fields.webresource_.content, Convert.ToBase64String(content), Service);
-                record.SetField(Fields.webresource_.webresourcetype, GetWebResourceType(fileInfo.Extension), Service);
-                records.Add(record);
-            }
-
-            var matchField = Fields.webresource_.name;
-            controller.UpdateProgress(2, 3, "Deploying Files");
-            var loadResponse = Service.LoadIntoCrm(records, matchField);
-            foreach (var item in records)
-            {
                 var responseItem = new DeployWebResourceResponseItem();
-                responseItem.Name = item.GetStringField(Fields.webresource_.name);
-                responseItem.Created = loadResponse.Created.Contains(item);
-                responseItem.Updated = loadResponse.Updated.Contains(item);
-                if (loadResponse.Errors.ContainsKey(item))
-                    responseItem.Exception = loadResponse.Errors[item];
+                responseItem.Name = fileName;
                 response.AddResponseItem(responseItem);
+
+                try
+                {
+
+                    var content = File.ReadAllBytes(file);
+                    var contentString = Convert.ToBase64String(content);
+
+                    //okay lets allow match on either name or display name
+                    var match = Service.GetFirst(Entities.webresource, Fields.webresource_.name, fileName);
+                    if (match == null)
+                    {
+                        match = Service.GetFirst(Entities.webresource, Fields.webresource_.displayname, fileName);
+                    }
+                    if (match != null)
+                    {
+                        if (match.GetStringField(Fields.webresource_.content) != contentString)
+                        {
+                            match.SetField(Fields.webresource_.content, contentString, Service);
+                            Service.Update(match, new[] { Fields.webresource_.content });
+                            publishIds.Add(match.Id);
+                            responseItem.Updated = true;
+                        }
+                    }
+                    else
+                    {
+                        var record = Service.NewRecord(Entities.webresource);
+                        record.SetField(Fields.webresource_.name, fileInfo.Name, Service);
+                        record.SetField(Fields.webresource_.displayname, fileInfo.Name, Service);
+                        record.SetField(Fields.webresource_.content, Convert.ToBase64String(content), Service);
+                        record.SetField(Fields.webresource_.webresourcetype, GetWebResourceType(fileInfo.Extension), Service);
+                        record.Id = Service.Create(record);
+                        publishIds.Add(record.Id);
+                        responseItem.Created = true;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    responseItem.Exception = ex;
+                }
             }
 
-            if (loadResponse.Updated.Any())
+            if (publishIds.Any())
             {
-                controller.UpdateProgress(3, 3, "Publising Files");
+                controller.UpdateProgress(totalTasks, totalTasks, "Publising Files");
                 var xml = new StringBuilder();
                 xml.Append("<importexportxml><webresources>");
-                foreach (var record in loadResponse.Updated)
-                    xml.Append("<webresource>" + record.Id + "</webresource>");
+                foreach (var id in publishIds)
+                    xml.Append("<webresource>" + id + "</webresource>");
                 xml.Append("</webresources></importexportxml>");
                 Service.Publish(xml.ToString());
             }
 
             //add plugin assembly to the solution
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.WebResource;
-            var itemsToAdd = loadResponse.Created.Union(loadResponse.Updated);
             if (PackageSettings.AddToSolution)
-                Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
-
+                Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, publishIds);
         }
 
         public int GetWebResourceType(string extention)

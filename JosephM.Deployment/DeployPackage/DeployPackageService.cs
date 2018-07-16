@@ -78,7 +78,7 @@ namespace JosephM.Deployment.DeployPackage
                 try
                 {
                     controller.UpdateProgress(++countRecordsImported, countToDo + 1,
-                        "Importing Solution " + new FileInfo(solutionFile).Name);
+                        $"Importing solution {new FileInfo(solutionFile).Name} into {xrmService.ToString()}");
                     var importId = Guid.NewGuid();
                     var req = new ImportSolutionRequest();
                     req.ImportJobId = importId;
