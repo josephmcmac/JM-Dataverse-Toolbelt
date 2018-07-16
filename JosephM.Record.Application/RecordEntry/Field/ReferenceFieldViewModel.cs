@@ -155,7 +155,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public void Search()
         {
-            ApplicationController.DoOnAsyncThread(LoadRowsAsync);
+            lock (_searchLock)
+            {
+                LookupGridVisible = true;
+                if (LookupGridViewModel.DynamicGridViewModel.CurrentPage != 1)
+                {
+                    LookupGridViewModel.DynamicGridViewModel.CurrentPage = 1;
+                }
+                else
+                {
+                    LookupGridViewModel.DynamicGridViewModel.ReloadGrid();
+                }
+                OnPropertyChanged(nameof(LookupGridViewModel));
+            }
         }
 
         public void OnRecordSelected(IRecord selectedRecord)
@@ -284,40 +296,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         }
 
         private readonly object _searchLock = new object();
-
-        private void LoadRowsAsync()
-        {
-            lock (_searchLock)
-            {
-                LookupGridVisible = false;
-                Searching = true;
-                try
-                {
-                    var records = GetSearchResults();
-
-                    DoOnMainThread(() =>
-                    {
-                        try
-                        {
-                            LookupGridViewModel.DynamicGridViewModel.GridRecords = GridRowViewModel.LoadRows(records, LookupGridViewModel.DynamicGridViewModel);
-                            OnPropertyChanged(nameof(LookupGridViewModel));
-                            Searching = false;
-                            LookupGridVisible = LookupGridViewModel.DynamicGridViewModel.GridRecords.Any();
-                        }
-                        catch (Exception)
-                        {
-                            Searching = false;
-                            throw;
-                        }
-                    });
-                }
-                catch (Exception)
-                {
-                    Searching = false;
-                    throw;
-                }
-            }
-        }
 
         protected abstract IEnumerable<IRecord> GetSearchResults();
 
