@@ -46,7 +46,7 @@ namespace JosephM.Deployment.DeployPackage
             var packageFolder = request.FolderContainingPackage.FolderPath;
             var solutionFiles = Directory.GetFiles(packageFolder, "*.zip");
 
-            ImportSolutions(solutionFiles, controller, xrmRecordService.XrmService);
+            ImportSolutions(solutionFiles, controller, xrmRecordService);
 
             foreach (var childFolder in Directory.GetDirectories(packageFolder))
             {
@@ -65,10 +65,12 @@ namespace JosephM.Deployment.DeployPackage
 
         private object _lockObject = new object();
 
-        public void ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmService xrmService)
+        public void ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
         {
             var countToDo = solutionFiles.Count();
             var countRecordsImported = 0;
+
+            var xrmService = XrmRecordService.XrmService;
 
             controller.LogLiteral($"Loading Active {xrmService.GetEntityCollectionName(Entities.duplicaterule)}");
             var duplicateRules = xrmService.RetrieveAllAndClauses(Entities.duplicaterule, new[] { new ConditionExpression(Fields.duplicaterule_.statecode, ConditionOperator.Equal, OptionSets.DuplicateDetectionRule.Status.Active) }, new string[0]);
@@ -78,7 +80,7 @@ namespace JosephM.Deployment.DeployPackage
                 try
                 {
                     controller.UpdateProgress(++countRecordsImported, countToDo + 1,
-                        $"Importing solution {new FileInfo(solutionFile).Name} into {xrmService.ToString()}");
+                        $"Importing solution {new FileInfo(solutionFile).Name} into {XrmRecordService.XrmRecordConfiguration?.ToString()}");
                     var importId = Guid.NewGuid();
                     var req = new ImportSolutionRequest();
                     req.ImportJobId = importId;
