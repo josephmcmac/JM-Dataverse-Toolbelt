@@ -313,6 +313,10 @@ namespace JosephM.Record.Xrm.XrmRecord
                 {
                     originalValue = new Guid(originalValue.ToString());
                 }
+                if (originalValue is decimal && _xrmService.GetFieldType(field, iRecord.Type) == AttributeTypeCode.Money)
+                {
+                    originalValue = new Microsoft.Xrm.Sdk.Money((decimal)originalValue);
+                }
                 entity.SetField(field, originalValue);
             }
 
