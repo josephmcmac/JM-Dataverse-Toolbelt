@@ -222,10 +222,11 @@ namespace JosephM.Xrm
         /// </summary>
         public static decimal GetMoneyValue(object fieldValue)
         {
-            if (fieldValue != null)
+            if (fieldValue is decimal)
+                return (decimal)fieldValue;
+            if (fieldValue is Money)
                 return ((Money)fieldValue).Value;
-            else
-                return new Decimal(0);
+            return new Decimal(0);
         }
 
         /// <summary>
