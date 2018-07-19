@@ -18,6 +18,7 @@
         <Setter Property="Padding" Value="4,4,4,4" />
         <Setter Property="Margin" Value="8,8,8,8" />
         <Setter Property="MinHeight" Value="25" />
+        <Setter Property="MaxHeight" Value="300" />
         <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
     </Style>
     <Style x:Key="FieldEntryButtonGridStyle" TargetType="Grid">
