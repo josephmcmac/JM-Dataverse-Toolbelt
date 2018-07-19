@@ -1,6 +1,4 @@
 using JosephM.Core.Attributes;
-using JosephM.Core.FieldType;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 

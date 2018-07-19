@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using JosephM.Record.Extentions;
+using JosephM.Record.IService;
+using JosephM.Record.Xrm.XrmRecord;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Deployment
+namespace JosephM.Record.Xrm
 {
     /// <summary>
     /// This class is for configuring types which have root/parent/child type relationships
@@ -45,6 +48,21 @@ namespace JosephM.Deployment
             return _configs.Any(c => c.Type == type)
                 ? _configs.First(c => c.Type == type)
                 : null;
+        }
+
+        public static IEnumerable<string> GetComparisonFieldsFor(string type, XrmRecordService xrmRecordService)
+        {
+            var config = GetFor(type);
+            var fields = new List<string>();
+            if (config != null)
+            {
+                if (config.ParentLookupField != null)
+                    fields.Add(config.ParentLookupField);
+                if (config.UniqueChildFields != null)
+                    fields.AddRange(config.UniqueChildFields);
+            }
+            fields.Add(xrmRecordService.GetPrimaryField(type));
+            return fields;
         }
     }
 }

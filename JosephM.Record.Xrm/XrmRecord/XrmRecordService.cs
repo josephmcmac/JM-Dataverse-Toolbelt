@@ -196,7 +196,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             return
                 ToEnumerableIRecord(_xrmService.RetrieveAllAndClauses(recordType, ToConditionExpressions(andConditions, recordType),
-                    fields));
+                    fields)).ToArray();
         }
 
         public string Create(IRecord iRecord, IEnumerable<string> fieldToSet)

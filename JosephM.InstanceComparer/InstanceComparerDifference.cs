@@ -21,9 +21,11 @@ namespace JosephM.InstanceComparer
         [DisplayOrder(80)]
         [PropertyInContextByPropertyNotNull(nameof(Url2))]
         public Url Url2 { get; }
+        //[Multiline]
         [DisplayOrder(90)]
         [PropertyInContextByPropertyNotNull(nameof(Value1))]
         public string Value1 { get; }
+        //[Multiline]
         [DisplayOrder(95)]
         [PropertyInContextByPropertyNotNull(nameof(Value2))]
         public string Value2 { get; }

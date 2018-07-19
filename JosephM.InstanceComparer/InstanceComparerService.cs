@@ -7,6 +7,7 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
+using JosephM.Record.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using System;
@@ -228,7 +229,7 @@ namespace JosephM.InstanceComparer
                 processContainer.Comparisons.Add(processCompareParams);
         }
 
-        private void AppendData(InstanceComparerService.ProcessContainer processContainer)
+        private void AppendData(ProcessContainer processContainer)
         {
             if (!processContainer.Request.Data)
                 return;
@@ -663,6 +664,9 @@ namespace JosephM.InstanceComparer
         {
             var thisInBoth = new List<List<IRecord>>();
             var service2AlreadyAdded = new List<IRecord>();
+
+            var typeConfig = XrmTypeConfigs.GetFor(processCompareParams.RecordType);
+
             foreach (var item in serviceOneItems)
             {
                 var matches = serviceTwoItems
@@ -692,7 +696,7 @@ namespace JosephM.InstanceComparer
                 {
                     var parentReference = parent1 == null ? null : parent1.GetStringField(parentCompareParams.MatchField);
                     var parentId = parent1 == null ? null : GetParentId(parentCompareParams, parent1);
-                    var displayName = processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
+                    var displayName = GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams);
                     processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
                         displayName, "Only In " + processContainer.Request.ConnectionOne.Name, displayName, null, item.Id, null, parentReference: parentReference, parentId1: parentId);
                 }
@@ -706,7 +710,7 @@ namespace JosephM.InstanceComparer
                 {
                     var parentReference = parent2 == null ? null : parent2.GetStringField(parentCompareParams.MatchField);
                     var parentId = parent2 == null ? null : GetParentId(parentCompareParams, parent2);
-                    var displayName = processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
+                    var displayName = GetItemDisplayName(item, processContainer.ServiceTwo, processCompareParams);
                     processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
                         displayName, "Only In " + processContainer.Request.ConnectionTwo.Name, null, displayName, null, item.Id, parentReference: parentReference, parentId2: parentId);
                 }
@@ -759,13 +763,43 @@ namespace JosephM.InstanceComparer
                         var parentReference = parent1 == null ? null : parent1.GetStringField(parentCompareParams.MatchField);
                         var parentId1 = parent1 == null ? null : GetParentId(parentCompareParams, parent1);
                         var parentId2 = parent2 == null ? null : GetParentId(parentCompareParams, parent2);
+                        var displayName1 = GetItemDisplayName(item.First(), processContainer.ServiceOne, processCompareParams);
                         processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
-                            processCompareParams.ConvertField1(processCompareParams.DisplayField, item.First().GetStringField(processCompareParams.DisplayField)),
+                            displayName1,
                             "Different " + fieldLabel, displayValue1, displayValue2, item.First().Id, item.Last().Id, parentReference: parentReference, parentId1: parentId1, parentId2: parentId2);
                     }
                 }
             }
             return thisInBoth;
+        }
+
+        public static object GetItemDisplayName(IRecord item, XrmRecordService xrmRecordService, ProcessCompareParams processCompareParams)
+        {
+            var config = XrmTypeConfigs.GetFor(item.Type);
+            if(config == null)
+            {
+                return processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField)); ;
+            }
+
+            var displayStrings = new List<string>();
+            if (config.ParentLookupField != null)
+            {
+                var thisOne = xrmRecordService.GetFieldAsDisplayString(item, config.ParentLookupField);
+                if (!string.IsNullOrWhiteSpace(thisOne))
+                    displayStrings.Add(thisOne);
+            }
+            if (config.UniqueChildFields != null)
+            {
+                foreach (var unique in (config.UniqueChildFields))
+                {
+                    var thisOne = xrmRecordService.GetFieldAsDisplayString(item, unique);
+                    if (!string.IsNullOrWhiteSpace(thisOne))
+                        displayStrings.Add(thisOne);
+                }
+            }
+            if(!displayStrings.Any())
+                displayStrings.Add(item.GetStringField(xrmRecordService.GetPrimaryField(item.Type)));
+            return string.Join(".", displayStrings);
         }
 
         private static bool FieldsEqual(object field1, object field2)
@@ -905,16 +939,19 @@ namespace JosephM.InstanceComparer
                 Type = ProcessCompareType.Records;
             }
 
-            public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, IRecordService recordService)
+            public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, XrmRecordService recordService)
                 : this("Data - " + dataComparison.Type,
                       dataComparison.Type,
-                      recordService.GetPrimaryField(dataComparison.Type),
+                      //todo wont work for access control rules
+                      XrmTypeConfigs.GetComparisonFieldsFor(dataComparison.Type, recordService),
                       recordService.GetPrimaryField(dataComparison.Type),
                       new Condition[0],
                       recordService
                             .GetFields(dataComparison.Type)
                             .Where(f => recordService.GetFieldMetadata(f, dataComparison.Type).IsCustomField)
-                            .ToArray()
+                            .ToArray(),
+                      null,
+                      null
                       )
             {
             }
@@ -1198,9 +1235,9 @@ namespace JosephM.InstanceComparer
             public InstanceComparerRequest Request { get; set; }
             public InstanceComparerResponse Response { get; set; }
 
-            public IRecordService ServiceOne { get; set; }
+            public XrmRecordService ServiceOne { get; set; }
 
-            public IRecordService ServiceTwo { get; set; }
+            public XrmRecordService ServiceTwo { get; set; }
             public List<ProcessCompareParams> Comparisons { get; set; }
             public List<InstanceComparerDifference> Differences { get; set; }
             public Dictionary<string, IEnumerable<IRecord>> MissingManagedSolutionComponents { get; private set; }
