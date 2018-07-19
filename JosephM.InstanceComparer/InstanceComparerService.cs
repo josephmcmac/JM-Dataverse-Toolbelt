@@ -448,6 +448,10 @@ namespace JosephM.InstanceComparer
                 new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceOne),
                 new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceTwo));
 
+            processArgs.AddConversionObject(Fields.annotation_.documentbody,
+                new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceOne),
+                new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceTwo));
+
             processContainer.Comparisons.Add(processArgs);
         }
 
@@ -719,6 +723,7 @@ namespace JosephM.InstanceComparer
             //differences
             foreach (var item in thisInBoth)
             {
+                var displayName1 = GetItemDisplayName(item.First(), processContainer.ServiceOne, processCompareParams);
                 foreach (var field in processCompareParams.FieldsCheckDifference)
                 {
                     var field1 = processCompareParams.ConvertField1(field, item.First().GetField(field));
@@ -763,10 +768,29 @@ namespace JosephM.InstanceComparer
                         var parentReference = parent1 == null ? null : parent1.GetStringField(parentCompareParams.MatchField);
                         var parentId1 = parent1 == null ? null : GetParentId(parentCompareParams, parent1);
                         var parentId2 = parent2 == null ? null : GetParentId(parentCompareParams, parent2);
-                        var displayName1 = GetItemDisplayName(item.First(), processContainer.ServiceOne, processCompareParams);
                         processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
                             displayName1,
                             "Different " + fieldLabel, displayValue1, displayValue2, item.First().Id, item.Last().Id, parentReference: parentReference, parentId1: parentId1, parentId2: parentId2);
+                    }
+                }
+                if(processCompareParams.RecordType == "adx_webfile")
+                {
+                    //for adx web files lets get the latest attachment for each and comare the docuemnt body field as well
+                    var query = new QueryDefinition(Entities.annotation);
+                    query.Fields = new[] { Fields.annotation_.documentbody };
+                    query.Sorts.Add(new SortExpression(Fields.annotation_.modifiedon, SortType.Descending));
+                    query.Top = 1;
+                    query.RootFilter.AddCondition(Fields.annotation_.objectid, ConditionType.Equal, item.First().Id);
+                    var notes1 = processContainer.ServiceOne.RetreiveAll(query);
+                    query.RootFilter.Conditions.First().Value = item.Last().Id;
+                    var notes2 = processContainer.ServiceTwo.RetreiveAll(query);
+                    var documentBody1 = notes1.Any() ? notes1.First().GetStringField(Fields.annotation_.documentbody) : null;
+                    var documentBody2 = notes2.Any() ? notes2.First().GetStringField(Fields.annotation_.documentbody) : null;
+                    if(!FieldsEqual(documentBody1, documentBody2))
+                    {
+                        processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
+                        displayName1,
+                        "Different File Content In Latest Modified Note", processCompareParams.ConvertField1(Fields.annotation_.documentbody, documentBody1), processCompareParams.ConvertField2(Fields.annotation_.documentbody, documentBody2), item.First().Id, item.Last().Id);
                     }
                 }
             }
