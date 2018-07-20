@@ -819,6 +819,10 @@ namespace JosephM.InstanceComparer
 
                 if (matches.Any())
                 {
+                    if(matches.Count() > 1)
+                    {
+                        processContainer.Response.AddResponseItem(new InstanceComparerResponseItem($"Multiple matches for record '{GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams)}'. Only the first will be compared", processCompareParams.RecordType));
+                    }
                     var match = matches.First();
                     service2AlreadyAdded.Add(match);
                     thisInBoth.Add(new List<IRecord>() { item, match });
