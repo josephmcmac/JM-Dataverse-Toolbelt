@@ -144,7 +144,6 @@
     <Compile Include="MigrateRecords\MigrateRecordsRequest.cs" />
     <Compile Include="MigrateRecords\MigrateRecordsResponse.cs" />
     <Compile Include="MigrateRecords\MigrateRecordsService.cs" />
-    <Compile Include="XrmTypeConfigs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataImportResponseItem.cs" />
   </ItemGroup>

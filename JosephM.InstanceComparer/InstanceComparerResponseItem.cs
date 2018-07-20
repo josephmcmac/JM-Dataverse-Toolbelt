@@ -8,6 +8,12 @@ namespace JosephM.InstanceComparer
         public string ErrorType { get; set; }
         public string Type { get; set; }
 
+        public InstanceComparerResponseItem(string errorType, string type)
+        {
+            ErrorType = errorType;
+            Type = type;
+        }
+
         public InstanceComparerResponseItem(string errorType, string type, Exception ex)
         {
             ErrorType = errorType;

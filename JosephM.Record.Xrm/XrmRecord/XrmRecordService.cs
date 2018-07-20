@@ -190,7 +190,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             return
                 ToEnumerableIRecord(_xrmService.RetrieveAllAndClauses(recordType, ToConditionExpressions(andConditions, recordType),
-                    fields));
+                    fields)).ToArray();
         }
 
         public string Create(IRecord iRecord, IEnumerable<string> fieldToSet)
@@ -317,6 +317,10 @@ namespace JosephM.Record.Xrm.XrmRecord
                 if (originalValue is string && !string.IsNullOrWhiteSpace(originalValue.ToString()) && _xrmService.GetFieldType(field, iRecord.Type) == AttributeTypeCode.Uniqueidentifier)
                 {
                     originalValue = new Guid(originalValue.ToString());
+                }
+                if (originalValue is decimal && _xrmService.GetFieldType(field, iRecord.Type) == AttributeTypeCode.Money)
+                {
+                    originalValue = new Microsoft.Xrm.Sdk.Money((decimal)originalValue);
                 }
                 entity.SetField(field, originalValue);
             }

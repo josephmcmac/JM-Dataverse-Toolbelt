@@ -14,7 +14,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
             //just use the method in DeployPackageService to do the import
             var xrmRecordService = new XrmRecordService(request.Connection);
             var service = new DeployPackageService(xrmRecordService);
-            service.ImportSolutions(new[] { request.SolutionZip.FileName }, controller, xrmRecordService.XrmService);
+            service.ImportSolutions(new[] { request.SolutionZip.FileName }, controller, xrmRecordService);
         }
     }
 }

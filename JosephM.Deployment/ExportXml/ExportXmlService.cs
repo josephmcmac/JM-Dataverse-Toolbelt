@@ -7,6 +7,7 @@ using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using JosephM.Record.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -48,17 +49,17 @@ namespace JosephM.Deployment.ExportXml
 
 
 
-        public void ExportXml(IEnumerable<ExportRecordType> exports, Folder folder, bool includeNotes, bool incoldeNNBetweenEntities, LogController controller)
+        public void ExportXml(IEnumerable<ExportRecordType> exports, Folder folder, bool includeNotes, bool includeNNBetweenEntities, LogController controller)
         {
             if (!Directory.Exists(folder.FolderPath))
                 Directory.CreateDirectory(folder.FolderPath);
 
-            ProcessExport(exports, includeNotes, incoldeNNBetweenEntities, controller
+            ProcessExport(exports, includeNotes, includeNNBetweenEntities, controller
                 , (entity) => WriteToXml(entity, folder.FolderPath, false)
                 , (entity) => WriteToXml(entity, folder.FolderPath, true));
         }
 
-        public void ProcessExport(IEnumerable<ExportRecordType> exports, bool includeNotes, bool incoldeNNBetweenEntities, LogController controller
+        public void ProcessExport(IEnumerable<ExportRecordType> exports, bool includeNotes, bool includeNNBetweenEntities, LogController controller
             , Action<Entity> processEntity, Action<Entity> processAssociation)
         {
             if (exports == null || !exports.Any())
@@ -132,16 +133,13 @@ namespace JosephM.Deployment.ExportXml
                     if(thisTypeConfig.UniqueChildFields != null)
                         excludeFields = excludeFields.Except(thisTypeConfig.UniqueChildFields).ToArray();
 
+                    var fieldsToIncludeInParent = XrmTypeConfigs.GetParentFieldsRequiredForComparison(type);
                     var thisTypesParentsConfig = XrmTypeConfigs.GetFor(thisTypeConfig.ParentLookupType);
-                    if(thisTypesParentsConfig != null && thisTypesParentsConfig.Type != thisTypeConfig.ParentLookupType)
+                    if(fieldsToIncludeInParent != null)
                     {
                         //if the parent also has a config then we need to use it when matching the parent
                         //e.g. portal web page access rules -> web page where the web page may be a master or child web page
                         //so lets include the parents config fields as aliased fields in the exported entity
-                        var fieldsToIncludeInParent = new List<string> { thisTypesParentsConfig.ParentLookupField };
-                        if (thisTypesParentsConfig.UniqueChildFields != null)
-                            fieldsToIncludeInParent.AddRange(thisTypesParentsConfig.UniqueChildFields);
-
                         foreach(var item in entities)
                         {
                             var parentId = item.GetLookupGuid(thisTypeConfig.ParentLookupField);
@@ -199,7 +197,7 @@ namespace JosephM.Deployment.ExportXml
                 }
             }
             var relationshipsDone = new List<string>();
-            if (incoldeNNBetweenEntities)
+            if (includeNNBetweenEntities)
             {
                 foreach (var type in exported.Keys)
                 {

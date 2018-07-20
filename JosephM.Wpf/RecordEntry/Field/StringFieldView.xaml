@@ -21,11 +21,13 @@
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToHidden}}" >
             <TextBox
                 Style="{StaticResource  StringFieldEntryStyleReadOnly}"
+                TextWrapping="WrapWithOverflow"
                 AcceptsReturn="{Binding IsMultiline}"
                 MinLines ="{Binding NumberOfLines}"
                 MaxLines ="{Binding NumberOfLines}"
                 TabIndex="1"
-                Text="{Binding Mode=OneWay, Path=ValueObject}"  />
+                Text="{Binding Mode=OneWay, Path=ValueObject}"
+                Height="Auto"/>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
             <TextBox 
