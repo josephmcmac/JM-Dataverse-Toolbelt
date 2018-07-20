@@ -45,10 +45,115 @@ namespace JosephM.InstanceComparer
 
             AppendData(processContainer);
 
-            processContainer.NumberOfProcesses = processContainer.Comparisons.Sum(GetProcessCount);
+            var numberOfDataToProcess = processContainer.Request.Data
+                && processContainer.Request.DataComparisons != null
+                ? processContainer.Request.DataComparisons.Count()
+                : 0;
+
+            processContainer.NumberOfProcesses = processContainer.Comparisons.Sum(GetProcessCount) + numberOfDataToProcess;//add data again for associations
 
             foreach (var item in processContainer.Comparisons)
                 ProcessCompare(item, processContainer);
+
+            CompareAssociations(processContainer);
+        }
+
+        private void CompareAssociations(ProcessContainer processContainer)
+        {
+            //in this method for all data we compared
+            //we will also compare the associations between them in the 2 instances
+            //this would for example output if an microsoft portal entity permission was associated
+            //to a web role in one instance but not the other
+            var relationshipsDone = new List<string>();
+            if (processContainer.Request.Data && processContainer.Request.DataComparisons != null)
+            {
+                var theTypes = processContainer.Request.DataComparisons.Select(dc => dc.Type).ToArray();
+                foreach (var type in theTypes)
+                {
+                    try
+                    {
+                        if (!processContainer.MatchedRecordDictionary.ContainsKey(type))
+                            continue;
+
+                        //each data type we compared and got matches
+                        processContainer.Controller.UpdateProgress(processContainer.NumberOfProcessesCompleted,
+                            processContainer.NumberOfProcesses, "Comparing Data Associations - " + type);
+
+                        //load its nn relationships where both side entities were included in data comparison
+                        var nnRelationships = processContainer.ServiceOne.GetManyToManyRelationships(type)
+                            .Where(
+                                r =>
+                                    theTypes.Contains(r.RecordType1) && theTypes.Contains(r.RecordType2));
+                        foreach (var item in nnRelationships)
+                        {
+                            try
+                            {
+                                var type1 = item.RecordType1;
+                                var type2 = item.RecordType2;
+                                if (!relationshipsDone.Contains(item.SchemaName))
+                                {
+                                    //get the associations in both instances
+                                    var associations1 = processContainer.ServiceOne.RetrieveAll(item.IntersectEntityName, null);
+                                    var associations2 = processContainer.ServiceTwo.RetrieveAll(item.IntersectEntityName, null);
+                                    foreach (var association in associations1)
+                                    {
+                                        //all the associations in instance 1
+                                        var guid1a = association.GetIdField(item.Entity1IntersectAttribute);
+                                        var guid1b = association.GetIdField(item.Entity2IntersectAttribute);
+                                        if (processContainer.MatchedRecordDictionary[item.RecordType1].Any(kv => kv.Key.Id == guid1a) && processContainer.MatchedRecordDictionary[item.RecordType2].Any(kv => kv.Key.Id == guid1b))
+                                        {
+                                            var recordMatcha = processContainer.MatchedRecordDictionary[item.RecordType1].First(kv => kv.Key.Id == guid1a);
+                                            var recordMatchb = processContainer.MatchedRecordDictionary[item.RecordType2].First(kv => kv.Key.Id == guid1b);
+                                            var guid2a = recordMatcha.Value.Id;
+                                            var guid2b = recordMatchb.Value.Id;
+                                            var matchAssociation2 = associations2.Where(a => a.GetIdField(item.Entity1IntersectAttribute) == guid2a && a.GetIdField(item.Entity2IntersectAttribute) == guid2b);
+                                            if (!matchAssociation2.Any())
+                                            {
+                                                //where there is not matching association in instance 2
+                                                //output a difference
+                                                var displayNamea = GetItemDisplayName(recordMatcha.Key, processContainer.ServiceOne, processContainer.Comparisons.First(c => c.RecordType == recordMatcha.Key.Type));
+                                                var displayNameb = GetItemDisplayName(recordMatchb.Key, processContainer.ServiceOne, processContainer.Comparisons.First(c => c.RecordType == recordMatchb.Key.Type));
+                                                processContainer.AddDifference("Data " + recordMatcha.Key.Type, recordMatcha.Key.Type, displayNamea, "Associated " + recordMatchb.Key.Type, displayNameb, null, recordMatcha.Key.Id, recordMatcha.Value.Id);
+                                            }
+                                        }
+                                    }
+                                    foreach (var association in associations2)
+                                    {
+                                        //all the associations in instance 2
+                                        var guid2a = association.GetIdField(item.Entity1IntersectAttribute);
+                                        var guid2b = association.GetIdField(item.Entity2IntersectAttribute);
+                                        if (processContainer.MatchedRecordDictionary[item.RecordType1].Any(kv => kv.Value.Id == guid2a) && processContainer.MatchedRecordDictionary[item.RecordType2].Any(kv => kv.Value.Id == guid2b))
+                                        {
+                                            var recordMatcha = processContainer.MatchedRecordDictionary[item.RecordType1].First(kv => kv.Value.Id == guid2a);
+                                            var recordMatchb = processContainer.MatchedRecordDictionary[item.RecordType2].First(kv => kv.Value.Id == guid2b);
+                                            var guid1a = recordMatcha.Key.Id;
+                                            var guid1b = recordMatchb.Key.Id;
+                                            var matchAssociation1 = associations1.Where(a => a.GetIdField(item.Entity1IntersectAttribute) == guid1a && a.GetIdField(item.Entity2IntersectAttribute) == guid1b);
+                                            if (!matchAssociation1.Any())
+                                            {
+                                                //where there is not matching association in instance 1
+                                                //output a difference
+                                                var displayNamea = GetItemDisplayName(recordMatcha.Value, processContainer.ServiceTwo, processContainer.Comparisons.First(c => c.RecordType == recordMatcha.Value.Type));
+                                                var displayNameb = GetItemDisplayName(recordMatchb.Value, processContainer.ServiceTwo, processContainer.Comparisons.First(c => c.RecordType == recordMatchb.Value.Type));
+                                                processContainer.AddDifference("Data " + recordMatcha.Value.Type, recordMatcha.Value.Type, displayNamea, "Associated " + recordMatchb.Key.Type, null, displayNameb, recordMatcha.Key.Id, recordMatcha.Value.Id);
+                                            }
+                                        }
+                                    }
+                                    relationshipsDone.Add(item.SchemaName);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                processContainer.Response.AddResponseItem(new InstanceComparerResponseItem("Error comparing associations for " + item.SchemaName, type, ex));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        processContainer.Response.AddResponseItem(new InstanceComparerResponseItem("Error loading relationshipd to compare for " + type, type, ex));
+                    }
+                }
+            }
         }
 
         private void AppendRoutingRules(ProcessContainer processContainer)
@@ -720,6 +825,25 @@ namespace JosephM.InstanceComparer
                 }
             }
 
+            //this part creates a sictionary mapping the matched records
+            //it is used to compare associations for the records
+            if(processContainer.Request.Data
+                && processContainer.Request.DataComparisons != null
+                && processContainer.Request.DataComparisons.Select(dc => dc.Type).Contains(processCompareParams.RecordType))
+            {
+                if(!processContainer.MatchedRecordDictionary.ContainsKey(processCompareParams.RecordType))
+                {
+                    processContainer.MatchedRecordDictionary.Add(processCompareParams.RecordType, new Dictionary<IRecord, IRecord>());
+                    foreach(var item in thisInBoth)
+                    {
+                        if(!processContainer.MatchedRecordDictionary[processCompareParams.RecordType].ContainsKey(item.First()))
+                        {
+                            processContainer.MatchedRecordDictionary[processCompareParams.RecordType][item.First()] = item.Last();
+                        }
+                    }
+                }
+            }
+
             //differences
             foreach (var item in thisInBoth)
             {
@@ -1265,6 +1389,7 @@ namespace JosephM.InstanceComparer
             public List<ProcessCompareParams> Comparisons { get; set; }
             public List<InstanceComparerDifference> Differences { get; set; }
             public Dictionary<string, IEnumerable<IRecord>> MissingManagedSolutionComponents { get; private set; }
+            public Dictionary<string, Dictionary<IRecord, IRecord>> MatchedRecordDictionary { get; internal set; }
 
             public ProcessContainer(InstanceComparerRequest request, InstanceComparerResponse response,
                 LogController controller)
@@ -1277,6 +1402,7 @@ namespace JosephM.InstanceComparer
                 Differences = new List<InstanceComparerDifference>();
                 Comparisons = new List<ProcessCompareParams>();
                 MissingManagedSolutionComponents = new Dictionary<string, IEnumerable<IRecord>>();
+                MatchedRecordDictionary = new Dictionary<string, Dictionary<IRecord, IRecord>>();
             }
 
             internal void AddDifference(string type, string recordType, object name, string difference, object value1, object value2, string id1, string id2, string parentReference = null, string parentId1 = null, string parentId2 = null)

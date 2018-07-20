@@ -49,17 +49,17 @@ namespace JosephM.Deployment.ExportXml
 
 
 
-        public void ExportXml(IEnumerable<ExportRecordType> exports, Folder folder, bool includeNotes, bool incoldeNNBetweenEntities, LogController controller)
+        public void ExportXml(IEnumerable<ExportRecordType> exports, Folder folder, bool includeNotes, bool includeNNBetweenEntities, LogController controller)
         {
             if (!Directory.Exists(folder.FolderPath))
                 Directory.CreateDirectory(folder.FolderPath);
 
-            ProcessExport(exports, includeNotes, incoldeNNBetweenEntities, controller
+            ProcessExport(exports, includeNotes, includeNNBetweenEntities, controller
                 , (entity) => WriteToXml(entity, folder.FolderPath, false)
                 , (entity) => WriteToXml(entity, folder.FolderPath, true));
         }
 
-        public void ProcessExport(IEnumerable<ExportRecordType> exports, bool includeNotes, bool incoldeNNBetweenEntities, LogController controller
+        public void ProcessExport(IEnumerable<ExportRecordType> exports, bool includeNotes, bool includeNNBetweenEntities, LogController controller
             , Action<Entity> processEntity, Action<Entity> processAssociation)
         {
             if (exports == null || !exports.Any())
@@ -200,7 +200,7 @@ namespace JosephM.Deployment.ExportXml
                 }
             }
             var relationshipsDone = new List<string>();
-            if (incoldeNNBetweenEntities)
+            if (includeNNBetweenEntities)
             {
                 foreach (var type in exported.Keys)
                 {

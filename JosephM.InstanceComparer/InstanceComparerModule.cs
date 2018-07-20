@@ -43,6 +43,7 @@ namespace JosephM.InstanceComparer
                         "adx_entitylist",
                         "adx_entitypermission",
                         "adx_pagetemplate",
+                        "adx_publishingstate",
                         "adx_sitemarker",
                         "adx_sitesetting",
                         "adx_webfile",
