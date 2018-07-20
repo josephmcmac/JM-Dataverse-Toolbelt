@@ -50,6 +50,7 @@ namespace JosephM.InstanceComparer
                         "adx_weblink",
                         "adx_weblinkset",
                         "adx_webpage",
+                        "adx_webpageaccesscontrolrule",
                         "adx_webrole",
                         "adx_webtemplate",
                     };

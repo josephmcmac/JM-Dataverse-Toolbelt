@@ -702,9 +702,13 @@ namespace JosephM.InstanceComparer
                         processContainer.Controller.UpdateLevel2Progress(1, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionOne.Name));
                         var serviceOneItems = processContainer.ServiceOne.RetrieveAllAndClauses(
                             processCompareParams.RecordType, processCompareParams.Conditions, null);
+                        AddRequiredParentFields(serviceOneItems, processContainer.ServiceOne);
+
                         processContainer.Controller.UpdateLevel2Progress(2, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionTwo.Name));
                         var serviceTwoItems = processContainer.ServiceTwo.RetrieveAllAndClauses(
                             processCompareParams.RecordType, processCompareParams.Conditions, null);
+                        AddRequiredParentFields(serviceTwoItems, processContainer.ServiceTwo);
+
                         processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
                         inBoth.AddRange(DoCompare(processCompareParams, processContainer, serviceOneItems, serviceTwoItems));
 
@@ -738,6 +742,31 @@ namespace JosephM.InstanceComparer
             catch (Exception ex)
             {
                 processContainer.Response.AddResponseItem(new InstanceComparerResponseItem("Fatal Error Comparing", processCompareParams.Context, ex));
+            }
+        }
+
+        private void AddRequiredParentFields(IEnumerable<IRecord> records, XrmRecordService xrmRecordService)
+        {
+            if (records.Any())
+            {
+                foreach(var record in records)
+                {
+                    var typeConfig = XrmTypeConfigs.GetFor(record.Type);
+                    var requiredParentFields = XrmTypeConfigs.GetParentFieldsRequiredForComparison(record.Type);
+                    if(typeConfig != null && requiredParentFields != null)
+                    {
+                        var parentId = record.GetLookupId(typeConfig.ParentLookupField);
+                        var parentType = record.GetLookupType(typeConfig.ParentLookupField);
+                        if(parentId != null && parentType != null)
+                        {
+                            var parent = xrmRecordService.Get(parentType, parentId);
+                            foreach (var parentField in requiredParentFields)
+                            {
+                                record[typeConfig.ParentLookupField + "." + parentField] = parent.GetField(parentField);
+                            }
+                        }
+                    }
+                }
             }
         }
 

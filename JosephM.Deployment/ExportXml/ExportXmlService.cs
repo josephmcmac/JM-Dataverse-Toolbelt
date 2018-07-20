@@ -133,16 +133,13 @@ namespace JosephM.Deployment.ExportXml
                     if(thisTypeConfig.UniqueChildFields != null)
                         excludeFields = excludeFields.Except(thisTypeConfig.UniqueChildFields).ToArray();
 
+                    var fieldsToIncludeInParent = XrmTypeConfigs.GetParentFieldsRequiredForComparison(type);
                     var thisTypesParentsConfig = XrmTypeConfigs.GetFor(thisTypeConfig.ParentLookupType);
-                    if(thisTypesParentsConfig != null && thisTypesParentsConfig.Type != thisTypeConfig.ParentLookupType)
+                    if(fieldsToIncludeInParent != null)
                     {
                         //if the parent also has a config then we need to use it when matching the parent
                         //e.g. portal web page access rules -> web page where the web page may be a master or child web page
                         //so lets include the parents config fields as aliased fields in the exported entity
-                        var fieldsToIncludeInParent = new List<string> { thisTypesParentsConfig.ParentLookupField };
-                        if (thisTypesParentsConfig.UniqueChildFields != null)
-                            fieldsToIncludeInParent.AddRange(thisTypesParentsConfig.UniqueChildFields);
-
                         foreach(var item in entities)
                         {
                             var parentId = item.GetLookupGuid(thisTypeConfig.ParentLookupField);

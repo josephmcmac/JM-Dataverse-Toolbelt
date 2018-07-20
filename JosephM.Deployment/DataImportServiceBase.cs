@@ -230,6 +230,7 @@ namespace JosephM.Deployment
 
                     var importFieldsForEntity = GetFieldsToImport(thisTypeEntities, recordType).ToArray();
                     var fieldsDontExist = GetFieldsInEntities(thisTypeEntities)
+                        .Where(f => !f.Contains("."))
                         .Where(f => !XrmService.FieldExists(f, thisRecordType))
                         .Where(f => !HardcodedIgnoreFields.Contains(f))
                         .Distinct()
@@ -603,9 +604,9 @@ namespace JosephM.Deployment
                 {
                     var matchByNameEntities = new[] { "businessunit", "team", "pricelevel", "uomschedule", "uom", "entitlementtemplate" };
                     var matchBySpecificFieldEntities = new Dictionary<string, string>()
-                {
-                    {  "knowledgearticle", "articlepublicnumber" }
-                };
+                    {
+                        {  "knowledgearticle", "articlepublicnumber" }
+                    };
                     if (thisEntity.LogicalName == "businessunit" && thisEntity.GetField("parentbusinessunitid") == null)
                     {
                         existingMatches = XrmService.RetrieveAllAndClauses("businessunit",
@@ -670,7 +671,8 @@ namespace JosephM.Deployment
                         var thisTypesParentsConfig = XrmTypeConfigs.GetFor(thisTypesConfig.ParentLookupType);
                         if (thisTypesParentsConfig != null)
                         {
-                            //okay so this record should have capture the relevant fields in the arent in aliased value
+                            //okay so this record should have captured fields in the parent
+                            //which are required to match the target parent in aliased value
                             var parentParentId = XrmEntity.GetLookupGuid(thisEntity.GetFieldValue($"{thisTypesConfig.ParentLookupField}.{thisTypesParentsConfig.ParentLookupField}"));
                             if (!parentParentId.HasValue)
                                 matchingParentConditions.Add(new ConditionExpression(thisTypesParentsConfig.ParentLookupField, ConditionOperator.Null));
@@ -680,7 +682,7 @@ namespace JosephM.Deployment
                             {
                                 foreach (var field in thisTypesParentsConfig.UniqueChildFields)
                                 {
-                                    var theValue = thisEntity.GetFieldValue($"{thisTypesParentsConfig.ParentLookupField}.{field}");
+                                    var theValue = thisEntity.GetFieldValue($"{thisTypesConfig.ParentLookupField}.{field}");
                                     if (theValue == null)
                                         matchingParentConditions.Add(new ConditionExpression(field, ConditionOperator.Null));
                                     else
@@ -695,6 +697,7 @@ namespace JosephM.Deployment
                         throw new Exception(string.Format("Could Not Find Unique Match For the Parent Record {0} Of {1}",
                             parentPrimaryNameField, parentName));
                     var parent = matchingParents.First();
+                    thisEntity.SetLookupField(thisTypesConfig.ParentLookupField, parent);
                     var matchingChildConditions = new List<ConditionExpression>
                     {
                         new ConditionExpression(thisTypesConfig.ParentLookupField, ConditionOperator.Equal, parent.Id)

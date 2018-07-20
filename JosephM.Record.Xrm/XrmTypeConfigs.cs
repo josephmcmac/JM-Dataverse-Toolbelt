@@ -60,9 +60,30 @@ namespace JosephM.Record.Xrm
                     fields.Add(config.ParentLookupField);
                 if (config.UniqueChildFields != null)
                     fields.AddRange(config.UniqueChildFields);
+                var parentComparisonFields = GetParentFieldsRequiredForComparison(type);
+                if(parentComparisonFields != null)
+                    fields.AddRange(parentComparisonFields.Select(pc => config.ParentLookupField + "." + pc));
             }
             fields.Add(xrmRecordService.GetPrimaryField(type));
             return fields;
+        }
+
+        public static IEnumerable<string> GetParentFieldsRequiredForComparison(string type)
+        {
+            var thisTypeConfig = GetFor(type);
+            if (thisTypeConfig == null)
+                return null;
+            var thisTypesParentsConfig = GetFor(thisTypeConfig.ParentLookupType);
+            if (thisTypesParentsConfig == null || thisTypeConfig.Type == thisTypeConfig.ParentLookupType)
+                return null;
+
+            //if the parent also has a config then we need to use it when matching the parent
+            //e.g. portal web page access rules -> web page where the web page may be a master or child web page
+            //so lets include the parents config fields as aliased fields in the exported entity
+            var fieldsToIncludeInParent = new List<string> { thisTypesParentsConfig.ParentLookupField };
+            if (thisTypesParentsConfig.UniqueChildFields != null)
+                fieldsToIncludeInParent.AddRange(thisTypesParentsConfig.UniqueChildFields);
+            return fieldsToIncludeInParent;
         }
     }
 }
