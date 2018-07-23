@@ -1123,7 +1123,6 @@ namespace JosephM.InstanceComparer
             public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, XrmRecordService recordService)
                 : this("Data - " + dataComparison.Type,
                       dataComparison.Type,
-                      //todo wont work for access control rules
                       XrmTypeConfigs.GetComparisonFieldsFor(dataComparison.Type, recordService),
                       recordService.GetPrimaryField(dataComparison.Type),
                       new Condition[0],
