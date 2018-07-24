@@ -11,6 +11,7 @@ using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -88,6 +89,117 @@ namespace JosephM.Deployment.Test
                     Assert.AreEqual(createRecords[1].Id, associated.First());
                 }
             }
+        }
+
+        [TestMethod]
+        public void DeploymentImportXmlPortalTypeConfigTest()
+        {
+            PrepareTests();
+            var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity };
+            var workFolder = ClearFilesAndData(types);
+
+            //okay this script is to verify importing microsoft portal types
+            //which aren't so simple as to just match by name
+            //as for example webpage have a root page, and language specific page(s)
+
+            //create a web page with an access control rule
+            RecreatePortalData();
+
+            var parentWebPage = XrmService.RetrieveAllAndClauses(Entities.adx_webpage, new[]
+            {
+                new ConditionExpression(Fields.adx_webpage_.adx_rootwebpageid, ConditionOperator.Null)
+            }).First();
+
+            //export to xml
+            var exportApp = new ExportXmlService(XrmRecordService);// CreateAndLoadTestApplication<ExportXmlModule>();
+            var exportRequest = new ExportXmlRequest
+            {
+                Folder = new Folder(workFolder),
+                IncludeNNRelationshipsBetweenEntities = true,
+                RecordTypesToExport = new[]
+                 {
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webrole, Entities.adx_webrole)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webpage, Entities.adx_webpage)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_websitelanguage, Entities.adx_websitelanguage)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webpageaccesscontrolrule, Entities.adx_webpageaccesscontrolrule)},
+                 }
+            };
+
+            var exportResponse = exportApp.Execute(exportRequest, Controller);// exportApp.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog, ExportXmlResponse>(exportRequest);
+            Assert.IsFalse(exportResponse.HasError);
+
+            //lets recreate all the web page data so the ids don't match when importing
+            //this will verify it matches them based on the root/unique field configs in XrmTypesConfig
+            RecreatePortalData();
+
+            var application = CreateAndLoadTestApplication<ImportXmlModule>();
+            var importRequest = new ImportXmlRequest
+            {
+                Folder = new Folder(workFolder)
+            };
+
+            var importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importResponse.HasError);
+
+            VerifyWebPageRecords();
+
+            //lets just do several other things which will verify some other matching logic
+
+            //delete the root page in the import files - this will verify the language specific page
+            //will correctly resolve its parent independently
+            //despite it having a different id and not being part of the import
+            var parentWebPageFile = FileUtility.GetFiles(workFolder).First(f => f.Contains(parentWebPage.Id.ToString().Replace("-","_")));
+            File.Delete(parentWebPageFile);
+
+            importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importResponse.HasError);
+
+            VerifyWebPageRecords();
+
+            //delete both web pages in the import files - this will verify the web page access contorl rule
+            //will correctly resolve its parent independently
+            //despite it having a different id and not being part of the import
+            var webPageFile = FileUtility.GetFiles(workFolder).Where(f => f.Contains(Entities.adx_webpage + "_"));
+            foreach (var file in webPageFile)
+                File.Delete(file);
+
+            importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importResponse.HasError);
+
+            VerifyWebPageRecords();
+
+            //lets do the same but delete the web page access control rule
+            //first to verify it also matches the parent when creating
+            XrmService.Delete(XrmService.GetFirst(Entities.adx_webpageaccesscontrolrule));
+            importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importResponse.HasError);
+
+            VerifyWebPageRecords();
+        }
+
+        private void VerifyWebPageRecords()
+        {
+            var languageRecords = XrmService.RetrieveAllEntityType(Entities.adx_websitelanguage);
+            var roleRecords = XrmService.RetrieveAllEntityType(Entities.adx_webrole);
+            var pageRecords = XrmService.RetrieveAllEntityType(Entities.adx_webpage);
+            var accessRecords = XrmService.RetrieveAllEntityType(Entities.adx_webpageaccesscontrolrule);
+            var accessRoleAssociations = XrmService.RetrieveAllEntityType(Relationships.adx_webrole_.adx_webpageaccesscontrolrule_webrole.EntityName);
+            var entityFormRecords = XrmService.RetrieveAllEntityType(Entities.adx_entityform);
+            var entityFormMetadataRecords = XrmService.RetrieveAllEntityType(Entities.adx_entityformmetadata);
+
+            //the records wont; have been updated as data the same - but we verify that the system matched
+            //them and therefore didn't create duplicates or throw errors
+            Assert.AreEqual(1, languageRecords.Count());
+            Assert.AreEqual(1, roleRecords.Count());
+            Assert.AreEqual(2, pageRecords.Count());
+            Assert.AreEqual(1, accessRecords.Count());
+            Assert.AreEqual(1, accessRoleAssociations.Count());
+            Assert.AreEqual(1, entityFormRecords.Count());
+            Assert.AreEqual(3, entityFormMetadataRecords.Count());
+
+            //verify the access control rule is correctly linked to the child web page
+            var childWebPage = pageRecords.First(e => e.GetLookupGuid(Fields.adx_webpage_.adx_rootwebpageid).HasValue);
+            Assert.AreEqual(childWebPage.Id, accessRecords.First().GetLookupGuid(Fields.adx_webpageaccesscontrolrule_.adx_webpageid));
         }
 
         [TestMethod]
@@ -391,7 +503,14 @@ namespace JosephM.Deployment.Test
             var fields1 = GetFields(type, importService);
             foreach (var field in fields1)
             {
-                record.SetField(field, CreateNewEntityFieldValue(field, type, record));
+                if (field == XrmService.GetPrimaryNameField(type))
+                {
+                    record.SetField(field, DateTime.UtcNow.ToFileTimeUtc().ToString());
+                }
+                else
+                {
+                    record.SetField(field, CreateNewEntityFieldValue(field, type, record));
+                }
             }
             record.Id = XrmService.Create(record);
             return record;

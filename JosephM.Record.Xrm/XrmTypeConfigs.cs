@@ -1,6 +1,7 @@
 ﻿using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Schema;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,24 +23,24 @@ namespace JosephM.Record.Xrm
         {
             new XrmTypeConfigs()
                 {
-                    Type = "adx_webpage",
-                    ParentLookupField = "adx_rootwebpageid",
-                    ParentLookupType = "adx_webpage",
-                    UniqueChildFields = new [] { "adx_webpagelanguageid" },
+                    Type = Entities.adx_webpage,
+                    ParentLookupField = Fields.adx_webpage_.adx_rootwebpageid,
+                    ParentLookupType = Entities.adx_webpage,
+                    UniqueChildFields = new [] { Fields.adx_webpage_.adx_webpagelanguageid },
                     BlockCreateChild = true
                 },
             new XrmTypeConfigs()
                 {
-                    Type = "adx_entityformmetadata",
-                    ParentLookupField = "adx_entityform",
-                    ParentLookupType = "adx_entityform",
-                    UniqueChildFields = new [] { "adx_type", "adx_sectionname", "adx_attributelogicalname", "adx_tabname", "adx_subgrid_name" }
+                    Type = Entities.adx_entityformmetadata,
+                    ParentLookupField = Fields.adx_entityformmetadata_.adx_entityform,
+                    ParentLookupType = Entities.adx_entityform,
+                    UniqueChildFields = new [] { Fields.adx_entityformmetadata_.adx_type, Fields.adx_entityformmetadata_.adx_sectionname, Fields.adx_entityformmetadata_.adx_attributelogicalname, Fields.adx_entityformmetadata_.adx_tabname, Fields.adx_entityformmetadata_.adx_subgrid_name }
                 },
             new XrmTypeConfigs()
                 {
-                    Type = "adx_webpageaccesscontrolrule",
-                    ParentLookupField = "adx_webpageid",
-                    ParentLookupType = "adx_webpage",
+                    Type = Entities.adx_webpageaccesscontrolrule,
+                    ParentLookupField = Fields.adx_webpageaccesscontrolrule_.adx_webpageid,
+                    ParentLookupType = Entities.adx_webpage,
                 },
         };
 
