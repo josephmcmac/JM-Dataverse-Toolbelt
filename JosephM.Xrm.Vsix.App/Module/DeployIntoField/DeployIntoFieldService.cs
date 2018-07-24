@@ -62,7 +62,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                         throw new NullReferenceException($"Could not find matching type by logical or display name for folder name of {containingFolderName}");
                     }
 
-                    if (recordType == "adx_webfile")
+                    if (recordType == Entities.adx_webfile)
                     {
                         //this one goes into an attachment
                         var matchingRecord = Service.GetFirst(recordType, Service.GetPrimaryField(recordType), fileInfo.Name);
@@ -111,8 +111,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                         {
                             new Condition(Service.GetPrimaryField(recordType), ConditionType.Equal, fileNameSansExtention)
                         };
-                        if (recordType == "adx_webpage")
-                            conditions.Add(new Condition("adx_rootwebpageid", ConditionType.NotNull));
+                        if (recordType == Entities.adx_webpage)
+                            conditions.Add(new Condition(Fields.adx_webpage_.adx_rootwebpageid, ConditionType.NotNull));
 
                         var matchingRecords = Service.RetrieveAllAndClauses(recordType, conditions);
                         if (matchingRecords.Count() != 1)

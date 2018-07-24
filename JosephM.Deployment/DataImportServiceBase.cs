@@ -602,7 +602,6 @@ namespace JosephM.Deployment
                 var existingMatches = existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
                 if (!existingMatches.Any())
                 {
-                    var matchByNameEntities = new[] { "businessunit", "team", "pricelevel", "uomschedule", "uom", "entitlementtemplate" };
                     var matchBySpecificFieldEntities = new Dictionary<string, string>()
                     {
                         {  "knowledgearticle", "articlepublicnumber" }
@@ -611,17 +610,6 @@ namespace JosephM.Deployment
                     {
                         existingMatches = XrmService.RetrieveAllAndClauses("businessunit",
                             new[] { new ConditionExpression("parentbusinessunitid", ConditionOperator.Null) });
-                    }
-                    else if (matchByNameEntities.Contains(thisEntity.LogicalName))
-                    {
-                        var primaryField = XrmService.GetPrimaryNameField(thisEntity.LogicalName);
-                        var name = thisEntity.GetStringField(primaryField);
-                        if (name.IsNullOrWhiteSpace())
-                            throw new NullReferenceException(string.Format("{0} Is Required On The {1}", XrmService.GetFieldLabel(primaryField, thisEntity.LogicalName), XrmService.GetEntityLabel(thisEntity.LogicalName)));
-                        existingMatches = GetMatchingEntities(thisEntity.LogicalName, primaryField, name);
-                        if (existingMatches.Count() > 1)
-                            throw new Exception(string.Format("More Than One Record Match To The {0} Of {1} When Matching The Name",
-                                "Name", name));
                     }
                     else if (matchBySpecificFieldEntities.ContainsKey(thisEntity.LogicalName))
                     {
@@ -633,6 +621,17 @@ namespace JosephM.Deployment
                         if (existingMatches.Count() > 1)
                             throw new Exception(string.Format("More Than One Record Match To The {0} Of {1}",
                                 matchField, valueToMatch));
+                    }
+                    else
+                    {
+                        var primaryField = XrmService.GetPrimaryNameField(thisEntity.LogicalName);
+                        var name = thisEntity.GetStringField(primaryField);
+                        if (name.IsNullOrWhiteSpace())
+                            throw new NullReferenceException(string.Format("{0} Is Required On The {1}", XrmService.GetFieldLabel(primaryField, thisEntity.LogicalName), XrmService.GetEntityLabel(thisEntity.LogicalName)));
+                        existingMatches = GetMatchingEntities(thisEntity.LogicalName, primaryField, name);
+                        if (existingMatches.Count() > 1)
+                            throw new Exception(string.Format("More Than One Record Match To The {0} Of {1} When Matching The Name",
+                                "Name", name));
                     }
                 }
                 return existingMatches;
@@ -725,22 +724,32 @@ namespace JosephM.Deployment
                             parentPrimaryNameField, parentName));
                     var parent = matchingParents.First();
                     thisEntity.SetLookupField(thisTypesConfig.ParentLookupField, parent);
-                    var matchingChildConditions = new List<ConditionExpression>
+                    var matchingChildQuery = XrmService.BuildQuery(thisTypesConfig.Type, null, new []
                     {
                         new ConditionExpression(thisTypesConfig.ParentLookupField, ConditionOperator.Equal, parent.Id)
-                    };
+                    }, null);
                     if(thisTypesConfig.UniqueChildFields != null)
                     {
                         foreach (var field in thisTypesConfig.UniqueChildFields)
                         {
                             var theValue = thisEntity.GetFieldValue(field);
                             if (theValue == null)
-                                matchingChildConditions.Add(new ConditionExpression(field, ConditionOperator.Null));
+                                matchingChildQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Null));
+                            else if (theValue is EntityReference)
+                            {
+                                var name = XrmEntity.GetLookupName(theValue);
+                                var type = XrmEntity.GetLookupType(theValue);
+                                var linkToReferenced = matchingChildQuery.AddLink(type, field, XrmService.GetPrimaryKeyField(type));
+                                if (name == null)
+                                    linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Null);
+                                else
+                                    linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, name);
+                            }
                             else
-                                matchingChildConditions.Add(new ConditionExpression(field, ConditionOperator.Equal, XrmService.ConvertToQueryValue(field, thisEntity.LogicalName, theValue)));
+                                matchingChildQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Equal, XrmService.ConvertToQueryValue(field, thisEntity.LogicalName, theValue)));
                         }
                     }
-                    var matchingChildren = XrmService.RetrieveAllAndClauses(thisTypesConfig.Type, matchingChildConditions);
+                    var matchingChildren = XrmService.RetrieveAll(matchingChildQuery);
                     if (matchingChildren.Count() > 1)
                         throw new Exception(string.Format("More Than One Match For the Child {0} Record Of {1} {2}",
                             thisTypesConfig.Type, parentName, parentPrimaryNameField));

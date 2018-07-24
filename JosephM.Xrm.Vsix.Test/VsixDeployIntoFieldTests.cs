@@ -39,15 +39,15 @@ namespace JosephM.Xrm.Vsix.Test
 
             //new target record to deploy into attachment
             var targetFileRecordName = "TESTDEPLOYINTO.css";
-            var targetFileRecord = XrmService.GetFirst("adx_webfile", XrmService.GetPrimaryNameField("adx_webfile"), targetFileRecordName);
+            var targetFileRecord = XrmService.GetFirst(Entities.adx_webfile, XrmService.GetPrimaryNameField(Entities.adx_webfile), targetFileRecordName);
             while (targetFileRecord != null)
             {
                 XrmService.Delete(targetFileRecord);
-                targetFileRecord = XrmService.GetFirst("adx_webfile", XrmService.GetPrimaryNameField("adx_webfile"), targetFileRecordName);
+                targetFileRecord = XrmService.GetFirst(Entities.adx_webfile, XrmService.GetPrimaryNameField(Entities.adx_webfile), targetFileRecordName);
             }
-            targetFileRecord = CreateTestRecord("adx_webfile", new Dictionary<string, object>
+            targetFileRecord = CreateTestRecord(Entities.adx_webfile, new Dictionary<string, object>
             {
-                { XrmService.GetPrimaryNameField("adx_webfile"), targetFileRecordName }
+                { XrmService.GetPrimaryNameField(Entities.adx_webfile), targetFileRecordName }
             });
 
 
@@ -98,7 +98,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         private static string[] GetFilesForFileImport()
         {
-            var javaScriptFiles = Directory.GetFiles(Path.Combine(GetSolutionRootFolder().FullName, "SolutionItems", "TestFiles", "TEST WEB FILE"));
+            var javaScriptFiles = Directory.GetFiles(Path.Combine(GetSolutionRootFolder().FullName, "SolutionItems", "TestFiles", "WEB FILE"));
             return javaScriptFiles;
         }
 
