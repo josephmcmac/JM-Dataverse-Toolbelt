@@ -103,7 +103,7 @@ namespace JosephM.Deployment.Test
             //as for example webpage have a root page, and language specific page(s)
 
             //create a web page with an access control rule
-            RecreateWebPageData();
+            RecreatePortalData();
 
             var parentWebPage = XrmService.RetrieveAllAndClauses(Entities.adx_webpage, new[]
             {
@@ -130,7 +130,7 @@ namespace JosephM.Deployment.Test
 
             //lets recreate all the web page data so the ids don't match when importing
             //this will verify it matches them based on the root/unique field configs in XrmTypesConfig
-            RecreateWebPageData();
+            RecreatePortalData();
 
             var application = CreateAndLoadTestApplication<ImportXmlModule>();
             var importRequest = new ImportXmlRequest
@@ -200,72 +200,6 @@ namespace JosephM.Deployment.Test
             //verify the access control rule is correctly linked to the child web page
             var childWebPage = pageRecords.First(e => e.GetLookupGuid(Fields.adx_webpage_.adx_rootwebpageid).HasValue);
             Assert.AreEqual(childWebPage.Id, accessRecords.First().GetLookupGuid(Fields.adx_webpageaccesscontrolrule_.adx_webpageid));
-        }
-
-        private void RecreateWebPageData()
-        {
-            DeleteAll(Entities.adx_websitelanguage);
-            DeleteAll(Entities.adx_webrole);
-            DeleteAll(Entities.adx_webpage);
-            DeleteAll(Entities.adx_webpageaccesscontrolrule);
-            DeleteAll(Entities.adx_entityform);
-            DeleteAll(Entities.adx_entityformmetadata);
-
-            var websiteLanguage = CreateTestRecord(Entities.adx_websitelanguage, new Dictionary<string, object>
-            {
-                { Fields.adx_websitelanguage_.adx_name, "English" }
-            });
-
-            var webRole = CreateTestRecord(Entities.adx_webrole, new Dictionary<string, object>
-            {
-                { Fields.adx_webrole_.adx_name, "TestScriptRole" }
-            });
-
-            var webPage = CreateTestRecord(Entities.adx_webpage, new Dictionary<string, object>
-            {
-                { Fields.adx_webpage_.adx_name, "IScriptWebPage" }
-            });
-            var childWebPage = CreateTestRecord(Entities.adx_webpage, new Dictionary<string, object>
-            {
-                { Fields.adx_webpage_.adx_name, "IScriptWebPage" },
-                { Fields.adx_webpage_.adx_rootwebpageid, webPage.ToEntityReference() },
-                { Fields.adx_webpage_.adx_webpagelanguageid, websiteLanguage.ToEntityReference() }
-            });
-            var webpageAccessControlRule = CreateTestRecord(Entities.adx_webpageaccesscontrolrule, new Dictionary<string, object>
-            {
-                { Fields.adx_webpageaccesscontrolrule_.adx_name, "IScriptWebPage" },
-                { Fields.adx_webpageaccesscontrolrule_.adx_webpageid, childWebPage.ToEntityReference() },
-            });
-
-            XrmService.Associate(Relationships.adx_webrole_.adx_webpageaccesscontrolrule_webrole.Name, Fields.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolruleid, webpageAccessControlRule.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
-
-            var entityForm = CreateTestRecord(Entities.adx_entityform, new Dictionary<string, object>
-            {
-                { Fields.adx_entityform_.adx_name, "IScriptEntityForm" }
-            });
-
-            var entityFormMetadata1 = CreateTestRecord(Entities.adx_entityformmetadata, new Dictionary<string, object>
-            {
-                { Fields.adx_entityform_.adx_name, null },
-                { Fields.adx_entityformmetadata_.adx_entityform, entityForm.ToEntityReference() },
-                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.EntityFormMetadata.Type.Attribute) },
-                { Fields.adx_entityformmetadata_.adx_attributelogicalname, "foo" },
-            });
-
-            var entityFormMetadata2 = CreateTestRecord(Entities.adx_entityformmetadata, new Dictionary<string, object>
-            {
-                { Fields.adx_entityform_.adx_name, null },
-                { Fields.adx_entityformmetadata_.adx_entityform, entityForm.ToEntityReference() },
-                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.EntityFormMetadata.Type.Attribute) },
-                { Fields.adx_entityformmetadata_.adx_attributelogicalname, "bar" },
-            });
-
-            var entityFormMetadata3 = CreateTestRecord(Entities.adx_entityformmetadata, new Dictionary<string, object>
-            {
-                { Fields.adx_entityform_.adx_name, null },
-                { Fields.adx_entityformmetadata_.adx_entityform, entityForm.ToEntityReference() },
-                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.EntityFormMetadata.Type.Notes) }
-            });
         }
 
         [TestMethod]
