@@ -70,7 +70,7 @@ namespace JosephM.Deployment.DeployPackage
             var countToDo = solutionFiles.Count();
             var countRecordsImported = 0;
 
-            var xrmService = XrmRecordService.XrmService;
+            var xrmService = xrmRecordService.XrmService;
 
             controller.LogLiteral($"Loading Active {xrmService.GetEntityCollectionName(Entities.duplicaterule)}");
             var duplicateRules = xrmService.RetrieveAllAndClauses(Entities.duplicaterule, new[] { new ConditionExpression(Fields.duplicaterule_.statecode, ConditionOperator.Equal, OptionSets.DuplicateDetectionRule.Status.Active) }, new string[0]);
@@ -80,7 +80,7 @@ namespace JosephM.Deployment.DeployPackage
                 try
                 {
                     controller.UpdateProgress(++countRecordsImported, countToDo + 1,
-                        $"Importing solution {new FileInfo(solutionFile).Name} into {XrmRecordService.XrmRecordConfiguration?.ToString()}");
+                        $"Importing solution {new FileInfo(solutionFile).Name} into {xrmRecordService.XrmRecordConfiguration?.ToString()}");
                     var importId = Guid.NewGuid();
                     var req = new ImportSolutionRequest();
                     req.ImportJobId = importId;
