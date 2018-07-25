@@ -432,13 +432,13 @@ namespace JosephM.InstanceComparer
                 {
                     Fields.sdkmessageprocessingstep_.mode, Fields.sdkmessageprocessingstep_.stage,
                     Fields.sdkmessageprocessingstep_.sdkmessageid, Fields.sdkmessageprocessingstep_.sdkmessagefilterid
-                    , Fields.sdkmessageprocessingstep_.name
+                    , Fields.sdkmessageprocessingstep_.plugintypeid, Fields.sdkmessageprocessingstep_.eventhandler
                 },
                 Fields.sdkmessageprocessingstep_.name,
                 null,
                 new[]
                 {
-                    Fields.sdkmessageprocessingstep_.description, Fields.sdkmessageprocessingstep_.filteringattributes, Fields.sdkmessageprocessingstep_.rank, Fields.sdkmessageprocessingstep_.statecode
+                    Fields.sdkmessageprocessingstep_.description, Fields.sdkmessageprocessingstep_.filteringattributes, Fields.sdkmessageprocessingstep_.rank, Fields.sdkmessageprocessingstep_.statecode, Fields.sdkmessageprocessingstep_.name
                 },
                 Fields.sdkmessageprocessingstep_.plugintypeid, ParentLinkType.Lookup);
             pluginRegistrationParams.AddConversionObject(Fields.sdkmessageprocessingstep_.sdkmessagefilterid,
@@ -821,7 +821,22 @@ namespace JosephM.InstanceComparer
                 {
                     if(matches.Count() > 1)
                     {
-                        processContainer.Response.AddResponseItem(new InstanceComparerResponseItem($"Multiple matches for record '{GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams)}'. Only the first will be compared", processCompareParams.RecordType));
+                        var displayName = GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams);
+                        foreach (var duplicate in matches.Skip(1))
+                        {
+                            //activity feeds use a weird pattern where they have multiple registrations
+                            //and the config differentiates them so I'll just ignore them for simplicity
+                            if ((displayName + "").StartsWith("ActivityFeeds"))
+                                continue;
+                            //surveys have a similar thing
+                            //but theirs differentiates by filtering attributes
+                            if ((displayName + "").StartsWith("Microsoft.Crm.Surveys"))
+                                continue;
+                            
+                            var displayName2 = GetItemDisplayName(duplicate, processContainer.ServiceTwo, processCompareParams);
+                            processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType, displayName
+                                , "Duplicate match. Only the first will be compared", displayName, displayName2, item.Id, duplicate.Id);
+                        }
                     }
                     var match = matches.First();
                     service2AlreadyAdded.Add(match);
