@@ -111,8 +111,8 @@ namespace JosephM.InstanceComparer
                                             {
                                                 //where there is not matching association in instance 2
                                                 //output a difference
-                                                var displayNamea = GetItemDisplayName(recordMatcha.Key, processContainer.ServiceOne, processContainer.Comparisons.First(c => c.RecordType == recordMatcha.Key.Type));
-                                                var displayNameb = GetItemDisplayName(recordMatchb.Key, processContainer.ServiceOne, processContainer.Comparisons.First(c => c.RecordType == recordMatchb.Key.Type));
+                                                var displayNamea = GetItemDisplayName(recordMatcha.Key, processContainer.ServiceOne, processContainer.Comparisons.First(c => c.RecordType == recordMatcha.Key.Type), false);
+                                                var displayNameb = GetItemDisplayName(recordMatchb.Key, processContainer.ServiceOne, processContainer.Comparisons.First(c => c.RecordType == recordMatchb.Key.Type), false);
                                                 processContainer.AddDifference("Data " + recordMatcha.Key.Type, recordMatcha.Key.Type, displayNamea, "Associated " + recordMatchb.Key.Type, displayNameb, null, recordMatcha.Key.Id, recordMatcha.Value.Id);
                                             }
                                         }
@@ -133,8 +133,8 @@ namespace JosephM.InstanceComparer
                                             {
                                                 //where there is not matching association in instance 1
                                                 //output a difference
-                                                var displayNamea = GetItemDisplayName(recordMatcha.Value, processContainer.ServiceTwo, processContainer.Comparisons.First(c => c.RecordType == recordMatcha.Value.Type));
-                                                var displayNameb = GetItemDisplayName(recordMatchb.Value, processContainer.ServiceTwo, processContainer.Comparisons.First(c => c.RecordType == recordMatchb.Value.Type));
+                                                var displayNamea = GetItemDisplayName(recordMatcha.Value, processContainer.ServiceTwo, processContainer.Comparisons.First(c => c.RecordType == recordMatcha.Value.Type), true);
+                                                var displayNameb = GetItemDisplayName(recordMatchb.Value, processContainer.ServiceTwo, processContainer.Comparisons.First(c => c.RecordType == recordMatchb.Value.Type), true);
                                                 processContainer.AddDifference("Data " + recordMatcha.Value.Type, recordMatcha.Value.Type, displayNamea, "Associated " + recordMatchb.Key.Type, null, displayNameb, recordMatcha.Key.Id, recordMatcha.Value.Id);
                                             }
                                         }
@@ -345,6 +345,9 @@ namespace JosephM.InstanceComparer
             foreach (var compare in compares)
             {
                 processContainer.Comparisons.Add(compare);
+                compare.AddConversionObject(Fields.annotation_.documentbody,
+                    new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceOne),
+                    new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceTwo));
             }
         }
 
@@ -550,10 +553,6 @@ namespace JosephM.InstanceComparer
             };
 
             processArgs.AddConversionObject(Fields.webresource_.content,
-                new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceOne),
-                new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceTwo));
-
-            processArgs.AddConversionObject(Fields.annotation_.documentbody,
                 new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceOne),
                 new ProcessCompareParams.ConvertFromBase64String(processContainer.ServiceTwo));
 
@@ -821,7 +820,7 @@ namespace JosephM.InstanceComparer
                 {
                     if(matches.Count() > 1)
                     {
-                        var displayName = GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams);
+                        var displayName = GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams, false);
                         foreach (var duplicate in matches.Skip(1))
                         {
                             //activity feeds use a weird pattern where they have multiple registrations
@@ -833,7 +832,7 @@ namespace JosephM.InstanceComparer
                             if ((displayName + "").StartsWith("Microsoft.Crm.Surveys"))
                                 continue;
                             
-                            var displayName2 = GetItemDisplayName(duplicate, processContainer.ServiceTwo, processCompareParams);
+                            var displayName2 = GetItemDisplayName(duplicate, processContainer.ServiceTwo, processCompareParams, true);
                             processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType, displayName
                                 , "Duplicate match. Only the first will be compared", displayName, displayName2, item.Id, duplicate.Id);
                         }
@@ -853,7 +852,7 @@ namespace JosephM.InstanceComparer
                 {
                     var parentReference = parent1 == null ? null : parent1.GetStringField(parentCompareParams.MatchField);
                     var parentId = parent1 == null ? null : GetParentId(parentCompareParams, parent1);
-                    var displayName = GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams);
+                    var displayName = GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams, false);
                     processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
                         displayName, "Only In " + processContainer.Request.ConnectionOne.Name, displayName, null, item.Id, null, parentReference: parentReference, parentId1: parentId);
                 }
@@ -867,7 +866,7 @@ namespace JosephM.InstanceComparer
                 {
                     var parentReference = parent2 == null ? null : parent2.GetStringField(parentCompareParams.MatchField);
                     var parentId = parent2 == null ? null : GetParentId(parentCompareParams, parent2);
-                    var displayName = GetItemDisplayName(item, processContainer.ServiceTwo, processCompareParams);
+                    var displayName = GetItemDisplayName(item, processContainer.ServiceTwo, processCompareParams, true);
                     processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
                         displayName, "Only In " + processContainer.Request.ConnectionTwo.Name, null, displayName, null, item.Id, parentReference: parentReference, parentId2: parentId);
                 }
@@ -895,7 +894,7 @@ namespace JosephM.InstanceComparer
             //differences
             foreach (var item in thisInBoth)
             {
-                var displayName1 = GetItemDisplayName(item.First(), processContainer.ServiceOne, processCompareParams);
+                var displayName1 = GetItemDisplayName(item.First(), processContainer.ServiceOne, processCompareParams, false);
                 foreach (var field in processCompareParams.FieldsCheckDifference)
                 {
                     var field1 = processCompareParams.ConvertField1(field, item.First().GetField(field));
@@ -913,29 +912,11 @@ namespace JosephM.InstanceComparer
                         {
                             displayValue1 = processContainer.ServiceOne.GetFieldAsDisplayString(item.First(), field);
                             displayValue2 = processContainer.ServiceTwo.GetFieldAsDisplayString(item.Last(), field);
-                            //okay for difference if it is a string we only really want to display s part of string which is different
-                            if (field1 is string || field2 is string)
-                            {
-                                displayValue1 = (string)field1;
-                                displayValue2 = (string)field2;
-
-                                var charsToDisplay = 250;
-                                if (field1 == null)
-                                    displayValue2 = displayValue2.Left(charsToDisplay) + (displayValue2.Length > charsToDisplay ? "..." : "");
-                                else if (field2 == null)
-                                    field1 = displayValue1.Left(charsToDisplay) + (displayValue1.Length > charsToDisplay ? "..." : "");
-                                else
-                                {
-                                    //https://stackoverflow.com/questions/4585939/comparing-strings-and-get-the-first-place-where-they-vary-from-eachother
-                                    var indexOfDiff = displayValue1.Zip(displayValue2, (c1, c2) => c1 == c2).TakeWhile(b => b).Count() + 1;
-                                    var startIndex = indexOfDiff - 10;
-                                    if (startIndex < 0)
-                                        startIndex = 0;
-
-                                    displayValue1 = displayValue1.Substring(startIndex).Left(charsToDisplay);
-                                    displayValue2 = displayValue2.Substring(startIndex).Left(charsToDisplay);
-                                }
-                            }
+                            //okay for difference if it is a string we only really want to display part of string which is different
+                            var tempDisplayValue1 = GetDifferenceDisplayPartForValue1(displayValue1, displayValue2);
+                            var tempDisplayValue2 = GetDifferenceDisplayPartForValue1(displayValue2, displayValue1);
+                            displayValue1 = tempDisplayValue1;
+                            displayValue2 = tempDisplayValue2;
                         }
                         var parentReference = parent1 == null ? null : parent1.GetStringField(parentCompareParams.MatchField);
                         var parentId1 = parent1 == null ? null : GetParentId(parentCompareParams, parent1);
@@ -945,7 +926,7 @@ namespace JosephM.InstanceComparer
                             "Different " + fieldLabel, displayValue1, displayValue2, item.First().Id, item.Last().Id, parentReference: parentReference, parentId1: parentId1, parentId2: parentId2);
                     }
                 }
-                if(processCompareParams.RecordType == "adx_webfile")
+                if(processCompareParams.RecordType == Entities.adx_webfile)
                 {
                     //for adx web files lets get the latest attachment for each and comare the docuemnt body field as well
                     var query = new QueryDefinition(Entities.annotation);
@@ -958,23 +939,52 @@ namespace JosephM.InstanceComparer
                     var notes2 = processContainer.ServiceTwo.RetreiveAll(query);
                     var documentBody1 = notes1.Any() ? notes1.First().GetStringField(Fields.annotation_.documentbody) : null;
                     var documentBody2 = notes2.Any() ? notes2.First().GetStringField(Fields.annotation_.documentbody) : null;
-                    if(!FieldsEqual(documentBody1, documentBody2))
+                    if (!FieldsEqual(documentBody1, documentBody2))
                     {
+                        documentBody1 = "" + processCompareParams.ConvertField1(Fields.annotation_.documentbody, documentBody1);
+                        documentBody2 = "" + processCompareParams.ConvertField2(Fields.annotation_.documentbody, documentBody2);
+                        var documentBodyDisplay1 = GetDifferenceDisplayPartForValue1(documentBody1, documentBody2);
+                        var documentBodyDisplay2 = GetDifferenceDisplayPartForValue1(documentBody2, documentBody1);
                         processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
-                        displayName1,
-                        "Different File Content In Latest Modified Note", processCompareParams.ConvertField1(Fields.annotation_.documentbody, documentBody1), processCompareParams.ConvertField2(Fields.annotation_.documentbody, documentBody2), item.First().Id, item.Last().Id);
+                        displayName1, "Different File Content In Latest Modified Note",
+                        documentBodyDisplay1, documentBodyDisplay2, item.First().Id, item.Last().Id);
                     }
                 }
             }
             return thisInBoth;
         }
 
-        public static object GetItemDisplayName(IRecord item, XrmRecordService xrmRecordService, ProcessCompareParams processCompareParams)
+        private static string GetDifferenceDisplayPartForValue1(string value1, string value2)
+        {
+            if (value1 != null)
+            {
+                var charsToDisplay = MaxCharsToDisplayInValue;
+                if (value2 == null)
+                    value1 = value1.Left(charsToDisplay) + (value1.Length > charsToDisplay ? "..." : "");
+                else
+                {
+                    //https://stackoverflow.com/questions/4585939/comparing-strings-and-get-the-first-place-where-they-vary-from-eachother
+                    var indexOfDiff = value1.Zip(value2, (c1, c2) => c1 == c2).TakeWhile(b => b).Count() + 1;
+                    var startIndex = indexOfDiff - 10;
+                    if (startIndex < 0)
+                        startIndex = 0;
+
+                    value1 = (startIndex > 0 ? "..." : "") + value1.Substring(startIndex).Left(charsToDisplay) + ((startIndex + charsToDisplay) < value1.Length ? "..." : "");
+                }
+            }
+            return value1;
+        }
+
+        private static int MaxCharsToDisplayInValue => 250;
+
+        public static object GetItemDisplayName(IRecord item, XrmRecordService xrmRecordService, ProcessCompareParams processCompareParams, bool is2)
         {
             var config = XrmTypeConfigs.GetFor(item.Type);
             if(config == null)
             {
-                return processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField)); ;
+                return is2
+                    ? processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField))
+                    : processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
             }
 
             var displayStrings = new List<string>();
