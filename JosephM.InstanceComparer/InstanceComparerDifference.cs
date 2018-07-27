@@ -33,8 +33,14 @@ namespace JosephM.InstanceComparer
         public string Id1 { get; }
         [Hidden]
         public string Id2 { get; }
+        [Hidden]
+        public int? ComponentTypeForSolution { get; }
+        [Hidden]
+        public string IdForSolution1 { get; }
+        [Hidden]
+        public string IdForSolution2 { get; }
 
-        public InstanceComparerDifference(string type, string name, string difference, string parentReference, string value1, string value2, Url url1, Url url2, string id1, string id2)
+        public InstanceComparerDifference(string type, string name, string difference, string parentReference, string value1, string value2, Url url1, Url url2, string id1, string id2, int? componentTypeForSolution, string idForSolution1, string idForSolution2)
         {
             Type = type;
             Name = string.Format("{0}{1}", parentReference == null ? null : ("[" + parentReference + "] "), name);
@@ -45,6 +51,9 @@ namespace JosephM.InstanceComparer
             Url2 = url2;
             Id1 = id1;
             Id2 = id2;
+            ComponentTypeForSolution = componentTypeForSolution;
+            IdForSolution1 = idForSolution1;
+            IdForSolution2 = idForSolution2;
         }
     }
 }

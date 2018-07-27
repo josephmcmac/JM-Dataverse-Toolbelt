@@ -10,6 +10,7 @@ using JosephM.Record.Service;
 using JosephM.Record.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.Crud;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -357,7 +358,12 @@ namespace JosephM.InstanceComparer
                 return;
             var processCompareParams = new ProcessCompareParams("Security Role",
                 Entities.role, Fields.role_.name, Fields.role_.name,
-                new[] { new Condition(Fields.role_.parentroleid, ConditionType.Null), new Condition(Fields.role_.name, ConditionType.NotEqual, "System Administrator"), new Condition(Fields.role_.name, ConditionType.NotEqual, "System Customizer") },
+                new[] {
+                    new Condition(Fields.role_.parentroleid, ConditionType.Null),
+                    new Condition(Fields.role_.name, ConditionType.NotEqual, "System Administrator"),
+                    new Condition(Fields.role_.name, ConditionType.NotEqual, "Activity Feeds"),
+                    new Condition(Fields.role_.name, ConditionType.NotEqual, "Support User"),
+                    new Condition(Fields.role_.name, ConditionType.NotEqual, "System Customizer") },
                 null)
             {
                 SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.role_.roleid, OptionSets.SolutionComponent.ObjectTypeCode.Role)
@@ -467,6 +473,10 @@ namespace JosephM.InstanceComparer
             {
                 SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(nameof(IRecordTypeMetadata.MetadataId), OptionSets.SolutionComponent.ObjectTypeCode.Entity)
             };
+            if (!processContainer.Request.AllTypesForEntityMetadata && processContainer.Request.EntityTypeComparisons != null)
+            {
+                processCompareParams.Conditions = processContainer.Request.EntityTypeComparisons.Select(c => new Condition(nameof(IRecordTypeMetadata.SchemaName), ConditionType.Equal, c.RecordType.Key)).ToArray();
+            }
 
             var fieldsCompareParams = new ProcessCompareParams("Field", typeof(IFieldMetadata),
                 (s, r) => r.GetFieldMetadata(s).ToArray(),
@@ -561,8 +571,10 @@ namespace JosephM.InstanceComparer
 
         private void AppendSolutions(ProcessContainer processContainer)
         {
-            if (!processContainer.Request.Solutions)
-                return;
+            //we always processs olution comarisons
+            //in case excluding components which
+            //are in a managed solution in the comparison
+            //logic in method ProcessContainer.ProcessIfManagedComponentExclude
             var processArgs = new ProcessCompareParams("Solution",
                 Entities.solution,
                 Fields.solution_.uniquename,
@@ -718,11 +730,13 @@ namespace JosephM.InstanceComparer
                         var serviceOneItems =
                             processCompareParams.GetObjects(null, null, processContainer.ServiceOne)
                                 .Select(o => new ObjectRecord(o))
+                                .Where(r => processCompareParams.Conditions == null || processCompareParams.Conditions.All(c => c.MeetsCondition(r)))
                                 .ToArray();
                         processContainer.Controller.UpdateLevel2Progress(2, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionTwo.Name));
                         var serviceTwoItems =
                             processCompareParams.GetObjects(null, null, processContainer.ServiceTwo)
                                 .Select(o => new ObjectRecord(o))
+                                .Where(r => processCompareParams.Conditions == null || processCompareParams.Conditions.All(c => c.MeetsCondition(r)))
                                 .ToArray();
                         processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
                         inBoth.AddRange(DoCompare(processCompareParams, processContainer, serviceOneItems, serviceTwoItems));
@@ -872,7 +886,7 @@ namespace JosephM.InstanceComparer
                 }
             }
 
-            //this part creates a sictionary mapping the matched records
+            //this part creates a dictionary mapping the matched records
             //it is used to compare associations for the records
             if(processContainer.Request.Data
                 && processContainer.Request.DataComparisons != null
@@ -894,6 +908,8 @@ namespace JosephM.InstanceComparer
             //differences
             foreach (var item in thisInBoth)
             {
+                if (item.First().Type == Entities.solution && !processContainer.Request.Solutions)
+                    continue;
                 var displayName1 = GetItemDisplayName(item.First(), processContainer.ServiceOne, processCompareParams, false);
                 foreach (var field in processCompareParams.FieldsCheckDifference)
                 {
@@ -1074,6 +1090,7 @@ namespace JosephM.InstanceComparer
             public Dictionary<string, List<ConvertField>> _conversionsObjects =
                 new Dictionary<string, List<ConvertField>>();
             private InstanceComparerRequest.InstanceCompareDataCompare c;
+            private object r;
 
             public object ConvertField1(string field, object value)
             {
@@ -1105,6 +1122,7 @@ namespace JosephM.InstanceComparer
                 Context = context;
                 RecordType = type.AssemblyQualifiedName;
                 GetObjects = getObjects;
+
                 MatchFields = new[] { keyProperty };
                 DisplayField = keyProperty;
                 Type = ProcessCompareType.Objects;
@@ -1455,7 +1473,11 @@ namespace JosephM.InstanceComparer
                 Response = response;
                 Controller = controller;
                 ServiceOne = new XrmRecordService(request.ConnectionOne);
+                ServiceOne.SetFormService(new XrmFormService());
                 ServiceTwo = new XrmRecordService(request.ConnectionTwo);
+                ServiceTwo.SetFormService(new XrmFormService());
+                Response.ServiceOne = ServiceOne;
+                Response.ServiceTwo = ServiceTwo;
                 Differences = new List<InstanceComparerDifference>();
                 Comparisons = new List<ProcessCompareParams>();
                 MissingManagedSolutionComponents = new Dictionary<string, IEnumerable<IRecord>>();
@@ -1547,8 +1569,138 @@ namespace JosephM.InstanceComparer
                 var url2 = string.IsNullOrWhiteSpace(url2String)
                     ? null
                     : new Url(url2String, string.Format("Open ({0})", Request.ConnectionTwo.Name));
+                
+                //this part generating ids and types for solution components which may be used in add differences to solution dialog
+                int? componentTypeForSolution = null;
+                string idForSolution1 = null;
+                string idForSolution2 = null;
+                if (recordType == typeof(IRecordTypeMetadata).AssemblyQualifiedName)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Entity;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+                if (recordType == typeof(IFieldMetadata).AssemblyQualifiedName)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Entity;
+                    idForSolution1 = parentId1;
+                    idForSolution2 = parentId2;
+                }
+                if (recordType == typeof(IMany2ManyRelationshipMetadata).AssemblyQualifiedName)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Entity;
+                    idForSolution1 = parentId1;
+                    idForSolution2 = parentId2;
+                }
+                if (recordType == Entities.savedquery)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Entity;
+                    idForSolution1 = parentId1;
+                    idForSolution2 = parentId2;
+                }
 
-                Differences.Add(new InstanceComparerDifference(type, name == null ? null : name.ToString(), difference, parentReference, value1 == null ? null : value1.ToString(), value2 == null ? null : value2.ToString(), url1, url2, id1, id2));
+                if (recordType == Entities.workflow)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Workflow;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+                if (recordType == Entities.webresource)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.WebResource;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+                if (recordType == typeof(PicklistOption).AssemblyQualifiedName)
+                {
+                    if (type.Contains("Shared"))
+                    {
+                        componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.OptionSet;
+                        idForSolution1 = parentId1;
+                        idForSolution2 = parentId2;
+                    }
+                    else
+                    {
+                        var matchingFieldMetadata1 = parentId1 == null ? null :
+                            ServiceOne
+                            .GetAllRecordTypes()
+                            .Select(r => ServiceOne.GetFieldMetadata(r))
+                            .SelectMany(f => f.ToArray())
+                            .First(f => f.MetadataId == parentId1);
+                        var matchingFieldMetadata2 = parentId2 == null ? null :
+                            ServiceTwo
+                            .GetAllRecordTypes()
+                            .Select(r => ServiceTwo.GetFieldMetadata(r))
+                            .SelectMany(f => f.ToArray())
+                            .First(f => f.MetadataId == parentId2);
+                        var parentRecordType = matchingFieldMetadata1?.RecordType ?? matchingFieldMetadata2?.RecordType;
+                        var entityId = matchingFieldMetadata1 == null
+                            ? ServiceTwo.GetRecordTypeMetadata(parentRecordType).MetadataId
+                            : ServiceOne.GetRecordTypeMetadata(parentRecordType).MetadataId;
+                        componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Entity;
+                        idForSolution1 = matchingFieldMetadata1 == null ? null : ServiceOne.GetRecordTypeMetadata(parentRecordType).MetadataId;
+                        idForSolution2 = matchingFieldMetadata2 == null ? null : ServiceTwo.GetRecordTypeMetadata(parentRecordType).MetadataId;
+                    }
+                }
+                if (recordType == typeof(IPicklistSet).AssemblyQualifiedName)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.OptionSet;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+                if (recordType == Relationships.role_.roleprivileges_association.EntityName)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Role;
+                    idForSolution1 = parentId1;
+                    idForSolution2 = parentId2;
+                }
+                if (recordType == Entities.template)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.EmailTemplate;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+                if (recordType == Entities.role)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Role;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+                if (recordType == Entities.systemform)
+                {
+                    if (parentReference != null)
+                    {
+                        componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Entity;
+                        idForSolution1 = parentId1;
+                        idForSolution2 = parentId2;
+                    }
+                    else
+                    {
+                        componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.SystemForm;
+                        idForSolution1 = id1;
+                        idForSolution2 = id2;
+                    }
+                }
+                if (recordType == Entities.report)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Report;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+                if (recordType == Entities.pluginassembly)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+                if (recordType == Entities.sdkmessageprocessingstep)
+                {
+                    componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.SDKMessageProcessingStep;
+                    idForSolution1 = id1;
+                    idForSolution2 = id2;
+                }
+
+                Differences.Add(new InstanceComparerDifference(type, name == null ? null : name.ToString(), difference, parentReference, value1 == null ? null : value1.ToString(), value2 == null ? null : value2.ToString(), url1, url2, id1, id2, componentTypeForSolution, idForSolution1, idForSolution2));
             }
 
             internal bool ProcessIfManagedComponentExclude(ProcessCompareParams processCompareParams, IRecord item, bool isInConnection1)
@@ -1557,24 +1709,32 @@ namespace JosephM.InstanceComparer
                 //then lets exclude components in that solution in the list because it just creates irrelevant noise in the output
 
                 //firstly if this is a solution we need to capture it in this record
-                if(processCompareParams.RecordType == Entities.solution && item.GetBoolField(Fields.solution_.ismanaged))
+                if(processCompareParams.RecordType == Entities.solution)
                 {
-                    if(!MissingManagedSolutionComponents.ContainsKey(item.Id))
+                    if (item.GetBoolField(Fields.solution_.ismanaged))
                     {
-                        var componentsInSolution = isInConnection1
-                            ? ServiceOne.GetLinkedRecords(Entities.solutioncomponent, Entities.solution, Fields.solutioncomponent_.solutionid, item.Id)
-                            : ServiceTwo.GetLinkedRecords(Entities.solutioncomponent, Entities.solution, Fields.solutioncomponent_.solutionid, item.Id);
-                        MissingManagedSolutionComponents.Add(item.Id, componentsInSolution);
+                        if (!MissingManagedSolutionComponents.ContainsKey(item.Id))
+                        {
+                            var componentsInSolution = isInConnection1
+                                ? ServiceOne.GetLinkedRecords(Entities.solutioncomponent, Entities.solution, Fields.solutioncomponent_.solutionid, item.Id)
+                                : ServiceTwo.GetLinkedRecords(Entities.solutioncomponent, Entities.solution, Fields.solutioncomponent_.solutionid, item.Id);
+                            MissingManagedSolutionComponents.Add(item.Id, componentsInSolution);
+                        }
                     }
+                    //if we aren't actually including solution differences return not to add the difference
+                    if (!Request.Solutions)
+                        return true;
                 }
+                if (!Request.IgnoreMissingManagedComponentDifferences)
+                    return false;
                 //okay otherwise if a solution component configured then check if this is a part of the managed solution
                 else if (processCompareParams.SolutionComponentConfiguration != null)
                 {
-                    foreach(var solution in MissingManagedSolutionComponents)
+                    foreach (var solution in MissingManagedSolutionComponents)
                     {
-                        foreach(var component in solution.Value)
+                        foreach (var component in solution.Value)
                         {
-                            if(component.GetIdField(Fields.solutioncomponent_.objectid) == item.GetIdField(processCompareParams.SolutionComponentConfiguration.MetadataIdFieldName)
+                            if (component.GetIdField(Fields.solutioncomponent_.objectid) == item.GetIdField(processCompareParams.SolutionComponentConfiguration.MetadataIdFieldName)
                                 && component.GetOptionKey(Fields.solutioncomponent_.componenttype) == processCompareParams.SolutionComponentConfiguration.ComponentType.ToString())
                             {
                                 return true;

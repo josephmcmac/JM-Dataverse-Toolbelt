@@ -97,11 +97,11 @@ namespace JosephM.Application.ViewModel.Grid
                     if (cf.ChildGridFunctions != null && cf.ChildGridFunctions.Any())
                     {
                         var childButtons = GridsFunctionsToXrmButtons(cf.ChildGridFunctions);
-                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, childButtons, ApplicationController));
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.LabelFunc(this), childButtons, ApplicationController));
                     }
                     else
                     {
-                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(this), ApplicationController));
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.LabelFunc(this), () => cf.Function(this), ApplicationController));
                     }
                 }
             }

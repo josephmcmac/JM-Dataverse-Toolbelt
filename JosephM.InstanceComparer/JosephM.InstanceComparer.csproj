@@ -83,6 +83,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddToSolution\AddToSolutionDialog.cs" />
+    <Compile Include="AddToSolution\AddToSolutionItem.cs" />
+    <Compile Include="AddToSolution\AddToSolutionRequest.cs" />
+    <Compile Include="AddToSolution\AddToSolutionResponse.cs" />
+    <Compile Include="AddToSolution\AddToSolutionResponseItem.cs" />
+    <Compile Include="AddToSolution\AddToSolutionService.cs" />
     <Compile Include="InstanceComparerTypeSummary.cs" />
     <Compile Include="InstanceComparerDifference.cs" />
     <Compile Include="InstanceComparerModule.cs" />

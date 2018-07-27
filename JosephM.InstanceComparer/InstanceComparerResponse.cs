@@ -1,5 +1,6 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
+using JosephM.Record.Xrm.XrmRecord;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +25,11 @@ namespace JosephM.InstanceComparer
         [AllowDownload]
         [PropertyInContextByPropertyValue(nameof(AreDifferences), true)]
         public IEnumerable<InstanceComparerDifference> AllDifferences { get; set; }
+
+        [Hidden]
+        public XrmRecordService ServiceOne { get; set; }
+        [Hidden]
+        public XrmRecordService ServiceTwo { get; set; }
 
     }
 }
