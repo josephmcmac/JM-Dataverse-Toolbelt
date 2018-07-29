@@ -129,18 +129,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             return new IsValidResponse();
         }
 
-        public override bool AllowSaveAndLoad
-        {
-            get
-            {
-                var objectType = GetObject().GetType();
-                return ApplicationController.AllowSaveRequests
-                    && objectType.IsTypeOf(typeof(IAllowSaveAndLoad))
-                    && !(objectType == typeof(SaveAndLoadFields))
-                    && objectType.GetCustomAttribute<AllowSaveAndLoad>() != null;
-            }
-        }
-
         internal override void RefreshEditabilityExtention()
         {
             if (FieldViewModels != null)
