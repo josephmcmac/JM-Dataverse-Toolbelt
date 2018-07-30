@@ -73,6 +73,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                 var turnOff = booleanFields.All(b => b.Value);
                                 foreach (var field in booleanFields)
                                     field.Value = !turnOff;
+
+                                var enumerableFields = thisSection.Fields.Where(f => f is EnumerableFieldViewModel).Cast<EnumerableFieldViewModel>();
+                                foreach(var field in enumerableFields)
+                                {
+                                    if(ObjectRecordService.GetClassType(field.RecordType).IsTypeOf(typeof(ISelectable)))
+                                    {
+                                        turnOff = field.GridRecords.All(r => r.GetBooleanFieldFieldViewModel(nameof(ISelectable.Selected)).Value);
+                                        foreach(var record in field.GridRecords)
+                                        {
+                                            record.GetBooleanFieldFieldViewModel(nameof(ISelectable.Selected)).Value = !turnOff;
+                                        }
+                                    }
+                                }
                             }
                         }));
                     }

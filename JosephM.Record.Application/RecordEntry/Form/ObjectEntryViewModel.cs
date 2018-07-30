@@ -90,10 +90,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             foreach (var grid in SubGrids)
             {
                 var typedEnumerable = MapGridToEnumerableValue(grid);
-                GetObject().GetType()
+                var setMethod = GetObject().GetType()
                     .GetProperty(grid.ReferenceName)
-                    .GetSetMethod()
-                    .Invoke(GetObject(), new[] {typedEnumerable});
+                    .GetSetMethod();
+                if (setMethod == null)
+                    throw new NullReferenceException($"Could not access set method for property '{grid.ReferenceName}' in class '{GetObject().GetType().Name}'. This property needs a public set accessor");
+                setMethod.Invoke(GetObject(), new[] {typedEnumerable});
             }
         }
 

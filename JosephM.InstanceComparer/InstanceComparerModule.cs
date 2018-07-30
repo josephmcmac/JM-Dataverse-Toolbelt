@@ -1,17 +1,16 @@
-﻿using JosephM.Application.Modules;
-using JosephM.Application.Desktop.Module.ServiceRequest;
-using JosephM.Core.Attributes;
-using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.ViewModel.Extentions;
-using System.Linq;
-using JosephM.Core.FieldType;
-using System;
-using System.Collections.Generic;
-using JosephM.Application.ViewModel.Grid;
-using JosephM.Record.Service;
-using JosephM.InstanceComparer.AddToSolution;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.Extentions;
+using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Attributes;
+using JosephM.Core.FieldType;
+using JosephM.InstanceComparer.AddToSolution;
+using JosephM.Record.Service;
+using JosephM.XrmModule.SavedXrmConnections;
+using System;
+using System.Linq;
 
 namespace JosephM.InstanceComparer
 {
@@ -61,10 +60,7 @@ namespace JosephM.InstanceComparer
                             .Where(d => d.ComponentTypeForSolution.HasValue && d.IdForSolution1 != null)
                             .Select(d => new AddToSolutionItem(d.ComponentTypeForSolution.Value, d.IdForSolution1))
                             .ToArray();
-                        var request = new AddToSolutionRequest()
-                        {
-                            Items = items
-                        };
+                        var request = new AddToSolutionRequest(items, service);
                         var dialog = new AddToSolutionDialog(service, dialogController, request: request, onClose: g.RemoveParentDialog);
                         g.LoadDialog(dialog);
                     }
@@ -115,10 +111,7 @@ namespace JosephM.InstanceComparer
                             .Where(d => d.ComponentTypeForSolution.HasValue && d.IdForSolution2 != null)
                             .Select(d => new AddToSolutionItem(d.ComponentTypeForSolution.Value, d.IdForSolution2))
                             .ToArray();
-                        var request = new AddToSolutionRequest()
-                        {
-                            Items = items
-                        };
+                        var request = new AddToSolutionRequest(items, service);
                         var dialog = new AddToSolutionDialog(service, dialogController, request: request, onClose: g.RemoveParentDialog);
                         g.LoadDialog(dialog);
                     }
