@@ -29,7 +29,7 @@ namespace JosephM.InstanceComparer.AddToSolution
             {
                 try
                 {
-                    controller.UpdateProgress(++done, toDo, $"Adding {XrmRecordService.GetPicklistLabel(Fields.solutioncomponent_.componenttype, Entities.solutioncomponent, type.ToString())} Components");
+                    controller.UpdateProgress(++done, toDo, $"Adding {XrmRecordService.GetPicklistLabel(Fields.solutioncomponent_.componenttype, Entities.solutioncomponent, type.ComponentTypeKey.ToString())} Components");
                     var theseItems = type.Items.Select(i => i.Id).ToArray();
                     XrmRecordService.AddSolutionComponents(request.SolutionAddTo.Id, type.ComponentTypeKey, theseItems);
                 }

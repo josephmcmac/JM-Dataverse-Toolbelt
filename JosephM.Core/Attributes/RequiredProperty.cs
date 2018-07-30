@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using JosephM.Core.Extentions;
 
 namespace JosephM.Core.Attributes
@@ -13,12 +14,31 @@ namespace JosephM.Core.Attributes
     {
         public override bool IsValid(object value)
         {
+            if (value is IEnumerable)
+            {
+                var enumerator = ((IEnumerable)value).GetEnumerator();
+                if (enumerator.MoveNext())
+                {
+                    var firstOne = enumerator.Current;
+                    if (firstOne is ISelectable)
+                    {
+                        var isOneSelelected = ((ISelectable)firstOne).Selected;
+                        while(enumerator.MoveNext())
+                        {
+                            var nextOne = enumerator.Current;
+                            if (((ISelectable)nextOne).Selected)
+                                isOneSelelected = true;
+                        }
+                        return isOneSelelected;
+                    }
+                }
+            }
             return value.IsNotEmpty();
         }
 
         public override string GetErrorMessage(string propertyLabel)
         {
-            return string.Format("{0} must be populated", propertyLabel);
+            return string.Format("{0} Is Required", propertyLabel);
         }
     }
 }

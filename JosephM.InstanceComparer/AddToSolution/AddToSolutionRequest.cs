@@ -43,9 +43,11 @@ namespace JosephM.InstanceComparer.AddToSolution
             return Items.Where(i => i.Selected);
         }
 
+        [DisplayName("Components For Inclusion")]
         [DoNotAllowAdd]
         [DoNotAllowDelete]
         [Group(Sections.Types)]
+        [RequiredProperty]
         public IEnumerable<AddToSolutionComponent> Items { get; set; }
 
         private static class Sections
