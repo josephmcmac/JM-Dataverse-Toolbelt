@@ -30,7 +30,9 @@ namespace JosephM.InstanceComparer.AddToSolution
                 try
                 {
                     controller.UpdateProgress(++done, toDo, $"Adding {XrmRecordService.GetPicklistLabel(Fields.solutioncomponent_.componenttype, Entities.solutioncomponent, type.ComponentTypeKey.ToString())} Components");
-                    var theseItems = type.Items.Select(i => i.Id).ToArray();
+                    var theseItems = type.AddAllItems
+                        ? type.AllItems.Select(i => i.Id).ToArray()
+                        : type.ItemsSelection.Where(i => i.Selected).Select(i => i.Id).ToArray();
                     XrmRecordService.AddSolutionComponents(request.SolutionAddTo.Id, type.ComponentTypeKey, theseItems);
                 }
                 catch(Exception ex)

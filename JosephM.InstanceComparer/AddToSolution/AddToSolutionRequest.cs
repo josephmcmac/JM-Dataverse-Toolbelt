@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Attributes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Attributes;
@@ -46,6 +47,7 @@ namespace JosephM.InstanceComparer.AddToSolution
         [DisplayName("Components For Inclusion")]
         [DoNotAllowAdd]
         [DoNotAllowDelete]
+        [DoNotAllowGridEdit]
         [Group(Sections.Types)]
         [RequiredProperty]
         public IEnumerable<AddToSolutionComponent> Items { get; set; }
@@ -56,37 +58,68 @@ namespace JosephM.InstanceComparer.AddToSolution
             public const string Types = "Types";
         }
 
-        [Group(Sections.Main, true)]
+        [Group(Sections.Main, true, order: 10)]
+        [Group(Sections.SelectedItems, true, order: 20, selectAll: true)]
         public class AddToSolutionComponent : ISelectable
         {
-            [DisplayName("Include")]
-            [Group(Sections.Main)]
-            [GridWidth(75)]
-            public bool Selected { get; set; }
-
+            [GridField]
             [Group(Sections.Main)]
             [GridWidth(225)]
+            [DisplayOrder(10)]
             public string ComponentType { get; private set; }
-            [Hidden]
-            public int ComponentTypeKey { get; set; }
+
+            [GridField]
             [Group(Sections.Main)]
+            [DisplayOrder(20)]
             [GridWidth(75)]
             public int Count
             {
                 get
                 {
-                    return Items.Count();
+                    return AllItems.Count();
                 }
             }
 
+            [GridField]
+            [DisplayName("Include")]
+            [Group(Sections.Main)]
+            [GridWidth(75)]
+            [DisplayOrder(30)]
+            public bool Selected { get; set; }
+
+            [GridField]
+            [Group(Sections.Main)]
+            [GridWidth(80)]
+            [DisplayOrder(40)]
+            [PropertyInContextByPropertyValue(nameof(Selected), true)]
+            public bool AddAllItems { get; set; }
+
+            [Hidden]
+            public int ComponentTypeKey { get; set; }
+
+            [Group(Sections.SelectedItems)]
+            [RequiredProperty]
+            [GridField]
+            [PropertyInContextByPropertyValue(nameof(Selected), true)]
+            [PropertyInContextByPropertyValue(nameof(AddAllItems), false)]
+            [DoNotAllowAdd]
+            [DoNotAllowDelete]
+            [DoNotAllowGridEdit]
+            [GridWidth(600)]
+            [DisplayOrder(50)]
+            public IEnumerable<SelectableAddToSolutionComponentItem> ItemsSelection { get; set; }
+
+            [PropertyInContextByPropertyValue(nameof(AddAllItems), true)]
             [DoNotAllowAdd]
             [DoNotAllowDelete]
             [DoNotAllowGridEdit]
             [GridWidth(400)]
-            public IEnumerable<AddToSolutionComponentItem> Items { get; set; }
+            public IEnumerable<AddToSolutionComponentItem> AllItems { get; set; }
 
             public AddToSolutionComponent(int componentType, IEnumerable<string> ids, XrmRecordService xrmRecordService)
             {
+                AddAllItems = true;
+
                 ComponentTypeKey = componentType;
                 ComponentType = xrmRecordService.GetPicklistLabel(Fields.solutioncomponent_.componenttype, Entities.solutioncomponent, componentType.ToString());
 
@@ -96,6 +129,7 @@ namespace JosephM.InstanceComparer.AddToSolution
             private static class Sections
             {
                 public const string Main = "Main";
+                public const string SelectedItems = "SelectedItems";
             }
 
             public class AddToSolutionComponentItem
@@ -105,6 +139,8 @@ namespace JosephM.InstanceComparer.AddToSolution
                     Id = id;
                     Name = name;
                 }
+
+                [Key]
                 [Hidden]
                 public string Id { get; set; }
 
@@ -117,11 +153,23 @@ namespace JosephM.InstanceComparer.AddToSolution
                 }
             }
 
+            [SelectableObjectsFunction]
+            public class SelectableAddToSolutionComponentItem : AddToSolutionComponentItem, ISelectable
+            {
+                public SelectableAddToSolutionComponentItem(string id, string name)
+                    : base(id, name)
+                {
+                }
+
+                [GridWidth(75)]
+                public bool Selected { get; set; }
+            }
+
             private void LoadComponentItems(IEnumerable<string> ids, XrmRecordService xrmRecordService)
             {
                 if(ComponentTypeKey == OptionSets.SolutionComponent.ObjectTypeCode.Entity)
                 {
-                    Items = xrmRecordService
+                    AllItems = xrmRecordService
                         .GetAllRecordTypes()
                         .Select(r => xrmRecordService.GetRecordTypeMetadata(r))
                         .Where(m => ids.Contains(m.MetadataId))
@@ -130,7 +178,7 @@ namespace JosephM.InstanceComparer.AddToSolution
                 }
                 else if (ComponentTypeKey == OptionSets.SolutionComponent.ObjectTypeCode.OptionSet)
                 {
-                    Items = xrmRecordService
+                    AllItems = xrmRecordService
                         .GetSharedPicklists()
                         .Where(m => ids.Contains(m.MetadataId))
                         .Select(m => new AddToSolutionComponentItem(m.MetadataId, m.DisplayName))
@@ -154,12 +202,16 @@ namespace JosephM.InstanceComparer.AddToSolution
                     var primaryKeyField = xrmRecordService.GetPrimaryKey(recordType);
                     var nameField = xrmRecordService.GetPrimaryField(recordType);
 
-                    Items = xrmRecordService
+                    AllItems = xrmRecordService
                         .RetrieveAllOrClauses(recordType, ids.Select(i => new Condition(primaryKeyField, ConditionType.Equal, i)))
                         .Select(e => new AddToSolutionComponentItem(e.Id, e.GetStringField(nameField)))
                         .OrderBy(c => c.Name)
                         .ToArray();
                 }
+
+                ItemsSelection = AllItems
+                    .Select(i => new SelectableAddToSolutionComponentItem(i.Id, i.Name))
+                    .ToArray();
             }
         }
     }

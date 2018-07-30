@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationOptions\MenuGroupViewModel.cs" />
+    <Compile Include="Attributes\SelectableObjectsFunction.cs" />
     <Compile Include="Attributes\BulkAddMultiSelectFunction.cs" />
     <Compile Include="Attributes\BulkAddFunction.cs" />
     <Compile Include="Attributes\BulkAddQueryFunction.cs" />

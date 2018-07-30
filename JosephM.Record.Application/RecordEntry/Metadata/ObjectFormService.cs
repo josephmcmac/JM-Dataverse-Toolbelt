@@ -397,6 +397,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return prop.GetCustomAttribute<DoNotAllowDelete>() == null;
         }
 
+        public override bool AllowGridEdit(string fieldName, string recordType)
+        {
+            var prop = GetPropertyInfo(fieldName, recordType);
+            return prop.GetCustomAttribute<DoNotAllowGridEdit>() == null;
+        }
+
         public override bool UsePicklist(string fieldName, string recordType)
         {
             var prop = GetPropertyInfo(fieldName, recordType);

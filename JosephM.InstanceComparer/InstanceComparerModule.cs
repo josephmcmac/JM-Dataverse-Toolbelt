@@ -11,6 +11,7 @@ using JosephM.Record.Service;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Linq;
+using System.Threading;
 
 namespace JosephM.InstanceComparer
 {
@@ -51,23 +52,31 @@ namespace JosephM.InstanceComparer
                 },
                 (g) =>
                 {
-                    try
+                    g.ApplicationController.DoOnAsyncThread(() =>
                     {
-                        var response = GetResponse(g);
-                        var service = response.ServiceOne;
-                        var dialogController = new DialogController(g.ApplicationController);
-                        var items = response.AllDifferences
-                            .Where(d => d.ComponentTypeForSolution.HasValue && d.IdForSolution1 != null)
-                            .Select(d => new AddToSolutionItem(d.ComponentTypeForSolution.Value, d.IdForSolution1))
-                            .ToArray();
-                        var request = new AddToSolutionRequest(items, service);
-                        var dialog = new AddToSolutionDialog(service, dialogController, request: request, onClose: g.RemoveParentDialog);
-                        g.LoadDialog(dialog);
-                    }
-                    catch (Exception ex)
-                    {
-                        g.ApplicationController.ThrowException(ex);
-                    }
+                        try
+                        {
+                            g.ParentForm.LoadingViewModel.IsLoading = true;
+                            var response = GetResponse(g);
+                            var service = response.ServiceOne;
+                            var dialogController = new DialogController(g.ApplicationController);
+                                                    var items = response.AllDifferences
+                                .Where(d => d.ComponentTypeForSolution.HasValue && d.IdForSolution1 != null)
+                                .Select(d => new AddToSolutionItem(d.ComponentTypeForSolution.Value, d.IdForSolution1))
+                                .ToArray();
+                            var request = new AddToSolutionRequest(items, service);
+                            var dialog = new AddToSolutionDialog(service, dialogController, request: request, onClose: g.RemoveParentDialog);
+                            g.LoadDialog(dialog);
+                        }
+                        catch (Exception ex)
+                        {
+                            g.ApplicationController.ThrowException(ex);
+                        }
+                        finally
+                        {
+                            g.ParentForm.LoadingViewModel.IsLoading = false;
+                        }
+                    });
                 }, (g) =>
                 {
                     try
@@ -102,23 +111,31 @@ namespace JosephM.InstanceComparer
                 },
                 (g) =>
                 {
-                    try
+                    g.ApplicationController.DoOnAsyncThread(() =>
                     {
-                        var response = GetResponse(g);
-                        var service = response.ServiceTwo;
-                        var dialogController = new DialogController(g.ApplicationController);
-                        var items = response.AllDifferences
-                            .Where(d => d.ComponentTypeForSolution.HasValue && d.IdForSolution2 != null)
-                            .Select(d => new AddToSolutionItem(d.ComponentTypeForSolution.Value, d.IdForSolution2))
-                            .ToArray();
-                        var request = new AddToSolutionRequest(items, service);
-                        var dialog = new AddToSolutionDialog(service, dialogController, request: request, onClose: g.RemoveParentDialog);
-                        g.LoadDialog(dialog);
-                    }
-                    catch (Exception ex)
-                    {
-                        g.ApplicationController.ThrowException(ex);
-                    }
+                        try
+                        {
+                            g.ParentForm.LoadingViewModel.IsLoading = true;
+                            var response = GetResponse(g);
+                            var service = response.ServiceTwo;
+                            var dialogController = new DialogController(g.ApplicationController);
+                            var items = response.AllDifferences
+                                .Where(d => d.ComponentTypeForSolution.HasValue && d.IdForSolution2 != null)
+                                .Select(d => new AddToSolutionItem(d.ComponentTypeForSolution.Value, d.IdForSolution2))
+                                .ToArray();
+                            var request = new AddToSolutionRequest(items, service);
+                            var dialog = new AddToSolutionDialog(service, dialogController, request: request, onClose: g.RemoveParentDialog);
+                            g.LoadDialog(dialog);
+                        }
+                        catch (Exception ex)
+                        {
+                            g.ApplicationController.ThrowException(ex);
+                        }
+                        finally
+                        {
+                            g.ParentForm.LoadingViewModel.IsLoading = false;
+                        }
+                    });
                 },
                 (g) =>
                 {
