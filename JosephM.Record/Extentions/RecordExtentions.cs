@@ -250,6 +250,14 @@ namespace JosephM.Record.Extentions
             return recordService.GetPicklistKeyValues(fieldName, recordType, null, null);
         }
 
+        public static string GetPicklistLabel(this IRecordService recordService, string fieldName, string recordType, string value)
+        {
+            var options = recordService.GetPicklistKeyValues(fieldName, recordType, null, null);
+            if (options.Any(o => o.Key == value))
+                return options.First(o => o.Key == value).Value;
+            return value;
+        }
+
         public static ParseFieldResponse ParseFieldRequest(this IRecordService recordService, ParseFieldRequest request)
         {
             try

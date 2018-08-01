@@ -3,6 +3,7 @@ using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
@@ -34,7 +35,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     PageSize = RecordForm.GridPageSize,
                     ViewType = ViewType.AssociatedView,
                     DeleteRow = !recordForm.IsReadOnly && FormService.AllowDelete(ReferenceName, GetRecordType()) ? RemoveRow :(Action<GridRowViewModel>)null,
-                    EditRow = EditRow,
+                    EditRow = FormService.AllowGridEdit(ReferenceName, GetRecordType()) ? EditRow : (Action<GridRowViewModel>)null,
                     AddRow = !recordForm.IsReadOnly && FormService.AllowAddNew(ReferenceName, GetRecordType()) ? AddRow : (Action)null,
                     AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel),
                     IsReadOnly = recordForm.IsReadOnly,
@@ -343,7 +344,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 if (Enumerable != null)
                 {
                     foreach (var item in Enumerable)
-                        list.Add(item == null ? "" : item.ToString());
+                    {
+                        if(item is ISelectable)
+                        {
+                            if (((ISelectable)item).Selected)
+                            {
+                                list.Add(item == null ? "" : item.ToString());
+                            }
+                        }
+                        else
+                            list.Add(item == null ? "" : item.ToString());
+                    }
                 }
                 return string.Join(",", list.ToArray());
             }

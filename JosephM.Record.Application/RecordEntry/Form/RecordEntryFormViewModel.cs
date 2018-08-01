@@ -346,11 +346,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 });
         }
 
-        public virtual bool AllowSaveAndLoad
-        {
-            get { return false; }
-        }
-
         protected override bool ConfirmTabClose()
         {
             return ConfirmClose();

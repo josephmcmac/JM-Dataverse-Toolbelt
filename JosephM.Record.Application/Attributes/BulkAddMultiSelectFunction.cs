@@ -65,7 +65,8 @@ namespace JosephM.Application.ViewModel.Attributes
                         }
                     };
                     var picklistOptions = GetSelectionOptions(recordForm, subGridReference);
-                    var childForm = new MultiSelectDialogViewModel<PicklistOption>(picklistOptions, null, onSave, () => mainFormInContext.ClearChildForm(), mainFormInContext.ApplicationController);
+                    var initialSelected = GetInitialSelectedOptions(recordForm, subGridReference);
+                    var childForm = new MultiSelectDialogViewModel<PicklistOption>(picklistOptions, initialSelected, onSave, () => mainFormInContext.ClearChildForm(), mainFormInContext.ApplicationController);
                     mainFormInContext.LoadChildForm(childForm);
                 }
                 catch (Exception ex)
@@ -79,7 +80,12 @@ namespace JosephM.Application.ViewModel.Attributes
             });
         }
 
-        public void AddSelectedItems(IEnumerable<PicklistOption> selectedItems, RecordEntryViewModelBase recordForm, string subGridReference)
+        public virtual IEnumerable<PicklistOption> GetInitialSelectedOptions(RecordEntryViewModelBase recordForm, string subGridReference)
+        {
+            return null;
+        }
+
+        public virtual void AddSelectedItems(IEnumerable<PicklistOption> selectedItems, RecordEntryViewModelBase recordForm, string subGridReference)
         {
             var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;

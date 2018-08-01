@@ -27,14 +27,13 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
             {
                 try
                 {
-                    var newRecord = RecordService.NewRecord(request.RecordType.Key);
-                    newRecord.Id = record.Id;
-                    var previousValue = record.GetStringField(request.FieldToReplaceIn.Key);
+                    var recordWithFieldLoaded = RecordService.Get(request.RecordType.Key, record.Id);
+                    var previousValue = recordWithFieldLoaded.GetStringField(request.FieldToReplaceIn.Key);
                     var newValue = previousValue == null ? null : previousValue.Replace(request.OldValue, request.NewValue);
                     if(previousValue != newValue)
                     {
-                        newRecord.SetField(request.FieldToReplaceIn.Key, newValue, RecordService);
-                        RecordService.Update(newRecord, new[] { request.FieldToReplaceIn.Key });
+                        recordWithFieldLoaded.SetField(request.FieldToReplaceIn.Key, newValue, RecordService);
+                        RecordService.Update(recordWithFieldLoaded, new[] { request.FieldToReplaceIn.Key });
                     }
                 }
                 catch(Exception ex)

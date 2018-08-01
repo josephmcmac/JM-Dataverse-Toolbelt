@@ -31,7 +31,7 @@ namespace JosephM.Application.ViewModel.Query
             AllowQuery = allowQuery;
             RecordService = recordService;
             if (closeFunction != null)
-                ReturnButton = new XrmButtonViewModel(closeFunction.Label, () => { closeFunction.Function(DynamicGridViewModel); }, controller);
+                ReturnButton = new XrmButtonViewModel(closeFunction.LabelFunc(null), () => { closeFunction.Function(DynamicGridViewModel); }, controller);
             QueryTypeButton = new XrmButtonViewModel("Change Query Type", ChangeQueryType, ApplicationController);
             DeleteSelectedConditionsButton = new XrmButtonViewModel("Delete Selected", () => DeleteSelected(), ApplicationController);
             GroupSelectedConditionsOr = new XrmButtonViewModel("Group Selected Or", () => GroupSelected(FilterOperator.Or), ApplicationController);

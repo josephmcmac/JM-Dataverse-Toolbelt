@@ -10,21 +10,36 @@ namespace JosephM.InstanceComparer
     [AllowSaveAndLoad]
     [Group(Sections.Connections, true, 10)]
     [Group(Sections.CompareOptions, true, order: 20, selectAll: true)]
+    [Group(Sections.GeneralOptions, true, order: 25)]
+    [Group(Sections.DataComparisonOptions, true, order: 30)]
+    [Group(Sections.EntityMetadataComparisonOptions, true, order: 40)]
     [DisplayName("Instance Comparison")]
     public class InstanceComparerRequest : ServiceRequestBase
     {
+        public InstanceComparerRequest()
+        {
+            AllTypesForEntityMetadata = true;
+            IgnoreMissingManagedComponentDifferences = true;
+        }
+
         [DisplayOrder(5)]
         [Group(Sections.Connections)]
         [RequiredProperty]
-        [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
-        [ConnectionFor("DataComparisons")]
+        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
+        [ConnectionFor(nameof(DataComparisons))]
+        [ConnectionFor(nameof(EntityTypeComparisons))]
         public SavedXrmRecordConfiguration ConnectionOne { get; set; }
 
         [DisplayOrder(10)]
         [Group(Sections.Connections)]
         [RequiredProperty]
-        [SettingsLookup(typeof(ISavedXrmConnections), "Connections")]
+        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration ConnectionTwo { get; set; }
+
+        [Group(Sections.GeneralOptions)]
+        [DisplayOrder(14)]
+        [MyDescription("When checked components in a managed solution which is not installed in either environment will be ignored")]
+        public bool IgnoreMissingManagedComponentDifferences { get; set; }
 
         [Group(Sections.CompareOptions)]
         [DisplayOrder(15)]
@@ -79,8 +94,23 @@ namespace JosephM.InstanceComparer
         public bool Data { get; set; }
 
         [RequiredProperty]
+        [Group(Sections.DataComparisonOptions)]
         [PropertyInContextByPropertyValue(nameof(Data), true)]
         public IEnumerable<InstanceCompareDataCompare> DataComparisons { get; set; }
+
+
+        [Group(Sections.EntityMetadataComparisonOptions)]
+        [DisplayOrder(10)]
+        [PropertyInContextByPropertyValue(nameof(Entities), true)]
+        [DisplayName("All Types")]
+        public bool AllTypesForEntityMetadata { get; set; }
+
+        [Group(Sections.EntityMetadataComparisonOptions)]
+        [DisplayOrder(20)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(Entities), true)]
+        [PropertyInContextByPropertyValue(nameof(AllTypesForEntityMetadata), false)]
+        public IEnumerable<InstanceCompareTypeCompare> EntityTypeComparisons { get; set; }
 
         [BulkAddRecordTypeFunction]
         public class InstanceCompareDataCompare
@@ -96,10 +126,27 @@ namespace JosephM.InstanceComparer
             }
         }
 
+        [BulkAddRecordTypeFunction]
+        public class InstanceCompareTypeCompare
+        {
+            [Hidden]
+            public string Type { get { return RecordType == null ? null : RecordType.Key; } }
+
+            public RecordType RecordType { get; set; }
+
+            public override string ToString()
+            {
+                return RecordType != null ? RecordType.Value : base.ToString();
+            }
+        }
+
         private static class Sections
         {
-            public const string CompareOptions = "CompareOptions";
             public const string Connections = "Select The Saved Connections For The CRM Instances To Compare";
+            public const string CompareOptions = "Compare Options";
+            public const string GeneralOptions = "General Options";
+            public const string DataComparisonOptions = "Data Comparison Options";
+            public const string EntityMetadataComparisonOptions = "Entity Metadata Comparison Options";
         }
     }
 }

@@ -6,6 +6,7 @@ using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.ObjectMapping;
@@ -13,6 +14,7 @@ using JosephM.Record.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace JosephM.Application.Desktop.Module.SavedRequests
@@ -37,7 +39,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
         /// </summary>
         private void AddSavedRequestsFormFunctions()
         {
-            var customFormFunction = new CustomFormFunction("SAVEREQUEST", "Save Details", SaveObject, (re) => { return true; });
+            var customFormFunction = new CustomFormFunction("SAVEREQUEST", "Save Details", SaveObject, IsAllowSaveAndLoad);
             this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
             customFormFunction = new CustomFormFunction("LOADREQUEST", "Load/Edit Saved Details", LoadObject, AreSavedRequests);
             this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
@@ -246,6 +248,26 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
             catch (Exception ex)
             {
                 ApplicationController.ThrowException(ex);
+            }
+        }
+
+        private bool IsAllowSaveAndLoad(RecordEntryFormViewModel viewModel)
+        {
+            try
+            {
+                //subgrids don't map directly to object so need to unload them to object
+                //before saving the record
+                if (viewModel is ObjectEntryViewModel)
+                {
+                    var oevm = (ObjectEntryViewModel)viewModel;
+                    return oevm.GetObject().GetType().GetCustomAttribute<AllowSaveAndLoad>() != null;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ApplicationController.ThrowException(ex);
+                return false;
             }
         }
     }
