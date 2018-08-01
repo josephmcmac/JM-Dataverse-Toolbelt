@@ -74,7 +74,7 @@ namespace JosephM.InstanceComparer.Test
             var altOrgName = "CRMAuto";
             request.ConnectionTwo.OrganizationUniqueName = altOrgName;
             if (!request.ConnectionTwo.Validate().IsValid)
-                Assert.Inconclusive($"Could not connect to alt organisation named {altOrgName} for camparison ");
+                Assert.Fail($"Could not connect to alt organisation named {altOrgName} for camparison ");
             foreach (var prop in request.GetType().GetProperties())
             {
                 if (prop.PropertyType == typeof(bool))
