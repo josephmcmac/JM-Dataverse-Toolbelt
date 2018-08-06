@@ -14,6 +14,6 @@ namespace JosephM.XrmModule.Crud
 
         }
 
-        public override IEnumerable<string> AdditionalExplicitTypes => new[] { Entities.role, Entities.sdkmessageprocessingstep, Entities.activitymimeattachment, Entities.organization, Entities.usersettings, Entities.productpricelevel };
+        public override IEnumerable<string> AdditionalExplicitTypes => new[] { Entities.calendar, Entities.role, Entities.sdkmessageprocessingstep, Entities.activitymimeattachment, Entities.organization, Entities.usersettings, Entities.productpricelevel };
     }
 }
