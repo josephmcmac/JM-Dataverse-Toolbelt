@@ -199,8 +199,11 @@ namespace JosephM.Deployment.ExportXml
             var relationshipsDone = new List<string>();
             if (includeNNBetweenEntities)
             {
+                countToExport = exports.Count();
+                countsExported = 0;
                 foreach (var type in exported.Keys)
                 {
+                    controller.UpdateProgress(countsExported++, countToExport, string.Format("Exporting {0} Associations", type));
                     var nnRelationships = XrmService.GetEntityManyToManyRelationships(type)
                         .Where(
                             r =>
