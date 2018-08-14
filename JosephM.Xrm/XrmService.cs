@@ -1,6 +1,4 @@
-﻿#region
-
-using JosephM.Core.Constants;
+﻿using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
@@ -17,8 +15,6 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
-
-#endregion
 
 namespace JosephM.Xrm
 {
@@ -1052,6 +1048,20 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             }
                             else
                                 throw new ArgumentException("Parse partylist not implemented for argument type: " +
+                                                            value.GetType().Name);
+                        }
+                    case AttributeTypeCode.EntityName:
+                        {
+                            if (value is Core.FieldType.RecordType)
+                            {
+                                value = ((Core.FieldType.RecordType)value).Key;
+                            }
+                            if (value is string)
+                            {
+                                return value;
+                            }
+                            else
+                                throw new ArgumentException("Parse EntityName not implemented for argument type: " +
                                                             value.GetType().Name);
                         }
                 }

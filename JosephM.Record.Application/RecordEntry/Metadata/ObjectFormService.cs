@@ -608,6 +608,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                                                         || fieldType == RecordFieldType.Status
                                                                         || fieldType == RecordFieldType.State
                                                                         || fieldType == RecordFieldType.Integer
+                                                                        || fieldType == RecordFieldType.RecordType
                                                 ? lookupService.GetPicklistKeyValues(selectedFieldName, selectedFieldRecordType)
                                                 : null;
                                             if (clearValue)

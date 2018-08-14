@@ -39,7 +39,7 @@ namespace JosephM.Application.ViewModel.Query
 
         private static IEnumerable<string> GetValidFields(string recordType, IRecordService lookupService)
         {
-            var invalidFieldTypes = new[] { RecordFieldType.ActivityParty, RecordFieldType.Unknown, RecordFieldType.Virtual, RecordFieldType.Uniqueidentifier, RecordFieldType.Image, RecordFieldType.EntityName };
+            var invalidFieldTypes = new[] { RecordFieldType.ActivityParty, RecordFieldType.Unknown, RecordFieldType.Virtual, RecordFieldType.Uniqueidentifier, RecordFieldType.Image };
             return lookupService
                 .GetFieldMetadata(recordType)
                 //.Where(f => f.Searchable)
