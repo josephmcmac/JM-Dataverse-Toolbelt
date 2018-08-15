@@ -535,15 +535,15 @@ namespace JosephM.Deployment
 
         private void PopulateRequiredCreateFields(Dictionary<Entity, List<string>> fieldsToRetry, Entity thisEntity, List<string> fieldsToSet)
         {
-            if (thisEntity.LogicalName == "team"
-                && !fieldsToSet.Contains("businessunitid")
-                && XrmService.FieldExists("businessunitid", "team"))
+            if (thisEntity.LogicalName == Entities.team
+                && !fieldsToSet.Contains(Fields.team_.businessunitid)
+                && XrmService.FieldExists(Fields.team_.businessunitid, Entities.team))
             {
-                thisEntity.SetLookupField("businessunitid", GetRootBusinessUnitId(), "businessunit");
-                fieldsToSet.Add("businessunitid");
+                thisEntity.SetLookupField(Fields.team_.businessunitid, GetRootBusinessUnitId(), Entities.businessunit);
+                fieldsToSet.Add(Fields.team_.businessunitid);
                 if (fieldsToRetry.ContainsKey(thisEntity)
-                    && fieldsToRetry[thisEntity].Contains("businessunitid"))
-                    fieldsToRetry[thisEntity].Remove("businessunitid");
+                    && fieldsToRetry[thisEntity].Contains(Fields.team_.businessunitid))
+                    fieldsToRetry[thisEntity].Remove(Fields.team_.businessunitid);
             }
             if (thisEntity.LogicalName == Entities.subject
                     && !fieldsToSet.Contains(Fields.subject_.featuremask)
@@ -555,11 +555,39 @@ namespace JosephM.Deployment
                     && fieldsToRetry[thisEntity].Contains(Fields.subject_.featuremask))
                     fieldsToRetry[thisEntity].Remove(Fields.subject_.featuremask);
             }
+            if (thisEntity.LogicalName == Entities.uomschedule)
+                
+            {
+                fieldsToSet.Add(Fields.uomschedule_.baseuomname);
+            }
+            if (thisEntity.LogicalName == Entities.uom)
+            {
+                //var uomGroupName = thisEntity.GetLookupName(Fields.uom_.uomscheduleid);
+                //var uomGroup = GetUniqueMatchingEntity(Entities.uomschedule, Fields.uomschedule_.name, uomGroupName);
+                //thisEntity.SetLookupField(Fields.uom_.uomscheduleid, uomGroup);
+                var unitGroupId = thisEntity.GetLookupGuid(Fields.uom_.uomscheduleid);
+                if (!unitGroupId.HasValue)
+                    throw new NullReferenceException($"Error The {XrmService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)} Is Not Populated");
+                fieldsToSet.Add(Fields.uom_.uomscheduleid);
+
+                var baseUnitName = thisEntity.GetLookupName(Fields.uom_.baseuom);
+                var baseUnitMatches = GetMatchingEntities(Entities.uom, new Dictionary<string, object>
+                {
+                    { Fields.uom_.name, baseUnitName },
+                    { Fields.uom_.uomscheduleid, unitGroupId.Value }
+                });
+                if (baseUnitMatches.Count() == 0)
+                    throw new Exception($"Could Not Identify The {XrmService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} {baseUnitName}. No Match Found For The {XrmService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)}");
+                if (baseUnitMatches.Count() == 0)
+                    throw new Exception($"Could Not Identify The {XrmService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} {baseUnitName}. Multiple Matches Found For The {XrmService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)}");
+                thisEntity.SetLookupField(Fields.uom_.baseuom, baseUnitMatches.First());
+                fieldsToSet.Add(Fields.uom_.baseuom);
+            }
         }
 
         private Guid GetRootBusinessUnitId()
         {
-            return XrmService.GetFirst("businessunit", "parentbusinessunitid", null, new string[0]).Id;
+            return XrmService.GetFirst(Entities.businessunit, Fields.businessunit_.parentbusinessunitid, null, new string[0]).Id;
         }
 
         private List<string> GetTargetTypesToTry(Entity thisEntity, string field)
@@ -810,7 +838,8 @@ namespace JosephM.Deployment
         {
             var fields = GetFieldsInEntities(thisTypeEntities)
                 .Where(f => IsIncludeField(f, type))
-                .Distinct();
+                .Distinct()
+                .ToList();
             return fields;
         }
 
