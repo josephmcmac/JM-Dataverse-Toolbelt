@@ -69,7 +69,7 @@ namespace JosephM.Deployment
         protected IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
         {
             var typeConfig = XrmTypeConfigs.GetFor(type);
-            if (typeConfig == null || field != XrmService.GetPrimaryNameField(type))
+            if (typeConfig == null || typeConfig.ParentLookupType != type || field != XrmService.GetPrimaryNameField(type))
             {
                 return GetMatchingEntities(type, new Dictionary<string, object>()
                 {
@@ -167,10 +167,6 @@ namespace JosephM.Deployment
 
             #region tryordertypes
 
-            //lets put team first because some other records
-            //may reference the queue which only gets created
-            //when the team does
-            typesToImport = typesToImport.OrderBy(s => s == Entities.team ? 0 : 1).ToArray();
 
             foreach (var type in typesToImport)
             {
@@ -197,6 +193,27 @@ namespace JosephM.Deployment
                 }
                 if (!orderedTypes.Contains(type))
                     orderedTypes.Add(type);
+            }
+
+            //these priorities are because when the first type gets create it creates a 'child' of the second type
+            //so we need to ensure the parent created first
+            var prioritiseOver = new List<KeyValuePair<string, string>>();
+            prioritiseOver.Add(new KeyValuePair<string, string>(Entities.team, Entities.queue));
+            prioritiseOver.Add(new KeyValuePair<string, string>(Entities.uomschedule, Entities.uom));
+            foreach (var item in prioritiseOver)
+            {
+                //if the first item is after the second item in the list
+                //then remove and insert it before the second item
+                if (orderedTypes.Contains(item.Key) && orderedTypes.Contains(item.Value))
+                {
+                    var indexOfFirst = orderedTypes.IndexOf(item.Key);
+                    var indexOfSecond = orderedTypes.IndexOf(item.Value);
+                    if(indexOfFirst > indexOfSecond)
+                    {
+                        orderedTypes.RemoveAt(indexOfFirst);
+                        orderedTypes.Insert(indexOfSecond, item.Key);
+                    }
+                }
             }
 
             #endregion tryordertypes
@@ -277,7 +294,8 @@ namespace JosephM.Deployment
                             if (existingMatchingIds.Any())
                             {
                                 var matchRecord = existingMatchingIds.First();
-                                idSwitches[recordType].Add(thisEntity.Id, matchRecord.Id);
+                                if (thisEntity.Id != Guid.Empty)
+                                    idSwitches[recordType].Add(thisEntity.Id, matchRecord.Id);
                                 thisEntity.Id = matchRecord.Id;
                                 thisEntity.SetField(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), thisEntity.Id);
                                 if(thisTypesConfig != null)
@@ -312,7 +330,7 @@ namespace JosephM.Deployment
                                                 idNullable.Value);
                                             if (matchRecord != null)
                                             {
-                                                thisEntity.SetLookupField(field, matchRecord);
+                                                ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
                                                 fieldResolved = true;
                                             }
                                             else
@@ -325,6 +343,7 @@ namespace JosephM.Deployment
                                                 if (matchRecords.Count() == 1)
                                                 {
                                                     thisEntity.SetLookupField(field, matchRecords.First());
+                                                    ((EntityReference)(thisEntity.GetField(field))).Name = name;
                                                     fieldResolved = true;
                                                 }
                                             }
@@ -434,6 +453,7 @@ namespace JosephM.Deployment
                                     if (matchRecord != null)
                                     {
                                         thisEntity.SetLookupField(field, matchRecord);
+                                        ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
                                         fieldResolved = true;
                                     }
                                     else
@@ -446,6 +466,7 @@ namespace JosephM.Deployment
                                         if (matchRecords.Count() == 1)
                                         {
                                             thisEntity.SetLookupField(field, matchRecords.First());
+                                            ((EntityReference)(thisEntity.GetField(field))).Name = name;
                                             fieldResolved = true;
                                         }
                                     }
@@ -535,15 +556,15 @@ namespace JosephM.Deployment
 
         private void PopulateRequiredCreateFields(Dictionary<Entity, List<string>> fieldsToRetry, Entity thisEntity, List<string> fieldsToSet)
         {
-            if (thisEntity.LogicalName == "team"
-                && !fieldsToSet.Contains("businessunitid")
-                && XrmService.FieldExists("businessunitid", "team"))
+            if (thisEntity.LogicalName == Entities.team
+                && !fieldsToSet.Contains(Fields.team_.businessunitid)
+                && XrmService.FieldExists(Fields.team_.businessunitid, Entities.team))
             {
-                thisEntity.SetLookupField("businessunitid", GetRootBusinessUnitId(), "businessunit");
-                fieldsToSet.Add("businessunitid");
+                thisEntity.SetLookupField(Fields.team_.businessunitid, GetRootBusinessUnitId(), Entities.businessunit);
+                fieldsToSet.Add(Fields.team_.businessunitid);
                 if (fieldsToRetry.ContainsKey(thisEntity)
-                    && fieldsToRetry[thisEntity].Contains("businessunitid"))
-                    fieldsToRetry[thisEntity].Remove("businessunitid");
+                    && fieldsToRetry[thisEntity].Contains(Fields.team_.businessunitid))
+                    fieldsToRetry[thisEntity].Remove(Fields.team_.businessunitid);
             }
             if (thisEntity.LogicalName == Entities.subject
                     && !fieldsToSet.Contains(Fields.subject_.featuremask)
@@ -555,11 +576,48 @@ namespace JosephM.Deployment
                     && fieldsToRetry[thisEntity].Contains(Fields.subject_.featuremask))
                     fieldsToRetry[thisEntity].Remove(Fields.subject_.featuremask);
             }
+            if (thisEntity.LogicalName == Entities.uomschedule)
+                
+            {
+                fieldsToSet.Add(Fields.uomschedule_.baseuomname);
+            }
+            if (thisEntity.LogicalName == Entities.uom)
+            {
+                //var uomGroupName = thisEntity.GetLookupName(Fields.uom_.uomscheduleid);
+                //var uomGroup = GetUniqueMatchingEntity(Entities.uomschedule, Fields.uomschedule_.name, uomGroupName);
+                //thisEntity.SetLookupField(Fields.uom_.uomscheduleid, uomGroup);
+                var unitGroupId = thisEntity.GetLookupGuid(Fields.uom_.uomscheduleid);
+                if (!unitGroupId.HasValue)
+                    throw new NullReferenceException($"Error The {XrmService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)} Is Not Populated");
+                fieldsToSet.Add(Fields.uom_.uomscheduleid);
+
+                var baseUnitName = thisEntity.GetLookupName(Fields.uom_.baseuom);
+                var baseUnitMatches = GetMatchingEntities(Entities.uom, new Dictionary<string, object>
+                {
+                    { Fields.uom_.name, baseUnitName },
+                    { Fields.uom_.uomscheduleid, unitGroupId.Value }
+                });
+                if (baseUnitMatches.Count() == 0)
+                    throw new Exception($"Could Not Identify The {XrmService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} {baseUnitName}. No Match Found For The {XrmService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)}");
+                if (baseUnitMatches.Count() > 1)
+                    throw new Exception($"Could Not Identify The {XrmService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} {baseUnitName}. Multiple Matches Found For The {XrmService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)}");
+                thisEntity.SetLookupField(Fields.uom_.baseuom, baseUnitMatches.First());
+                fieldsToSet.Add(Fields.uom_.baseuom);
+            }
+            if (thisEntity.LogicalName == Entities.product)
+            {
+                var unitGroupId = thisEntity.GetLookupGuid(Fields.product_.defaultuomscheduleid);
+                if(unitGroupId.HasValue)
+                    fieldsToSet.Add(Fields.product_.defaultuomscheduleid);
+                var unitId = thisEntity.GetLookupGuid(Fields.product_.defaultuomid);
+                if (unitId.HasValue)
+                    fieldsToSet.Add(Fields.product_.defaultuomid);
+            }
         }
 
         private Guid GetRootBusinessUnitId()
         {
-            return XrmService.GetFirst("businessunit", "parentbusinessunitid", null, new string[0]).Id;
+            return XrmService.GetFirst(Entities.businessunit, Fields.businessunit_.parentbusinessunitid, null, new string[0]).Id;
         }
 
         private List<string> GetTargetTypesToTry(Entity thisEntity, string field)
@@ -599,7 +657,9 @@ namespace JosephM.Deployment
             if (thisTypesConfig == null)
             {
                 //okay this is where we just need to find the matching record by name
-                var existingMatches = existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
+                var existingMatches = thisEntity.Id == Guid.Empty
+                                ? new Entity[0]
+                                : existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
                 if (!existingMatches.Any())
                 {
                     var matchBySpecificFieldEntities = new Dictionary<string, string>()
@@ -810,7 +870,8 @@ namespace JosephM.Deployment
         {
             var fields = GetFieldsInEntities(thisTypeEntities)
                 .Where(f => IsIncludeField(f, type))
-                .Distinct();
+                .Distinct()
+                .ToList();
             return fields;
         }
 

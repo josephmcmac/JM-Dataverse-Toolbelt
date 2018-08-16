@@ -15,8 +15,8 @@ namespace JosephM.Record.Xrm.Mappers
             new[]
             {
                 new TypeMapping<AttributeTypeCode, RecordFieldType>(AttributeTypeCode.DateTime, RecordFieldType.Date),
-                new TypeMapping<AttributeTypeCode, RecordFieldType>(AttributeTypeCode.PartyList,
-                    RecordFieldType.ActivityParty)
+                new TypeMapping<AttributeTypeCode, RecordFieldType>(AttributeTypeCode.PartyList, RecordFieldType.ActivityParty),
+                new TypeMapping<AttributeTypeCode, RecordFieldType>(AttributeTypeCode.EntityName, RecordFieldType.RecordType)
             };
 
         protected override RecordFieldType DefaultEnum2Option

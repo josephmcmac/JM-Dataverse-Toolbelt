@@ -130,23 +130,44 @@ namespace JosephM.Deployment.ExportXml
                 {
                     //which need to include the fields if they are needed for parentchild configs
                     excludeFields = excludeFields.Except(new[] { thisTypeConfig.ParentLookupField }).ToArray();
-                    if(thisTypeConfig.UniqueChildFields != null)
+                    if (thisTypeConfig.UniqueChildFields != null)
                         excludeFields = excludeFields.Except(thisTypeConfig.UniqueChildFields).ToArray();
 
                     var fieldsToIncludeInParent = XrmTypeConfigs.GetParentFieldsRequiredForComparison(type);
                     var thisTypesParentsConfig = XrmTypeConfigs.GetFor(thisTypeConfig.ParentLookupType);
-                    if(fieldsToIncludeInParent != null)
+                    if (fieldsToIncludeInParent != null)
                     {
                         //if the parent also has a config then we need to use it when matching the parent
                         //e.g. portal web page access rules -> web page where the web page may be a master or child web page
                         //so lets include the parents config fields as aliased fields in the exported entity
-                        foreach(var item in entities)
+                        foreach (var item in entities)
                         {
                             var parentId = item.GetLookupGuid(thisTypeConfig.ParentLookupField);
-                            if(parentId.HasValue)
+                            if (parentId.HasValue)
                             {
                                 var parent = XrmService.Retrieve(thisTypeConfig.ParentLookupType, parentId.Value, fieldsToIncludeInParent);
-                                item.Attributes.AddRange(parent.Attributes.Select(f => new KeyValuePair<string,object>($"{thisTypeConfig.ParentLookupField}.{f.Key}", new AliasedValue(thisTypeConfig.ParentLookupType, f.Key, f.Value))));
+                                item.Attributes.AddRange(parent.Attributes.Select(f => new KeyValuePair<string, object>($"{thisTypeConfig.ParentLookupField}.{f.Key}", new AliasedValue(thisTypeConfig.ParentLookupType, f.Key, f.Value))));
+                            }
+                        }
+                    }
+
+                    var lookupFieldsEnsureNamePopulated = new List<string>();
+                    if (thisTypeConfig.ParentLookupField != null)
+                        lookupFieldsEnsureNamePopulated.Add(thisTypeConfig.ParentLookupField);
+                    if (thisTypeConfig.UniqueChildFields != null)
+                    {
+                        lookupFieldsEnsureNamePopulated.AddRange(thisTypeConfig.UniqueChildFields.Where(f => XrmService.IsLookup(f, thisTypeConfig.Type)));
+                    }
+                    foreach (var field in lookupFieldsEnsureNamePopulated)
+                    {
+                        foreach (var item in entities)
+                        {
+                            var entityReference = item.GetField(field) as EntityReference;
+                            if (entityReference != null && entityReference.Name == null)
+                            {
+                                var referencedTypeNameField = XrmService.GetPrimaryNameField(entityReference.LogicalName);
+                                var referencedRecord = XrmService.Retrieve(entityReference.LogicalName, entityReference.Id, new[] { referencedTypeNameField });
+                                entityReference.Name = referencedRecord.GetStringField(referencedTypeNameField);
                             }
                         }
                     }
@@ -199,8 +220,11 @@ namespace JosephM.Deployment.ExportXml
             var relationshipsDone = new List<string>();
             if (includeNNBetweenEntities)
             {
+                countToExport = exports.Count();
+                countsExported = 0;
                 foreach (var type in exported.Keys)
                 {
+                    controller.UpdateProgress(countsExported++, countToExport, string.Format("Exporting {0} Associations", type));
                     var nnRelationships = XrmService.GetEntityManyToManyRelationships(type)
                         .Where(
                             r =>

@@ -27,7 +27,7 @@ namespace JosephM.Application.ViewModel.Attributes
             var gridRecords = gridField.GridRecords;
 
             var lookupService = GetLookupService(recordForm, subGridReference);
-            var includeExplicit = new[] { "subject" };
+            var includeExplicit = new[] { "subject", "uom", "productpricelevel" };
             var types = lookupService
                 .GetAllRecordTypes()
                 .Where(r => !gridRecords?.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value?.Key == r) ?? true)

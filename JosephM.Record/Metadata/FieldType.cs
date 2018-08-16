@@ -30,7 +30,6 @@
         Virtual,
         State,
         Image,
-        EntityName,
         BigInt,
         ManagedProperty,
         Object,

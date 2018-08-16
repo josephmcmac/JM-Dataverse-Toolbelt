@@ -42,7 +42,7 @@ namespace JosephM.XrmModule.Crud
                     if (instance != null)
                     {
                         var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
-                        var dialog = new CrudDialog(new DialogController(ApplicationController), xrmRecordService);
+                        var dialog = new XrmCrudDialog(xrmRecordService, new DialogController(ApplicationController));
                         dialog.SetTabLabel("Browse " + instance.Name);
                         g.LoadDialog(dialog);
                     }

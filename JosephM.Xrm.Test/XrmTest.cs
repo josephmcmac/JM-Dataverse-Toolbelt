@@ -598,5 +598,18 @@ namespace JosephM.Xrm.Test
                 return _testAccountContact;
             }
         }
+
+        public void DeleteMultiple(IEnumerable<Entity> entities)
+        {
+            var responses = XrmService.DeleteMultiple(entities);
+            if (responses.Any(r => r.Fault != null))
+                Assert.Fail(responses.First(r => r.Fault != null).Fault.Message);
+        }
+
+        public void DeleteAllMatchingName(string type, IEnumerable<string> names)
+        {
+            var blah = XrmService.RetrieveAllOrClauses(type, names.Select(n => new ConditionExpression(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, n)));
+            DeleteMultiple(blah);
+        }
     }
 }

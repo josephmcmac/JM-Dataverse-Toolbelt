@@ -188,7 +188,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         {
                             IsRecordServiceField = isRecordServiceField,
                             ItemsSource =
-                                recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference,
+                                explicitPicklistOptions != null
+                                ? explicitPicklistOptions.Select(p => new RecordType(p.Key, p.Value)).Where(rt => !string.IsNullOrWhiteSpace(rt.Value)).OrderBy(rt => rt.Value).ToArray()
+                                : recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference,
                                     recordForm.GetRecord())
                                     .Select(p =>  new RecordType(p.Key, p.Value))
                                     .Where(rt => !rt.Value.IsNullOrWhiteSpace())

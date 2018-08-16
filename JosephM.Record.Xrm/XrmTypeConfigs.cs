@@ -42,6 +42,20 @@ namespace JosephM.Record.Xrm
                     ParentLookupField = Fields.adx_webpageaccesscontrolrule_.adx_webpageid,
                     ParentLookupType = Entities.adx_webpage,
                 },
+            new XrmTypeConfigs()
+                {
+                    Type = Entities.productpricelevel,
+                    ParentLookupField = Fields.productpricelevel_.pricelevelid,
+                    ParentLookupType = Entities.pricelevel,
+                    UniqueChildFields = new [] { Fields.productpricelevel_.productid, Fields.productpricelevel_.uomid }
+                },
+            new XrmTypeConfigs()
+                {
+                    Type = Entities.uom,
+                    ParentLookupField = Fields.uom_.uomscheduleid,
+                    ParentLookupType = Entities.uomschedule,
+                    UniqueChildFields = new [] { Fields.uom_.baseuom, Fields.uom_.name }
+                },
         };
 
         public static XrmTypeConfigs GetFor(string type)

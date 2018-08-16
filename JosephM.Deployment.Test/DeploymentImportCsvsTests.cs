@@ -3,11 +3,11 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportCsvs;
-using JosephM.XrmModule.Test;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
-using JosephM.Xrm.Test;
+using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -105,6 +105,78 @@ namespace JosephM.Deployment.Test
             Assert.AreEqual(XrmPicklists.State.Inactive, entity.GetOptionSetValue(Fields.jmcg_testentity_.statecode));
             Assert.AreEqual(XrmPicklists.State.Inactive, Refresh(testMultiKeya).GetOptionSetValue(Fields.jmcg_testentity_.statecode));
             Assert.AreEqual(XrmPicklists.State.Inactive, Refresh(testMultiKeyb).GetOptionSetValue(Fields.jmcg_testentity_.statecode));
+        }
+
+        [DeploymentItem(@"Files\Price List Items.csv")]
+        [DeploymentItem(@"Files\Price Lists.csv")]
+        [DeploymentItem(@"Files\Products.csv")]
+        [DeploymentItem(@"Files\uom.csv")]
+        [DeploymentItem(@"Files\uomschedule.csv")]
+        [TestMethod]
+        public void DeploymentImportCsvsTestProductsAndPricings()
+        {
+            //imports product configurations in csv files
+            PrepareTests();
+            var workFolder = ClearFilesAndData();
+
+            File.Copy(@"Price List Items.csv", Path.Combine(workFolder, @"Price List Items.csv"));
+            File.Copy(@"Price Lists.csv", Path.Combine(workFolder, @"Price Lists.csv"));
+            File.Copy(@"Products.csv", Path.Combine(workFolder, @"Products.csv"));
+            File.Copy(@"uom.csv", Path.Combine(workFolder, @"uom.csv"));
+            File.Copy(@"uomschedule.csv", Path.Combine(workFolder, @"uomschedule.csv"));
+
+            //lets delete all these items
+            var products = CsvUtility
+                .SelectAllRows(Path.Combine(workFolder, @"Products.csv"))
+                .Select(r => r.GetFieldAsString("Name"))
+                .ToArray();
+            DeleteAllMatchingName(Entities.product, products);
+            var unitGroups = CsvUtility
+                .SelectAllRows(Path.Combine(workFolder, @"uomschedule.csv"))
+                .Select(r => r.GetFieldAsString("Name"))
+                .ToArray();
+            DeleteAllMatchingName(Entities.uomschedule, unitGroups);
+            var priceLists = CsvUtility
+                .SelectAllRows(Path.Combine(workFolder, @"Price Lists.csv"))
+                .Select(r => r.GetFieldAsString("Name"))
+                .ToArray();
+            DeleteAllMatchingName(Entities.pricelevel, priceLists);
+
+            //run the import and verify no errors
+            var importerExporterService = new ImportCsvsService(XrmRecordService);
+            var request = new ImportCsvsRequest
+            {
+                Folder = new Folder(workFolder),
+                FolderOrFiles = ImportCsvsRequest.CsvImportOption.Folder,
+            };
+            var response = importerExporterService.Execute(request, Controller);
+            if (response.HasError)
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
+
+            //okay lets get the last created price list item
+            var query = XrmService.BuildQuery(Entities.productpricelevel, null,null,null);
+            query.Orders.Add(new OrderExpression(Fields.productpricelevel_.createdon, OrderType.Descending));
+            var latestPriceListItem = XrmService.RetrieveFirst(query);
+            //verify it has a price
+            var initialPrice = latestPriceListItem.GetMoneyValue(Fields.productpricelevel_.amount);
+            Assert.IsTrue(initialPrice > 0);
+            //now lets set it something else so we can verify it gets updated after the second run
+            latestPriceListItem.SetMoneyField(Fields.productpricelevel_.amount, initialPrice.Value + 1);
+            latestPriceListItem = UpdateFieldsAndRetreive(latestPriceListItem, Fields.productpricelevel_.amount);
+
+            //run again and verify no errors
+            importerExporterService = new ImportCsvsService(XrmRecordService);
+            request = new ImportCsvsRequest
+            {
+                Folder = new Folder(workFolder),
+                FolderOrFiles = ImportCsvsRequest.CsvImportOption.Folder,
+            };
+            response = importerExporterService.Execute(request, Controller);
+            if (response.HasError)
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
+            //verify the price list item we updated is changed
+            latestPriceListItem = Refresh(latestPriceListItem);
+            Assert.AreEqual(initialPrice, latestPriceListItem.GetMoneyValue(Fields.productpricelevel_.amount));
         }
 
         [DeploymentItem(@"Files\Account.csv")]

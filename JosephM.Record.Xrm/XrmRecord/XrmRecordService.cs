@@ -100,9 +100,18 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
-            return _xrmService.GetPicklistKeyValues(recordType, field)
+            var type = _xrmService.GetFieldType(field, recordType);
+            if (type == AttributeTypeCode.EntityName)
+                return XrmService.GetAllEntityTypes().Select(s => new PicklistOption(s, XrmService.GetEntityDisplayName(s))).ToArray();
+
+            return type == AttributeTypeCode.Picklist
+                || type == AttributeTypeCode.State
+                || type == AttributeTypeCode.Status
+                || type == AttributeTypeCode.Integer
+                ? _xrmService.GetPicklistKeyValues(recordType, field)
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value))
-                .ToArray();
+                .ToArray()
+                : null;
         }
 
         public IRecord NewRecord(string recordType)
@@ -335,6 +344,8 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 //Strings no map
             }
+            else if (temp is RecordType)
+                temp = ((RecordType)temp).Key;
             else if (temp is PicklistOption)
                 temp = new OptionSetValue(int.Parse(((PicklistOption)temp).Key));
             else if (temp is Lookup)
