@@ -7,6 +7,7 @@ using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using JosephM.Record.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -73,6 +74,7 @@ namespace JosephM.Deployment.ImportCsvs
                                     .GetColumnNames()
                                     .Where(c => c.StartsWith("key|"));
 
+                            //lets set the id if one matches in the target
                             if (keyColumns.Any())
                             {
                                 var fieldValues = new Dictionary<string, object>();
@@ -91,25 +93,37 @@ namespace JosephM.Deployment.ImportCsvs
                                 if (matchingEntity.Count() == 1)
                                     entity.Id = matchingEntity.First().Id;
                             }
-                            else if (request.MatchByName && !getTypeResponse.IsRelationship)
+                            else
                             {
-                                var primaryFieldColumns =
-                                    rows.First()
-                                    .GetColumnNames()
-                                    .Where(c => MapColumnToFieldSchemaName(XrmService, type, c) == primaryField).ToArray();
-                                var primaryFieldColumn = primaryFieldColumns.Any() ? primaryFieldColumns.First() : null;
-                                if (request.MatchByName && primaryFieldColumn.IsNullOrWhiteSpace())
-                                    throw new NullReferenceException(string.Format("Match By Name Was Specified But No Column In The CSV Matched To The Primary Field {0} ({1})", XrmService.GetFieldLabel(primaryField, type), primaryField));
+                                var typeConfig = XrmTypeConfigs.GetFor(type);
+                                var comparisonFields = XrmTypeConfigs.GetComparisonFieldsFor(type, XrmRecordService);
+                                if (typeConfig != null && comparisonFields.Any())
+                                {
+                                    //if we have a type config then it will find the target during the import
+                                    //these are for example price list items which must match on price list, product & unit
+                                }
+                                else if (request.MatchByName && !getTypeResponse.IsRelationship)
+                                {
+                                    var primaryFieldColumns =
+                                        rows.First()
+                                        .GetColumnNames()
+                                        .Where(c => MapColumnToFieldSchemaName(XrmService, type, c) == primaryField).ToArray();
+                                    var primaryFieldColumn = primaryFieldColumns.Any() ? primaryFieldColumns.First() : null;
+                                    if (request.MatchByName && primaryFieldColumn.IsNullOrWhiteSpace())
+                                        throw new NullReferenceException(string.Format("Match By Name Was Specified But No Column In The CSV Matched To The Primary Field {0} ({1})", XrmService.GetFieldLabel(primaryField, type), primaryField));
 
-                                var columnValue = row.GetFieldAsString(primaryFieldColumn);
-                                if (columnValue != null)
-                                    columnValue = columnValue.Trim();
-                                var matchingEntity = GetMatchingEntities(type, primaryField, columnValue);
-                                if (matchingEntity.Count() > 1)
-                                    throw new Exception(string.Format("Specified Match By Name But More Than One {0} Record Matched To Name Of {1}", type, columnValue));
-                                if (matchingEntity.Count() == 1)
-                                    entity.Id = matchingEntity.First().Id;
+                                    var columnValue = row.GetFieldAsString(primaryFieldColumn);
+                                    if (columnValue != null)
+                                        columnValue = columnValue.Trim();
+                                    var matchingEntity = GetMatchingEntities(type, primaryField, columnValue);
+                                    if (matchingEntity.Count() > 1)
+                                        throw new Exception(string.Format("Specified Match By Name But More Than One {0} Record Matched To Name Of {1}", type, columnValue));
+                                    if (matchingEntity.Count() == 1)
+                                        entity.Id = matchingEntity.First().Id;
+                                }
                             }
+                            //lets parse all the fields in to the entity
+                            //any lookup fields we will populate the name with Guid.Empty for now
                             foreach (var column in row.GetColumnNames())
                             {
                                 var field = MapColumnToFieldSchemaName(XrmService, type, column);

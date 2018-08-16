@@ -44,6 +44,13 @@ namespace JosephM.Record.Xrm
                 },
             new XrmTypeConfigs()
                 {
+                    Type = Entities.productpricelevel,
+                    ParentLookupField = Fields.productpricelevel_.pricelevelid,
+                    ParentLookupType = Entities.pricelevel,
+                    UniqueChildFields = new [] { Fields.productpricelevel_.productid, Fields.productpricelevel_.uomid }
+                },
+            new XrmTypeConfigs()
+                {
                     Type = Entities.uom,
                     ParentLookupField = Fields.uom_.uomscheduleid,
                     ParentLookupType = Entities.uomschedule,

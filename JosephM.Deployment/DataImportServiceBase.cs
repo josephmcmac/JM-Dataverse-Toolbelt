@@ -69,7 +69,7 @@ namespace JosephM.Deployment
         protected IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
         {
             var typeConfig = XrmTypeConfigs.GetFor(type);
-            if (typeConfig == null || field != XrmService.GetPrimaryNameField(type))
+            if (typeConfig == null || typeConfig.ParentLookupType != type || field != XrmService.GetPrimaryNameField(type))
             {
                 return GetMatchingEntities(type, new Dictionary<string, object>()
                 {
@@ -277,7 +277,8 @@ namespace JosephM.Deployment
                             if (existingMatchingIds.Any())
                             {
                                 var matchRecord = existingMatchingIds.First();
-                                idSwitches[recordType].Add(thisEntity.Id, matchRecord.Id);
+                                if (thisEntity.Id != Guid.Empty)
+                                    idSwitches[recordType].Add(thisEntity.Id, matchRecord.Id);
                                 thisEntity.Id = matchRecord.Id;
                                 thisEntity.SetField(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), thisEntity.Id);
                                 if(thisTypesConfig != null)
@@ -583,6 +584,15 @@ namespace JosephM.Deployment
                 thisEntity.SetLookupField(Fields.uom_.baseuom, baseUnitMatches.First());
                 fieldsToSet.Add(Fields.uom_.baseuom);
             }
+            if (thisEntity.LogicalName == Entities.product)
+            {
+                var unitGroupId = thisEntity.GetLookupGuid(Fields.product_.defaultuomscheduleid);
+                if(unitGroupId.HasValue)
+                    fieldsToSet.Add(Fields.product_.defaultuomscheduleid);
+                var unitId = thisEntity.GetLookupGuid(Fields.product_.defaultuomid);
+                if (unitId.HasValue)
+                    fieldsToSet.Add(Fields.product_.defaultuomid);
+            }
         }
 
         private Guid GetRootBusinessUnitId()
@@ -627,7 +637,9 @@ namespace JosephM.Deployment
             if (thisTypesConfig == null)
             {
                 //okay this is where we just need to find the matching record by name
-                var existingMatches = existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
+                var existingMatches = thisEntity.Id == Guid.Empty
+                                ? new Entity[0]
+                                : existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
                 if (!existingMatches.Any())
                 {
                     var matchBySpecificFieldEntities = new Dictionary<string, string>()
