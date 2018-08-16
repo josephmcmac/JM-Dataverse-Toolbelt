@@ -317,7 +317,7 @@ namespace JosephM.Xrm
         /// <summary>
         ///     Sets the money field to the input value
         /// </summary>
-        public static void SetMoneyField(Entity entity, string fieldName, Decimal value)
+        public static void SetMoneyField(this Entity entity, string fieldName, Decimal value)
         {
             SetField(entity, fieldName, new Money(value));
         }

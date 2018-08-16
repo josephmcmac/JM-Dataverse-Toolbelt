@@ -598,5 +598,12 @@ namespace JosephM.Xrm.Test
                 return _testAccountContact;
             }
         }
+
+        public void DeleteMultiple(IEnumerable<Entity> entities)
+        {
+            var responses = XrmService.DeleteMultiple(entities);
+            if (responses.Any(r => r.Fault != null))
+                Assert.Fail(responses.First(r => r.Fault != null).Fault.Message);
+        }
     }
 }

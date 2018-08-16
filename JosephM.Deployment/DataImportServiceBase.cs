@@ -167,10 +167,6 @@ namespace JosephM.Deployment
 
             #region tryordertypes
 
-            //lets put team first because some other records
-            //may reference the queue which only gets created
-            //when the team does
-            typesToImport = typesToImport.OrderBy(s => s == Entities.team ? 0 : 1).ToArray();
 
             foreach (var type in typesToImport)
             {
@@ -197,6 +193,27 @@ namespace JosephM.Deployment
                 }
                 if (!orderedTypes.Contains(type))
                     orderedTypes.Add(type);
+            }
+
+            //these priorities are because when the first type gets create it creates a 'child' of the second type
+            //so we need to ensure the parent created first
+            var prioritiseOver = new List<KeyValuePair<string, string>>();
+            prioritiseOver.Add(new KeyValuePair<string, string>(Entities.team, Entities.queue));
+            prioritiseOver.Add(new KeyValuePair<string, string>(Entities.uomschedule, Entities.uom));
+            foreach (var item in prioritiseOver)
+            {
+                //if the first item is after the second item in the list
+                //then remove and insert it before the second item
+                if (orderedTypes.Contains(item.Key) && orderedTypes.Contains(item.Value))
+                {
+                    var indexOfFirst = orderedTypes.IndexOf(item.Key);
+                    var indexOfSecond = orderedTypes.IndexOf(item.Value);
+                    if(indexOfFirst > indexOfSecond)
+                    {
+                        orderedTypes.RemoveAt(indexOfFirst);
+                        orderedTypes.Insert(indexOfSecond, item.Key);
+                    }
+                }
             }
 
             #endregion tryordertypes
@@ -313,7 +330,7 @@ namespace JosephM.Deployment
                                                 idNullable.Value);
                                             if (matchRecord != null)
                                             {
-                                                thisEntity.SetLookupField(field, matchRecord);
+                                                ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
                                                 fieldResolved = true;
                                             }
                                             else
@@ -326,6 +343,7 @@ namespace JosephM.Deployment
                                                 if (matchRecords.Count() == 1)
                                                 {
                                                     thisEntity.SetLookupField(field, matchRecords.First());
+                                                    ((EntityReference)(thisEntity.GetField(field))).Name = name;
                                                     fieldResolved = true;
                                                 }
                                             }
@@ -435,6 +453,7 @@ namespace JosephM.Deployment
                                     if (matchRecord != null)
                                     {
                                         thisEntity.SetLookupField(field, matchRecord);
+                                        ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
                                         fieldResolved = true;
                                     }
                                     else
@@ -447,6 +466,7 @@ namespace JosephM.Deployment
                                         if (matchRecords.Count() == 1)
                                         {
                                             thisEntity.SetLookupField(field, matchRecords.First());
+                                            ((EntityReference)(thisEntity.GetField(field))).Name = name;
                                             fieldResolved = true;
                                         }
                                     }
@@ -579,7 +599,7 @@ namespace JosephM.Deployment
                 });
                 if (baseUnitMatches.Count() == 0)
                     throw new Exception($"Could Not Identify The {XrmService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} {baseUnitName}. No Match Found For The {XrmService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)}");
-                if (baseUnitMatches.Count() == 0)
+                if (baseUnitMatches.Count() > 1)
                     throw new Exception($"Could Not Identify The {XrmService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} {baseUnitName}. Multiple Matches Found For The {XrmService.GetFieldLabel(Fields.uom_.uomscheduleid, Entities.uom)}");
                 thisEntity.SetLookupField(Fields.uom_.baseuom, baseUnitMatches.First());
                 fieldsToSet.Add(Fields.uom_.baseuom);
