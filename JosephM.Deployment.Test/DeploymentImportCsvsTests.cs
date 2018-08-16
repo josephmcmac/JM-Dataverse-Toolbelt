@@ -3,16 +3,14 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportCsvs;
-using JosephM.XrmModule.Test;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
-using JosephM.Xrm.Test;
+using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System;
-using Microsoft.Xrm.Sdk.Query;
 
 namespace JosephM.Deployment.Test
 {
@@ -120,7 +118,6 @@ namespace JosephM.Deployment.Test
             //imports product configurations in csv files
             PrepareTests();
             var workFolder = ClearFilesAndData();
-            DeleteAll(Entities.account);
 
             File.Copy(@"Price List Items.csv", Path.Combine(workFolder, @"Price List Items.csv"));
             File.Copy(@"Price Lists.csv", Path.Combine(workFolder, @"Price Lists.csv"));
@@ -180,12 +177,6 @@ namespace JosephM.Deployment.Test
             //verify the price list item we updated is changed
             latestPriceListItem = Refresh(latestPriceListItem);
             Assert.AreEqual(initialPrice, latestPriceListItem.GetMoneyValue(Fields.productpricelevel_.amount));
-        }
-
-        private void DeleteAllMatchingName(string type, string[] names)
-        {
-            var blah = XrmService.RetrieveAllOrClauses(type, names.Select(n => new ConditionExpression(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, n)));
-            DeleteMultiple(blah);
         }
 
         [DeploymentItem(@"Files\Account.csv")]

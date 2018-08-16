@@ -605,5 +605,11 @@ namespace JosephM.Xrm.Test
             if (responses.Any(r => r.Fault != null))
                 Assert.Fail(responses.First(r => r.Fault != null).Fault.Message);
         }
+
+        public void DeleteAllMatchingName(string type, IEnumerable<string> names)
+        {
+            var blah = XrmService.RetrieveAllOrClauses(type, names.Select(n => new ConditionExpression(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, n)));
+            DeleteMultiple(blah);
+        }
     }
 }
