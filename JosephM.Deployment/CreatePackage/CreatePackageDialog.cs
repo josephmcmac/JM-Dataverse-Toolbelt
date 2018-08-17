@@ -2,7 +2,7 @@
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Service;
 using JosephM.Record.Xrm.XrmRecord;
-
+using JosephM.XrmModule.Extentions;
 
 namespace JosephM.Deployment.CreatePackage
 {
@@ -15,6 +15,7 @@ namespace JosephM.Deployment.CreatePackage
             IDialogController dialogController, XrmRecordService lookupService)
             : base(service, dialogController, lookupService)
         {
+            this.AddRedirectToConnectionEntryWhenNotConnected(lookupService);
         }
     }
 }

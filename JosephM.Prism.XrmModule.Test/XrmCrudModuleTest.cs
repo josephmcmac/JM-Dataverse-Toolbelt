@@ -12,6 +12,11 @@ using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using JosephM.Core.AppConfig;
+using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.Application.Application;
+using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.Core.Utility;
 
 namespace JosephM.XrmModule.Test
 {
@@ -227,9 +232,46 @@ namespace JosephM.XrmModule.Test
 
             //Create test app and load query
             var app = CreateAndLoadTestApplication<XrmCrudModule>();
+            var settingsFolder = app.Controller.SettingsPath;
+            if (settingsFolder != null)
+                FileUtility.DeleteFiles(settingsFolder);
+
+            //okay adding this here because I added a redirect to connection entry if none is entered
+            var xrmRecordService = app.Controller.ResolveType<XrmRecordService>();
+            //okay this is the service which will get resolve by the dialog - so lets clear out its connection details
+            //then the dialog should redirect to entry
+            var originalConnection = xrmRecordService.XrmRecordConfiguration;
+            xrmRecordService.XrmRecordConfiguration = new XrmRecordConfiguration();
+
             var dialog = app.NavigateToDialog<XrmCrudModule, XrmCrudDialog>();
+
+            //okay we should have been dir4ected to a connection entry
+
+            var connectionEntryViewModel = dialog.Controller.UiItems[0] as ObjectEntryViewModel;
+            var newConnection = connectionEntryViewModel.GetObject() as SavedXrmRecordConfiguration;
+            newConnection.AuthenticationProviderType = originalConnection.AuthenticationProviderType;
+            newConnection.DiscoveryServiceAddress = originalConnection.DiscoveryServiceAddress;
+            newConnection.OrganizationUniqueName = originalConnection.OrganizationUniqueName;
+            newConnection.Domain = originalConnection.Domain;
+            newConnection.Username = originalConnection.Username;
+            newConnection.Password = originalConnection.Password;
+            newConnection.Name = "RedirectScriptEntered";
+            connectionEntryViewModel.SaveButtonViewModel.Invoke();
+
+            //cool if has worked then now we will be at the query view model with the connection
             var queryViewModel = dialog.Controller.UiItems[0] as QueryViewModel;
             Assert.IsNotNull(queryViewModel);
+            //lets just verify the connection was saved as well
+            var savedConnections = app.Controller.ResolveType<ISavedXrmConnections>();
+            Assert.IsTrue(savedConnections.Connections.Any(c => c.Name == "RedirectScriptEntered"));
+            var appXrmRecordService = app.Controller.ResolveType<XrmRecordService>();
+            Assert.IsTrue(appXrmRecordService.XrmRecordConfiguration.ToString() == "RedirectScriptEntered");
+            var appXrmRecordConnection = app.Controller.ResolveType<IXrmRecordConfiguration>();
+            Assert.IsTrue(appXrmRecordConnection.ToString() == "RedirectScriptEntered");
+            var savedSetingsManager = app.Controller.ResolveType<ISettingsManager>();
+            var savedXrmRecordService = savedSetingsManager.Resolve<SavedXrmConnections.SavedXrmConnections>();
+            Assert.IsTrue(appXrmRecordService.XrmRecordConfiguration.ToString() == "RedirectScriptEntered");
+            var savedXrmRecordConnection = savedSetingsManager.Resolve<XrmRecordConfiguration>();
 
             //select account type and run query
             queryViewModel.SelectedRecordType = queryViewModel.RecordTypeItemsSource.First(r => r.Key == Entities.account);

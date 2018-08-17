@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.XrmModule.Extentions;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
@@ -9,6 +10,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             XrmRecordService xrmRecordService)
             : base(service, dialogController, xrmRecordService)
         {
+            this.AddRedirectToConnectionEntryWhenNotConnected(xrmRecordService);
         }
     }
 }

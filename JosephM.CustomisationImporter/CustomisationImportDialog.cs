@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.CustomisationImporter.Service;
-
+using JosephM.XrmModule.Extentions;
 
 namespace JosephM.CustomisationImporter
 {
@@ -13,6 +13,7 @@ namespace JosephM.CustomisationImporter
         public CustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController)
             : base(service, dialogController, service.RecordService)
         {
+            this.AddRedirectToConnectionEntryWhenNotConnected(service.RecordService);
         }
 
         protected override void CompleteDialogExtention()
