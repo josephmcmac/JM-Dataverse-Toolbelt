@@ -95,8 +95,8 @@ namespace JosephM.Deployment.ImportCsvs
                             }
                             else
                             {
-                                var typeConfig = XrmTypeConfigs.GetFor(type);
-                                var comparisonFields = XrmTypeConfigs.GetComparisonFieldsFor(type, XrmRecordService);
+                                var typeConfig = XrmRecordService.GetTypeConfigs().GetFor(type);
+                                var comparisonFields = XrmRecordService.GetTypeConfigs().GetComparisonFieldsFor(type, XrmRecordService);
                                 if (typeConfig != null && comparisonFields.Any())
                                 {
                                     //if we have a type config then it will find the target during the import

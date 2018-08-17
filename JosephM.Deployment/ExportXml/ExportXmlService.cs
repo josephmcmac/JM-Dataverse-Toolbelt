@@ -70,7 +70,7 @@ namespace JosephM.Deployment.ExportXml
             foreach (var exportType in exports)
             {
                 var type = exportType.RecordType == null ? null : exportType.RecordType.Key;
-                var thisTypeConfig = XrmTypeConfigs.GetFor(type);
+                var thisTypeConfig = XrmRecordService.GetTypeConfigs().GetFor(type);
                 controller.UpdateProgress(countsExported++, countToExport, string.Format("Exporting {0} Records", type));
                 var conditions = new List<ConditionExpression>();
                 if (type == "list")
@@ -133,8 +133,8 @@ namespace JosephM.Deployment.ExportXml
                     if (thisTypeConfig.UniqueChildFields != null)
                         excludeFields = excludeFields.Except(thisTypeConfig.UniqueChildFields).ToArray();
 
-                    var fieldsToIncludeInParent = XrmTypeConfigs.GetParentFieldsRequiredForComparison(type);
-                    var thisTypesParentsConfig = XrmTypeConfigs.GetFor(thisTypeConfig.ParentLookupType);
+                    var fieldsToIncludeInParent = XrmRecordService.GetTypeConfigs().GetParentFieldsRequiredForComparison(type);
+                    var thisTypesParentsConfig = XrmRecordService.GetTypeConfigs().GetFor(thisTypeConfig.ParentLookupType);
                     if (fieldsToIncludeInParent != null)
                     {
                         //if the parent also has a config then we need to use it when matching the parent

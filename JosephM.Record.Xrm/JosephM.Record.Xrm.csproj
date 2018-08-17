@@ -113,7 +113,6 @@
     <Compile Include="XrmRecord\XrmRecordService.cs" />
     <Compile Include="XrmRecord\XrmRecordTypeMetadata.cs" />
     <Compile Include="XrmRecord\XrmConfigurationBase.cs" />
-    <Compile Include="XrmTypeConfigs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">

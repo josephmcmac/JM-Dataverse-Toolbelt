@@ -179,5 +179,7 @@ namespace JosephM.Record.IService
         IFormService GetFormService();
 
         string GetWebUrl(string recordType, string id, string additionalparams = null);
+
+        TypeConfigs GetTypeConfigs();
     }
 }
