@@ -56,6 +56,34 @@ namespace JosephM.Record.Extentions
             return lookup;
         }
 
+        public static Lookup ToLookupWithAltDisplayNameName(this IRecordService service, IRecord record)
+        {
+            var displayStrings = new List<string>();
+
+            var config = service.GetTypeConfigs().GetFor(record.Type);
+            if (config != null)
+            {
+                if (config.ParentLookupField != null)
+                {
+                    var thisOne = service.GetFieldAsDisplayString(record, config.ParentLookupField);
+                    if (!string.IsNullOrWhiteSpace(thisOne))
+                        displayStrings.Add(thisOne);
+                }
+                if (config.UniqueChildFields != null)
+                {
+                    foreach (var unique in (config.UniqueChildFields))
+                    {
+                        var thisOne = service.GetFieldAsDisplayString(record, unique);
+                        if (!string.IsNullOrWhiteSpace(thisOne))
+                            displayStrings.Add(thisOne);
+                    }
+                }
+            }
+            if (!displayStrings.Any())
+                return service.ToLookup(record);
+            return new Lookup(record.Type, record.Id, string.Join(".", displayStrings));
+        }
+
         /// <summary>
         ///     Loads The IRecord Into A Lookup. Does Not Load Name
         /// </summary>

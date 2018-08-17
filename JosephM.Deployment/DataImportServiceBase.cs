@@ -68,7 +68,7 @@ namespace JosephM.Deployment
 
         protected IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
         {
-            var typeConfig = XrmTypeConfigs.GetFor(type);
+            var typeConfig = XrmRecordService.GetTypeConfigs().GetFor(type);
             if (typeConfig == null || typeConfig.ParentLookupType != type || field != XrmService.GetPrimaryNameField(type))
             {
                 return GetMatchingEntities(type, new Dictionary<string, object>()
@@ -226,7 +226,7 @@ namespace JosephM.Deployment
                 try
                 {
                     var thisRecordType = recordType;
-                    var thisTypesConfig = XrmTypeConfigs.GetFor(recordType);
+                    var thisTypesConfig = XrmRecordService.GetTypeConfigs().GetFor(recordType);
                     var displayPrefix = $"Importing {recordType} Records ({countImported + 1}/{countToImport})";
                     controller.UpdateProgress(countImported++, countToImport, string.Format("Importing {0} Records", recordType));
                     controller.UpdateLevel2Progress(0, 1, "Loading");
@@ -653,7 +653,7 @@ namespace JosephM.Deployment
 
         private IEnumerable<Entity> GetMatchForExistingRecord(IEnumerable<Entity> existingEntitiesWithIdMatches, Entity thisEntity)
         {
-            var thisTypesConfig = XrmTypeConfigs.GetFor(thisEntity.LogicalName);
+            var thisTypesConfig = XrmRecordService.GetTypeConfigs().GetFor(thisEntity.LogicalName);
             if (thisTypesConfig == null)
             {
                 //okay this is where we just need to find the matching record by name
@@ -729,7 +729,7 @@ namespace JosephM.Deployment
                         matchingParentQuery.Criteria.AddCondition(new ConditionExpression(thisTypesConfig.ParentLookupField, ConditionOperator.Null));
                     else
                     {
-                        var thisTypesParentsConfig = XrmTypeConfigs.GetFor(thisTypesConfig.ParentLookupType);
+                        var thisTypesParentsConfig = XrmRecordService.GetTypeConfigs().GetFor(thisTypesConfig.ParentLookupType);
                         if (thisTypesParentsConfig != null)
                         {
                             //okay so this record should have captured fields in the parent
@@ -822,7 +822,7 @@ namespace JosephM.Deployment
             }
         }
 
-        private IEnumerable<Entity> GetMatchesByNameForRootRecord(XrmTypeConfigs parentChildConfig, string name)
+        private IEnumerable<Entity> GetMatchesByNameForRootRecord(TypeConfigs.Config parentChildConfig, string name)
         {
             //okay if this is a parent record (e.g a root web page)
             //then match by name and where the parent reference is empty

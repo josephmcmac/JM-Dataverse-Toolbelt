@@ -764,8 +764,8 @@ namespace JosephM.InstanceComparer
             {
                 foreach(var record in records)
                 {
-                    var typeConfig = XrmTypeConfigs.GetFor(record.Type);
-                    var requiredParentFields = XrmTypeConfigs.GetParentFieldsRequiredForComparison(record.Type);
+                    var typeConfig = xrmRecordService.GetTypeConfigs().GetFor(record.Type);
+                    var requiredParentFields = xrmRecordService.GetTypeConfigs().GetParentFieldsRequiredForComparison(record.Type);
                     if(typeConfig != null && requiredParentFields != null)
                     {
                         var parentId = record.GetLookupId(typeConfig.ParentLookupField);
@@ -816,7 +816,7 @@ namespace JosephM.InstanceComparer
             var thisInBoth = new List<List<IRecord>>();
             var service2AlreadyAdded = new List<IRecord>();
 
-            var typeConfig = XrmTypeConfigs.GetFor(processCompareParams.RecordType);
+            var typeConfig = processContainer.ServiceOne.GetTypeConfigs().GetFor(processCompareParams.RecordType);
 
             foreach (var item in serviceOneItems)
             {
@@ -995,7 +995,7 @@ namespace JosephM.InstanceComparer
 
         public static object GetItemDisplayName(IRecord item, XrmRecordService xrmRecordService, ProcessCompareParams processCompareParams, bool is2)
         {
-            var config = XrmTypeConfigs.GetFor(item.Type);
+            var config = xrmRecordService.GetTypeConfigs().GetFor(item.Type);
             if(config == null)
             {
                 return is2
@@ -1166,7 +1166,7 @@ namespace JosephM.InstanceComparer
             public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, XrmRecordService recordService)
                 : this("Data - " + dataComparison.Type,
                       dataComparison.Type,
-                      XrmTypeConfigs.GetComparisonFieldsFor(dataComparison.Type, recordService),
+                      recordService.GetTypeConfigs().GetComparisonFieldsFor(dataComparison.Type, recordService),
                       recordService.GetPrimaryField(dataComparison.Type),
                       new Condition[0],
                       recordService

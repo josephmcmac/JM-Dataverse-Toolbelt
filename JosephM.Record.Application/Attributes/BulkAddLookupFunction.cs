@@ -33,7 +33,7 @@ namespace JosephM.Application.ViewModel.Attributes
             var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
             var newRecord = recordForm.RecordService.NewRecord(GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName);
-            var lookup = GetLookupService(recordForm, subGridReference).ToLookup(selectedRow.GetRecord());
+            var lookup = GetLookupService(recordForm, subGridReference).ToLookupWithAltDisplayNameName(selectedRow.GetRecord());
 
             newRecord.SetField(targetPropertyname, lookup, recordForm.RecordService);
             //if (gridField.GridRecords.Any(g => g.GetLookupFieldFieldViewModel(targetPropertyname).Value == lookup))

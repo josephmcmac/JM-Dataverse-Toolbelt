@@ -47,7 +47,10 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public void Load(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            recordForm.DoOnMainThread(() =>
+            var parentForm = recordForm.ParentForm;
+            if (parentForm != null)
+                parentForm.LoadingViewModel.IsLoading = true;
+            recordForm.DoOnAsynchThread(() =>
             {
                 try
                 {
@@ -71,7 +74,8 @@ namespace JosephM.Application.ViewModel.Attributes
                 }
                 finally
                 {
-                    recordForm.LoadingViewModel.IsLoading = false;
+                    if (parentForm != null)
+                        parentForm.LoadingViewModel.IsLoading = false;
                 }
             });
         }

@@ -324,5 +324,10 @@ namespace JosephM.Record.Service
         {
             return null;
         }
+
+        public TypeConfigs GetTypeConfigs()
+        {
+            return new TypeConfigs(null);
+        }
     }
 }

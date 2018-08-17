@@ -229,8 +229,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 Value = null;
             else
             {
-                var recordName = selectedRecord.GetStringField(LookupService.GetPrimaryField(selectedRecord.Type));
-                Value = new Lookup(RecordTypeToLookup, selectedRecord.Id, recordName);
+                Value = LookupService.ToLookupWithAltDisplayNameName(selectedRecord);
             }
         }
 

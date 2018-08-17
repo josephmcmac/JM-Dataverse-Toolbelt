@@ -15,28 +15,13 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public override Action GetCustomFunction(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            return () =>
-            {
-                recordForm.LoadingViewModel.IsLoading = true;
-                recordForm.DoOnAsynchThread(() =>
-                {
-                    try
-                    {
-                        Thread.Sleep(100);
-                        Load(recordForm, subGridReference);
-                    }
-                    catch (Exception ex)
-                    {
-                        recordForm.ApplicationController.ThrowException(ex);
-                        recordForm.LoadingViewModel.IsLoading = false;
-                    }
-                });
-            };
+            return () => Load(recordForm, subGridReference);
         }
 
         public void Load(RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            recordForm.DoOnMainThread(() =>
+            recordForm.LoadingViewModel.IsLoading = true;
+            recordForm.DoOnAsynchThread(() =>
             {
                 try
                 {
@@ -48,7 +33,6 @@ namespace JosephM.Application.ViewModel.Attributes
                     //displaying a grid of the selectable options with a checkbox
                     Action<IEnumerable<PicklistOption>> onSave = (selectedOptions) =>
                     {
-                        //copy into the
                         mainFormInContext.LoadingViewModel.IsLoading = true;
                         try
                         {

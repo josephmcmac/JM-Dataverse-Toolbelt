@@ -173,10 +173,13 @@ namespace JosephM.InstanceComparer
 
         private void AddPortalDataButtonToRequestFormGrid()
         {
-            var customFormFunction = new CustomFormFunction("ADDPORTALDATA", "Add Portal Types", (r) =>
+            var customGridFunction = new CustomGridFunction("ADDPORTALDATA", "Add Portal Types", (DynamicGridViewModel g) =>
             {
                 try
                 {
+                    var r = g.ParentForm;
+                    if (r == null)
+                        throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
                     r.GetBooleanFieldFieldViewModel(nameof(InstanceComparerRequest.Data)).Value = true;
                     var typesGrid = r.GetEnumerableFieldViewModel(nameof(InstanceComparerRequest.DataComparisons));
                     var typesToAdd = new[]
@@ -208,10 +211,10 @@ namespace JosephM.InstanceComparer
                 }
                 catch(Exception ex)
                 {
-                    r.ApplicationController.ThrowException(ex);
+                    g.ApplicationController.ThrowException(ex);
                 }
-            }, (r) => true);
-            this.AddCustomFormFunction(customFormFunction, typeof(InstanceComparerRequest));
+            }, visibleFunction: (g) => true);
+            this.AddCustomGridFunction(customGridFunction, typeof(InstanceComparerRequest.InstanceCompareDataCompare));
         }
     }
 }
