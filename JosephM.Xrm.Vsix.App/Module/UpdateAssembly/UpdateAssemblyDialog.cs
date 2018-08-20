@@ -3,6 +3,7 @@ using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Application.Extentions;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.IO;
@@ -22,6 +23,8 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
             VisualStudioService = visualStudioService;
             Service = xrmRecordService;
             PackageSettings = packageSettings;
+
+            this.AddRedirectToPackageSettingsEntryWhenNotConnected(Service, PackageSettings);
         }
 
         protected override void LoadDialogExtention()

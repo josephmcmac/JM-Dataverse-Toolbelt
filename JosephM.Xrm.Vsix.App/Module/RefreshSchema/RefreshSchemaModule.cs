@@ -62,7 +62,7 @@ namespace JosephM.Xrm.Vsix.Module.RefreshSchema
             var uri = new UriQuery();
             uri.AddObject(nameof(CSharpDialog.Request), request);
             uri.AddObject(nameof(CSharpDialog.SkipObjectEntry), true);
-            ApplicationController.NavigateTo(typeof(CSharpDialog), uri);
+            ApplicationController.NavigateTo(typeof(VsixCSharpDialog), uri);
         }
     }
 }

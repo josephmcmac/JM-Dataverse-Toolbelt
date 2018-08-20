@@ -1,4 +1,5 @@
-﻿using JosephM.Core.FieldType;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment;
@@ -44,10 +45,16 @@ namespace JosephM.Xrm.Vsix.Test
             //set solution v2 prior to package create
             XrmService.SetField(Entities.solution, new Guid(packageSettings.Solution.Id), Fields.solution_.version, "2.0.0.0");
 
-            //run create package dialog
-            var request = CreatePackageRequest.CreateForCreatePackage(tempFolder, packageSettings.Solution);
-            request.ThisReleaseVersion = "3.0.0.0";
-            request.SetVersionPostRelease = "4.0.0.0";
+            var app = CreateAndLoadTestApplication<VsixCreatePackageModule>();
+            //run the dialog - including a redirect to enter the package settings first
+            var originalConnection = HijackForPackageEntryRedirect(app);
+            var dialog = app.NavigateToDialog<VsixCreatePackageModule, VsixCreatePackageDialog>();
+            VerifyPackageEntryRedirect(originalConnection, dialog);
+            //okay no should be at the entry the create package details
+            var packageEntry = dialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            //create package request
+            var request = new CreatePackageRequest();
+            request.HideTypeAndFolder = true;
             request.DataToInclude = new[]
             {
                 new ExportRecordType()
@@ -59,9 +66,17 @@ namespace JosephM.Xrm.Vsix.Test
                      RecordType = new RecordType(Entities.contact, Entities.contact), Type = ExportType.AllRecords
                 }
             };
+            app.EnterObject(request, packageEntry);
+            //lets set explicit versions
+            packageEntry.GetStringFieldFieldViewModel(nameof(CreatePackageRequest.ThisReleaseVersion)).Value = "3.0.0.0";
+            packageEntry.GetStringFieldFieldViewModel(nameof(CreatePackageRequest.SetVersionPostRelease)).Value = "4.0.0.0";
 
-            var createTestApplication = CreateAndLoadTestApplication<VsixCreatePackageModule>();
-            var createResponse = createTestApplication.NavigateAndProcessDialog<VsixCreatePackageModule, VsixCreatePackageDialog, ServiceResponseBase<DataImportResponseItem>>(request);
+            if (!packageEntry.Validate())
+                throw new Exception(packageEntry.GetValidationSummary());
+            packageEntry.SaveButtonViewModel.Invoke();
+
+            var createResponse = dialog.CompletionItem as ServiceResponseBase<DataImportResponseItem>;
+
             Assert.IsFalse(createResponse.HasError);
 
             //verify the files created in the solution package folder

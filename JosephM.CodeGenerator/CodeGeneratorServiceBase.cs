@@ -20,7 +20,7 @@ namespace JosephM.CodeGenerator
             Service = service;
         }
 
-        protected XrmRecordService Service { get; set; }
+        public XrmRecordService Service { get; set; }
 
         private static IEnumerable<RecordFieldType> OptionSetTypes
         {

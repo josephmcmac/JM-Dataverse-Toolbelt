@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Core.AppConfig;
 
 namespace JosephM.Xrm.Vsix.Test
 {
@@ -199,6 +201,37 @@ namespace JosephM.Xrm.Vsix.Test
         public static ObjectEntryViewModel GetEntryForm(DialogViewModel dialog)
         {
             return (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+        }
+
+        public static IXrmRecordConfiguration HijackForPackageEntryRedirect(TestApplication app)
+        {
+            //okay adding this here because I added a redirect to connection entry if none is entered
+            var xrmRecordService = app.Controller.ResolveType<XrmRecordService>();
+            //okay this is the service which will get resolve by the dialog - so lets clear out its connection details
+            //then the dialog should redirect to entry
+            var originalConnection = xrmRecordService.XrmRecordConfiguration;
+            xrmRecordService.XrmRecordConfiguration = new XrmRecordConfiguration();
+            return originalConnection;
+        }
+
+        public static void VerifyPackageEntryRedirect(IXrmRecordConfiguration originalConnection, DialogViewModel dialog)
+        {
+            //okay we should have been directed to a connection entry
+            var connectionEntryViewModel = dialog.Controller.UiItems[0] as ObjectEntryViewModel;
+            var newConnection = connectionEntryViewModel.GetObject() as SavedXrmRecordConfiguration;
+            newConnection.AuthenticationProviderType = originalConnection.AuthenticationProviderType;
+            newConnection.DiscoveryServiceAddress = originalConnection.DiscoveryServiceAddress;
+            newConnection.OrganizationUniqueName = originalConnection.OrganizationUniqueName;
+            newConnection.Domain = originalConnection.Domain;
+            newConnection.Username = originalConnection.Username;
+            newConnection.Password = originalConnection.Password;
+            newConnection.Name = "RedirectScriptEntered";
+            connectionEntryViewModel.SaveButtonViewModel.Invoke();
+            //okay now we should be directed to the xrm package settings entry
+            var packageSettingsEntryViewModel = dialog.Controller.UiItems[0] as ObjectEntryViewModel;
+            var newPackageSettings = packageSettingsEntryViewModel.GetObject() as XrmPackageSettings;
+            newPackageSettings.SolutionObjectPrefix = "FAKEIT";
+            packageSettingsEntryViewModel.SaveButtonViewModel.Invoke();
         }
     }
 }

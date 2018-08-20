@@ -38,6 +38,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public override void UserMessage(string message)
         {
+            Debug.Write(message);
         }
 
         public override bool UserConfirmation(string message)

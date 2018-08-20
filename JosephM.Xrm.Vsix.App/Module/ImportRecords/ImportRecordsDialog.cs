@@ -10,7 +10,6 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
         public ImportRecordsDialog(ImportRecordsService service, IDialogController dialogController)
             : base(service, dialogController)
         {
-
         }
     }
 }

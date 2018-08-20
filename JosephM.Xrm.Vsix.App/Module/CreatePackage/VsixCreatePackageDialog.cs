@@ -1,8 +1,11 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
+using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.CreatePackage;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Application.Extentions;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System.IO;
 
 namespace JosephM.Xrm.Vsix.Module.CreatePackage
@@ -10,17 +13,29 @@ namespace JosephM.Xrm.Vsix.Module.CreatePackage
     public class VsixCreatePackageDialog : CreatePackageDialog
     {
         public IVisualStudioService VisualStudioService { get; set; }
+        public XrmPackageSettings XrmPackageSettings { get; }
 
-        public VsixCreatePackageDialog(CreatePackageService service, IDialogController dialogController, XrmRecordService xrmRecordService, IVisualStudioService visualStudioService)
-            : base(service, dialogController, xrmRecordService)
+        public VsixCreatePackageDialog(CreatePackageService service, IDialogController dialogController, XrmRecordService xrmRecordService, IVisualStudioService visualStudioService, XrmPackageSettings xrmPackageSettings)
+            : base(service, dialogController, xrmRecordService, true)
         {
             VisualStudioService = visualStudioService;
+            XrmPackageSettings = xrmPackageSettings;
+
+            this.AddRedirectToPackageSettingsEntryWhenNotConnected(xrmRecordService, xrmPackageSettings, processEnteredSettings: (s) =>
+            {
+                Request.Solution = s.Solution;
+            });
         }
 
         protected override void LoadDialogExtention()
         {
+            Request.HideTypeAndFolder = true;
+            Request.FolderPath = new Folder(VisualStudioService.SolutionDirectory + "/TempSolutionFolder");
+            Request.Solution = XrmPackageSettings.Solution;
+            //WARNING THIS FOLDER IS CLEARED BEFORE PROCESSING SO CAREFUL IF CHANGE DIRECTORY
             FileUtility.DeleteSubFolders(Request.FolderPath.FolderPath);
             FileUtility.DeleteFiles(Request.FolderPath.FolderPath);
+
             base.LoadDialogExtention();
         }
 

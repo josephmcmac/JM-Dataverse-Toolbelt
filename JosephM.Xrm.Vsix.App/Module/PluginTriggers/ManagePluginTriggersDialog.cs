@@ -9,6 +9,7 @@ using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Application.Extentions;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             var configEntryDialog = new ObjectGetEntryDialog(() => EntryObject, this, ApplicationController, XrmRecordService);
             SubDialogs = new DialogViewModel[] { configEntryDialog };
+
+            this.AddRedirectToPackageSettingsEntryWhenNotConnected(XrmRecordService, PackageSettings);
         }
 
         private void Load(string assemblyName)

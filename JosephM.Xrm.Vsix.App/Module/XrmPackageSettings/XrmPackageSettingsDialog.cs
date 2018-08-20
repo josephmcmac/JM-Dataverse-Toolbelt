@@ -34,17 +34,38 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
 
         private XrmRecordService XrmRecordService { get; set; }
 
+        private Action<XrmPackageSettings> ProcessEnteredSettings { get; set; }
+
         public XrmPackageSettingsDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService)
         : base(dialogController, xrmRecordService, objectToEnter)
         {
             XrmRecordService = xrmRecordService;
             VisualStudioService = visualStudioService;
 
-            if(string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
+            AddRedirectToConnectionEntryIfNotConnected(visualStudioService);
+        }
+
+        /// <summary>
+        /// this one internal so the navigation resolver doesn;t use it
+        /// </summary>
+        internal XrmPackageSettingsDialog(DialogViewModel parentDialog, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, Action<XrmPackageSettings> processEnteredSettings)
+            : base(parentDialog, xrmRecordService, objectToEnter)
+        {
+            XrmRecordService = xrmRecordService;
+            VisualStudioService = visualStudioService;
+            ProcessEnteredSettings = processEnteredSettings;
+
+            AddRedirectToConnectionEntryIfNotConnected(visualStudioService);
+        }
+
+        private void AddRedirectToConnectionEntryIfNotConnected(IVisualStudioService visualStudioService)
+        {
+            if (string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
             {
                 //if there was no connection then lets redirect to the connection entry first
                 var newConnection = new SavedXrmRecordConfiguration();
-                Action refreshChildDialogConnection = () => {
+                Action refreshChildDialogConnection = () =>
+                {
                     newConnection.Active = true;
                     XrmRecordService.XrmRecordConfiguration = newConnection;
                     SettingsObject.Connections = new[] { newConnection };
@@ -95,6 +116,8 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     }
                 }
             }
+            if (ProcessEnteredSettings != null)
+                ProcessEnteredSettings(SettingsObject);
 
             CompletionMessage = "Settings Updated";
         }

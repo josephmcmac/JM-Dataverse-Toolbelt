@@ -30,7 +30,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             var dialog = app.NavigateToDialog<XrmCrudModule, XrmCrudDialog>();
 
-            //okay we should have been dir4ected to a connection entry
+            //okay we should have been directed to a connection entry
 
             var connectionEntryViewModel = dialog.Controller.UiItems[0] as ObjectEntryViewModel;
             var newConnection = connectionEntryViewModel.GetObject() as SavedXrmRecordConfiguration;

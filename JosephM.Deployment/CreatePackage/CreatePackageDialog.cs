@@ -11,11 +11,17 @@ namespace JosephM.Deployment.CreatePackage
             <CreatePackageService, CreatePackageRequest,
                 ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
     {
-        public CreatePackageDialog(CreatePackageService service,
-            IDialogController dialogController, XrmRecordService lookupService)
+        public CreatePackageDialog(CreatePackageService service, IDialogController dialogController, XrmRecordService lookupService)
+            : this(service, dialogController, lookupService, false)
+        {
+        }
+
+        protected CreatePackageDialog(CreatePackageService service, IDialogController dialogController, XrmRecordService lookupService, bool dontAddRedirect)
             : base(service, dialogController, lookupService)
         {
-            this.AddRedirectToConnectionEntryWhenNotConnected(lookupService);
+            if (!dontAddRedirect)
+                this.AddRedirectToConnectionEntryWhenNotConnected(lookupService);
         }
+
     }
 }

@@ -11,9 +11,15 @@ namespace JosephM.CustomisationImporter
                 CustomisationImportResponseItem>
     {
         public CustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController)
+            : this(service, dialogController, false)
+        {
+        }
+
+        protected CustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController, bool dontAddRedirect)
             : base(service, dialogController, service.RecordService)
         {
-            this.AddRedirectToConnectionEntryWhenNotConnected(service.RecordService);
+            if (!dontAddRedirect)
+                this.AddRedirectToConnectionEntryWhenNotConnected(service.RecordService);
         }
 
         protected override void CompleteDialogExtention()

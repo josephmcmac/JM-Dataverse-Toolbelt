@@ -23,7 +23,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
         }
 
         public XrmPackageSettings PackageSettings { get; set; }
-        private XrmRecordService Service { get; set; }
+        public XrmRecordService Service { get; set; }
 
         public override void ExecuteExtention(DeployIntoFieldRequest request, DeployIntoFieldResponse response,
             LogController controller)

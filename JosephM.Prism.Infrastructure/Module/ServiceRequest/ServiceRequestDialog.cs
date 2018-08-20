@@ -52,7 +52,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
 
         public bool SkipObjectEntry { get; set; }
 
-        protected TService Service { get; set; }
+        public TService Service { get; set; }
 
         public TRequest Request { get; set; }
 

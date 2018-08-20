@@ -10,9 +10,15 @@ namespace JosephM.CodeGenerator.CSharp
         ServiceRequestDialog<CSharpService, CSharpRequest, CSharpResponse, ServiceResponseItem>
     {
         public CSharpDialog(CSharpService service, IDialogController dialogController, XrmRecordService lookupService)
+            : this(service, dialogController, lookupService, false)
+        {
+        }
+
+        protected CSharpDialog(CSharpService service, IDialogController dialogController, XrmRecordService lookupService, bool dontAddRedirect)
             : base(service, dialogController, lookupService)
         {
-            this.AddRedirectToConnectionEntryWhenNotConnected(lookupService);
+            if (!dontAddRedirect)
+                this.AddRedirectToConnectionEntryWhenNotConnected(lookupService);
         }
 
         protected override void ProcessCompletionExtention()
