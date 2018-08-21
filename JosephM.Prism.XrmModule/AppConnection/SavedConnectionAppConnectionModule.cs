@@ -13,7 +13,7 @@ namespace JosephM.XrmModule.AppConnection
     {
         protected override DialogViewModel CreateRedirectDialog(DialogViewModel dialog, XrmRecordService xrmRecordService)
         {
-            return new SavedXrmConnectionEntryDialog(dialog, xrmRecordService);
+            return new AppXrmConnectionEntryDialog(dialog, xrmRecordService);
         }
     }
 }

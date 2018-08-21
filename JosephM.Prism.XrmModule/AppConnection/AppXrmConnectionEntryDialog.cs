@@ -5,16 +5,20 @@ using JosephM.XrmModule.XrmConnection;
 using System;
 using JosephM.Core.AppConfig;
 using System.Linq;
+using JosephM.XrmModule.SavedXrmConnections;
 
-namespace JosephM.XrmModule.SavedXrmConnections
+namespace JosephM.XrmModule.AppConnection
 {
-    public class SavedXrmConnectionEntryDialog : DialogViewModel
+    /// <summary>
+    /// This dialog is for entering a connection to dynamics when the app is not yet connected
+    /// </summary>
+    public class AppXrmConnectionEntryDialog : DialogViewModel
     {
         private SavedXrmRecordConfiguration ObjectToEnter { get; set; }
         public Action DoPostEntry { get; private set; }
         public XrmRecordService XrmRecordService { get; }
 
-        public SavedXrmConnectionEntryDialog(DialogViewModel parentDialog, XrmRecordService xrmRecordService)
+        public AppXrmConnectionEntryDialog(DialogViewModel parentDialog, XrmRecordService xrmRecordService)
             : base(parentDialog)
         {
             ObjectToEnter = new SavedXrmRecordConfiguration();
@@ -35,7 +39,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
             //lets set the connection in the service our parent dialog is using
             XrmRecordService.XrmRecordConfiguration = ObjectToEnter;
             //lets also refresh it in the applications containers
-            XrmConnectionModule.RefreshXrmServices(ObjectToEnter, ApplicationController);
+            XrmConnectionModule.RefreshXrmServices(ObjectToEnter, ApplicationController, xrmRecordService: XrmRecordService);
             //lets also refresh it in the saved settings
             var appSettingsManager = ApplicationController.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
             var savedConnectionsObject = ApplicationController.ResolveType<ISavedXrmConnections>();
