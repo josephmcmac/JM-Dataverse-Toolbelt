@@ -38,6 +38,16 @@ namespace JosephM.Application.Desktop.Module.Settings
 
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
+        protected AppSettingsDialog(DialogViewModel parentDialog, IRecordService lookupService, TSettingsObject objectToEnter)
+            : base(parentDialog)
+        {
+            SettingsObject = objectToEnter;
+            var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, lookupService,
+                null, OnSave, null);
+
+            SubDialogs = new DialogViewModel[] { configEntryDialog };
+        }
+
 
         protected virtual void OnSave()
         {

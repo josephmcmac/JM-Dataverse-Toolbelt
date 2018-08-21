@@ -1,9 +1,9 @@
 ﻿using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.Connection;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,11 +40,29 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
             XrmRecordService = xrmRecordService;
             VisualStudioService = visualStudioService;
 
-            if(string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
+            AddRedirectToConnectionEntryIfNotConnected(visualStudioService);
+        }
+
+        /// <summary>
+        /// this one internal so the navigation resolver doesn;t use it
+        /// </summary>
+        internal XrmPackageSettingsDialog(DialogViewModel parentDialog, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService)
+            : base(parentDialog, xrmRecordService, objectToEnter)
+        {
+            XrmRecordService = xrmRecordService;
+            VisualStudioService = visualStudioService;
+
+            AddRedirectToConnectionEntryIfNotConnected(visualStudioService);
+        }
+
+        private void AddRedirectToConnectionEntryIfNotConnected(IVisualStudioService visualStudioService)
+        {
+            if (string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
             {
                 //if there was no connection then lets redirect to the connection entry first
                 var newConnection = new SavedXrmRecordConfiguration();
-                Action refreshChildDialogConnection = () => {
+                Action refreshChildDialogConnection = () =>
+                {
                     newConnection.Active = true;
                     XrmRecordService.XrmRecordConfiguration = newConnection;
                     SettingsObject.Connections = new[] { newConnection };
@@ -95,7 +113,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     }
                 }
             }
-
             CompletionMessage = "Settings Updated";
         }
     }

@@ -23,7 +23,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
         }
 
         public XrmPackageSettings PackageSettings { get; set; }
-        private XrmRecordService Service { get; set; }
+        public XrmRecordService Service { get; set; }
 
         public override void ExecuteExtention(DeployWebResourceRequest request, DeployWebResourceResponse response,
             LogController controller)

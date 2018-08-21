@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
@@ -16,6 +17,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
+    [RequiresConnection]
     public class ManagePluginTriggersDialog : DialogViewModel
     {
         public XrmRecordService XrmRecordService { get; set; }

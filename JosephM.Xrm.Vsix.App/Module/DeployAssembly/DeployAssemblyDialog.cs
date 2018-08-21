@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
@@ -17,6 +18,7 @@ using System.Reflection;
 
 namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 {
+    [RequiresConnection]
     public class DeployAssemblyDialog : DialogViewModel
     {
         public XrmRecordService Service { get; set; }

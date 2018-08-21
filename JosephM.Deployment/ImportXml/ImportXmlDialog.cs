@@ -1,10 +1,11 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
 
-
 namespace JosephM.Deployment.ImportXml
 {
+    [RequiresConnection]
     public class ImportXmlDialog :
         ServiceRequestDialog
             <ImportXmlService, ImportXmlRequest,

@@ -1,17 +1,18 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.CustomisationImporter.Service;
 
-
 namespace JosephM.CustomisationImporter
 {
+    [RequiresConnection]
     public class CustomisationImportDialog :
         ServiceRequestDialog
             <XrmCustomisationImportService, CustomisationImportRequest, CustomisationImportResponse,
                 CustomisationImportResponseItem>
     {
         public CustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController)
-            : base(service, dialogController, service.RecordService)
+            : base(service, dialogController)
         {
         }
 

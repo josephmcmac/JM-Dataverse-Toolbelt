@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
@@ -10,6 +11,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 {
+    [RequiresConnection]
     public class UpdateAssemblyDialog : DialogViewModel
     {
         public XrmRecordService Service { get; set; }

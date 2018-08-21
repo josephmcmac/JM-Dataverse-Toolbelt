@@ -208,6 +208,14 @@ namespace JosephM.Application.Application
 
         public virtual bool ForceElementWindowHeight {  get { return false; } }
 
+        //runs all registered on navigate events
+        protected void OnNavigatedTo(object objectNavigatedTo)
+        {
+            var navigationEvents = Container.ResolveType<NavigationEvents>();
+            foreach (var eventAction in navigationEvents.EventActions)
+                eventAction(objectNavigatedTo);
+        }
+
         public class Notification
         {
             public Notification(string key, string value, bool isLoading)

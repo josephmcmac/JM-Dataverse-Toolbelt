@@ -30,12 +30,12 @@ namespace JosephM.CustomisationImporter.Service
         private const string OptionSetsTabName = "Option Sets";
         private const string FieldsTabName = "Fields";
 
-        public CustomisationImportService(IRecordService recordService)
+        public CustomisationImportService(XrmRecordService recordService)
         {
             RecordService = recordService;
         }
 
-        public IRecordService RecordService { get; set; }
+        public XrmRecordService RecordService { get; set; }
 
         public override void ExecuteExtention(CustomisationImportRequest request, CustomisationImportResponse response,
             LogController controller)

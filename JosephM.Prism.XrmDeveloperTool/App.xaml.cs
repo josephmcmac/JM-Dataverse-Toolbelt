@@ -9,12 +9,13 @@ using JosephM.CustomisationExporter.Exporter;
 using JosephM.CustomisationImporter;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
-using JosephM.XrmModule.Crud;
-using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.RecordCounts;
 using JosephM.Xrm.RecordExtract.RecordExtract;
-using System.Windows;
 using JosephM.Xrm.RecordExtract.TextSearch;
+using JosephM.XrmModule.AppConnection;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
+using System.Windows;
 
 namespace JosephM.XrmDeveloperTool
 {
@@ -42,6 +43,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<ConsoleApplicationModule>();
             app.AddModule<XrmDeveloperToolAboutModule>();
             app.AddModule<DevAppReleaseCheckModule>();
+            app.AddModule<SavedConnectionAppConnectionModule>();
             app.Run();
         }
 

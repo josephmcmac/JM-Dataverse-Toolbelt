@@ -9,6 +9,7 @@ using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Linq;
+using JosephM.Xrm.Vsix.App.Module.CustomisationImport;
 
 namespace JosephM.Xrm.Vsix.Module.CustomisationImport
 {
@@ -25,7 +26,7 @@ namespace JosephM.Xrm.Vsix.Module.CustomisationImport
             var selectedItems = visualStudioService.GetSelectedFileNamesQualified();
             if (selectedItems.Count() != 1)
             {
-                ApplicationController.UserMessage("Only one file may be selected to refresh");
+                ApplicationController.UserMessage("Only one file may be selected to deploy");
                 return;
             }
             var packageSettings = ApplicationController.ResolveType(typeof(XrmPackageSettings)) as XrmPackageSettings;
@@ -47,7 +48,7 @@ namespace JosephM.Xrm.Vsix.Module.CustomisationImport
 
             var uri = new UriQuery();
             uri.AddObject(nameof(CustomisationImportDialog.Request), request);
-            ApplicationController.NavigateTo(typeof(CustomisationImportDialog), uri);
+            ApplicationController.NavigateTo(typeof(VsixCustomisationImportDialog), uri);
         }
     }
 }

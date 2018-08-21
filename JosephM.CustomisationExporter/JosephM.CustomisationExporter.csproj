@@ -75,6 +75,10 @@
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.XrmModule.csproj">
+      <Project>{ca2bb834-77fa-43db-8ddc-b0d1b5f519b9}</Project>
+      <Name>JosephM.XrmModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>

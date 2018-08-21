@@ -1,26 +1,45 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.Dialog;
+using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
 using JosephM.Deployment.CreatePackage;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System.IO;
 
 namespace JosephM.Xrm.Vsix.Module.CreatePackage
 {
+    [RequiresConnection(nameof(ProcessEnteredSettings))]
     public class VsixCreatePackageDialog : CreatePackageDialog
     {
         public IVisualStudioService VisualStudioService { get; set; }
+        public XrmPackageSettings XrmPackageSettings { get; }
 
-        public VsixCreatePackageDialog(CreatePackageService service, IDialogController dialogController, XrmRecordService xrmRecordService, IVisualStudioService visualStudioService)
+        public VsixCreatePackageDialog(CreatePackageService service, IDialogController dialogController, XrmRecordService xrmRecordService, IVisualStudioService visualStudioService, XrmPackageSettings xrmPackageSettings)
             : base(service, dialogController, xrmRecordService)
         {
             VisualStudioService = visualStudioService;
+            XrmPackageSettings = xrmPackageSettings;
+        }
+
+        public void ProcessEnteredSettings(XrmPackageSettings packageSettings)
+        {
+            if (packageSettings != null)
+            {
+                Request.Solution = packageSettings.Solution;
+            }
         }
 
         protected override void LoadDialogExtention()
         {
+            Request.HideTypeAndFolder = true;
+            Request.FolderPath = new Folder(VisualStudioService.SolutionDirectory + "/TempSolutionFolder");
+            Request.Solution = XrmPackageSettings.Solution;
+            //WARNING THIS FOLDER IS CLEARED BEFORE PROCESSING SO CAREFUL IF CHANGE DIRECTORY
             FileUtility.DeleteSubFolders(Request.FolderPath.FolderPath);
             FileUtility.DeleteFiles(Request.FolderPath.FolderPath);
+
             base.LoadDialogExtention();
         }
 

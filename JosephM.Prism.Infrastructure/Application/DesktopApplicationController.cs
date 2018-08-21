@@ -1,10 +1,13 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.Navigation;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
@@ -59,31 +62,12 @@ namespace JosephM.Application.Desktop.Application
         private void RequestNavigate(Type type, UriQuery uriQuery)
         {
             var resolveIt = Container.ResolveType(type);
+
+            OnNavigatedTo(resolveIt);
+
             LoadedObjects.Add(resolveIt);
             ActiveTabItem = resolveIt;
-
-            //var uri = new Uri(type.FullName, UriKind.Relative);
-            //var navigationParameters = new NavigationParameters();
-            //if (uriQuery != null && uriQuery.Arguments != null)
-            //{
-            //    foreach (var item in uriQuery.Arguments)
-            //    {
-            //        navigationParameters.Add(item.Key, item.Value);
-            //    }
-            //}
-            //RegionManager.RequestNavigate(regionName, uri, ProcessNavigationResult, navigationParameters);
         }
-
-        //private void ProcessNavigationResult(NavigationResult navigationResult)
-        //{
-        //    if (navigationResult.Result == false)
-        //    {
-        //        var navigationErrorViewModel = new NavigationErrorViewModel(navigationResult.Error, this);
-
-        //        RegionManager.AddToRegion(RegionNames.MainTabRegion, navigationErrorViewModel);
-        //    }
-        //}
-
 
         public override void UserMessage(string message)
         {

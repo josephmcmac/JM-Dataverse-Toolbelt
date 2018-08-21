@@ -169,6 +169,13 @@ namespace JosephM.Application.ViewModel.Dialog
 
         protected abstract void LoadDialogExtention();
 
+        private List<Action> _onCompletedEvents = new List<Action>();
+
+        public void AddOnCompletedEvent(Action action)
+        {
+            _onCompletedEvents.Add(action);
+        }
+
         public void CompleteDialog()
         {
             ApplicationController.DoOnAsyncThread(
@@ -178,6 +185,8 @@ namespace JosephM.Application.ViewModel.Dialog
                     try
                     {
                         CompleteDialogExtention();
+                        foreach (var action in _onCompletedEvents)
+                            action();
                         if (DialogCompletionCommit)
                         {
                             if (FatalException == null)

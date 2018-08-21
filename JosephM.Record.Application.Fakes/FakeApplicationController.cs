@@ -2,7 +2,6 @@
 
 using JosephM.Application.Application;
 using JosephM.Core.AppConfig;
-using JosephM.Core.Extentions;
 using JosephM.Core.Test;
 using System;
 using System.Collections.Generic;
@@ -49,6 +48,8 @@ namespace JosephM.Application.ViewModel.Fakes
             ClearTabs();
 
             var resolvedType = Container.ResolveType(type);
+
+            OnNavigatedTo(resolvedType);
 
             _loadedObjects.Add(resolvedType);
         }

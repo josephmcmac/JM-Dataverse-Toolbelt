@@ -178,11 +178,16 @@
     <Compile Include="Application\VsixApplicationController.cs" />
     <Compile Include="Application\VsixDependencyContainer.cs" />
     <Compile Include="Application\VsixSettingsManager.cs" />
+    <Compile Include="Module\Web\OpenAdvancedFindDialog.cs" />
+    <Compile Include="Module\Web\OpenSolutionDialog.cs" />
+    <Compile Include="Module\Web\OpenWebDialog.cs" />
+    <Compile Include="Module\XrmPackageSettings\PackageSettingsAppConnectionModule.cs" />
     <Compile Include="Module\ClearCacheModule.cs" />
     <Compile Include="Module\Connection\ConnectionEntryDialog.cs" />
     <Compile Include="Module\CreatePackage\VsixCreatePackageDialog.cs" />
     <Compile Include="Module\CreatePackage\VsixCreatePackageModule.cs" />
     <Compile Include="Module\CustomisationImport\MenuItemVisibleXlsx.cs" />
+    <Compile Include="Module\CustomisationImport\VsixCustomisationImportDialog.cs" />
     <Compile Include="Module\CustomisationImport\VsixCustomisationImportModule.cs" />
     <Compile Include="Module\DeployAssembly\DeployAssemblyDialog.cs" />
     <Compile Include="Module\DeployAssembly\DeployAssemblyModule.cs" />
@@ -309,6 +314,7 @@
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.16\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.16\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

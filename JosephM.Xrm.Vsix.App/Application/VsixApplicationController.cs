@@ -63,6 +63,8 @@ namespace JosephM.Xrm.Vsix.Application
                     }
                 }
 
+                OnNavigatedTo(navigationObject);
+
                 LoadDialog(dialog, showCompletionScreen: showCompletionScreen, isModal: isModal);
             }
             else
