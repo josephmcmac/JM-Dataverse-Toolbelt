@@ -12,6 +12,7 @@ using Microsoft.Xrm.Sdk.Client;
 using JosephM.Xrm.Schema;
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
+using JosephM.XrmModule.AppConnection;
 
 namespace JosephM.XrmModule.Test
 {
@@ -23,11 +24,13 @@ namespace JosephM.XrmModule.Test
             XrmRecordService.SetFormService(new XrmFormService());
         }
 
-        protected virtual TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null, bool loadXrmConnection = true)
+        protected virtual TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null, bool loadXrmConnection = true, bool addSavedConnectionAppConnectionModule = true)
             where TModule : ModuleBase, new()
         {
             var testApplication = TestApplication.CreateTestApplication(applicationController, settingsManager);
             testApplication.AddModule<TModule>();
+            if(addSavedConnectionAppConnectionModule)
+                testApplication.AddModule<SavedConnectionAppConnectionModule>();
             if (loadXrmConnection)
             {
                 XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), testApplication.Controller);

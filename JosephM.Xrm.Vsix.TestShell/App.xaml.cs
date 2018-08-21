@@ -8,6 +8,7 @@ using JosephM.Xrm.Vsix.Test;
 using System;
 using System.IO;
 using System.Windows;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 
 namespace JosephM.Xrm.Vsix.TestShell
 {
@@ -39,6 +40,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication.AddModule<ManagePluginTriggersModule>();
             VsixApplication.AddModule<XrmCrudModule>();
             VsixApplication.AddModule<TestDialogModule>();
+            VsixApplication.AddModule<PackageSettingsAppConnectionModule>();
         }
 
         public VsixApplication VsixApplication { get; set; }

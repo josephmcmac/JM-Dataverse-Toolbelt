@@ -6,16 +6,16 @@
 
 using EnvDTE80;
 using JosephM.Application.Application;
-using JosephM.Application.Desktop.Application;
 using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.InstanceComparer;
-using JosephM.XrmModule.Crud;
+using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.Xrm.Vsix;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
 using JosephM.Xrm.Vsix.Module.CreatePackage;
 using JosephM.Xrm.Vsix.Module.CustomisationImport;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
+using JosephM.Xrm.Vsix.Module.DeployIntoField;
 using JosephM.Xrm.Vsix.Module.DeployPackage;
 using JosephM.Xrm.Vsix.Module.DeployWebResource;
 using JosephM.Xrm.Vsix.Module.ImportCsvs;
@@ -26,14 +26,13 @@ using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using JosephM.Xrm.Vsix.Module.RefreshSchema;
 using JosephM.Xrm.Vsix.Module.UpdateAssembly;
 using JosephM.Xrm.Vsix.Module.Web;
+using JosephM.XrmModule.Crud;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using JosephM.Xrm.RecordExtract.TextSearch;
-using JosephM.Xrm.Vsix.Module.DeployIntoField;
 
 namespace JosephM.XRM.VSIX
 {
@@ -91,6 +90,7 @@ namespace JosephM.XRM.VSIX
             app.AddModule<ImportSolutionModule>(0x0114);
             app.AddModule<ImportRecordsModule>(0x0115);
             app.AddModule<DeployIntoFieldModule>(0x0117);
+            app.AddModule<PackageSettingsAppConnectionModule>();
         }
 
         public class XrmPackageAboutModule : AboutModule

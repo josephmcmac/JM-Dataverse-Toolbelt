@@ -178,7 +178,10 @@
     <Compile Include="Application\VsixApplicationController.cs" />
     <Compile Include="Application\VsixDependencyContainer.cs" />
     <Compile Include="Application\VsixSettingsManager.cs" />
-    <Compile Include="Extentions\DialogExtentions.cs" />
+    <Compile Include="Module\Web\OpenAdvancedFindDialog.cs" />
+    <Compile Include="Module\Web\OpenSolutionDialog.cs" />
+    <Compile Include="Module\Web\OpenWebDialog.cs" />
+    <Compile Include="Module\XrmPackageSettings\PackageSettingsAppConnectionModule.cs" />
     <Compile Include="Module\ClearCacheModule.cs" />
     <Compile Include="Module\Connection\ConnectionEntryDialog.cs" />
     <Compile Include="Module\CreatePackage\VsixCreatePackageDialog.cs" />
@@ -227,7 +230,6 @@
     <Compile Include="Module\PluginTriggers\PluginTrigger.cs" />
     <Compile Include="Module\RefreshSchema\MenuItemVisibleSchemaCs.cs" />
     <Compile Include="Module\RefreshSchema\RefreshSchemaModule.cs" />
-    <Compile Include="Module\RefreshSchema\VsixCSharpDialog.cs" />
     <Compile Include="Module\UpdateAssembly\UpdateAssemblyDialog.cs" />
     <Compile Include="Module\UpdateAssembly\UpdateAssemblyModule.cs" />
     <Compile Include="Module\Web\OpenAdvancedFindModule.cs" />

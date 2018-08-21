@@ -1,27 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.Navigation;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Core.Extentions;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
-using JosephM.Core.Service;
-using JosephM.Application.ViewModel.TabArea;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using JosephM.Application.Application;
-using JosephM.ObjectMapping;
-using JosephM.Core.AppConfig;
-using JosephM.Record.Service;
-using JosephM.Application.ViewModel.RecordEntry;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.Modules;
 
 namespace JosephM.Application.ViewModel.Extentions
 {
     public static class Extentions
     {
+        public static void AddNavigationEvent(this ModuleBase module, Action<object> action)
+        {
+            //okay this one is autmatically created by the unity container 
+            //but iteratively add and resolve 2 items and verify they are retained in the resolved list
+            var events = module.ApplicationController.ResolveType<NavigationEvents>();
+            events.AddEvent(action);
+            module.ApplicationController.RegisterInstance(typeof(NavigationEvents), events);
+        }
+
         public static void AddCustomFormFunction(this ModuleBase module, CustomFormFunction customFormFunction, Type type)
         {
             //okay this one is autmatically created by the unity container 

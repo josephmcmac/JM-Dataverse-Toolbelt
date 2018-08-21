@@ -3,27 +3,27 @@ using JosephM.Application.Desktop.Test;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.AppConfig;
 using JosephM.Core.Utility;
 using JosephM.ObjectMapping;
-using JosephM.XrmModule.Crud;
-using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.XrmModule.Test;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.Mappers;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Core.AppConfig;
 
 namespace JosephM.Xrm.Vsix.Test
 {
@@ -37,9 +37,11 @@ namespace JosephM.Xrm.Vsix.Test
 
         public bool InitialiseModuleXrmConnection { get; set; }
 
-        protected override TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null, bool loadXrmConnection = true)
+        protected override TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null, bool loadXrmConnection = true, bool addSavedConnectionAppConnectionModule = false)
         {
-            return base.CreateAndLoadTestApplication<TModule>(CreateTestVsixApplicationController(), new VsixSettingsManager(VisualStudioService), loadXrmConnection: InitialiseModuleXrmConnection);
+            var app = base.CreateAndLoadTestApplication<TModule>(CreateTestVsixApplicationController(), new VsixSettingsManager(VisualStudioService), loadXrmConnection: InitialiseModuleXrmConnection, addSavedConnectionAppConnectionModule: addSavedConnectionAppConnectionModule);
+            app.AddModule<PackageSettingsAppConnectionModule>();
+            return app;
         }
 
         public ApplicationControllerBase CreateTestVsixApplicationController()
@@ -207,10 +209,17 @@ namespace JosephM.Xrm.Vsix.Test
         {
             //okay adding this here because I added a redirect to connection entry if none is entered
             var xrmRecordService = app.Controller.ResolveType<XrmRecordService>();
+            var visualStudioService = app.Controller.ResolveType<IVisualStudioService>();
             //okay this is the service which will get resolve by the dialog - so lets clear out its connection details
             //then the dialog should redirect to entry
             var originalConnection = xrmRecordService.XrmRecordConfiguration;
             xrmRecordService.XrmRecordConfiguration = new XrmRecordConfiguration();
+            //lets delete the settings files, then verify they are recreated during the redirect entry
+            var solutionItemsFolder = Path.Combine(visualStudioService.SolutionDirectory, "SolutionItems");
+            FileUtility.DeleteFiles(solutionItemsFolder);
+            var solutionSettingFiles = FileUtility.GetFiles(solutionItemsFolder);
+            Assert.AreEqual(0, solutionSettingFiles.Count());
+
             return originalConnection;
         }
 
@@ -232,6 +241,18 @@ namespace JosephM.Xrm.Vsix.Test
             var newPackageSettings = packageSettingsEntryViewModel.GetObject() as XrmPackageSettings;
             newPackageSettings.SolutionObjectPrefix = "FAKEIT";
             packageSettingsEntryViewModel.SaveButtonViewModel.Invoke();
+
+            //lets just verify the connections were saved as well
+            var savedConnections = dialog.ApplicationController.ResolveType<ISavedXrmConnections>();
+            Assert.IsTrue(savedConnections.Connections.Any(c => c.Name == "RedirectScriptEntered"));
+            var appXrmRecordService = dialog.ApplicationController.ResolveType<XrmRecordService>();
+            Assert.IsTrue(appXrmRecordService.XrmRecordConfiguration.ToString() == "RedirectScriptEntered");
+            //var appXrmRecordConnection = dialog.ApplicationController.ResolveType<IXrmRecordConfiguration>();
+            //Assert.IsTrue(appXrmRecordConnection.ToString() == "RedirectScriptEntered");
+            var savedSetingsManager = dialog.ApplicationController.ResolveType<ISettingsManager>();
+            var savedXrmRecordService = savedSetingsManager.Resolve<XrmPackageSettings>();
+            Assert.IsTrue(appXrmRecordService.XrmRecordConfiguration.ToString() == "RedirectScriptEntered");
+            var savedXrmRecordConnection = savedSetingsManager.Resolve<XrmRecordConfiguration>();
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Application;
-using JosephM.Xrm.Vsix.Application.Extentions;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.IO;
@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 {
+    [RequiresConnection]
     public class UpdateAssemblyDialog : DialogViewModel
     {
         public XrmRecordService Service { get; set; }
@@ -23,8 +24,6 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
             VisualStudioService = visualStudioService;
             Service = xrmRecordService;
             PackageSettings = packageSettings;
-
-            this.AddRedirectToPackageSettingsEntryWhenNotConnected(Service, PackageSettings);
         }
 
         protected override void LoadDialogExtention()

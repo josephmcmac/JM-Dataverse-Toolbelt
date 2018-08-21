@@ -1,21 +1,26 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.CustomisationImporter;
 using JosephM.CustomisationImporter.Service;
-using JosephM.Xrm.Vsix.Application.Extentions;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 
 namespace JosephM.Xrm.Vsix.App.Module.CustomisationImport
 {
+    [RequiresConnection(nameof(ProcessEnteredSettings))]
     public class VsixCustomisationImportDialog : CustomisationImportDialog
     {
         public VsixCustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController, XrmPackageSettings xrmPackageSettings)
-            : base(service, dialogController, true)
+            : base(service, dialogController)
         {
-            this.AddRedirectToPackageSettingsEntryWhenNotConnected(service.RecordService, xrmPackageSettings, processEnteredSettings: (s) =>
+        }
+
+        public void ProcessEnteredSettings(XrmPackageSettings packageSettings)
+        {
+            if(packageSettings != null)
             {
-                Request.AddToSolution = s.AddToSolution;
-                Request.Solution = s.Solution;
-            });
+                Request.AddToSolution = packageSettings.AddToSolution;
+                Request.Solution = packageSettings.Solution;
+            }
         }
     }
 }

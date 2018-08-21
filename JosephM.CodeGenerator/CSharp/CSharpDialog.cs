@@ -1,24 +1,18 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Service;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.XrmModule.Extentions;
 
 namespace JosephM.CodeGenerator.CSharp
 {
+    [RequiresConnection]
     public class CSharpDialog :
         ServiceRequestDialog<CSharpService, CSharpRequest, CSharpResponse, ServiceResponseItem>
     {
         public CSharpDialog(CSharpService service, IDialogController dialogController, XrmRecordService lookupService)
-            : this(service, dialogController, lookupService, false)
-        {
-        }
-
-        protected CSharpDialog(CSharpService service, IDialogController dialogController, XrmRecordService lookupService, bool dontAddRedirect)
             : base(service, dialogController, lookupService)
         {
-            if (!dontAddRedirect)
-                this.AddRedirectToConnectionEntryWhenNotConnected(lookupService);
         }
 
         protected override void ProcessCompletionExtention()

@@ -1,9 +1,9 @@
 ﻿using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.Connection;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +34,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
 
         private XrmRecordService XrmRecordService { get; set; }
 
-        private Action<XrmPackageSettings> ProcessEnteredSettings { get; set; }
-
         public XrmPackageSettingsDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService)
         : base(dialogController, xrmRecordService, objectToEnter)
         {
@@ -48,12 +46,11 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         /// <summary>
         /// this one internal so the navigation resolver doesn;t use it
         /// </summary>
-        internal XrmPackageSettingsDialog(DialogViewModel parentDialog, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, Action<XrmPackageSettings> processEnteredSettings)
+        internal XrmPackageSettingsDialog(DialogViewModel parentDialog, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService)
             : base(parentDialog, xrmRecordService, objectToEnter)
         {
             XrmRecordService = xrmRecordService;
             VisualStudioService = visualStudioService;
-            ProcessEnteredSettings = processEnteredSettings;
 
             AddRedirectToConnectionEntryIfNotConnected(visualStudioService);
         }
@@ -116,9 +113,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     }
                 }
             }
-            if (ProcessEnteredSettings != null)
-                ProcessEnteredSettings(SettingsObject);
-
             CompletionMessage = "Settings Updated";
         }
     }

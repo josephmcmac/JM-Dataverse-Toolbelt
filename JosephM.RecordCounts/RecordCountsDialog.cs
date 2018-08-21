@@ -1,10 +1,11 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.XrmModule.Extentions;
 
 namespace JosephM.RecordCounts
 {
+    [RequiresConnection]
     public class RecordCountsDialog :
         ServiceRequestDialog
             <RecordCountsService, RecordCountsRequest, RecordCountsResponse,
@@ -14,7 +15,6 @@ namespace JosephM.RecordCounts
             XrmRecordService recordService)
             : base(service, dialogController, recordService)
         {
-            this.AddRedirectToConnectionEntryWhenNotConnected(recordService);
         }
     }
 }

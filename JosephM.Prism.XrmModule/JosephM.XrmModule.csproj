@@ -82,10 +82,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConnection\XrmRecordServiceAppConnectionModule.cs" />
+    <Compile Include="AppConnection\SavedConnectionAppConnectionModule.cs" />
     <Compile Include="Crud\XrmCrudDialog.cs" />
     <Compile Include="Crud\XrmCrudModule.cs" />
     <Compile Include="Crud\XrmFormService.cs" />
-    <Compile Include="Extentions\DialogExtentions.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmConnectionEntryDialog.cs" />
     <Compile Include="XrmConnection\XrmConnectionDialog.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmRecordConnection.cs" />
