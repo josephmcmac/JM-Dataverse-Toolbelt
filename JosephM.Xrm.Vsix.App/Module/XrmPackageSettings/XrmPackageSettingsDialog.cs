@@ -4,6 +4,7 @@ using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.Connection;
 using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.XrmConnection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +56,8 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
             AddRedirectToConnectionEntryIfNotConnected(visualStudioService);
         }
 
+        private bool RefreshActiveServiceConnection { get; set; }
+
         private void AddRedirectToConnectionEntryIfNotConnected(IVisualStudioService visualStudioService)
         {
             if (string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
@@ -67,6 +70,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     XrmRecordService.XrmRecordConfiguration = newConnection;
                     SettingsObject.Connections = new[] { newConnection };
                 };
+                RefreshActiveServiceConnection = true;
                 var connectionEntryDialog = new ConnectionEntryDialog(this, newConnection, visualStudioService, true, doPostEntry: refreshChildDialogConnection);
                 var subDialogList = new List<DialogViewModel>();
                 subDialogList.Add(connectionEntryDialog);
@@ -110,6 +114,8 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     {
                         var activeConnection = activeConnections.First();
                         VisualStudioService.AddSolutionItem("solution.xrmconnection", activeConnection);
+
+                        XrmConnectionModule.RefreshXrmServices(activeConnection, ApplicationController, xrmRecordService: (RefreshActiveServiceConnection ? XrmRecordService : null));
                     }
                 }
             }

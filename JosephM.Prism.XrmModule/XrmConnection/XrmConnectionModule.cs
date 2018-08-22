@@ -48,11 +48,12 @@ namespace JosephM.XrmModule.XrmConnection
 
         private static IXrmRecordConfiguration LastXrmConfiguration { get; set; }
 
-        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller)
+        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller, XrmRecordService xrmRecordService = null)
         {
             controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
-            var serviceConnection = new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>(), formService: new XrmFormService());
-            controller.RegisterInstance(serviceConnection);
+            xrmRecordService = xrmRecordService ?? new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>(), formService: new XrmFormService());
+            xrmRecordService.XrmRecordConfiguration = xrmConfiguration;
+            controller.RegisterInstance(xrmRecordService);
             LastXrmConfiguration = xrmConfiguration;
             if (xrmConfiguration.OrganizationUniqueName == null)
                 controller.AddNotification("XRMCONNECTION", "No Active Connection");
@@ -63,13 +64,13 @@ namespace JosephM.XrmModule.XrmConnection
                     try
                     {
                         controller.AddNotification("XRMCONNECTION", $"Connecting To '{xrmConfiguration}'", isLoading: true);
-                        var verify = serviceConnection.VerifyConnection();
+                        var verify = xrmRecordService.VerifyConnection();
                         if (LastXrmConfiguration != xrmConfiguration)
                             return;
                         if (verify.IsValid)
                         {
                             controller.AddNotification("XRMCONNECTION", string.Format("Connected To '{0}'", xrmConfiguration));
-                            var preLoadRecordTypes = serviceConnection.GetAllRecordTypes();
+                            var preLoadRecordTypes = xrmRecordService.GetAllRecordTypes();
                         }
                         else
                         {

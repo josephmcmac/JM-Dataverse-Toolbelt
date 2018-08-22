@@ -2,6 +2,7 @@
 using JosephM.ObjectMapping;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Xrm.Vsix.Module.Connection;
+using JosephM.XrmModule.SavedXrmConnections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
@@ -14,7 +15,7 @@ namespace JosephM.Xrm.Vsix.Test
         public void VsixRefreshConnectionDialogTest()
         {
             var xrmConfiguration = new InterfaceMapperFor<IXrmConfiguration,XrmConfiguration>().Map(XrmConfiguration);
-            var xrmRecordConfiguration = new XrmConfigurationMapper().Map(xrmConfiguration);
+            var xrmRecordConfiguration = SavedXrmRecordConfiguration.CreateNew(new XrmConfigurationMapper().Map(xrmConfiguration));
             var dialog = new ConnectionEntryDialog(CreateDialogController(), xrmRecordConfiguration, VisualStudioService, true);
             dialog.Controller.BeginDialog();
 
