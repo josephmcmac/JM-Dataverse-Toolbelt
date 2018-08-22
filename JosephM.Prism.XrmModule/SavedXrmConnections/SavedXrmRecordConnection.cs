@@ -6,11 +6,15 @@ namespace JosephM.XrmModule.SavedXrmConnections
 {
     public class SavedXrmRecordConfiguration : XrmRecordConfiguration
     {
+        [PropertyInContextByPropertyValue(nameof(HideActive), false)]
         [MyDescription("Set This Connection As Active")]
         [DisplayOrder(1)]
         [UniqueOn]
         [GridWidth(60)]
         public bool Active { get; set; }
+
+        [Hidden]
+        public bool HideActive { get; set; }
 
         public static SavedXrmRecordConfiguration CreateNew(IXrmRecordConfiguration xrmRecordConfiguration)
         {
