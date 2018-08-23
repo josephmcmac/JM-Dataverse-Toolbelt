@@ -19,7 +19,10 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid
+        Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}"
+        Style="{StaticResource SectionContainer}"
+        >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -35,7 +38,7 @@
                             Text="{Binding SectionLabel}"
                             Style="{StaticResource SectionHeadingStyle}" />
                 </Grid>
-                <Grid Grid.Column="1">
+                <Grid Grid.Column="1" VerticalAlignment="Center">
                     <ItemsControl
                             ItemsSource="{Binding CustomFunctions}"
                             ItemTemplate="{StaticResource XrmButtonTemplate}">

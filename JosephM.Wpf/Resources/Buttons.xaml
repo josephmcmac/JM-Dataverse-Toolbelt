@@ -11,6 +11,7 @@
     <Image x:Key="AddMultipleButtonImageKey" Source="../Images/AddMultipleIcon.jpg" Height="15" Width="15" />
     <Image x:Key="DeleteButtonImageKey" Source="../Images/DeleteIcon.jpg" Height="15" Width="15" />
     <Image x:Key="EditButtonImageKey" Source="../Images/EditIcon.jpg" Height="15" Width="15" />
+    <Image x:Key="OpenRowImageKey" Source="../Images/OpenRowIcon.jpg" Height="15" Width="15" />
     <Image x:Key="NextImageKey" Source="../Images/Next.png" Height="15" Width="15" />
     <Image x:Key="PreviousImageKey" Source="../Images/Previous.png" />
     <Style x:Key="IconButton" TargetType="{x:Type Button}">
@@ -21,7 +22,10 @@
     <Style x:Key="DeleteRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource DeleteButtonImageKey}" />
     </Style>
-    <Style x:Key="EditRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+    <Style x:Key="OpenRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Content" Value="{StaticResource OpenRowImageKey}" />
+    </Style>
+    <Style x:Key="EditButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource EditButtonImageKey}" />
     </Style>
     <Style x:Key="AddNewButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
@@ -33,6 +37,9 @@
     </Style>
     <Style x:Key="SearchButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource SearchButtonImageKey}" />
+    </Style>
+    <Style x:Key="AddMultipleButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Content" Value="{StaticResource AddMultipleButtonImageKey}" />
     </Style>
     <Style x:Key="AddMultipleRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
         <Setter Property="Content" Value="{StaticResource AddMultipleButtonImageKey}" />

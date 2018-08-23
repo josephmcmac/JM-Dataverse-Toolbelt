@@ -36,7 +36,7 @@
             Grid.Column="0" Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}"
             Style="{StaticResource FieldEntryButtonGridStyle}"
             >
-            <Button  Command="{Binding EditButton.Command}" Style="{StaticResource EditRowButton}" />
+            <Button  Command="{Binding EditButton.Command}" Style="{StaticResource EditButton}" />
         </Grid>
     </Grid>
 </field:FieldControlBase>

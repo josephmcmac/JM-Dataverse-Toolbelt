@@ -29,7 +29,7 @@ namespace JosephM.Application.ViewModel.Grid
             GridViewModel = gridViewModel;
             LoadFields();
             DeleteRowViewModel = new XrmButtonViewModel("Delete", DeleteRow, ApplicationController, description: "Delete");
-            EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController, description: "Open For Editing");
+            EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController, description: "Open This Item");
         }
 
         public DynamicGridViewModel GridViewModel { get; private set; }

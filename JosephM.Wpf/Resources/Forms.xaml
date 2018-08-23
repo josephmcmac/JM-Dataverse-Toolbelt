@@ -10,6 +10,9 @@
     <Style x:Key="SectionHeadingStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadingStyle}" >
         <Setter Property="TextDecorations" Value="Underline" />
     </Style>
+    <Style x:Key="SectionContainer" TargetType="Grid" >
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
     <DataTemplate x:Key="FieldSectionTemplate">
         <Grid Grid.Row="1">
             <recordEntry:FieldSectionView DataContext="{Binding}" />

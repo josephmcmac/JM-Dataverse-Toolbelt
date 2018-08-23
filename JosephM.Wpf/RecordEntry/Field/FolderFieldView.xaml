@@ -31,7 +31,9 @@
                 IsReadOnly="False" />
             </GroupBox>
         </Grid>
-        <Grid Grid.Column="1"  Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}">
+        <Grid Grid.Column="1"
+              Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}"
+              Style="{StaticResource FieldEntryButtonGridStyle}">
             <Button
                 Style="{StaticResource SearchButton}" 
                 TabIndex="1"

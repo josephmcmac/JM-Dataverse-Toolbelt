@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace JosephM.InstanceComparer
 {
     [DisplayName("Instance Comparison")]
-    [Instruction("The System Will Query And Compare The Components Across The 2 Dynamics Instances. After Completion A Detailed Report Will Output Of Differences Identified. The Report Will Include Hyperlinks To Open Items, As Well As A Feature To Add Some, Or All, Of The Components Into A Solution For Correcting The Different Components \n\nNote The Comparison Between Customisation Does Not Include Every Property And False Positives Have Been Known To Find Their Way In At Times")]
+    [Instruction("The System Will Query And Compare The Components Across The 2 Dynamics Instances. After Completion A Detailed Report Will Output Of Differences Identified. The Report Will Include Hyperlinks To Open Items, As Well As A Feature To Add Some, Or All, Of The Components Into A Solution For Correcting The Different Components \n\nNote The Comparison Does Not Include Every Property Of The Components")]
     [AllowSaveAndLoad]
     [Group(Sections.Connections, true, 10)]
     [Group(Sections.CompareOptions, true, order: 20, selectAll: true)]
