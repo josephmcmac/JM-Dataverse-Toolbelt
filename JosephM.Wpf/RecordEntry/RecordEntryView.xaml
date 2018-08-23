@@ -40,6 +40,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -73,17 +74,20 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                <Grid Grid.Row="1">
+                    <Grid Grid.Row="1" Visibility="{Binding Instruction, Converter={StaticResource NullToHiddenConverter}}">
+                        <TextBlock Style="{StaticResource HeadingStyle}"  Text="{Binding Instruction}"></TextBlock>
+                    </Grid>
+                    <Grid Grid.Row="2"  Visibility="{Binding ValidationPrompt, Converter={StaticResource NullToHiddenConverter}}">
                     <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
                 </Grid>
-                <Grid Grid.Row="2">
-                        <ScrollViewer>
+                <Grid Grid.Row="3">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ItemsControl
                         ItemsSource="{Binding FormSectionsAsync}"
                         ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
                         </ScrollViewer>
                     </Grid>
-                <Grid Grid.Row="3" Margin="0,0,0,15">
+                <Grid Grid.Row="4" Margin="0,0,0,15">
                     <StackPanel
                         Orientation="Horizontal"
                         VerticalAlignment="Top"

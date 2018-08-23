@@ -10,5 +10,7 @@ namespace JosephM.Deployment.CreatePackage
         : ServiceRequestModule<CreatePackageDialog, CreatePackageService, CreatePackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
     {
         public override string MenuGroup => "Deployment";
+
+        public override string MainOperationName { get { return "Create Package"; } }
     }
 }

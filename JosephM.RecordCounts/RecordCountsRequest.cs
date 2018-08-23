@@ -7,10 +7,11 @@ using JosephM.Xrm.Schema;
 
 namespace JosephM.RecordCounts
 {
+    [DisplayName("Record Counts")]
+    [Instruction("A Report Will Be Output Detailing Counts Of Records")]
     [AllowSaveAndLoad]
     [Group(Sections.RecordOwnerOptions, true, 20)]
     [Group(Sections.RecordTypes, true, 30)]
-    [DisplayName("Record Count")]
     public class RecordCountsRequest : ServiceRequestBase
     {
         [DisplayOrder(100)]

@@ -34,7 +34,7 @@ namespace JosephM.Deployment.ImportCsvs
         /// </summary>
         private void AddDownloadTemplateFormFunction()
         {
-            var customFormFunction = new CustomFormFunction("DOWNLOADCSVTEMPLATES", "Download Templates", DownloadTemplates, (re) => { return true; });
+            var customFormFunction = new CustomFormFunction("DOWNLOADCSVTEMPLATES", "Create CSV Templates", DownloadTemplates, (re) => { return true; });
             this.AddCustomFormFunction(customFormFunction, typeof(ImportCsvsRequest));
             AddProductTypesToCsvgenerationGrid();
         }

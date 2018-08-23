@@ -8,6 +8,7 @@ using JosephM.Core.Service;
 
 namespace JosephM.CustomisationExporter.Exporter
 {
+    [Instruction("CSV Files Will Be Output Into The Folder Listing All The Components Of Each Type Along With Their Details")]
     [AllowSaveAndLoad]
     [DisplayName("Export Customisations")]
     [Group(Sections.Folder, true, 10)]

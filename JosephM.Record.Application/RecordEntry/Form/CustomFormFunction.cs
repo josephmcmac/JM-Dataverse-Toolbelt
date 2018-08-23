@@ -8,11 +8,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
     {
         public string Id { get; set; }
         public string Label { get; set; }
+        public string Description { get; set; }
         public Action<RecordEntryFormViewModel> Function { get; set; }
         public Func<RecordEntryFormViewModel, bool> VisibleFunction { get; set; }
         public IEnumerable<CustomFormFunction> ChildFormFunctions { get; set; }
 
-        public CustomFormFunction(string id, string label, Action<RecordEntryFormViewModel> function, Func<RecordEntryFormViewModel, bool> visibleFunction = null)
+        public CustomFormFunction(string id, string label, Action<RecordEntryFormViewModel> function, Func<RecordEntryFormViewModel, bool> visibleFunction = null, string description = null)
         {
             Id = id;
             Function = function;
@@ -21,6 +22,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             if (visibleFunction != null)
                 VisibleFunction = visibleFunction;
             ChildFormFunctions = new CustomFormFunction[0];
+            Description = description;
         }
 
         public CustomFormFunction(string id, string label, IEnumerable<CustomFormFunction> childFormFunctions)

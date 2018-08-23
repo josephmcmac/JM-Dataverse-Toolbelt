@@ -93,11 +93,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     if (cf.ChildFormFunctions != null && cf.ChildFormFunctions.Any())
                     {
                         var childButtons = FormFunctionsToXrmButtons(cf.ChildFormFunctions);
-                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, childButtons, ApplicationController));
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, childButtons, ApplicationController) { Description = cf.Description });
                     }
                     else
                     {
-                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(this), ApplicationController));
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(this), ApplicationController) { Description = cf.Description });
                     }
                 }
             }
@@ -453,6 +453,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         protected virtual void PostLoading()
         {
             return;
+        }
+
+        public virtual string Instruction
+        {
+            get
+            {
+                return null;
+            }
         }
     }
 }

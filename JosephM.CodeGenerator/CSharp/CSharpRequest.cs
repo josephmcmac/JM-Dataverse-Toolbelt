@@ -2,13 +2,12 @@
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Record.Attributes;
-using JosephM.Record.Metadata;
-using JosephM.Record.Query;
 using System.Collections.Generic;
 
 namespace JosephM.CodeGenerator.CSharp
 {
+    [Instruction("A .CS File Will Be Output Containing Code Constants For The Customisations In The Dynamics Instance")]
+    [DisplayName("Generate C# Constants")]
     [Group(Sections.Type, true, 10)]
     [Group(Sections.FileDetails, true, 20)]
     [Group(Sections.IncludeConstantsForTheseItems, true, order: 30, selectAll: true)]

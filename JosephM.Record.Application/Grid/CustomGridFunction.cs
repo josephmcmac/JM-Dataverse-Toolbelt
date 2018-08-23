@@ -1,5 +1,4 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 

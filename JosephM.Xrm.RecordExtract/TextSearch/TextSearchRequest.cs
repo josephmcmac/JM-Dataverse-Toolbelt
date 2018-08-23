@@ -7,11 +7,12 @@ using System.Collections.Generic;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {
+    [DisplayName("Text Search")]
+    [Instruction("String Fields Will Be Searched For Matches To The Search Text, Then A Report Output Detailing Matches. Matching Records May Then Be Edited Either Individually, Or Using A Bulk Replace Function")]
     [Group(Sections.Document, true, 10)]
     [Group(Sections.SearchTerm, true, 20)]
     [Group(Sections.SearchOptions, true, 30)]
     [Group(Sections.Types, true, 40)]
-    [DisplayName("Text Search")]
     public class TextSearchRequest : ServiceRequestBase
     {
         public TextSearchRequest()
@@ -95,7 +96,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             public const string Document = "Document";
             public const string SearchTerm = "Search Term";
             public const string SearchOptions = "Search Options";
-            public const string Types = "Types to Search - note if All Types is selected some system object types are excluded in the searches";
+            public const string Types = "Types To Search - Note If 'All Types' Is Selected Some System Object Types Are Excluded In The Searches";
         }
 
         public class SearchTerm

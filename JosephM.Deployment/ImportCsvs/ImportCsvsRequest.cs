@@ -10,6 +10,8 @@ using System.Collections.Generic;
 
 namespace JosephM.Deployment.ImportCsvs
 {
+    [Instruction("All CSV Files Will Be Imported Into The Dynamics Instance. Matches To Update Records In The Target Will By Done By Either Primary Key, Then Name, Else If No Match Is Found A New Record Will Be Created")]
+    [DisplayName("Import CSVs")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.CsvImport, true, 20)]

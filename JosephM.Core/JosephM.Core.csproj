@@ -94,6 +94,7 @@
     <Compile Include="Attributes\AllowDownload.cs" />
     <Compile Include="Attributes\DoNotAllowDelete.cs" />
     <Compile Include="Attributes\ISelectable.cs" />
+    <Compile Include="Attributes\Instruction.cs" />
     <Compile Include="Attributes\MyDescription.cs" />
     <Compile Include="Attributes\DisplayNameForPropertyValue.cs" />
     <Compile Include="Attributes\AllowSaveAndLoad.cs" />

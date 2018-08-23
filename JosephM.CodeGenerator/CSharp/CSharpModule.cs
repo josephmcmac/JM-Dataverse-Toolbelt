@@ -13,5 +13,7 @@ namespace JosephM.CodeGenerator.CSharp
             <CSharpDialog, CSharpService, CSharpRequest, CSharpResponse, ServiceResponseItem>
     {
         public override string MenuGroup => "Code Generation";
+
+        public override string MainOperationName => "C# Constants";
     }
 }
