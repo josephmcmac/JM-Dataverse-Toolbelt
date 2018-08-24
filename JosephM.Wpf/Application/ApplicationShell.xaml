@@ -43,6 +43,15 @@
                 <TabControl.ItemContainerStyle>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="HeaderTemplate" Value="{StaticResource TabItemHeaderTemplate}" />
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu >
+                                    <MenuItem Header="Close" Command="{Binding TabCloseCommand}" />
+                                    <MenuItem Header="Close All" Command="{Binding CloseAllTabsCommand}" Visibility="{Binding AreMultipleTabs, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <MenuItem Header="Close All But This" Command="{Binding CloseOtherTabsCommand}" Visibility="{Binding AreMultipleTabs, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </TabControl.ItemContainerStyle>
             </TabControl>

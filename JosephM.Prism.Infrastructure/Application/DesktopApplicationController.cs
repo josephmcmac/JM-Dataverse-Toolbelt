@@ -1,12 +1,14 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Navigation;
+using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
@@ -31,11 +33,23 @@ namespace JosephM.Application.Desktop.Application
         {
             if (LoadedObjects.Contains(item))
                 LoadedObjects.Remove(item);
+            RaiseAreMultipleTabsChangedEvents();
+        }
+
+        private void RaiseAreMultipleTabsChangedEvents()
+        {
+            foreach (var loadedObject in LoadedObjects)
+            {
+                if (loadedObject is TabAreaViewModelBase)
+                {
+                    ((TabAreaViewModelBase)loadedObject).OnPropertyChanged(nameof(TabAreaViewModelBase.AreMultipleTabs));
+                }
+            }
         }
 
         public override IEnumerable<object> GetObjects()
         {
-            return LoadedObjects;
+            return LoadedObjects.ToArray();
         }
 
         private object _activeTabItem;
@@ -67,6 +81,7 @@ namespace JosephM.Application.Desktop.Application
 
             LoadedObjects.Add(resolveIt);
             ActiveTabItem = resolveIt;
+            RaiseAreMultipleTabsChangedEvents();
         }
 
         public override void UserMessage(string message)
