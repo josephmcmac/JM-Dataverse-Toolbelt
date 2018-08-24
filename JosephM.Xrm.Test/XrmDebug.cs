@@ -14,40 +14,8 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            var connection = new XrmConfiguration()
-            {
-                AuthenticationProviderType = XrmConfiguration.AuthenticationProviderType,
-                OrganizationUniqueName = "CRMAuto",
-                Domain = XrmConfiguration.Domain,
-                DiscoveryServiceAddress = XrmConfiguration.DiscoveryServiceAddress,
-                Username = XrmConfiguration.Username,
-                Password = XrmConfiguration.Password
-            };
-            connection.OrganizationUniqueName = "CRMAuto";
-            var newService = new XrmService(connection);
-
-            var importJob = newService.Retrieve(Entities.importjob, new Guid("702C87A8-3581-46D1-A281-CE4246112651"));
-
-            var dataString = importJob.GetStringField(Fields.importjob_.data);
-            var xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(dataString);
-            var resultNodes = xmlDocument.GetElementsByTagName("result");
-            foreach(XmlNode node in resultNodes)
-            {
-                //result = "success" errorcode = "0" errortext = ""
-                var result = node.Attributes["result"];
-                if (result != null && result.Value != "success")
-                {
-                    var errorCode = node.Attributes["errorcode"]?.Value;
-                    var errortext = node.Attributes["errortext"]?.Value;
-                }
-            }
+            
         }
-
-        //private class ImportJobData
-        //{
-        //    public string 
-        //}
 
         private void DeleteOnlineSampleData()
         {
