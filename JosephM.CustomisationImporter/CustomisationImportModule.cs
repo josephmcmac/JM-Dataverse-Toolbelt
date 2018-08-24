@@ -19,13 +19,21 @@ namespace JosephM.CustomisationImporter
 
         public override string MenuGroup => "Customisations";
 
+        protected virtual bool AddGetTemplateLink
+        {
+            get { return true; }
+        }
+
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            this.AddCustomFormFunction(new CustomFormFunction("GETIMPORTTEMPLATE", "Get Import Template", (r) => OpenTemplateCommand(), (r) => true)
+            if (AddGetTemplateLink)
             {
-                Description = "Open The Excel Template With Tabs And Columns For Importing Customisations"
-            }, typeof(CustomisationImportRequest));
+                this.AddCustomFormFunction(new CustomFormFunction("GETIMPORTTEMPLATE", "Get Import Template", (r) => OpenTemplateCommand(), (r) => true)
+                {
+                    Description = "Open The Excel Template With Tabs And Columns For Importing Customisations"
+                }, typeof(CustomisationImportRequest));
+            }
         }
 
         public void OpenTemplateCommand()
