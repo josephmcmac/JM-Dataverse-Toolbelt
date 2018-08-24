@@ -5,6 +5,7 @@ using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Deployment.DeployPackage
 {
+    [Instruction("The Solution In The Package Will Be Installed And Published In The Target Instance. Any Data Included In The Package Will Also Be Imported Matching By Either Id, Then Name, Or If No Match Is Found A New Record Created")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Connection, true, 20)]

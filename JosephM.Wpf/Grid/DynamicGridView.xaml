@@ -22,9 +22,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Style="{StaticResource DynamicGridContainer}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -32,23 +31,12 @@
         <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToVis}, Mode=OneWay}">
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
-        <Grid Grid.Row="1"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
-            <ItemsControl
-                ItemsSource="{Binding CustomFunctions}"
-                ItemTemplate="{StaticResource XrmButtonTemplate}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </Grid>
-        <Grid Grid.Row="2" Visibility="{Binding GridLoadError, Converter={StaticResource BoolToVis}}">
+        <Grid Grid.Row="1" Visibility="{Binding GridLoadError, Converter={StaticResource BoolToVis}}">
             <TextBlock
                     Text="{Binding ErrorMessage}"
                      Style="{StaticResource ValidationMessage}"  />
         </Grid>
-        <Grid Grid.Row="3"   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenNotCollapsedConverter}, Mode=OneWay}" >
+        <Grid Grid.Row="2"   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenNotCollapsedConverter}, Mode=OneWay}" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -57,26 +45,48 @@
                 <Grid Name="SortingLoadGrid" Grid.Row="0" Visibility="Collapsed" >
                     <shared:LoadingView DataContext="{Binding SortLoadingViewModel}" />
                 </Grid>
-                <Grid Name="SortingMainGrid" Grid.Row="1">
-                    <Grid Visibility="{Binding GridLoaded, Converter={StaticResource BoolToVis}}">
+                <Grid Name="SortingMainGrid" Grid.Row="1" Visibility="{Binding GridLoaded, Converter={StaticResource BoolToVis}}">
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto"  />
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Visibility="{Binding CanAddRow, Converter={StaticResource BoolToVis}}">
-                            <WrapPanel Orientation="Horizontal">
-                                <Button DataContext="{Binding Path=AddRowButton}"
-                                    Style="{StaticResource AddRowButton}"
-                                    Command="{Binding Command}" ToolTip="Add New" />
-                                <Grid Grid.Row="0" Visibility="{Binding CanAddMultipleRow, Converter={StaticResource BoolToVis}}">
-                                    <Button DataContext="{Binding Path=AddMultipleRowButton}"
-                                        Style="{StaticResource AddMultipleRowButton}"
-                                            Command="{Binding Command}" ToolTip="Add Multiple" />
-                                </Grid>
-                            </WrapPanel>
+                        <Grid Grid.Row="0" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" 
+                                  Visibility="{Binding CanAddRow, Converter={StaticResource BoolToVis}}"
+                                  Style="{StaticResource GridFunctionSection}"
+                                    >
+                                <WrapPanel Orientation="Horizontal"  VerticalAlignment="Center">
+                                    <Button DataContext="{Binding Path=AddRowButton}"
+                                        Style="{StaticResource AddRowButton}"
+                                        Command="{Binding Command}" ToolTip="Add New" />
+                                    <Grid Grid.Row="0" Visibility="{Binding CanAddMultipleRow, Converter={StaticResource BoolToVis}}">
+                                        <Button DataContext="{Binding Path=AddMultipleRowButton}"
+                                            Style="{StaticResource AddMultipleRowButton}"
+                                                Command="{Binding Command}" ToolTip="Add Multiple" />
+                                    </Grid>
+                                </WrapPanel>
+                            </Grid>
+                            <Grid Grid.Column="1"
+                                  Style="{StaticResource GridFunctionSection}"
+                                  >
+                                <ItemsControl
+                                    ItemsSource="{Binding CustomFunctions}"
+                                    ItemTemplate="{StaticResource XrmButtonTemplate}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </Grid>
                         </Grid>
-                        <Grid Grid.Row="1" >
+                        <Grid Grid.Row="1">
                             <DataGrid
                                 controlExtentions:FocusExtension.IsFocused="{Binding IsFocused, Mode=TwoWay}"
                                 CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"
@@ -89,7 +99,8 @@
                                 </DataGrid.ColumnHeaderStyle>
                             </DataGrid>
                         </Grid>
-                        <Grid  Grid.Row="2" Visibility="{Binding HasPaging, Converter={StaticResource BoolToVis}}">
+                        <Grid  Grid.Row="2" 
+                               Visibility="{Binding HasPaging, Converter={StaticResource BoolToVis}}">
                             <WrapPanel Orientation="Horizontal">
                                 <Grid Visibility="{Binding IsNotFirstPage, Converter={StaticResource BoolToVis}}" >
                                     <Button DataContext="{Binding PreviousPageButton}" Style="{StaticResource PreviousButton}" Command="{Binding Command}" />

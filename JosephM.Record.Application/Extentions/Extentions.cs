@@ -75,6 +75,15 @@ namespace JosephM.Application.ViewModel.Extentions
             return new ViewMetadata(recordService.GetFields(recordType).Select(f => new ViewField(f, 1, 200)));
         }
 
+        public static IEnumerable<string> GetStringQuickfindFields(this IRecordService recordService, string recordType)
+        {
+            var results = new List<String>();
+            results.AddRange(recordService.GetQuickfindFields(recordType).Where(f => recordService.IsString(f, recordType)));
+            if (!results.Any())
+                results.Add(recordService.GetPrimaryField(recordType));
+            return results;
+        }
+
         public static GetGridRecordsResponse GetGridRecordPage(this DynamicGridViewModel gridViewModel, IEnumerable<Condition> conditions, IEnumerable<SortExpression> sorts)
         {
             var sortList = sorts == null ? new List<SortExpression>() : sorts.ToList();

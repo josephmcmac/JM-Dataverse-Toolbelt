@@ -187,5 +187,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 var prop = GetObjectRecordService().GetPropertyInfo(field.FieldName, RecordType);
             }
         }
+
+        public override string Instruction => GetObjectRecordService().GetInstruction(RecordType);
     }
 }

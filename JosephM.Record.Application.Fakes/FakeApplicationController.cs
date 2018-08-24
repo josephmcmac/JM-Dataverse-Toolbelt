@@ -37,7 +37,7 @@ namespace JosephM.Application.ViewModel.Fakes
 
         public override IEnumerable<object> GetObjects()
         {
-            return _loadedObjects;
+            return _loadedObjects.ToArray();
         }
 
         private readonly List<object> _loadedObjects = new List<object>();

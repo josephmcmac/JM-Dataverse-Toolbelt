@@ -18,6 +18,10 @@ namespace JosephM.Xrm.Vsix.Module.CustomisationImport
     [DependantModule(typeof(XrmConnectionModule))]
     public class VsixCustomisationImportModule : CustomisationImportModule
     {
+        protected override bool AddGetTemplateLink
+        {
+            get { return false; }
+        }
         public override void DialogCommand()
         {
             var visualStudioService = ApplicationController.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService;

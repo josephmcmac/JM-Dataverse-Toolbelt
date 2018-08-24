@@ -13,6 +13,8 @@ using System.Linq;
 
 namespace JosephM.Deployment.CreatePackage
 {
+    [DisplayName("Create Deployment Package")]
+    [Instruction("A Folder Will Be Created Containing The Solution Zip And Xml Files For The Data To Be Included In The Deployment Package. The Deploy Package Process May Then Be Run On That Folder To Install The Package Into Another Dynamics Instance")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Connection, true, 20)]
@@ -105,7 +107,7 @@ namespace JosephM.Deployment.CreatePackage
         private static class Sections
         {
             public const string Main = "Main";
-            public const string PackageSolution = "PackageSolution";
+            public const string PackageSolution = "Solution";
             public const string Connection = "Connection";
             public const string DataIncluded = "Data Included Options";
         }

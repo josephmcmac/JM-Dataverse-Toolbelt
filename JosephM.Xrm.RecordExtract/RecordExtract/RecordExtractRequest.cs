@@ -7,6 +7,8 @@ using System.Collections.Generic;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
+    [DisplayName("Record Extract")]
+    [Instruction("A Document Will Be Generated Detailing Field Values In The Record, As Well As Records Related To It Via N:N, Or 1:N, Relationships")]
     [AllowSaveAndLoad]
     [Group(Sections.Document, true, 10)]
     [Group(Sections.RecordToReport, true, 20)]
@@ -14,7 +16,6 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
     [Group(Sections.CommonFieldOptions, true, 40)]
     [Group(Sections.DisplayOptions, true, 45)]
     [Group(Sections.ConfigureReportExclusions, true, 50)]
-    [DisplayName("Record Report")]
     public class RecordExtractRequest : ServiceRequestBase
     {
         public RecordExtractRequest()

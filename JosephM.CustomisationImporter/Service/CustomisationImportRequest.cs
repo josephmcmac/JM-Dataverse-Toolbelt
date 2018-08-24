@@ -13,6 +13,7 @@ using System.Linq;
 
 namespace JosephM.CustomisationImporter.Service
 {
+    [Instruction("Customisations Defined In The Excel File Will Be Imported Into The Dynamics Instance And Published. For Each Item If A Match Exists For The Schema Name It Will Be Updated, Otherwise A New Customisation Item Will Be Created")]
     [AllowSaveAndLoad]
     [DisplayName("Import Customisations")]
     [Group(Sections.File, true, 10)]

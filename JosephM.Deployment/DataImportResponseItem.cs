@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Record.IService;
@@ -12,13 +13,19 @@ namespace JosephM.Deployment
 {
     public class DataImportResponseItem : ServiceResponseItem
     {
-        public string Entity { get; set; }
+        [DisplayOrder(10)]
+        public string Entity { get; }
 
-        public string Name { get; set; }
+        [DisplayOrder(20)]
+        public string Name { get; }
 
-        public string Field { get; set; }
+        [DisplayOrder(30)]
+        [PropertyInContextByPropertyNotNull(nameof(Field))]
+        public string Field { get; }
 
-        public string Message { get; set; }
+        [GridWidth(400)]
+        [DisplayOrder(40)]
+        public string Message { get; }
 
         public DataImportResponseItem(string entity, string field, string name, string message, Exception ex)
             : this(message, ex)

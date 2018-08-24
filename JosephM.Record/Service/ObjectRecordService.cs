@@ -185,6 +185,13 @@ namespace JosephM.Record.Service
             throw new NotImplementedException();
         }
 
+        public string GetInstruction(string recordType)
+        {
+            var classType = GetClassType(recordType);
+            var instructionAttribute = classType.GetCustomAttribute<Instruction>();
+            return instructionAttribute?.Text;
+        }
+
         public override void Delete(string recordType, string id)
         {
             throw new NotImplementedException();

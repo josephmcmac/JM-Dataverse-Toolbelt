@@ -113,6 +113,7 @@
     <Compile Include="DeployPackage\DeployPackageService.cs" />
     <Compile Include="DeploymentModule.cs" />
     <Compile Include="DataImportServiceBase.cs" />
+    <Compile Include="DeployPackage\SolutionImportResult.cs" />
     <Compile Include="ExportXml\ExportType.cs" />
     <Compile Include="ExportXml\ExportRecordType.cs" />
     <Compile Include="ImportCsvs\DateFormat.cs" />

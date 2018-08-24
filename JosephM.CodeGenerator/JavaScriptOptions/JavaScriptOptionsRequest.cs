@@ -1,15 +1,15 @@
-﻿using JosephM.Application.ViewModel.SettingTypes;
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Attributes;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
-using System.Collections.Generic;
 
 namespace JosephM.CodeGenerator.JavaScriptOptions
 {
+    [DisplayName("JavaScript Generation")]
+    [Instruction("JavaScript Statements Will Be Output Which Initialise A JavaScript Object With Properties For Field Picklist Values. This May Then Be Copied Into A JavaScript File For Referencing Option Values")]
     [Group(Sections.OptionSetSelection, true, 10)]
     [Group(Sections.Other, true, 20)]
     public class JavaScriptOptionsRequest : ServiceRequestBase

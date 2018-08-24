@@ -10,6 +10,8 @@ using System.Collections.Generic;
 
 namespace JosephM.Deployment.ExportXml
 {
+    [DisplayName("Export XML")]
+    [Instruction("A Folder Will Be Created Containing An Xml File For Each Record Included. The Import XML Process May Then Be Run On That Folder To Import The Data Into A Dynamics Instance")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.IncludeWithExportedRecords, true, 30)]

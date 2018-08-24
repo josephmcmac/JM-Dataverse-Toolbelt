@@ -13,4 +13,10 @@
     <Style TargetType="{x:Type DataGridRow}" >
         <Setter Property="Background" Value="White" />
     </Style>
+    <Style x:Key="DynamicGridContainer" TargetType="{x:Type Grid}" >
+        <Setter Property="Margin" Value="9,9,9,9" />
+    </Style>
+    <Style x:Key="GridFunctionSection" TargetType="{x:Type Grid}" >
+        <Setter Property="Margin" Value="13,0,0,0" />
+    </Style>
 </ResourceDictionary>

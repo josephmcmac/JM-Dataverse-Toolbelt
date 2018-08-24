@@ -34,14 +34,19 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
             AddSavedRequestLoadFunction();
         }
 
+        private string LoadButtonLabel
+        {
+            get { return "Load/Edit Saved Input"; }
+        }
+
         /// <summary>
         /// This function adds the save and load buttons onto the form for an object type which implements IAllowSaveAndLoad
         /// </summary>
         private void AddSavedRequestsFormFunctions()
         {
-            var customFormFunction = new CustomFormFunction("SAVEREQUEST", "Save Details", SaveObject, IsAllowSaveAndLoad);
+            var customFormFunction = new CustomFormFunction("SAVEREQUEST", "Save Input", SaveObject, IsAllowSaveAndLoad, description: "Save The Input For Future Use.");
             this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
-            customFormFunction = new CustomFormFunction("LOADREQUEST", "Load/Edit Saved Details", LoadObject, AreSavedRequests);
+            customFormFunction = new CustomFormFunction("LOADREQUEST", LoadButtonLabel, LoadObject, AreSavedRequests, description: "Load Saved Input Into The Form, Edit Saved Inputs, Or Generate A Bat Executable To Automate Process Execution");
             this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
         }
 
@@ -233,7 +238,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                         //reload the form and notify
                         viewModel.ClearChildForms();
                         viewModel.LoadCustomFunctions();
-                        viewModel.ApplicationController.UserMessage("Saved!");
+                        viewModel.ApplicationController.UserMessage($"You Input Has Been Saved. To Load A Saved Input Or Generate A Bat Executable Click The '{LoadButtonLabel}' Button");
                     };
 
                     //load the entry form

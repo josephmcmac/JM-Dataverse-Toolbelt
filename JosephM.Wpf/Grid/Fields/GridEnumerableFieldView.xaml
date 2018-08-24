@@ -26,9 +26,11 @@
                 Style="{StaticResource StringFieldEntryStyleReadOnly}"
                 Text="{Binding StringDisplay, Mode=OneWay, NotifyOnValidationError=True}" />
         </Grid>
-        <Grid Grid.Column="1" Visibility="{Binding BulkAddButton, Converter={StaticResource NullToHiddenConverter}}">
+        <Grid Grid.Column="1"
+              Visibility="{Binding BulkAddButton, Converter={StaticResource NullToHiddenConverter}}"
+              Style="{StaticResource FieldEntryButtonGridStyle}">
             <Button DataContext="{Binding Path=BulkAddButton}" 
-                        Style="{StaticResource AddMultipleRowButton}"
+                        Style="{StaticResource AddMultipleButton}"
                             Command="{Binding Command}" ToolTip="Click To Add Multiple Items" />
         </Grid>
     </Grid>

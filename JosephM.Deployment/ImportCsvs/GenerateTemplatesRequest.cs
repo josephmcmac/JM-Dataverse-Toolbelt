@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace JosephM.Deployment.ImportCsvs
 {
+    [Instruction("CSV Files Will Be Created With The Correct Naming And Columns Headings To Import Records Into Dynamics")]
+    [DisplayName("Generate CSV Templates")]
     [Group(Sections.Main, true)]
     public class GenerateTemplatesRequest
     {

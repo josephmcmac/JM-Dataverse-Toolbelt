@@ -122,7 +122,13 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
 
         public override string TabLabel
         {
-            get { return typeof(TRequest).GetDisplayName(); }
+            get
+            {
+                var requestType = typeof(TRequest).GetDisplayName();
+                if (requestType.EndsWith(" Request"))
+                    requestType = requestType.Substring(0, requestType.Length - 8);
+                return requestType;
+            }
         }
 
         public ObjectEntryDialog ConfigEntryDialog { get; private set; }

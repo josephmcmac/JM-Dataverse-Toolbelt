@@ -1,8 +1,10 @@
 ﻿using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Linq;
+using System.Xml;
 
 namespace JosephM.Xrm.Test
 {
@@ -12,6 +14,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+            
         }
 
         private void DeleteOnlineSampleData()

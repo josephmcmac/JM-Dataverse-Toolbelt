@@ -23,9 +23,10 @@ namespace JosephM.Application.ViewModel.Query
     public class QueryViewModel : TabAreaViewModelBase, INotifyPropertyChanged
     {
         public QueryViewModel(IEnumerable<string> recordTypes, IRecordService recordService, IApplicationController controller, bool allowQuery = false, bool loadInitially = false, CustomGridFunction closeFunction = null
-            , IEnumerable<CustomGridFunction> customFunctions = null)
+            , IEnumerable<CustomGridFunction> customFunctions = null, bool allowCrud = true)
             : base(controller)
         {
+            AllowCrud = allowCrud;
             CustomFunctions = customFunctions;
             LoadInitially = loadInitially;
             AllowQuery = allowQuery;
@@ -37,6 +38,7 @@ namespace JosephM.Application.ViewModel.Query
             GroupSelectedConditionsOr = new XrmButtonViewModel("Group Selected Or", () => GroupSelected(FilterOperator.Or), ApplicationController);
             GroupSelectedConditionsAnd = new XrmButtonViewModel("Group Selected And", () => GroupSelected(FilterOperator.And), ApplicationController);
             UngroupSelectedConditions = new XrmButtonViewModel("Ungroup Selected", () => UnGroupSelected(), ApplicationController);
+            RunQueryButton = new XrmButtonViewModel("Run Query", QuickFind, ApplicationController);
             ChangeQueryType();
 
             QueryTypeButton.IsVisible = AllowQuery;
@@ -45,6 +47,8 @@ namespace JosephM.Application.ViewModel.Query
             if (_recordTypes.Count() == 1)
                 RecordType = _recordTypes.First();
         }
+
+        public bool AllowCrud { get; set; }
 
         private IEnumerable<CustomGridFunction> CustomFunctions { get; set; }
         private bool LoadInitially { get; set; }
@@ -106,7 +110,7 @@ namespace JosephM.Application.ViewModel.Query
                     new CustomGridFunction("BACKTOQUERY", "Back To Query", (g) => { ResetToQueryEntry(); }, (g) => !IsQuickFind && QueryRun),
                     new CustomGridFunction("EDITCOLUMNS", "Edit Columns", (g) => LoadColumnEdit(), (g) => DynamicGridViewModel != null)
                 };
-                if (FormService != null)
+                if (FormService != null && AllowCrud)
                 {
                     DynamicGridViewModel.EditRow = (g) =>
                     {
@@ -413,7 +417,9 @@ namespace JosephM.Application.ViewModel.Query
                 query.QuickFindText = QuickFindText;
                 if (!string.IsNullOrWhiteSpace(QuickFindText))
                 {
-                    query.RootFilter.Conditions.Add(new Condition(RecordService.GetPrimaryField(DynamicGridViewModel.RecordType), ConditionType.BeginsWith, QuickFindText));
+                    var quickFindFields = RecordService.GetStringQuickfindFields(RecordType);
+                    query.RootFilter.ConditionOperator = FilterOperator.Or;
+                    query.RootFilter.Conditions.AddRange(quickFindFields.Select(f => new Condition(f, ConditionType.BeginsWith, QuickFindText)));
                 }
             }
             else
@@ -480,6 +486,7 @@ namespace JosephM.Application.ViewModel.Query
         public XrmButtonViewModel GroupSelectedConditionsAnd { get; set; }
 
         public XrmButtonViewModel UngroupSelectedConditions { get; set; }
+        public XrmButtonViewModel RunQueryButton { get; private set; }
 
         private IEnumerable<string> _recordTypes;
         private IEnumerable<RecordType> _recordTypeItemsSource;

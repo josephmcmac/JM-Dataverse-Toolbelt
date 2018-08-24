@@ -2,6 +2,7 @@
 
 using JosephM.Core.AppConfig;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 #endregion
@@ -20,9 +21,15 @@ namespace JosephM.Application.Application
         string ApplicationName { get; }
 
         /// <summary>
-        ///     Removes An Object From The UI Region In The Application
+        ///     Removes An Object From The Application UI
         /// </summary>
         void Remove(object item);
+
+        /// <summary>
+        ///     Gets All Objects Loaded In The Application UI
+        /// </summary>
+        IEnumerable<object> GetObjects();
+
 
         /// <summary>
         ///     Invokes A Popup With A Message For The User

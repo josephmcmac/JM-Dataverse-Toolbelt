@@ -2,6 +2,7 @@
 using JosephM.Core.Service;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Record.Xrm.XrmRecord;
+using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportSolution
 {
@@ -14,7 +15,8 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
             //just use the method in DeployPackageService to do the import
             var xrmRecordService = new XrmRecordService(request.Connection);
             var service = new DeployPackageService(xrmRecordService);
-            service.ImportSolutions(new[] { request.SolutionZip.FileName }, controller, xrmRecordService);
+            var importItems = service.ImportSolutions(new[] { request.SolutionZip.FileName }, controller, xrmRecordService);
+            response.AddResponseItems(importItems.Where(it => !it.IsSuccess).Select(it => new ImportSolutionResponseItem(it)));
         }
     }
 }

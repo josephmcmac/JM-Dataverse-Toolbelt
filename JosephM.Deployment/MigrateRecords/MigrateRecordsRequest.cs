@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace JosephM.Deployment.MigrateRecords
 {
+    [Instruction("All Records Will Be Queried From The Source Instance, Then Imported Into The Target Instance. Matches To Update Records In The Target Will By Done By Either Primary Key, Then Name, Else If No Match Is Found A New Record Will Be Created")]
     [AllowSaveAndLoad]
     [Group(Sections.Connections, true, 10)]
     [Group(Sections.IncludeWithExportedRecords, true, 30)]

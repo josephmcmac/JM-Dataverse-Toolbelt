@@ -27,10 +27,6 @@ namespace JosephM.Record.Query
         DoesNotEndWith,
         [ValidForFieldTypes(RecordFieldType.String, RecordFieldType.Memo)]
         Like,
-        //this actually just a fake to prevent it displaying in UI at all
-        //as haven't implemented multiselect
-        [ValidForFieldTypes(RecordFieldType.FileRef)]
-        In,
         [ValidForFieldTypes(RecordFieldType.Owner)]
         EqualUserId,
         [ValidForFieldTypes(RecordFieldType.Owner)]
@@ -86,6 +82,78 @@ namespace JosephM.Record.Query
         [ValidForFieldTypes(RecordFieldType.Date)]
         LastFiscalYear,
         [ValidForFieldTypes(RecordFieldType.Date)]
-        LastFiscalPeriod
+        LastFiscalPeriod,
+        [ValidForFieldTypes(RecordFieldType.String, RecordFieldType.Memo)]
+        NotLike,
+        //this actually just a fake to prevent it displaying in UI at all
+        //as haven't implemented multiselect
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        In,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NotIn,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        Between,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NotBetween,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        LastXHours,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NextXHours,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        LastXDays,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NextXDays,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        LastXWeeks,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NextXWeeks,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        LastXMonths,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NextXMonths,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        LastXYears,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NextXYears,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        EqualBusinessId,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NotEqualBusinessId,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        ChildOf,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        Mask,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NotMask,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        MasksSelect,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        Contains,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        DoesNotContain,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        EqualUserLanguage,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        OlderThanXMonths,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        LastXFiscalYears,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NextXFiscalYears,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        LastXFiscalPeriods,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        NextXFiscalPeriods,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        InFiscalYear,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        InFiscalPeriod,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        InFiscalPeriodAndYear,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        InOrBeforeFiscalPeriodAndYear,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        InOrAfterFiscalPeriodAndYear,
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
+        UnmatchedConditionType = 999999,
     }
 }

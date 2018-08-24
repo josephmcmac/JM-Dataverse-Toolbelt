@@ -19,6 +19,34 @@ namespace JosephM.Application.ViewModel.TabArea
             : base(controller)
         {
             LoadingViewModel = new LoadingViewModel(controller);
+            CloseOtherTabsCommand = new MyCommand(() =>
+            {
+                foreach(var item in ApplicationController.GetObjects().ToArray())
+                {
+                    if (item != this)
+                    {
+                        if(item is TabAreaViewModelBase)
+                        {
+                            ((TabAreaViewModelBase)item).TabCloseCommand.Execute();
+                        }
+                        else
+                            ApplicationController.Remove(item);
+                    }
+                }
+
+            });
+            CloseAllTabsCommand = new MyCommand(() =>
+            {
+                foreach (var item in ApplicationController.GetObjects().ToArray())
+                {
+                    if (item is TabAreaViewModelBase)
+                    {
+                        ((TabAreaViewModelBase)item).TabCloseCommand.Execute();
+                    }
+                    else
+                        ApplicationController.Remove(item);
+                }
+            });
         }
 
         public virtual string TabLabel
@@ -93,6 +121,15 @@ namespace JosephM.Application.ViewModel.TabArea
             {
                 return !ChildForms.Any();
             }
+        }
+
+        public MyCommand CloseOtherTabsCommand { get; set; }
+
+        public MyCommand CloseAllTabsCommand { get; set; }
+
+        public bool AreMultipleTabs
+        {
+            get { return ApplicationController.GetObjects().Count() > 1; }
         }
     }
 }

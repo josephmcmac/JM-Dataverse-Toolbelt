@@ -21,20 +21,20 @@ namespace JosephM.Xrm.Vsix.Test
         public override void LoadDialog(DialogViewModel dialog, bool showCompletionScreen = true, bool isModal = false)
         {
             ClearTabs();
-            _regions.Add(dialog);
+            _loadedObjects.Add(dialog);
         }
 
         public override void Remove(object item)
         {
-            _regions.Remove(item);
+            _loadedObjects.Remove(item);
         }
 
         public override IEnumerable<object> GetObjects()
         {
-            return _regions;
+            return _loadedObjects.ToArray();
         }
 
-        private readonly List<object> _regions = new List<object>();
+        private readonly List<object> _loadedObjects = new List<object>();
 
         public override void UserMessage(string message)
         {
@@ -63,7 +63,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public override void ClearTabs()
         {
-             _regions.Clear();
+             _loadedObjects.Clear();
         }
 
         public override Process StartProcess(string fileName, string arguments = null)

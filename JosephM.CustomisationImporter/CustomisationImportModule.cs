@@ -5,6 +5,8 @@ using JosephM.CustomisationImporter.Service;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.IO;
+using JosephM.Application.ViewModel.Extentions;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
 namespace JosephM.CustomisationImporter
 {
@@ -17,10 +19,21 @@ namespace JosephM.CustomisationImporter
 
         public override string MenuGroup => "Customisations";
 
+        protected virtual bool AddGetTemplateLink
+        {
+            get { return true; }
+        }
+
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-            AddOption(MenuGroup, "Open Template", OpenTemplateCommand, "Get An Excel File With The Tabs And Columns For Importing Customisations");
+            if (AddGetTemplateLink)
+            {
+                this.AddCustomFormFunction(new CustomFormFunction("GETIMPORTTEMPLATE", "Get Import Template", (r) => OpenTemplateCommand(), (r) => true)
+                {
+                    Description = "Open The Excel Template With Tabs And Columns For Importing Customisations"
+                }, typeof(CustomisationImportRequest));
+            }
         }
 
         public void OpenTemplateCommand()
