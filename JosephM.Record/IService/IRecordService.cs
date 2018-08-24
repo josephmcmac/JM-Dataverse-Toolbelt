@@ -104,6 +104,7 @@ namespace JosephM.Record.IService
         ///     Saves The Record Type Creating It If It Does Not Yet Exist
         /// </summary>
         void CreateOrUpdate(RecordMetadata recordMetadata);
+        IEnumerable<string> GetQuickfindFields(string recordType);
 
         /// <summary>
         ///     Saves The Relationship Creating It If It Does Not Yet Exist

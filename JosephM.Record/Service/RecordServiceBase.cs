@@ -329,5 +329,10 @@ namespace JosephM.Record.Service
         {
             return new TypeConfigs(null);
         }
+
+        public IEnumerable<string> GetQuickfindFields(string recordType)
+        {
+            return new[] { this.GetPrimaryField(recordType) };
+        }
     }
 }

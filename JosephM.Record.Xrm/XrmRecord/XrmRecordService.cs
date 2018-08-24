@@ -1339,6 +1339,46 @@ namespace JosephM.Record.Xrm.XrmRecord
             return _typeConfigs;
         }
 
+        public IEnumerable<string> GetQuickfindFields(string recordType)
+        {
+            var results = new List<String>();
+            var savedViews = GetViews(recordType);
+            if (savedViews != null)
+            {
+                var matchingViews = savedViews.Where(v => v.ViewType == ViewType.QuickFindSearch);
+                if (matchingViews.Any())
+                {
+                    var quickfindView = matchingViews.First();
+                    if (quickfindView.RawQuery != null)
+                    {
+                        //okay think need to parse out the attributes
+                        var startQuickFindFilter = quickfindView.RawQuery.IndexOf("isquickfindfields");
+                        var endQuickFindFilter = quickfindView.RawQuery.IndexOf("</fil", startQuickFindFilter);
+                        if (startQuickFindFilter != -1 && endQuickFindFilter != -1)
+                        {
+                            var currentIndex = startQuickFindFilter;
+                            while (true)
+                            {
+                                var nextAttribute = quickfindView.RawQuery.IndexOf("attribute=\"", currentIndex);
+                                if (nextAttribute == -1 || nextAttribute > endQuickFindFilter)
+                                    break;
+                                var startAttribute = nextAttribute + 11;
+                                var endAttribute = quickfindView.RawQuery.IndexOf("\"", startAttribute);
+                                if (endAttribute == -1)
+                                    break;
+                                var attributeName = quickfindView.RawQuery.Substring(startAttribute, endAttribute - startAttribute);
+                                results.Add(attributeName);
+                                currentIndex = endAttribute;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!results.Any())
+                results.Add(XrmService.GetPrimaryNameField(recordType));
+            return results;
+        }
+
         public class DeleteInCrmResponse
         {
             private List<IRecord> _deleted = new List<IRecord>();
