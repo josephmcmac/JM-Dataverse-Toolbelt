@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 #endregion
 
@@ -353,6 +354,13 @@ namespace JosephM.Core.Extentions
                 }
             }
             return result.Distinct();
+        }
+
+        public static string ToTitleCase(this string severalWords)
+        {
+            if (severalWords == null)
+                return null;
+            return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(severalWords.ToLower());
         }
     }
 }

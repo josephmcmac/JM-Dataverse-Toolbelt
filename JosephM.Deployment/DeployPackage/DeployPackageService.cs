@@ -21,6 +21,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Threading;
+using System.Xml;
 
 #endregion
 
@@ -46,7 +47,8 @@ namespace JosephM.Deployment.DeployPackage
             var packageFolder = request.FolderContainingPackage.FolderPath;
             var solutionFiles = Directory.GetFiles(packageFolder, "*.zip");
 
-            ImportSolutions(solutionFiles, controller, xrmRecordService);
+            var importItems = ImportSolutions(solutionFiles, controller, xrmRecordService);
+            response.AddResponseItems(importItems.Where(it => !it.IsSuccess).Select(it => new DataImportResponseItem(it.Type, null, it.Name, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null)));
 
             foreach (var childFolder in Directory.GetDirectories(packageFolder))
             {
@@ -65,8 +67,9 @@ namespace JosephM.Deployment.DeployPackage
 
         private object _lockObject = new object();
 
-        public void ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
+        public IEnumerable<SolutionImportResult> ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
         {
+            var results = new List<SolutionImportResult>();
             var countToDo = solutionFiles.Count();
             var countRecordsImported = 0;
 
@@ -96,6 +99,18 @@ namespace JosephM.Deployment.DeployPackage
                     try
                     {
                         xrmService.Execute(req);
+                        var job = xrmService.GetFirst("importjob", "importjobid", importId);
+                        if (job != null)
+                        {
+                            var dataString = job.GetStringField(Fields.importjob_.data);
+                            var xmlDocument = new XmlDocument();
+                            xmlDocument.LoadXml(dataString);
+                            var resultNodes = xmlDocument.GetElementsByTagName("result");
+                            foreach (XmlNode node in resultNodes)
+                            {
+                                results.Add(new SolutionImportResult(node));
+                            }
+                        }
                     }
                     finally
                     {
@@ -135,6 +150,7 @@ namespace JosephM.Deployment.DeployPackage
                     });
                 }
             }
+            return results;
         }
 
         public class Processor
