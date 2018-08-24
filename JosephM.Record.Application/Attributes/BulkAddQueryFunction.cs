@@ -62,7 +62,7 @@ namespace JosephM.Application.ViewModel.Attributes
                     var targetType = GetTargetType(recordForm, subGridReference);
 
                     var selectedFunction = new CustomGridFunction("ADDSELECTED", "Add Selected", (g) => AddSelectedItems(g, recordForm, subGridReference)
-                    , visibleFunction: (g) => g.GridRecords.Any());
+                    , visibleFunction: (g) => g.GridRecords != null && g.GridRecords.Any());
 
                     var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, customFunctions: new[] { selectedFunction }, allowCrud: false);
                     childForm.TypeAhead = TypeAhead;
