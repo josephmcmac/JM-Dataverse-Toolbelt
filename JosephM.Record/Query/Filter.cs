@@ -11,6 +11,7 @@ namespace JosephM.Record.Query
         public List<Condition> Conditions { get; set; }
 
         public List<Filter> SubFilters { get; set; }
+        public bool IsQuickFindFilter { get; set; }
 
         public Filter()
         {

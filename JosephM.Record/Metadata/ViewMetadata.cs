@@ -21,9 +21,9 @@ namespace JosephM.Record.Metadata
         }
 
         public IEnumerable<ViewField> Fields { get; private set; }
-
         public IEnumerable<SortExpression> Sorts { get; private set; }
-
         public ViewType ViewType { get; set; }
+        public string Id { get; set; }
+        public string RawQuery { get; set; }
     }
 }

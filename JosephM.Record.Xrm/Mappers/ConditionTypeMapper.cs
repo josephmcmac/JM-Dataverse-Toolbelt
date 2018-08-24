@@ -6,9 +6,6 @@ namespace JosephM.Record.Xrm.Mappers
 {
     public class ConditionTypeMapper : EnumMapper<ConditionType, ConditionOperator>
     {
-        protected override bool AllowUnmapped
-        {
-            get { return false; }
-        }
+        protected override ConditionType DefaultEnum1Option => ConditionType.UnmatchedConditionType;
     }
 }

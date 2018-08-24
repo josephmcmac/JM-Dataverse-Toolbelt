@@ -28,7 +28,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     query.QuickFindText = referenceField.EnteredText;
                     if (!string.IsNullOrWhiteSpace(referenceField.EnteredText))
                     {
-                        query.RootFilter.Conditions.Add(new Condition(referenceField.LookupService.GetPrimaryField(referenceField.RecordTypeToLookup), ConditionType.BeginsWith, referenceField.EnteredText));
+                        var quickFindFields = DynamicGridViewModel.RecordService.GetStringQuickfindFields(referenceField.RecordTypeToLookup);
+                        query.RootFilter.ConditionOperator = FilterOperator.Or;
+                        query.RootFilter.Conditions.AddRange(quickFindFields.Select(f => new Condition(f, ConditionType.BeginsWith, referenceField.EnteredText)));
                     }
 
                     if (!DynamicGridViewModel.HasPaging || ignorePages)

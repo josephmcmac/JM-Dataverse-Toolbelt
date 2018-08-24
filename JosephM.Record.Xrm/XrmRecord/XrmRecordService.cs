@@ -241,6 +241,17 @@ namespace JosephM.Record.Xrm.XrmRecord
                     new ConditionTypeMapper().Map(condition.ConditionType));
         }
 
+        private Condition ToCondition(ConditionExpression conditionexpression, string recordType)
+        {
+            if (conditionexpression.Values != null && conditionexpression.Values.Any())
+                return new Condition(conditionexpression.AttributeName,
+                    new ConditionTypeMapper().Map(conditionexpression.Operator),
+                    conditionexpression.Values);
+            else
+                return new Condition(conditionexpression.AttributeName,
+                    new ConditionTypeMapper().Map(conditionexpression.Operator));
+        }
+
         private IRecord ToIRecord(Entity entity)
         {
             var xrmRecord = new XrmRecord(entity.LogicalName);
@@ -681,7 +692,8 @@ namespace JosephM.Record.Xrm.XrmRecord
                             {
                                 Enum.TryParse(query.GetInt("querytype").ToString(), out viewType);
                             }
-                            var view = new ViewMetadata(viewFields) { ViewType = viewType };
+                            var view = new ViewMetadata(viewFields) { ViewType = viewType, Id = query.Id.ToString() };
+                            view.RawQuery = query.GetStringField(Fields.savedquery_.fetchxml);
                             viewMetadatas.Add(view);
                         }
                     }
@@ -902,6 +914,25 @@ namespace JosephM.Record.Xrm.XrmRecord
             return crmFilter;
         }
 
+        private Filter ToFilter(FilterExpression filterExpression, string recordType)
+        {
+            var mapper = new EnumMapper<LogicalOperator, FilterOperator>();
+            var filter = new Filter();
+            filter.ConditionOperator = mapper.Map(filterExpression.FilterOperator);
+            filter.IsQuickFindFilter = filterExpression.IsQuickFindFilter;
+            if (filterExpression.Conditions != null)
+            {
+                foreach (var c in filterExpression.Conditions)
+                    filter.Conditions.Add(ToCondition(c, recordType));
+            }
+            if (filterExpression.Filters != null)
+            {
+                foreach (var f in filterExpression.Filters)
+                    filter.SubFilters.Add(ToFilter(f, recordType));
+            }
+            return filter;
+        }
+
         public string GetRelationshipLabel(One2ManyRelationshipMetadata relationship)
         {
             return _xrmService.GetOneToManyRelationshipLabel(relationship.ReferencedEntity, relationship.SchemaName);
@@ -1059,6 +1090,23 @@ namespace JosephM.Record.Xrm.XrmRecord
                     MapIntoLink(childLink, childJoin);
                 }
             }
+        }
+
+        private Join ToJoin(LinkEntity link)
+        {
+            var join = new Join(link.LinkFromAttributeName, link.LinkFromEntityName, link.LinkToAttributeName);
+            if (link.LinkCriteria != null)
+            {
+                join.RootFilter = ToFilter(link.LinkCriteria, link.LinkToEntityName);
+            }
+            if (link.LinkEntities != null)
+            {
+                foreach (var childLink in link.LinkEntities)
+                {
+                    join.Joins.Add(ToJoin(childLink));
+                }
+            }
+            return join;
         }
 
         public string WebUrl

@@ -75,6 +75,55 @@ namespace JosephM.Application.ViewModel.Extentions
             return new ViewMetadata(recordService.GetFields(recordType).Select(f => new ViewField(f, 1, 200)));
         }
 
+        public static IEnumerable<string> GetQuickfindFields(this IRecordService recordService, string recordType)
+        {
+            var results = new List<String>();
+            var savedViews = recordService.GetViews(recordType);
+            if (savedViews != null)
+            {
+                var matchingViews = savedViews.Where(v => v.ViewType == ViewType.QuickFindSearch);
+                if (matchingViews.Any())
+                {
+                    var quickfindView = matchingViews.First();
+                    if(quickfindView.RawQuery != null)
+                    {
+                        //okay think need to parse out the attributes
+                        var startQuickFindFilter = quickfindView.RawQuery.IndexOf("isquickfindfields");
+                        var endQuickFindFilter = quickfindView.RawQuery.IndexOf("</fil", startQuickFindFilter);
+                        if (startQuickFindFilter != -1 && endQuickFindFilter != -1)
+                        {
+                            var currentIndex = startQuickFindFilter;
+                            while (true)
+                            {
+                                var nextAttribute = quickfindView.RawQuery.IndexOf("attribute=\"", currentIndex);
+                                if (nextAttribute == -1 || nextAttribute > endQuickFindFilter)
+                                    break;
+                                var startAttribute = nextAttribute + 11;
+                                var endAttribute = quickfindView.RawQuery.IndexOf("\"", startAttribute);
+                                if (endAttribute == -1)
+                                    break;
+                                var attributeName = quickfindView.RawQuery.Substring(startAttribute, endAttribute - startAttribute);
+                                results.Add(attributeName);
+                                currentIndex = endAttribute;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!results.Any())
+                results.Add(recordService.GetPrimaryField(recordType));
+            return results;
+        }
+
+        public static IEnumerable<string> GetStringQuickfindFields(this IRecordService recordService, string recordType)
+        {
+            var results = new List<String>();
+            results.AddRange(recordService.GetQuickfindFields(recordType).Where(f => recordService.IsString(f, recordType)));
+            if (!results.Any())
+                results.Add(recordService.GetPrimaryField(recordType));
+            return results;
+        }
+
         public static GetGridRecordsResponse GetGridRecordPage(this DynamicGridViewModel gridViewModel, IEnumerable<Condition> conditions, IEnumerable<SortExpression> sorts)
         {
             var sortList = sorts == null ? new List<SortExpression>() : sorts.ToList();

@@ -417,7 +417,9 @@ namespace JosephM.Application.ViewModel.Query
                 query.QuickFindText = QuickFindText;
                 if (!string.IsNullOrWhiteSpace(QuickFindText))
                 {
-                    query.RootFilter.Conditions.Add(new Condition(RecordService.GetPrimaryField(DynamicGridViewModel.RecordType), ConditionType.BeginsWith, QuickFindText));
+                    var quickFindFields = RecordService.GetStringQuickfindFields(RecordType);
+                    query.RootFilter.ConditionOperator = FilterOperator.Or;
+                    query.RootFilter.Conditions.AddRange(quickFindFields.Select(f => new Condition(f, ConditionType.BeginsWith, QuickFindText)));
                 }
             }
             else
