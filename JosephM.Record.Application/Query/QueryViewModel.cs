@@ -386,7 +386,7 @@ namespace JosephM.Application.ViewModel.Query
 
         public ObservableCollection<GridRowViewModel> GridRecords
         {
-            get { return DynamicGridViewModel.GridRecords; }
+            get { return DynamicGridViewModel?.GridRecords; }
         }
 
         public GetGridRecordsResponse GetGridRecords(bool ignorePages)

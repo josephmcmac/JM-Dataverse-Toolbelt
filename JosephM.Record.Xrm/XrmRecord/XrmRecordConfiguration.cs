@@ -23,6 +23,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [MyDescription("The User Authentication Type For The CRM Instance")]
         [DisplayOrder(20)]
         [RequiredProperty]
+        [DisplayName("Authentication Type")]
         public XrmRecordAuthenticationProviderType AuthenticationProviderType { get; set; }
 
         [MyDescription("The Discovery Service Address For The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
@@ -35,6 +36,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [DisplayOrder(40)]
         [RequiredProperty]
         [GridWidth(160)]
+        [DisplayName("Org Unique Name")]
         public string OrganizationUniqueName { get; set; }
 
         [MyDescription("If Active Directory Authentication The Domain For Your Login")]

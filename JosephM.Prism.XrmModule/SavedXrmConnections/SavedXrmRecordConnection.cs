@@ -10,7 +10,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
         [MyDescription("Set This Connection As Active")]
         [DisplayOrder(1)]
         [UniqueOn]
-        [GridWidth(60)]
+        [GridWidth(65)]
         public bool Active { get; set; }
 
         [Hidden]

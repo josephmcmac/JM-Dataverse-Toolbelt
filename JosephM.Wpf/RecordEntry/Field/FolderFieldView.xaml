@@ -20,7 +20,11 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" MinWidth="150">
-            <GroupBox Width="Auto" AllowDrop="True" Drop="DropFile"  Style="{StaticResource HighlightDropZone}">
+            <GroupBox 
+                BorderThickness="0"
+                Margin="0"
+                Padding="0"
+                Width="Auto" AllowDrop="True" Drop="DropFile"  Style="{StaticResource HighlightDropZone}">
                 <TextBox
                 AllowDrop="True" PreviewDragOver="TextBoxDragOver" Drop="DropFile"  
                 TabIndex="1"
