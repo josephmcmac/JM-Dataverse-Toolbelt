@@ -24,12 +24,13 @@ namespace JosephM.Application.Desktop.Module.Crud
             : base(dialogController)
         {
             RecordService = recordService;
-            //this is so that the completion screen isnt losaded when the dialog completes
+            //this is so that the completion screen isnt loaded when the dialog completes
             //this dialog just loads the query into the ui and does not have a 'completion'
             OverideCompletionScreenMethod = () => { };
         }
 
-        private string _tabLabel = "Browse/Update Data";
+        private string _tabLabel = "Crud/Query Data";
+
         public override string TabLabel
         {
             get

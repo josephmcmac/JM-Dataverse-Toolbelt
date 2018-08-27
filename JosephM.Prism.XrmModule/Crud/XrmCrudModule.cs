@@ -24,12 +24,12 @@ namespace JosephM.XrmModule.Crud
 
         public override string MainOperationName
         {
-            get { return "Browse/Update"; }
+            get { return "Crud/Query Data"; }
         }
 
         private void AddBrowseButtonToSavedConnectionsGrid()
         {
-            var customGridFunction = new CustomGridFunction("CRUD", "Browse Selected", (g) =>
+            var customGridFunction = new CustomGridFunction("CRUD", "Crud/Query Selected", (g) =>
             {
                 if (g.SelectedRows.Count() != 1)
                 {
@@ -43,8 +43,8 @@ namespace JosephM.XrmModule.Crud
                     {
                         var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
                         var dialog = new XrmCrudDialog(xrmRecordService, new DialogController(ApplicationController));
-                        dialog.SetTabLabel("Browse " + instance.Name);
-                        g.LoadDialog(dialog);
+                        dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
+                        g.ApplicationController.NavigateTo(dialog);
                     }
                 }
             }, (g) => g.GridRecords != null && g.GridRecords.Any());

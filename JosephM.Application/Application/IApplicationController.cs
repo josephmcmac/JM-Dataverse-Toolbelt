@@ -63,6 +63,8 @@ namespace JosephM.Application.Application
 
         void ThrowException(Exception ex);
 
+        void NavigateTo(object item);
+
         void NavigateTo(Type type, UriQuery uriQuery);
 
         string GetSaveFileName(string initialFileName, string extention);

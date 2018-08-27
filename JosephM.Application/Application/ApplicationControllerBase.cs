@@ -143,7 +143,7 @@ namespace JosephM.Application.Application
         }
 
         public abstract void NavigateTo(Type type, UriQuery uriQuery = null);
-
+        public abstract void NavigateTo(object item);
         public abstract string GetSaveFileName(string initialFileName, string extention);
 
         public abstract string GetSaveFolderName();

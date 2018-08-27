@@ -73,17 +73,6 @@ namespace JosephM.Application.Desktop.Application
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void RequestNavigate(Type type, UriQuery uriQuery)
-        {
-            var resolveIt = Container.ResolveType(type);
-
-            OnNavigatedTo(resolveIt);
-
-            LoadedObjects.Add(resolveIt);
-            ActiveTabItem = resolveIt;
-            RaiseAreMultipleTabsChangedEvents();
-        }
-
         public override void UserMessage(string message)
         {
             DoOnMainThread(
@@ -103,7 +92,16 @@ namespace JosephM.Application.Desktop.Application
 
         public override void NavigateTo(Type type, UriQuery uriQuery)
         {
-            RequestNavigate(type, uriQuery);
+            var resolveIt = Container.ResolveType(type);
+            NavigateTo(resolveIt);
+        }
+
+        public override void NavigateTo(object item)
+        {
+            OnNavigatedTo(item);
+            LoadedObjects.Add(item);
+            ActiveTabItem = item;
+            RaiseAreMultipleTabsChangedEvents();
         }
 
         public override string GetSaveFileName(string initialFileName, string extention)

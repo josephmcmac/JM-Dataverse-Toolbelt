@@ -38,6 +38,11 @@ namespace JosephM.Application.Desktop.Console
             throw new NotImplementedException();
         }
 
+        public override void NavigateTo(object item)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void NavigateTo(Type type, UriQuery uriQuery = null)
         {
             var resolvedType = Container.ResolveType(type);

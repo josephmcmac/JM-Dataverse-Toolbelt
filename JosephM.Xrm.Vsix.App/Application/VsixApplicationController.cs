@@ -39,6 +39,11 @@ namespace JosephM.Xrm.Vsix.Application
             NavigateTo(navigationObject, uriQuery, showCompletionScreen: true, isModal: false);
         }
 
+        public override void NavigateTo(object item)
+        {
+            NavigateTo(item, null, showCompletionScreen: true, isModal: false);
+        }
+
         public void NavigateTo(object navigationObject, UriQuery uriQuery, bool showCompletionScreen = true, bool isModal = false)
         {
             uriQuery = uriQuery ?? new UriQuery();
