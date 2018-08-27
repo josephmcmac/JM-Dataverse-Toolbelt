@@ -95,6 +95,8 @@
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
                                         <EventSetter Event="Click" Handler="columnHeader_Click" />
+                                        <Setter Property="HorizontalContentAlignment" Value="{Binding Align}" />
+                                        <Setter Property="ContentTemplate" Value="{StaticResource ColumnHeaderTemplate}" />
                                     </Style>
                                 </DataGrid.ColumnHeaderStyle>
                             </DataGrid>
