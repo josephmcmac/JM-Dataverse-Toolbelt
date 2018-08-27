@@ -16,7 +16,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
             var xrmRecordService = new XrmRecordService(request.Connection);
             var service = new DeployPackageService(xrmRecordService);
             var importItems = service.ImportSolutions(new[] { request.SolutionZip.FileName }, controller, xrmRecordService);
-            response.AddResponseItems(importItems.Where(it => !it.IsSuccess).Select(it => new ImportSolutionResponseItem(it)));
+            response.AddResponseItems(importItems.Select(it => new ImportSolutionResponseItem(it)));
         }
     }
 }
