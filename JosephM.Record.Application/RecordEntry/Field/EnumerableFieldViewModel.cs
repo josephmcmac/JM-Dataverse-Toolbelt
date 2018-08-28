@@ -35,7 +35,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     PageSize = RecordForm.GridPageSize,
                     ViewType = ViewType.AssociatedView,
                     DeleteRow = !recordForm.IsReadOnly && FormService.AllowDelete(ReferenceName, GetRecordType()) ? RemoveRow :(Action<GridRowViewModel>)null,
-                    EditRow = FormService.AllowGridEdit(ReferenceName, GetRecordType()) ? EditRow : (Action<GridRowViewModel>)null,
+                    EditRow = FormService.AllowGridOpen(ReferenceName, RecordForm) ? EditRow : (Action<GridRowViewModel>)null,
                     AddRow = !recordForm.IsReadOnly && FormService.AllowAddNew(ReferenceName, GetRecordType()) ? AddRow : (Action)null,
                     AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel),
                     IsReadOnly = recordForm.IsReadOnly,

@@ -397,10 +397,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return prop.GetCustomAttribute<DoNotAllowDelete>() == null;
         }
 
-        public override bool AllowGridEdit(string fieldName, string recordType)
+        public override bool AllowGridOpen(string fieldName, RecordEntryViewModelBase recordForm)
         {
-            var prop = GetPropertyInfo(fieldName, recordType);
-            return prop.GetCustomAttribute<DoNotAllowGridEdit>() == null;
+            var prop = GetPropertyInfo(fieldName, recordForm.GetRecordType());
+            if(prop.PropertyType.GenericTypeArguments.Count() == 1
+                && prop.PropertyType.GenericTypeArguments[0].GetCustomAttribute<DoNotAllowGridOpen>() != null)
+                return false;
+            return
+                prop.GetCustomAttribute<DoNotAllowGridOpen>() == null;
         }
 
         public override bool UsePicklist(string fieldName, string recordType)
@@ -666,9 +670,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var propertyInfo = GetPropertyInfo(split.First(), viewModel.GetRecord().Type);
             if (propertyInfo != null)
             {
-                if(propertyInfo.GetType().Name == "IEnumerable`1" && split.Count() > 1)
+                if(propertyInfo.PropertyType.Name == "IEnumerable`1" && split.Count() > 1)
                 {
-                    var enumeratedType = propertyInfo.GetType().GenericTypeArguments[0];
+                    var enumeratedType = propertyInfo.PropertyType.GenericTypeArguments[0];
                     propertyInfo = enumeratedType.GetProperty(split.ElementAt(1)) ?? propertyInfo;
                 }
                 var attribute = propertyInfo.GetCustomAttribute<ReferencedType>();

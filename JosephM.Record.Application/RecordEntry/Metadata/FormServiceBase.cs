@@ -128,7 +128,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return true;
         }
 
-        public virtual bool AllowGridEdit(string fieldName, string recordType)
+        public virtual bool AllowGridOpen(string fieldName, RecordEntryViewModelBase recordForm)
         {
             return true;
         }

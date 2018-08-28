@@ -3,6 +3,7 @@ using JosephM.Core.FieldType;
 
 namespace JosephM.Application.ViewModel.SettingTypes
 {
+    [DoNotAllowGridOpen]
     public class RecordFieldSetting
     {
         [DisplayOrder(10)]

@@ -110,6 +110,7 @@ namespace JosephM.InstanceComparer
         [RequiredProperty]
         [Group(Sections.DataComparisonOptions)]
         [PropertyInContextByPropertyValue(nameof(Data), true)]
+        [PropertyInContextByPropertyNotNull(nameof(ConnectionOne))]
         public IEnumerable<InstanceCompareDataCompare> DataComparisons { get; set; }
 
         [GridWidth(110)]
@@ -124,8 +125,10 @@ namespace JosephM.InstanceComparer
         [RequiredProperty]
         [PropertyInContextByPropertyValue(nameof(Entities), true)]
         [PropertyInContextByPropertyValue(nameof(AllTypesForEntityMetadata), false)]
+        [PropertyInContextByPropertyNotNull(nameof(ConnectionOne))]
         public IEnumerable<InstanceCompareTypeCompare> EntityTypeComparisons { get; set; }
 
+        [DoNotAllowGridOpen]
         [BulkAddRecordTypeFunction]
         public class InstanceCompareDataCompare
         {
@@ -140,6 +143,7 @@ namespace JosephM.InstanceComparer
             }
         }
 
+        [DoNotAllowGridOpen]
         [BulkAddRecordTypeFunction]
         public class InstanceCompareTypeCompare
         {

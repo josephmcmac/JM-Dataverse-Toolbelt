@@ -106,6 +106,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             public const string Types = "Types To Search - Note If 'All Types' Is Selected Some System Object Types Are Excluded In The Searches";
         }
 
+        [DoNotAllowGridOpen]
         public class SearchTerm
         {
             [GridWidth(400)]
