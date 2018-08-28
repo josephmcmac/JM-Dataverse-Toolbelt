@@ -90,7 +90,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }));
                     }
                     otherSections[section.Name] = new List<FormFieldMetadata>();
-                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.DisplayLayout, section.Order, customFunctions: functions);
+                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.DisplayLayout, section.Order, customFunctions: functions, displayLabel: section.DisplayLabel);
                     formSections.Add(newSection);
                 }
 

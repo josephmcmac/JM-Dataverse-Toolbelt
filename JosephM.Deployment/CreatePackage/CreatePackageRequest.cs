@@ -20,6 +20,7 @@ namespace JosephM.Deployment.CreatePackage
     [Group(Sections.Connection, true, 20)]
     [Group(Sections.PackageSolution, true, 25)]
     [Group(Sections.DataIncluded, true, 30)]
+    [Group(Sections.DataIncludedRecordTypes, true, order: 35, displayLabel: false)]
     public class CreatePackageRequest : ServiceRequestBase, IValidatableObject
     {
         public static CreatePackageRequest CreateForCreatePackage(string folder, Lookup solution)
@@ -107,6 +108,7 @@ namespace JosephM.Deployment.CreatePackage
 
         [DisplayOrder(1070)]
         [GridWidth(400)]
+        [Group(Sections.DataIncludedRecordTypes)]
         public IEnumerable<ExportRecordType> DataToInclude { get; set; }
 
         [Hidden]
@@ -117,7 +119,8 @@ namespace JosephM.Deployment.CreatePackage
             public const string Main = "Main";
             public const string PackageSolution = "Solution";
             public const string Connection = "Connection";
-            public const string DataIncluded = "Data Included Options";
+            public const string DataIncluded = "Data Included";
+            public const string DataIncludedRecordTypes = "Record Types";
         }
 
     }

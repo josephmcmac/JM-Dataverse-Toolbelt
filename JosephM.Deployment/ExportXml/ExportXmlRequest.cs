@@ -14,8 +14,8 @@ namespace JosephM.Deployment.ExportXml
     [Instruction("A Folder Will Be Created Containing An Xml File For Each Record Included. The Import XML Process May Then Be Run On That Folder To Import The Data Into A Dynamics Instance")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
-    [Group(Sections.IncludeWithExportedRecords, true, 30)]
-    [Group(Sections.Misc, true, 40)]
+    [Group(Sections.RecordTypesOptions, true, 30)]
+    [Group(Sections.RecordTypes, true, order: 35, displayLabel: false)]
     public class ExportXmlRequest : ServiceRequestBase
     {
         [GridWidth(300)]
@@ -27,18 +27,19 @@ namespace JosephM.Deployment.ExportXml
 
         [GridWidth(110)]
         [DisplayOrder(200)]
-        [Group(Sections.IncludeWithExportedRecords)]
+        [Group(Sections.RecordTypesOptions)]
         [DisplayName("Include Attached Notes")]
         [RequiredProperty]
         public bool IncludeNotes { get; set; }
 
         [GridWidth(110)]
         [DisplayOrder(210)]
-        [Group(Sections.IncludeWithExportedRecords)]
+        [Group(Sections.RecordTypesOptions, true, 30)]
         [DisplayName("Include N:N Links Between Records")]
         [RequiredProperty]
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }
 
+        [Group(Sections.RecordTypes)]
         [GridWidth(500)]
         [DisplayOrder(300)]
         [RequiredProperty]
@@ -47,8 +48,8 @@ namespace JosephM.Deployment.ExportXml
         private static class Sections
         {
             public const string Main = "Main";
-            public const string Misc = "Misc";
-            public const string IncludeWithExportedRecords = "Options To Include With Exported Records";
+            public const string RecordTypesOptions = "Record Types To Export";
+            public const string RecordTypes = "Record Types";
         }
     }
 }

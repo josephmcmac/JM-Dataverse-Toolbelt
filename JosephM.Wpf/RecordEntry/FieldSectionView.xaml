@@ -25,7 +25,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Visibility="{Binding DisplayLabel, Converter={StaticResource BoolToVis}}">
             <TextBlock
                     Text="{Binding SectionLabel}"
                     Style="{StaticResource SectionHeadingStyle}" />
