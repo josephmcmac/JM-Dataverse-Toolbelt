@@ -22,21 +22,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         private string _recordType;
 
-        protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference, IDictionary<string, IEnumerable<string>> onlyValidate = null)
-            : this(formController, onlyValidate)
+        protected RecordEntryFormViewModel(FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference, IDictionary<string, IEnumerable<string>> onlyValidate = null, string saveButtonLabel = null, string cancelButtonLabel = null)
+            : this(formController, onlyValidate, saveButtonLabel: saveButtonLabel, cancelButtonLabel: cancelButtonLabel)
         {
             _parentForm = parentForm;
             _parentFormReference = parentFormReference;
         }
 
-        protected RecordEntryFormViewModel(FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null)
+        protected RecordEntryFormViewModel(FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null, string saveButtonLabel = null, string cancelButtonLabel = null)
             : base(formController, onlyValidate)
         {
-            SaveButtonViewModel = new XrmButtonViewModel(SaveButtonLabel, DoOnSave, ApplicationController)
+            SaveButtonViewModel = new XrmButtonViewModel(saveButtonLabel ?? "Save", DoOnSave, ApplicationController)
             {
                 IsVisible = false
             };
-            CancelButtonViewModel = new XrmButtonViewModel(CancelButtonLabel, () => OnCancel(), ApplicationController)
+            CancelButtonViewModel = new XrmButtonViewModel(cancelButtonLabel ?? "Cancel", () => OnCancel(), ApplicationController)
             {
                 IsVisible = false
             };
@@ -148,16 +148,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         public override string TabLabel
         {
             get { return "Create"; }
-        }
-
-        public virtual string SaveButtonLabel
-        {
-            get { return "Save"; }
-        }
-
-        public virtual string CancelButtonLabel
-        {
-            get { return "Cancel"; }
         }
 
         protected bool HasChangedPersistentFields

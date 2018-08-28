@@ -26,8 +26,8 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
     IApplicationController applicationController, IRecordService lookupService,
-    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel)
-            : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave, onCancel: onCancel)
+    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel, string saveButtonLabel = null)
+            : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave, onCancel: onCancel, saveButtonLabel: saveButtonLabel)
         {
             _objectToEnter = objectsToEnter;
         }

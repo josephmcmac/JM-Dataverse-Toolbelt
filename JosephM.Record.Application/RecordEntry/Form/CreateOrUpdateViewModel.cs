@@ -13,7 +13,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         private IRecord _record;
 
         public CreateOrUpdateViewModel(IRecord record, FormController formController, Action postSave, Action onCancel, bool explicitIsCreate = false)
-            : base(formController)
+            : base(formController, saveButtonLabel: record.Id == null ? "Create" : "Update")
         {
             _record = record;
             RecordType = record.Type;
@@ -41,11 +41,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         public override string TabLabel
         {
             get { return "Create Or Update"; }
-        }
-
-        public override string SaveButtonLabel
-        {
-            get { return "Save"; }
         }
 
         public override IRecord GetRecord()

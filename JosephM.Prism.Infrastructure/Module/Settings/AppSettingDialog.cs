@@ -34,8 +34,7 @@ namespace JosephM.Application.Desktop.Module.Settings
         {
             SettingsObject = objectToEnter;
             var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, lookupService,
-                null, OnSave, null);
-
+                null, OnSave, null, saveButtonLabel: "Save");
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
         protected AppSettingsDialog(DialogViewModel parentDialog, IRecordService lookupService, TSettingsObject objectToEnter)

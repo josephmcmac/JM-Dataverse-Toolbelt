@@ -751,7 +751,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
-                    newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
+                    newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate
+                    , saveButtonLabel: "Add");
                 return viewModel;
                 //ideally could hide the parent dialog temporarily and load this one
             }
@@ -780,9 +781,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var formService = new ObjectFormService(newObject, recordService);
             formService.AllowLookupFunctions = AllowLookupFunctions;
             var viewModel = new ObjectEntryViewModel(
-                () => onSave(new ObjectRecord(newObject)),
+                parentForm.IsReadOnly ? (Action)null : () => onSave(new ObjectRecord(newObject)),
                 onCancel,
-                newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
+                newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate
+                , saveButtonLabel: "Apply Changes", cancelButtonLabel: parentForm.IsReadOnly ? "Return" : null);
             return viewModel;
         }
 

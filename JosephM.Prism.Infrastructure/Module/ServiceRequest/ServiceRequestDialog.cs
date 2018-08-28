@@ -46,7 +46,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             else
                 Request = ApplicationController.ResolveType<TRequest>();
 
-            ConfigEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose);
+            ConfigEntryDialog = new ObjectEntryDialog(Request, this, ApplicationController, lookupService, null, null, onClose, saveButtonLabel: "Next");
             SubDialogs = new DialogViewModel[] { ConfigEntryDialog };
         }
 
