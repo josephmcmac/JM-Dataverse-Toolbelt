@@ -114,7 +114,7 @@ namespace JosephM.Deployment.ExportXml
             public RecordField FieldToSet { get; set; }
 
             [MyDescription("If Set The Value Will Be Cleared Rather Than Populated With A Specific Value")]
-            [GridWidth(75)]
+            [GridWidth(100)]
             [Group(Sections.FieldUpdate)]
             [DisplayOrder(20)]
             [RequiredProperty]

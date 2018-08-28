@@ -11,14 +11,14 @@ namespace JosephM.Core.Service
         [DataMember]
         [UniqueOn]
         [DisplayOrder(1)]
-        [GridWidth(75)]
+        [GridWidth(80)]
         [PropertyInContextByPropertyValue("DisplaySavedSettingFields", true)]
         public bool Autoload { get; set; }
 
         [Group(Sections.SavedRequestDetails)]
         [DataMember]
         [DisplayOrder(2)]
-        [GridWidth(250)]
+        [GridWidth(200)]
         [PropertyInContextByPropertyValue("DisplaySavedSettingFields", true)]
         [RequiredProperty]
         public string Name { get; set; }

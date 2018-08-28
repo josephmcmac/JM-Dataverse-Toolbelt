@@ -17,12 +17,14 @@ namespace JosephM.Deployment.ImportXml
     [Group(Sections.Misc, true, 40)]
     public class ImportXmlRequest : ServiceRequestBase
     {
+        [GridWidth(350)]
         [DisplayOrder(20)]
         [Group(Sections.Main)]
         [RequiredProperty]
         [DisplayName("Select The Folder Containing The XML Files")]
         public Folder Folder { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.Misc)]
         [DisplayOrder(400)]
         [RequiredProperty]

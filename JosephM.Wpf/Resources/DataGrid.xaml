@@ -21,7 +21,7 @@
     </Style>
     <Style x:Key="ColumnHeadingTextBlock" TargetType="TextBlock" >
         <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="Margin" Value="10,0,10,0" />
+        <Setter Property="Margin" Value="8,0,8,0" />
     </Style>
     <DataTemplate x:Key="ColumnHeaderTemplate">
         <Grid >

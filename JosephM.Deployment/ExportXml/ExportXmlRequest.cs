@@ -18,24 +18,28 @@ namespace JosephM.Deployment.ExportXml
     [Group(Sections.Misc, true, 40)]
     public class ExportXmlRequest : ServiceRequestBase
     {
+        [GridWidth(300)]
         [DisplayOrder(20)]
         [Group(Sections.Main)]
         [RequiredProperty]
         [DisplayName("Select The Folder To Export The XML Files Into")]
         public Folder Folder { get; set; }
 
+        [GridWidth(110)]
         [DisplayOrder(200)]
         [Group(Sections.IncludeWithExportedRecords)]
-        [DisplayName("Include Notes Attached To Exported Records")]
+        [DisplayName("Include Attached Notes")]
         [RequiredProperty]
         public bool IncludeNotes { get; set; }
 
+        [GridWidth(110)]
         [DisplayOrder(210)]
         [Group(Sections.IncludeWithExportedRecords)]
-        [DisplayName("Include N:N Associations Between Exported Records")]
+        [DisplayName("Include N:N Links Between Records")]
         [RequiredProperty]
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }
 
+        [GridWidth(500)]
         [DisplayOrder(300)]
         [RequiredProperty]
         public IEnumerable<ExportRecordType> RecordTypesToExport { get; set; }

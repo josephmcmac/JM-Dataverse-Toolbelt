@@ -52,6 +52,7 @@ namespace JosephM.Deployment.CreatePackage
         [PropertyInContextByPropertyValue(nameof(HideTypeAndFolder), false)]
         public Folder FolderPath { get; set; }
 
+        [GridWidth(150)]
         [Group(Sections.Main)]
         [DisplayOrder(40)]
         [DisplayName("Deploy Package Into (Optional)")]
@@ -63,7 +64,7 @@ namespace JosephM.Deployment.CreatePackage
         [RequiredProperty]
         [Group(Sections.PackageSolution)]
         [DisplayName("Solution")]
-        [GridWidth(400)]
+        [GridWidth(150)]
         [ReferencedType(Entities.solution)]
         [LookupCondition(Fields.solution_.ismanaged, false)]
         [LookupCondition(Fields.solution_.isvisible, true)]
@@ -71,10 +72,12 @@ namespace JosephM.Deployment.CreatePackage
         [UsePicklist(Fields.solution_.uniquename)]
         public Lookup Solution { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.PackageSolution)]
         [DisplayOrder(500)]
         public bool ExportAsManaged { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.PackageSolution)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [CascadeOnChange(nameof(SetVersionPostRelease))]
@@ -82,16 +85,21 @@ namespace JosephM.Deployment.CreatePackage
         [RequiredProperty]
         public string ThisReleaseVersion { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.PackageSolution)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [DisplayOrder(530)]
         [RequiredProperty]
         public string SetVersionPostRelease { get; set; }
 
+        [DisplayName("Include Attached Notes")]
+        [GridWidth(110)]
         [Group(Sections.DataIncluded)]
         [DisplayOrder(1050)]
         public bool IncludeNotes { get; set; }
 
+        [DisplayName("Include N:N Links Between Records")]
+        [GridWidth(110)]
         [Group(Sections.DataIncluded)]
         [DisplayOrder(1060)]
         [RequiredProperty]

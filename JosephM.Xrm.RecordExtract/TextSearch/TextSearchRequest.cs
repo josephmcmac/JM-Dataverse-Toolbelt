@@ -13,6 +13,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
     [Group(Sections.SearchTerm, true, 20)]
     [Group(Sections.SearchOptions, true, 30)]
     [Group(Sections.Types, true, 40)]
+    [AllowSaveAndLoad]
     public class TextSearchRequest : ServiceRequestBase
     {
         public TextSearchRequest()
@@ -26,6 +27,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             };
         }
 
+        [GridWidth(110)]
         [DisplayOrder(5)]
         [Group(Sections.Document)]
         [RequiredProperty]
@@ -43,6 +45,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
 
+        [GridWidth(75)]
         [DisplayOrder(105)]
         [Group(Sections.SearchTerm)]
         [RequiredProperty]
@@ -53,6 +56,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         [RequiredProperty]
         public IEnumerable<SearchTerm> SearchTerms { get; set; }
 
+        [GridWidth(100)]
         [DisplayOrder(160)]
         [Group(Sections.SearchOptions)]
         public bool StripHtmlTagsPriorToSearch { get; set; }
@@ -62,6 +66,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         [PropertyInContextByPropertyValue(nameof(StripHtmlTagsPriorToSearch), true)]
         public IEnumerable<RecordFieldSetting> CustomHtmlFields { get; set; }
 
+        [GridWidth(100)]
         [DisplayOrder(210)]
         [Group(Sections.Types)]
         public bool SearchAllTypes { get; set; }
@@ -72,11 +77,13 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         public IEnumerable<RecordTypeSetting> TypesToSearch { get; set; }
 
+        [GridWidth(100)]
         [DisplayOrder(230)]
         [Group(Sections.Types)]
         [PropertyInContextByPropertyValue(nameof(SearchAllTypes), true)]
         public bool ExcludeEmails { get; set; }
 
+        [GridWidth(100)]
         [DisplayOrder(240)]
         [Group(Sections.Types)]
         [PropertyInContextByPropertyValue(nameof(SearchAllTypes), true)]
@@ -101,8 +108,14 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         public class SearchTerm
         {
+            [GridWidth(400)]
             [RequiredProperty]
             public string Text { get; set; }
+
+            public override string ToString()
+            {
+                return Text;
+            }
         }
 
         public enum SearchTermOperator

@@ -14,6 +14,7 @@ namespace JosephM.RecordCounts
     [Group(Sections.RecordTypes, true, 30)]
     public class RecordCountsRequest : ServiceRequestBase
     {
+        [GridWidth(150)]
         [DisplayOrder(100)]
         [DisplayName("Only Count Records Owned By Specific User")]
         [Group(Sections.RecordOwnerOptions)]
@@ -29,6 +30,7 @@ namespace JosephM.RecordCounts
         [RequiredProperty]
         public Lookup Owner { get; set; }
 
+        [GridWidth(150)]
         [DisplayOrder(120)]
         [DisplayName("Group Counts By Record Owner")]
         [Group(Sections.RecordOwnerOptions)]
@@ -36,12 +38,14 @@ namespace JosephM.RecordCounts
         [RequiredProperty]
         public bool GroupCountsByOwner { get; set; }
 
+        [GridWidth(150)]
         [DisplayOrder(200)]
         [DisplayName("Include Total For All Record Types")]
         [Group(Sections.RecordTypes)]
         [RequiredProperty]
         public bool AllRecordTypes { get; set; }
 
+        [GridWidth(500)]
         [DisplayOrder(210)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue("AllRecordTypes", false)]

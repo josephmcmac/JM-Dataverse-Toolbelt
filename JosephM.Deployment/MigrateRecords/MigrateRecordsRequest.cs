@@ -27,26 +27,30 @@ namespace JosephM.Deployment.MigrateRecords
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration TargetConnection { get; set; }
 
+        [GridWidth(110)]
         [MyDescription("If Set Any Email Addresses In Contact Or Account Records Will Be Rewritten To Fake Email Addresses")]
         [Group(Sections.IncludeWithExportedRecords)]
         [DisplayOrder(200)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
 
+        [GridWidth(110)]
         [MyDescription("If Set Any Notes Attached To Records Will Be Included In The Migration")]
         [DisplayOrder(205)]
         [Group(Sections.IncludeWithExportedRecords)]
-        [DisplayName("Include Notes Attached To Exported Records")]
+        [DisplayName("Include Attached Notes")]
         [RequiredProperty]
         public bool IncludeNotes { get; set; }
 
+        [GridWidth(110)]
         [MyDescription("If Set Any N:N Relationship Associations Between Records Being Migrated WIll Be Included In The Migration")]
         [DisplayOrder(210)]
         [Group(Sections.IncludeWithExportedRecords)]
-        [DisplayName("Include N:N Associations Between Exported Records")]
+        [DisplayName("Include N:N Links Between Records")]
         [RequiredProperty]
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }
 
+        [GridWidth(500)]
         [MyDescription("The Specific Records Configured To Be included In The Migrated")]
         [PropertyInContextByPropertyNotNull(nameof(SourceConnection))]
         [DisplayOrder(300)]
