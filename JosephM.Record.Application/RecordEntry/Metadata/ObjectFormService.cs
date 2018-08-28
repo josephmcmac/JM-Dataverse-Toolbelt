@@ -34,7 +34,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             ObjectToEnter = objectToEnter;
             ObjectRecordService = objectRecordService;
             ObjectTypeMaps = objectTypeMaps;
+            AllowLookupFunctions = true;
         }
+
+        public bool AllowLookupFunctions { get; set; }
 
         public object ObjectToEnter { get; set; }
 
@@ -743,10 +746,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(fieldMetadata.EnumeratedTypeQualifiedName);
                 var newObject = newRecord.Instance;
                 var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName, parentForm.ApplicationController);
+                var formService = new ObjectFormService(newObject, recordService);
+                formService.AllowLookupFunctions = AllowLookupFunctions;
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
-                    newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
+                    newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
                 return viewModel;
                 //ideally could hide the parent dialog temporarily and load this one
             }
@@ -772,10 +777,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var mapper = new ClassSelfMapper();
             var newObject = mapper.Map(newRecord.Instance);
             var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName, parentForm.ApplicationController);
+            var formService = new ObjectFormService(newObject, recordService);
+            formService.AllowLookupFunctions = AllowLookupFunctions;
             var viewModel = new ObjectEntryViewModel(
                 () => onSave(new ObjectRecord(newObject)),
                 onCancel,
-                newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
+                newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
             return viewModel;
         }
 
@@ -915,6 +922,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public override Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)
         {
+            if (!AllowLookupFunctions)
+                return null;
             var functions = new Dictionary<string, Action>();
             var enumeratedType = ObjectRecordService.GetPropertyType(referenceName, recordForm.GetRecordType()).GenericTypeArguments[0];
             var customFunction = enumeratedType.GetCustomAttribute<BulkAddFunction>();

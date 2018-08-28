@@ -5,7 +5,6 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace JosephM.Application.ViewModel.Attributes
 {

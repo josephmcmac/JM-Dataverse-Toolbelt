@@ -182,6 +182,8 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                     var dialogController = new DialogController(ApplicationController);
                     var recordService = new ObjectRecordService(savedSettings, null, null, ApplicationController, objectTypeMaps);
                     var formService = new ObjectFormService(savedSettings, recordService, objectTypeMaps);
+                    formService.AllowLookupFunctions = false;
+
                     var vm = new ObjectEntryViewModel(savedLoadForm, oevm.ClearChildForms, savedSettings, 
                         new FormController(recordService, formService, ApplicationController), re, "LOADING", onlyValidate: onlyValidate);
 
