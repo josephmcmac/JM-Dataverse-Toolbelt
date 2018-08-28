@@ -43,7 +43,7 @@
         <field:DateFieldView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="stringFieldTemplate">
-        <field:StringFieldView DataContext="{Binding}" />
+        <field:StringFieldView DataContext="{Binding}" MinWidth="200" />
     </DataTemplate>
     <DataTemplate x:Key="passwordFieldTemplate">
         <field:PasswordFieldView DataContext="{Binding}" />
