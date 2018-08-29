@@ -84,5 +84,11 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
                 Options.Add(option);
             OnPropertyChanged(nameof(HasOneOption));
         }
+
+        public void AddOption(string optionLabel, Action action, string description)
+        {
+            var option = new ApplicationOption(optionLabel, () => { OpenChildButtons = false; action(); }, description);
+            AddOption(option);
+        }
     }
 }
