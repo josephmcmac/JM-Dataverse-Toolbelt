@@ -194,6 +194,12 @@
           <ButtonText>Open Solution in Browser</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmDefaultSolutionCommandId" priority="0x0108" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Open Default Solution in Browser</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidXrmPackageCmdSet" id="OpenCrmAdvancedFindCommandId" priority="0x0108" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
@@ -326,6 +332,7 @@
       <IDSymbol name="TextSearchCommandId" value="0x0116" />
       <IDSymbol name="DeployIntoFieldCommandId" value="0x0117" />
       <IDSymbol name="GenerateJavascriptOptionsCommandId" value="0x0118" />
+      <IDSymbol name="OpenCrmDefaultSolutionCommandId" value="0x0119" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

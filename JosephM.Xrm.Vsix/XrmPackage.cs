@@ -92,6 +92,7 @@ namespace JosephM.XRM.VSIX
             app.AddModule<ImportRecordsModule>(0x0115);
             app.AddModule<DeployIntoFieldModule>(0x0117);
             app.AddModule<JavaScriptOptionsModule>(0x0118);
+            app.AddModule<OpenDefaultSolutionModule>(0x0119);
             app.AddModule<PackageSettingsAppConnectionModule>();
         }
 
