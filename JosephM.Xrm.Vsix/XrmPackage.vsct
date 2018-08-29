@@ -254,12 +254,18 @@
           <ButtonText>Text Search</ButtonText>
         </Strings>
       </Button>
-          <Button guid="guidXrmPackageCmdSet" id="DeployIntoFieldCommandId" priority="0x0100" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="DeployIntoFieldCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Deploy Into Record</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="GenerateJavascriptOptionsCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Generate JavaScript Options</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -319,6 +325,7 @@
       <IDSymbol name="ImportRecordsCommandId" value="0x0115" />
       <IDSymbol name="TextSearchCommandId" value="0x0116" />
       <IDSymbol name="DeployIntoFieldCommandId" value="0x0117" />
+      <IDSymbol name="GenerateJavascriptOptionsCommandId" value="0x0118" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

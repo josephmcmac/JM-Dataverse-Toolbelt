@@ -7,6 +7,7 @@
 using EnvDTE80;
 using JosephM.Application.Application;
 using JosephM.Application.Desktop.Module.AboutModule;
+using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.InstanceComparer;
 using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.Xrm.Vsix;
@@ -90,6 +91,7 @@ namespace JosephM.XRM.VSIX
             app.AddModule<ImportSolutionModule>(0x0114);
             app.AddModule<ImportRecordsModule>(0x0115);
             app.AddModule<DeployIntoFieldModule>(0x0117);
+            app.AddModule<JavaScriptOptionsModule>(0x0118);
             app.AddModule<PackageSettingsAppConnectionModule>();
         }
 
