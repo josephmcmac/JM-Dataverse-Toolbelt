@@ -8,6 +8,7 @@ namespace JosephM.CodeGenerator.JavaScriptOptions
     {
         [Group(Sections.JavaScript)]
         [Multiline]
+        [DoNotLimitDisplayHeight]
         public string Javascript { get; set; }
 
         private static class Sections

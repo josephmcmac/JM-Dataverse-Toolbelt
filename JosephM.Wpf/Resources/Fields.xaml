@@ -42,6 +42,11 @@
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="TextWrapping" Value="Wrap" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DoNotLimitDisplayHeight}" Value="True">
+                <Setter Property="MaxHeight" Value="5000"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="UrlFieldStyle" TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Top" />

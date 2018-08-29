@@ -110,6 +110,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         || groupAttribute != null;
 
                     var fieldMetadata = new PersistentFormField(property.SchemaName, enumerableType, displayLabel);
+                    fieldMetadata.DoNotLimitDisplayHeight = propinfo.GetCustomAttribute<DoNotLimitDisplayHeight>() != null;
                     fieldMetadata.Order = property.Order;
 
                     string sectionName = null;

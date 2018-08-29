@@ -19,6 +19,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public bool IsMultiline { get; set; }
 
+        public bool DoNotLimitDisplayHeight { get; set; }
+
         public int NumberOfLines
         {
             get { return IsMultiline ? 10 : 1; }

@@ -35,6 +35,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public bool DisplayLabel { get; set; }
 
+        public bool DoNotLimitDisplayHeight { get; set; }
+
         public FieldViewModelBase CreateFieldViewModel(string recordType, IRecordService recordService,
             RecordEntryViewModelBase recordForm, IApplicationController applicationController, RecordFieldType? explicitFieldType = null, string explicitLookupTargetType = null, IEnumerable<PicklistOption> explicitPicklistOptions = null)
         {
@@ -97,7 +99,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         fieldVm = new StringFieldViewModel(field, label, recordForm)
                         {
                             IsRecordServiceField = isRecordServiceField,
-                            IsMultiline = recordService.GetFieldMetadata(field, recordType).IsMultiline()
+                            IsMultiline = recordService.GetFieldMetadata(field, recordType).IsMultiline(),
+                            DoNotLimitDisplayHeight = DoNotLimitDisplayHeight
                         };
                         if (!explicitFieldType.HasValue)
                         {

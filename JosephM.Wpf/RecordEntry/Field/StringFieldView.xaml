@@ -27,7 +27,8 @@
                 MaxLines ="{Binding NumberOfLines}"
                 TabIndex="1"
                 Text="{Binding Mode=OneWay, Path=ValueObject}"
-                Height="Auto"/>
+                Height="Auto">
+            </TextBox>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
             <TextBox 

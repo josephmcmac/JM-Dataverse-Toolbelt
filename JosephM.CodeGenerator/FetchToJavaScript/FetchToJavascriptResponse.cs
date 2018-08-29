@@ -1,5 +1,4 @@
-﻿using JosephM.Application.ViewModel.Attributes;
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 
 namespace JosephM.CodeGenerator.FetchToJavascript
@@ -9,6 +8,7 @@ namespace JosephM.CodeGenerator.FetchToJavascript
     {
         [Group(Sections.JavaScript)]
         [Multiline]
+        [DoNotLimitDisplayHeight]
         public string Javascript { get; set; }
 
         private static class Sections
