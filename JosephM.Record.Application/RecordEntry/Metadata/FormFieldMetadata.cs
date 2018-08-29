@@ -45,7 +45,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             {
                 RecordFieldType? fieldType = explicitFieldType;
                 string label;
-                var isEditable = true;
+                var thisFieldEditable = true;
                 //this not quite right haven't needed to change yet though
                 var isNonPersistent = this is NonPersistentFormField;
                 var isRecordServiceField = !isNonPersistent;
@@ -54,14 +54,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     if (!explicitFieldType.HasValue)
                         fieldType = ((NonPersistentFormField)this).RecordFieldType;
                     label = ((NonPersistentFormField) this).Label;
-                    isEditable = false;
+                    thisFieldEditable = false;
                 }
                 else
                 {
                     if (!explicitFieldType.HasValue)
                         fieldType = recordService.GetFieldType(field, recordType);
                     label = recordService.GetFieldLabel(field, recordType);
-                    isEditable = string.IsNullOrWhiteSpace(recordForm.GetRecord().Id) ? recordService.GetFieldMetadata(field, recordType).Createable : recordService.GetFieldMetadata(field, recordType).Writeable;
+                    thisFieldEditable = string.IsNullOrWhiteSpace(recordForm.GetRecord().Id) ? recordService.GetFieldMetadata(field, recordType).Createable : recordService.GetFieldMetadata(field, recordType).Writeable;
                 }
                 FieldViewModelBase fieldVm = null;
                 switch (fieldType)
@@ -155,7 +155,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             var usePicklist = recordForm.FormService == null
                                     ? false
                                     : recordForm.FormService.UsePicklist(field, recordType);
-                            fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType, usePicklist, isEditable)
+                            thisFieldEditable = thisFieldEditable && recordForm.FormService != null && recordForm.FormService.AllowLookupFunctions;
+                            fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType, usePicklist, thisFieldEditable)
                         {
                             IsRecordServiceField = isRecordServiceField
                         };
@@ -345,7 +346,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     {
                         IsRecordServiceField = isRecordServiceField
                     };
-                fieldVm.IsEditable = isEditable;
+                fieldVm.IsEditable = thisFieldEditable;
                 fieldVm.DisplayLabel = DisplayLabel;
                 if (!explicitFieldType.HasValue)
                 {

@@ -34,10 +34,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             ObjectToEnter = objectToEnter;
             ObjectRecordService = objectRecordService;
             ObjectTypeMaps = objectTypeMaps;
-            AllowLookupFunctions = true;
         }
-
-        public bool AllowLookupFunctions { get; set; }
 
         public object ObjectToEnter { get; set; }
 

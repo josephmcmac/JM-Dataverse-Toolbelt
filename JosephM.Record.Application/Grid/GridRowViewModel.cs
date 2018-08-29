@@ -51,7 +51,12 @@ namespace JosephM.Application.ViewModel.Grid
                     var isWriteable = RecordService?.GetFieldMetadata(field.FieldName, RecordType).Createable == true
                         || RecordService?.GetFieldMetadata(field.FieldName, RecordType).Writeable == true;
 
-                    viewModel.IsEditable = !IsReadOnly && isWriteable && FormService != null && FormService.AllowGridFieldEditEdit(ParentFormReference );
+                    viewModel.IsEditable = !IsReadOnly
+                        && isWriteable
+                        && FormService != null
+                        && FormService.AllowGridFieldEditEdit(ParentFormReference)
+                        && (!(viewModel is LookupFieldViewModel) || FormService.AllowLookupFunctions);
+
                     AddField(viewModel);
                 }
                 catch (Exception ex)

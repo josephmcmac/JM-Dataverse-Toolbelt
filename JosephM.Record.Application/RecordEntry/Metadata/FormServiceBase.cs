@@ -16,12 +16,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     public abstract class FormServiceBase : IFormService
     {
+        public FormServiceBase()
+        {
+            AllowLookupFunctions = true;
+        }
+
         public virtual bool AllowGridFieldEditEdit(string fieldName)
         {
             return true;
         }
 
-        public abstract FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null); 
+        public abstract FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null);
 
         public virtual bool IsFieldInContext(string fieldName, IRecord record)
         {
@@ -32,6 +37,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             return true;
         }
+
+        public bool AllowLookupFunctions { get; set; }
 
         public virtual IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string recordType)
         {

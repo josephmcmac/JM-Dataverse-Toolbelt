@@ -64,7 +64,7 @@
         <field:StringEnumerableFieldView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="LookupFieldTemplate">
-        <field:LookupView DataContext="{Binding}" />
+        <field:LookupView DataContext="{Binding}" MinWidth="200" />
     </DataTemplate>
     <DataTemplate x:Key="LookupFieldPicklistTemplate">
         <field:LookupPicklistView DataContext="{Binding}" />
