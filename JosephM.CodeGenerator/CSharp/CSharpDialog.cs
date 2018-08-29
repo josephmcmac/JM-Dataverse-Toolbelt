@@ -21,7 +21,7 @@ namespace JosephM.CodeGenerator.CSharp
                 AddCompletionOption("Open File", OpenFile);
             if (!string.IsNullOrWhiteSpace(Response.Folder))
                 AddCompletionOption("Open Folder", OpenFolder);
-            CompletionMessage = "Document Successfully Generated";
+            CompletionMessage = "Document Generation Complete";
         }
 
         public void OpenFile()

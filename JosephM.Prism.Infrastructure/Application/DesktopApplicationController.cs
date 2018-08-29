@@ -1,15 +1,11 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.ViewModel.Attributes;
-using JosephM.Application.ViewModel.Navigation;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.AppConfig;
-using JosephM.Core.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;

@@ -16,5 +16,11 @@ namespace JosephM.Deployment.CreatePackage
             : base(service, dialogController, lookupService)
         {
         }
+
+        protected override void CompleteDialogExtention()
+        {
+            base.CompleteDialogExtention();
+            CompletionMessage = "The Deployment Package Has Been Generated" + (Request.DeployPackageInto == null ? "" : " And Deployed");
+        }
     }
 }

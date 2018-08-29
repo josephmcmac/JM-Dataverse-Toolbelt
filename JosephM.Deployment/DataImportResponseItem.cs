@@ -1,14 +1,7 @@
-﻿#region
-
-using System;
-using System.IO;
-using JosephM.Core.Attributes;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Record.IService;
-
-#endregion
+using System;
 
 namespace JosephM.Deployment
 {
@@ -29,7 +22,7 @@ namespace JosephM.Deployment
         public string Message { get; }
 
         [PropertyInContextByPropertyNotNull(nameof(Link))]
-        [GridWidth(55)]
+        [GridWidth(62)]
         [DisplayOrder(50)]
         public Url Link { get; }
 

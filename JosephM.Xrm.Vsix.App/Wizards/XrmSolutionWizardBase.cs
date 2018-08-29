@@ -58,7 +58,7 @@ namespace JosephM.Xrm.Vsix.Wizards
             if (resolvePackageSettings == null)
                 applicationController.RegisterInstance(typeof(XrmPackageSettings), new XrmPackageSettings());
 
-            var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, new XrmRecordService(new XrmRecordConfiguration(), formService: new XrmFormService()));
+            var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, new XrmRecordService(new XrmRecordConfiguration(), formService: new XrmFormService()), saveButtonLabel: "Next");
             settingsDialog.SaveSettings = false;
             var uriQuery = new UriQuery();
             uriQuery.Add("Modal", true.ToString());

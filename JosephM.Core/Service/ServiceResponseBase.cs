@@ -11,7 +11,7 @@ using System.Linq;
 namespace JosephM.Core.Service
 {
     [Group(Sections.FatalError, false, 0)]
-    [Group(Sections.ResponseItems, false, 1)]
+    [Group(Sections.ResponseItems, true, 1, displayLabel: false)]
     public class ServiceResponseBase<TResponseItem> : IProcessCompletion
         where TResponseItem : ServiceResponseItem
     {

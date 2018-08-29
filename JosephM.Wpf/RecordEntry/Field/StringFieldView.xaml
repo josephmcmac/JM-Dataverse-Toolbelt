@@ -39,7 +39,7 @@
                 TabIndex="1"
                 Text="{Binding Mode=TwoWay, Path=ValueObject}"
                 DataContext="{Binding NotifyOnValidationError=True}"
-                IsReadOnly="False" Height="Auto" />
+                IsReadOnly="False" />
         </Grid>
     </Grid>
 </field:FieldControlBase>

@@ -11,15 +11,15 @@ namespace JosephM.Application.ViewModel.Dialog
         ///     Implementation Of DialogViewModel For Entering Data Into A CLR Object
         /// </summary>
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
-            IApplicationController applicationController)
-            : this(objectsToEnter, parentDialog, applicationController, null, null)
+            IApplicationController applicationController, string saveButtonLabel = null)
+            : this(objectsToEnter, parentDialog, applicationController, null, null, saveButtonLabel: saveButtonLabel)
         {
         }
 
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
             IApplicationController applicationController, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionsetLimitedValues)
-            : this(objectsToEnter, parentDialog, applicationController, lookupService, optionsetLimitedValues, null, null)
+            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, string saveButtonLabel = null)
+            : this(objectsToEnter, parentDialog, applicationController, lookupService, optionsetLimitedValues, null, null, saveButtonLabel: saveButtonLabel)
         {
             _objectToEnter = objectsToEnter;
         }

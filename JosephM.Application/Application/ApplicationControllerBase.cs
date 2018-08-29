@@ -1,19 +1,13 @@
-﻿#region
-
-using JosephM.Core.AppConfig;
+﻿using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
-using JosephM.Core.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Windows.Threading;
-
-#endregion
 
 namespace JosephM.Application.Application
 {

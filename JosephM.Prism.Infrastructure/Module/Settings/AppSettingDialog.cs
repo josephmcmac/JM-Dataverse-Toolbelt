@@ -16,25 +16,20 @@ namespace JosephM.Application.Desktop.Module.Settings
         : DialogViewModel
         where TSettingsObject : TSettingsInterface, new()
     {
-        protected AppSettingsDialog(IDialogController dialogController)
-            : this(dialogController, null)
-        {
-        }
-
-        protected AppSettingsDialog(IDialogController dialogController,  IRecordService lookupService)
+        protected AppSettingsDialog(IDialogController dialogController,  IRecordService lookupService = null, string saveButtonLabel = null)
             //map the existing config to the new record
-            : this(dialogController, lookupService, new InterfaceMapperFor<TSettingsInterface, TSettingsObject>().Map(dialogController.ApplicationController.ResolveType<TSettingsInterface>()))
+            : this(dialogController, lookupService, new InterfaceMapperFor<TSettingsInterface, TSettingsObject>().Map(dialogController.ApplicationController.ResolveType<TSettingsInterface>()), saveButtonLabel: saveButtonLabel)
         {
             
         }
 
         protected AppSettingsDialog(IDialogController dialogController,
-            IRecordService lookupService, TSettingsObject objectToEnter)
+            IRecordService lookupService, TSettingsObject objectToEnter, string saveButtonLabel = null)
             : base(dialogController)
         {
             SettingsObject = objectToEnter;
             var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, lookupService,
-                null, OnSave, null, saveButtonLabel: "Save");
+                null, OnSave, null, saveButtonLabel: saveButtonLabel ?? "Save");
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
         protected AppSettingsDialog(DialogViewModel parentDialog, IRecordService lookupService, TSettingsObject objectToEnter)
@@ -42,7 +37,7 @@ namespace JosephM.Application.Desktop.Module.Settings
         {
             SettingsObject = objectToEnter;
             var configEntryDialog = new ObjectEntryDialog(SettingsObject, this, ApplicationController, lookupService,
-                null, OnSave, null);
+                null, OnSave, null, saveButtonLabel: "Next");
 
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }

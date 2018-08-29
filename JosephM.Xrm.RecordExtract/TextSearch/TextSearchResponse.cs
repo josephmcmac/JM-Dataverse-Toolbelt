@@ -22,7 +22,9 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         private Dictionary<string, Dictionary<string, List<string>>> Matches { get; set; }
 
         private List<SummaryItem> _summaryItems = new List<SummaryItem>();
+
         [AllowDownload]
+        [DisplayName("Search Results")]
         public IEnumerable<SummaryItem> Summary
         {
             get

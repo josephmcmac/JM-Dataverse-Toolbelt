@@ -112,10 +112,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
 
             if (!Response.Success)
                 ProcessError(Response.Exception);
-            else if (CompletionMessage.IsNullOrWhiteSpace())
-                CompletionMessage = "Process Finished";
         }
-
         protected virtual void ProcessCompletionExtention()
         {
         }

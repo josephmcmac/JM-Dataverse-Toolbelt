@@ -16,5 +16,12 @@ namespace JosephM.Deployment.ExportXml
             : base(service, dialogController, lookupService)
         {
         }
+
+        protected override void CompleteDialogExtention()
+        {
+            base.CompleteDialogExtention();
+            CompletionMessage = "The XML Files Have Been Created";
+            AddCompletionOption("Open Folder", () => ApplicationController.StartProcess(Request.Folder.FolderPath));
+        }
     }
 }

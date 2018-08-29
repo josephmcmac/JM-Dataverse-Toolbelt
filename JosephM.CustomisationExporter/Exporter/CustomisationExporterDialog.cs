@@ -28,8 +28,10 @@ namespace JosephM.CustomisationExporter.Exporter
                 AddCompletionOption("Open Relationships", OpenRelationshipsFile);
             if (!Response.OptionSetsFileName.IsNullOrWhiteSpace())
                 AddCompletionOption("Open Options", OpenOptionsFile);
+            CompletionMessage = string.Format("The CSV {0} Been Generated",
+                CompletionOptions.Count > 1 ? "Files Have" : "File Has");
             AddCompletionOption("Open Folder", OpenFolder);
-            CompletionMessage = "Document Successfully Generated";
+
         }
 
         public void OpenFolder()

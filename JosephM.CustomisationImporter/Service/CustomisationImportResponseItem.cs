@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Extentions;
+﻿using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Record.Metadata;
 using System;
@@ -33,7 +34,8 @@ namespace JosephM.CustomisationImporter.Service
             Exception = ex;
         }
 
-        public int? ExcelRow { get; set; }
+        [PropertyInContextByPropertyNotNull(nameof(ExcelRow))]
+        public int? ExcelRow { get; }
         public string Type { get {
                 var typeDisplay = Metadata.GetType().GetDisplayName();
                 if (typeDisplay.EndsWith(" Metadata"))
