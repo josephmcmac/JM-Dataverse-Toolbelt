@@ -25,6 +25,7 @@
                 AcceptsReturn="{Binding IsMultiline}"
                 MinLines ="{Binding NumberOfLines}"
                 MaxLines ="{Binding NumberOfLines}"
+                VerticalScrollBarVisibility="Auto"
                 TabIndex="1"
                 Text="{Binding Mode=OneWay, Path=ValueObject}"
                 Height="Auto">
@@ -36,10 +37,10 @@
                 Name="TextBox"
                 AcceptsReturn="{Binding IsMultiline}"
                 MinLines ="{Binding NumberOfLines}"
-                MaxLines ="{Binding NumberOfLines}"
                 TabIndex="1"
                 Text="{Binding Mode=TwoWay, Path=ValueObject}"
                 DataContext="{Binding NotifyOnValidationError=True}"
+                VerticalScrollBarVisibility="Auto"
                 IsReadOnly="False" />
         </Grid>
     </Grid>

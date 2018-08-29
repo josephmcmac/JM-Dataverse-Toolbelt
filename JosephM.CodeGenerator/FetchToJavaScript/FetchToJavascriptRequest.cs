@@ -10,6 +10,7 @@ namespace JosephM.CodeGenerator.FetchToJavascript
     {
         [Multiline]
         [RequiredProperty]
+        [DoNotLimitDisplayHeight]
         [Group(Sections.Fetch)]
         public string Fetch { get; set; }
 
