@@ -93,11 +93,6 @@
                             <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderHover}" />
                             <Setter Property="Foreground" Value="{DynamicResource ButtonTextHover}" />
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
-                            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderPressed}" />
-                            <Setter Property="Foreground" Value="{DynamicResource ButtonTextPressed}" />
-                        </Trigger>
                         <Trigger Property="IsFocused" Value="true">
                             <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource Accent}" />
                         </Trigger>

@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="BorderColor" Color="LightGray" Opacity="1" />
     <SolidColorBrush x:Key="BorderColorLight" Color="LightGray" Opacity=".3" />
+    <SolidColorBrush x:Key="StandardTextColour" Color="Black" />
     <Style  x:Key="ValidationMessage" TargetType="{x:Type TextBlock}" >
         <Setter Property="Margin" Value="8,8,8,8" />
         <Setter Property="Foreground" Value="Red" />
@@ -29,6 +30,7 @@
     </Style>
     <Style TargetType="TextBlock">
         <Setter Property="Margin" Value="13,13,13,13" />
+        <Setter Property="Foreground" Value="{StaticResource StandardTextColour}" />
     </Style>
     <Style x:Key="ButtonsGrid" TargetType="{x:Type Grid}" >
         <Setter Property="Margin" Value="21,0,0,0" />
