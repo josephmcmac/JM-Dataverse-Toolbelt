@@ -11,6 +11,7 @@
         <Setter Property="Margin" Value="13,13,13,13" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
         <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
     </Style>
     <Style x:Key="HeadingStyleTextBox" TargetType="TextBox" >
         <Setter Property="TextWrapping" Value="Wrap" />
@@ -19,6 +20,8 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Margin" Value="13,13,13,13" />
         <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
     </Style>
     <Style x:Key="BorderStyle" TargetType="{x:Type Border}">
         <Setter Property="BorderThickness"  Value="1" />
@@ -30,7 +33,7 @@
     </Style>
     <Style TargetType="TextBlock">
         <Setter Property="Margin" Value="13,13,13,13" />
-        <Setter Property="Foreground" Value="{StaticResource StandardTextColour}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
     </Style>
     <Style x:Key="ButtonsGrid" TargetType="{x:Type Grid}" >
         <Setter Property="Margin" Value="21,0,0,0" />

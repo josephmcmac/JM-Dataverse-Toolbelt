@@ -126,6 +126,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -164,6 +165,7 @@
     <Compile Include="Converters\LengthConverter.cs" />
     <Compile Include="Converters\TabbedApplicationHeightConverter.cs" />
     <Compile Include="Converters\ShellApplicationHeightConverter.cs" />
+    <Compile Include="Extentions\UserControlExtentions.cs" />
     <Compile Include="Grid\DynamicGridView.xaml.cs">
       <DependentUpon>DynamicGridView.xaml</DependentUpon>
     </Compile>
@@ -327,6 +329,9 @@
     <Compile Include="RecordEntry\Field\UrlFieldView.xaml.cs">
       <DependentUpon>UrlFieldView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Themes\Theme.cs" />
+    <Compile Include="Resources\Themes\XamlTheme.cs" />
+    <Compile Include="Resources\Themes\XamlThemes.cs" />
     <Compile Include="Shared\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
@@ -609,6 +614,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Resources\Themes\Dark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Shared\LoadingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -684,7 +693,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Resources\ModernUI.Light.xaml">
+    <Page Include="Resources\Themes\Light.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -775,6 +784,7 @@
   <ItemGroup>
     <Resource Include="Images\OpenRowIcon.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -3,6 +3,7 @@ using JosephM.Application.Desktop.Console;
 using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.ReleaseCheckModule;
 using JosephM.Application.Desktop.Module.SavedRequests;
+using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.Xrm;
 using JosephM.Core.FieldType;
 using JosephM.CustomisationExporter.Exporter;
@@ -44,6 +45,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<XrmDeveloperToolAboutModule>();
             app.AddModule<DevAppReleaseCheckModule>();
             app.AddModule<SavedConnectionAppConnectionModule>();
+            app.AddModule<ThemeModule>();
             app.Run();
         }
 

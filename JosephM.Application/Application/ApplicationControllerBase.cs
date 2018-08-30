@@ -163,9 +163,28 @@ namespace JosephM.Application.Application
             return Container == null ? null : Container.ResolveType(type);
         }
 
+        public void AddOnInstanceRegistered<T>(Action processRegisteredObject)
+        {
+            _instanceRegisteredActions.Add(new KeyValuePair<Type, Action>(typeof(T), processRegisteredObject));
+        }
+
+        private List<KeyValuePair<Type, Action>> _instanceRegisteredActions = new List<KeyValuePair<Type, Action>>();
+
+        private void OnInstanceRegistered(Type type)
+        {
+            foreach(var item in _instanceRegisteredActions)
+            {
+                if(item.Key == type)
+                {
+                    item.Value();
+                }
+            }
+        }
+
         public void RegisterInstance(Type type, object instance)
         {
             Container.RegisterInstance(type, instance);
+            OnInstanceRegistered(type);
         }
 
         public object ResolveType(string typeName)
@@ -191,6 +210,7 @@ namespace JosephM.Application.Application
         public void RegisterInstance(Type type, string key, object instance)
         {
             Container.RegisterInstance(type, key, instance);
+            OnInstanceRegistered(type);
         }
 
         public object ResolveInstance(Type type, string key)

@@ -67,5 +67,6 @@
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
         <Setter Property="MinHeight" Value="20" />
+        <Setter Property="Foreground" Value="{DynamicResource ItemText}" />
     </Style>
 </ResourceDictionary>

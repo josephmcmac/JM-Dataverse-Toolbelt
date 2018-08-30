@@ -42,6 +42,8 @@
                 >
                 <TabControl.ItemContainerStyle>
                     <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="BorderBrush" Value="White" />
+                        <Setter Property="BorderThickness" Value=".5" />
                         <Setter Property="HeaderTemplate" Value="{StaticResource TabItemHeaderTemplate}" />
                         <Setter Property="ContextMenu">
                             <Setter.Value>

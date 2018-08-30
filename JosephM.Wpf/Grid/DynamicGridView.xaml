@@ -94,11 +94,26 @@
                                 >
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                                        <Setter Property="BorderThickness" Value=".5" />
                                         <EventSetter Event="Click" Handler="columnHeader_Click" />
                                         <Setter Property="HorizontalContentAlignment" Value="{Binding Align}" />
                                         <Setter Property="ContentTemplate" Value="{StaticResource ColumnHeaderTemplate}" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundHover}" />
+                                                <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderHover}" />
+                                                <Setter Property="Foreground" Value="{DynamicResource ButtonTextHover}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+
                                     </Style>
                                 </DataGrid.ColumnHeaderStyle>
+                                <DataGrid.RowHeaderStyle>
+                                    <Style TargetType="DataGridRowHeader">
+                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                                    </Style>
+                                </DataGrid.RowHeaderStyle>
                             </DataGrid>
                         </Grid>
                         <Grid  Grid.Row="2" 
