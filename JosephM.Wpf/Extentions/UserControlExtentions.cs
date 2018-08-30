@@ -35,14 +35,19 @@ namespace JosephM.Wpf.Extentions
                      new Uri("/" + Assembly.GetExecutingAssembly().GetName().Name + ";component/" + themePath,
                      UriKind.RelativeOrAbsolute)) as ResourceDictionary;
                 userControl.Resources.MergedDictionaries.Add(res);
-                System.Windows.Application.Current.MainWindow.Resources.MergedDictionaries.Add(res);
+                var window = Window.GetWindow(userControl);
+                window.Resources.MergedDictionaries.Clear();
+                window.Resources.MergedDictionaries.Add(res);
             }
         }
 
         private static ApplicationControllerBase GetAppController(this UserControl userControl)
         {
-            var app = userControl.DataContext as ApplicationBase;
-            return app?.Controller;
+            if (userControl.DataContext is ApplicationBase)
+                return ((ApplicationBase)userControl.DataContext).Controller;
+            if (userControl.DataContext is ApplicationControllerBase)
+                return (ApplicationControllerBase)userControl.DataContext;
+            return null;
         }
     }
 }

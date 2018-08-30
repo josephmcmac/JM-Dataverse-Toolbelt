@@ -87,7 +87,7 @@
                         ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
                         </ScrollViewer>
                     </Grid>
-                    <Grid Grid.Row="4" Style="{StaticResource ButtonsGrid}">
+                    <Grid Margin="21,0,0,15" Grid.Row="4" Style="{StaticResource ButtonsGrid}">
                     <StackPanel
                         Orientation="Horizontal"
                         VerticalAlignment="Top"

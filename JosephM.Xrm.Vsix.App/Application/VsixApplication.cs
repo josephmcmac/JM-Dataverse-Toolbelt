@@ -11,6 +11,8 @@ using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
 using System.Reflection;
+using JosephM.Core.AppConfig;
+using JosephM.Application.Desktop.Application;
 
 namespace JosephM.Xrm.Vsix
 {
@@ -85,6 +87,14 @@ namespace JosephM.Xrm.Vsix
             }
             var packageSettings = settingsManager.Resolve<XrmPackageSettings>();
             Controller.RegisterInstance(typeof(XrmPackageSettings), packageSettings);
+        }
+
+        public static VsixApplication Create(IVisualStudioService visualStudioService, IDependencyResolver dependencyResolver, string applicationName, Guid commandSetId)
+        {
+            var applicationController = new VsixApplicationController(dependencyResolver, applicationName);
+            var vsixSettingsManager = new VsixSettingsManager(visualStudioService, new DesktopSettingsManager(applicationController));
+            var app = new VsixApplication(applicationController, vsixSettingsManager, commandSetId);
+            return app;
         }
     }
 }

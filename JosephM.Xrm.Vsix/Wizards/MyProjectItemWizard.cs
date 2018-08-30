@@ -26,7 +26,7 @@ namespace JosephM.XRM.VSIX.Wizards
         {
             AddRootNamespaceReplacement(replacementsDictionary);
 
-            var vsixSettingsManager = new VsixSettingsManager(VisualStudioService);
+            var vsixSettingsManager = new VsixSettingsManager(VisualStudioService, null);
             var packageSettings = vsixSettingsManager.Resolve<XrmPackageSettings>();
             if (packageSettings == null)
                 throw new NullReferenceException("packageSettings");

@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Windows;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.Application.Desktop.Module.Themes;
 
 namespace JosephM.Xrm.Vsix.TestShell
 {
@@ -32,8 +33,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             var visualStudioService = new FakeVisualStudioService(solutionDirectory: settingsFolder);
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
 
-            var applicationController = new VsixApplicationController(container, applicationName: applicationName);
-            VsixApplication = new VsixApplication(applicationController, new VsixSettingsManager(visualStudioService), new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
+            VsixApplication = VsixApplication.Create(visualStudioService, container, "Vsix Test Shell", new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
 
             VsixApplication.AddModule<OpenWebModule>();
             VsixApplication.AddModule<DeployAssemblyModule>();
@@ -41,6 +41,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication.AddModule<XrmCrudModule>();
             VsixApplication.AddModule<TestDialogModule>();
             VsixApplication.AddModule<PackageSettingsAppConnectionModule>();
+            VsixApplication.AddModule<ThemeModule>();
         }
 
         public VsixApplication VsixApplication { get; set; }

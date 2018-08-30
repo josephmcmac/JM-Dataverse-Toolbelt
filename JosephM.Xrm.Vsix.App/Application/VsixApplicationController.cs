@@ -17,7 +17,8 @@ namespace JosephM.Xrm.Vsix.Application
 {
     public class VsixApplicationController : ApplicationControllerBase
     {
-        public VsixApplicationController(IDependencyResolver dependencyResolver, string applicationName = null) : base(applicationName ?? "JosephM.Xrm.Vsix", dependencyResolver)
+        public VsixApplicationController(IDependencyResolver dependencyResolver, string applicationName)
+            : base(applicationName, dependencyResolver)
         {
         }
 
@@ -83,15 +84,14 @@ namespace JosephM.Xrm.Vsix.Application
 
         public static void LoadDialogIntoWindow(DialogViewModel dialog, bool showCompletionScreen = true, bool isModal = false)
         {
-            var window = new Window
+            var window = new WindowShellWindow
             {
                 Title = dialog.TabLabel
             };
-            var content = new WindowShell();
-            window.Content = content;
-            var dialogControl = new DialogForm();
-            dialogControl.DataContext = dialog;
-            content.Content = dialogControl;
+            window.DataContext = dialog.ApplicationController;
+            //var dialogControl = new DialogForm();
+            //dialogControl.DataContext = dialog;
+            window.SetContent(dialog);
 
             Action closeMethod = () =>
             {

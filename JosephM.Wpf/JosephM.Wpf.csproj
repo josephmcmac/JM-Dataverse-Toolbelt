@@ -150,6 +150,9 @@
     <Compile Include="Application\ApplicationMenuGroupView.xaml.cs">
       <DependentUpon>ApplicationMenuGroupView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Application\WindowShellWindow.xaml.cs">
+      <DependentUpon>WindowShellWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Application\WindowShell.xaml.cs">
       <DependentUpon>WindowShell.xaml</DependentUpon>
     </Compile>
@@ -395,6 +398,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Application\ApplicationMenuGroupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Application\WindowShellWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

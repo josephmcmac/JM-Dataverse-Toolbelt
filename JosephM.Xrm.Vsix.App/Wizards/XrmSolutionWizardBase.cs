@@ -34,7 +34,7 @@ namespace JosephM.Xrm.Vsix.Wizards
             #endif
 
             var container = new DependencyContainer();
-            var applicationController = new VsixApplicationController(container);
+            var applicationController = new VsixApplicationController(container, "JosephM.Xrm.Vsix");
             if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && (replacementsDictionary["$specifiedsolutionname$"] == null || replacementsDictionary["$specifiedsolutionname$"] == ""))
             {
                 applicationController.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");

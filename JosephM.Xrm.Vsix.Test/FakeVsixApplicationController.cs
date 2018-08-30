@@ -13,7 +13,8 @@ namespace JosephM.Xrm.Vsix.Test
     public class FakeVsixApplicationController : VsixApplicationController
     {
         public override bool RunThreadsAsynch => false;
-        public FakeVsixApplicationController(IDependencyResolver dependencyResolver) : base(dependencyResolver)
+        public FakeVsixApplicationController(IDependencyResolver dependencyResolver)
+            : base(dependencyResolver, "ScriptedVsixApplication")
         {
              
         }

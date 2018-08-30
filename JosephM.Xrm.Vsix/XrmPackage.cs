@@ -6,7 +6,9 @@
 
 using EnvDTE80;
 using JosephM.Application.Application;
+using JosephM.Application.Desktop.Application;
 using JosephM.Application.Desktop.Module.AboutModule;
+using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.InstanceComparer;
 using JosephM.Xrm.RecordExtract.TextSearch;
@@ -67,8 +69,7 @@ namespace JosephM.XRM.VSIX
             var visualStudioService = new VisualStudioService(dte);
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
 
-            var applicationController = new VsixApplicationController(container);
-            var app = new VsixApplication(applicationController, new VsixSettingsManager(visualStudioService), new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
+            var app = VsixApplication.Create(visualStudioService, container, "JosephM.Xrm.Vsix", new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
 
             app.AddModule<OpenWebModule>(0x010B);
             app.AddModule<OpenSolutionModule>(0x010C);
@@ -93,6 +94,7 @@ namespace JosephM.XRM.VSIX
             app.AddModule<DeployIntoFieldModule>(0x0117);
             app.AddModule<JavaScriptOptionsModule>(0x0118);
             app.AddModule<OpenDefaultSolutionModule>(0x0119);
+            app.AddModule<ThemeModule>(0x011A);
             app.AddModule<PackageSettingsAppConnectionModule>();
         }
 

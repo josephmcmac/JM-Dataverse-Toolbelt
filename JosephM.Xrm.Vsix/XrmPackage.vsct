@@ -274,6 +274,12 @@
           <ButtonText>Generate JavaScript Options</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ThemeCommandId" priority="0x0108" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Theme</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -333,6 +339,7 @@
       <IDSymbol name="DeployIntoFieldCommandId" value="0x0117" />
       <IDSymbol name="GenerateJavascriptOptionsCommandId" value="0x0118" />
       <IDSymbol name="OpenCrmDefaultSolutionCommandId" value="0x0119" />
+      <IDSymbol name="ThemeCommandId" value="0x011A" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >
