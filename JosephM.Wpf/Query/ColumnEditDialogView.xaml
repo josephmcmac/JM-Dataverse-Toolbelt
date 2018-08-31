@@ -67,7 +67,7 @@
                                     </GroupBox>
                                 </Grid>
                                 <Border Style="{StaticResource BorderStyleLight}"  Width="{Binding Width}" >
-                                    <Grid MouseMove="SelectMouseMoveEvent">
+                                    <Grid MouseMove="SelectMouseMoveEvent" Background="{DynamicResource BackgroundColor}">
                                         <GroupBox>
                                             <Grid>
                                                 <Grid.RowDefinitions>
@@ -96,7 +96,7 @@
         </Grid>
         <Grid Grid.Row="4">
             <TextBlock
-                Text="Available Columns - Click Ocon Or Drag Into The Current Columns To Add To The View"
+                Text="Available Columns - Click + Icon Or Drag Into The Current Columns To Add To The View"
                 Style="{StaticResource HeadingStyle}" />
         </Grid>
         <Grid Grid.Row="5" Margin="8">

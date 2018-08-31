@@ -20,7 +20,7 @@
     </Style>
     <Style x:Key="TabHeaderPanel" TargetType="{x:Type DockPanel}">
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
-        <Setter Property="Margin" Value="0,-1.5,0,-1" />
+        <Setter Property="Margin" Value="0,0,0,0" />
     </Style>
     <DataTemplate x:Key="applicationMenuViewTemplate">
         <application:ApplicationOptionsView DataContext="{Binding}" />
@@ -72,7 +72,7 @@
     </DataTemplate>
     <DataTemplate x:Key="TabItemHeaderTemplate">
         <DockPanel Style="{StaticResource TabHeaderPanel}" >
-            <DockPanel Margin="10,5,5,5">
+            <DockPanel Margin="10,5,5,5" >
                 <TextBlock Style="{StaticResource TabLabelStyle}" Text="{Binding TabLabel}" />
                 <Button Style="{StaticResource RemoveButtonStyle}" Command="{Binding TabCloseCommand}" >
                     <Image Source="../Images/CloseButton.gif" Height="15" Width="15" />

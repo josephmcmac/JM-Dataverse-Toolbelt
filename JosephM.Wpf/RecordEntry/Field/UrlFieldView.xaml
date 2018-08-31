@@ -16,8 +16,18 @@
     </field:FieldControlBase.Resources>
     <Grid>
         <TextBlock Name="TextBlock" Style="{StaticResource UrlFieldStyle}">           
-            <Hyperlink NavigateUri="{Binding LinkUri}" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None" >
-                <TextBlock Text="{Binding LinkName}" Margin="0,0,0,0" Padding="0,0,0,0" TextWrapping="Wrap" />
+            <Hyperlink NavigateUri="{Binding LinkUri}" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None"  Foreground="{DynamicResource BackgroundColor}" >
+                <TextBlock Text="{Binding LinkName}" Margin="0,0,0,0" Padding="0,0,0,0" TextWrapping="Wrap" Foreground="{DynamicResource TextColor}" >
+                    <TextBlock.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <Trigger Property="TextBlock.IsMouseOver" Value="True">
+                                    <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Hyperlink>
         </TextBlock>
     </Grid>

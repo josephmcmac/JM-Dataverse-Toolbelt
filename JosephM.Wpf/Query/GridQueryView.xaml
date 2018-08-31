@@ -55,7 +55,6 @@
                                     VerticalAlignment="Top"
                                     TabIndex="1"
                                     Name="ComboBox"
-                                    Style="{StaticResource FieldEntryStyle}"
                                     Tag="Key"
                                     DisplayMemberPath="Value"
                                     ItemsSource="{Binding RecordTypeItemsSource}"

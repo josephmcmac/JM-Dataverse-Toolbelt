@@ -92,6 +92,16 @@
                                 CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"
                                 CanUserAddRows="True" SelectionChanged="DataGrid_SelectionChanged" SelectionMode="{Binding MultiSelect, Converter={StaticResource BooleanToMultiSelectConverter}}"
                                 >
+                                <DataGrid.Resources>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Style.Triggers>
+                                            <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource SelectedBackgroundColor}" />
+                                                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.Resources>
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
                                         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
@@ -100,11 +110,20 @@
                                         <Setter Property="HorizontalContentAlignment" Value="{Binding Align}" />
                                         <Setter Property="ContentTemplate" Value="{StaticResource ColumnHeaderTemplate}" />
                                         <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
+                                            <!--<Trigger Property="IsMouseOver" Value="True">
                                                 <Setter Property="Background" Value="{DynamicResource ButtonBackgroundHover}" />
                                                 <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderHover}" />
                                                 <Setter Property="Foreground" Value="{DynamicResource ButtonTextHover}" />
-                                            </Trigger>
+                                            </Trigger>-->
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True"/>
+                                                    <Condition Binding="{Binding IsSortable}" Value="True"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundHover}" />
+                                                <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderHover}" />
+                                                <Setter Property="Foreground" Value="{DynamicResource ButtonTextHover}" />
+                                            </MultiDataTrigger>
                                         </Style.Triggers>
 
                                     </Style>

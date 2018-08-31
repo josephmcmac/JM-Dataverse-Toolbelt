@@ -405,6 +405,11 @@ namespace JosephM.Wpf.Grid
                 }
             }
 
+            public bool IsSortable
+            {
+                get { return FieldLabel != null; }
+            }
+
             public string FieldName { get; private set; }
             public string FieldLabel { get; private set; }
             public RecordFieldType FieldType { get; private set; }

@@ -34,14 +34,13 @@
                     Visibility="{Binding SelectedItem, Converter={StaticResource NullToHiddenConverter}}" >
                     <Image Source="../Images/DeleteIcon.jpg" Height="15" Width="15" />
                 </Button>
-                <TextBlock VerticalAlignment="Center">Join</TextBlock>
+                <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextColor}">Join</TextBlock>
                 <ComboBox
                             Width="Auto"
-                            Style="{StaticResource  PicklistFieldEntryStyle}"
                             DisplayMemberPath="Value"
                             ItemsSource="{Binding LinkSelections}"
                             SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}" />
-                <TextBlock Visibility="{Binding SelectedItem, Converter={StaticResource NullToHiddenConverter}}" VerticalAlignment="Center">Where</TextBlock>
+                <TextBlock Visibility="{Binding SelectedItem, Converter={StaticResource NullToHiddenConverter}}" VerticalAlignment="Center" Foreground="{DynamicResource TextColor}">Where</TextBlock>
             </StackPanel>
             <Grid>
                 <Grid

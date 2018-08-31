@@ -31,7 +31,6 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <ComboBox
-                    Style="{StaticResource PicklistFieldEntryStyle}"
                     TabIndex="1"
                     Name="ComboBox"
                     Tag="Key"
