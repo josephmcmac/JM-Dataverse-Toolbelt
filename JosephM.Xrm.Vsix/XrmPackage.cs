@@ -13,6 +13,7 @@ using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.InstanceComparer;
 using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.Xrm.Vsix;
+using JosephM.Xrm.Vsix.App;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
 using JosephM.Xrm.Vsix.Module.CreatePackage;
@@ -69,52 +70,10 @@ namespace JosephM.XRM.VSIX
             var visualStudioService = new VisualStudioService(dte);
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
 
-            var app = VsixApplication.Create(visualStudioService, container, "JosephM.Xrm.Vsix", new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
-
-            app.AddModule<OpenWebModule>(0x010B);
-            app.AddModule<OpenSolutionModule>(0x010C);
-            app.AddModule<OpenAdvancedFindModule>(0x010D);
-            app.AddModule<ClearCacheModule>(0x0109);
-            app.AddModule<XrmCrudModule>(0x0112);
-            app.AddModule<InstanceComparerModule>(0x0111);
-            app.AddModule<UpdateAssemblyModule>(0x0105);
-            app.AddModule<XrmPackageSettingsModule>(0x0106);
-            app.AddModule<DeployAssemblyModule>(0x0103);
-            app.AddModule<ManagePluginTriggersModule>(0x0104);
-            app.AddModule<VsixCustomisationImportModule>(0x010A);
-            app.AddModule<VsixCreatePackageModule>(0x010E);
-            app.AddModule<RefreshSchemaModule>(0x0100);
-            app.AddModule<DeployWebResourceModule>(0x0102);
-            app.AddModule<VsixImportCsvsModule>(0x0108);
-            app.AddModule<VsixDeployPackageModule>(0x0110);
-            app.AddModule<XrmTextSearchModule>(0x0116);
-            app.AddModule<XrmPackageAboutModule>(0x0113);
-            app.AddModule<ImportSolutionModule>(0x0114);
-            app.AddModule<ImportRecordsModule>(0x0115);
-            app.AddModule<DeployIntoFieldModule>(0x0117);
-            app.AddModule<JavaScriptOptionsModule>(0x0118);
-            app.AddModule<OpenDefaultSolutionModule>(0x0119);
-            app.AddModule<ThemeModule>(0x011A);
-            app.AddModule<PackageSettingsAppConnectionModule>();
+            var app = Factory.CreateJosephMXrmVsixApp(visualStudioService, container);
         }
 
-        public class XrmPackageAboutModule : AboutModule
-        {
-            public override string CodeLink => "https://github.com/josephmcmac/XRM-Developer-Tool";
 
-            public override string CreateIssueLink => "https://github.com/josephmcmac/XRM-Developer-Tool/issues/new";
-
-            public override Core.FieldType.Url OtherLink => new Core.FieldType.Url("https://github.com/josephmcmac/XRM-Developer-Tool/releases", "Download Desktop App");
-
-            //public override Assembly MainAssembly => Assembly.GetExecutingAssembly();
-
-            public override string AboutDetail =>
-                "This extention has been created to improve productivity developing, customising, and deploying solutions in Miscrosoft Dynamics CRM (now know as Dynamics 365)\n" +
-                "\n" +
-                "My desktop application also shares many of these features, as well includes others. It can be download at the link shown below\n" +
-                "\n" +
-                "If you use this extention and experience issues, or have any suggestions for improvement, create an issue in github with the link shown below and I will look into it when I get a chance";
-        }
         #endregion
     }
 }

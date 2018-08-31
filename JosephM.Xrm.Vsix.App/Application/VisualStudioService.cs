@@ -77,10 +77,13 @@ namespace JosephM.Xrm.Vsix.Application
 
         private static Project GetProject(Solution2 solution, string name)
         {
-            foreach (Project item in solution.Projects)
+            if (solution.Projects != null)
             {
-                if (item.Name == name)
-                    return item;
+                foreach (Project item in solution.Projects)
+                {
+                    if (item.Name == name)
+                        return item;
+                }
             }
             return null;
         }

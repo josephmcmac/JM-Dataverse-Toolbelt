@@ -32,6 +32,7 @@ namespace JosephM.Application.Desktop.Module.Settings
                 null, OnSave, null, saveButtonLabel: saveButtonLabel ?? "Save");
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
+
         protected AppSettingsDialog(DialogViewModel parentDialog, IRecordService lookupService, TSettingsObject objectToEnter)
             : base(parentDialog)
         {

@@ -178,6 +178,7 @@
     <Compile Include="Application\VsixApplicationController.cs" />
     <Compile Include="Application\VsixDependencyContainer.cs" />
     <Compile Include="Application\VsixSettingsManager.cs" />
+    <Compile Include="Factory.cs" />
     <Compile Include="Module\Web\OpenAdvancedFindDialog.cs" />
     <Compile Include="Module\Web\OpenDefaultSolutionDialog.cs" />
     <Compile Include="Module\Web\OpenSolutionDialog.cs" />
@@ -275,6 +276,10 @@
       <Project>{82118987-FB76-4E70-81A0-06D0B062D89C}</Project>
       <Name>JosephM.Deployment</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.InstanceComparer\JosephM.InstanceComparer.csproj">
+      <Project>{9D2F8F1B-CB77-46F2-A32B-AA7D7959A1D0}</Project>
+      <Name>JosephM.InstanceComparer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
       <Project>{EB4443BD-DEAD-4546-9C8C-BFC2A807AF3A}</Project>
       <Name>JosephM.ObjectMapping</Name>
@@ -302,6 +307,10 @@
     <ProjectReference Include="..\JosephM.Wpf\JosephM.Wpf.csproj">
       <Project>{ED23E8EF-1623-491E-A30F-BA55C8F65CE7}</Project>
       <Name>JosephM.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj">
+      <Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>
+      <Name>JosephM.Xrm.RecordExtract</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
       <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>

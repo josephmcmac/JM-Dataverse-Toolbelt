@@ -18,16 +18,23 @@ namespace JosephM.Xrm.Vsix
 {
     public class VsixApplication : ApplicationBase
     {
-        public VsixApplication(VsixApplicationController applicationController, ISettingsManager settingsManager, Guid commandSetId)
+        public VsixApplication(VsixApplicationController applicationController, ISettingsManager settingsManager, Guid commandSetId, bool isWizardContext)
             : base(applicationController, new ApplicationOptionsViewModel(applicationController), settingsManager)
         {
+            VsixApplicationController = applicationController;
             CommandSetId = commandSetId;
+            IsWizardContext = isWizardContext;
             ApplicationName = applicationController.ApplicationName;
             Controller.RegisterType<IDialogController, DialogController>();
         }
 
-        public Guid CommandSetId { get; set; }
+        public VsixApplicationController VsixApplicationController
+        {
+            get; set;
+        }
 
+        public Guid CommandSetId { get; set; }
+        public bool IsWizardContext { get; }
         public string ApplicationName { get; set; }
 
         public void AddModule<T>(int commandId)
@@ -35,33 +42,36 @@ namespace JosephM.Xrm.Vsix
         {
             var module = AddModule<T>();
 
-            var commandService = Controller.ResolveType(typeof(IMenuCommandService)) as IMenuCommandService;
-            if (commandService == null)
-                throw new NullReferenceException("commandService");
-
-            var menuCommandId = new CommandID(CommandSetId, commandId);
-
-            EventHandler menuItemCallback = (sender, e) =>
+            if (!IsWizardContext)
             {
-                try
-                {
-                    CheckRefreshActiveSettings();
-                    module.DialogCommand();
-                }
-                catch (Exception ex)
-                {
-                    Controller.ThrowException(ex);
-                }
-            };
+                var commandService = Controller.ResolveType(typeof(IMenuCommandService)) as IMenuCommandService;
+                if (commandService == null)
+                    throw new NullReferenceException("commandService");
 
-            var menuItem = new OleMenuCommand(menuItemCallback, menuCommandId);
-            commandService.AddCommand(menuItem);
+                var menuCommandId = new CommandID(CommandSetId, commandId);
 
-            var menuItemVisibleAttribute = typeof(T).GetCustomAttribute<MenuItemVisible>();
-            if (menuItemVisibleAttribute != null)
-            {
-                EventHandler clickHandler = (o, e) => menuItemVisibleAttribute.Process(Controller.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService, menuItem);
-                menuItem.BeforeQueryStatus += clickHandler;
+                EventHandler menuItemCallback = (sender, e) =>
+                {
+                    try
+                    {
+                        CheckRefreshActiveSettings();
+                        module.DialogCommand();
+                    }
+                    catch (Exception ex)
+                    {
+                        Controller.ThrowException(ex);
+                    }
+                };
+
+                var menuItem = new OleMenuCommand(menuItemCallback, menuCommandId);
+                commandService.AddCommand(menuItem);
+
+                var menuItemVisibleAttribute = typeof(T).GetCustomAttribute<MenuItemVisible>();
+                if (menuItemVisibleAttribute != null)
+                {
+                    EventHandler clickHandler = (o, e) => menuItemVisibleAttribute.Process(Controller.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService, menuItem);
+                    menuItem.BeforeQueryStatus += clickHandler;
+                }
             }
         }
 
@@ -89,11 +99,11 @@ namespace JosephM.Xrm.Vsix
             Controller.RegisterInstance(typeof(XrmPackageSettings), packageSettings);
         }
 
-        public static VsixApplication Create(IVisualStudioService visualStudioService, IDependencyResolver dependencyResolver, string applicationName, Guid commandSetId)
+        public static VsixApplication Create(IVisualStudioService visualStudioService, IDependencyResolver dependencyResolver, string applicationName, Guid commandSetId, bool isWizardContext = false)
         {
             var applicationController = new VsixApplicationController(dependencyResolver, applicationName);
             var vsixSettingsManager = new VsixSettingsManager(visualStudioService, new DesktopSettingsManager(applicationController));
-            var app = new VsixApplication(applicationController, vsixSettingsManager, commandSetId);
+            var app = new VsixApplication(applicationController, vsixSettingsManager, commandSetId, isWizardContext);
             return app;
         }
     }
