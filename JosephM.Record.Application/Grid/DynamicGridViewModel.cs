@@ -227,7 +227,10 @@ namespace JosephM.Application.ViewModel.Grid
         public bool CanDelete { get { return DeleteRow != null; } }
         public bool CanEdit { get { return EditRow != null; } }
         public Action<GridRowViewModel> DeleteRow { get; set; }
+
+        public bool CanEditNewTab { get { return EditRowNewTab != null; } }
         public Action<GridRowViewModel> EditRow { get; set; }
+        public Action<GridRowViewModel> EditRowNewTab { get; set; }
         public Action OnDoubleClick { get; set; }
         public Action OnClick { get; set; }
         public Action OnKeyDown { get; set; }

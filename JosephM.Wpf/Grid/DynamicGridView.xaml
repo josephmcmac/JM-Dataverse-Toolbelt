@@ -101,6 +101,10 @@
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>
+                                    <ContextMenu  x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" Visibility="{Binding DisplayContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <MenuItem Header="Open" Command="{Binding EditRowViewModel.Command}" Visibility="{Binding CanEdit, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        <MenuItem Header="Open In New Tab" Command="{Binding EditRowNewTabViewModel.Command}" Visibility="{Binding CanEditNewTab, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    </ContextMenu>
                                 </DataGrid.Resources>
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
@@ -133,6 +137,11 @@
                                         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
                                     </Style>
                                 </DataGrid.RowHeaderStyle>
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                                    </Style>
+                                </DataGrid.RowStyle>
                             </DataGrid>
                         </Grid>
                         <Grid  Grid.Row="2" 

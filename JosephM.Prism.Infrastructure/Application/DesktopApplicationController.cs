@@ -27,9 +27,12 @@ namespace JosephM.Application.Desktop.Application
 
         public override void Remove(object item)
         {
-            if (LoadedObjects.Contains(item))
-                LoadedObjects.Remove(item);
-            RaiseAreMultipleTabsChangedEvents();
+            DoOnMainThread(() =>
+            {
+                if (LoadedObjects.Contains(item))
+                    LoadedObjects.Remove(item);
+                RaiseAreMultipleTabsChangedEvents();
+            });
         }
 
         private void RaiseAreMultipleTabsChangedEvents()

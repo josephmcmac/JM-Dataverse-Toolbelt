@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry;
@@ -128,6 +129,19 @@ namespace JosephM.Application.ViewModel.Query
 
                             var newForm = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, onSave, ClearChildForm);
                             LoadChildForm(newForm);
+                        }
+                    };
+                    DynamicGridViewModel.EditRowNewTab = (g) =>
+                    {
+                        var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
+                        var formController = new FormController(RecordService, FormService, ApplicationController);
+                        var selectedRow = g;
+                        if (selectedRow != null)
+                        {
+                            var record = selectedRow.Record;
+                            var newForm = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, null, null);
+                            ApplicationController.NavigateTo(newForm);
+                            //LoadChildForm(newForm);
                         }
                     };
                     DynamicGridViewModel.AddRow = () =>

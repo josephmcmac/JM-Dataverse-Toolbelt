@@ -31,6 +31,7 @@ namespace JosephM.Application.ViewModel.Grid
             LoadFields();
             DeleteRowViewModel = new XrmButtonViewModel("Delete", DeleteRow, ApplicationController, description: "Delete");
             EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController, description: "Open This Item");
+            EditRowNewTabViewModel = new XrmButtonViewModel("Edit Row New Tab", EditRowNewTab, ApplicationController, description: "Open This Item In New Tab");
         }
 
         public DynamicGridViewModel GridViewModel { get; private set; }
@@ -72,6 +73,17 @@ namespace JosephM.Application.ViewModel.Grid
             GridViewModel.EditRow(this);
         }
 
+        public void EditRowNewTab()
+        {
+            GridViewModel.EditRowNewTab(this);
+        }
+
+        public bool DisplayContextMenu { get { return CanEdit || CanEditNewTab; } }
+
+        public bool CanEdit { get { return GridViewModel.CanEdit; } }
+
+        public bool CanEditNewTab { get { return GridViewModel.CanEditNewTab; } }
+
         public void DeleteRow()
         {
             GridViewModel.DeleteRow(this);
@@ -80,7 +92,7 @@ namespace JosephM.Application.ViewModel.Grid
         public XrmButtonViewModel DeleteRowViewModel { get; set; }
 
         public XrmButtonViewModel EditRowViewModel { get; set; }
-
+        public XrmButtonViewModel EditRowNewTabViewModel { get; private set; }
         public IRecord Record { get; set; }
 
         public IEnumerable<GridFieldMetadata> GridFields
