@@ -16,6 +16,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             : base(formController, saveButtonLabel: record.Id == null ? "Create" : "Update")
         {
             _record = record;
+            ExplicitIsCreate = explicitIsCreate;
             RecordType = record.Type;
             OnSave = () =>
             {
@@ -40,8 +41,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override string TabLabel
         {
-            get { return "Create Or Update"; }
+            get { return GetRecord()?.Id == null || ExplicitIsCreate
+                    ? "Create " + RecordService.GetDisplayName(RecordType)
+                    : "Update " + RecordService.GetDisplayName(RecordType); }
         }
+
+        public bool ExplicitIsCreate { get; }
 
         public override IRecord GetRecord()
         {

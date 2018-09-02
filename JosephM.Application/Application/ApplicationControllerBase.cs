@@ -220,7 +220,7 @@ namespace JosephM.Application.Application
 
         public virtual bool AllowSaveRequests { get { return true; } }
 
-        public virtual bool ForceElementWindowHeight {  get { return false; } }
+        public virtual bool IsTabbedApplication {  get { return true; } }
 
         //runs all registered on navigate events
         protected void OnNavigatedTo(object objectNavigatedTo)

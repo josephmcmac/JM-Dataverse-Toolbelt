@@ -104,6 +104,7 @@
                                     <ContextMenu  x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" Visibility="{Binding DisplayContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <MenuItem Header="Open" Command="{Binding EditRowViewModel.Command}" Visibility="{Binding CanEdit, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                         <MenuItem Header="Open In New Tab" Command="{Binding EditRowNewTabViewModel.Command}" Visibility="{Binding CanEditNewTab, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        <MenuItem Header="Open In New Window" Command="{Binding EditRowNewWindowViewModel.Command}" Visibility="{Binding CanEditNewWindow, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                     </ContextMenu>
                                 </DataGrid.Resources>
                                 <DataGrid.ColumnHeaderStyle>
@@ -140,6 +141,7 @@
                                 <DataGrid.RowStyle>
                                     <Style TargetType="DataGridRow">
                                         <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                                        <Setter Property="Background" Value="Transparent" />
                                     </Style>
                                 </DataGrid.RowStyle>
                             </DataGrid>

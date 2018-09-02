@@ -187,7 +187,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
                     <Border Name="Border"
-                              Padding="0"
+                              Padding="3,3,3,3"
                               SnapsToDevicePixels="true">
                         <ContentPresenter />
                     </Border>

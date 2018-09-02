@@ -79,6 +79,6 @@ namespace JosephM.Application.Application
 
         bool AllowSaveRequests { get; }
 
-        bool ForceElementWindowHeight { get; }
+        bool IsTabbedApplication { get; }
     }
 }

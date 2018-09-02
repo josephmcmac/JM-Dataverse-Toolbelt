@@ -131,7 +131,7 @@ namespace JosephM.Application.ViewModel.Query
                             LoadChildForm(newForm);
                         }
                     };
-                    DynamicGridViewModel.EditRowNewTab = (g) =>
+                    DynamicGridViewModel.EditRowNew = (g) =>
                     {
                         var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
                         var formController = new FormController(RecordService, FormService, ApplicationController);

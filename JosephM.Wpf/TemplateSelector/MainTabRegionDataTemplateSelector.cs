@@ -28,7 +28,7 @@ namespace JosephM.Wpf.TemplateSelector
             if (item is QueryViewModel)
             {
                 var viewModel = (QueryViewModel)item;
-                if (viewModel.ApplicationController?.ForceElementWindowHeight ?? false)
+                if (!viewModel.ApplicationController?.IsTabbedApplication ?? true)
                 {
                     return QueryViewTemplateWindowSize;
                 }
