@@ -115,11 +115,6 @@
                                         <Setter Property="HorizontalContentAlignment" Value="{Binding Align}" />
                                         <Setter Property="ContentTemplate" Value="{StaticResource ColumnHeaderTemplate}" />
                                         <Style.Triggers>
-                                            <!--<Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundHover}" />
-                                                <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderHover}" />
-                                                <Setter Property="Foreground" Value="{DynamicResource ButtonTextHover}" />
-                                            </Trigger>-->
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True"/>

@@ -42,8 +42,14 @@
                 >
                 <TabControl.ItemContainerStyle>
                     <Style TargetType="{x:Type TabItem}">
-                        <Setter Property="BorderBrush" Value="White" />
-                        <Setter Property="BorderThickness" Value=".5" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+                                <Setter Property="Margin" Value="0,0,0,0"/>
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                        <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="HeaderTemplate" Value="{StaticResource TabItemHeaderTemplate}" />
                         <Setter Property="ContextMenu">
                             <Setter.Value>
