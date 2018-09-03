@@ -21,4 +21,17 @@
             </EventTrigger>
         </Style.Triggers>
     </Style>
+    <Style TargetType="{x:Type GroupBox}" x:Key="FieldDropZone" BasedOn="{StaticResource HighlightDropZone}">
+        <Setter Property="Margin" Value="-3,-3,-3,-7" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style TargetType="{x:Type Border}" x:Key="DropZoneBorder" >
+        <Setter Property="Margin" Value="2,2,2,2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style TargetType="{x:Type Border}" x:Key="FieldDropZoneBorder" BasedOn="{StaticResource DropZoneBorder}" >
+        <Setter Property="BorderThickness" Value=".5" />
+    </Style>
 </ResourceDictionary>

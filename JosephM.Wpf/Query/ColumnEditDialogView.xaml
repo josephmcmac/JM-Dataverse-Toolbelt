@@ -63,12 +63,15 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Grid AllowDrop="True" Drop="SelectDropBefore" Visibility="{Binding IsFirstColumn, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <GroupBox Style="{StaticResource HighlightDropZone}">
-                                    </GroupBox>
+                                    <Border Style="{StaticResource DropZoneBorder}" >
+                                        <GroupBox BorderThickness="0" Style="{StaticResource HighlightDropZone}">
+                                        </GroupBox>
+                                    </Border>
                                 </Grid>
-                                <Border Style="{StaticResource BorderStyleLight}"  Width="{Binding Width}" >
+                                <Border BorderThickness="0" Style="{StaticResource BorderStyleLight}"  Width="{Binding Width}" >
                                     <Grid MouseMove="SelectMouseMoveEvent" Background="{DynamicResource BackgroundColor}">
-                                        <GroupBox>
+                                        <Border Style="{StaticResource DropZoneBorder}" >
+                                            <GroupBox BorderThickness="0">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto"  />
@@ -82,11 +85,14 @@
                                         Style="{StaticResource FieldLabelStyle}" />
                                             </Grid>
                                         </GroupBox>
+                                        </Border>
                                     </Grid>
                                 </Border>
-                                <Grid AllowDrop="True" Drop="SelectDropAfter">
-                                    <GroupBox Style="{StaticResource HighlightDropZone}">
-                                    </GroupBox>
+                                <Grid  AllowDrop="True" Drop="SelectDropAfter">
+                                    <Border Style="{StaticResource DropZoneBorder}" >
+                                        <GroupBox BorderThickness="0" Style="{StaticResource HighlightDropZone}">
+                                        </GroupBox>
+                                    </Border>
                                 </Grid>
                             </StackPanel>
                         </DataTemplate>

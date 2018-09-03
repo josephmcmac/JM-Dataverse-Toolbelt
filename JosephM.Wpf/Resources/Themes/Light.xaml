@@ -5,6 +5,6 @@
     <SolidColorBrush x:Key="SelectedBackgroundColor" Color="#dddddd" />
     <SolidColorBrush x:Key="FieldEntryBackgroundColor" Color="#ffffff" />
     <SolidColorBrush x:Key="TextColor" Color="#333333" />
-    <SolidColorBrush x:Key="BorderColor" Color="#cccccc" />
+    <SolidColorBrush x:Key="BorderColor" Color="#99a6af" />
     <SolidColorBrush x:Key="LightColor" Color="#ffffff" />
 </ResourceDictionary>

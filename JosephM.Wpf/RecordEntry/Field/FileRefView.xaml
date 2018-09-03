@@ -20,8 +20,13 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" MinWidth="150" >
-            <GroupBox Width="Auto" AllowDrop="True" Drop="DropFile"  Style="{StaticResource HighlightDropZone}">
-                <TextBox
+            <Border Style="{StaticResource FieldDropZoneBorder}" >
+                <GroupBox
+                Width="Auto"
+                AllowDrop="True"
+                Drop="DropFile" 
+                Style="{StaticResource FieldDropZone}">
+                    <TextBox
                     AllowDrop="True" PreviewDragOver="TextBoxDragOver" Drop="DropFile"  
                     TabIndex="1"
                     DataContext="{Binding NotifyOnValidationError=True}"
@@ -29,7 +34,8 @@
                     Name="FileNameTextBox"
                     Style="{StaticResource FieldEntryStyle}"
                     IsReadOnly="True" />
-            </GroupBox>
+                </GroupBox>
+            </Border>
         </Grid>
         <Grid Grid.Column="1" 
               Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}"
