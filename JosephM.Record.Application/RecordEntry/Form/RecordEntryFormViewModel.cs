@@ -244,7 +244,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     if (Validate())
                     {
                         OnSave();
-                        ApplicationController.Remove(this);
                     }
                 }
                 catch (Exception ex)

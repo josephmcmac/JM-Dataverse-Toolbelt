@@ -1,10 +1,6 @@
-﻿#region
-
-using JosephM.Record.Extentions;
+﻿using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
@@ -12,8 +8,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
     {
         private IRecord _record;
 
-        public CreateOrUpdateViewModel(IRecord record, FormController formController, Action postSave, Action onCancel, bool explicitIsCreate = false)
-            : base(formController, saveButtonLabel: record.Id == null ? "Create" : "Update")
+        public CreateOrUpdateViewModel(IRecord record, FormController formController, Action postSave, Action onCancel, bool explicitIsCreate = false, string cancelButtonLabel = null)
+            : base(formController, saveButtonLabel: record.Id == null ? "Create" : "Update", cancelButtonLabel: cancelButtonLabel)
         {
             _record = record;
             ExplicitIsCreate = explicitIsCreate;

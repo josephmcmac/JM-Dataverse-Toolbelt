@@ -139,8 +139,12 @@ namespace JosephM.Application.ViewModel.Query
                         if (selectedRow != null)
                         {
                             var record = selectedRow.Record;
-                            var newForm = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, null, null);
-                            ApplicationController.NavigateTo(newForm);
+                            CreateOrUpdateViewModel vmRef = null;
+                            vmRef = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, () => {
+                                vmRef.ValidationPrompt = "Changes Have Been Saved";
+                                DynamicGridViewModel.ReloadGrid();
+                            }, () => ApplicationController.Remove(vmRef), cancelButtonLabel: "Close");
+                            ApplicationController.NavigateTo(vmRef);
                             //LoadChildForm(newForm);
                         }
                     };

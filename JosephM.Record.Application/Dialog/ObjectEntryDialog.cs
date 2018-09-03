@@ -12,7 +12,7 @@ namespace JosephM.Application.ViewModel.Dialog
         /// </summary>
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
             IApplicationController applicationController, string saveButtonLabel = null)
-            : this(objectsToEnter, parentDialog, applicationController, null, null, saveButtonLabel: saveButtonLabel)
+            : this(objectsToEnter, parentDialog, applicationController, null, null)
         {
         }
 
@@ -26,9 +26,10 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
     IApplicationController applicationController, IRecordService lookupService,
-    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel, string saveButtonLabel = null)
+    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel, string saveButtonLabel = null, string initialMessage = null)
             : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave, onCancel: onCancel, saveButtonLabel: saveButtonLabel)
         {
+            InitialMessage = initialMessage;
             _objectToEnter = objectsToEnter;
         }
 

@@ -88,6 +88,12 @@ namespace JosephM.Application.ViewModel.Dialog
         public IDialogController Controller { get; private set; }
 
         private DialogViewModel ParentDialog { get; set; }
+
+        protected bool HasParentDialog
+        {
+            get { return ParentDialog != null; }
+        }
+
         public bool IsProcessing { get; protected set; }
 
         protected void StartNextAction()

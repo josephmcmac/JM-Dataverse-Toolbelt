@@ -46,6 +46,8 @@ namespace JosephM.Application.ViewModel.Dialog
             SaveMethod = saveMethod;
         }
 
+        public string InitialMessage { get; set; }
+
         public string SaveButtonLabel { get; set; }
 
         protected abstract object ObjectToEnter { get; }
@@ -63,6 +65,8 @@ namespace JosephM.Application.ViewModel.Dialog
             var formService = new ObjectFormService(ObjectToEnter, recordService, ObjectTypeMaps);
             ViewModel = new ObjectEntryViewModel(StartNextAction, OnCancel, ObjectToEnter,
                 new FormController(recordService, formService, ApplicationController), OnlyValidate, saveButtonLabel: SaveButtonLabel);
+            if (InitialMessage != null)
+                ViewModel.ValidationPrompt = InitialMessage;
             Controller.LoadToUi(ViewModel);
         }
 
