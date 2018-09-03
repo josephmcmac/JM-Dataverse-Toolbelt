@@ -24,6 +24,9 @@
         <ProgressBar
             Value="{Binding FractionCompleted}"
             Minimum="0"
-            Maximum="1" />
+            Maximum="1"
+            Foreground="{DynamicResource TextColor}"
+            Background="{DynamicResource SelectedBackgroundColor}"
+            />
     </StackPanel>
 </UserControl>

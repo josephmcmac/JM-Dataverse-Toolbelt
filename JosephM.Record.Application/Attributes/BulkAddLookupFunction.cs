@@ -4,7 +4,6 @@ using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
-using System.Linq;
 
 namespace JosephM.Application.ViewModel.Attributes
 {

@@ -31,13 +31,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override int GridPageSize { get { return IsReadOnly ? 25 : 0; } }
 
-        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null)
-            : this(onSave, onCancel, objectToEnter, formController, null, null, onlyValidate)
+        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null, string saveButtonLabel = null, string cancelButtonLabel = null)
+            : this(onSave, onCancel, objectToEnter, formController, null, null, onlyValidate, saveButtonLabel: saveButtonLabel, cancelButtonLabel: cancelButtonLabel)
         {
         }
 
-        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference, IDictionary<string, IEnumerable<string>> onlyValidate = null)
-            : base(formController, parentForm, parentFormReference, onlyValidate)
+        public ObjectEntryViewModel(Action onSave, Action onCancel, object objectToEnter, FormController formController, RecordEntryViewModelBase parentForm, string parentFormReference, IDictionary<string, IEnumerable<string>> onlyValidate = null, string saveButtonLabel = null, string cancelButtonLabel = null)
+            : base(formController, parentForm, parentFormReference, onlyValidate, saveButtonLabel: saveButtonLabel, cancelButtonLabel: cancelButtonLabel)
         {
             _objectRecord = new ObjectRecord(objectToEnter);
             OnSave = onSave;
@@ -71,11 +71,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(FormServiceBase).Name,
                     typeof(ObjectFormService).Name));
             return ((ObjectFormService)service);
-        }
-
-        public override string SaveButtonLabel
-        {
-            get { return "Next"; }
         }
 
         protected override void PreValidateExtention()

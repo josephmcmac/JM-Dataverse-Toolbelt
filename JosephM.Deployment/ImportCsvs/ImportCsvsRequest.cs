@@ -64,6 +64,7 @@ namespace JosephM.Deployment.ImportCsvs
             SpecificFiles
         }
 
+        [DoNotAllowGridOpen]
         public class CsvToImport
         {
             [RequiredProperty]

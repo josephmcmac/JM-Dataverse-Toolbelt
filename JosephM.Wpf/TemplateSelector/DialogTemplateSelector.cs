@@ -39,7 +39,7 @@ namespace JosephM.Wpf.TemplateSelector
             if(item is ViewModelBase)
             {
                 var viewModel = (ViewModelBase)item;
-                if (viewModel.ApplicationController?.ForceElementWindowHeight ?? false)
+                if (!viewModel.ApplicationController?.IsTabbedApplication ?? true)
                 {
                     if (item is RecordEntryFormViewModel)
                         return RecordEntryTemplateWindowSize;

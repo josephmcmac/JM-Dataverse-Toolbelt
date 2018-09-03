@@ -8,6 +8,7 @@ using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Application.ViewModel.TabArea;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -30,6 +31,8 @@ namespace JosephM.Application.ViewModel.Grid
             LoadFields();
             DeleteRowViewModel = new XrmButtonViewModel("Delete", DeleteRow, ApplicationController, description: "Delete");
             EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController, description: "Open This Item");
+            EditRowNewTabViewModel = new XrmButtonViewModel("Edit Row New Tab", EditRowNewTab, ApplicationController, description: "Open This Item In New Tab");
+            EditRowNewWindowViewModel = new XrmButtonViewModel("Edit Row New Window", EditRowNewTab, ApplicationController, description: "Open This Item In New Window");
         }
 
         public DynamicGridViewModel GridViewModel { get; private set; }
@@ -51,7 +54,12 @@ namespace JosephM.Application.ViewModel.Grid
                     var isWriteable = RecordService?.GetFieldMetadata(field.FieldName, RecordType).Createable == true
                         || RecordService?.GetFieldMetadata(field.FieldName, RecordType).Writeable == true;
 
-                    viewModel.IsEditable = !IsReadOnly && isWriteable && FormService != null && FormService.AllowGridFieldEditEdit(ParentFormReference );
+                    viewModel.IsEditable = !IsReadOnly
+                        && isWriteable
+                        && FormService != null
+                        && FormService.AllowGridFieldEditEdit(ParentFormReference)
+                        && (!(viewModel is LookupFieldViewModel) || FormService.AllowLookupFunctions);
+
                     AddField(viewModel);
                 }
                 catch (Exception ex)
@@ -66,6 +74,19 @@ namespace JosephM.Application.ViewModel.Grid
             GridViewModel.EditRow(this);
         }
 
+        public void EditRowNewTab()
+        {
+            GridViewModel.EditRowNew(this);
+        }
+
+        public bool DisplayContextMenu { get { return CanEdit || CanEditNewTab || CanEditNewWindow; } }
+
+        public bool CanEdit { get { return GridViewModel.CanEdit; } }
+
+        public bool CanEditNewTab { get { return GridViewModel.CanEditNewTab; } }
+
+        public bool CanEditNewWindow { get { return GridViewModel.CanEditNewWindow; } }
+
         public void DeleteRow()
         {
             GridViewModel.DeleteRow(this);
@@ -74,7 +95,8 @@ namespace JosephM.Application.ViewModel.Grid
         public XrmButtonViewModel DeleteRowViewModel { get; set; }
 
         public XrmButtonViewModel EditRowViewModel { get; set; }
-
+        public XrmButtonViewModel EditRowNewTabViewModel { get; private set; }
+        public XrmButtonViewModel EditRowNewWindowViewModel { get; private set; }
         public IRecord Record { get; set; }
 
         public IEnumerable<GridFieldMetadata> GridFields
@@ -163,6 +185,16 @@ namespace JosephM.Application.ViewModel.Grid
         protected internal override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName)
         {
             return FormService.GetSubgridValidationRules(fieldName, RecordType);
+        }
+
+        public override void LoadChildForm(TabAreaViewModelBase viewModel)
+        {
+            ParentForm.LoadChildForm(viewModel);
+        }
+
+        public override void ClearChildForm()
+        {
+            ParentForm.ClearChildForm();
         }
     }
 }

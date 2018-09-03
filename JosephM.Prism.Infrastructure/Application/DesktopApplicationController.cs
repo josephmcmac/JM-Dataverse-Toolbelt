@@ -1,15 +1,11 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.ViewModel.Attributes;
-using JosephM.Application.ViewModel.Navigation;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.AppConfig;
-using JosephM.Core.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
@@ -31,9 +27,12 @@ namespace JosephM.Application.Desktop.Application
 
         public override void Remove(object item)
         {
-            if (LoadedObjects.Contains(item))
-                LoadedObjects.Remove(item);
-            RaiseAreMultipleTabsChangedEvents();
+            DoOnMainThread(() =>
+            {
+                if (LoadedObjects.Contains(item))
+                    LoadedObjects.Remove(item);
+                RaiseAreMultipleTabsChangedEvents();
+            });
         }
 
         private void RaiseAreMultipleTabsChangedEvents()
@@ -73,17 +72,6 @@ namespace JosephM.Application.Desktop.Application
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void RequestNavigate(Type type, UriQuery uriQuery)
-        {
-            var resolveIt = Container.ResolveType(type);
-
-            OnNavigatedTo(resolveIt);
-
-            LoadedObjects.Add(resolveIt);
-            ActiveTabItem = resolveIt;
-            RaiseAreMultipleTabsChangedEvents();
-        }
-
         public override void UserMessage(string message)
         {
             DoOnMainThread(
@@ -103,7 +91,16 @@ namespace JosephM.Application.Desktop.Application
 
         public override void NavigateTo(Type type, UriQuery uriQuery)
         {
-            RequestNavigate(type, uriQuery);
+            var resolveIt = Container.ResolveType(type);
+            NavigateTo(resolveIt);
+        }
+
+        public override void NavigateTo(object item)
+        {
+            OnNavigatedTo(item);
+            LoadedObjects.Add(item);
+            ActiveTabItem = item;
+            RaiseAreMultipleTabsChangedEvents();
         }
 
         public override string GetSaveFileName(string initialFileName, string extention)

@@ -21,6 +21,7 @@ namespace JosephM.CustomisationImporter.Service
     [Group(Sections.Include, true, order: 30, selectAll: true)]
     public class CustomisationImportRequest : ServiceRequestBase, IValidatableObject
     {
+        [GridWidth(400)]
         [DisplayOrder(10)]
         [Group(Sections.File)]
         [RequiredProperty]
@@ -33,7 +34,7 @@ namespace JosephM.CustomisationImporter.Service
 
         [Hidden]
         public bool HideSolutionOptions { get; set; }
-
+        [GridWidth(120)]
         [DisplayOrder(100)]
         [Group(Sections.Solution)]
         [PropertyInContextByPropertyValue("HideSolutionOptions", false)]
@@ -51,22 +52,27 @@ namespace JosephM.CustomisationImporter.Service
         [PropertyInContextByPropertyValue("AddToSolution", true)]
         [PropertyInContextByPropertyValue("HideSolutionOptions", false)]
         public Lookup Solution { get; set; }
-
+        [GridWidth(110)]
         [DisplayOrder(200)]
         [Group(Sections.Include)]
         public bool Entities { get; set; }
+        [GridWidth(110)]
         [DisplayOrder(210)]
         [Group(Sections.Include)]
         public bool Fields { get; set; }
+        [GridWidth(110)]
         [DisplayOrder(220)]
         [Group(Sections.Include)]
         public bool Relationships { get; set; }
+        [GridWidth(110)]
         [DisplayOrder(230)]
         [Group(Sections.Include)]
         public bool FieldOptionSets { get; set; }
+        [GridWidth(110)]
         [DisplayOrder(240)]
         [Group(Sections.Include)]
         public bool SharedOptionSets { get; set; }
+        [GridWidth(110)]
         [DisplayOrder(250)]
         [Group(Sections.Include)]
         public bool Views { get; set; }

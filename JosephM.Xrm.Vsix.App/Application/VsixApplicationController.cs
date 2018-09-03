@@ -12,12 +12,14 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
+using JosephM.Application.ViewModel.TabArea;
 
 namespace JosephM.Xrm.Vsix.Application
 {
     public class VsixApplicationController : ApplicationControllerBase
     {
-        public VsixApplicationController(IDependencyResolver dependencyResolver, string applicationName = null) : base(applicationName ?? "JosephM.Xrm.Vsix", dependencyResolver)
+        public VsixApplicationController(IDependencyResolver dependencyResolver, string applicationName)
+            : base(applicationName, dependencyResolver)
         {
         }
 
@@ -39,74 +41,77 @@ namespace JosephM.Xrm.Vsix.Application
             NavigateTo(navigationObject, uriQuery, showCompletionScreen: true, isModal: false);
         }
 
+        public override void NavigateTo(object item)
+        {
+            NavigateTo(item, null, showCompletionScreen: true, isModal: false);
+        }
+
         public void NavigateTo(object navigationObject, UriQuery uriQuery, bool showCompletionScreen = true, bool isModal = false)
         {
             uriQuery = uriQuery ?? new UriQuery();
 
-            if (navigationObject is DialogViewModel)
+            foreach (var arg in uriQuery.Arguments)
             {
-                var dialog = navigationObject as DialogViewModel;
-                foreach (var arg in uriQuery.Arguments)
+                var dialogProperty = navigationObject.GetType().GetProperty(arg.Key);
+                if (dialogProperty != null)
                 {
-                    var dialogProperty = dialog.GetType().GetProperty(arg.Key);
-                    if (dialogProperty != null)
+                    if (dialogProperty.PropertyType == typeof(bool))
+                        navigationObject.SetPropertyValue(dialogProperty.Name, bool.Parse(arg.Value));
+                    else
                     {
-                        if (dialogProperty.PropertyType == typeof(bool))
-                            dialog.SetPropertyValue(dialogProperty.Name, bool.Parse(arg.Value));
-                        else
-                        {
-                            var argObject = JsonHelper.JsonStringToObject(arg.Value, dialogProperty.PropertyType);
-                            var propertyValue = dialog.GetPropertyValue(dialogProperty.Name) ?? argObject;
-                            var mapper = new ClassSelfMapper();
-                            mapper.Map(argObject, propertyValue);
-                        }
+                        var argObject = JsonHelper.JsonStringToObject(arg.Value, dialogProperty.PropertyType);
+                        var propertyValue = navigationObject.GetPropertyValue(dialogProperty.Name) ?? argObject;
+                        var mapper = new ClassSelfMapper();
+                        mapper.Map(argObject, propertyValue);
                     }
                 }
-
-                OnNavigatedTo(navigationObject);
-
-                LoadDialog(dialog, showCompletionScreen: showCompletionScreen, isModal: isModal);
             }
+            OnNavigatedTo(navigationObject);
+            if (navigationObject is TabAreaViewModelBase)
+                LoadViewModel((TabAreaViewModelBase)navigationObject, showCompletionScreen: showCompletionScreen, isModal: isModal);
             else
                 throw new NotImplementedException("Not implemented for type " + navigationObject?.GetType().Name);
         }
 
-        public virtual void LoadDialog(DialogViewModel dialog, bool showCompletionScreen = true, bool isModal = false)
+        public virtual void LoadViewModel(TabAreaViewModelBase viewModel, bool showCompletionScreen = true, bool isModal = false)
         {
-            LoadDialogIntoWindow(dialog, showCompletionScreen, isModal);
+            LoadDialogIntoWindow(viewModel, showCompletionScreen, isModal);
         }
 
-        public static void LoadDialogIntoWindow(DialogViewModel dialog, bool showCompletionScreen = true, bool isModal = false)
+        public static void LoadDialogIntoWindow(TabAreaViewModelBase viewModel, bool showCompletionScreen = true, bool isModal = false)
         {
-            var window = new Window
+            var window = new WindowShellWindow
             {
-                Title = dialog.TabLabel
+                Title = viewModel.TabLabel
             };
-            var content = new WindowShell();
-            window.Content = content;
-            var dialogControl = new DialogForm();
-            dialogControl.DataContext = dialog;
-            content.Content = dialogControl;
+            window.DataContext = viewModel.ApplicationController;
+            //var dialogControl = new DialogForm();
+            //dialogControl.DataContext = dialog;
+            window.SetContent(viewModel);
 
             Action closeMethod = () =>
             {
-                dialog.DoOnMainThread(() =>
+                viewModel.DoOnMainThread(() =>
                 {
                     window.Close();
                 });
             };
 
-            if (dialog.ApplicationController is VsixApplicationController)
+            if (viewModel.ApplicationController is VsixApplicationController)
             {
-                var vsixController = (VsixApplicationController)dialog.ApplicationController;
+                var vsixController = (VsixApplicationController)viewModel.ApplicationController;
                 vsixController.SetRemoveMethod((item) =>
                 {
-                    if (item == dialog)
+                    if (item == viewModel)
                         closeMethod();
                 });
             }
-            if (!showCompletionScreen)
-                dialog.OverideCompletionScreenMethod = closeMethod;
+            if (viewModel is DialogViewModel)
+            {
+                var dialog = (DialogViewModel)viewModel;
+                if (!showCompletionScreen)
+                    dialog.OverideCompletionScreenMethod = closeMethod;
+            }
 
             if (isModal)
                 window.ShowDialog();
@@ -158,7 +163,7 @@ namespace JosephM.Xrm.Vsix.Application
 
         public override bool AllowSaveRequests {  get { return false; } }
 
-        public override bool ForceElementWindowHeight { get { return true; } }
+        public override bool IsTabbedApplication { get { return false; } }
 
         public override object ResolveType(Type type)
         {

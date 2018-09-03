@@ -15,6 +15,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Windows;
 using VSLangProj;
+using JosephM.Xrm.Vsix.App;
 
 namespace JosephM.Xrm.Vsix.Wizards
 {
@@ -34,14 +35,15 @@ namespace JosephM.Xrm.Vsix.Wizards
             #endif
 
             var container = new DependencyContainer();
-            var applicationController = new VsixApplicationController(container);
+            var app = Factory.CreateJosephMXrmVsixApp(new VisualStudioService(DTE), container, isWizardContext: true);
+
             if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && (replacementsDictionary["$specifiedsolutionname$"] == null || replacementsDictionary["$specifiedsolutionname$"] == ""))
             {
-                applicationController.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");
+                app.Controller.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");
             }
 
 
-            RunWizardSettingsEntry(XrmPackageSettings, applicationController);
+            RunWizardSettingsEntry(XrmPackageSettings, app.VsixApplicationController);
 
             //add token replacements for the template projects
             AddReplacements(replacementsDictionary, XrmPackageSettings);
@@ -58,7 +60,7 @@ namespace JosephM.Xrm.Vsix.Wizards
             if (resolvePackageSettings == null)
                 applicationController.RegisterInstance(typeof(XrmPackageSettings), new XrmPackageSettings());
 
-            var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, new XrmRecordService(new XrmRecordConfiguration(), formService: new XrmFormService()));
+            var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, new XrmRecordService(new XrmRecordConfiguration(), formService: new XrmFormService()), saveButtonLabel: "Next");
             settingsDialog.SaveSettings = false;
             var uriQuery = new UriQuery();
             uriQuery.Add("Modal", true.ToString());

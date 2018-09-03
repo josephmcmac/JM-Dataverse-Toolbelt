@@ -72,7 +72,7 @@ namespace JosephM.Application.ViewModel.TabArea
             return true;
         }
 
-        public void LoadChildForm(TabAreaViewModelBase viewModel)
+        public virtual void LoadChildForm(TabAreaViewModelBase viewModel)
         {
             ApplicationController.DoOnMainThread(() =>
             {
@@ -81,7 +81,7 @@ namespace JosephM.Application.ViewModel.TabArea
             });
         }
 
-        public void ClearChildForm()
+        public virtual void ClearChildForm()
         {
             ApplicationController.DoOnMainThread(() =>
             {

@@ -11,24 +11,25 @@ namespace JosephM.Application.ViewModel.Dialog
         ///     Implementation Of DialogViewModel For Entering Data Into A CLR Object
         /// </summary>
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
-            IApplicationController applicationController)
+            IApplicationController applicationController, string saveButtonLabel = null)
             : this(objectsToEnter, parentDialog, applicationController, null, null)
         {
         }
 
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
             IApplicationController applicationController, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionsetLimitedValues)
-            : this(objectsToEnter, parentDialog, applicationController, lookupService, optionsetLimitedValues, null, null)
+            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, string saveButtonLabel = null)
+            : this(objectsToEnter, parentDialog, applicationController, lookupService, optionsetLimitedValues, null, null, saveButtonLabel: saveButtonLabel)
         {
             _objectToEnter = objectsToEnter;
         }
 
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
     IApplicationController applicationController, IRecordService lookupService,
-    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel)
-            : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave, onCancel: onCancel)
+    IDictionary<string, IEnumerable<string>> optionsetLimitedValues,Action onSave, Action onCancel, string saveButtonLabel = null, string initialMessage = null)
+            : base(parentDialog, applicationController, lookupService, optionsetLimitedValues, onSave, onCancel: onCancel, saveButtonLabel: saveButtonLabel)
         {
+            InitialMessage = initialMessage;
             _objectToEnter = objectsToEnter;
         }
 

@@ -92,11 +92,51 @@
                                 CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"
                                 CanUserAddRows="True" SelectionChanged="DataGrid_SelectionChanged" SelectionMode="{Binding MultiSelect, Converter={StaticResource BooleanToMultiSelectConverter}}"
                                 >
+                                <DataGrid.Resources>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Style.Triggers>
+                                            <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource SelectedBackgroundColor}" />
+                                                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                    <ContextMenu  x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" Visibility="{Binding DisplayContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <MenuItem Header="Open" Command="{Binding EditRowViewModel.Command}" Visibility="{Binding CanEdit, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        <MenuItem Header="Open In New Tab" Command="{Binding EditRowNewTabViewModel.Command}" Visibility="{Binding CanEditNewTab, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        <MenuItem Header="Open In New Window" Command="{Binding EditRowNewWindowViewModel.Command}" Visibility="{Binding CanEditNewWindow, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    </ContextMenu>
+                                </DataGrid.Resources>
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                                        <Setter Property="BorderThickness" Value=".5" />
                                         <EventSetter Event="Click" Handler="columnHeader_Click" />
+                                        <Setter Property="HorizontalContentAlignment" Value="{Binding Align}" />
+                                        <Setter Property="ContentTemplate" Value="{StaticResource ColumnHeaderTemplate}" />
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True"/>
+                                                    <Condition Binding="{Binding IsSortable}" Value="True"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Background" Value="{DynamicResource SelectedBackgroundColor}" />
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+
                                     </Style>
                                 </DataGrid.ColumnHeaderStyle>
+                                <DataGrid.RowHeaderStyle>
+                                    <Style TargetType="DataGridRowHeader">
+                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                                    </Style>
+                                </DataGrid.RowHeaderStyle>
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Style>
+                                </DataGrid.RowStyle>
                             </DataGrid>
                         </Grid>
                         <Grid  Grid.Row="2" 

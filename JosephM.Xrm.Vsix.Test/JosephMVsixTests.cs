@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Application;
 using JosephM.Application.Desktop.Test;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
@@ -39,19 +40,15 @@ namespace JosephM.Xrm.Vsix.Test
 
         protected override TestApplication CreateAndLoadTestApplication<TModule>(ApplicationControllerBase applicationController = null, ISettingsManager settingsManager = null, bool loadXrmConnection = true, bool addSavedConnectionAppConnectionModule = false)
         {
-            var app = base.CreateAndLoadTestApplication<TModule>(CreateTestVsixApplicationController(), new VsixSettingsManager(VisualStudioService), loadXrmConnection: InitialiseModuleXrmConnection, addSavedConnectionAppConnectionModule: addSavedConnectionAppConnectionModule);
-            app.AddModule<PackageSettingsAppConnectionModule>();
-            return app;
-        }
-
-        public ApplicationControllerBase CreateTestVsixApplicationController()
-        {
             var container = new VsixDependencyContainer();
             var visualStudioService = VisualStudioService;
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
-            container.RegisterInstance(typeof(ISettingsManager), new VsixSettingsManager(visualStudioService));
-            var applicationController = new FakeVsixApplicationController(container);
-            return applicationController;
+            var vsixController = new FakeVsixApplicationController(container);
+            var vsixSettingsManager = new VsixSettingsManager(VisualStudioService, new DesktopSettingsManager(vsixController));
+            container.RegisterInstance(typeof(ISettingsManager), vsixSettingsManager);
+            var app = base.CreateAndLoadTestApplication<TModule>(vsixController, vsixSettingsManager, loadXrmConnection: InitialiseModuleXrmConnection, addSavedConnectionAppConnectionModule: addSavedConnectionAppConnectionModule);
+            app.AddModule<PackageSettingsAppConnectionModule>();
+            return app;
         }
 
         private FakeVisualStudioService _visualStudioService;
@@ -97,7 +94,11 @@ namespace JosephM.Xrm.Vsix.Test
 
         public FakeDialogController CreateDialogController()
         {
-            return new FakeDialogController(new FakeApplicationController(VsixDependencyContainer.Create(GetTestPackageSettings(), VisualStudioService)));
+            var container = new VsixDependencyContainer();
+            var dialogController = new FakeDialogController(new FakeApplicationController(container));
+            container.RegisterInstance(typeof(ISettingsManager), new VsixSettingsManager(VisualStudioService, new DesktopSettingsManager(dialogController.ApplicationController)));
+            container.RegisterInstance(typeof(ISavedXrmConnections), GetTestPackageSettings());
+            return dialogController;
         }
 
         public static string GetTestPluginAssemblyName()

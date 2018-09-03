@@ -4,6 +4,7 @@ using JosephM.Core.FieldType;
 
 namespace JosephM.Application.ViewModel.SettingTypes
 {
+    [DoNotAllowGridOpen]
     [BulkAddFieldFunction]
     public class FieldSetting
     {

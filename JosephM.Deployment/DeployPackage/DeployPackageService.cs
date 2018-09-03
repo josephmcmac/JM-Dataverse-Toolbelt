@@ -48,7 +48,7 @@ namespace JosephM.Deployment.DeployPackage
             var solutionFiles = Directory.GetFiles(packageFolder, "*.zip");
 
             var importItems = ImportSolutions(solutionFiles, controller, xrmRecordService);
-            response.AddResponseItems(importItems.Where(it => !it.IsSuccess).Select(it => new DataImportResponseItem(it.Type, null, it.Name, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null)));
+            response.AddResponseItems(importItems.Select(it => new DataImportResponseItem(it.Type, null, it.Name, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null, it.GetUrl())));
 
             foreach (var childFolder in Directory.GetDirectories(packageFolder))
             {
@@ -102,13 +102,19 @@ namespace JosephM.Deployment.DeployPackage
                         var job = xrmService.GetFirst("importjob", "importjobid", importId);
                         if (job != null)
                         {
+                            var ignoreTheseErrorCodes = new[]
+                            {
+                                "0x8004F039"//deactivated duplicate detection rules - these get activated in next set of code
+                            };
                             var dataString = job.GetStringField(Fields.importjob_.data);
                             var xmlDocument = new XmlDocument();
                             xmlDocument.LoadXml(dataString);
                             var resultNodes = xmlDocument.GetElementsByTagName("result");
                             foreach (XmlNode node in resultNodes)
                             {
-                                results.Add(new SolutionImportResult(node));
+                                var importResult = new SolutionImportResult(node, xrmRecordService);
+                                if (!importResult.IsSuccess && (importResult.ErrorCode == null || !ignoreTheseErrorCodes.Contains(importResult.ErrorCode)))
+                                    results.Add(importResult);
                             }
                         }
                     }

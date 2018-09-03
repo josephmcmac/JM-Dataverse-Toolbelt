@@ -20,6 +20,7 @@ namespace JosephM.Deployment.DeployPackage
             };
         }
 
+        [GridWidth(250)]
         [Group(Sections.Connection)]
         [DisplayOrder(100)]
         [DisplayName("Saved Connection To Import Into")]
@@ -27,7 +28,7 @@ namespace JosephM.Deployment.DeployPackage
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration Connection { get; set; }
 
-
+        [GridWidth(300)]
         [Group(Sections.Main)]
         [DisplayOrder(20)]
         [RequiredProperty]

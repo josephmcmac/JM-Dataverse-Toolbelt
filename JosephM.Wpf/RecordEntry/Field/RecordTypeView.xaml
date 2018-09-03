@@ -18,7 +18,6 @@
         <ComboBox
             TabIndex="1"
             Name="ComboBox"
-            Style="{StaticResource PicklistFieldEntryStyle}"
             Tag="Key"
             DisplayMemberPath="Value"
             ItemsSource="{Binding ItemsSource}"

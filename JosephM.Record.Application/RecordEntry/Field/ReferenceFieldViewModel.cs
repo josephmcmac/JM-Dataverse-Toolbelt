@@ -37,7 +37,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 lock (_lockoObject)
                 {
-                    if (_itemsSource == null)
+                    if (_itemsSource == null && UsePicklist)
                     {
                         LoadPicklistItems();
                     }

@@ -37,7 +37,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 AddCompletionOption("Open Document", OpenFile);
                 AddCompletionOption("Open Folder", OpenFolder);
             }
-            CompletionMessage = "Search Completed";
         }
 
         public void OpenFile()

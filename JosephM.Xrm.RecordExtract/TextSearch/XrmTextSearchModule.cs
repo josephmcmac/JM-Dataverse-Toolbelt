@@ -55,8 +55,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
                         var xrmTextSearchService = new XrmTextSearchService(xrmRecordService, new DocumentWriter.DocumentWriter());
                         var dialog = new XrmTextSearchDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService);
-                        dialog.SetTabLabel("Text Search " + instance.Name);
-                        g.LoadDialog(dialog);
+                        dialog.SetTabLabel(instance.Name + " " + dialog.TabLabel);
+                        g.ApplicationController.NavigateTo(dialog);
                     }
                 }
             }, (g) => g.GridRecords != null && g.GridRecords.Any());

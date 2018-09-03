@@ -29,7 +29,7 @@ namespace JosephM.Xrm.Vsix.Module.Connection
             VisualStudioService = visualStudioService;
             AddToSolution = addtoSolution;
             ObjectToEnter = objectToEnter;
-            var configEntryDialog = new ObjectEntryDialog(ObjectToEnter, this, ApplicationController);
+            var configEntryDialog = new ObjectEntryDialog(ObjectToEnter, this, ApplicationController, saveButtonLabel: "Next");
             SubDialogs = new DialogViewModel[] { configEntryDialog };
             DoPostEntry = doPostEntry;
         }

@@ -37,6 +37,9 @@ namespace JosephM.Application.ViewModel.Attributes
                     catch (Exception ex)
                     {
                         recordForm.ApplicationController.ThrowException(ex);
+                    }
+                    finally
+                    {
                         recordForm.LoadingViewModel.IsLoading = false;
                     }
                 });

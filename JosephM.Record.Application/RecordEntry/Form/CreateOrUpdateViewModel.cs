@@ -1,10 +1,6 @@
-﻿#region
-
-using JosephM.Record.Extentions;
+﻿using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
@@ -12,10 +8,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
     {
         private IRecord _record;
 
-        public CreateOrUpdateViewModel(IRecord record, FormController formController, Action postSave, Action onCancel, bool explicitIsCreate = false)
-            : base(formController)
+        public CreateOrUpdateViewModel(IRecord record, FormController formController, Action postSave, Action onCancel, bool explicitIsCreate = false, string cancelButtonLabel = null)
+            : base(formController, saveButtonLabel: record.Id == null ? "Create" : "Update", cancelButtonLabel: cancelButtonLabel)
         {
             _record = record;
+            ExplicitIsCreate = explicitIsCreate;
             RecordType = record.Type;
             OnSave = () =>
             {
@@ -40,13 +37,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override string TabLabel
         {
-            get { return "Create Or Update"; }
+            get { return GetRecord()?.Id == null || ExplicitIsCreate
+                    ? "Create " + RecordService.GetDisplayName(RecordType)
+                    : "Update " + RecordService.GetDisplayName(RecordType); }
         }
 
-        public override string SaveButtonLabel
-        {
-            get { return "Save"; }
-        }
+        public bool ExplicitIsCreate { get; }
 
         public override IRecord GetRecord()
         {

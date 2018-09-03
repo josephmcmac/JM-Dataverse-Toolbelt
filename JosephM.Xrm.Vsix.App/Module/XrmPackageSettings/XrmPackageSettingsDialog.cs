@@ -36,7 +36,15 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         private XrmRecordService XrmRecordService { get; set; }
 
         public XrmPackageSettingsDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService)
-        : base(dialogController, xrmRecordService, objectToEnter)
+        : this(dialogController, objectToEnter, visualStudioService, xrmRecordService, saveButtonLabel: null)
+        {
+        }
+
+        /// <summary>
+        /// this one internal so the navigation resolver doesnt use it
+        /// </summary>
+        internal XrmPackageSettingsDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, string saveButtonLabel)
+            : base(dialogController, xrmRecordService, objectToEnter, saveButtonLabel: saveButtonLabel)
         {
             XrmRecordService = xrmRecordService;
             VisualStudioService = visualStudioService;
@@ -45,7 +53,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         }
 
         /// <summary>
-        /// this one internal so the navigation resolver doesn;t use it
+        /// this one internal so the navigation resolver doesnt use it
         /// </summary>
         internal XrmPackageSettingsDialog(DialogViewModel parentDialog, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService)
             : base(parentDialog, xrmRecordService, objectToEnter)

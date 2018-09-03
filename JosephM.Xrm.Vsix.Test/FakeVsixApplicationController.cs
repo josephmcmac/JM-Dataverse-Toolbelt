@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
+using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Test;
 using JosephM.Xrm.Vsix.Application;
@@ -13,12 +14,12 @@ namespace JosephM.Xrm.Vsix.Test
     public class FakeVsixApplicationController : VsixApplicationController
     {
         public override bool RunThreadsAsynch => false;
-        public FakeVsixApplicationController(IDependencyResolver dependencyResolver) : base(dependencyResolver)
+        public FakeVsixApplicationController(IDependencyResolver dependencyResolver)
+            : base(dependencyResolver, "ScriptedVsixApplication")
         {
              
         }
-
-        public override void LoadDialog(DialogViewModel dialog, bool showCompletionScreen = true, bool isModal = false)
+        public override void LoadViewModel(TabAreaViewModelBase dialog, bool showCompletionScreen = true, bool isModal = false)
         {
             ClearTabs();
             _loadedObjects.Add(dialog);

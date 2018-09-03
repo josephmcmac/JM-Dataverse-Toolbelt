@@ -20,6 +20,7 @@ namespace JosephM.Deployment.CreatePackage
     [Group(Sections.Connection, true, 20)]
     [Group(Sections.PackageSolution, true, 25)]
     [Group(Sections.DataIncluded, true, 30)]
+    [Group(Sections.DataIncludedRecordTypes, true, order: 35, displayLabel: false)]
     public class CreatePackageRequest : ServiceRequestBase, IValidatableObject
     {
         public static CreatePackageRequest CreateForCreatePackage(string folder, Lookup solution)
@@ -52,6 +53,7 @@ namespace JosephM.Deployment.CreatePackage
         [PropertyInContextByPropertyValue(nameof(HideTypeAndFolder), false)]
         public Folder FolderPath { get; set; }
 
+        [GridWidth(150)]
         [Group(Sections.Main)]
         [DisplayOrder(40)]
         [DisplayName("Deploy Package Into (Optional)")]
@@ -63,7 +65,7 @@ namespace JosephM.Deployment.CreatePackage
         [RequiredProperty]
         [Group(Sections.PackageSolution)]
         [DisplayName("Solution")]
-        [GridWidth(400)]
+        [GridWidth(150)]
         [ReferencedType(Entities.solution)]
         [LookupCondition(Fields.solution_.ismanaged, false)]
         [LookupCondition(Fields.solution_.isvisible, true)]
@@ -71,10 +73,12 @@ namespace JosephM.Deployment.CreatePackage
         [UsePicklist(Fields.solution_.uniquename)]
         public Lookup Solution { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.PackageSolution)]
         [DisplayOrder(500)]
         public bool ExportAsManaged { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.PackageSolution)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [CascadeOnChange(nameof(SetVersionPostRelease))]
@@ -82,16 +86,21 @@ namespace JosephM.Deployment.CreatePackage
         [RequiredProperty]
         public string ThisReleaseVersion { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.PackageSolution)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [DisplayOrder(530)]
         [RequiredProperty]
         public string SetVersionPostRelease { get; set; }
 
+        [DisplayName("Include Attached Notes")]
+        [GridWidth(110)]
         [Group(Sections.DataIncluded)]
         [DisplayOrder(1050)]
         public bool IncludeNotes { get; set; }
 
+        [DisplayName("Include N:N Links Between Records")]
+        [GridWidth(110)]
         [Group(Sections.DataIncluded)]
         [DisplayOrder(1060)]
         [RequiredProperty]
@@ -99,6 +108,7 @@ namespace JosephM.Deployment.CreatePackage
 
         [DisplayOrder(1070)]
         [GridWidth(400)]
+        [Group(Sections.DataIncludedRecordTypes)]
         public IEnumerable<ExportRecordType> DataToInclude { get; set; }
 
         [Hidden]
@@ -109,7 +119,8 @@ namespace JosephM.Deployment.CreatePackage
             public const string Main = "Main";
             public const string PackageSolution = "Solution";
             public const string Connection = "Connection";
-            public const string DataIncluded = "Data Included Options";
+            public const string DataIncluded = "Data Included";
+            public const string DataIncludedRecordTypes = "Record Types";
         }
 
     }

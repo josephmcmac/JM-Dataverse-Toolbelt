@@ -66,6 +66,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             return true;
         }
 
+        public bool DisplayLabel
+        {
+            get { return FormSection.DisplayLabel; }
+        }
+
         public bool IsVisible
         {
             get { return _isVisible; }

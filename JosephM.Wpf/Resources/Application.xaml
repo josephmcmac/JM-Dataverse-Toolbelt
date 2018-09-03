@@ -6,7 +6,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
-        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/modernui.light.xaml" />
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernProgressRing.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="AppContainerStyle" TargetType="{x:Type Grid}">
@@ -21,10 +20,12 @@
         <Setter Property="FontWeight" Value="Bold"></Setter>
         <Setter Property="FontStyle" Value="Italic"></Setter>
         <Setter Property="FontSize" Value="24px"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}"></Setter>
     </Style>
     <Style x:Key="NotificationTextBlock" TargetType="{x:Type TextBlock}">
         <Setter Property="FontWeight"  Value="Bold" />
         <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}"></Setter>
     </Style>
     <Style x:Key="NotificationProgressRing" TargetType="{x:Type shared:ModernProgressRing}" BasedOn="{StaticResource CircleProgressRingStyle}" >
         <Setter Property="MinHeight"  Value="20px" />

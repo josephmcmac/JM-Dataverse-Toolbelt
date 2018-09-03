@@ -18,7 +18,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" MinWidth="250">
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" >
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="*" />
@@ -35,7 +35,6 @@
                 VerticalAlignment="Top"
                 TabIndex="1"
                 Name="ComboBox"
-                Style="{StaticResource FieldEntryStyle}"
                 Tag="Key"
                 DisplayMemberPath="Value"
                 ItemsSource="{Binding RecordTypeItemsSource}"
@@ -50,7 +49,7 @@
                 Text="{Binding Path=EnteredText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Name="EnteredTextBox"
                 LostKeyboardFocus="EnteredTextBox_OnLostKeyboardFocus"
-                Style="{StaticResource FieldEntryStyle}"
+                Style="{StaticResource LookupFieldEntryStyle}"
                 IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
                 PreviewKeyDown="OnPreviewKeyDown" />
         </Grid>

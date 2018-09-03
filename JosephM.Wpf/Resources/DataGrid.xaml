@@ -6,17 +6,38 @@
     <Style x:Key="SectionDataGrid" TargetType="{x:Type DataGrid}" BasedOn="{StaticResource {x:Type DataGrid}}">
         <Setter Property="Margin" Value="5,5,5,5" />
         <Setter Property="BorderThickness"  Value=".5" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
-        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource BorderColor}" />
-        <Setter Property="VerticalGridLinesBrush" Value="{StaticResource BorderColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
     </Style>
     <Style TargetType="{x:Type DataGridRow}" >
-        <Setter Property="Background" Value="White" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True" >
+                <Setter Property="Background" Value="{DynamicResource SelectedBackgroundColor}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="DynamicGridContainer" TargetType="{x:Type Grid}" >
         <Setter Property="Margin" Value="9,9,9,9" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+    </Style>
+    <Style TargetType="{x:Type DataGridColumnHeader}" >
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
     </Style>
     <Style x:Key="GridFunctionSection" TargetType="{x:Type Grid}" >
         <Setter Property="Margin" Value="13,0,0,0" />
     </Style>
+    <Style x:Key="ColumnHeadingTextBlock" TargetType="TextBlock" >
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <DataTemplate x:Key="ColumnHeaderTemplate">
+        <Grid>
+            <TextBlock TextAlignment="{Binding TextAlign}" Text="{Binding FieldLabel}" ToolTip="{Binding Tooltip}" Style="{StaticResource ColumnHeadingTextBlock}" />
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

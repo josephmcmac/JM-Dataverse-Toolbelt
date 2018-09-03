@@ -22,7 +22,7 @@ namespace JosephM.XrmModule.AppConnection
             : base(parentDialog)
         {
             ObjectToEnter = new SavedXrmRecordConfiguration();
-            var configEntryDialog = new ObjectEntryDialog(ObjectToEnter, this, ApplicationController);
+            var configEntryDialog = new ObjectEntryDialog(ObjectToEnter, this, ApplicationController, saveButtonLabel: "Next");
             SubDialogs = new DialogViewModel[] { configEntryDialog };
             XrmRecordService = xrmRecordService;
         }

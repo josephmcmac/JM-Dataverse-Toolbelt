@@ -1,13 +1,7 @@
-﻿#region
-
-using System;
-using System.IO;
-using JosephM.Core.Attributes;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Attributes;
+using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Record.IService;
-
-#endregion
+using System;
 
 namespace JosephM.Deployment
 {
@@ -27,12 +21,18 @@ namespace JosephM.Deployment
         [DisplayOrder(40)]
         public string Message { get; }
 
-        public DataImportResponseItem(string entity, string field, string name, string message, Exception ex)
+        [PropertyInContextByPropertyNotNull(nameof(Link))]
+        [GridWidth(62)]
+        [DisplayOrder(50)]
+        public Url Link { get; }
+
+        public DataImportResponseItem(string entity, string field, string name, string message, Exception ex, Url url = null)
             : this(message, ex)
         {
             Entity = entity;
             Field = field;
             Name = name;
+            Link = url;
         }
 
         public DataImportResponseItem(string message, Exception ex)

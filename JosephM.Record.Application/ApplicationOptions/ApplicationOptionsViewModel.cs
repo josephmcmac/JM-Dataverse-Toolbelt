@@ -43,10 +43,8 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
         {
             var option = new ApplicationOption(optionLabel, action, description);
             
-            if (group == "Help")
-                AddToCollection(option, Helps);
-            else if (group == "Setting")
-                AddToCollection(option, Settings);
+            if (group == "Setting")
+                AddToSettingsCollection(optionLabel, action, description);
             else
             {
                 if(!Options.Any(o => o.Label == group))
@@ -54,7 +52,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
                     AddToCollection(new MenuGroupViewModel(group, ApplicationController), Options);
                 }
                 var groupMenu = Options.First(o => o.Label == group);
-                groupMenu.AddOption(option);
+                groupMenu.AddOption(optionLabel, action, description);
             }
 
             OnPropertyChanged("HasSettings");
@@ -87,29 +85,31 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
             }
         }
 
-        private void AddToCollection(ApplicationOption option, ObservableCollection<ApplicationOption> options)
+        private void AddToSettingsCollection(string optionLabel, Action action, string description)
         {
+            var option = new ApplicationOption(optionLabel, () => { OpenSettings = false; action(); }, description);
+
             var forceLastLabel = "About";
             if (option.Label == forceLastLabel)
-                options.Add(option);
+                Settings.Add(option);
             else
             {
                 var index = -1;
                 if (!option.Label.IsNullOrWhiteSpace())
                 {
-                    foreach (var item in options)
+                    foreach (var item in Settings)
                     {
                         if (item.Label == forceLastLabel || String.Compare(option.Label, item.Label, StringComparison.Ordinal) < 0)
                         {
-                            index = options.IndexOf(item);
+                            index = Settings.IndexOf(item);
                             break;
                         }
                     }
                 }
                 if (index != -1)
-                    options.Insert(index, option);
+                    Settings.Insert(index, option);
                 else
-                    options.Add(option);
+                    Settings.Add(option);
             }
         }
 

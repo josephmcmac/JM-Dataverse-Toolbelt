@@ -1,14 +1,10 @@
-﻿#region
-
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Test;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.Fakes
 {
@@ -42,16 +38,17 @@ namespace JosephM.Application.ViewModel.Fakes
 
         private readonly List<object> _loadedObjects = new List<object>();
 
+        public override void NavigateTo(Type type, UriQuery uriQuery)
+        {
+            var resolvedType = Container.ResolveType(type);
+            NavigateTo(resolvedType);
+        }
 
-        private void RequestNavigate(Type type, UriQuery uriQuery)
+        public override void NavigateTo(object item)
         {
             ClearTabs();
-
-            var resolvedType = Container.ResolveType(type);
-
-            OnNavigatedTo(resolvedType);
-
-            _loadedObjects.Add(resolvedType);
+            OnNavigatedTo(item);
+            _loadedObjects.Add(item);
         }
 
         public override void UserMessage(string message)
@@ -92,11 +89,6 @@ namespace JosephM.Application.ViewModel.Fakes
         public override void OpenFile(string fileName)
         {
             //nope
-        }
-
-        public override void NavigateTo(Type type, UriQuery uriQuery)
-        {
-            RequestNavigate(type, uriQuery);
         }
     }
 }

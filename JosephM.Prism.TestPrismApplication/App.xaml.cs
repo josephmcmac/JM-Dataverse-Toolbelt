@@ -12,6 +12,7 @@ using JosephM.XrmTestModule.DebugModule;
 using JosephM.XrmTestModule.TestSettings;
 using JosephM.Xrm.RecordExtract.Test.TextSearch;
 using System.Windows;
+using JosephM.Application.Desktop.Module.Themes;
 
 namespace JosephM.TestDesktopApplication
 {
@@ -25,18 +26,19 @@ namespace JosephM.TestDesktopApplication
             base.OnStartup(e);
 
             var app = DesktopApplication.Create("Test Desktop Application");
-            app.AddModule<SavedXrmConnectionsModule>();
+            //app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<TestTextSearchModule>();
             app.AddModule<TestDialogModule>();
             app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<DebugDialogModule>();
-            app.AddModule<XrmSettingsModule>();
+            //app.AddModule<XrmSettingsModule>();
             app.AddModule<ObjectEncryptModule<TestObjectEncryptDialog, TestClassToEncrypt>>();
             app.AddModule<TestSettingsModule>();
             app.AddModule<TestCrudModule>();
             app.AddModule<SavedRequestModule>();
             app.AddModule<ConsoleApplicationModule>();
             app.AddModule<TestGridEditModule>();
+            app.AddModule<ThemeModule>();
             app.Run();
         }
     }

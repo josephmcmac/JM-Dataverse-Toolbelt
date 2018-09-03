@@ -1,19 +1,13 @@
-﻿#region
-
-using JosephM.Core.AppConfig;
+﻿using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
-using JosephM.Core.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Windows.Threading;
-
-#endregion
 
 namespace JosephM.Application.Application
 {
@@ -143,7 +137,7 @@ namespace JosephM.Application.Application
         }
 
         public abstract void NavigateTo(Type type, UriQuery uriQuery = null);
-
+        public abstract void NavigateTo(object item);
         public abstract string GetSaveFileName(string initialFileName, string extention);
 
         public abstract string GetSaveFolderName();
@@ -169,9 +163,28 @@ namespace JosephM.Application.Application
             return Container == null ? null : Container.ResolveType(type);
         }
 
+        public void AddOnInstanceRegistered<T>(Action processRegisteredObject)
+        {
+            _instanceRegisteredActions.Add(new KeyValuePair<Type, Action>(typeof(T), processRegisteredObject));
+        }
+
+        private List<KeyValuePair<Type, Action>> _instanceRegisteredActions = new List<KeyValuePair<Type, Action>>();
+
+        private void OnInstanceRegistered(Type type)
+        {
+            foreach(var item in _instanceRegisteredActions)
+            {
+                if(item.Key == type)
+                {
+                    item.Value();
+                }
+            }
+        }
+
         public void RegisterInstance(Type type, object instance)
         {
             Container.RegisterInstance(type, instance);
+            OnInstanceRegistered(type);
         }
 
         public object ResolveType(string typeName)
@@ -197,6 +210,7 @@ namespace JosephM.Application.Application
         public void RegisterInstance(Type type, string key, object instance)
         {
             Container.RegisterInstance(type, key, instance);
+            OnInstanceRegistered(type);
         }
 
         public object ResolveInstance(Type type, string key)
@@ -206,7 +220,7 @@ namespace JosephM.Application.Application
 
         public virtual bool AllowSaveRequests { get { return true; } }
 
-        public virtual bool ForceElementWindowHeight {  get { return false; } }
+        public virtual bool IsTabbedApplication {  get { return true; } }
 
         //runs all registered on navigate events
         protected void OnNavigatedTo(object objectNavigatedTo)

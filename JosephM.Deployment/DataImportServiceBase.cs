@@ -371,7 +371,7 @@ namespace JosephM.Deployment
                                     var theEmail = thisEntity.GetStringField(field);
                                     if (!string.IsNullOrWhiteSpace(theEmail))
                                     {
-                                        thisEntity.SetField(field, theEmail.Replace("@", "_AT_") + "_fakecrmdevemail@example.com");
+                                        thisEntity.SetField(field, theEmail.Replace("@", "_AT_") + "_@fakemaskedemail.com");
                                     }
                                 }
                             }

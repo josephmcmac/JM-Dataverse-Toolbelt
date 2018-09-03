@@ -1,11 +1,11 @@
-﻿using System;
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
+    [Instruction("Enter Details For Connecting To The Dynamics Instance\n\nThe Discovery Service Address And Organisation Unique Name Are Found By Navigating To Settings -> Customizations -> Developer Resources In The Main Menu Of The Dynamics Web Application")]
     [ServiceConnection(typeof(XrmRecordService))]
     public class XrmRecordConfiguration : IXrmRecordConfiguration, IValidatableObject
     {
@@ -19,10 +19,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             return Name ?? OrganizationUniqueName;
         }
 
-        [GridWidth(175)]
+        [GridWidth(160)]
         [MyDescription("The User Authentication Type For The CRM Instance")]
         [DisplayOrder(20)]
         [RequiredProperty]
+        [DisplayName("Authentication Type")]
         public XrmRecordAuthenticationProviderType AuthenticationProviderType { get; set; }
 
         [MyDescription("The Discovery Service Address For The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
@@ -35,6 +36,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [DisplayOrder(40)]
         [RequiredProperty]
         [GridWidth(160)]
+        [DisplayName("Org Unique Name")]
         public string OrganizationUniqueName { get; set; }
 
         [MyDescription("If Active Directory Authentication The Domain For Your Login")]

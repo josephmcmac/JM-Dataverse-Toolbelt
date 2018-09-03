@@ -1,4 +1,5 @@
 ﻿using System;
+using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
 
 namespace JosephM.Xrm
@@ -18,7 +19,7 @@ namespace JosephM.Xrm
             get
             {
                 if (_organisation == null)
-                    _organisation = XrmService.GetFirst("organization");
+                    _organisation = XrmService.GetFirst(Entities.organization);
                 return _organisation;
             }
         }
@@ -27,9 +28,9 @@ namespace JosephM.Xrm
         {
             get
             {
-                var value = Organisation.GetLookupGuid("basecurrencyid");
+                var value = Organisation.GetLookupGuid(Fields.organization_.basecurrencyid);
                 if(!value.HasValue)
-                    throw new NullReferenceException(string.Format("Error Getting {0} From The {1} Record", XrmService.GetFieldLabel("basecurrencyid", "organization"), XrmService.GetEntityLabel("organization")));
+                    throw new NullReferenceException(string.Format("Error Getting {0} From The {1} Record", XrmService.GetFieldLabel(Fields.organization_.basecurrencyid, Entities.organization), XrmService.GetEntityLabel(Entities.organization)));
                 return value.Value;
             }
         }

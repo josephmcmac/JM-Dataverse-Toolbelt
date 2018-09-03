@@ -35,19 +35,21 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         [Group(Sections.Document)]
         [RequiredProperty]
         public DocumentType DocumentFormat { get; set; }
-
+        [GridWidth(150)]
         [DisplayOrder(100)]
         [Group(Sections.RecordToReport)]
         [RequiredProperty]
         [RecordTypeFor(nameof(RecordLookup))]
         public RecordType RecordType { get; set; }
 
+        [GridWidth(150)]
         [DisplayOrder(110)]
         [Group(Sections.RecordToReport)]
         [RequiredProperty]
-        [PropertyInContextByPropertyNotNull("RecordType")]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         public Lookup RecordLookup { get; set; }
 
+        [GridWidth(125)]
         [DisplayOrder(200)]
         [Group(Sections.DetailLevelOptions)]
         [RequiredProperty]
@@ -55,25 +57,30 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
 
         [DisplayOrder(210)]
         [Group(Sections.DetailLevelOptions)]
-        [PropertyInContextByPropertyValue("DetailOfRelatedRecords", DetailLevel.AllFields)]
+        [PropertyInContextByPropertyValue(nameof(DetailOfRelatedRecords), DetailLevel.AllFields)]
         public IEnumerable<RecordTypeSetting> RecordTypesOnlyDisplayName { get; set; }
-
+        [GridWidth(100)]
         [DisplayOrder(300)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeCreatedByAndOn { get; set; }
+        [GridWidth(100)]
         [DisplayOrder(310)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeModifiedByAndOn { get; set; }
+        [GridWidth(100)]
         [DisplayOrder(320)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeCrmOwner { get; set; }
+        [GridWidth(100)]
         [DisplayOrder(330)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeState { get; set; }
+        [GridWidth(100)]
         [DisplayOrder(340)]
         [Group(Sections.CommonFieldOptions)]
         public bool IncludeStatus { get; set; }
 
+        [GridWidth(100)]
         [DisplayOrder(380)]
         [Group(Sections.DisplayOptions)]
         public bool StripHtmlTags { get; set; }

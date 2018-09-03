@@ -42,5 +42,7 @@ namespace JosephM.Application.Desktop.Application
             System.Windows.Application.Current.MainWindow.DataContext = this;
             System.Windows.Application.Current.MainWindow.Show();
         }
+
+
     }
 }

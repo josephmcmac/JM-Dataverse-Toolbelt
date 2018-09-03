@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry;
@@ -128,6 +129,23 @@ namespace JosephM.Application.ViewModel.Query
 
                             var newForm = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, onSave, ClearChildForm);
                             LoadChildForm(newForm);
+                        }
+                    };
+                    DynamicGridViewModel.EditRowNew = (g) =>
+                    {
+                        var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
+                        var formController = new FormController(RecordService, FormService, ApplicationController);
+                        var selectedRow = g;
+                        if (selectedRow != null)
+                        {
+                            var record = selectedRow.Record;
+                            CreateOrUpdateViewModel vmRef = null;
+                            vmRef = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, () => {
+                                vmRef.ValidationPrompt = "Changes Have Been Saved";
+                                DynamicGridViewModel.ReloadGrid();
+                            }, () => ApplicationController.Remove(vmRef), cancelButtonLabel: "Close");
+                            ApplicationController.NavigateTo(vmRef);
+                            //LoadChildForm(newForm);
                         }
                     };
                     DynamicGridViewModel.AddRow = () =>
@@ -386,7 +404,7 @@ namespace JosephM.Application.ViewModel.Query
 
         public ObservableCollection<GridRowViewModel> GridRecords
         {
-            get { return DynamicGridViewModel.GridRecords; }
+            get { return DynamicGridViewModel?.GridRecords; }
         }
 
         public GetGridRecordsResponse GetGridRecords(bool ignorePages)

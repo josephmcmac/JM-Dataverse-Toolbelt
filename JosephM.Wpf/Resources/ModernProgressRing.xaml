@@ -10,7 +10,7 @@
 
     <Style x:Key="CircleProgressRingStyle" TargetType="shared:ModernProgressRing">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
         <Setter Property="IsHitTestVisible" Value="False" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />

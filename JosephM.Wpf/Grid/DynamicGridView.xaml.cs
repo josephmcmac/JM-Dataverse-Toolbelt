@@ -1,6 +1,4 @@
-﻿#region
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,8 +12,6 @@ using System.Windows.Media;
 using System;
 using System.ComponentModel;
 using JosephM.Core.Extentions;
-
-#endregion
 
 namespace JosephM.Wpf.Grid
 {
@@ -145,14 +141,11 @@ namespace JosephM.Wpf.Grid
                     foreach (var gridField in gridSectionViewModel.FieldMetadata.OrderBy(gf => gf.Order))
                     {
                         var fieldName = gridField.FieldName;
-                        var fieldType = gridSectionViewModel.RecordService.GetFieldType(fieldName,
+                        var fieldMetadata = gridSectionViewModel.RecordService.GetFieldMetadata(fieldName,
                             gridSectionViewModel
                                 .RecordType);
-
-                        var header = gridSectionViewModel.RecordService.GetFieldLabel(fieldName,
-                            gridSectionViewModel.RecordType);
-                        var thisColumn = new ColumnMetadata(fieldName, header, fieldType, gridField.WidthPart,
-                            gridField.IsEditable);
+                        var thisColumn = new ColumnMetadata(fieldName, fieldMetadata.DisplayName ?? fieldName, fieldMetadata.FieldType, gridField.WidthPart,
+                            gridField.IsEditable, fieldMetadata.Description);
                         columnMetadata.Add(thisColumn);
                     }
 
@@ -348,7 +341,7 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             }
-                            dataGridField.Header = column.FieldLabel;
+                            dataGridField.Header = column;
                             dataGridField.Width = new DataGridLength(column.WidthPart,
                                 DataGridLengthUnitType.Pixel);
                             var isFormReadonly = gridSectionViewModel.IsReadOnly;
@@ -389,16 +382,32 @@ namespace JosephM.Wpf.Grid
             //GridSectionViewModel.OnClick();
         }
 
-        private class ColumnMetadata
+        public class ColumnMetadata
         {
             public ColumnMetadata(string fieldName, string fieldLabel, RecordFieldType fieldType, double widthPart,
-                bool isEditable)
+                bool isEditable, string tooltip)
             {
                 FieldName = fieldName;
                 FieldLabel = fieldLabel;
                 FieldType = fieldType;
                 WidthPart = widthPart;
                 IsEditable = isEditable;
+                Tooltip = tooltip;
+                if (new[] { RecordFieldType.Boolean, RecordFieldType.Url }.Contains(FieldType))
+                {
+                    Align = HorizontalAlignment.Center;
+                    TextAlign = TextAlignment.Center;
+                }
+                else
+                {
+                    Align = HorizontalAlignment.Left;
+                    TextAlign = TextAlignment.Left;
+                }
+            }
+
+            public bool IsSortable
+            {
+                get { return FieldLabel != null; }
             }
 
             public string FieldName { get; private set; }
@@ -406,6 +415,9 @@ namespace JosephM.Wpf.Grid
             public RecordFieldType FieldType { get; private set; }
             public double WidthPart { get; private set; }
             public bool IsEditable { get; private set; }
+            public string Tooltip { get; }
+            public HorizontalAlignment Align { get; private set; }
+            public TextAlignment TextAlign { get; }
         }
 
         private object _lockObject = new object();

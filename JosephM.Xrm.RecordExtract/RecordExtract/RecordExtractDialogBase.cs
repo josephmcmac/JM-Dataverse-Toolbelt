@@ -21,7 +21,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         {
             AddCompletionOption("Open Document", OpenFile);
             AddCompletionOption("Open Folder", OpenFolder);
-            CompletionMessage = "Document Successfully Generated";
+            CompletionMessage = "The Document Has Been Generated";
         }
 
         public void OpenFile()

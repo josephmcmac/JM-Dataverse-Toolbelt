@@ -55,7 +55,6 @@
                                     VerticalAlignment="Top"
                                     TabIndex="1"
                                     Name="ComboBox"
-                                    Style="{StaticResource FieldEntryStyle}"
                                     Tag="Key"
                                     DisplayMemberPath="Value"
                                     ItemsSource="{Binding RecordTypeItemsSource}"
@@ -111,7 +110,7 @@
                                     <shared:XrmButton DataContext="{Binding RunQueryButton}" />
                                 </WrapPanel>
                             </Grid>
-                    <Grid Grid.Row="4" >
+                            <Grid Grid.Row="4" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
                         <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
                     </Grid>
                 </Grid>

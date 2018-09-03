@@ -82,15 +82,21 @@ namespace JosephM.Xrm.Vsix.Test
             //save package entry form
             SubmitEntryForm(dialog);
 
-            var completionScreen = dialog.Controller.UiItems.First() as CompletionScreenViewModel;
-
-            completionScreen.CloseButton.Invoke();
+            //dialog now reopens new entry form when completed
+            var EntryForm2 = dialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.AreNotEqual(entryViewModel, EntryForm2);
             Assert.IsNull(dialog.FatalException);
 
             //verify the package settings now have the solution we created when resolved
             var settingsManager = testApplication.Controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
             Assert.IsNotNull(settingsManager);
             Assert.AreEqual(solutionField.Value.Id, settingsManager.Resolve<XrmPackageSettings>().Solution.Id);
+
+            //lets just verify another save again opens new one
+            EntryForm2.SaveButtonViewModel.Invoke();
+            var EntryForm3 = dialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.AreNotEqual(EntryForm2, EntryForm3);
+            Assert.IsNull(dialog.FatalException);
         }
 
         /// <summary>

@@ -1,0 +1,15 @@
+﻿<Window x:Class="JosephM.Wpf.Application.WindowShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:application="clr-namespace:JosephM.Wpf.Application"
+        Height="600" Width="800" WindowState="Maximized"
+        >
+    <Window.Style>
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+        </Style>
+    </Window.Style>
+    <Grid>
+        <application:WindowShell x:Name="Container" />
+    </Grid>
+</Window>

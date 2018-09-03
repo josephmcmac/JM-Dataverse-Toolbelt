@@ -7,7 +7,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [Description("Windows Integrated")] None = 0,
         ActiveDirectory = 1,
         Federation = 2,
-        [Description("Live Id / Office 365")] LiveId = 3,
+        [Description("Online / Office 365")] LiveId = 3,
         OnlineFederation = 4,
     }
 }

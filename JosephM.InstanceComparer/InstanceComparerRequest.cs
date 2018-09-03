@@ -37,69 +37,83 @@ namespace JosephM.InstanceComparer
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration ConnectionTwo { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.GeneralOptions)]
         [DisplayOrder(14)]
         [MyDescription("When checked components in a managed solution which is not installed in either environment will be ignored")]
         public bool IgnoreMissingManagedComponentDifferences { get; set; }
-
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(15)]
         public bool Solutions { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(20)]
         public bool Entities { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(30)]
         public bool Workflows { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(40)]
         public bool WebResources { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(50)]
         public bool Plugins { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(60)]
         public bool SharedOptions { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(70)]
         public bool SecurityRoles { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(80)]
         public bool Dashboards { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(85)]
         public bool EmailTemplates { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(87)]
         public bool Reports { get; set; }
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(88)]
         public bool CaseCreationRules { get; set; }
-
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayName("SLAs")]
         [DisplayOrder(89)]
         public bool SLAs { get; set; }
-
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(95)]
         public bool Apps { get; set; }
-        
 
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(100)]
         public bool RoutingRules { get; set; }
 
+        [GridWidth(110)]
         [Group(Sections.CompareOptions)]
         [DisplayOrder(9000)]
         public bool Data { get; set; }
 
+        [GridWidth(400)]
         [RequiredProperty]
         [Group(Sections.DataComparisonOptions)]
         [PropertyInContextByPropertyValue(nameof(Data), true)]
+        [PropertyInContextByPropertyNotNull(nameof(ConnectionOne))]
         public IEnumerable<InstanceCompareDataCompare> DataComparisons { get; set; }
 
-
+        [GridWidth(110)]
         [Group(Sections.EntityMetadataComparisonOptions)]
         [DisplayOrder(10)]
         [PropertyInContextByPropertyValue(nameof(Entities), true)]
@@ -111,8 +125,10 @@ namespace JosephM.InstanceComparer
         [RequiredProperty]
         [PropertyInContextByPropertyValue(nameof(Entities), true)]
         [PropertyInContextByPropertyValue(nameof(AllTypesForEntityMetadata), false)]
+        [PropertyInContextByPropertyNotNull(nameof(ConnectionOne))]
         public IEnumerable<InstanceCompareTypeCompare> EntityTypeComparisons { get; set; }
 
+        [DoNotAllowGridOpen]
         [BulkAddRecordTypeFunction]
         public class InstanceCompareDataCompare
         {
@@ -127,6 +143,7 @@ namespace JosephM.InstanceComparer
             }
         }
 
+        [DoNotAllowGridOpen]
         [BulkAddRecordTypeFunction]
         public class InstanceCompareTypeCompare
         {

@@ -90,7 +90,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }));
                     }
                     otherSections[section.Name] = new List<FormFieldMetadata>();
-                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.DisplayLayout, section.Order, customFunctions: functions);
+                    var newSection = new FormFieldSection(section.Name, otherSections[section.Name], section.DisplayLayout, section.Order, customFunctions: functions, displayLabel: section.DisplayLabel);
                     formSections.Add(newSection);
                 }
 
@@ -107,6 +107,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         || groupAttribute != null;
 
                     var fieldMetadata = new PersistentFormField(property.SchemaName, enumerableType, displayLabel);
+                    fieldMetadata.DoNotLimitDisplayHeight = propinfo.GetCustomAttribute<DoNotLimitDisplayHeight>() != null;
                     fieldMetadata.Order = property.Order;
 
                     string sectionName = null;
@@ -397,10 +398,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return prop.GetCustomAttribute<DoNotAllowDelete>() == null;
         }
 
-        public override bool AllowGridEdit(string fieldName, string recordType)
+        public override bool AllowGridOpen(string fieldName, RecordEntryViewModelBase recordForm)
         {
-            var prop = GetPropertyInfo(fieldName, recordType);
-            return prop.GetCustomAttribute<DoNotAllowGridEdit>() == null;
+            var prop = GetPropertyInfo(fieldName, recordForm.GetRecordType());
+            if(prop.PropertyType.GenericTypeArguments.Count() == 1
+                && prop.PropertyType.GenericTypeArguments[0].GetCustomAttribute<DoNotAllowGridOpen>() != null)
+                return false;
+            return
+                prop.GetCustomAttribute<DoNotAllowGridOpen>() == null;
         }
 
         public override bool UsePicklist(string fieldName, string recordType)
@@ -666,9 +671,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var propertyInfo = GetPropertyInfo(split.First(), viewModel.GetRecord().Type);
             if (propertyInfo != null)
             {
-                if(propertyInfo.GetType().Name == "IEnumerable`1" && split.Count() > 1)
+                if(propertyInfo.PropertyType.Name == "IEnumerable`1" && split.Count() > 1)
                 {
-                    var enumeratedType = propertyInfo.GetType().GenericTypeArguments[0];
+                    var enumeratedType = propertyInfo.PropertyType.GenericTypeArguments[0];
                     propertyInfo = enumeratedType.GetProperty(split.ElementAt(1)) ?? propertyInfo;
                 }
                 var attribute = propertyInfo.GetCustomAttribute<ReferencedType>();
@@ -739,10 +744,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 var newRecord = (ObjectRecord)ObjectRecordService.NewRecord(fieldMetadata.EnumeratedTypeQualifiedName);
                 var newObject = newRecord.Instance;
                 var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName, parentForm.ApplicationController);
+                var formService = new ObjectFormService(newObject, recordService);
+                formService.AllowLookupFunctions = AllowLookupFunctions;
                 var viewModel = new ObjectEntryViewModel(
                     () => onSave(new ObjectRecord(newObject)),
                     onCancel,
-                    newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
+                    newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate
+                    , saveButtonLabel: "Add");
                 return viewModel;
                 //ideally could hide the parent dialog temporarily and load this one
             }
@@ -768,10 +776,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var mapper = new ClassSelfMapper();
             var newObject = mapper.Map(newRecord.Instance);
             var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName, parentForm.ApplicationController);
+            var formService = new ObjectFormService(newObject, recordService);
+            formService.AllowLookupFunctions = AllowLookupFunctions;
             var viewModel = new ObjectEntryViewModel(
-                () => onSave(new ObjectRecord(newObject)),
+                parentForm.IsReadOnly ? (Action)null : () => onSave(new ObjectRecord(newObject)),
                 onCancel,
-                newObject, new FormController(recordService, new ObjectFormService(newObject, recordService), parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate);
+                newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate
+                , saveButtonLabel: "Apply Changes", cancelButtonLabel: parentForm.IsReadOnly ? "Return" : null);
             return viewModel;
         }
 
@@ -911,6 +922,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public override Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)
         {
+            if (!AllowLookupFunctions)
+                return null;
             var functions = new Dictionary<string, Action>();
             var enumeratedType = ObjectRecordService.GetPropertyType(referenceName, recordForm.GetRecordType()).GenericTypeArguments[0];
             var customFunction = enumeratedType.GetCustomAttribute<BulkAddFunction>();

@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using JosephM.Wpf.Extentions;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace JosephM.Wpf.Application
 {
@@ -10,6 +12,13 @@ namespace JosephM.Wpf.Application
         public WindowShell()
         {
             InitializeComponent();
+
+            DataContextChanged += WindowShell_DataContextChanged;
+        }
+
+        private void WindowShell_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            this.DoThemeLoading();
         }
     }
 }

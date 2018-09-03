@@ -2,7 +2,7 @@
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Service;
 using JosephM.Record.Xrm.XrmRecord;
-
+using System;
 
 namespace JosephM.Deployment.DeployPackage
 {
@@ -15,6 +15,23 @@ namespace JosephM.Deployment.DeployPackage
             IDialogController dialogController, XrmRecordService lookupService)
             : base(service, dialogController, lookupService)
         {
+        }
+
+        protected override void CompleteDialogExtention()
+        {
+            base.CompleteDialogExtention();
+            CompletionMessage = $"The Package Has Been Deployed Into {Request.Connection}";
+            AddCompletionOption($"Open {Request.Connection}", () =>
+            {
+                try
+                {
+                    ApplicationController.StartProcess(new XrmRecordService(Request.Connection).WebUrl);
+                }
+                catch (Exception ex)
+                {
+                    ApplicationController.ThrowException(ex);
+                }
+            });
         }
     }
 }

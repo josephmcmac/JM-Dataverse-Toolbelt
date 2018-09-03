@@ -17,41 +17,44 @@ namespace JosephM.CustomisationExporter.Exporter
     [Group(Sections.RecordTypes, true, 40)]
     public class CustomisationExporterRequest : ServiceRequestBase, IValidatableObject
     {
+        [GridWidth(300)]
         [DisplayOrder(10)]
         [Group(Sections.Folder)]
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
-
+        [GridWidth(110)]
         [DisplayOrder(100)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool Entities { get; set; }
-
+        [GridWidth(110)]
         [DisplayOrder(110)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool Fields { get; set; }
-
+        [GridWidth(110)]
         [DisplayOrder(120)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool FieldOptionSets { get; set; }
-
+        [GridWidth(110)]
         [DisplayOrder(130)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool SharedOptionSets { get; set; }
-
+        [GridWidth(110)]
         [DisplayOrder(200)]
         [Group(Sections.Relationships)]
         public bool Relationships { get; set; }
-
+        [DisplayName("Duplicate N:N Relationship Sides")]
+        [GridWidth(110)]
         [DisplayOrder(210)]
         [Group(Sections.Relationships)]
         [PropertyInContextByPropertyValue("Relationships", true)]
         public bool DuplicateManyToManyRelationshipSides { get; set; }
-
+        [GridWidth(110)]
         [DisplayOrder(220)]
         [Group(Sections.Relationships)]
+        [DisplayName("Include 1:N Relationships")]
         [PropertyInContextByPropertyValue("Relationships", true)]
         public bool IncludeOneToManyRelationships { get; set; }
-
+        [GridWidth(110)]
         [DisplayOrder(300)]
         [RequiredProperty]
         [PropertyInContextForAny(nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(Relationships))]
@@ -61,7 +64,7 @@ namespace JosephM.CustomisationExporter.Exporter
         [DisplayOrder(310)]
         [Group(Sections.RecordTypes)]
         [RequiredProperty]
-        [DisplayName("Include These Specific Record Types")]
+        [DisplayName("Include These Types")]
         [PropertyInContextByPropertyValue(nameof(IncludeAllRecordTypes), false)]
         [PropertyInContextForAny(nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(Relationships))]
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }

@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="{x:Type GroupBox}" x:Key="HighlightDropZone">
         <Setter Property="Width" Value="15" />
-        <Setter Property="Background" Value="WhiteSmoke" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
         <Style.Triggers>
             <EventTrigger RoutedEvent="GroupBox.DragEnter">
                 <BeginStoryboard x:Name="DropZoneBeginStoryboard">
@@ -20,5 +20,18 @@
                 <StopStoryboard BeginStoryboardName="DropZoneBeginStoryboard"/>
             </EventTrigger>
         </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type GroupBox}" x:Key="FieldDropZone" BasedOn="{StaticResource HighlightDropZone}">
+        <Setter Property="Margin" Value="-3,-3,-3,-7" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style TargetType="{x:Type Border}" x:Key="DropZoneBorder" >
+        <Setter Property="Margin" Value="2,2,2,2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style TargetType="{x:Type Border}" x:Key="FieldDropZoneBorder" BasedOn="{StaticResource DropZoneBorder}" >
+        <Setter Property="BorderThickness" Value=".5" />
     </Style>
 </ResourceDictionary>

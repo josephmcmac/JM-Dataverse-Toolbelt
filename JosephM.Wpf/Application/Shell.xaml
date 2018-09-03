@@ -2,7 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:application="clr-namespace:JosephM.Wpf.Application"
-        Title="{Binding ApplicationName}" Height="600" Width="800" WindowState="Maximized">
+        Title="{Binding ApplicationName}" Height="600" Width="800" WindowState="Maximized"
+        >
+    <Window.Style>
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+        </Style>
+    </Window.Style>
     <Grid>
         <application:ApplicationShell DataContext="{Binding}" />
     </Grid>

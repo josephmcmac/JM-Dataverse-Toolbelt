@@ -14,8 +14,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             IEnumerable<FormFieldMetadata> formFields,
             Group.DisplayLayoutEnum displayLayout = Group.DisplayLayoutEnum.VerticalList,
             int order = 10000,
-            IEnumerable<CustomFormFunction> customFunctions = null)
-            : base(sectionLabel, order, customFunctions: customFunctions)
+            IEnumerable<CustomFormFunction> customFunctions = null, bool displayLabel = true)
+            : base(sectionLabel, order, customFunctions: customFunctions, displayLabel: displayLabel)
         {
             FormFields = formFields;
             DisplayLayout = displayLayout;

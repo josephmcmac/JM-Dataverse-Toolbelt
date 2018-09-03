@@ -47,7 +47,6 @@ namespace JosephM.InstanceComparer.AddToSolution
         [DisplayName("Components For Inclusion")]
         [DoNotAllowAdd]
         [DoNotAllowDelete]
-        [DoNotAllowGridEdit]
         [Group(Sections.Types)]
         [RequiredProperty]
         public IEnumerable<AddToSolutionComponent> Items { get; set; }
@@ -58,6 +57,7 @@ namespace JosephM.InstanceComparer.AddToSolution
             public const string Types = "Types";
         }
 
+        [DoNotAllowGridOpen]
         [Group(Sections.Main, true, order: 10)]
         [Group(Sections.SelectedItems, true, order: 20, selectAll: true)]
         public class AddToSolutionComponent : ISelectable
@@ -104,7 +104,6 @@ namespace JosephM.InstanceComparer.AddToSolution
             [PropertyInContextByPropertyValue(nameof(AddAllItems), false)]
             [DoNotAllowAdd]
             [DoNotAllowDelete]
-            [DoNotAllowGridEdit]
             [GridWidth(600)]
             [DisplayOrder(50)]
             public IEnumerable<SelectableAddToSolutionComponentItem> ItemsSelection { get; set; }
@@ -112,7 +111,6 @@ namespace JosephM.InstanceComparer.AddToSolution
             [PropertyInContextByPropertyValue(nameof(AddAllItems), true)]
             [DoNotAllowAdd]
             [DoNotAllowDelete]
-            [DoNotAllowGridEdit]
             [GridWidth(400)]
             public IEnumerable<AddToSolutionComponentItem> AllItems { get; set; }
 
@@ -132,6 +130,7 @@ namespace JosephM.InstanceComparer.AddToSolution
                 public const string SelectedItems = "SelectedItems";
             }
 
+            [DoNotAllowGridOpen]
             public class AddToSolutionComponentItem
             {
                 public AddToSolutionComponentItem(string id, string name)
@@ -153,6 +152,7 @@ namespace JosephM.InstanceComparer.AddToSolution
                 }
             }
 
+            [DoNotAllowGridOpen]
             [SelectableObjectsFunction]
             public class SelectableAddToSolutionComponentItem : AddToSolutionComponentItem, ISelectable
             {

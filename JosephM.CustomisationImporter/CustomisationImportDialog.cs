@@ -21,6 +21,8 @@ namespace JosephM.CustomisationImporter
             base.CompleteDialogExtention();
             if (Response.ExcelReadErrors)
                 CompletionMessage = "There were errors loading the metadata in the Excel spreadsheet. You will need to review and fix these errors then rerun the import";
+            else
+                CompletionMessage = "TheCustomisations Have Been Imported And Published";
         }
     }
 }
