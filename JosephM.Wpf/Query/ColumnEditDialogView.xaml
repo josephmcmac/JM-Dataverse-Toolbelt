@@ -77,9 +77,26 @@
                                                     <RowDefinition Height="Auto"  />
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
-                                                <Button HorizontalAlignment="Right" Grid.Row="0"  Style="{StaticResource RemoveButtonStyle}"  Command="{Binding RemoveCommand}" >
-                                                    <Image Source="../Images/CloseButton.gif" Height="15" Width="15" />
-                                                </Button>
+                                                <Button
+                                                    HorizontalAlignment="Right"
+                                                    Grid.Row="0" 
+                                                    Style="{StaticResource RemoveButtonStyle}" 
+                                                    Command="{Binding RemoveCommand}" >
+                                                        <Grid HorizontalAlignment="Left" 
+                        Background="{DynamicResource BackgroundColor}"
+                        VerticalAlignment="Top" >
+                                                            <Ellipse Fill="Transparent"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch" />
+                                                            <Path Data="M40,53 L48,69 62,69 49,46 61,24 48,24 C48,24 40,39 40,39 40,39 32,24 32,24 L18,24 30,46 17,69 31,69 z" 
+                          Fill="{DynamicResource BorderColor}" 
+                          Stretch="Fill" 
+                          Margin="3,3,3,3"     
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                        />
+                                                        </Grid>
+                                                    </Button>
                                                 <TextBlock Grid.Row="1"
                                         Text="{Binding FieldLabel}"
                                         Style="{StaticResource FieldLabelStyle}" />

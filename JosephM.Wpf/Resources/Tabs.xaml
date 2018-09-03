@@ -71,11 +71,26 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="TabItemHeaderTemplate">
-        <DockPanel Margin="-5,-1,-4.5,-2.5" Style="{StaticResource TabHeaderPanel}" >
+        <DockPanel Margin="-5,-1,-4.5,-2.5" Style="{StaticResource TabHeaderPanel}"   >
             <DockPanel Margin="5,5,5,5" >
                 <TextBlock Style="{StaticResource TabLabelStyle}" Text="{Binding TabLabel}" />
-                <Button Style="{StaticResource RemoveButtonStyle}" Command="{Binding TabCloseCommand}" >
-                    <Image Source="../Images/CloseButton.gif" Height="15" Width="15" />
+                <Button Style="{StaticResource RemoveButtonStyle}" Command="{Binding TabCloseCommand}"
+                        ToolTip="Close This tab"
+                        >
+                    <Grid HorizontalAlignment="Left" 
+                        Background="{DynamicResource BackgroundColor}"
+                        VerticalAlignment="Top" >
+                        <Ellipse Fill="Transparent"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch" />
+                        <Path Data="M40,53 L48,69 62,69 49,46 61,24 48,24 C48,24 40,39 40,39 40,39 32,24 32,24 L18,24 30,46 17,69 31,69 z" 
+                          Fill="{DynamicResource BorderColor}" 
+                          Stretch="Fill" 
+                          Margin="3,3,3,3"     
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                        />
+                    </Grid>
                 </Button>
             </DockPanel>
         </DockPanel>
