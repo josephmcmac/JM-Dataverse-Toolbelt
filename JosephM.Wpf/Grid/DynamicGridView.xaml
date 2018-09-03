@@ -125,9 +125,7 @@
                                                     <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True"/>
                                                     <Condition Binding="{Binding IsSortable}" Value="True"/>
                                                 </MultiDataTrigger.Conditions>
-                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundHover}" />
-                                                <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderHover}" />
-                                                <Setter Property="Foreground" Value="{DynamicResource ButtonTextHover}" />
+                                                <Setter Property="Background" Value="{DynamicResource SelectedBackgroundColor}" />
                                             </MultiDataTrigger>
                                         </Style.Triggers>
 
