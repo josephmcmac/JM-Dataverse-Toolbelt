@@ -79,7 +79,7 @@ namespace JosephM.Application.ViewModel.Grid
             GridViewModel.EditRowNew(this);
         }
 
-        public bool DisplayContextMenu { get { return CanEdit || CanEditNewTab || CanEditNewWindow; } }
+        public bool DisplayContextMenu { get { return CanEdit || CanEditNewTab || CanEditNewWindow || CanDelete; } }
 
         public bool CanEdit { get { return GridViewModel.CanEdit; } }
 
@@ -87,8 +87,16 @@ namespace JosephM.Application.ViewModel.Grid
 
         public bool CanEditNewWindow { get { return GridViewModel.CanEditNewWindow; } }
 
+        public bool CanDelete { get { return GridViewModel.CanDelete; } }
+
         public void DeleteRow()
         {
+            if(GridViewModel.SelectedRows != null)
+            {
+                foreach (var item in GridViewModel.SelectedRows.ToArray())
+                    if (item != this)
+                        GridViewModel.DeleteRow(item);
+            }
             GridViewModel.DeleteRow(this);
         }
 
