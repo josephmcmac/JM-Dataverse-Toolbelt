@@ -66,6 +66,7 @@ namespace JosephM.Xrm.Vsix.Application
                     }
                 }
             }
+            OnNavigatedTo(navigationObject);
             if (navigationObject is TabAreaViewModelBase)
                 LoadViewModel((TabAreaViewModelBase)navigationObject, showCompletionScreen: showCompletionScreen, isModal: isModal);
             else
