@@ -227,6 +227,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             return new IsValidResponse();
         }
 
+        private bool lastValidationResult = true;
+
         public virtual bool Validate()
         {
             _errors.Clear();
@@ -235,12 +237,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 var validationResponse = validationRule.Validate(this);
                 if (validationResponse.IsValid == false)
                 {
+                    lastValidationResult = false;
                     _errors.Add(validationResponse.ErrorContent);
                     foreach (var validationPropertyName in ValidationPropertyNames)
                         NotifyErrorsChanged(validationPropertyName);
                     return false;
                 }
             }
+            lastValidationResult = true;
             foreach (var validationPropertyName in ValidationPropertyNames)
                 NotifyErrorsChanged(validationPropertyName);
             return true;
@@ -271,6 +275,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             //Validate();
             OnChange();
             OnChangeDelegate(this);
+           if (!lastValidationResult)
+                DoOnAsynchThread(() => Validate());
         }
 
         public void SetLoading()
