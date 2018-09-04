@@ -166,6 +166,7 @@
     <Compile Include="Converters\FileRefToStringConverter.cs" />
     <Compile Include="Converters\NullOrEmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\LengthConverter.cs" />
+    <Compile Include="Converters\StringTruncateConverter.cs" />
     <Compile Include="Converters\TabbedApplicationHeightConverter.cs" />
     <Compile Include="Converters\ShellApplicationHeightConverter.cs" />
     <Compile Include="Extentions\UserControlExtentions.cs" />
@@ -739,12 +740,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ErrorIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\CloseButton.gif" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7bf3e622-67ca-4e67-a9ca-f3b334c954fd}</Project>
       <Name>JosephM.Application</Name>
@@ -765,31 +760,6 @@
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Loading.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\DeleteIcon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\AddIcon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\EditIcon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Next.png" />
-    <Resource Include="Images\Previous.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\AddMultipleIcon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Search.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\OpenRowIcon.jpg" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

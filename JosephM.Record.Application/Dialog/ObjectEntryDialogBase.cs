@@ -20,7 +20,7 @@ namespace JosephM.Application.ViewModel.Dialog
     {
         protected ObjectEntryDialogBase(DialogViewModel parentDialog,
             IApplicationController applicationController, IRecordService lookupService,
-            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null, IDictionary<string, IEnumerable<string>> onlyValidate = null, Action onCancel = null, string saveButtonLabel = null)
+            IDictionary<string, IEnumerable<string>> optionsetLimitedValues, Action saveMethod, IDictionary<string, Type> objectTypeMaps = null, IDictionary<string, IEnumerable<string>> onlyValidate = null, Action onCancel = null, string saveButtonLabel = null, string cancelButtonLabel = null)
             : base(parentDialog)
         {
             ApplicationController = applicationController;
@@ -32,6 +32,7 @@ namespace JosephM.Application.ViewModel.Dialog
             if (onCancel != null)
                 OnCancel = onCancel;
             SaveButtonLabel = saveButtonLabel;
+            CancelButtonLabel = cancelButtonLabel;
         }
 
         protected ObjectEntryDialogBase(
@@ -49,7 +50,7 @@ namespace JosephM.Application.ViewModel.Dialog
         public string InitialMessage { get; set; }
 
         public string SaveButtonLabel { get; set; }
-
+        public string CancelButtonLabel { get; private set; }
         protected abstract object ObjectToEnter { get; }
 
         public ObjectEntryViewModel ViewModel { get; set; }
@@ -64,7 +65,7 @@ namespace JosephM.Application.ViewModel.Dialog
             var recordService = new ObjectRecordService(ObjectToEnter, LookupService, OptionsetLimitedValues, ApplicationController, ObjectTypeMaps);
             var formService = new ObjectFormService(ObjectToEnter, recordService, ObjectTypeMaps);
             ViewModel = new ObjectEntryViewModel(StartNextAction, OnCancel, ObjectToEnter,
-                new FormController(recordService, formService, ApplicationController), OnlyValidate, saveButtonLabel: SaveButtonLabel);
+                new FormController(recordService, formService, ApplicationController), OnlyValidate, saveButtonLabel: SaveButtonLabel, cancelButtonLabel: CancelButtonLabel);
             if (InitialMessage != null)
                 ViewModel.ValidationPrompt = InitialMessage;
             Controller.LoadToUi(ViewModel);

@@ -29,10 +29,10 @@ namespace JosephM.Application.ViewModel.Grid
             Record = record;
             GridViewModel = gridViewModel;
             LoadFields();
-            DeleteRowViewModel = new XrmButtonViewModel("Delete", DeleteRow, ApplicationController, description: "Delete");
-            EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController, description: "Open This Item");
-            EditRowNewTabViewModel = new XrmButtonViewModel("Edit Row New Tab", EditRowNewTab, ApplicationController, description: "Open This Item In New Tab");
-            EditRowNewWindowViewModel = new XrmButtonViewModel("Edit Row New Window", EditRowNewTab, ApplicationController, description: "Open This Item In New Window");
+            DeleteRowViewModel = new XrmButtonViewModel("Remove", DeleteRow, ApplicationController, description: "Remove This Item");
+            EditRowViewModel = new XrmButtonViewModel("Open", EditRow, ApplicationController, description: "Open This Item");
+            EditRowNewTabViewModel = new XrmButtonViewModel("Open In New Tab", EditRowNewTab, ApplicationController, description: "Open This Item In New Tab");
+            EditRowNewWindowViewModel = new XrmButtonViewModel("Open In New Window", EditRowNewTab, ApplicationController, description: "Open This Item In New Window");
         }
 
         public DynamicGridViewModel GridViewModel { get; private set; }
@@ -79,7 +79,7 @@ namespace JosephM.Application.ViewModel.Grid
             GridViewModel.EditRowNew(this);
         }
 
-        public bool DisplayContextMenu { get { return CanEdit || CanEditNewTab || CanEditNewWindow; } }
+        public bool DisplayContextMenu { get { return CanEdit || CanEditNewTab || CanEditNewWindow || CanDelete; } }
 
         public bool CanEdit { get { return GridViewModel.CanEdit; } }
 
@@ -87,8 +87,16 @@ namespace JosephM.Application.ViewModel.Grid
 
         public bool CanEditNewWindow { get { return GridViewModel.CanEditNewWindow; } }
 
+        public bool CanDelete { get { return GridViewModel.CanDelete; } }
+
         public void DeleteRow()
         {
+            if(GridViewModel.SelectedRows != null)
+            {
+                foreach (var item in GridViewModel.SelectedRows.ToArray())
+                    if (item != this)
+                        GridViewModel.DeleteRow(item);
+            }
             GridViewModel.DeleteRow(this);
         }
 

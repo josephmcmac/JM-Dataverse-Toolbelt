@@ -194,7 +194,17 @@ namespace JosephM.Record.Service
         public override IEnumerable<IRecord> RetreiveAll(QueryDefinition query)
         {
             var results = new List<IRecord>();
-            return Clone(GetRecordsOfType(query.RecordType).Where(r => query.RootFilter.MeetsFilter(r)), query.Fields);
+            var cloneResults = Clone(GetRecordsOfType(query.RecordType).Where(r => query.RootFilter.MeetsFilter(r)), query.Fields).ToList();
+            var newSorts = new List<SortExpression>(query.Sorts);
+            newSorts.Reverse();
+            foreach (var sort in newSorts.Take(1))
+            {
+                var comparer = new RecordComparer(sort.FieldName);
+                cloneResults.Sort(comparer);
+                if (sort.SortType == SortType.Descending)
+                    cloneResults.Reverse();
+            }
+            return cloneResults;
         }
 
         public override string GetFieldAsDisplayString(IRecord record, string fieldName)

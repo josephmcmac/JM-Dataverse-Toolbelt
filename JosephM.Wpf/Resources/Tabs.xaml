@@ -3,7 +3,8 @@
                     xmlns:application="clr-namespace:JosephM.Wpf.Application"
                     xmlns:query="clr-namespace:JosephM.Wpf.Query"
                     xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
-                    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector">
+                    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary>
@@ -71,11 +72,21 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="TabItemHeaderTemplate">
-        <DockPanel Margin="-5,-1,-4.5,-2.5" Style="{StaticResource TabHeaderPanel}" >
+        <DockPanel Margin="-5,-1,-4.5,-2.5" Style="{StaticResource TabHeaderPanel}"   >
             <DockPanel Margin="5,5,5,5" >
-                <TextBlock Style="{StaticResource TabLabelStyle}" Text="{Binding TabLabel}" />
-                <Button Style="{StaticResource RemoveButtonStyle}" Command="{Binding TabCloseCommand}" >
-                    <Image Source="../Images/CloseButton.gif" Height="15" Width="15" />
+                <TextBlock
+                    Style="{StaticResource TabLabelStyle}">
+                    <TextBlock.Text>
+                        <Binding Path="TabLabel"
+                        Converter="{StaticResource StringTruncateConverter}">
+                            <Binding.ConverterParameter>
+                                <sys:Int32>30</sys:Int32>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <Button Style="{StaticResource RemoveButtonStyle}" Command="{Binding TabCloseCommand}"
+                        ToolTip="Close This Tab" >
                 </Button>
             </DockPanel>
         </DockPanel>

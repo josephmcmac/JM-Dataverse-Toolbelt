@@ -77,9 +77,13 @@
                                                     <RowDefinition Height="Auto"  />
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
-                                                <Button HorizontalAlignment="Right" Grid.Row="0"  Style="{StaticResource RemoveButtonStyle}"  Command="{Binding RemoveCommand}" >
-                                                    <Image Source="../Images/CloseButton.gif" Height="15" Width="15" />
-                                                </Button>
+                                                    <Button
+                                                    HorizontalAlignment="Right"
+                                                    Grid.Row="0" 
+                                                    Style="{StaticResource RemoveButtonStyle}" 
+                                                    Command="{Binding RemoveCommand}"
+                                                        ToolTip="Remove This Field">
+                                                    </Button>
                                                 <TextBlock Grid.Row="1"
                                         Text="{Binding FieldLabel}"
                                         Style="{StaticResource FieldLabelStyle}" />
@@ -130,8 +134,8 @@
                                     <TextBlock Grid.Column="0"
                                         Text="{Binding FieldLabel}"
                                         Style="{StaticResource FieldLabelStyle}" />
-                                    <Button HorizontalAlignment="Right" Grid.Column="1"  Style="{StaticResource RemoveButtonStyle}"  Command="{Binding AddCommand}" >
-                                        <Image Source="../Images/AddIcon.jpg" Height="15" Width="15" />
+                                    <Button HorizontalAlignment="Right" Grid.Column="1"  Style="{StaticResource AddNewButton}"  Command="{Binding AddCommand}"
+                                            ToolTip="Add This Field">
                                     </Button>
                                 </Grid>
                             </Border>

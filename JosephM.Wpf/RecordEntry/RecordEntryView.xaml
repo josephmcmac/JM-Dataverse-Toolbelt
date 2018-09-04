@@ -96,7 +96,16 @@
                             DataContext="{Binding SaveButtonViewModel}" />
                         <shared:XrmButton
                             DataContext="{Binding CancelButtonViewModel}" />
-                    </StackPanel>
+                        </StackPanel>
+                            <StackPanel
+                        Orientation="Horizontal"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right">
+                                <shared:XrmButton
+                            DataContext="{Binding SaveButtonViewModel}" />
+                                <shared:XrmButton
+                            DataContext="{Binding CancelButtonViewModel}" />
+                            </StackPanel>
                 </Grid>
             </Grid>
         </Grid>

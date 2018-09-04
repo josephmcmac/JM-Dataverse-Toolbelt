@@ -157,6 +157,7 @@
     <Compile Include="Metadata\Fields\BooleanFieldMetadata.cs" />
     <Compile Include="IService\ParseFieldRequest.cs" />
     <Compile Include="IService\ParseFieldResponse.cs" />
+    <Compile Include="Service\RecordComparer.cs" />
     <Compile Include="Service\RecordServiceBase.cs" />
     <Compile Include="Service\ObjectRecord.cs" />
     <Compile Include="Service\ObjectRecordService.cs" />

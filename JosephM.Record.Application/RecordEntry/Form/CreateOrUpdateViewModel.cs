@@ -37,9 +37,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override string TabLabel
         {
-            get { return GetRecord()?.Id == null || ExplicitIsCreate
-                    ? "Create " + RecordService.GetDisplayName(RecordType)
-                    : "Update " + RecordService.GetDisplayName(RecordType); }
+            get {
+                if (GetRecord()?.Id == null || ExplicitIsCreate)
+                {
+                    return "Create " + RecordService.GetDisplayName(RecordType);
+                }
+                else
+                    return GetRecord().GetStringField(RecordService.GetPrimaryField(RecordType)) ?? ("Update " + RecordService.GetDisplayName(RecordType));
+            }
         }
 
         public bool ExplicitIsCreate { get; }

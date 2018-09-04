@@ -24,7 +24,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Name="QueryScroll" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

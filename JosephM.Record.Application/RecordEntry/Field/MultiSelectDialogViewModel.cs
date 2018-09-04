@@ -12,7 +12,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
     public class MultiSelectDialogViewModel<T> : TabAreaViewModelBase, IMultiSelectDialog
         where T : PicklistOption
     {
-        public MultiSelectDialogViewModel(IEnumerable<T> options, IEnumerable<T> selectedOptions, Action<IEnumerable<T>> onApply, Action onCancel, IApplicationController applicationController)
+        public MultiSelectDialogViewModel(IEnumerable<T> options, IEnumerable<T> selectedOptions, Action<IEnumerable<T>> onApply, Action onCancel, IApplicationController applicationController, string saveButtonLabel = null, string cancelButtonLabel = null)
             : base(applicationController)
         {
             ItemsSource = options == null
@@ -20,8 +20,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 : options
                 .Select(i => new SelectablePicklistOption(i, selectedOptions != null && selectedOptions.Any(s => s.Key == i.Key)))
                 .ToArray();
-            ApplyButtonViewModel = new XrmButtonViewModel("Apply Changes", () => onApply(ItemsSource.Where(i => i.Select).Select(i => i.PicklistItem).ToArray()), ApplicationController, "Apply The Selection Changes");
-            CancelButtonViewModel = new XrmButtonViewModel("Cancel Changes", onCancel, ApplicationController, "Cancel The Selection Changes And Return");
+            ApplyButtonViewModel = new XrmButtonViewModel(saveButtonLabel ?? "Apply Changes", () => onApply(ItemsSource.Where(i => i.Select).Select(i => i.PicklistItem).ToArray()), ApplicationController, "Apply The Selection Changes");
+            CancelButtonViewModel = new XrmButtonViewModel(cancelButtonLabel ?? "Cancel Changes", onCancel, ApplicationController, "Cancel The Selection Changes And Return");
         }
 
         public XrmButtonViewModel ApplyButtonViewModel { get; set; }
