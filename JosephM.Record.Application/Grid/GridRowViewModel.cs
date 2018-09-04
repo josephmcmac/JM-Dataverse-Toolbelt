@@ -29,10 +29,10 @@ namespace JosephM.Application.ViewModel.Grid
             Record = record;
             GridViewModel = gridViewModel;
             LoadFields();
-            DeleteRowViewModel = new XrmButtonViewModel("Delete", DeleteRow, ApplicationController, description: "Delete");
-            EditRowViewModel = new XrmButtonViewModel("Edit", EditRow, ApplicationController, description: "Open This Item");
-            EditRowNewTabViewModel = new XrmButtonViewModel("Edit Row New Tab", EditRowNewTab, ApplicationController, description: "Open This Item In New Tab");
-            EditRowNewWindowViewModel = new XrmButtonViewModel("Edit Row New Window", EditRowNewTab, ApplicationController, description: "Open This Item In New Window");
+            DeleteRowViewModel = new XrmButtonViewModel("Remove", DeleteRow, ApplicationController, description: "Remove This Item");
+            EditRowViewModel = new XrmButtonViewModel("Open", EditRow, ApplicationController, description: "Open This Item");
+            EditRowNewTabViewModel = new XrmButtonViewModel("Open In New Tab", EditRowNewTab, ApplicationController, description: "Open This Item In New Tab");
+            EditRowNewWindowViewModel = new XrmButtonViewModel("Open In New Window", EditRowNewTab, ApplicationController, description: "Open This Item In New Window");
         }
 
         public DynamicGridViewModel GridViewModel { get; private set; }

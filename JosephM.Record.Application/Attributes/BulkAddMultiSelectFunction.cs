@@ -49,7 +49,7 @@ namespace JosephM.Application.ViewModel.Attributes
                     };
                     var picklistOptions = GetSelectionOptions(recordForm, subGridReference);
                     var initialSelected = GetInitialSelectedOptions(recordForm, subGridReference);
-                    var childForm = new MultiSelectDialogViewModel<PicklistOption>(picklistOptions, initialSelected, onSave, () => mainFormInContext.ClearChildForm(), mainFormInContext.ApplicationController);
+                    var childForm = new MultiSelectDialogViewModel<PicklistOption>(picklistOptions, initialSelected, onSave, () => mainFormInContext.ClearChildForm(), mainFormInContext.ApplicationController, saveButtonLabel: "Add Selections", cancelButtonLabel: "Return");
                     mainFormInContext.LoadChildForm(childForm);
                 }
                 catch (Exception ex)
