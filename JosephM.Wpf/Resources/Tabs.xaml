@@ -3,7 +3,8 @@
                     xmlns:application="clr-namespace:JosephM.Wpf.Application"
                     xmlns:query="clr-namespace:JosephM.Wpf.Query"
                     xmlns:recordEntry="clr-namespace:JosephM.Wpf.RecordEntry"
-                    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector">
+                    xmlns:templateSelector="clr-namespace:JosephM.Wpf.TemplateSelector"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary>
@@ -73,24 +74,19 @@
     <DataTemplate x:Key="TabItemHeaderTemplate">
         <DockPanel Margin="-5,-1,-4.5,-2.5" Style="{StaticResource TabHeaderPanel}"   >
             <DockPanel Margin="5,5,5,5" >
-                <TextBlock Style="{StaticResource TabLabelStyle}" Text="{Binding TabLabel}" />
+                <TextBlock
+                    Style="{StaticResource TabLabelStyle}">
+                    <TextBlock.Text>
+                        <Binding Path="TabLabel"
+                        Converter="{StaticResource StringTruncateConverter}">
+                            <Binding.ConverterParameter>
+                                <sys:Int32>30</sys:Int32>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </TextBlock.Text>
+                </TextBlock>
                 <Button Style="{StaticResource RemoveButtonStyle}" Command="{Binding TabCloseCommand}"
-                        ToolTip="Close This tab"
-                        >
-                    <!--<Grid HorizontalAlignment="Left" 
-                        Background="{DynamicResource BackgroundColor}"
-                        VerticalAlignment="Top" >
-                        <Ellipse Fill="Transparent"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch" />
-                        <Path Data="M40,53 L48,69 62,69 49,46 61,24 48,24 C48,24 40,39 40,39 40,39 32,24 32,24 L18,24 30,46 17,69 31,69 z" 
-                          Fill="{DynamicResource BorderColor}" 
-                          Stretch="Fill" 
-                          Margin="3,3,3,3"     
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                        />
-                    </Grid>-->
+                        ToolTip="Close This Tab" >
                 </Button>
             </DockPanel>
         </DockPanel>

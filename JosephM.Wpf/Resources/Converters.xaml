@@ -18,5 +18,6 @@
     <converters:ToLowerConverter x:Key="ToLowerConverter" />
     <converters:WidthConverter x:Key="WidthConverter" />
     <converters:LengthConverter x:Key="LengthConverter" />
-    <converters:BooleanToMultiSelectConverter x:Key="BooleanToMultiSelectConverter" /> 
+    <converters:BooleanToMultiSelectConverter x:Key="BooleanToMultiSelectConverter" />
+    <converters:StringTruncateConverter x:Key="StringTruncateConverter" />
 </ResourceDictionary>

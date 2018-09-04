@@ -166,6 +166,7 @@
     <Compile Include="Converters\FileRefToStringConverter.cs" />
     <Compile Include="Converters\NullOrEmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\LengthConverter.cs" />
+    <Compile Include="Converters\StringTruncateConverter.cs" />
     <Compile Include="Converters\TabbedApplicationHeightConverter.cs" />
     <Compile Include="Converters\ShellApplicationHeightConverter.cs" />
     <Compile Include="Extentions\UserControlExtentions.cs" />
