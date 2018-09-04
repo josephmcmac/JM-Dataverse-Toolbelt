@@ -42,11 +42,11 @@ namespace JosephM.Wpf.Grid
                 //this first part is for the query view model context
                 //basically if navigate in a query result we want the query view to scroll to the top
                 var scroller = FindParentOfType<ScrollViewer>(this);
-                if (scroller != null && scroller.Name == "QueryScroll")
+                if (scroller != null)// && scroller.Name == "QueryScroll")
                 {
                     var transform = TransformToVisual(scroller) as MatrixTransform;
                     if (transform != null)
-                        scroller.ScrollToVerticalOffset(transform.Matrix.OffsetY);
+                        scroller.ScrollToVerticalOffset(scroller.VerticalOffset + transform.Matrix.OffsetY);
                 }
 
                 //this i think is the scroller in the datagrid itself if it has a limited height
