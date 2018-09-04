@@ -739,9 +739,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ErrorIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
       <Project>{7bf3e622-67ca-4e67-a9ca-f3b334c954fd}</Project>
       <Name>JosephM.Application</Name>
