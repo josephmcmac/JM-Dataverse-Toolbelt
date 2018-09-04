@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using JosephM.Application.ViewModel.Grid;
+using JosephM.Core.Extentions;
+using JosephM.Record.Extentions;
+using JosephM.Record.Metadata;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
-using JosephM.Application.ViewModel.Grid;
-using JosephM.Record.Extentions;
-using JosephM.Record.Metadata;
 using System.Windows.Media;
-using System;
-using System.ComponentModel;
-using JosephM.Core.Extentions;
 
 namespace JosephM.Wpf.Grid
 {
@@ -39,14 +39,39 @@ namespace JosephM.Wpf.Grid
             //when the user navigates to a different page
             if (VisualTreeHelper.GetChildrenCount(DataGrid) > 0)
             {
-                var border = VisualTreeHelper.GetChild(DataGrid, 0) as Decorator;
-                if (border != null)
+                //this first part is for the query view model context
+                //basically if navigate in a query result we want the query view to scroll to the top
+                var scroller = FindParentOfType<ScrollViewer>(this);
+                if (scroller != null && scroller.Name == "QueryScroll")
                 {
-                    var scrollViewer = border.Child as ScrollViewer;
-                    if (scrollViewer != null)
-                        scrollViewer.ScrollToTop();
+                    var transform = TransformToVisual(scroller) as MatrixTransform;
+                    if (transform != null)
+                        scroller.ScrollToVerticalOffset(transform.Matrix.OffsetY);
                 }
+
+                //this i think is the scroller in the datagrid itself if it has a limited height
+                //in that case we want it to scroll to the top
+                //    var border = VisualTreeHelper.GetChild(DataGrid, 0) as Decorator;
+                //if (border != null)
+                //{
+                //    var scrollViewer = border.Child as ScrollViewer;
+                //    if (scrollViewer != null)
+                //        scrollViewer.ScrollToTop();
+                //}
             }
+        }
+
+        public static T FindParentOfType<T>(DependencyObject child) where T : DependencyObject
+        {
+            DependencyObject parentDepObj = child;
+            do
+            {
+                parentDepObj = VisualTreeHelper.GetParent(parentDepObj);
+                T parent = parentDepObj as T;
+                if (parent != null) return parent;
+            }
+            while (parentDepObj != null);
+            return null;
         }
 
         private void AddingNewItem(object sender, AddingNewItemEventArgs e)
