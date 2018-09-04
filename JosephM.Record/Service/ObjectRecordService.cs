@@ -301,7 +301,7 @@ namespace JosephM.Record.Service
                 newSorts.Reverse();
                 foreach (var sort in newSorts.Take(1))
                 {
-                    var comparer = new ObjectComparer(sort.FieldName);
+                    var comparer = new RecordComparer(sort.FieldName);
                     objects.Sort(comparer);
                     if (sort.SortType == SortType.Descending)
                         objects.Reverse();
@@ -821,40 +821,6 @@ namespace JosephM.Record.Service
                     }
             }
             throw new NotImplementedException(string.Format("{0} not implemented", condition.ConditionType));
-        }
-
-        public class ObjectComparer : IComparer<IRecord>
-        {
-            private string PropertyName { get; set; }
-            public ObjectComparer(string propertyName)
-            {
-                PropertyName = propertyName;
-            }
-
-            public int Compare(IRecord x, IRecord y)
-            {
-                var value1 = x.GetField(PropertyName);
-                var value2 = y.GetField(PropertyName);
-                if (value1 == null && value2 == null)
-                {
-                    return 0;
-                }
-                if (value2 == null)
-                {
-                    return 1;
-                }
-                else if (!(value1 is Enum) && value1 is IComparable)
-                {
-                    return ((IComparable)value1).CompareTo(value2);
-                }
-                var sortString1 = value1.ToString();
-                var sortString2 = value2.ToString();
-                if (value1 is Enum)
-                    sortString1 = ((Enum)value1).GetDisplayString();
-                if (value2 is Enum)
-                    sortString2 = ((Enum)value2).GetDisplayString();
-                return String.Compare(sortString1, sortString2, StringComparison.Ordinal);
-            }
         }
     }
 }
