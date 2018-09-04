@@ -77,25 +77,12 @@
                                                     <RowDefinition Height="Auto"  />
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
-                                                <Button
+                                                    <Button
                                                     HorizontalAlignment="Right"
                                                     Grid.Row="0" 
                                                     Style="{StaticResource RemoveButtonStyle}" 
-                                                    Command="{Binding RemoveCommand}" >
-                                                        <Grid HorizontalAlignment="Left" 
-                        Background="{DynamicResource BackgroundColor}"
-                        VerticalAlignment="Top" >
-                                                            <Ellipse Fill="Transparent"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch" />
-                                                            <Path Data="M40,53 L48,69 62,69 49,46 61,24 48,24 C48,24 40,39 40,39 40,39 32,24 32,24 L18,24 30,46 17,69 31,69 z" 
-                          Fill="{DynamicResource BorderColor}" 
-                          Stretch="Fill" 
-                          Margin="3,3,3,3"     
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                        />
-                                                        </Grid>
+                                                    Command="{Binding RemoveCommand}"
+                                                        ToolTip="Remove This Field">
                                                     </Button>
                                                 <TextBlock Grid.Row="1"
                                         Text="{Binding FieldLabel}"
@@ -147,8 +134,8 @@
                                     <TextBlock Grid.Column="0"
                                         Text="{Binding FieldLabel}"
                                         Style="{StaticResource FieldLabelStyle}" />
-                                    <Button HorizontalAlignment="Right" Grid.Column="1"  Style="{StaticResource RemoveButtonStyle}"  Command="{Binding AddCommand}" >
-                                        <Image Source="../Images/AddIcon.jpg" Height="15" Width="15" />
+                                    <Button HorizontalAlignment="Right" Grid.Column="1"  Style="{StaticResource AddNewButton}"  Command="{Binding AddCommand}"
+                                            ToolTip="Add This Field">
                                     </Button>
                                 </Grid>
                             </Border>

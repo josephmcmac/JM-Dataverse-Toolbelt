@@ -77,7 +77,7 @@
                 <Button Style="{StaticResource RemoveButtonStyle}" Command="{Binding TabCloseCommand}"
                         ToolTip="Close This tab"
                         >
-                    <Grid HorizontalAlignment="Left" 
+                    <!--<Grid HorizontalAlignment="Left" 
                         Background="{DynamicResource BackgroundColor}"
                         VerticalAlignment="Top" >
                         <Ellipse Fill="Transparent"
@@ -90,7 +90,7 @@
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
                         />
-                    </Grid>
+                    </Grid>-->
                 </Button>
             </DockPanel>
         </DockPanel>

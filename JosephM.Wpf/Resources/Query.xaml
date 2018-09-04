@@ -29,10 +29,10 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <Button
-                    Style="{StaticResource IconButton}"
+                    ToolTip="Remove This Join"
+                    Style="{StaticResource DeleteRowButton}"
                     Command="{Binding Remove}" 
                     Visibility="{Binding SelectedItem, Converter={StaticResource NullToHiddenConverter}}" >
-                    <Image Source="../Images/DeleteIcon.jpg" Height="15" Width="15" />
                 </Button>
                 <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextColor}">Join</TextBlock>
                 <ComboBox

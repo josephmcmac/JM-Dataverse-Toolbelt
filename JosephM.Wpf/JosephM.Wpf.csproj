@@ -763,31 +763,6 @@
       <Name>JosephM.Record</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Loading.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\DeleteIcon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\AddIcon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\EditIcon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Next.png" />
-    <Resource Include="Images\Previous.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\AddMultipleIcon.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Search.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\OpenRowIcon.jpg" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
