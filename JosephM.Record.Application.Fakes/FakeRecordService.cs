@@ -9,6 +9,8 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Service;
 using JosephM.Record.Extentions;
+using JosephM.Core.Extentions;
+using JosephM.Core.Test;
 
 #endregion
 
@@ -45,6 +47,7 @@ namespace JosephM.Application.ViewModel.Fakes
             CreateFakeRecord(FakeConstants.RecordType2, "Update");
             Create100DummyRecords();
             CreateTextSearchRecords();
+            CreateAllFieldRecords();
         }
 
         private void CreateTextSearchRecords()
@@ -137,6 +140,31 @@ namespace JosephM.Application.ViewModel.Fakes
             return CreateFakeRecord(FakeConstants.RecordType, stringField, additionalFields);
         }
 
+        private void CreateAllFieldRecords()
+        {
+            for (var i = 0; i < 2; i++)
+            {
+                var id = "Dummy" + (1 + i);
+                var entity = NewRecord(FakeConstants.AllFieldTypesType);
+                entity.SetField(FakeConstants.AllId, id, this);
+                entity.Id = id;
+                entity.SetField(FakeConstants.AllString, "All Fields Record" + (1 + i), this);
+                entity.SetField(FakeConstants.AllMemo, ("All Fields Record" + (1 + i) + "\n").ReplicateString(5), this);
+                entity.SetField(FakeConstants.AllPicklist, new PicklistOption("Key", "Label"), this);
+                entity.SetField(FakeConstants.AllInteger, 1, this);
+                entity.SetField(FakeConstants.AllBoolean, true, this);
+                entity.SetField(FakeConstants.AllDate, DateTime.Now, this);
+                entity.SetField(FakeConstants.AllLookup, this.ToLookupWithAltDisplayNameName(GetMainRecord()), this);
+                entity.SetField(FakeConstants.AllDecimal, (decimal)2, this);
+                entity.SetField(FakeConstants.AllMoney, (decimal)3, this);
+                entity.SetField(FakeConstants.AllPassword, new Password("Fake", false, true), this);
+                entity.SetField(FakeConstants.AllFolder, new Folder(CoreTest.TestingFolder), this);
+                entity.SetField(FakeConstants.AllDouble, (double)4, this);
+                entity.SetField(FakeConstants.AllRecordType, new RecordType(FakeConstants.RecordType, FakeConstants.RecordType), this);
+                Create(entity, null);
+            }
+        }
+
         private void Create100DummyRecords()
         {
             for (var i = 0; i < 100; i++)
@@ -213,7 +241,36 @@ namespace JosephM.Application.ViewModel.Fakes
             return new[]
             {
                 recordMetadata, recordMetadata2, CreateFakePostTypeMetadata(), CreateFakeActivityTypeMetadata(),
-                CreateContactTypeMetadata(), CreateActivityPartyTypeMetadata()
+                CreateContactTypeMetadata(), CreateActivityPartyTypeMetadata(), CreateAllFieldTypesMetadata()
+            };
+        }
+
+        private static RecordMetadata CreateAllFieldTypesMetadata()
+        {
+            return new RecordMetadata
+            {
+                SchemaName = FakeConstants.AllFieldTypesType,
+                DisplayName = FakeConstants.AllFieldTypesTypeLabel,
+                CollectionName = FakeConstants.AllFieldTypesTypeLabel,
+                Fields = new FieldMetadata[]
+                {
+                    new UniqueidentifierFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllId, FakeConstants.AllId) { IsPrimaryKey = true },
+                    new StringFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllString, FakeConstants.AllString) { IsPrimaryField = true },
+                    new MemoFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllMemo, FakeConstants.AllMemo),
+                    new PicklistFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllPicklist, FakeConstants.AllPicklist, new PicklistOptionSet(new [] { new PicklistOption("Key", "Value"), new PicklistOption("Key2", "Value2") })),
+                    new IntegerFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllInteger, FakeConstants.AllInteger),
+                    new BooleanFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllBoolean, FakeConstants.AllBoolean),
+                    new DateFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDate, FakeConstants.AllDate),
+                    new LookupFieldMetadata(FakeConstants.AllLookup, FakeConstants.AllLookup, FakeConstants.RecordType),
+                    new DecimalFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDecimal, FakeConstants.AllDecimal),
+                    new MoneyFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllMoney, FakeConstants.AllMoney),
+                    new PasswordFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllPassword, FakeConstants.AllPassword),
+                    new FolderFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllFolder, FakeConstants.AllFolder),
+                    new DoubleFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDouble, FakeConstants.AllDouble),
+                    new RecordTypeFieldMetadata(FakeConstants.AllRecordType, FakeConstants.AllRecordType),
+                    
+
+                }
             };
         }
 

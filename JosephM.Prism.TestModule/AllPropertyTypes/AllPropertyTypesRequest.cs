@@ -1,127 +1,93 @@
-﻿using JosephM.Application.ViewModel.Fakes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
+using JosephM.Core.Test;
+using JosephM.Record.Extentions;
+using JosephM.TestModule.AllPropertyTypes;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace JosephM.TestModule.TestDialog
+namespace JosephM.AllPropertyTypesModule.AllPropertyTypesDialog
 {
     [AllowSaveAndLoad]
-    [Group(Sections.DisplayFirst, true, 5)]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.SelectAll, true, order: 20, selectAll: true)]
-    [Group(Sections.TypesAndLookups, true, order: 30)]
-    [Group(Sections.Setting, true, order: 40)]
-    [DisplayName("Test Dialog")]
-    public class TestDialogRequest : ServiceRequestBase
+    public class AllPropertyTypesRequest : ServiceRequestBase
     {
-        public TestDialogRequest()
+        public AllPropertyTypesRequest()
         {
-            Items = new[] {new TestDialogRequestItem()};
+            StringField = DateTime.Now.ToFileTime().ToString();
+            MultilineStringField = (DateTime.Now.ToFileTime().ToString() + "\n").ReplicateString(10);
+            EnumPicklist = AllPropertyTypesEnum.Option100;
+            EnumMultiselect = new[] { AllPropertyTypesEnum.Option1, AllPropertyTypesEnum.Option100 };
+            Integer = 100;
+            Boolean = true;
+            Date = DateTime.Now;
+            LookupField = FakeRecordService.Get().ToLookupWithAltDisplayNameName(FakeRecordService.Get().GetFirst(FakeConstants.RecordType));
+            MultiLookupField = FakeRecordService.Get().ToLookupWithAltDisplayNameName(FakeRecordService.Get().GetFirst(FakeConstants.RecordType));
+            Decimal = 200;
+            Password = new Password("Fake", false, true);
+            Folder = new Folder(CoreTest.TestingFolder);
+            Double = 300;
+            RecordType = new RecordType(FakeConstants.RecordType, FakeConstants.RecordType);
+            Field = new RecordField(FakeConstants.LookupField, FakeConstants.LookupField);
+            BigInt = 500;
+            Hyperlink = new Url("http://www/google.com", "Google");
+            SettingsLookup = TestSettingsType.Create().Items.First();
         }
 
-        public IEnumerable<TestEnum> MultiSelect { get; set; }
+        public string StringField { get; set; }
 
-        [MyDescription("If set this will log a heap of errors in the service response")]
-        [Group(Sections.Main)]
-        public bool ThrowFatalErrors { get; set; }
+        [Multiline]
+        public string MultilineStringField { get; set; }
 
-        [MyDescription("If set this will log a heap of errors in the service response")]
-        [Group(Sections.Main)]
-        public bool ThrowResponseErrors { get; set; }
+        public AllPropertyTypesEnum EnumPicklist { get; set; }
 
-        [MyDescription("Will Wait Halfway Through Completion")]
-        [Group(Sections.Main)]
-        public bool Wait10SecondsHalfwayThrough { get; set; }
+        public IEnumerable<AllPropertyTypesEnum> EnumMultiselect { get; set; }
 
-        [Group(Sections.Main)]
+        [SettingsLookup(typeof(TestSettingsType), nameof(TestSettingsType.Items))]
+        public TestSettingsTypeEnumerated SettingsLookup { get; set; }
+
+        public int Integer { get; set; }
+
+        public bool Boolean { get; set; }
+
+        public DateTime Date { get; set; }
+
+        [ReferencedType(FakeConstants.RecordType)]
+        public Lookup LookupField { get; set; }
+
+        [ReferencedType(FakeConstants.RecordType)]
+        [ReferencedType(FakeConstants.RecordType2)]
+        public Lookup MultiLookupField { get; set; }
+
+        public decimal Decimal { get; set; }
+
+        public Password Password { get; set; }
+
+        public Folder Folder { get; set; }
+
+        public double Double { get; set; }
+
+        [RecordTypeFor(nameof(Field))]
+        public RecordType RecordType { get; set; }
+
+        public RecordField Field { get; set; }
+
+        public long BigInt { get; set; }
+
         [FileMask(FileMasks.ExcelFile)]
         public FileReference ExcelFile { get; set; }
 
-        [Group(Sections.Main)]
-        [FileMask(FileMasks.ZipFile)]
-        public FileReference ZipFile { get; set; }
+        public Url Hyperlink { get; set; }
 
-        [Group(Sections.Main)]
-        [FileMask(FileMasks.XmlFile)]
-        public FileReference XmlFile { get; set; }
+        public IEnumerable<AllPropertyTypesRequest> EnumerableField { get; set; }
 
-        [Group(Sections.Main)]
-        public Folder Folder { get; set; }
-
-        [Group(Sections.SelectAll)]
-        public bool Bool1 { get; set; }
-
-        [Group(Sections.SelectAll)]
-        public bool Bool2 { get; set; }
-
-        [Group(Sections.SelectAll)]
-        public bool Bool3 { get; set; }
-
-        //[Group(Sections.Setting)]
-        //[SettingsLookup(typeof(ITestSettings), nameof(ITestSettings.Settings))]
-        //public TestSetting TestSetting { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        [RecordTypeFor(nameof(Fields) + "." + nameof(FieldSetting.RecordField))]
-        [RecordTypeFor(nameof(SpecificRecordsToExport) + "." + nameof(LookupSetting.Record))]
-        public RecordType RecordType { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        [ReferencedType(FakeConstants.RecordType)]
-        [UsePicklist]
-        [OrderPriority(FakeConstants.MainRecordName, "TestingString")]
-        public Lookup LookupField { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        public IEnumerable<FieldSetting> Fields { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        public IEnumerable<LookupSetting> SpecificRecordsToExport { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
-
-        [Group(Sections.DisplayFirst)]
-        [DoNotAllowAdd]
-        public IEnumerable<TestDialogRequestItem> Items { get; set; }
-
-        private static class Sections
-        {
-            public const string DisplayFirst = "DisplayFirst";
-            public const string Main = "Main";
-            public const string Setting = "Setting";
-            public const string TypesAndLookups = "TypesAndLookups";
-            public const string SelectAll = "SelectAll";
-        }
-
-        public class TestDialogRequestItem
-        {
-            public TestDialogRequestItem()
-            {
-                ReadOnlyProp = "I Read Only";
-            }
-
-            public IEnumerable<TestEnum> MultiSelect { get; set; }
-
-            [ReferencedType(FakeConstants.RecordType)]
-            public IEnumerable<FieldSetting> Fields { get; set; }
-
-            [ReferencedType(FakeConstants.RecordType)]
-            public IEnumerable<LookupSetting> Lookups { get; set; }
-
-            [ReadOnlyWhenSet]
-            public string ReadOnlyProp { get; set; }
-
-            [FileMask(FileMasks.CsvFile)]
-            public FileReference CsvFile { get; set; }
-        }
-
-        public enum TestEnum
+        public enum AllPropertyTypesEnum
         {
             Option1,
             Option2,

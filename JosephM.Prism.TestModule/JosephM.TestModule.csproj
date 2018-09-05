@@ -78,10 +78,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllPropertyTypes\TestSettingsTypeEnumerated.cs" />
+    <Compile Include="AllPropertyTypes\TestSettingsType.cs" />
     <Compile Include="ObjectEncrypt\TestClassToEncrypt.cs" />
     <Compile Include="ObjectEncrypt\TestObjectEncryptDialog.cs" />
     <Compile Include="TestCrud\TestCrudDialog.cs" />
     <Compile Include="TestCrud\TestCrudModule.cs" />
+    <Compile Include="AllPropertyTypes\AllPropertyTypesDialog.cs" />
+    <Compile Include="AllPropertyTypes\AllPropertyTypesModule.cs" />
+    <Compile Include="AllPropertyTypes\AllPropertyTypesRequest.cs" />
+    <Compile Include="AllPropertyTypes\AllPropertyTypesResponse.cs" />
+    <Compile Include="AllPropertyTypes\AllPropertyTypesResponseItem.cs" />
+    <Compile Include="AllPropertyTypes\AllPropertyTypesService.cs" />
     <Compile Include="TestGridEdit\TestDialogBase.cs" />
     <Compile Include="TestGridEdit\TestDialogModule.cs" />
     <Compile Include="TestGridEdit\TestDialogRequest.cs" />

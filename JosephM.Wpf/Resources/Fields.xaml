@@ -18,6 +18,7 @@
         <Setter Property="Margin" Value="8,8,8,8" />
         <Setter Property="MinHeight" Value="25" />
         <Setter Property="MaxHeight" Value="300" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
     </Style>
     <Style x:Key="FieldEntryButtonGridStyle" TargetType="Grid">
@@ -50,6 +51,7 @@
         <Setter Property="MinWidth" Value="100" />
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding DoNotLimitDisplayHeight}" Value="True">
@@ -81,7 +83,8 @@
                   CornerRadius="0"
                   Background="{DynamicResource FieldEntryBackgroundColor}"
                   BorderBrush="{DynamicResource BorderColor}"
-                  BorderThickness="1" />
+                  BorderThickness="1">
+            </Border>
             <Border 
                   Grid.Column="0"
                   CornerRadius="0" 
@@ -160,7 +163,7 @@
                                 x:Name="DropDownBorder"
                                 Background="{DynamicResource BackgroundColor}"
                                 BorderThickness="1"
-                                BorderBrush="{DynamicResource TextColor}" />
+                                BorderBrush="{DynamicResource BorderColor}" />
                                 <ScrollViewer Margin="8,6,8,8" SnapsToDevicePixels="True">
                                     <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
                                 </ScrollViewer>

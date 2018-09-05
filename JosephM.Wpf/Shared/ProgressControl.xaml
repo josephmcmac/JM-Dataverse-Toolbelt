@@ -25,8 +25,8 @@
             Value="{Binding FractionCompleted}"
             Minimum="0"
             Maximum="1"
-            Foreground="{DynamicResource TextColor}"
-            Background="{DynamicResource SelectedBackgroundColor}"
+            Foreground="{DynamicResource BorderColor}"
+            Background="Transparent"
             />
     </StackPanel>
 </UserControl>

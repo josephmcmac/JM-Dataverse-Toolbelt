@@ -15,9 +15,16 @@
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="TabLabelStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="Padding" Value="4,0,4,0" />
         <Setter Property="Margin" Value="3,3,3,3" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsActiveTabItem}" Value="True">
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="FontSize" Value="14" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="TabHeaderPanel" TargetType="{x:Type DockPanel}">
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />

@@ -18,19 +18,30 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" >
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition MinWidth="150" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BoolToVis}}">
-            <ComboBox
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+            <TextBox
+                Style="{StaticResource  StringFieldEntryStyleReadOnly}"
+                TextWrapping="WrapWithOverflow"
+                VerticalScrollBarVisibility="Auto"
+                TabIndex="1"
+                Text="{Binding Mode=OneWay, Path=EnteredText}"
+                Height="Auto">
+            </TextBox>
+        </Grid>
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition MinWidth="150" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BoolToVis}}">
+                <ComboBox
                 MinWidth="150"
                 VerticalAlignment="Top"
                 TabIndex="1"
@@ -41,9 +52,9 @@
                 SelectedItem="{Binding SelectedRecordType, Mode=TwoWay}"
                 IsEnabled="{Binding IsEditable}"
              />
-        </Grid>
-        <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
-            <TextBox
+            </Grid>
+            <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
+                <TextBox
                 TabIndex="1"
                 DataContext="{Binding NotifyOnValidationError=True}"
                 Text="{Binding Path=EnteredText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -52,35 +63,36 @@
                 Style="{StaticResource LookupFieldEntryStyle}"
                 IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
                 PreviewKeyDown="OnPreviewKeyDown" />
-        </Grid>
-        <Grid
+            </Grid>
+            <Grid
             Style="{StaticResource FieldEntryButtonGridStyle}"
             Grid.Column="2"
             Row="0"
             Visibility="{Binding EditableAndTypePopulated, Converter={StaticResource BoolToVis}}">
-            <Button DataContext="{Binding Path=XrmButton}"
+                <Button DataContext="{Binding Path=XrmButton}"
                         Style="{StaticResource SearchButton}"
                             Command="{Binding Command}" ToolTip="Click To Search" />
-        </Grid>
-        <Grid
+            </Grid>
+            <Grid
             Style="{StaticResource FieldEntryButtonGridStyle}"
             Grid.Column="3"
             Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" >
-            <Button DataContext="{Binding Path=NewButton}"
+                <Button DataContext="{Binding Path=NewButton}"
                         Style="{StaticResource AddNewButton}"
                             Command="{Binding Command}" ToolTip="Click To Create New" />
-        </Grid>
-        <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="4" Row="1" >
-            <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding Searching}" StaysOpen="False">
-                <TextBlock Text="Searching..." />
-            </Popup>
-            <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding LookupGridVisible}" StaysOpen="False">
-                <Border>
-                    <field:LookupGridView
-                    Background="WhiteSmoke"
+            </Grid>
+            <Grid Name="PopupGrid" Grid.Column="0" Grid.ColumnSpan="4" Row="1" >
+                <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding Searching}" StaysOpen="False">
+                    <TextBlock Text="Searching..." />
+                </Popup>
+                <Popup PlacementTarget="{Binding ElementName=EnteredTextBox}" IsOpen="{Binding LookupGridVisible}" StaysOpen="False">
+                    <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" >
+                        <field:LookupGridView
+                    Background="{DynamicResource BackgroundColor}"
                     DataContext="{Binding LookupGridViewModel}"/>
-                </Border>
-            </Popup>
+                    </Border>
+                </Popup>
+            </Grid>
         </Grid>
     </Grid>
 </field:FieldControlBase>

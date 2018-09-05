@@ -52,7 +52,7 @@ namespace JosephM.Application.Desktop.Application
         }
 
         private object _activeTabItem;
-        public object ActiveTabItem
+        public override object ActiveTabItem
         {
             get
             {
@@ -62,6 +62,13 @@ namespace JosephM.Application.Desktop.Application
             {
                 _activeTabItem = value;
                 OnPropertyChanged(nameof(ActiveTabItem));
+                foreach (var loadedObject in LoadedObjects)
+                {
+                    if (loadedObject is TabAreaViewModelBase)
+                    {
+                        ((TabAreaViewModelBase)loadedObject).OnPropertyChanged(nameof(TabAreaViewModelBase.IsActiveTabItem));
+                    }
+                }
             }
         }
 

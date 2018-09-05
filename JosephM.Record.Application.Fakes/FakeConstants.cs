@@ -71,6 +71,23 @@ namespace JosephM.Application.ViewModel.Fakes
             }
         }
 
+        public const string AllFieldTypesType = "AllFieldTypesType";
+        public const string AllFieldTypesTypeLabel = "All Field Types";
+        public const string AllId = "Id";
+        public const string AllMemo = "Memo";
+        public const string AllString = "String";
+        public const string AllPicklist = "Picklist";
+        public const string AllInteger = "Integer";
+        public const string AllBoolean = "Boolean";
+        public const string AllDate = "Date";
+        public const string AllLookup = "Lookup";
+        public const string AllDecimal = "Decimal";
+        public const string AllMoney = "Money";
+        public const string AllPassword = "Password";
+        public const string AllFolder = "Folder";
+        public const string AllDouble = "Double";
+        public const string AllRecordType = "RecordType";
+
         public const string MainRecordName = "Main Record";
 
 

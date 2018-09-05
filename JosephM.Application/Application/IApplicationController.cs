@@ -80,5 +80,7 @@ namespace JosephM.Application.Application
         bool AllowSaveRequests { get; }
 
         bool IsTabbedApplication { get; }
+
+        object ActiveTabItem { get; set; }
     }
 }

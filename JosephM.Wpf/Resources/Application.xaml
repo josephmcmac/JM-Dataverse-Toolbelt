@@ -44,7 +44,7 @@
         <Setter Property="Padding" Value="0" />
     </Style>
     <DataTemplate x:Key="OptionDropdownTemplate" DataType="applicationOptions:ApplicationOption" >
-        <Button Margin="0,0,0,0" Content="{Binding Label}"
+        <Button  BorderThickness="1,0,1,1" Margin="0,0,0,0" Content="{Binding Label}"
                 Command="{Binding DelegateCommand}" Style="{StaticResource MainMenuButton}" 
                 ToolTip="{Binding Description}" />
     </DataTemplate>
@@ -64,7 +64,7 @@
         <application:ApplicationMenuGroupView Content="{Binding Label}"  />
     </DataTemplate>
     <DataTemplate x:Key="ButtonDropdownTemplate" DataType="applicationOptions:ApplicationOption">
-        <Button Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
+        <Button BorderThickness="1,0,1,1" Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
                 Command="{Binding DelegateCommand}" ToolTip="{Binding Description}" />
     </DataTemplate>
 </ResourceDictionary>
