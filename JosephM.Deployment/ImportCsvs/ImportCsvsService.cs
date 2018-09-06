@@ -175,7 +175,7 @@ namespace JosephM.Deployment.ImportCsvs
                     response.AddResponseItem(new ImportCsvsResponseItem("Not Imported", csvFile, ex));
                 }
             }
-            var imports = DoImport(entities, controller, request.MaskEmails);
+            var imports = DoImport(entities, controller, request.MaskEmails, matchExistingRecords: request.MatchByName);
             foreach (var item in imports)
                 response.AddResponseItem(new ImportCsvsResponseItem(item));
         }
