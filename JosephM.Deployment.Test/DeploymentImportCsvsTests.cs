@@ -18,6 +18,52 @@ namespace JosephM.Deployment.Test
     public class DeploymentImportCsvsTests : XrmModuleTest
     {
         [DeploymentItem(@"Files\Account.csv")]
+        [DeploymentItem(@"Files\Contact.csv")]
+        [TestMethod]
+        public void DeploymentExportImportCsvAccountAndContactsTest()
+        {
+            PrepareTests();
+            var workFolder = ClearFilesAndData(new[]
+            {
+                Entities.account,
+                Entities.contact
+            });
+
+            File.Copy(@"Account.csv", Path.Combine(workFolder, @"Account.csv"));
+            File.Copy(@"Contact.csv", Path.Combine(workFolder, @"Contact.csv"));
+
+            var application = CreateAndLoadTestApplication<ImportCsvsModule>();
+
+            var request = new ImportCsvsRequest
+            {
+                FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
+                CsvsToImport = new []
+                {
+                    new ImportCsvsRequest.CsvToImport { Csv = new FileReference(Path.Combine(workFolder, @"Contact.csv")) },
+                    new ImportCsvsRequest.CsvToImport { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) },
+                },
+                
+                DateFormat = DateFormat.American
+            };
+
+            var response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
+            if (response.HasError)
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.XrmDisplayString());
+
+            var accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            var contacts = XrmService.RetrieveAllEntityType(Entities.contact);
+            Assert.AreEqual(1, accounts.Count());
+            Assert.AreEqual(2, contacts.Count());
+
+            foreach (var contact in contacts)
+            {
+                Assert.AreEqual(accounts.First().Id, contact.GetLookupGuid(Fields.contact_.parentcustomerid));
+                Assert.IsNotNull(contact.GetStringField(Fields.contact_.firstname));
+                Assert.IsNotNull(contact.GetStringField(Fields.contact_.lastname));
+            }
+        }
+
+        [DeploymentItem(@"Files\Account.csv")]
         [DeploymentItem(@"Files\jmcg_testentity_account.csv")]
         [DeploymentItem(@"Files\Test Entity.csv")]
         [DeploymentItem(@"Files\Test Entity Two.csv")]

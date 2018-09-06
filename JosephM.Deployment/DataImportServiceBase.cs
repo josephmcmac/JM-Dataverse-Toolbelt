@@ -182,7 +182,7 @@ namespace JosephM.Deployment
 
                     foreach (var field in fields)
                     {
-                        if (thatTypeEntities.Any(e => e.GetLookupType(field) == type))
+                        if (thatTypeEntities.Any(e => e.GetLookupType(field).Split(',').Contains(type)))
                         {
                             orderedTypes.Insert(orderedTypes.IndexOf(type2), type);
                             break;
