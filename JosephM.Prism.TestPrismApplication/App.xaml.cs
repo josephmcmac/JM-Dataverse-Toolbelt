@@ -1,11 +1,12 @@
-﻿using JosephM.AllPropertyTypesModule.AllPropertyTypesDialog;
-using JosephM.Application.Desktop.Application;
+﻿using JosephM.Application.Desktop.Application;
 using JosephM.Application.Desktop.Console;
 using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.Application.Desktop.Module.Themes;
 using JosephM.Core.FieldType;
 using JosephM.ObjectEncryption;
+using JosephM.TestModule.AllPropertyTypesCompact;
+using JosephM.TestModule.AllPropertyTypesModule;
 using JosephM.TestModule.ObjectEncrypt;
 using JosephM.TestModule.TestCrud;
 using JosephM.TestModule.TestDialog;
@@ -42,6 +43,7 @@ namespace JosephM.TestDesktopApplication
             app.AddModule<TestGridEditModule>();
             app.AddModule<ThemeModule>();
             app.AddModule<AllPropertyTypesDialogModule>();
+            app.AddModule<AllPropertyTypesCompactModule>();
             app.AddModule<TestAppAboutModule>();
             app.Run();
         }

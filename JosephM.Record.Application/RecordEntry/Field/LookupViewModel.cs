@@ -33,7 +33,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     }
                     else
                     {
-                        var recordTypes = splitIt
+                        var recordTypes = LookupService == null
+                            ? new RecordType[0]
+                            : splitIt
                             .Select(s => LookupService.GetRecordTypeMetadata(s))
                             .Select(r => new RecordType(r.SchemaName, r.DisplayName))
                             .ToArray();

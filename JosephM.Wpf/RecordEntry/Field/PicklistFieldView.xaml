@@ -28,6 +28,7 @@
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
             <ComboBox
+                                MinWidth="100"
                 Name="ComboBox"
                 DisplayMemberPath="Value"
                 ItemsSource="{Binding ItemsSource}"

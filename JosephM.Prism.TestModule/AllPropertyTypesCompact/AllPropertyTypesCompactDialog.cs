@@ -3,13 +3,13 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Shared;
 
-namespace JosephM.TestModule.AllPropertyTypesModule
+namespace JosephM.TestModule.AllPropertyTypesCompact
 {
-    public class AllPropertyTypesDialog :
-        ServiceRequestDialog<AllPropertyTypesService, AllPropertyTypesRequest, AllPropertyTypesResponse, AllPropertyTypesResponseItem>
+    public class AllPropertyTypesCompactDialog :
+        ServiceRequestDialog<AllPropertyTypesCompactService, AllPropertyTypesCompactRequest, AllPropertyTypesCompactResponse, AllPropertyTypesCompactResponseItem>
     {
-        public AllPropertyTypesDialog(IDialogController dialogController)
-            : base(new AllPropertyTypesService(), dialogController, FakeRecordService.Get())
+        public AllPropertyTypesCompactDialog(IDialogController dialogController)
+            : base(new AllPropertyTypesCompactService(), dialogController, FakeRecordService.Get())
         {
             
         }

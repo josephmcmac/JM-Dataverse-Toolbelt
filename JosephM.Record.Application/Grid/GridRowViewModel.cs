@@ -12,6 +12,7 @@ using JosephM.Application.ViewModel.TabArea;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using JosephM.Record.Metadata;
 
 #endregion
 
@@ -33,6 +34,11 @@ namespace JosephM.Application.ViewModel.Grid
             EditRowViewModel = new XrmButtonViewModel("Open", EditRow, ApplicationController, description: "Open This Item");
             EditRowNewTabViewModel = new XrmButtonViewModel("Open In New Tab", EditRowNewTab, ApplicationController, description: "Open This Item In New Tab");
             EditRowNewWindowViewModel = new XrmButtonViewModel("Open In New Window", EditRowNewTab, ApplicationController, description: "Open This Item In New Window");
+        }
+
+        public override HorizontalJustify GetHorizontalJustify(RecordFieldType fieldType)
+        {
+            return GridViewModel == null ? HorizontalJustify.Left : GridViewModel.GetHorizontalJustify(fieldType);
         }
 
         public DynamicGridViewModel GridViewModel { get; private set; }

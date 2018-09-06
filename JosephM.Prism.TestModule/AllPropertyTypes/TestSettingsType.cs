@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JosephM.TestModule.AllPropertyTypes
+namespace JosephM.TestModule.AllPropertyTypesModule
 {
     public class TestSettingsType
     {

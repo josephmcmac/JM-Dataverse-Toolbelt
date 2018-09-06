@@ -55,46 +55,49 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         private void SetNewAction()
         {
-            NewAction = () =>
+            if (SettingsAttribute.AllowAddNew)
             {
-                var settingsObject = GetSettingsObject();
-                var propertyInfo = settingsObject.GetType().GetProperty(SettingsAttribute.PropertyName);
-                var enumerateType = propertyInfo.PropertyType.GenericTypeArguments[0];
-                var newSettingObject = enumerateType.CreateFromParameterlessConstructor();
-
-                var objectRecordService = new ObjectRecordService(newSettingObject, ApplicationController, null);
-                var formService = new ObjectFormService(newSettingObject, objectRecordService);
-                var formController = new FormController(objectRecordService, formService, ApplicationController);
-
-                Action onSave = () =>
+                NewAction = () =>
                 {
+                    var settingsObject = GetSettingsObject();
+                    var propertyInfo = settingsObject.GetType().GetProperty(SettingsAttribute.PropertyName);
+                    var enumerateType = propertyInfo.PropertyType.GenericTypeArguments[0];
+                    var newSettingObject = enumerateType.CreateFromParameterlessConstructor();
+
+                    var objectRecordService = new ObjectRecordService(newSettingObject, ApplicationController, null);
+                    var formService = new ObjectFormService(newSettingObject, objectRecordService);
+                    var formController = new FormController(objectRecordService, formService, ApplicationController);
+
+                    Action onSave = () =>
+                    {
                     //add the new item to the permanent settings
                     var settingsManager = ApplicationController.ResolveType<ISettingsManager>();
-                    settingsObject = GetSettingsObject();
-                    var settingsService = new ObjectRecordService(settingsObject, ApplicationController);
-                    var currentSettings = settingsService.RetrieveAll(enumerateType.AssemblyQualifiedName, null)
-                        .Select(r => ((ObjectRecord)r).Instance)
-                        .ToList();
-                    currentSettings.Add(newSettingObject);
-                    settingsObject.SetPropertyValue(SettingsAttribute.PropertyName, enumerateType.ToNewTypedEnumerable(currentSettings));
-                    settingsManager.SaveSettingsObject(settingsObject);
-                    ValueObject = newSettingObject;
-                    if (UsePicklist)
-                    {
+                        settingsObject = GetSettingsObject();
+                        var settingsService = new ObjectRecordService(settingsObject, ApplicationController);
+                        var currentSettings = settingsService.RetrieveAll(enumerateType.AssemblyQualifiedName, null)
+                            .Select(r => ((ObjectRecord)r).Instance)
+                            .ToList();
+                        currentSettings.Add(newSettingObject);
+                        settingsObject.SetPropertyValue(SettingsAttribute.PropertyName, enumerateType.ToNewTypedEnumerable(currentSettings));
+                        settingsManager.SaveSettingsObject(settingsObject);
+                        ValueObject = newSettingObject;
+                        if (UsePicklist)
+                        {
                         //reload the picklist
                         ValueObject = newSettingObject;
-                        LoadPicklistItems();
-                    }
-                    else
-                    {
-                        SetEnteredTestWithoutClearingValue(ValueObject.ToString());
-                    }
-                    RecordEntryViewModel.ClearChildForm();
-                };
+                            LoadPicklistItems();
+                        }
+                        else
+                        {
+                            SetEnteredTestWithoutClearingValue(ValueObject.ToString());
+                        }
+                        RecordEntryViewModel.ClearChildForm();
+                    };
 
-                var newSettingForm = new ObjectEntryViewModel(onSave, RecordEntryViewModel.ClearChildForm, newSettingObject, formController);
-                RecordEntryViewModel.LoadChildForm(newSettingForm);
-            };
+                    var newSettingForm = new ObjectEntryViewModel(onSave, RecordEntryViewModel.ClearChildForm, newSettingObject, formController);
+                    RecordEntryViewModel.LoadChildForm(newSettingForm);
+                };
+            }
         }
 
         private object GetSettingsObject()

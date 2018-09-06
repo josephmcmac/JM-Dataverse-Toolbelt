@@ -1,8 +1,7 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.Attributes;
-using JosephM.TestModule.AllPropertyTypes;
 
-namespace JosephM.AllPropertyTypesModule.AllPropertyTypesDialog
+namespace JosephM.TestModule.AllPropertyTypesModule
 {
     [MyDescription("Just a fake dialog for AllPropertyTypesing")]
     public class AllPropertyTypesDialogModule :

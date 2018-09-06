@@ -19,18 +19,30 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid  Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}"  MinWidth="150">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0"
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToHidden}}" >
+            <TextBox
+                Style="{StaticResource  StringFieldEntryStyleReadOnly}"
+                TextWrapping="WrapWithOverflow"
+                VerticalScrollBarVisibility="Auto"
+                TabIndex="1"
+                Text="{Binding Mode=OneWay, Path=ValueObject}"
+                Height="Auto">
+            </TextBox>
+        </Grid>
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
                   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToHidden}, Mode=OneWay}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <ComboBox
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <ComboBox
+                    MinWidth="100"
                     TabIndex="1"
                     Name="ComboBox"
                     Tag="Key"
@@ -39,11 +51,12 @@
                     SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}"
                     IsEnabled="{Binding IsEditable}"
                     Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
-            </Grid>
-            <Grid Grid.Column="1" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" Style="{StaticResource FieldEntryButtonGridStyle}">
-                <Button DataContext="{Binding Path=NewButton}" Style="{StaticResource AddNewButton}"
+                </Grid>
+                <Grid Grid.Column="1" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" Style="{StaticResource FieldEntryButtonGridStyle}">
+                    <Button DataContext="{Binding Path=NewButton}" Style="{StaticResource AddNewButton}"
                             Command="{Binding Command}" ToolTip="Click To Create New">
-                </Button>
+                    </Button>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

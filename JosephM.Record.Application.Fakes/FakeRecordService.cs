@@ -94,14 +94,19 @@ namespace JosephM.Application.ViewModel.Fakes
 
 
             var contact = CreateFakeRecord(FakeConstants.FakeContactType, testingString + " Contact");
+            var contact2 = CreateFakeRecord(FakeConstants.FakeContactType, testingString + " Contact 2");
             var activity = CreateFakeRecord(FakeConstants.FakeEmailType, "This Is An Activity");
             activity.SetField(FakeConstants.FakeEmailTypeContentField, SampleHtml, this);
             Update(activity, null);
             var activityParty = CreateFakeRecord(FakeConstants.FakeActivityPartyType, "Activity Party");
-            activityParty.SetField("partyid", new Lookup(contact.Type, contact.Id, null), this);
-            activityParty.SetField("activityid", new Lookup(activity.Type, activity.Id, null), this);
+            activityParty.SetField(FakeConstants.FakeActivityPartyTypePartyField, new Lookup(contact.Type, contact.Id, null), this);
+            activityParty.SetField(FakeConstants.FakeActivityPartyTypeActivityField, new Lookup(activity.Type, activity.Id, null), this);
             Update(activityParty, null);
-            activity.SetField(FakeConstants.FakeEmailTypeActivityParty, new[] {activityParty}, this);
+            var activityParty2 = CreateFakeRecord(FakeConstants.FakeActivityPartyType, "Activity Party 2");
+            activityParty2.SetField(FakeConstants.FakeActivityPartyTypePartyField, new Lookup(contact2.Type, contact2.Id, null), this);
+            activityParty2.SetField(FakeConstants.FakeActivityPartyTypeActivityField, new Lookup(activity.Type, activity.Id, null), this);
+            Update(activityParty2, null);
+            activity.SetField(FakeConstants.FakeEmailTypeActivityParty, new[] {activityParty, activityParty2}, this);
             Update(activity, null);
         }
 
@@ -151,16 +156,20 @@ namespace JosephM.Application.ViewModel.Fakes
                 entity.SetField(FakeConstants.AllString, "All Fields Record" + (1 + i), this);
                 entity.SetField(FakeConstants.AllMemo, ("All Fields Record" + (1 + i) + "\n").ReplicateString(5), this);
                 entity.SetField(FakeConstants.AllPicklist, new PicklistOption("Key", "Label"), this);
+                entity.SetField(FakeConstants.AllPicklistMulti, new[] { new PicklistOption("Key", "Label"), new PicklistOption("Key3", "Label3") }, this);
                 entity.SetField(FakeConstants.AllInteger, 1, this);
+                entity.SetField(FakeConstants.AllIntegerPicklist, 2, this);
                 entity.SetField(FakeConstants.AllBoolean, true, this);
                 entity.SetField(FakeConstants.AllDate, DateTime.Now, this);
                 entity.SetField(FakeConstants.AllLookup, this.ToLookupWithAltDisplayNameName(GetMainRecord()), this);
+                entity.SetField(FakeConstants.AllLookupMulti, this.ToLookupWithAltDisplayNameName(this.GetFirst(FakeConstants.RecordType2)), this);
                 entity.SetField(FakeConstants.AllDecimal, (decimal)2, this);
                 entity.SetField(FakeConstants.AllMoney, (decimal)3, this);
                 entity.SetField(FakeConstants.AllPassword, new Password("Fake", false, true), this);
                 entity.SetField(FakeConstants.AllFolder, new Folder(CoreTest.TestingFolder), this);
                 entity.SetField(FakeConstants.AllDouble, (double)4, this);
                 entity.SetField(FakeConstants.AllRecordType, new RecordType(FakeConstants.RecordType, FakeConstants.RecordType), this);
+                entity.SetField(FakeConstants.AllActivityParty, this.RetrieveAll(FakeConstants.FakeActivityPartyType, null), this);
                 Create(entity, null);
             }
         }
@@ -258,18 +267,20 @@ namespace JosephM.Application.ViewModel.Fakes
                     new StringFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllString, FakeConstants.AllString) { IsPrimaryField = true },
                     new MemoFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllMemo, FakeConstants.AllMemo),
                     new PicklistFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllPicklist, FakeConstants.AllPicklist, new PicklistOptionSet(new [] { new PicklistOption("Key", "Value"), new PicklistOption("Key2", "Value2") })),
+                    new PicklistFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllPicklistMulti, FakeConstants.AllPicklistMulti, new PicklistOptionSet(new [] { new PicklistOption("Key", "Value"), new PicklistOption("Key2", "Value2"), new PicklistOption("Key3", "Value3") })) { IsMultiSelect = true },
                     new IntegerFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllInteger, FakeConstants.AllInteger),
+                    new IntegerFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllIntegerPicklist, FakeConstants.AllIntegerPicklist) { IntegerFormat = IntegerType.Language },
                     new BooleanFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllBoolean, FakeConstants.AllBoolean),
                     new DateFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDate, FakeConstants.AllDate),
                     new LookupFieldMetadata(FakeConstants.AllLookup, FakeConstants.AllLookup, FakeConstants.RecordType),
+                    new LookupFieldMetadata(FakeConstants.AllLookupMulti, FakeConstants.AllLookupMulti, FakeConstants.RecordType + "," + FakeConstants.RecordType2),
                     new DecimalFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDecimal, FakeConstants.AllDecimal),
                     new MoneyFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllMoney, FakeConstants.AllMoney),
                     new PasswordFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllPassword, FakeConstants.AllPassword),
                     new FolderFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllFolder, FakeConstants.AllFolder),
                     new DoubleFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDouble, FakeConstants.AllDouble),
                     new RecordTypeFieldMetadata(FakeConstants.AllRecordType, FakeConstants.AllRecordType),
-                    
-
+                    new ActivityPartyFieldMetadata(FakeConstants.AllActivityParty, FakeConstants.AllActivityParty),
                 }
             };
         }
@@ -279,8 +290,8 @@ namespace JosephM.Application.ViewModel.Fakes
             return new RecordMetadata
             {
                 SchemaName = FakeConstants.FakeActivityPartyType,
-                DisplayName = FakeConstants.FakeActivityPartyType,
-                CollectionName = FakeConstants.FakeActivityPartyType,
+                DisplayName = FakeConstants.FakeActivityPartyTypeLabel,
+                CollectionName = FakeConstants.FakeActivityPartyTypeLabel,
                 Fields = new FieldMetadata[]
                 {
                     new StringFieldMetadata(FakeConstants.FakeActivityPartyTypeId, FakeConstants.FakeContactTypeId) { IsPrimaryKey = true },
@@ -460,6 +471,13 @@ namespace JosephM.Application.ViewModel.Fakes
         public override IFormService GetFormService()
         {
             return _formService;
+        }
+
+        public override IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
+        {
+            if (field == FakeConstants.AllIntegerPicklist)
+                return new[] { new PicklistOption("1", "One"), new PicklistOption("2", "Two"), new PicklistOption("3", "Three") };
+            return base.GetPicklistKeyValues(field, recordType, dependentValue, record);
         }
     }
 }

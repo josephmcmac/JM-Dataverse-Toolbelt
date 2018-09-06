@@ -1,15 +1,15 @@
-﻿namespace JosephM.TestModule.AllPropertyTypesModule
+﻿namespace JosephM.TestModule.AllPropertyTypesCompact
 {
-    public class TestSettingsTypeEnumerated
+    public class TestSettingsTypeCompactEnumerated
     {
         private string Name { get; set; }
 
-        public TestSettingsTypeEnumerated()
+        public TestSettingsTypeCompactEnumerated()
         {
 
         }
 
-        public TestSettingsTypeEnumerated(string name)
+        public TestSettingsTypeCompactEnumerated(string name)
         {
             Name = name;
         }

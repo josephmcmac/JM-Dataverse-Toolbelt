@@ -1,5 +1,3 @@
-#region
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,8 +19,6 @@ using System.IO;
 using JosephM.Record.Extentions;
 using JosephM.Application.ViewModel.Dialog;
 
-#endregion
-
 namespace JosephM.Application.ViewModel.Grid
 {
     /// <summary>
@@ -43,7 +39,10 @@ namespace JosephM.Application.ViewModel.Grid
             PreviousPageButton = new XrmButtonViewModel("Prev", () =>
             {
                 if (PreviousPageButton.Enabled)
+                {
+                    HasNavigated = true;
                     --CurrentPage;
+                }
             }, ApplicationController)
             {
                 Enabled = false
@@ -51,7 +50,10 @@ namespace JosephM.Application.ViewModel.Grid
             NextPageButton = new XrmButtonViewModel("Next", () =>
             {
                 if (NextPageButton.Enabled)
+                {
+                    HasNavigated = true;
                     ++CurrentPage;
+                }
             }, ApplicationController)
             {
                 Enabled = false
@@ -60,6 +62,24 @@ namespace JosephM.Application.ViewModel.Grid
             LoadDialog = (d) => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(LoadDialog))); };
             RemoveParentDialog = () => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(RemoveParentDialog))); };
         }
+
+        public HorizontalJustify GetHorizontalJustify(RecordFieldType fieldType)
+        {
+            if (new[] { RecordFieldType.Boolean, RecordFieldType.Url }.Contains(fieldType))
+            {
+                return HorizontalJustify.Middle;
+            }
+            else if (IsReadOnly && new[] { RecordFieldType.Lookup, RecordFieldType.Date, RecordFieldType.RecordType, RecordFieldType.RecordField, RecordFieldType.Picklist, RecordFieldType.Integer, RecordFieldType.Decimal, RecordFieldType.Double, RecordFieldType.Money }.Contains(fieldType))
+            {
+                return HorizontalJustify.Middle;
+            }
+            else
+            {
+                return HorizontalJustify.Left;
+            }
+        }
+
+        public bool HasNavigated { get; set; }
 
         public int MaxHeight { get; set; }
 

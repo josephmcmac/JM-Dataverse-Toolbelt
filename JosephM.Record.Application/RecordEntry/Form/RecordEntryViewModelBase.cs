@@ -10,6 +10,7 @@ using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.IService;
 using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Record.Metadata;
 
 #endregion
 
@@ -22,6 +23,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         {
             FormController = formController;
             OnlyValidate = onlyValidate;
+        }
+
+        public virtual HorizontalJustify GetHorizontalJustify(RecordFieldType fieldType)
+        {
+            return HorizontalJustify.Left;
         }
 
         public virtual bool Validate()

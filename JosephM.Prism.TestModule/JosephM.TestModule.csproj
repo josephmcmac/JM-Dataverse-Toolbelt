@@ -78,6 +78,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactDialog.cs" />
+    <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactModule.cs" />
+    <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactRequest.cs" />
+    <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactResponse.cs" />
+    <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactResponseItem.cs" />
+    <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactService.cs" />
+    <Compile Include="AllPropertyTypesCompact\TestSettingsTypeCompact.cs" />
+    <Compile Include="AllPropertyTypesCompact\TestSettingsTypeCompactEnumerated.cs" />
     <Compile Include="AllPropertyTypes\TestSettingsTypeEnumerated.cs" />
     <Compile Include="AllPropertyTypes\TestSettingsType.cs" />
     <Compile Include="ObjectEncrypt\TestClassToEncrypt.cs" />

@@ -11,16 +11,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace JosephM.TestModule.AllPropertyTypesModule
+namespace JosephM.TestModule.AllPropertyTypesCompact
 {
-    public class AllPropertyTypesResponse : ServiceResponseBase<AllPropertyTypesResponseItem>
+    [Group(Sections.Main, true, 10)]
+    public class AllPropertyTypesCompactResponse : ServiceResponseBase<AllPropertyTypesCompactResponseItem>
     {
-        public AllPropertyTypesResponse()
+        public AllPropertyTypesCompactResponse()
         {
             StringField = DateTime.Now.ToFileTime().ToString();
             MultilineStringField = (DateTime.Now.ToFileTime().ToString() + "\n").ReplicateString(10);
-            EnumPicklist = AllPropertyTypesEnum.Option100;
-            EnumMultiselect = new[] { AllPropertyTypesEnum.Option1, AllPropertyTypesEnum.Option100 };
+            EnumPicklist = AllPropertyTypesCompactEnum.Option100;
+            EnumMultiselect = new[] { AllPropertyTypesCompactEnum.Option1, AllPropertyTypesCompactEnum.Option100 };
             Integer = 100;
             Boolean = true;
             Date = DateTime.Now;
@@ -34,58 +35,83 @@ namespace JosephM.TestModule.AllPropertyTypesModule
             Field = new RecordField(FakeConstants.LookupField, FakeConstants.LookupField);
             BigInt = 500;
             Hyperlink = new Url("http://www/google.com", "Google");
-            SettingsLookup = TestSettingsType.Create().Items.First();
+            SettingsLookup = TestSettingsTypeCompact.Create().Items.First();
             CsvFile = new FileReference(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestCsv.csv"));
         }
 
+        [Group(Sections.Main)]
         public string StringField { get; set; }
 
+        [Group(Sections.Main)]
         [Multiline]
         public string MultilineStringField { get; set; }
 
-        public AllPropertyTypesEnum EnumPicklist { get; set; }
+        [Group(Sections.Main)]
+        public AllPropertyTypesCompactEnum EnumPicklist { get; set; }
 
-        public IEnumerable<AllPropertyTypesEnum> EnumMultiselect { get; set; }
+        [Group(Sections.Main)]
+        public IEnumerable<AllPropertyTypesCompactEnum> EnumMultiselect { get; set; }
 
-        [SettingsLookup(typeof(TestSettingsType), nameof(TestSettingsType.Items))]
-        public TestSettingsTypeEnumerated SettingsLookup { get; set; }
+        [Group(Sections.Main)]
+        [SettingsLookup(typeof(TestSettingsTypeCompact), nameof(TestSettingsTypeCompact.Items))]
+        public TestSettingsTypeCompactEnumerated SettingsLookup { get; set; }
 
+        [Group(Sections.Main)]
         public int Integer { get; set; }
 
+        [Group(Sections.Main)]
         public bool Boolean { get; set; }
 
+        [Group(Sections.Main)]
         public DateTime Date { get; set; }
 
+        [Group(Sections.Main)]
         [ReferencedType(FakeConstants.RecordType)]
         public Lookup LookupField { get; set; }
 
+        [Group(Sections.Main)]
         [ReferencedType(FakeConstants.RecordType)]
         [ReferencedType(FakeConstants.RecordType2)]
         public Lookup MultiLookupField { get; set; }
 
+        [Group(Sections.Main)]
         public decimal Decimal { get; set; }
 
+        [Group(Sections.Main)]
         public Password Password { get; set; }
 
+        [Group(Sections.Main)]
         public Folder Folder { get; set; }
 
+        [Group(Sections.Main)]
         public double Double { get; set; }
 
+        [Group(Sections.Main)]
         [RecordTypeFor(nameof(Field))]
         public RecordType RecordType { get; set; }
 
+        [Group(Sections.Main)]
         public RecordField Field { get; set; }
 
+        [Group(Sections.Main)]
         public long BigInt { get; set; }
 
+        [Group(Sections.Main)]
         [FileMask(FileMasks.CsvFile)]
         public FileReference CsvFile { get; set; }
 
+        [Group(Sections.Main)]
         public Url Hyperlink { get; set; }
 
-        public IEnumerable<AllPropertyTypesResponse> EnumerableField { get; set; }
+        [Group(Sections.Main)]
+        public IEnumerable<AllPropertyTypesCompactResponse> EnumerableField { get; set; }
 
-        public enum AllPropertyTypesEnum
+        private static class Sections
+        {
+            public const string Main = "Main";
+        }
+
+        public enum AllPropertyTypesCompactEnum
         {
             Option1,
             Option2,

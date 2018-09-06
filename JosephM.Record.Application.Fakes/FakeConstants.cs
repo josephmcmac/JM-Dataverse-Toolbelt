@@ -51,6 +51,7 @@ namespace JosephM.Application.ViewModel.Fakes
         public const string FakeContactPrimaryField = "name";
 
         public const string FakeActivityPartyType = "activityparty";
+        public const string FakeActivityPartyTypeLabel = "Activity Party";
         public const string FakeActivityPartyTypeId = "activitypartyid";
         public const string FakeActivityPartyTypePrimaryField = "name";
         public const string FakeActivityPartyTypePartyField = "partyid";
@@ -77,16 +78,20 @@ namespace JosephM.Application.ViewModel.Fakes
         public const string AllMemo = "Memo";
         public const string AllString = "String";
         public const string AllPicklist = "Picklist";
+        public const string AllPicklistMulti = "Picklist Multi";
         public const string AllInteger = "Integer";
+        public const string AllIntegerPicklist = "Integer Picklist";
         public const string AllBoolean = "Boolean";
         public const string AllDate = "Date";
         public const string AllLookup = "Lookup";
+        public const string AllLookupMulti = "Lookup Multi";
         public const string AllDecimal = "Decimal";
         public const string AllMoney = "Money";
         public const string AllPassword = "Password";
         public const string AllFolder = "Folder";
         public const string AllDouble = "Double";
-        public const string AllRecordType = "RecordType";
+        public const string AllRecordType = "Record Type";
+        public const string AllActivityParty = "Activity Party";
 
         public const string MainRecordName = "Main Record";
 

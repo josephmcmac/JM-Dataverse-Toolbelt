@@ -101,8 +101,10 @@ namespace JosephM.Record.Service
                                 parsedValue = value;
                             else if (value is PicklistOption)
                                 parsedValue = value;
+                            else if (value is IEnumerable<PicklistOption>)
+                                parsedValue = value;
                             else
-                                throw new Exception("value not of keyvalue type");
+                                throw new Exception("value not of key value type");
                             break;
                         }
                     case RecordFieldType.Boolean:

@@ -1,5 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
+    </ResourceDictionary.MergedDictionaries>
     <ControlTemplate x:Key="ErrorTemplate">
         <DockPanel DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
             <Grid Margin="0,0,5,0" ToolTip="{Binding ElementName=AdornedFieldElement, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
@@ -48,6 +51,8 @@
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
     <Style x:Key="StringFieldEntryStyleReadOnly" TargetType="TextBox" BasedOn="{StaticResource FieldEntryStyle}" >
+        <Setter Property="TextAlignment" Value="{Binding HorizontalJustify, Converter={StaticResource TextHorizontalJustifyConverter}}" />
+        <Setter Property="MinWidth" Value="100" />
         <Setter Property="MinWidth" Value="100" />
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="BorderThickness" Value="0" />
