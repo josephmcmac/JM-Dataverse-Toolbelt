@@ -83,6 +83,7 @@ namespace JosephM.Application.ViewModel.Fakes
         public const string AllIntegerPicklist = "Integer Picklist";
         public const string AllBoolean = "Boolean";
         public const string AllDate = "Date";
+        public const string AllDateIncludeTime = "Date Time";
         public const string AllLookup = "Lookup";
         public const string AllLookupMulti = "Lookup Multi";
         public const string AllDecimal = "Decimal";

@@ -160,7 +160,8 @@ namespace JosephM.Application.ViewModel.Fakes
                 entity.SetField(FakeConstants.AllInteger, 1, this);
                 entity.SetField(FakeConstants.AllIntegerPicklist, 2, this);
                 entity.SetField(FakeConstants.AllBoolean, true, this);
-                entity.SetField(FakeConstants.AllDate, DateTime.Now, this);
+                entity.SetField(FakeConstants.AllDate, DateTime.Today, this);
+                entity.SetField(FakeConstants.AllDateIncludeTime, DateTime.Now, this);
                 entity.SetField(FakeConstants.AllLookup, this.ToLookupWithAltDisplayNameName(GetMainRecord()), this);
                 entity.SetField(FakeConstants.AllLookupMulti, this.ToLookupWithAltDisplayNameName(this.GetFirst(FakeConstants.RecordType2)), this);
                 entity.SetField(FakeConstants.AllDecimal, (decimal)2, this);
@@ -272,6 +273,7 @@ namespace JosephM.Application.ViewModel.Fakes
                     new IntegerFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllIntegerPicklist, FakeConstants.AllIntegerPicklist) { IntegerFormat = IntegerType.Language },
                     new BooleanFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllBoolean, FakeConstants.AllBoolean),
                     new DateFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDate, FakeConstants.AllDate),
+                    new DateFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDateIncludeTime, FakeConstants.AllDateIncludeTime) { IncludeTime = true },
                     new LookupFieldMetadata(FakeConstants.AllLookup, FakeConstants.AllLookup, FakeConstants.RecordType),
                     new LookupFieldMetadata(FakeConstants.AllLookupMulti, FakeConstants.AllLookupMulti, FakeConstants.RecordType + "," + FakeConstants.RecordType2),
                     new DecimalFieldMetadata(FakeConstants.AllFieldTypesType, FakeConstants.AllDecimal, FakeConstants.AllDecimal),
