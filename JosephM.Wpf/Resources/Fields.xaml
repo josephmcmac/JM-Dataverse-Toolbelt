@@ -96,7 +96,9 @@
                   Margin="1" 
                   Background="{DynamicResource FieldEntryBackgroundColor}"
                   BorderBrush="{DynamicResource BorderColor}"
-                  BorderThickness="0,0,1,0" />
+                  BorderThickness="0,0,1,0"
+                >
+            </Border>
             <Path 
                   x:Name="Arrow"
                   Grid.Column="1"     

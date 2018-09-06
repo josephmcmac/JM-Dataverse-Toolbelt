@@ -637,6 +637,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                                                 if (clearValue)
                                                     fieldViewModel.ValueObject = null;
+                                                if (newFieldViewModel is BooleanFieldViewModel)
+                                                    newFieldViewModel.ValueObject = false;
                                                 section.Fields.Insert(index, newFieldViewModel);
                                                 re.RefreshVisibility();
                                             });

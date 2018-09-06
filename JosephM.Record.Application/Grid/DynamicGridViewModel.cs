@@ -69,7 +69,7 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 return HorizontalJustify.Middle;
             }
-            else if (IsReadOnly && new[] { RecordFieldType.Object, RecordFieldType.BigInt, RecordFieldType.Password, RecordFieldType.Uniqueidentifier, RecordFieldType.Status, RecordFieldType.State, RecordFieldType.Owner, RecordFieldType.Customer, RecordFieldType.Lookup, RecordFieldType.Date, RecordFieldType.RecordType, RecordFieldType.RecordField, RecordFieldType.Picklist, RecordFieldType.Integer, RecordFieldType.Decimal, RecordFieldType.Double, RecordFieldType.Money }.Contains(fieldType))
+            else if (IsReadOnly && new[] { RecordFieldType.ManagedProperty, RecordFieldType.Object, RecordFieldType.BigInt, RecordFieldType.Password, RecordFieldType.Uniqueidentifier, RecordFieldType.Status, RecordFieldType.State, RecordFieldType.Owner, RecordFieldType.Customer, RecordFieldType.Lookup, RecordFieldType.Date, RecordFieldType.RecordType, RecordFieldType.RecordField, RecordFieldType.Picklist, RecordFieldType.Integer, RecordFieldType.Decimal, RecordFieldType.Double, RecordFieldType.Money }.Contains(fieldType))
             {
                 return HorizontalJustify.Middle;
             }

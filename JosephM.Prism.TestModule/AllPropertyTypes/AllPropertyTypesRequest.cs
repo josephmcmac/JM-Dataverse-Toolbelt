@@ -34,7 +34,7 @@ namespace JosephM.TestModule.AllPropertyTypesModule
             RecordType = new RecordType(FakeConstants.RecordType, FakeConstants.RecordType);
             Field = new RecordField(FakeConstants.LookupField, FakeConstants.LookupField);
             BigInt = 500;
-            Hyperlink = new Url("http://www/google.com", "Google");
+            Hyperlink = new Url("http://www.google.com", "Google");
             SettingsLookup = TestSettingsType.Create().Items.First();
             CsvFile = new FileReference(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestCsv.csv"));
         }

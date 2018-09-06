@@ -1,5 +1,3 @@
-#region
-
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
@@ -19,8 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-
-#endregion
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -277,6 +273,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             if (newValue is EntityReference)
             {
                 newValue = _lookupMapper.Map((EntityReference)newValue);
+            }
+            if (newValue is BooleanManagedProperty)
+            {
+                newValue = ((BooleanManagedProperty)newValue).Value;
             }
             else if (newValue is OptionSetValue)
             {

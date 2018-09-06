@@ -200,7 +200,8 @@ namespace JosephM.Wpf.Grid
                                 Mode = BindingMode.TwoWay
                             };
                             DataGridColumn dataGridField;
-                            if (column.FieldType == RecordFieldType.Boolean)
+                            if (column.FieldType == RecordFieldType.Boolean
+                            || column.FieldType == RecordFieldType.ManagedProperty)
                                 dataGridField = new GridBooleanColumn
                                 {
                                     Binding = cellBinding

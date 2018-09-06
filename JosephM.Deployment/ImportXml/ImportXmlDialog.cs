@@ -22,7 +22,7 @@ namespace JosephM.Deployment.ImportXml
         {
             base.CompleteDialogExtention();
             CompletionMessage = "The Import Process Has Completed";
-            AddCompletionOption($"Open {Service?.XrmRecordService?.XrmRecordConfiguration?.OrganizationUniqueName}", () =>
+            AddCompletionOption($"Open {Service?.XrmRecordService?.XrmRecordConfiguration?.ToString()}", () =>
             {
                 try
                 {
