@@ -637,6 +637,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                                                 if (clearValue)
                                                     fieldViewModel.ValueObject = null;
+                                                if (newFieldViewModel is BooleanFieldViewModel)
+                                                    newFieldViewModel.ValueObject = false;
                                                 section.Fields.Insert(index, newFieldViewModel);
                                                 re.RefreshVisibility();
                                             });
@@ -676,9 +678,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     var enumeratedType = propertyInfo.PropertyType.GenericTypeArguments[0];
                     propertyInfo = enumeratedType.GetProperty(split.ElementAt(1)) ?? propertyInfo;
                 }
-                var attribute = propertyInfo.GetCustomAttribute<ReferencedType>();
-                if (attribute != null)
-                    return attribute.Type;
+                var referenceAttributes = propertyInfo.GetCustomAttributes<ReferencedType>();
+                if (referenceAttributes != null && referenceAttributes.Any())
+                    return string.Join(",",referenceAttributes.Select(attribute => attribute.Type));
             }
             foreach (var parentField in ObjectRecordService.GetPropertyInfos(viewModel.GetRecordType()))
             {

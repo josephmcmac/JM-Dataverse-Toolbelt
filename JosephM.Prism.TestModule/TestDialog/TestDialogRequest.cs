@@ -32,6 +32,10 @@ namespace JosephM.TestModule.TestDialog
         [Group(Sections.Main)]
         public bool ThrowResponseErrors { get; set; }
 
+        [MyDescription("Will Wait Halfway Through Completion")]
+        [Group(Sections.Main)]
+        public bool Wait10SecondsHalfwayThrough { get; set; }
+
         [Group(Sections.Main)]
         [FileMask(FileMasks.ExcelFile)]
         public FileReference ExcelFile { get; set; }

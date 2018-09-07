@@ -1,16 +1,10 @@
-﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.FieldType;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using JosephM.Core.Attributes;
-using JosephM.Application.ViewModel.Grid;
-using JosephM.Record.Service;
-using JosephM.Record.Query;
-using JosephM.Record.Metadata;
-using JosephM.Record.IService;
-using JosephM.ObjectMapping;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {

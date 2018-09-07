@@ -1,18 +1,21 @@
 ﻿using JosephM.Application.Desktop.Application;
 using JosephM.Application.Desktop.Console;
+using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.SavedRequests;
+using JosephM.Application.Desktop.Module.Themes;
+using JosephM.Core.FieldType;
 using JosephM.ObjectEncryption;
+using JosephM.TestModule.AllPropertyTypesCompact;
+using JosephM.TestModule.AllPropertyTypesModule;
 using JosephM.TestModule.ObjectEncrypt;
 using JosephM.TestModule.TestCrud;
 using JosephM.TestModule.TestDialog;
 using JosephM.TestModule.TestGridEdit;
 using JosephM.TestModule.TestSettings;
+using JosephM.Xrm.RecordExtract.Test.TextSearch;
 using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.XrmTestModule.DebugModule;
-using JosephM.XrmTestModule.TestSettings;
-using JosephM.Xrm.RecordExtract.Test.TextSearch;
 using System.Windows;
-using JosephM.Application.Desktop.Module.Themes;
 
 namespace JosephM.TestDesktopApplication
 {
@@ -39,7 +42,26 @@ namespace JosephM.TestDesktopApplication
             app.AddModule<ConsoleApplicationModule>();
             app.AddModule<TestGridEditModule>();
             app.AddModule<ThemeModule>();
+            app.AddModule<AllPropertyTypesDialogModule>();
+            app.AddModule<AllPropertyTypesCompactModule>();
+            app.AddModule<TestAppAboutModule>();
             app.Run();
+        }
+
+        public class TestAppAboutModule : AboutModule
+        {
+            public override string CodeLink => "https://github.com/josephmcmac/XRM-Developer-Tool";
+
+            public override string CreateIssueLink => "https://github.com/josephmcmac/XRM-Developer-Tool/issues/new";
+
+            public override Url OtherLink => new Url("https://visualstudiogallery.msdn.microsoft.com/28fb85a8-70d8-4621-96c7-54151eac11cf", "Visual Studio Extention");
+
+            public override string AboutDetail =>
+                "Blah blah blah\n" +
+                "\n" +
+                "Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah\n" +
+                "\n" +
+                "Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah";
         }
     }
 }

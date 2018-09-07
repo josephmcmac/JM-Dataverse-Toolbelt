@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
@@ -18,6 +19,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get { return base.Value; }
             set { base.Value = value; }
+        }
+
+        public string ReadOnlyStars
+        {
+            get { return Value == null
+                    ? null
+                    : "*".ReplicateString(Value.GetRawPassword()?.Length ?? 0); }
         }
     }
 }

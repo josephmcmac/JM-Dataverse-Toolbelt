@@ -67,7 +67,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 switch (fieldType)
                 {
                     case RecordFieldType.Boolean:
-                    {
+                    case RecordFieldType.ManagedProperty:
+                        {
                         fieldVm = new BooleanFieldViewModel(field, label, recordForm)
                         {
                             IsRecordServiceField = isRecordServiceField

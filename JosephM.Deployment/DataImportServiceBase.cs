@@ -146,7 +146,7 @@ namespace JosephM.Deployment
             throw new NullReferenceException(string.Format("No Unique Record Type Or Relationship Matched (Label Or Name) For CSV Name Of {0}", name));
         }
 
-        public IEnumerable<DataImportResponseItem> DoImport(IEnumerable<Entity> entities, LogController controller, bool maskEmails)
+        public IEnumerable<DataImportResponseItem> DoImport(IEnumerable<Entity> entities, LogController controller, bool maskEmails, bool matchExistingRecords = true)
         {
             controller.LogLiteral("Preparing Import");
             var response = new List<DataImportResponseItem>();
@@ -182,7 +182,7 @@ namespace JosephM.Deployment
 
                     foreach (var field in fields)
                     {
-                        if (thatTypeEntities.Any(e => e.GetLookupType(field) == type))
+                        if (thatTypeEntities.Any(e => e.GetLookupType(field).Split(',').Contains(type)))
                         {
                             orderedTypes.Insert(orderedTypes.IndexOf(type2), type);
                             break;
@@ -290,7 +290,9 @@ namespace JosephM.Deployment
                         var thisEntity = entity;
                         try
                         {
-                            var existingMatchingIds = GetMatchForExistingRecord(existingEntities, thisEntity);
+                            var existingMatchingIds = matchExistingRecords
+                                ? GetMatchForExistingRecord(existingEntities, thisEntity)
+                                : new Entity[0];
                             if (existingMatchingIds.Any())
                             {
                                 var matchRecord = existingMatchingIds.First();
@@ -626,7 +628,7 @@ namespace JosephM.Deployment
 
             if (!string.IsNullOrWhiteSpace(thisEntity.GetLookupType(field)))
             {
-                targetTypesToTry.Add(thisEntity.GetLookupType(field));
+                targetTypesToTry.AddRange(thisEntity.GetLookupType(field).Split(','));
             }
             else
             {

@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="SectionDataGrid" TargetType="{x:Type DataGrid}" BasedOn="{StaticResource {x:Type DataGrid}}">
         <Setter Property="Margin" Value="5,5,5,5" />
@@ -31,13 +32,13 @@
     </Style>
     <Style x:Key="ColumnHeadingTextBlock" TargetType="TextBlock" >
         <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Margin" Value="13,8,13,8" />
         <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
     <DataTemplate x:Key="ColumnHeaderTemplate">
         <Grid>
-            <TextBlock TextAlignment="{Binding TextAlign}" Text="{Binding FieldLabel}" ToolTip="{Binding Tooltip}" Style="{StaticResource ColumnHeadingTextBlock}" />
+            <TextBlock TextAlignment="{Binding HorizontalJustify, Converter={StaticResource TextHorizontalJustifyConverter}}" Text="{Binding FieldLabel}" ToolTip="{Binding Tooltip}" Style="{StaticResource ColumnHeadingTextBlock}" />
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

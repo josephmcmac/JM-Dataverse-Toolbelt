@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.Options;
 using System;
 using System.Windows;
+using JosephM.Wpf.Extentions;
 
 namespace JosephM.Xrm.Vsix.TestShell
 {
@@ -12,6 +13,8 @@ namespace JosephM.Xrm.Vsix.TestShell
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContextChanged += WindowShell_DataContextChanged;
         }
 
         protected override void OnContentRendered(EventArgs e)
@@ -27,8 +30,15 @@ namespace JosephM.Xrm.Vsix.TestShell
             if (applicationOptions == null)
                 throw new NullReferenceException("applicationOptions");
             optionsView.DataContext = applicationOptions;
+            DataContext = myApplication;
 
+        }
 
+        private void WindowShell_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //in the actual apps this loads in a user control bound to the application controller
+            //soi I will wire the method via the heading control which is bound to it
+            headingView.DoThemeLoading();
         }
     }
 }

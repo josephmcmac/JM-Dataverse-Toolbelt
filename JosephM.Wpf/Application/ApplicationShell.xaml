@@ -46,10 +46,16 @@
                             <Trigger Property="IsSelected" Value="False">
                                 <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
                                 <Setter Property="Margin" Value="0,0,0,0"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                                <Setter Property="BorderThickness" Value="1" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+                                <Setter Property="Margin" Value="0,0,0,0"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+                                <Setter Property="BorderThickness" Value="1" />
                             </Trigger>
                         </Style.Triggers>
-                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-                        <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="HeaderTemplate" Value="{StaticResource TabItemHeaderTemplate}" />
                         <Setter Property="ContextMenu">
                             <Setter.Value>

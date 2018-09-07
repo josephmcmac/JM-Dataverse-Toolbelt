@@ -2,6 +2,7 @@
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.CustomisationImporter;
 using JosephM.CustomisationImporter.Service;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 
 namespace JosephM.Xrm.Vsix.App.Module.CustomisationImport
@@ -9,8 +10,8 @@ namespace JosephM.Xrm.Vsix.App.Module.CustomisationImport
     [RequiresConnection(nameof(ProcessEnteredSettings))]
     public class VsixCustomisationImportDialog : CustomisationImportDialog
     {
-        public VsixCustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController, XrmPackageSettings xrmPackageSettings)
-            : base(service, dialogController)
+        public VsixCustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController, XrmPackageSettings xrmPackageSettings, XrmRecordService lookupService)
+            : base(service, dialogController, lookupService)
         {
         }
 

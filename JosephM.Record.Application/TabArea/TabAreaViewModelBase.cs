@@ -131,5 +131,13 @@ namespace JosephM.Application.ViewModel.TabArea
         {
             get { return ApplicationController.GetObjects().Count() > 1; }
         }
+
+        public bool IsActiveTabItem
+        {
+            get
+            {
+                return ApplicationController.ActiveTabItem == this;
+            }
+        }
     }
 }

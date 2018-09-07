@@ -175,7 +175,31 @@ namespace JosephM.Deployment.ImportCsvs
                     response.AddResponseItem(new ImportCsvsResponseItem("Not Imported", csvFile, ex));
                 }
             }
-            var imports = DoImport(entities, controller, request.MaskEmails);
+            foreach(var contact in entities.Where(e => e.LogicalName == Entities.contact))
+            {
+                if(contact.Contains(Fields.contact_.fullname)
+                    && !contact.Contains(Fields.contact_.firstname)
+                    && !contact.Contains(Fields.contact_.lastname))
+                {
+                    //okay for these dudes lets split their name into first and last name somehow
+                    var name = contact.GetStringField(Fields.contact_.fullname);
+                    if (name != null)
+                    {
+                        name = name.Trim();
+                        var lastSpaceIndex = name.LastIndexOf(" ");
+                        if (lastSpaceIndex == -1)
+                        {
+                            contact.SetField(Fields.contact_.firstname, name);
+                        }
+                        else
+                        {
+                            contact.SetField(Fields.contact_.firstname, name.Substring(0,lastSpaceIndex));
+                            contact.SetField(Fields.contact_.lastname, name.Substring(lastSpaceIndex + 1));
+                        }
+                    }
+                }
+            }
+            var imports = DoImport(entities, controller, request.MaskEmails, matchExistingRecords: request.MatchByName);
             foreach (var item in imports)
                 response.AddResponseItem(new ImportCsvsResponseItem(item));
         }

@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:JosephM.Wpf.Converters">
 
+    <converters:TextHorizontalJustifyConverter x:Key="TextHorizontalJustifyConverter" />
+    <converters:AlignHorizontalConverter x:Key="AlignHorizontalConverter" />
     <converters:BooleanToFalseConverter x:Key="BooleanToFalseConverter" />
     <converters:BooleanToFontWeightConverter x:Key="BooleanToFontWeightConverter" />
     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />

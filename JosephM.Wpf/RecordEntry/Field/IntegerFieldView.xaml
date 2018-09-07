@@ -13,12 +13,25 @@
             <converters:BooleanToFalseConverter x:Key="BooleanToFalseConverter" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid>
-        <controls:IntegerTextBox
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+            <TextBox
+                Style="{StaticResource  StringFieldEntryStyleReadOnly}"
+                TextWrapping="WrapWithOverflow"
+                VerticalScrollBarVisibility="Auto"
+                TabIndex="1"
+                Text="{Binding Mode=OneWay, Path=ValueObject}"
+                Height="Auto">
+            </TextBox>
+        </Grid>
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+            <controls:IntegerTextBox
+            MinWidth="100"
             TabIndex="1"
             x:Name="IntegerTextBox"
             DataContext="{Binding NotifyOnValidationError=True}"
@@ -26,5 +39,6 @@
             Style="{StaticResource IntegerFieldEntryStyle}"
             IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
             Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+        </Grid>
     </Grid>
 </field:FieldControlBase>

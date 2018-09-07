@@ -153,7 +153,7 @@
         <Setter Property="StaysOpen" Value="False" />
     </Style>
     <DataTemplate x:Key="XrmButtonDropdownTemplate" DataType="shared:XrmButtonViewModel">
-        <Button Style="{StaticResource XrmDropdownButton}" Margin="0,0,0,0" Content="{Binding Label}"
+        <Button BorderThickness="1,0,1,1" Style="{StaticResource XrmDropdownButton}" Margin="0,0,0,0" Content="{Binding Label}"
                 Command="{Binding Command}" ToolTip="{Binding Description}" />
     </DataTemplate>
     <DataTemplate x:Key="XrmButtonTemplate">

@@ -222,6 +222,9 @@ namespace JosephM.Application.Application
 
         public virtual bool IsTabbedApplication {  get { return true; } }
 
+        //only implemented by tabbed application controllers
+        public virtual object ActiveTabItem { get; set; }
+
         //runs all registered on navigate events
         protected void OnNavigatedTo(object objectNavigatedTo)
         {

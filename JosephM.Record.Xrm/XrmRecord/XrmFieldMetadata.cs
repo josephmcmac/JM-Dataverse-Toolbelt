@@ -196,12 +196,20 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public bool Writeable
         {
-            get { return XrmService.IsWritable(FieldName, RecordType); }
+            get
+            {
+                return XrmService.IsWritable(FieldName, RecordType)
+                    && FieldType != RecordFieldType.ManagedProperty;
+            }
         }
 
         public bool Createable
         {
-            get { return XrmService.IsCreateable(FieldName, RecordType); }
+            get
+            {
+                return XrmService.IsCreateable(FieldName, RecordType)
+                    && FieldType != RecordFieldType.ManagedProperty;
+            }
         }
 
         public bool IsDisplayRelated

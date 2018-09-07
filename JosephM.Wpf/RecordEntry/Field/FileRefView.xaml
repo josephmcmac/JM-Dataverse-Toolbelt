@@ -8,6 +8,7 @@
             <converters:FileRefToStringConverter x:Key="FileRefToString" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/DragDrop.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
@@ -15,37 +16,50 @@
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
     <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" MinWidth="150" >
-            <Border Style="{StaticResource FieldDropZoneBorder}" >
-                <GroupBox
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+            <TextBox
+                Style="{StaticResource  StringFieldEntryStyleReadOnly}"
+                TextWrapping="WrapWithOverflow"
+                VerticalScrollBarVisibility="Auto"
+                TabIndex="1"
+                Text="{Binding Mode=OneWay, Path=ValueObject}"
+                Height="Auto">
+            </TextBox>
+        </Grid>
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" MinWidth="150" >
+                <Border Style="{StaticResource FieldDropZoneBorder}" >
+                    <GroupBox
                 Width="Auto"
                 AllowDrop="True"
                 Drop="DropFile" 
                 Style="{StaticResource FieldDropZone}">
-                    <TextBox
+                        <TextBox
                     AllowDrop="True" PreviewDragOver="TextBoxDragOver" Drop="DropFile"  
                     TabIndex="1"
                     DataContext="{Binding NotifyOnValidationError=True}"
                     Text="{Binding Path=ValueObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FileRefToString}}"
                     Name="FileNameTextBox"
                     Style="{StaticResource FieldEntryStyle}"
+                            TextWrapping="Wrap"
                     IsReadOnly="True" />
-                </GroupBox>
-            </Border>
-        </Grid>
-        <Grid Grid.Column="1" 
+                    </GroupBox>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="1" 
               Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}"
               Style="{StaticResource FieldEntryButtonGridStyle}">
-            <Button
+                <Button
                 Style="{StaticResource SearchButton}" 
                 TabIndex="1"
                 Name="SearchButton"
                 Click="selectButtonClick"
                 IsEnabled="{Binding IsEditable}"/>
+            </Grid>
         </Grid>
     </Grid>
 </field:FieldControlBase>

@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Extentions;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
@@ -35,6 +36,8 @@ namespace JosephM.Wpf.Grid
 
         private void TextBlock_SourceUpdated(object sender, EventArgs e)
         {
+            if (DynamicGridViewModel == null || !DynamicGridViewModel.HasNavigated)
+                return;
             //the point of this is to scroll to the top of the grid
             //when the user navigates to a different page
             if (VisualTreeHelper.GetChildrenCount(DataGrid) > 0)
@@ -170,7 +173,7 @@ namespace JosephM.Wpf.Grid
                             gridSectionViewModel
                                 .RecordType);
                         var thisColumn = new ColumnMetadata(fieldName, fieldMetadata.DisplayName ?? fieldName, fieldMetadata.FieldType, gridField.WidthPart,
-                            gridField.IsEditable, fieldMetadata.Description);
+                            gridField.IsEditable, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType));
                         columnMetadata.Add(thisColumn);
                     }
 
@@ -197,7 +200,8 @@ namespace JosephM.Wpf.Grid
                                 Mode = BindingMode.TwoWay
                             };
                             DataGridColumn dataGridField;
-                            if (column.FieldType == RecordFieldType.Boolean)
+                            if (column.FieldType == RecordFieldType.Boolean
+                            || column.FieldType == RecordFieldType.ManagedProperty)
                                 dataGridField = new GridBooleanColumn
                                 {
                                     Binding = cellBinding
@@ -410,7 +414,7 @@ namespace JosephM.Wpf.Grid
         public class ColumnMetadata
         {
             public ColumnMetadata(string fieldName, string fieldLabel, RecordFieldType fieldType, double widthPart,
-                bool isEditable, string tooltip)
+                bool isEditable, string tooltip, HorizontalJustify justify)
             {
                 FieldName = fieldName;
                 FieldLabel = fieldLabel;
@@ -418,16 +422,7 @@ namespace JosephM.Wpf.Grid
                 WidthPart = widthPart;
                 IsEditable = isEditable;
                 Tooltip = tooltip;
-                if (new[] { RecordFieldType.Boolean, RecordFieldType.Url }.Contains(FieldType))
-                {
-                    Align = HorizontalAlignment.Center;
-                    TextAlign = TextAlignment.Center;
-                }
-                else
-                {
-                    Align = HorizontalAlignment.Left;
-                    TextAlign = TextAlignment.Left;
-                }
+                HorizontalJustify = justify;
             }
 
             public bool IsSortable
@@ -441,8 +436,7 @@ namespace JosephM.Wpf.Grid
             public double WidthPart { get; private set; }
             public bool IsEditable { get; private set; }
             public string Tooltip { get; }
-            public HorizontalAlignment Align { get; private set; }
-            public TextAlignment TextAlign { get; }
+            public HorizontalJustify HorizontalJustify { get; private set; }
         }
 
         private object _lockObject = new object();

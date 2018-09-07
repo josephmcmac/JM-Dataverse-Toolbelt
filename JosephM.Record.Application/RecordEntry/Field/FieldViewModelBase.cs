@@ -35,6 +35,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             DisplayLabel = true;
         }
 
+
+        public HorizontalJustify HorizontalJustify
+        {
+            get
+            {
+                return RecordEntryViewModel.GetHorizontalJustify(GetRecordService().GetFieldType(FieldName, GetRecordType()));
+            }
+        }
+
         public bool IsNotNullable { get; set; }
 
         private object DeltaValue { get; set; }
@@ -298,5 +307,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public virtual bool IsLoaded { get { return true; } }
 
         public string Description { get; set; }
+
+        public bool DoNotLimitDisplayHeight { get; set; }
     }
 }

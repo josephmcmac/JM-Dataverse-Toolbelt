@@ -7,7 +7,7 @@ namespace JosephM.Wpf.Resources.Themes
     {
         [RequiredProperty]
         [Group(Sections.Theme)]
-        [SettingsLookup(typeof(XamlThemes), nameof(XamlThemes.Themes))]
+        [SettingsLookup(typeof(XamlThemes), nameof(XamlThemes.Themes), allowAddNew: false)]
         public XamlTheme SelectedTheme { get; set; }
 
         private static class Sections

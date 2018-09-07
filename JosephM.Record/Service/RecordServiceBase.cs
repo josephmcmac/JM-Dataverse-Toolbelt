@@ -101,8 +101,10 @@ namespace JosephM.Record.Service
                                 parsedValue = value;
                             else if (value is PicklistOption)
                                 parsedValue = value;
+                            else if (value is IEnumerable<PicklistOption>)
+                                parsedValue = value;
                             else
-                                throw new Exception("value not of keyvalue type");
+                                throw new Exception("value not of key value type");
                             break;
                         }
                     case RecordFieldType.Boolean:
@@ -197,8 +199,12 @@ namespace JosephM.Record.Service
 
         public virtual IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
-            var metadata = this.GetFieldMetadata(field, recordType) as PicklistFieldMetadata;
-            return metadata?.PicklistOptions;
+            var metadata = this.GetFieldMetadata(field, recordType);
+            if (metadata is RecordTypeFieldMetadata)
+                return GetAllRecordTypes().Select(r => new PicklistOption(r, this.GetDisplayName(r))).ToArray();
+            if (metadata is PicklistFieldMetadata)
+                return ((PicklistFieldMetadata)metadata).PicklistOptions;
+            return null;
         }
 
         public virtual IEnumerable<IRecord> GetLinkedRecords(string linkedEntityType, string entityTypeFrom,

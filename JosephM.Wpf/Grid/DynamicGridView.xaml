@@ -113,7 +113,7 @@
                                         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
                                         <Setter Property="BorderThickness" Value=".5" />
                                         <EventSetter Event="Click" Handler="columnHeader_Click" />
-                                        <Setter Property="HorizontalContentAlignment" Value="{Binding Align}" />
+                                        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalJustify, Converter={StaticResource AlignHorizontalConverter}}" />
                                         <Setter Property="ContentTemplate" Value="{StaticResource ColumnHeaderTemplate}" />
                                         <Style.Triggers>
                                             <MultiDataTrigger>

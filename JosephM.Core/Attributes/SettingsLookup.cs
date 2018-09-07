@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace JosephM.Core.Attributes
 {
@@ -16,10 +15,13 @@ namespace JosephM.Core.Attributes
 
         public string PropertyName { get; private set; }
 
-        public SettingsLookup(Type settingsType, string propertyName)
+        public bool AllowAddNew { get; private set; }
+
+        public SettingsLookup(Type settingsType, string propertyName, bool allowAddNew = true)
         {
             SettingsType = settingsType;
             PropertyName = propertyName;
+            AllowAddNew = allowAddNew;
         }
     }
 }

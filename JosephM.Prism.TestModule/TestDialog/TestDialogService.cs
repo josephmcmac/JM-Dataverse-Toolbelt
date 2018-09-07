@@ -30,6 +30,8 @@ namespace JosephM.TestModule.TestDialog
             for (var i = 0; i < 100; i++)
             {
                 controller.UpdateProgress(i, 100, "Fake Progress");
+                if(request.Wait10SecondsHalfwayThrough && i == 50)
+                    Thread.Sleep(10000);
                 Thread.Sleep(10);
             }
         }

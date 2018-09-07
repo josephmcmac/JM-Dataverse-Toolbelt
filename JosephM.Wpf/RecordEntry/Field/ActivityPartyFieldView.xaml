@@ -20,8 +20,7 @@
             Name="TextBox"
             DataContext="{Binding NotifyOnValidationError=True}"
             Text="{Binding DisplayString, Mode=OneWay}"
-            Style="{StaticResource FieldEntryStyle}"
-            IsEnabled="False"
+            Style="{StaticResource StringFieldEntryStyleReadOnly}"
              />
     </Grid>
 </field:FieldControlBase>

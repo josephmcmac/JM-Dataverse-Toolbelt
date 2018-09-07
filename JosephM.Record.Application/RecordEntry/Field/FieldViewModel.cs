@@ -11,7 +11,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public virtual T Value
         {
-            get { return (T) ValueObject; }
+            get { return (T)ValueObject; }
             set { ValueObject = value; }
         }
     }

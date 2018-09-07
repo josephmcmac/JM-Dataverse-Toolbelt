@@ -64,6 +64,18 @@ namespace JosephM.Record.Service
             return _records.Where(r => r.Type == recordType);
         }
 
+        private IEnumerable<IRecord> PopulateLookups(IEnumerable<IRecord> records)
+        {
+            foreach (var item in records)
+            {
+                this.PopulateLookups(new Dictionary<string, List<Lookup>>
+                {
+                    { item.Type, item.GetFields().Select(f => f.Value).Where(o => o is Lookup).Cast<Lookup>().ToList() }
+                }, null);
+            }
+            return records;
+        }
+
         public override IRecord NewRecord(string recordType)
         {
             return new RecordObject(recordType);
@@ -110,7 +122,7 @@ namespace JosephM.Record.Service
 
         public override void Update(IRecord record, IEnumerable<string> fieldsToUpdate)
         {
-            var savedRecord = Get(record.Type, record.Id);
+            var savedRecord = GetActualWithoutCloning(record.Type, record.Id);
             CopyFieldsTo(record, savedRecord, fieldsToUpdate);
             foreach (var field in savedRecord.GetFieldsInEntity())
             {
@@ -121,19 +133,24 @@ namespace JosephM.Record.Service
                     var id = lookup.Id;
                     var type = lookup.RecordType;
                     var referencedRecord = Get(type, id);
-                    var name = referencedRecord.GetStringField(GetRecordTypeMetadata(type).PrimaryKeyName);
+                    var name = referencedRecord.GetStringField(GetRecordTypeMetadata(type).PrimaryFieldSchemaName);
                     lookup.Name = name;
                 }
             }
         }
 
-        public override IRecord Get(string recordType, string id)
+        private IRecord GetActualWithoutCloning(string recordType, string id)
         {
             var recordsOfType = GetRecordsOfType(recordType);
             if (recordsOfType.Any(r => r.Id == id))
-                return Clone(recordsOfType.First(r => r.Id == id), null);
+                return recordsOfType.First(r => r.Id == id);
 
             throw new Exception(string.Format("No Record Exists Of Type '{0}' With Id = '{1}'", recordType, id));
+        }
+
+        public override IRecord Get(string recordType, string id)
+        {
+            return Clone(GetActualWithoutCloning(recordType, id), null);
         }
 
         public override IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType)
@@ -243,7 +260,9 @@ namespace JosephM.Record.Service
 
         private IEnumerable<IRecord> Clone(IEnumerable<IRecord> records, IEnumerable<string> fields)
         {
-            return records.Select(r => Clone(r, fields)).ToArray();
+            var cloned = records.Select(r => Clone(r, fields)).ToArray();
+            PopulateLookups(cloned);
+            return cloned;
         }
 
         private IRecord Clone(IRecord record, IEnumerable<string> fields)
