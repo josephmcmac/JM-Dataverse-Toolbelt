@@ -5,6 +5,7 @@ using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -99,6 +100,10 @@ namespace JosephM.Deployment.Test
                 Assert.IsNotNull(contact.GetStringField(Fields.contact_.lastname));
                 if(contact.GetStringField(Fields.contact_.emailaddress1) != null)
                     Assert.IsTrue(contact.GetStringField(Fields.contact_.emailaddress1).Contains("@fake"));
+                //this one is date only
+                Assert.AreEqual(new DateTime(1980, 11, 15), contact.GetDateTimeField(Fields.contact_.birthdate));
+                //this one is user local
+                Assert.AreEqual(new DateTime(1980, 11, 15), contact.GetDateTimeField(Fields.contact_.lastonholdtime).Value.ToLocalTime());
             }
         }
 

@@ -858,7 +858,13 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                                                       MinCrmDateTime);
                             //remove the second fractions as crm strips them out
                             if (temp.HasValue)
-                                temp = temp.Value.AddMilliseconds(-1 * temp.Value.Millisecond).ToUniversalTime();
+                            {
+                                temp = temp.Value.AddMilliseconds(-1 * temp.Value.Millisecond);
+                                if(temp.Value.Kind == DateTimeKind.Local)
+                                {
+                                    temp = temp.Value.ToUniversalTime();
+                                }
+                            }
                             return temp;
                         }
                     case AttributeTypeCode.Lookup:

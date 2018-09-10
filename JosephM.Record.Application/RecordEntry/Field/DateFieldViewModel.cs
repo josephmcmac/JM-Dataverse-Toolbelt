@@ -26,11 +26,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                return base.Value?.ToLocalTime();
+                if (!base.Value.HasValue)
+                    return null;
+                if (base.Value.Value.Kind == DateTimeKind.Utc)
+                    return base.Value?.ToLocalTime();
+                return base.Value;
             }
             set
             {
-                base.Value = value?.ToUniversalTime();
+                if (!value.HasValue)
+                    base.Value = null;
+                if (value.Value.Kind == DateTimeKind.Local)
+                    base.Value = value.Value.ToUniversalTime();
+                base.Value = value;
             }
         }
     }
