@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using JosephM.Core.Attributes;
 using JosephM.Record.Metadata;
 using JosephM.Xrm;
 using Microsoft.Xrm.Sdk.Metadata;
-using JosephM.Core.Attributes;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
@@ -72,10 +68,22 @@ namespace JosephM.Record.Xrm.XrmRecord
             SchemaName = name;
         }
 
+        public XrmManyToManyRelationshipMetadata(ManyToManyRelationshipMetadata sdkMetadata, XrmService xrmService)
+            : base(xrmService)
+        {
+            SchemaName = sdkMetadata.SchemaName;
+            _sdkMetadata = sdkMetadata;
+        }
+
         private string _recordTypeForLoading;
+        private ManyToManyRelationshipMetadata _sdkMetadata;
         private ManyToManyRelationshipMetadata GetMetadata()
         {
-            return XrmService.GetManyToManyRelationship(_recordTypeForLoading, SchemaName);
+            if (_sdkMetadata == null)
+            {
+                _sdkMetadata = XrmService.GetManyToManyRelationship(_recordTypeForLoading, SchemaName); ;
+            }
+            return _sdkMetadata;
         }
 
         public bool IsManyToManyDisplayRelated(bool forRecordType2)
@@ -124,6 +132,11 @@ namespace JosephM.Record.Xrm.XrmRecord
             var relationship = GetMetadata();
             var menuConfiguration = GetAssociatedMenuConfiguration(forRecordType2, relationship);
             return GetDisplayOrder(menuConfiguration);
+        }
+
+        public string PicklistDisplay
+        {
+            get { return XrmService.GetEntityDisplayName(RecordType1) + " " + XrmService.GetEntityCollectionName(RecordType1) + " (N:N Association)"; }
         }
     }
 }

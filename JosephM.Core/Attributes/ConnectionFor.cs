@@ -13,7 +13,7 @@ namespace JosephM.Core.Attributes
         AllowMultiple = true)]
     public class ConnectionFor : Attribute
     {
-        public Type ServiceType { get; private set; }
+        public Type ConnectionType { get; private set; }
         public string Property { get; private set; }
 
         public ConnectionFor(string property)
@@ -21,9 +21,9 @@ namespace JosephM.Core.Attributes
             Property = property;
         }
 
-        public ConnectionFor(string property, Type serviceType)
+        public ConnectionFor(string property, Type connectionType)
         {
-            ServiceType = serviceType;
+            ConnectionType = connectionType;
             Property = property;
         }
     }

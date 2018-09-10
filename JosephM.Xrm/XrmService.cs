@@ -2155,7 +2155,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             }
         }
 
-        private List<ManyToManyRelationshipMetadata> AllRelationshipMetadata
+        public List<ManyToManyRelationshipMetadata> AllRelationshipMetadata
         {
             get
             {

@@ -57,7 +57,7 @@ namespace JosephM.Application.ViewModel.Query
         {
             return f =>
             {
-                foreach (var action in FormService.GetOnChanges(f.FieldName))
+                foreach (var action in FormService.GetOnChanges(f.FieldName, this))
                 {
                     try
                     {

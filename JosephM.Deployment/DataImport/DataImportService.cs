@@ -1,13 +1,8 @@
-#region
-
 using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
 using JosephM.Core.Log;
-using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
-using JosephM.Record.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -17,19 +12,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 
-#endregion
 
-namespace JosephM.Deployment
+namespace JosephM.Deployment.DataImport
 {
-    public abstract class DataImportServiceBase<TReq, Tres, TResItem>
-        : ServiceBase<TReq, Tres, TResItem>
-        where TReq : ServiceRequestBase
-        where Tres : ServiceResponseBase<TResItem>, new()
-        where TResItem : ServiceResponseItem
+    public class DataImportService
     {
-        public DataImportServiceBase(XrmRecordService xrmRecordService)
+        public DataImportService(XrmRecordService xrmRecordService)
         {
             XrmRecordService = xrmRecordService;
         }
@@ -44,13 +33,7 @@ namespace JosephM.Deployment
             }
         }
 
-        public string GetBaseTransactionId(IRecordService service)
-        {
-            var organisation = service.GetFirst("organization");
-            return organisation.GetLookupId("basecurrencyid");
-        }
-
-        protected IEnumerable<Entity> GetMatchingEntities(string type, IDictionary<string,object> fieldValues)
+        public IEnumerable<Entity> GetMatchingEntities(string type, IDictionary<string,object> fieldValues)
         {
             var conditions = fieldValues.Select(fv =>
             fv.Value == null
@@ -66,7 +49,7 @@ namespace JosephM.Deployment
             return XrmService.RetrieveAllAndClauses(type, conditions, new String[0]);
         }
 
-        protected IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
+        public IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
         {
             var typeConfig = XrmRecordService.GetTypeConfigs().GetFor(type);
             if (typeConfig == null || typeConfig.ParentLookupType != type || field != XrmService.GetPrimaryNameField(type))
@@ -471,11 +454,17 @@ namespace JosephM.Deployment
                                             ((EntityReference)(thisEntity.GetField(field))).Name = name;
                                             fieldResolved = true;
                                         }
+                                        else if(matchRecords.Count() > 0)
+                                        {
+                                            throw new Exception($"Multiple {lookupEntity} records matched the name of {name}");
+                                        }
                                     }
-                                    if (!fieldResolved)
-                                    {
-                                        throw new Exception(string.Format("Could not find matching record for field {0}.{1} {2}", thisEntity.LogicalName, field, name));
-                                    }
+                                    if (fieldResolved)
+                                        break; ;
+                                }
+                                if (!fieldResolved)
+                                {
+                                    throw new Exception($"Could not find record with name {name}");
                                 }
                             }
                             catch (Exception ex)
@@ -484,7 +473,7 @@ namespace JosephM.Deployment
                                     thisEntity.Attributes.Remove(field);
                                 response.Add(
                                      new DataImportResponseItem(thisEntity.LogicalName, field, thisEntity.GetStringField(thisPrimaryField),
-                                        string.Format("Error Setting Lookup Field Id={0}", thisEntity.Id), ex));
+                                        string.Format("Error Setting Lookup Field", thisEntity.Id), ex));
                             }
                         }
                     }

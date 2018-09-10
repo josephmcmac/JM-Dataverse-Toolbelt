@@ -938,14 +938,22 @@ namespace JosephM.Record.Xrm.XrmRecord
             return _xrmService.GetOneToManyRelationshipLabel(relationship.ReferencedEntity, relationship.SchemaName);
         }
 
-        public IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType)
+        public IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType = null)
         {
-            var relationships = _xrmService.GetEntityManyToManyRelationships(recordType);
-            //var real = relationships.First();
-            return relationships
-                //.Where(r => r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
-                .Select(r => new XrmManyToManyRelationshipMetadata(r.SchemaName, XrmService, recordType))
-                .ToArray();
+            if (recordType == null)
+            {
+                var nnRelationships = _xrmService.AllRelationshipMetadata;
+                return nnRelationships.Select(n => new XrmManyToManyRelationshipMetadata(n, _xrmService)).ToArray();
+            }
+            else
+            {
+                var relationships = _xrmService.GetEntityManyToManyRelationships(recordType);
+                //var real = relationships.First();
+                return relationships
+                    //.Where(r => r.IsValidForAdvancedFind.HasValue && r.IsValidForAdvancedFind.Value)
+                    .Select(r => new XrmManyToManyRelationshipMetadata(r.SchemaName, XrmService, recordType))
+                    .ToArray();
+            }
         }
 
         public IEnumerable<IRecord> GetRelatedRecords(IRecord record, IMany2ManyRelationshipMetadata relationship,

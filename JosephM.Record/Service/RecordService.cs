@@ -153,7 +153,7 @@ namespace JosephM.Record.Service
             return Clone(GetActualWithoutCloning(recordType, id), null);
         }
 
-        public override IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType)
+        public override IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType = null)
         {
             return
                 Many2ManyRelationships.Where(

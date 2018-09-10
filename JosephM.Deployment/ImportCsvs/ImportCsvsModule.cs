@@ -21,7 +21,7 @@ namespace JosephM.Deployment.ImportCsvs
     public class ImportCsvsModule
         : ServiceRequestModule<ImportCsvsDialog, ImportCsvsService, ImportCsvsRequest, ImportCsvsResponse, ImportCsvsResponseItem>
     {
-        public override string MenuGroup => "Deployment";
+        public override string MenuGroup => "Data Import/Export";
 
         public override void RegisterTypes()
         {

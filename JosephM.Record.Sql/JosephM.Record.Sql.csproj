@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.Record.Sql</RootNamespace>
     <AssemblyName>JosephM.Record.Sql</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -40,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExcelFileConnection.cs" />
     <Compile Include="CsvFileConnection.cs" />
+    <Compile Include="ExcelRecordService.cs" />
     <Compile Include="CsvRecordService.cs" />
     <Compile Include="Extentions.cs" />
     <Compile Include="ISqlRecordMetadataService.cs" />
@@ -60,6 +69,13 @@
       <Project>{59CAC082-C1A8-474C-B73C-BC79267C9B51}</Project>
       <Name>JosephM.Record</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Spreadsheet\JosephM.Spreadsheet.csproj">
+      <Project>{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}</Project>
+      <Name>JosephM.Spreadsheet</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="JosephM.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

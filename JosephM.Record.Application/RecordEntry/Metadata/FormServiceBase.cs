@@ -55,7 +55,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new ValidationRuleBase[] { };
         }
 
-        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName)
+        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, RecordEntryViewModelBase entryViewModel)
         {
             return new Action<RecordEntryViewModelBase>[] {};
         }
@@ -70,7 +70,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return false;
         }
 
-        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string subGrid)
+        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string subGrid, RecordEntryViewModelBase entryViewModel)
         {
             return new Action<RecordEntryViewModelBase>[] {};
         }

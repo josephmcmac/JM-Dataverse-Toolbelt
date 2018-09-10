@@ -10,6 +10,7 @@ using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using JosephM.Deployment.DataImport;
 
 namespace JosephM.Deployment.Test
 {

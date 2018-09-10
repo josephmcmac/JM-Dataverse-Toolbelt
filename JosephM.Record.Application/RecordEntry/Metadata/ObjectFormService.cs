@@ -1,6 +1,4 @@
-﻿#region
-
-using JosephM.Application.ViewModel.Attributes;
+﻿using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -19,8 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
@@ -218,12 +214,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 return new ValidationRuleBase[0];
         }
 
-        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName)
+        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, RecordEntryViewModelBase entryViewModel)
         {
-            return GetOnChanges(fieldName, ObjectType.AssemblyQualifiedName);
+            return GetOnChanges(fieldName, ObjectType.AssemblyQualifiedName, entryViewModel);
         }
 
-        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType)
+        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType, RecordEntryViewModelBase entryViewModel)
         {
             var onChanges = new List<Action<RecordEntryViewModelBase>>();
             AppendRecordTypeForChanges(fieldName, recordType, onChanges);
@@ -235,7 +231,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendLookupFieldCascadeChanges(fieldName, recordType, onChanges);
             AppendCascadeOnChanges(fieldName, recordType, onChanges);
             AppendFieldForChanges(fieldName, recordType, onChanges, clearValue: true);
-            return base.GetOnChanges(fieldName, recordType).Union(onChanges);
+            AppendOnChangeFunctions(fieldName, recordType, onChanges, entryViewModel);
+            return base.GetOnChanges(fieldName, recordType, entryViewModel).Union(onChanges);
+        }
+
+        private void AppendOnChangeFunctions(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges, RecordEntryViewModelBase entryViewModel)
+        {
+            var type = ObjectRecordService.GetClassType(recordType);
+            var injectedFunctions = entryViewModel.ApplicationController.ResolveInstance(typeof(OnChangeFunctions), recordType) as OnChangeFunctions;
+            foreach(var func in injectedFunctions.CustomFunctions)
+            {
+                Action<RecordEntryViewModelBase> onChange = (revm) => func.Execute(revm, fieldName);
+                onChanges.Add(onChange);
+            }
         }
 
         private void AppendCascadeOnChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)

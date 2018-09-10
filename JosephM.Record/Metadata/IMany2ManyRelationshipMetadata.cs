@@ -29,5 +29,7 @@
         int RecordType2DisplayOrder { get; }
 
         bool IsCustomRelationship { get; }
+
+        string PicklistDisplay { get; }
     }
 }

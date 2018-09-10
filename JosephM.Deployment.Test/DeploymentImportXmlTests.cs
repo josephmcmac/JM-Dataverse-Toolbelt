@@ -630,13 +630,13 @@ namespace JosephM.Deployment.Test
 
         private IEnumerable<string> GetFields(string type, ImportXmlService importService)
         {
-            var fields = XrmService.GetFields(type).Where(f => importService.IsIncludeField(f, type));
+            var fields = XrmService.GetFields(type).Where(f => importService.DataImportService.IsIncludeField(f, type));
             return fields;
         }
 
         private IEnumerable<string> GetUpdateFields(string type, ImportXmlService importService)
         {
-            var updateFields = XrmService.GetFields(type).Where(f => importService.IsIncludeField(f, type));
+            var updateFields = XrmService.GetFields(type).Where(f => importService.DataImportService.IsIncludeField(f, type));
             return updateFields;
         }
 

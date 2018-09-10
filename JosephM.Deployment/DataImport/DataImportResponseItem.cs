@@ -3,7 +3,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using System;
 
-namespace JosephM.Deployment
+namespace JosephM.Deployment.DataImport
 {
     public class DataImportResponseItem : ServiceResponseItem
     {

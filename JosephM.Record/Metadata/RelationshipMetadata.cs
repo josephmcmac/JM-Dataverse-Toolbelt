@@ -45,5 +45,7 @@ namespace JosephM.Record.Metadata
                 return SchemaName;
             }
         }
+
+        public string PicklistDisplay => SchemaName;
     }
 }

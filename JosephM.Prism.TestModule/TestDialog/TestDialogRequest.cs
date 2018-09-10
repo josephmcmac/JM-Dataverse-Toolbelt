@@ -4,6 +4,7 @@ using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
+using JosephM.Record.Sql;
 using System.Collections.Generic;
 
 namespace JosephM.TestModule.TestDialog
@@ -24,6 +25,26 @@ namespace JosephM.TestModule.TestDialog
 
         public IEnumerable<TestEnum> MultiSelect { get; set; }
 
+        [DisplayOrder(15)]
+        [Group(Sections.Main)]
+        [RequiredProperty]
+        [FileMask(FileMasks.ExcelFile)]
+        [ConnectionFor(nameof(ExcelRecordType), typeof(ExcelFileConnection))]
+        [ConnectionFor(nameof(ExcelField), typeof(ExcelFileConnection))]
+        public FileReference ExcelFile { get; set; }
+
+        [PropertyInContextByPropertyNotNull(nameof(ExcelFile))]
+        [RecordTypeFor(nameof(ExcelField))]
+        [DisplayOrder(16)]
+        [Group(Sections.Main)]
+        public RecordType ExcelRecordType { get; set; }
+
+        [PropertyInContextByPropertyNotNull(nameof(ExcelRecordType))]
+        [DisplayOrder(17)]
+        [Group(Sections.Main)]
+        public RecordField ExcelField { get; set; }
+
+
         [MyDescription("If set this will log a heap of errors in the service response")]
         [Group(Sections.Main)]
         public bool ThrowFatalErrors { get; set; }
@@ -35,10 +56,6 @@ namespace JosephM.TestModule.TestDialog
         [MyDescription("Will Wait Halfway Through Completion")]
         [Group(Sections.Main)]
         public bool Wait10SecondsHalfwayThrough { get; set; }
-
-        [Group(Sections.Main)]
-        [FileMask(FileMasks.ExcelFile)]
-        public FileReference ExcelFile { get; set; }
 
         [Group(Sections.Main)]
         [FileMask(FileMasks.ZipFile)]

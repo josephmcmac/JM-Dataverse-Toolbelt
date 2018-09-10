@@ -5,6 +5,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
+using JosephM.Deployment.DataImport;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm;
@@ -24,11 +25,15 @@ using System.Runtime.Serialization;
 namespace JosephM.Deployment.ImportCsvs
 {
     public class ImportCsvsService :
-        DataImportServiceBase<ImportCsvsRequest, ImportCsvsResponse, ImportCsvsResponseItem>
+        ServiceBase<ImportCsvsRequest, ImportCsvsResponse, ImportCsvsResponseItem>
     {
+        public XrmRecordService XrmRecordService { get; }
+        public DataImportService DataImportService { get; }
+
         public ImportCsvsService(XrmRecordService xrmRecordService)
-            : base(xrmRecordService)
         {
+            XrmRecordService = xrmRecordService;
+            DataImportService = new DataImportService(xrmRecordService);
         }
 
         public override void ExecuteExtention(ImportCsvsRequest request, ImportCsvsResponse response,
@@ -39,7 +44,7 @@ namespace JosephM.Deployment.ImportCsvs
 
         private void ImportCsvs(ImportCsvsRequest request, LogController controller, ImportCsvsResponse response)
         {
-            var organisationSettings = new OrganisationSettings(XrmService);
+            var organisationSettings = new OrganisationSettings(XrmRecordService.XrmService);
             controller.LogLiteral("Preparing Import");
             var csvFiles = request.FolderOrFiles == ImportCsvsRequest.CsvImportOption.Folder
                 ? FileUtility.GetFiles(request.Folder.FolderPath).Where(f => f.EndsWith(".csv"))
@@ -56,9 +61,9 @@ namespace JosephM.Deployment.ImportCsvs
                 {
                     //try think if better way
                     controller.UpdateProgress(countImported++, countToImport, string.Format("Reading {0}", csvFile));
-                    var getTypeResponse = GetTargetType(XrmService, csvFile);
+                    var getTypeResponse = GetTargetType(XrmRecordService.XrmService, csvFile);
                     var type = getTypeResponse.LogicalName;
-                    var primaryField = XrmService.GetPrimaryNameField(type);
+                    var primaryField = XrmRecordService.XrmService.GetPrimaryNameField(type);
                     var fileInfo = new FileInfo(csvFile);
                     CsvUtility.ConstructTextSchema(fileInfo.Directory.FullName, Path.GetFileName(csvFile));
                     var rows = CsvUtility.SelectAllRows(csvFile);
@@ -80,14 +85,14 @@ namespace JosephM.Deployment.ImportCsvs
                                 var fieldValues = new Dictionary<string, object>();
                                 foreach (var key in keyColumns)
                                 {
-                                    var fieldName = MapColumnToFieldSchemaName(XrmService, type, key);
+                                    var fieldName = MapColumnToFieldSchemaName(XrmRecordService.XrmService, type, key);
                                     var columnValue = row.GetFieldAsString(key);
                                     if (columnValue != null)
                                         columnValue = columnValue.Trim();
 
                                     fieldValues.Add(fieldName, columnValue);
                                 }
-                                var matchingEntity = GetMatchingEntities(type, fieldValues);
+                                var matchingEntity = DataImportService.GetMatchingEntities(type, fieldValues);
                                 if (matchingEntity.Count() > 1)
                                     throw new Exception(string.Format("Specified Match By Name But More Than One {0} Record Matched To The Keys Of {1}", type, string.Join(",", fieldValues.Select(kv => kv.Key + "=" + kv.Value))));
                                 if (matchingEntity.Count() == 1)
@@ -107,15 +112,15 @@ namespace JosephM.Deployment.ImportCsvs
                                     var primaryFieldColumns =
                                         rows.First()
                                         .GetColumnNames()
-                                        .Where(c => MapColumnToFieldSchemaName(XrmService, type, c) == primaryField).ToArray();
+                                        .Where(c => MapColumnToFieldSchemaName(XrmRecordService.XrmService, type, c) == primaryField).ToArray();
                                     var primaryFieldColumn = primaryFieldColumns.Any() ? primaryFieldColumns.First() : null;
                                     if (request.MatchByName && primaryFieldColumn.IsNullOrWhiteSpace())
-                                        throw new NullReferenceException(string.Format("Match By Name Was Specified But No Column In The CSV Matched To The Primary Field {0} ({1})", XrmService.GetFieldLabel(primaryField, type), primaryField));
+                                        throw new NullReferenceException(string.Format("Match By Name Was Specified But No Column In The CSV Matched To The Primary Field {0} ({1})", XrmRecordService.XrmService.GetFieldLabel(primaryField, type), primaryField));
 
                                     var columnValue = row.GetFieldAsString(primaryFieldColumn);
                                     if (columnValue != null)
                                         columnValue = columnValue.Trim();
-                                    var matchingEntity = GetMatchingEntities(type, primaryField, columnValue);
+                                    var matchingEntity = DataImportService.GetMatchingEntities(type, primaryField, columnValue);
                                     if (matchingEntity.Count() > 1)
                                         throw new Exception(string.Format("Specified Match By Name But More Than One {0} Record Matched To Name Of {1}", type, columnValue));
                                     if (matchingEntity.Count() == 1)
@@ -126,7 +131,7 @@ namespace JosephM.Deployment.ImportCsvs
                             //any lookup fields we will populate the name with Guid.Empty for now
                             foreach (var column in row.GetColumnNames())
                             {
-                                var field = MapColumnToFieldSchemaName(XrmService, type, column);
+                                var field = MapColumnToFieldSchemaName(XrmRecordService.XrmService, type, column);
                                 if (true)//(getTypeResponse.IsRelationship || XrmService.IsWritable(field, type))
                                 {
                                     var stringValue = row.GetFieldAsString(column);
@@ -139,12 +144,12 @@ namespace JosephM.Deployment.ImportCsvs
                                         //as the referenced record may not be created yet
                                         entity.SetField(field, stringValue);
                                     }
-                                    else if (XrmService.IsLookup(field, type))
+                                    else if (XrmRecordService.XrmService.IsLookup(field, type))
                                     {
                                         //for lookups am going to set to a empty guid and allow the import part to replace with a correct guid
                                         if (!stringValue.IsNullOrWhiteSpace())
                                             entity.SetField(field,
-                                                new EntityReference(XrmService.GetLookupTargetEntity(field, type),
+                                                new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(field, type),
                                                     Guid.Empty)
                                                 {
                                                     Name = stringValue
@@ -152,11 +157,11 @@ namespace JosephM.Deployment.ImportCsvs
                                     }
                                     else
                                     {
-                                        entity.SetField(field, XrmService.ParseField(field, type, stringValue, request.DateFormat == DateFormat.American));
+                                        entity.SetField(field, XrmRecordService.XrmService.ParseField(field, type, stringValue, request.DateFormat == DateFormat.American));
                                     }
                                 }
                             }
-                            if (XrmService.FieldExists("transactioncurrencyid", type) &&
+                            if (XrmRecordService.XrmService.FieldExists("transactioncurrencyid", type) &&
                                 !entity.GetLookupGuid("transactioncurrencyid").HasValue)
                             {
                                 entity.SetLookupField("transactioncurrencyid", organisationSettings.BaseCurrencyId,
@@ -199,7 +204,7 @@ namespace JosephM.Deployment.ImportCsvs
                     }
                 }
             }
-            var imports = DoImport(entities, controller, request.MaskEmails, matchExistingRecords: request.MatchByName);
+            var imports = DataImportService.DoImport(entities, controller, request.MaskEmails, matchExistingRecords: request.MatchByName);
             foreach (var item in imports)
                 response.AddResponseItem(new ImportCsvsResponseItem(item));
         }

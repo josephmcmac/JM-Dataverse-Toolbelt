@@ -29,7 +29,7 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Gets All Many To Many Relationships To Records Of The Type In The Data Store
         /// </summary>
-        IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType);
+        IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType = null);
 
         /// <summary>
         ///     Gets The Picklist Options For A Picklist Field Filtered By The Dependant Values

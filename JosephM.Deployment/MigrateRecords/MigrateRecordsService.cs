@@ -5,6 +5,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
+using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportXml;
 using JosephM.Record.Extentions;
@@ -42,7 +43,7 @@ namespace JosephM.Deployment.MigrateRecords
                 , (entity) => exportedEntities.Add(entity)
                 , (entity) => exportedEntities.Add(entity));
 
-            var importService = new ImportXmlService(new XrmRecordService(request.TargetConnection));
+            var importService = new DataImportService(new XrmRecordService(request.TargetConnection));
             importService.DoImport(exportedEntities, controller, request.MaskEmails);
         }
     }

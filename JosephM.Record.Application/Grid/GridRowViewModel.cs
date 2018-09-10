@@ -181,7 +181,7 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 if (FormService != null)
                 {
-                    foreach (var action in FormService.GetOnChanges(f.FieldName, RecordType))
+                    foreach (var action in FormService.GetOnChanges(f.FieldName, RecordType, this))
                     {
                         try
                         {
