@@ -27,7 +27,7 @@ namespace JosephM.Application.ViewModel.Shared
             set
             {
                 _loadingMessage = value;
-                OnPropertyChanged("LoadingMessage");
+                OnPropertyChanged(nameof(LoadingMessage));
             }
         }
 
@@ -41,7 +41,7 @@ namespace JosephM.Application.ViewModel.Shared
             set
             {
                 _isLoading = value;
-                OnPropertyChanged("IsLoading");
+                OnPropertyChanged(nameof(IsLoading));
             }
         }
     }

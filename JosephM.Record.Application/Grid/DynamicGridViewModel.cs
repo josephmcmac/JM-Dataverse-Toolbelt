@@ -109,7 +109,7 @@ namespace JosephM.Application.ViewModel.Grid
             });
         }
 
-        private IEnumerable<XrmButtonViewModel> GridsFunctionsToXrmButtons(IEnumerable<CustomGridFunction> functions)
+        public IEnumerable<XrmButtonViewModel> GridsFunctionsToXrmButtons(IEnumerable<CustomGridFunction> functions)
         {
             var buttons = new List<XrmButtonViewModel>();
             foreach(var cf in functions.ToArray())

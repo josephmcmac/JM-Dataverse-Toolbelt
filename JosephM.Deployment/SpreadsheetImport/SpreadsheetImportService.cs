@@ -21,14 +21,14 @@ namespace JosephM.Deployment.SpreadsheetImport
 
         public XrmRecordService XrmRecordService { get; }
 
-        public IEnumerable<DataImportResponseItem> DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, LogController controller)
+        public IEnumerable<DataImportResponseItem> DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, LogController controller, bool useAmericanDates = false)
         {
             var responseItems = new List<DataImportResponseItem>();
 
             var entitiesToImport = new List<Entity>();
             foreach (var mapping in mappings)
             {
-                entitiesToImport.AddRange(MapToEntities(mapping.Value, mapping.Key, responseItems));
+                entitiesToImport.AddRange(MapToEntities(mapping.Value, mapping.Key, responseItems, useAmericanDates));
             }
             PopulateEmptyNameFields(entitiesToImport);
 
@@ -38,7 +38,7 @@ namespace JosephM.Deployment.SpreadsheetImport
             return responseItems;
         }
 
-        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, List<DataImportResponseItem> responses)
+        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, List<DataImportResponseItem> responses, bool useAmericanDates)
         {
             var result = new List<Entity>();
 
@@ -88,7 +88,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                             else
                             {
                                 //todo check date formats
-                                entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue));
+                                entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates));
                             }
                         }
                     }

@@ -120,7 +120,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new CustomFormFunction[0];
         }
 
-        internal virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
+        public virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
         {
             return new CustomGridFunction[0];
         }

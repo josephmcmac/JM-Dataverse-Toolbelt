@@ -330,9 +330,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                 if (fieldViewModel is RecordTypeFieldViewModel)
                                 {
                                     var typedViewModel = (RecordTypeFieldViewModel) fieldViewModel;
+                                    
                                     typedViewModel.ItemsSource = ObjectRecordService
                                         .GetPicklistKeyValues(fieldViewModel.FieldName,
-                                            fieldViewModel.GetRecordType())
+                                            fieldViewModel.GetRecordType(), fieldViewModel.RecordEntryViewModel.ParentFormReference, fieldViewModel.RecordEntryViewModel.GetRecord())
                                         .Select(p => new RecordType(p.Key, p.Value))
                                         .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                                         .OrderBy(rt => rt.Value)
@@ -881,7 +882,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 : lookupService.GetPrimaryField(recordTypeToLookup);
         }
 
-        internal override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
+        public override IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
         {
             var functions = new Dictionary<string, Action>();
             var recordType = recordForm.GetEnumerableFieldViewModel(referenceName).RecordType;

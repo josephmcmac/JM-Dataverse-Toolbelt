@@ -31,15 +31,13 @@ namespace JosephM.Xrm.Vsix.Module.ImportCsvs
 
             var request = new ImportCsvsRequest()
             {
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
                 MatchByName = true,
                 DateFormat = DateFormat.English,
-                CsvsToImport = files.Select(f => new ImportCsvsRequest.CsvToImport() { Csv = new FileReference(f) }).ToArray()
+                CsvsToImport = files.Select(f => new ImportCsvsRequest.CsvToImport() { SourceCsv = new FileReference(f) }).ToArray()
             };
 
             var uri = new UriQuery();
             uri.AddObject(nameof(ImportCsvsDialog.Request), request);
-            uri.AddObject(nameof(ImportCsvsDialog.SkipObjectEntry), true);
             ApplicationController.NavigateTo(typeof(ImportCsvsDialog), uri);
         }
     }

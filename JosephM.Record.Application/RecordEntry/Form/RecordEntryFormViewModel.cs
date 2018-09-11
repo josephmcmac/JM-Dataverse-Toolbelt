@@ -129,7 +129,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 {
                     item.IsVisible = FormService.IsSectionInContext(item.SectionIdentifier, GetRecord());
                 }
-                OnPropertyChanged("FormSectionsAsync");
+                OnPropertyChanged(nameof(FormSectionsAsync));
             }
         }
 

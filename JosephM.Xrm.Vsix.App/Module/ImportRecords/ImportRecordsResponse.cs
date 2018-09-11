@@ -1,5 +1,5 @@
 ﻿using JosephM.Core.Service;
-using JosephM.Deployment;
+using JosephM.Deployment.DataImport;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {
