@@ -2,7 +2,7 @@
 
 namespace JosephM.Core.Attributes
 {
-    public class AllowSaveAndLoad : Attribute
+    public class AllowNestedGridEdit : Attribute
     {
     }
 }

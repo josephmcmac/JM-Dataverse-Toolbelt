@@ -53,6 +53,7 @@ namespace JosephM.Deployment.ImportCsvs
             SpecificFiles
         }
 
+        [DoNotAllowGridOpen]
         [Group(Sections.Main, true, 10)]
         public class CsvToImport : IMapSpreadsheetImport
         {
@@ -81,6 +82,7 @@ namespace JosephM.Deployment.ImportCsvs
             [PropertyInContextByPropertyNotNull(nameof(SourceCsv))]
             public RecordType TargetType { get; set; }
 
+            [AllowNestedGridEdit]
             [RequiredProperty]
             [GridWidth(800)]
             [PropertyInContextByPropertyNotNull(nameof(SourceType))]

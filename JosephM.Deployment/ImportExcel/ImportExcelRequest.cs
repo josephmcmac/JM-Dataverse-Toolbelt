@@ -47,6 +47,7 @@ namespace JosephM.Deployment.ImportExcel
             public const string Misc = "Misc";
         }
 
+        [DoNotAllowGridOpen]
         [Group(Sections.Main, true, 10)]
         public class ExcelImportTabMapping : IMapSpreadsheetImport
         {
@@ -63,6 +64,7 @@ namespace JosephM.Deployment.ImportExcel
             [RecordTypeFor(nameof(Mappings) + "." + nameof(ExcelImportFieldMapping.TargetField))]
             public RecordType TargetType { get; set; }
 
+            [AllowNestedGridEdit]
             [RequiredProperty]
             [GridWidth(800)]
             [PropertyInContextByPropertyNotNull(nameof(SourceTab))]

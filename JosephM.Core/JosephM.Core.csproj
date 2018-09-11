@@ -90,6 +90,7 @@
     <Compile Include="AppConfig\Extentions.cs" />
     <Compile Include="AppConfig\IResolveObject.cs" />
     <Compile Include="AppConfig\IDependencyResolver.cs" />
+    <Compile Include="Attributes\AllowNestedGridEdit.cs" />
     <Compile Include="Attributes\CascadeOnChange.cs" />
     <Compile Include="Attributes\AllowDownload.cs" />
     <Compile Include="Attributes\DoNotAllowDelete.cs" />

@@ -201,7 +201,7 @@ namespace JosephM.Application.ViewModel.Grid
             return FormService.GetSubgridValidationRules(fieldName, RecordType);
         }
 
-        public override void LoadChildForm(TabAreaViewModelBase viewModel)
+        public override void LoadChildForm(object viewModel)
         {
             ParentForm.LoadChildForm(viewModel);
         }

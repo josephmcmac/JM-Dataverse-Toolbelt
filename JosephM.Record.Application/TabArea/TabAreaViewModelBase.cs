@@ -72,12 +72,12 @@ namespace JosephM.Application.ViewModel.TabArea
             return true;
         }
 
-        public virtual void LoadChildForm(TabAreaViewModelBase viewModel)
+        public virtual void LoadChildForm(object viewModel)
         {
             ApplicationController.DoOnMainThread(() =>
             {
                 ChildForms.Add(viewModel);
-                OnPropertyChanged("MainFormInContext");
+                OnPropertyChanged(nameof(MainFormInContext));
             });
         }
 
@@ -90,12 +90,12 @@ namespace JosephM.Application.ViewModel.TabArea
             });
         }
 
-        private ObservableCollection<TabAreaViewModelBase> _childForms = new ObservableCollection<TabAreaViewModelBase>();
+        private ObservableCollection<object> _childForms = new ObservableCollection<object>();
 
         /// <summary>
         /// DONT USE CLEAR USER ClearChildForm()
         /// </summary>
-        public ObservableCollection<TabAreaViewModelBase> ChildForms
+        public ObservableCollection<object> ChildForms
         {
             get { return _childForms; }
             set

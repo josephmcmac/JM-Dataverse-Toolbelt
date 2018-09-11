@@ -85,6 +85,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return null;
         }
 
+        public virtual RecordEntryFormViewModel GetEditEnumerableViewModel(string subGridName, string fieldName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        {
+            return null;
+        }
+
         internal virtual string GetDependantValue(string field, string recordType, RecordEntryViewModelBase viewModel)
         {
             return null;
@@ -138,6 +143,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public virtual bool AllowGridOpen(string fieldName, RecordEntryViewModelBase recordForm)
         {
             return true;
+        }
+
+        public virtual bool AllowNestedGridEdit(string subGridName, string fieldName)
+        {
+            return false;
         }
 
         public virtual bool UsePicklist(string fieldName, string recordType)

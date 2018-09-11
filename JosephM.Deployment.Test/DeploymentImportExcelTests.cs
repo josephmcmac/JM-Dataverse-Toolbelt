@@ -41,7 +41,7 @@ namespace JosephM.Deployment.Test
             var contactSource = mappingGrid.GridRecords.First(r => r.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).Value.Key.ToLower().Contains("contact"));
             Assert.AreEqual(Entities.contact, contactSource.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.TargetType)).Value?.Key);
 
-            contactSource.EditRowViewModel.Command.Execute();
+            contactSource.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings)).EditButton.Command.Execute();
             var contactMapEntryModel = app.GetSubObjectEntryViewModel(entryViewmodel);
             var fieldMappingGrid = contactMapEntryModel.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings));
             //verify the autmapped field 
@@ -62,7 +62,7 @@ namespace JosephM.Deployment.Test
             //map the other tab to accounts
             var accountSource = mappingGrid.GridRecords.First(r => r.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).Value.Key.ToLower().Contains("compan"));
             accountSource.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.TargetType)).Value = new RecordType(Entities.account, Entities.account);
-            accountSource.EditRowViewModel.Command.Execute();
+            accountSource.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings)).EditButton.Command.Execute();
             var accountMapEntryModel = app.GetSubObjectEntryViewModel(entryViewmodel);
             fieldMappingGrid = accountMapEntryModel.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings));
             //map the account name
@@ -136,10 +136,9 @@ namespace JosephM.Deployment.Test
             //add another map to create accounts for the parentcustomerid column
             mappingGrid.AddRow();
             var accountTarget = mappingGrid.GridRecords.First(r => r.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).Value == null);
-
             accountTarget.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).Value = accountTarget.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).ItemsSource.First();
             accountTarget.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.TargetType)).Value = new RecordType(Entities.account, Entities.account);
-            accountTarget.EditRowViewModel.Command.Execute();
+            accountTarget.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings)).EditButton.Command.Execute();
             var accountMapEntryModel = app.GetSubObjectEntryViewModel(entryViewmodel);
             var fieldMappingGrid = accountMapEntryModel.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings));
             

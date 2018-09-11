@@ -18,20 +18,28 @@
     </UserControl.Resources>
     <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <TextBox
-                Style="{StaticResource StringFieldEntryStyleReadOnly}"
-                Text="{Binding StringDisplay, Mode=OneWay, NotifyOnValidationError=True}" />
-        </Grid>
-        <Grid Grid.Column="1"
+        <Grid Grid.Column="0"
               Visibility="{Binding BulkAddButton, Converter={StaticResource NullToHiddenConverter}}"
               Style="{StaticResource FieldEntryButtonGridStyle}">
             <Button DataContext="{Binding Path=BulkAddButton}" 
                         Style="{StaticResource AddMultipleButton}"
                             Command="{Binding Command}" ToolTip="Click To Add Multiple Items" />
+        </Grid>
+        <Grid Grid.Column="1"
+              Visibility="{Binding EditAction, Converter={StaticResource NullToHiddenConverter}}"
+              Style="{StaticResource FieldEntryButtonGridStyle}">
+            <Button DataContext="{Binding Path=EditButton}" 
+                        Style="{StaticResource EditButton}"
+                            Command="{Binding Command}" ToolTip="Click To Edit Items" />
+        </Grid>
+        <Grid Grid.Column="2">
+            <TextBox
+                Style="{StaticResource StringFieldEntryStyleReadOnly}"
+                Text="{Binding StringDisplay, Mode=OneWay, NotifyOnValidationError=True}" />
         </Grid>
     </Grid>
 </UserControl>

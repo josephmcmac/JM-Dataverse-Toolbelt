@@ -25,11 +25,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         private FormMetadata _formMetadata;
         private ObjectRecordService ObjectRecordService { get; set; }
 
-        public ObjectFormService(object objectToEnter, ObjectRecordService objectRecordService, IDictionary<string, Type> objectTypeMaps = null)
+        public ObjectFormService(object objectToEnter, ObjectRecordService objectRecordService, IDictionary<string, Type> objectTypeMaps = null, IEnumerable<string> limitFields = null)
         {
             ObjectToEnter = objectToEnter;
             ObjectRecordService = objectRecordService;
             ObjectTypeMaps = objectTypeMaps;
+            LimitFields = limitFields;
         }
 
         public object ObjectToEnter { get; set; }
@@ -40,6 +41,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         }
 
         public IDictionary<string, Type> ObjectTypeMaps { get; private set; }
+        public IEnumerable<string> LimitFields { get; }
 
         public override FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null)
         {
@@ -92,6 +94,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                 foreach (var property in propertyMetadata.Where(m => m.Readable || m.Writeable))
                 {
+                    if (LimitFields != null && !LimitFields.Contains(property.SchemaName))
+                        continue;
                     var propinfo = ObjectRecordService.GetPropertyInfo(property.SchemaName, type.AssemblyQualifiedName);
                     var groupAttribute = propinfo.GetCustomAttribute<Group>();
 
@@ -724,9 +728,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             lookupForAttribute.PropertyPaths.First() == viewModel.ParentFormReference &&
                             lookupForAttribute.PropertyPaths.Last() == field)
                         {
-                            var parentsFieldViewmOdel = parentForm.GetRecordTypeFieldViewModel(parentField.Name);
-                            if (parentsFieldViewmOdel.Value != null)
-                                return parentsFieldViewmOdel.Value.Key;
+                            var parentObjectRecord = parentForm.GetRecord() as ObjectRecord;
+                            if(parentObjectRecord != null)
+                            {
+                                var recordTypeFor = parentObjectRecord.Instance.GetPropertyValue(parentField.Name) as RecordType;
+                                if (recordTypeFor != null)
+                                    return recordTypeFor.Key;
+                            }
                         }
                     }
                 }
@@ -776,6 +784,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return propertyInfo == null || !propertyInfo.PropertyType.GenericTypeArguments.Any() || propertyInfo.PropertyType.GenericTypeArguments[0].GetCustomAttribute<DoNotAllowGridEdit>() == null;
         }
 
+        public override bool AllowNestedGridEdit(string subGridName, string fieldName)
+        {
+            var gridClass = GetPropertyInfo(subGridName, ObjectType.AssemblyQualifiedName);
+            var gridEnumerableProperty = GetPropertyInfo(fieldName, gridClass.PropertyType.GenericTypeArguments[0].AssemblyQualifiedName);
+            return gridEnumerableProperty.GetCustomAttribute<AllowNestedGridEdit>() != null;
+        }
+
         public override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
         {
             var record = gridRow.GetRecord();
@@ -788,6 +803,27 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var newObject = mapper.Map(newRecord.Instance);
             var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName, parentForm.ApplicationController);
             var formService = new ObjectFormService(newObject, recordService);
+            formService.AllowLookupFunctions = AllowLookupFunctions;
+            var viewModel = new ObjectEntryViewModel(
+                parentForm.IsReadOnly ? (Action)null : () => onSave(new ObjectRecord(newObject)),
+                onCancel,
+                newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate
+                , saveButtonLabel: "Apply Changes", cancelButtonLabel: parentForm.IsReadOnly ? "Return" : null);
+            return viewModel;
+        }
+
+        public override RecordEntryFormViewModel GetEditEnumerableViewModel(string subGridName, string fieldName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        {
+            var record = gridRow.GetRecord();
+            if (!(record is ObjectRecord))
+                throw new NotSupportedException(string.Format("Error Expected Object Of Type {0}", typeof(ObjectRecord).Name));
+            var newRecord = (ObjectRecord)record;
+            //need to load the existing row to this
+            //lets start a dialog to add it on complete
+            var mapper = new ClassSelfMapper();
+            var newObject = mapper.Map(newRecord.Instance);
+            var recordService = new ObjectRecordService(newObject, ObjectRecordService.LookupService, ObjectRecordService.OptionSetLimitedValues, ObjectRecordService, subGridName, parentForm.ApplicationController);
+            var formService = new ObjectFormService(newObject, recordService, limitFields: new[] { fieldName });
             formService.AllowLookupFunctions = AllowLookupFunctions;
             var viewModel = new ObjectEntryViewModel(
                 parentForm.IsReadOnly ? (Action)null : () => onSave(new ObjectRecord(newObject)),
