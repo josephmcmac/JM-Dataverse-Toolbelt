@@ -788,7 +788,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             var gridClass = GetPropertyInfo(subGridName, ObjectType.AssemblyQualifiedName);
             var gridEnumerableProperty = GetPropertyInfo(fieldName, gridClass.PropertyType.GenericTypeArguments[0].AssemblyQualifiedName);
-            return gridEnumerableProperty.GetCustomAttribute<AllowNestedGridEdit>() != null;
+            return gridEnumerableProperty != null && gridEnumerableProperty.GetCustomAttribute<AllowNestedGridEdit>() != null;
         }
 
         public override RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
