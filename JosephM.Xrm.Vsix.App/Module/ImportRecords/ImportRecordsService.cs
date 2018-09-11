@@ -1,6 +1,6 @@
 ﻿using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Deployment;
+using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ImportXml;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
             var service = new ImportXmlService(xrmRecordService);
             var entities = service.LoadEntitiesFromXmlFiles(request.XmlFiles.Select(fr => fr.FileName).ToArray());
 
-            var importResponses = service.DoImport(entities, controller, false);
+            var importResponses = service.DataImportService.DoImport(entities, controller, false);
             response.AddResponseItems(importResponses);
         }
     }

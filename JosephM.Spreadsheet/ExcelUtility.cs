@@ -1,14 +1,10 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using JosephM.Core.Extentions;
 using JosephM.Core.Sql;
-
-#endregion
 
 namespace JosephM.Spreadsheet
 {
@@ -27,27 +23,27 @@ namespace JosephM.Spreadsheet
             return tabName.Contains(" ") ? "'" + tabName + "$'" : tabName + "$";
         }
 
-        /// <summary>
-        ///     Reads data from Excel into DataTable object
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="tabName"></param>
         /// <returns>DataTable containing the rows and columns from the excel sheet</returns>
-        private static DataTable SelectFromExcelTabName(string fileName, string tabName)
+        public static IEnumerable<QueryRow> SelectFromExcel(string fileName, string query)
         {
             OleDbDataAdapter dAdapter = null;
             try
             {
                 var connString = GetConnectionString(fileName);
-                var excelQuery = "select * from [" + GetInternalTabName(tabName) + "]";
+                var excelQuery = query;
                 var dTable = new DataTable();
                 dAdapter = new OleDbDataAdapter(excelQuery, connString);
                 dAdapter.Fill(dTable);
-                return dTable;
+                var itemsToAdd = new List<DataRow>();
+                foreach (DataRow row in dTable.Rows)
+                {
+                    itemsToAdd.Add(row);
+                }
+                return itemsToAdd.Select(r => new QueryRow(r)).ToArray();
             }
             catch (Exception ex)
             {
-                throw new Exception("Error reading from excel tab\nFile: " + fileName + "\nTab: " + tabName + "\n" +
+                throw new Exception("Error executing query from excel\nFile: " + fileName + "\nQuery: " + query + "\n" +
                                     ex.DisplayString());
             }
             finally
@@ -61,25 +57,8 @@ namespace JosephM.Spreadsheet
 
         public static IEnumerable<QueryRow> SelectPropertyBagsFromExcelTabName(string fileName, string tabName)
         {
-            return SelectRowsFromExcelTabName(fileName, tabName).Select(r => new QueryRow(r));
-        }
-
-
-        /// <summary>
-        ///     Reads data from Excel into DataTable object
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="tabName"></param>
-        /// <returns>DataTable containing the rows and columns from the excel sheet</returns>
-        private static IEnumerable<DataRow> SelectRowsFromExcelTabName(string fileName, string tabName)
-        {
-            var allData = SelectFromExcelTabName(fileName, tabName);
-            var itemsToAdd = new List<DataRow>();
-            foreach (DataRow row in allData.Rows)
-            {
-                itemsToAdd.Add(row);
-            }
-            return itemsToAdd;
+            var excelQuery = "select * from [" + GetInternalTabName(tabName) + "]";
+            return SelectFromExcel(fileName, excelQuery);
         }
 
         /// <summary>
@@ -87,7 +66,67 @@ namespace JosephM.Spreadsheet
         /// </summary>
         /// <param name="excelFile">The excel file.</param>
         /// <returns>String[]</returns>
-        public static String[] GetExcelTabNames(string excelFile)
+        public static IDictionary<string, IEnumerable<string>> GetExcelColumnNames(string excelFile)
+        {
+            var result = new Dictionary<string, List<string>>();
+
+            OleDbConnection objConn = null;
+            DataTable dt = null;
+
+            try
+            {
+                var connString = GetConnectionString(excelFile);
+                objConn = new OleDbConnection(connString);
+                objConn.Open();
+                dt = objConn.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, null);
+
+                var ignoreColumnNames = new List<string>();
+                for (var i = 0; i < 100; i++)
+                    ignoreColumnNames.Add("F" + i);
+
+                if (dt != null)
+                {
+                    var excelSheets = new String[dt.Rows.Count];
+                    foreach (DataRow row in dt.Rows)
+                    {
+
+                        var table = row["TABLE_NAME"].ToString();
+                        var column = row["COLUMN_NAME"].ToString();
+                        if (!ignoreColumnNames.Contains(column))
+                        {
+                            if (!result.ContainsKey(table))
+                                result.Add(table, new List<string>());
+                            result[table].Add(column);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unable to read sheet names from Excel File (" + excelFile + ") - " +
+                                    ex.DisplayString());
+            }
+            finally
+            {
+                if (objConn != null)
+                {
+                    objConn.Close();
+                    objConn.Dispose();
+                }
+                if (dt != null)
+                {
+                    dt.Dispose();
+                }
+            }
+            return result.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value);
+        }
+
+        /// <summary>
+        ///     This method retrieves the excel sheet names from an excel workbook.
+        /// </summary>
+        /// <param name="excelFile">The excel file.</param>
+        /// <returns>String[]</returns>
+        public static IEnumerable<string> GetExcelTabNames(string excelFile)
         {
             OleDbConnection objConn = null;
             DataTable dt = null;

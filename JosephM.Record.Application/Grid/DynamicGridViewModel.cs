@@ -99,14 +99,17 @@ namespace JosephM.Application.ViewModel.Grid
         {
             ApplicationController.DoOnMainThread(() =>
             {
-                _customFunctions =
-                    new ObservableCollection<XrmButtonViewModel>(GridsFunctionsToXrmButtons(_loadedGridButtons.ToArray()));
+                _customFunctions.Clear();
+                foreach (var button in GridsFunctionsToXrmButtons(_loadedGridButtons.ToArray()))
+                {
+                    _customFunctions.Add(button);
+                }
                 
                 OnPropertyChanged(nameof(CustomFunctions));
             });
         }
 
-        private IEnumerable<XrmButtonViewModel> GridsFunctionsToXrmButtons(IEnumerable<CustomGridFunction> functions)
+        public IEnumerable<XrmButtonViewModel> GridsFunctionsToXrmButtons(IEnumerable<CustomGridFunction> functions)
         {
             var buttons = new List<XrmButtonViewModel>();
             foreach(var cf in functions.ToArray())
@@ -150,7 +153,7 @@ namespace JosephM.Application.ViewModel.Grid
 
         }
 
-        private ObservableCollection<XrmButtonViewModel> _customFunctions;
+        private ObservableCollection<XrmButtonViewModel> _customFunctions = new ObservableCollection<XrmButtonViewModel>();
 
         public ObservableCollection<XrmButtonViewModel> CustomFunctions
         {

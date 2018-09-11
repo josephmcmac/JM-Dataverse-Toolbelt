@@ -1,8 +1,5 @@
-﻿#region
-
-using JosephM.Core.Service;
-
-#endregion
+﻿using JosephM.Core.Service;
+using JosephM.Deployment.DataImport;
 
 namespace JosephM.Deployment.ImportXml
 {

@@ -181,7 +181,7 @@ namespace JosephM.Application.ViewModel.Grid
             {
                 if (FormService != null)
                 {
-                    foreach (var action in FormService.GetOnChanges(f.FieldName, RecordType))
+                    foreach (var action in FormService.GetOnChanges(f.FieldName, RecordType, this))
                     {
                         try
                         {
@@ -201,7 +201,7 @@ namespace JosephM.Application.ViewModel.Grid
             return FormService.GetSubgridValidationRules(fieldName, RecordType);
         }
 
-        public override void LoadChildForm(TabAreaViewModelBase viewModel)
+        public override void LoadChildForm(object viewModel)
         {
             ParentForm.LoadChildForm(viewModel);
         }

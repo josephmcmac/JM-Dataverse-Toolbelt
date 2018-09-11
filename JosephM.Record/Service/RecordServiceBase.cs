@@ -232,7 +232,7 @@ namespace JosephM.Record.Service
             throw new NotImplementedException();
         }
 
-        public virtual IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType)
+        public virtual IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType = null)
         {
             throw new NotImplementedException();
         }

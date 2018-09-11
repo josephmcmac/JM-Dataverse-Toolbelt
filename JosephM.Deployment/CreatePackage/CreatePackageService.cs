@@ -1,37 +1,29 @@
-#region
-
-using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
+using JosephM.Deployment.DataImport;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Deployment.ExportXml;
-using JosephM.Record.Extentions;
-using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-
-#endregion
 
 namespace JosephM.Deployment.CreatePackage
 {
     public class CreatePackageService :
-        DataImportServiceBase<CreatePackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
+        ServiceBase<CreatePackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
     {
         public CreatePackageService(XrmRecordService xrmRecordService)
-            : base(xrmRecordService)
         {
+            XrmRecordService = xrmRecordService;
         }
+
+        public XrmRecordService XrmRecordService { get; }
 
         public override void ExecuteExtention(CreatePackageRequest request, ServiceResponseBase<DataImportResponseItem> response,
             LogController controller)
@@ -101,7 +93,7 @@ namespace JosephM.Deployment.CreatePackage
                         FolderContainingPackage = request.FolderPath,
                         Connection = request.DeployPackageInto
                     };
-                    var deployService = new DeployPackageService(new XrmRecordService(request.DeployPackageInto));
+                    var deployService = new DeployPackageService();
                     deployService.ExecuteExtention(deployRequest, response, controller);
                 }
             }

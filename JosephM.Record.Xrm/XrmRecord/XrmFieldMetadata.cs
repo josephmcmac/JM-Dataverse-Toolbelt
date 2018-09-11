@@ -43,7 +43,27 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public string DisplayName
         {
-            get { return XrmService.GetFieldLabel(FieldName, RecordType); }
+            get
+            {
+                if (XrmService.GetEntityMetadata(RecordType).IsIntersect ?? false)
+                {
+                    var relationshipMetadata = XrmService.GetRelationshipMetadataForEntityName(RecordType);
+                    var areSameEntity = relationshipMetadata.Entity1IntersectAttribute == relationshipMetadata.Entity2IntersectAttribute;
+                    if (areSameEntity)
+                    {
+                        return FieldName;
+                    }
+                    if (relationshipMetadata.Entity1IntersectAttribute == FieldName)
+                    {
+                        return XrmService.GetEntityLabel(relationshipMetadata.Entity1LogicalName);
+                    }
+                    else if(relationshipMetadata.Entity2IntersectAttribute == FieldName)
+                    {
+                        return XrmService.GetEntityLabel(relationshipMetadata.Entity2LogicalName);
+                    }
+                }
+                return XrmService.GetFieldLabel(FieldName, RecordType);
+            }
         }
 
         public int MaxLength

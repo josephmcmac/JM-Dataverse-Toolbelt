@@ -27,14 +27,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             if (recordForm is RecordEntryFormViewModel)
             {
-                RecordForm = (RecordEntryFormViewModel)recordForm;
                 LinkedRecordType = linkedRecordType;
+                RecordForm = (RecordEntryFormViewModel)recordForm;
 
                 DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
                 {
                     PageSize = RecordForm.GridPageSize,
                     ViewType = ViewType.AssociatedView,
-                    DeleteRow = !recordForm.IsReadOnly && FormService.AllowDelete(ReferenceName, GetRecordType()) ? RemoveRow :(Action<GridRowViewModel>)null,
+                    DeleteRow = !recordForm.IsReadOnly && FormService.AllowDelete(ReferenceName, GetRecordType()) ? RemoveRow : (Action<GridRowViewModel>)null,
                     EditRow = FormService.AllowGridOpen(ReferenceName, RecordForm) ? EditRow : (Action<GridRowViewModel>)null,
                     AddRow = !recordForm.IsReadOnly && FormService.AllowAddNew(ReferenceName, GetRecordType()) ? AddRow : (Action)null,
                     AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel),
@@ -67,6 +67,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 var bulkAddFunction = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);
                 if (bulkAddFunction != null)
                     BulkAddButton = new XrmButtonViewModel("BULKADD", "BULK ADD", bulkAddFunction, ApplicationController);
+                EditAction = !RecordEntryViewModel.IsReadOnly && FormService.AllowNestedGridEdit(RecordEntryViewModel.ParentFormReference, FieldName) ? LoadGridEditDialog : (Action)null;
             }
         }
 
@@ -75,7 +76,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         private bool _isLoaded;
         public override bool IsLoaded { get { return _isLoaded; } }
 
-        private string LinkedRecordLookup {  get { return FieldName; } }
+        private string LinkedRecordLookup { get { return FieldName; } }
         private string LinkedRecordType { get; set; }
 
         private RecordEntryFormViewModel RecordForm { get; set; }
@@ -123,7 +124,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 LoadingViewModel.LoadingMessage = "Please Wait While Loading";
                 try
                 {
-
                     var viewModel = GetEditRowViewModel(row);
                     if (viewModel == null)
                     {
@@ -345,7 +345,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     foreach (var item in Enumerable)
                     {
-                        if(item is ISelectable)
+                        if (item is ISelectable)
                         {
                             if (((ISelectable)item).Selected)
                             {
@@ -362,7 +362,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public IEnumerable Enumerable
         {
-            get { return ValueObject == null ? null : (IEnumerable) ValueObject; }
+            get { return ValueObject == null ? null : (IEnumerable)ValueObject; }
         }
 
         public override IEnumerable Value
@@ -376,6 +376,82 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 base.Value = value;
                 OnPropertyChanged(nameof(StringDisplay));
             }
+        }
+
+        private Action _editAction;
+        public Action EditAction
+        {
+            get
+            {
+                return _editAction;
+            }
+            set
+            {
+                _editAction = value;
+                if (_editAction != null)
+                    EditButton = new XrmButtonViewModel("New", () => { try { _editAction(); } catch (Exception ex) { ApplicationController.ThrowException(ex); } }, ApplicationController);
+                OnPropertyChanged(nameof(EditAction));
+            }
+        }
+
+        private XrmButtonViewModel _editButton;
+        public XrmButtonViewModel EditButton
+        {
+            get { return _editButton; }
+            set
+            {
+                _editButton = value;
+                OnPropertyChanged(nameof(EditButton));
+            }
+        }
+
+        public void LoadGridEditDialog()
+        {
+            //this loads a form for this row
+            //but with the form metadata set to only include this specific field
+            //so basically loads a child form for this fields row with only this enumerable field
+            RecordEntryViewModel.DoOnMainThread(() =>
+            {
+                try
+                {
+                    var mainFormInContext = RecordEntryViewModel;
+                    if (RecordEntryViewModel is GridRowViewModel)
+                        mainFormInContext = RecordEntryViewModel.ParentForm;
+
+                    var gridRow = RecordEntryViewModel as GridRowViewModel;
+                    if (gridRow != null)
+                    {
+                        var enumerableFieldThisFieldIsIn = mainFormInContext.GetEnumerableFieldViewModel(gridRow.ParentFormReference);
+                        var viewModel = FormService.GetEditEnumerableViewModel(gridRow.ParentFormReference, FieldName, mainFormInContext, (record) =>
+                        {
+                            mainFormInContext.ClearChildForm();
+                            var index = enumerableFieldThisFieldIsIn.DynamicGridViewModel.GridRecords.IndexOf(gridRow);
+                            DoOnMainThread(() =>
+                            {
+                                enumerableFieldThisFieldIsIn.RemoveRow(gridRow);
+                                enumerableFieldThisFieldIsIn.InsertRecord(record, index == -1 ? 0 : index);
+                            });
+                        }, () => mainFormInContext.ClearChildForm(), gridRow);
+                        if (viewModel == null)
+                        {
+                            throw new NotImplementedException("No Form For Type");
+                        }
+                        else
+                        {
+                            viewModel.IsReadOnly = IsReadOnly;
+                            mainFormInContext.LoadChildForm(viewModel);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    RecordEntryViewModel.ApplicationController.ThrowException(ex);
+                }
+                finally
+                {
+                    RecordEntryViewModel.LoadingViewModel.IsLoading = false;
+                }
+            });
         }
     }
 }

@@ -78,6 +78,14 @@ namespace JosephM.Record.Sql
             }
         }
 
+        public override IRecordTypeMetadata GetRecordTypeMetadata(string recordType)
+        {
+            var label = recordType;
+            if (label.EndsWith(".csv"))
+                label = label.Substring(0, label.Length - 4);
+            return new RecordMetadata() { SchemaName = recordType, DisplayName = label, CollectionName = label };
+        }
+
         public override IEnumerable<string> GetAllRecordTypes()
         {
             return new[] { CsvUtility.GetTableName(CsvNameQualified) };

@@ -90,11 +90,13 @@
     <Compile Include="AppConfig\Extentions.cs" />
     <Compile Include="AppConfig\IResolveObject.cs" />
     <Compile Include="AppConfig\IDependencyResolver.cs" />
+    <Compile Include="Attributes\AllowNestedGridEdit.cs" />
     <Compile Include="Attributes\CascadeOnChange.cs" />
     <Compile Include="Attributes\AllowDownload.cs" />
     <Compile Include="Attributes\DoNotAllowDelete.cs" />
     <Compile Include="Attributes\DoNotLimitDisplayHeight.cs" />
     <Compile Include="Attributes\DoNotAllowGridOpen.cs" />
+    <Compile Include="Attributes\IncludeManyToManyIntersects.cs" />
     <Compile Include="Attributes\ISelectable.cs" />
     <Compile Include="Attributes\Instruction.cs" />
     <Compile Include="Attributes\MyDescription.cs" />

@@ -173,15 +173,29 @@ namespace JosephM.Deployment.Test
             File.Copy(@"uomschedule.csv", Path.Combine(workFolder, @"uomschedule.csv"));
 
             //run the import and verify no errors
-            var importerExporterService = new ImportCsvsService(XrmRecordService);
+            var application = CreateAndLoadTestApplication<ImportCsvsModule>();
+
             var request = new ImportCsvsRequest
             {
-                Folder = new Folder(workFolder),
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.Folder,
+                CsvsToImport = new[]
+                {
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Price List Items.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Price Lists.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Products.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"uom.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"uomschedule.csv")) },
+                },
+                DateFormat = DateFormat.American
             };
-            var response = importerExporterService.Execute(request, Controller);
+
+            var response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
             if (response.HasError)
-                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.XrmDisplayString());
         }
 
         public void DeleteProductData()
@@ -630,13 +644,13 @@ namespace JosephM.Deployment.Test
 
         private IEnumerable<string> GetFields(string type, ImportXmlService importService)
         {
-            var fields = XrmService.GetFields(type).Where(f => importService.IsIncludeField(f, type));
+            var fields = XrmService.GetFields(type).Where(f => importService.DataImportService.IsIncludeField(f, type));
             return fields;
         }
 
         private IEnumerable<string> GetUpdateFields(string type, ImportXmlService importService)
         {
-            var updateFields = XrmService.GetFields(type).Where(f => importService.IsIncludeField(f, type));
+            var updateFields = XrmService.GetFields(type).Where(f => importService.DataImportService.IsIncludeField(f, type));
             return updateFields;
         }
 

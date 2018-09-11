@@ -21,6 +21,11 @@ namespace JosephM.Record.Sql
             File = new FileReference(fileName);
         }
 
+        public CsvFileConnection(FileReference fileReference)
+        {
+            File = fileReference;
+        }
+
         [FileMask(FileMasks.CsvFile)]
         public FileReference File { get; set; }
 

@@ -1,11 +1,11 @@
 ﻿using JosephM.Application;
-using JosephM.Application.Modules;
 using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
-using JosephM.Deployment;
-using JosephM.XrmModule.XrmConnection;
+using JosephM.Deployment.DataImport;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.XrmConnection;
 using System;
 using System.Linq;
 

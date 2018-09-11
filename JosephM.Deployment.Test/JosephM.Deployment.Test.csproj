@@ -66,6 +66,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DeploymentImportExcelTests.cs" />
     <Compile Include="DeploymentMigrateRecordsModuleTests.cs" />
     <Compile Include="DeploymentExportXmlModuleTests.cs" />
     <Compile Include="DeploymentImportCsvsTests.cs" />
@@ -105,6 +106,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Files\Test Entity.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Files\TestExcelImportAccountAndContact.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Files\TestExcelImportAssociations.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Files\TestExcelImportContacts.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Files\uom.csv">

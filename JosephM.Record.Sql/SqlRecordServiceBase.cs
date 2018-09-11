@@ -39,7 +39,7 @@ namespace JosephM.Record.Sql
         protected string GetFirstXQuery(string recordType, int x, IEnumerable<string> fields, IEnumerable<Condition> conditions, IEnumerable<SortExpression> sort,
             FilterOperator conditionOperator)
         {
-            var sql = string.Format("select {0} {1} from {2} {3} where {4} order by {5}"
+            var sql = string.Format("select {0} {1} from {2} {3} where {4} {5}"
                 , x > 0 ? " top " + x : null, CreateColumnSelect(fields, recordType), ToIdentifier(recordType),
                 GetJoinClause(recordType, fields),
                 conditionOperator == FilterOperator.And ? CreateAndClause(conditions) : CreateOrClause(conditions),
@@ -78,8 +78,8 @@ namespace JosephM.Record.Sql
         private string CreateSortClause(IEnumerable<SortExpression> sort)
         {
             if (sort == null || !sort.Any())
-                return " 1 ";
-            return string.Join(",",
+                return " ";
+            return " order by " + string.Join(",",
                 sort.Select(
                     s =>
                         string.Format("{0} {1}", ToIdentifier(s.FieldName),

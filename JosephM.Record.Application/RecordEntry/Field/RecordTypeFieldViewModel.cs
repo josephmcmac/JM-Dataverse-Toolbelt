@@ -1,9 +1,5 @@
-﻿#region
-
-using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {

@@ -5,6 +5,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
+using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ImportXml;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -28,10 +29,9 @@ using System.Xml;
 namespace JosephM.Deployment.DeployPackage
 {
     public class DeployPackageService :
-        DataImportServiceBase<DeployPackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
+        ServiceBase<DeployPackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
     {
-        public DeployPackageService(XrmRecordService xrmRecordService)
-            : base(xrmRecordService)
+        public DeployPackageService()
         {
         }
 

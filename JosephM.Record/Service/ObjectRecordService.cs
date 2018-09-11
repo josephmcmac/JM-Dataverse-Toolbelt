@@ -405,11 +405,24 @@ namespace JosephM.Record.Service
                                 .ToArray();
                         else
                         {
-                            return lookupService == null
-                                ? new RecordType[0]
-                                : lookupService.GetAllRecordTypes()
+                            if (lookupService == null)
+                                return new RecordType[0];
+                            var recordTypes = lookupService.GetAllRecordTypes();
+                            var options = recordTypes
                                 .Select(r => new RecordType(r, lookupService.GetRecordTypeMetadata(r).DisplayName))
-                                .ToArray();
+                                .ToList();
+                            var classType = GetClassType(recordType);
+                            var prop = classType.GetProperty(fieldName);
+                            if(prop.GetCustomAttribute<IncludeManyToManyIntersects>() != null)
+                            {
+                                var manyToManys = lookupService.GetManyToManyRelationships();
+                                foreach(var manyToMany in manyToManys)
+                                {
+                                    if (!options.Any(p => p.Key == manyToMany.IntersectEntityName))
+                                        options.Add(new RecordType(manyToMany.IntersectEntityName, manyToMany.PicklistDisplay));
+                                }
+                            }
+                            return options;
                         }
                     }
                 case RecordFieldType.RecordField:
@@ -638,21 +651,28 @@ namespace JosephM.Record.Service
                         return parsedService;
                     }
 
-                    var serviceType = attr.ServiceType;
-                    var connectionFieldType = value.GetType();
+                    var connectionObject = value;
+
+                    if(attr.ConnectionType != null)
+                    {
+                        connectionObject = attr.ConnectionType.CreateFromConstructorFor(value);
+                    }
+                    var connectionType = connectionObject.GetType();
+
+                    Type serviceType = null;
                     if (serviceType == null)
                     {
                         var serviceConnectionAttr =
-                            connectionFieldType.GetCustomAttribute<ServiceConnection>(true);
+                            connectionType.GetCustomAttribute<ServiceConnection>(true);
                         if (serviceConnectionAttr == null)
                             throw new NullReferenceException(
                                 string.Format(
                                     "The Property {0} Is Specified With A {1} Attribute However It's Type {2} Does Not Have The {3} Attribute Record To Create The {4}",
-                                    prop.Name, typeof (ConnectionFor).Name, connectionFieldType.Name,
+                                    prop.Name, typeof (ConnectionFor).Name, connectionType.Name,
                                     typeof (ServiceConnection).Name, typeof (IRecordService).Name));
                         serviceType = serviceConnectionAttr.ServiceType;
                     }
-                    var service = TypeLoader.LoadServiceForConnection(value, serviceType);
+                    var service = TypeLoader.LoadServiceForConnection(connectionObject, serviceType);
                     _serviceConnections.Add(value, service);
                     return service;
                 }

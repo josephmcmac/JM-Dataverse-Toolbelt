@@ -32,7 +32,7 @@
         <Setter Property="MinWidth" Value="20px" />
     </Style>
     <Style x:Key="MainMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
-        <Setter Property="Width" Value="{Binding Path=ActualWidth,ElementName=MainMenuGrid, Converter={StaticResource LengthConverter}, ConverterParameter=.12}" />
+        <Setter Property="Width" Value="{Binding Path=ActualWidth,ElementName=MainMenuGrid, Converter={StaticResource LengthConverter}, ConverterParameter=.10}" />
         <Setter Property="Height" Value="30px" />
         <Setter Property="Margin" Value="8,8,8,8" />
         <Setter Property="Padding" Value="0" />

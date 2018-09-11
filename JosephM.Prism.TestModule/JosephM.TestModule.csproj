@@ -164,6 +164,10 @@
       <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>
       <Name>JosephM.Application.ViewModel.Fakes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Sql\JosephM.Record.Sql.csproj">
+      <Project>{53651F05-D505-4D59-8FED-E723D26E491F}</Project>
+      <Name>JosephM.Record.Sql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>

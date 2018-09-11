@@ -124,7 +124,9 @@
     <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />
     <Compile Include="RecordEntry\Form\CreateOrUpdateViewModel.cs" />
+    <Compile Include="RecordEntry\Form\OnChangeFunction.cs" />
     <Compile Include="RecordEntry\Form\CustomFormFunction.cs" />
+    <Compile Include="RecordEntry\Form\OnChangeFunctions.cs" />
     <Compile Include="RecordEntry\Form\CustomFormFunctions.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />
     <Compile Include="Grid\CustomGridFunction.cs" />

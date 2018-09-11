@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.Attributes;
-
+using JosephM.Deployment.DataImport;
 
 namespace JosephM.Deployment.ImportXml
 {
@@ -8,6 +8,6 @@ namespace JosephM.Deployment.ImportXml
     public class ImportXmlModule
         : ServiceRequestModule<ImportXmlDialog, ImportXmlService, ImportXmlRequest, ImportXmlResponse, DataImportResponseItem>
     {
-        public override string MenuGroup => "Deployment";
+        public override string MenuGroup => "Data Import/Export";
     }
 }

@@ -1,12 +1,7 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.IO;
 using JosephM.Core.Extentions;
-using JosephM.Core.Service;
-using JosephM.Record.IService;
-
-#endregion
+using JosephM.Deployment.DataImport;
 
 namespace JosephM.Deployment.ImportCsvs
 {

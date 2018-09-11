@@ -129,7 +129,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 {
                     item.IsVisible = FormService.IsSectionInContext(item.SectionIdentifier, GetRecord());
                 }
-                OnPropertyChanged("FormSectionsAsync");
+                OnPropertyChanged(nameof(FormSectionsAsync));
             }
         }
 
@@ -174,7 +174,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             return f =>
             {
                 AddChangedField(f);
-                foreach (var action in FormService.GetOnChanges(f.FieldName))
+                foreach (var action in FormService.GetOnChanges(f.FieldName, this))
                 {
                     try
                     {

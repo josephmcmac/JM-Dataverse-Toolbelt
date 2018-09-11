@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
+using JosephM.Core.Test;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportCsvs;
 using JosephM.Xrm;
@@ -20,7 +21,54 @@ namespace JosephM.Deployment.Test
         [DeploymentItem(@"Files\Account.csv")]
         [DeploymentItem(@"Files\Contact.csv")]
         [TestMethod]
-        public void DeploymentExportImportCsvAccountAndContactsTest()
+        public void DeploymentImportCsvsLoadFolderTest()
+        {
+            PrepareTests();
+            var workFolder = ClearFilesAndData(new[]
+            {
+                Entities.account,
+                Entities.contact
+            });
+
+            File.Copy(@"Account.csv", Path.Combine(TestConstants.TestFolder, @"Account.csv"));
+            File.Copy(@"Contact.csv", Path.Combine(TestConstants.TestFolder, @"Contact.csv"));
+
+            var application = CreateAndLoadTestApplication<ImportCsvsModule>();
+
+            var entryViewModel = application.NavigateToDialogModuleEntryForm<ImportCsvsModule, ImportCsvsDialog>();
+
+            var mappingField = entryViewModel.GetEnumerableFieldViewModel(nameof(ImportCsvsRequest.CsvsToImport));
+            var mappingGrid = mappingField.DynamicGridViewModel;
+
+            //the buttons aren't loading into the grid in this script for some obscure reason
+            //think due to multiple for loading and something to do with observable collections
+            //so lets just load get them directly from the form service
+
+            //trigger the load folder function
+            var customButtons = mappingGrid.GridsFunctionsToXrmButtons(entryViewModel.FormService.GetCustomFunctionsFor(mappingField.FieldName, entryViewModel));
+            customButtons.First(b => b.Id == "LOADFOLDER").Invoke();
+
+            //this should have loaded the csv files as well as automapped them
+            //so lets trigger the process by saving
+            entryViewModel.SaveButtonViewModel.Invoke();
+
+            //check no errors
+            var dialog = application.GetNavigatedDialog<ImportCsvsDialog>();
+            var completionScreen = dialog.CompletionItem as ImportCsvsResponse;
+            if (completionScreen.HasError)
+                Assert.Fail(completionScreen.GetResponseItemsWithError().First().Exception.XrmDisplayString());
+
+            //check the accounts and contacts created
+            var accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            var contacts = XrmService.RetrieveAllEntityType(Entities.contact);
+            Assert.AreEqual(1, accounts.Count());
+            Assert.AreEqual(2, contacts.Count());
+        }
+
+        [DeploymentItem(@"Files\Account.csv")]
+        [DeploymentItem(@"Files\Contact.csv")]
+        [TestMethod]
+        public void DeploymentImportCsvsAccountAndContactsTest()
         {
             PrepareTests();
             var workFolder = ClearFilesAndData(new[]
@@ -36,13 +84,13 @@ namespace JosephM.Deployment.Test
 
             var request = new ImportCsvsRequest
             {
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
                 CsvsToImport = new []
                 {
-                    new ImportCsvsRequest.CsvToImport { Csv = new FileReference(Path.Combine(workFolder, @"Contact.csv")) },
-                    new ImportCsvsRequest.CsvToImport { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Contact.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Account.csv")) },
                 },
-                
                 DateFormat = DateFormat.American
             };
 
@@ -71,7 +119,7 @@ namespace JosephM.Deployment.Test
         [DeploymentItem(@"Files\Team.csv")]
         [DeploymentItem(@"Files\jmcg_testentity.csv")]
         [TestMethod]
-        public void DeploymentExportImportCsvMultipleTest()
+        public void DeploymentImportCsvMultipleTest()
         {
             PrepareTests();
             var typesExTeam = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity, Entities.account };
@@ -91,8 +139,21 @@ namespace JosephM.Deployment.Test
 
             var request = new ImportCsvsRequest
             {
-                Folder = new Folder(workFolder),
-                DateFormat = DateFormat.American
+                DateFormat = DateFormat.American,
+                CsvsToImport = new[] {
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Account.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"jmcg_testentity_account.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Test Entity.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Test Entity Two.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Test Entity Three.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Team.csv")) },
+                    }
             };
 
             var response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
@@ -102,10 +163,10 @@ namespace JosephM.Deployment.Test
 
             request = new ImportCsvsRequest
             {
-                Folder = new Folder(workFolder),
                 DateFormat = DateFormat.American,
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
-                CsvsToImport = new[] { new ImportCsvsRequest.CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } }
+                CsvsToImport = new[] {
+                    new ImportCsvsRequest.CsvToImport() {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } }
             };
             response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
             Assert.IsFalse(response.HasError);
@@ -113,7 +174,6 @@ namespace JosephM.Deployment.Test
             File.Copy(@"jmcg_testentity.csv", Path.Combine(workFolder, @"jmcg_testentity.csv"));
 
             //this one sets a record inactive state
-            //and matches on multiple keys
             var accounta = CreateTestRecord(Entities.account, new Dictionary<string, object>()
             {
                 { Fields.account_.name, "accounta" }
@@ -122,26 +182,15 @@ namespace JosephM.Deployment.Test
             {
                 { Fields.account_.name, "accountb" }
             });
-            var testMultiKeya = CreateTestRecord(Entities.jmcg_testentity, new Dictionary<string, object>()
-            {
-                { Fields.jmcg_testentity_.jmcg_name, "TESTMATCH" },
-                { Fields.jmcg_testentity_.jmcg_account, accounta.ToEntityReference() },
-            });
-            var testMultiKeyb = CreateTestRecord(Entities.jmcg_testentity, new Dictionary<string, object>()
-            {
-                { Fields.jmcg_testentity_.jmcg_name, "TESTMATCH" },
-                { Fields.jmcg_testentity_.jmcg_account, accountb.ToEntityReference() },
-            });
-
 
             application = CreateAndLoadTestApplication<ImportCsvsModule>();
 
             request = new ImportCsvsRequest
             {
-                Folder = new Folder(workFolder),
                 DateFormat = DateFormat.English,
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
-                CsvsToImport = new[] { new ImportCsvsRequest.CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"jmcg_testentity.csv")) } }
+                CsvsToImport = new[] {
+                    new ImportCsvsRequest.CsvToImport() {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"jmcg_testentity.csv")) } }
             };
 
             response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
@@ -149,8 +198,6 @@ namespace JosephM.Deployment.Test
 
             var entity = XrmService.GetFirst(Entities.jmcg_testentity, Fields.jmcg_testentity_.jmcg_name, "BLAH 2");
             Assert.AreEqual(XrmPicklists.State.Inactive, entity.GetOptionSetValue(Fields.jmcg_testentity_.statecode));
-            Assert.AreEqual(XrmPicklists.State.Inactive, Refresh(testMultiKeya).GetOptionSetValue(Fields.jmcg_testentity_.statecode));
-            Assert.AreEqual(XrmPicklists.State.Inactive, Refresh(testMultiKeyb).GetOptionSetValue(Fields.jmcg_testentity_.statecode));
         }
 
         [DeploymentItem(@"Files\Price List Items.csv")]
@@ -189,18 +236,29 @@ namespace JosephM.Deployment.Test
             DeleteAllMatchingName(Entities.pricelevel, priceLists);
 
             //run the import and verify no errors
-            var importerExporterService = new ImportCsvsService(XrmRecordService);
+            var application = CreateAndLoadTestApplication<ImportCsvsModule>();
             var request = new ImportCsvsRequest
             {
-                Folder = new Folder(workFolder),
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.Folder,
+                CsvsToImport = new[]
+                {
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Price List Items.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Price Lists.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Products.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"uom.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"uomschedule.csv")) },
+                },
+                DateFormat = DateFormat.American
             };
-            var response = importerExporterService.Execute(request, Controller);
-            if (response.HasError)
-                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
+            var response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
+            Assert.IsFalse(response.HasError);
 
             //okay lets get the last created price list item
-            var query = XrmService.BuildQuery(Entities.productpricelevel, null,null,null);
+            var query = XrmService.BuildQuery(Entities.productpricelevel, null, null, null);
             query.Orders.Add(new OrderExpression(Fields.productpricelevel_.createdon, OrderType.Descending));
             var latestPriceListItem = XrmService.RetrieveFirst(query);
             //verify it has a price
@@ -211,15 +269,25 @@ namespace JosephM.Deployment.Test
             latestPriceListItem = UpdateFieldsAndRetreive(latestPriceListItem, Fields.productpricelevel_.amount);
 
             //run again and verify no errors
-            importerExporterService = new ImportCsvsService(XrmRecordService);
             request = new ImportCsvsRequest
             {
-                Folder = new Folder(workFolder),
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.Folder,
+                CsvsToImport = new[]
+                {
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Price List Items.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Price Lists.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Products.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"uom.csv")) },
+                    new ImportCsvsRequest.CsvToImport {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"uomschedule.csv")) },
+                },
+                DateFormat = DateFormat.American
             };
-            response = importerExporterService.Execute(request, Controller);
-            if (response.HasError)
-                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
+            response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
+            Assert.IsFalse(response.HasError);
             //verify the price list item we updated is changed
             latestPriceListItem = Refresh(latestPriceListItem);
             Assert.AreEqual(initialPrice, latestPriceListItem.GetMoneyValue(Fields.productpricelevel_.amount));
@@ -234,33 +302,38 @@ namespace JosephM.Deployment.Test
             DeleteAll(Entities.account);
             File.Copy(@"Account.csv", Path.Combine(workFolder, @"Account.csv"));
 
-            var importerExporterService = new ImportCsvsService(XrmRecordService);
+            var application = CreateAndLoadTestApplication<ImportCsvsModule>();
 
             var request = new ImportCsvsRequest
             {
-                Folder = new Folder(workFolder),
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
-                CsvsToImport = new[] { new ImportCsvsRequest.CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } },
+                CsvsToImport = new[] {
+                    new ImportCsvsRequest.CsvToImport()
+                    {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Account.csv"))
+                    }
+                },
                 MaskEmails = true
-
             };
-            var response = importerExporterService.Execute(request, Controller);
+            var response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
             if (response.HasError)
-                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.XrmDisplayString());
 
             var entity = XrmService.GetFirst(Entities.account);
             Assert.IsTrue(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));
 
             request = new ImportCsvsRequest
             {
-                Folder = new Folder(workFolder),
-                FolderOrFiles = ImportCsvsRequest.CsvImportOption.SpecificFiles,
-                CsvsToImport = new[] { new ImportCsvsRequest.CsvToImport() { Csv = new FileReference(Path.Combine(workFolder, @"Account.csv")) } },
+                CsvsToImport = new[] {
+                    new ImportCsvsRequest.CsvToImport()
+                    {
+                        SourceCsv = new FileReference(Path.Combine(workFolder, @"Account.csv"))
+                    }
+                },
                 MaskEmails = false
             };
-            response = importerExporterService.Execute(request, Controller);
+            response = application.NavigateAndProcessDialog<ImportCsvsModule, ImportCsvsDialog, ImportCsvsResponse>(request);
             if (response.HasError)
-                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.XrmDisplayString());
 
             entity = XrmService.GetFirst(Entities.account);
             Assert.IsFalse(entity.GetStringField(Fields.account_.emailaddress1).Contains("_AT_"));

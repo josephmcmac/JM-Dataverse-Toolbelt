@@ -1,6 +1,6 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Deployment;
+using JosephM.Deployment.DataImport;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {

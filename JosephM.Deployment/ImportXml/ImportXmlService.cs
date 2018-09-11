@@ -1,34 +1,25 @@
-#region
-
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
-using JosephM.Record.Extentions;
-using JosephM.Record.IService;
+using JosephM.Deployment.DataImport;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm;
-using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-
-#endregion
 
 namespace JosephM.Deployment.ImportXml
 {
     public class ImportXmlService :
-        DataImportServiceBase<ImportXmlRequest, ImportXmlResponse, DataImportResponseItem>
+        ServiceBase<ImportXmlRequest, ImportXmlResponse, DataImportResponseItem>
     {
         public ImportXmlService(XrmRecordService xrmRecordService)
-            : base(xrmRecordService)
         {
+            DataImportService = new DataImportService(xrmRecordService);
+            XrmRecordService = xrmRecordService;
         }
+
+        public DataImportService DataImportService { get; }
+        public XrmRecordService XrmRecordService { get; }
 
         public override void ExecuteExtention(ImportXmlRequest request, ImportXmlResponse response,
             LogController controller)
@@ -43,7 +34,7 @@ namespace JosephM.Deployment.ImportXml
             controller.UpdateProgress(0, 1, "Loading XML Files");
             var entities = LoadEntitiesFromXmlFiles(folder);
 
-            var importResponses = DoImport(entities, controller, maskEmails);
+            var importResponses = DataImportService.DoImport(entities, controller, maskEmails);
             foreach (var item in importResponses)
                 response.AddResponseItem(item);
         }

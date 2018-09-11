@@ -107,15 +107,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataImport\DataImportService.cs" />
     <Compile Include="DeployPackage\DeployPackageDialog.cs" />
     <Compile Include="DeployPackage\DeployPackageModule.cs" />
     <Compile Include="DeployPackage\DeployPackageRequest.cs" />
     <Compile Include="DeployPackage\DeployPackageService.cs" />
     <Compile Include="DeploymentModule.cs" />
-    <Compile Include="DataImportServiceBase.cs" />
     <Compile Include="DeployPackage\SolutionImportResult.cs" />
     <Compile Include="ExportXml\ExportType.cs" />
     <Compile Include="ExportXml\ExportRecordType.cs" />
+    <Compile Include="ImportExcel\ImportExcelDialog.cs" />
+    <Compile Include="ImportExcel\ImportExcelModule.cs" />
+    <Compile Include="ImportExcel\ImportExcelRequest.cs" />
+    <Compile Include="ImportExcel\ImportExcelResponse.cs" />
+    <Compile Include="ImportExcel\ImportExcelResponseItem.cs" />
+    <Compile Include="ImportExcel\ImportExcelService.cs" />
     <Compile Include="ImportCsvs\DateFormat.cs" />
     <Compile Include="ImportCsvs\GenerateTemplateConfiguration.cs" />
     <Compile Include="ImportCsvs\GenerateTemplatesRequest.cs" />
@@ -146,7 +152,10 @@
     <Compile Include="MigrateRecords\MigrateRecordsResponse.cs" />
     <Compile Include="MigrateRecords\MigrateRecordsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataImportResponseItem.cs" />
+    <Compile Include="DataImport\DataImportResponseItem.cs" />
+    <Compile Include="SpreadsheetImport\IMapSpreadsheetField.cs" />
+    <Compile Include="SpreadsheetImport\IMapSpreadsheetImport.cs" />
+    <Compile Include="SpreadsheetImport\SpreadsheetImportService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="JosephM.snk" />
@@ -171,6 +180,10 @@
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Sql\JosephM.Record.Sql.csproj">
+      <Project>{53651F05-D505-4D59-8FED-E723D26E491F}</Project>
+      <Name>JosephM.Record.Sql</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
       <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>

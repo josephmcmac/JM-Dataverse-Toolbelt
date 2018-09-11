@@ -1,13 +1,10 @@
-﻿using JosephM.Application;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.Modules;
-using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.Service;
-using JosephM.Deployment;
 using JosephM.Deployment.CreatePackage;
-using JosephM.XrmModule.XrmConnection;
-using JosephM.Xrm.Vsix.Application;
+using JosephM.Deployment.DataImport;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using System;
+using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.Vsix.Module.CreatePackage
 {

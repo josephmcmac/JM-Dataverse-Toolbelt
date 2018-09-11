@@ -55,7 +55,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new ValidationRuleBase[] { };
         }
 
-        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName)
+        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, RecordEntryViewModelBase entryViewModel)
         {
             return new Action<RecordEntryViewModelBase>[] {};
         }
@@ -70,7 +70,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return false;
         }
 
-        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string subGrid)
+        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string subGrid, RecordEntryViewModelBase entryViewModel)
         {
             return new Action<RecordEntryViewModelBase>[] {};
         }
@@ -81,6 +81,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         }
 
         public virtual RecordEntryFormViewModel GetEditRowViewModel(string subGridName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        {
+            return null;
+        }
+
+        public virtual RecordEntryFormViewModel GetEditEnumerableViewModel(string subGridName, string fieldName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
         {
             return null;
         }
@@ -120,7 +125,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new CustomFormFunction[0];
         }
 
-        internal virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
+        public virtual IEnumerable<CustomGridFunction> GetCustomFunctionsFor(string referenceName, RecordEntryFormViewModel recordForm)
         {
             return new CustomGridFunction[0];
         }
@@ -138,6 +143,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public virtual bool AllowGridOpen(string fieldName, RecordEntryViewModelBase recordForm)
         {
             return true;
+        }
+
+        public virtual bool AllowNestedGridEdit(string subGridName, string fieldName)
+        {
+            return false;
         }
 
         public virtual bool UsePicklist(string fieldName, string recordType)
