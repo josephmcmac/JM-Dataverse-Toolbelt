@@ -374,6 +374,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                                     {
                                         var searchTermFilter = new Filter();
                                         searchTermFilter.Conditions = new List<Condition>();
+                                        searchTermFilter.Conditions.Add(new Condition(field, ConditionType.Like, string.Format("%{0}%", s.Text)));
                                         searchTermFilter.Conditions.Add(new Condition("createdon", ConditionType.GreaterEqual, first));
                                         if(limit.HasValue)
                                             searchTermFilter.Conditions.Add(new Condition("createdon", ConditionType.LessThan, limit.Value));
