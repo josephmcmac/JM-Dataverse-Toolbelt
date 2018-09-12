@@ -66,7 +66,7 @@ namespace JosephM.Xrm.Vsix.App
 
             public override string CreateIssueLink => "https://github.com/josephmcmac/XRM-Developer-Tool/issues/new";
 
-            public override Core.FieldType.Url OtherLink => new Core.FieldType.Url("https://github.com/josephmcmac/XRM-Developer-Tool/releases", "Download Desktop App");
+            public override Core.FieldType.Url OtherLink => new Core.FieldType.Url("https://github.com/josephmcmac/XRM-Developer-Tool/releases/latest", "Download Desktop App");
 
             //public override Assembly MainAssembly => Assembly.GetExecutingAssembly();
 
