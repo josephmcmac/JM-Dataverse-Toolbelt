@@ -7,6 +7,7 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.InstanceComparer.AddToSolution;
+using JosephM.Record.Extentions;
 using JosephM.Record.Service;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
@@ -213,7 +214,11 @@ namespace JosephM.InstanceComparer
                 {
                     g.ApplicationController.ThrowException(ex);
                 }
-            }, visibleFunction: (g) => true);
+            }, visibleFunction: (g) =>
+            {
+                var lookupService = g.RecordService.GetLookupService(nameof(InstanceComparerRequest.InstanceCompareDataCompare.RecordType), typeof(InstanceComparerRequest.InstanceCompareDataCompare).AssemblyQualifiedName, nameof(InstanceComparerRequest.DataComparisons), null);
+                return lookupService != null && lookupService.RecordTypeExists("adx_webfile");
+            });
             this.AddCustomGridFunction(customGridFunction, typeof(InstanceComparerRequest.InstanceCompareDataCompare));
         }
     }

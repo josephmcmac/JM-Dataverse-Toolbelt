@@ -158,7 +158,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public bool IsVisible
+        public virtual bool IsVisible
         {
             get { return _isVisible; }
             set

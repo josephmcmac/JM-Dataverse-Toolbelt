@@ -97,10 +97,11 @@ namespace JosephM.Application.ViewModel.Grid
 
         public void RefreshGridButtons()
         {
+            var buttons = GridsFunctionsToXrmButtons(_loadedGridButtons.ToArray());
             ApplicationController.DoOnMainThread(() =>
             {
                 _customFunctions.Clear();
-                foreach (var button in GridsFunctionsToXrmButtons(_loadedGridButtons.ToArray()))
+                foreach (var button in buttons)
                 {
                     _customFunctions.Add(button);
                 }
