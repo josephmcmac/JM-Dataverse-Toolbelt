@@ -71,6 +71,40 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
+        public override bool IsVisible
+        {
+            get
+            {
+                return base.IsVisible;
+            }
+            set
+            {
+                var isChanging = base.IsVisible != value;
+                base.IsVisible = value;
+                //at least one grid buttons visibility aint (ADDPORTALTYPES)
+                //correct until its visible so lets refresh them when set visible
+                if (DynamicGridViewModel != null && isChanging && value)
+                {
+                    ApplicationController.DoOnAsyncThread(() =>
+                    {
+                        RecordEntryViewModel.LoadingViewModel.IsLoading = true;
+                        try
+                        {
+                            DynamicGridViewModel.RefreshGridButtons();
+                        }
+                        catch (Exception ex)
+                        {
+                            ApplicationController.ThrowException(ex);
+                        }
+                        finally
+                        {
+                            RecordEntryViewModel.LoadingViewModel.IsLoading = false;
+                        }
+                    });
+                }
+            }
+        }
+
         public XrmButtonViewModel BulkAddButton { get; set; }
 
         private bool _isLoaded;
