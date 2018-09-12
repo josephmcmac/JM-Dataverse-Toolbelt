@@ -112,22 +112,26 @@ namespace JosephM.Application.Desktop.Application
 
         public override string GetSaveFileName(string initialFileName, string extention)
         {
-            var selectFolderDialog = new SaveFileDialog() { DefaultExt = extention, FileName = initialFileName, Filter = string.Format("{0} files |*{0}", extention) };
-            var result = selectFolderDialog.ShowDialog();
-            if (result == DialogResult.OK)
+            using (var selectFolderDialog = new SaveFileDialog() { DefaultExt = extention, FileName = initialFileName, Filter = string.Format("{0} files |*{0}", extention) })
             {
-                return selectFolderDialog.FileName;
+                var result = selectFolderDialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    return selectFolderDialog.FileName;
+                }
+                return null;
             }
-            return null;
         }
 
         public override string GetSaveFolderName()
         {
-            var selectFolderDialog = new FolderBrowserDialog { ShowNewFolderButton = true };
-            var dialogResult = selectFolderDialog.ShowDialog();
-            return dialogResult == DialogResult.OK
-                ? selectFolderDialog.SelectedPath
-                : null;
+            using (var selectFolderDialog = new FolderBrowserDialog { ShowNewFolderButton = true })
+            {
+                var dialogResult = selectFolderDialog.ShowDialog();
+                return dialogResult == DialogResult.OK
+                    ? selectFolderDialog.SelectedPath
+                    : null;
+            }
         }
     }
 }
