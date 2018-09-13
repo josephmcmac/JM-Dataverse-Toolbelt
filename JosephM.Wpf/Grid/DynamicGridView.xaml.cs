@@ -169,12 +169,16 @@ namespace JosephM.Wpf.Grid
                     foreach (var gridField in gridSectionViewModel.FieldMetadata.OrderBy(gf => gf.Order))
                     {
                         var fieldName = gridField.FieldName;
-                        var fieldMetadata = gridSectionViewModel.RecordService.GetFieldMetadata(fieldName,
-                            gridSectionViewModel
-                                .RecordType);
-                        var thisColumn = new ColumnMetadata(fieldName, fieldMetadata.DisplayName ?? fieldName, fieldMetadata.FieldType, gridField.WidthPart,
-                            gridField.IsEditable, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType));
-                        columnMetadata.Add(thisColumn);
+                        if (gridSectionViewModel.RecordService.FieldExists(fieldName,
+                            gridSectionViewModel.RecordType))
+                        {
+                            var fieldMetadata = gridSectionViewModel.RecordService.GetFieldMetadata(fieldName,
+                                gridSectionViewModel
+                                    .RecordType);
+                            var thisColumn = new ColumnMetadata(fieldName, fieldMetadata.DisplayName ?? fieldName, fieldMetadata.FieldType, gridField.WidthPart,
+                                gridField.IsEditable, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType));
+                            columnMetadata.Add(thisColumn);
+                        }
                     }
 
                     gridSectionViewModel.ApplicationController.DoOnMainThread(() =>
