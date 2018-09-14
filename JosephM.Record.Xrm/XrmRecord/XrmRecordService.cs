@@ -1353,6 +1353,13 @@ namespace JosephM.Record.Xrm.XrmRecord
                     ParentLookupType = Entities.salesorder,
                     UniqueChildFields = new [] { Fields.salesorderdetail_.salesorderdetailid, Fields.salesorderdetail_.productid }
                 },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_webformmetadata,
+                    ParentLookupField = Fields.adx_webformmetadata_.adx_webformstep,
+                    ParentLookupType = Entities.adx_webformstep,
+                    UniqueChildFields = new [] { Fields.adx_webformmetadata_.adx_type, Fields.adx_webformmetadata_.adx_sectionname, Fields.adx_webformmetadata_.adx_attributelogicalname, Fields.adx_webformmetadata_.adx_tabname, Fields.adx_webformmetadata_.adx_subgrid_name }
+                },
         });
         public TypeConfigs GetTypeConfigs()
         {
