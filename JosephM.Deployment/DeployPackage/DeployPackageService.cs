@@ -101,7 +101,8 @@ namespace JosephM.Deployment.DeployPackage
                         {
                             var ignoreTheseErrorCodes = new[]
                             {
-                                "0x8004F039"//deactivated duplicate detection rules - these get activated in next set of code
+                                "0x8004F039",
+                                "0x80045043"//deactivated duplicate detection rules - these get activated in next set of code
                             };
                             var dataString = job.GetStringField(Fields.importjob_.data);
                             var xmlDocument = new XmlDocument();
