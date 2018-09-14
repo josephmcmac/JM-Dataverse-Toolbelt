@@ -21,24 +21,24 @@ namespace JosephM.Deployment.SpreadsheetImport
 
         public XrmRecordService XrmRecordService { get; }
 
-        public IEnumerable<DataImportResponseItem> DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, LogController controller, bool useAmericanDates = false)
+        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, LogController controller, bool useAmericanDates = false)
         {
-            var responseItems = new List<DataImportResponseItem>();
+            var response = new SpreadsheetImportResponse();
 
             var entitiesToImport = new List<Entity>();
             foreach (var mapping in mappings)
             {
-                entitiesToImport.AddRange(MapToEntities(mapping.Value, mapping.Key, responseItems, useAmericanDates));
+                entitiesToImport.AddRange(MapToEntities(mapping.Value, mapping.Key, response, useAmericanDates));
             }
             PopulateEmptyNameFields(entitiesToImport);
 
             var dataImportService = new DataImportService(XrmRecordService);
-            responseItems.AddRange(dataImportService.DoImport(entitiesToImport, controller, maskEmails, matchExistingRecords: matchByName));
+            response.LoadDataImport(dataImportService.DoImport(entitiesToImport, controller, maskEmails, matchExistingRecords: matchByName));
 
-            return responseItems;
+            return response;
         }
 
-        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, List<DataImportResponseItem> responses, bool useAmericanDates)
+        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, SpreadsheetImportResponse response, bool useAmericanDates)
         {
             var result = new List<Entity>();
 
@@ -101,7 +101,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                 catch (Exception ex)
                 {
                     //todo perhaps could add row number and source details etc.
-                    responses.Add(new DataImportResponseItem("Mapping Error", ex));
+                    response.AddResponseItem(new DataImportResponseItem("Mapping Error", ex));
                 }
             }
             return result;

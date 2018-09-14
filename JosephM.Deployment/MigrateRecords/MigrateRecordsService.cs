@@ -43,8 +43,18 @@ namespace JosephM.Deployment.MigrateRecords
                 , (entity) => exportedEntities.Add(entity)
                 , (entity) => exportedEntities.Add(entity));
 
+            var removeDuplicates = new List<Entity>();
+            foreach(var entity in exportedEntities)
+            {
+                if(!removeDuplicates.Any(e => e.Id == entity.Id && e.LogicalName == entity.LogicalName))
+                {
+                    removeDuplicates.Add(entity);
+                }
+            }
+
             var importService = new DataImportService(new XrmRecordService(request.TargetConnection));
-            importService.DoImport(exportedEntities, controller, request.MaskEmails);
+            var dataImportResponse = importService.DoImport(removeDuplicates, controller, request.MaskEmails);
+            response.LoadDataImport(dataImportResponse);
         }
     }
 }

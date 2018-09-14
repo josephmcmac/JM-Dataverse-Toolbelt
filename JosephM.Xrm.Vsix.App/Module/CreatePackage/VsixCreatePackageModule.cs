@@ -11,7 +11,7 @@ namespace JosephM.Xrm.Vsix.Module.CreatePackage
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
     public class VsixCreatePackageModule
-                : ServiceRequestModule<VsixCreatePackageDialog, CreatePackageService, CreatePackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
+                : ServiceRequestModule<VsixCreatePackageDialog, CreatePackageService, CreatePackageRequest, CreatePackageResponse, DataImportResponseItem>
     {
         public override string MenuGroup => "Deployment";
     }

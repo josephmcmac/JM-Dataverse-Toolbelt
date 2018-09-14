@@ -37,9 +37,7 @@ namespace JosephM.Deployment.ImportExcel
 
             var importService = new SpreadsheetImportService(XrmRecordService);
             var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, controller);
-
-            foreach (var item in responseItems)
-                response.AddResponseItem(new ImportExcelResponseItem(item));
+            response.LoadSpreadsheetImport(responseItems);
         }
     }
 }

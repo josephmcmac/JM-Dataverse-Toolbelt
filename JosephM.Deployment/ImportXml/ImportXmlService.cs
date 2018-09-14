@@ -34,9 +34,8 @@ namespace JosephM.Deployment.ImportXml
             controller.UpdateProgress(0, 1, "Loading XML Files");
             var entities = LoadEntitiesFromXmlFiles(folder);
 
-            var importResponses = DataImportService.DoImport(entities, controller, maskEmails);
-            foreach (var item in importResponses)
-                response.AddResponseItem(item);
+            var importResponse = DataImportService.DoImport(entities, controller, maskEmails);
+            response.LoadDataImport(importResponse);
         }
 
         public IEnumerable<Entity> LoadEntitiesFromXmlFiles(string folder)
