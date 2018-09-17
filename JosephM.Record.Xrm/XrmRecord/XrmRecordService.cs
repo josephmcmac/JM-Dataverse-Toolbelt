@@ -3,6 +3,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.ObjectMapping;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
@@ -696,7 +697,11 @@ namespace JosephM.Record.Xrm.XrmRecord
                                     {
                                         //exclude where null or where a linked field
                                         //linked fields in view not implemented in UI
-                                        if (item.Attributes["name"] == null || item.Attributes["width"] == null || item.Attributes["name"].Value == null || item.Attributes["name"].Value.Contains("."))
+                                        if (item.Attributes["name"] == null 
+                                            || item.Attributes["width"] == null
+                                            || item.Attributes["name"].Value == null
+                                            || item.Attributes["name"].Value.Contains(".")
+                                            || !this.FieldExists(item.Attributes["name"].Value, recordType))
                                             continue;
                                         viewFields.Add(new ViewField(item.Attributes["name"].Value, ++i,
                                             Convert.ToInt32(item.Attributes["width"].Value)));
@@ -1356,6 +1361,20 @@ namespace JosephM.Record.Xrm.XrmRecord
                     ParentLookupField = Fields.uom_.uomscheduleid,
                     ParentLookupType = Entities.uomschedule,
                     UniqueChildFields = new [] { Fields.uom_.baseuom, Fields.uom_.name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.salesorderdetail,
+                    ParentLookupField = Fields.salesorderdetail_.salesorderid,
+                    ParentLookupType = Entities.salesorder,
+                    UniqueChildFields = new [] { Fields.salesorderdetail_.salesorderdetailid, Fields.salesorderdetail_.productid }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_webformmetadata,
+                    ParentLookupField = Fields.adx_webformmetadata_.adx_webformstep,
+                    ParentLookupType = Entities.adx_webformstep,
+                    UniqueChildFields = new [] { Fields.adx_webformmetadata_.adx_type, Fields.adx_webformmetadata_.adx_sectionname, Fields.adx_webformmetadata_.adx_attributelogicalname, Fields.adx_webformmetadata_.adx_tabname, Fields.adx_webformmetadata_.adx_subgrid_name }
                 },
         });
         public TypeConfigs GetTypeConfigs()

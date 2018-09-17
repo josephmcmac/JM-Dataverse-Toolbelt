@@ -16,7 +16,7 @@ using System.Linq;
 namespace JosephM.Deployment.CreatePackage
 {
     public class CreatePackageService :
-        ServiceBase<CreatePackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
+        ServiceBase<CreatePackageRequest, CreatePackageResponse, DataImportResponseItem>
     {
         public CreatePackageService(XrmRecordService xrmRecordService)
         {
@@ -25,14 +25,14 @@ namespace JosephM.Deployment.CreatePackage
 
         public XrmRecordService XrmRecordService { get; }
 
-        public override void ExecuteExtention(CreatePackageRequest request, ServiceResponseBase<DataImportResponseItem> response,
+        public override void ExecuteExtention(CreatePackageRequest request, CreatePackageResponse response,
             LogController controller)
         {
             CreateDeploymentPackage(request, controller, response);
         }
 
 
-        private void CreateDeploymentPackage(CreatePackageRequest request, LogController controller, ServiceResponseBase<DataImportResponseItem> response)
+        private void CreateDeploymentPackage(CreatePackageRequest request, LogController controller, CreatePackageResponse response)
         {
             var folderPath = request.FolderPath.FolderPath;
 
@@ -94,7 +94,9 @@ namespace JosephM.Deployment.CreatePackage
                         Connection = request.DeployPackageInto
                     };
                     var deployService = new DeployPackageService();
-                    deployService.ExecuteExtention(deployRequest, response, controller);
+                    var deployPackageResponse = new DeployPackageResponse();
+                    deployService.ExecuteExtention(deployRequest, deployPackageResponse, controller);
+                    response.LoadDeployPackageResponse(deployPackageResponse);
                 }
             }
         }

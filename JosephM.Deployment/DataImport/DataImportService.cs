@@ -46,7 +46,7 @@ namespace JosephM.Deployment.DataImport
                 conditions.Add(new ConditionExpression("merged", ConditionOperator.NotEqual, true));
             if (type == "knowledgearticle")
                 conditions.Add(new ConditionExpression("islatestversion", ConditionOperator.Equal, true));
-            return XrmService.RetrieveAllAndClauses(type, conditions, new String[0]);
+            return XrmService.RetrieveAllAndClauses(type, conditions, null);
         }
 
         public IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
@@ -129,10 +129,11 @@ namespace JosephM.Deployment.DataImport
             throw new NullReferenceException(string.Format("No Unique Record Type Or Relationship Matched (Label Or Name) For CSV Name Of {0}", name));
         }
 
-        public IEnumerable<DataImportResponseItem> DoImport(IEnumerable<Entity> entities, LogController controller, bool maskEmails, bool matchExistingRecords = true)
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, LogController controller, bool maskEmails, bool matchExistingRecords = true)
         {
+            var response = new DataImportResponse();
+
             controller.LogLiteral("Preparing Import");
-            var response = new List<DataImportResponseItem>();
 
             var fieldsToRetry = new Dictionary<Entity, List<string>>();
             var typesToImport = entities.Select(e => e.LogicalName).Distinct();
@@ -237,7 +238,7 @@ namespace JosephM.Deployment.DataImport
                         .ToArray();
                     foreach (var field in fieldsDontExist)
                     {
-                        response.Add(
+                        response.AddResponseItem(
                                 new DataImportResponseItem(recordType, field, null,
                                 string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType),
                                 new NullReferenceException(string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType))));
@@ -364,13 +365,19 @@ namespace JosephM.Deployment.DataImport
                             if (isUpdate)
                             {
                                 var existingRecord = existingMatchingIds.First();
-                                XrmService.Update(thisEntity, fieldsToSet.Where(f => !XrmEntity.FieldsEqual(existingRecord.GetField(f), thisEntity.GetField(f))));
+                                var fieldsToSetWhichAreChanged = fieldsToSet.Where(f => !XrmEntity.FieldsEqual(existingRecord.GetField(f), thisEntity.GetField(f))).ToArray();
+                                if (fieldsToSetWhichAreChanged.Any())
+                                {
+                                    XrmService.Update(thisEntity, fieldsToSetWhichAreChanged);
+                                    response.AddUpdated(thisEntity);
+                                }
                             }
                             else
                             {
                                 PopulateRequiredCreateFields(fieldsToRetry, thisEntity, fieldsToSet);
                                 CheckThrowValidForCreate(thisEntity, fieldsToSet);
                                 thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
+                                response.AddCreated(thisEntity);
                             }
                             if (!isUpdate && thisEntity.GetOptionSetValue("statecode") > 0)
                                 XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
@@ -392,7 +399,7 @@ namespace JosephM.Deployment.DataImport
                         {
                             if (fieldsToRetry.ContainsKey(thisEntity))
                                 fieldsToRetry.Remove(thisEntity);
-                            response.Add(
+                            response.AddResponseItem(
                                 new DataImportResponseItem(recordType, null, entity.GetStringField(primaryField),
                                     string.Format("Error Importing Record Id={0}", entity.Id),
                                     ex));
@@ -403,7 +410,7 @@ namespace JosephM.Deployment.DataImport
                 }
                 catch (Exception ex)
                 {
-                    response.Add(
+                    response.AddResponseItem(
                         new DataImportResponseItem(recordType, null, null, string.Format("Error Importing Type {0}", recordType), ex));
                 }
             }
@@ -460,7 +467,7 @@ namespace JosephM.Deployment.DataImport
                                         }
                                     }
                                     if (fieldResolved)
-                                        break; ;
+                                        break;
                                 }
                                 if (!fieldResolved)
                                 {
@@ -471,7 +478,7 @@ namespace JosephM.Deployment.DataImport
                             {
                                 if (thisEntity.Contains(field))
                                     thisEntity.Attributes.Remove(field);
-                                response.Add(
+                                response.AddResponseItem(
                                      new DataImportResponseItem(thisEntity.LogicalName, field, thisEntity.GetStringField(thisPrimaryField),
                                         string.Format("Error Setting Lookup Field", thisEntity.Id), ex));
                             }
@@ -481,7 +488,7 @@ namespace JosephM.Deployment.DataImport
                 }
                 catch (Exception ex)
                 {
-                    response.Add(
+                    response.AddResponseItem(
                         new DataImportResponseItem(thisEntity.LogicalName, null, thisEntity.GetStringField(thisPrimaryField),
                             string.Format("Error Importing Record Id={0}", thisEntity.Id),
                             ex));
@@ -528,11 +535,13 @@ namespace JosephM.Deployment.DataImport
                             id1 = idSwitches[type1][id1];
                         if (idSwitches.ContainsKey(type2) && idSwitches[type2].ContainsKey(id2))
                             id2 = idSwitches[type2][id2];
-                        XrmService.AssociateSafe(relationship.SchemaName, type1, field1, id1, type2, field2, new[] { id2 });
+                        var newAssociation = XrmService.AssociateSafe(relationship.SchemaName, type1, field1, id1, type2, field2, new[] { id2 });
+                        if (newAssociation)
+                            response.AddCreated(thisEntity);
                     }
                     catch (Exception ex)
                     {
-                        response.Add(
+                        response.AddResponseItem(
                         new DataImportResponseItem(
                                 string.Format("Error Associating Record Of Type {0} Id {1}", thisEntity.LogicalName,
                                     thisEntity.Id),

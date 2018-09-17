@@ -340,7 +340,19 @@ namespace JosephM.Xrm
                 return (((EntityReference)field1).Id).Equals(((EntityReference)field2).Id) &&
                        (((EntityReference)field1).LogicalName).Equals(((EntityReference)field2).LogicalName);
             else if (field1 is DateTime && field2 is DateTime)
-                return ((DateTime)field1).Equals((DateTime)field2);
+            {
+                var dt1 = (DateTime)field1;
+                var dt2 = (DateTime)field2;
+                if(dt1.Kind == DateTimeKind.Utc && (dt2.Kind == DateTimeKind.Local || dt2.Kind == DateTimeKind.Unspecified))
+                {
+                    dt2 = dt2.ToUniversalTime();
+                }
+                if ((dt1.Kind == DateTimeKind.Local || dt1.Kind == DateTimeKind.Unspecified) && dt2.Kind == DateTimeKind.Utc)
+                {
+                    dt1 = dt1.ToUniversalTime();
+                }
+                return dt1.Equals(dt2);
+            }
             else if (field1 is OptionSetValue)
             {
                 if (field2 is OptionSetValue)

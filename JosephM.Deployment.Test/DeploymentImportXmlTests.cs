@@ -248,6 +248,9 @@ namespace JosephM.Deployment.Test
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_webpage, Entities.adx_webpage)},
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_websitelanguage, Entities.adx_websitelanguage)},
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_webpageaccesscontrolrule, Entities.adx_webpageaccesscontrolrule)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webform, Entities.adx_webform)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webformstep, Entities.adx_webformstep)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webformmetadata, Entities.adx_webformmetadata)},
                  }
             };
 
@@ -312,6 +315,10 @@ namespace JosephM.Deployment.Test
             var accessRoleAssociations = XrmService.RetrieveAllEntityType(Relationships.adx_webrole_.adx_webpageaccesscontrolrule_webrole.EntityName);
             var entityFormRecords = XrmService.RetrieveAllEntityType(Entities.adx_entityform);
             var entityFormMetadataRecords = XrmService.RetrieveAllEntityType(Entities.adx_entityformmetadata);
+            var webFormRecords = XrmService.RetrieveAllEntityType(Entities.adx_webform);
+            var webFormStepRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformstep);
+            var webFormMetadataRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformmetadata);
+            
 
             //the records wont; have been updated as data the same - but we verify that the system matched
             //them and therefore didn't create duplicates or throw errors
@@ -322,6 +329,9 @@ namespace JosephM.Deployment.Test
             Assert.AreEqual(1, accessRoleAssociations.Count());
             Assert.AreEqual(1, entityFormRecords.Count());
             Assert.AreEqual(3, entityFormMetadataRecords.Count());
+            Assert.AreEqual(1, webFormRecords.Count());
+            Assert.AreEqual(2, webFormStepRecords.Count());
+            Assert.AreEqual(4, webFormMetadataRecords.Count());
 
             //verify the access control rule is correctly linked to the child web page
             var childWebPage = pageRecords.First(e => e.GetLookupGuid(Fields.adx_webpage_.adx_rootwebpageid).HasValue);

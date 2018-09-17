@@ -1,22 +1,21 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
-using JosephM.Deployment.DataImport;
+using JosephM.Deployment.ImportXml;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Xrm.Vsix.Module.ImportRecords
+namespace JosephM.Deployment.DataImport
 {
-    public class ImportRecordsResponse : ServiceResponseBase<DataImportResponseItem>
+    public class DeployPackageResponse : ServiceResponseBase<DataImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
-        public ImportRecordsResponse()
-        {
-        }
 
-        public void LoadDataImport(DataImportResponse dataImportResponse)
+        public void LoadImportxmlResponse(ImportXmlResponse dataImportResponse)
         {
+            if (dataImportResponse.Exception != null)
+                AddResponseItem(new DataImportResponseItem("Fatal Data Import Error", dataImportResponse.Exception));
             AddResponseItems(dataImportResponse.ResponseItems);
-            _importedRecords.AddRange(dataImportResponse.GetImportSummary());
+            _importedRecords.AddRange(dataImportResponse.ImportSummary);
         }
 
         [Hidden]

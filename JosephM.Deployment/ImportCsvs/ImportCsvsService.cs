@@ -38,10 +38,8 @@ namespace JosephM.Deployment.ImportCsvs
             //todo check date format
 
             var importService = new SpreadsheetImportService(XrmRecordService);
-            var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, controller, useAmericanDates: request.DateFormat == DateFormat.American);
-
-            foreach (var item in responseItems)
-                response.AddResponseItem(new ImportCsvsResponseItem(item));
+            var responseItem = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, controller, useAmericanDates: request.DateFormat == DateFormat.American);
+            response.LoadSpreadsheetImport(responseItem);
         }
     }
 }

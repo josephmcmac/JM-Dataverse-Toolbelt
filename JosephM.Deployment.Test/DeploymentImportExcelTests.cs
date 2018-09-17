@@ -1,4 +1,9 @@
-﻿using JosephM.Core.FieldType;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Module.SavedRequests;
+using JosephM.Application.Desktop.Test;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportExcel;
 using JosephM.Xrm;
@@ -29,13 +34,14 @@ namespace JosephM.Deployment.Test
             File.Copy(@"TestExcelImportAccountAndContact.xlsx", sourceExcelFile);
 
             var app = CreateAndLoadTestApplication<ImportExcelModule>();
+            app.AddModule<SavedRequestModule>();
 
             var entryViewmodel = app.NavigateToDialogModuleEntryForm<ImportExcelModule, ImportExcelDialog>();
             entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.MaskEmails)).Value = true;
 
             //select the excel file
             entryViewmodel.GetFieldViewModel(nameof(ImportExcelRequest.ExcelFile)).ValueObject = new FileReference(sourceExcelFile);
-            
+
             //okay on change trigger should have fired and populated mappings on contact
             var mappingGrid = entryViewmodel.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.Mappings));
             var contactSource = mappingGrid.GridRecords.First(r => r.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).Value.Key.ToLower().Contains("contact"));
@@ -56,6 +62,8 @@ namespace JosephM.Deployment.Test
                 if (item.GetFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.TargetField)).ValueObject == null)
                     item.DeleteRowViewModel.Command.Execute();
             }
+
+
             contactMapEntryModel.SaveButtonViewModel.Command.Execute();
             Assert.IsFalse(entryViewmodel.ChildForms.Any());
 
@@ -72,11 +80,15 @@ namespace JosephM.Deployment.Test
             Assert.IsFalse(entryViewmodel.ChildForms.Any());
 
             //remove unmapped tabs
-            foreach(var item in mappingGrid.DynamicGridViewModel.GridRecords.ToArray())
+            foreach (var item in mappingGrid.DynamicGridViewModel.GridRecords.ToArray())
             {
                 if (item.GetFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.TargetType)).ValueObject == null)
                     item.DeleteRowViewModel.Command.Execute();
             }
+
+            ClearSavedRequests(app, entryViewmodel);
+            //lets save the request with autoload so we can run again afterwards
+            SaveWithAutoload(app, entryViewmodel);
 
             //trigger the import
             entryViewmodel.SaveButtonViewModel.Command.Execute();
@@ -98,13 +110,57 @@ namespace JosephM.Deployment.Test
                 Assert.AreEqual(accounts.First().Id, contact.GetLookupGuid(Fields.contact_.parentcustomerid));
                 Assert.IsNotNull(contact.GetStringField(Fields.contact_.firstname));
                 Assert.IsNotNull(contact.GetStringField(Fields.contact_.lastname));
-                if(contact.GetStringField(Fields.contact_.emailaddress1) != null)
+                if (contact.GetStringField(Fields.contact_.emailaddress1) != null)
                     Assert.IsTrue(contact.GetStringField(Fields.contact_.emailaddress1).Contains("@fake"));
                 //this one is date only
                 Assert.AreEqual(new DateTime(1980, 11, 15), contact.GetDateTimeField(Fields.contact_.birthdate));
                 //this one is user local
                 Assert.AreEqual(new DateTime(1980, 11, 15), contact.GetDateTimeField(Fields.contact_.lastonholdtime).Value.ToLocalTime());
             }
+
+            //okay lets do a second import and verify no creates or updates
+            entryViewmodel = app.NavigateToDialogModuleEntryForm<ImportExcelModule, ImportExcelDialog>();
+            entryViewmodel.SaveButtonViewModel.Command.Execute();
+            dialog = app.GetNavigatedDialog<ImportExcelDialog>();
+            completionScreen = dialog.CompletionItem as ImportExcelResponse;
+            if (completionScreen.HasError)
+                Assert.Fail(completionScreen.GetResponseItemsWithError().First().Exception.XrmDisplayString());
+            Assert.IsTrue(completionScreen.ImportSummary.All(i => i.Created == 0 && i.Updated == 0));
+        }
+
+        private void ClearSavedRequests(TestApplication app, RecordEntryFormViewModel entryViewmodel)
+        {
+            if (entryViewmodel.CustomFunctions.Any(cb => cb.Id == "LOADREQUEST"))
+            {
+                var loadRequestButton = entryViewmodel.GetButton("LOADREQUEST");
+                loadRequestButton.Invoke();
+                //enter and save details
+                var saveRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
+                var requestsGrid = saveRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
+                foreach (var item in requestsGrid.GridRecords.ToArray())
+                {
+                    requestsGrid.DynamicGridViewModel.DeleteRow(item);
+                }
+                saveRequestForm.SaveButtonViewModel.Invoke();
+                Assert.IsFalse(entryViewmodel.ChildForms.Any());
+                Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
+            }
+        }
+
+        private static void SaveWithAutoload(Application.Desktop.Test.TestApplication app, Application.ViewModel.RecordEntry.Form.RecordEntryFormViewModel entryViewmodel)
+        {
+            var saveRequestButton = entryViewmodel.GetButton("SAVEREQUEST");
+            saveRequestButton.Invoke();
+            //enter and save details
+            var saveRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
+            var detailsEntered = new SaveAndLoadFields()
+            {
+                Name = "ScriptSaveAutoload",
+                Autoload = true
+            };
+            app.EnterAndSaveObject(detailsEntered, saveRequestForm);
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+            Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
         }
 
         [DeploymentItem(@"Files\TestExcelImportContacts.xlsx")]
@@ -177,6 +233,7 @@ namespace JosephM.Deployment.Test
             if (completionScreen.HasError)
                 Assert.Fail(completionScreen.GetResponseItemsWithError().First().Exception.XrmDisplayString());
 
+            Assert.IsTrue(completionScreen.ImportSummary.All(i => i.Created == 0 && i.Updated == 0));
             //verify still same number
             accounts = XrmService.RetrieveAllEntityType(Entities.account);
             contacts = XrmService.RetrieveAllEntityType(Entities.contact);

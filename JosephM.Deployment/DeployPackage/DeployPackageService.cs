@@ -29,19 +29,19 @@ using System.Xml;
 namespace JosephM.Deployment.DeployPackage
 {
     public class DeployPackageService :
-        ServiceBase<DeployPackageRequest, ServiceResponseBase<DataImportResponseItem>, DataImportResponseItem>
+        ServiceBase<DeployPackageRequest, DeployPackageResponse, DataImportResponseItem>
     {
         public DeployPackageService()
         {
         }
 
-        public override void ExecuteExtention(DeployPackageRequest request, ServiceResponseBase<DataImportResponseItem> response,
+        public override void ExecuteExtention(DeployPackageRequest request, DeployPackageResponse response,
             LogController controller)
         {
             DeployPackage(request, controller, response);
         }
 
-        private void DeployPackage(DeployPackageRequest request, LogController controller, ServiceResponseBase<DataImportResponseItem> response)
+        private void DeployPackage(DeployPackageRequest request, LogController controller, DeployPackageResponse response)
         {
             var xrmRecordService = new XrmRecordService(request.Connection, controller);
             var packageFolder = request.FolderContainingPackage.FolderPath;
@@ -57,10 +57,7 @@ namespace JosephM.Deployment.DeployPackage
                     var dataImportService = new ImportXmlService(xrmRecordService);
                     var importResponse = new ImportXmlResponse();
                     dataImportService.ImportXml(childFolder, controller, importResponse);
-                    if (importResponse.Exception != null)
-                        response.AddResponseItem(new DataImportResponseItem("Fatal Data Import Error", importResponse.Exception));
-                    foreach (var item in importResponse.ResponseItems)
-                        response.AddResponseItem(item);
+                    response.LoadImportxmlResponse(importResponse);
                 }
             }
         }
@@ -104,7 +101,8 @@ namespace JosephM.Deployment.DeployPackage
                         {
                             var ignoreTheseErrorCodes = new[]
                             {
-                                "0x8004F039"//deactivated duplicate detection rules - these get activated in next set of code
+                                "0x8004F039",
+                                "0x80045043"//deactivated duplicate detection rules - these get activated in next set of code
                             };
                             var dataString = job.GetStringField(Fields.importjob_.data);
                             var xmlDocument = new XmlDocument();

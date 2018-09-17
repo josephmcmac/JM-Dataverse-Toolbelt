@@ -83,6 +83,9 @@ namespace JosephM.XrmModule.Test
             DeleteAll(Entities.adx_webpageaccesscontrolrule);
             DeleteAll(Entities.adx_entityform);
             DeleteAll(Entities.adx_entityformmetadata);
+            DeleteAll(Entities.adx_webform);
+            DeleteAll(Entities.adx_webformstep);
+            DeleteAll(Entities.adx_webformmetadata);
 
             var websiteLanguage = CreateTestRecord(Entities.adx_websitelanguage, new Dictionary<string, object>
             {
@@ -138,6 +141,51 @@ namespace JosephM.XrmModule.Test
                 { Fields.adx_entityform_.adx_name, null },
                 { Fields.adx_entityformmetadata_.adx_entityform, entityForm.ToEntityReference() },
                 { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.EntityFormMetadata.Type.Notes) }
+            });
+
+            var webForm = CreateTestRecord(Entities.adx_webform, new Dictionary<string, object>
+            {
+                { Fields.adx_webform_.adx_name, "IScriptWebForm" }
+            });
+
+            var webFormStep = CreateTestRecord(Entities.adx_webformstep, new Dictionary<string, object>
+            {
+                { Fields.adx_webformstep_.adx_name, "IScriptWebFormStep1" },
+                { Fields.adx_webformstep_.adx_webform, webForm.ToEntityReference() }
+            });
+
+            var webFormStep2 = CreateTestRecord(Entities.adx_webformstep, new Dictionary<string, object>
+            {
+                { Fields.adx_webformstep_.adx_name, "IScriptWebFormStep2" },
+                { Fields.adx_webformstep_.adx_webform, webForm.ToEntityReference() }
+            });
+
+            var webFormMetadata1 = CreateTestRecord(Entities.adx_webformmetadata, new Dictionary<string, object>
+            {
+                { Fields.adx_webformmetadata_.adx_webformstep, webFormStep.ToEntityReference() },
+                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Attribute) },
+                { Fields.adx_webformmetadata_.adx_attributelogicalname, "foo" },
+            });
+
+            var webFormMetadata2 = CreateTestRecord(Entities.adx_webformmetadata, new Dictionary<string, object>
+            {
+                { Fields.adx_webformmetadata_.adx_webformstep, webFormStep.ToEntityReference() },
+                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Attribute) },
+                { Fields.adx_webformmetadata_.adx_attributelogicalname, "bar" },
+            });
+
+            var webFormMetadata3 = CreateTestRecord(Entities.adx_webformmetadata, new Dictionary<string, object>
+            {
+                { Fields.adx_webformmetadata_.adx_attributelogicalname, null },
+                { Fields.adx_webformmetadata_.adx_webformstep, webFormStep.ToEntityReference() },
+                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Notes) }
+            });
+
+            var webFormMetadata4 = CreateTestRecord(Entities.adx_webformmetadata, new Dictionary<string, object>
+            {
+                { Fields.adx_webformmetadata_.adx_attributelogicalname, null },
+                { Fields.adx_webformmetadata_.adx_webformstep, webFormStep2.ToEntityReference() },
+                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Notes) }
             });
         }
     }

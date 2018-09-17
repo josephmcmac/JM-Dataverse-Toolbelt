@@ -7,6 +7,7 @@ using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace JosephM.Deployment.Test
 {
@@ -16,6 +17,7 @@ namespace JosephM.Deployment.Test
         [TestMethod]
         public void DeploymentMigrateRecordsModuleTest()
         {
+            DeleteAll(Entities.account);
             var account = CreateAccount();
             FileUtility.DeleteFiles(TestingFolder);
 
@@ -43,7 +45,11 @@ namespace JosephM.Deployment.Test
             };
 
             var response = application.NavigateAndProcessDialog<MigrateRecordsModule, MigrateRecordsDialog, MigrateRecordsResponse>(instance);
-            Assert.IsFalse(response.HasError);
+            if(response.HasError)
+            {
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.XrmDisplayString());
+            }
+
 
             var accounts = XrmService.RetrieveAllEntityType(Entities.account);
             foreach (var migratedAccount in accounts)

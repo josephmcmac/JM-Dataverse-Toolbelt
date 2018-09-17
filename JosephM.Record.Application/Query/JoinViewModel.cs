@@ -78,10 +78,13 @@ namespace JosephM.Application.ViewModel.Query
             var oneToManyRelationships = RecordService.GetOneToManyRelationships(RecordType).ToArray();
             foreach(var oneToMany in oneToManyRelationships)
             {
-                var key = $"1n:{oneToMany.ReferencingEntity}:{oneToMany.ReferencingAttribute}";
-                var label = $"{RecordService.GetDisplayName(oneToMany.ReferencingEntity)} ({RecordService.GetFieldLabel(oneToMany.ReferencingAttribute, oneToMany.ReferencingEntity)})";
-                var option = new PicklistOption(key, label);
-                options.Add(option);
+                if (RecordService.FieldExists(oneToMany.ReferencingAttribute, oneToMany.ReferencingEntity))
+                {
+                    var key = $"1n:{oneToMany.ReferencingEntity}:{oneToMany.ReferencingAttribute}";
+                    var label = $"{RecordService.GetDisplayName(oneToMany.ReferencingEntity)} ({RecordService.GetFieldLabel(oneToMany.ReferencingAttribute, oneToMany.ReferencingEntity)})";
+                    var option = new PicklistOption(key, label);
+                    options.Add(option);
+                }
             }
 
             options.Sort((p1, p2) => p1.CompareTo(p2));

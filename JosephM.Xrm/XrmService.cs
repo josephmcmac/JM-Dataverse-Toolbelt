@@ -3156,14 +3156,19 @@ string recordType)
             return fieldType == AttributeTypeCode.Money;
         }
 
-        public void AssociateSafe(string relationshipName, string entityFrom, string keyAttributeFrom, Guid entityFromId,
+        public bool AssociateSafe(string relationshipName, string entityFrom, string keyAttributeFrom, Guid entityFromId,
             string entityTo, string keyAttributeTo,
             IEnumerable<Guid> entitiesTo)
         {
             var associatedItems = GetAssociatedIds(relationshipName, keyAttributeFrom, entityFromId, keyAttributeTo);
             var newItems = entitiesTo.Where(id => !associatedItems.Contains(id));
             if (newItems.Any())
+            {
                 Associate(relationshipName, keyAttributeFrom, entityFromId, keyAttributeTo, newItems);
+                return true;
+            }
+            else
+                return false;
         }
 
         public int GetObjectTypeCode(string recordType)
