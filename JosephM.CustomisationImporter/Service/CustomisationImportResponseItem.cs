@@ -37,12 +37,14 @@ namespace JosephM.CustomisationImporter.Service
         [PropertyInContextByPropertyNotNull(nameof(ExcelRow))]
         public int? ExcelRow { get; }
         public string Type { get {
-                var typeDisplay = Metadata.GetType().GetDisplayName();
+                var typeDisplay = Metadata?.GetType().GetDisplayName();
+                if (typeDisplay == null)
+                    return null;
                 if (typeDisplay.EndsWith(" Metadata"))
                     typeDisplay = typeDisplay.Left(typeDisplay.LastIndexOf(" Metadata"));
                 return typeDisplay;
             } }
-        public string Name { get { return Metadata.SchemaName; } }
+        public string Name { get { return Metadata?.SchemaName; } }
         public bool Updated { get; set; }
         internal IMetadata Metadata { get; set; }
     }
