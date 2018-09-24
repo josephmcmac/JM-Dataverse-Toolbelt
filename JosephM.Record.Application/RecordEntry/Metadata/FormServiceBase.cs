@@ -9,6 +9,7 @@ using JosephM.Record.IService;
 using JosephM.Record.Query;
 using System.Linq;
 using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Record.Extentions;
 
 #endregion
 
@@ -110,14 +111,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new Condition[0];
         }
 
-        internal virtual IEnumerable<IRecord> GetLookupPicklist(string fieldName, string recordType, string reference, IRecord record, IRecordService lookupService, string recordTypeToLookup)
-        {
-            throw new NotImplementedException();
-        }
-
         internal virtual string GetPicklistDisplayField(string fieldName, string recordType, IRecordService lookupService, string recordTypeToLookup)
         {
-            throw new NotImplementedException();
+            var targetType = lookupService.GetLookupTargetType(fieldName, recordType);
+            return lookupService.GetPrimaryField(targetType);
         }
 
         internal virtual IEnumerable<CustomFormFunction> GetCustomFunctions(string recordType, RecordEntryFormViewModel recordForm)
@@ -158,6 +155,47 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public virtual Action GetBulkAddFunctionFor(string referenceName, RecordEntryViewModelBase recordForm)
         {
             return null;
+        }
+
+        private readonly object _lockObject = new Object();
+        private readonly IDictionary<string, CachedPicklist> _cachedPicklist = new Dictionary<string, CachedPicklist>();
+
+        private class CachedPicklist
+        {
+            private IEnumerable<Condition> Conditions { get; set; }
+            public IRecordService LookupService { get; set; }
+            public IEnumerable<IRecord> Picklist { get; set; }
+
+
+            public CachedPicklist(IEnumerable<IRecord> picklist, IEnumerable<Condition> conditions,
+                IRecordService lookupService)
+            {
+                {
+                    Picklist = picklist;
+                    Conditions = conditions;
+                    LookupService = lookupService;
+                }
+            }
+        }
+        internal IEnumerable<IRecord> GetLookupPicklist(string fieldName, string recordType, string reference, IRecord record, IRecordService lookupService, string recordTypeToLookup)
+        {
+            var conditions = GetLookupConditions(fieldName, recordType, reference, record);
+            lock (_lockObject)
+            {
+                if (!_cachedPicklist.ContainsKey(fieldName) || _cachedPicklist[fieldName].LookupService != lookupService)
+                {
+                    var displayField = GetPicklistDisplayField(fieldName, recordType, lookupService, recordTypeToLookup);
+
+                    var picklist = lookupService.RetrieveAllAndClauses(recordTypeToLookup, conditions,
+                        new[] { displayField });
+                    var cache = new CachedPicklist(picklist, conditions, lookupService);
+                    if (_cachedPicklist.ContainsKey(fieldName))
+                        _cachedPicklist[fieldName] = cache;
+                    else
+                        _cachedPicklist.Add(fieldName, cache);
+                }
+                return _cachedPicklist[fieldName].Picklist;
+            }
         }
     }
 }

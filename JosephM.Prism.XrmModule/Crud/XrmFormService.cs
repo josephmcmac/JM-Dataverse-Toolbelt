@@ -84,7 +84,9 @@ namespace JosephM.XrmModule.Crud
                         {
                             case Fields.solution_.publisherid:
                                 {
+                                    
                                     conditions.Add(new Condition(Fields.publisher_.isreadonly, ConditionType.Equal, false));
+                                    conditions.Add(new Condition(Fields.publisher_.uniquename, ConditionType.NotEqual, "MicrosoftCorporation"));
                                     break;
                                 }
                             case Fields.solution_.configurationpageid:
@@ -98,6 +100,26 @@ namespace JosephM.XrmModule.Crud
             }
             return conditions;
         }
+
+        public override bool UsePicklist(string fieldName, string recordType)
+        {
+            switch (recordType)
+            {
+                case Entities.solution:
+                    {
+                        switch (fieldName)
+                        {
+                            case Fields.solution_.publisherid:
+                                {
+                                    return true;
+                                }
+                        }
+                        break;
+                    }
+            }
+            return false;
+        }
+
 
         public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string recordType)
         {

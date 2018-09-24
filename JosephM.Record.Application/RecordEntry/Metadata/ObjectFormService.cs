@@ -848,46 +848,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return conditions;
         }
 
-        private readonly object _lockObject = new Object();
-        private readonly IDictionary<string, CachedPicklist> _cachedPicklist = new Dictionary<string, CachedPicklist>();
 
-        private class CachedPicklist
-        {
-            private IEnumerable<Condition> Conditions { get; set; }
-            public IRecordService LookupService { get; set; }
-            public IEnumerable<IRecord> Picklist { get; set; }
-
-
-            public CachedPicklist(IEnumerable<IRecord> picklist, IEnumerable<Condition> conditions,
-                IRecordService lookupService)
-            {
-                {
-                    Picklist = picklist;
-                    Conditions = conditions;
-                    LookupService = lookupService;
-                }
-            }
-        }
-        internal override IEnumerable<IRecord> GetLookupPicklist(string fieldName, string recordType, string reference, IRecord record, IRecordService lookupService, string recordTypeToLookup)
-        {
-            var conditions = GetLookupConditions(fieldName, recordType, reference, record);
-            lock (_lockObject)
-            {
-                if (!_cachedPicklist.ContainsKey(fieldName) || _cachedPicklist[fieldName].LookupService != lookupService)
-                {
-                    var displayField = GetPicklistDisplayField(fieldName, recordType, lookupService, recordTypeToLookup);
-
-                    var picklist = lookupService.RetrieveAllAndClauses(recordTypeToLookup, conditions,
-                        new[] { displayField });
-                    var cache = new CachedPicklist(picklist, conditions, lookupService);
-                    if (_cachedPicklist.ContainsKey(fieldName))
-                        _cachedPicklist[fieldName] = cache;
-                    else
-                        _cachedPicklist.Add(fieldName, cache);
-                }
-                return _cachedPicklist[fieldName].Picklist;
-            }
-        }
 
         internal override IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> OrderPicklistItems<T>(string fieldName, string recordType, IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> picklistItems)
         {
