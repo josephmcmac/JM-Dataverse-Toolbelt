@@ -70,11 +70,8 @@ namespace JosephM.InstanceComparer.Test
             //so there are actually differences which we will spawn the add to solution dialog for
             var request = new InstanceComparerRequest();
             request.ConnectionOne = GetSavedXrmRecordConfiguration();
-            request.ConnectionTwo = GetSavedXrmRecordConfiguration();
-            var altOrgName = "CRMAuto";
-            request.ConnectionTwo.OrganizationUniqueName = altOrgName;
-            if (!request.ConnectionTwo.Validate().IsValid)
-                Assert.Fail($"Could not connect to alt organisation named {altOrgName} for camparison ");
+            request.ConnectionTwo = GetAltSavedXrmRecordConfiguration();
+
             foreach (var prop in request.GetType().GetProperties())
             {
                 if (prop.PropertyType == typeof(bool))
@@ -118,7 +115,7 @@ namespace JosephM.InstanceComparer.Test
             var typesGrid = addToSolutionEntry.GetEnumerableFieldViewModel(nameof(AddToSolutionRequest.Items));
             Assert.IsTrue(typesGrid.GridRecords.Any());
             //select to add all component types
-            foreach(var row in typesGrid.GridRecords)
+            foreach (var row in typesGrid.GridRecords)
             {
                 row.GetBooleanFieldFieldViewModel(nameof(AddToSolutionRequest.AddToSolutionComponent.Selected)).Value = true;
             }

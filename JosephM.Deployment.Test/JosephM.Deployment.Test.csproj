@@ -66,12 +66,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DeploymentCreateAndDeployPackageModuleTests.cs" />
     <Compile Include="DeploymentImportExcelTests.cs" />
     <Compile Include="DeploymentMigrateRecordsModuleTests.cs" />
     <Compile Include="DeploymentExportXmlModuleTests.cs" />
     <Compile Include="DeploymentImportCsvsTests.cs" />
     <Compile Include="DeploymentImportXmlTests.cs" />
-    <Compile Include="DeploymentCreateAndDeployPackageModuleTests.cs" />
+    <Compile Include="DeploymentDeploySolutionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

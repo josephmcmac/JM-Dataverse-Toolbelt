@@ -1,7 +1,7 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Deployment.DeployPackage;
+using JosephM.Deployment.SolutionImport;
 
 namespace JosephM.Xrm.Vsix.Module.ImportSolution
 {

@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Deployment.CreatePackage;
 using JosephM.Deployment.DeployPackage;
+using JosephM.Deployment.DeploySolution;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportCsvs;
 using JosephM.Deployment.ImportExcel;
@@ -16,6 +17,7 @@ namespace JosephM.Deployment
     [DependantModule(typeof(CreatePackageModule))]
     [DependantModule(typeof(DeployPackageModule))]
     [DependantModule(typeof(MigrateRecordsModule))]
+    [DependantModule(typeof(DeploySolutionModule))]
     public class DeploymentModule : ModuleBase
     {
         public override void InitialiseModule()
