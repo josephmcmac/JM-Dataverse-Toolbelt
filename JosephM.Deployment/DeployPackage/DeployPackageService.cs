@@ -7,6 +7,7 @@ using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ImportXml;
+using JosephM.Deployment.SolutionImport;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
@@ -48,7 +49,7 @@ namespace JosephM.Deployment.DeployPackage
             var solutionFiles = Directory.GetFiles(packageFolder, "*.zip");
 
             var importItems = ImportSolutions(solutionFiles, controller, xrmRecordService);
-            response.AddResponseItems(importItems.Select(it => new DataImportResponseItem(it.Type, null, it.Name, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null, it.GetUrl())));
+            response.AddResponseItems(importItems.Select(it => new DataImportResponseItem(it.Type, null, it.Name, null, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null, it.GetUrl())));
 
             foreach (var childFolder in Directory.GetDirectories(packageFolder))
             {
@@ -62,143 +63,15 @@ namespace JosephM.Deployment.DeployPackage
             }
         }
 
-        private object _lockObject = new object();
-
         public IEnumerable<SolutionImportResult> ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
         {
-            var results = new List<SolutionImportResult>();
-            var countToDo = solutionFiles.Count();
-            var countRecordsImported = 0;
-
-            var xrmService = xrmRecordService.XrmService;
-
-            controller.LogLiteral($"Loading Active {xrmService.GetEntityCollectionName(Entities.duplicaterule)}");
-            var duplicateRules = xrmService.RetrieveAllAndClauses(Entities.duplicaterule, new[] { new ConditionExpression(Fields.duplicaterule_.statecode, ConditionOperator.Equal, OptionSets.DuplicateDetectionRule.Status.Active) }, new string[0]);
-
-            foreach (var solutionFile in solutionFiles)
+            var solutionFilesDictionary = new Dictionary<string, byte[]>();
+            foreach(var item in solutionFiles)
             {
-                try
-                {
-                    controller.UpdateProgress(++countRecordsImported, countToDo + 1,
-                        $"Importing solution {new FileInfo(solutionFile).Name} into {xrmRecordService.XrmRecordConfiguration?.ToString()}");
-                    var importId = Guid.NewGuid();
-                    var req = new ImportSolutionRequest();
-                    req.ImportJobId = importId;
-                    req.CustomizationFile = File.ReadAllBytes(solutionFile);
-                    req.PublishWorkflows = true;
-                    req.OverwriteUnmanagedCustomizations = true;
-
-                    var finished = new Processor();
-                    var extraService = new XrmService(xrmService.XrmConfiguration);
-                    var monitoreProgressThread = new Thread(() => DoProgress(importId, controller.GetLevel2Controller(), finished, extraService));
-                    monitoreProgressThread.IsBackground = true;
-                    monitoreProgressThread.Start();
-                    try
-                    {
-                        xrmService.Execute(req);
-                        var job = xrmService.GetFirst("importjob", "importjobid", importId);
-                        if (job != null)
-                        {
-                            var ignoreTheseErrorCodes = new[]
-                            {
-                                "0x8004F039",
-                                "0x80045043"//deactivated duplicate detection rules - these get activated in next set of code
-                            };
-                            var dataString = job.GetStringField(Fields.importjob_.data);
-                            var xmlDocument = new XmlDocument();
-                            xmlDocument.LoadXml(dataString);
-                            var resultNodes = xmlDocument.GetElementsByTagName("result");
-                            foreach (XmlNode node in resultNodes)
-                            {
-                                var importResult = new SolutionImportResult(node, xrmRecordService);
-                                if (!importResult.IsSuccess && (importResult.ErrorCode == null || !ignoreTheseErrorCodes.Contains(importResult.ErrorCode)))
-                                    results.Add(importResult);
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        lock (_lockObject)
-                            finished.Completed = true;
-                    }
-                }
-                catch (FaultException<OrganizationServiceFault> ex)
-                {
-                    if (ex.Detail != null && ex.Detail.InnerFault != null && ex.Detail.InnerFault.InnerFault != null)
-                    {
-                        throw new Exception(string.Format("Error Importing Solution {0}\n{1}\n{2}", solutionFile, ex.Message, ex.Detail.InnerFault.InnerFault.Message), ex);
-                    }
-                    else
-                        throw new Exception(
-                            string.Format("Error Importing Solution {0}\n{1}", solutionFile, ex.Message), ex);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(string.Format("Error Importing Solution {0}", solutionFile), ex);
-                }
+                solutionFilesDictionary.Add(new FileInfo(item).Name, File.ReadAllBytes(item));
             }
-            controller.TurnOffLevel2();
-            controller.LogLiteral("Publishing Customisations");
-            xrmService.Publish();
-
-            controller.LogLiteral($"Checking Deactivated {xrmService.GetEntityCollectionName(Entities.duplicaterule)}");
-            duplicateRules = xrmService.Retrieve(Entities.duplicaterule, duplicateRules.Select(e => e.Id), new[] { Fields.duplicaterule_.statecode, Fields.duplicaterule_.name });
-            foreach(var rule in duplicateRules)
-            {
-                if(rule.GetOptionSetValue(Fields.duplicaterule_.statecode) == OptionSets.DuplicateDetectionRule.Status.Inactive)
-                {
-                    controller.LogLiteral($"Republishing {xrmService.GetEntityLabel(Entities.duplicaterule)} '{rule.GetStringField(Fields.duplicaterule_.name)}'");
-                    xrmService.Execute(new PublishDuplicateRuleRequest()
-                    {
-                        DuplicateRuleId = rule.Id
-                    });
-                }
-            }
-            return results;
-        }
-
-        public class Processor
-        {
-            public bool Completed { get; set; }
-        }
-
-        public void DoProgress(Guid importId, LogController controller, Processor finished, XrmService xrmService)
-        {
-            lock (_lockObject)
-            {
-                if (!finished.Completed)
-                    controller.UpdateProgress(0, 100, "Import Progress");
-            }
-            while (true)
-            {
-                Thread.Sleep(5000);
-                // connect to crm again, don't reuse the connection that's used to import
-                lock (_lockObject)
-                {
-                    if (finished.Completed)
-                        return;
-                }
-                try
-                {
-                    var job = xrmService.GetFirst("importjob", "importjobid", importId);
-                    if (job != null)
-                    {
-                        var progress = job.GetDoubleValue("progress");
-                        lock (_lockObject)
-                        {
-                            if (finished.Completed)
-                                return;
-                            controller.UpdateProgress(Convert.ToInt32(progress / 1), 100, "Import Progress");
-                        }
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    controller.LogLiteral("Unexpected Error " + ex.Message);
-                }
-
-            }
+            var solutionImportService = new SolutionImportService(xrmRecordService);
+            return solutionImportService.ImportSolutions(solutionFilesDictionary, controller);
         }
     }
 }

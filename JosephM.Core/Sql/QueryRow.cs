@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using JosephM.Core.Extentions;
 
 namespace JosephM.Core.Sql
@@ -90,7 +91,22 @@ namespace JosephM.Core.Sql
             where T : struct
         {
             if (!IsDbNull(fieldName))
-                return GetFieldAsString(fieldName).ParseEnum<T>();
+            {
+                var stringValue = GetFieldAsString(fieldName);
+                try
+                {
+                    return stringValue.ParseEnum<T>();
+                }
+                catch (Exception ex)
+                {
+                    var items = new List<string>();
+                    foreach(var item in typeof(T).GetEnumValues())
+                    {
+                        items.Add(item.ToString());
+                    }
+                    throw new Exception($"The Value {stringValue} Could Not Be Parsed To {typeof(T).Name}. Valid Values Are {items.OrderBy(s => s).JoinGrammarAnd()}");
+                }
+            }
             else
                 return default(T);
         }

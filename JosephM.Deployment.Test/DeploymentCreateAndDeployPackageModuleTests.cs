@@ -20,7 +20,6 @@ namespace JosephM.Deployment.Test
         [TestMethod]
         public void DeploymentCreateAndDeployPackageModuleTest()
         {
-
             DeleteAll(Entities.account);
             DeleteAll(Entities.contact);
 

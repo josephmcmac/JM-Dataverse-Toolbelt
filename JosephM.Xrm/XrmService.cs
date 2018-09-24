@@ -502,8 +502,8 @@ namespace JosephM.Xrm
                 }
             }
             if (!String.IsNullOrEmpty(value))
-                throw new ArgumentOutOfRangeException("Field " + field + " in entity " + entity +
-                                                      " has no matching picklist option for label " + value);
+                throw new Exception("Field " + field + " In Entity " + entity +
+                                                      " Has No Matching Picklist Option For Label " + value);
             return -1;
         }
 

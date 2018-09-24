@@ -1171,7 +1171,11 @@ namespace JosephM.InstanceComparer
                       new Condition[0],
                       recordService
                             .GetFields(dataComparison.Type)
-                            .Where(f => recordService.GetFieldMetadata(f, dataComparison.Type).IsCustomField)
+                            .Where(f =>
+                            {
+                                var mt = recordService.GetFieldMetadata(f, dataComparison.Type);
+                                return mt.IsCustomField || mt.IsPrimaryKey;
+                            })
                             .ToArray(),
                       null,
                       null

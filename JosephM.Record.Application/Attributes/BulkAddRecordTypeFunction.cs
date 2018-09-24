@@ -15,10 +15,17 @@ namespace JosephM.Application.ViewModel.Attributes
         AllowMultiple = false)]
     public class BulkAddRecordTypeFunction : BulkAddMultiSelectFunction
     {
+        public BulkAddRecordTypeFunction(bool allowTypeMultipleTimes = false)
+        {
+            AllowTypeMultipleTimes = allowTypeMultipleTimes;
+        }
+
         public override Type TargetPropertyType
         {
             get { return typeof(RecordType); }
         }
+
+        public bool AllowTypeMultipleTimes { get; }
 
         public override IEnumerable<PicklistOption> GetSelectionOptions(RecordEntryViewModelBase recordForm, string subGridReference)
         {
@@ -30,7 +37,7 @@ namespace JosephM.Application.ViewModel.Attributes
             var includeExplicit = new[] { "subject", "uom", "productpricelevel" };
             var types = lookupService
                 .GetAllRecordTypes()
-                .Where(r => !gridRecords?.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value?.Key == r) ?? true)
+                .Where(r => AllowTypeMultipleTimes || (!gridRecords?.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value?.Key == r) ?? true))
                 .Select(r => lookupService.GetRecordTypeMetadata(r))
                 .Where(r => r.Searchable || includeExplicit.Contains(r.SchemaName))
                 .OrderBy(r => r.DisplayName)

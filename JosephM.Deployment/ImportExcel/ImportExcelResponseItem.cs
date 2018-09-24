@@ -21,7 +21,7 @@ namespace JosephM.Deployment.ImportExcel
         }
 
         public ImportExcelResponseItem(DataImportResponseItem item)
-            : base(item.Entity, item.Field, item.Name, item.Message, item.Exception)
+            : base(item.Entity, item.Field, item.Name, item.FieldValue, item.Message, item.Exception)
         {
         }
     }

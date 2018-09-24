@@ -1396,22 +1396,25 @@ namespace JosephM.Record.Xrm.XrmRecord
                     {
                         //okay think need to parse out the attributes
                         var startQuickFindFilter = quickfindView.RawQuery.IndexOf("isquickfindfields");
-                        var endQuickFindFilter = quickfindView.RawQuery.IndexOf("</fil", startQuickFindFilter);
-                        if (startQuickFindFilter != -1 && endQuickFindFilter != -1)
+                        if (startQuickFindFilter != -1)
                         {
-                            var currentIndex = startQuickFindFilter;
-                            while (true)
+                            var endQuickFindFilter = quickfindView.RawQuery.IndexOf("</fil", startQuickFindFilter);
+                            if (endQuickFindFilter != -1)
                             {
-                                var nextAttribute = quickfindView.RawQuery.IndexOf("attribute=\"", currentIndex);
-                                if (nextAttribute == -1 || nextAttribute > endQuickFindFilter)
-                                    break;
-                                var startAttribute = nextAttribute + 11;
-                                var endAttribute = quickfindView.RawQuery.IndexOf("\"", startAttribute);
-                                if (endAttribute == -1)
-                                    break;
-                                var attributeName = quickfindView.RawQuery.Substring(startAttribute, endAttribute - startAttribute);
-                                results.Add(attributeName);
-                                currentIndex = endAttribute;
+                                var currentIndex = startQuickFindFilter;
+                                while (true)
+                                {
+                                    var nextAttribute = quickfindView.RawQuery.IndexOf("attribute=\"", currentIndex);
+                                    if (nextAttribute == -1 || nextAttribute > endQuickFindFilter)
+                                        break;
+                                    var startAttribute = nextAttribute + 11;
+                                    var endAttribute = quickfindView.RawQuery.IndexOf("\"", startAttribute);
+                                    if (endAttribute == -1)
+                                        break;
+                                    var attributeName = quickfindView.RawQuery.Substring(startAttribute, endAttribute - startAttribute);
+                                    results.Add(attributeName);
+                                    currentIndex = endAttribute;
+                                }
                             }
                         }
                     }

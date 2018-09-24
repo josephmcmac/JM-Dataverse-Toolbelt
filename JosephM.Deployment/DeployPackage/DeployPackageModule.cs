@@ -4,7 +4,7 @@ using JosephM.Deployment.DataImport;
 
 namespace JosephM.Deployment.DeployPackage
 {
-    [MyDescription("Deploy A Solution Package Into A Target CRM instance")]
+    [MyDescription("Deploy A Solution Package Into A Target CRM Instance")]
     public class DeployPackageModule
         : ServiceRequestModule<DeployPackageDialog, DeployPackageService, DeployPackageRequest, DeployPackageResponse, DataImportResponseItem>
     {

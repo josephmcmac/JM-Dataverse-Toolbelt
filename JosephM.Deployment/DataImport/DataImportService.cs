@@ -239,7 +239,7 @@ namespace JosephM.Deployment.DataImport
                     foreach (var field in fieldsDontExist)
                     {
                         response.AddResponseItem(
-                                new DataImportResponseItem(recordType, field, null,
+                                new DataImportResponseItem(recordType, field, null, null,
                                 string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType),
                                 new NullReferenceException(string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType))));
                     }
@@ -400,7 +400,7 @@ namespace JosephM.Deployment.DataImport
                             if (fieldsToRetry.ContainsKey(thisEntity))
                                 fieldsToRetry.Remove(thisEntity);
                             response.AddResponseItem(
-                                new DataImportResponseItem(recordType, null, entity.GetStringField(primaryField),
+                                new DataImportResponseItem(recordType, null, entity.GetStringField(primaryField), null,
                                     string.Format("Error Importing Record Id={0}", entity.Id),
                                     ex));
                         }
@@ -411,7 +411,7 @@ namespace JosephM.Deployment.DataImport
                 catch (Exception ex)
                 {
                     response.AddResponseItem(
-                        new DataImportResponseItem(recordType, null, null, string.Format("Error Importing Type {0}", recordType), ex));
+                        new DataImportResponseItem(recordType, null, null, null, string.Format("Error Importing Type {0}", recordType), ex));
                 }
             }
             controller.TurnOffLevel2();
@@ -422,7 +422,6 @@ namespace JosephM.Deployment.DataImport
             foreach (var item in fieldsToRetry)
             {
                 var thisEntity = item.Key;
-                controller.UpdateProgress(countImported++, countToImport, string.Format("Retrying Unresolved Fields {0}", thisEntity.LogicalName));
                 var thisPrimaryField = XrmService.GetPrimaryNameField(thisEntity.LogicalName);
                 try
                 {
@@ -430,12 +429,12 @@ namespace JosephM.Deployment.DataImport
                     {
                         if (XrmService.IsLookup(field, thisEntity.LogicalName) && thisEntity.GetField(field) != null)
                         {
+                            var fieldResolved = false;
+                            var thisLookupName = thisEntity.GetLookupName(field);
                             try
                             {
                                 var targetTypesToTry = GetTargetTypesToTry(thisEntity, field);
-                                var name = thisEntity.GetLookupName(field);
                                 var idNullable = thisEntity.GetLookupGuid(field);
-                                var fieldResolved = false;
                                 foreach (var lookupEntity in targetTypesToTry)
                                 {
                                     var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
@@ -450,20 +449,20 @@ namespace JosephM.Deployment.DataImport
                                     }
                                     else
                                     {
-                                        var matchRecords = name.IsNullOrWhiteSpace() ?
+                                        var matchRecords = thisLookupName.IsNullOrWhiteSpace() ?
                                             new Entity[0] :
                                             GetMatchingEntities(lookupEntity,
                                             targetPrimaryField,
-                                            name);
+                                            thisLookupName);
                                         if (matchRecords.Count() == 1)
                                         {
                                             thisEntity.SetLookupField(field, matchRecords.First());
-                                            ((EntityReference)(thisEntity.GetField(field))).Name = name;
+                                            ((EntityReference)(thisEntity.GetField(field))).Name = thisLookupName;
                                             fieldResolved = true;
                                         }
                                         else if(matchRecords.Count() > 0)
                                         {
-                                            throw new Exception($"Multiple {lookupEntity} records matched the name of {name}");
+                                            throw new Exception($"Multiple {lookupEntity} Records Matched The Name");
                                         }
                                     }
                                     if (fieldResolved)
@@ -471,7 +470,12 @@ namespace JosephM.Deployment.DataImport
                                 }
                                 if (!fieldResolved)
                                 {
-                                    throw new Exception($"Could not find record with name {name}");
+                                    throw new Exception($"Could Not Find Record With Name");
+                                }
+                                else
+                                {
+                                    XrmService.Update(thisEntity, new[] { field });
+                                    response.AddUpdated(thisEntity);
                                 }
                             }
                             catch (Exception ex)
@@ -479,22 +483,24 @@ namespace JosephM.Deployment.DataImport
                                 if (thisEntity.Contains(field))
                                     thisEntity.Attributes.Remove(field);
                                 response.AddResponseItem(
-                                     new DataImportResponseItem(thisEntity.LogicalName, field, thisEntity.GetStringField(thisPrimaryField),
-                                        string.Format("Error Setting Lookup Field", thisEntity.Id), ex));
+                                     new DataImportResponseItem(thisEntity.LogicalName,
+                                     field,
+                                     thisEntity.GetStringField(thisPrimaryField), thisLookupName,
+                                        "Error Setting Lookup Field - " + ex.Message, ex));
                             }
                         }
+
                     }
-                    XrmService.Update(thisEntity, item.Value);
                 }
                 catch (Exception ex)
                 {
                     response.AddResponseItem(
-                        new DataImportResponseItem(thisEntity.LogicalName, null, thisEntity.GetStringField(thisPrimaryField),
+                        new DataImportResponseItem(thisEntity.LogicalName, null, thisEntity.GetStringField(thisPrimaryField), null,
                             string.Format("Error Importing Record Id={0}", thisEntity.Id),
                             ex));
                 }
                 countImported++;
-                controller.UpdateProgress(countImported, countToImport, estimator.GetProgressString(countImported, taskName: $"Retrying Unresolved Fields {thisEntity.LogicalName}"));
+                controller.UpdateProgress(countImported, countToImport, estimator.GetProgressString(countImported, taskName: $"Retrying Unresolved Fields"));
             }
             countToImport = associationTypes.Count();
             countImported = 0;

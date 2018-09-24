@@ -60,10 +60,9 @@ namespace JosephM.Deployment.SpreadsheetImport
 
                     foreach (var fieldMapping in mapping.FieldMappings)
                     {
+                        var targetField = fieldMapping.TargetField;
                         if (fieldMapping.TargetField != null)
                         {
-                            var targetField = fieldMapping.TargetField;
-
                             var stringValue = row.GetStringField(fieldMapping.SourceField);
                             if (stringValue != null)
                                 stringValue = stringValue.Trim();
@@ -87,8 +86,14 @@ namespace JosephM.Deployment.SpreadsheetImport
                             }
                             else
                             {
-                                //todo check date formats
-                                entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates));
+                                try
+                                {
+                                    entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates));
+                                }
+                                catch(Exception ex)
+                                {
+                                    response.AddResponseItem(new DataImportResponseItem(targetType, targetField, null, stringValue, "Error Parsing Field - " + ex.Message, ex));
+                                }
                             }
                         }
                     }
@@ -130,6 +135,18 @@ namespace JosephM.Deployment.SpreadsheetImport
                             contact.SetField(Fields.contact_.firstname, name.Substring(0, lastSpaceIndex));
                             contact.SetField(Fields.contact_.lastname, name.Substring(lastSpaceIndex + 1));
                         }
+                    }
+                }
+                if (!contact.Contains(Fields.contact_.fullname)
+                    && (contact.Contains(Fields.contact_.firstname)
+                        || contact.Contains(Fields.contact_.lastname)))
+                {
+                    //okay for these dudes lets split their name into first and last name somehow
+                    var name = contact.GetStringField(Fields.contact_.firstname) + " " + contact.GetStringField(Fields.contact_.lastname);
+                    if (name != null)
+                    {
+                        name = name.Trim();
+                        contact.SetField(Fields.contact_.fullname, name);
                     }
                 }
             }

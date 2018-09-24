@@ -13,6 +13,7 @@ using JosephM.Xrm.Schema;
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 using JosephM.XrmModule.AppConnection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JosephM.XrmModule.Test
 {
@@ -58,6 +59,16 @@ namespace JosephM.XrmModule.Test
                 Name = "TESTSCRIPTCONNECTION"
             };
             return savedConfig;
+        }
+
+        public SavedXrmRecordConfiguration GetAltSavedXrmRecordConfiguration()
+        {
+            var altConnection = GetSavedXrmRecordConfiguration();
+            var altOrgName = "CRMAuto";
+            altConnection.OrganizationUniqueName = altOrgName;
+            if (!altConnection.Validate().IsValid)
+                Assert.Fail($"Could not connect to alt organisation named {altOrgName} for camparison ");
+            return altConnection;
         }
 
         public XrmRecordConfiguration GetXrmRecordConfiguration()
