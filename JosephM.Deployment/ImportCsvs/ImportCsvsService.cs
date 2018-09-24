@@ -35,7 +35,6 @@ namespace JosephM.Deployment.ImportCsvs
                     dictionary.Add(csvMapping, queryRows);
                 }
             }
-            //todo check date format
 
             var importService = new SpreadsheetImportService(XrmRecordService);
             var responseItem = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, controller, useAmericanDates: request.DateFormat == DateFormat.American);

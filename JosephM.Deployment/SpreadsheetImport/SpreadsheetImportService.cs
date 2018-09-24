@@ -60,10 +60,9 @@ namespace JosephM.Deployment.SpreadsheetImport
 
                     foreach (var fieldMapping in mapping.FieldMappings)
                     {
+                        var targetField = fieldMapping.TargetField;
                         if (fieldMapping.TargetField != null)
                         {
-                            var targetField = fieldMapping.TargetField;
-
                             var stringValue = row.GetStringField(fieldMapping.SourceField);
                             if (stringValue != null)
                                 stringValue = stringValue.Trim();
@@ -87,8 +86,14 @@ namespace JosephM.Deployment.SpreadsheetImport
                             }
                             else
                             {
-                                //todo check date formats
-                                entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates));
+                                try
+                                {
+                                    entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates));
+                                }
+                                catch(Exception ex)
+                                {
+                                    response.AddResponseItem(new DataImportResponseItem(targetType, targetField, null, stringValue, "Error Parsing Field - " + ex.Message, ex));
+                                }
                             }
                         }
                     }
