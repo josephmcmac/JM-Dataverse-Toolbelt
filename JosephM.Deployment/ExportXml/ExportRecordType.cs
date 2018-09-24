@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace JosephM.Deployment.ExportXml
 {
-    [BulkAddRecordTypeFunction]
+    [BulkAddRecordTypeFunction(true)]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Fields, true, 15)]
     [Group(Sections.Fetch, false, 20)]
