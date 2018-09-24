@@ -14,12 +14,10 @@ namespace JosephM.Deployment.ImportCsvs
         ServiceBase<ImportCsvsRequest, ImportCsvsResponse, ImportCsvsResponseItem>
     {
         public XrmRecordService XrmRecordService { get; }
-        public DataImportService DataImportService { get; }
 
         public ImportCsvsService(XrmRecordService xrmRecordService)
         {
             XrmRecordService = xrmRecordService;
-            DataImportService = new DataImportService(xrmRecordService);
         }
 
         public override void ExecuteExtention(ImportCsvsRequest request, ImportCsvsResponse response, LogController controller)

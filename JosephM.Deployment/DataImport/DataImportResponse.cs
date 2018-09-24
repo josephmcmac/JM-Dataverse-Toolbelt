@@ -8,8 +8,8 @@ namespace JosephM.Deployment.DataImport
 {
     public class DataImportResponse : ServiceResponseBase<DataImportResponseItem>
     {
-        private List<Entity> _createdEntities = new List<Entity>();
-        private List<Entity> _updatedEntities = new List<Entity>();
+        private Dictionary<string, Dictionary<Guid, Entity>> _createdEntities = new Dictionary<string, Dictionary<Guid, Entity>>();
+        private Dictionary<string, Dictionary<Guid, Entity>> _updatedEntities = new Dictionary<string, Dictionary<Guid, Entity>>();
 
         public DataImportResponse()
         {
@@ -17,39 +17,45 @@ namespace JosephM.Deployment.DataImport
 
         public void AddCreated(Entity thisEntity)
         {
-            _createdEntities.Add(thisEntity);
+            if (!_createdEntities.ContainsKey(thisEntity.LogicalName))
+                _createdEntities.Add(thisEntity.LogicalName, new Dictionary<Guid, Entity>());
+            if (!_createdEntities[thisEntity.LogicalName].ContainsKey(thisEntity.Id))
+                _createdEntities[thisEntity.LogicalName].Add(thisEntity.Id, thisEntity);
         }
 
         public void AddUpdated(Entity thisEntity)
         {
-            _updatedEntities.Add(thisEntity);
+            if (_createdEntities.ContainsKey(thisEntity.LogicalName)
+                && _createdEntities[thisEntity.LogicalName].ContainsKey(thisEntity.Id))
+            {
+                //already added as created
+                return;
+            }
+            if (!_updatedEntities.ContainsKey(thisEntity.LogicalName))
+                _updatedEntities.Add(thisEntity.LogicalName, new Dictionary<Guid, Entity>());
+            if (!_updatedEntities[thisEntity.LogicalName].ContainsKey(thisEntity.Id))
+                _updatedEntities[thisEntity.LogicalName].Add(thisEntity.Id, thisEntity);
         }
 
         public IEnumerable<ImportedRecords> GetImportSummary()
         {
             var results = new List<ImportedRecords>();
-            var createdGroup = _createdEntities
-                .GroupBy(e => e.LogicalName)
-                .ToDictionary(g => g.Key, g => g.Count());
-            foreach (var item in createdGroup)
+            foreach (var item in _createdEntities)
                 results.Add(new ImportedRecords()
                 {
                     Type = item.Key,
-                    Created = item.Value
+                    Created = item.Value.Count
                 });
-            var updatedGroup = _updatedEntities
-                .GroupBy(e => e.LogicalName)
-                .ToDictionary(g => g.Key, g => g.Count());
-            foreach (var item in updatedGroup)
+            foreach (var item in _updatedEntities)
             {
                 if(!results.Any(r => r.Type == item.Key))
                 {
                     results.Add(new ImportedRecords()
                     {
-                        Type = item.Key
+                        Type = item.Key,
                     });
                 }
-                results.First(r => r.Type == item.Key).Updated = item.Value;
+                results.First(r => r.Type == item.Key).Updated = item.Value.Count;
             }
             return results;
         }

@@ -475,6 +475,7 @@ namespace JosephM.Deployment.DataImport
                                 else
                                 {
                                     XrmService.Update(thisEntity, new[] { field });
+                                    response.AddUpdated(thisEntity);
                                 }
                             }
                             catch (Exception ex)
