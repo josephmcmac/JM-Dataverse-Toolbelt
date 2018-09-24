@@ -422,7 +422,6 @@ namespace JosephM.Deployment.DataImport
             foreach (var item in fieldsToRetry)
             {
                 var thisEntity = item.Key;
-                controller.UpdateProgress(countImported++, countToImport, string.Format("Retrying Unresolved Fields {0}", thisEntity.LogicalName));
                 var thisPrimaryField = XrmService.GetPrimaryNameField(thisEntity.LogicalName);
                 try
                 {
@@ -494,7 +493,7 @@ namespace JosephM.Deployment.DataImport
                             ex));
                 }
                 countImported++;
-                controller.UpdateProgress(countImported, countToImport, estimator.GetProgressString(countImported, taskName: $"Retrying Unresolved Fields {thisEntity.LogicalName}"));
+                controller.UpdateProgress(countImported, countToImport, estimator.GetProgressString(countImported, taskName: $"Retrying Unresolved Fields"));
             }
             countToImport = associationTypes.Count();
             countImported = 0;
