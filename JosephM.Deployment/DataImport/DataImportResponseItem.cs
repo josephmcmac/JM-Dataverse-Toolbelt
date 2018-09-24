@@ -17,6 +17,10 @@ namespace JosephM.Deployment.DataImport
         [PropertyInContextByPropertyNotNull(nameof(Field))]
         public string Field { get; }
 
+        [DisplayOrder(35)]
+        [PropertyInContextByPropertyNotNull(nameof(FieldValue))]
+        public string FieldValue { get; }
+
         [GridWidth(400)]
         [DisplayOrder(40)]
         public string Message { get; }
@@ -26,12 +30,13 @@ namespace JosephM.Deployment.DataImport
         [DisplayOrder(50)]
         public Url Link { get; }
 
-        public DataImportResponseItem(string entity, string field, string name, string message, Exception ex, Url url = null)
+        public DataImportResponseItem(string entity, string field, string name, string fieldValue, string message, Exception ex, Url url = null)
             : this(message, ex)
         {
             Entity = entity;
             Field = field;
             Name = name;
+            FieldValue = fieldValue;
             Link = url;
         }
 

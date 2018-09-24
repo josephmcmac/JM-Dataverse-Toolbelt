@@ -132,6 +132,18 @@ namespace JosephM.Deployment.SpreadsheetImport
                         }
                     }
                 }
+                if (!contact.Contains(Fields.contact_.fullname)
+                    && (contact.Contains(Fields.contact_.firstname)
+                        || contact.Contains(Fields.contact_.lastname)))
+                {
+                    //okay for these dudes lets split their name into first and last name somehow
+                    var name = contact.GetStringField(Fields.contact_.firstname) + " " + contact.GetStringField(Fields.contact_.lastname);
+                    if (name != null)
+                    {
+                        name = name.Trim();
+                        contact.SetField(Fields.contact_.fullname, name);
+                    }
+                }
             }
         }
     }
