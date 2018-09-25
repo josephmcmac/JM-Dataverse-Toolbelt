@@ -31,7 +31,6 @@
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
             <controls:IntegerTextBox
-            MinWidth="100"
             TabIndex="1"
             x:Name="IntegerTextBox"
             DataContext="{Binding NotifyOnValidationError=True}"
