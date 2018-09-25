@@ -86,7 +86,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
 
             if (publishIds.Any())
             {
-                controller.UpdateProgress(totalTasks, totalTasks, "Publising Files");
+                controller.UpdateProgress(totalTasks, totalTasks, "Publishing Files");
                 var xml = new StringBuilder();
                 xml.Append("<importexportxml><webresources>");
                 foreach (var id in publishIds)
