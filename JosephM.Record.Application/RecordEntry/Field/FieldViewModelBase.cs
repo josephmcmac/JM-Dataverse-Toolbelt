@@ -27,6 +27,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             : base(recordForm.ApplicationController)
         {
             LoadingViewModel = new LoadingViewModel(recordForm.ApplicationController);
+            LoadingViewModel.LoadingMessage = null;
             RecordEntryViewModel = recordForm;
             Label = label;
             FieldName = fieldName;

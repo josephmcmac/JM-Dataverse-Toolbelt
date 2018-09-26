@@ -13,6 +13,7 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernProgressRing.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -24,7 +25,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Row="0">
+        <Grid Row="0" Visibility="{Binding LoadingMessage, Converter={StaticResource NullToHiddenConverter}}">
             <TextBlock Style="{StaticResource HeadingStyle}" Text="{Binding LoadingMessage}" />
         </Grid>
         <Grid Row="1">

@@ -64,7 +64,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     if (_itemsSource == null && UsePicklist)
                     {
-                        DoOnAsynchThread(LoadPicklistItems);
+                        DoOnAsynchThread(() =>
+                        {
+                            LoadingViewModel.IsLoading = true;
+                            try
+                            {
+                                LoadPicklistItems();
+                            }
+                            finally
+                            {
+                                LoadingViewModel.IsLoading = false;
+                            }
+                        });
                     }
                     return _itemsSource;
                 }

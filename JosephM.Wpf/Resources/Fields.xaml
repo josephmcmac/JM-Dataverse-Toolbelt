@@ -12,6 +12,10 @@
             <AdornedElementPlaceholder Name="AdornedFieldElement" />
         </DockPanel>
     </ControlTemplate>
+    <Style x:Key="FieldLoadingStyle" TargetType="UserControl">
+        <Setter Property="Height" Value="35" />
+        <Setter Property="Margin" Value="20,-22,8,0" />
+    </Style>
     <Style x:Key="FieldEntryStyle" TargetType="Control">
         <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
         <Setter Property="Background" Value="{DynamicResource FieldEntryBackgroundColor}" />

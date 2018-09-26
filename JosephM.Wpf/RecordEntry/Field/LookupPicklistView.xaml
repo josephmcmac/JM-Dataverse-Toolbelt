@@ -62,7 +62,9 @@
             </Grid>
             <Grid Grid.Row="1"
                   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
-                <shared:LoadingView DataContext="{Binding LoadingViewModel}"></shared:LoadingView>
+                <shared:LoadingView
+                    Style="{StaticResource FieldLoadingStyle}"
+                    DataContext="{Binding LoadingViewModel}"></shared:LoadingView>
             </Grid>
         </Grid>
     </Grid>
