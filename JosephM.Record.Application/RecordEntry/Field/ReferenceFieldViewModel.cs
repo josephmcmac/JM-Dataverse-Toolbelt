@@ -50,7 +50,23 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     _itemsSource = value;
                     OnPropertyChanged(nameof(ItemsSource));
+                    OnPropertyChanged(nameof(ItemsSourceAsync));
                     SelectedItem = MatchSelectedItemInItemsSourceToValue();
+                }
+            }
+        }
+
+        public IEnumerable<ReferencePicklistItem> ItemsSourceAsync
+        {
+            get
+            {
+                lock (_lockoObject)
+                {
+                    if (_itemsSource == null && UsePicklist)
+                    {
+                        DoOnAsynchThread(LoadPicklistItems);
+                    }
+                    return _itemsSource;
                 }
             }
         }
