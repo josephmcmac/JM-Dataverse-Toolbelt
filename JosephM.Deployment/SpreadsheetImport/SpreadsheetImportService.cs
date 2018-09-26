@@ -47,13 +47,15 @@ namespace JosephM.Deployment.SpreadsheetImport
                 .Select(m => m.IntersectEntityName)
                 .ToArray();
 
+            var duplicateLogged = false;
+
             var rowNumber = 0;
             foreach (var row in queryRows)
             {
                 rowNumber++;
+                var targetType = mapping.TargetType;
                 try
                 {
-                    var targetType = mapping.TargetType;
                     var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
                     var entity = new Entity(targetType);
                     var keyColumns = new string[0];
@@ -97,9 +99,16 @@ namespace JosephM.Deployment.SpreadsheetImport
                             }
                         }
                     }
-                    //okay any which are exact dupolicates to previous ones lets ignore
+                    //okay any which are exact duplicates to previous ones lets ignore
                     if (result.Any(r => r.GetFieldsInEntity().All(f => XrmRecordService.FieldsEqual(r.GetField(f), entity.GetField(f)))))
+                    {
+                        if(!duplicateLogged)
+                        {
+                            response.AddResponseItem(new DataImportResponseItem(targetType, null, null, null, "Duplicates For The Import Map Were Ignored", null));
+                            duplicateLogged = true;
+                        }
                         continue;
+                    }
 
                     result.Add(entity);
                 }
