@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportCsvs;
@@ -58,7 +59,7 @@ namespace JosephM.Deployment.Test
                 IncludeNNRelationshipsBetweenEntities = true,
                 IncludeNotes = true
             };
-            var response = exportService.Execute(exportRequest, Controller);
+            var response = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
             Assert.IsFalse(response.HasError);
 
             foreach (var type in types)
@@ -122,7 +123,7 @@ namespace JosephM.Deployment.Test
                  }
             };
             //verify no errors
-            var exportResponse = exportApp.Execute(exportRequest, Controller);// exportApp.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog, ExportXmlResponse>(exportRequest);
+            var exportResponse = exportApp.Execute(exportRequest, new ServiceRequestController(Controller));
             Assert.IsFalse(exportResponse.HasError);
 
             //delete all the data so when we import the xml it is creating new
@@ -254,7 +255,7 @@ namespace JosephM.Deployment.Test
                  }
             };
 
-            var exportResponse = exportApp.Execute(exportRequest, Controller);// exportApp.NavigateAndProcessDialog<ExportXmlModule, ExportXmlDialog, ExportXmlResponse>(exportRequest);
+            var exportResponse = exportApp.Execute(exportRequest, new ServiceRequestController(Controller));
             Assert.IsFalse(exportResponse.HasError);
 
             //lets recreate all the web page data so the ids don't match when importing
@@ -359,7 +360,7 @@ namespace JosephM.Deployment.Test
                 Folder = new Folder(workFolder),
                 RecordTypesToExport = types.Select(t => new ExportRecordType() { RecordType = new RecordType(t, t) })
             };
-            var response = exportService.Execute(exportRequest, Controller);
+            var response = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
             Assert.IsFalse(response.HasError);
 
             foreach (var type in types)
@@ -397,7 +398,7 @@ namespace JosephM.Deployment.Test
                 Folder = new Folder(workFolder),
                 RecordTypesToExport = new[] { new ExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
             };
-            var exportResponse = exportService.Execute(exportRequest, Controller);
+            var exportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
             Assert.IsTrue(exportResponse.Success);
 
             XrmService.Delete(record);
@@ -499,7 +500,7 @@ namespace JosephM.Deployment.Test
                 RecordTypesToExport = new[] { t1RequestAll, t2RequestFetch, t3RequestSpecific }
             };
             var exportService = new ExportXmlService(XrmRecordService);
-            var exportResponse = exportService.Execute(exportRequest, Controller);
+            var exportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
             Assert.IsFalse(exportResponse.HasError);
 
             var entities = importService.LoadEntitiesFromXmlFiles(workFolder);
@@ -510,7 +511,7 @@ namespace JosephM.Deployment.Test
             {
                 Folder = new Folder(workFolder)
             };
-            var importResponse = importService.Execute(importRequest, Controller);
+            var importResponse = importService.Execute(importRequest, new ServiceRequestController(Controller));
             Assert.IsFalse(importResponse.HasError);
         }
 
@@ -536,7 +537,7 @@ namespace JosephM.Deployment.Test
                 RecordTypesToExport = new[] { accountsExport }
             };
             var exportService = new ExportXmlService(XrmRecordService);
-            var ecxportResponse = exportService.Execute(exportRequest, Controller);
+            var ecxportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
             Assert.IsFalse(ecxportResponse.HasError);
 
             var importRequest = new ImportXmlRequest
@@ -598,7 +599,7 @@ namespace JosephM.Deployment.Test
                     RecordTypesToExport = new[] { export }
                 };
                 var exportService = new ExportXmlService(XrmRecordService);
-                var ecxportResponse = exportService.Execute(exportRequest, Controller);
+                var ecxportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
                 Assert.IsFalse(ecxportResponse.HasError);
 
                 //okay we will delete then create one with the same article number

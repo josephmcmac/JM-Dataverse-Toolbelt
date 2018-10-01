@@ -10,12 +10,12 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
         ServiceBase<ImportSolutionRequest, ImportSolutionResponse, ImportSolutionResponseItem>
     {
         public override void ExecuteExtention(ImportSolutionRequest request, ImportSolutionResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             //just use the method in DeployPackageService to do the import
             var xrmRecordService = new XrmRecordService(request.Connection);
             var service = new DeployPackageService();
-            var importItems = service.ImportSolutions(new[] { request.SolutionZip.FileName }, controller, xrmRecordService);
+            var importItems = service.ImportSolutions(new[] { request.SolutionZip.FileName }, controller.Controller, xrmRecordService);
             response.AddResponseItems(importItems.Select(it => new ImportSolutionResponseItem(it)));
         }
     }

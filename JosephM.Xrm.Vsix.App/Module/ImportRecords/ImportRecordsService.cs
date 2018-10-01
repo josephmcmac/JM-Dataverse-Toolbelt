@@ -11,7 +11,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
         ServiceBase<ImportRecordsRequest, ImportRecordsResponse, DataImportResponseItem>
     {
         public override void ExecuteExtention(ImportRecordsRequest request, ImportRecordsResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             //just use the method in ImportXmlService to do the import
             var xrmRecordService = new XrmRecordService(request.Connection);

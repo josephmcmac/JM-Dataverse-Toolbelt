@@ -42,9 +42,9 @@ namespace JosephM.Deployment.ExportXml
         }
 
         public override void ExecuteExtention(ExportXmlRequest request, ExportXmlResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
-            ExportXml(request.RecordTypesToExport, request.Folder, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller);
+            ExportXml(request.RecordTypesToExport, request.Folder, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller.Controller);
         }
 
 

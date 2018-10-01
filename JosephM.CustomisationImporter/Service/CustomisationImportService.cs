@@ -38,18 +38,18 @@ namespace JosephM.CustomisationImporter.Service
         public XrmRecordService RecordService { get; set; }
 
         public override void ExecuteExtention(CustomisationImportRequest request, CustomisationImportResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             controller.LogLiteral("Reading excel spreadsheet");
 
             var optionSets = ExtractOptionSetsFromExcel(request.ExcelFile.FileName,
-                controller, response);
+                controller.Controller, response);
             var fieldMetadataToImport = ExtractFieldMetadataFromExcel(
-                request.ExcelFile.FileName, controller, optionSets, response);
+                request.ExcelFile.FileName, controller.Controller, optionSets, response);
             var recordMetadataToImport =
-                ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, controller, fieldMetadataToImport.Values, response);
+                ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, controller.Controller, fieldMetadataToImport.Values, response);
             var relationshipMetadataToImport =
-                ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, controller, response);
+                ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, controller.Controller, response);
 
             if(response.GetResponseItemsWithError().Any())
             {
@@ -57,29 +57,29 @@ namespace JosephM.CustomisationImporter.Service
                 return;
             }
 
-            CheckCrmConnection(controller);
+            CheckCrmConnection(controller.Controller);
 
             var createdRecordTypes = new List<string>();
             var createdFields = new List<FieldMetadata>();
 
             if (request.Entities)
             {
-                var importRecordsResponse = ImportRecordTypes(recordMetadataToImport, controller, response);
+                var importRecordsResponse = ImportRecordTypes(recordMetadataToImport, controller.Controller, response);
                 createdRecordTypes.AddRange(importRecordsResponse.CreatedRecordTypes);
             }
             if (request.SharedOptionSets)
-                ImportSharedOptionSets(optionSets, controller, response);
+                ImportSharedOptionSets(optionSets, controller.Controller, response);
             if (request.Fields)
             {
-                var importFieldsResponse = ImportFieldTypes(fieldMetadataToImport, controller, response, createdRecordTypes);
+                var importFieldsResponse = ImportFieldTypes(fieldMetadataToImport, controller.Controller, response, createdRecordTypes);
                 createdFields.AddRange(importFieldsResponse.CreatedFields);
             }
             if (request.FieldOptionSets)
-                ImportFieldOptionSets(fieldMetadataToImport.Values, controller, response, createdFields);
+                ImportFieldOptionSets(fieldMetadataToImport.Values, controller.Controller, response, createdFields);
             if (request.Views)
-                ImportViews(recordMetadataToImport.Values, controller, response, createdRecordTypes);
+                ImportViews(recordMetadataToImport.Values, controller.Controller, response, createdRecordTypes);
             if (request.Relationships)
-                ImportRelationships(relationshipMetadataToImport, controller, response);
+                ImportRelationships(relationshipMetadataToImport, controller.Controller, response);
             controller.LogLiteral("Publishing Changes");
             RecordService.Publish();
 
@@ -100,7 +100,7 @@ namespace JosephM.CustomisationImporter.Service
                     .Cast<IMetadata>()
                     .Distinct()
                     .ToArray();
-                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.OptionSet, theseObjectsToAdd, getMetadata, response, solution, controller);
+                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.OptionSet, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //record types
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((RecordMetadata)item).SchemaName);
                 theseObjectsToAdd = allImportedResponseItems
@@ -108,7 +108,7 @@ namespace JosephM.CustomisationImporter.Service
                     .Cast<IMetadata>()
                     .Distinct()
                     .ToArray();
-                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller);
+                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //fields
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((FieldMetadata)item).RecordType);
                 theseObjectsToAdd = allImportedResponseItems
@@ -116,7 +116,7 @@ namespace JosephM.CustomisationImporter.Service
                     .Cast<IMetadata>()
                     .Distinct()
                     .ToArray();
-                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller);
+                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //relationships side 1
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((Many2ManyRelationshipMetadata)item).RecordType1);
                 theseObjectsToAdd = allImportedResponseItems
@@ -124,7 +124,7 @@ namespace JosephM.CustomisationImporter.Service
                     .Cast<IMetadata>()
                     .Distinct()
                     .ToArray();
-                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller);
+                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //relationships side 2
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((Many2ManyRelationshipMetadata)item).RecordType2);
                 theseObjectsToAdd = allImportedResponseItems
@@ -132,7 +132,7 @@ namespace JosephM.CustomisationImporter.Service
                     .Cast<IMetadata>()
                     .Distinct()
                     .ToArray();
-                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller);
+                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //field options
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((ImportPicklistFieldOptions)item).FieldMetadata.RecordType);
                 theseObjectsToAdd = allImportedResponseItems
@@ -140,7 +140,7 @@ namespace JosephM.CustomisationImporter.Service
                     .Cast<IMetadata>()
                     .Distinct()
                     .ToArray();
-                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller);
+                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //views
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((ImportViews)item).SchemaName);
                 theseObjectsToAdd = allImportedResponseItems
@@ -148,7 +148,7 @@ namespace JosephM.CustomisationImporter.Service
                     .Cast<IMetadata>()
                     .Distinct()
                     .ToArray();
-                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller);
+                AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
 
             }
 

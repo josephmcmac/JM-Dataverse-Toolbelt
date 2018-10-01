@@ -29,14 +29,14 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         private IRecordService Service { get; set; }
 
         public override void ExecuteExtention(TextSearchRequest request, TextSearchResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             controller.UpdateProgress(0, 1, "Loading Text Search");
             var document = DocumentWriter.NewDocument();
             var firstSection = document.AddSection();
             var nextSection = document.AddSection();
 
-            var container = new TextSearchContainer(request, response, controller, nextSection);
+            var container = new TextSearchContainer(request, response, controller.Controller, nextSection);
 
             ProcessRecordsReferencingTheWord(container);
 

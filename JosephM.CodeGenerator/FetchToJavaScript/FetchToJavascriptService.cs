@@ -9,9 +9,9 @@ namespace JosephM.CodeGenerator.FetchToJavascript
     public class FetchToJavascriptService : ServiceBase<FetchToJavascriptRequest, FetchToJavascriptResponse, ServiceResponseItem>
     {
         public override void ExecuteExtention(FetchToJavascriptRequest request, FetchToJavascriptResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
-            response.Javascript = WriteFetchToJavascript(request, controller);
+            response.Javascript = WriteFetchToJavascript(request, controller.Controller);
         }
 
         private string WriteFetchToJavascript(FetchToJavascriptRequest request, LogController controller)

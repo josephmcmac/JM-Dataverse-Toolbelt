@@ -21,7 +21,7 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
                 SearchTerms = new[] { new TextSearchRequest.SearchTerm() { Text = TestingString } }
             };
             var response = new TextSearchResponse();
-            TestTextSearchService.ExecuteExtention(request, response, Controller);
+            TestTextSearchService.ExecuteExtention(request, response, CreateServiceRequestController());
             if (!response.Success)
                 throw new AssertFailedException("Response Contained Error", response.Exception);
             if (response.ResponseItems.Any(r => r.Exception != null))

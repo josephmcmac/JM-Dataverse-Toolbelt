@@ -26,7 +26,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
         public XrmRecordService Service { get; set; }
 
         public override void ExecuteExtention(DeployWebResourceRequest request, DeployWebResourceResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var records = new List<IRecord>();
 

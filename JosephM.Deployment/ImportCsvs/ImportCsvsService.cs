@@ -20,7 +20,7 @@ namespace JosephM.Deployment.ImportCsvs
             XrmRecordService = xrmRecordService;
         }
 
-        public override void ExecuteExtention(ImportCsvsRequest request, ImportCsvsResponse response, LogController controller)
+        public override void ExecuteExtention(ImportCsvsRequest request, ImportCsvsResponse response, ServiceRequestController controller)
         {
             var dictionary = new Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>>();
 

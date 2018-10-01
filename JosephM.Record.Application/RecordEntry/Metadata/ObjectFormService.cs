@@ -15,6 +15,7 @@ using JosephM.Record.Query;
 using JosephM.Record.Service;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
@@ -56,10 +57,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                 var fieldSections = type.GetCustomAttributes<Group>();
                 var otherSections = new Dictionary<string, List<FormFieldMetadata>>();
-                foreach(var section in fieldSections)
+                foreach (var section in fieldSections)
                 {
                     var functions = new List<CustomFormFunction>();
-                    if(section.SelectAll)
+                    if (section.SelectAll)
                     {
                         functions.Add(new CustomFormFunction("SELECTALL", "SELECT ALL", (re) =>
                         {
@@ -73,12 +74,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                     field.Value = !turnOff;
 
                                 var enumerableFields = thisSection.Fields.Where(f => f is EnumerableFieldViewModel).Cast<EnumerableFieldViewModel>();
-                                foreach(var field in enumerableFields)
+                                foreach (var field in enumerableFields)
                                 {
-                                    if(ObjectRecordService.GetClassType(field.RecordType).IsTypeOf(typeof(ISelectable)))
+                                    if (ObjectRecordService.GetClassType(field.RecordType).IsTypeOf(typeof(ISelectable)))
                                     {
                                         turnOff = field.GridRecords.All(r => r.GetBooleanFieldFieldViewModel(nameof(ISelectable.Selected)).Value);
-                                        foreach(var record in field.GridRecords)
+                                        foreach (var record in field.GridRecords)
                                         {
                                             record.GetBooleanFieldFieldViewModel(nameof(ISelectable.Selected)).Value = !turnOff;
                                         }
@@ -243,7 +244,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             var type = ObjectRecordService.GetClassType(recordType);
             var injectedFunctions = entryViewModel.ApplicationController.ResolveInstance(typeof(OnChangeFunctions), recordType) as OnChangeFunctions;
-            foreach(var func in injectedFunctions.CustomFunctions)
+            foreach (var func in injectedFunctions.CustomFunctions)
             {
                 Action<RecordEntryViewModelBase> onChange = (revm) => func.Execute(revm, fieldName);
                 onChanges.Add(onChange);
@@ -328,13 +329,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                 var fieldViewModel = matchingFields.First();
                                 if (!isOnLoad && fieldViewModel is LookupFieldViewModel)
                                 {
-                                    var typedViewModel = (LookupFieldViewModel) fieldViewModel;
+                                    var typedViewModel = (LookupFieldViewModel)fieldViewModel;
                                     typedViewModel.ConnectionForChanged();
                                 }
                                 if (fieldViewModel is RecordTypeFieldViewModel)
                                 {
-                                    var typedViewModel = (RecordTypeFieldViewModel) fieldViewModel;
-                                    
+                                    var typedViewModel = (RecordTypeFieldViewModel)fieldViewModel;
+
                                     typedViewModel.ItemsSource = ObjectRecordService
                                         .GetPicklistKeyValues(fieldViewModel.FieldName,
                                             fieldViewModel.GetRecordType(), fieldViewModel.RecordEntryViewModel.ParentFormReference, fieldViewModel.RecordEntryViewModel.GetRecord())
@@ -364,7 +365,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         private void AppendSubGridButtons(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> methods)
         {
             var fieldMetadata = ObjectRecordService.GetFieldMetadata(fieldName, recordType);
-            if(fieldMetadata.FieldType == RecordFieldType.Enumerable)
+            if (fieldMetadata.FieldType == RecordFieldType.Enumerable)
             {
                 methods.Add(
                     re => re.StartNewAction(() =>
@@ -414,7 +415,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public override bool AllowGridOpen(string fieldName, RecordEntryViewModelBase recordForm)
         {
             var prop = GetPropertyInfo(fieldName, recordForm.GetRecordType());
-            if(prop.PropertyType.GenericTypeArguments.Count() == 1
+            if (prop.PropertyType.GenericTypeArguments.Count() == 1
                 && prop.PropertyType.GenericTypeArguments[0].GetCustomAttribute<DoNotAllowGridOpen>() != null)
                 return false;
             return
@@ -686,14 +687,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var propertyInfo = GetPropertyInfo(split.First(), viewModel.GetRecord().Type);
             if (propertyInfo != null)
             {
-                if(propertyInfo.PropertyType.Name == "IEnumerable`1" && split.Count() > 1)
+                if (propertyInfo.PropertyType.Name == "IEnumerable`1" && split.Count() > 1)
                 {
                     var enumeratedType = propertyInfo.PropertyType.GenericTypeArguments[0];
                     propertyInfo = enumeratedType.GetProperty(split.ElementAt(1)) ?? propertyInfo;
                 }
                 var referenceAttributes = propertyInfo.GetCustomAttributes<ReferencedType>();
                 if (referenceAttributes != null && referenceAttributes.Any())
-                    return string.Join(",",referenceAttributes.Select(attribute => attribute.Type));
+                    return string.Join(",", referenceAttributes.Select(attribute => attribute.Type));
             }
             foreach (var parentField in ObjectRecordService.GetPropertyInfos(viewModel.GetRecordType()))
             {
@@ -705,7 +706,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     {
                         //can't use the field view model as called on load and may trigger infinite loop loading field list
                         var record = viewModel.GetRecord();
-                        if(record is ObjectRecord)
+                        if (record is ObjectRecord)
                         {
                             var objectrecord = (ObjectRecord)record;
                             var propertyValue = objectrecord.Instance.GetPropertyValue(parentField.Name);
@@ -729,7 +730,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             lookupForAttribute.PropertyPaths.Last() == field)
                         {
                             var parentObjectRecord = parentForm.GetRecord() as ObjectRecord;
-                            if(parentObjectRecord != null)
+                            if (parentObjectRecord != null)
                             {
                                 var recordTypeFor = parentObjectRecord.Instance.GetPropertyValue(parentField.Name) as RecordType;
                                 if (recordTypeFor != null)
@@ -938,6 +939,26 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return customFunction != null
                 ? customFunction.GetCustomFunction(recordForm, referenceName)
                 : null;
+        }
+
+        public override void LoadPropertyChangedEvent(FieldViewModelBase fieldViewModel)
+        {
+            var objectRecord = fieldViewModel.GetRecordForm().GetRecord() as ObjectRecord;
+            if (objectRecord != null)
+            {
+                var theClass = ObjectRecordService.GetClassType(objectRecord.Type);
+                if (theClass.IsTypeOf(typeof(INotifyPropertyChanged)))
+                {
+                    var iNotify = (INotifyPropertyChanged)objectRecord.Instance;
+                    iNotify.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
+                    {
+                        fieldViewModel.ApplicationController.DoOnMainThread(() =>
+                        {
+                            fieldViewModel.OnChangeBase();
+                        });
+                    };
+                }
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace JosephM.TestModule.TestGridEdit
         ServiceBase<TestGridEditRequest, TestGridEditResponse, TestGridEditResponseItem>
     {
         public override void ExecuteExtention(TestGridEditRequest request, TestGridEditResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             response.AddResponseItem(new TestGridEditResponseItem("Dummy Response", null));
             for (var i = 0; i < 100; i++)

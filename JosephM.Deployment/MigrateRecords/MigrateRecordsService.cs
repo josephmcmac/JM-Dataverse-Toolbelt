@@ -33,13 +33,13 @@ namespace JosephM.Deployment.MigrateRecords
         }
 
         public override void ExecuteExtention(MigrateRecordsRequest request, MigrateRecordsResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var exportService = new ExportXmlService(new XrmRecordService(request.SourceConnection));
 
             var exportedEntities = new List<Entity>();
 
-            exportService.ProcessExport(request.RecordTypesToMigrate, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller
+            exportService.ProcessExport(request.RecordTypesToMigrate, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller.Controller
                 , (entity) => exportedEntities.Add(entity)
                 , (entity) => exportedEntities.Add(entity));
 

@@ -1,5 +1,7 @@
-﻿using JosephM.Core.Extentions;
+﻿using JosephM.Application.Application;
+using JosephM.Core.Extentions;
 using JosephM.Core.Log;
+using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
@@ -20,8 +22,9 @@ namespace JosephM.Deployment.SpreadsheetImport
         }
 
         public XrmRecordService XrmRecordService { get; }
+        public IApplicationController ApplicationController { get; }
 
-        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, LogController controller, bool useAmericanDates = false)
+        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, ServiceRequestController controller, bool useAmericanDates = false)
         {
             var response = new SpreadsheetImportResponse();
 

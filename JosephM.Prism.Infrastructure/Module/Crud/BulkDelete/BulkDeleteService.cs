@@ -17,7 +17,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
         }
 
         public override void ExecuteExtention(BulkDeleteRequest request, BulkDeleteResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var countToUpdate = request.RecordCount;
             var countUpdated = 0;

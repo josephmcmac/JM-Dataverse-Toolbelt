@@ -12,7 +12,7 @@ namespace JosephM.Core.Service
         where TResponse : ServiceResponseBase<TResponseItem>, new()
         where TResponseItem : ServiceResponseItem
     {
-        public TResponse Execute(TRequest request, LogController controller)
+        public TResponse Execute(TRequest request, ServiceRequestController controller)
         {
             var response = new TResponse();
             try
@@ -26,6 +26,6 @@ namespace JosephM.Core.Service
             return response;
         }
 
-        public abstract void ExecuteExtention(TRequest request, TResponse response, LogController controller);
+        public abstract void ExecuteExtention(TRequest request, TResponse response, ServiceRequestController controller);
     }
 }

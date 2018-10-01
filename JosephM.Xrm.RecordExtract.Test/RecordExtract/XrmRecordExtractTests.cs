@@ -28,7 +28,7 @@ namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
             request.RecordLookup = new Lookup(testReportRecord.Type, testReportRecord.Id, "Test Report");
 
             var response = new RecordExtractResponse();
-            XrmRecordExtractService.ExecuteExtention(request, response, new LogController());
+            XrmRecordExtractService.ExecuteExtention(request, response, CreateServiceRequestController());
         }
 
         private XrmRecordExtractService XrmRecordExtractService

@@ -197,5 +197,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 return _cachedPicklist[fieldName].Picklist;
             }
         }
+
+        public virtual void LoadPropertyChangedEvent(FieldViewModelBase fieldViewModelBase)
+        {
+        }
     }
 }

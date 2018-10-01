@@ -1,5 +1,7 @@
+using JosephM.Application.Application;
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
+using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -129,433 +131,448 @@ namespace JosephM.Deployment.DataImport
             throw new NullReferenceException(string.Format("No Unique Record Type Or Relationship Matched (Label Or Name) For CSV Name Of {0}", name));
         }
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, LogController controller, bool maskEmails, bool matchExistingRecords = true)
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, bool matchExistingRecords = true)
         {
-            var response = new DataImportResponse();
-
-            controller.LogLiteral("Preparing Import");
-
-            var fieldsToRetry = new Dictionary<Entity, List<string>>();
-            var typesToImport = entities.Select(e => e.LogicalName).Distinct();
-
-            var allNNRelationships = XrmService.GetAllNnRelationshipEntityNames();
-            var associationTypes = typesToImport.Where(allNNRelationships.Contains).ToArray();
-
-            typesToImport = typesToImport.Where(t => !associationTypes.Contains(t)).ToArray();
-
-            var orderedTypes = new List<string>();
-
-            var idSwitches = new Dictionary<string, Dictionary<Guid, Guid>>();
-            foreach (var item in typesToImport)
-                idSwitches.Add(item, new Dictionary<Guid, Guid>());
-
-            #region tryordertypes
-
-
-            foreach (var type in typesToImport)
+            var response = new DataImportResponse(entities);
+            controller.AddObjectToUi(response);
+            try
             {
-                //iterate through the types and if any of them have a lookup which references this type
-                //then insert this one before it for import first
-                //otherwise just append to the end
-                foreach (var type2 in orderedTypes)
-                {
-                    var thatType = type2;
-                    var thatTypeEntities = entities.Where(e => e.LogicalName == thatType).ToList();
-                    var fields = GetFieldsToImport(thatTypeEntities, thatType)
-                        .Where(f => XrmService.FieldExists(f, thatType) && XrmService.IsLookup(f, thatType));
+                controller.LogLiteral("Preparing Import");
 
-                    foreach (var field in fields)
+                var fieldsToRetry = new Dictionary<Entity, List<string>>();
+                var typesToImport = entities.Select(e => e.LogicalName).Distinct();
+
+                var allNNRelationships = XrmService.GetAllNnRelationshipEntityNames();
+                var associationTypes = typesToImport.Where(allNNRelationships.Contains).ToArray();
+
+                typesToImport = typesToImport.Where(t => !associationTypes.Contains(t)).ToArray();
+
+                var orderedTypes = new List<string>();
+
+                var idSwitches = new Dictionary<string, Dictionary<Guid, Guid>>();
+                foreach (var item in typesToImport)
+                    idSwitches.Add(item, new Dictionary<Guid, Guid>());
+
+                #region tryordertypes
+
+
+                foreach (var type in typesToImport)
+                {
+                    //iterate through the types and if any of them have a lookup which references this type
+                    //then insert this one before it for import first
+                    //otherwise just append to the end
+                    foreach (var type2 in orderedTypes)
                     {
-                        if (thatTypeEntities.Any(e => e.GetLookupType(field).Split(',').Contains(type)))
+                        var thatType = type2;
+                        var thatTypeEntities = entities.Where(e => e.LogicalName == thatType).ToList();
+                        var fields = GetFieldsToImport(thatTypeEntities, thatType)
+                            .Where(f => XrmService.FieldExists(f, thatType) && XrmService.IsLookup(f, thatType));
+
+                        foreach (var field in fields)
                         {
-                            orderedTypes.Insert(orderedTypes.IndexOf(type2), type);
-                            break;
-                        }
-                    }
-                    if (orderedTypes.Contains(type))
-                        break;
-                }
-                if (!orderedTypes.Contains(type))
-                    orderedTypes.Add(type);
-            }
-
-            //these priorities are because when the first type gets create it creates a 'child' of the second type
-            //so we need to ensure the parent created first
-            var prioritiseOver = new List<KeyValuePair<string, string>>();
-            prioritiseOver.Add(new KeyValuePair<string, string>(Entities.team, Entities.queue));
-            prioritiseOver.Add(new KeyValuePair<string, string>(Entities.uomschedule, Entities.uom));
-            foreach (var item in prioritiseOver)
-            {
-                //if the first item is after the second item in the list
-                //then remove and insert it before the second item
-                if (orderedTypes.Contains(item.Key) && orderedTypes.Contains(item.Value))
-                {
-                    var indexOfFirst = orderedTypes.IndexOf(item.Key);
-                    var indexOfSecond = orderedTypes.IndexOf(item.Value);
-                    if(indexOfFirst > indexOfSecond)
-                    {
-                        orderedTypes.RemoveAt(indexOfFirst);
-                        orderedTypes.Insert(indexOfSecond, item.Key);
-                    }
-                }
-            }
-
-            #endregion tryordertypes
-            var estimator = new TaskEstimator(1);
-
-            var countToImport = orderedTypes.Count;
-            var countImported = 0;
-            foreach (var recordType in orderedTypes)
-            {
-                try
-                {
-                    var thisRecordType = recordType;
-                    var thisTypesConfig = XrmRecordService.GetTypeConfigs().GetFor(recordType);
-                    var displayPrefix = $"Importing {recordType} Records ({countImported + 1}/{countToImport})";
-                    controller.UpdateProgress(countImported++, countToImport, string.Format("Importing {0} Records", recordType));
-                    controller.UpdateLevel2Progress(0, 1, "Loading");
-                    var primaryField = XrmService.GetPrimaryNameField(recordType);
-                    var thisTypeEntities = entities.Where(e => e.LogicalName == recordType).ToList();
-
-                    var orConditions = thisTypeEntities
-                        .Select(
-                            e =>
-                                new ConditionExpression(XrmService.GetPrimaryKeyField(e.LogicalName),
-                                    ConditionOperator.Equal, e.Id))
-                        .ToArray();
-                    var existingEntities = XrmService.RetrieveAllOrClauses(recordType, orConditions);
-
-                    var orderedEntities = new List<Entity>();
-
-                    #region tryorderentities
-
-                    var importFieldsForEntity = GetFieldsToImport(thisTypeEntities, recordType).ToArray();
-                    var fieldsDontExist = GetFieldsInEntities(thisTypeEntities)
-                        .Where(f => !f.Contains("."))
-                        .Where(f => !XrmService.FieldExists(f, thisRecordType))
-                        .Where(f => !HardcodedIgnoreFields.Contains(f))
-                        .Distinct()
-                        .ToArray();
-                    foreach (var field in fieldsDontExist)
-                    {
-                        response.AddResponseItem(
-                                new DataImportResponseItem(recordType, field, null, null,
-                                string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType),
-                                new NullReferenceException(string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType))));
-                    }
-
-                    var selfReferenceFields = importFieldsForEntity.Where(
-                                f =>
-                                    XrmService.IsLookup(f, recordType) &&
-                                    XrmService.GetLookupTargetEntity(f, recordType) == recordType).ToArray();
-
-                    foreach (var entity in thisTypeEntities)
-                    {
-                        foreach (var entity2 in orderedEntities)
-                        {
-                            if (selfReferenceFields.Any(f => entity2.GetLookupGuid(f) == entity.Id || (entity2.GetLookupGuid(f) == Guid.Empty && entity2.GetLookupName(f) == entity.GetStringField(primaryField))))
+                            if (thatTypeEntities.Any(e => e.GetLookupType(field).Split(',').Contains(type)))
                             {
-                                orderedEntities.Insert(orderedEntities.IndexOf(entity2), entity);
+                                orderedTypes.Insert(orderedTypes.IndexOf(type2), type);
                                 break;
                             }
                         }
-                        if (!orderedEntities.Contains(entity))
-                            orderedEntities.Add(entity);
+                        if (orderedTypes.Contains(type))
+                            break;
                     }
+                    if (!orderedTypes.Contains(type))
+                        orderedTypes.Add(type);
+                }
 
-                    #endregion tryorderentities
-
-                    var countRecordsToImport = orderedEntities.Count;
-                    var countRecordsImported = 0;
-                    estimator = new TaskEstimator(countRecordsToImport);
-
-                    foreach (var entity in orderedEntities)
+                //these priorities are because when the first type gets create it creates a 'child' of the second type
+                //so we need to ensure the parent created first
+                var prioritiseOver = new List<KeyValuePair<string, string>>();
+                prioritiseOver.Add(new KeyValuePair<string, string>(Entities.team, Entities.queue));
+                prioritiseOver.Add(new KeyValuePair<string, string>(Entities.uomschedule, Entities.uom));
+                foreach (var item in prioritiseOver)
+                {
+                    //if the first item is after the second item in the list
+                    //then remove and insert it before the second item
+                    if (orderedTypes.Contains(item.Key) && orderedTypes.Contains(item.Value))
                     {
-                        var thisEntity = entity;
-                        try
+                        var indexOfFirst = orderedTypes.IndexOf(item.Key);
+                        var indexOfSecond = orderedTypes.IndexOf(item.Value);
+                        if (indexOfFirst > indexOfSecond)
                         {
-                            var existingMatchingIds = matchExistingRecords
-                                ? GetMatchForExistingRecord(existingEntities, thisEntity)
-                                : new Entity[0];
-                            if (existingMatchingIds.Any())
+                            orderedTypes.RemoveAt(indexOfFirst);
+                            orderedTypes.Insert(indexOfSecond, item.Key);
+                        }
+                    }
+                }
+
+                #endregion tryordertypes
+                var estimator = new TaskEstimator(1);
+
+                var countToImport = orderedTypes.Count;
+                var countImported = 0;
+                foreach (var recordType in orderedTypes)
+                {
+                    try
+                    {
+                        var thisRecordType = recordType;
+                        var thisTypesConfig = XrmRecordService.GetTypeConfigs().GetFor(recordType);
+                        var displayPrefix = $"Importing {recordType} Records ({countImported + 1}/{countToImport})";
+                        controller.UpdateProgress(countImported++, countToImport, string.Format("Importing {0} Records", recordType));
+                        controller.UpdateLevel2Progress(0, 1, "Loading");
+                        var primaryField = XrmService.GetPrimaryNameField(recordType);
+                        var thisTypeEntities = entities.Where(e => e.LogicalName == recordType).ToList();
+
+                        var orConditions = thisTypeEntities
+                            .Select(
+                                e =>
+                                    new ConditionExpression(XrmService.GetPrimaryKeyField(e.LogicalName),
+                                        ConditionOperator.Equal, e.Id))
+                            .ToArray();
+                        var existingEntities = XrmService.RetrieveAllOrClauses(recordType, orConditions);
+
+                        var orderedEntities = new List<Entity>();
+
+                        #region tryorderentities
+
+                        var importFieldsForEntity = GetFieldsToImport(thisTypeEntities, recordType).ToArray();
+                        var fieldsDontExist = GetFieldsInEntities(thisTypeEntities)
+                            .Where(f => !f.Contains("."))
+                            .Where(f => !XrmService.FieldExists(f, thisRecordType))
+                            .Where(f => !HardcodedIgnoreFields.Contains(f))
+                            .Distinct()
+                            .ToArray();
+                        foreach (var field in fieldsDontExist)
+                        {
+                            response.AddImportError(
+                                    new DataImportResponseItem(recordType, field, null, null,
+                                    string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType),
+                                    new NullReferenceException(string.Format("Field {0} On Entity {1} Doesn't Exist In Target Instance And Will Be Ignored", field, recordType))));
+                        }
+
+                        var selfReferenceFields = importFieldsForEntity.Where(
+                                    f =>
+                                        XrmService.IsLookup(f, recordType) &&
+                                        XrmService.GetLookupTargetEntity(f, recordType) == recordType).ToArray();
+
+                        foreach (var entity in thisTypeEntities)
+                        {
+                            foreach (var entity2 in orderedEntities)
                             {
-                                var matchRecord = existingMatchingIds.First();
-                                if (thisEntity.Id != Guid.Empty)
-                                    idSwitches[recordType].Add(thisEntity.Id, matchRecord.Id);
-                                thisEntity.Id = matchRecord.Id;
-                                thisEntity.SetField(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), thisEntity.Id);
-                                if(thisTypesConfig != null)
+                                if (selfReferenceFields.Any(f => entity2.GetLookupGuid(f) == entity.Id || (entity2.GetLookupGuid(f) == Guid.Empty && entity2.GetLookupName(f) == entity.GetStringField(primaryField))))
                                 {
-                                    thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField));
-                                    if(thisTypesConfig.UniqueChildFields != null)
-                                    {
-                                        foreach(var childField in thisTypesConfig.UniqueChildFields)
-                                            thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField));
-                                    }
+                                    orderedEntities.Insert(orderedEntities.IndexOf(entity2), entity);
+                                    break;
                                 }
                             }
-                            var isUpdate = existingMatchingIds.Any();
-                            //parse all but aliased fields
-                            foreach (var field in thisEntity.GetFieldsInEntity().Where(f => !f.Contains(".")).ToArray())
+                            if (!orderedEntities.Contains(entity))
+                                orderedEntities.Add(entity);
+                        }
+
+                        #endregion tryorderentities
+
+                        var countRecordsToImport = orderedEntities.Count;
+                        var countRecordsImported = 0;
+                        estimator = new TaskEstimator(countRecordsToImport);
+
+                        foreach (var entity in orderedEntities)
+                        {
+                            var thisEntity = entity;
+                            try
                             {
-                                if (importFieldsForEntity.Contains(field) &&
-                                    XrmService.IsLookup(field, thisEntity.LogicalName) &&
-                                    thisEntity.GetField(field) != null)
+                                var existingMatchingIds = matchExistingRecords
+                                    ? GetMatchForExistingRecord(existingEntities, thisEntity)
+                                    : new Entity[0];
+                                if (existingMatchingIds.Any())
                                 {
-                                    var idNullable = thisEntity.GetLookupGuid(field);
-                                    if (idNullable.HasValue)
+                                    var matchRecord = existingMatchingIds.First();
+                                    if (thisEntity.Id != Guid.Empty)
+                                        idSwitches[recordType].Add(thisEntity.Id, matchRecord.Id);
+                                    thisEntity.Id = matchRecord.Id;
+                                    thisEntity.SetField(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), thisEntity.Id);
+                                    if (thisTypesConfig != null)
                                     {
-                                        var targetTypesToTry = GetTargetTypesToTry(thisEntity, field);
-                                        var name = thisEntity.GetLookupName(field);
-                                        var fieldResolved = false;
-                                        foreach (var lookupEntity in targetTypesToTry)
+                                        thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField));
+                                        if (thisTypesConfig.UniqueChildFields != null)
                                         {
-                                            var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
-                                            var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
-                                            var matchRecord = XrmService.GetFirst(lookupEntity, targetPrimaryKey,
-                                                idNullable.Value);
-                                            if (matchRecord != null)
+                                            foreach (var childField in thisTypesConfig.UniqueChildFields)
+                                                thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField));
+                                        }
+                                    }
+                                }
+                                var isUpdate = existingMatchingIds.Any();
+                                //parse all but aliased fields
+                                foreach (var field in thisEntity.GetFieldsInEntity().Where(f => !f.Contains(".")).ToArray())
+                                {
+                                    if (importFieldsForEntity.Contains(field) &&
+                                        XrmService.IsLookup(field, thisEntity.LogicalName) &&
+                                        thisEntity.GetField(field) != null)
+                                    {
+                                        var idNullable = thisEntity.GetLookupGuid(field);
+                                        if (idNullable.HasValue)
+                                        {
+                                            var targetTypesToTry = GetTargetTypesToTry(thisEntity, field);
+                                            var name = thisEntity.GetLookupName(field);
+                                            var fieldResolved = false;
+                                            foreach (var lookupEntity in targetTypesToTry)
                                             {
-                                                ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
-                                                fieldResolved = true;
-                                            }
-                                            else
-                                            {
-                                                var matchRecords = name.IsNullOrWhiteSpace() ?
-                                                    new Entity[0] :
-                                                    GetMatchingEntities(lookupEntity,
-                                                    targetPrimaryField,
-                                                    name);
-                                                if (matchRecords.Count() == 1)
+                                                var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
+                                                var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
+                                                var matchRecord = XrmService.GetFirst(lookupEntity, targetPrimaryKey,
+                                                    idNullable.Value);
+                                                if (matchRecord != null)
                                                 {
-                                                    thisEntity.SetLookupField(field, matchRecords.First());
-                                                    ((EntityReference)(thisEntity.GetField(field))).Name = name;
+                                                    ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
                                                     fieldResolved = true;
                                                 }
-                                            }
-                                            if (!fieldResolved)
-                                            {
-                                                if (!fieldsToRetry.ContainsKey(thisEntity))
-                                                    fieldsToRetry.Add(thisEntity, new List<string>());
-                                                fieldsToRetry[thisEntity].Add(field);
+                                                else
+                                                {
+                                                    var matchRecords = name.IsNullOrWhiteSpace() ?
+                                                        new Entity[0] :
+                                                        GetMatchingEntities(lookupEntity,
+                                                        targetPrimaryField,
+                                                        name);
+                                                    if (matchRecords.Count() == 1)
+                                                    {
+                                                        thisEntity.SetLookupField(field, matchRecords.First());
+                                                        ((EntityReference)(thisEntity.GetField(field))).Name = name;
+                                                        fieldResolved = true;
+                                                    }
+                                                }
+                                                if (!fieldResolved)
+                                                {
+                                                    if (!fieldsToRetry.ContainsKey(thisEntity))
+                                                        fieldsToRetry.Add(thisEntity, new List<string>());
+                                                    fieldsToRetry[thisEntity].Add(field);
+                                                    response.AddFieldForRetry(thisEntity, field);
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
-                            var fieldsToSet = new List<string>();
-                            fieldsToSet.AddRange(thisEntity.GetFieldsInEntity()
-                                .Where(importFieldsForEntity.Contains));
-                            if (fieldsToRetry.ContainsKey(thisEntity))
-                                fieldsToSet.RemoveAll(f => fieldsToRetry[thisEntity].Contains(f));
+                                var fieldsToSet = new List<string>();
+                                fieldsToSet.AddRange(thisEntity.GetFieldsInEntity()
+                                    .Where(importFieldsForEntity.Contains));
+                                if (fieldsToRetry.ContainsKey(thisEntity))
+                                    fieldsToSet.RemoveAll(f => fieldsToRetry[thisEntity].Contains(f));
 
-                            if (maskEmails)
-                            {
-                                var emailFields = new[] { "emailaddress1", "emailaddress2", "emailaddress3" };
-                                foreach (var field in emailFields)
+                                if (maskEmails)
                                 {
-                                    var theEmail = thisEntity.GetStringField(field);
-                                    if (!string.IsNullOrWhiteSpace(theEmail))
+                                    var emailFields = new[] { "emailaddress1", "emailaddress2", "emailaddress3" };
+                                    foreach (var field in emailFields)
                                     {
-                                        thisEntity.SetField(field, theEmail.Replace("@", "_AT_") + "_@fakemaskedemail.com");
+                                        var theEmail = thisEntity.GetStringField(field);
+                                        if (!string.IsNullOrWhiteSpace(theEmail))
+                                        {
+                                            thisEntity.SetField(field, theEmail.Replace("@", "_AT_") + "_@fakemaskedemail.com");
+                                        }
+                                    }
+                                }
+
+                                if (isUpdate)
+                                {
+                                    var existingRecord = existingMatchingIds.First();
+                                    var fieldsToSetWhichAreChanged = fieldsToSet.Where(f => !XrmEntity.FieldsEqual(existingRecord.GetField(f), thisEntity.GetField(f))).ToArray();
+                                    if (fieldsToSetWhichAreChanged.Any())
+                                    {
+                                        XrmService.Update(thisEntity, fieldsToSetWhichAreChanged);
+                                        response.AddUpdated(thisEntity);
+                                    }
+                                    else
+                                    {
+                                        response.AddSkippedNoChange(thisEntity);
+                                    }
+                                }
+                                else
+                                {
+                                    PopulateRequiredCreateFields(fieldsToRetry, thisEntity, fieldsToSet);
+                                    CheckThrowValidForCreate(thisEntity, fieldsToSet);
+                                    thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
+                                    response.AddCreated(thisEntity);
+                                }
+                                if (!isUpdate && thisEntity.GetOptionSetValue("statecode") > 0)
+                                    XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
+                                else if (isUpdate && existingMatchingIds.Any())
+                                {
+                                    var matchRecord = existingMatchingIds.First();
+                                    var thisState = thisEntity.GetOptionSetValue("statecode");
+                                    var thisStatus = thisEntity.GetOptionSetValue("statuscode");
+                                    var matchState = matchRecord.GetOptionSetValue("statecode");
+                                    var matchStatus = matchRecord.GetOptionSetValue("statuscode");
+                                    if ((thisState != -1 && thisState != matchState)
+                                        || (thisStatus != -1 && thisState != matchStatus))
+                                    {
+                                        XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
                                     }
                                 }
                             }
+                            catch (Exception ex)
+                            {
+                                if (fieldsToRetry.ContainsKey(thisEntity))
+                                    fieldsToRetry.Remove(thisEntity);
+                                response.AddImportError(entity, 
+                                    new DataImportResponseItem(recordType, null, entity.GetStringField(primaryField), null,
+                                        string.Format("Error Importing Record Id={0}", entity.Id),
+                                        ex));
+                            }
+                            countRecordsImported++;
+                            controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        response.AddImportError(
+                            new DataImportResponseItem(recordType, null, null, null, string.Format("Error Importing Type {0}", recordType), ex));
+                    }
+                }
+                controller.TurnOffLevel2();
+                countToImport = fieldsToRetry.Count;
+                countImported = 0;
+                controller.UpdateProgress(countImported, countToImport, "Retrying Unresolved Fields");
+                estimator = new TaskEstimator(countToImport);
+                foreach (var item in fieldsToRetry)
+                {
+                    var thisEntity = item.Key;
+                    var thisPrimaryField = XrmService.GetPrimaryNameField(thisEntity.LogicalName);
+                    try
+                    {
+                        foreach (var field in item.Value)
+                        {
+                            if (XrmService.IsLookup(field, thisEntity.LogicalName) && thisEntity.GetField(field) != null)
+                            {
+                                response.RemoveFieldForRetry(thisEntity, field);
+                                var fieldResolved = false;
+                                var thisLookupName = thisEntity.GetLookupName(field);
+                                try
+                                {
+                                    var targetTypesToTry = GetTargetTypesToTry(thisEntity, field);
+                                    var idNullable = thisEntity.GetLookupGuid(field);
+                                    foreach (var lookupEntity in targetTypesToTry)
+                                    {
+                                        var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
+                                        var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
+                                        var matchRecord = idNullable.HasValue ? XrmService.GetFirst(lookupEntity, targetPrimaryKey,
+                                            idNullable.Value) : null;
+                                        if (matchRecord != null)
+                                        {
+                                            thisEntity.SetLookupField(field, matchRecord);
+                                            ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
+                                            fieldResolved = true;
+                                        }
+                                        else
+                                        {
+                                            var matchRecords = thisLookupName.IsNullOrWhiteSpace() ?
+                                                new Entity[0] :
+                                                GetMatchingEntities(lookupEntity,
+                                                targetPrimaryField,
+                                                thisLookupName);
+                                            if (matchRecords.Count() == 1)
+                                            {
+                                                thisEntity.SetLookupField(field, matchRecords.First());
+                                                ((EntityReference)(thisEntity.GetField(field))).Name = thisLookupName;
+                                                fieldResolved = true;
+                                            }
+                                            else if (matchRecords.Count() > 0)
+                                            {
+                                                throw new Exception($"Multiple {lookupEntity} Records Matched The Name");
+                                            }
+                                        }
+                                        if (fieldResolved)
+                                            break;
+                                    }
+                                    if (!fieldResolved)
+                                    {
+                                        throw new Exception($"Could Not Find Record With Name");
+                                    }
+                                    else
+                                    {
+                                        XrmService.Update(thisEntity, new[] { field });
+                                        response.AddUpdated(thisEntity);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (thisEntity.Contains(field))
+                                        thisEntity.Attributes.Remove(field);
+                                    response.AddImportError(thisEntity, 
+                                         new DataImportResponseItem(thisEntity.LogicalName,
+                                         field,
+                                         thisEntity.GetStringField(thisPrimaryField), thisLookupName,
+                                            "Error Setting Lookup Field - " + ex.Message, ex));
+                                }
+                            }
 
-                            if (isUpdate)
-                            {
-                                var existingRecord = existingMatchingIds.First();
-                                var fieldsToSetWhichAreChanged = fieldsToSet.Where(f => !XrmEntity.FieldsEqual(existingRecord.GetField(f), thisEntity.GetField(f))).ToArray();
-                                if (fieldsToSetWhichAreChanged.Any())
-                                {
-                                    XrmService.Update(thisEntity, fieldsToSetWhichAreChanged);
-                                    response.AddUpdated(thisEntity);
-                                }
-                            }
-                            else
-                            {
-                                PopulateRequiredCreateFields(fieldsToRetry, thisEntity, fieldsToSet);
-                                CheckThrowValidForCreate(thisEntity, fieldsToSet);
-                                thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        response.AddImportError(thisEntity, 
+                            new DataImportResponseItem(thisEntity.LogicalName, null, thisEntity.GetStringField(thisPrimaryField), null,
+                                string.Format("Error Importing Record Id={0}", thisEntity.Id),
+                                ex));
+                    }
+                    countImported++;
+                    controller.UpdateProgress(countImported, countToImport, estimator.GetProgressString(countImported, taskName: $"Retrying Unresolved Fields"));
+                }
+                countToImport = associationTypes.Count();
+                countImported = 0;
+                foreach (var relationshipEntityName in associationTypes)
+                {
+                    var thisEntityName = relationshipEntityName;
+                    controller.UpdateProgress(countImported++, countToImport, $"Associating {thisEntityName} Records");
+                    controller.UpdateLevel2Progress(0, 1, "Loading");
+                    var thisTypeEntities = entities.Where(e => e.LogicalName == thisEntityName).ToList();
+                    var countRecordsToImport = thisTypeEntities.Count;
+                    var countRecordsImported = 0;
+                    estimator = new TaskEstimator(countRecordsToImport);
+                    foreach (var thisEntity in thisTypeEntities)
+                    {
+                        try
+                        {
+                            var relationship = XrmService.GetRelationshipMetadataForEntityName(thisEntityName);
+                            var type1 = relationship.Entity1LogicalName;
+                            var field1 = relationship.Entity1IntersectAttribute;
+                            var type2 = relationship.Entity2LogicalName;
+                            var field2 = relationship.Entity2IntersectAttribute;
+
+                            //bit of hack
+                            //when importing from csv just set the fields to the string name of the referenced record
+                            //so either string when csv or guid when xml import/export
+                            var value1 = thisEntity.GetField(relationship.Entity1IntersectAttribute);
+                            var id1 = value1 is string
+                                ? GetUniqueMatchingEntity(type1, XrmRecordService.GetPrimaryField(type1), (string)value1).Id
+                                : thisEntity.GetGuidField(relationship.Entity1IntersectAttribute);
+
+                            var value2 = thisEntity.GetField(relationship.Entity2IntersectAttribute);
+                            var id2 = value2 is string
+                                ? GetUniqueMatchingEntity(type2, XrmRecordService.GetPrimaryField(type2), (string)value2).Id
+                                : thisEntity.GetGuidField(relationship.Entity2IntersectAttribute);
+
+                            //add a where field lookup reference then look it up
+                            if (idSwitches.ContainsKey(type1) && idSwitches[type1].ContainsKey(id1))
+                                id1 = idSwitches[type1][id1];
+                            if (idSwitches.ContainsKey(type2) && idSwitches[type2].ContainsKey(id2))
+                                id2 = idSwitches[type2][id2];
+                            var newAssociation = XrmService.AssociateSafe(relationship.SchemaName, type1, field1, id1, type2, field2, new[] { id2 });
+                            if (newAssociation)
                                 response.AddCreated(thisEntity);
-                            }
-                            if (!isUpdate && thisEntity.GetOptionSetValue("statecode") > 0)
-                                XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
-                            else if (isUpdate && existingMatchingIds.Any())
-                            {
-                                var matchRecord = existingMatchingIds.First();
-                                var thisState = thisEntity.GetOptionSetValue("statecode");
-                                var thisStatus = thisEntity.GetOptionSetValue("statuscode");
-                                var matchState = matchRecord.GetOptionSetValue("statecode");
-                                var matchStatus = matchRecord.GetOptionSetValue("statuscode");
-                                if ((thisState != -1 && thisState != matchState)
-                                    ||  (thisStatus != -1 && thisState != matchStatus))
-                                {
-                                    XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
-                                }
-                            }
+                            else
+                                response.AddSkippedNoChange(thisEntity);
                         }
                         catch (Exception ex)
                         {
-                            if (fieldsToRetry.ContainsKey(thisEntity))
-                                fieldsToRetry.Remove(thisEntity);
-                            response.AddResponseItem(
-                                new DataImportResponseItem(recordType, null, entity.GetStringField(primaryField), null,
-                                    string.Format("Error Importing Record Id={0}", entity.Id),
+                            response.AddImportError(thisEntity, 
+                            new DataImportResponseItem(
+                                    string.Format("Error Associating Record Of Type {0} Id {1}", thisEntity.LogicalName,
+                                        thisEntity.Id),
                                     ex));
                         }
                         countRecordsImported++;
                         controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
                     }
                 }
-                catch (Exception ex)
-                {
-                    response.AddResponseItem(
-                        new DataImportResponseItem(recordType, null, null, null, string.Format("Error Importing Type {0}", recordType), ex));
-                }
             }
-            controller.TurnOffLevel2();
-            countToImport = fieldsToRetry.Count;
-            countImported = 0;
-            controller.UpdateProgress(countImported, countToImport, "Retrying Unresolved Fields");
-            estimator = new TaskEstimator(countToImport);
-            foreach (var item in fieldsToRetry)
+            finally
             {
-                var thisEntity = item.Key;
-                var thisPrimaryField = XrmService.GetPrimaryNameField(thisEntity.LogicalName);
-                try
-                {
-                    foreach (var field in item.Value)
-                    {
-                        if (XrmService.IsLookup(field, thisEntity.LogicalName) && thisEntity.GetField(field) != null)
-                        {
-                            var fieldResolved = false;
-                            var thisLookupName = thisEntity.GetLookupName(field);
-                            try
-                            {
-                                var targetTypesToTry = GetTargetTypesToTry(thisEntity, field);
-                                var idNullable = thisEntity.GetLookupGuid(field);
-                                foreach (var lookupEntity in targetTypesToTry)
-                                {
-                                    var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
-                                    var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
-                                    var matchRecord = idNullable.HasValue ? XrmService.GetFirst(lookupEntity, targetPrimaryKey,
-                                        idNullable.Value) : null;
-                                    if (matchRecord != null)
-                                    {
-                                        thisEntity.SetLookupField(field, matchRecord);
-                                        ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
-                                        fieldResolved = true;
-                                    }
-                                    else
-                                    {
-                                        var matchRecords = thisLookupName.IsNullOrWhiteSpace() ?
-                                            new Entity[0] :
-                                            GetMatchingEntities(lookupEntity,
-                                            targetPrimaryField,
-                                            thisLookupName);
-                                        if (matchRecords.Count() == 1)
-                                        {
-                                            thisEntity.SetLookupField(field, matchRecords.First());
-                                            ((EntityReference)(thisEntity.GetField(field))).Name = thisLookupName;
-                                            fieldResolved = true;
-                                        }
-                                        else if(matchRecords.Count() > 0)
-                                        {
-                                            throw new Exception($"Multiple {lookupEntity} Records Matched The Name");
-                                        }
-                                    }
-                                    if (fieldResolved)
-                                        break;
-                                }
-                                if (!fieldResolved)
-                                {
-                                    throw new Exception($"Could Not Find Record With Name");
-                                }
-                                else
-                                {
-                                    XrmService.Update(thisEntity, new[] { field });
-                                    response.AddUpdated(thisEntity);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                if (thisEntity.Contains(field))
-                                    thisEntity.Attributes.Remove(field);
-                                response.AddResponseItem(
-                                     new DataImportResponseItem(thisEntity.LogicalName,
-                                     field,
-                                     thisEntity.GetStringField(thisPrimaryField), thisLookupName,
-                                        "Error Setting Lookup Field - " + ex.Message, ex));
-                            }
-                        }
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    response.AddResponseItem(
-                        new DataImportResponseItem(thisEntity.LogicalName, null, thisEntity.GetStringField(thisPrimaryField), null,
-                            string.Format("Error Importing Record Id={0}", thisEntity.Id),
-                            ex));
-                }
-                countImported++;
-                controller.UpdateProgress(countImported, countToImport, estimator.GetProgressString(countImported, taskName: $"Retrying Unresolved Fields"));
-            }
-            countToImport = associationTypes.Count();
-            countImported = 0;
-            foreach (var relationshipEntityName in associationTypes)
-            {
-                var thisEntityName = relationshipEntityName;
-                controller.UpdateProgress(countImported++, countToImport, $"Associating {thisEntityName} Records");
-                controller.UpdateLevel2Progress(0, 1, "Loading");
-                var thisTypeEntities = entities.Where(e => e.LogicalName == thisEntityName).ToList();
-                var countRecordsToImport = thisTypeEntities.Count;
-                var countRecordsImported = 0;
-                estimator = new TaskEstimator(countRecordsToImport);
-                foreach (var thisEntity in thisTypeEntities)
-                {
-                    try
-                    {
-                        var relationship = XrmService.GetRelationshipMetadataForEntityName(thisEntityName);
-                        var type1 = relationship.Entity1LogicalName;
-                        var field1 = relationship.Entity1IntersectAttribute;
-                        var type2 = relationship.Entity2LogicalName;
-                        var field2 = relationship.Entity2IntersectAttribute;
-
-                        //bit of hack
-                        //when importing from csv just set the fields to the string name of the referenced record
-                        //so either string when csv or guid when xml import/export
-                        var value1 = thisEntity.GetField(relationship.Entity1IntersectAttribute);
-                        var id1 = value1 is string
-                            ? GetUniqueMatchingEntity(type1, XrmRecordService.GetPrimaryField(type1), (string)value1).Id
-                            : thisEntity.GetGuidField(relationship.Entity1IntersectAttribute);
-
-                        var value2 = thisEntity.GetField(relationship.Entity2IntersectAttribute);
-                        var id2 = value2 is string
-                            ? GetUniqueMatchingEntity(type2, XrmRecordService.GetPrimaryField(type2), (string)value2).Id
-                            : thisEntity.GetGuidField(relationship.Entity2IntersectAttribute);
-
-                        //add a where field lookup reference then look it up
-                        if (idSwitches.ContainsKey(type1) && idSwitches[type1].ContainsKey(id1))
-                            id1 = idSwitches[type1][id1];
-                        if (idSwitches.ContainsKey(type2) && idSwitches[type2].ContainsKey(id2))
-                            id2 = idSwitches[type2][id2];
-                        var newAssociation = XrmService.AssociateSafe(relationship.SchemaName, type1, field1, id1, type2, field2, new[] { id2 });
-                        if (newAssociation)
-                            response.AddCreated(thisEntity);
-                    }
-                    catch (Exception ex)
-                    {
-                        response.AddResponseItem(
-                        new DataImportResponseItem(
-                                string.Format("Error Associating Record Of Type {0} Id {1}", thisEntity.LogicalName,
-                                    thisEntity.Id),
-                                ex));
-                    }
-                    countRecordsImported++;
-                    controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
-                }
+                controller.RemoveObjectFromUi(response);
             }
             return response;
         }

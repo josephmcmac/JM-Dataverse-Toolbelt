@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.ViewModel.Fakes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
+using JosephM.Core.Service;
 using JosephM.Record.Extentions;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,7 +25,7 @@ namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
             request.RecordLookup = new Lookup(FakeConstants.RecordType, record.Id, "Fake Record");
 
             var response = new RecordExtractResponse();
-            TestRecordExtractService.ExecuteExtention(request, response, new LogController());
+            TestRecordExtractService.ExecuteExtention(request, response, new ServiceRequestController(new LogController()));
         }
 
         [TestMethod]
@@ -43,7 +44,7 @@ namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
             request.RecordLookup = new Lookup(record.Type, record.Id, "Fake Record");
 
             var response = new RecordExtractResponse();
-            TestRecordExtractService.ExecuteExtention(request, response, new LogController());
+            TestRecordExtractService.ExecuteExtention(request, response, new ServiceRequestController(new LogController()));
         }
     }
 }

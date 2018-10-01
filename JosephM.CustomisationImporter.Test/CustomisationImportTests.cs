@@ -61,7 +61,7 @@ namespace JosephM.CustomisationImporter.Test
             var importService =
                 new XrmCustomisationImportService(XrmRecordService);
 
-            var response = importService.Execute(request, Controller);
+            var response = importService.Execute(request, CreateServiceRequestController());
             if (response.HasError)
                 Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
@@ -111,7 +111,7 @@ namespace JosephM.CustomisationImporter.Test
             importService =
                 new XrmCustomisationImportService(XrmRecordService);
 
-            response = importService.Execute(request, Controller);
+            response = importService.Execute(request, CreateServiceRequestController());
             if (response.HasError)
                 Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
@@ -146,7 +146,7 @@ namespace JosephM.CustomisationImporter.Test
 
             foreach (var request in requests)
             {
-                var response = importService.Execute(request, Controller);
+                var response = importService.Execute(request, CreateServiceRequestController());
                 if (response.HasError)
                     Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
 
@@ -207,7 +207,7 @@ namespace JosephM.CustomisationImporter.Test
             var importService =
                 new XrmCustomisationImportService(XrmRecordService);
 
-            var response = importService.Execute(request, Controller);
+            var response = importService.Execute(request, CreateServiceRequestController());
 
             Assert.IsTrue(response.ExcelReadErrors);
             Assert.IsNull(response.Exception);

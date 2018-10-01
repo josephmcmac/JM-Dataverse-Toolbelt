@@ -22,15 +22,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
             _objectRecord = new ObjectRecord(objectToEnter);
             RecordType = _objectRecord.Type;
-
-            if (objectToEnter.GetType().IsTypeOf(typeof(INotifyPropertyChanged)))
-            {
-                var iNotify = (INotifyPropertyChanged)objectToEnter;
-                iNotify.PropertyChanged += NotifyOnPropertyChanged;
-            }
         }
 
-        protected object GetObject()
+        public object GetObject()
         {
             return _objectRecord.Instance;
         }
@@ -40,14 +34,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             return _objectRecord;
         }
 
-        private void NotifyOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            DoOnMainThread(() =>
-            {
-                var fieldViewModel = GetFieldViewModel(propertyChangedEventArgs.PropertyName);
-                fieldViewModel.OnChangeBase();
-            });
-        }
         public override void LoadFormSections()
         {
             base.LoadFormSections();

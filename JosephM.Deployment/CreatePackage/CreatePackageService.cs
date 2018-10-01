@@ -26,13 +26,13 @@ namespace JosephM.Deployment.CreatePackage
         public XrmRecordService XrmRecordService { get; }
 
         public override void ExecuteExtention(CreatePackageRequest request, CreatePackageResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             CreateDeploymentPackage(request, controller, response);
         }
 
 
-        private void CreateDeploymentPackage(CreatePackageRequest request, LogController controller, CreatePackageResponse response)
+        private void CreateDeploymentPackage(CreatePackageRequest request, ServiceRequestController controller, CreatePackageResponse response)
         {
             var folderPath = request.FolderPath.FolderPath;
 
@@ -71,7 +71,7 @@ namespace JosephM.Deployment.CreatePackage
                 var dataExportService = new ExportXmlService(xrmRecordService);
                 dataExportService.ExportXml(request.DataToInclude,
                     new Folder(GetDataExportFolder(folderPath)), request.IncludeNotes,
-                    request.IncludeNNRelationshipsBetweenEntities, controller);
+                    request.IncludeNNRelationshipsBetweenEntities, controller.Controller);
             }
             tasksDone++;
             if (solution.GetStringField(Fields.solution_.version) != request.SetVersionPostRelease)

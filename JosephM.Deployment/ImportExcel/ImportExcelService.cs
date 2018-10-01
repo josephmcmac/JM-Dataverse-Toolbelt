@@ -1,3 +1,4 @@
+using JosephM.Application.Application;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
@@ -20,7 +21,7 @@ namespace JosephM.Deployment.ImportExcel
         public XrmRecordService XrmRecordService { get; }
 
         public override void ExecuteExtention(ImportExcelRequest request, ImportExcelResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var excelService = new ExcelRecordService(request.ExcelFile);
 

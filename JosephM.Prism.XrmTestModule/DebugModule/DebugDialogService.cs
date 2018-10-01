@@ -15,7 +15,7 @@ namespace JosephM.XrmTestModule.DebugModule
         }
 
         public override void ExecuteExtention(DebugDialogRequest request, DebugDialogResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             
         }
