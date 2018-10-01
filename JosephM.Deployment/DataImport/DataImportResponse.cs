@@ -13,7 +13,7 @@ namespace JosephM.Deployment.DataImport
         public DataImportResponse(IEnumerable<Entity> entitiesToProcess)
         {
             var types = entitiesToProcess.Select(e => e.LogicalName).Distinct().ToArray();
-            _importedRecords.AddRange(types.Select(s => new ImportingRecords() { Type = s }));
+            _importedRecords.AddRange(types.OrderBy(s => s).Select(s => new ImportingRecords() { Type = s }));
         }
 
         public IEnumerable<ImportingRecords> ImportedRecords
