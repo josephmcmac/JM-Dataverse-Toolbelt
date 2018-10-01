@@ -1,6 +1,4 @@
-using JosephM.Application.Application;
 using JosephM.Core.Extentions;
-using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
@@ -131,7 +129,13 @@ namespace JosephM.Deployment.DataImport
             throw new NullReferenceException(string.Format("No Unique Record Type Or Relationship Matched (Label Or Name) For CSV Name Of {0}", name));
         }
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, bool matchExistingRecords = true)
+        public enum MatchOption
+        {
+            PrimaryKeyOnly,
+            PrimaryKeyThenName
+        }
+
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName) 
         {
             var response = new DataImportResponse(entities);
             controller.AddObjectToUi(response);
@@ -278,9 +282,18 @@ namespace JosephM.Deployment.DataImport
                             var thisEntity = entity;
                             try
                             {
-                                var existingMatchingIds = matchExistingRecords
-                                    ? GetMatchForExistingRecord(existingEntities, thisEntity)
-                                    : new Entity[0];
+                                IEnumerable<Entity> existingMatchingIds = new Entity[0];
+                                if (matchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
+                                {
+                                    existingMatchingIds = GetMatchForExistingRecord(existingEntities, thisEntity);
+                                }
+                                else if (matchOption == MatchOption.PrimaryKeyOnly && thisEntity.Id != Guid.Empty)
+                                {
+                                    existingMatchingIds = XrmService.RetrieveAllAndClauses(thisEntity.LogicalName, new[]
+                                    {
+                                        new ConditionExpression(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), ConditionOperator.Equal, thisEntity.Id)
+                                    });
+                                }
                                 if (existingMatchingIds.Any())
                                 {
                                     var matchRecord = existingMatchingIds.First();
@@ -925,6 +938,7 @@ namespace JosephM.Deployment.DataImport
                 {
                     "yomifullname", "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
                     "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid"
+                    , "address1_addressid", "address2_addressid"
                 };
             }
         }

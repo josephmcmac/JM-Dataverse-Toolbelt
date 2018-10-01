@@ -53,7 +53,8 @@ namespace JosephM.Deployment.MigrateRecords
             }
 
             var importService = new DataImportService(new XrmRecordService(request.TargetConnection));
-            var dataImportResponse = importService.DoImport(removeDuplicates, controller, request.MaskEmails);
+            var matchOption = request.MatchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly;
+            var dataImportResponse = importService.DoImport(removeDuplicates, controller, request.MaskEmails, matchOption: matchOption);
             response.LoadDataImport(dataImportResponse);
         }
     }

@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.ImportExcel
 {
+    [Group(Sections.Summary, false, 0)]
     public class ImportExcelResponse : ServiceResponseBase<ImportExcelResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
@@ -23,6 +24,7 @@ namespace JosephM.Deployment.ImportExcel
             get { return ImportSummary != null && ImportSummary.Any(); }
         }
 
+        [Group(Sections.Summary)]
         [PropertyInContextByPropertyValue(nameof(IsImportSummary), true)]
         public IEnumerable<ImportedRecords> ImportSummary
         {
@@ -30,6 +32,11 @@ namespace JosephM.Deployment.ImportExcel
             {
                 return _importedRecords;
             }
+        }
+
+        private static class Sections
+        {
+            public const string Summary = "Summary";
         }
     }
 }

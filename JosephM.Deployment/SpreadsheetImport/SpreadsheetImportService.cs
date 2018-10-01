@@ -36,7 +36,7 @@ namespace JosephM.Deployment.SpreadsheetImport
             PopulateEmptyNameFields(entitiesToImport);
 
             var dataImportService = new DataImportService(XrmRecordService);
-            response.LoadDataImport(dataImportService.DoImport(entitiesToImport, controller, maskEmails, matchExistingRecords: matchByName));
+            response.LoadDataImport(dataImportService.DoImport(entitiesToImport, controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyOnly : DataImportService.MatchOption.PrimaryKeyThenName));
 
             return response;
         }

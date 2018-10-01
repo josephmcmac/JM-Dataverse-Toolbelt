@@ -6,13 +6,18 @@ using System.Collections.Generic;
 
 namespace JosephM.Deployment.MigrateRecords
 {
-    [Instruction("All Records Will Be Queried From The Source Instance, Then Imported Into The Target Instance. Matches To Update Records In The Target Will By Done By Either Primary Key, Then Name, Else If No Match Is Found A New Record Will Be Created")]
+    [Instruction("Records Will Be Queried From The Source Instance, Then Imported Into The Target Instance\n\nTurn The Match By Name Flag Off If You Want To Allow Mulitple Records Created With The Same Name. If Left On Each Record Will Check For A Record With The Same Name To Update, Otherwise Only Primary Key Will Be Matched. Note Several Types Including Knowledge Articles And Price List Items Will Always Check By Name/Id Due To Duplicate Key Constraints")]
     [AllowSaveAndLoad]
     [Group(Sections.Connections, true, 10)]
     [Group(Sections.RecordTypesOptions, true, 30)]
     [Group(Sections.RecordTypes, true, order: 35, displayLabel: false)]
     public class MigrateRecordsRequest : ServiceRequestBase
     {
+        public MigrateRecordsRequest()
+        {
+            MatchByName = true;
+        }
+
         [MyDescription("The Connection Which Records Will Be Migrated From")]
         [Group(Sections.Connections)]
         [DisplayOrder(10)]
@@ -50,6 +55,12 @@ namespace JosephM.Deployment.MigrateRecords
         [DisplayName("Include N:N Links Between Records")]
         [RequiredProperty]
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }
+
+        [GridWidth(110)]
+        [DisplayOrder(215)]
+        [Group(Sections.RecordTypesOptions)]
+        [RequiredProperty]
+        public bool MatchByName { get; set; }
 
         [Group(Sections.RecordTypes)]
         [GridWidth(500)]
