@@ -30,7 +30,7 @@ namespace JosephM.Deployment.SpreadsheetImport
             var parseResponse = ParseIntoEntities(mappings, useAmericanDates: useAmericanDates);
             response.LoadParseResponse(parseResponse);
             var dataImportService = new DataImportService(XrmRecordService);
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly));
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems));
             return response;
         }
 

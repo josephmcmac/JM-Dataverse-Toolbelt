@@ -135,9 +135,9 @@ namespace JosephM.Deployment.DataImport
             PrimaryKeyThenName
         }
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName) 
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null) 
         {
-            var response = new DataImportResponse(entities);
+            var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
             try
             {

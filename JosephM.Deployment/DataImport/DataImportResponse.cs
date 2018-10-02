@@ -10,10 +10,21 @@ namespace JosephM.Deployment.DataImport
     {
         private List<ImportingRecords> _importedRecords = new List<ImportingRecords>();
 
-        public DataImportResponse(IEnumerable<Entity> entitiesToProcess)
+        public DataImportResponse(IEnumerable<Entity> entitiesToProcess, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary)
         {
             var types = entitiesToProcess.Select(e => e.LogicalName).Distinct().ToArray();
             _importedRecords.AddRange(types.OrderBy(s => s).Select(s => new ImportingRecords() { Type = s }));
+            if(loadExistingErrorsIntoSummary != null)
+            {
+                foreach(var item in loadExistingErrorsIntoSummary)
+                {
+                    if(item.Entity != null)
+                    {
+                        var summaryItem = GetImportForType(item.Entity);
+                        summaryItem.AddError();
+                    }
+                }
+            }
         }
 
         public IEnumerable<ImportingRecords> ImportedRecords
@@ -75,7 +86,7 @@ namespace JosephM.Deployment.DataImport
         public void AddImportError(Entity entity, DataImportResponseItem dataImportResponseItem)
         {
             var importObject = GetImportForType(entity.LogicalName);
-            importObject.AddedError(entity);
+            importObject.AddError();
             _errors.Add(dataImportResponseItem);
         }
 

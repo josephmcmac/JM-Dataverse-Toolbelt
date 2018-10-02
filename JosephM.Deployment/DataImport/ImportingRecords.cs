@@ -120,7 +120,7 @@ namespace JosephM.Deployment.DataImport
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void AddedError(Entity entity)
+        public void AddError()
         {
             Errors++;
         }
