@@ -1,7 +1,5 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Application.ViewModel.RecordEntry;
-using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
@@ -99,20 +97,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             Controller.LoadToUi(progressControlViewModelLevel2);
             LogController = new LogController(progressControlViewModel);
             LogController.AddLevel2Ui(progressControlViewModelLevel2);
-            Action<object> addObjectToUi = (o) =>
-            {
-                var vm = new ObjectDisplayViewModel(o, FormController.CreateForObject(o, ApplicationController, null));
-                Controller.LoadToUi(vm);
-            };
-            Action<object> removeObjectFromUi = (o) =>
-            {
-                foreach(var item in Controller.UiItems.ToArray())
-                {
-                    if (item is ObjectDisplayViewModel && ((ObjectDisplayViewModel)item).GetObject() == o)
-                        Controller.RemoveFromUi(item);
-                }
-            };
-            var serviceRequestController = new ServiceRequestController(LogController, addObjectToUi, removeObjectFromUi);
+            var serviceRequestController = new ServiceRequestController(LogController, (o) => AddObjectToUi(o), RemoveObjectFromUi);
             Response = Service.Execute(Request, serviceRequestController);
 
             CompletionItem = Response;
@@ -128,6 +113,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             if (!Response.Success)
                 ProcessError(Response.Exception);
         }
+
         protected virtual void ProcessCompletionExtention()
         {
         }

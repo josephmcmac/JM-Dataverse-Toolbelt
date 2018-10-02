@@ -1,11 +1,6 @@
-﻿#region
-
-using System.ComponentModel;
-using JosephM.Record.IService;
+﻿using JosephM.Record.IService;
 using JosephM.Record.Service;
-using JosephM.Core.Extentions;
-
-#endregion
+using System;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
@@ -15,10 +10,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override int GridPageSize { get { return 25; } }
 
-        public ObjectDisplayViewModel(object objectToEnter, FormController formController)
-            : base(formController)
+        public ObjectDisplayViewModel(object objectToEnter, FormController formController, Action backAction = null, Action nextAction = null)
+            : base(formController, saveButtonLabel: "Next")
         {
             IsReadOnly = true;
+            OnSave = nextAction;
+            OnBack = backAction;
 
             _objectRecord = new ObjectRecord(objectToEnter);
             RecordType = _objectRecord.Type;
@@ -47,5 +44,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         {
             base.RefreshEditabilityExtention();
         }
+
+        public ObjectRecordService GetObjectRecordService()
+        {
+            var service = RecordService;
+            if (!(service is ObjectRecordService))
+                throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecordService).Name,
+                    typeof(ObjectRecordService).Name));
+            return ((ObjectRecordService)service);
+        }
+
+        public override string Instruction => GetObjectRecordService().GetInstruction(RecordType);
     }
 }

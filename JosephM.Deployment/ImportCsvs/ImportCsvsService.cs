@@ -22,6 +22,15 @@ namespace JosephM.Deployment.ImportCsvs
 
         public override void ExecuteExtention(ImportCsvsRequest request, ImportCsvsResponse response, ServiceRequestController controller)
         {
+            var dictionary = LoadMappingDictionary(request);
+
+            var importService = new SpreadsheetImportService(XrmRecordService);
+            var responseItem = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, controller, useAmericanDates: request.DateFormat == DateFormat.American);
+            response.LoadSpreadsheetImport(responseItem);
+        }
+
+        public Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportCsvsRequest request)
+        {
             var dictionary = new Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>>();
 
             foreach (var csvMapping in request.CsvsToImport)
@@ -34,9 +43,7 @@ namespace JosephM.Deployment.ImportCsvs
                 }
             }
 
-            var importService = new SpreadsheetImportService(XrmRecordService);
-            var responseItem = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, controller, useAmericanDates: request.DateFormat == DateFormat.American);
-            response.LoadSpreadsheetImport(responseItem);
+            return dictionary;
         }
     }
 }

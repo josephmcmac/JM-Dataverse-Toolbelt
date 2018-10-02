@@ -1,8 +1,8 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Attributes;
-using JosephM.Core.Log;
 using JosephM.Core.Service;
+using System.Linq;
 
 namespace JosephM.Application.Desktop.Console.Test
 {
@@ -24,7 +24,48 @@ namespace JosephM.Application.Desktop.Console.Test
         public TestSavedRequestDialog(IDialogController controller)
             : base(new TestSavedRequestDialogService(), controller)
         {
+            var validationDialog = new ValidationDisplayDialog(this);
+            SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
+        }
 
+        /// <summary>
+        /// this is to replicate the
+        /// import dialogs which display validation
+        /// prior to the import
+        /// </summary>
+        public class ValidationDisplayDialog : DialogViewModel
+        {
+            public ValidationDisplayDialog(DialogViewModel parentDialog)
+                : base(parentDialog)
+            {
+            }
+
+            protected override void CompleteDialogExtention()
+            {
+
+            }
+
+            protected override void LoadDialogExtention()
+            {
+                var iDisplay = new ArbitraryObject();
+                AddObjectToUi(iDisplay,
+                    nextAction: () =>
+                    {
+                        RemoveObjectFromUi(iDisplay);
+                        StartNextAction();
+                    },
+                    backAction: () =>
+                    {
+                        RemoveObjectFromUi(iDisplay);
+                        MoveBackToPrevious();
+                    });
+
+            }
+
+            public class ArbitraryObject
+            {
+                public string IDisplaySomething {  get { return "WTF"; } }
+            }
         }
     }
 
