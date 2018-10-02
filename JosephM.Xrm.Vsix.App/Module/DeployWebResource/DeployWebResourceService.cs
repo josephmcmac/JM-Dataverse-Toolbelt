@@ -26,7 +26,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
         public XrmRecordService Service { get; set; }
 
         public override void ExecuteExtention(DeployWebResourceRequest request, DeployWebResourceResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var records = new List<IRecord>();
 
@@ -86,7 +86,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
 
             if (publishIds.Any())
             {
-                controller.UpdateProgress(totalTasks, totalTasks, "Publising Files");
+                controller.UpdateProgress(totalTasks, totalTasks, "Publishing Files");
                 var xml = new StringBuilder();
                 xml.Append("<importexportxml><webresources>");
                 foreach (var id in publishIds)

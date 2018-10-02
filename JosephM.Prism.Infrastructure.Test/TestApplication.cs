@@ -44,7 +44,8 @@ namespace JosephM.Application.Desktop.Test
                 Assert.AreEqual(1, objects.Count(), "Ambiguous which dialog to get");
             var item = objects[index] as T;
             Assert.IsNotNull(item);
-            item.Controller.BeginDialog();
+            if(!item.Controller.IsStarted)
+                item.Controller.BeginDialog();
             return item;
         }
 
@@ -148,6 +149,11 @@ namespace JosephM.Application.Desktop.Test
         {
             TDialog dialog = NavigateAndProcessDialog<TDialogModule, TDialog>(instanceEntered);
 
+            return GetCompletionViewModel(dialog);
+        }
+
+        public ObjectEntryViewModel GetCompletionViewModel(DialogViewModel dialog)
+        {
             var completionScreen = dialog.Controller.UiItems.First() as CompletionScreenViewModel;
             Assert.IsNotNull(completionScreen);
             Assert.IsNotNull(completionScreen.CompletionDetails);
@@ -168,6 +174,17 @@ namespace JosephM.Application.Desktop.Test
             }
 
             EnterAndSaveObject(instanceEntered, entryForm);
+            var uiItem = dialog.Controller.UiItems.Any()
+                ? dialog.Controller.UiItems.First()
+                : null;
+            //this is for dialogs which display any validation details
+            //after the initial entry
+            //in this case we proceed at that screen as well
+            if(uiItem is ObjectDisplayViewModel)
+            {
+                var odvbm = uiItem as ObjectDisplayViewModel;
+                odvbm.SaveButtonViewModel.Invoke();
+            }
             return dialog;
         }
 

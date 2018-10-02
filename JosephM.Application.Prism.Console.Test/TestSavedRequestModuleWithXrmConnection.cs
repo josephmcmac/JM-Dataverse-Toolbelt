@@ -43,7 +43,7 @@ namespace JosephM.Application.Desktop.Console.Test
 
         public XrmRecordService XrmRecordService { get; }
 
-        public override void ExecuteExtention(TestSavedRequestWithXrmConnectionDialogRequest request, TestSavedRequestWithXrmConnectionDialogResponse response, LogController controller)
+        public override void ExecuteExtention(TestSavedRequestWithXrmConnectionDialogRequest request, TestSavedRequestWithXrmConnectionDialogResponse response, ServiceRequestController controller)
         {
             var isValid = XrmRecordService.VerifyConnection();
             if (!isValid.IsValid)

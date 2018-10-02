@@ -10,7 +10,6 @@ using System.Linq;
 
 namespace JosephM.Core.Service
 {
-    [Group(Sections.FatalError, false, 0)]
     [Group(Sections.ResponseItems, true, 1, displayLabel: false)]
     public class ServiceResponseBase<TResponseItem> : IProcessCompletion
         where TResponseItem : ServiceResponseItem
@@ -87,7 +86,6 @@ namespace JosephM.Core.Service
 
         private static class Sections
         {
-            public const string FatalError = "Summary";
             public const string ResponseItems = "Response Items";
         }
     }

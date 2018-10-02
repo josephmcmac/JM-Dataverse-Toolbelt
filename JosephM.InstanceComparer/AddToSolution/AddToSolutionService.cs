@@ -21,7 +21,7 @@ namespace JosephM.InstanceComparer.AddToSolution
         public XrmRecordService XrmRecordService { get; }
 
         public override void ExecuteExtention(AddToSolutionRequest request, AddToSolutionResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var toDo = request.GetItemsToInclude().Count();
             var done = 0;

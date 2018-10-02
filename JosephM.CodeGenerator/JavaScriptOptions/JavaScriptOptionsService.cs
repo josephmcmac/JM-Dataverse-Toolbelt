@@ -17,9 +17,9 @@ namespace JosephM.CodeGenerator.JavaScriptOptions
         }
 
         public override void ExecuteExtention(JavaScriptOptionsRequest request, JavaScriptOptionsResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
-            response.Javascript = WriteJavaScriptOptionSets(request, controller);
+            response.Javascript = WriteJavaScriptOptionSets(request, controller.Controller);
         }
 
         private string WriteJavaScriptOptionSets(JavaScriptOptionsRequest request, LogController controller)

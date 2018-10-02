@@ -17,7 +17,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
         }
 
         public override void ExecuteExtention(BulkReplaceRequest request, BulkReplaceResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var countToUpdate = request.RecordCount;
             var countUpdated = 0;

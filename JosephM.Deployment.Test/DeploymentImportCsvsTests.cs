@@ -1,9 +1,11 @@
-﻿using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Test;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportCsvs;
+using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
@@ -18,6 +20,63 @@ namespace JosephM.Deployment.Test
     [TestClass]
     public class DeploymentImportCsvsTests : XrmModuleTest
     {
+        [DeploymentItem(@"Files\accounts.csv")]
+        [TestMethod]
+        public void DeploymentImportCsvsValidationTest()
+        {
+            //script through csv import where there are parse field errors
+            //for an invalid picklist value and exceeding the max string length
+            //in this case after submitting the form the validation/parse errors should 
+            //display and allow moving back to entry or proceeding anyway
+            PrepareTests();
+            var workFolder = ClearFilesAndData(new[]
+            {
+                Entities.account
+            });
+
+            File.Copy(@"accounts.csv", Path.Combine(TestConstants.TestFolder, @"accounts.csv"));
+
+            var application = CreateAndLoadTestApplication<ImportCsvsModule>();
+            var dialog = application.NavigateToDialog<ImportCsvsModule, ImportCsvsDialog>();
+            var entryViewModel = application.GetSubObjectEntryViewModel(dialog);
+
+            var mappingField = entryViewModel.GetEnumerableFieldViewModel(nameof(ImportCsvsRequest.CsvsToImport));
+            var mappingGrid = mappingField.DynamicGridViewModel;
+
+            //the buttons aren't loading into the grid in this script for some obscure reason
+            //think due to multiple for loading and something to do with observable collections
+            //so lets just load get them directly from the form service
+
+            //trigger the load folder function
+            var customButtons = mappingGrid.GridsFunctionsToXrmButtons(entryViewModel.FormService.GetCustomFunctionsFor(mappingField.FieldName, entryViewModel));
+            customButtons.First(b => b.Id == "LOADFOLDER").Invoke();
+            entryViewModel.SaveButtonViewModel.Invoke();
+
+            //check validation results displayed
+            var validationResults = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
+            Assert.IsNotNull(validationResults);
+            Assert.IsTrue(validationResults.GetObject() is ParseIntoEntitiesResponse);
+
+            //navigate back to entry form
+            validationResults.BackButtonViewModel.Invoke();
+            entryViewModel = dialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(entryViewModel);
+            Assert.IsTrue(entryViewModel.GetObject() is ImportCsvsRequest);
+
+            //submit again
+            entryViewModel.SaveButtonViewModel.Invoke();
+            validationResults = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
+            Assert.IsNotNull(validationResults);
+            Assert.IsTrue(validationResults.GetObject() is ParseIntoEntitiesResponse);
+
+            //at validation display proceed anyway
+            validationResults.SaveButtonViewModel.Invoke();
+            var completionScreen = application.GetCompletionViewModel(dialog);
+            var importExcelResponse = completionScreen.GetObject() as ImportCsvsResponse;
+            Assert.IsNotNull(importExcelResponse);
+            Assert.IsTrue(importExcelResponse.ResponseItems.Any());
+        }
+
         [DeploymentItem(@"Files\Account.csv")]
         [DeploymentItem(@"Files\Contact.csv")]
         [TestMethod]

@@ -7,6 +7,7 @@
     xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
     xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+    xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
     mc:Ignorable="d" d:DesignHeight="100" d:DesignWidth="500"
     d:DataContext="{d:DesignInstance Type=fakes:FakeLookupViewModel, IsDesignTimeCreatable=True}">
     <field:FieldControlBase.Resources>
@@ -33,6 +34,7 @@
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
             <Grid.RowDefinitions>
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
                   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToHidden}, Mode=OneWay}">
@@ -47,7 +49,7 @@
                     Name="ComboBox"
                     Tag="Key"
                     DisplayMemberPath="Name"
-                    ItemsSource="{Binding ItemsSource}"
+                    ItemsSource="{Binding ItemsSourceAsync}"
                     SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}"
                     IsEnabled="{Binding IsEditable}"
                     Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
@@ -57,6 +59,12 @@
                             Command="{Binding Command}" ToolTip="Click To Create New">
                     </Button>
                 </Grid>
+            </Grid>
+            <Grid Grid.Row="1"
+                  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                <shared:LoadingView
+                    Style="{StaticResource FieldLoadingStyle}"
+                    DataContext="{Binding LoadingViewModel}"></shared:LoadingView>
             </Grid>
         </Grid>
     </Grid>

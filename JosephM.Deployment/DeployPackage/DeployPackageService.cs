@@ -37,18 +37,18 @@ namespace JosephM.Deployment.DeployPackage
         }
 
         public override void ExecuteExtention(DeployPackageRequest request, DeployPackageResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             DeployPackage(request, controller, response);
         }
 
-        private void DeployPackage(DeployPackageRequest request, LogController controller, DeployPackageResponse response)
+        private void DeployPackage(DeployPackageRequest request, ServiceRequestController controller, DeployPackageResponse response)
         {
-            var xrmRecordService = new XrmRecordService(request.Connection, controller);
+            var xrmRecordService = new XrmRecordService(request.Connection, controller.Controller);
             var packageFolder = request.FolderContainingPackage.FolderPath;
             var solutionFiles = Directory.GetFiles(packageFolder, "*.zip");
 
-            var importItems = ImportSolutions(solutionFiles, controller, xrmRecordService);
+            var importItems = ImportSolutions(solutionFiles, controller.Controller, xrmRecordService);
             response.AddResponseItems(importItems.Select(it => new DataImportResponseItem(it.Type, null, it.Name, null, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null, it.GetUrl())));
 
             foreach (var childFolder in Directory.GetDirectories(packageFolder))

@@ -12,6 +12,10 @@
             <AdornedElementPlaceholder Name="AdornedFieldElement" />
         </DockPanel>
     </ControlTemplate>
+    <Style x:Key="FieldLoadingStyle" TargetType="UserControl">
+        <Setter Property="Height" Value="35" />
+        <Setter Property="Margin" Value="20,-22,8,0" />
+    </Style>
     <Style x:Key="FieldEntryStyle" TargetType="Control">
         <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
         <Setter Property="Background" Value="{DynamicResource FieldEntryBackgroundColor}" />
@@ -37,14 +41,12 @@
         </Style.Triggers>
     </Style>
     <Style x:Key="IntegerFieldEntryStyle" TargetType="TextBox" BasedOn="{StaticResource FieldEntryStyle}" >
-        <Setter Property="MinWidth" Value="55" />
     </Style>
     <Style x:Key="BooleanFieldEntryStyle" TargetType="CheckBox" BasedOn="{StaticResource FieldEntryStyle}" >
         <Setter Property="Margin" Value="18,13,8,8" />
         <Setter Property="Background" Value="{DynamicResource LightColor}" />
     </Style>
     <Style x:Key="PicklistFieldEntryStyle" TargetType="ComboBox" BasedOn="{StaticResource FieldEntryStyle}" >
-        <Setter Property="MinWidth" Value="75" />
     </Style>
     <Style x:Key="LookupFieldEntryStyle" TargetType="TextBox" BasedOn="{StaticResource FieldEntryStyle}" >
         <Setter Property="MinWidth" Value="100" />

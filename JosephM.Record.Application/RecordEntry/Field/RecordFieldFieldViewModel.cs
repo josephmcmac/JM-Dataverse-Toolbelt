@@ -36,9 +36,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 var reference = GetRecordForm().ParentFormReference == null
                     ? _recordTypeForField
                     : _recordTypeForField + ":" + GetRecordForm().ParentFormReference;
-                ItemsSource = GetRecordService()
-                    .GetPicklistKeyValues (FieldName, GetRecordType(), reference, RecordEntryViewModel.GetRecord())
-                    .Select(p => new RecordField(p.Key, p.Value));
+
+                DoOnAsynchThread(() =>
+                {
+                    LoadingViewModel.IsLoading = true;
+                    try
+                    {
+                        ItemsSource = GetRecordService()
+                            .GetPicklistKeyValues(FieldName, GetRecordType(), reference, RecordEntryViewModel.GetRecord())
+                            .Select(p => new RecordField(p.Key, p.Value));
+                    }
+                    finally
+                    {
+                        LoadingViewModel.IsLoading = false;
+                    }
+                });
             }
         }
     }

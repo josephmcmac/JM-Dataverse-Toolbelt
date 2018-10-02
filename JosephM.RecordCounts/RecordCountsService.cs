@@ -24,7 +24,7 @@ namespace JosephM.RecordCounts
 
         public override void ExecuteExtention(RecordCountsRequest request,
             RecordCountsResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             controller.LogLiteral("Loading Types");
 

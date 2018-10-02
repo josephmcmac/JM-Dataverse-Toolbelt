@@ -32,6 +32,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         protected RecordEntryFormViewModel(FormController formController, IDictionary<string, IEnumerable<string>> onlyValidate = null, string saveButtonLabel = null, string cancelButtonLabel = null)
             : base(formController, onlyValidate)
         {
+            BackButtonViewModel = new XrmButtonViewModel("Back", () => OnBack(), ApplicationController)
+            {
+                IsVisible = false
+            };
             SaveButtonViewModel = new XrmButtonViewModel(saveButtonLabel ?? "Save", DoOnSave, ApplicationController)
             {
                 IsVisible = false
@@ -138,6 +142,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             _formSections = new ObservableCollection<SectionViewModelBase>();
             StartNewAction(LoadFormSections);
         }
+
+        public XrmButtonViewModel BackButtonViewModel { get; private set; }
 
         public XrmButtonViewModel SaveButtonViewModel { get; private set; }
 
@@ -254,6 +260,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         }
 
         public Action OnSave { get; set; }
+
+        public Action OnBack { get; set; }
 
         protected virtual void PreValidateExtention()
         {
@@ -429,6 +437,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                             record.OnLoad();
                 }
 
+                BackButtonViewModel.IsVisible = OnBack != null;
                 SaveButtonViewModel.IsVisible = OnSave != null;
                 CancelButtonViewModel.IsVisible = OnCancel != null;
 

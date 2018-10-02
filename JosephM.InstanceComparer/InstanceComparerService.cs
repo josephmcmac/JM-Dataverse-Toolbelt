@@ -22,10 +22,10 @@ namespace JosephM.InstanceComparer
         ServiceBase<InstanceComparerRequest, InstanceComparerResponse, InstanceComparerResponseItem>
     {
         public override void ExecuteExtention(InstanceComparerRequest request, InstanceComparerResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
 
-            var processContainer = new ProcessContainer(request, response, controller);
+            var processContainer = new ProcessContainer(request, response, controller.Controller);
             response.AllDifferences = processContainer.Differences;
             //ENSURE TO INCREASE THIS IF ADDING TO PROCESSES
 

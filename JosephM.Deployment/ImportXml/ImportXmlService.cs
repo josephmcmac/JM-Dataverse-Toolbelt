@@ -22,13 +22,13 @@ namespace JosephM.Deployment.ImportXml
         public XrmRecordService XrmRecordService { get; }
 
         public override void ExecuteExtention(ImportXmlRequest request, ImportXmlResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             ImportXml(request.Folder.FolderPath, controller, response, request.MaskEmails);
         }
 
 
-        public void ImportXml(string folder, LogController controller,
+        public void ImportXml(string folder, ServiceRequestController controller,
             ImportXmlResponse response, bool maskEmails = false)
         {
             controller.UpdateProgress(0, 1, "Loading XML Files");

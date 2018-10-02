@@ -10,7 +10,7 @@ namespace JosephM.TestModule.TestDialog
         ServiceBase<TestDialogRequest, TestDialogResponse, TestDialogResponseItem>
     {
         public override void ExecuteExtention(TestDialogRequest request, TestDialogResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             if(request.ThrowFatalErrors)
             {

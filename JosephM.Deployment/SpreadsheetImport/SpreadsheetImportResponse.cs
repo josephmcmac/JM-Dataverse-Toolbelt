@@ -1,7 +1,9 @@
 ﻿using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using Microsoft.Xrm.Sdk;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Deployment.SpreadsheetImport
 {
@@ -21,6 +23,16 @@ namespace JosephM.Deployment.SpreadsheetImport
         {
             AddResponseItems(dataImportResponse.ResponseItems);
             _importedRecords.AddRange(dataImportResponse.GetImportSummary());
+        }
+
+        public void LoadParseResponse(ParseIntoEntitiesResponse parseResponse)
+        {
+            AddResponseItems(parseResponse.ResponseItems.Select(ri => new DataImportResponseItem(ri.TargetType,
+                ri.TargetField,
+                ri.Name,
+                ri.StringValue,
+                ri.Message,
+                ri.Exception)));
         }
     }
 }

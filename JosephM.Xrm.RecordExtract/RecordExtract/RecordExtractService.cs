@@ -28,13 +28,13 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         private IRecordService Service { get; set; }
 
         public override void ExecuteExtention(RecordExtractRequest request, RecordExtractResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var document = DocumentWriter.NewDocument();
             var firstSection = document.AddSection();
             var nextSection = document.AddSection();
             var extractToDocumentRequest = new RecordExtractToDocumentRequest(request.RecordLookup, nextSection,
-                controller, request.DetailOfRelatedRecords
+                controller.Controller, request.DetailOfRelatedRecords
                 , request.RecordTypesOnlyDisplayName.Where(r => r.RecordType != null).Select(r => r.RecordType.Key).ToArray()
                  , request.FieldsToExclude, request.RecordTypesToExclude.Where(r => r.RecordType != null).Select(r => r.RecordType.Key).ToArray()
                  , request.IncludeCreatedByAndOn, request.IncludeModifiedByAndOn, request.IncludeCrmOwner, request.IncludeState, request.IncludeStatus, request.StripHtmlTags, request.CustomHtmlFields);

@@ -32,7 +32,22 @@ namespace JosephM.Application.Desktop.Console
         private object _lockObject = new object();
         public override void LoadToUi(ViewModelBase viewModel)
         {
-            if(viewModel is ObjectEntryViewModel)
+            if (viewModel is ObjectDisplayViewModel)
+            {
+                var oeVm = (ObjectDisplayViewModel)viewModel;
+                UserInterface.LogMessage(string.Format("Loading {0}", oeVm.RecordType));
+                oeVm.LoadFormSections();
+                UserInterface.LogMessage(string.Format("Validating {0}", oeVm.RecordType));
+                var validate = oeVm.Validate();
+                if (!validate)
+                {
+                    throw new Exception(string.Format("The {0} Object Could Not Be Validated For Processing: {1}", oeVm.GetObject().GetType().Name, oeVm.GetValidationSummary()));
+                }
+                UserInterface.LogMessage("Validation Complete");
+                oeVm.OnSave();
+            }
+
+            if (viewModel is ObjectEntryViewModel)
             {
                 var oeVm = (ObjectEntryViewModel)viewModel;
                 UserInterface.LogMessage(string.Format("Loading {0}", oeVm.RecordType));

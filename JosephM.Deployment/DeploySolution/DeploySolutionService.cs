@@ -37,9 +37,9 @@ namespace JosephM.Deployment.DeploySolution
         }
 
         public override void ExecuteExtention(DeploySolutionRequest request, DeploySolutionResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
-            DeploySolution(request, controller, response);
+            DeploySolution(request, controller.Controller, response);
         }
 
         private void DeploySolution(DeploySolutionRequest request, LogController controller, DeploySolutionResponse response)

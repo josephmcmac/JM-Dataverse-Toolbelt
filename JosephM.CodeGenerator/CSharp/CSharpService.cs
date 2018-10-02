@@ -22,9 +22,9 @@ namespace JosephM.CodeGenerator.CSharp
         }
 
         public override void ExecuteExtention(CSharpRequest request, CSharpResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
-            WriteCSharpMetadata(request, controller, response);
+            WriteCSharpMetadata(request, controller.Controller, response);
         }
 
         private void AppendGenerationComments(StringBuilder sb)

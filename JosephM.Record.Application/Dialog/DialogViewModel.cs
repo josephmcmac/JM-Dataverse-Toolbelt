@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.Extentions;
@@ -95,6 +97,22 @@ namespace JosephM.Application.ViewModel.Dialog
         }
 
         public bool IsProcessing { get; protected set; }
+
+        protected void MoveBackToPrevious()
+        {
+            if(ParentDialog == null)
+            {
+                throw new Exception("Cannot Move Back. Parent Dialog Is Null");
+            }
+            if(ParentDialog._currentSubDialogIndex < 2)
+            {
+                throw new NotImplementedException("Cannot Move Back. Not Implemented For The First Child Dialog Of The Parent");
+            }
+            var previousDialog = ParentDialog.SubDialogs.ElementAt(ParentDialog._currentSubDialogIndex - 2);
+            previousDialog.DialogCompletionCommit = false;
+            ParentDialog._currentSubDialogIndex = ParentDialog._currentSubDialogIndex - 2;
+            ParentDialog.StartNextAction();
+        }
 
         protected void StartNextAction()
         {
@@ -235,6 +253,22 @@ namespace JosephM.Application.ViewModel.Dialog
             {
                 _showProgressControlViewModel = value;
                 OnPropertyChanged(nameof(ShowProgressControlViewModel));
+            }
+        }
+
+        protected void AddObjectToUi(object objectToDisplay, Action backAction = null, Action nextAction = null)
+        {
+            var vm = new ObjectDisplayViewModel(objectToDisplay, FormController.CreateForObject(objectToDisplay, ApplicationController, null)
+                , backAction: backAction, nextAction: nextAction);
+            Controller.LoadToUi(vm);
+        }
+
+        protected void RemoveObjectFromUi(object objectToDisplay)
+        {
+            foreach (var item in Controller.UiItems.ToArray())
+            {
+                if (item is ObjectDisplayViewModel && ((ObjectDisplayViewModel)item).GetObject() == objectToDisplay)
+                    Controller.RemoveFromUi(item);
             }
         }
     }

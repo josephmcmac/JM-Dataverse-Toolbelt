@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Deployment.ImportXml
 {
+    [Group(Sections.Summary, false, 0)]
     public class ImportXmlResponse : ServiceResponseBase<DataImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
@@ -23,6 +23,7 @@ namespace JosephM.Deployment.ImportXml
             get { return ImportSummary != null && ImportSummary.Any(); }
         }
 
+        [Group(Sections.Summary)]
         [PropertyInContextByPropertyValue(nameof(IsImportSummary), true)]
         public IEnumerable<ImportedRecords> ImportSummary
         {
@@ -30,6 +31,11 @@ namespace JosephM.Deployment.ImportXml
             {
                 return _importedRecords;
             }
+        }
+
+        private static class Sections
+        {
+            public const string Summary = "Summary";
         }
     }
 }

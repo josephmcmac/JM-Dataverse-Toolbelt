@@ -39,7 +39,7 @@ namespace JosephM.Deployment.SolutionImport
                 try
                 {
                     controller.LogLiteral(
-                        $"Importing solution {solutionFile.Key} into {XrmRecordService.XrmRecordConfiguration?.ToString()}");
+                        $"Importing Solution {solutionFile.Key} Into {XrmRecordService.XrmRecordConfiguration?.ToString()}");
                     var importId = Guid.NewGuid();
                     var req = new ImportSolutionRequest();
                     req.ImportJobId = importId;

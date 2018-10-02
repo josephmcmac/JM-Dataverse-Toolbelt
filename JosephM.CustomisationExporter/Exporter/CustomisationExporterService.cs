@@ -25,14 +25,14 @@ namespace JosephM.CustomisationExporter.Exporter
 
         public override void ExecuteExtention(CustomisationExporterRequest request,
             CustomisationExporterResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             response.Folder = request.SaveToFolder.FolderPath;
             controller.LogLiteral("Loading Metadata");
-            ProcessForEntities(request, response, controller);
-            ProcessForFields(request, response, controller);
-            ProcessForRelationships(request, response, controller);
-            ProcessForOptionSets(request, response, controller);
+            ProcessForEntities(request, response, controller.Controller);
+            ProcessForFields(request, response, controller.Controller);
+            ProcessForRelationships(request, response, controller.Controller);
+            ProcessForOptionSets(request, response, controller.Controller);
         }
 
         private void ProcessForRelationships(CustomisationExporterRequest request,

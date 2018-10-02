@@ -1,5 +1,7 @@
-﻿using JosephM.Core.Extentions;
+﻿using JosephM.Application.Application;
+using JosephM.Core.Extentions;
 using JosephM.Core.Log;
+using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
@@ -20,25 +22,30 @@ namespace JosephM.Deployment.SpreadsheetImport
         }
 
         public XrmRecordService XrmRecordService { get; }
+        public IApplicationController ApplicationController { get; }
 
-        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, LogController controller, bool useAmericanDates = false)
+        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, ServiceRequestController controller, bool useAmericanDates = false)
         {
             var response = new SpreadsheetImportResponse();
-
-            var entitiesToImport = new List<Entity>();
-            foreach (var mapping in mappings)
-            {
-                entitiesToImport.AddRange(MapToEntities(mapping.Value, mapping.Key, response, useAmericanDates));
-            }
-            PopulateEmptyNameFields(entitiesToImport);
-
+            var parseResponse = ParseIntoEntities(mappings, useAmericanDates: useAmericanDates);
+            response.LoadParseResponse(parseResponse);
             var dataImportService = new DataImportService(XrmRecordService);
-            response.LoadDataImport(dataImportService.DoImport(entitiesToImport, controller, maskEmails, matchExistingRecords: matchByName));
-
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems));
             return response;
         }
 
-        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, SpreadsheetImportResponse response, bool useAmericanDates)
+        public ParseIntoEntitiesResponse ParseIntoEntities(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool useAmericanDates = false)
+        {
+            var response = new ParseIntoEntitiesResponse();
+            foreach (var mapping in mappings)
+            {
+                response.AddEntities(MapToEntities(mapping.Value, mapping.Key, response, useAmericanDates));
+            }
+            PopulateEmptyNameFields(response.GetParsedEntities());
+            return response;
+        }
+
+        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, ParseIntoEntitiesResponse response, bool useAmericanDates)
         {
             var result = new List<Entity>();
 
@@ -47,13 +54,15 @@ namespace JosephM.Deployment.SpreadsheetImport
                 .Select(m => m.IntersectEntityName)
                 .ToArray();
 
+            var duplicateLogged = false;
+
             var rowNumber = 0;
             foreach (var row in queryRows)
             {
                 rowNumber++;
+                var targetType = mapping.TargetType;
                 try
                 {
-                    var targetType = mapping.TargetType;
                     var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
                     var entity = new Entity(targetType);
                     var keyColumns = new string[0];
@@ -92,21 +101,28 @@ namespace JosephM.Deployment.SpreadsheetImport
                                 }
                                 catch(Exception ex)
                                 {
-                                    response.AddResponseItem(new DataImportResponseItem(targetType, targetField, null, stringValue, "Error Parsing Field - " + ex.Message, ex));
+                                    response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, targetField, null, stringValue, "Error Parsing Field - " + ex.Message, ex));
                                 }
                             }
                         }
                     }
-                    //okay any which are exact dupolicates to previous ones lets ignore
+                    //okay any which are exact duplicates to previous ones lets ignore
                     if (result.Any(r => r.GetFieldsInEntity().All(f => XrmRecordService.FieldsEqual(r.GetField(f), entity.GetField(f)))))
+                    {
+                        if(!duplicateLogged)
+                        {
+                            response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, null, null, null, "At Least One Duplicate For The Import Map Was Ignored", null));
+                            duplicateLogged = true;
+                        }
                         continue;
+                    }
 
                     result.Add(entity);
                 }
                 catch (Exception ex)
                 {
                     //todo perhaps could add row number and source details etc.
-                    response.AddResponseItem(new DataImportResponseItem("Mapping Error", ex));
+                    response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError("Mapping Error", ex));
                 }
             }
             return result;

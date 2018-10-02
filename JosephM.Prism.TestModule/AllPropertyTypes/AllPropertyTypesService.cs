@@ -10,7 +10,7 @@ namespace JosephM.TestModule.AllPropertyTypesModule
         ServiceBase<AllPropertyTypesRequest, AllPropertyTypesResponse, AllPropertyTypesResponseItem>
     {
         public override void ExecuteExtention(AllPropertyTypesRequest request, AllPropertyTypesResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             response.EnumerableField = new[]
             {

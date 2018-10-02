@@ -26,7 +26,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
         public XrmRecordService Service { get; set; }
 
         public override void ExecuteExtention(DeployIntoFieldRequest request, DeployIntoFieldResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var records = new List<IRecord>();
 

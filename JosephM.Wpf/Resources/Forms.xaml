@@ -40,7 +40,7 @@
         <field:BooleanFieldView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="comboBoxFieldTemplate">
-        <field:PicklistFieldView DataContext="{Binding}" />
+        <field:PicklistFieldView DataContext="{Binding}" MinWidth="100" />
     </DataTemplate>
     <DataTemplate x:Key="dateFieldTemplate">
         <field:DateFieldView DataContext="{Binding}" />
@@ -52,7 +52,7 @@
         <field:PasswordFieldView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="integerFieldTemplate">
-        <field:IntegerFieldView DataContext="{Binding}" />
+        <field:IntegerFieldView DataContext="{Binding}" MinWidth="100"  />
     </DataTemplate>
     <DataTemplate x:Key="IntegerPicklistFieldTemplate">
         <field:IntegerPicklistFieldView DataContext="{Binding}" />

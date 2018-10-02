@@ -66,9 +66,11 @@
                         Orientation="Horizontal"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Right">
-                        <shared:XrmButton
+                                    <shared:XrmButton
+                            DataContext="{Binding BackButtonViewModel}" />
+                                    <shared:XrmButton
                             DataContext="{Binding SaveButtonViewModel}" />
-                        <shared:XrmButton
+                                    <shared:XrmButton
                             DataContext="{Binding CancelButtonViewModel}" />
                     </StackPanel>
                             </Grid>
@@ -92,7 +94,9 @@
                         Orientation="Horizontal"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Left">
-                        <shared:XrmButton
+                            <shared:XrmButton
+                            DataContext="{Binding BackButtonViewModel}" />
+                            <shared:XrmButton
                             DataContext="{Binding SaveButtonViewModel}" />
                         <shared:XrmButton
                             DataContext="{Binding CancelButtonViewModel}" />
@@ -101,7 +105,9 @@
                         Orientation="Horizontal"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Right">
-                                <shared:XrmButton
+                            <shared:XrmButton
+                            DataContext="{Binding BackButtonViewModel}" />
+                            <shared:XrmButton
                             DataContext="{Binding SaveButtonViewModel}" />
                                 <shared:XrmButton
                             DataContext="{Binding CancelButtonViewModel}" />

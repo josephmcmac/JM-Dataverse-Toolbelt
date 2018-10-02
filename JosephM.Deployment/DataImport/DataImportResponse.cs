@@ -1,63 +1,118 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using JosephM.Core.Service;
+﻿using JosephM.Core.Attributes;
 using Microsoft.Xrm.Sdk;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace JosephM.Deployment.DataImport
 {
-    public class DataImportResponse : ServiceResponseBase<DataImportResponseItem>
+    public class DataImportResponse : INotifyPropertyChanged
     {
-        private Dictionary<string, Dictionary<Guid, Entity>> _createdEntities = new Dictionary<string, Dictionary<Guid, Entity>>();
-        private Dictionary<string, Dictionary<Guid, Entity>> _updatedEntities = new Dictionary<string, Dictionary<Guid, Entity>>();
+        private List<ImportingRecords> _importedRecords = new List<ImportingRecords>();
 
-        public DataImportResponse()
+        public DataImportResponse(IEnumerable<Entity> entitiesToProcess, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary)
         {
+            var types = entitiesToProcess.Select(e => e.LogicalName).Distinct().ToArray();
+            _importedRecords.AddRange(types.OrderBy(s => s).Select(s => new ImportingRecords() { Type = s }));
+            if(loadExistingErrorsIntoSummary != null)
+            {
+                foreach(var item in loadExistingErrorsIntoSummary)
+                {
+                    if(item.Entity != null)
+                    {
+                        var summaryItem = GetImportForType(item.Entity);
+                        summaryItem.AddError();
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<ImportingRecords> ImportedRecords
+        {
+            get
+            {
+                return _importedRecords;
+            }
+        }
+
+        [Hidden]
+        public IEnumerable<DataImportResponseItem> ResponseItems
+        {
+            get
+            {
+                return _errors;
+            }
         }
 
         public void AddCreated(Entity thisEntity)
         {
-            if (!_createdEntities.ContainsKey(thisEntity.LogicalName))
-                _createdEntities.Add(thisEntity.LogicalName, new Dictionary<Guid, Entity>());
-            if (!_createdEntities[thisEntity.LogicalName].ContainsKey(thisEntity.Id))
-                _createdEntities[thisEntity.LogicalName].Add(thisEntity.Id, thisEntity);
+            var importObject = GetImportForType(thisEntity.LogicalName);
+            importObject.AddedCreated(thisEntity);
+        }
+
+        private ImportingRecords GetImportForType(string logicalName)
+        {
+            if (!_importedRecords.Any(ir => ir.Type == logicalName))
+                _importedRecords.Add(new ImportingRecords() { Type = logicalName });
+            return _importedRecords.First(ir => ir.Type == logicalName);
         }
 
         public void AddUpdated(Entity thisEntity)
         {
-            if (_createdEntities.ContainsKey(thisEntity.LogicalName)
-                && _createdEntities[thisEntity.LogicalName].ContainsKey(thisEntity.Id))
-            {
-                //already added as created
-                return;
-            }
-            if (!_updatedEntities.ContainsKey(thisEntity.LogicalName))
-                _updatedEntities.Add(thisEntity.LogicalName, new Dictionary<Guid, Entity>());
-            if (!_updatedEntities[thisEntity.LogicalName].ContainsKey(thisEntity.Id))
-                _updatedEntities[thisEntity.LogicalName].Add(thisEntity.Id, thisEntity);
+            var importObject = GetImportForType(thisEntity.LogicalName);
+            importObject.AddedUpdated(thisEntity);
         }
 
         public IEnumerable<ImportedRecords> GetImportSummary()
         {
-            var results = new List<ImportedRecords>();
-            foreach (var item in _createdEntities)
-                results.Add(new ImportedRecords()
-                {
-                    Type = item.Key,
-                    Created = item.Value.Count
-                });
-            foreach (var item in _updatedEntities)
+            return _importedRecords.Select(i => new ImportedRecords
             {
-                if(!results.Any(r => r.Type == item.Key))
-                {
-                    results.Add(new ImportedRecords()
-                    {
-                        Type = item.Key,
-                    });
-                }
-                results.First(r => r.Type == item.Key).Updated = item.Value.Count;
-            }
-            return results;
+                Type = i.Type,
+                Created = i.Created,
+                Updated = i.Updated,
+                NoChange = i.NoChange,
+                Errors = i.Errors,
+            }).ToArray();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void AddImportError(Entity entity, DataImportResponseItem dataImportResponseItem)
+        {
+            var importObject = GetImportForType(entity.LogicalName);
+            importObject.AddError();
+            _errors.Add(dataImportResponseItem);
+        }
+
+        public void AddImportError(DataImportResponseItem dataImportResponseItem)
+        {
+            _errors.Add(dataImportResponseItem);
+        }
+
+        private List<DataImportResponseItem> _errors = new List<DataImportResponseItem>();
+
+        internal void AddFieldForRetry(Entity thisEntity, string field)
+        {
+            var importObject = GetImportForType(thisEntity.LogicalName);
+            importObject.AddFieldForRetry(thisEntity, field);
+        }
+
+        internal void AddSkippedNoChange(Entity thisEntity)
+        {
+            var importObject = GetImportForType(thisEntity.LogicalName);
+            importObject.AddSkippedNoChange(thisEntity);
+        }
+
+        internal void RemoveFieldForRetry(Entity thisEntity, string field)
+        {
+            var importObject = GetImportForType(thisEntity.LogicalName);
+            importObject.RemoveFieldForRetry(thisEntity, field);
         }
     }
 }

@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+    xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
     mc:Ignorable="d" d:DesignHeight="40" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -27,13 +28,25 @@
             </TextBox>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
+                  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <ComboBox
-                                MinWidth="100"
                 Name="ComboBox"
                 DisplayMemberPath="Value"
                 ItemsSource="{Binding ItemsSource}"
                 IsEnabled="{Binding IsEditable}"
                 SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}" />
+            </Grid>
+            <Grid Grid.Row="1"
+                  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                <shared:LoadingView
+                    Style="{StaticResource FieldLoadingStyle}"
+                    DataContext="{Binding LoadingViewModel}"></shared:LoadingView>
+            </Grid>
         </Grid>
     </Grid>
 </field:FieldControlBase>

@@ -97,8 +97,8 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             Controller.LoadToUi(progressControlViewModelLevel2);
             LogController = new LogController(progressControlViewModel);
             LogController.AddLevel2Ui(progressControlViewModelLevel2);
-
-            Response = Service.Execute(Request, LogController);
+            var serviceRequestController = new ServiceRequestController(LogController, (o) => AddObjectToUi(o), RemoveObjectFromUi);
+            Response = Service.Execute(Request, serviceRequestController);
 
             CompletionItem = Response;
 
@@ -113,6 +113,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             if (!Response.Success)
                 ProcessError(Response.Exception);
         }
+
         protected virtual void ProcessCompletionExtention()
         {
         }

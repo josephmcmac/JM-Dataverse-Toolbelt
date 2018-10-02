@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {
+    [Group(Sections.Summary, false, 0)]
     public class ImportRecordsResponse : ServiceResponseBase<DataImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
@@ -25,6 +26,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
             get { return ImportSummary != null && ImportSummary.Any(); }
         }
 
+        [Group(Sections.Summary)]
         [PropertyInContextByPropertyValue(nameof(IsImportSummary), true)]
         public IEnumerable<ImportedRecords> ImportSummary
         {
@@ -32,6 +34,11 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
             {
                 return _importedRecords;
             }
+        }
+
+        private static class Sections
+        {
+            public const string Summary = "Summary";
         }
     }
 }

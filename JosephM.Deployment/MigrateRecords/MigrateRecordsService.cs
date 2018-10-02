@@ -33,13 +33,13 @@ namespace JosephM.Deployment.MigrateRecords
         }
 
         public override void ExecuteExtention(MigrateRecordsRequest request, MigrateRecordsResponse response,
-            LogController controller)
+            ServiceRequestController controller)
         {
             var exportService = new ExportXmlService(new XrmRecordService(request.SourceConnection));
 
             var exportedEntities = new List<Entity>();
 
-            exportService.ProcessExport(request.RecordTypesToMigrate, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller
+            exportService.ProcessExport(request.RecordTypesToMigrate, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller.Controller
                 , (entity) => exportedEntities.Add(entity)
                 , (entity) => exportedEntities.Add(entity));
 
@@ -53,7 +53,8 @@ namespace JosephM.Deployment.MigrateRecords
             }
 
             var importService = new DataImportService(new XrmRecordService(request.TargetConnection));
-            var dataImportResponse = importService.DoImport(removeDuplicates, controller, request.MaskEmails);
+            var matchOption = request.MatchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly;
+            var dataImportResponse = importService.DoImport(removeDuplicates, controller, request.MaskEmails, matchOption: matchOption);
             response.LoadDataImport(dataImportResponse);
         }
     }

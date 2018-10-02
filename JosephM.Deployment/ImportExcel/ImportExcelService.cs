@@ -1,3 +1,4 @@
+using JosephM.Application.Application;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
@@ -20,7 +21,15 @@ namespace JosephM.Deployment.ImportExcel
         public XrmRecordService XrmRecordService { get; }
 
         public override void ExecuteExtention(ImportExcelRequest request, ImportExcelResponse response,
-            LogController controller)
+            ServiceRequestController controller)
+        {
+            var dictionary = LoadMappingDictionary(request);
+            var importService = new SpreadsheetImportService(XrmRecordService);
+            var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, controller);
+            response.LoadSpreadsheetImport(responseItems);
+        }
+
+        public Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportExcelRequest request)
         {
             var excelService = new ExcelRecordService(request.ExcelFile);
 
@@ -28,16 +37,14 @@ namespace JosephM.Deployment.ImportExcel
 
             foreach (var tabMapping in request.Mappings)
             {
-                if(tabMapping.TargetType != null)
+                if (tabMapping.TargetType != null)
                 {
                     var queryRows = excelService.RetrieveAll(tabMapping.SourceTab.Key, null);
                     dictionary.Add(tabMapping, queryRows);
                 }
             }
 
-            var importService = new SpreadsheetImportService(XrmRecordService);
-            var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, controller);
-            response.LoadSpreadsheetImport(responseItems);
+            return dictionary;
         }
     }
 }

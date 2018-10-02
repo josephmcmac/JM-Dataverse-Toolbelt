@@ -6,6 +6,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Deployment.ImportExcel;
+using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
@@ -19,6 +20,66 @@ namespace JosephM.Deployment.Test
     [TestClass]
     public class DeploymentImportExcelTests : XrmModuleTest
     {
+        [DeploymentItem(@"Files\TestExcelImportValidationErrors.xlsx")]
+        [TestMethod]
+        public void DeploymentImportExcelValidationTest()
+        {
+            //script through excel import where there are parse field errors
+            //for an invalid picklist value and exceeding the max string length
+            //in this case after submitting the form the validation/parse errors should 
+            //display and allow moving back to entry or proceeding anyway
+            PrepareTests();
+            DeleteAll(Entities.account);
+
+            var workFolder = TestingFolder + @"\ExcelImportScript";
+            FileUtility.CheckCreateFolder(workFolder);
+            var sourceExcelFile = Path.Combine(workFolder, @"TestExcelImportValidationErrors.xlsx");
+            File.Copy(@"TestExcelImportValidationErrors.xlsx", sourceExcelFile);
+
+            var app = CreateAndLoadTestApplication<ImportExcelModule>();
+            app.AddModule<SavedRequestModule>();
+
+            //there was an autoload so lets delete it
+            ClearSavedRequests(app);
+
+            //navigate to the dialog
+            var dialog = app.NavigateToDialog<ImportExcelModule, ImportExcelDialog>();
+            var entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
+            //select the excel file with the errors and submit form
+            entryViewmodel.GetFieldViewModel(nameof(ImportExcelRequest.ExcelFile)).ValueObject = new FileReference(sourceExcelFile);
+            entryViewmodel.SaveButtonViewModel.Invoke();
+
+            //check validation results displayed
+            var validationResults = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
+            Assert.IsNotNull(validationResults);
+            Assert.IsTrue(validationResults.GetObject() is ParseIntoEntitiesResponse);
+
+            //navigate back to entry form
+            validationResults.BackButtonViewModel.Invoke();
+            entryViewmodel = dialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(entryViewmodel);
+            Assert.IsTrue(entryViewmodel.GetObject() is ImportExcelRequest);
+
+            //submit again
+            entryViewmodel.SaveButtonViewModel.Invoke();
+            validationResults = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
+            Assert.IsNotNull(validationResults);
+            Assert.IsTrue(validationResults.GetObject() is ParseIntoEntitiesResponse);
+
+            //at validation display proceed anyway
+            validationResults.SaveButtonViewModel.Invoke();
+            var completionScreen = app.GetCompletionViewModel(dialog);
+            var importExcelResponse = completionScreen.GetObject() as ImportExcelResponse;
+            Assert.IsNotNull(importExcelResponse);
+            Assert.IsTrue(importExcelResponse.ResponseItems.Any());
+        }
+
+        private void ClearSavedRequests(TestApplication app)
+        {
+            var entryViewmodel = app.NavigateToDialogModuleEntryForm<ImportExcelModule, ImportExcelDialog>() as ObjectEntryViewModel;
+            ClearSavedRequests(app, entryViewmodel);
+        }
+
         [DeploymentItem(@"Files\TestExcelImportAccountAndContact.xlsx")]
         [TestMethod]
         public void DeploymentImportExcelBasicTest()
@@ -35,6 +96,7 @@ namespace JosephM.Deployment.Test
 
             var app = CreateAndLoadTestApplication<ImportExcelModule>();
             app.AddModule<SavedRequestModule>();
+            ClearSavedRequests(app);
 
             var entryViewmodel = app.NavigateToDialogModuleEntryForm<ImportExcelModule, ImportExcelDialog>();
             entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.MaskEmails)).Value = true;
@@ -208,12 +270,17 @@ namespace JosephM.Deployment.Test
             //trigger the import
             entryViewmodel.SaveButtonViewModel.Command.Execute();
 
+            //since there are duplicates the validation is dsiplayed to the user so lets proceed through it
             var dialog = app.GetNavigatedDialog<ImportExcelDialog>();
+            var validationDisplay = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
+            Assert.IsNotNull(validationDisplay);
+            validationDisplay.SaveButtonViewModel.Invoke();
+
             var completionScreen = dialog.CompletionItem as ImportExcelResponse;
             if (completionScreen.HasError)
                 Assert.Fail(completionScreen.GetResponseItemsWithError().First().Exception.XrmDisplayString());
 
-            //veirfy the account and contact created
+            //verify the account and contact created
             var accounts = XrmService.RetrieveAllEntityType(Entities.account);
             var contacts = XrmService.RetrieveAllEntityType(Entities.contact);
             Assert.AreEqual(2, accounts.Count());
@@ -279,6 +346,7 @@ namespace JosephM.Deployment.Test
             File.Copy(@"TestExcelImportAssociations.xlsx", sourceExcelFile);
 
             var app = CreateAndLoadTestApplication<ImportExcelModule>();
+            ClearSavedRequests(app);
 
             var entryViewmodel = app.NavigateToDialogModuleEntryForm<ImportExcelModule, ImportExcelDialog>();
             //select the excel file

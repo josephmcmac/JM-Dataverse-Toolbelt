@@ -9,6 +9,7 @@ using JosephM.Core.Log;
 using JosephM.Core.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using JosephM.Core.Service;
 
 namespace JosephM.Core.Test
 {
@@ -146,6 +147,11 @@ namespace JosephM.Core.Test
                     Assert.Fail("Waited Too Long Without Meeting Test Criteria");
                 Thread.Sleep(1000);
             }
+        }
+
+        public ServiceRequestController CreateServiceRequestController()
+        {
+            return new ServiceRequestController(Controller);
         }
     }
 }
