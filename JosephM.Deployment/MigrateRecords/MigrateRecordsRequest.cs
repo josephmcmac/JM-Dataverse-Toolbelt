@@ -16,6 +16,8 @@ namespace JosephM.Deployment.MigrateRecords
         public MigrateRecordsRequest()
         {
             MatchByName = true;
+            IncludeNNRelationshipsBetweenEntities = true;
+            IncludeNotes = true;
         }
 
         [MyDescription("The Connection Which Records Will Be Migrated From")]

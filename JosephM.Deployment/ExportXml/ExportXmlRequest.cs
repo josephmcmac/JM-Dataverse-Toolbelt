@@ -18,6 +18,12 @@ namespace JosephM.Deployment.ExportXml
     [Group(Sections.RecordTypes, true, order: 35, displayLabel: false)]
     public class ExportXmlRequest : ServiceRequestBase
     {
+        public ExportXmlRequest()
+        {
+            IncludeNNRelationshipsBetweenEntities = true;
+            IncludeNotes = true;
+        }
+
         [GridWidth(300)]
         [DisplayOrder(20)]
         [Group(Sections.Main)]

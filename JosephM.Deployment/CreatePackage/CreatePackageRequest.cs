@@ -33,6 +33,12 @@ namespace JosephM.Deployment.CreatePackage
             };
         }
 
+        public CreatePackageRequest()
+        {
+            IncludeNNRelationshipsBetweenEntities = true;
+            IncludeNotes = true;
+        }
+
         public IsValidResponse Validate()
         {
             var response = new IsValidResponse();
