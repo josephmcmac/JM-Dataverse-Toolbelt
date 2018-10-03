@@ -74,7 +74,7 @@ namespace JosephM.Record.Sql
                     {
                         foreach(var column in typeFields.Value)
                         {
-                            fields.Add(new StringFieldMetadata(typeFields.Key, column, column));
+                            fields.Add(new StringFieldMetadata(typeFields.Key, column, column?.Replace("#",".")));
                         }
                     }
                     _fieldMetadata = fields;
