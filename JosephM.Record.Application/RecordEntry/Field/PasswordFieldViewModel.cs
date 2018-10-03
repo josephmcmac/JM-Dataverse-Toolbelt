@@ -21,7 +21,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set { base.Value = value; }
         }
 
-        public string ReadOnlyStars
+        public override string StringDisplay
         {
             get { return Value == null
                     ? null

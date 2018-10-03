@@ -1,4 +1,4 @@
-﻿<field:FieldControlBase x:Class="JosephM.Wpf.RecordEntry.Field.ActivityPartyFieldView"
+﻿<field:FieldControlBase x:Class="JosephM.Wpf.RecordEntry.Field.StringFieldDisplayOnlyView"
                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,19 +8,21 @@
                         d:DesignHeight="40" d:DesignWidth="300">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid>
         <TextBox
-            TabIndex="1"
             Name="TextBox"
-            DataContext="{Binding NotifyOnValidationError=True}"
-            Text="{Binding StringDisplay, Mode=OneWay}"
-            Style="{StaticResource StringFieldEntryStyleReadOnly}"
-             />
+                Style="{StaticResource  StringFieldEntryStyleReadOnly}"
+                TextWrapping="WrapWithOverflow"
+                AcceptsReturn="True"
+                VerticalScrollBarVisibility="Auto"
+                TabIndex="1"
+                Text="{Binding Mode=OneWay, Path=StringDisplay}"
+                Height="Auto">
+        </TextBox>
     </Grid>
 </field:FieldControlBase>

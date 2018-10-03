@@ -1,15 +1,17 @@
-﻿using JosephM.TestModule.TestDialog;
-using JosephM.XrmModule.Crud;
+﻿using JosephM.Application.Desktop.Module.Themes;
+using JosephM.InstanceComparer;
+using JosephM.TestModule.TestDialog;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.Xrm.Vsix.Test;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.IO;
 using System.Windows;
-using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.Application.Desktop.Module.Themes;
 
 namespace JosephM.Xrm.Vsix.TestShell
 {
@@ -34,7 +36,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             container.RegisterInstance(typeof(IVisualStudioService), visualStudioService);
 
             VsixApplication = VsixApplication.Create(visualStudioService, container, "Vsix Test Shell", new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
-
+            VsixApplication.AddModule<SavedXrmConnectionsModule>();
             VsixApplication.AddModule<OpenWebModule>();
             VsixApplication.AddModule<DeployAssemblyModule>();
             VsixApplication.AddModule<ManagePluginTriggersModule>();
@@ -42,6 +44,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication.AddModule<TestDialogModule>();
             VsixApplication.AddModule<PackageSettingsAppConnectionModule>();
             VsixApplication.AddModule<ThemeModule>();
+            VsixApplication.AddModule<InstanceComparerModule>();
         }
 
         public VsixApplication VsixApplication { get; set; }

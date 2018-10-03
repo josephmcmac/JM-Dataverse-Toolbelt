@@ -219,6 +219,10 @@
       <DependentUpon>GridMultiSelectFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\Fields\GridMultiSelectColumn.cs" />
+    <Compile Include="Grid\Fields\GridStringDisplayOnlyColumn.cs" />
+    <Compile Include="Grid\Fields\GridStringDisplayOnlyView.xaml.cs">
+      <DependentUpon>GridStringDisplayOnlyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Query\ColumnEditDialogView.xaml.cs">
       <DependentUpon>ColumnEditDialogView.xaml</DependentUpon>
     </Compile>
@@ -332,6 +336,9 @@
     <Compile Include="Converters\WidthConverter.cs" />
     <Compile Include="ControlExtentions\FocusExtension.cs" />
     <Compile Include="Grid\Fields\GridLookupPicklistColumn.cs" />
+    <Compile Include="RecordEntry\Field\StringFieldDisplayOnlyView.xaml.cs">
+      <DependentUpon>StringFieldDisplayOnlyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\UrlFieldView.xaml.cs">
       <DependentUpon>UrlFieldView.xaml</DependentUpon>
     </Compile>
@@ -460,6 +467,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\Fields\GridStringDisplayOnlyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Query\ColumnEditDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -577,6 +588,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\StringEnumerableFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\StringFieldDisplayOnlyView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -204,17 +204,35 @@ namespace JosephM.Wpf.Grid
                                 Mode = BindingMode.TwoWay
                             };
                             DataGridColumn dataGridField;
-                            if (column.FieldType == RecordFieldType.Boolean
+                            if (column.FieldType == RecordFieldType.Url)
+                            {
+                                dataGridField = new GridUrlColumn()
+                                {
+                                    Binding = cellBinding
+                                };
+                            }
+                            else if (gridSectionViewModel.IsReadOnly)
+                            {
+                                dataGridField = new GridStringDisplayOnlyColumn()
+                                {
+                                    Binding = cellBinding
+                                };
+                            }
+                            else if (column.FieldType == RecordFieldType.Boolean
                             || column.FieldType == RecordFieldType.ManagedProperty)
+                            {
                                 dataGridField = new GridBooleanColumn
                                 {
                                     Binding = cellBinding
                                 };
+                            }
                             else if (column.FieldType == RecordFieldType.RecordType)
+                            {
                                 dataGridField = new GridPicklistColumn()
                                 {
                                     Binding = cellBinding
                                 };
+                            }
                             else if (column.FieldType == RecordFieldType.RecordField)
                             {
                                 var metadata = gridSectionViewModel.RecordService.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType);
@@ -303,7 +321,7 @@ namespace JosephM.Wpf.Grid
                             {
                                 var format = gridSectionViewModel.RecordService.GetIntegerFormat(column.FieldName,
                                         gridSectionViewModel.RecordType);
-                                if(format == IntegerType.TimeZone || format == IntegerType.Language)
+                                if (format == IntegerType.TimeZone || format == IntegerType.Language)
                                 {
                                     dataGridField = new GridIntPicklistColumn()
                                     {
@@ -349,13 +367,6 @@ namespace JosephM.Wpf.Grid
                             else if (column.FieldType == RecordFieldType.Money)
                             {
                                 dataGridField = new GridMoneyColumn()
-                                {
-                                    Binding = cellBinding
-                                };
-                            }
-                            else if (column.FieldType == RecordFieldType.Url)
-                            {
-                                dataGridField = new GridUrlColumn()
                                 {
                                     Binding = cellBinding
                                 };

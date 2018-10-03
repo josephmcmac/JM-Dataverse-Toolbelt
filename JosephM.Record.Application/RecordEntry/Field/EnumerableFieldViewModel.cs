@@ -38,7 +38,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     EditRow = FormService.AllowGridOpen(ReferenceName, RecordForm) ? EditRow : (Action<GridRowViewModel>)null,
                     AddRow = !recordForm.IsReadOnly && FormService.AllowAddNew(ReferenceName, GetRecordType()) ? AddRow : (Action)null,
                     AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel),
-                    IsReadOnly = recordForm.IsReadOnly,
+                    IsReadOnly = !FormService.AllowGridFieldEditEdit(FieldName) || recordForm.IsReadOnly,
                     ParentForm = recordForm,
                     ReferenceName = ReferenceName,
                     RecordType = linkedRecordType,
@@ -370,7 +370,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public string StringDisplay
+        public override string StringDisplay
         {
             get
             {

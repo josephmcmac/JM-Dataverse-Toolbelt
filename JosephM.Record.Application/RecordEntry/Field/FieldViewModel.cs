@@ -14,5 +14,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get { return (T)ValueObject; }
             set { ValueObject = value; }
         }
+
+        public virtual string StringDisplay
+        {
+            get
+            {
+                return Value?.ToString();
+            }
+        }
     }
 }
