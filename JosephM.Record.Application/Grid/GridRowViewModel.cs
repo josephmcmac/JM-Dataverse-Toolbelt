@@ -34,6 +34,7 @@ namespace JosephM.Application.ViewModel.Grid
             EditRowViewModel = new XrmButtonViewModel("Open", EditRow, ApplicationController, description: "Open This Item");
             EditRowNewTabViewModel = new XrmButtonViewModel("Open In New Tab", EditRowNewTab, ApplicationController, description: "Open This Item In New Tab");
             EditRowNewWindowViewModel = new XrmButtonViewModel("Open In New Window", EditRowNewTab, ApplicationController, description: "Open This Item In New Window");
+            OpenWebViewModel = new XrmButtonViewModel("Open In Browser", OpenWeb, ApplicationController, description: "Open This Item In Browser");
         }
 
         public override HorizontalJustify GetHorizontalJustify(RecordFieldType fieldType)
@@ -85,7 +86,13 @@ namespace JosephM.Application.ViewModel.Grid
             GridViewModel.EditRowNew(this);
         }
 
-        public bool DisplayContextMenu { get { return CanEdit || CanEditNewTab || CanEditNewWindow || CanDelete; } }
+        public void OpenWeb()
+        {
+            var url = RecordService.GetWebUrl(RecordType, Record.Id);
+            ApplicationController.StartProcess(url);
+        }
+
+        public bool DisplayContextMenu { get { return CanEdit || CanEditNewTab || CanEditNewWindow || CanDelete || CanOpenWeb; } }
 
         public bool CanEdit { get { return GridViewModel.CanEdit; } }
 
@@ -94,6 +101,14 @@ namespace JosephM.Application.ViewModel.Grid
         public bool CanEditNewWindow { get { return GridViewModel.CanEditNewWindow; } }
 
         public bool CanDelete { get { return GridViewModel.CanDelete; } }
+
+        public bool CanOpenWeb {
+            get
+            {
+                return RecordService.GetRecordTypeMetadata(RecordType).Searchable
+                    && RecordService.GetWebUrl(RecordType, Record.Id) != null;
+            }
+        }
 
         public void DeleteRow()
         {
@@ -111,6 +126,7 @@ namespace JosephM.Application.ViewModel.Grid
         public XrmButtonViewModel EditRowViewModel { get; set; }
         public XrmButtonViewModel EditRowNewTabViewModel { get; private set; }
         public XrmButtonViewModel EditRowNewWindowViewModel { get; private set; }
+        public XrmButtonViewModel OpenWebViewModel { get; private set; }
         public IRecord Record { get; set; }
 
         public IEnumerable<GridFieldMetadata> GridFields
