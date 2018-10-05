@@ -8,23 +8,10 @@ namespace JosephM.CustomisationImporter.Service
 {
     public class CustomisationImportResponseItem : ServiceResponseItem
     {
-        public CustomisationImportResponseItem(IMetadata metadata, bool isUpdate)
-        {
-            Metadata = metadata;
-            Updated = isUpdate;
-        }
-
         public CustomisationImportResponseItem(IMetadata metadata, Exception ex)
         {
             Metadata = metadata;
             Exception = ex;
-        }
-
-        public CustomisationImportResponseItem(int? excelRow, IMetadata metadata, bool isUpdate)
-        {
-            ExcelRow = excelRow;
-            Metadata = metadata;
-            Updated = isUpdate;
         }
 
         public CustomisationImportResponseItem(int? excelRow, IMetadata metadata, Exception ex)
@@ -34,8 +21,11 @@ namespace JosephM.CustomisationImporter.Service
             Exception = ex;
         }
 
+        [DisplayOrder(10)]
+        [GridWidth(125)]
         [PropertyInContextByPropertyNotNull(nameof(ExcelRow))]
         public int? ExcelRow { get; }
+        [DisplayOrder(20)]
         public string Type { get {
                 var typeDisplay = Metadata?.GetType().GetDisplayName();
                 if (typeDisplay == null)
@@ -44,8 +34,9 @@ namespace JosephM.CustomisationImporter.Service
                     typeDisplay = typeDisplay.Left(typeDisplay.LastIndexOf(" Metadata"));
                 return typeDisplay;
             } }
+        [DisplayOrder(30)]
         public string Name { get { return Metadata?.SchemaName; } }
-        public bool Updated { get; set; }
+        [Hidden]
         internal IMetadata Metadata { get; set; }
     }
 }

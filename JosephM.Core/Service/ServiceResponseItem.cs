@@ -1,15 +1,13 @@
-﻿#region
-
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using System;
-
-#endregion
 
 namespace JosephM.Core.Service
 {
     public class ServiceResponseItem
     {
+        [Hidden]
+        [DisplayName("Is Error")]
         [GridWidth(75)]
         [DisplayOrder(999999)]
         [PropertyInContextByPropertyValue(nameof(HasError), true)]
