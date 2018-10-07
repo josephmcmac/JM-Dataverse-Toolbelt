@@ -15,6 +15,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [FormEntry]
         public IEnumerable<PluginTrigger> Triggers { get; set; } 
     }
+
+    [DoNotAllowGridEdit]
     public class PluginTrigger
     {
         public PluginTrigger()
@@ -67,6 +69,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [RequiredProperty]
         public int Rank { get; set; }
 
+        [GridWidth(150)]
         [DisplayName("Run In User Context (Optional)")]
         [ReferencedType(Entities.systemuser)]
         [DisplayOrder(60)]
@@ -75,7 +78,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         public Lookup SpecificUserContext { get; set; }
 
         [DisplayOrder(65)]
-        [GridWidth(300)]
+        [GridWidth(225)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         [PropertyInContextByPropertyValue(nameof(Message), "Update")]
         public IEnumerable<RecordField> FilteringFields { get; set; }
@@ -87,7 +90,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         public bool PreImageAllFields { get; set; }
 
         [DisplayOrder(75)]
-        [GridWidth(300)]
+        [GridWidth(225)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
         [PropertyInContextByPropertyValue(nameof(PreImageAllFields), false)]

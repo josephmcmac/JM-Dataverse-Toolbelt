@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Extentions;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.CustomisationImporter.Service;
 using JosephM.Record.Extentions;
@@ -195,6 +196,16 @@ namespace JosephM.CustomisationImporter.Test
         [DeploymentItem("TestCustomisationsSpreadsheetErrors.xlsx")]
         public void CustomisationImportTestSpreadsheetErrors()
         {
+            //this scripts through the scenario where errors are captured reading the spreadsheet
+            //in this case rather than completing the import process
+            //the dialog stops at a screen displaying the errors
+            //and does not allow proceeding
+
+            //create the app
+            var testApplication = CreateAndLoadTestApplication<CustomisationImportModule>();
+            var dialog = testApplication.NavigateToDialog<CustomisationImportModule, CustomisationImportDialog>();
+            var entryForm = testApplication.GetSubObjectEntryViewModel(dialog);
+            //enter and submit the request with an invalid spreadsheet
             var request = new CustomisationImportRequest
             {
                 ExcelFile = new FileReference("TestCustomisationsSpreadsheetErrors.xlsx"),
@@ -205,14 +216,24 @@ namespace JosephM.CustomisationImporter.Test
                 SharedOptionSets = true,
                 FieldOptionSets = true
             };
+            testApplication.EnterAndSaveObject(request, entryForm);
 
-            var importService =
-                new XrmCustomisationImportService(XrmRecordService);
+            //verify we landed at the validation/error display
+            var validationDisplay = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
+            Assert.IsNotNull(validationDisplay);
+            Assert.IsTrue(validationDisplay.GetObject() is ReadExcelResponse);
 
-            var response = importService.Execute(request, CreateServiceRequestController());
+            //navigate back to the entry screen
+            validationDisplay.BackButtonViewModel.Invoke();
+            entryForm = dialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(entryForm);
+            Assert.IsTrue(entryForm.GetObject() is CustomisationImportRequest);
 
-            Assert.IsTrue(response.ExcelReadErrors);
-            Assert.IsNull(response.Exception);
+            //submit again and verify still lands at the validation/error display
+            entryForm.SaveButtonViewModel.Invoke();
+            validationDisplay = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
+            Assert.IsNotNull(validationDisplay);
+            Assert.IsTrue(validationDisplay.GetObject() is ReadExcelResponse);
         }
 
         private void VerifyViews(CustomisationImportRequest request)

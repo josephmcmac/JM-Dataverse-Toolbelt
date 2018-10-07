@@ -42,14 +42,9 @@ namespace JosephM.CustomisationImporter.Service
         {
             controller.LogLiteral("Reading excel spreadsheet");
 
-            var optionSets = ExtractOptionSetsFromExcel(request.ExcelFile.FileName,
-                controller.Controller, response);
-            var fieldMetadataToImport = ExtractFieldMetadataFromExcel(
-                request.ExcelFile.FileName, controller.Controller, optionSets, response);
-            var recordMetadataToImport =
-                ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, controller.Controller, fieldMetadataToImport.Values, response);
-            var relationshipMetadataToImport =
-                ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, controller.Controller, response);
+            var readExcelResponse = ReadExcel(request, controller.Controller);
+
+            response.AddResponseItems(readExcelResponse.ResponseItems);
 
             if(response.GetResponseItemsWithError().Any())
             {
@@ -64,22 +59,22 @@ namespace JosephM.CustomisationImporter.Service
 
             if (request.Entities)
             {
-                var importRecordsResponse = ImportRecordTypes(recordMetadataToImport, controller.Controller, response);
+                var importRecordsResponse = ImportRecordTypes(readExcelResponse.GetRecordMetadataToImport(), controller.Controller, response);
                 createdRecordTypes.AddRange(importRecordsResponse.CreatedRecordTypes);
             }
             if (request.SharedOptionSets)
-                ImportSharedOptionSets(optionSets, controller.Controller, response);
+                ImportSharedOptionSets(readExcelResponse.GetOptionSets(), controller.Controller, response);
             if (request.Fields)
             {
-                var importFieldsResponse = ImportFieldTypes(fieldMetadataToImport, controller.Controller, response, createdRecordTypes);
+                var importFieldsResponse = ImportFieldTypes(readExcelResponse.GetFieldMetadataToImport(), controller.Controller, response, createdRecordTypes);
                 createdFields.AddRange(importFieldsResponse.CreatedFields);
             }
             if (request.FieldOptionSets)
-                ImportFieldOptionSets(fieldMetadataToImport.Values, controller.Controller, response, createdFields);
+                ImportFieldOptionSets(readExcelResponse.GetFieldMetadataToImport().Values, controller.Controller, response, createdFields);
             if (request.Views)
-                ImportViews(recordMetadataToImport.Values, controller.Controller, response, createdRecordTypes);
+                ImportViews(readExcelResponse.GetRecordMetadataToImport().Values, controller.Controller, response, createdRecordTypes);
             if (request.Relationships)
-                ImportRelationships(relationshipMetadataToImport, controller.Controller, response);
+                ImportRelationships(readExcelResponse.GetRelationshipMetadataToImport(), controller.Controller, response);
 
             if (request.AddToSolution)
             {
@@ -151,6 +146,23 @@ namespace JosephM.CustomisationImporter.Service
             }
 
             RecordService.ClearCache();
+        }
+
+        public ReadExcelResponse ReadExcel(CustomisationImportRequest request, LogController controller)
+        {
+            var response = new ReadExcelResponse();
+            try
+            {
+                response.SetOptionSets(ExtractOptionSetsFromExcel(request.ExcelFile.FileName, controller, response));
+                response.SetFieldMetadataToImport(ExtractFieldMetadataFromExcel(request.ExcelFile.FileName, controller, response.GetOptionSets(), response));
+                response.SetRecordMetadataToImport(ExtractRecordMetadataFromExcel(request.ExcelFile.FileName, controller, response.GetFieldMetadataToImport().Values, response));
+                response.SetRelationshipMetadataToImport(ExtractRelationshipMetadataFromExcel(request.ExcelFile.FileName, controller, response));
+            }
+            catch(Exception ex)
+            {
+                response.AddResponseItem(new CustomisationImportResponseItem(null, ex));
+            }
+            return response;
         }
 
         private void AddComponentsToSolution(int componentType, IEnumerable<IMetadata> objectsToAdd, Func<object, IMetadata> getMetadata, CustomisationImportResponse response, IRecord solution, LogController controller)
@@ -414,7 +426,7 @@ namespace JosephM.CustomisationImporter.Service
                         RecordService.UpdateFieldOptionSet(entityType, field.SchemaName,
                             field.PicklistOptionSet);
                         var updated = !createdFields.Contains(field);
-                        response.AddResponseItem(importFieldOptions, updated);
+                        response.AddImportedItem(importFieldOptions, updated);
                     }
                     catch (Exception ex)
                     {
@@ -448,7 +460,7 @@ namespace JosephM.CustomisationImporter.Service
                     var isUpdate = RecordService.GetSharedPicklists().Any(p => p.SchemaName == sharedOptionSet.SchemaName);
                     RecordService.CreateOrUpdateSharedOptionSet(sharedOptionSet);
 
-                    importResponse.AddResponseItem(sharedOptionSet, isUpdate);
+                    importResponse.AddImportedItem(sharedOptionSet, isUpdate);
                 }
                 catch (Exception ex)
                 {
@@ -482,7 +494,7 @@ namespace JosephM.CustomisationImporter.Service
                     }
                     else
                         continue;
-                    response.AddResponseItem(viewImport, isUpdate);
+                    response.AddImportedItem(viewImport, isUpdate);
                 }
                 catch (Exception ex)
                 {
@@ -517,7 +529,7 @@ namespace JosephM.CustomisationImporter.Service
                     controller.UpdateProgress(numberCompleted++, numberToDo, string.Format("Importing {0}", RelationshipTabName));
                     var isUpdate = RecordService.GetManyToManyRelationships(recordMetadata.RecordType1).Any(r => r.SchemaName == recordMetadata.SchemaName);
                     RecordService.CreateOrUpdate(recordMetadata);
-                    response.AddResponseItem(excelRow, recordMetadata, isUpdate);
+                    response.AddImportedItem(excelRow, recordMetadata, isUpdate);
                 }
                 catch (Exception ex)
                 {
@@ -563,8 +575,6 @@ namespace JosephM.CustomisationImporter.Service
                         && RecordService.FieldExists(field.SchemaName, field.RecordType);
 
                     RecordService.CreateOrUpdate(field, field.RecordType);
-                    if (!isUpdate && field is LookupFieldMetadata)
-                        lookupFieldsCreated.Add(excelRow, field);
                     response.AddResponseItem(excelRow, field, isUpdate);
                     if (!isUpdate)
                         importFieldsResponse.AddCreatedField(field);
@@ -624,9 +634,9 @@ namespace JosephM.CustomisationImporter.Service
                     if (!isUpdate)
                     {
                         thisResponse.AddCreatedRecordType(recordMetadata.SchemaName);
-                        response.AddResponseItem(recordMetadata.GetPrimaryFieldMetadata(), false);
+                        response.AddImportedItem(recordMetadata.GetPrimaryFieldMetadata(), false);
                     }
-                    response.AddResponseItem(excelRow, recordMetadata, isUpdate);
+                    response.AddImportedItem(excelRow, recordMetadata, isUpdate);
                 }
                 catch (Exception ex)
                 {

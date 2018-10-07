@@ -54,8 +54,6 @@
     </Style>
     <Style x:Key="StringFieldEntryStyleReadOnly" TargetType="TextBox" BasedOn="{StaticResource FieldEntryStyle}" >
         <Setter Property="TextAlignment" Value="{Binding HorizontalJustify, Converter={StaticResource TextHorizontalJustifyConverter}}" />
-        <Setter Property="MinWidth" Value="100" />
-        <Setter Property="MinWidth" Value="100" />
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Background" Value="Transparent" />

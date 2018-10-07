@@ -115,8 +115,10 @@
     <Compile Include="Service\CustomisationImportResponse.cs" />
     <Compile Include="Service\CustomisationImportService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\CustomisationImportValidationDialog.cs" />
     <Compile Include="Service\ImportFieldsResponse.cs" />
     <Compile Include="Service\ImportRecordTypesResponse.cs" />
+    <Compile Include="Service\ReadExcelResponse.cs" />
     <Compile Include="Service\XrmCustomisationImportService.cs" />
   </ItemGroup>
   <ItemGroup>

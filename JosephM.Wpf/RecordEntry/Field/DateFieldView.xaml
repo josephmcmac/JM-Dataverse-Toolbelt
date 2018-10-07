@@ -22,7 +22,7 @@
                 TextWrapping="WrapWithOverflow"
                 VerticalScrollBarVisibility="Auto"
                 TabIndex="1"
-                Text="{Binding Mode=OneWay, Path=FormattedDate}"
+                Text="{Binding Mode=OneWay, Path=StringDisplay}"
                 Height="Auto">
             </TextBox>
         </Grid>
@@ -41,7 +41,7 @@
             <TextBox
             Name="TextBox"
             TabIndex="1"
-            Text="{Binding FormattedDate, Mode=OneWay}"
+            Text="{Binding StringDisplay, Mode=OneWay}"
             Style="{StaticResource FieldEntryStyle}"
             IsReadOnly="True"
             Visibility="{Binding IsVisibleAndReadonly, Converter={StaticResource BoolToVis}}"

@@ -4,6 +4,9 @@ using System;
 using JosephM.Core.Service;
 using JosephM.Record.Metadata;
 using JosephM.Core.Attributes;
+using System.Collections.Generic;
+using JosephM.Core.Extentions;
+using System.Linq;
 
 #endregion
 
@@ -14,16 +17,31 @@ namespace JosephM.CustomisationImporter.Service
         [Hidden]
         public bool ExcelReadErrors { get; internal set; }
 
-        public void AddResponseItem(IMetadata metadata, bool isUpdate)
+        private List<ImportedItem> _importedItems = new List<ImportedItem>();
+
+        [Hidden]
+        public bool HasImportedItems
         {
-            var responseItem = new CustomisationImportResponseItem(metadata, isUpdate);
-            AddResponseItem(responseItem);
+            get { return _importedItems.Any(); }
         }
 
-        public void AddResponseItem(int excelRow, IMetadata metadata, bool isUpdate)
+        [PropertyInContextByPropertyValue(nameof(HasImportedItems), true)]
+        [AllowDownload]
+        public IEnumerable<ImportedItem> ImportedItems
         {
-            var responseItem = new CustomisationImportResponseItem(excelRow, metadata, isUpdate);
-            AddResponseItem(responseItem);
+            get { return _importedItems; }
+        }
+
+        public void AddImportedItem(IMetadata metadata, bool isUpdate)
+        {
+            var responseItem = new ImportedItem(metadata, isUpdate);
+            _importedItems.Add(responseItem);
+        }
+
+        public void AddImportedItem(int excelRow, IMetadata metadata, bool isUpdate)
+        {
+            var responseItem = new ImportedItem(excelRow, metadata, isUpdate);
+            _importedItems.Add(responseItem);
         }
 
         internal void AddResponseItem(IMetadata metadata, Exception ex)
@@ -36,6 +54,46 @@ namespace JosephM.CustomisationImporter.Service
         {
             var responseItem = new CustomisationImportResponseItem(excelRow, metadata, ex);
             AddResponseItem(responseItem);
+        }
+
+        public class ImportedItem
+        {
+            public ImportedItem(IMetadata metadata, bool isUpdate)
+            {
+                Metadata = metadata;
+                Updated = isUpdate;
+            }
+
+            public ImportedItem(int? excelRow, IMetadata metadata, bool isUpdate)
+            {
+                ExcelRow = excelRow;
+                Metadata = metadata;
+                Updated = isUpdate;
+            }
+
+            [DisplayOrder(10)]
+            [GridWidth(125)]
+            [PropertyInContextByPropertyNotNull(nameof(ExcelRow))]
+            public int? ExcelRow { get; }
+            [DisplayOrder(20)]
+            public string Type
+            {
+                get
+                {
+                    var typeDisplay = Metadata?.GetType().GetDisplayName();
+                    if (typeDisplay == null)
+                        return null;
+                    if (typeDisplay.EndsWith(" Metadata"))
+                        typeDisplay = typeDisplay.Left(typeDisplay.LastIndexOf(" Metadata"));
+                    return typeDisplay;
+                }
+            }
+            [DisplayOrder(30)]
+            public string Name { get { return Metadata?.SchemaName; } }
+            [DisplayOrder(40)]
+            [GridWidth(125)]
+            public bool Updated { get; set; }
+            internal IMetadata Metadata { get; set; }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public string Format { get; set; }
 
-        public string FormattedDate { get { return Value?.ToString(Format); } }
+        public override string StringDisplay { get { return Value?.ToString(Format); } }
 
         public override DateTime? Value
         {

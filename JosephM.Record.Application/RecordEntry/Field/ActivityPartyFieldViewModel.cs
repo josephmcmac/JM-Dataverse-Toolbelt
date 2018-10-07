@@ -1,12 +1,5 @@
-﻿#region
-
-using System;
-using System.Linq;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Service;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.IService;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -17,7 +10,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
         }
 
-        public string DisplayString
+        public override string StringDisplay
         {
             get
             {

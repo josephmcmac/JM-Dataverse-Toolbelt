@@ -105,6 +105,7 @@
                                         <MenuItem Header="Open" Command="{Binding EditRowViewModel.Command}" Visibility="{Binding CanEdit, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                         <MenuItem Header="Open In New Tab" Command="{Binding EditRowNewTabViewModel.Command}" Visibility="{Binding CanEditNewTab, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                         <MenuItem Header="Open In New Window" Command="{Binding EditRowNewWindowViewModel.Command}" Visibility="{Binding CanEditNewWindow, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        <MenuItem Header="Open In Browser" Command="{Binding OpenWebViewModel.Command}" Visibility="{Binding CanOpenWeb, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                         <MenuItem Header="Remove" Command="{Binding DeleteRowViewModel.Command}" Visibility="{Binding CanDelete, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                     </ContextMenu>
                                 </DataGrid.Resources>

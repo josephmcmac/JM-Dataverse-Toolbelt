@@ -77,10 +77,10 @@
                                 </Grid>
                                 <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
                                 <WrapPanel Orientation="Horizontal"  Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
-                                    <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
-                                    <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
-                                    <shared:XrmButton DataContext="{Binding GroupSelectedConditionsAnd}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
-                                    <shared:XrmButton DataContext="{Binding UngroupSelectedConditions}" Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" />
+                                    <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" />
+                                    <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" />
+                                    <shared:XrmButton DataContext="{Binding GroupSelectedConditionsAnd}" />
+                                    <shared:XrmButton DataContext="{Binding UngroupSelectedConditions}" />
                                 </WrapPanel>
                             </WrapPanel>
                         </Grid>
