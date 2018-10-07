@@ -575,7 +575,7 @@ namespace JosephM.CustomisationImporter.Service
                         && RecordService.FieldExists(field.SchemaName, field.RecordType);
 
                     RecordService.CreateOrUpdate(field, field.RecordType);
-                    response.AddResponseItem(excelRow, field, isUpdate);
+                    response.AddImportedItem(excelRow, field, isUpdate);
                     if (!isUpdate)
                         importFieldsResponse.AddCreatedField(field);
                 }
