@@ -99,7 +99,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                                 {
                                     entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates));
                                 }
-                                catch(Exception ex)
+                                catch (Exception ex)
                                 {
                                     response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, targetField, null, stringValue, "Error Parsing Field - " + ex.Message, ex));
                                 }
@@ -107,7 +107,19 @@ namespace JosephM.Deployment.SpreadsheetImport
                         }
                     }
                     //okay any which are exact duplicates to previous ones lets ignore
-                    if (result.Any(r => r.GetFieldsInEntity().All(f => XrmRecordService.FieldsEqual(r.GetField(f), entity.GetField(f)))))
+                    if (result.Any(r => r.GetFieldsInEntity().All(f =>
+                    {
+                        //since for entity references we just load the name with empty guids
+                        //we check the dipslay name for them
+                        var fieldValue1 = r.GetField(f);
+                        var fieldValue2 = entity.GetField(f);
+                        if (fieldValue1 is EntityReference && fieldValue2 is EntityReference)
+                        {
+                            return ((EntityReference)fieldValue1).Name == ((EntityReference)fieldValue2).Name;
+                        }
+                        else
+                            return XrmRecordService.FieldsEqual(fieldValue1, fieldValue2);
+                    })))
                     {
                         if(!duplicateLogged)
                         {
