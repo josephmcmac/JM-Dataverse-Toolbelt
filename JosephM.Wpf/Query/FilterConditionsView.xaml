@@ -23,7 +23,7 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Border VerticalAlignment="Center">
-                <TextBlock Text="{Binding FilterOperator}" />
+                    <TextBlock Text="{Binding FilterOperator}" Foreground="{DynamicResource TextColor}" />
             </Border>
         </Grid>
         <Grid Grid.Column="1"  >
