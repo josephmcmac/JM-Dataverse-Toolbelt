@@ -456,7 +456,7 @@ namespace JosephM.Record.Service
                             : OptionSetLimitedValues[fieldName];
 
                         return allFieldsMetadata
-                            .Select(f => new RecordField(f.SchemaName, f.DisplayName))
+                            .Select(f => new RecordField(f.SchemaName, f.IsPrimaryKey ? f.DisplayName + " Id" : f.DisplayName))
                             .Where(f => !f.Value.IsNullOrWhiteSpace())
                             .Where(f => onlyInclude == null || onlyInclude.Contains(f.Key))
                             .OrderBy(f => f.Value)
