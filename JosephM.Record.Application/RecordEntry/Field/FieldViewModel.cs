@@ -22,5 +22,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 return Value?.ToString();
             }
         }
+
+        public override void CallOnPropertyChangeEvents()
+        {
+            OnPropertyChanged(nameof(ValueObject));
+            OnPropertyChanged(nameof(StringDisplay));
+            OnPropertyChanged(nameof(Value));
+        }
     }
 }
