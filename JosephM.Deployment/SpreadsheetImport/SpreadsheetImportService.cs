@@ -24,13 +24,23 @@ namespace JosephM.Deployment.SpreadsheetImport
         public XrmRecordService XrmRecordService { get; }
         public IApplicationController ApplicationController { get; }
 
-        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, ServiceRequestController controller, bool useAmericanDates = false)
+        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, bool useAmericanDates = false)
         {
             var response = new SpreadsheetImportResponse();
             var parseResponse = ParseIntoEntities(mappings, useAmericanDates: useAmericanDates);
             response.LoadParseResponse(parseResponse);
             var dataImportService = new DataImportService(XrmRecordService);
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems));
+            var matchKeyDictionary = new Dictionary<string, IEnumerable<string>>();
+            foreach(var map in mappings.Keys)
+            {
+                if(map.AltMatchKeys != null && map.AltMatchKeys.Any())
+                {
+                    if (matchKeyDictionary.ContainsKey(map.TargetType))
+                        throw new NotSupportedException($"Error Type {map.TargetType} Is Defined With Multiple Match Keys");
+                    matchKeyDictionary.Add(map.TargetType, map.AltMatchKeys.Select(mk => mk.TargetField).ToArray());
+                }
+            }
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, updateOnly: updateOnly));
             return response;
         }
 
@@ -65,7 +75,6 @@ namespace JosephM.Deployment.SpreadsheetImport
                 {
                     var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
                     var entity = new Entity(targetType);
-                    var keyColumns = new string[0];
 
                     foreach (var fieldMapping in mapping.FieldMappings)
                     {
@@ -99,15 +108,32 @@ namespace JosephM.Deployment.SpreadsheetImport
                                 {
                                     entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates));
                                 }
-                                catch(Exception ex)
+                                catch (Exception ex)
                                 {
                                     response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, targetField, null, stringValue, "Error Parsing Field - " + ex.Message, ex));
                                 }
                             }
                         }
                     }
+                    if(entity.GetFieldsInEntity().All(f => XrmEntity.FieldsEqual(null, entity.GetField(f))))
+                    {
+                        //ignore any where all fields emopty
+                        continue;
+                    }
                     //okay any which are exact duplicates to previous ones lets ignore
-                    if (result.Any(r => r.GetFieldsInEntity().All(f => XrmRecordService.FieldsEqual(r.GetField(f), entity.GetField(f)))))
+                    if (result.Any(r => r.GetFieldsInEntity().All(f =>
+                    {
+                        //since for entity references we just load the name with empty guids
+                        //we check the dipslay name for them
+                        var fieldValue1 = r.GetField(f);
+                        var fieldValue2 = entity.GetField(f);
+                        if (fieldValue1 is EntityReference && fieldValue2 is EntityReference)
+                        {
+                            return ((EntityReference)fieldValue1).Name == ((EntityReference)fieldValue2).Name;
+                        }
+                        else
+                            return XrmRecordService.FieldsEqual(fieldValue1, fieldValue2);
+                    })))
                     {
                         if(!duplicateLogged)
                         {
@@ -121,7 +147,6 @@ namespace JosephM.Deployment.SpreadsheetImport
                 }
                 catch (Exception ex)
                 {
-                    //todo perhaps could add row number and source details etc.
                     response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError("Mapping Error", ex));
                 }
             }

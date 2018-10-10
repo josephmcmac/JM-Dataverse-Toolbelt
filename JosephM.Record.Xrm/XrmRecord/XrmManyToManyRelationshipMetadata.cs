@@ -136,7 +136,9 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public string PicklistDisplay
         {
-            get { return XrmService.GetEntityDisplayName(RecordType1) + " " + XrmService.GetEntityCollectionName(RecordType1) + " (N:N Association)"; }
+            get {
+                return
+                    XrmService.GetEntityDisplayName(RecordType1) + " " + XrmService.GetEntityCollectionName(RecordType2) + " (N:N Association)"; }
         }
     }
 }

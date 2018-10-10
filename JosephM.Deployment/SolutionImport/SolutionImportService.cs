@@ -60,7 +60,8 @@ namespace JosephM.Deployment.SolutionImport
                         {
                             var ignoreTheseErrorCodes = new[]
                             {
-                                "0x8004F039",
+                                "0x80045042",//reactivated workflows
+                                "0x8004F039",//reactivated plugins
                                 "0x80045043"//deactivated duplicate detection rules - these get activated in next set of code
                             };
                             var dataString = job.GetStringField(Fields.importjob_.data);

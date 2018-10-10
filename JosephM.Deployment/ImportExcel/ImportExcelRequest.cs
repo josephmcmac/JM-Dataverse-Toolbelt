@@ -5,6 +5,7 @@ using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Sql;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Deployment.ImportExcel
 {
@@ -12,7 +13,7 @@ namespace JosephM.Deployment.ImportExcel
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Misc, true, 20)]
-    public class ImportExcelRequest : ServiceRequestBase
+    public class ImportExcelRequest : ServiceRequestBase, IValidatableObject
     {
         public ImportExcelRequest()
         {
@@ -37,9 +38,22 @@ namespace JosephM.Deployment.ImportExcel
         [RequiredProperty]
         public bool MatchRecordsByName { get; set; }
 
+        [Group(Sections.Misc)]
+        [DisplayOrder(415)]
+        [RequiredProperty]
+        public bool UpdateOnly { get; set; }
+
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull(nameof(ExcelFile))]
         public IEnumerable<ExcelImportTabMapping> Mappings { get; set; }
+
+        public IsValidResponse Validate()
+        {
+            if (Mappings == null)
+                return new IsValidResponse();
+
+            return Mappings.Validate(MatchRecordsByName, UpdateOnly);
+        }
 
         private static class Sections
         {
@@ -62,7 +76,12 @@ namespace JosephM.Deployment.ImportExcel
             [RequiredProperty]
             [IncludeManyToManyIntersects]
             [RecordTypeFor(nameof(Mappings) + "." + nameof(ExcelImportFieldMapping.TargetField))]
+            [RecordTypeFor(nameof(AltMatchKeys) + "." + nameof(ExcelImportMatchKey.TargetField))]
             public RecordType TargetType { get; set; }
+
+            [AllowNestedGridEdit]
+            [PropertyInContextByPropertyNotNull(nameof(TargetType))]
+            public IEnumerable<ExcelImportMatchKey> AltMatchKeys { get; set; }
 
             [AllowNestedGridEdit]
             [RequiredProperty]
@@ -72,9 +91,8 @@ namespace JosephM.Deployment.ImportExcel
             public IEnumerable<ExcelImportFieldMapping> Mappings { get; set; }
 
             string IMapSpreadsheetImport.SourceType => SourceTab?.Key;
-
             string IMapSpreadsheetImport.TargetType => TargetType?.Key;
-
+            IEnumerable<IMapSpreadsheetMatchKey> IMapSpreadsheetImport.AltMatchKeys => AltMatchKeys;
             IEnumerable<IMapSpreadsheetColumn> IMapSpreadsheetImport.FieldMappings => Mappings;
 
             public override string ToString()
@@ -103,6 +121,20 @@ namespace JosephM.Deployment.ImportExcel
                 public override string ToString()
                 {
                     return (SourceColumn?.Value ?? "(None)") + " > " + (TargetField?.Value ?? "(None)");
+                }
+            }
+
+            [DoNotAllowGridOpen]
+            public class ExcelImportMatchKey : IMapSpreadsheetMatchKey
+            {
+                [RequiredProperty]
+                public RecordField TargetField { get; set; }
+
+                string IMapSpreadsheetMatchKey.TargetField => TargetField?.Key;
+
+                public override string ToString()
+                {
+                    return (TargetField?.Value ?? "(Empty)");
                 }
             }
         }

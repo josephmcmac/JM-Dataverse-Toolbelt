@@ -60,6 +60,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
 
         protected override void LoadDialogExtention()
         {
+            //todo - this should be part of the saved request module
             var savedRequests = ApplicationController
                 .ResolveType<ISettingsManager>()
                 .Resolve<SavedSettings>(typeof(TRequest));

@@ -80,13 +80,12 @@ namespace JosephM.CustomisationImporter.Service
             {
                 var solutionId = request.Solution.Id;
                 var solution = RecordService.Get(Entities.solution, solutionId);
-                var allImportedResponseItems = response.ResponseItems
-                    .Where(ri => !ri.HasError)
+                var allImportedItemsMetadata = response.ImportedItems
                     .Select(ri => ri.Metadata)
                     .ToArray();
                 //option sets
                 Func<object, IMetadata> getMetadata = (object item) => RecordService.GetSharedPicklist(((PicklistOptionSet)item).SchemaName);
-                var theseObjectsToAdd = allImportedResponseItems
+                var theseObjectsToAdd = allImportedItemsMetadata
                     .Where(m => m is PicklistOptionSet)
                     .Cast<PicklistOptionSet>()
                     .Where(p => p.IsSharedOptionSet)
@@ -96,7 +95,7 @@ namespace JosephM.CustomisationImporter.Service
                 AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.OptionSet, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //record types
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((RecordMetadata)item).SchemaName);
-                theseObjectsToAdd = allImportedResponseItems
+                theseObjectsToAdd = allImportedItemsMetadata
                     .Where(m => m is RecordMetadata)
                     .Cast<IMetadata>()
                     .Distinct()
@@ -104,7 +103,7 @@ namespace JosephM.CustomisationImporter.Service
                 AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //fields
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((FieldMetadata)item).RecordType);
-                theseObjectsToAdd = allImportedResponseItems
+                theseObjectsToAdd = allImportedItemsMetadata
                     .Where(m => m is FieldMetadata)
                     .Cast<IMetadata>()
                     .Distinct()
@@ -112,7 +111,7 @@ namespace JosephM.CustomisationImporter.Service
                 AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //relationships side 1
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((Many2ManyRelationshipMetadata)item).RecordType1);
-                theseObjectsToAdd = allImportedResponseItems
+                theseObjectsToAdd = allImportedItemsMetadata
                     .Where(m => m is Many2ManyRelationshipMetadata)
                     .Cast<IMetadata>()
                     .Distinct()
@@ -120,7 +119,7 @@ namespace JosephM.CustomisationImporter.Service
                 AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //relationships side 2
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((Many2ManyRelationshipMetadata)item).RecordType2);
-                theseObjectsToAdd = allImportedResponseItems
+                theseObjectsToAdd = allImportedItemsMetadata
                     .Where(m => m is Many2ManyRelationshipMetadata)
                     .Cast<IMetadata>()
                     .Distinct()
@@ -128,7 +127,7 @@ namespace JosephM.CustomisationImporter.Service
                 AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //field options
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((ImportPicklistFieldOptions)item).FieldMetadata.RecordType);
-                theseObjectsToAdd = allImportedResponseItems
+                theseObjectsToAdd = allImportedItemsMetadata
                     .Where(m => m is ImportPicklistFieldOptions)
                     .Cast<IMetadata>()
                     .Distinct()
@@ -136,7 +135,7 @@ namespace JosephM.CustomisationImporter.Service
                 AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
                 //views
                 getMetadata = (object item) => RecordService.GetRecordTypeMetadata(((ImportViews)item).SchemaName);
-                theseObjectsToAdd = allImportedResponseItems
+                theseObjectsToAdd = allImportedItemsMetadata
                     .Where(m => m is ImportViews)
                     .Cast<IMetadata>()
                     .Distinct()

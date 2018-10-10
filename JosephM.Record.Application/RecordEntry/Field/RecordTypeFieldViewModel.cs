@@ -16,7 +16,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 ValueObject = value;
-                OnPropertyChanged("Value");
+                OnPropertyChanged(nameof(Value));
             }
         }
     }

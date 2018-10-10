@@ -128,7 +128,7 @@ namespace JosephM.Deployment.ImportCsvs
                                 var targetTypeResponse = GetTargetType(targetLookupService, sourceLabel);
                                 if (targetTypeResponse.IsMatch)
                                 {
-                                    revm.GetRecordTypeFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.TargetType)).Value = new RecordType(targetTypeResponse.LogicalName, targetTypeResponse.LogicalName);
+                                    revm.GetRecordTypeFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.TargetType)).Value = new RecordType(targetTypeResponse.LogicalName, targetLookupService.GetDisplayName(targetTypeResponse.LogicalName));
                                 }
                             }
                             var targetType = revm.GetRecordTypeFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.TargetType)).Value;
