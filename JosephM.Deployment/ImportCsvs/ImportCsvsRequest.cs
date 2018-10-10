@@ -18,7 +18,7 @@ namespace JosephM.Deployment.ImportCsvs
     [Group(Sections.Main, true, 10)]
     [Group(Sections.CsvImport, true, 20)]
     [Group(Sections.Misc, true, 40)]
-    public class ImportCsvsRequest : ServiceRequestBase
+    public class ImportCsvsRequest : ServiceRequestBase, IValidatableObject
     {
         public ImportCsvsRequest()
         {
@@ -35,6 +35,11 @@ namespace JosephM.Deployment.ImportCsvs
         [DisplayName("Match Existing Records By Name When Importing")]
         [RequiredProperty]
         public bool MatchByName { get; set; }
+
+        [Group(Sections.CsvImport)]
+        [DisplayOrder(105)]
+        [RequiredProperty]
+        public bool UpdateOnly { get; set; }
 
         [DisplayOrder(110)]
         [Group(Sections.CsvImport)]
@@ -61,7 +66,7 @@ namespace JosephM.Deployment.ImportCsvs
             [ConnectionFor(nameof(Mappings) + "." + nameof(CsvImportFieldMapping.SourceColumn), typeof(CsvFileConnection))]
             [RequiredProperty]
             [Group(Sections.Main)]
-            [GridWidth(600)]
+            [GridWidth(500)]
             [DisplayOrder(10)]
             [FileMask(FileMasks.CsvFile)]
             public FileReference SourceCsv { get; set; }
@@ -79,8 +84,13 @@ namespace JosephM.Deployment.ImportCsvs
             [RequiredProperty]
             [IncludeManyToManyIntersects]
             [RecordTypeFor(nameof(Mappings) + "." + nameof(CsvImportFieldMapping.TargetField))]
+            [RecordTypeFor(nameof(AltMatchKeys) + "." + nameof(CsvImportMatchKey.TargetField))]
             [PropertyInContextByPropertyNotNull(nameof(SourceCsv))]
             public RecordType TargetType { get; set; }
+
+            [AllowNestedGridEdit]
+            [PropertyInContextByPropertyNotNull(nameof(TargetType))]
+            public IEnumerable<CsvImportMatchKey> AltMatchKeys { get; set; }
 
             [AllowNestedGridEdit]
             [RequiredProperty]
@@ -93,6 +103,8 @@ namespace JosephM.Deployment.ImportCsvs
             string IMapSpreadsheetImport.SourceType => SourceType?.Key;
 
             string IMapSpreadsheetImport.TargetType => TargetType?.Key;
+
+            IEnumerable<IMapSpreadsheetMatchKey> IMapSpreadsheetImport.AltMatchKeys => AltMatchKeys;
 
             IEnumerable<IMapSpreadsheetColumn> IMapSpreadsheetImport.FieldMappings => Mappings;
 
@@ -124,6 +136,20 @@ namespace JosephM.Deployment.ImportCsvs
                     return (SourceColumn?.Value ?? "(None)") + " > " + (TargetField?.Value ?? "(None)");
                 }
             }
+
+            [DoNotAllowGridOpen]
+            public class CsvImportMatchKey : IMapSpreadsheetMatchKey
+            {
+                [RequiredProperty]
+                public RecordField TargetField { get; set; }
+
+                string IMapSpreadsheetMatchKey.TargetField => TargetField?.Key;
+
+                public override string ToString()
+                {
+                    return (TargetField?.Value ?? "(Empty)");
+                }
+            }
         }
 
         private static class Sections
@@ -131,6 +157,14 @@ namespace JosephM.Deployment.ImportCsvs
             public const string Main = "Main";
             public const string CsvImport = "CSV Import Options";
             public const string Misc = "Misc";
+        }
+
+        public IsValidResponse Validate()
+        {
+            if (CsvsToImport == null)
+                return new IsValidResponse();
+
+            return CsvsToImport.Validate(MatchByName, UpdateOnly);
         }
     }
 }

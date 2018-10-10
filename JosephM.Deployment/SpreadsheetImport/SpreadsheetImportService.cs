@@ -24,13 +24,23 @@ namespace JosephM.Deployment.SpreadsheetImport
         public XrmRecordService XrmRecordService { get; }
         public IApplicationController ApplicationController { get; }
 
-        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, ServiceRequestController controller, bool useAmericanDates = false)
+        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, bool useAmericanDates = false)
         {
             var response = new SpreadsheetImportResponse();
             var parseResponse = ParseIntoEntities(mappings, useAmericanDates: useAmericanDates);
             response.LoadParseResponse(parseResponse);
             var dataImportService = new DataImportService(XrmRecordService);
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems));
+            var matchKeyDictionary = new Dictionary<string, IEnumerable<string>>();
+            foreach(var map in mappings.Keys)
+            {
+                if(map.AltMatchKeys != null && map.AltMatchKeys.Any())
+                {
+                    if (matchKeyDictionary.ContainsKey(map.TargetType))
+                        throw new NotSupportedException($"Error Type {map.TargetType} Is Defined With Multiple Match Keys");
+                    matchKeyDictionary.Add(map.TargetType, map.AltMatchKeys.Select(mk => mk.TargetField).ToArray());
+                }
+            }
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, updateOnly: updateOnly));
             return response;
         }
 
@@ -65,7 +75,6 @@ namespace JosephM.Deployment.SpreadsheetImport
                 {
                     var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
                     var entity = new Entity(targetType);
-                    var keyColumns = new string[0];
 
                     foreach (var fieldMapping in mapping.FieldMappings)
                     {
@@ -106,6 +115,11 @@ namespace JosephM.Deployment.SpreadsheetImport
                             }
                         }
                     }
+                    if(entity.GetFieldsInEntity().All(f => XrmEntity.FieldsEqual(null, entity.GetField(f))))
+                    {
+                        //ignore any where all fields emopty
+                        continue;
+                    }
                     //okay any which are exact duplicates to previous ones lets ignore
                     if (result.Any(r => r.GetFieldsInEntity().All(f =>
                     {
@@ -133,7 +147,6 @@ namespace JosephM.Deployment.SpreadsheetImport
                 }
                 catch (Exception ex)
                 {
-                    //todo perhaps could add row number and source details etc.
                     response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError("Mapping Error", ex));
                 }
             }

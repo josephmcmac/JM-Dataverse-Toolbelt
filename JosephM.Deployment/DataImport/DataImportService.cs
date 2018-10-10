@@ -135,13 +135,15 @@ namespace JosephM.Deployment.DataImport
             PrimaryKeyThenName
         }
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null) 
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<string>> altMatchKeyDictionary = null, bool updateOnly = false) 
         {
             var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
             try
             {
                 controller.LogLiteral("Preparing Import");
+
+                altMatchKeyDictionary = altMatchKeyDictionary ?? new Dictionary<string, IEnumerable<string>>();
 
                 var fieldsToRetry = new Dictionary<Entity, List<string>>();
                 var typesToImport = entities.Select(e => e.LogicalName).Distinct();
@@ -283,7 +285,18 @@ namespace JosephM.Deployment.DataImport
                             try
                             {
                                 IEnumerable<Entity> existingMatchingIds = new Entity[0];
-                                if (matchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
+                                if (altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName))
+                                {
+                                    var matchKetFieldDictionary = altMatchKeyDictionary[thisEntity.LogicalName]
+                                        .Distinct().ToDictionary(f => f, f => thisEntity.GetField(f));
+                                    if(matchKetFieldDictionary.Any(kv => XrmEntity.FieldsEqual(null, kv.Value)))
+                                    {
+                                        throw new Exception("Match Key Field Is Empty");
+                                    }
+                                    existingMatchingIds = GetMatchingEntities(thisEntity.LogicalName, matchKetFieldDictionary);
+
+                                }
+                                else if (matchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
                                 {
                                     existingMatchingIds = GetMatchForExistingRecord(existingEntities, thisEntity);
                                 }
@@ -293,6 +306,10 @@ namespace JosephM.Deployment.DataImport
                                     {
                                         new ConditionExpression(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), ConditionOperator.Equal, thisEntity.Id)
                                     });
+                                }
+                                if (!existingMatchingIds.Any() && updateOnly)
+                                {
+                                    throw new Exception("Updates Only And No Matching Record Found");
                                 }
                                 if (existingMatchingIds.Any())
                                 {
@@ -423,7 +440,7 @@ namespace JosephM.Deployment.DataImport
                                     fieldsToRetry.Remove(thisEntity);
                                 response.AddImportError(entity, 
                                     new DataImportResponseItem(recordType, null, entity.GetStringField(primaryField), null,
-                                        string.Format("Error Importing Record Id={0}", entity.Id),
+                                        ex.Message + (entity.Id != Guid.Empty ? " Id=" + entity.Id : ""),
                                         ex));
                             }
                             countRecordsImported++;

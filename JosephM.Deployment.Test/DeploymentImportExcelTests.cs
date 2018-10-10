@@ -80,6 +80,100 @@ namespace JosephM.Deployment.Test
             ClearSavedRequests(app, entryViewmodel);
         }
 
+        [DeploymentItem(@"Files\AccountsWithKeys.xlsx")]
+        [TestMethod]
+        public void DeploymentImportExcelMatchKeysTest()
+        {
+            //okay this script imports a sheet using
+            //account number as the match key
+
+            //the initial import creates new records
+            //though one of the five rows throws error due to missing account number (key)
+
+            //the subsequent one only allows updates
+            //and I delete one of the records imported to verify
+            //it throws an extra error due to a missing key for update in the target
+
+            PrepareTests();
+            DeleteAll(Entities.account);
+
+            var workFolder = TestingFolder + @"\ExcelImportScript";
+            FileUtility.CheckCreateFolder(workFolder);
+            var sourceExcelFile = Path.Combine(workFolder, @"AccountsWithKeys.xlsx");
+            File.Copy(@"AccountsWithKeys.xlsx", sourceExcelFile);
+
+            var app = CreateAndLoadTestApplication<ImportExcelModule>();
+            var dialog = app.NavigateToDialog<ImportExcelModule, ImportExcelDialog>();
+            var entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
+            entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.MaskEmails)).Value = true;
+
+            //select the excel file
+            entryViewmodel.GetFieldViewModel(nameof(ImportExcelRequest.ExcelFile)).ValueObject = new FileReference(sourceExcelFile);
+
+            //okay on change trigger should have fired and populated mappings on contact
+            //now add match key 
+            var tabMappingsGrid = entryViewmodel.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.Mappings));
+            var accountMap = tabMappingsGrid.DynamicGridViewModel.GridRecords.First();
+            var keyMapsField = accountMap.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.AltMatchKeys));
+            keyMapsField.EditButton.Command.Execute();
+            var altMatchKeyEntryForm = entryViewmodel.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(altMatchKeyEntryForm);
+            altMatchKeyEntryForm.LoadFormSections();
+            var mapsField = altMatchKeyEntryForm.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.AltMatchKeys));
+            mapsField.AddRow();
+            var matchKeyField = mapsField.DynamicGridViewModel.GridRecords.First().GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportMatchKey.TargetField));
+            Assert.IsTrue(matchKeyField.ItemsSource.Any());
+            matchKeyField.Value = matchKeyField.ItemsSource.First(f => f.Key == Fields.account_.accountnumber);
+            altMatchKeyEntryForm.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+
+            //run the import and verify response and account count
+            entryViewmodel.SaveButtonViewModel.Invoke();
+            var response = app.GetCompletionViewModel(dialog).GetObject() as ImportExcelResponse;
+            Assert.IsNotNull(response);
+
+            Assert.AreEqual(1, response.GetResponseItemsWithError().Count());
+            var accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            Assert.AreEqual(4, accounts.Count());
+
+            //delete one of the imported accounts
+            XrmService.Delete(accounts.First());
+            //second import - this one only allows updates
+            dialog = app.NavigateToDialog<ImportExcelModule, ImportExcelDialog>();
+            entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
+            entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.MaskEmails)).Value = true;
+            entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.UpdateOnly)).Value = true;
+            //select the excel file
+            entryViewmodel.GetFieldViewModel(nameof(ImportExcelRequest.ExcelFile)).ValueObject = new FileReference(sourceExcelFile);
+
+            //okay on change trigger should have fired and populated mappings on contact
+            //now add match key 
+            tabMappingsGrid = entryViewmodel.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.Mappings));
+            accountMap = tabMappingsGrid.DynamicGridViewModel.GridRecords.First();
+            keyMapsField = accountMap.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.AltMatchKeys));
+            keyMapsField.EditButton.Command.Execute();
+            altMatchKeyEntryForm = entryViewmodel.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(altMatchKeyEntryForm);
+            altMatchKeyEntryForm.LoadFormSections();
+            mapsField = altMatchKeyEntryForm.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.AltMatchKeys));
+            mapsField.AddRow();
+            matchKeyField = mapsField.DynamicGridViewModel.GridRecords.First().GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportMatchKey.TargetField));
+            Assert.IsTrue(matchKeyField.ItemsSource.Any());
+            matchKeyField.Value = matchKeyField.ItemsSource.First(f => f.Key == Fields.account_.accountnumber);
+            altMatchKeyEntryForm.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+
+            //run the import and verify response and account count
+            entryViewmodel.SaveButtonViewModel.Invoke();
+
+            response = app.GetCompletionViewModel(dialog).GetObject() as ImportExcelResponse;
+            Assert.IsNotNull(response);
+
+            Assert.AreEqual(2, response.GetResponseItemsWithError().Count());
+            accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            Assert.AreEqual(3, accounts.Count());
+        }
+
         [DeploymentItem(@"Files\TestExcelImportAccountAndContact.xlsx")]
         [TestMethod]
         public void DeploymentImportExcelBasicTest()
@@ -240,6 +334,8 @@ namespace JosephM.Deployment.Test
             File.Copy(@"TestExcelImportContacts.xlsx", sourceExcelFile);
 
             var app = CreateAndLoadTestApplication<ImportExcelModule>();
+            app.AddModule<SavedRequestModule>();
+            ClearSavedRequests(app);
 
             var entryViewmodel = app.NavigateToDialogModuleEntryForm<ImportExcelModule, ImportExcelDialog>();
             //select the excel file
@@ -346,6 +442,7 @@ namespace JosephM.Deployment.Test
             File.Copy(@"TestExcelImportAssociations.xlsx", sourceExcelFile);
 
             var app = CreateAndLoadTestApplication<ImportExcelModule>();
+            app.AddModule<SavedRequestModule>();
             ClearSavedRequests(app);
 
             var entryViewmodel = app.NavigateToDialogModuleEntryForm<ImportExcelModule, ImportExcelDialog>();

@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
@@ -75,6 +76,103 @@ namespace JosephM.Deployment.Test
             var importExcelResponse = completionScreen.GetObject() as ImportCsvsResponse;
             Assert.IsNotNull(importExcelResponse);
             Assert.IsTrue(importExcelResponse.ResponseItems.Any());
+        }
+
+        [DeploymentItem(@"Files\AccountsWithKeys.csv")]
+        [TestMethod]
+        public void DeploymentImportCsvsMatchKeysTest()
+        {
+            //okay this script imports a sheet using
+            //account number as the match key
+
+            //the initial import creates new records
+            //though one of the five rows throws error due to missing account number (key)
+
+            //the subsequent one only allows updates
+            //and I delete one of the records imported to verify
+            //it throws an extra error due to a missing key for update in the target
+
+            PrepareTests();
+            DeleteAll(Entities.account);
+
+            var workFolder = TestingFolder + @"\CsvsImportScript";
+            FileUtility.CheckCreateFolder(workFolder);
+            var sourceCsvsFile = Path.Combine(workFolder, @"account.csv");
+            File.Copy(@"AccountsWithKeys.csv", sourceCsvsFile);
+
+            var app = CreateAndLoadTestApplication<ImportCsvsModule>();
+            var dialog = app.NavigateToDialog<ImportCsvsModule, ImportCsvsDialog>();
+            var entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
+            entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportCsvsRequest.MaskEmails)).Value = true;
+
+            //add csv row and set it to the source csv
+            var tabMappingsGrid = entryViewmodel.GetEnumerableFieldViewModel(nameof(ImportCsvsRequest.CsvsToImport));
+            tabMappingsGrid.DynamicGridViewModel.AddRow();
+            var accountMap = tabMappingsGrid.DynamicGridViewModel.GridRecords.First();
+            var fileReference = accountMap.GetFieldViewModel<FileRefFieldViewModel>(nameof(ImportCsvsRequest.CsvToImport.SourceCsv));
+            fileReference.Value = new FileReference(sourceCsvsFile);
+            //okay on change trigger should have fired and populated mappings on contact
+            //now add match key 
+            var keyMapsField = accountMap.GetEnumerableFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.AltMatchKeys));
+            keyMapsField.EditButton.Command.Execute();
+            var altMatchKeyEntryForm = entryViewmodel.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(altMatchKeyEntryForm);
+            altMatchKeyEntryForm.LoadFormSections();
+            var mapsField = altMatchKeyEntryForm.GetEnumerableFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.AltMatchKeys));
+            mapsField.AddRow();
+            var matchKeyField = mapsField.DynamicGridViewModel.GridRecords.First().GetRecordFieldFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.CsvImportMatchKey.TargetField));
+            Assert.IsTrue(matchKeyField.ItemsSource.Any());
+            matchKeyField.Value = matchKeyField.ItemsSource.First(f => f.Key == Fields.account_.accountnumber);
+            altMatchKeyEntryForm.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+
+            //run the import and verify response and account count
+            entryViewmodel.SaveButtonViewModel.Invoke();
+            var response = app.GetCompletionViewModel(dialog).GetObject() as ImportCsvsResponse;
+            Assert.IsNotNull(response);
+
+            Assert.AreEqual(1, response.GetResponseItemsWithError().Count());
+            var accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            Assert.AreEqual(4, accounts.Count());
+
+            //delete one of the imported accounts
+            XrmService.Delete(accounts.First());
+            //second import - this one only allows updates
+            dialog = app.NavigateToDialog<ImportCsvsModule, ImportCsvsDialog>();
+            entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
+            entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportCsvsRequest.MaskEmails)).Value = true;
+            entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportCsvsRequest.UpdateOnly)).Value = true;
+
+            //add csv row and set it to the source csv
+            tabMappingsGrid = entryViewmodel.GetEnumerableFieldViewModel(nameof(ImportCsvsRequest.CsvsToImport));
+            tabMappingsGrid.DynamicGridViewModel.AddRow();
+            accountMap = tabMappingsGrid.DynamicGridViewModel.GridRecords.First();
+            fileReference = accountMap.GetFieldViewModel<FileRefFieldViewModel>(nameof(ImportCsvsRequest.CsvToImport.SourceCsv));
+            fileReference.Value = new FileReference(sourceCsvsFile);
+            //okay on change trigger should have fired and populated mappings on contact
+            //now add match key 
+            keyMapsField = accountMap.GetEnumerableFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.AltMatchKeys));
+            keyMapsField.EditButton.Command.Execute();
+            altMatchKeyEntryForm = entryViewmodel.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(altMatchKeyEntryForm);
+            altMatchKeyEntryForm.LoadFormSections();
+            mapsField = altMatchKeyEntryForm.GetEnumerableFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.AltMatchKeys));
+            mapsField.AddRow();
+            matchKeyField = mapsField.DynamicGridViewModel.GridRecords.First().GetRecordFieldFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.CsvImportMatchKey.TargetField));
+            Assert.IsTrue(matchKeyField.ItemsSource.Any());
+            matchKeyField.Value = matchKeyField.ItemsSource.First(f => f.Key == Fields.account_.accountnumber);
+            altMatchKeyEntryForm.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+
+            //run the import and verify response and account count
+            entryViewmodel.SaveButtonViewModel.Invoke();
+
+            response = app.GetCompletionViewModel(dialog).GetObject() as ImportCsvsResponse;
+            Assert.IsNotNull(response);
+
+            Assert.AreEqual(2, response.GetResponseItemsWithError().Count());
+            accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            Assert.AreEqual(3, accounts.Count());
         }
 
         [DeploymentItem(@"Files\Account.csv")]

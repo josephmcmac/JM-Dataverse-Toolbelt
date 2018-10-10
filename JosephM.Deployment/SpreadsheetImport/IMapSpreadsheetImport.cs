@@ -7,5 +7,6 @@ namespace JosephM.Deployment.SpreadsheetImport
         string SourceType { get; }
         string TargetType { get; }
         IEnumerable<IMapSpreadsheetColumn> FieldMappings { get; }
+        IEnumerable<IMapSpreadsheetMatchKey> AltMatchKeys { get; }
     }
 }

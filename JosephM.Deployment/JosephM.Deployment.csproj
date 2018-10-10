@@ -166,6 +166,8 @@
     <Compile Include="MigrateRecords\MigrateRecordsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataImport\DataImportResponseItem.cs" />
+    <Compile Include="SpreadsheetImport\Extensions.cs" />
+    <Compile Include="SpreadsheetImport\IMapSpreadsheetMatchKey.cs" />
     <Compile Include="SpreadsheetImport\ParseIntoEntitiesResponse.cs" />
     <Compile Include="SpreadsheetImport\SpreadsheetImportResponse.cs" />
     <Compile Include="SpreadsheetImport\IMapSpreadsheetField.cs" />
