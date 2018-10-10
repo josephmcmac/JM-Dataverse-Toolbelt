@@ -3,5 +3,6 @@
     public interface IMapSpreadsheetMatchKey
     {
         string TargetField { get; }
+        string TargetFieldLabel { get; }
     }
 }

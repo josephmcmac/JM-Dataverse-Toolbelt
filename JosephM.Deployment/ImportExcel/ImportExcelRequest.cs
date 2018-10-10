@@ -92,6 +92,7 @@ namespace JosephM.Deployment.ImportExcel
 
             string IMapSpreadsheetImport.SourceType => SourceTab?.Key;
             string IMapSpreadsheetImport.TargetType => TargetType?.Key;
+            string IMapSpreadsheetImport.TargetTypeLabel => TargetType?.Value;
             IEnumerable<IMapSpreadsheetMatchKey> IMapSpreadsheetImport.AltMatchKeys => AltMatchKeys;
             IEnumerable<IMapSpreadsheetColumn> IMapSpreadsheetImport.FieldMappings => Mappings;
 
@@ -131,6 +132,7 @@ namespace JosephM.Deployment.ImportExcel
                 public RecordField TargetField { get; set; }
 
                 string IMapSpreadsheetMatchKey.TargetField => TargetField?.Key;
+                string IMapSpreadsheetMatchKey.TargetFieldLabel => TargetField?.Value;
 
                 public override string ToString()
                 {

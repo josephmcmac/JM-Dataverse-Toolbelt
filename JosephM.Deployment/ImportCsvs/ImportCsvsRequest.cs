@@ -103,6 +103,7 @@ namespace JosephM.Deployment.ImportCsvs
             string IMapSpreadsheetImport.SourceType => SourceType?.Key;
 
             string IMapSpreadsheetImport.TargetType => TargetType?.Key;
+            string IMapSpreadsheetImport.TargetTypeLabel => TargetType?.Value;
 
             IEnumerable<IMapSpreadsheetMatchKey> IMapSpreadsheetImport.AltMatchKeys => AltMatchKeys;
 
@@ -144,6 +145,7 @@ namespace JosephM.Deployment.ImportCsvs
                 public RecordField TargetField { get; set; }
 
                 string IMapSpreadsheetMatchKey.TargetField => TargetField?.Key;
+                string IMapSpreadsheetMatchKey.TargetFieldLabel => TargetField?.Value;
 
                 public override string ToString()
                 {
