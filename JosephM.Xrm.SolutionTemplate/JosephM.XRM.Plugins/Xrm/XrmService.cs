@@ -723,5 +723,25 @@ namespace $safeprojectname$.Xrm
             }
             throw new ArgumentException("The field " + fieldName + " in entity " + entityType + " is not of string type");
         }
+
+        public IEnumerable<Entity> Fetch(string fetchXmlQuery)
+        {
+            var query = new FetchExpression(fetchXmlQuery);
+            return ((RetrieveMultipleResponse)Execute(new RetrieveMultipleRequest()
+            {
+                Query = query
+            })).EntityCollection.Entities;
+        }
+
+        public void SetFieldIfChanging(string recordType, Guid id, string fieldName, object fieldValue)
+        {
+            var record = Retrieve(recordType, id, new[] { fieldName });
+            var currentValue = record.GetField(fieldName);
+            if (!XrmEntity.FieldsEqual(currentValue, fieldValue))
+            {
+                record.SetField(fieldName, fieldValue);
+                Update(record);
+            }
+        }
     }
 }

@@ -77,6 +77,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.cs" />
     <Compile Include="Services\$ext_jmobjprefix$Service.cs" />
+    <Compile Include="Rollups\RollupService.cs" />
+    <Compile Include="Rollups\RollupType.cs" />
+    <Compile Include="Rollups\LookupRollup.cs" />
+    <Compile Include="Rollups\$ext_jmobjprefix$RollupService.cs" />
     <Compile Include="Workflows\$ext_jmobjprefix$WorkflowActivity.cs" />
     <Compile Include="Xrm\DeviceIdManager.cs" />
     <Compile Include="Xrm\ExceptionExtentions.cs" />

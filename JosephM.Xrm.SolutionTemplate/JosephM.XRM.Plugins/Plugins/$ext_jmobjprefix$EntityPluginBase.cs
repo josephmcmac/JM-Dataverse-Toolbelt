@@ -1,4 +1,5 @@
 ﻿using $safeprojectname$.Services;
+using $safeprojectname$.Rollups;
 using $safeprojectname$.Xrm;
 
 namespace $safeprojectname$.Plugins
@@ -27,6 +28,17 @@ namespace $safeprojectname$.Plugins
                 if (_service == null)
                     _service = new $ext_jmobjprefix$Service(XrmService, $ext_jmobjprefix$Settings);
                 return _service;
+            }
+        }
+
+        private $ext_jmobjprefix$RollupService _RollupService;
+        public $ext_jmobjprefix$RollupService $ext_jmobjprefix$RollupService
+        {
+            get
+            {
+                if (_RollupService == null)
+                    _RollupService = new $ext_jmobjprefix$RollupService(XrmService);
+                return _RollupService;
             }
         }
     }

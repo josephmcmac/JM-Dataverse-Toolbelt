@@ -15,6 +15,12 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="JosephM.Xrm.Plugins.csproj" File="JosephM.Xrm.Plugins.csproj" ReplaceParameters="true">
+        <Folder Name="Rollups" TargetFolderName="Rollups">
+          <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$RollupService.cs">$ext_jmobjprefix$RollupService.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="RollupService.cs">RollupService.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="RollupType.cs">RollupType.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="LookupRollup.cs">LookupRollup.cs</ProjectItem>
+        </Folder>
       <Folder Name="Core" TargetFolderName="Core">
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleSettings.cs">ConsoleSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleUserInterface.cs">ConsoleUserInterface.cs</ProjectItem>
