@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
 using $ext_safeprojectname$.Plugins.Xrm;
+using $ext_safeprojectname$.Plugins.SharePoint;
 
 namespace $safeprojectname$
 {
@@ -73,6 +74,17 @@ namespace $safeprojectname$
                 if (_RollupService == null)
                     _RollupService = new $ext_jmobjprefix$RollupService(XrmService);
                 return _RollupService;
+            }
+        }
+
+        private $ext_jmobjprefix$SharepointService _sharePointService;
+        public $ext_jmobjprefix$SharepointService $ext_jmobjprefix$SharepointService
+        {
+            get
+            {
+                if (_sharePointService == null)
+                    _sharePointService = new $ext_jmobjprefix$SharepointService(XrmService, new $ext_jmobjprefix$SharePointSettings(XrmService));
+                return _sharePointService;
             }
         }
 

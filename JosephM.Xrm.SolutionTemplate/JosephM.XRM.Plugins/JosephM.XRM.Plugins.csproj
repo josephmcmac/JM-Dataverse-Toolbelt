@@ -81,6 +81,11 @@
     <Compile Include="Rollups\RollupType.cs" />
     <Compile Include="Rollups\LookupRollup.cs" />
     <Compile Include="Rollups\$ext_jmobjprefix$RollupService.cs" />
+    <Compile Include="SharePoint\$ext_jmobjprefix$SpService.cs" />
+    <Compile Include="SharePoint\$ext_jmobjprefix$SpSettings.cs" />
+    <Compile Include="SharePoint\GetFolderResponse.cs" />
+    <Compile Include="SharePoint\ISharePointSettings.cs" />
+    <Compile Include="SharePoint\SharePointService.cs" />
     <Compile Include="Workflows\$ext_jmobjprefix$WorkflowActivity.cs" />
     <Compile Include="Xrm\DeviceIdManager.cs" />
     <Compile Include="Xrm\ExceptionExtentions.cs" />

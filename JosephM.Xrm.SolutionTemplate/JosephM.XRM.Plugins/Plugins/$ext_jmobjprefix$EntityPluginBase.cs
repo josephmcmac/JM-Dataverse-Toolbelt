@@ -1,6 +1,7 @@
 ﻿using $safeprojectname$.Services;
 using $safeprojectname$.Rollups;
 using $safeprojectname$.Xrm;
+using $safeprojectname$.SharePoint;
 
 namespace $safeprojectname$.Plugins
 {
@@ -39,6 +40,17 @@ namespace $safeprojectname$.Plugins
                 if (_RollupService == null)
                     _RollupService = new $ext_jmobjprefix$RollupService(XrmService);
                 return _RollupService;
+            }
+        }
+
+        private $ext_jmobjprefix$SharepointService _sharePointService;
+        public $ext_jmobjprefix$SharepointService $ext_jmobjprefix$SharepointService
+        {
+            get
+            {
+                if (_sharePointService == null)
+                    _sharePointService = new $ext_jmobjprefix$SharepointService(XrmService, new $ext_jmobjprefix$SharePointSettings(XrmService));
+                return _sharePointService;
             }
         }
     }

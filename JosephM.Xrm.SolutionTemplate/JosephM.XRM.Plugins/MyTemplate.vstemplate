@@ -21,6 +21,13 @@
           <ProjectItem ReplaceParameters="true" TargetFileName="RollupType.cs">RollupType.cs</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="LookupRollup.cs">LookupRollup.cs</ProjectItem>
         </Folder>
+        <Folder Name="SharePoint" TargetFolderName="SharePoint">
+          <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$SpService.cs">$ext_jmobjprefix$SpService.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$SpSettings.cs">$ext_jmobjprefix$SpSettings.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="GetFolderResponse.cs">GetFolderResponse.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="ISharePointSettings.cs">ISharePointSettings.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharePointService.cs">SharePointService.cs</ProjectItem>
+        </Folder>
       <Folder Name="Core" TargetFolderName="Core">
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleSettings.cs">ConsoleSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleUserInterface.cs">ConsoleUserInterface.cs</ProjectItem>

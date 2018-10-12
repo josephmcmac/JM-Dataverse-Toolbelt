@@ -307,7 +307,7 @@ namespace $safeprojectname$.Xrm
             return Retrieve(entityType, id, CreateColumnSet(fields));
         }
 
-        private ColumnSet CreateColumnSet(IEnumerable<string> fields)
+        public ColumnSet CreateColumnSet(IEnumerable<string> fields)
         {
             if (fields != null)
                 return new ColumnSet(fields.ToArray());
@@ -742,6 +742,141 @@ namespace $safeprojectname$.Xrm
                 record.SetField(fieldName, fieldValue);
                 Update(record);
             }
+        }
+
+        /// <summary>
+        /// Returns list of key values giving the types and field name parsed for the given string of field joins
+        /// key = type, value = field
+        /// </summary>
+        /// <param name="xrmService"></param>
+        /// <param name="fieldPath"></param>
+        /// <param name="sourceType"></param>
+        /// <returns></returns>
+        public IEnumerable<KeyValuePair<string, string>> GetTypeFieldPath(string fieldPath, string sourceType)
+        {
+
+            var list = new List<KeyValuePair<string, string>>();
+            var splitOutFunction = fieldPath.Split(':');
+            if (splitOutFunction.Count() > 1)
+                fieldPath = splitOutFunction.ElementAt(1);
+            var split = fieldPath.Split('.');
+            var currentType = sourceType;
+            list.Add(new KeyValuePair<string, string>(currentType, split.ElementAt(0).Split('|').First()));
+            var i = 1;
+            if (split.Length > 1)
+            {
+                foreach (var item in split.Skip(1).Take(split.Length - 1))
+                {
+                    var fieldName = item.Split('|').First();
+                    if (split.ElementAt(i - 1).Contains("|"))
+                    {
+                        var targetType = split.ElementAt(i - 1).Split('|').Last();
+                        list.Add(new KeyValuePair<string, string>(targetType, fieldName));
+                        currentType = targetType;
+                    }
+                    else
+                    {
+                        var targetType = GetLookupTargets(list.ElementAt(i - 1).Value, currentType);
+                        list.Add(new KeyValuePair<string, string>(targetType, fieldName));
+                        currentType = targetType;
+                    }
+                    i++;
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Returns a query containing all the fields, and required joins for all the given fields
+        /// field examples are "did_contactid.firstname" or "customerid|contact.lastname"
+        public QueryExpression BuildSourceQuery(string sourceType, IEnumerable<string> fields)
+        {
+            var query = BuildQuery(sourceType, new string[0], null, null);
+            foreach (var field in fields)
+            {
+                AddRequiredQueryJoins(query, field);
+            }
+            return query;
+        }
+
+        public void AddRequiredQueryJoins(QueryExpression query, string source)
+        {
+            var typeFieldPaths = GetTypeFieldPath(source, query.EntityName);
+            var splitOutFunction = source.Split(':');
+            if (splitOutFunction.Count() > 1)
+                source = splitOutFunction.ElementAt(1);
+            var splitTokens = source.Split('.');
+            if (typeFieldPaths.Count() == 1)
+                query.ColumnSet.AddColumn(typeFieldPaths.First().Value);
+            else
+            {
+                LinkEntity thisLink = null;
+
+                for (var i = 0; i < typeFieldPaths.Count() - 1; i++)
+                {
+                    var lookupField = typeFieldPaths.ElementAt(i).Value;
+                    var path = string.Join(".", splitTokens.Take(i + 1)).Replace("|", "_");
+                    var targetType = typeFieldPaths.ElementAt(i + 1).Key;
+                    if (i == 0)
+                    {
+                        var matchingLinks = query.LinkEntities.Where(le => le.EntityAlias == path);
+
+                        if (matchingLinks.Any())
+                            thisLink = matchingLinks.First();
+                        else
+                        {
+                            thisLink = query.AddLink(targetType, lookupField, GetPrimaryKey(targetType), JoinOperator.LeftOuter);
+                            thisLink.EntityAlias = path;
+                            thisLink.Columns = CreateColumnSet(new string[0]);
+                        }
+                    }
+                    else
+                    {
+                        var matchingLinks = thisLink.LinkEntities.Where(le => le.EntityAlias == path);
+                        if (matchingLinks.Any())
+                            thisLink = matchingLinks.First();
+                        else
+                        {
+                            thisLink = thisLink.AddLink(targetType, lookupField, GetPrimaryKey(targetType), JoinOperator.LeftOuter);
+                            thisLink.EntityAlias = path;
+                            thisLink.Columns = CreateColumnSet(new string[0]);
+
+                        }
+
+                    }
+                }
+                thisLink.Columns.AddColumn(typeFieldPaths.ElementAt(typeFieldPaths.Count() - 1).Value);
+            }
+        }
+
+        public string GetLookupTargets(string field, string entity)
+        {
+            var result = "";
+            var metadata = GetFieldMetadata(field, entity);
+            if (metadata.AttributeType == AttributeTypeCode.Lookup
+                || metadata.AttributeType == AttributeTypeCode.Owner
+                || metadata.AttributeType == AttributeTypeCode.Customer)
+            {
+                var targets = ((LookupAttributeMetadata)metadata).Targets;
+                result = targets.Any() ? string.Join(",", targets) : null;
+            }
+            return result;
+        }
+
+        public string GetPrimaryKey(string targetType)
+        {
+            return GetEntityMetadata(targetType).PrimaryIdAttribute;
+        }
+
+        public string GetPrimaryNameField(string targetType)
+        {
+            return GetEntityMetadata(targetType).PrimaryNameAttribute;
+        }
+
+        public bool IsDateIncludeTime(string fieldName, string recordType)
+        {
+            return ((DateTimeAttributeMetadata)GetFieldMetadata(fieldName, recordType)).Format ==
+                   DateTimeFormat.DateAndTime;
         }
     }
 }
