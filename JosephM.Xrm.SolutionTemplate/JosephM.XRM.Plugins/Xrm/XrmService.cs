@@ -4,11 +4,14 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using $safeprojectname$.Core;
+using $safeprojectname$.Localisation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
+using Schema;
+using System.Text;
 
 namespace $safeprojectname$.Xrm
 {
@@ -877,6 +880,274 @@ namespace $safeprojectname$.Xrm
         {
             return ((DateTimeAttributeMetadata)GetFieldMetadata(fieldName, recordType)).Format ==
                    DateTimeFormat.DateAndTime;
+        }
+
+        public string GenerateEmailContent(string emailTemplateResourceName, string emailTemplateTargetType, Guid emailTemplateTargetId, LocalisationService localisationService, Dictionary<string, string> explicitTokenDictionary = null)
+        {
+            string activityDescription = null;
+            var targetTokens = new List<string>();
+            var staticTokens = new Dictionary<string, List<string>>();
+            var ifTokens = new List<string>();
+            var staticIdentifier = "static|";
+            var ifIdentifier = "if|";
+            var endifIdentifier = "endif";
+
+            if (emailTemplateResourceName != null)
+            {
+                var resource = GetFirst(Entities.webresource, Fields.webresource_.name, emailTemplateResourceName);
+                if (resource == null)
+                    throw new NullReferenceException(string.Format("Could Not Find {0} With {1} '{2}'", GetEntityDisplayName(Entities.webresource), GetFieldLabel(Fields.webresource_.name, Entities.webresource), emailTemplateResourceName));
+                var encoded = resource.GetStringField(Fields.webresource_.content);
+                byte[] binary = Convert.FromBase64String(encoded);
+                activityDescription = Encoding.UTF8.GetString(binary);
+
+                if (explicitTokenDictionary != null)
+                {
+                    foreach (var item in explicitTokenDictionary)
+                    {
+                        activityDescription = activityDescription.Replace("[" + item.Key + "]", item.Value);
+                    }
+                }
+
+                //parse out all tokens inside [] chars to replace in the email
+
+                var i = 0;
+                while (i < activityDescription.Length)
+                {
+                    if (activityDescription[i] == '[')
+                    {
+                        var startIndex = i;
+                        while (i < activityDescription.Length)
+                        {
+                            if (activityDescription[i] == ']')
+                            {
+                                var endIndex = i;
+                                var token = activityDescription.Substring(startIndex + 1, endIndex - startIndex - 1);
+
+                                if (token.ToLower().StartsWith(ifIdentifier) || token.ToLower().StartsWith(endifIdentifier))
+                                {
+                                    ifTokens.Add(token);
+                                }
+                                else if (token.ToLower().StartsWith(staticIdentifier))
+                                {
+                                    token = token.Substring(staticIdentifier.Length);
+                                    var split = token.Split('.');
+                                    if (split.Count() != 2)
+                                        throw new Exception(string.Format("The static token {0} is not formatted as expected. It should be of the form type.field", token));
+                                    var staticType = split.First();
+                                    var staticField = split.ElementAt(1);
+                                    if (!staticTokens.ContainsKey(staticType))
+                                        staticTokens.Add(staticType, new List<string>());
+                                    staticTokens[staticType].Add(staticField);
+                                }
+
+                                else
+                                    targetTokens.Add(token);
+                                break;
+                            }
+                            i++;
+                        }
+                    }
+                    else
+                        i++;
+                }
+            }
+
+            //query to get all the fields for replacing tokens
+            var query = BuildSourceQuery(emailTemplateTargetType, targetTokens);
+            query.Criteria.AddCondition(new ConditionExpression(GetPrimaryKey(emailTemplateTargetType), ConditionOperator.Equal, emailTemplateTargetId));
+            var targetObject = RetrieveFirst(query);
+
+            //process all the ifs (clear where not)
+            while (ifTokens.Any())
+            {
+                var endIfTokenStackCount = 0;
+                var removeAll = false;
+                var token = ifTokens.First();
+                if (token.ToLower() != endifIdentifier)
+                {
+                    var tokenIndex = activityDescription.IndexOf(token);
+                    var indexOf = token.IndexOf("|");
+                    if (indexOf > -1)
+                    {
+                        var field = token.Substring(indexOf + 1);
+                        var fieldValue = targetObject.GetField(field);
+                        var endIfTokenStack = 1;
+                        var remainingTokens = ifTokens.Skip(1).ToList();
+                        while (true && remainingTokens.Any())
+                        {
+                            if (remainingTokens.First().ToLower() == endifIdentifier)
+                            {
+                                endIfTokenStack--;
+                                endIfTokenStackCount++;
+                            }
+                            else
+                            {
+                                endIfTokenStack++;
+                            }
+                            remainingTokens.RemoveAt(0);
+                            if (endIfTokenStack == 0)
+                                break;
+                        }
+                        //okay so starting at the current index need to find the end if
+                        //and remove the content or the tokens
+                        var currentStack = endIfTokenStackCount;
+                        var currentIndex = activityDescription.IndexOf(token);
+                        while (currentStack > 0)
+                        {
+                            var endIfIndex = activityDescription.IndexOf(endifIdentifier, currentIndex, StringComparison.OrdinalIgnoreCase);
+                            if (endIfIndex > -1)
+                            {
+                                currentIndex = endIfIndex;
+                                currentStack--;
+                            }
+                            else
+                                break;
+                        }
+                        removeAll = fieldValue == null;
+                        if (removeAll)
+                        {
+                            var startRemove = tokenIndex - 1;
+                            var endRemove = currentIndex + endifIdentifier.Length + 1;
+                            activityDescription = activityDescription.Substring(0, startRemove) + activityDescription.Substring(endRemove);
+                        }
+                        else
+                        {
+                            var startRemove = tokenIndex - 1;
+                            var endRemove = currentIndex - 1;
+                            activityDescription = activityDescription.Substring(0, startRemove)
+                                + activityDescription.Substring(startRemove + token.Length + 2, endRemove - startRemove - token.Length - 2)
+                                + activityDescription.Substring(endRemove + endifIdentifier.Length + 2);
+                        }
+                    }
+                }
+                ifTokens.RemoveRange(0, endIfTokenStackCount > 0 ? endIfTokenStackCount * 2 : 1);
+            }
+
+            //replace all the tokens
+            foreach (var token in targetTokens)
+            {
+                var sourceType = emailTemplateTargetType;
+                string displayString = GetDisplayStringForToken(targetObject, token, localisationService, isHtml: true);
+                activityDescription = activityDescription.Replace("[" + token + "]", displayString);
+            }
+
+            foreach (var staticTargetTokens in staticTokens)
+            {
+                var staticType = staticTargetTokens.Key;
+                var staticFields = staticTargetTokens.Value;
+
+                //query to get all the fields for replacing tokens
+                var staticQuery = BuildSourceQuery(staticType, staticFields);
+                var staticTarget = RetrieveFirst(staticQuery);
+
+                //replace all the tokens
+                foreach (var staticField in staticFields)
+                {
+                    string staticFunc = null;
+                    activityDescription = activityDescription.Replace("[static|" + string.Format("{0}.{1}", staticType, staticField) + "]", GetFieldAsDisplayString(staticType, staticField, staticTarget.GetField(staticField), localisationService, isHtml: true, func: staticFunc));
+                }
+            }
+            string removeThisFunkyChar = "\xFEFF";
+            if (activityDescription != null)
+                activityDescription = activityDescription.Replace(removeThisFunkyChar, "");
+            return activityDescription;
+        }
+
+        private string GetDisplayStringForToken(Entity targetObject, string token, LocalisationService localisationService, bool isHtml = false)
+        {
+            var fieldPaths = GetTypeFieldPath(token, targetObject.LogicalName);
+            var thisFieldType = fieldPaths.Last().Key;
+            var thisFieldName = fieldPaths.Last().Value;
+            string func = null;
+            var getFieldString = token.Replace("|", "_");
+            var splitFunc = getFieldString.Split(':');
+            if (splitFunc.Count() > 1)
+            {
+                func = splitFunc.First();
+                getFieldString = splitFunc.ElementAt(1);
+            }
+            var displayString = GetFieldAsDisplayString(thisFieldType, thisFieldName, targetObject.GetField(getFieldString), localisationService, isHtml: isHtml, func: func);
+            return displayString;
+        }
+
+        public string GetFieldAsDisplayString(string recordType, string fieldName, object value, LocalisationService localisationService, bool isHtml = false, string func = null)
+        {
+            if (value == null)
+                return "";
+            else if (value is string)
+            {
+                if (isHtml)
+                    return ((string)value).Replace(Environment.NewLine, "<br />").Replace("\n", "<br />");
+                else
+                    return ((string)value);
+            }
+            else if (value is EntityReference)
+            {
+                return XrmEntity.GetLookupName(value);
+            }
+            else if (value is OptionSetValue)
+            {
+                if (value is OptionSetValue)
+                    return GetOptionLabel(((OptionSetValue)value).Value, fieldName, recordType);
+                throw new Exception("Value Type Not Matched For OptionSetValue " + value.GetType().Name);
+            }
+            else if (value is Money)
+            {
+                return XrmEntity.GetMoneyValue(value).ToString("$##,###,###,###,##0.00");
+            }
+            else if (value is DateTime)
+            {
+                var dt = (DateTime)value;
+                if (dt.Kind == DateTimeKind.Utc)
+                    dt = localisationService.ConvertToTargetTime(dt);
+                if (func == "year")
+                    return dt.ToString("yyyy");
+                if (GetDateFormat(fieldName, recordType) == DateTimeFormat.DateAndTime)
+                    return dt.ToString("dd/MM/yyyy hh:mm:ss tt");
+                return dt.Date.ToString("dd/MM/yyyy");
+            }
+            else if (IsActivityParty(fieldName, recordType))
+            {
+                if (value is Entity[])
+                {
+                    var namesToOutput = new List<string>();
+                    foreach (var party in (Entity[])value)
+                    {
+                        namesToOutput.Add(XrmEntity.GetLookupName(party, "partyid"));
+                    }
+                    return string.Join(", ", namesToOutput.Where(f => !string.IsNullOrWhiteSpace(f)));
+                }
+            }
+            else if (value is bool)
+            {
+                var metadata = GetFieldMetadata(fieldName, recordType) as BooleanAttributeMetadata;
+                if (metadata != null)
+                {
+                    var boolValue = (bool)value;
+                    if (boolValue && metadata.OptionSet != null && metadata.OptionSet.TrueOption != null && metadata.OptionSet.TrueOption.Label != null)
+                        return GetLabelDisplay(metadata.OptionSet.TrueOption.Label);
+                    if (!boolValue && metadata.OptionSet != null && metadata.OptionSet.FalseOption != null && metadata.OptionSet.FalseOption.Label != null)
+                        return GetLabelDisplay(metadata.OptionSet.FalseOption.Label);
+                    return value.ToString();
+                }
+            }
+            return value.ToString();
+        }
+        private DateTimeFormat? GetDateFormat(string fieldName, string recordType)
+        {
+            var metadata = (DateTimeAttributeMetadata)GetFieldMetadata(fieldName, recordType);
+            return metadata.Format;
+        }
+
+        public bool IsActivityParty(string field, string recordType)
+        {
+            return GetFieldType(field, recordType) == AttributeTypeCode.PartyList;
+        }
+
+        public AttributeTypeCode GetFieldType(string field, string entity)
+        {
+            return (AttributeTypeCode)GetFieldMetadata(field, entity).AttributeType;
         }
     }
 }

@@ -2,6 +2,7 @@
 using $safeprojectname$.Rollups;
 using $safeprojectname$.Xrm;
 using $safeprojectname$.SharePoint;
+using $safeprojectname$.Localisation;
 
 namespace $safeprojectname$.Plugins
 {
@@ -51,6 +52,17 @@ namespace $safeprojectname$.Plugins
                 if (_sharePointService == null)
                     _sharePointService = new $ext_jmobjprefix$SharepointService(XrmService, new $ext_jmobjprefix$SharePointSettings(XrmService));
                 return _sharePointService;
+            }
+        }
+
+        private LocalisationService _localisationService;
+        public LocalisationService LocalisationService
+        {
+            get
+            {
+                if (_localisationService == null)
+                    _localisationService = new LocalisationService(new LocalisationSettings());
+                return _localisationService;
             }
         }
     }

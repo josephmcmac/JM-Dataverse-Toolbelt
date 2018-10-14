@@ -8,6 +8,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
 using $ext_safeprojectname$.Plugins.Xrm;
 using $ext_safeprojectname$.Plugins.SharePoint;
+using $ext_safeprojectname$.Plugins.Localisation;
 
 namespace $safeprojectname$
 {
@@ -85,6 +86,17 @@ namespace $safeprojectname$
                 if (_sharePointService == null)
                     _sharePointService = new $ext_jmobjprefix$SharepointService(XrmService, new $ext_jmobjprefix$SharePointSettings(XrmService));
                 return _sharePointService;
+            }
+        }
+
+        private LocalisationService _localisationService;
+        public LocalisationService LocalisationService
+        {
+            get
+            {
+                if (_localisationService == null)
+                    _localisationService = new LocalisationService(new LocalisationSettings());
+                return _localisationService;
             }
         }
 

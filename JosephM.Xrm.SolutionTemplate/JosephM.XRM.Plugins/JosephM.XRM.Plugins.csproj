@@ -73,6 +73,9 @@
     <Compile Include="Core\StringEncryptor.cs" />
     <Compile Include="Core\StringExtentions.cs" />
     <Compile Include="Core\TypeExtentions.cs" />
+    <Compile Include="Localisation\ILocalisationSettings.cs" />
+    <Compile Include="Localisation\LocalisationService.cs" />
+    <Compile Include="Localisation\LocalisationSettings.cs" />
     <Compile Include="Plugins\$ext_jmobjprefix$EntityPluginBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.cs" />
