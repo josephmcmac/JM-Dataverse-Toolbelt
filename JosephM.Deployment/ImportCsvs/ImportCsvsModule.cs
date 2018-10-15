@@ -128,7 +128,7 @@ namespace JosephM.Deployment.ImportCsvs
                                 var targetTypeResponse = GetTargetType(targetLookupService, sourceLabel);
                                 if (targetTypeResponse.IsMatch)
                                 {
-                                    revm.GetRecordTypeFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.TargetType)).Value = new RecordType(targetTypeResponse.LogicalName, targetLookupService.GetDisplayName(targetTypeResponse.LogicalName));
+                                    revm.GetRecordTypeFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.TargetType)).Value = new RecordType(targetTypeResponse.LogicalName, targetTypeResponse.DisplayLabel);
                                 }
                             }
                             var targetType = revm.GetRecordTypeFieldViewModel(nameof(ImportCsvsRequest.CsvToImport.TargetType)).Value;
@@ -192,6 +192,7 @@ namespace JosephM.Deployment.ImportCsvs
 
             public bool IsMatch { get { return LogicalName != null; } }
             public string LogicalName { get; set; }
+            public string Display { get; set; }
         }
 
         private static GetTargetTypeResponse GetTargetType(IRecordService service, string sourceString)
@@ -200,15 +201,15 @@ namespace JosephM.Deployment.ImportCsvs
             var recordTypes = service.GetAllRecordTypes();
             var typesForLabel = recordTypes.Where(t => service.GetDisplayName(t)?.ToLower() == sourceString || service.GetCollectionName(t)?.ToLower() == sourceString);
             if (typesForLabel.Count() == 1)
-                return new GetTargetTypeResponse(typesForLabel.First(), false);
+                return new GetTargetTypeResponse(typesForLabel.First(), false, service.GetDisplayName(typesForLabel.First()));
             var typesForName = recordTypes.Where(t => t == sourceString);
             if (typesForName.Any())
-                return new GetTargetTypeResponse(typesForName.First(), false);
+                return new GetTargetTypeResponse(typesForName.First(), false, service.GetDisplayName(typesForLabel.First()));
 
             var manyToManys = service.GetManyToManyRelationships();
             var manysmatch = manyToManys.Where(mm => mm.SchemaName == sourceString);
             if (manysmatch.Any())
-                return new GetTargetTypeResponse(manysmatch.First().SchemaName, false);
+                return new GetTargetTypeResponse(manysmatch.First().SchemaName, false, manysmatch.First().PicklistDisplay);
 
             return new GetTargetTypeResponse();
         }
@@ -220,15 +221,17 @@ namespace JosephM.Deployment.ImportCsvs
 
             }
 
-            public GetTargetTypeResponse(string logicalName, bool isRelationship)
+            public GetTargetTypeResponse(string logicalName, bool isRelationship, string displayLabel)
             {
                 LogicalName = logicalName;
                 IsRelationship = isRelationship;
+                DisplayLabel = displayLabel;
             }
 
             public bool IsMatch { get { return LogicalName != null; } }
             public bool IsRelationship { get; set; }
             public string LogicalName { get; set; }
+            public string DisplayLabel { get; set; }
         }
 
         private void AddProductTypesToCsvgenerationGrid()
