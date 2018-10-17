@@ -45,6 +45,9 @@ namespace JosephM.XrmModule.Test
             };
             testApplication.EnterObject(request, entryForm);
 
+            var loadDropDownButtons = entryForm.CustomFunctions.Where(f => f.Id == "LOADREQUESTDROPDOWN");
+            Assert.AreEqual(0, loadDropDownButtons.Count());
+
             //trigger save request
             var saveRequestButton = entryForm.GetButton("SAVEREQUEST");
             saveRequestButton.Invoke();
@@ -60,7 +63,13 @@ namespace JosephM.XrmModule.Test
             Assert.IsFalse(entryForm.ChildForms.Any());
             Assert.IsFalse(entryForm.LoadingViewModel.IsLoading);
 
-            //reopen app/dialog and veirfy autoloads
+            //okay lets verify that the dropdown of saved requests loaded
+            loadDropDownButtons = entryForm.CustomFunctions.Where(f => f.Id == "LOADREQUESTDROPDOWN");
+            Assert.AreEqual(1, loadDropDownButtons.Count());
+            Assert.AreEqual(1, loadDropDownButtons.First().ChildButtons.Count());
+            Assert.AreEqual("TestName", loadDropDownButtons.First().ChildButtons.First().Label);
+
+            //reopen app/dialog and verify autoloads
             testApplication = CreateAndLoadTestApplication<SavedRequestModule>();
             testApplication.AddModule<TestSavedRequestModule>();
             entryForm = testApplication.NavigateToDialogModuleEntryForm<TestSavedRequestModule, TestSavedRequestDialog>();
@@ -70,7 +79,22 @@ namespace JosephM.XrmModule.Test
             //clear the loaded string value
             entryForm.GetStringFieldFieldViewModel(nameof(TestSavedRequestDialogRequest.SomeArbitraryString)).Value = "Something Else";
 
-            //invoke load request dialog
+            //invoke load request dialog in the dropdown
+            loadDropDownButtons = entryForm.CustomFunctions.Where(f => f.Id == "LOADREQUESTDROPDOWN");
+            Assert.AreEqual(1, loadDropDownButtons.Count());
+            Assert.AreEqual(1, loadDropDownButtons.First().ChildButtons.Count());
+            Assert.AreEqual("TestName", loadDropDownButtons.First().ChildButtons.First().Label);
+            loadDropDownButtons.First().ChildButtons.First().Invoke();
+
+            //verify loads
+            Assert.IsFalse(entryForm.ChildForms.Any());
+            Assert.IsFalse(entryForm.LoadingViewModel.IsLoading);
+            Assert.AreEqual(nameof(TestSavedRequestDialogRequest.SomeArbitraryString), entryForm.GetStringFieldFieldViewModel(nameof(TestSavedRequestDialogRequest.SomeArbitraryString)).Value);
+
+            //clear the loaded string value
+            entryForm.GetStringFieldFieldViewModel(nameof(TestSavedRequestDialogRequest.SomeArbitraryString)).Value = "Something Else";
+
+            //invoke load request dialog in the edit form
             var loadRequestButton = entryForm.GetButton("LOADREQUEST");
             loadRequestButton.Invoke();
             var loadRequestForm = testApplication.GetSubObjectEntryViewModel(entryForm);
@@ -97,6 +121,10 @@ namespace JosephM.XrmModule.Test
             loadRequestForm.SaveButtonViewModel.Invoke();
             Assert.IsFalse(entryForm.ChildForms.Any());
             Assert.IsFalse(entryForm.LoadingViewModel.IsLoading);
+
+            //no saved dropdown
+            loadDropDownButtons = entryForm.CustomFunctions.Where(f => f.Id == "LOADREQUESTDROPDOWN");
+            Assert.AreEqual(0, loadDropDownButtons.Count());
 
             //verify no longer a saved request resolved by the settings manager
             settingsManager = testApplication.Controller.ResolveType<ISettingsManager>();

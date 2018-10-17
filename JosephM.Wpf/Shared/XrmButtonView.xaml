@@ -28,7 +28,14 @@
                     Name="ParentButton"
                     Content="{Binding Label}"
                     Command="{Binding Command}"
-                    ToolTip="{Binding Description}" />
+                    ToolTip="{Binding Description}">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock Padding="0" Margin="0" TextWrapping="WrapWithOverflow" Text="{Binding}"></TextBlock>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                
                 <Popup
                     Style="{StaticResource ButtonDropDownPopup}"
                     PlacementTarget="{Binding ElementName=ParentButton}"

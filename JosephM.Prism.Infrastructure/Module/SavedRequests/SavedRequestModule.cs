@@ -36,7 +36,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
 
         private string LoadButtonLabel
         {
-            get { return "Load/Edit Saved Input"; }
+            get { return "Edit Saved Items"; }
         }
 
         /// <summary>
@@ -47,6 +47,54 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
             var customFormFunction = new CustomFormFunction("SAVEREQUEST", "Save Input", SaveObject, IsAllowSaveAndLoad, description: "Save The Input For Future Use.");
             this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
             customFormFunction = new CustomFormFunction("LOADREQUEST", LoadButtonLabel, LoadObject, AreSavedRequests, description: "Load Saved Input Into The Form, Edit Saved Inputs, Or Generate A Bat Executable To Automate Process Execution");
+            this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
+            LoadRequestButtons();
+        }
+
+        private void LoadRequestButtons()
+        {
+            Func<RecordEntryFormViewModel, IEnumerable<CustomFormFunction>> getSavedRequestFuncs = (r) =>
+            {
+                var results = new List<CustomFormFunction>();
+
+                var settingsManager = ApplicationController.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
+                if (settingsManager == null)
+                    throw new NullReferenceException("settingsManager");
+
+                if (r is ObjectEntryViewModel)
+                {
+                    var type = r.RecordType;
+                    var savedSettings = settingsManager.Resolve<SavedSettings>(Type.GetType(type));
+                    if (savedSettings != null && savedSettings.SavedRequests.Any())
+                    {
+                        var i = 0;
+                        foreach (var item in savedSettings.SavedRequests)
+                        {
+                            if (item is IAllowSaveAndLoad)
+                            {
+                                var savedRequest = (IAllowSaveAndLoad)item;
+                                results.Add(new CustomFormFunction("SAVEDREQUEST" + 1, savedRequest.Name, (r2) =>
+                                {
+                                    ApplicationController.DoOnAsyncThread(() =>
+                                    {
+                                        try
+                                        {
+                                            r.LoadingViewModel.IsLoading = true;
+                                            LoadSavedObject(item, (ObjectEntryViewModel)r);
+                                        }
+                                        finally
+                                        {
+                                            r.LoadingViewModel.IsLoading = false;
+                                        }
+                                    });
+                                }));
+                            }
+                        }
+                    }
+                }
+                return results;
+            };
+            var customFormFunction = new CustomFormFunction("LOADREQUESTDROPDOWN", "Load Saved Item", getSavedRequestFuncs);
             this.AddCustomFormFunction(customFormFunction, typeof(IAllowSaveAndLoad));
         }
 
@@ -99,23 +147,8 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                     if (parentParentForm == null)
                         throw new NullReferenceException(string.Format("Error parent parent form is not of type {0}", typeof(ObjectEntryViewModel)));
 
-                    var parentFormObject = parentParentForm.GetObject();
-                    var mapper = new ClassSelfMapper();
-                    mapper.Map(selectedObject, parentFormObject);
-                    if (parentFormObject is ServiceRequestBase)
-                        ((ServiceRequestBase)parentFormObject).DisplaySavedSettingFields = false;
-
-                    parentParentForm.LoadingViewModel.IsLoading = true;
-                    //allow loading to display
-                    Thread.Sleep(1000);
-
-                    //reload the parent parent form fo4r the updated object
-                    parentParentForm.Reload();
-                    foreach (var grid in parentParentForm.SubGrids)
-                    {
-                        grid.DynamicGridViewModel.ReloadGrid();
-                    }
-                    
+                    var loadIntoForm = parentParentForm;
+                    LoadSavedObject(selectedObject, loadIntoForm);
                 }
                 parentForm.LoadSubgridsToObject();
                 parentForm.OnSave();
@@ -123,6 +156,26 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
             catch (Exception ex)
             {
                 ApplicationController.ThrowException(ex);
+            }
+        }
+
+        private static void LoadSavedObject(object selectedObject, ObjectEntryViewModel loadIntoForm)
+        {
+            var formObject = loadIntoForm.GetObject();
+            var mapper = new ClassSelfMapper();
+            mapper.Map(selectedObject, formObject);
+            if (formObject is ServiceRequestBase)
+                ((ServiceRequestBase)formObject).DisplaySavedSettingFields = false;
+
+            loadIntoForm.LoadingViewModel.IsLoading = true;
+            //allow loading to display
+            Thread.Sleep(1000);
+
+            //reload the parent parent form fo4r the updated object
+            loadIntoForm.Reload();
+            foreach (var grid in loadIntoForm.SubGrids)
+            {
+                grid.DynamicGridViewModel.ReloadGrid();
             }
         }
 

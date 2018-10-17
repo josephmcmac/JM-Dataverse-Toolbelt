@@ -94,9 +94,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 var isVisible = cf.VisibleFunction(this);
                 if (isVisible)
                 {
-                    if (cf.ChildFormFunctions != null && cf.ChildFormFunctions.Any())
+                    if (cf.GetChildFormFunctions != null && cf.GetChildFormFunctions(this).Any())
                     {
-                        var childButtons = FormFunctionsToXrmButtons(cf.ChildFormFunctions);
+                        var childButtons = FormFunctionsToXrmButtons(cf.GetChildFormFunctions(this));
                         buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, childButtons, ApplicationController) { Description = cf.Description });
                     }
                     else
