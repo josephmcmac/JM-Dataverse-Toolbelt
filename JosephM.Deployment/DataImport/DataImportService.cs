@@ -369,13 +369,13 @@ namespace JosephM.Deployment.DataImport
                                                         fieldResolved = true;
                                                     }
                                                 }
-                                                if (!fieldResolved)
-                                                {
-                                                    if (!fieldsToRetry.ContainsKey(thisEntity))
-                                                        fieldsToRetry.Add(thisEntity, new List<string>());
-                                                    fieldsToRetry[thisEntity].Add(field);
-                                                    response.AddFieldForRetry(thisEntity, field);
-                                                }
+                                            }
+                                            if (!fieldResolved)
+                                            {
+                                                if (!fieldsToRetry.ContainsKey(thisEntity))
+                                                    fieldsToRetry.Add(thisEntity, new List<string>());
+                                                fieldsToRetry[thisEntity].Add(field);
+                                                response.AddFieldForRetry(thisEntity, field);
                                             }
                                         }
                                     }
