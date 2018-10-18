@@ -53,6 +53,7 @@ namespace JosephM.Wpf.RecordEntry.Field
                     {
                         FileNameTextBox.Text = item;
                     }
+                    e.Handled = true;
                 }
             }
         }

@@ -135,13 +135,15 @@ namespace JosephM.Deployment.DataImport
             PrimaryKeyThenName
         }
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<string>> altMatchKeyDictionary = null, bool updateOnly = false) 
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<string>> altMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false) 
         {
             var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
             try
             {
                 controller.LogLiteral("Preparing Import");
+
+                var ignoreFields = GetIgnoreFields(includeOwner);
 
                 altMatchKeyDictionary = altMatchKeyDictionary ?? new Dictionary<string, IEnumerable<string>>();
 
@@ -171,7 +173,7 @@ namespace JosephM.Deployment.DataImport
                     {
                         var thatType = type2;
                         var thatTypeEntities = entities.Where(e => e.LogicalName == thatType).ToList();
-                        var fields = GetFieldsToImport(thatTypeEntities, thatType)
+                        var fields = GetFieldsToImport(thatTypeEntities, thatType, includeOwner)
                             .Where(f => XrmService.FieldExists(f, thatType) && XrmService.IsLookup(f, thatType));
 
                         foreach (var field in fields)
@@ -239,11 +241,11 @@ namespace JosephM.Deployment.DataImport
 
                         #region tryorderentities
 
-                        var importFieldsForEntity = GetFieldsToImport(thisTypeEntities, recordType).ToArray();
+                        var importFieldsForEntity = GetFieldsToImport(thisTypeEntities, recordType, includeOwner).ToArray();
                         var fieldsDontExist = GetFieldsInEntities(thisTypeEntities)
                             .Where(f => !f.Contains("."))
                             .Where(f => !XrmService.FieldExists(f, thisRecordType))
-                            .Where(f => !HardcodedIgnoreFields.Contains(f))
+                            .Where(f => !ignoreFields.Contains(f))
                             .Distinct()
                             .ToArray();
                         foreach (var field in fieldsDontExist)
@@ -367,13 +369,13 @@ namespace JosephM.Deployment.DataImport
                                                         fieldResolved = true;
                                                     }
                                                 }
-                                                if (!fieldResolved)
-                                                {
-                                                    if (!fieldsToRetry.ContainsKey(thisEntity))
-                                                        fieldsToRetry.Add(thisEntity, new List<string>());
-                                                    fieldsToRetry[thisEntity].Add(field);
-                                                    response.AddFieldForRetry(thisEntity, field);
-                                                }
+                                            }
+                                            if (!fieldResolved)
+                                            {
+                                                if (!fieldsToRetry.ContainsKey(thisEntity))
+                                                    fieldsToRetry.Add(thisEntity, new List<string>());
+                                                fieldsToRetry[thisEntity].Add(field);
+                                                response.AddFieldForRetry(thisEntity, field);
                                             }
                                         }
                                     }
@@ -919,18 +921,18 @@ namespace JosephM.Deployment.DataImport
             return thisTypeEntities.SelectMany(e => e.GetFieldsInEntity());
         }
 
-        private IEnumerable<string> GetFieldsToImport(IEnumerable<Entity> thisTypeEntities, string type)
+        private IEnumerable<string> GetFieldsToImport(IEnumerable<Entity> thisTypeEntities, string type, bool includeOwner)
         {
             var fields = GetFieldsInEntities(thisTypeEntities)
-                .Where(f => IsIncludeField(f, type))
+                .Where(f => IsIncludeField(f, type, includeOwner: includeOwner))
                 .Distinct()
                 .ToList();
             return fields;
         }
 
-        public bool IsIncludeField(string fieldName, string entityType)
+        public bool IsIncludeField(string fieldName, string entityType, bool includeOwner = false)
         {
-            var hardcodeInvalidFields = HardcodedIgnoreFields;
+            var hardcodeInvalidFields = GetIgnoreFields(includeOwner);
             if (hardcodeInvalidFields.Contains(fieldName))
                 return false;
             //these are just hack since they are not updateable fields (IsWriteable)
@@ -947,17 +949,17 @@ namespace JosephM.Deployment.DataImport
 
         }
 
-        private static IEnumerable<string> HardcodedIgnoreFields
+        private static IEnumerable<string> GetIgnoreFields(bool includeOwner)
         {
-            get
+            var fields = new[]
             {
-                return new[]
-                {
-                    "yomifullname", "administratorid", "owneridtype", "ownerid", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
+                    "yomifullname", "administratorid", "owneridtype", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
                     "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid"
                     , "address1_addressid", "address2_addressid"
-                };
-            }
+            };
+            if (!includeOwner)
+                fields = fields.Union(new[] { "ownerid" }).ToArray();
+            return fields;
         }
     }
 }

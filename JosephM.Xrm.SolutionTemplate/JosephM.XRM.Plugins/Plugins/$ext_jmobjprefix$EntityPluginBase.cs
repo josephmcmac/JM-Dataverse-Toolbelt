@@ -1,5 +1,8 @@
 ﻿using $safeprojectname$.Services;
+using $safeprojectname$.Rollups;
 using $safeprojectname$.Xrm;
+using $safeprojectname$.SharePoint;
+using $safeprojectname$.Localisation;
 
 namespace $safeprojectname$.Plugins
 {
@@ -27,6 +30,39 @@ namespace $safeprojectname$.Plugins
                 if (_service == null)
                     _service = new $ext_jmobjprefix$Service(XrmService, $ext_jmobjprefix$Settings);
                 return _service;
+            }
+        }
+
+        private $ext_jmobjprefix$RollupService _RollupService;
+        public $ext_jmobjprefix$RollupService $ext_jmobjprefix$RollupService
+        {
+            get
+            {
+                if (_RollupService == null)
+                    _RollupService = new $ext_jmobjprefix$RollupService(XrmService);
+                return _RollupService;
+            }
+        }
+
+        private $ext_jmobjprefix$SharepointService _sharePointService;
+        public $ext_jmobjprefix$SharepointService $ext_jmobjprefix$SharepointService
+        {
+            get
+            {
+                if (_sharePointService == null)
+                    _sharePointService = new $ext_jmobjprefix$SharepointService(XrmService, new $ext_jmobjprefix$SharePointSettings(XrmService));
+                return _sharePointService;
+            }
+        }
+
+        private LocalisationService _localisationService;
+        public LocalisationService LocalisationService
+        {
+            get
+            {
+                if (_localisationService == null)
+                    _localisationService = new LocalisationService(new LocalisationSettings());
+                return _localisationService;
             }
         }
     }

@@ -144,7 +144,8 @@
     </Style>
     <Style x:Key="XrmDropdownButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="MinWidth" Value="120px" />
-        <Setter Property="MaxHeight" Value="30px" />
+        <Setter Property="Width" Value="150px" />
+        <!--<Setter Property="MaxHeight" Value="30px" />-->
         <Setter Property="Margin" Value="4,4,4,4" />
     </Style>
     <Style x:Key="ButtonDropDownPopup" TargetType="{x:Type Popup}" >
@@ -153,8 +154,14 @@
         <Setter Property="StaysOpen" Value="False" />
     </Style>
     <DataTemplate x:Key="XrmButtonDropdownTemplate" DataType="shared:XrmButtonViewModel">
-        <Button BorderThickness="1,0,1,1" Style="{StaticResource XrmDropdownButton}" Margin="0,0,0,0" Content="{Binding Label}"
-                Command="{Binding Command}" ToolTip="{Binding Description}" />
+        <Button MaxHeight="50" BorderThickness="1,0,1,1" Style="{StaticResource XrmDropdownButton}" Margin="0,0,0,0" Content="{Binding Label}"
+                Command="{Binding Command}" ToolTip="{Binding Description}" >
+            <Button.ContentTemplate>
+                <DataTemplate>
+                    <TextBlock TextAlignment="Center" Padding="0" Margin="0" TextWrapping="WrapWithOverflow" Text="{Binding}"></TextBlock>
+                </DataTemplate>
+            </Button.ContentTemplate>
+        </Button>
     </DataTemplate>
     <DataTemplate x:Key="XrmButtonTemplate">
         <Grid  Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">

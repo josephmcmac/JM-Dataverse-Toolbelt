@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Service;
+﻿using JosephM.Core.Extentions;
+using JosephM.Core.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                 {
                     if(item.Count() > 1 && item.Any(i => i.AltMatchKeys != null && i.AltMatchKeys.Any()))
                     {
-                        response.AddInvalidReason($"There Are Multiple Maps To {item.Key}. Multiple Imports To The Same Type Are Not Supported Where Alt Match Keys Are Used For That Type");
+                        response.AddInvalidReason($"There Are Multiple Maps To {item.First().TargetTypeLabel}. Multiple Imports To The Same Type Are Not Supported Where {typeof(IMapSpreadsheetImport).GetProperty(nameof(IMapSpreadsheetImport.AltMatchKeys)).GetDisplayName()} Are Used For That Type");
                     }
                 }
                 foreach(var map in imports)
@@ -27,7 +28,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                         {
                             if(map.FieldMappings == null || !map.FieldMappings.Any(fm => fm.TargetField == key.TargetField))
                             {
-                                response.AddInvalidReason($"The Alt Match Key {key.TargetField} Is Not Included In The Field Mappings. Alt Match Keys Need To Be Included In The Source To Target Field Mappings");
+                                response.AddInvalidReason($"{key.TargetFieldLabel} Is Not Included In The {typeof(IMapSpreadsheetImport).GetProperty(nameof(IMapSpreadsheetImport.FieldMappings)).GetDisplayName()}. All {typeof(IMapSpreadsheetImport).GetProperty(nameof(IMapSpreadsheetImport.AltMatchKeys)).GetDisplayName()} Need To Be Included In The {typeof(IMapSpreadsheetImport).GetProperty(nameof(IMapSpreadsheetImport.FieldMappings)).GetDisplayName()}");
                             }
                         }
                     }
@@ -38,7 +39,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                 if(!matchByName
                     && !imports.All(i => i.AltMatchKeys != null && i.AltMatchKeys.Any()))
                 {
-                    response.AddInvalidReason($"When Updates Only Either Match By Name Must Be Set Or All Mappings Must Have Alt Match Keys Defined");
+                    response.AddInvalidReason($"When Updates Only Either Match By Name Must Be Set Or All Mappings Must Have {typeof(IMapSpreadsheetImport).GetProperty(nameof(IMapSpreadsheetImport.AltMatchKeys)).GetDisplayName()} Defined");
                 }
             }
             return response;
