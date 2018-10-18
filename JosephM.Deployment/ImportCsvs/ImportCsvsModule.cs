@@ -204,7 +204,7 @@ namespace JosephM.Deployment.ImportCsvs
                 return new GetTargetTypeResponse(typesForLabel.First(), false, service.GetDisplayName(typesForLabel.First()));
             var typesForName = recordTypes.Where(t => t == sourceString);
             if (typesForName.Any())
-                return new GetTargetTypeResponse(typesForName.First(), false, service.GetDisplayName(typesForLabel.First()));
+                return new GetTargetTypeResponse(typesForName.First(), false, service.GetDisplayName(typesForName.First()));
 
             var manyToManys = service.GetManyToManyRelationships();
             var manysmatch = manyToManys.Where(mm => mm.SchemaName == sourceString);
