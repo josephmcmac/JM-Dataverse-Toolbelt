@@ -25,6 +25,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <TextBlock
@@ -74,6 +75,8 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 </ScrollViewer>
+        </Grid>
+        <Grid Grid.Row="6" Height="20px">
         </Grid>
     </Grid>
 </UserControl>
