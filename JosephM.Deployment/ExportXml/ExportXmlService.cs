@@ -109,11 +109,9 @@ namespace JosephM.Deployment.ExportXml
                                 : exportType.SpecificRecordsToExport
                                     .Select(r => r.Record == null ? null : r.Record.Id)
                                     .Where(s => !s.IsNullOrWhiteSpace()).Distinct().ToArray();
-                            entities = ids.Any()
-                                ? XrmService.RetrieveAllOrClauses(type,
-                                    ids.Select(
-                                        i => new ConditionExpression(primaryKey, ConditionOperator.Equal, new Guid(i))))
-                                : new Entity[0];
+                            entities = ids
+                                .Select(id => XrmService.Retrieve(type, new Guid(id)))
+                                .ToArray();
                             break;
                         }
                     default:

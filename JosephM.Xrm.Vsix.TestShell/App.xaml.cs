@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Desktop.Module.Themes;
+using JosephM.Deployment;
 using JosephM.InstanceComparer;
 using JosephM.TestModule.TestDialog;
 using JosephM.Xrm.Vsix.Application;
@@ -45,6 +46,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication.AddModule<PackageSettingsAppConnectionModule>();
             VsixApplication.AddModule<ThemeModule>();
             VsixApplication.AddModule<InstanceComparerModule>();
+            VsixApplication.AddModule<DeploymentModule>();
         }
 
         public VsixApplication VsixApplication { get; set; }
