@@ -46,7 +46,9 @@ namespace JosephM.Deployment.DeployPackage
         {
             var xrmRecordService = new XrmRecordService(request.Connection, controller.Controller);
             var packageFolder = request.FolderContainingPackage.FolderPath;
-            var solutionFiles = Directory.GetFiles(packageFolder, "*.zip");
+            var solutionFiles = Directory.GetFiles(packageFolder, "*.zip")
+                .OrderBy(s => s)
+                .ToArray();
 
             var importItems = ImportSolutions(solutionFiles, controller.Controller, xrmRecordService);
             response.AddResponseItems(importItems.Select(it => new DataImportResponseItem(it.Type, null, it.Name, null, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null, it.GetUrl())));
