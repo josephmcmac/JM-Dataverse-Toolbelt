@@ -440,8 +440,14 @@ namespace JosephM.Deployment.DataImport
                             {
                                 if (fieldsToRetry.ContainsKey(thisEntity))
                                     fieldsToRetry.Remove(thisEntity);
+                                var field = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                    ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName])
+                                    : null;
+                                var value = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                    ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsMatchString(entity.LogicalName, k, entity.GetField(k))))
+                                    : null;
                                 response.AddImportError(entity, 
-                                    new DataImportResponseItem(recordType, null, entity.GetStringField(primaryField), null,
+                                    new DataImportResponseItem(recordType, field, entity.GetStringField(primaryField), value,
                                         ex.Message + (entity.Id != Guid.Empty ? " Id=" + entity.Id : ""),
                                         ex));
                             }
