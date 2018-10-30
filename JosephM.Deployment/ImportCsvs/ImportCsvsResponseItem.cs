@@ -21,7 +21,7 @@ namespace JosephM.Deployment.ImportCsvs
         }
 
         public ImportCsvsResponseItem(DataImportResponseItem item)
-            : base(item.Entity, item.Field, item.Name, item.FieldValue, item.Message, item.Exception)
+            : base(item.Entity, item.Field, item.Name, item.FieldValue, item.Message, item.Exception, rowNumber: item.RowNumber)
         {
         }
     }

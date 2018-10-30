@@ -439,17 +439,23 @@ namespace JosephM.Deployment.DataImport
                             catch (Exception ex)
                             {
                                 if (fieldsToRetry.ContainsKey(thisEntity))
+                                {
                                     fieldsToRetry.Remove(thisEntity);
+                                    response.RemoveFieldForRetry(thisEntity);
+                                }
                                 var field = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
                                     ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName])
                                     : null;
                                 var value = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
                                     ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsMatchString(entity.LogicalName, k, entity.GetField(k))))
                                     : null;
+                                var rowNumber = entity.Contains("Sheet.RowNumber")
+                                    ? entity.GetInt("Sheet.RowNumber")
+                                    : (int?)null;
                                 response.AddImportError(entity, 
                                     new DataImportResponseItem(recordType, field, entity.GetStringField(primaryField), value,
                                         ex.Message + (entity.Id != Guid.Empty ? " Id=" + entity.Id : ""),
-                                        ex));
+                                        ex, rowNumber: rowNumber));
                             }
                             countRecordsImported++;
                             controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
@@ -528,13 +534,19 @@ namespace JosephM.Deployment.DataImport
                                 }
                                 catch (Exception ex)
                                 {
+                                    var keyValue = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                        ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsMatchString(thisEntity.LogicalName, k, thisEntity.GetField(k))))
+                                        : null;
+                                    var rowNumber = thisEntity.Contains("Sheet.RowNumber")
+                                        ? thisEntity.GetInt("Sheet.RowNumber")
+                                        : (int?)null;
                                     if (thisEntity.Contains(field))
                                         thisEntity.Attributes.Remove(field);
                                     response.AddImportError(thisEntity, 
                                          new DataImportResponseItem(thisEntity.LogicalName,
                                          field,
-                                         thisEntity.GetStringField(thisPrimaryField), thisLookupName,
-                                            "Error Setting Lookup Field - " + ex.Message, ex));
+                                         thisEntity.GetStringField(thisPrimaryField) ?? keyValue, thisLookupName,
+                                            "Error Setting Lookup Field - " + ex.Message, ex, rowNumber: rowNumber));
                                 }
                             }
 
@@ -597,11 +609,14 @@ namespace JosephM.Deployment.DataImport
                         }
                         catch (Exception ex)
                         {
+                            var rowNumber = thisEntity.Contains("Sheet.RowNumber")
+                                ? thisEntity.GetInt("Sheet.RowNumber")
+                                : (int?)null;
                             response.AddImportError(thisEntity, 
                             new DataImportResponseItem(
                                     string.Format("Error Associating Record Of Type {0} Id {1}", thisEntity.LogicalName,
                                         thisEntity.Id),
-                                    ex));
+                                    ex, rowNumber: rowNumber));
                         }
                         countRecordsImported++;
                         controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));

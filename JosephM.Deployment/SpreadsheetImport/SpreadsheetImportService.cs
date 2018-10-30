@@ -75,7 +75,9 @@ namespace JosephM.Deployment.SpreadsheetImport
                 {
                     var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
                     var entity = new Entity(targetType);
-
+                    //this is used in the import to output the rownumber
+                    //if the import throws an error
+                    entity.SetField("Sheet.RowNumber", rowNumber);
                     foreach (var fieldMapping in mapping.FieldMappings)
                     {
                         var targetField = fieldMapping.TargetField;

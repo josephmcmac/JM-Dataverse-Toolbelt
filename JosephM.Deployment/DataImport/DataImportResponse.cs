@@ -1,5 +1,6 @@
 ﻿using JosephM.Core.Attributes;
 using Microsoft.Xrm.Sdk;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -113,6 +114,12 @@ namespace JosephM.Deployment.DataImport
         {
             var importObject = GetImportForType(thisEntity.LogicalName);
             importObject.RemoveFieldForRetry(thisEntity, field);
+        }
+
+        internal void RemoveFieldForRetry(Entity thisEntity)
+        {
+            var importObject = GetImportForType(thisEntity.LogicalName);
+            importObject.RemoveForRetry(thisEntity);
         }
     }
 }
