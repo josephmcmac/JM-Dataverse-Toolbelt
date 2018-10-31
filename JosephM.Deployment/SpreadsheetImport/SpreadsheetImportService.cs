@@ -77,7 +77,6 @@ namespace JosephM.Deployment.SpreadsheetImport
                     var entity = new Entity(targetType);
                     //this is used in the import to output the rownumber
                     //if the import throws an error
-                    entity.SetField("Sheet.RowNumber", rowNumber);
                     foreach (var fieldMapping in mapping.FieldMappings)
                     {
                         var targetField = fieldMapping.TargetField;
@@ -123,7 +122,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                         continue;
                     }
                     //okay any which are exact duplicates to previous ones lets ignore
-                    if (result.Any(r => r.GetFieldsInEntity().All(f =>
+                    if (result.Any(r => r.GetFieldsInEntity().Except(new[] { "Sheet.RowNumber" }).All(f =>
                     {
                         //since for entity references we just load the name with empty guids
                         //we check the dipslay name for them
@@ -144,7 +143,6 @@ namespace JosephM.Deployment.SpreadsheetImport
                         }
                         continue;
                     }
-
                     result.Add(entity);
                 }
                 catch (Exception ex)

@@ -447,7 +447,7 @@ namespace JosephM.Deployment.DataImport
                                     ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName])
                                     : null;
                                 var value = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
-                                    ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsMatchString(entity.LogicalName, k, entity.GetField(k))))
+                                    ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsDisplayString(entity.LogicalName, k, entity.GetField(k))))
                                     : null;
                                 var rowNumber = entity.Contains("Sheet.RowNumber")
                                     ? entity.GetInt("Sheet.RowNumber")
@@ -535,7 +535,7 @@ namespace JosephM.Deployment.DataImport
                                 catch (Exception ex)
                                 {
                                     var keyValue = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
-                                        ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsMatchString(thisEntity.LogicalName, k, thisEntity.GetField(k))))
+                                        ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsDisplayString(thisEntity.LogicalName, k, thisEntity.GetField(k))))
                                         : null;
                                     var rowNumber = thisEntity.Contains("Sheet.RowNumber")
                                         ? thisEntity.GetInt("Sheet.RowNumber")
