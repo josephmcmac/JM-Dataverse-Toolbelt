@@ -36,6 +36,12 @@ namespace JosephM.Deployment.MigrateRecords
         public SavedXrmRecordConfiguration TargetConnection { get; set; }
 
         [GridWidth(110)]
+        [Group(Sections.RecordTypesOptions)]
+        [DisplayOrder(399)]
+        [RequiredProperty]
+        public bool IncludeOwner { get; set; }
+
+        [GridWidth(110)]
         [MyDescription("If Set Any Email Addresses In Contact Or Account Records Will Be Rewritten To Fake Email Addresses")]
         [Group(Sections.RecordTypesOptions)]
         [DisplayOrder(200)]

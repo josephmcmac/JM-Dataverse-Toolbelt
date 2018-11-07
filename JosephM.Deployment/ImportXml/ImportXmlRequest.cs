@@ -26,6 +26,12 @@ namespace JosephM.Deployment.ImportXml
 
         [GridWidth(110)]
         [Group(Sections.Misc)]
+        [DisplayOrder(399)]
+        [RequiredProperty]
+        public bool IncludeOwner { get; set; }
+
+        [GridWidth(110)]
+        [Group(Sections.Misc)]
         [DisplayOrder(400)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
