@@ -428,8 +428,26 @@ namespace JosephM.Deployment.DataImport
                                     thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
                                     response.AddCreated(thisEntity);
                                 }
-                                if (!isUpdate && thisEntity.GetOptionSetValue("statecode") > 0)
-                                    SetState(thisEntity);
+                                if (!isUpdate)
+                                {
+                                    if (thisEntity.LogicalName == Entities.product)
+                                    {
+                                        var createdEntity = XrmService.Retrieve(thisEntity.LogicalName, thisEntity.Id);
+                                        var thisState = thisEntity.GetOptionSetValue("statecode");
+                                        var thisStatus = thisEntity.GetOptionSetValue("statuscode");
+                                        var matchState = createdEntity.GetOptionSetValue("statecode");
+                                        var matchStatus = createdEntity.GetOptionSetValue("statuscode");
+                                        if ((thisState != -1 && thisState != matchState)
+                                            || (thisStatus != -1 && thisState != matchStatus))
+                                        {
+                                            SetState(thisEntity);
+                                        }
+                                    }
+                                    else if (thisEntity.GetOptionSetValue("statecode") > 0)
+                                    {
+                                        SetState(thisEntity);
+                                    }
+                                }
                                 else if (isUpdate && existingMatchingIds.Any())
                                 {
                                     var matchRecord = existingMatchingIds.First();
@@ -475,6 +493,7 @@ namespace JosephM.Deployment.DataImport
                             new DataImportResponseItem(recordType, null, null, null, string.Format("Error Importing Type {0}", recordType), ex));
                     }
                 }
+
                 controller.TurnOffLevel2();
                 countToImport = fieldsToRetry.Count;
                 countImported = 0;
@@ -1043,6 +1062,8 @@ namespace JosephM.Deployment.DataImport
                 return true;
             if (fieldName == "salesliteratureid")
                 return true;
+            if (fieldName == Fields.product_.productstructure)
+                return true;
             return
                 XrmRecordService.FieldExists(fieldName, entityType) && XrmRecordService.GetFieldMetadata(fieldName, entityType).Writeable;
 
@@ -1054,7 +1075,7 @@ namespace JosephM.Deployment.DataImport
             {
                     "yomifullname", "administratorid", "owneridtype", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
                     "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid"
-                    , "address1_addressid", "address2_addressid", "processid"
+                    , "address1_addressid", "address2_addressid", "processid", Fields.incident_.slaid, Fields.incident_.firstresponsebykpiid, Fields.incident_.resolvebykpiid
             };
             if (!includeOwner)
                 fields = fields.Union(new[] { "ownerid" }).ToArray();
