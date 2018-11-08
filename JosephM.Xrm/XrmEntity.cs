@@ -157,7 +157,14 @@ namespace JosephM.Xrm
         /// </summary>
         public static string GetLookupType(this Entity entity, string fieldName)
         {
-            return GetLookupType(GetField(entity, fieldName));
+            try
+            {
+                return GetLookupType(GetField(entity, fieldName));
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"Unexpected Error Getting Lookup Type For Field {fieldName} in type {entity?.LogicalName}", ex);
+            }
         }
 
         /// <summary>
@@ -166,7 +173,9 @@ namespace JosephM.Xrm
         public static string GetLookupType(object fieldValue)
         {
             if (fieldValue != null)
+            {
                 return ((EntityReference)fieldValue).LogicalName;
+            }
             else
                 return "";
         }

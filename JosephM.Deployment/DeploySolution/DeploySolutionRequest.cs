@@ -16,7 +16,7 @@ namespace JosephM.Deployment.DeploySolution
         [GridWidth(250)]
         [Group(Sections.Connection)]
         [DisplayOrder(100)]
-        [DisplayName("Saved Connection To Import Into")]
+        [DisplayName("Source Instance")]
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         [ConnectionFor(nameof(Solution))]
@@ -25,7 +25,7 @@ namespace JosephM.Deployment.DeploySolution
         [GridWidth(250)]
         [Group(Sections.Connection)]
         [DisplayOrder(100)]
-        [DisplayName("Saved Connection To Import Into")]
+        [DisplayName("Target Instance")]
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration TargetConnection { get; set; }

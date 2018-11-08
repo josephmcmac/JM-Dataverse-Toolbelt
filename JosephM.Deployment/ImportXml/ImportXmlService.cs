@@ -5,6 +5,7 @@ using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Xrm.Sdk;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace JosephM.Deployment.ImportXml
@@ -24,36 +25,41 @@ namespace JosephM.Deployment.ImportXml
         public override void ExecuteExtention(ImportXmlRequest request, ImportXmlResponse response,
             ServiceRequestController controller)
         {
-            ImportXml(request.Folder.FolderPath, controller, response, request.MaskEmails);
+            ImportXml(request.Folder.FolderPath, controller, response, maskEmails: request.MaskEmails, includeOwner: request.IncludeOwner, matchByName: request.MatchByName);
         }
 
 
         public void ImportXml(string folder, ServiceRequestController controller,
-            ImportXmlResponse response, bool maskEmails = false)
+            ImportXmlResponse response, bool maskEmails = false, bool includeOwner = false, bool matchByName = true)
         {
             controller.UpdateProgress(0, 1, "Loading XML Files");
-            var entities = LoadEntitiesFromXmlFiles(folder);
-
-            var importResponse = DataImportService.DoImport(entities, controller, maskEmails);
+            var entities = LoadEntitiesFromXmlFiles(folder, controller.Controller);
+            var matchOption = matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly;
+            var importResponse = DataImportService.DoImport(entities, controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner);
             response.LoadDataImport(importResponse);
         }
 
-        public IEnumerable<Entity> LoadEntitiesFromXmlFiles(string folder)
+        public IEnumerable<Entity> LoadEntitiesFromXmlFiles(string folder, LogController controller = null)
         {
             var filesToImport = Directory.GetFiles(folder, "*.xml");
-            return LoadEntitiesFromXmlFiles(filesToImport);
+            return LoadEntitiesFromXmlFiles(filesToImport, controller);
         }
 
-        public IEnumerable<Entity> LoadEntitiesFromXmlFiles(IEnumerable<string> filesToImport)
+        public IEnumerable<Entity> LoadEntitiesFromXmlFiles(IEnumerable<string> filesToImport, LogController controller = null)
         {
             var lateBoundSerializer = new DataContractSerializer(typeof(Entity));
             var entities = new List<Entity>();
+            var done = 0;
+            var toDo = filesToImport.Count();
             foreach (var file in filesToImport)
             {
                 using (var fileStream = new FileStream(file, FileMode.Open))
                 {
                     entities.Add((Entity)lateBoundSerializer.ReadObject(fileStream));
                 }
+                done++;
+                if (controller != null)
+                    controller.LogLiteral($"Loading Xml Files {done}/{toDo}");
             }
             return entities;
         }

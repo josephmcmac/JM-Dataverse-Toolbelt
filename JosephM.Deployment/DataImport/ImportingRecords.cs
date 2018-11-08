@@ -162,5 +162,17 @@ namespace JosephM.Deployment.DataImport
                 OnPropertyChanged(nameof(FieldsToRetry));
             }
         }
+
+        public void RemoveForRetry(Entity entity)
+        {
+            lock (_lockObject)
+            {
+                if (_fieldsForRetry.ContainsKey(entity))
+                { 
+                    _fieldsForRetry.Remove(entity);
+                    OnPropertyChanged(nameof(FieldsToRetry));
+                }
+            }
+        }
     }
 }

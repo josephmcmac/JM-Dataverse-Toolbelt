@@ -17,6 +17,11 @@ namespace JosephM.Deployment.ImportXml
     [Group(Sections.Misc, true, 40)]
     public class ImportXmlRequest : ServiceRequestBase
     {
+        public ImportXmlRequest()
+        {
+            MatchByName = true;
+        }
+
         [GridWidth(350)]
         [DisplayOrder(20)]
         [Group(Sections.Main)]
@@ -25,6 +30,18 @@ namespace JosephM.Deployment.ImportXml
         public Folder Folder { get; set; }
 
         [GridWidth(110)]
+        [Group(Sections.Misc)]
+        [DisplayOrder(399)]
+        [RequiredProperty]
+        public bool IncludeOwner { get; set; }
+
+        [GridWidth(115)]
+        [DisplayOrder(215)]
+        [Group(Sections.Misc)]
+        [RequiredProperty]
+        public bool MatchByName { get; set; }
+
+        [GridWidth(120)]
         [Group(Sections.Misc)]
         [DisplayOrder(400)]
         [RequiredProperty]

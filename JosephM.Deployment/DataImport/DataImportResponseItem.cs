@@ -7,6 +7,11 @@ namespace JosephM.Deployment.DataImport
 {
     public class DataImportResponseItem : ServiceResponseItem
     {
+        [PropertyInContextByPropertyNotNull(nameof(RowNumber))]
+        [GridWidth(125)]
+        [DisplayOrder(5)]
+        public int? RowNumber { get; }
+
         [DisplayOrder(10)]
         public string Entity { get; }
 
@@ -30,7 +35,7 @@ namespace JosephM.Deployment.DataImport
         [DisplayOrder(50)]
         public Url Link { get; }
 
-        public DataImportResponseItem(string entity, string field, string name, string fieldValue, string message, Exception ex, Url url = null)
+        public DataImportResponseItem(string entity, string field, string name, string fieldValue, string message, Exception ex, Url url = null, int? rowNumber = null)
             : this(message, ex)
         {
             Entity = entity;
@@ -38,12 +43,14 @@ namespace JosephM.Deployment.DataImport
             Name = name;
             FieldValue = fieldValue;
             Link = url;
+            RowNumber = rowNumber;
         }
 
-        public DataImportResponseItem(string message, Exception ex)
+        public DataImportResponseItem(string message, Exception ex, int? rowNumber = null)
         {
             Message = message;
             Exception = ex;
+            RowNumber = rowNumber;
         }
     }
 }

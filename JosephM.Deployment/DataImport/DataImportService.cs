@@ -6,6 +6,7 @@ using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -155,41 +156,74 @@ namespace JosephM.Deployment.DataImport
 
                 typesToImport = typesToImport.Where(t => !associationTypes.Contains(t)).ToArray();
 
-                var orderedTypes = new List<string>();
-
                 var idSwitches = new Dictionary<string, Dictionary<Guid, Guid>>();
                 foreach (var item in typesToImport)
                     idSwitches.Add(item, new Dictionary<Guid, Guid>());
 
                 #region tryordertypes
 
+                var dependencyDictionary = typesToImport
+                    .ToDictionary(s => s, s => new List<string>());
+                var dependentTo = typesToImport
+                    .ToDictionary(s => s, s => new List<string>());
 
+                var toDo = typesToImport.Count();
+                var done = 0;
+                var fieldsToImport = new Dictionary<string, IEnumerable<string>>();
                 foreach (var type in typesToImport)
                 {
+                    controller.LogLiteral($"Loading Fields For Import {done++}/{toDo}");
+                    var thatTypeEntities = entities.Where(e => e.LogicalName == type).ToList();
+                    var fields = GetFieldsToImport(thatTypeEntities, type, includeOwner)
+                        .Where(f => XrmService.FieldExists(f, type) &&
+                            (XrmService.IsLookup(f, type) || XrmService.IsActivityParty(f, type)));
+                    fieldsToImport.Add(type, fields.ToArray());
+                }
+
+                toDo = typesToImport.Count();
+                done = 0;
+                foreach (var type in typesToImport)
+                {
+                    controller.LogLiteral($"Ordering Types For Import {done++}/{toDo}");
                     //iterate through the types and if any of them have a lookup which references this type
                     //then insert this one before it for import first
                     //otherwise just append to the end
-                    foreach (var type2 in orderedTypes)
+                    foreach (var otherType in typesToImport.Where(s => s != type))
                     {
-                        var thatType = type2;
-                        var thatTypeEntities = entities.Where(e => e.LogicalName == thatType).ToList();
-                        var fields = GetFieldsToImport(thatTypeEntities, thatType, includeOwner)
-                            .Where(f => XrmService.FieldExists(f, thatType) && XrmService.IsLookup(f, thatType));
-
+                        var fields = fieldsToImport[otherType];
+                        var thatTypeEntities = entities.Where(e => e.LogicalName == otherType).ToList();
                         foreach (var field in fields)
                         {
-                            if (thatTypeEntities.Any(e => e.GetLookupType(field).Split(',').Contains(type)))
+                            if (thatTypeEntities.Any(e =>
+                                (XrmService.IsLookup(field, otherType) && e.GetLookupType(field).Split(',').Contains(type))
+                                || (XrmService.IsActivityParty(field, otherType) && e.GetActivityParties(field).Any(p => p.GetLookupType(Fields.activityparty_.partyid) == type))))
                             {
-                                orderedTypes.Insert(orderedTypes.IndexOf(type2), type);
+                                dependencyDictionary[type].Add(otherType);
+                                dependentTo[otherType].Add(type);
                                 break;
                             }
                         }
-                        if (orderedTypes.Contains(type))
-                            break;
                     }
-                    if (!orderedTypes.Contains(type))
-                        orderedTypes.Add(type);
                 }
+                var orderedTypes = new List<string>();
+                foreach (var dependency in dependencyDictionary)
+                {
+                    if (!dependentTo[dependency.Key].Any())
+                        orderedTypes.Insert(0, dependency.Key);
+                    if (orderedTypes.Contains(dependency.Key))
+                        continue;
+                    foreach (var otherType in orderedTypes.ToArray())
+                    {
+                        if(dependency.Value.Contains(otherType))
+                        {
+                            orderedTypes.Insert(orderedTypes.IndexOf(otherType), dependency.Key);
+                            break;
+                        }
+                    }
+                    if (!orderedTypes.Contains(dependency.Key))
+                        orderedTypes.Add(dependency.Key);
+                }
+
 
                 //these priorities are because when the first type gets create it creates a 'child' of the second type
                 //so we need to ensure the parent created first
@@ -334,48 +368,22 @@ namespace JosephM.Deployment.DataImport
                                 //parse all but aliased fields
                                 foreach (var field in thisEntity.GetFieldsInEntity().Where(f => !f.Contains(".")).ToArray())
                                 {
-                                    if (importFieldsForEntity.Contains(field) &&
-                                        XrmService.IsLookup(field, thisEntity.LogicalName) &&
-                                        thisEntity.GetField(field) != null)
+                                    if (importFieldsForEntity.Contains(field)
+                                        && XrmService.IsLookup(field, thisEntity.LogicalName)
+                                        && thisEntity.GetField(field) != null)
                                     {
-                                        var idNullable = thisEntity.GetLookupGuid(field);
-                                        if (idNullable.HasValue)
+                                        ParseLookup(response, fieldsToRetry, thisEntity, field, true);
+                                    }
+                                    else if (importFieldsForEntity.Contains(field)
+                                        && XrmService.IsActivityParty(field, thisEntity.LogicalName)
+                                        && thisEntity.GetField(field) != null)
+                                    {
+                                        var parties = thisEntity.GetActivityParties(field);
+                                        foreach(var party in parties)
                                         {
-                                            var targetTypesToTry = GetTargetTypesToTry(thisEntity, field);
-                                            var name = thisEntity.GetLookupName(field);
-                                            var fieldResolved = false;
-                                            foreach (var lookupEntity in targetTypesToTry)
+                                            if (party.GetField(Fields.activityparty_.partyid) != null)
                                             {
-                                                var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
-                                                var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
-                                                var matchRecord = XrmService.GetFirst(lookupEntity, targetPrimaryKey,
-                                                    idNullable.Value);
-                                                if (matchRecord != null)
-                                                {
-                                                    ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
-                                                    fieldResolved = true;
-                                                }
-                                                else
-                                                {
-                                                    var matchRecords = name.IsNullOrWhiteSpace() ?
-                                                        new Entity[0] :
-                                                        GetMatchingEntities(lookupEntity,
-                                                        targetPrimaryField,
-                                                        name);
-                                                    if (matchRecords.Count() == 1)
-                                                    {
-                                                        thisEntity.SetLookupField(field, matchRecords.First());
-                                                        ((EntityReference)(thisEntity.GetField(field))).Name = name;
-                                                        fieldResolved = true;
-                                                    }
-                                                }
-                                            }
-                                            if (!fieldResolved)
-                                            {
-                                                if (!fieldsToRetry.ContainsKey(thisEntity))
-                                                    fieldsToRetry.Add(thisEntity, new List<string>());
-                                                fieldsToRetry[thisEntity].Add(field);
-                                                response.AddFieldForRetry(thisEntity, field);
+                                                ParseLookup(response, fieldsToRetry, party, Fields.activityparty_.partyid, false);
                                             }
                                         }
                                     }
@@ -420,8 +428,26 @@ namespace JosephM.Deployment.DataImport
                                     thisEntity.Id = XrmService.Create(thisEntity, fieldsToSet);
                                     response.AddCreated(thisEntity);
                                 }
-                                if (!isUpdate && thisEntity.GetOptionSetValue("statecode") > 0)
-                                    XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
+                                if (!isUpdate)
+                                {
+                                    if (thisEntity.LogicalName == Entities.product)
+                                    {
+                                        var createdEntity = XrmService.Retrieve(thisEntity.LogicalName, thisEntity.Id);
+                                        var thisState = thisEntity.GetOptionSetValue("statecode");
+                                        var thisStatus = thisEntity.GetOptionSetValue("statuscode");
+                                        var matchState = createdEntity.GetOptionSetValue("statecode");
+                                        var matchStatus = createdEntity.GetOptionSetValue("statuscode");
+                                        if ((thisState != -1 && thisState != matchState)
+                                            || (thisStatus != -1 && thisState != matchStatus))
+                                        {
+                                            SetState(thisEntity);
+                                        }
+                                    }
+                                    else if (thisEntity.GetOptionSetValue("statecode") > 0)
+                                    {
+                                        SetState(thisEntity);
+                                    }
+                                }
                                 else if (isUpdate && existingMatchingIds.Any())
                                 {
                                     var matchRecord = existingMatchingIds.First();
@@ -432,18 +458,30 @@ namespace JosephM.Deployment.DataImport
                                     if ((thisState != -1 && thisState != matchState)
                                         || (thisStatus != -1 && thisState != matchStatus))
                                     {
-                                        XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
+                                        SetState(thisEntity);
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
                                 if (fieldsToRetry.ContainsKey(thisEntity))
+                                {
                                     fieldsToRetry.Remove(thisEntity);
+                                    response.RemoveFieldForRetry(thisEntity);
+                                }
+                                var field = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                    ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName])
+                                    : null;
+                                var value = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                    ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsDisplayString(entity.LogicalName, k, entity.GetField(k))))
+                                    : null;
+                                var rowNumber = entity.Contains("Sheet.RowNumber")
+                                    ? entity.GetInt("Sheet.RowNumber")
+                                    : (int?)null;
                                 response.AddImportError(entity, 
-                                    new DataImportResponseItem(recordType, null, entity.GetStringField(primaryField), null,
+                                    new DataImportResponseItem(recordType, field, entity.GetStringField(primaryField), value,
                                         ex.Message + (entity.Id != Guid.Empty ? " Id=" + entity.Id : ""),
-                                        ex));
+                                        ex, rowNumber: rowNumber));
                             }
                             countRecordsImported++;
                             controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
@@ -455,6 +493,7 @@ namespace JosephM.Deployment.DataImport
                             new DataImportResponseItem(recordType, null, null, null, string.Format("Error Importing Type {0}", recordType), ex));
                     }
                 }
+
                 controller.TurnOffLevel2();
                 countToImport = fieldsToRetry.Count;
                 countImported = 0;
@@ -522,13 +561,19 @@ namespace JosephM.Deployment.DataImport
                                 }
                                 catch (Exception ex)
                                 {
+                                    var keyValue = altMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                        ? string.Join("|", altMatchKeyDictionary[thisEntity.LogicalName].Select(k => XrmService.GetFieldAsDisplayString(thisEntity.LogicalName, k, thisEntity.GetField(k))))
+                                        : null;
+                                    var rowNumber = thisEntity.Contains("Sheet.RowNumber")
+                                        ? thisEntity.GetInt("Sheet.RowNumber")
+                                        : (int?)null;
                                     if (thisEntity.Contains(field))
                                         thisEntity.Attributes.Remove(field);
                                     response.AddImportError(thisEntity, 
                                          new DataImportResponseItem(thisEntity.LogicalName,
                                          field,
-                                         thisEntity.GetStringField(thisPrimaryField), thisLookupName,
-                                            "Error Setting Lookup Field - " + ex.Message, ex));
+                                         thisEntity.GetStringField(thisPrimaryField) ?? keyValue, thisLookupName,
+                                            "Error Setting Lookup Field - " + ex.Message, ex, rowNumber: rowNumber));
                                 }
                             }
 
@@ -591,22 +636,95 @@ namespace JosephM.Deployment.DataImport
                         }
                         catch (Exception ex)
                         {
+                            var rowNumber = thisEntity.Contains("Sheet.RowNumber")
+                                ? thisEntity.GetInt("Sheet.RowNumber")
+                                : (int?)null;
                             response.AddImportError(thisEntity, 
                             new DataImportResponseItem(
                                     string.Format("Error Associating Record Of Type {0} Id {1}", thisEntity.LogicalName,
                                         thisEntity.Id),
-                                    ex));
+                                    ex, rowNumber: rowNumber));
                         }
                         countRecordsImported++;
                         controller.UpdateLevel2Progress(countRecordsImported, countRecordsToImport, estimator.GetProgressString(countRecordsImported));
                     }
                 }
             }
+            catch(Exception ex)
+            {
+                throw;
+            }
             finally
             {
                 controller.RemoveObjectFromUi(response);
             }
             return response;
+        }
+
+        private void ParseLookup(DataImportResponse response, Dictionary<Entity, List<string>> fieldsToRetry, Entity thisEntity, string field, bool allowAddForRetry)
+        {
+            var idNullable = thisEntity.GetLookupGuid(field);
+            if (idNullable.HasValue)
+            {
+                var targetTypesToTry = GetTargetTypesToTry(thisEntity, field);
+                var name = thisEntity.GetLookupName(field);
+                var fieldResolved = false;
+                foreach (var lookupEntity in targetTypesToTry)
+                {
+                    var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
+                    var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
+                    var matchRecord = XrmService.GetFirst(lookupEntity, targetPrimaryKey,
+                        idNullable.Value);
+                    if (matchRecord != null)
+                    {
+                        ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
+                        fieldResolved = true;
+                    }
+                    else
+                    {
+                        var matchRecords = name.IsNullOrWhiteSpace() ?
+                            new Entity[0] :
+                            GetMatchingEntities(lookupEntity,
+                            targetPrimaryField,
+                            name);
+                        if (matchRecords.Count() == 1)
+                        {
+                            thisEntity.SetLookupField(field, matchRecords.First());
+                            ((EntityReference)(thisEntity.GetField(field))).Name = name;
+                            fieldResolved = true;
+                        }
+                    }
+                }
+                if (!fieldResolved)
+                {
+                    if (!allowAddForRetry)
+                        throw new Exception($"Could Not Resolve {field} {name}");
+                    if (!fieldsToRetry.ContainsKey(thisEntity))
+                        fieldsToRetry.Add(thisEntity, new List<string>());
+                    fieldsToRetry[thisEntity].Add(field);
+                    response.AddFieldForRetry(thisEntity, field);
+                }
+            }
+        }
+
+        private void SetState(Entity thisEntity)
+        {
+            var theState = thisEntity.GetOptionSetValue("statecode");
+            var theStatus = thisEntity.GetOptionSetValue("statuscode");
+            if (thisEntity.LogicalName == Entities.incident && theState == OptionSets.Case.Status.Resolved)
+            {
+                var closeIt = new Entity(Entities.incidentresolution);
+                closeIt.SetLookupField(Fields.incidentresolution_.incidentid, thisEntity);
+                closeIt.SetField(Fields.incidentresolution_.subject, "Close By Data Import");
+                var req = new CloseIncidentRequest
+                {
+                    IncidentResolution = closeIt,
+                    Status = new OptionSetValue(theStatus)
+                };
+                XrmService.Execute(req);
+            }
+            else
+                XrmService.SetState(thisEntity, thisEntity.GetOptionSetValue("statecode"), thisEntity.GetOptionSetValue("statuscode"));
         }
 
         private void PopulateRequiredCreateFields(Dictionary<Entity, List<string>> fieldsToRetry, Entity thisEntity, List<string> fieldsToSet)
@@ -944,6 +1062,8 @@ namespace JosephM.Deployment.DataImport
                 return true;
             if (fieldName == "salesliteratureid")
                 return true;
+            if (fieldName == Fields.product_.productstructure)
+                return true;
             return
                 XrmRecordService.FieldExists(fieldName, entityType) && XrmRecordService.GetFieldMetadata(fieldName, entityType).Writeable;
 
@@ -955,7 +1075,7 @@ namespace JosephM.Deployment.DataImport
             {
                     "yomifullname", "administratorid", "owneridtype", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
                     "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid"
-                    , "address1_addressid", "address2_addressid"
+                    , "address1_addressid", "address2_addressid", "processid", Fields.incident_.slaid, Fields.incident_.firstresponsebykpiid, Fields.incident_.resolvebykpiid
             };
             if (!includeOwner)
                 fields = fields.Union(new[] { "ownerid" }).ToArray();

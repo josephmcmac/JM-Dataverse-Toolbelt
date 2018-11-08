@@ -164,6 +164,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
             }
             if (fileInfo.Name.EndsWith("htm") || fileInfo.Name.EndsWith("html"))
             {
+                if (recordType == Entities.adx_webpage)
+                    return "adx_copy";
                 var matchingFields = Service.GetFields(recordType).Where(f => f.Contains("source"));
                 if (matchingFields.Count() != 1)
                     throw new Exception($"Could not find unique field in {recordType} with name containing 'source'");
