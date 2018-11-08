@@ -25,17 +25,17 @@ namespace JosephM.Deployment.ImportXml
         public override void ExecuteExtention(ImportXmlRequest request, ImportXmlResponse response,
             ServiceRequestController controller)
         {
-            ImportXml(request.Folder.FolderPath, controller, response, maskEmails: request.MaskEmails, includeOwner: request.IncludeOwner);
+            ImportXml(request.Folder.FolderPath, controller, response, maskEmails: request.MaskEmails, includeOwner: request.IncludeOwner, matchByName: request.MatchByName);
         }
 
 
         public void ImportXml(string folder, ServiceRequestController controller,
-            ImportXmlResponse response, bool maskEmails = false, bool includeOwner = false)
+            ImportXmlResponse response, bool maskEmails = false, bool includeOwner = false, bool matchByName = true)
         {
             controller.UpdateProgress(0, 1, "Loading XML Files");
             var entities = LoadEntitiesFromXmlFiles(folder, controller.Controller);
-
-            var importResponse = DataImportService.DoImport(entities, controller, maskEmails, includeOwner: includeOwner);
+            var matchOption = matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly;
+            var importResponse = DataImportService.DoImport(entities, controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner);
             response.LoadDataImport(importResponse);
         }
 
