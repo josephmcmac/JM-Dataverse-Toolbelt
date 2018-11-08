@@ -71,7 +71,7 @@ namespace JosephM.Deployment.ExportXml
             {
                 var type = exportType.RecordType == null ? null : exportType.RecordType.Key;
                 var thisTypeConfig = XrmRecordService.GetTypeConfigs().GetFor(type);
-                controller.UpdateProgress(countsExported++, countToExport, string.Format("Exporting {0} Records", type));
+                controller.UpdateProgress(countsExported++, countToExport, string.Format("Querying {0} Records", type));
                 var conditions = new List<ConditionExpression>();
                 if (type == "list")
                     conditions.Add(new ConditionExpression("type", ConditionOperator.Equal, XrmPicklists.ListType.Dynamic));
@@ -158,6 +158,7 @@ namespace JosephM.Deployment.ExportXml
                     }
                     foreach (var field in lookupFieldsEnsureNamePopulated)
                     {
+                        controller.UpdateProgress(countsExported++, countToExport, string.Format("Populating Empty Lookups For {0} Records", type));
                         foreach (var item in entities)
                         {
                             var entityReference = item.GetField(field) as EntityReference;
@@ -192,28 +193,39 @@ namespace JosephM.Deployment.ExportXml
                 var fieldsAlwaysExclude = new[] { "calendarrules" };
                 excludeFields = excludeFields.Union(fieldsAlwaysExclude).ToArray();
 
+                var toDo = entities.Count();
+                var done = 0;
                 foreach (var entity in entities)
                 {
+                    controller.UpdateLevel2Progress(done++, toDo, string.Format("Processing {0} Records", type));
                     entity.RemoveFields(excludeFields);
                     processEntity(entity);
                 }
+                controller.TurnOffLevel2();
                 if (!exported.ContainsKey(type))
                     exported.Add(type, new List<Entity>());
                 exported[type].AddRange(entities);
                 if (includeNotes)
                 {
+                    controller.LogLiteral(string.Format("Querying Notes For {0} Records", type));
                     var notes = XrmService
                         .RetrieveAllOrClauses("annotation",
                             new[] { new ConditionExpression("objecttypecode", ConditionOperator.Equal, type) });
+
+                    toDo = notes.Count();
+                    done = 0;
                     foreach (var note in notes)
                     {
                         var objectId = note.GetLookupGuid("objectid");
                         if (objectId.HasValue && entities.Select(e => e.Id).Contains(objectId.Value))
                         {
+                            controller.UpdateLevel2Progress(done++, toDo, string.Format("Processing Notes For {0} Records", type));
                             processEntity(note);
                         }
                     }
+                    controller.TurnOffLevel2();
                 }
+                controller.TurnOffLevel2();
             }
             var relationshipsDone = new List<string>();
             if (includeNNBetweenEntities)
@@ -227,24 +239,31 @@ namespace JosephM.Deployment.ExportXml
                         .Where(
                             r =>
                                 exported.Keys.Contains(r.Entity1LogicalName) && exported.Keys.Contains(r.Entity2LogicalName));
+
                     foreach (var item in nnRelationships)
                     {
                         var type1 = item.Entity1LogicalName;
                         var type2 = item.Entity2LogicalName;
                         if (!relationshipsDone.Contains(item.SchemaName))
                         {
+                            controller.LogLiteral(string.Format("Querying {0} Associations", item.SchemaName));
                             var associations = XrmService.RetrieveAllEntityType(item.IntersectEntityName, null);
+                            var toDo = associations.Count();
+                            var done = 0;
                             foreach (var association in associations)
                             {
+                                controller.UpdateLevel2Progress(done++, toDo, string.Format("Processing Notes For {0} Records", type));
                                 if (exported[type1].Any(e => e.Id == association.GetGuidField(item.Entity1IntersectAttribute))
                                     && exported[type2].Any(e => e.Id == association.GetGuidField(item.Entity2IntersectAttribute)))
                                     processAssociation(association);
                             }
                             relationshipsDone.Add(item.SchemaName);
+                            controller.TurnOffLevel2();
                         }
                     }
                 }
             }
+            controller.TurnOffLevel2();
         }
 
         private void WriteToXml(Entity entity, string folder, bool association)
