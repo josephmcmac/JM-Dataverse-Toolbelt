@@ -66,7 +66,8 @@ namespace JosephM.Xrm.Schema
 		public const string fixedmonthlyfiscalcalendar = "fixedmonthlyfiscalcalendar";
 		public const string subscription = "subscription";
 		public const string adx_webfile = "adx_webfile";
-		public const string template = "template";
+        public const string adx_website = "adx_website"; 
+        public const string template = "template";
 		public const string phonetocaseprocess = "phonetocaseprocess";
 		public const string new_testentity1 = "new_testentity1";
 		public const string unresolvedaddress = "unresolvedaddress";

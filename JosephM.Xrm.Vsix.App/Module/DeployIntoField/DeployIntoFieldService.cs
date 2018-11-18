@@ -1,5 +1,4 @@
-﻿using JosephM.Core.Log;
-using JosephM.Core.Service;
+﻿using JosephM.Core.Service;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
@@ -47,6 +46,9 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                 {
 
                     var containingFolderName = fileInfo.Directory.Name;
+                    var containingFolderParentName = fileInfo.Directory.Parent != null
+                        ? fileInfo.Directory.Parent.Name
+                        : null;
                     //get target record type
                     string recordType = null;
                     if (Service.GetAllRecordTypes().Any(r => r == containingFolderName))
@@ -65,7 +67,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                     if (recordType == Entities.adx_webfile)
                     {
                         //this one goes into an attachment
-                        var matchingRecord = Service.GetFirst(recordType, Service.GetPrimaryField(recordType), fileInfo.Name);
+                        var matchingRecord = GetRecordToDeployInto(recordType, fileInfo.Name, containingFolderParentName);
                         if (matchingRecord == null)
                         {
                             throw new NullReferenceException($"There is no {Service.GetDisplayName(recordType)} record name {fileInfo.Name} to load the file attachment into");
@@ -105,21 +107,9 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                     else
                     {
                         //get the record with the same name as the file
-                        var fileNameSansExtention = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf("."));
+                        var nameToMatch = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf("."));
 
-                        var conditions = new List<Condition>
-                        {
-                            new Condition(Service.GetPrimaryField(recordType), ConditionType.Equal, fileNameSansExtention)
-                        };
-                        if (recordType == Entities.adx_webpage)
-                            conditions.Add(new Condition(Fields.adx_webpage_.adx_rootwebpageid, ConditionType.NotNull));
-
-                        var matchingRecords = Service.RetrieveAllAndClauses(recordType, conditions);
-                        if (matchingRecords.Count() != 1)
-                        {
-                            throw new NullReferenceException($"Could not find {Service.GetDisplayName(recordType)} named {fileInfo.Name} to update");
-                        }
-                        var matchingRecord = matchingRecords.First();
+                        var matchingRecord = GetRecordToDeployInto(recordType, nameToMatch, containingFolderParentName);
 
                         var targetField = GetTargetField(fileInfo, recordType);
 
@@ -137,6 +127,56 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                     thisResponseItem.Exception = ex;
                 }
             }
+        }
+
+        private IRecord GetRecordToDeployInto(string recordType, string nameToMatch, string containingFolderParentName)
+        {
+            var conditions = new List<Condition>
+                        {
+                            new Condition(Service.GetPrimaryField(recordType), ConditionType.Equal, nameToMatch)
+                        };
+            if (recordType == Entities.adx_webpage)
+                conditions.Add(new Condition(Fields.adx_webpage_.adx_rootwebpageid, ConditionType.NotNull));
+
+            IRecord matchingRecord = null;
+            var matchingRecords = Service.RetrieveAllAndClauses(recordType, conditions);
+            if (matchingRecords.Count() == 0)
+            {
+                throw new NullReferenceException($"Could not find {Service.GetDisplayName(recordType)} named {nameToMatch} to update");
+            }
+            else if (matchingRecords.Count() == 1)
+            {
+                matchingRecord = matchingRecords.First();
+            }
+            else
+            {
+                if (containingFolderParentName == null)
+                    throw new NullReferenceException($"There are multiple {Service.GetCollectionName(recordType)} named {nameToMatch} and the parents parent folder does not provide the name of a {Service.GetDisplayName(Entities.adx_website)} to deploy into");
+                else
+                {
+                    var websiteLookupFields = Service
+                        .GetFields(recordType)
+                        .Where(f => Service.GetLookupTargetType(f, recordType) == Entities.adx_website)
+                        .ToArray();
+                    if (websiteLookupFields.Count() != 1)
+                    {
+                        throw new NullReferenceException($"There are multiple {Service.GetCollectionName(recordType)} named {nameToMatch} but the type does not contain 1 lookup field referencing the {Service.GetDisplayName(Entities.adx_website)} to deploy into");
+                    }
+                    var websiteFieldName = websiteLookupFields.First();
+                    matchingRecords = matchingRecords.Where(r => r.GetLookupName(websiteFieldName)?.ToLower() == containingFolderParentName.ToLower());
+                    if (matchingRecords.Count() == 0)
+                    {
+                        throw new NullReferenceException($"There are multiple {Service.GetCollectionName(recordType)} named {nameToMatch} but none of them are linked to a {Service.GetDisplayName(Entities.adx_website)} named {containingFolderParentName}");
+                    }
+                    if (matchingRecords.Count() > 1)
+                    {
+                        throw new NullReferenceException($"There are multiple {Service.GetCollectionName(recordType)} named {nameToMatch} linked to a {Service.GetDisplayName(Entities.adx_website)} named {containingFolderParentName}");
+                    }
+                    matchingRecord = matchingRecords.First();
+                }
+            }
+
+            return matchingRecord;
         }
 
         private string GetTargetField(FileInfo fileInfo, string recordType)
