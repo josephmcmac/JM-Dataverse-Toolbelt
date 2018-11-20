@@ -1627,14 +1627,18 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 var i = 0;
                 var query = new QueryExpression(entityName);
                 query.ColumnSet = CreateColumnSet(fields);
-                query.Criteria.FilterOperator = LogicalOperator.Or;
+                //there was a bug in SDK when querying on queues
+                //which required adding our or filter as a child filter
+                //rather than adding in the root filter
+                var whatTheFilter = new FilterExpression(LogicalOperator.Or);
                 while (tempFilters.Any() && i < 200)
                 {
                     var filter = tempFilters.ElementAt(0);
                     tempFilters.RemoveAt(0);
-                    query.Criteria.AddFilter(filter);
+                    whatTheFilter.AddFilter(filter);
                     i++;
                 }
+                query.Criteria.AddFilter(whatTheFilter);
                 foreach (var entity in RetrieveAll(query))
                 {
                     if (!results.ContainsKey(entity.Id))

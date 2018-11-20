@@ -436,8 +436,13 @@ namespace JosephM.Application.ViewModel.Query
                 if (!string.IsNullOrWhiteSpace(QuickFindText))
                 {
                     var quickFindFields = RecordService.GetStringQuickfindFields(RecordType);
-                    query.RootFilter.ConditionOperator = FilterOperator.Or;
-                    query.RootFilter.Conditions.AddRange(quickFindFields.Select(f => new Condition(f, ConditionType.BeginsWith, QuickFindText)));
+                    //there was a bug in SDK when querying on queues
+                    //which required adding our or filter as a child filter
+                    //rather than adding in the root filter
+                    var nestedFilter = new Filter();
+                    nestedFilter.ConditionOperator = FilterOperator.Or;
+                    nestedFilter.Conditions.AddRange(quickFindFields.Select(f => new Condition(f, ConditionType.BeginsWith, QuickFindText)));
+                    query.RootFilter.SubFilters.Add(nestedFilter);
                 }
             }
             else
