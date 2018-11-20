@@ -2,13 +2,17 @@
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
+using JosephM.Core.FieldType;
+using JosephM.Record.Extentions;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.XrmModule.XrmConnection;
+using System;
 using System.Linq;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
@@ -36,6 +40,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         {
             base.RegisterTypes();
             AddTextSearchButtonToSavedConnectionsGrid();
+            AddPortalDataButtonToRequestFormGrid();
         }
 
         private void AddTextSearchButtonToSavedConnectionsGrid()
@@ -61,6 +66,58 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 }
             }, (g) => g.GridRecords != null && g.GridRecords.Any());
             this.AddCustomGridFunction(customGridFunction, typeof(SavedXrmRecordConfiguration));
+        }
+
+        private void AddPortalDataButtonToRequestFormGrid()
+        {
+            var customGridFunction = new CustomGridFunction("ADDPORTALDATA", "Add Portal Types", (DynamicGridViewModel g) =>
+            {
+                try
+                {
+                    var r = g.ParentForm;
+                    if (r == null)
+                        throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
+                    var typesGrid = r.GetEnumerableFieldViewModel(nameof(TextSearchRequest.TypesToSearch));
+                    var typesToAdd = new[]
+                    {
+                        "adx_contentsnippet",
+                        "adx_entityform",
+                        "adx_entityformmetadata",
+                        "adx_entitylist",
+                        "adx_entitypermission",
+                        "adx_pagetemplate",
+                        "adx_publishingstate",
+                        "adx_sitemarker",
+                        "adx_sitesetting",
+                        "adx_webfile",
+                        "adx_webform",
+                        "adx_webformmetadata",
+                        "adx_webformstep",
+                        "adx_weblink",
+                        "adx_weblinkset",
+                        "adx_webpage",
+                        "adx_webpageaccesscontrolrule",
+                        "adx_webrole",
+                        "adx_webtemplate",
+                    };
+                    var typesGridService = typesGrid.GetRecordService();
+                    foreach (var item in typesToAdd.Reverse())
+                    {
+                        var newRecord = typesGridService.NewRecord(typeof(TextSearchRequest.TypeToSearch).AssemblyQualifiedName);
+                        newRecord.SetField(nameof(TextSearchRequest.TypeToSearch.RecordType), new RecordType(item, item), typesGridService);
+                        typesGrid.InsertRecord(newRecord, 0);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    g.ApplicationController.ThrowException(ex);
+                }
+            }, visibleFunction: (g) =>
+            {
+                var lookupService = g.RecordService.GetLookupService(nameof(TextSearchRequest.TypesToSearch) + "." + nameof(TextSearchRequest.TypeToSearch.RecordType), typeof(TextSearchRequest.TypeToSearch).AssemblyQualifiedName, nameof(TextSearchRequest.TypesToSearch), null);
+                return lookupService != null && lookupService.RecordTypeExists("adx_webfile");
+            });
+            this.AddCustomGridFunction(customGridFunction, typeof(TextSearchRequest.TypeToSearch));
         }
     }
 }

@@ -52,7 +52,7 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
             instance.SearchAllTypes = false;
             instance.TypesToSearch = new[]
             {
-                new RecordTypeSetting(Entities.account, Entities.account)
+                new TextSearchRequest.TypeToSearch { RecordType = new RecordType(Entities.account, Entities.account) }
             };
             instance.StripHtmlTagsPriorToSearch = true;
             instance.CustomHtmlFields = new[]
