@@ -100,10 +100,22 @@ namespace JosephM.XrmModule.Test
             DeleteAll(Entities.adx_weblink);
             DeleteAll(Entities.adx_weblinkset);
             DeleteAll(Entities.adx_website);
+            DeleteAll(Entities.adx_webfile);
 
             var website = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
             {
                 { Fields.adx_website_.adx_name, "Fake Site" }
+            });
+
+            var webFile = CreateTestRecord(Entities.adx_webfile, new Dictionary<string, object>
+            {
+                { Fields.adx_webfile_.adx_name, "Fake Web File" }
+            });
+
+            var webFileAttachment = CreateTestRecord(Entities.annotation, new Dictionary<string, object>
+            {
+                { Fields.annotation_.subject, "Fake Web File" },
+                { Fields.annotation_.objectid, webFile.ToEntityReference() }
             });
 
             var weblinkSet1 = CreateTestRecord(Entities.adx_weblinkset, new Dictionary<string, object>
