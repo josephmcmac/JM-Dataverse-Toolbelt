@@ -252,6 +252,11 @@ namespace JosephM.Deployment.Test
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_webform, Entities.adx_webform)},
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_webformstep, Entities.adx_webformstep)},
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_webformmetadata, Entities.adx_webformmetadata)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_website, Entities.adx_website)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_weblinkset, Entities.adx_weblinkset)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_weblink, Entities.adx_weblink)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_entityform, Entities.adx_entityform)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_entityformmetadata, Entities.adx_entityformmetadata)},
                  }
             };
 
@@ -309,6 +314,9 @@ namespace JosephM.Deployment.Test
 
         private void VerifyWebPageRecords()
         {
+            var webSiteRecords = XrmService.RetrieveAllEntityType(Entities.adx_website);
+            var webLinkSetRecords = XrmService.RetrieveAllEntityType(Entities.adx_weblinkset);
+            var webLinkRecords = XrmService.RetrieveAllEntityType(Entities.adx_weblink);
             var languageRecords = XrmService.RetrieveAllEntityType(Entities.adx_websitelanguage);
             var roleRecords = XrmService.RetrieveAllEntityType(Entities.adx_webrole);
             var pageRecords = XrmService.RetrieveAllEntityType(Entities.adx_webpage);
@@ -319,10 +327,13 @@ namespace JosephM.Deployment.Test
             var webFormRecords = XrmService.RetrieveAllEntityType(Entities.adx_webform);
             var webFormStepRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformstep);
             var webFormMetadataRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformmetadata);
-            
+
 
             //the records wont; have been updated as data the same - but we verify that the system matched
             //them and therefore didn't create duplicates or throw errors
+            Assert.AreEqual(1, webSiteRecords.Count());
+            Assert.AreEqual(2, webLinkSetRecords.Count());
+            Assert.AreEqual(5, webLinkRecords.Count());
             Assert.AreEqual(1, languageRecords.Count());
             Assert.AreEqual(1, roleRecords.Count());
             Assert.AreEqual(2, pageRecords.Count());

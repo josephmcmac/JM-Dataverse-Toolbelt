@@ -97,6 +97,54 @@ namespace JosephM.XrmModule.Test
             DeleteAll(Entities.adx_webform);
             DeleteAll(Entities.adx_webformstep);
             DeleteAll(Entities.adx_webformmetadata);
+            DeleteAll(Entities.adx_weblink);
+            DeleteAll(Entities.adx_weblinkset);
+            DeleteAll(Entities.adx_website);
+
+            var website = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
+            {
+                { Fields.adx_website_.adx_name, "Fake Site" }
+            });
+
+            var weblinkSet1 = CreateTestRecord(Entities.adx_weblinkset, new Dictionary<string, object>
+            {
+                { Fields.adx_weblinkset_.adx_name, "Fake Link Set 1" }
+            });
+
+            var weblinkSet2 = CreateTestRecord(Entities.adx_weblinkset, new Dictionary<string, object>
+            {
+                { Fields.adx_weblinkset_.adx_name, "Fake Link Set 2" }
+            });
+
+            var weblink1a = CreateTestRecord(Entities.adx_weblink, new Dictionary<string, object>
+            {
+                { Fields.adx_weblink_.adx_name, "Fake Link a" },
+                { Fields.adx_weblink_.adx_weblinksetid, weblinkSet1.ToEntityReference() }
+            });
+
+            var weblink1b = CreateTestRecord(Entities.adx_weblink, new Dictionary<string, object>
+            {
+                { Fields.adx_weblink_.adx_name, "Fake Link b" },
+                { Fields.adx_weblink_.adx_weblinksetid, weblinkSet1.ToEntityReference() }
+            });
+
+            var weblink2b = CreateTestRecord(Entities.adx_weblink, new Dictionary<string, object>
+            {
+                { Fields.adx_weblink_.adx_name, "Fake Link b" },
+                { Fields.adx_weblink_.adx_weblinksetid, weblinkSet2.ToEntityReference() }
+            });
+
+            var weblink2c = CreateTestRecord(Entities.adx_weblink, new Dictionary<string, object>
+            {
+                { Fields.adx_weblink_.adx_name, "Fake Link c" },
+                { Fields.adx_weblink_.adx_weblinksetid, weblinkSet2.ToEntityReference() }
+            });
+
+            var weblink2bc = CreateTestRecord(Entities.adx_weblink, new Dictionary<string, object>
+            {
+                { Fields.adx_weblink_.adx_name, "Fake Link bc" },
+                { Fields.adx_weblink_.adx_parentweblinkid, weblink2c.ToEntityReference() }
+            });
 
             var websiteLanguage = CreateTestRecord(Entities.adx_websitelanguage, new Dictionary<string, object>
             {
