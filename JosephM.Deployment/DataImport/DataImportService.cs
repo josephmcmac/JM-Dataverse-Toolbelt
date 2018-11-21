@@ -34,7 +34,9 @@ namespace JosephM.Deployment.DataImport
             }
         }
 
-        public IEnumerable<Entity> GetMatchingEntities(string type, IDictionary<string,object> fieldValues)
+        private Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>> _cachedRecords = new Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>>();
+
+        public IEnumerable<Entity> GetMatchingEntities(string type, IDictionary<string, object> fieldValues, string ignoreCacheFor = null)
         {
             var conditions = fieldValues.Select(fv =>
             fv.Value == null
@@ -47,10 +49,40 @@ namespace JosephM.Deployment.DataImport
                 conditions.Add(new ConditionExpression("merged", ConditionOperator.NotEqual, true));
             if (type == "knowledgearticle")
                 conditions.Add(new ConditionExpression("islatestversion", ConditionOperator.Equal, true));
+
+            if(type != ignoreCacheFor
+                && conditions.Count == 1
+                && fieldValues.Values.First() != null)
+            {
+                var maxCacheCount = 5000;
+                var fieldName = fieldValues.Keys.First();
+                var matchString = XrmService.GetFieldAsMatchString(type, fieldName, fieldValues.Values.First());
+                if (!_cachedRecords.ContainsKey(type))
+                    _cachedRecords.Add(type, new Dictionary<string, Dictionary<string, List<Entity>>>());
+                if (!_cachedRecords[type].ContainsKey(fieldName))
+                {
+                    var query = XrmService.BuildQuery(type, null, new[] { new ConditionExpression(fieldName, ConditionOperator.NotNull) }, null);
+                    var recordsToCache = XrmService.RetrieveFirstX(query, maxCacheCount);
+                    _cachedRecords[type].Add(fieldName, new Dictionary<string, List<Entity>>());
+                    foreach(var item in recordsToCache)
+                    {
+                        var cacheMatchString = XrmService.GetFieldAsMatchString(type, fieldName, item.GetFieldValue(fieldName));
+                        if (!_cachedRecords[type][fieldName].ContainsKey(cacheMatchString))
+                            _cachedRecords[type][fieldName].Add(cacheMatchString, new List<Entity>());
+                        _cachedRecords[type][fieldName][cacheMatchString].Add(item);
+                    }
+                }
+                //only use the cache if there were less than maxRecords
+                //otherwise there may be dupicates not included
+                if (_cachedRecords[type][fieldName].SelectMany(kv => kv.Value).Count() < maxCacheCount
+                    && _cachedRecords[type][fieldName].ContainsKey(matchString))
+                     return _cachedRecords[type][fieldName][matchString];
+            }
+
             return XrmService.RetrieveAllAndClauses(type, conditions, null);
         }
 
-        public IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
+        public IEnumerable<Entity> GetMatchingEntities(string type, string field, string value, string ignoreCacheFor = null)
         {
             var typeConfig = XrmRecordService.GetTypeConfigs().GetFor(type);
             if (typeConfig == null || typeConfig.ParentLookupType != type || field != XrmService.GetPrimaryNameField(type))
@@ -58,7 +90,7 @@ namespace JosephM.Deployment.DataImport
                 return GetMatchingEntities(type, new Dictionary<string, object>()
                 {
                     { field, value }
-                });
+                }, ignoreCacheFor: ignoreCacheFor);
             }
             else
             {
@@ -253,6 +285,8 @@ namespace JosephM.Deployment.DataImport
                 var countImported = 0;
                 foreach (var recordType in orderedTypes)
                 {
+                    if (_cachedRecords.ContainsKey(recordType))
+                        _cachedRecords.Remove(recordType);
                     try
                     {
                         var thisRecordType = recordType;
@@ -269,7 +303,6 @@ namespace JosephM.Deployment.DataImport
                                     new ConditionExpression(XrmService.GetPrimaryKeyField(e.LogicalName),
                                         ConditionOperator.Equal, e.Id))
                             .ToArray();
-                        var existingEntities = XrmService.RetrieveAllOrClauses(recordType, orConditions);
 
                         var orderedEntities = new List<Entity>();
 
@@ -334,7 +367,7 @@ namespace JosephM.Deployment.DataImport
                                 }
                                 else if (matchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
                                 {
-                                    existingMatchingIds = GetMatchForExistingRecord(existingEntities, thisEntity);
+                                    existingMatchingIds = GetMatchForExistingRecord(thisEntity);
                                 }
                                 else if (matchOption == MatchOption.PrimaryKeyOnly && thisEntity.Id != Guid.Empty)
                                 {
@@ -493,6 +526,8 @@ namespace JosephM.Deployment.DataImport
                         response.AddImportError(
                             new DataImportResponseItem(recordType, null, null, null, string.Format("Error Importing Type {0}", recordType), ex));
                     }
+                    if (_cachedRecords.ContainsKey(recordType))
+                        _cachedRecords.Remove(recordType);
                 }
 
                 controller.TurnOffLevel2();
@@ -674,11 +709,15 @@ namespace JosephM.Deployment.DataImport
                 {
                     var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
                     var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
-                    var matchRecord = XrmService.GetFirst(lookupEntity, targetPrimaryKey,
-                        idNullable.Value);
-                    if (matchRecord != null)
+                    var idMatches = GetMatchingEntities(lookupEntity,
+                            new Dictionary<string, object>
+                            {
+                                { targetPrimaryKey, idNullable.Value }
+                            }, ignoreCacheFor: thisEntity.LogicalName);
+
+                    if (idMatches.Any())
                     {
-                        ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
+                        ((EntityReference)(thisEntity.GetField(field))).Name = idMatches.First().GetStringField(targetPrimaryField);
                         fieldResolved = true;
                     }
                     else
@@ -687,7 +726,7 @@ namespace JosephM.Deployment.DataImport
                             new Entity[0] :
                             GetMatchingEntities(lookupEntity,
                             targetPrimaryField,
-                            name);
+                            name, ignoreCacheFor: thisEntity.LogicalName);
                         if (matchRecords.Count() == 1)
                         {
                             thisEntity.SetLookupField(field, matchRecords.First());
@@ -825,7 +864,7 @@ namespace JosephM.Deployment.DataImport
             return targetTypesToTry;
         }
 
-        private IEnumerable<Entity> GetMatchForExistingRecord(IEnumerable<Entity> existingEntitiesWithIdMatches, Entity thisEntity)
+        private IEnumerable<Entity> GetMatchForExistingRecord(Entity thisEntity)
         {
             var thisTypesConfig = XrmRecordService.GetTypeConfigs().GetFor(thisEntity.LogicalName);
             if (thisTypesConfig == null)
@@ -833,7 +872,10 @@ namespace JosephM.Deployment.DataImport
                 //okay this is where we just need to find the matching record by name
                 var existingMatches = thisEntity.Id == Guid.Empty
                                 ? new Entity[0]
-                                : existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
+                                : GetMatchingEntities(thisEntity.LogicalName, new Dictionary<string, object>
+                                {
+                                    { XrmService.GetPrimaryKeyName(thisEntity.LogicalName), thisEntity.Id }
+                                });
                 if (!existingMatches.Any())
                 {
                     var matchBySpecificFieldEntities = new Dictionary<string, string>()

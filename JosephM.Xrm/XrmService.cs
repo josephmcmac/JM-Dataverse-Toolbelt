@@ -1401,7 +1401,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 return ((OptionSetValue)fieldValue).Value.ToString();
             }
             else
-                return fieldValue.ToString();
+                return fieldValue.ToString()?.ToLower();
         }
 
         public void SetState(string entityType, Guid id, int state)
