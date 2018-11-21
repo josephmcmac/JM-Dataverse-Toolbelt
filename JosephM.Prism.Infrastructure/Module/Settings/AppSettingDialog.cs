@@ -51,7 +51,7 @@ namespace JosephM.Application.Desktop.Module.Settings
         }
 
         protected TSettingsObject SettingsObject { get; set; }
-        public IRecordService LookupService { get; }
+        public IRecordService LookupService { get; set; }
 
         protected override void LoadDialogExtention()
         {

@@ -124,6 +124,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                         VisualStudioService.AddSolutionItem("solution.xrmconnection", activeConnection);
 
                         XrmConnectionModule.RefreshXrmServices(activeConnection, ApplicationController, xrmRecordService: (RefreshActiveServiceConnection ? XrmRecordService : null));
+                        LookupService = (XrmRecordService)ApplicationController.ResolveType(typeof(XrmRecordService));
                     }
                 }
             }
