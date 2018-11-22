@@ -31,7 +31,7 @@
                     ToolTip="{Binding Description}">
                     <Button.ContentTemplate>
                         <DataTemplate>
-                            <TextBlock Padding="0" Margin="0" TextWrapping="WrapWithOverflow" Text="{Binding}"></TextBlock>
+                            <TextBlock Text="{Binding}" Style="{StaticResource XrmButtonContentTextBlock}"></TextBlock>
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
