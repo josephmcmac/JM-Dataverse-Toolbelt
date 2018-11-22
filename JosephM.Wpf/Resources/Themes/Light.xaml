@@ -7,5 +7,6 @@
     <SolidColorBrush x:Key="TextColor" Color="#333333" />
     <SolidColorBrush x:Key="BorderColor" Color="#99a6af" />
     <SolidColorBrush x:Key="LightColor" Color="#ffffff" />
+    <SolidColorBrush x:Key="DarkColor" Color="#333333" />
     <SolidColorBrush x:Key="ErrorColor" Color="Red" />
 </ResourceDictionary>
