@@ -43,6 +43,13 @@ namespace JosephM.Core.Utility
         public static void WriteToFile(string folder, string name, string text)
         {
             CheckCreateFolder(folder);
+            var filePath = folder + @"\" + name;
+            if(File.Exists(filePath))
+            {
+                var fileInfo = new FileInfo(filePath);
+                if (fileInfo.IsReadOnly)
+                    fileInfo.IsReadOnly = false;
+            }
             File.WriteAllText(folder + @"\" + name, text);
         }
 
