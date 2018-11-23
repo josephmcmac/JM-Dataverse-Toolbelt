@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -38,7 +39,12 @@ namespace JosephM.Xrm.Vsix.Application
             foreach (var item in ProjectItems)
             {
                 if (item.Name == fileName)
+                {
+                    var itemFileName = item.FileName;
+                    if (itemFileName != file)
+                        throw new Exception($"Error saving the settings file in the solution. The file referenced in the solution item does not match the expected location for the settings file. The expected path is {file}, the actual path is {itemFileName}. You will need to remove the file with the incorrect reference out of the solution");
                     return item;
+                }
             }
             var newItem = Project.ProjectItems.AddFromFile(file);
             if (newItem.IsOpen)
