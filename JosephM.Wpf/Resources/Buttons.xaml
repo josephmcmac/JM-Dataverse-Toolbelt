@@ -142,6 +142,12 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="XrmButtonContentTextBlock" TargetType="{x:Type TextBlock}" >
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+    </Style>
     <Style x:Key="XrmDropdownButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="MinWidth" Value="120px" />
         <Setter Property="Width" Value="150px" />

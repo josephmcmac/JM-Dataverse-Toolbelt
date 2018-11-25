@@ -38,6 +38,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                             : splitIt
                             .Select(s => LookupService.GetRecordTypeMetadata(s))
                             .Select(r => new RecordType(r.SchemaName, r.DisplayName))
+                            .OrderBy(rt => rt.Value)
                             .ToArray();
                         RecordTypeItemsSource = recordTypes;
                     }

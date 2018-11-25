@@ -111,6 +111,7 @@ namespace JosephM.Application.ViewModel.Extentions
             if (gridViewModel.GetLastSortExpression() != null)
                 query.Sorts.Insert(0, gridViewModel.GetLastSortExpression());
             var records = gridViewModel.RecordService.RetreiveAll(query);
+            records.PopulateEmptyLookups(gridViewModel.RecordService, null);
             var hasMoreRows = records.Count() > gridViewModel.CurrentPageCeiling;
             records = records.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();
             return new GetGridRecordsResponse(records, hasMoreRows);

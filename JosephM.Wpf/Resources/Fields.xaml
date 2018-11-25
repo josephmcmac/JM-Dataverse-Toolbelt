@@ -45,6 +45,7 @@
     <Style x:Key="BooleanFieldEntryStyle" TargetType="CheckBox" BasedOn="{StaticResource FieldEntryStyle}" >
         <Setter Property="Margin" Value="18,13,8,8" />
         <Setter Property="Background" Value="{DynamicResource LightColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource DarkColor}" />
     </Style>
     <Style x:Key="PicklistFieldEntryStyle" TargetType="ComboBox" BasedOn="{StaticResource FieldEntryStyle}" >
     </Style>

@@ -818,9 +818,23 @@ namespace JosephM.InstanceComparer
 
             var typeConfig = processContainer.ServiceOne.GetTypeConfigs().GetFor(processCompareParams.RecordType);
 
+            var indexService2Items =
+                processCompareParams.MatchFields.Count() == 1
+                && processCompareParams.Type == ProcessCompareType.Records
+                ? serviceTwoItems.GroupBy(e => processContainer.ServiceTwo.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField2(processCompareParams.MatchField, e.GetField(processCompareParams.MatchField))))
+                    .Where(g => g.Key != null)
+                    .ToDictionary(g => g.Key, g => g.ToArray())
+                : null;
+
             foreach (var item in serviceOneItems)
             {
-                var matches = serviceTwoItems
+                var matches =
+                    indexService2Items != null
+                    ? (indexService2Items.ContainsKey(processContainer.ServiceOne.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField))))
+                    ? indexService2Items[processContainer.ServiceOne.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField)))]
+                    : new IRecord[0])
+                    
+                    : serviceTwoItems
                     .Where(
                     w =>
                         processCompareParams.MatchFields.All(f =>
@@ -928,6 +942,11 @@ namespace JosephM.InstanceComparer
                         {
                             displayValue1 = processContainer.ServiceOne.GetFieldAsDisplayString(item.First(), field);
                             displayValue2 = processContainer.ServiceTwo.GetFieldAsDisplayString(item.Last(), field);
+                            if (processContainer.ServiceOne.IsString(field, processCompareParams.RecordType))
+                            {
+                                displayValue1 = (string)processCompareParams.ConvertField1(field, displayValue1);
+                                displayValue2 = (string)processCompareParams.ConvertField2(field, displayValue2); ;
+                            }
                             //okay for difference if it is a string we only really want to display part of string which is different
                             var tempDisplayValue1 = GetDifferenceDisplayPartForValue1(displayValue1, displayValue2);
                             var tempDisplayValue2 = GetDifferenceDisplayPartForValue1(displayValue2, displayValue1);
@@ -1467,7 +1486,7 @@ namespace JosephM.InstanceComparer
             public XrmRecordService ServiceTwo { get; set; }
             public List<ProcessCompareParams> Comparisons { get; set; }
             public List<InstanceComparerDifference> Differences { get; set; }
-            public Dictionary<string, IEnumerable<IRecord>> MissingManagedSolutionComponents { get; private set; }
+            public Dictionary<string, Dictionary<string, List<string>>> MissingManagedSolutionComponents { get; private set; }
             public Dictionary<string, Dictionary<IRecord, IRecord>> MatchedRecordDictionary { get; internal set; }
 
             public ProcessContainer(InstanceComparerRequest request, InstanceComparerResponse response,
@@ -1484,7 +1503,7 @@ namespace JosephM.InstanceComparer
                 Response.ServiceTwo = ServiceTwo;
                 Differences = new List<InstanceComparerDifference>();
                 Comparisons = new List<ProcessCompareParams>();
-                MissingManagedSolutionComponents = new Dictionary<string, IEnumerable<IRecord>>();
+                MissingManagedSolutionComponents = new Dictionary<string, Dictionary<string, List<string>>>();
                 MatchedRecordDictionary = new Dictionary<string, Dictionary<IRecord, IRecord>>();
             }
 
@@ -1722,7 +1741,18 @@ namespace JosephM.InstanceComparer
                             var componentsInSolution = isInConnection1
                                 ? ServiceOne.GetLinkedRecords(Entities.solutioncomponent, Entities.solution, Fields.solutioncomponent_.solutionid, item.Id)
                                 : ServiceTwo.GetLinkedRecords(Entities.solutioncomponent, Entities.solution, Fields.solutioncomponent_.solutionid, item.Id);
-                            MissingManagedSolutionComponents.Add(item.Id, componentsInSolution);
+
+                            MissingManagedSolutionComponents.Add(item.Id, new Dictionary<string, List<string>>());
+                            foreach(var component in componentsInSolution)
+                            {
+                                var componentType = component.GetOptionKey(Fields.solutioncomponent_.componenttype);
+                                if (componentType != null)
+                                {
+                                    if (!MissingManagedSolutionComponents[item.Id].ContainsKey(componentType))
+                                        MissingManagedSolutionComponents[item.Id].Add(componentType, new List<string>());
+                                    MissingManagedSolutionComponents[item.Id][componentType].Add(component.GetIdField(Fields.solutioncomponent_.objectid));
+                                }
+                            }
                         }
                     }
                     //if we aren't actually including solution differences return not to add the difference
@@ -1734,15 +1764,14 @@ namespace JosephM.InstanceComparer
                 //okay otherwise if a solution component configured then check if this is a part of the managed solution
                 else if (processCompareParams.SolutionComponentConfiguration != null)
                 {
+                    var thisComponentType = processCompareParams.SolutionComponentConfiguration.ComponentType.ToString();
+                    var thisComponentId = item.GetIdField(processCompareParams.SolutionComponentConfiguration.MetadataIdFieldName);
                     foreach (var solution in MissingManagedSolutionComponents)
                     {
-                        foreach (var component in solution.Value)
+                        if (solution.Value.ContainsKey(thisComponentType)
+                            && solution.Value[thisComponentType].Contains(thisComponentId))
                         {
-                            if (component.GetIdField(Fields.solutioncomponent_.objectid) == item.GetIdField(processCompareParams.SolutionComponentConfiguration.MetadataIdFieldName)
-                                && component.GetOptionKey(Fields.solutioncomponent_.componenttype) == processCompareParams.SolutionComponentConfiguration.ComponentType.ToString())
-                            {
-                                return true;
-                            }
+                            return true;
                         }
                     }
                 }

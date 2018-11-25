@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
@@ -75,7 +76,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         [Group(Sections.Types)]
         [PropertyInContextByPropertyValue(nameof(SearchAllTypes), false)]
 
-        public IEnumerable<RecordTypeSetting> TypesToSearch { get; set; }
+        public IEnumerable<TypeToSearch> TypesToSearch { get; set; }
 
         [GridWidth(100)]
         [DisplayOrder(230)]
@@ -97,6 +98,21 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
         [DisplayOrder(260)]
         [Group(Sections.Types)]
         public IEnumerable<RecordFieldSetting> FieldExclusions { get; set; }
+
+        [DoNotAllowGridOpen]
+        [BulkAddRecordTypeFunction]
+        public class TypeToSearch
+        {
+            [Hidden]
+            public string Type { get { return RecordType == null ? null : RecordType.Key; } }
+
+            public RecordType RecordType { get; set; }
+
+            public override string ToString()
+            {
+                return RecordType != null ? RecordType.Value : base.ToString();
+            }
+        }
 
         private static class Sections
         {

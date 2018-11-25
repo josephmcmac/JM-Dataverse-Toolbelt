@@ -232,8 +232,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
                 if (stringFields.Any())
                 {
-
-
                     var htmlSearchFields = container.Request.StripHtmlTagsPriorToSearch
                         ? stringFields
                         .Where(s => IsHtmlField(recordType, s, container)).ToArray()

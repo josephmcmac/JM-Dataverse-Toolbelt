@@ -59,7 +59,8 @@ namespace JosephM.Xrm.RecordExtract
                 "fieldpermission", "stringmap", "systemform", "customerrelationship", "timezonerule",
                 "partnerapplication", "calendarrule", "customeropportunityrole", "multientitysearch", "wizardpage",
                 "authorizationserver", "complexcontrol", "workflowwaitsubscription", "sdkmessagerequestfield",
-                "untrackedemail", "mailboxtrackingfolder", "sharepointdocument", "pluginassembly", "sdkmessageprocessingstep", "sdkmessageprocessingstepimage", "plugintracelog"
+                "untrackedemail", "mailboxtrackingfolder", "sharepointdocument", "pluginassembly", "sdkmessageprocessingstep", "sdkmessageprocessingstepimage", "plugintracelog",
+                Entities.solutioncomponent, "msdyn_solutioncomponentsummary"
             };
         }
 

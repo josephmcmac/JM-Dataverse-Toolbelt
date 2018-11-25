@@ -1,6 +1,5 @@
 ﻿using JosephM.Core.Attributes;
 using Microsoft.Xrm.Sdk;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,7 +13,7 @@ namespace JosephM.Deployment.DataImport
         public DataImportResponse(IEnumerable<Entity> entitiesToProcess, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary)
         {
             var types = entitiesToProcess.Select(e => e.LogicalName).Distinct().ToArray();
-            _importedRecords.AddRange(types.OrderBy(s => s).Select(s => new ImportingRecords() { Type = s }));
+            _importedRecords.AddRange(types.OrderBy(s => s).Select(s => new ImportingRecords() { Type = s, Total = entitiesToProcess.Count(e => e.LogicalName == s) }));
             if(loadExistingErrorsIntoSummary != null)
             {
                 foreach(var item in loadExistingErrorsIntoSummary)
@@ -69,6 +68,7 @@ namespace JosephM.Deployment.DataImport
             return _importedRecords.Select(i => new ImportedRecords
             {
                 Type = i.Type,
+                Total = i.Total,
                 Created = i.Created,
                 Updated = i.Updated,
                 NoChange = i.NoChange,

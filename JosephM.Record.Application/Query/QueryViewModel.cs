@@ -126,8 +126,9 @@ namespace JosephM.Application.ViewModel.Query
                                 DynamicGridViewModel.ReloadGrid();
                             };
                             var record = selectedRow.Record;
-
-                            var newForm = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, onSave, ClearChildForm);
+                            var createOrUpdateRecord = RecordService.Get(record.Type, record.Id);
+                            new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
+                            var newForm = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, onSave, ClearChildForm);
                             LoadChildForm(newForm);
                         }
                     };
@@ -140,7 +141,9 @@ namespace JosephM.Application.ViewModel.Query
                         {
                             var record = selectedRow.Record;
                             CreateOrUpdateViewModel vmRef = null;
-                            vmRef = new CreateOrUpdateViewModel(RecordService.Get(record.Type, record.Id), formController, () => {
+                            var createOrUpdateRecord = RecordService.Get(record.Type, record.Id);
+                            new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
+                            vmRef = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, () => {
                                 vmRef.ValidationPrompt = "Changes Have Been Saved";
                                 DynamicGridViewModel.ReloadGrid();
                             }, () => ApplicationController.Remove(vmRef), cancelButtonLabel: "Close");
@@ -417,6 +420,7 @@ namespace JosephM.Application.ViewModel.Query
             if (!DynamicGridViewModel.HasPaging || ignorePages)
             {
                 var records = DynamicGridViewModel.RecordService.RetreiveAll(query);
+                records.PopulateEmptyLookups(RecordService, null);
                 return new GetGridRecordsResponse(records);
             }
             else
@@ -436,8 +440,13 @@ namespace JosephM.Application.ViewModel.Query
                 if (!string.IsNullOrWhiteSpace(QuickFindText))
                 {
                     var quickFindFields = RecordService.GetStringQuickfindFields(RecordType);
-                    query.RootFilter.ConditionOperator = FilterOperator.Or;
-                    query.RootFilter.Conditions.AddRange(quickFindFields.Select(f => new Condition(f, ConditionType.BeginsWith, QuickFindText)));
+                    //there was a bug in SDK when querying on queues
+                    //which required adding our or filter as a child filter
+                    //rather than adding in the root filter
+                    var nestedFilter = new Filter();
+                    nestedFilter.ConditionOperator = FilterOperator.Or;
+                    nestedFilter.Conditions.AddRange(quickFindFields.Select(f => new Condition(f, ConditionType.BeginsWith, QuickFindText)));
+                    query.RootFilter.SubFilters.Add(nestedFilter);
                 }
             }
             else

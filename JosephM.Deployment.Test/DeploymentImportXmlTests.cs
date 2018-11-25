@@ -252,6 +252,11 @@ namespace JosephM.Deployment.Test
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_webform, Entities.adx_webform)},
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_webformstep, Entities.adx_webformstep)},
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_webformmetadata, Entities.adx_webformmetadata)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_website, Entities.adx_website)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_weblinkset, Entities.adx_weblinkset)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_weblink, Entities.adx_weblink)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_entityform, Entities.adx_entityform)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_entityformmetadata, Entities.adx_entityformmetadata)},
                  }
             };
 
@@ -271,7 +276,7 @@ namespace JosephM.Deployment.Test
             var importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
             Assert.IsFalse(importResponse.HasError);
 
-            VerifyWebPageRecords();
+            VerifyImportedPortalData();
 
             //lets just do several other things which will verify some other matching logic
 
@@ -284,7 +289,7 @@ namespace JosephM.Deployment.Test
             importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
             Assert.IsFalse(importResponse.HasError);
 
-            VerifyWebPageRecords();
+            VerifyImportedPortalData();
 
             //delete both web pages in the import files - this will verify the web page access contorl rule
             //will correctly resolve its parent independently
@@ -296,7 +301,7 @@ namespace JosephM.Deployment.Test
             importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
             Assert.IsFalse(importResponse.HasError);
 
-            VerifyWebPageRecords();
+            VerifyImportedPortalData();
 
             //lets do the same but delete the web page access control rule
             //first to verify it also matches the parent when creating
@@ -304,11 +309,16 @@ namespace JosephM.Deployment.Test
             importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
             Assert.IsFalse(importResponse.HasError);
 
-            VerifyWebPageRecords();
+            VerifyImportedPortalData();
         }
 
-        private void VerifyWebPageRecords()
+        private void VerifyImportedPortalData()
         {
+            var webSiteRecords = XrmService.RetrieveAllEntityType(Entities.adx_website);
+            var webFileRecords = XrmService.RetrieveAllEntityType(Entities.adx_webfile);
+            var webFileAttachmentRecords = XrmService.RetrieveAllOrClauses(Entities.annotation, webFileRecords.Select(e => new ConditionExpression(Fields.annotation_.objectid, ConditionOperator.Equal, e.Id)));
+            var webLinkSetRecords = XrmService.RetrieveAllEntityType(Entities.adx_weblinkset);
+            var webLinkRecords = XrmService.RetrieveAllEntityType(Entities.adx_weblink);
             var languageRecords = XrmService.RetrieveAllEntityType(Entities.adx_websitelanguage);
             var roleRecords = XrmService.RetrieveAllEntityType(Entities.adx_webrole);
             var pageRecords = XrmService.RetrieveAllEntityType(Entities.adx_webpage);
@@ -319,10 +329,15 @@ namespace JosephM.Deployment.Test
             var webFormRecords = XrmService.RetrieveAllEntityType(Entities.adx_webform);
             var webFormStepRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformstep);
             var webFormMetadataRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformmetadata);
-            
+
 
             //the records wont; have been updated as data the same - but we verify that the system matched
             //them and therefore didn't create duplicates or throw errors
+            Assert.AreEqual(1, webSiteRecords.Count());
+            Assert.AreEqual(1, webFileRecords.Count());
+            Assert.AreEqual(1, webFileAttachmentRecords.Count());
+            Assert.AreEqual(2, webLinkSetRecords.Count());
+            Assert.AreEqual(5, webLinkRecords.Count());
             Assert.AreEqual(1, languageRecords.Count());
             Assert.AreEqual(1, roleRecords.Count());
             Assert.AreEqual(2, pageRecords.Count());

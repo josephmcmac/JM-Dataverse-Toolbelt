@@ -1376,6 +1376,11 @@ namespace JosephM.Record.Xrm.XrmRecord
                     ParentLookupType = Entities.adx_webformstep,
                     UniqueChildFields = new [] { Fields.adx_webformmetadata_.adx_type, Fields.adx_webformmetadata_.adx_sectionname, Fields.adx_webformmetadata_.adx_attributelogicalname, Fields.adx_webformmetadata_.adx_tabname, Fields.adx_webformmetadata_.adx_subgrid_name }
                 },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_weblink,
+                    UniqueChildFields = new [] { Fields.adx_weblink_.adx_weblinksetid, Fields.adx_weblink_.adx_parentweblinkid, Fields.adx_weblink_.adx_name }
+                },
         });
         public TypeConfigs GetTypeConfigs()
         {

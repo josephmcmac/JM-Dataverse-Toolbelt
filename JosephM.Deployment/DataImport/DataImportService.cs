@@ -34,7 +34,9 @@ namespace JosephM.Deployment.DataImport
             }
         }
 
-        public IEnumerable<Entity> GetMatchingEntities(string type, IDictionary<string,object> fieldValues)
+        private Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>> _cachedRecords = new Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>>();
+
+        public IEnumerable<Entity> GetMatchingEntities(string type, IDictionary<string, object> fieldValues, string ignoreCacheFor = null)
         {
             var conditions = fieldValues.Select(fv =>
             fv.Value == null
@@ -47,10 +49,40 @@ namespace JosephM.Deployment.DataImport
                 conditions.Add(new ConditionExpression("merged", ConditionOperator.NotEqual, true));
             if (type == "knowledgearticle")
                 conditions.Add(new ConditionExpression("islatestversion", ConditionOperator.Equal, true));
+
+            if(type != ignoreCacheFor
+                && conditions.Count == 1
+                && fieldValues.Values.First() != null)
+            {
+                var maxCacheCount = 5000;
+                var fieldName = fieldValues.Keys.First();
+                var matchString = XrmService.GetFieldAsMatchString(type, fieldName, fieldValues.Values.First());
+                if (!_cachedRecords.ContainsKey(type))
+                    _cachedRecords.Add(type, new Dictionary<string, Dictionary<string, List<Entity>>>());
+                if (!_cachedRecords[type].ContainsKey(fieldName))
+                {
+                    var query = XrmService.BuildQuery(type, null, new[] { new ConditionExpression(fieldName, ConditionOperator.NotNull) }, null);
+                    var recordsToCache = XrmService.RetrieveFirstX(query, maxCacheCount);
+                    _cachedRecords[type].Add(fieldName, new Dictionary<string, List<Entity>>());
+                    foreach(var item in recordsToCache)
+                    {
+                        var cacheMatchString = XrmService.GetFieldAsMatchString(type, fieldName, item.GetFieldValue(fieldName));
+                        if (!_cachedRecords[type][fieldName].ContainsKey(cacheMatchString))
+                            _cachedRecords[type][fieldName].Add(cacheMatchString, new List<Entity>());
+                        _cachedRecords[type][fieldName][cacheMatchString].Add(item);
+                    }
+                }
+                //only use the cache if there were less than maxRecords
+                //otherwise there may be dupicates not included
+                if (_cachedRecords[type][fieldName].SelectMany(kv => kv.Value).Count() < maxCacheCount
+                    && _cachedRecords[type][fieldName].ContainsKey(matchString))
+                     return _cachedRecords[type][fieldName][matchString];
+            }
+
             return XrmService.RetrieveAllAndClauses(type, conditions, null);
         }
 
-        public IEnumerable<Entity> GetMatchingEntities(string type, string field, string value)
+        public IEnumerable<Entity> GetMatchingEntities(string type, string field, string value, string ignoreCacheFor = null)
         {
             var typeConfig = XrmRecordService.GetTypeConfigs().GetFor(type);
             if (typeConfig == null || typeConfig.ParentLookupType != type || field != XrmService.GetPrimaryNameField(type))
@@ -58,7 +90,7 @@ namespace JosephM.Deployment.DataImport
                 return GetMatchingEntities(type, new Dictionary<string, object>()
                 {
                     { field, value }
-                });
+                }, ignoreCacheFor: ignoreCacheFor);
             }
             else
             {
@@ -253,6 +285,8 @@ namespace JosephM.Deployment.DataImport
                 var countImported = 0;
                 foreach (var recordType in orderedTypes)
                 {
+                    if (_cachedRecords.ContainsKey(recordType))
+                        _cachedRecords.Remove(recordType);
                     try
                     {
                         var thisRecordType = recordType;
@@ -269,7 +303,6 @@ namespace JosephM.Deployment.DataImport
                                     new ConditionExpression(XrmService.GetPrimaryKeyField(e.LogicalName),
                                         ConditionOperator.Equal, e.Id))
                             .ToArray();
-                        var existingEntities = XrmService.RetrieveAllOrClauses(recordType, orConditions);
 
                         var orderedEntities = new List<Entity>();
 
@@ -334,7 +367,7 @@ namespace JosephM.Deployment.DataImport
                                 }
                                 else if (matchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
                                 {
-                                    existingMatchingIds = GetMatchForExistingRecord(existingEntities, thisEntity);
+                                    existingMatchingIds = GetMatchForExistingRecord(thisEntity);
                                 }
                                 else if (matchOption == MatchOption.PrimaryKeyOnly && thisEntity.Id != Guid.Empty)
                                 {
@@ -356,11 +389,12 @@ namespace JosephM.Deployment.DataImport
                                     thisEntity.SetField(XrmService.GetPrimaryKeyField(thisEntity.LogicalName), thisEntity.Id);
                                     if (thisTypesConfig != null)
                                     {
-                                        thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField));
+                                        if (thisTypesConfig.ParentLookupField != null)
+                                            thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField));
                                         if (thisTypesConfig.UniqueChildFields != null)
                                         {
                                             foreach (var childField in thisTypesConfig.UniqueChildFields)
-                                                thisEntity.SetField(thisTypesConfig.ParentLookupField, matchRecord.GetField(thisTypesConfig.ParentLookupField));
+                                                thisEntity.SetField(childField, matchRecord.GetField(childField));
                                         }
                                     }
                                 }
@@ -492,6 +526,8 @@ namespace JosephM.Deployment.DataImport
                         response.AddImportError(
                             new DataImportResponseItem(recordType, null, null, null, string.Format("Error Importing Type {0}", recordType), ex));
                     }
+                    if (_cachedRecords.ContainsKey(recordType))
+                        _cachedRecords.Remove(recordType);
                 }
 
                 controller.TurnOffLevel2();
@@ -673,11 +709,15 @@ namespace JosephM.Deployment.DataImport
                 {
                     var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
                     var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
-                    var matchRecord = XrmService.GetFirst(lookupEntity, targetPrimaryKey,
-                        idNullable.Value);
-                    if (matchRecord != null)
+                    var idMatches = GetMatchingEntities(lookupEntity,
+                            new Dictionary<string, object>
+                            {
+                                { targetPrimaryKey, idNullable.Value }
+                            }, ignoreCacheFor: thisEntity.LogicalName);
+
+                    if (idMatches.Any())
                     {
-                        ((EntityReference)(thisEntity.GetField(field))).Name = matchRecord.GetStringField(targetPrimaryField);
+                        ((EntityReference)(thisEntity.GetField(field))).Name = idMatches.First().GetStringField(targetPrimaryField);
                         fieldResolved = true;
                     }
                     else
@@ -686,7 +726,7 @@ namespace JosephM.Deployment.DataImport
                             new Entity[0] :
                             GetMatchingEntities(lookupEntity,
                             targetPrimaryField,
-                            name);
+                            name, ignoreCacheFor: thisEntity.LogicalName);
                         if (matchRecords.Count() == 1)
                         {
                             thisEntity.SetLookupField(field, matchRecords.First());
@@ -824,7 +864,7 @@ namespace JosephM.Deployment.DataImport
             return targetTypesToTry;
         }
 
-        private IEnumerable<Entity> GetMatchForExistingRecord(IEnumerable<Entity> existingEntitiesWithIdMatches, Entity thisEntity)
+        private IEnumerable<Entity> GetMatchForExistingRecord(Entity thisEntity)
         {
             var thisTypesConfig = XrmRecordService.GetTypeConfigs().GetFor(thisEntity.LogicalName);
             if (thisTypesConfig == null)
@@ -832,7 +872,10 @@ namespace JosephM.Deployment.DataImport
                 //okay this is where we just need to find the matching record by name
                 var existingMatches = thisEntity.Id == Guid.Empty
                                 ? new Entity[0]
-                                : existingEntitiesWithIdMatches.Where(e => e.Id == thisEntity.Id);
+                                : GetMatchingEntities(thisEntity.LogicalName, new Dictionary<string, object>
+                                {
+                                    { XrmService.GetPrimaryKeyName(thisEntity.LogicalName), thisEntity.Id }
+                                });
                 if (!existingMatches.Any())
                 {
                     var matchBySpecificFieldEntities = new Dictionary<string, string>()
@@ -871,126 +914,161 @@ namespace JosephM.Deployment.DataImport
             }
             else
             {
-                //okay these are where we have a special type which I cannot just match the record name
-                //initially implemented for adx where web page have multiple for each language
-                //but also for entity form metadata which doesn't have a name
-                //and web page access control rules which may not have unique name
-                var primaryField = XrmService.GetPrimaryNameField(thisTypesConfig.Type);
-                var isParent = thisEntity.GetLookupGuid(thisTypesConfig.ParentLookupField) == null;
-                if (isParent)
+                if (thisTypesConfig.ParentLookupField == null)
                 {
-                    var name = thisEntity.GetStringField(primaryField);
-                    return GetMatchesByNameForRootRecord(thisTypesConfig, name);
+                    if (thisTypesConfig.UniqueChildFields == null || !thisTypesConfig.UniqueChildFields.Any())
+                    {
+                        throw new NullReferenceException($"There is a type config for type {thisTypesConfig.Type} but it does not have {nameof(TypeConfigs.Config.ParentLookupField)} or {nameof(TypeConfigs.Config.UniqueChildFields)} configured");
+                    }
+                    //just unique fields in the config
+                    var matchQuery = XrmService.BuildQuery(thisTypesConfig.Type, null, null, null);
+                    foreach (var field in thisTypesConfig.UniqueChildFields)
+                    {
+                        var theValue = thisEntity.GetFieldValue(field);
+                        if (theValue == null)
+                            matchQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Null));
+                        else if (theValue is EntityReference)
+                        {
+                            var name = XrmEntity.GetLookupName(theValue);
+                            var type = XrmEntity.GetLookupType(theValue);
+                            var linkToReferenced = matchQuery.AddLink(type, field, XrmService.GetPrimaryKeyField(type));
+                            if (name == null)
+                                linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Null);
+                            else
+                                linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, name);
+                        }
+                        else
+                            matchQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Equal, XrmService.ConvertToQueryValue(field, thisEntity.LogicalName, theValue)));
+                    }
+                    var matches = XrmService.RetrieveAll(matchQuery);
+                    if (matches.Count() > 1)
+                        throw new Exception(string.Format("More Than One Match For the {0} Record Of {1}",
+                            thisTypesConfig.Type, thisEntity.GetField(XrmService.GetPrimaryNameField(thisTypesConfig.Type))));
+
+                    return matches;
                 }
                 else
                 {
-                    //okay for a child
-                    //we need to get the matching parent in the target
-                    //then query if one exists for that parent with the unique fields matching
-                    var parentName = thisEntity.GetLookupName(thisTypesConfig.ParentLookupField);
-                    if(parentName == null)
-                        throw new Exception(string.Format("Cannot identify parent record for {0} Of {1} because the parent reference name is empty",
-                             XrmService.GetPrimaryNameField(thisTypesConfig.Type), thisEntity.GetStringField(primaryField)));
-                    var parentPrimaryNameField = XrmService.GetPrimaryNameField(thisTypesConfig.ParentLookupType);
-
-                    var matchingParentQuery = XrmService.BuildQuery(thisTypesConfig.ParentLookupType, null, new[]
+                    //okay these are where we have a special type which I cannot just match the record name
+                    //initially implemented for adx where web page have multiple for each language
+                    //but also for entity form metadata which doesn't have a name
+                    //and web page access control rules which may not have unique name
+                    var primaryField = XrmService.GetPrimaryNameField(thisTypesConfig.Type);
+                    var isParent = thisEntity.GetLookupGuid(thisTypesConfig.ParentLookupField) == null;
+                    if (isParent)
                     {
+                        var name = thisEntity.GetStringField(primaryField);
+                        return GetMatchesByNameForRootRecord(thisTypesConfig, name);
+                    }
+                    else
+                    {
+                        //okay for a child
+                        //we need to get the matching parent in the target
+                        //then query if one exists for that parent with the unique fields matching
+                        var parentName = thisEntity.GetLookupName(thisTypesConfig.ParentLookupField);
+                        if (parentName == null)
+                            throw new Exception(string.Format("Cannot identify parent record for {0} Of {1} because the parent reference name is empty",
+                                 XrmService.GetPrimaryNameField(thisTypesConfig.Type), thisEntity.GetStringField(primaryField)));
+                        var parentPrimaryNameField = XrmService.GetPrimaryNameField(thisTypesConfig.ParentLookupType);
+
+                        var matchingParentQuery = XrmService.BuildQuery(thisTypesConfig.ParentLookupType, null, new[]
+                        {
                         new ConditionExpression(parentPrimaryNameField, ConditionOperator.Equal, parentName)
                     }, null);
 
-                    if (thisTypesConfig.Type == thisTypesConfig.ParentLookupType)
-                        matchingParentQuery.Criteria.AddCondition(new ConditionExpression(thisTypesConfig.ParentLookupField, ConditionOperator.Null));
-                    else
-                    {
-                        var thisTypesParentsConfig = XrmRecordService.GetTypeConfigs().GetFor(thisTypesConfig.ParentLookupType);
-                        if (thisTypesParentsConfig != null)
+                        if (thisTypesConfig.Type == thisTypesConfig.ParentLookupType)
+                            matchingParentQuery.Criteria.AddCondition(new ConditionExpression(thisTypesConfig.ParentLookupField, ConditionOperator.Null));
+                        else
                         {
-                            //okay so this record should have captured fields in the parent
-                            //which are required to match the target parent in aliased value
-                            //add the parents parent condition to the query
-                            //note we have to use names for the parent condition as ids may not be consistent
-                            var parentParentId = XrmEntity.GetLookupGuid(thisEntity.GetFieldValue($"{thisTypesConfig.ParentLookupField}.{thisTypesParentsConfig.ParentLookupField}"));
-                            if (!parentParentId.HasValue)
+                            var thisTypesParentsConfig = XrmRecordService.GetTypeConfigs().GetFor(thisTypesConfig.ParentLookupType);
+                            if (thisTypesParentsConfig != null)
                             {
-                                matchingParentQuery.Criteria.AddCondition(new ConditionExpression(thisTypesParentsConfig.ParentLookupField, ConditionOperator.Null));
-                            }
-                            else
-                            {
-                                var name = XrmEntity.GetLookupName(thisEntity.GetFieldValue($"{thisTypesConfig.ParentLookupField}.{thisTypesParentsConfig.ParentLookupField}"));
-                                var linkToParent = matchingParentQuery.AddLink(thisTypesParentsConfig.ParentLookupType, thisTypesParentsConfig.ParentLookupField, XrmService.GetPrimaryKeyField(thisTypesParentsConfig.ParentLookupType));
-                                if (name == null)
-                                    linkToParent.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(thisTypesParentsConfig.ParentLookupType), ConditionOperator.Null);
-                                else
-                                    linkToParent.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(thisTypesParentsConfig.ParentLookupType), ConditionOperator.Equal, name);
-                            }
-
-
-                            if (thisTypesParentsConfig.UniqueChildFields != null)
-                            {
-                                //add the parents unique fields to the query
-                                //note we have to use name conditions for lookup fields as may not be consistent
-                                foreach (var field in thisTypesParentsConfig.UniqueChildFields)
+                                //okay so this record should have captured fields in the parent
+                                //which are required to match the target parent in aliased value
+                                //add the parents parent condition to the query
+                                //note we have to use names for the parent condition as ids may not be consistent
+                                var parentParentId = XrmEntity.GetLookupGuid(thisEntity.GetFieldValue($"{thisTypesConfig.ParentLookupField}.{thisTypesParentsConfig.ParentLookupField}"));
+                                if (!parentParentId.HasValue)
                                 {
-                                    var theValue = thisEntity.GetFieldValue($"{thisTypesConfig.ParentLookupField}.{field}");
-                                    if (theValue == null)
-                                        matchingParentQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Null));
-                                    else if(theValue is EntityReference)
-                                    {
-                                        var name = XrmEntity.GetLookupName(theValue);
-                                        var type = XrmEntity.GetLookupType(theValue);
-                                        var linkToReferenced = matchingParentQuery.AddLink(type, field, XrmService.GetPrimaryKeyField(type));
-                                        if (name == null)
-                                            linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Null);
-                                        else
-                                            linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, name);
-                                    }
+                                    matchingParentQuery.Criteria.AddCondition(new ConditionExpression(thisTypesParentsConfig.ParentLookupField, ConditionOperator.Null));
+                                }
+                                else
+                                {
+                                    var name = XrmEntity.GetLookupName(thisEntity.GetFieldValue($"{thisTypesConfig.ParentLookupField}.{thisTypesParentsConfig.ParentLookupField}"));
+                                    var linkToParent = matchingParentQuery.AddLink(thisTypesParentsConfig.ParentLookupType, thisTypesParentsConfig.ParentLookupField, XrmService.GetPrimaryKeyField(thisTypesParentsConfig.ParentLookupType));
+                                    if (name == null)
+                                        linkToParent.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(thisTypesParentsConfig.ParentLookupType), ConditionOperator.Null);
                                     else
-                                        matchingParentQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Equal, XrmService.ConvertToQueryValue(field, thisTypesParentsConfig.ParentLookupType, theValue)));
+                                        linkToParent.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(thisTypesParentsConfig.ParentLookupType), ConditionOperator.Equal, name);
+                                }
+
+                                if (thisTypesParentsConfig.UniqueChildFields != null)
+                                {
+                                    //add the parents unique fields to the query
+                                    //note we have to use name conditions for lookup fields as may not be consistent
+                                    foreach (var field in thisTypesParentsConfig.UniqueChildFields)
+                                    {
+                                        var theValue = thisEntity.GetFieldValue($"{thisTypesConfig.ParentLookupField}.{field}");
+                                        if (theValue == null)
+                                            matchingParentQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Null));
+                                        else if (theValue is EntityReference)
+                                        {
+                                            var name = XrmEntity.GetLookupName(theValue);
+                                            var type = XrmEntity.GetLookupType(theValue);
+                                            var linkToReferenced = matchingParentQuery.AddLink(type, field, XrmService.GetPrimaryKeyField(type));
+                                            if (name == null)
+                                                linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Null);
+                                            else
+                                                linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, name);
+                                        }
+                                        else
+                                            matchingParentQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Equal, XrmService.ConvertToQueryValue(field, thisTypesParentsConfig.ParentLookupType, theValue)));
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    var matchingParents = XrmService.RetrieveAll(matchingParentQuery);
-                    if (matchingParents.Count() != 1)
-                        throw new Exception(string.Format("Could Not Find Unique Match For the Parent Record {0} Of {1}",
-                            parentPrimaryNameField, parentName));
-                    var parent = matchingParents.First();
-                    thisEntity.SetLookupField(thisTypesConfig.ParentLookupField, parent);
-                    var matchingChildQuery = XrmService.BuildQuery(thisTypesConfig.Type, null, new []
-                    {
+                        var matchingParents = XrmService.RetrieveAll(matchingParentQuery);
+                        if (matchingParents.Count() != 1)
+                            throw new Exception(string.Format("Could Not Find Unique Match For the Parent Record {0} Of {1}",
+                                parentPrimaryNameField, parentName));
+                        var parent = matchingParents.First();
+                        thisEntity.SetLookupField(thisTypesConfig.ParentLookupField, parent);
+                        var matchingChildQuery = XrmService.BuildQuery(thisTypesConfig.Type, null, new[]
+                        {
                         new ConditionExpression(thisTypesConfig.ParentLookupField, ConditionOperator.Equal, parent.Id)
                     }, null);
-                    if(thisTypesConfig.UniqueChildFields != null)
-                    {
-                        foreach (var field in thisTypesConfig.UniqueChildFields)
+                        if (thisTypesConfig.UniqueChildFields != null)
                         {
-                            var theValue = thisEntity.GetFieldValue(field);
-                            if (theValue == null)
-                                matchingChildQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Null));
-                            else if (theValue is EntityReference)
+                            foreach (var field in thisTypesConfig.UniqueChildFields)
                             {
-                                var name = XrmEntity.GetLookupName(theValue);
-                                var type = XrmEntity.GetLookupType(theValue);
-                                var linkToReferenced = matchingChildQuery.AddLink(type, field, XrmService.GetPrimaryKeyField(type));
-                                if (name == null)
-                                    linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Null);
+                                var theValue = thisEntity.GetFieldValue(field);
+                                if (theValue == null)
+                                    matchingChildQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Null));
+                                else if (theValue is EntityReference)
+                                {
+                                    var name = XrmEntity.GetLookupName(theValue);
+                                    var type = XrmEntity.GetLookupType(theValue);
+                                    var linkToReferenced = matchingChildQuery.AddLink(type, field, XrmService.GetPrimaryKeyField(type));
+                                    if (name == null)
+                                        linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Null);
+                                    else
+                                        linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, name);
+                                }
                                 else
-                                    linkToReferenced.LinkCriteria.AddCondition(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, name);
+                                    matchingChildQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Equal, XrmService.ConvertToQueryValue(field, thisEntity.LogicalName, theValue)));
                             }
-                            else
-                                matchingChildQuery.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Equal, XrmService.ConvertToQueryValue(field, thisEntity.LogicalName, theValue)));
                         }
-                    }
-                    var matchingChildren = XrmService.RetrieveAll(matchingChildQuery);
-                    if (matchingChildren.Count() > 1)
-                        throw new Exception(string.Format("More Than One Match For the Child {0} Record Of {1} {2}",
-                            thisTypesConfig.Type, parentName, parentPrimaryNameField));
-                    if (matchingChildren.Count() == 0 && thisTypesConfig.BlockCreateChild)
-                        throw new Exception(string.Format("Creation Prevented For Child {0} Record Of {1} {2}. These Are Expected To Be Created By The System",
-                            thisTypesConfig.Type, parentName, parentPrimaryNameField));
+                        var matchingChildren = XrmService.RetrieveAll(matchingChildQuery);
+                        if (matchingChildren.Count() > 1)
+                            throw new Exception(string.Format("More Than One Match For the Child {0} Record Of {1} {2}",
+                                thisTypesConfig.Type, parentName, parentPrimaryNameField));
+                        if (matchingChildren.Count() == 0 && thisTypesConfig.BlockCreateChild)
+                            throw new Exception(string.Format("Creation Prevented For Child {0} Record Of {1} {2}. These Are Expected To Be Created By The System",
+                                thisTypesConfig.Type, parentName, parentPrimaryNameField));
 
-                    return matchingChildren;
+                        return matchingChildren;
+                    }
                 }
             }
         }

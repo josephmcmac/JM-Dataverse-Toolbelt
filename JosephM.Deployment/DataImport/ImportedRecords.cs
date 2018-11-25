@@ -7,6 +7,9 @@ namespace JosephM.Deployment.DataImport
     {
         [DisplayOrder(10)]
         public string Type { get; set; }
+        [DisplayOrder(15)]
+        [GridWidth(125)]
+        public int Total { get; set; }
         [DisplayOrder(20)]
         [GridWidth(125)]
         public int Created { get; set; }
