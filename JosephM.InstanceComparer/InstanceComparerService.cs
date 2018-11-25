@@ -820,6 +820,7 @@ namespace JosephM.InstanceComparer
 
             var indexService2Items =
                 processCompareParams.MatchFields.Count() == 1
+                && processCompareParams.Type == ProcessCompareType.Records
                 ? serviceTwoItems.GroupBy(e => processContainer.ServiceTwo.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField2(processCompareParams.MatchField, e.GetField(processCompareParams.MatchField))))
                     .Where(g => g.Key != null)
                     .ToDictionary(g => g.Key, g => g.ToArray())
