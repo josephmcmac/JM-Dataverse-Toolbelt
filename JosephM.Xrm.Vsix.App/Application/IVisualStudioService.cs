@@ -35,7 +35,11 @@ namespace JosephM.Xrm.Vsix.Application
     {
         string ParentProjectName { get; }
 
+        string Name { get; }
+
         IEnumerable<IProjectItem> ProjectItems { get; }
+
+        IEnumerable<ISolutionFolder> SubFolders { get; }
 
         IProjectItem AddProjectItem(string file);
         ISolutionFolder AddSubFolder(string subFolder);

@@ -16,6 +16,15 @@ namespace JosephM.Xrm.Vsix.Test
 
         private string FolderPath { get; set; }
 
+        public string Name
+        {
+            get
+            {
+                var folderInfo = new DirectoryInfo(FolderPath);
+                return folderInfo.Name;
+            }
+        }
+
         public string ParentProjectName
         {
             get
@@ -30,6 +39,14 @@ namespace JosephM.Xrm.Vsix.Test
             get
             {
                 return FileUtility.GetFiles(FolderPath).Select(f => new FakeVisualStudioProjectItem(f)).ToArray();
+            }
+        }
+
+        public IEnumerable<ISolutionFolder> SubFolders
+        {
+            get
+            {
+                return FileUtility.GetFolders(FolderPath).Select(f => new FakeVisualStudioSolutionFolder(f)).ToArray();
             }
         }
 

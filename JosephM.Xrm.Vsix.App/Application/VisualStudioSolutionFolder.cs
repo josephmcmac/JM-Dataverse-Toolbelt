@@ -1,6 +1,7 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace JosephM.Xrm.Vsix.Application
@@ -20,6 +21,22 @@ namespace JosephM.Xrm.Vsix.Application
             get
             {
                 return SolutionFolder?.Parent?.ParentProjectItem?.ContainingProject?.Name;
+            }
+        }
+
+        public IEnumerable<ISolutionFolder> SubFolders
+        {
+            get
+            {
+                if (Project?.ProjectItems == null)
+                    return new VisualStudioSolutionFolder[0];
+                var results = new List<VisualStudioSolutionFolder>();
+                foreach (ProjectItem item in Project?.ProjectItems)
+                {
+                    if(item.SubProject != null)
+                        results.Add(new VisualStudioSolutionFolder(item.SubProject));
+                }
+                return results;
             }
         }
 
