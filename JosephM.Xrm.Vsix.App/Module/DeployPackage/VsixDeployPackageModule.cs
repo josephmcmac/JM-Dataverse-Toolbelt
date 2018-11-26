@@ -43,7 +43,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployPackage
                     {
                         if (item.FileName?.EndsWith(".zip") ?? false)
                         {
-                            if (item.FileFolder != solutionFolderPath)
+                            if (item.FileFolder?.Replace("\\\\","\\") != solutionFolderPath?.Replace("\\\\", "\\"))
                             {
                                 throw new Exception($"The Zip File In the Package Folder Is In An Unexpected Directory. You Will Need To Move It Into A Matching Folder Path For The Solution Folder. The Expected Path Was {solutionFolderPath}, The Actual path Is {item.FileFolder}");
                             }
@@ -58,11 +58,14 @@ namespace JosephM.Xrm.Vsix.Module.DeployPackage
                             isDataFolderInVs = true;
                             var filesInSolutionFolder = item
                                 .ProjectItems
-                                .Select(pi => pi.FileName)
+                                .Select(pi => pi.FileName?.Replace("\\\\", "\\"))
                                 .OrderBy(s => s)
                                 .ToArray();
                             var filesOnDisk = Directory.Exists(dataFolderOnDisk)
-                                ? FileUtility.GetFiles(dataFolderOnDisk).OrderBy(s => s).ToArray()
+                                ? FileUtility.GetFiles(dataFolderOnDisk)
+                                .Select(s => s?.Replace("\\\\", "\\"))
+                                .OrderBy(s => s)
+                                .ToArray()
                                 : new string[0];
                             var itemsOnDiskNotInVs = filesOnDisk.Except(filesInSolutionFolder).ToArray();
                             if(itemsOnDiskNotInVs.Any())
