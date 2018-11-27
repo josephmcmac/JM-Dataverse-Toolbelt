@@ -75,11 +75,14 @@ namespace JosephM.Xrm.Vsix.Application
 
         public virtual void LoadViewModel(TabAreaViewModelBase viewModel, bool showCompletionScreen = true, bool isModal = false)
         {
-            LoadDialogIntoWindow(viewModel, showCompletionScreen, isModal);
+            if (!isModal)
+                DoOnMainThread(() => LoadDialogIntoWindow(viewModel, showCompletionScreen, isModal));
+            else
+                LoadDialogIntoWindow(viewModel, showCompletionScreen, isModal);
         }
 
         public static void LoadDialogIntoWindow(TabAreaViewModelBase viewModel, bool showCompletionScreen = true, bool isModal = false)
-        {
+        { 
             var window = new WindowShellWindow
             {
                 Title = viewModel.TabLabel

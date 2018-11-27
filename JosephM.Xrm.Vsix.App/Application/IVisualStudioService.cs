@@ -5,16 +5,19 @@ namespace JosephM.Xrm.Vsix.Application
     public interface IVisualStudioService
     {
         string SolutionDirectory { get; }
-        string AddSolutionItem(string name, string serialised);
-        string AddSolutionItem<T>(string name, T objectToSerialise);
-        string AddSolutionItem(string fileQualified);
+        string AddVsixSetting(string name, string serialised);
+        string AddVsixSetting<T>(string name, T objectToSerialise);
+        string AddVsixSetting(string fileQualified);
         IEnumerable<IVisualStudioProject> GetSolutionProjects();
         void AddFolder(string folderDirectory);
-        string GetSolutionItemText(string name);
+        string GetVsixSettingText(string name);
+        string GetItemText(string name, string folderName);
         string BuildSelectedProjectAndGetAssemblyName();
         string GetSelectedProjectAssemblyName();
         IEnumerable<string> GetSelectedFileNamesQualified();
         IEnumerable<IVisualStudioItem> GetSelectedItems();
+        ISolutionFolder GetSolutionFolder(string solutionFolderName);
+        string ItemFolderName { get; }
     }
 
     public interface IVisualStudioProject

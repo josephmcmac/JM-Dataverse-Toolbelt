@@ -64,8 +64,8 @@ namespace JosephM.Xrm.Vsix.Test
                     //okay we 
                     if (InitialiseModuleXrmConnection)
                     {
-                        _visualStudioService.AddSolutionItem("solution.xrmconnection", GetXrmRecordConfiguration());
-                        _visualStudioService.AddSolutionItem("xrmpackage.xrmsettings", GetTestPackageSettings());
+                        _visualStudioService.AddVsixSetting("solution.xrmconnection", GetXrmRecordConfiguration());
+                        _visualStudioService.AddVsixSetting("xrmpackage.xrmsettings", GetTestPackageSettings());
                     }
                 }
                 return _visualStudioService;

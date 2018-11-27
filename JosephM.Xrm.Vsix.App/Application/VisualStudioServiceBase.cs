@@ -42,10 +42,10 @@ namespace JosephM.Xrm.Vsix.Application
             carryProject.CopyFilesIntoSolutionFolder(folderDirectory);
         }
 
-        public string AddSolutionItem(string name, string serialised)
+        public string AddVsixSetting(string name, string serialised)
         {
-            var project = AddSolutionFolder("SolutionItems");
-            var solutionItemsFolder = SolutionDirectory + @"\SolutionItems";
+            var project = AddSolutionFolder(ItemFolderName);
+            var solutionItemsFolder = SolutionDirectory + @"\" + ItemFolderName;
             FileUtility.WriteToFile(solutionItemsFolder, name, serialised);
             project.AddProjectItem(Path.Combine(solutionItemsFolder, name));
             return Path.Combine(solutionItemsFolder, name);
@@ -53,7 +53,7 @@ namespace JosephM.Xrm.Vsix.Application
 
         protected abstract ISolutionFolder AddSolutionFolder(string name);
 
-        public string AddSolutionItem<T>(string name, T objectToSerialise)
+        public string AddVsixSetting<T>(string name, T objectToSerialise)
         {
             if (objectToSerialise is XrmRecordConfiguration)
             {
@@ -61,33 +61,24 @@ namespace JosephM.Xrm.Vsix.Application
                 foreach (var prop in objectToSerialise.GetType().GetReadWriteProperties())
                 {
                     var value = objectToSerialise.GetPropertyValue(prop.Name);
-                    dictionary.Add(prop.Name, value == null ? null : value.ToString());
+                    dictionary.Add(prop.Name, value?.ToString());
                 }
-                name = "solution.xrmconnection";
                 var serialised = JsonHelper.ObjectToJsonString(dictionary);
 
-                var solutionItemFile = AddSolutionItem(name, serialised);
+                var solutionItemFile = AddVsixSetting(name, serialised);
 
-                foreach (var item in GetSolutionProjects())
-                {
-                    if (item.Name.EndsWith(".Test"))
-                    {
-                        var linkedConnectionItem = item.AddProjectItem(solutionItemFile);
-                        linkedConnectionItem.SetProperty("CopyToOutputDirectory", 1);
-                    }
-                }
                 return solutionItemFile;
             }
             else
             {
                 var json = JsonHelper.ObjectAsTypeToJsonString(objectToSerialise);
-                return AddSolutionItem(name, json);
+                return AddVsixSetting(name, json);
             }
         }
 
-        public string AddSolutionItem(string fileQualified)
+        public string AddVsixSetting(string fileQualified)
         {
-            var project = AddSolutionFolder("SolutionItems");
+            var project = AddSolutionFolder(ItemFolderName);
             if (fileQualified.StartsWith(SolutionDirectory))
             {
                 var subString = fileQualified.Substring(SolutionDirectory.Length + 1);
@@ -110,15 +101,42 @@ namespace JosephM.Xrm.Vsix.Application
 
         public abstract string GetSelectedProjectAssemblyName();
 
-        public string GetSolutionItemText(string name)
+        public string GetVsixSettingText(string name)
+        {
+            //chnaged folder used so also check old folder
+            //if new one not present
+            var folderNames = new[]
+            {
+                ItemFolderName,
+                "SolutionItems"
+            };
+
+            foreach(var possibleFolder in folderNames)
+            {
+                var text = GetItemText(name, possibleFolder);
+                if (text != null)
+                    return text;
+            }
+            return null;
+        }
+
+        public string ItemFolderName
+        {
+            get
+            {
+                return "Xrm.Vsix";
+            }
+        }
+
+        public string GetItemText(string name, string folderName)
         {
             string fileName = null;
-            var solutionItems = GetSolutionFolder("SolutionItems");
+            var solutionItems = GetSolutionFolder(folderName);
             if (solutionItems == null)
                 return null;
             foreach (var item in solutionItems.ProjectItems)
             {
-                if (item.Name == name)
+                if (item.Name?.ToLower() == name?.ToLower())
                 {
                     fileName = item.FileName;
                 }
@@ -128,7 +146,7 @@ namespace JosephM.Xrm.Vsix.Application
             return File.ReadAllText(fileName);
         }
 
-        protected abstract ISolutionFolder GetSolutionFolder(string solutionFolderName);
+        public abstract ISolutionFolder GetSolutionFolder(string solutionFolderName);
 
         public abstract IEnumerable<IVisualStudioProject> GetSolutionProjects();
     }

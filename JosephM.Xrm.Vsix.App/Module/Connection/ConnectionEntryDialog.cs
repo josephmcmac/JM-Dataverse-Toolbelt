@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Dialog;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.XrmModule.SavedXrmConnections;
@@ -45,7 +46,10 @@ namespace JosephM.Xrm.Vsix.Module.Connection
             ObjectToEnter.HideActive = false;
             if (AddToSolution)
             {
-                VisualStudioService.AddSolutionItem("solution.xrmconnection", ObjectToEnter);
+                var settingsManager = ApplicationController.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
+                if (settingsManager == null)
+                    throw new NullReferenceException("settingsManager");
+                settingsManager.SaveSettingsObject(ObjectToEnter);
             }
             CompletionMessage = "Connection Refreshed";
             if (DoPostEntry != null)

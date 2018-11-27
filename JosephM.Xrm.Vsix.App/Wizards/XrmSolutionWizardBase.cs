@@ -153,9 +153,10 @@ namespace JosephM.Xrm.Vsix.Wizards
 
             var visualStudioService = new VisualStudioService(DTE, useSolutionDirectory: DestinationDirectory);
             //add xrm connection and package settings to solution items
-            visualStudioService.AddSolutionItem("xrmpackage.xrmsettings", XrmPackageSettings);
+            var vsixSettingsManager = new VsixSettingsManager(visualStudioService, null);
+            vsixSettingsManager.SaveSettingsObject(XrmPackageSettings);
             if (XrmPackageSettings.Connections.Any())
-                visualStudioService.AddSolutionItem("solution.xrmconnection", XrmPackageSettings.Connections.First());
+                vsixSettingsManager.SaveSettingsObject(XrmPackageSettings.Connections.First());
             visualStudioService.CloseAllDocuments();
 
             RemoveEmptyFolders(DestinationDirectory);

@@ -92,7 +92,7 @@ namespace JosephM.Xrm.Vsix.Test
             return new FakeVisualStudioSolutionFolder(qualifiedDirectory);
         }
 
-        protected override ISolutionFolder GetSolutionFolder(string name)
+        public override ISolutionFolder GetSolutionFolder(string name)
         {
             var qualifiedDirectory = Path.Combine(SolutionDirectory, name);
             if (!Directory.Exists(qualifiedDirectory))

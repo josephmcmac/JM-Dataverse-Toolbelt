@@ -69,7 +69,7 @@ namespace JosephM.Xrm.Vsix.Application
                 Solution.SaveAs(Solution.FullName);
         }
 
-        protected override ISolutionFolder GetSolutionFolder(string solutionFolderName)
+        public override ISolutionFolder GetSolutionFolder(string solutionFolderName)
         {
             var project = GetProject(DTE.Solution as Solution2, solutionFolderName);
             return project == null ? null : new VisualStudioSolutionFolder(project);
