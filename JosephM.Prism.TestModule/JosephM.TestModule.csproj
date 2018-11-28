@@ -94,8 +94,6 @@
     <Compile Include="AllPropertyTypesCompact\TestSettingsTypeCompactEnumerated.cs" />
     <Compile Include="AllPropertyTypes\TestSettingsTypeEnumerated.cs" />
     <Compile Include="AllPropertyTypes\TestSettingsType.cs" />
-    <Compile Include="ObjectEncrypt\TestClassToEncrypt.cs" />
-    <Compile Include="ObjectEncrypt\TestObjectEncryptDialog.cs" />
     <Compile Include="TestCrud\TestCrudDialog.cs" />
     <Compile Include="TestCrud\TestCrudModule.cs" />
     <Compile Include="AllPropertyTypes\AllPropertyTypesDialog.cs" />
@@ -158,10 +156,6 @@
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.ObjectEncryption\JosephM.ObjectEncryption.csproj">
-      <Project>{2FE73DC9-7959-4944-B594-29E73AA79604}</Project>
-      <Name>JosephM.ObjectEncryption</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>

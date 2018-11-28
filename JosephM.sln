@@ -115,10 +115,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.XrmDeveloperTool", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Spreadsheet", "JosephM.Spreadsheet\JosephM.Spreadsheet.csproj", "{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EncryptObject", "EncryptObject", "{31A0E44B-CA42-41D3-837D-1B5677F97245}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.ObjectEncryption", "JosephM.ObjectEncryption\JosephM.ObjectEncryption.csproj", "{2FE73DC9-7959-4944-B594-29E73AA79604}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Record.Sql", "JosephM.Record.Sql\JosephM.Record.Sql.csproj", "{53651F05-D505-4D59-8FED-E723D26E491F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}"
@@ -134,8 +130,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.CustomisationExporter", "JosephM.CustomisationExporter\JosephM.CustomisationExporter.csproj", "{0A84403C-046E-48FF-967C-30CDDA6AF07A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.CustomisationExporter.Test", "JosephM.CustomisationExporter.Test\JosephM.CustomisationExporter.Test.csproj", "{E4394274-2B36-4F39-8228-D35C44EFA078}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.ObjectEncryption.Test", "JosephM.ObjectEncryption.Test\JosephM.ObjectEncryption.Test.csproj", "{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Deployment", "JosephM.Deployment\JosephM.Deployment.csproj", "{82118987-FB76-4E70-81A0-06D0B062D89C}"
 EndProject
@@ -216,10 +210,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB FILE", "WEB FILE", "{47
 		SolutionItems\TestFiles\WEB FILE\TESTDEPLOYINTO.css = SolutionItems\TestFiles\WEB FILE\TESTDEPLOYINTO.css
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xrm.Vsix", "Xrm.Vsix", "{2D932723-7578-4B9B-B063-07DF1AF32C87}"
+	ProjectSection(SolutionItems) = preProject
+		Xrm.Vsix\joseph.mcgregor-macd.solution.xrmconnection = Xrm.Vsix\joseph.mcgregor-macd.solution.xrmconnection
+		Xrm.Vsix\joseph.mcgregor-macd.xrmpackage.xrmsettings = Xrm.Vsix\joseph.mcgregor-macd.xrmpackage.xrmsettings
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -541,16 +538,6 @@ Global
 		{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}.Release|x86.ActiveCfg = Release|x86
 		{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}.Release|x86.Build.0 = Release|x86
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{2FE73DC9-7959-4944-B594-29E73AA79604}.Release|x86.ActiveCfg = Release|Any CPU
 		{53651F05-D505-4D59-8FED-E723D26E491F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{53651F05-D505-4D59-8FED-E723D26E491F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53651F05-D505-4D59-8FED-E723D26E491F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -623,16 +610,6 @@ Global
 		{E4394274-2B36-4F39-8228-D35C44EFA078}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E4394274-2B36-4F39-8228-D35C44EFA078}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E4394274-2B36-4F39-8228-D35C44EFA078}.Release|x86.ActiveCfg = Release|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F}.Release|x86.ActiveCfg = Release|Any CPU
 		{82118987-FB76-4E70-81A0-06D0B062D89C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{82118987-FB76-4E70-81A0-06D0B062D89C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82118987-FB76-4E70-81A0-06D0B062D89C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -878,8 +855,6 @@ Global
 		{BB5BB40F-282B-4CF0-A165-533AB810D61D} = {472650C0-A212-4FA5-9015-576734061227}
 		{F303560E-2FD6-4198-BE27-3EAC2446103C} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 		{CAFB2299-A90B-4FAA-AAFA-9BB958742D45} = {42B099DB-0DD6-4312-B980-09AEAD911B90}
-		{31A0E44B-CA42-41D3-837D-1B5677F97245} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
-		{2FE73DC9-7959-4944-B594-29E73AA79604} = {31A0E44B-CA42-41D3-837D-1B5677F97245}
 		{53651F05-D505-4D59-8FED-E723D26E491F} = {67CE8CD0-4F37-4A0B-897A-E126AF300F8D}
 		{EA89F426-09BA-4F87-B5C5-17CFFB6A89F8} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 		{7BF3E622-67CA-4E67-A9CA-F3B334C954FD} = {EA89F426-09BA-4F87-B5C5-17CFFB6A89F8}
@@ -888,7 +863,6 @@ Global
 		{B3005F0C-ACFC-4C16-8379-46B6DECA302A} = {F9B7BDB4-5B16-499F-830C-36BE12EC665E}
 		{0A84403C-046E-48FF-967C-30CDDA6AF07A} = {8E90EB5E-EA6B-4CBC-B45F-1EB2790D00CC}
 		{E4394274-2B36-4F39-8228-D35C44EFA078} = {8E90EB5E-EA6B-4CBC-B45F-1EB2790D00CC}
-		{CDBE4B3F-5E45-417C-95EB-8745B4D2D77F} = {31A0E44B-CA42-41D3-837D-1B5677F97245}
 		{82118987-FB76-4E70-81A0-06D0B062D89C} = {B4EC23AA-5796-4C36-BAD7-7D82411E5027}
 		{F52C0989-0F48-419A-B4CF-591F8ADA8DD1} = {B4EC23AA-5796-4C36-BAD7-7D82411E5027}
 		{7C85339E-A485-44A4-BCA0-C5A533AB3E01} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
@@ -917,8 +891,11 @@ Global
 		{47CB7C29-2618-4E81-A651-9880CA6CFC2E} = {750AC5D1-B85A-4912-8F27-1BC6541F79AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
