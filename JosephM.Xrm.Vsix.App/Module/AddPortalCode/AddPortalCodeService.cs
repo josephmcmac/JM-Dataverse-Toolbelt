@@ -35,7 +35,7 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
             //and for each item not null add somehting to the vs solution
             foreach (var config in exportConfigs)
             {
-                controller.UpdateProgress(done++, toDo, "Exporting " + config + " Code");
+                controller.UpdateProgress(done++, toDo, "Exporting " + config.RecordType + " Code");
                 var query = new QueryDefinition(config.RecordType);
                 if (config.Conditions != null)
                     query.RootFilter.Conditions.AddRange(config.Conditions);
