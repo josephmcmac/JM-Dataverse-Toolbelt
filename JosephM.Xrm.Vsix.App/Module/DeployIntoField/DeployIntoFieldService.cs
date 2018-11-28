@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Service;
+﻿using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
@@ -42,6 +43,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                     Name = fileInfo.Name
                 };
                 response.AddResponseItem(thisResponseItem);
+
                 try
                 {
 
@@ -72,6 +74,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                         {
                             throw new NullReferenceException($"There is no {Service.GetDisplayName(recordType)} record name {fileInfo.Name} to load the file attachment into");
                         }
+                        thisResponseItem.Link = new Url(Service.GetWebUrl(matchingRecord.Type, matchingRecord.Id), "Open");
                         //get matching attachment by name else create a new one
                         var fileAttachments = Service.RetrieveAllAndClauses(Entities.annotation, new[]
                         {
@@ -110,7 +113,11 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                         var nameToMatch = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf("."));
 
                         var matchingRecord = GetRecordToDeployInto(recordType, nameToMatch, containingFolderParentName);
-
+                        if (matchingRecord == null)
+                        {
+                            throw new NullReferenceException($"There is no {Service.GetDisplayName(recordType)} record name {fileInfo.Name} to load the file attachment into");
+                        }
+                        thisResponseItem.Link = new Url(Service.GetWebUrl(matchingRecord.Type, matchingRecord.Id), "Open");
                         var targetField = GetTargetField(fileInfo, recordType);
 
                         var contentText = File.ReadAllText(file);

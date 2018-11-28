@@ -49,12 +49,14 @@ namespace JosephM.Xrm.Vsix.Application
             return new VisualStudioSolutionFolder(Solution.AddSolutionFolder(folder));
         }
 
-        public override IEnumerable<IVisualStudioProject> GetSolutionProjects()
+        public override IVisualStudioProject GetProject(string name)
         {
-            var projects = new List<IVisualStudioProject>();
-            foreach(Project project in Solution.Projects)
-                projects.Add(new VisualStudioProject(project));
-            return projects;
+            foreach (Project project in Solution.Projects)
+            {
+                if (project.Name == name)
+                    return new VisualStudioProject(project);
+            }
+            throw new NullReferenceException("Couldnt find project named " + name);
         }
 
         public void CloseAllDocuments()
@@ -69,7 +71,7 @@ namespace JosephM.Xrm.Vsix.Application
                 Solution.SaveAs(Solution.FullName);
         }
 
-        protected override ISolutionFolder GetSolutionFolder(string solutionFolderName)
+        public override ISolutionFolder GetSolutionFolder(string solutionFolderName)
         {
             var project = GetProject(DTE.Solution as Solution2, solutionFolderName);
             return project == null ? null : new VisualStudioSolutionFolder(project);

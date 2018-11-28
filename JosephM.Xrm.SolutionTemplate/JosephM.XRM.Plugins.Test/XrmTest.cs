@@ -10,10 +10,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Schema;
+using System.Reflection;
 
 namespace $safeprojectname$
 {
-    [DeploymentItem("solution.xrmconnection")]
     [TestClass]
     public abstract class XrmTest
     {
@@ -52,8 +52,24 @@ namespace $safeprojectname$
         {
             get
             {
-                var readEncryptedConfig = File.ReadAllText("solution.xrmconnection");
-                var dictionary =
+            var assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
+            var fileInfo = new FileInfo(assemblyLocation.Substring(8));
+            var carryDirectory = fileInfo.Directory;
+            var nameOfRootFolderInSolution = new[] { "TestResults", Assembly.GetExecutingAssembly().GetName().Name };
+            while (carryDirectory.Parent != null && !nameOfRootFolderInSolution.Contains(carryDirectory.Name))
+            {
+                carryDirectory = carryDirectory.Parent;
+                if (nameOfRootFolderInSolution.Contains(carryDirectory.Name))
+                {
+                    carryDirectory = carryDirectory.Parent;
+                    break;
+                }
+            }
+            if (carryDirectory.Parent == null)
+                throw new Exception("Error resolving connection file");
+            var fileName = Path.Combine(carryDirectory.FullName, "Xrm.Vsix", Environment.UserName + ".solution.xrmconnection");
+            var readEncryptedConfig = File.ReadAllText(fileName);
+            var dictionary =
                     (Dictionary<string, string>)
                         JsonHelper.JsonStringToObject(readEncryptedConfig, typeof(Dictionary<string, string>));
 

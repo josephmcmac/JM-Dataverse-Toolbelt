@@ -7,6 +7,7 @@ using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Collections.Generic;
 using JosephM.Application.Desktop.Application;
+using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Application
 {
@@ -23,26 +24,32 @@ namespace JosephM.Xrm.Vsix.Application
 
         public TSettingsObject Resolve<TSettingsObject>(Type settingsType = null) where TSettingsObject : new()
         {
-
             var type = settingsType ?? typeof(TSettingsObject);
-            if (SolutionSettingTypes.ContainsKey(type))
+            var savedFileSetting = GetSavedSolutionFileSetting(type);
+            if (savedFileSetting != null)
             {
-                var fileName = MapTypeToFileName(settingsType ?? typeof(TSettingsObject));
+                string readFileContents = null;
 
-                string read = fileName != null ? VisualStudioService.GetSolutionItemText(fileName) : null;
+                var fileName = savedFileSetting.FileName;
+                if(savedFileSetting.UsePersonalisedFile)
+                    readFileContents = VisualStudioService.GetVsixSettingText(savedFileSetting.PersonalisedFileName);
+                if(readFileContents == null)
+                    readFileContents = VisualStudioService.GetVsixSettingText(fileName);
 
-                if (string.IsNullOrEmpty(read))
+                if (string.IsNullOrEmpty(readFileContents))
                     return new TSettingsObject();
                 else
                 {
                     if (type == typeof(XrmRecordConfiguration))
                     {
-                        //csan't recall why but this type is saved as a dictionary rather than just an object
-                        //maybe due to interfaces
-                        var dictionary = string.IsNullOrEmpty(read)
+                        //this saved as a dictionary rather than object
+                        //because the solution template test project
+                        //needs to deserialise it to a new defined type
+                        //with different namespaces
+                        var dictionary = string.IsNullOrEmpty(readFileContents)
                             ? new Dictionary<string, string>()
                             : (Dictionary<string, string>)
-                                JsonHelper.JsonStringToObject(read, typeof(Dictionary<string, string>));
+                                JsonHelper.JsonStringToObject(readFileContents, typeof(Dictionary<string, string>));
 
                         var xrmConfig = new TSettingsObject();
                         foreach (var prop in xrmConfig.GetType().GetReadWriteProperties())
@@ -53,7 +60,7 @@ namespace JosephM.Xrm.Vsix.Application
                         return xrmConfig;
                     }
                     else
-                        return (TSettingsObject)JsonHelper.JsonStringToObject(read, type);
+                        return (TSettingsObject)JsonHelper.JsonStringToObject(readFileContents, type);
                 }
             }
             else
@@ -70,16 +77,19 @@ namespace JosephM.Xrm.Vsix.Application
             if (settingsObject is SavedXrmConnections)
                 return;
             var type = settingsType ?? settingsObject.GetType();
-            if (SolutionSettingTypes.ContainsKey(type))
-                VisualStudioService.AddSolutionItem(MapTypeToFileName(type), settingsObject);
+            if (settingsObject is XrmRecordConfiguration)
+                type = typeof(XrmRecordConfiguration);
+            var savedFileSetting = GetSavedSolutionFileSetting(type);
+            if (savedFileSetting != null)
+                VisualStudioService.AddVsixSetting(savedFileSetting.UsePersonalisedFile ? savedFileSetting.PersonalisedFileName : savedFileSetting.FileName, settingsObject);
             else
                 DesktopSettingsManager.SaveSettingsObject(settingsObject, settingsType: settingsType);
         }
 
-        private string MapTypeToFileName(Type type)
+        private SaveSolutionFileSetting GetSavedSolutionFileSetting(Type type)
         {
-            return SolutionSettingTypes.ContainsKey(type)
-                ? SolutionSettingTypes[type]
+            return SavedSolutionFileSettings.Any(sfs => sfs.Class == type)
+                ? SavedSolutionFileSettings.First(sfs => sfs.Class == type)
                 : null;
         }
 
@@ -87,20 +97,41 @@ namespace JosephM.Xrm.Vsix.Application
         /// defines these types are stored in the visual studio solution with the given file name
         /// if no enytry then it is stored in the user settings file for global use (rather than solution specific)
         /// </summary>
-        private Dictionary<Type, string> SolutionSettingTypes
+        private IEnumerable<SaveSolutionFileSetting> SavedSolutionFileSettings
         {
             get
             {
-                return new Dictionary<Type, string>
+                return new []
                 {
-                    { typeof(XrmPackageSettings), "xrmpackage.xrmsettings" },
-                    { typeof(XrmRecordConfiguration), "solution.xrmconnection" }
+                    new SaveSolutionFileSetting(typeof(XrmPackageSettings), "xrmpackage.xrmsettings", true),
+                    new SaveSolutionFileSetting(typeof(XrmRecordConfiguration), "solution.xrmconnection", true)
                 };
             }
         }
 
         void ISettingsManager.ProcessNamespaceChange(string newNamespace, string oldNamespace)
         {
+        }
+
+        private class SaveSolutionFileSetting
+        {
+            public SaveSolutionFileSetting(Type type, string fileName, bool usePersonalisedFile)
+            {
+                Class = type;
+                FileName = fileName;
+                UsePersonalisedFile = usePersonalisedFile;
+            }
+
+            public Type Class { get; set; }
+            public string FileName { get; set; }
+            public bool UsePersonalisedFile { get; set; }
+            public string PersonalisedFileName
+            {
+                get
+                {
+                    return Environment.UserName?.ToLower() + "." + FileName;
+                }
+            }
         }
     }
 }

@@ -61,10 +61,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="FakeVisualStudioProject.cs" />
     <Compile Include="FakeVisualStudioService.cs" />
     <Compile Include="FakeVisualStudioProjectItem.cs" />
     <Compile Include="FakeVisualStudioSolutionFolder.cs" />
     <Compile Include="FakeVsixApplicationController.cs" />
+    <Compile Include="VsixAddPortalCodeTests.cs" />
     <Compile Include="VsixXrmCrudDialogTests.cs" />
     <Compile Include="VsixDeployIntoFieldTests.cs" />
     <Compile Include="VsixManagePluginTriggersTests.cs" />

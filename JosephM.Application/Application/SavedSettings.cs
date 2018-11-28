@@ -12,7 +12,6 @@ namespace JosephM.Application.Application
         }
 
         [DoNotAllowAdd]
-
         public IEnumerable<object> SavedRequests { get;  set; }
     }
 }

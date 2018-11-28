@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 using JosephM.XrmModule.AppConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
 
 namespace JosephM.XrmModule.Test
 {
@@ -86,7 +88,7 @@ namespace JosephM.XrmModule.Test
             };
         }
 
-        public void RecreatePortalData()
+        public void RecreatePortalData(bool createSecondDuplicateSite = false)
         {
             DeleteAll(Entities.adx_websitelanguage);
             DeleteAll(Entities.adx_webrole);
@@ -94,6 +96,7 @@ namespace JosephM.XrmModule.Test
             DeleteAll(Entities.adx_webpageaccesscontrolrule);
             DeleteAll(Entities.adx_entityform);
             DeleteAll(Entities.adx_entityformmetadata);
+            DeleteAll(Entities.adx_entitylist);
             DeleteAll(Entities.adx_webform);
             DeleteAll(Entities.adx_webformstep);
             DeleteAll(Entities.adx_webformmetadata);
@@ -101,21 +104,54 @@ namespace JosephM.XrmModule.Test
             DeleteAll(Entities.adx_weblinkset);
             DeleteAll(Entities.adx_website);
             DeleteAll(Entities.adx_webfile);
+            DeleteAll(Entities.adx_webtemplate);
 
-            var website = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
+            var website1 = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
             {
-                { Fields.adx_website_.adx_name, "Fake Site" }
+                { Fields.adx_website_.adx_name, "Fake Site 1" }
             });
+            CreateWebsiteRecords(website1);
 
+            if (createSecondDuplicateSite)
+            {
+                var website2 = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
+                {
+                    { Fields.adx_website_.adx_name, "Fake Site 2" }
+                });
+                CreateWebsiteRecords(website2);
+            }
+        }
+
+        private void CreateWebsiteRecords(Entity website)
+        {
             var webFile = CreateTestRecord(Entities.adx_webfile, new Dictionary<string, object>
             {
-                { Fields.adx_webfile_.adx_name, "Fake Web File" }
+                { Fields.adx_webfile_.adx_name, "Fake Web File.css" },
+                { Fields.adx_webfile_.adx_websiteid, website.ToEntityReference() }
             });
 
+            var file = Path.Combine(GetSolutionRootFolder().FullName, "SolutionItems", "TestFiles", "WEB FILE", "TESTDEPLOYINTO.css");
+            var contentBytes = File.ReadAllBytes(file);
+            var contentBase64String = Convert.ToBase64String(contentBytes);
             var webFileAttachment = CreateTestRecord(Entities.annotation, new Dictionary<string, object>
             {
-                { Fields.annotation_.subject, "Fake Web File" },
-                { Fields.annotation_.objectid, webFile.ToEntityReference() }
+                { Fields.annotation_.subject, "Fake Web File.css" },
+                { Fields.annotation_.objectid, webFile.ToEntityReference() },
+                { Fields.annotation_.documentbody, contentBase64String },
+            });
+
+            var webTemplate1 = CreateTestRecord(Entities.adx_webtemplate, new Dictionary<string, object>
+            {
+                { Fields.adx_webtemplate_.adx_name, "Fake Web Template 1" },
+                { Fields.adx_webtemplate_.adx_websiteid, website.ToEntityReference() },
+                { Fields.adx_webtemplate_.adx_source, "<html><body><div>Web Template 1</div></body></html>" }
+            });
+
+            var webTemplate2 = CreateTestRecord(Entities.adx_webtemplate, new Dictionary<string, object>
+            {
+                { Fields.adx_webtemplate_.adx_name, "Fake Web Template 2" },
+                { Fields.adx_webtemplate_.adx_websiteid, website.ToEntityReference() },
+                { Fields.adx_webtemplate_.adx_source, "<html><body><div>Web Template 2</div></body></html>" }
             });
 
             var weblinkSet1 = CreateTestRecord(Entities.adx_weblinkset, new Dictionary<string, object>
@@ -170,13 +206,19 @@ namespace JosephM.XrmModule.Test
 
             var webPage = CreateTestRecord(Entities.adx_webpage, new Dictionary<string, object>
             {
-                { Fields.adx_webpage_.adx_name, "IScriptWebPage" }
+                { Fields.adx_webpage_.adx_name, "IScriptWebPage" },
+                { Fields.adx_webpage_.adx_websiteid, website.ToEntityReference() },
+                { Fields.adx_webpage_.adx_copy, "<div>Page Copy Parent</div>" }
             });
             var childWebPage = CreateTestRecord(Entities.adx_webpage, new Dictionary<string, object>
             {
                 { Fields.adx_webpage_.adx_name, "IScriptWebPage" },
+                { Fields.adx_webpage_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_webpage_.adx_rootwebpageid, webPage.ToEntityReference() },
-                { Fields.adx_webpage_.adx_webpagelanguageid, websiteLanguage.ToEntityReference() }
+                { Fields.adx_webpage_.adx_webpagelanguageid, websiteLanguage.ToEntityReference() },
+                { Fields.adx_webpage_.adx_copy, "<div>Page Copy</div>" },
+                { Fields.adx_webpage_.adx_customcss, ".class { color : white }" },
+                { Fields.adx_webpage_.adx_customjavascript, "var blah = 'javascript'" },
             });
             var webpageAccessControlRule = CreateTestRecord(Entities.adx_webpageaccesscontrolrule, new Dictionary<string, object>
             {
@@ -188,7 +230,9 @@ namespace JosephM.XrmModule.Test
 
             var entityForm = CreateTestRecord(Entities.adx_entityform, new Dictionary<string, object>
             {
-                { Fields.adx_entityform_.adx_name, "IScriptEntityForm" }
+                { Fields.adx_entityform_.adx_name, "IScriptEntityForm" },
+                { Fields.adx_entityform_.adx_websiteid, website.ToEntityReference() },
+                { Fields.adx_entityform_.adx_registerstartupscript, "var blah = 'entityform'" }
             });
 
             var entityFormMetadata1 = CreateTestRecord(Entities.adx_entityformmetadata, new Dictionary<string, object>
@@ -214,21 +258,31 @@ namespace JosephM.XrmModule.Test
                 { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.EntityFormMetadata.Type.Notes) }
             });
 
+            var entityList = CreateTestRecord(Entities.adx_entitylist, new Dictionary<string, object>
+            {
+                { Fields.adx_entitylist_.adx_name, "IScriptEntityList" },
+                { Fields.adx_entitylist_.adx_websiteid, website.ToEntityReference() },
+                { Fields.adx_entitylist_.adx_registerstartupscript, "var blah = 'entityform'" }
+            });
+
             var webForm = CreateTestRecord(Entities.adx_webform, new Dictionary<string, object>
             {
-                { Fields.adx_webform_.adx_name, "IScriptWebForm" }
+                { Fields.adx_webform_.adx_name, "IScriptWebForm" },
+                { Fields.adx_webform_.adx_websiteid, website.ToEntityReference() },
             });
 
             var webFormStep = CreateTestRecord(Entities.adx_webformstep, new Dictionary<string, object>
             {
                 { Fields.adx_webformstep_.adx_name, "IScriptWebFormStep1" },
-                { Fields.adx_webformstep_.adx_webform, webForm.ToEntityReference() }
+                { Fields.adx_webformstep_.adx_webform, webForm.ToEntityReference() },
+                { Fields.adx_webformstep_.adx_registerstartupscript, "var blah = 'web form step'" }
             });
 
             var webFormStep2 = CreateTestRecord(Entities.adx_webformstep, new Dictionary<string, object>
             {
                 { Fields.adx_webformstep_.adx_name, "IScriptWebFormStep2" },
-                { Fields.adx_webformstep_.adx_webform, webForm.ToEntityReference() }
+                { Fields.adx_webformstep_.adx_webform, webForm.ToEntityReference() },
+                { Fields.adx_webformstep_.adx_registerstartupscript, "var blah = 'web form step 2'" }
             });
 
             var webFormMetadata1 = CreateTestRecord(Entities.adx_webformmetadata, new Dictionary<string, object>

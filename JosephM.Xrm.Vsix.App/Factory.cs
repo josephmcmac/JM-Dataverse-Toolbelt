@@ -6,6 +6,7 @@ using JosephM.InstanceComparer;
 using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
+using JosephM.Xrm.Vsix.Module.AddPortalCode;
 using JosephM.Xrm.Vsix.Module.CreatePackage;
 using JosephM.Xrm.Vsix.Module.CustomisationImport;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
@@ -55,6 +56,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<JavaScriptOptionsModule>(0x0118);
             app.AddModule<OpenDefaultSolutionModule>(0x0119);
             app.AddModule<ThemeModule>(0x011A);
+            app.AddModule<AddPortalCodeModule>(0x011B);
             app.AddModule<PackageSettingsAppConnectionModule>();
 
             return app;

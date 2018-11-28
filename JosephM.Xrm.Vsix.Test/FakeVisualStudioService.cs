@@ -65,9 +65,15 @@ namespace JosephM.Xrm.Vsix.Test
             return PluginAssemblyName;
         }
 
-        public override IEnumerable<IVisualStudioProject> GetSolutionProjects()
+        public override IVisualStudioProject GetProject(string name)
         {
-            return new IVisualStudioProject[0];
+            foreach(var folder in Directory.GetDirectories(SolutionDirectory))
+            {
+                var directory = new DirectoryInfo(folder);
+                if (directory.Name == name)
+                    return new FakeVisualStudioProject(folder);
+            }
+            throw new NullReferenceException("Couldnt find folder named " + name);
         }
 
         private List<IVisualStudioItem> _selectedItems = new List<IVisualStudioItem>();
@@ -92,7 +98,7 @@ namespace JosephM.Xrm.Vsix.Test
             return new FakeVisualStudioSolutionFolder(qualifiedDirectory);
         }
 
-        protected override ISolutionFolder GetSolutionFolder(string name)
+        public override ISolutionFolder GetSolutionFolder(string name)
         {
             var qualifiedDirectory = Path.Combine(SolutionDirectory, name);
             if (!Directory.Exists(qualifiedDirectory))

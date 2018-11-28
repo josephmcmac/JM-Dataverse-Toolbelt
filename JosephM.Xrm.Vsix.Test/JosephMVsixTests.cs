@@ -64,8 +64,8 @@ namespace JosephM.Xrm.Vsix.Test
                     //okay we 
                     if (InitialiseModuleXrmConnection)
                     {
-                        _visualStudioService.AddSolutionItem("solution.xrmconnection", GetXrmRecordConfiguration());
-                        _visualStudioService.AddSolutionItem("xrmpackage.xrmsettings", GetTestPackageSettings());
+                        _visualStudioService.AddVsixSetting("solution.xrmconnection", GetXrmRecordConfiguration());
+                        _visualStudioService.AddVsixSetting("xrmpackage.xrmsettings", GetTestPackageSettings());
                     }
                 }
                 return _visualStudioService;
@@ -124,20 +124,6 @@ namespace JosephM.Xrm.Vsix.Test
             objectEntry.OnSave();
 
             Assert.AreEqual(1, GetTestPluginAssemblyRecords().Count());
-        }
-
-        public static DirectoryInfo GetSolutionRootFolder()
-        {
-            var rootFolderName = "XRM-Developer-Tool";
-            var fileInfo = new FileInfo(Assembly.GetExecutingAssembly().CodeBase.Substring(8));
-            var directory = fileInfo.Directory;
-            while (directory.Name != rootFolderName)
-            {
-                directory = directory.Parent;
-                if (directory == null)
-                    throw new NullReferenceException("Could not find solution root folder of name '" + rootFolderName + "' in " + fileInfo.FullName);
-            }
-            return directory;
         }
 
         public static DirectoryInfo GetRootFolder()
@@ -216,7 +202,7 @@ namespace JosephM.Xrm.Vsix.Test
             var originalConnection = xrmRecordService.XrmRecordConfiguration;
             xrmRecordService.XrmRecordConfiguration = new XrmRecordConfiguration();
             //lets delete the settings files, then verify they are recreated during the redirect entry
-            var solutionItemsFolder = Path.Combine(visualStudioService.SolutionDirectory, "SolutionItems");
+            var solutionItemsFolder = Path.Combine(visualStudioService.SolutionDirectory, visualStudioService.ItemFolderName);
             FileUtility.DeleteFiles(solutionItemsFolder);
             var solutionSettingFiles = FileUtility.GetFiles(solutionItemsFolder);
             Assert.AreEqual(0, solutionSettingFiles.Count());
