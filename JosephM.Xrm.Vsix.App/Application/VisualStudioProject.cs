@@ -35,10 +35,14 @@ namespace JosephM.Xrm.Vsix.Application
                     foreach (ProjectItem item in projectItems)
                     {
                         if (item.Name?.ToLower() == path?.ToLower())
+                        {
                             thisPartProjectItem = item;
+
+                        }
                     }
                     if (thisPartProjectItem == null)
                         thisPartProjectItem = projectItems.AddFolder(path);
+                    projectItems = thisPartProjectItem.ProjectItems;
                 }
             }
             var projectFileName = Project.FileName;

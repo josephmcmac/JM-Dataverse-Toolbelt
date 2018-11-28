@@ -46,7 +46,8 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                 foreach (var result in results)
                 {
                     ++done2;
-                    controller.UpdateLevel2Progress(done2, toDo2, $"Processing {done2}/{toDo2}");
+                    if (config.RecordType == Entities.adx_webfile)
+                        controller.UpdateLevel2Progress(done2, toDo2, $"Processing {done2}/{toDo2}");
                     var recordName = result.GetStringField(Service.GetPrimaryField(config.RecordType));
                     var rootFolderName = request.WebSite.Name;
                     var thisTypesFolderLabel = Service.GetDisplayName(config.RecordType);
