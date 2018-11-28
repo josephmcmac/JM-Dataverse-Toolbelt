@@ -10,6 +10,7 @@ using JosephM.Core.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using JosephM.Core.Service;
+using System.Reflection;
 
 namespace JosephM.Core.Test
 {
@@ -21,6 +22,20 @@ namespace JosephM.Core.Test
             FileUtility.DeleteSubFolders(TestingFolder);
             Controller = new LogController();
             Controller.AddUi(new DebugUserInterface());
+        }
+
+        public static DirectoryInfo GetSolutionRootFolder()
+        {
+            var rootFolderName = "XRM-Developer-Tool";
+            var fileInfo = new FileInfo(Assembly.GetExecutingAssembly().CodeBase.Substring(8));
+            var directory = fileInfo.Directory;
+            while (directory.Name != rootFolderName)
+            {
+                directory = directory.Parent;
+                if (directory == null)
+                    throw new NullReferenceException("Could not find solution root folder of name '" + rootFolderName + "' in " + fileInfo.FullName);
+            }
+            return directory;
         }
 
         protected LogController Controller { get; private set; }

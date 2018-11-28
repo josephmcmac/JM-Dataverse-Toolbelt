@@ -40,7 +40,7 @@ namespace JosephM.Xrm.Vsix.Test
             //run the deploy including a redirect to enter package settings first
             var originalConnection = HijackForPackageEntryRedirect(app);
             //lets delete the settings files, then verify they are recreated during the redirect entry
-            var solutionItemsFolder = Path.Combine(VisualStudioService.SolutionDirectory, "SolutionItems");
+            var solutionItemsFolder = Path.Combine(VisualStudioService.SolutionDirectory, VisualStudioService.ItemFolderName);
             FileUtility.DeleteFiles(solutionItemsFolder);
             var solutionSettingFiles = FileUtility.GetFiles(solutionItemsFolder);
             Assert.AreEqual(0, solutionSettingFiles.Count());

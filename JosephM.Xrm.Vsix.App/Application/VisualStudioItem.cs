@@ -6,6 +6,8 @@ namespace JosephM.Xrm.Vsix.Application
     {
         public SelectedItem Item { get; set; }
 
+        public string Name => Item.Name;
+
         public VisualStudioItem(SelectedItem item)
         {
             Item = item;

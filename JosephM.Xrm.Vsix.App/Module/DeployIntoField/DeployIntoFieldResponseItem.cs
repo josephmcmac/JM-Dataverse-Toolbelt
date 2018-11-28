@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Service;
+﻿using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 
 namespace JosephM.Xrm.Vsix.Module.DeployIntoField
 {
@@ -7,5 +8,6 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
         public string Name { get; set; }
         public bool Created { get; set; }
         public bool Updated { get; set; }
+        public Url Link { get; set; }
     }
 }

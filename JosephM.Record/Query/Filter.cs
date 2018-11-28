@@ -20,7 +20,7 @@ namespace JosephM.Record.Query
         }
 
 
-        public void AddCondition(string fieldname, ConditionType conditionType, string value)
+        public void AddCondition(string fieldname, ConditionType conditionType, object value)
         {
             Conditions.Add(new Condition(fieldname, conditionType, value));
         }

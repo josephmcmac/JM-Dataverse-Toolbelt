@@ -418,5 +418,83 @@ namespace JosephM.Record.Extentions
         {
             return recordService.GetFieldMetadata(fieldName, recordType).IntegerFormat;
         }
+
+        /// <summary>
+        /// Returns list of key values giving the types and field name parsed for the given string of field joins
+        /// key = type, value = field
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="fieldPath"></param>
+        /// <param name="sourceType"></param>
+        /// <returns></returns>
+        public static IEnumerable<KeyValuePair<string, string>> GetTypeFieldPath(this IRecordService service, string fieldPath, string sourceType)
+        {
+
+            var list = new List<KeyValuePair<string, string>>();
+            var splitOutFunction = fieldPath.Split(':');
+            if (splitOutFunction.Count() > 1)
+                fieldPath = splitOutFunction.ElementAt(1);
+            var split = fieldPath.Split('.');
+            var currentType = sourceType;
+            list.Add(new KeyValuePair<string, string>(currentType, split.ElementAt(0).Split('|').First()));
+            var i = 1;
+            if (split.Length > 1)
+            {
+                foreach (var item in split.Skip(1).Take(split.Length - 1))
+                {
+                    var fieldName = item.Split('|').First();
+                    if (split.ElementAt(i - 1).Contains("|"))
+                    {
+                        var targetType = split.ElementAt(i - 1).Split('|').Last();
+                        list.Add(new KeyValuePair<string, string>(targetType, fieldName));
+                        currentType = targetType;
+                    }
+                    else
+                    {
+                        var targetType = service.GetLookupTargetType(list.ElementAt(i - 1).Value, currentType);
+                        list.Add(new KeyValuePair<string, string>(targetType, fieldName));
+                        currentType = targetType;
+                    }
+                    i++;
+                }
+            }
+            return list;
+        }
+
+        public static void AddJoinCondition(this IRecordService service, QueryDefinition query, string fieldPath, ConditionType conditionType, object value)
+        {
+            var typeFieldPaths = service.GetTypeFieldPath(fieldPath, query.RecordType);
+            var splitOutFunction = fieldPath.Split(':');
+            if (splitOutFunction.Count() > 1)
+                fieldPath = splitOutFunction.ElementAt(1);
+            var splitTokens = fieldPath.Split('.');
+            if (typeFieldPaths.Count() == 1)
+            {
+                query.RootFilter.AddCondition(fieldPath, conditionType, value);
+            }
+            else
+            {
+                Join thisJoin = null;
+
+                for (var i = 0; i < typeFieldPaths.Count() - 1; i++)
+                {
+                    var lookupField = typeFieldPaths.ElementAt(i).Value;
+                    var path = string.Join(".", splitTokens.Take(i + 1)).Replace("|", "_");
+                    var targetType = typeFieldPaths.ElementAt(i + 1).Key;
+                    if (i == 0)
+                    {
+                        thisJoin = new Join(lookupField, targetType, service.GetPrimaryKey(targetType));
+                        query.Joins.Add(thisJoin);
+                    }
+                    else
+                    {
+                        var previousJoin = thisJoin;
+                        thisJoin = new Join(targetType, lookupField, service.GetPrimaryKey(targetType));
+                        previousJoin.Joins.Add(thisJoin);
+                    }
+                }
+                thisJoin.RootFilter.AddCondition(typeFieldPaths.Last().Value, conditionType, value);
+            }
+        }
     }
 }

@@ -147,7 +147,6 @@ namespace JosephM.Xrm.Vsix.Application
         }
 
         public abstract ISolutionFolder GetSolutionFolder(string solutionFolderName);
-
-        public abstract IEnumerable<IVisualStudioProject> GetSolutionProjects();
+        public abstract IVisualStudioProject GetProject(string name);
     }
 }

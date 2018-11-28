@@ -179,6 +179,12 @@
     <Compile Include="Application\VsixDependencyContainer.cs" />
     <Compile Include="Application\VsixSettingsManager.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="Module\AddPortalCode\AddPortalCodeDialog.cs" />
+    <Compile Include="Module\AddPortalCode\AddPortalCodeModule.cs" />
+    <Compile Include="Module\AddPortalCode\AddPortalCodeRequest.cs" />
+    <Compile Include="Module\AddPortalCode\AddPortalCodeResponse.cs" />
+    <Compile Include="Module\AddPortalCode\AddPortalCodeResponseItem.cs" />
+    <Compile Include="Module\AddPortalCode\AddPortalCodeService.cs" />
     <Compile Include="Module\Web\OpenAdvancedFindDialog.cs" />
     <Compile Include="Module\Web\OpenDefaultSolutionDialog.cs" />
     <Compile Include="Module\Web\OpenSolutionDialog.cs" />
