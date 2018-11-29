@@ -28,13 +28,25 @@ namespace JosephM.Xrm.Vsix.Test
             var webSite = XrmRecordService.GetFirst(Entities.adx_website, Fields.adx_website_.adx_name, websiteName);
             var request = new AddPortalCodeRequest
             {
-                ProjectName = fakeProjectName,
                 WebSite = XrmRecordService.ToLookup(webSite),
                 ExportWhereFieldEmpty = true,
                 CreateFolderForWebsiteName = true
             };
 
-            var responseViewModel = app.NavigateAndProcessDialogGetResponseViewModel<AddPortalCodeModule, AddPortalCodeDialog>(request);
+            var dialog = app.NavigateToDialog<AddPortalCodeModule, AddPortalCodeDialog>();
+            var entryForm = app.GetSubObjectEntryViewModel(dialog);
+            entryForm.GetLookupFieldFieldViewModel(nameof(AddPortalCodeRequest.WebSite)).SetValue(entryForm.GetLookupFieldFieldViewModel(nameof(AddPortalCodeRequest.WebSite)).ItemsSourceAsync.First(r => r.Record != null).Record);
+            entryForm.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.ExportWhereFieldEmpty)).Value = true;
+            entryForm.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.CreateFolderForWebsiteName)).Value = true;
+            foreach(var item in entryForm.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.RecordsToExport)).GridRecords)
+            {
+                item.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.Selected)).Value = true;
+            }
+            Assert.IsTrue(entryForm.Validate());
+            entryForm.SaveButtonViewModel.Invoke();
+
+
+            var responseViewModel = app.GetCompletionViewModel(dialog);
             var response = responseViewModel.GetObject() as AddPortalCodeResponse;
             Assert.IsFalse(response.HasError);
 

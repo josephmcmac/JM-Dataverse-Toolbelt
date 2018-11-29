@@ -10,7 +10,7 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
     [Group(Sections.Main, true, order: 10)]
     [Group(Sections.Options, true, order: 20)]
     [Group(Sections.TypesToInclude, true, order: 25, selectAll: true)]
-    [Group(Sections.RecordsToInclude, true, order: 30)]
+    [Group(Sections.RecordsToInclude, true, order: 30, selectAll: true)]
     [Instruction("This process will export html, javascript and css configured in portal records into files in the visual studio project\n\nOnce exported the code may be deployed into the dynamics instance by right clicking the file, then selecting the 'Deploy Into Record' option")]
     public class AddPortalCodeRequest : ServiceRequestBase, IValidatableObject
     {
@@ -19,8 +19,6 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
             IncludeHtml = true;
             IncludeCss = true;
             IncludeJavaScript = true;
-
-            IncludeAllRecordTypes = true;
 
             var exportConfigs = AddPortalCodeConfiguration.GetExportConfigs();
 
@@ -79,30 +77,22 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
         [DisplayName("Other (web file types)")]
         public bool IncludeOtherTypes { get; set; }
 
-
-        [Group(Sections.RecordsToInclude)]
-        [DisplayOrder(310)]
-        public bool IncludeAllRecordTypes { get; set; }
-
         [DoNotAllowAdd]
         [DoNotAllowDelete]
         [DoNotAllowGridOpen]
         [Group(Sections.RecordsToInclude)]
         [DisplayOrder(320)]
-        [PropertyInContextByPropertyValue(nameof(IncludeAllRecordTypes), false)]
         public IEnumerable<PortalRecordsToExport> RecordsToExport { get; set; }
 
         public bool IncludeType(string type)
         {
-            return IncludeAllRecordTypes
-                || (RecordsToExport != null  && RecordsToExport.Any(r => r.RecordType?.Key == type && r.Include));
+            return RecordsToExport != null  && RecordsToExport.Any(r => r.RecordType?.Key == type && r.Selected);
         }
 
         public IsValidResponse Validate()
         {
             var response = new IsValidResponse();
-            if(!IncludeAllRecordTypes
-                && (RecordsToExport == null || !RecordsToExport.Any(r => r.Include)))
+            if(RecordsToExport == null || !RecordsToExport.Any(r => r.Selected))
             {
                 response.AddInvalidReason("At Least One Record Type Must Be Included For Export");
             }
@@ -117,11 +107,13 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
             public const string RecordsToInclude = "Records To Include";
         }
 
-        public class PortalRecordsToExport
+        public class PortalRecordsToExport : ISelectable
         {
             [GridWidth(75)]
             [DisplayOrder(20)]
-            public bool Include { get; set; }
+            [DisplayName("Include")]
+            public bool Selected { get; set; }
+
             [ReadOnlyWhenSet]
             [DisplayOrder(10)]
             public RecordType RecordType { get; set; }
