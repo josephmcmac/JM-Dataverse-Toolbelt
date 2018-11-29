@@ -29,7 +29,9 @@ namespace JosephM.Xrm.Vsix.Test
             var request = new AddPortalCodeRequest
             {
                 ProjectName = fakeProjectName,
-                WebSite = XrmRecordService.ToLookup(webSite)
+                WebSite = XrmRecordService.ToLookup(webSite),
+                ExportWhereFieldEmpty = true,
+                CreateFolderForWebsiteName = true
             };
 
             var responseViewModel = app.NavigateAndProcessDialogGetResponseViewModel<AddPortalCodeModule, AddPortalCodeDialog>(request);

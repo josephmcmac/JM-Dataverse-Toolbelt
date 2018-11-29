@@ -140,6 +140,12 @@ namespace JosephM.XrmModule.Test
                 { Fields.annotation_.documentbody, contentBase64String },
             });
 
+            var webFile2 = CreateTestRecord(Entities.adx_webfile, new Dictionary<string, object>
+            {
+                { Fields.adx_webfile_.adx_name, "Fake Web File 2.css" },
+                { Fields.adx_webfile_.adx_websiteid, website.ToEntityReference() }
+            });
+
             var webTemplate1 = CreateTestRecord(Entities.adx_webtemplate, new Dictionary<string, object>
             {
                 { Fields.adx_webtemplate_.adx_name, "Fake Web Template 1" },
@@ -152,6 +158,12 @@ namespace JosephM.XrmModule.Test
                 { Fields.adx_webtemplate_.adx_name, "Fake Web Template 2" },
                 { Fields.adx_webtemplate_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_webtemplate_.adx_source, "<html><body><div>Web Template 2</div></body></html>" }
+            });
+
+            var webTemplate3 = CreateTestRecord(Entities.adx_webtemplate, new Dictionary<string, object>
+            {
+                { Fields.adx_webtemplate_.adx_name, "Fake Web Template 3" },
+                { Fields.adx_webtemplate_.adx_websiteid, website.ToEntityReference() },
             });
 
             var weblinkSet1 = CreateTestRecord(Entities.adx_weblinkset, new Dictionary<string, object>

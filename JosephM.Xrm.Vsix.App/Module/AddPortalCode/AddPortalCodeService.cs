@@ -11,7 +11,7 @@ using System.Text;
 
 namespace JosephM.Xrm.Vsix.Module.AddPortalCode
 {
-    public class AddPortalCodeService :
+    public partial class AddPortalCodeService :
         ServiceBase<AddPortalCodeRequest, AddPortalCodeResponse, AddPortalCodeResponseItem>
     {
         public AddPortalCodeService(XrmRecordService service, IVisualStudioService visualStudioService)
@@ -28,7 +28,9 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
         {
             var project = VisualStudioService.GetProject(request.ProjectName);
 
-            var exportConfigs = ExportConfigs;
+            var exportConfigs = AddPortalCodeConfiguration.GetExportConfigs()
+                .Where(c => request.IncludeType(c.RecordType))
+                .ToArray();
             var toDo = exportConfigs.Count();
             var done = 0;
             //okay so lets iterate the configurations
@@ -49,8 +51,11 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                     if (config.RecordType == Entities.adx_webfile)
                         controller.UpdateLevel2Progress(done2, toDo2, $"Processing {done2}/{toDo2}");
                     var recordName = result.GetStringField(Service.GetPrimaryField(config.RecordType));
-                    var rootFolderName = request.WebSite.Name;
                     var thisTypesFolderLabel = Service.GetDisplayName(config.RecordType);
+                    var path = new List<string>();
+                    if (request.CreateFolderForWebsiteName)
+                        path.Add(request.WebSite.Name);
+                    path.Add(thisTypesFolderLabel);
                     try
                     {
                         if (config.RecordType == Entities.adx_webfile)
@@ -58,17 +63,19 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                             var notes = Service.GetLinkedRecords(Entities.annotation, config.RecordType, Fields.annotation_.objectid, result.Id);
                             if (notes.Count() > 1)
                                 throw new Exception("There is more than 1 note attached to the file. You will need to delete the excess notes to export");
-                            else if (notes.Any())
+                            else if (notes.Any() || request.ExportWhereFieldEmpty)
                             {
-                                var note = notes.First();
-                                var fileContentBase64 = note.GetStringField(Fields.annotation_.documentbody);
-                                if(fileContentBase64 != null)
+                                string fileContent = notes.Any()
+                                    ? notes.First().GetStringField(Fields.annotation_.documentbody)
+                                    : null;
+                                if (fileContent != null)
                                 {
-                                    var data = Convert.FromBase64String(fileContentBase64);
-                                    var content = Encoding.UTF8.GetString(data);
-                                    var fileName = recordName;
-                                    project.AddItem(fileName, content, new[] { rootFolderName, thisTypesFolderLabel });
+                                    var data = Convert.FromBase64String(fileContent);
+                                    fileContent = Encoding.UTF8.GetString(data);
                                 }
+                                var fileName = recordName;
+                                if (IncludeExtention(request, fileName))
+                                    project.AddItem(fileName, fileContent, path.ToArray());
                             }
                         }
                         else
@@ -76,11 +83,12 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                             foreach (var field in config.FieldsToExport)
                             {
                                 var content = result.GetStringField(field.FieldName);
-                                if (content != null)
+                                if (content != null || request.ExportWhereFieldEmpty)
                                 {
                                     var fileExtention = field.Extention;
                                     var fileName = recordName + "." + fileExtention;
-                                    project.AddItem(fileName, content, new[] { rootFolderName, thisTypesFolderLabel });
+                                    if (IncludeExtention(request, fileName))
+                                        project.AddItem(fileName, content, path.ToArray());
                                 }
                             }
                         }
@@ -94,110 +102,19 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
             }
         }
 
-        private IEnumerable<ExportConfiguration> ExportConfigs
+        public bool IncludeExtention(AddPortalCodeRequest request, string fileName)
         {
-            get
+            if(fileName != null && fileName.LastIndexOf(".") > -1 && fileName.Length > fileName.LastIndexOf("."))
             {
-                return new []
-                {
-                    new ExportConfiguration
-                    {
-                        RecordType = Entities.adx_webpage,
-                        Conditions = new [] { new Condition(Fields.adx_webpage_.adx_rootwebpageid, ConditionType.NotNull) },
-                        WebSiteField = Fields.adx_webpage_.adx_websiteid,
-                        FieldsToExport = new []
-                        {
-                            new ExportConfiguration.ExportFieldConfigration
-                            {
-                                FieldName = Fields.adx_webpage_.adx_copy,
-                                Extention = "html"
-                            },
-                            new ExportConfiguration.ExportFieldConfigration
-                            {
-                                FieldName = Fields.adx_webpage_.adx_customjavascript,
-                                Extention = "js"
-                            },
-                            new ExportConfiguration.ExportFieldConfigration
-                            {
-                                FieldName = Fields.adx_webpage_.adx_customcss,
-                                Extention = "css"
-                            }
-                        }
-                    },
-                    new ExportConfiguration
-                    {
-                        RecordType = Entities.adx_webformstep,
-                        WebSiteField = Fields.adx_webformstep_.adx_webform + "." + Fields.adx_webform_.adx_websiteid,
-                        FieldsToExport = new []
-                        {
-                            new ExportConfiguration.ExportFieldConfigration
-                            {
-                                FieldName = Fields.adx_webformstep_.adx_registerstartupscript,
-                                Extention = "js"
-                            }
-                        }
-                    },
-                    new ExportConfiguration
-                    {
-                        RecordType = Entities.adx_webtemplate,
-                        WebSiteField = Fields.adx_webtemplate_.adx_websiteid,
-                        FieldsToExport = new []
-                        {
-                            new ExportConfiguration.ExportFieldConfigration
-                            {
-                                FieldName = Fields.adx_webtemplate_.adx_source,
-                                Extention = "html"
-                            }
-                        }
-                    },
-                    new ExportConfiguration
-                    {
-                        RecordType = Entities.adx_entityform,
-                        WebSiteField = Fields.adx_entityform_.adx_websiteid,
-                        FieldsToExport = new []
-                        {
-                            new ExportConfiguration.ExportFieldConfigration
-                            {
-                                FieldName = Fields.adx_entityform_.adx_registerstartupscript,
-                                Extention = "js"
-                            }
-                        }
-                    },
-                    new ExportConfiguration
-                    {
-                        RecordType = Entities.adx_entitylist,
-                        WebSiteField = Fields.adx_entitylist_.adx_websiteid,
-                        FieldsToExport = new []
-                        {
-                            new ExportConfiguration.ExportFieldConfigration
-                            {
-                                FieldName = Fields.adx_entitylist_.adx_registerstartupscript,
-                                Extention = "js"
-                            }
-                        }
-                    },
-                    new ExportConfiguration
-                    {
-                        RecordType = Entities.adx_webfile,
-                        WebSiteField = Fields.adx_webfile_.adx_websiteid
-                    }
-                };
+                var extention = fileName.Substring(fileName.LastIndexOf(".") + 1).ToLower();
+                if (extention == "htm" || extention == "html")
+                    return request.IncludeHtml;
+                if (extention == "js")
+                    return request.IncludeJavaScript;
+                if (extention == "css")
+                    return request.IncludeCss;
             }
-        }
-
-
-        private class ExportConfiguration
-        {
-            public string RecordType { get; set; }
-            public string WebSiteField { get; set; }
-            public IEnumerable<ExportFieldConfigration> FieldsToExport { get; set; }
-            public IEnumerable<Condition> Conditions { get; set; }
-
-            public class ExportFieldConfigration
-            {
-                public string FieldName { get; set; }
-                public string Extention { get; set; }
-            }
+            return request.IncludeOtherTypes;
         }
     }
 }
