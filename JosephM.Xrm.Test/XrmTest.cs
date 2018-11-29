@@ -68,18 +68,22 @@ namespace JosephM.Xrm.Test
         {
             get
             {
-                var assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
-                var fileInfo = new FileInfo(assemblyLocation.Substring(8));
+                var thisAssemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
+                var fileInfo = new FileInfo(thisAssemblyLocation.Substring(8));
                 var carryDirectory = fileInfo.Directory;
-                var nameOfRootFolderInSolution = new[] { "TestResults", Assembly.GetExecutingAssembly().GetName().Name };
-                while (carryDirectory.Parent != null && !nameOfRootFolderInSolution.Contains(carryDirectory.Name))
+                while (carryDirectory.Parent != null)
                 {
-                    carryDirectory = carryDirectory.Parent;
-                    if (nameOfRootFolderInSolution.Contains(carryDirectory.Name))
+                    if (carryDirectory.Name == "TestResults")
                     {
                         carryDirectory = carryDirectory.Parent;
                         break;
                     }
+                    if (carryDirectory.Name?.ToLower() == "bin")
+                    {
+                        carryDirectory = carryDirectory.Parent?.Parent;
+                        break;
+                    }
+                    carryDirectory = carryDirectory.Parent;
                 }
                 if (carryDirectory.Parent == null)
                     throw new Exception("Error resolving connection file");

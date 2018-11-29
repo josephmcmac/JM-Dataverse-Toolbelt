@@ -27,6 +27,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
 
         [DisplayOrder(120)]
         [Group(Sections.CodeChanges)]
+        [DoNotLimitDisplayHeight]
         public string WithTheseLines
         {
             get
@@ -34,15 +35,19 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                 return "var assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;"
                 +"\nvar fileInfo = new FileInfo(assemblyLocation.Substring(8));"
                 + "\nvar carryDirectory = fileInfo.Directory;"
-                + "\nvar nameOfRootFolderInSolution = new[] { \"TestResults\", Assembly.GetExecutingAssembly().GetName().Name };"
-                + "\nwhile (carryDirectory.Parent != null && !nameOfRootFolderInSolution.Contains(carryDirectory.Name))"
+                + "\nwhile (carryDirectory.Parent != null)"
+                + "\n{"
+                + "\nif (carryDirectory.Name == \"TestResults\")"
                 + "\n{"
                 + "\n    carryDirectory = carryDirectory.Parent;"
-                + "\n    if (nameOfRootFolderInSolution.Contains(carryDirectory.Name))"
-                + "\n    {"
-                + "\n        carryDirectory = carryDirectory.Parent;"
-                + "\n        break;"
-                + "\n    }"
+                + "\n    break;"
+                + "\n}"
+                + "\nif (carryDirectory.Name?.ToLower() == \"bin\")"
+                + "\n{"
+                + "\n    carryDirectory = carryDirectory.Parent?.Parent;"
+                + "\n    break;"
+                + "\n}"
+                + "\ncarryDirectory = carryDirectory.Parent;"
                 + "\n}"
                 + "\nif (carryDirectory.Parent == null)"
                 + "\n    throw new Exception(\"Error resolving connection file\");"
