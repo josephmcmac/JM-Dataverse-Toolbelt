@@ -176,10 +176,6 @@
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.ObjectEncryption\JosephM.ObjectEncryption.csproj">
-      <Project>{2FE73DC9-7959-4944-B594-29E73AA79604}</Project>
-      <Name>JosephM.ObjectEncryption</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
       <Name>JosephM.Application.Desktop</Name>

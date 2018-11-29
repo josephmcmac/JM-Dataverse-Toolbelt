@@ -4,10 +4,8 @@ using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.Application.Desktop.Module.Themes;
 using JosephM.Core.FieldType;
-using JosephM.ObjectEncryption;
 using JosephM.TestModule.AllPropertyTypesCompact;
 using JosephM.TestModule.AllPropertyTypesModule;
-using JosephM.TestModule.ObjectEncrypt;
 using JosephM.TestModule.TestCrud;
 using JosephM.TestModule.TestDialog;
 using JosephM.TestModule.TestGridEdit;
@@ -35,7 +33,6 @@ namespace JosephM.TestDesktopApplication
             app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<DebugDialogModule>();
             //app.AddModule<XrmSettingsModule>();
-            app.AddModule<ObjectEncryptModule<TestObjectEncryptDialog, TestClassToEncrypt>>();
             app.AddModule<TestSettingsModule>();
             app.AddModule<TestCrudModule>();
             app.AddModule<SavedRequestModule>();

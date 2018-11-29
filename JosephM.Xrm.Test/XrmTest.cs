@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,8 +11,8 @@ using JosephM.Core.Log;
 using JosephM.Core.Test;
 using Microsoft.Xrm.Sdk.Query;
 using JosephM.Xrm.Schema;
-
-#endregion
+using JosephM.Core.Serialisation;
+using JosephM.Core.Extentions;
 
 namespace JosephM.Xrm.Test
 {
@@ -70,16 +68,37 @@ namespace JosephM.Xrm.Test
         {
             get
             {
-                var settingsObject = GetSavedTestEncryptedXrmConfiguration();
-                return new XrmConfiguration()
+                var assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
+                var fileInfo = new FileInfo(assemblyLocation.Substring(8));
+                var carryDirectory = fileInfo.Directory;
+                var nameOfRootFolderInSolution = new[] { "TestResults", Assembly.GetExecutingAssembly().GetName().Name };
+                while (carryDirectory.Parent != null && !nameOfRootFolderInSolution.Contains(carryDirectory.Name))
                 {
-                    AuthenticationProviderType = settingsObject.AuthenticationProviderType,
-                    DiscoveryServiceAddress = settingsObject.DiscoveryServiceAddress,
-                    OrganizationUniqueName = OverrideOrganisation ?? settingsObject.OrganizationUniqueName,
-                    Domain = settingsObject.Domain,
-                    Username = settingsObject.Username,
-                    Password = settingsObject.Password == null ? null : settingsObject.Password.GetRawPassword()
-                };
+                    carryDirectory = carryDirectory.Parent;
+                    if (nameOfRootFolderInSolution.Contains(carryDirectory.Name))
+                    {
+                        carryDirectory = carryDirectory.Parent;
+                        break;
+                    }
+                }
+                if (carryDirectory.Parent == null)
+                    throw new Exception("Error resolving connection file");
+                var fileName = Path.Combine(carryDirectory.FullName, "Xrm.Vsix", Environment.UserName + ".solution.xrmconnection");
+                var readEncryptedConfig = File.ReadAllText(fileName);
+                var dictionary =
+                        (Dictionary<string, string>)
+                            JsonHelper.JsonStringToObject(readEncryptedConfig, typeof(Dictionary<string, string>));
+
+                var xrmConfig = new XrmConfiguration();
+                foreach (var prop in xrmConfig.GetType().GetReadWriteProperties())
+                {
+                    var value = dictionary[prop.Name];
+                    if (value != null && prop.Name == nameof(XrmConfiguration.Password))
+                        xrmConfig.SetPropertyByString(prop.Name, new JosephM.Core.FieldType.Password(value).GetRawPassword());
+                    else
+                        xrmConfig.SetPropertyByString(prop.Name, value);
+                }
+                return xrmConfig;
             }
         }
 
