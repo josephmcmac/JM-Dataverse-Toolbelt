@@ -5,6 +5,7 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Application.ViewModel.Attributes
 {
@@ -47,7 +48,9 @@ namespace JosephM.Application.ViewModel.Attributes
                             mainFormInContext.LoadingViewModel.IsLoading = false;
                         }
                     };
-                    var picklistOptions = GetSelectionOptions(recordForm, subGridReference);
+                    var picklistOptions = GetSelectionOptions(recordForm, subGridReference)
+                        .OrderBy(o => o.Value)
+                        .ToArray();
                     var initialSelected = GetInitialSelectedOptions(recordForm, subGridReference);
                     var childForm = new MultiSelectDialogViewModel<PicklistOption>(picklistOptions, initialSelected, onSave, () => mainFormInContext.ClearChildForm(), mainFormInContext.ApplicationController, saveButtonLabel: "Add Selections", cancelButtonLabel: "Return");
                     mainFormInContext.LoadChildForm(childForm);
