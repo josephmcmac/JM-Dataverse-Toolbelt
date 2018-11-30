@@ -257,6 +257,8 @@ namespace JosephM.Deployment.Test
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_weblink, Entities.adx_weblink)},
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_entityform, Entities.adx_entityform)},
                      new ExportRecordType() { RecordType = new RecordType(Entities.adx_entityformmetadata, Entities.adx_entityformmetadata)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webtemplate, Entities.adx_webtemplate)},
+                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_entitylist, Entities.adx_entitylist)},
                  }
             };
 
@@ -329,12 +331,14 @@ namespace JosephM.Deployment.Test
             var webFormRecords = XrmService.RetrieveAllEntityType(Entities.adx_webform);
             var webFormStepRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformstep);
             var webFormMetadataRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformmetadata);
+            var webTemplateRecords = XrmService.RetrieveAllEntityType(Entities.adx_webtemplate);
+            var entityListRecords = XrmService.RetrieveAllEntityType(Entities.adx_entitylist);
 
 
             //the records wont; have been updated as data the same - but we verify that the system matched
             //them and therefore didn't create duplicates or throw errors
             Assert.AreEqual(1, webSiteRecords.Count());
-            Assert.AreEqual(1, webFileRecords.Count());
+            Assert.AreEqual(2, webFileRecords.Count());
             Assert.AreEqual(1, webFileAttachmentRecords.Count());
             Assert.AreEqual(2, webLinkSetRecords.Count());
             Assert.AreEqual(5, webLinkRecords.Count());
@@ -348,6 +352,8 @@ namespace JosephM.Deployment.Test
             Assert.AreEqual(1, webFormRecords.Count());
             Assert.AreEqual(2, webFormStepRecords.Count());
             Assert.AreEqual(4, webFormMetadataRecords.Count());
+            Assert.AreEqual(3, webTemplateRecords.Count());
+            Assert.AreEqual(1, entityListRecords.Count());
 
             //verify the access control rule is correctly linked to the child web page
             var childWebPage = pageRecords.First(e => e.GetLookupGuid(Fields.adx_webpage_.adx_rootwebpageid).HasValue);
