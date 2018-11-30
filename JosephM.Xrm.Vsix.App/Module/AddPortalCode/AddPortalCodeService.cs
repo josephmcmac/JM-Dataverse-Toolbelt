@@ -38,11 +38,8 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
             foreach (var config in exportConfigs)
             {
                 controller.UpdateProgress(done++, toDo, "Exporting " + config.RecordType + " Code");
-                var query = new QueryDefinition(config.RecordType);
-                if (config.Conditions != null)
-                    query.RootFilter.Conditions.AddRange(config.Conditions);
-                Service.AddJoinCondition(query, config.WebSiteField, ConditionType.Equal, request.WebSite.Id);
-                var results = Service.RetreiveAll(query);
+                var results = AddPortalCodeConfiguration.GetRecordsForConfig(config.RecordType, Service, request.WebSite.Id);
+                results = request.FilterInclusionForType(config.RecordType, results);
                 var toDo2 = results.Count();
                 var done2 = 0;
                 foreach (var result in results)

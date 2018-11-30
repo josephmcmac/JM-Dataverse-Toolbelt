@@ -1,7 +1,10 @@
-﻿using JosephM.Core.Attributes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
+using JosephM.Record.IService;
 using JosephM.Xrm.Schema;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -89,6 +92,24 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
             return RecordsToExport != null  && RecordsToExport.Any(r => r.RecordType?.Key == type && r.Selected);
         }
 
+        public IEnumerable<IRecord> FilterInclusionForType(string recordType, IEnumerable<IRecord> results)
+        {
+            if(RecordsToExport.Any(r => r.RecordType?.Key == recordType))
+            {
+                var thisOne = RecordsToExport.First(r => r.RecordType?.Key == recordType);
+                if (thisOne.IncludeAll)
+                    return results;
+                else if(thisOne.RecordsToInclude != null)
+                {
+                    return results
+                        .Where(r => thisOne.RecordsToInclude.Any(ri => ri.Id == r.Id && ri.Selected))
+                        .ToArray();
+                }
+            }
+            throw new Exception($"Couldn't Determine Records For Inclusion For Type " + recordType);
+
+        }
+
         public IsValidResponse Validate()
         {
             var response = new IsValidResponse();
@@ -99,7 +120,7 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
             return response;
         }
 
-        private static class Sections
+        public static class Sections
         {
             public const string Main = "Main";
             public const string Options = "Options";
@@ -109,18 +130,56 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
 
         public class PortalRecordsToExport : ISelectable
         {
-            [GridWidth(75)]
+            public PortalRecordsToExport()
+            {
+                IncludeAll = true;
+            }
+
             [DisplayOrder(20)]
-            [DisplayName("Include")]
+            [DisplayName("Include This Type")]
             public bool Selected { get; set; }
 
             [ReadOnlyWhenSet]
             [DisplayOrder(10)]
             public RecordType RecordType { get; set; }
-            //[DisplayOrder(30)]
-            //public bool AllRecords { get; set; }
-            //[DisplayOrder(40)]
-            //public bool RecordsToInclude { get; set; }
+
+            [DisplayOrder(30)]
+            [DisplayName("Include All Of This Type")]
+            [PropertyInContextByPropertyValue(nameof(Selected), true)]
+            public bool IncludeAll { get; set; }
+
+            [RequiredProperty]
+            [GridWidth(500)]
+            [DisplayOrder(40)]
+            [DisplayName("Records To Include Of This Type")]
+            [PropertyInContextByPropertyValue(nameof(IncludeAll), false)]
+            [PropertyInContextByPropertyValue(nameof(Selected), true)]
+            public IEnumerable<SelectableRecordToInclude> RecordsToInclude { get; set; }
+
+            [DoNotAllowGridOpen]
+            [SelectableObjectsFunction]
+            public class SelectableRecordToInclude : ISelectable
+            {
+                public SelectableRecordToInclude(string id, string name)
+                {
+                    Id = id;
+                    Name = name;
+                }
+
+                [GridWidth(75)]
+                public bool Selected { get; set; }
+                [Key]
+                [Hidden]
+                public string Id { get; set; }
+
+                [GridWidth(400)]
+                public string Name { get; set; }
+
+                public override string ToString()
+                {
+                    return Name;
+                }
+            }
         }
     }
 }

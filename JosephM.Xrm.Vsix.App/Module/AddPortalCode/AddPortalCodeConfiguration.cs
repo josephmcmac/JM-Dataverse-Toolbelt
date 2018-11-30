@@ -1,6 +1,10 @@
-﻿using JosephM.Record.Query;
+﻿using JosephM.Record.Extentions;
+using JosephM.Record.IService;
+using JosephM.Record.Query;
 using JosephM.Xrm.Schema;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.AddPortalCode
 {
@@ -15,6 +19,24 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
         {
             public string FieldName { get; set; }
             public string Extention { get; set; }
+        }
+
+        public static IEnumerable<IRecord> GetRecordsForConfig(string recordType, IRecordService service, string websiteId)
+        {
+            var config = GetConfigFor(recordType);
+            var query = new QueryDefinition(recordType);
+            if (config.Conditions != null)
+                query.RootFilter.Conditions.AddRange(config.Conditions);
+            service.AddJoinCondition(query, config.WebSiteField, ConditionType.Equal, websiteId);
+            return service.RetreiveAll(query);
+        }
+
+        private static AddPortalCodeConfiguration GetConfigFor(string recordType)
+        {
+            var configs = GetExportConfigs();
+            if (configs.Any(c => c.RecordType == recordType))
+                return configs.First(c => c.RecordType == recordType);
+            throw new Exception("No config defined for type " + recordType);
         }
 
         public static IEnumerable<AddPortalCodeConfiguration> GetExportConfigs()

@@ -1,4 +1,6 @@
-﻿using JosephM.Record.Extentions;
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Core.FieldType;
+using JosephM.Record.Extentions;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Module.AddPortalCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,10 +40,26 @@ namespace JosephM.Xrm.Vsix.Test
             entryForm.GetLookupFieldFieldViewModel(nameof(AddPortalCodeRequest.WebSite)).SetValue(entryForm.GetLookupFieldFieldViewModel(nameof(AddPortalCodeRequest.WebSite)).ItemsSourceAsync.First(r => r.Record != null).Record);
             entryForm.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.ExportWhereFieldEmpty)).Value = true;
             entryForm.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.CreateFolderForWebsiteName)).Value = true;
-            foreach(var item in entryForm.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.RecordsToExport)).GridRecords)
-            {
-                item.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.Selected)).Value = true;
-            }
+
+            var section = entryForm.GetFieldSection(AddPortalCodeRequest.Sections.RecordsToInclude);
+            var func = section.CustomFunctions.First(c => c.Id == "SELECTALL");
+            func.Invoke();
+            Assert.IsTrue(entryForm.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.RecordsToExport)).GridRecords
+                .All(r => r.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.Selected)).Value));
+
+            var webTemplateRow = entryForm.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.RecordsToExport))
+                .GridRecords
+                .First(gr => gr.GetRecordTypeFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.RecordType)).Value.Key == Entities.adx_webtemplate);
+
+            webTemplateRow.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.IncludeAll)).Value = false;
+            webTemplateRow.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.RecordsToInclude)).BulkAddButton.Invoke();
+
+            var templateRecordSelectionForm = entryForm.ChildForms.First() as MultiSelectDialogViewModel<PicklistOption>;
+            templateRecordSelectionForm.ItemsSource.First().Select = true;
+            templateRecordSelectionForm.ItemsSource.Last().Select = true;
+            templateRecordSelectionForm.ApplyButtonViewModel.Invoke();
+            Assert.IsFalse(entryForm.ChildForms.Any());
+
             Assert.IsTrue(entryForm.Validate());
             entryForm.SaveButtonViewModel.Invoke();
 
@@ -63,6 +81,10 @@ namespace JosephM.Xrm.Vsix.Test
                     // (multi language not implemented)
                     // + each has html, css & javascript
                     Assert.AreEqual((recordsOfType.Count() / 4) * 3, fileCountInDirectory);
+                }
+                else if (type == Entities.adx_webtemplate)
+                {
+                    Assert.AreEqual(2, fileCountInDirectory);
                 }
                 else
                 {
