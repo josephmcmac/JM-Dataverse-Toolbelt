@@ -15,6 +15,6 @@ namespace JosephM.XrmModule.Crud
         {
         }
 
-        public override IEnumerable<string> AdditionalExplicitTypes => new[] { Entities.sitemap, Entities.subject, Entities.systemform, Entities.uom, Entities.savedquery, Entities.calendar, Entities.role, Entities.sdkmessageprocessingstep, Entities.activitymimeattachment, Entities.organization, Entities.usersettings, Entities.productpricelevel };
+        public override IEnumerable<string> AdditionalExplicitTypes => new[] { Entities.userquery, Entities.sitemap, Entities.subject, Entities.systemform, Entities.uom, Entities.savedquery, Entities.calendar, Entities.role, Entities.sdkmessageprocessingstep, Entities.activitymimeattachment, Entities.organization, Entities.usersettings, Entities.productpricelevel };
     }
 }

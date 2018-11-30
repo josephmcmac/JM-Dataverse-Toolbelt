@@ -29,6 +29,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                 try
                 {
                     Clipboard.SetText(r.GetStringFieldFieldViewModel(nameof(SettingsFolderMoving.WithTheseLines)).Value);
+                    ApplicationController.UserMessage("Code Copied To Clipboard!");
                 }
                 catch(Exception ex)
                 {

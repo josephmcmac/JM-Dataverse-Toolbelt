@@ -13,6 +13,11 @@ namespace JosephM.Xrm.Vsix.Test
         public FakeVisualStudioService(string solutionDirectory = null)
         {
             _solutionDirectory = solutionDirectory ?? Path.Combine(TestConstants.TestFolder, "FakeVSSolutionFolder");
+
+            var fakeProjectName = "FakeProject";
+            var fakeProjectFolderPath = Path.Combine(SolutionDirectory, fakeProjectName);
+            Directory.CreateDirectory(fakeProjectFolderPath);
+            SetSelectedItem(new FakeVisualStudioSolutionFolder(fakeProjectFolderPath));
         }
 
         private string _solutionDirectory;
