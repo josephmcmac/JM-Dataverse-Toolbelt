@@ -13,7 +13,6 @@ namespace JosephM.Core.Attributes
         public DisplayLayoutEnum DisplayLayout { get; private set; }
         public int Order { get; private set; }
         public bool SelectAll { get; private set; }
-        public string SelectAllGridProperty { get; private set; }
         public bool DisplayLabel { get; private set; }
 
         public Group(string name, DisplayLayoutEnum displayLayout = DisplayLayoutEnum.VerticalList, int order = 0, bool selectAll = false, bool displayLabel = true)
