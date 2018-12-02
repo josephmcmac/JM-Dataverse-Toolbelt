@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.ObjectModel;
 using JosephM.Application.Application;
 
@@ -16,6 +17,7 @@ namespace JosephM.Application.ViewModel.Dialog
         {
             ApplicationController = applicationController;
             UiItems = new ObservableCollection<ViewModelBase>();
+            RemoveMethod = () => ApplicationController.Remove(MainDialog);
         }
 
         public DialogViewModel MainDialog { get; set; }
@@ -23,10 +25,11 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public bool IsStarted { get; set; }
         public IApplicationController ApplicationController { get; private set; }
+        public Action RemoveMethod { get; set; }
 
         public void Close()
         {
-            ApplicationController.Remove(MainDialog);
+            RemoveMethod();
             if (MainDialog.OverideCompletionScreenMethod != null)
                 MainDialog.OverideCompletionScreenMethod();
         }

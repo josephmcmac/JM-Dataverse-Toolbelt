@@ -112,6 +112,7 @@ namespace JosephM.Xrm.Vsix.Application
             if (viewModel is DialogViewModel)
             {
                 var dialog = (DialogViewModel)viewModel;
+                dialog.Controller.RemoveMethod = closeMethod;
                 if (!showCompletionScreen)
                     dialog.OverideCompletionScreenMethod = closeMethod;
             }
