@@ -73,14 +73,12 @@ namespace JosephM.Xrm.Test
                 var carryDirectory = fileInfo.Directory;
                 while (carryDirectory.Parent != null)
                 {
-                    if (carryDirectory.Name == "TestResults")
+                    if (carryDirectory
+                        .Parent
+                        .GetDirectories()
+                        .Any(d => d.Name == "Xrm.Vsix"))
                     {
                         carryDirectory = carryDirectory.Parent;
-                        break;
-                    }
-                    if (carryDirectory.Name?.ToLower() == "bin")
-                    {
-                        carryDirectory = carryDirectory.Parent?.Parent;
                         break;
                     }
                     carryDirectory = carryDirectory.Parent;
