@@ -8,7 +8,7 @@ namespace JosephM.Xrm.Vsix.Module.Web
     [DependantModule(typeof(XrmConnectionModule))]
     public class OpenDefaultSolutionModule : OptionActionModule
     {
-        public override string MainOperationName => "Open Solution";
+        public override string MainOperationName => "Open Default Solution";
 
         public override string MenuGroup => "Web";
 
