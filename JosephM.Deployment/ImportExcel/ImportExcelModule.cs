@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -6,6 +7,10 @@ using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using JosephM.Record.Service;
+using JosephM.Record.Xrm.XrmRecord;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +27,32 @@ namespace JosephM.Deployment.ImportExcel
         {
             base.RegisterTypes();
             AddGenerateMappingsWhenExcelFileSelected();
+            AddOImportExcelToSavedConnectionsGrid();
+        }
+
+        private void AddOImportExcelToSavedConnectionsGrid()
+        {
+            var customGridFunction = new CustomGridFunction("IMPORTEEXCEL", "Import Excel", (g) =>
+            {
+                if (g.SelectedRows.Count() != 1)
+                {
+                    g.ApplicationController.UserMessage("Please Select One Row To Browse The Connection");
+                }
+                else
+                {
+                    var selectedRow = g.SelectedRows.First();
+                    var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
+                    if (instance != null)
+                    {
+                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var exportXmlService = new ImportExcelService(xrmRecordService);
+                        var dialog = new ImportExcelDialog(exportXmlService, new DialogController(ApplicationController), xrmRecordService);
+                        dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
+                        g.ApplicationController.NavigateTo(dialog);
+                    }
+                }
+            }, (g) => g.GridRecords != null && g.GridRecords.Any());
+            this.AddCustomGridFunction(customGridFunction, typeof(SavedXrmRecordConfiguration));
         }
 
         private void AddGenerateMappingsWhenExcelFileSelected()
