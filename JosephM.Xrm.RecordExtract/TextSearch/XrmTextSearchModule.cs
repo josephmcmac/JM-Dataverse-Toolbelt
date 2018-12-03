@@ -45,7 +45,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         private void AddTextSearchButtonToSavedConnectionsGrid()
         {
-            var customGridFunction = new CustomGridFunction("TEXTSEARCH", "Text Search Selected", (g) =>
+            var customGridFunction = new CustomGridFunction("TEXTSEARCH", "Text Search", (g) =>
             {
                 if (g.SelectedRows.Count() != 1)
                 {

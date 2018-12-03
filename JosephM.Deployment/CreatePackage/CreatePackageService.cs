@@ -43,31 +43,31 @@ namespace JosephM.Deployment.CreatePackage
             var service = xrmRecordService.XrmService;
             var solution = service.Retrieve(Entities.solution, new Guid(request.Solution.Id));
             tasksDone++;
+            var solutionUniqueName = solution.GetStringField(Fields.solution_.uniquename);
             if (solution.GetStringField(Fields.solution_.version) != request.ThisReleaseVersion)
             {
                 controller.UpdateProgress(tasksDone, totalTasks, "Setting Release Version " + request.ThisReleaseVersion);
                 solution.SetField(Fields.solution_.version, request.ThisReleaseVersion);
                 service.Update(solution, new[] { Fields.solution_.version });
             }
-            controller.UpdateProgress(tasksDone, totalTasks, "Exporting Solution " + request.Solution.Name);
+            controller.UpdateProgress(tasksDone, totalTasks, "Exporting Solution " + solutionUniqueName);
 
-            var uniqueName = (string)solution.GetStringField(Fields.solution_.uniquename);
             var req = new ExportSolutionRequest();
             req.Managed = request.ExportAsManaged;
-            req.SolutionName = uniqueName;
+            req.SolutionName = solutionUniqueName;
 
             var exportResponse = (ExportSolutionResponse)service.Execute(req);
 
             var version = solution.GetStringField(Fields.solution_.version);
             var versionText = version == null ? null : version.Replace(".", "_");
-            var fileName = string.Format("{0}_{1}{2}.zip", uniqueName, versionText,
+            var fileName = string.Format("{0}_{1}{2}.zip", solutionUniqueName, versionText,
                 request.ExportAsManaged ? "_managed" : null);
 
             FileUtility.WriteToFile(folderPath, fileName, exportResponse.ExportSolutionFile);
             ++tasksDone;
             if (request.DataToInclude != null && request.DataToInclude.Any())
             {
-                controller.UpdateProgress(tasksDone, totalTasks, "Exporting Data " + request.Solution.Name);
+                controller.UpdateProgress(tasksDone, totalTasks, "Exporting Data");
                 var dataExportService = new ExportXmlService(xrmRecordService);
                 dataExportService.ExportXml(request.DataToInclude,
                     new Folder(GetDataExportFolder(folderPath)), request.IncludeNotes,

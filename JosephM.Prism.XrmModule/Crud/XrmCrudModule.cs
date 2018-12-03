@@ -29,7 +29,7 @@ namespace JosephM.XrmModule.Crud
 
         private void AddBrowseButtonToSavedConnectionsGrid()
         {
-            var customGridFunction = new CustomGridFunction("CRUD", "Crud/Query Selected", (g) =>
+            var customGridFunction = new CustomGridFunction("CRUD", "Crud/Query", (g) =>
             {
                 if (g.SelectedRows.Count() != 1)
                 {

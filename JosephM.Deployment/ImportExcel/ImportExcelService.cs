@@ -23,6 +23,7 @@ namespace JosephM.Deployment.ImportExcel
         public override void ExecuteExtention(ImportExcelRequest request, ImportExcelResponse response,
             ServiceRequestController controller)
         {
+            controller.Controller.UpdateProgress(0, 1, "Loading Records For Import");
             var dictionary = LoadMappingDictionary(request);
             var importService = new SpreadsheetImportService(XrmRecordService);
             var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller);

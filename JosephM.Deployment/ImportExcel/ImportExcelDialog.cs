@@ -37,5 +37,19 @@ namespace JosephM.Deployment.ImportExcel
                 }
             });
         }
+
+        private string _tabLabel = "Import Excel";
+        public override string TabLabel
+        {
+            get
+            {
+                return _tabLabel;
+            }
+        }
+
+        public void SetTabLabel(string newLabel)
+        {
+            _tabLabel = newLabel;
+        }
     }
 }
