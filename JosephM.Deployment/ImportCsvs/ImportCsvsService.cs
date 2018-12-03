@@ -22,6 +22,7 @@ namespace JosephM.Deployment.ImportCsvs
 
         public override void ExecuteExtention(ImportCsvsRequest request, ImportCsvsResponse response, ServiceRequestController controller)
         {
+            controller.Controller.UpdateProgress(0, 1, "Loading Records For Import");
             var dictionary = LoadMappingDictionary(request);
 
             var importService = new SpreadsheetImportService(XrmRecordService);
