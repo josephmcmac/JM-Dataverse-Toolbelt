@@ -49,7 +49,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             {
                 if (g.SelectedRows.Count() != 1)
                 {
-                    g.ApplicationController.UserMessage("Please Select One Row To Search The Connection");
+                    g.ApplicationController.UserMessage("Please Select One Row To Run This Function");
                 }
                 else
                 {

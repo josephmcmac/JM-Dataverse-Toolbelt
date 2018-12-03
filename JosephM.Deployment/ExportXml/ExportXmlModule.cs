@@ -29,7 +29,7 @@ namespace JosephM.Deployment.ExportXml
             {
                 if (g.SelectedRows.Count() != 1)
                 {
-                    g.ApplicationController.UserMessage("Please Select One Row To Browse The Connection");
+                    g.ApplicationController.UserMessage("Please Select One Row To Run This Function");
                 }
                 else
                 {
