@@ -16,20 +16,7 @@ namespace JosephM.Deployment.ExportXml
             IDialogController dialogController, XrmRecordService lookupService)
             : base(service, dialogController, lookupService)
         {
-        }
-
-        private string _tabLabel = "Export XML";
-        public override string TabLabel
-        {
-            get
-            {
-                return _tabLabel;
-            }
-        }
-
-        public void SetTabLabel(string newLabel)
-        {
-            _tabLabel = newLabel;
+            SetTabLabel("Export XML");
         }
 
         protected override void CompleteDialogExtention()

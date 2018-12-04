@@ -17,6 +17,7 @@ namespace JosephM.Deployment.ImportExcel
             IDialogController dialogController, XrmRecordService lookupService)
             : base(service, dialogController, lookupService)
         {
+            SetTabLabel("Import Excel");
             var validationDialog = new ImportExcelValidationDialog(this, Request);
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
         }
@@ -36,20 +37,6 @@ namespace JosephM.Deployment.ImportExcel
                     ApplicationController.ThrowException(ex);
                 }
             });
-        }
-
-        private string _tabLabel = "Import Excel";
-        public override string TabLabel
-        {
-            get
-            {
-                return _tabLabel;
-            }
-        }
-
-        public void SetTabLabel(string newLabel)
-        {
-            _tabLabel = newLabel;
         }
     }
 }

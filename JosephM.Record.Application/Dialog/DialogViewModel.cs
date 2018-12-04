@@ -54,16 +54,24 @@ namespace JosephM.Application.ViewModel.Dialog
             OnCancel = Controller.Close;
         }
 
+        private string _tabLabel;
         public override string TabLabel
         {
             get
             {
-                var typeName = GetType().Name.SplitCamelCase();
-                if (typeName.EndsWith(" Dialog"))
-                    return typeName.Substring(0, typeName.IndexOf(" Dialog", StringComparison.Ordinal));
-                else
-                    return typeName;
+                if(_tabLabel == null)
+                {
+                    _tabLabel = GetType().Name.SplitCamelCase();
+                    if (_tabLabel.EndsWith(" Dialog"))
+                        _tabLabel = _tabLabel.Substring(0, _tabLabel.IndexOf(" Dialog", StringComparison.Ordinal));
+                }
+                return _tabLabel;
             }
+        }
+
+        public virtual void SetTabLabel(string newLabel)
+        {
+            _tabLabel = newLabel;
         }
 
         public string CompletionMessage { get; set; }

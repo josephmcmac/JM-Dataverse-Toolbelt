@@ -2,7 +2,11 @@
 using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.Core.AppConfig;
+using JosephM.CustomisationExporter.Exporter;
+using JosephM.Deployment.ImportExcel;
+using JosephM.Deployment.MigrateRecords;
 using JosephM.InstanceComparer;
+using JosephM.RecordCounts;
 using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
@@ -58,7 +62,10 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<ThemeModule>(0x011A);
             app.AddModule<AddPortalCodeModule>(0x011B);
             app.AddModule<PackageSettingsAppConnectionModule>();
-
+            app.AddModule<MigrateRecordsModule>(0x011C);
+            app.AddModule<ImportExcelModule>();
+            app.AddModule<CustomisationExporterModule>();
+            app.AddModule<RecordCountsModule>();
             return app;
         }
 
