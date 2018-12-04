@@ -21,7 +21,7 @@ namespace JosephM.Xrm.Vsix.Module.Web
             if (solution == null)
                 throw new NullReferenceException($"Could Not Find Solution named 'default'");
             var url = XrmRecordService.WebUrl;
-            var solutionUrl = string.Format("{0}/{1}tools/solution/edit.aspx?id={2}", url, url.EndsWith("/") ? "" : "/", solution.Id.ToString());
+            var solutionUrl = string.Format("{0}/tools/solution/edit.aspx?id={1}", url, solution.Id.ToString());
             return solutionUrl;
         }
     }

@@ -23,7 +23,7 @@ namespace JosephM.Xrm.Vsix.Module.Web
             if (XrmPackageSettings.Solution == null)
                 throw new NullReferenceException($"{nameof(XrmPackageSettings.Solution)} Is Not Populated In The {nameof(XrmPackageSettings)}");
             var url = XrmRecordService.WebUrl;
-            var solutionUrl = string.Format("{0}/{1}tools/solution/edit.aspx?id={2}", url, url.EndsWith("/") ? "" : "/", XrmPackageSettings.Solution.Id.ToString());
+            var solutionUrl = string.Format("{0}/tools/solution/edit.aspx?id={1}", url,  XrmPackageSettings.Solution.Id.ToString());
             return solutionUrl;
         }
     }
