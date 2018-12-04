@@ -276,6 +276,10 @@
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.CustomisationExporter\JosephM.CustomisationExporter.csproj">
+      <Project>{0A84403C-046E-48FF-967C-30CDDA6AF07A}</Project>
+      <Name>JosephM.CustomisationExporter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj">
       <Project>{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}</Project>
       <Name>JosephM.CustomisationImporter</Name>
@@ -307,6 +311,10 @@
     <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
       <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
       <Name>JosephM.Record.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.RecordCounts\JosephM.RecordCounts.csproj">
+      <Project>{2B4C0363-133C-4A96-9D18-E3A90CA60F25}</Project>
+      <Name>JosephM.RecordCounts</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59CAC082-C1A8-474C-B73C-BC79267C9B51}</Project>

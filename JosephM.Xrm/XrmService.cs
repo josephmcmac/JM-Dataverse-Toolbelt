@@ -147,6 +147,8 @@ namespace JosephM.Xrm
                     if (XrmConfiguration == null)
                         throw new NotImplementedException(string.Format("XrmConfiguration is null"));
                     _webUrl = new XrmConnection(XrmConfiguration).GetWebUrl();
+                    if (_webUrl != null && _webUrl.EndsWith("/"))
+                        _webUrl = _webUrl.Left(_webUrl.Length - 1);
                 }
                 return _webUrl;
             }

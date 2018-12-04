@@ -119,15 +119,24 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
         {
         }
 
+        private string _tabLabel;
         public override string TabLabel
         {
             get
             {
-                var requestType = typeof(TRequest).GetDisplayName();
-                if (requestType.EndsWith(" Request"))
-                    requestType = requestType.Substring(0, requestType.Length - 8);
-                return requestType;
+                if (_tabLabel == null)
+                {
+                    _tabLabel = typeof(TRequest).GetDisplayName();
+                    if (_tabLabel.EndsWith(" Request"))
+                        _tabLabel = _tabLabel.Substring(0, _tabLabel.IndexOf(" Request", StringComparison.Ordinal));
+                }
+                return _tabLabel;
             }
+        }
+
+        public override void SetTabLabel(string newLabel)
+        {
+            _tabLabel = newLabel;
         }
 
         public ObjectEntryDialog ConfigEntryDialog { get; private set; }

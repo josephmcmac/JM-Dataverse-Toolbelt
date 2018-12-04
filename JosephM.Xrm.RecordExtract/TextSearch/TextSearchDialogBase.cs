@@ -14,20 +14,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             IRecordService recordService)
             : base(service, dialogController, recordService)
         {
-        }
-
-        private string _tabLabel = "Text Search";
-        public override string TabLabel
-        {
-            get
-            {
-                return _tabLabel;
-            }
-        }
-
-        public void SetTabLabel(string newLabel)
-        {
-            _tabLabel = newLabel;
+            SetTabLabel("Text Search");
         }
 
         protected override void ProcessCompletionExtention()

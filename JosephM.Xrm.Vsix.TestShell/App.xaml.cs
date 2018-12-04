@@ -40,6 +40,9 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication = VsixApplication.Create(visualStudioService, container, "Vsix Test Shell", new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"));
             VsixApplication.AddModule<SavedXrmConnectionsModule>();
             VsixApplication.AddModule<OpenWebModule>();
+            VsixApplication.AddModule<OpenAdvancedFindModule>();
+            VsixApplication.AddModule<OpenDefaultSolutionModule>();
+            VsixApplication.AddModule<OpenSolutionModule>();
             VsixApplication.AddModule<DeployAssemblyModule>();
             VsixApplication.AddModule<ManagePluginTriggersModule>();
             VsixApplication.AddModule<XrmCrudModule>();
