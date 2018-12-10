@@ -15,7 +15,7 @@ namespace JosephM.Xrm.Vsix.Module.Web
         protected override string GetUrl()
         {
             var url = XrmRecordService.WebUrl;
-            return string.Format("{0}/{1}main.aspx?pagetype=advancedfind", url, url.EndsWith("/") ? "" : "/");
+            return string.Format("{0}/main.aspx?pagetype=advancedfind", url);
         }
     }
 }
