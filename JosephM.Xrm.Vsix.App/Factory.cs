@@ -3,6 +3,7 @@ using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.Core.AppConfig;
 using JosephM.CustomisationExporter.Exporter;
+using JosephM.Deployment;
 using JosephM.Deployment.ImportExcel;
 using JosephM.Deployment.MigrateRecords;
 using JosephM.InstanceComparer;
@@ -66,6 +67,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<ImportExcelModule>();
             app.AddModule<CustomisationExporterModule>();
             app.AddModule<RecordCountsModule>();
+            app.AddModule<AddPortalDataModule>();
             return app;
         }
 

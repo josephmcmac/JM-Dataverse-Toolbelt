@@ -112,6 +112,7 @@
     <Compile Include="DataImport\DataImportService.cs" />
     <Compile Include="DataImport\ImportedRecords.cs" />
     <Compile Include="DataImport\ImportingRecords.cs" />
+    <Compile Include="AddPortalDataModule.cs" />
     <Compile Include="DeploySolution\DeploySolutionDialog.cs" />
     <Compile Include="DeploySolution\DeploySolutionModule.cs" />
     <Compile Include="DeploySolution\DeploySolutionRequest.cs" />
