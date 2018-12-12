@@ -1331,6 +1331,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                     Type = Entities.adx_webpageaccesscontrolrule,
                     ParentLookupField = Fields.adx_webpageaccesscontrolrule_.adx_webpageid,
                     ParentLookupType = Entities.adx_webpage,
+                    UniqueChildFields = new [] { Fields.adx_webpageaccesscontrolrule_.adx_name }
                 },
             new TypeConfigs.Config()
                 {
