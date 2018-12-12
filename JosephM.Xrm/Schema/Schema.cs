@@ -51,6 +51,7 @@ namespace JosephM.Xrm.Schema
 		public const string connectionroleobjecttypecode = "connectionroleobjecttypecode";
 		public const string importdata = "importdata";
 		public const string importlog = "importlog";
+		public const string adx_publishingstate = "adx_publishingstate";
 		public const string importentitymapping = "importentitymapping";
 		public const string mailboxtrackingfolder = "mailboxtrackingfolder";
 		public const string interprocesslock = "interprocesslock";
@@ -77,7 +78,6 @@ namespace JosephM.Xrm.Schema
 		public const string msdyn_wallsavedquery = "msdyn_wallsavedquery";
 		public const string childincidentcount = "childincidentcount";
 		public const string quote = "quote";
-		public const string new_testentity2 = "new_testentity2";
 		public const string lookupmapping = "lookupmapping";
 		public const string systemusermanagermap = "systemusermanagermap";
 		public const string ribboncommand = "ribboncommand";
@@ -112,6 +112,8 @@ namespace JosephM.Xrm.Schema
 		public const string product = "product";
 		public const string traceregarding = "traceregarding";
 		public const string recurringappointmentmaster = "recurringappointmentmaster";
+		public const string dc_businessmanagers = "dc_businessmanagers";
+		public const string new_testentity1 = "new_testentity1";
 		public const string transformationparametermapping = "transformationparametermapping";
 		public const string recordcountsnapshot = "recordcountsnapshot";
 		public const string jmcg_testentitytwo = "jmcg_testentitytwo";
@@ -149,7 +151,6 @@ namespace JosephM.Xrm.Schema
 		public const string task = "task";
 		public const string clientupdate = "clientupdate";
 		public const string postcomment = "postcomment";
-		public const string new_testentity1 = "new_testentity1";
 		public const string userentityuisettings = "userentityuisettings";
 		public const string report = "report";
 		public const string mailboxstatistics = "mailboxstatistics";
@@ -161,6 +162,7 @@ namespace JosephM.Xrm.Schema
 		public const string systemapplicationmetadata = "systemapplicationmetadata";
 		public const string sdkmessagepair = "sdkmessagepair";
 		public const string contractdetail = "contractdetail";
+		public const string adx_sitemarker = "adx_sitemarker";
 		public const string resourcespec = "resourcespec";
 		public const string recurrencerule = "recurrencerule";
 		public const string sdkmessageresponsefield = "sdkmessageresponsefield";
@@ -191,6 +193,7 @@ namespace JosephM.Xrm.Schema
 		public const string fax = "fax";
 		public const string annotation = "annotation";
 		public const string displaystringmap = "displaystringmap";
+		public const string adx_sitesetting = "adx_sitesetting";
 		public const string webwizard = "webwizard";
 		public const string sharedobjectsforread = "sharedobjectsforread";
 		public const string serviceendpoint = "serviceendpoint";
@@ -209,6 +212,7 @@ namespace JosephM.Xrm.Schema
 		public const string processtrigger = "processtrigger";
 		public const string serviceappointment = "serviceappointment";
 		public const string timezonerule = "timezonerule";
+		public const string adx_contentsnippet = "adx_contentsnippet";
 		public const string import = "import";
 		public const string bookableresource = "bookableresource";
 		public const string new_testentitysolutionadd = "new_testentitysolutionadd";
@@ -262,11 +266,13 @@ namespace JosephM.Xrm.Schema
 		public const string mobileofflineprofileitem = "mobileofflineprofileitem";
 		public const string jmcg_testentitythree = "jmcg_testentitythree";
 		public const string sitemap = "sitemap";
+		public const string adx_entitypermission = "adx_entitypermission";
 		public const string principalobjectattributeaccess = "principalobjectattributeaccess";
 		public const string dynamicpropertyoptionsetitem = "dynamicpropertyoptionsetitem";
 		public const string subscriptionsyncentryoutlook = "subscriptionsyncentryoutlook";
 		public const string cardtype = "cardtype";
 		public const string slaitem = "slaitem";
+		public const string adx_pagetemplate = "adx_pagetemplate";
 		public const string ribboncontextgroup = "ribboncontextgroup";
 		public const string importfile = "importfile";
 		public const string workflow = "workflow";
@@ -320,18 +326,19 @@ namespace JosephM.Xrm.Schema
 		public const string queueitem = "queueitem";
 		public const string sqlencryptionaudit = "sqlencryptionaudit";
 		public const string competitor = "competitor";
+		public const string new_testentity2 = "new_testentity2";
 		public const string bookableresourcebookingheader = "bookableresourcebookingheader";
 		public const string userentityinstancedata = "userentityinstancedata";
 		public const string systemuserprincipals = "systemuserprincipals";
 		public const string socialactivity = "socialactivity";
 		public const string teamtemplate = "teamtemplate";
+		public const string adx_contentaccesslevel = "adx_contentaccesslevel";
 		public const string syncattributemappingprofile = "syncattributemappingprofile";
 		public const string languagelocale = "languagelocale";
 		public const string recommendationmodelmapping = "recommendationmodelmapping";
 		public const string timezonelocalizedname = "timezonelocalizedname";
 		public const string queuemembercount = "queuemembercount";
 		public const string timestampdatemapping = "timestampdatemapping";
-		public const string new_testentity3 = "new_testentity3";
 		public const string principalattributeaccessmap = "principalattributeaccessmap";
 		public const string sharepointdocumentlocation = "sharepointdocumentlocation";
 		public const string wizardpage = "wizardpage";
@@ -382,6 +389,7 @@ namespace JosephM.Xrm.Schema
 		public const string adx_webform = "adx_webform";
 		public const string complexcontrol = "complexcontrol";
 		public const string salesliteratureitem = "salesliteratureitem";
+		public const string new_testentity3 = "new_testentity3";
 		public const string processstage = "processstage";
 		public const string entitymap = "entitymap";
 		public const string sharepointsite = "sharepointsite";
@@ -500,6 +508,14 @@ namespace JosephM.Xrm.Schema
 				public const string EntityName = "jmcg_testentity_jmcg_testentity";
 			}
 		}
+		public static class adx_publishingstate_
+		{
+			public static class adx_accesscontrolrule_publishingstate
+			{
+				public const string Name = "adx_accesscontrolrule_publishingstate";
+				public const string EntityName = "adx_accesscontrolrule_publishingstate";
+			}
+		}
 		public static class subscription_
 		{
 			public static class task_subscription_association
@@ -521,25 +537,17 @@ namespace JosephM.Xrm.Schema
 				public const string EntityName = "contactquotes";
 			}
 		}
-		public static class new_testentity2_
-		{
-			public static class new_testentity_testentity2
-			{
-				public const string Name = "new_testentity_testentity2";
-				public const string EntityName = "new_testentity_testentity2";
-			}
-			public static class new_testentity_testentity2_b
-			{
-				public const string Name = "new_testentity_testentity2_b";
-				public const string EntityName = "new_testentity_testentity2_b";
-			}
-		}
 		public static class adx_webpageaccesscontrolrule_
 		{
 			public static class adx_webpageaccesscontrolrule_webrole
 			{
 				public const string Name = "adx_webpageaccesscontrolrule_webrole";
 				public const string EntityName = "adx_webpageaccesscontrolrule_webrole";
+			}
+			public static class adx_accesscontrolrule_publishingstate
+			{
+				public const string Name = "adx_accesscontrolrule_publishingstate";
+				public const string EntityName = "adx_accesscontrolrule_publishingstate";
 			}
 		}
 		public static class knowledgebaserecord_
@@ -581,6 +589,19 @@ namespace JosephM.Xrm.Schema
 			{
 				public const string Name = "campaignproduct_association";
 				public const string EntityName = "campaignitem";
+			}
+		}
+		public static class new_testentity1_
+		{
+			public static class new_testentity_testentity2
+			{
+				public const string Name = "new_testentity_testentity2";
+				public const string EntityName = "new_testentity_testentity2";
+			}
+			public static class new_testentity_testentity2_b
+			{
+				public const string Name = "new_testentity_testentity2_b";
+				public const string EntityName = "new_testentity_testentity2_b";
 			}
 		}
 		public static class entitlement_
@@ -638,19 +659,6 @@ namespace JosephM.Xrm.Schema
 			{
 				public const string Name = "task_subscription_association";
 				public const string EntityName = "subscriptionmanuallytrackedobject";
-			}
-		}
-		public static class new_testentity1_
-		{
-			public static class new_testentity_testentity2
-			{
-				public const string Name = "new_testentity_testentity2";
-				public const string EntityName = "new_testentity_testentity2";
-			}
-			public static class new_testentity_testentity2_b
-			{
-				public const string Name = "new_testentity_testentity2_b";
-				public const string EntityName = "new_testentity_testentity2_b";
 			}
 		}
 		public static class opportunity_
@@ -810,6 +818,14 @@ namespace JosephM.Xrm.Schema
 				public const string EntityName = "leadcompetitors";
 			}
 		}
+		public static class adx_entitypermission_
+		{
+			public static class adx_entitypermission_webrole
+			{
+				public const string Name = "adx_entitypermission_webrole";
+				public const string EntityName = "adx_entitypermission_webrole";
+			}
+		}
 		public static class entitlementtemplate_
 		{
 			public static class product_entitlementtemplate_association
@@ -855,6 +871,27 @@ namespace JosephM.Xrm.Schema
 			{
 				public const string Name = "competitorsalesliterature_association";
 				public const string EntityName = "competitorsalesliterature";
+			}
+		}
+		public static class new_testentity2_
+		{
+			public static class new_testentity_testentity2
+			{
+				public const string Name = "new_testentity_testentity2";
+				public const string EntityName = "new_testentity_testentity2";
+			}
+			public static class new_testentity_testentity2_b
+			{
+				public const string Name = "new_testentity_testentity2_b";
+				public const string EntityName = "new_testentity_testentity2_b";
+			}
+		}
+		public static class adx_contentaccesslevel_
+		{
+			public static class adx_WebRoleContentAccessLevel
+			{
+				public const string Name = "adx_WebRoleContentAccessLevel";
+				public const string EntityName = "adx_webrolecontentaccesslevel";
 			}
 		}
 		public static class syncattributemappingprofile_
@@ -917,6 +954,16 @@ namespace JosephM.Xrm.Schema
 			{
 				public const string Name = "adx_webpageaccesscontrolrule_webrole";
 				public const string EntityName = "adx_webpageaccesscontrolrule_webrole";
+			}
+			public static class adx_entitypermission_webrole
+			{
+				public const string Name = "adx_entitypermission_webrole";
+				public const string EntityName = "adx_entitypermission_webrole";
+			}
+			public static class adx_WebRoleContentAccessLevel
+			{
+				public const string Name = "adx_WebRoleContentAccessLevel";
+				public const string EntityName = "adx_webrolecontentaccesslevel";
 			}
 		}
 		public static class salesorder_
@@ -2529,6 +2576,28 @@ namespace JosephM.Xrm.Schema
 			public const string createdon = "createdon";
 			public const string modifiedonbehalfby = "modifiedonbehalfby";
 		}
+		public static class adx_publishingstate_
+		{
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string owningteam = "owningteam";
+			public const string statecode = "statecode";
+			public const string owninguser = "owninguser";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string adx_name = "adx_name";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string adx_publishingstateid = "adx_publishingstateid";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string modifiedon = "modifiedon";
+			public const string statuscode = "statuscode";
+			public const string createdon = "createdon";
+			public const string versionnumber = "versionnumber";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
+		}
 		public static class importentitymapping_
 		{
 			public const string modifiedonbehalfby = "modifiedonbehalfby";
@@ -3228,57 +3297,6 @@ namespace JosephM.Xrm.Schema
 			public const string totallineitemamount = "totallineitemamount";
 			public const string freighttermscode = "freighttermscode";
 			public const string totalamount_base = "totalamount_base";
-		}
-		public static class new_testentity2_
-		{
-			public const string new_double = "new_double";
-			public const string new_integer2 = "new_integer2";
-			public const string createdon = "createdon";
-			public const string new_string2 = "new_string2";
-			public const string new_timezone = "new_timezone";
-			public const string new_language = "new_language";
-			public const string new_email = "new_email";
-			public const string createdonbehalfby = "createdonbehalfby";
-			public const string new_picklist = "new_picklist";
-			public const string new_lookup2 = "new_lookup2";
-			public const string overriddencreatedon = "overriddencreatedon";
-			public const string new_string = "new_string";
-			public const string new_picklist2 = "new_picklist2";
-			public const string modifiedonbehalfby = "modifiedonbehalfby";
-			public const string exchangerate = "exchangerate";
-			public const string new_double2 = "new_double2";
-			public const string owningteam = "owningteam";
-			public const string statecode = "statecode";
-			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
-			public const string new_boolean = "new_boolean";
-			public const string new_textarea = "new_textarea";
-			public const string new_tickersymbol = "new_tickersymbol";
-			public const string new_testentity2id = "new_testentity2id";
-			public const string new_boolean2 = "new_boolean2";
-			public const string new_url = "new_url";
-			public const string new_decimal = "new_decimal";
-			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
-			public const string new_lookup = "new_lookup";
-			public const string new_sharedpicklist = "new_sharedpicklist";
-			public const string ownerid = "ownerid";
-			public const string modifiedon = "modifiedon";
-			public const string importsequencenumber = "importsequencenumber";
-			public const string new_date2 = "new_date2";
-			public const string new_money_base = "new_money_base";
-			public const string new_date = "new_date";
-			public const string transactioncurrencyid = "transactioncurrencyid";
-			public const string createdby = "createdby";
-			public const string modifiedby = "modifiedby";
-			public const string new_name = "new_name";
-			public const string new_money = "new_money";
-			public const string owninguser = "owninguser";
-			public const string owningbusinessunit = "owningbusinessunit";
-			public const string versionnumber = "versionnumber";
-			public const string statuscode = "statuscode";
-			public const string new_memo = "new_memo";
-			public const string new_decimal2 = "new_decimal2";
-			public const string new_integer = "new_integer";
-			public const string new_duration = "new_duration";
 		}
 		public static class lookupmapping_
 		{
@@ -4203,6 +4221,53 @@ namespace JosephM.Xrm.Schema
 			public const string category = "category";
 			public const string subject = "subject";
 			public const string occurrences = "occurrences";
+		}
+		public static class dc_businessmanagers_
+		{
+			public const string owninguser = "owninguser";
+			public const string statecode = "statecode";
+			public const string statuscode = "statuscode";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string versionnumber = "versionnumber";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string dc_contact = "dc_contact";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string owningteam = "owningteam";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string modifiedon = "modifiedon";
+			public const string createdon = "createdon";
+			public const string dc_account = "dc_account";
+			public const string dc_businessmanagersid = "dc_businessmanagersid";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string dc_name = "dc_name";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
+		}
+		public static class new_testentity1_
+		{
+			public const string owninguser = "owninguser";
+			public const string owningteam = "owningteam";
+			public const string statecode = "statecode";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string new_name = "new_name";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string modifiedon = "modifiedon";
+			public const string new_testentity1id = "new_testentity1id";
+			public const string statuscode = "statuscode";
+			public const string createdon = "createdon";
+			public const string new_string = "new_string";
+			public const string versionnumber = "versionnumber";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
 		}
 		public static class transformationparametermapping_
 		{
@@ -5247,29 +5312,6 @@ namespace JosephM.Xrm.Schema
 			public const string postid = "postid";
 			public const string createdonbehalfby = "createdonbehalfby";
 		}
-		public static class new_testentity1_
-		{
-			public const string owninguser = "owninguser";
-			public const string owningteam = "owningteam";
-			public const string statecode = "statecode";
-			public const string statuscode = "statuscode";
-			public const string createdonbehalfby = "createdonbehalfby";
-			public const string importsequencenumber = "importsequencenumber";
-			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
-			public const string owningbusinessunit = "owningbusinessunit";
-			public const string new_name = "new_name";
-			public const string modifiedby = "modifiedby";
-			public const string createdby = "createdby";
-			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
-			public const string modifiedon = "modifiedon";
-			public const string createdon = "createdon";
-			public const string new_testentity1id = "new_testentity1id";
-			public const string new_string = "new_string";
-			public const string versionnumber = "versionnumber";
-			public const string modifiedonbehalfby = "modifiedonbehalfby";
-			public const string ownerid = "ownerid";
-			public const string overriddencreatedon = "overriddencreatedon";
-		}
 		public static class userentityuisettings_
 		{
 			public const string insertintoemailmruxml = "insertintoemailmruxml";
@@ -5605,6 +5647,28 @@ namespace JosephM.Xrm.Schema
 			public const string rate = "rate";
 			public const string productserialnumber = "productserialnumber";
 			public const string uomid = "uomid";
+		}
+		public static class adx_sitemarker_
+		{
+			public const string owninguser = "owninguser";
+			public const string statecode = "statecode";
+			public const string statuscode = "statuscode";
+			public const string adx_sitemarkerid = "adx_sitemarkerid";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string adx_name = "adx_name";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string owningteam = "owningteam";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string modifiedon = "modifiedon";
+			public const string createdon = "createdon";
+			public const string versionnumber = "versionnumber";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
 		}
 		public static class resourcespec_
 		{
@@ -6548,6 +6612,28 @@ namespace JosephM.Xrm.Schema
 			public const string displaystringmapidunique = "displaystringmapidunique";
 			public const string ismanaged = "ismanaged";
 		}
+		public static class adx_sitesetting_
+		{
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string statecode = "statecode";
+			public const string owninguser = "owninguser";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string adx_name = "adx_name";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string owningteam = "owningteam";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string adx_sitesettingid = "adx_sitesettingid";
+			public const string modifiedon = "modifiedon";
+			public const string statuscode = "statuscode";
+			public const string createdon = "createdon";
+			public const string versionnumber = "versionnumber";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
+		}
 		public static class webwizard_
 		{
 			public const string modifiedonbehalfby = "modifiedonbehalfby";
@@ -7033,6 +7119,28 @@ namespace JosephM.Xrm.Schema
 			public const string standardmonth = "standardmonth";
 			public const string timezoneruleid = "timezoneruleid";
 			public const string daylightdayofweek = "daylightdayofweek";
+		}
+		public static class adx_contentsnippet_
+		{
+			public const string owninguser = "owninguser";
+			public const string statecode = "statecode";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string adx_name = "adx_name";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string adx_contentsnippetid = "adx_contentsnippetid";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string owningteam = "owningteam";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string modifiedon = "modifiedon";
+			public const string statuscode = "statuscode";
+			public const string createdon = "createdon";
+			public const string versionnumber = "versionnumber";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
 		}
 		public static class import_
 		{
@@ -8656,6 +8764,28 @@ namespace JosephM.Xrm.Schema
 			public const string sitemapid = "sitemapid";
 			public const string ismanaged = "ismanaged";
 		}
+		public static class adx_entitypermission_
+		{
+			public const string owninguser = "owninguser";
+			public const string statecode = "statecode";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string adx_name = "adx_name";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string adx_entitypermissionid = "adx_entitypermissionid";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string owningteam = "owningteam";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string modifiedon = "modifiedon";
+			public const string statuscode = "statuscode";
+			public const string createdon = "createdon";
+			public const string versionnumber = "versionnumber";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
+		}
 		public static class principalobjectattributeaccess_
 		{
 			public const string organizationid = "organizationid";
@@ -8757,6 +8887,28 @@ namespace JosephM.Xrm.Schema
 			public const string workflowid = "workflowid";
 			public const string ownerid = "ownerid";
 			public const string slaitemid = "slaitemid";
+		}
+		public static class adx_pagetemplate_
+		{
+			public const string owninguser = "owninguser";
+			public const string owningteam = "owningteam";
+			public const string statecode = "statecode";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string adx_name = "adx_name";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string adx_pagetemplateid = "adx_pagetemplateid";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string versionnumber = "versionnumber";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string modifiedon = "modifiedon";
+			public const string statuscode = "statuscode";
+			public const string createdon = "createdon";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
 		}
 		public static class ribboncontextgroup_
 		{
@@ -10152,6 +10304,57 @@ namespace JosephM.Xrm.Schema
 			public const string address1_composite = "address1_composite";
 			public const string address1_postofficebox = "address1_postofficebox";
 		}
+		public static class new_testentity2_
+		{
+			public const string new_double = "new_double";
+			public const string versionnumber = "versionnumber";
+			public const string createdon = "createdon";
+			public const string new_string2 = "new_string2";
+			public const string new_timezone = "new_timezone";
+			public const string new_language = "new_language";
+			public const string new_email = "new_email";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string new_picklist = "new_picklist";
+			public const string new_lookup2 = "new_lookup2";
+			public const string overriddencreatedon = "overriddencreatedon";
+			public const string new_string = "new_string";
+			public const string new_picklist2 = "new_picklist2";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string exchangerate = "exchangerate";
+			public const string new_double2 = "new_double2";
+			public const string owningteam = "owningteam";
+			public const string statecode = "statecode";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string new_boolean = "new_boolean";
+			public const string new_textarea = "new_textarea";
+			public const string new_tickersymbol = "new_tickersymbol";
+			public const string new_testentity2id = "new_testentity2id";
+			public const string new_boolean2 = "new_boolean2";
+			public const string new_integer2 = "new_integer2";
+			public const string new_url = "new_url";
+			public const string new_decimal = "new_decimal";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string new_lookup = "new_lookup";
+			public const string new_sharedpicklist = "new_sharedpicklist";
+			public const string ownerid = "ownerid";
+			public const string modifiedon = "modifiedon";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string new_date2 = "new_date2";
+			public const string new_money_base = "new_money_base";
+			public const string new_date = "new_date";
+			public const string transactioncurrencyid = "transactioncurrencyid";
+			public const string createdby = "createdby";
+			public const string modifiedby = "modifiedby";
+			public const string new_name = "new_name";
+			public const string new_money = "new_money";
+			public const string owninguser = "owninguser";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string statuscode = "statuscode";
+			public const string new_memo = "new_memo";
+			public const string new_decimal2 = "new_decimal2";
+			public const string new_integer = "new_integer";
+			public const string new_duration = "new_duration";
+		}
 		public static class bookableresourcebookingheader_
 		{
 			public const string modifiedonbehalfby = "modifiedonbehalfby";
@@ -10293,6 +10496,28 @@ namespace JosephM.Xrm.Schema
 			public const string objecttypecode = "objecttypecode";
 			public const string createdonbehalfby = "createdonbehalfby";
 		}
+		public static class adx_contentaccesslevel_
+		{
+			public const string owninguser = "owninguser";
+			public const string owningteam = "owningteam";
+			public const string statecode = "statecode";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string adx_name = "adx_name";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string versionnumber = "versionnumber";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string adx_contentaccesslevelid = "adx_contentaccesslevelid";
+			public const string modifiedon = "modifiedon";
+			public const string statuscode = "statuscode";
+			public const string createdon = "createdon";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
+		}
 		public static class syncattributemappingprofile_
 		{
 			public const string modifiedonbehalfby = "modifiedonbehalfby";
@@ -10385,28 +10610,6 @@ namespace JosephM.Xrm.Schema
 			public const string timestampdatemappingid = "timestampdatemappingid";
 			public const string date = "date";
 			public const string timestamp = "timestamp";
-		}
-		public static class new_testentity3_
-		{
-			public const string new_testentity3id = "new_testentity3id";
-			public const string owninguser = "owninguser";
-			public const string owningteam = "owningteam";
-			public const string statecode = "statecode";
-			public const string createdonbehalfby = "createdonbehalfby";
-			public const string importsequencenumber = "importsequencenumber";
-			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
-			public const string owningbusinessunit = "owningbusinessunit";
-			public const string new_name = "new_name";
-			public const string modifiedby = "modifiedby";
-			public const string createdby = "createdby";
-			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
-			public const string modifiedon = "modifiedon";
-			public const string statuscode = "statuscode";
-			public const string createdon = "createdon";
-			public const string versionnumber = "versionnumber";
-			public const string modifiedonbehalfby = "modifiedonbehalfby";
-			public const string ownerid = "ownerid";
-			public const string overriddencreatedon = "overriddencreatedon";
 		}
 		public static class principalattributeaccessmap_
 		{
@@ -11789,6 +11992,28 @@ namespace JosephM.Xrm.Schema
 			public const string salesliteratureitemid = "salesliteratureitemid";
 			public const string overriddencreatedon = "overriddencreatedon";
 		}
+		public static class new_testentity3_
+		{
+			public const string new_testentity3id = "new_testentity3id";
+			public const string owninguser = "owninguser";
+			public const string owningteam = "owningteam";
+			public const string statecode = "statecode";
+			public const string createdonbehalfby = "createdonbehalfby";
+			public const string importsequencenumber = "importsequencenumber";
+			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
+			public const string owningbusinessunit = "owningbusinessunit";
+			public const string new_name = "new_name";
+			public const string modifiedby = "modifiedby";
+			public const string createdby = "createdby";
+			public const string timezoneruleversionnumber = "timezoneruleversionnumber";
+			public const string modifiedon = "modifiedon";
+			public const string statuscode = "statuscode";
+			public const string createdon = "createdon";
+			public const string versionnumber = "versionnumber";
+			public const string modifiedonbehalfby = "modifiedonbehalfby";
+			public const string ownerid = "ownerid";
+			public const string overriddencreatedon = "overriddencreatedon";
+		}
 		public static class processstage_
 		{
 			public const string stagename = "stagename";
@@ -12684,8 +12909,8 @@ namespace JosephM.Xrm.Schema
 			}
 			public static class SharedPicklist
 			{
-				public const int SharedOption2B = 2;
-				public const int SharedOption3 = 3;
+				public const int SharedOption2 = 2;
+				public const int SharedOption1 = 1;
 			}
 		}
 		public static class WebsiteLanguage
@@ -13309,7 +13534,7 @@ namespace JosephM.Xrm.Schema
 		{
 			public static class TypeTo
 			{
-				public const int TestEntity2 = 10263;
+				public const int TestEntity2 = 10280;
 				public const int SocialActivity = 4216;
 				public const int MarketingList = 4300;
 				public const int Territory = 2013;
@@ -13363,7 +13588,7 @@ namespace JosephM.Xrm.Schema
 			}
 			public static class TypeFrom
 			{
-				public const int TestEntity2 = 10263;
+				public const int TestEntity2 = 10280;
 				public const int SocialActivity = 4216;
 				public const int Email = 4202;
 				public const int Territory = 2013;
@@ -13865,6 +14090,19 @@ namespace JosephM.Xrm.Schema
 				public const int Active = 0;
 			}
 		}
+		public static class PublishingState
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
+			}
+		}
 		public static class ImportEntityMapping
 		{
 			public static class Status
@@ -14035,27 +14273,28 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionSyncEntryOutlook = 48;
 				public const int ActionCardType = 9983;
 				public const int SLAItem = 9751;
-				public const int SiteMap = 4709;
+				public const int EntityPermission = 10286;
 				public const int FieldSharing = 44;
 				public const int PropertyOptionSetItem = 1049;
+				public const int Process = 4703;
 				public const int BusinessDataLocalizedLabel = 4232;
 				public const int PostRegarding = 8002;
-				public const int Notification = 4110;
+				public const int PageTemplate = 10287;
 				public const int RibbonContextGroup = 1115;
 				public const int ImportSourceFile = 4412;
-				public const int Process = 4703;
-				public const int WebFormStep = 10221;
 				public const int BulkDeleteFailure = 4425;
 				public const int ExpiredProcess = 955;
-				public const int AnnualFiscalCalendar = 2000;
+				public const int OwnerMapping = 4420;
 				public const int RelationshipRoleMap = 4501;
 				public const int Website = 10256;
-				public const int ImportJob = 9107;
+				public const int WebFormStep = 10221;
 				public const int MobileOfflineProfileItem = 9867;
 				public const int TestEntityThree = 10015;
-				public const int OwnerMapping = 4420;
+				public const int SiteMap = 4709;
 				public const int Lead = 4;
 				public const int TranslationProcess = 951;
+				public const int ImportJob = 9107;
+				public const int Notification = 4110;
 				public const int PriceList = 1022;
 				public const int EmailSearch = 4299;
 				public const int TransformationMapping = 4426;
@@ -14080,7 +14319,7 @@ namespace JosephM.Xrm.Schema
 				public const int ActivityParty = 135;
 				public const int ArticleComment = 1082;
 				public const int ResourceExpansion = 4010;
-				public const int UserSettings = 150;
+				public const int AnnualFiscalCalendar = 2000;
 				public const int Announcement = 132;
 				public const int RollupJob = 9511;
 				public const int KnowledgeArticle = 9953;
@@ -14093,42 +14332,43 @@ namespace JosephM.Xrm.Schema
 				public const int App = 9006;
 				public const int UserChart = 1112;
 				public const int LeadToOpportunitySalesProcess = 954;
-				public const int SdkMessageRequest = 4609;
 				public const int DependencyFeature = 7108;
 				public const int Auditing = 4567;
-				public const int WebFormMetadata = 10220;
+				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int FilterTemplate = 30;
 				public const int SystemChart = 1111;
-				public const int TimeZoneRule = 4811;
+				public const int SdkMessageRequest = 4609;
+				public const int ContentSnippet = 10285;
 				public const int DataImport = 4410;
 				public const int BookableResource = 1150;
-				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int ProcessTrigger = 4712;
 				public const int ServiceActivity = 4214;
-				public const int ApplicationFile = 4707;
+				public const int TimeZoneRule = 4811;
+				public const int SdkMessage = 4606;
 				public const int ImageDescriptor = 1007;
 				public const int WebLink = 10254;
-				public const int RatingModel = 1144;
+				public const int SalesLiterature = 1038;
 				public const int TextAnalyticsEntityMapping = 9945;
 				public const int RibbonTabToCommandMapping = 1113;
-				public const int UserDashboard = 1031;
+				public const int ApplicationFile = 4707;
 				public const int InteractionforEmail = 9986;
 				public const int PrivilegeObjectTypeCode = 31;
-				public const int SalesLiterature = 1038;
+				public const int UserSettings = 150;
 				public const int AppModuleComponent = 9007;
 				public const int DisplayString = 4102;
-				public const int BulkOperationLog = 4405;
+				public const int UserDashboard = 1031;
 				public const int TestAggregatedEntity = 10233;
 				public const int ReportRelatedEntity = 9101;
-				public const int SdkMessage = 4606;
+				public const int Contact = 2;
 				public const int StatusMap = 1075;
 				public const int WebLinkSet = 10255;
-				public const int Queue = 2020;
+				public const int BulkOperationLog = 4405;
 				public const int ReplicationBacklog = 1140;
 				public const int QuarterlyFiscalCalendar = 2002;
-				public const int Contact = 2;
+				public const int RatingModel = 1144;
 				public const int Campaign = 4400;
 				public const int PostConfiguration = 10001;
+				public const int Queue = 2020;
 				public const int Subject = 129;
 				public const int MobileOfflineProfile = 9866;
 				public const int Feedback = 9958;
@@ -14154,6 +14394,7 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionManuallyTrackedObject = 37;
 				public const int DiscountList = 1080;
 				public const int ActionCardUserSettings = 9973;
+				public const int SalesProcessInstance = 32;
 				public const int PublisherAddress = 7102;
 				public const int QuoteClose = 4211;
 				public const int KnowledgeArticleCategory = 9960;
@@ -14166,18 +14407,18 @@ namespace JosephM.Xrm.Schema
 				public const int PostRuleConfiguration = 10002;
 				public const int SubscriptionStatisticOffline = 45;
 				public const int DocumentSuggestions = 1189;
-				public const int AuthorizationServer = 1094;
 				public const int DuplicateDetectionRule = 4414;
 				public const int BookableResourceBookingtoExchangeIdMapping = 4421;
-				public const int SalesProcessInstance = 32;
+				public const int Dependency = 7105;
 				public const int TimeZoneDefinition = 4810;
 				public const int InvoiceProduct = 1091;
-				public const int ProcessConfiguration = 9650;
+				public const int AuthorizationServer = 1094;
 				public const int SalesAttachment = 1070;
+				public const int TestEntity3 = 10283;
 				public const int ProcessStage = 4724;
-				public const int Dependency = 7105;
 				public const int Privilege = 1023;
 				public const int WebForm = 10219;
+				public const int ProcessConfiguration = 9650;
 				public const int SolutionComponent = 7103;
 				public const int ChannelProperty = 1236;
 				public const int EntitlementChannel = 9701;
@@ -14185,9 +14426,9 @@ namespace JosephM.Xrm.Schema
 				public const int ConnectionRole = 3231;
 				public const int TopicModelConfiguration = 9942;
 				public const int ExternalParty = 3008;
+				public const int TestEntity2 = 10280;
 				public const int BookableResourceBookingHeader = 1146;
 				public const int UserEntityInstanceData = 2501;
-				public const int SystemUserPrincipal = 14;
 				public const int Post = 8000;
 				public const int QueueItem = 2029;
 				public const int Competitor = 123;
@@ -14203,6 +14444,7 @@ namespace JosephM.Xrm.Schema
 				public const int SLAKPIInstance = 9752;
 				public const int Category = 9959;
 				public const int Appointment = 4201;
+				public const int SystemUserPrincipal = 14;
 				public const int ContractTemplate = 2011;
 				public const int SimilarityRule = 9951;
 				public const int PluginTraceLog = 4619;
@@ -14215,19 +14457,19 @@ namespace JosephM.Xrm.Schema
 				public const int Invoice = 1090;
 				public const int PersonalDocumentTemplate = 9941;
 				public const int PropertyAssociation = 1235;
+				public const int SyncAttributeMappingProfile = 1400;
 				public const int Language = 9957;
 				public const int ModelEntityMapping = 9934;
-				public const int TimeZoneLocalizedName = 4812;
 				public const int SocialActivity = 4216;
 				public const int Teamtemplate = 92;
-				public const int SyncAttributeMappingProfile = 1400;
+				public const int ContentAccessLevel = 10291;
 				public const int DocumentLocation = 9508;
 				public const int WizardPage = 4802;
 				public const int ProductRelationship = 1028;
+				public const int TimeZoneLocalizedName = 4812;
 				public const int QueueMemberCount = 2024;
 				public const int TimeStampDateMapping = 9932;
-				public const int TestEntity3 = 10266;
-				public const int OpportunityClose = 4208;
+				public const int WebFormMetadata = 10220;
 				public const int PhoneToCaseProcess = 952;
 				public const int UnresolvedAddress = 2012;
 				public const int Attachment_1001 = 1001;
@@ -14252,30 +14494,31 @@ namespace JosephM.Xrm.Schema
 				public const int ProductRecommendationModel = 9933;
 				public const int PluginType = 4602;
 				public const int LeadAddress = 1017;
-				public const int Characteristic = 1141;
-				public const int DependencyNode = 7106;
+				public const int LookupMapping = 4419;
 				public const int SdkMessageProcessingStepImage = 4615;
-				public const int PropertyInstance = 1333;
-				public const int ActionCard = 9962;
-				public const int KnowledgeBaseRecord = 9930;
-				public const int EntitlementTemplateChannel = 9703;
-				public const int BusinessUnitMap = 6;
-				public const int BookableResourceCategoryAssn = 1149;
 				public const int Trace = 8050;
 				public const int SyncAttributeMapping = 1401;
+				public const int KnowledgeBaseRecord = 9930;
+				public const int Characteristic = 1141;
+				public const int DependencyNode = 7106;
+				public const int BookableResourceCategoryAssn = 1149;
+				public const int DuplicateRuleCondition = 4416;
+				public const int BusinessUnit = 10;
 				public const int Attachment_1002 = 1002;
-				public const int RibbonCommand = 1116;
-				public const int WebPageAccessControlRule = 10175;
+				public const int EntitlementTemplateChannel = 9703;
+				public const int BusinessUnitMap = 6;
 				public const int BusinessProcessFlowInstance = 4725;
-				public const int TestEntity2 = 10263;
-				public const int LookupMapping = 4419;
-				public const int SystemUserManagerMap = 51;
-				public const int BookableResourceCategory = 1147;
-				public const int LocalConfigStore = 9201;
-				public const int ArticleTemplate = 1016;
 				public const int ProfileAlbum = 10000;
 				public const int AttributeMap = 4601;
+				public const int SystemUserManagerMap = 51;
+				public const int RibbonCommand = 1116;
+				public const int WebPageAccessControlRule = 10175;
+				public const int ArticleTemplate = 1016;
+				public const int PropertyInstance = 1333;
+				public const int ActionCard = 9962;
 				public const int DataPerformanceDashboard = 4450;
+				public const int BookableResourceCategory = 1147;
+				public const int LocalConfigStore = 9201;
 				public const int InterProcessLock = 4011;
 				public const int QuickCampaign = 4406;
 				public const int HierarchyRule = 8840;
@@ -14301,80 +14544,82 @@ namespace JosephM.Xrm.Schema
 				public const int SecurityRole = 1036;
 				public const int CustomerRelationship = 4502;
 				public const int SubscriptionClients = 1072;
-				public const int ProcessLog = 4706;
+				public const int QuoteProduct = 1085;
 				public const int Article = 127;
 				public const int RuleItem = 8199;
-				public const int QueueItemCount = 2023;
+				public const int Like = 8006;
 				public const int RecommendationModelVersion = 9935;
 				public const int Organization = 1019;
-				public const int ImportLog = 4423;
+				public const int ProcessLog = 4706;
+				public const int PublishingState = 10288;
 				public const int ImportEntityMapping = 4428;
 				public const int MailboxAutoTrackingFolder = 9608;
-				public const int Like = 8006;
 				public const int ConnectionRoleObjectTypeCode = 3233;
 				public const int ImportData = 4413;
-				public const int RecommendationCache = 9938;
+				public const int ImportLog = 4423;
 				public const int FieldSecurityProfile = 1200;
 				public const int TestAggregateEntity = 10232;
-				public const int QuoteProduct = 1085;
+				public const int Connection = 3234;
 				public const int FieldPermission = 1201;
 				public const int EntityList = 10268;
-				public const int OrderProduct = 1089;
+				public const int RecommendationCache = 9938;
 				public const int IntegrationStatus = 3000;
 				public const int TestEntity = 10014;
-				public const int Connection = 3234;
+				public const int QueueItemCount = 2023;
 				public const int ActionCardUserState = 9968;
 				public const int InvalidDependency = 7107;
-				public const int DuplicateRuleCondition = 4416;
-				public const int ProductAssociation = 1025;
+				public const int OrderProduct = 1089;
+				public const int AdvancedSimilarityRule = 9949;
 				public const int View = 1039;
 				public const int Unit = 1055;
-				public const int ResourceSpecification = 4006;
+				public const int Opportunity = 3;
 				public const int RecurrenceRule = 4250;
 				public const int SdkMessageResponseField = 4611;
-				public const int ProcessSession = 4710;
+				public const int ProductAssociation = 1025;
 				public const int SchedulingGroup = 4005;
 				public const int OrganizationInsightsMetric = 9699;
-				public const int Opportunity = 3;
+				public const int Goal = 9600;
 				public const int ChannelAccessProfileRule = 9400;
 				public const int TeamProfiles = 1203;
-				public const int MailboxStatistics = 9607;
-				public const int OpportunityProduct = 1083;
+				public const int ProcessSession = 4710;
 				public const int Address = 1071;
-				public const int TestEntity1 = 10262;
-				public const int UserEntityUISettings = 2500;
-				public const int Report = 9100;
-				public const int SystemApplicationMetadata = 7000;
-				public const int SdkMessagePair = 4613;
-				public const int ContractLine = 1011;
 				public const int EntityForm = 10177;
 				public const int OpportunityRelationship = 4503;
+				public const int Report = 9100;
+				public const int MailboxStatistics = 9607;
+				public const int OpportunityProduct = 1083;
+				public const int ContractLine = 1011;
+				public const int SiteMarker = 10289;
+				public const int ResourceSpecification = 4006;
 				public const int Resource = 4002;
+				public const int SystemApplicationMetadata = 7000;
+				public const int SdkMessagePair = 4613;
+				public const int CaseResolution = 4206;
+				public const int DisplayStringMap = 4101;
+				public const int SiteSetting = 10290;
+				public const int WebWizard = 4800;
+				public const int CustomControlResource = 9754;
 				public const int Fax = 4204;
 				public const int Note = 5;
-				public const int DisplayStringMap = 4101;
-				public const int RoutingRuleSet = 8181;
-				public const int GoalMetric = 9603;
-				public const int CustomControlResource = 9754;
-				public const int ChannelAccessProfile = 3005;
 				public const int KnowledgeArticleViews = 9955;
 				public const int Publisher = 7101;
-				public const int WebWizard = 4800;
+				public const int OpportunityClose = 4208;
 				public const int ServiceEndpoint = 4618;
 				public const int Position = 50;
-				public const int CampaignResponse = 4401;
-				public const int KnowledgeSearchModel = 9947;
+				public const int ChannelAccessProfile = 3005;
 				public const int FacilityEquipment = 4000;
-				public const int Goal = 9600;
-				public const int CaseResolution = 4206;
-				public const int ReportLink = 9104;
-				public const int WebWizardAccessPrivilege = 4803;
-				public const int SharepointDocument = 9507;
-				public const int ISVConfig = 4705;
 				public const int WebResource = 9333;
 				public const int OpportunitySalesProcess = 953;
+				public const int ReportLink = 9104;
+				public const int CampaignResponse = 4401;
+				public const int KnowledgeSearchModel = 9947;
+				public const int ISVConfig = 4705;
+				public const int RoutingRuleSet = 8181;
+				public const int GoalMetric = 9603;
 				public const int PrincipalSyncAttributeMap = 1404;
-				public const int Comment = 8005;
+				public const int WebWizardAccessPrivilege = 4803;
+				public const int SharepointDocument = 9507;
+				public const int UserEntityUISettings = 2500;
 				public const int WebTemplate = 10267;
 				public const int SavedOrganizationInsightsConfiguration = 1309;
 				public const int SubscriptionSynchronizationInformation = 33;
@@ -14387,42 +14632,43 @@ namespace JosephM.Xrm.Schema
 				public const int Entitlement = 9700;
 				public const int DataMap = 4411;
 				public const int Case = 112;
-				public const int SyncError = 9869;
-				public const int SubscriptionStatisticOutlook = 46;
 				public const int CompetitorProduct = 1006;
-				public const int BusinessUnit = 10;
-				public const int AdvancedSimilarityRule = 9949;
-				public const int NewProcess = 950;
-				public const int TraceRegarding = 8052;
-				public const int RecurringAppointment = 4251;
-				public const int TransformationParameterMapping = 4427;
 				public const int EntityFormMetadata = 10178;
 				public const int Email = 4202;
+				public const int NewProcess = 950;
+				public const int SyncError = 9869;
+				public const int SubscriptionStatisticOutlook = 46;
+				public const int BusinessManager = 10284;
+				public const int TestEntity1 = 10279;
+				public const int TransformationParameterMapping = 4427;
 				public const int Product = 1024;
-				public const int UserSearchFacet = 52;
+				public const int TraceRegarding = 8052;
+				public const int RecurringAppointment = 4251;
+				public const int Service = 4001;
 				public const int CampaignActivityItem = 4404;
 				public const int RibbonDifference = 1130;
-				public const int Territory = 2013;
+				public const int Follow = 8003;
 				public const int CompetitorAddress = 1004;
 				public const int AzureServiceConnection = 9936;
-				public const int Solution = 7100;
+				public const int UserSearchFacet = 52;
 				public const int Task = 4212;
 				public const int Clientupdate = 36;
-				public const int Follow = 8003;
+				public const int Comment = 8005;
 				public const int CampaignItem = 4403;
 				public const int TextAnalyticsTopic = 9948;
-				public const int EmailServerProfile = 9605;
+				public const int Solution = 7100;
 				public const int RollupQuery = 9602;
 				public const int RibbonRule = 1117;
-				public const int Service = 4001;
+				public const int CalendarRule = 4004;
 				public const int OrganizationUI = 1021;
 				public const int OfficeDocument = 4490;
-				public const int WebPage = 10172;
+				public const int EmailServerProfile = 9605;
 				public const int MailMergeTemplate = 9106;
 				public const int HierarchySecurityConfiguration = 9919;
-				public const int CalendarRule = 4004;
+				public const int Territory = 2013;
 				public const int RecordCreationandUpdateRuleItem = 9301;
 				public const int BookingStatus = 1152;
+				public const int WebPage = 10172;
 			}
 			public static class SLAType
 			{
@@ -14592,34 +14838,6 @@ namespace JosephM.Xrm.Schema
 			{
 				public const int FOB = 1;
 				public const int NoCharge = 2;
-			}
-		}
-		public static class TestEntity2
-		{
-			public static class PicklistUpdated
-			{
-				public const int Option2B = 2;
-				public const int Option3 = 3;
-			}
-			public static class SharedPicklist
-			{
-				public const int SharedOption2B = 2;
-				public const int SharedOption3 = 3;
-			}
-			public static class Status
-			{
-				public const int Active = 0;
-				public const int Inactive = 1;
-			}
-			public static class SharedPicklistUpdated
-			{
-				public const int SharedOption2B = 2;
-				public const int SharedOption3 = 3;
-			}
-			public static class StatusReason
-			{
-				public const int Active = 1;
-				public const int Inactive = 2;
 			}
 		}
 		public static class LookupMapping
@@ -15175,6 +15393,32 @@ namespace JosephM.Xrm.Schema
 				public const int OutofOffice = 6;
 			}
 		}
+		public static class BusinessManager
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
+			}
+		}
+		public static class TestEntity1
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
+			}
+		}
 		public static class TransformationParameterMapping
 		{
 			public static class ParameterDataType
@@ -15303,27 +15547,28 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionSyncEntryOutlook = 48;
 				public const int ActionCardType = 9983;
 				public const int SLAItem = 9751;
-				public const int SiteMap = 4709;
+				public const int EntityPermission = 10286;
 				public const int FieldSharing = 44;
 				public const int PropertyOptionSetItem = 1049;
+				public const int Process = 4703;
 				public const int BusinessDataLocalizedLabel = 4232;
 				public const int PostRegarding = 8002;
-				public const int Notification = 4110;
+				public const int PageTemplate = 10287;
 				public const int RibbonContextGroup = 1115;
 				public const int ImportSourceFile = 4412;
-				public const int Process = 4703;
-				public const int WebFormStep = 10221;
 				public const int BulkDeleteFailure = 4425;
 				public const int ExpiredProcess = 955;
-				public const int AnnualFiscalCalendar = 2000;
+				public const int OwnerMapping = 4420;
 				public const int RelationshipRoleMap = 4501;
 				public const int Website = 10256;
-				public const int ImportJob = 9107;
+				public const int WebFormStep = 10221;
 				public const int MobileOfflineProfileItem = 9867;
 				public const int TestEntityThree = 10015;
-				public const int OwnerMapping = 4420;
+				public const int SiteMap = 4709;
 				public const int Lead = 4;
 				public const int TranslationProcess = 951;
+				public const int ImportJob = 9107;
+				public const int Notification = 4110;
 				public const int PriceList = 1022;
 				public const int EmailSearch = 4299;
 				public const int TransformationMapping = 4426;
@@ -15348,7 +15593,7 @@ namespace JosephM.Xrm.Schema
 				public const int ActivityParty = 135;
 				public const int ArticleComment = 1082;
 				public const int ResourceExpansion = 4010;
-				public const int UserSettings = 150;
+				public const int AnnualFiscalCalendar = 2000;
 				public const int Announcement = 132;
 				public const int RollupJob = 9511;
 				public const int KnowledgeArticle = 9953;
@@ -15361,42 +15606,43 @@ namespace JosephM.Xrm.Schema
 				public const int App = 9006;
 				public const int UserChart = 1112;
 				public const int LeadToOpportunitySalesProcess = 954;
-				public const int SdkMessageRequest = 4609;
 				public const int DependencyFeature = 7108;
 				public const int Auditing = 4567;
-				public const int WebFormMetadata = 10220;
+				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int FilterTemplate = 30;
 				public const int SystemChart = 1111;
-				public const int TimeZoneRule = 4811;
+				public const int SdkMessageRequest = 4609;
+				public const int ContentSnippet = 10285;
 				public const int DataImport = 4410;
 				public const int BookableResource = 1150;
-				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int ProcessTrigger = 4712;
 				public const int ServiceActivity = 4214;
-				public const int ApplicationFile = 4707;
+				public const int TimeZoneRule = 4811;
+				public const int SdkMessage = 4606;
 				public const int ImageDescriptor = 1007;
 				public const int WebLink = 10254;
-				public const int RatingModel = 1144;
+				public const int SalesLiterature = 1038;
 				public const int TextAnalyticsEntityMapping = 9945;
 				public const int RibbonTabToCommandMapping = 1113;
-				public const int UserDashboard = 1031;
+				public const int ApplicationFile = 4707;
 				public const int InteractionforEmail = 9986;
 				public const int PrivilegeObjectTypeCode = 31;
-				public const int SalesLiterature = 1038;
+				public const int UserSettings = 150;
 				public const int AppModuleComponent = 9007;
 				public const int DisplayString = 4102;
-				public const int BulkOperationLog = 4405;
+				public const int UserDashboard = 1031;
 				public const int TestAggregatedEntity = 10233;
 				public const int ReportRelatedEntity = 9101;
-				public const int SdkMessage = 4606;
+				public const int Contact = 2;
 				public const int StatusMap = 1075;
 				public const int WebLinkSet = 10255;
-				public const int Queue = 2020;
+				public const int BulkOperationLog = 4405;
 				public const int ReplicationBacklog = 1140;
 				public const int QuarterlyFiscalCalendar = 2002;
-				public const int Contact = 2;
+				public const int RatingModel = 1144;
 				public const int Campaign = 4400;
 				public const int PostConfiguration = 10001;
+				public const int Queue = 2020;
 				public const int Subject = 129;
 				public const int MobileOfflineProfile = 9866;
 				public const int Feedback = 9958;
@@ -15422,6 +15668,7 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionManuallyTrackedObject = 37;
 				public const int DiscountList = 1080;
 				public const int ActionCardUserSettings = 9973;
+				public const int SalesProcessInstance = 32;
 				public const int PublisherAddress = 7102;
 				public const int QuoteClose = 4211;
 				public const int KnowledgeArticleCategory = 9960;
@@ -15434,18 +15681,18 @@ namespace JosephM.Xrm.Schema
 				public const int PostRuleConfiguration = 10002;
 				public const int SubscriptionStatisticOffline = 45;
 				public const int DocumentSuggestions = 1189;
-				public const int AuthorizationServer = 1094;
 				public const int DuplicateDetectionRule = 4414;
 				public const int BookableResourceBookingtoExchangeIdMapping = 4421;
-				public const int SalesProcessInstance = 32;
+				public const int Dependency = 7105;
 				public const int TimeZoneDefinition = 4810;
 				public const int InvoiceProduct = 1091;
-				public const int ProcessConfiguration = 9650;
+				public const int AuthorizationServer = 1094;
 				public const int SalesAttachment = 1070;
+				public const int TestEntity3 = 10283;
 				public const int ProcessStage = 4724;
-				public const int Dependency = 7105;
 				public const int Privilege = 1023;
 				public const int WebForm = 10219;
+				public const int ProcessConfiguration = 9650;
 				public const int SolutionComponent = 7103;
 				public const int ChannelProperty = 1236;
 				public const int EntitlementChannel = 9701;
@@ -15453,9 +15700,9 @@ namespace JosephM.Xrm.Schema
 				public const int ConnectionRole = 3231;
 				public const int TopicModelConfiguration = 9942;
 				public const int ExternalParty = 3008;
+				public const int TestEntity2 = 10280;
 				public const int BookableResourceBookingHeader = 1146;
 				public const int UserEntityInstanceData = 2501;
-				public const int SystemUserPrincipal = 14;
 				public const int Post = 8000;
 				public const int QueueItem = 2029;
 				public const int Competitor = 123;
@@ -15471,6 +15718,7 @@ namespace JosephM.Xrm.Schema
 				public const int SLAKPIInstance = 9752;
 				public const int Category = 9959;
 				public const int Appointment = 4201;
+				public const int SystemUserPrincipal = 14;
 				public const int ContractTemplate = 2011;
 				public const int SimilarityRule = 9951;
 				public const int PluginTraceLog = 4619;
@@ -15483,19 +15731,19 @@ namespace JosephM.Xrm.Schema
 				public const int Invoice = 1090;
 				public const int PersonalDocumentTemplate = 9941;
 				public const int PropertyAssociation = 1235;
+				public const int SyncAttributeMappingProfile = 1400;
 				public const int Language = 9957;
 				public const int ModelEntityMapping = 9934;
-				public const int TimeZoneLocalizedName = 4812;
 				public const int SocialActivity = 4216;
 				public const int Teamtemplate = 92;
-				public const int SyncAttributeMappingProfile = 1400;
+				public const int ContentAccessLevel = 10291;
 				public const int DocumentLocation = 9508;
 				public const int WizardPage = 4802;
 				public const int ProductRelationship = 1028;
+				public const int TimeZoneLocalizedName = 4812;
 				public const int QueueMemberCount = 2024;
 				public const int TimeStampDateMapping = 9932;
-				public const int TestEntity3 = 10266;
-				public const int OpportunityClose = 4208;
+				public const int WebFormMetadata = 10220;
 				public const int PhoneToCaseProcess = 952;
 				public const int UnresolvedAddress = 2012;
 				public const int Attachment_1001 = 1001;
@@ -15520,30 +15768,31 @@ namespace JosephM.Xrm.Schema
 				public const int ProductRecommendationModel = 9933;
 				public const int PluginType = 4602;
 				public const int LeadAddress = 1017;
-				public const int Characteristic = 1141;
-				public const int DependencyNode = 7106;
+				public const int LookupMapping = 4419;
 				public const int SdkMessageProcessingStepImage = 4615;
-				public const int PropertyInstance = 1333;
-				public const int ActionCard = 9962;
-				public const int KnowledgeBaseRecord = 9930;
-				public const int EntitlementTemplateChannel = 9703;
-				public const int BusinessUnitMap = 6;
-				public const int BookableResourceCategoryAssn = 1149;
 				public const int Trace = 8050;
 				public const int SyncAttributeMapping = 1401;
+				public const int KnowledgeBaseRecord = 9930;
+				public const int Characteristic = 1141;
+				public const int DependencyNode = 7106;
+				public const int BookableResourceCategoryAssn = 1149;
+				public const int DuplicateRuleCondition = 4416;
+				public const int BusinessUnit = 10;
 				public const int Attachment_1002 = 1002;
-				public const int RibbonCommand = 1116;
-				public const int WebPageAccessControlRule = 10175;
+				public const int EntitlementTemplateChannel = 9703;
+				public const int BusinessUnitMap = 6;
 				public const int BusinessProcessFlowInstance = 4725;
-				public const int TestEntity2 = 10263;
-				public const int LookupMapping = 4419;
-				public const int SystemUserManagerMap = 51;
-				public const int BookableResourceCategory = 1147;
-				public const int LocalConfigStore = 9201;
-				public const int ArticleTemplate = 1016;
 				public const int ProfileAlbum = 10000;
 				public const int AttributeMap = 4601;
+				public const int SystemUserManagerMap = 51;
+				public const int RibbonCommand = 1116;
+				public const int WebPageAccessControlRule = 10175;
+				public const int ArticleTemplate = 1016;
+				public const int PropertyInstance = 1333;
+				public const int ActionCard = 9962;
 				public const int DataPerformanceDashboard = 4450;
+				public const int BookableResourceCategory = 1147;
+				public const int LocalConfigStore = 9201;
 				public const int InterProcessLock = 4011;
 				public const int QuickCampaign = 4406;
 				public const int HierarchyRule = 8840;
@@ -15569,80 +15818,82 @@ namespace JosephM.Xrm.Schema
 				public const int SecurityRole = 1036;
 				public const int CustomerRelationship = 4502;
 				public const int SubscriptionClients = 1072;
-				public const int ProcessLog = 4706;
+				public const int QuoteProduct = 1085;
 				public const int Article = 127;
 				public const int RuleItem = 8199;
-				public const int QueueItemCount = 2023;
+				public const int Like = 8006;
 				public const int RecommendationModelVersion = 9935;
 				public const int Organization = 1019;
-				public const int ImportLog = 4423;
+				public const int ProcessLog = 4706;
+				public const int PublishingState = 10288;
 				public const int ImportEntityMapping = 4428;
 				public const int MailboxAutoTrackingFolder = 9608;
-				public const int Like = 8006;
 				public const int ConnectionRoleObjectTypeCode = 3233;
 				public const int ImportData = 4413;
-				public const int RecommendationCache = 9938;
+				public const int ImportLog = 4423;
 				public const int FieldSecurityProfile = 1200;
 				public const int TestAggregateEntity = 10232;
-				public const int QuoteProduct = 1085;
+				public const int Connection = 3234;
 				public const int FieldPermission = 1201;
 				public const int EntityList = 10268;
-				public const int OrderProduct = 1089;
+				public const int RecommendationCache = 9938;
 				public const int IntegrationStatus = 3000;
 				public const int TestEntity = 10014;
-				public const int Connection = 3234;
+				public const int QueueItemCount = 2023;
 				public const int ActionCardUserState = 9968;
 				public const int InvalidDependency = 7107;
-				public const int DuplicateRuleCondition = 4416;
-				public const int ProductAssociation = 1025;
+				public const int OrderProduct = 1089;
+				public const int AdvancedSimilarityRule = 9949;
 				public const int View = 1039;
 				public const int Unit = 1055;
-				public const int ResourceSpecification = 4006;
+				public const int Opportunity = 3;
 				public const int RecurrenceRule = 4250;
 				public const int SdkMessageResponseField = 4611;
-				public const int ProcessSession = 4710;
+				public const int ProductAssociation = 1025;
 				public const int SchedulingGroup = 4005;
 				public const int OrganizationInsightsMetric = 9699;
-				public const int Opportunity = 3;
+				public const int Goal = 9600;
 				public const int ChannelAccessProfileRule = 9400;
 				public const int TeamProfiles = 1203;
-				public const int MailboxStatistics = 9607;
-				public const int OpportunityProduct = 1083;
+				public const int ProcessSession = 4710;
 				public const int Address = 1071;
-				public const int TestEntity1 = 10262;
-				public const int UserEntityUISettings = 2500;
-				public const int Report = 9100;
-				public const int SystemApplicationMetadata = 7000;
-				public const int SdkMessagePair = 4613;
-				public const int ContractLine = 1011;
 				public const int EntityForm = 10177;
 				public const int OpportunityRelationship = 4503;
+				public const int Report = 9100;
+				public const int MailboxStatistics = 9607;
+				public const int OpportunityProduct = 1083;
+				public const int ContractLine = 1011;
+				public const int SiteMarker = 10289;
+				public const int ResourceSpecification = 4006;
 				public const int Resource = 4002;
+				public const int SystemApplicationMetadata = 7000;
+				public const int SdkMessagePair = 4613;
+				public const int CaseResolution = 4206;
+				public const int DisplayStringMap = 4101;
+				public const int SiteSetting = 10290;
+				public const int WebWizard = 4800;
+				public const int CustomControlResource = 9754;
 				public const int Fax = 4204;
 				public const int Note = 5;
-				public const int DisplayStringMap = 4101;
-				public const int RoutingRuleSet = 8181;
-				public const int GoalMetric = 9603;
-				public const int CustomControlResource = 9754;
-				public const int ChannelAccessProfile = 3005;
 				public const int KnowledgeArticleViews = 9955;
 				public const int Publisher = 7101;
-				public const int WebWizard = 4800;
+				public const int OpportunityClose = 4208;
 				public const int ServiceEndpoint = 4618;
 				public const int Position = 50;
-				public const int CampaignResponse = 4401;
-				public const int KnowledgeSearchModel = 9947;
+				public const int ChannelAccessProfile = 3005;
 				public const int FacilityEquipment = 4000;
-				public const int Goal = 9600;
-				public const int CaseResolution = 4206;
-				public const int ReportLink = 9104;
-				public const int WebWizardAccessPrivilege = 4803;
-				public const int SharepointDocument = 9507;
-				public const int ISVConfig = 4705;
 				public const int WebResource = 9333;
 				public const int OpportunitySalesProcess = 953;
+				public const int ReportLink = 9104;
+				public const int CampaignResponse = 4401;
+				public const int KnowledgeSearchModel = 9947;
+				public const int ISVConfig = 4705;
+				public const int RoutingRuleSet = 8181;
+				public const int GoalMetric = 9603;
 				public const int PrincipalSyncAttributeMap = 1404;
-				public const int Comment = 8005;
+				public const int WebWizardAccessPrivilege = 4803;
+				public const int SharepointDocument = 9507;
+				public const int UserEntityUISettings = 2500;
 				public const int WebTemplate = 10267;
 				public const int SavedOrganizationInsightsConfiguration = 1309;
 				public const int SubscriptionSynchronizationInformation = 33;
@@ -15655,42 +15906,43 @@ namespace JosephM.Xrm.Schema
 				public const int Entitlement = 9700;
 				public const int DataMap = 4411;
 				public const int Case = 112;
-				public const int SyncError = 9869;
-				public const int SubscriptionStatisticOutlook = 46;
 				public const int CompetitorProduct = 1006;
-				public const int BusinessUnit = 10;
-				public const int AdvancedSimilarityRule = 9949;
-				public const int NewProcess = 950;
-				public const int TraceRegarding = 8052;
-				public const int RecurringAppointment = 4251;
-				public const int TransformationParameterMapping = 4427;
 				public const int EntityFormMetadata = 10178;
 				public const int Email = 4202;
+				public const int NewProcess = 950;
+				public const int SyncError = 9869;
+				public const int SubscriptionStatisticOutlook = 46;
+				public const int BusinessManager = 10284;
+				public const int TestEntity1 = 10279;
+				public const int TransformationParameterMapping = 4427;
 				public const int Product = 1024;
-				public const int UserSearchFacet = 52;
+				public const int TraceRegarding = 8052;
+				public const int RecurringAppointment = 4251;
+				public const int Service = 4001;
 				public const int CampaignActivityItem = 4404;
 				public const int RibbonDifference = 1130;
-				public const int Territory = 2013;
+				public const int Follow = 8003;
 				public const int CompetitorAddress = 1004;
 				public const int AzureServiceConnection = 9936;
-				public const int Solution = 7100;
+				public const int UserSearchFacet = 52;
 				public const int Task = 4212;
 				public const int Clientupdate = 36;
-				public const int Follow = 8003;
+				public const int Comment = 8005;
 				public const int CampaignItem = 4403;
 				public const int TextAnalyticsTopic = 9948;
-				public const int EmailServerProfile = 9605;
+				public const int Solution = 7100;
 				public const int RollupQuery = 9602;
 				public const int RibbonRule = 1117;
-				public const int Service = 4001;
+				public const int CalendarRule = 4004;
 				public const int OrganizationUI = 1021;
 				public const int OfficeDocument = 4490;
-				public const int WebPage = 10172;
+				public const int EmailServerProfile = 9605;
 				public const int MailMergeTemplate = 9106;
 				public const int HierarchySecurityConfiguration = 9919;
-				public const int CalendarRule = 4004;
+				public const int Territory = 2013;
 				public const int RecordCreationandUpdateRuleItem = 9301;
 				public const int BookingStatus = 1152;
+				public const int WebPage = 10172;
 			}
 			public static class Status
 			{
@@ -16223,19 +16475,6 @@ namespace JosephM.Xrm.Schema
 				public const int Afterdownloaddata = 3;
 			}
 		}
-		public static class TestEntity1
-		{
-			public static class Status
-			{
-				public const int Active = 0;
-				public const int Inactive = 1;
-			}
-			public static class StatusReason
-			{
-				public const int Active = 1;
-				public const int Inactive = 2;
-			}
-		}
 		public static class Report
 		{
 			public static class ReportType
@@ -16391,6 +16630,19 @@ namespace JosephM.Xrm.Schema
 				public const int Renewed = 2;
 				public const int Canceled = 3;
 				public const int Expired = 4;
+			}
+		}
+		public static class SiteMarker
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
 			}
 		}
 		public static class RecurrenceRule
@@ -17003,6 +17255,19 @@ namespace JosephM.Xrm.Schema
 				public const int DeletedUnpublished = 3;
 			}
 		}
+		public static class SiteSetting
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
+			}
+		}
 		public static class ServiceEndpoint
 		{
 			public static class UserClaim
@@ -17346,6 +17611,19 @@ namespace JosephM.Xrm.Schema
 				public const int Completed = 8;
 				public const int Canceled = 9;
 				public const int NoShow = 10;
+			}
+		}
+		public static class ContentSnippet
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
 			}
 		}
 		public static class DataImport
@@ -18221,6 +18499,19 @@ namespace JosephM.Xrm.Schema
 				public const int DeletedUnpublished = 3;
 			}
 		}
+		public static class EntityPermission
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
+			}
+		}
 		public static class ActionCardType
 		{
 			public static class CardClientAvailability
@@ -18238,6 +18529,19 @@ namespace JosephM.Xrm.Schema
 				public const int Unpublished = 1;
 				public const int Deleted = 2;
 				public const int DeletedUnpublished = 3;
+			}
+		}
+		public static class PageTemplate
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
 			}
 		}
 		public static class RibbonContextGroup
@@ -18958,20 +19262,20 @@ namespace JosephM.Xrm.Schema
 			}
 			public static class Type
 			{
-				public const int CampaignActivity = 4402;
 				public const int Appointment = 4201;
-				public const int KnowledgeArticle = 9953;
+				public const int QuickCampaign = 4406;
 				public const int Case = 112;
+				public const int CampaignActivity = 4402;
 				public const int CampaignResponse = 4401;
 				public const int Email = 4202;
-				public const int QuickCampaign = 4406;
 				public const int RecurringAppointment = 4251;
+				public const int TestEntity2 = 10280;
 				public const int Activity = 4200;
 				public const int Fax = 4204;
 				public const int Task = 4212;
 				public const int ServiceActivity = 4214;
-				public const int TestEntity2 = 10263;
 				public const int SocialActivity = 4216;
+				public const int KnowledgeArticle = 9953;
 				public const int PhoneCall = 4210;
 				public const int Letter = 4207;
 			}
@@ -18993,6 +19297,34 @@ namespace JosephM.Xrm.Schema
 			public static class Address1ShippingMethod
 			{
 				public const int DefaultValue = 1;
+			}
+		}
+		public static class TestEntity2
+		{
+			public static class Picklist
+			{
+				public const int Option2 = 2;
+				public const int Option1 = 1;
+			}
+			public static class SharedPicklist_new_picklist2
+			{
+				public const int SharedOption2 = 2;
+				public const int SharedOption1 = 1;
+			}
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class SharedPicklist_new_sharedpicklist
+			{
+				public const int SharedOption2 = 2;
+				public const int SharedOption1 = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
 			}
 		}
 		public static class BookableResourceBookingHeader
@@ -19040,6 +19372,19 @@ namespace JosephM.Xrm.Schema
 				public const int Processing = 3;
 				public const int Open = 4;
 				public const int Canceled = 5;
+			}
+		}
+		public static class ContentAccessLevel
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
 			}
 		}
 		public static class SyncAttributeMappingProfile
@@ -19099,19 +19444,6 @@ namespace JosephM.Xrm.Schema
 			{
 				public const int Yes = 1;
 				public const int No = 2;
-			}
-		}
-		public static class TestEntity3
-		{
-			public static class Status
-			{
-				public const int Active = 0;
-				public const int Inactive = 1;
-			}
-			public static class StatusReason
-			{
-				public const int Active = 1;
-				public const int Inactive = 2;
 			}
 		}
 		public static class DocumentLocation
@@ -19325,27 +19657,28 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionSyncEntryOutlook = 48;
 				public const int ActionCardType = 9983;
 				public const int SLAItem = 9751;
-				public const int SiteMap = 4709;
+				public const int EntityPermission = 10286;
 				public const int FieldSharing = 44;
 				public const int PropertyOptionSetItem = 1049;
+				public const int Process = 4703;
 				public const int BusinessDataLocalizedLabel = 4232;
 				public const int PostRegarding = 8002;
-				public const int Notification = 4110;
+				public const int PageTemplate = 10287;
 				public const int RibbonContextGroup = 1115;
 				public const int ImportSourceFile = 4412;
-				public const int Process = 4703;
-				public const int WebFormStep = 10221;
 				public const int BulkDeleteFailure = 4425;
 				public const int ExpiredProcess = 955;
-				public const int AnnualFiscalCalendar = 2000;
+				public const int OwnerMapping = 4420;
 				public const int RelationshipRoleMap = 4501;
 				public const int Website = 10256;
-				public const int ImportJob = 9107;
+				public const int WebFormStep = 10221;
 				public const int MobileOfflineProfileItem = 9867;
 				public const int TestEntityThree = 10015;
-				public const int OwnerMapping = 4420;
+				public const int SiteMap = 4709;
 				public const int Lead = 4;
 				public const int TranslationProcess = 951;
+				public const int ImportJob = 9107;
+				public const int Notification = 4110;
 				public const int PriceList = 1022;
 				public const int EmailSearch = 4299;
 				public const int TransformationMapping = 4426;
@@ -19370,7 +19703,7 @@ namespace JosephM.Xrm.Schema
 				public const int ActivityParty = 135;
 				public const int ArticleComment = 1082;
 				public const int ResourceExpansion = 4010;
-				public const int UserSettings = 150;
+				public const int AnnualFiscalCalendar = 2000;
 				public const int Announcement = 132;
 				public const int RollupJob = 9511;
 				public const int KnowledgeArticle = 9953;
@@ -19383,42 +19716,43 @@ namespace JosephM.Xrm.Schema
 				public const int App = 9006;
 				public const int UserChart = 1112;
 				public const int LeadToOpportunitySalesProcess = 954;
-				public const int SdkMessageRequest = 4609;
 				public const int DependencyFeature = 7108;
 				public const int Auditing = 4567;
-				public const int WebFormMetadata = 10220;
+				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int FilterTemplate = 30;
 				public const int SystemChart = 1111;
-				public const int TimeZoneRule = 4811;
+				public const int SdkMessageRequest = 4609;
+				public const int ContentSnippet = 10285;
 				public const int DataImport = 4410;
 				public const int BookableResource = 1150;
-				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int ProcessTrigger = 4712;
 				public const int ServiceActivity = 4214;
-				public const int ApplicationFile = 4707;
+				public const int TimeZoneRule = 4811;
+				public const int SdkMessage = 4606;
 				public const int ImageDescriptor = 1007;
 				public const int WebLink = 10254;
-				public const int RatingModel = 1144;
+				public const int SalesLiterature = 1038;
 				public const int TextAnalyticsEntityMapping = 9945;
 				public const int RibbonTabToCommandMapping = 1113;
-				public const int UserDashboard = 1031;
+				public const int ApplicationFile = 4707;
 				public const int InteractionforEmail = 9986;
 				public const int PrivilegeObjectTypeCode = 31;
-				public const int SalesLiterature = 1038;
+				public const int UserSettings = 150;
 				public const int AppModuleComponent = 9007;
 				public const int DisplayString = 4102;
-				public const int BulkOperationLog = 4405;
+				public const int UserDashboard = 1031;
 				public const int TestAggregatedEntity = 10233;
 				public const int ReportRelatedEntity = 9101;
-				public const int SdkMessage = 4606;
+				public const int Contact = 2;
 				public const int StatusMap = 1075;
 				public const int WebLinkSet = 10255;
-				public const int Queue = 2020;
+				public const int BulkOperationLog = 4405;
 				public const int ReplicationBacklog = 1140;
 				public const int QuarterlyFiscalCalendar = 2002;
-				public const int Contact = 2;
+				public const int RatingModel = 1144;
 				public const int Campaign = 4400;
 				public const int PostConfiguration = 10001;
+				public const int Queue = 2020;
 				public const int Subject = 129;
 				public const int MobileOfflineProfile = 9866;
 				public const int Feedback = 9958;
@@ -19444,6 +19778,7 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionManuallyTrackedObject = 37;
 				public const int DiscountList = 1080;
 				public const int ActionCardUserSettings = 9973;
+				public const int SalesProcessInstance = 32;
 				public const int PublisherAddress = 7102;
 				public const int QuoteClose = 4211;
 				public const int KnowledgeArticleCategory = 9960;
@@ -19456,18 +19791,18 @@ namespace JosephM.Xrm.Schema
 				public const int PostRuleConfiguration = 10002;
 				public const int SubscriptionStatisticOffline = 45;
 				public const int DocumentSuggestions = 1189;
-				public const int AuthorizationServer = 1094;
 				public const int DuplicateDetectionRule = 4414;
 				public const int BookableResourceBookingtoExchangeIdMapping = 4421;
-				public const int SalesProcessInstance = 32;
+				public const int Dependency = 7105;
 				public const int TimeZoneDefinition = 4810;
 				public const int InvoiceProduct = 1091;
-				public const int ProcessConfiguration = 9650;
+				public const int AuthorizationServer = 1094;
 				public const int SalesAttachment = 1070;
+				public const int TestEntity3 = 10283;
 				public const int ProcessStage = 4724;
-				public const int Dependency = 7105;
 				public const int Privilege = 1023;
 				public const int WebForm = 10219;
+				public const int ProcessConfiguration = 9650;
 				public const int SolutionComponent = 7103;
 				public const int ChannelProperty = 1236;
 				public const int EntitlementChannel = 9701;
@@ -19475,9 +19810,9 @@ namespace JosephM.Xrm.Schema
 				public const int ConnectionRole = 3231;
 				public const int TopicModelConfiguration = 9942;
 				public const int ExternalParty = 3008;
+				public const int TestEntity2 = 10280;
 				public const int BookableResourceBookingHeader = 1146;
 				public const int UserEntityInstanceData = 2501;
-				public const int SystemUserPrincipal = 14;
 				public const int Post = 8000;
 				public const int QueueItem = 2029;
 				public const int Competitor = 123;
@@ -19493,6 +19828,7 @@ namespace JosephM.Xrm.Schema
 				public const int SLAKPIInstance = 9752;
 				public const int Category = 9959;
 				public const int Appointment = 4201;
+				public const int SystemUserPrincipal = 14;
 				public const int ContractTemplate = 2011;
 				public const int SimilarityRule = 9951;
 				public const int PluginTraceLog = 4619;
@@ -19505,19 +19841,19 @@ namespace JosephM.Xrm.Schema
 				public const int Invoice = 1090;
 				public const int PersonalDocumentTemplate = 9941;
 				public const int PropertyAssociation = 1235;
+				public const int SyncAttributeMappingProfile = 1400;
 				public const int Language = 9957;
 				public const int ModelEntityMapping = 9934;
-				public const int TimeZoneLocalizedName = 4812;
 				public const int SocialActivity = 4216;
 				public const int Teamtemplate = 92;
-				public const int SyncAttributeMappingProfile = 1400;
+				public const int ContentAccessLevel = 10291;
 				public const int DocumentLocation = 9508;
 				public const int WizardPage = 4802;
 				public const int ProductRelationship = 1028;
+				public const int TimeZoneLocalizedName = 4812;
 				public const int QueueMemberCount = 2024;
 				public const int TimeStampDateMapping = 9932;
-				public const int TestEntity3 = 10266;
-				public const int OpportunityClose = 4208;
+				public const int WebFormMetadata = 10220;
 				public const int PhoneToCaseProcess = 952;
 				public const int UnresolvedAddress = 2012;
 				public const int Attachment_1001 = 1001;
@@ -19542,30 +19878,31 @@ namespace JosephM.Xrm.Schema
 				public const int ProductRecommendationModel = 9933;
 				public const int PluginType = 4602;
 				public const int LeadAddress = 1017;
-				public const int Characteristic = 1141;
-				public const int DependencyNode = 7106;
+				public const int LookupMapping = 4419;
 				public const int SdkMessageProcessingStepImage = 4615;
-				public const int PropertyInstance = 1333;
-				public const int ActionCard = 9962;
-				public const int KnowledgeBaseRecord = 9930;
-				public const int EntitlementTemplateChannel = 9703;
-				public const int BusinessUnitMap = 6;
-				public const int BookableResourceCategoryAssn = 1149;
 				public const int Trace = 8050;
 				public const int SyncAttributeMapping = 1401;
+				public const int KnowledgeBaseRecord = 9930;
+				public const int Characteristic = 1141;
+				public const int DependencyNode = 7106;
+				public const int BookableResourceCategoryAssn = 1149;
+				public const int DuplicateRuleCondition = 4416;
+				public const int BusinessUnit = 10;
 				public const int Attachment_1002 = 1002;
-				public const int RibbonCommand = 1116;
-				public const int WebPageAccessControlRule = 10175;
+				public const int EntitlementTemplateChannel = 9703;
+				public const int BusinessUnitMap = 6;
 				public const int BusinessProcessFlowInstance = 4725;
-				public const int TestEntity2 = 10263;
-				public const int LookupMapping = 4419;
-				public const int SystemUserManagerMap = 51;
-				public const int BookableResourceCategory = 1147;
-				public const int LocalConfigStore = 9201;
-				public const int ArticleTemplate = 1016;
 				public const int ProfileAlbum = 10000;
 				public const int AttributeMap = 4601;
+				public const int SystemUserManagerMap = 51;
+				public const int RibbonCommand = 1116;
+				public const int WebPageAccessControlRule = 10175;
+				public const int ArticleTemplate = 1016;
+				public const int PropertyInstance = 1333;
+				public const int ActionCard = 9962;
 				public const int DataPerformanceDashboard = 4450;
+				public const int BookableResourceCategory = 1147;
+				public const int LocalConfigStore = 9201;
 				public const int InterProcessLock = 4011;
 				public const int QuickCampaign = 4406;
 				public const int HierarchyRule = 8840;
@@ -19591,80 +19928,82 @@ namespace JosephM.Xrm.Schema
 				public const int SecurityRole = 1036;
 				public const int CustomerRelationship = 4502;
 				public const int SubscriptionClients = 1072;
-				public const int ProcessLog = 4706;
+				public const int QuoteProduct = 1085;
 				public const int Article = 127;
 				public const int RuleItem = 8199;
-				public const int QueueItemCount = 2023;
+				public const int Like = 8006;
 				public const int RecommendationModelVersion = 9935;
 				public const int Organization = 1019;
-				public const int ImportLog = 4423;
+				public const int ProcessLog = 4706;
+				public const int PublishingState = 10288;
 				public const int ImportEntityMapping = 4428;
 				public const int MailboxAutoTrackingFolder = 9608;
-				public const int Like = 8006;
 				public const int ConnectionRoleObjectTypeCode = 3233;
 				public const int ImportData = 4413;
-				public const int RecommendationCache = 9938;
+				public const int ImportLog = 4423;
 				public const int FieldSecurityProfile = 1200;
 				public const int TestAggregateEntity = 10232;
-				public const int QuoteProduct = 1085;
+				public const int Connection = 3234;
 				public const int FieldPermission = 1201;
 				public const int EntityList = 10268;
-				public const int OrderProduct = 1089;
+				public const int RecommendationCache = 9938;
 				public const int IntegrationStatus = 3000;
 				public const int TestEntity = 10014;
-				public const int Connection = 3234;
+				public const int QueueItemCount = 2023;
 				public const int ActionCardUserState = 9968;
 				public const int InvalidDependency = 7107;
-				public const int DuplicateRuleCondition = 4416;
-				public const int ProductAssociation = 1025;
+				public const int OrderProduct = 1089;
+				public const int AdvancedSimilarityRule = 9949;
 				public const int View = 1039;
 				public const int Unit = 1055;
-				public const int ResourceSpecification = 4006;
+				public const int Opportunity = 3;
 				public const int RecurrenceRule = 4250;
 				public const int SdkMessageResponseField = 4611;
-				public const int ProcessSession = 4710;
+				public const int ProductAssociation = 1025;
 				public const int SchedulingGroup = 4005;
 				public const int OrganizationInsightsMetric = 9699;
-				public const int Opportunity = 3;
+				public const int Goal = 9600;
 				public const int ChannelAccessProfileRule = 9400;
 				public const int TeamProfiles = 1203;
-				public const int MailboxStatistics = 9607;
-				public const int OpportunityProduct = 1083;
+				public const int ProcessSession = 4710;
 				public const int Address = 1071;
-				public const int TestEntity1 = 10262;
-				public const int UserEntityUISettings = 2500;
-				public const int Report = 9100;
-				public const int SystemApplicationMetadata = 7000;
-				public const int SdkMessagePair = 4613;
-				public const int ContractLine = 1011;
 				public const int EntityForm = 10177;
 				public const int OpportunityRelationship = 4503;
+				public const int Report = 9100;
+				public const int MailboxStatistics = 9607;
+				public const int OpportunityProduct = 1083;
+				public const int ContractLine = 1011;
+				public const int SiteMarker = 10289;
+				public const int ResourceSpecification = 4006;
 				public const int Resource = 4002;
+				public const int SystemApplicationMetadata = 7000;
+				public const int SdkMessagePair = 4613;
+				public const int CaseResolution = 4206;
+				public const int DisplayStringMap = 4101;
+				public const int SiteSetting = 10290;
+				public const int WebWizard = 4800;
+				public const int CustomControlResource = 9754;
 				public const int Fax = 4204;
 				public const int Note = 5;
-				public const int DisplayStringMap = 4101;
-				public const int RoutingRuleSet = 8181;
-				public const int GoalMetric = 9603;
-				public const int CustomControlResource = 9754;
-				public const int ChannelAccessProfile = 3005;
 				public const int KnowledgeArticleViews = 9955;
 				public const int Publisher = 7101;
-				public const int WebWizard = 4800;
+				public const int OpportunityClose = 4208;
 				public const int ServiceEndpoint = 4618;
 				public const int Position = 50;
-				public const int CampaignResponse = 4401;
-				public const int KnowledgeSearchModel = 9947;
+				public const int ChannelAccessProfile = 3005;
 				public const int FacilityEquipment = 4000;
-				public const int Goal = 9600;
-				public const int CaseResolution = 4206;
-				public const int ReportLink = 9104;
-				public const int WebWizardAccessPrivilege = 4803;
-				public const int SharepointDocument = 9507;
-				public const int ISVConfig = 4705;
 				public const int WebResource = 9333;
 				public const int OpportunitySalesProcess = 953;
+				public const int ReportLink = 9104;
+				public const int CampaignResponse = 4401;
+				public const int KnowledgeSearchModel = 9947;
+				public const int ISVConfig = 4705;
+				public const int RoutingRuleSet = 8181;
+				public const int GoalMetric = 9603;
 				public const int PrincipalSyncAttributeMap = 1404;
-				public const int Comment = 8005;
+				public const int WebWizardAccessPrivilege = 4803;
+				public const int SharepointDocument = 9507;
+				public const int UserEntityUISettings = 2500;
 				public const int WebTemplate = 10267;
 				public const int SavedOrganizationInsightsConfiguration = 1309;
 				public const int SubscriptionSynchronizationInformation = 33;
@@ -19677,69 +20016,71 @@ namespace JosephM.Xrm.Schema
 				public const int Entitlement = 9700;
 				public const int DataMap = 4411;
 				public const int Case = 112;
-				public const int SyncError = 9869;
-				public const int SubscriptionStatisticOutlook = 46;
 				public const int CompetitorProduct = 1006;
-				public const int BusinessUnit = 10;
-				public const int AdvancedSimilarityRule = 9949;
-				public const int NewProcess = 950;
-				public const int TraceRegarding = 8052;
-				public const int RecurringAppointment = 4251;
-				public const int TransformationParameterMapping = 4427;
 				public const int EntityFormMetadata = 10178;
 				public const int Email = 4202;
+				public const int NewProcess = 950;
+				public const int SyncError = 9869;
+				public const int SubscriptionStatisticOutlook = 46;
+				public const int BusinessManager = 10284;
+				public const int TestEntity1 = 10279;
+				public const int TransformationParameterMapping = 4427;
 				public const int Product = 1024;
-				public const int UserSearchFacet = 52;
+				public const int TraceRegarding = 8052;
+				public const int RecurringAppointment = 4251;
+				public const int Service = 4001;
 				public const int CampaignActivityItem = 4404;
 				public const int RibbonDifference = 1130;
-				public const int Territory = 2013;
+				public const int Follow = 8003;
 				public const int CompetitorAddress = 1004;
 				public const int AzureServiceConnection = 9936;
-				public const int Solution = 7100;
+				public const int UserSearchFacet = 52;
 				public const int Task = 4212;
 				public const int Clientupdate = 36;
-				public const int Follow = 8003;
+				public const int Comment = 8005;
 				public const int CampaignItem = 4403;
 				public const int TextAnalyticsTopic = 9948;
-				public const int EmailServerProfile = 9605;
+				public const int Solution = 7100;
 				public const int RollupQuery = 9602;
 				public const int RibbonRule = 1117;
-				public const int Service = 4001;
+				public const int CalendarRule = 4004;
 				public const int OrganizationUI = 1021;
 				public const int OfficeDocument = 4490;
-				public const int WebPage = 10172;
+				public const int EmailServerProfile = 9605;
 				public const int MailMergeTemplate = 9106;
 				public const int HierarchySecurityConfiguration = 9919;
-				public const int CalendarRule = 4004;
+				public const int Territory = 2013;
 				public const int RecordCreationandUpdateRuleItem = 9301;
 				public const int BookingStatus = 1152;
+				public const int WebPage = 10172;
 			}
 			public static class MatchingRecordType
 			{
 				public const int SubscriptionSyncEntryOutlook = 48;
 				public const int ActionCardType = 9983;
 				public const int SLAItem = 9751;
-				public const int SiteMap = 4709;
+				public const int EntityPermission = 10286;
 				public const int FieldSharing = 44;
 				public const int PropertyOptionSetItem = 1049;
+				public const int Process = 4703;
 				public const int BusinessDataLocalizedLabel = 4232;
 				public const int PostRegarding = 8002;
-				public const int Notification = 4110;
+				public const int PageTemplate = 10287;
 				public const int RibbonContextGroup = 1115;
 				public const int ImportSourceFile = 4412;
-				public const int Process = 4703;
-				public const int WebFormStep = 10221;
 				public const int BulkDeleteFailure = 4425;
 				public const int ExpiredProcess = 955;
-				public const int AnnualFiscalCalendar = 2000;
+				public const int OwnerMapping = 4420;
 				public const int RelationshipRoleMap = 4501;
 				public const int Website = 10256;
-				public const int ImportJob = 9107;
+				public const int WebFormStep = 10221;
 				public const int MobileOfflineProfileItem = 9867;
 				public const int TestEntityThree = 10015;
-				public const int OwnerMapping = 4420;
+				public const int SiteMap = 4709;
 				public const int Lead = 4;
 				public const int TranslationProcess = 951;
+				public const int ImportJob = 9107;
+				public const int Notification = 4110;
 				public const int PriceList = 1022;
 				public const int EmailSearch = 4299;
 				public const int TransformationMapping = 4426;
@@ -19764,7 +20105,7 @@ namespace JosephM.Xrm.Schema
 				public const int ActivityParty = 135;
 				public const int ArticleComment = 1082;
 				public const int ResourceExpansion = 4010;
-				public const int UserSettings = 150;
+				public const int AnnualFiscalCalendar = 2000;
 				public const int Announcement = 132;
 				public const int RollupJob = 9511;
 				public const int KnowledgeArticle = 9953;
@@ -19777,42 +20118,43 @@ namespace JosephM.Xrm.Schema
 				public const int App = 9006;
 				public const int UserChart = 1112;
 				public const int LeadToOpportunitySalesProcess = 954;
-				public const int SdkMessageRequest = 4609;
 				public const int DependencyFeature = 7108;
 				public const int Auditing = 4567;
-				public const int WebFormMetadata = 10220;
+				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int FilterTemplate = 30;
 				public const int SystemChart = 1111;
-				public const int TimeZoneRule = 4811;
+				public const int SdkMessageRequest = 4609;
+				public const int ContentSnippet = 10285;
 				public const int DataImport = 4410;
 				public const int BookableResource = 1150;
-				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int ProcessTrigger = 4712;
 				public const int ServiceActivity = 4214;
-				public const int ApplicationFile = 4707;
+				public const int TimeZoneRule = 4811;
+				public const int SdkMessage = 4606;
 				public const int ImageDescriptor = 1007;
 				public const int WebLink = 10254;
-				public const int RatingModel = 1144;
+				public const int SalesLiterature = 1038;
 				public const int TextAnalyticsEntityMapping = 9945;
 				public const int RibbonTabToCommandMapping = 1113;
-				public const int UserDashboard = 1031;
+				public const int ApplicationFile = 4707;
 				public const int InteractionforEmail = 9986;
 				public const int PrivilegeObjectTypeCode = 31;
-				public const int SalesLiterature = 1038;
+				public const int UserSettings = 150;
 				public const int AppModuleComponent = 9007;
 				public const int DisplayString = 4102;
-				public const int BulkOperationLog = 4405;
+				public const int UserDashboard = 1031;
 				public const int TestAggregatedEntity = 10233;
 				public const int ReportRelatedEntity = 9101;
-				public const int SdkMessage = 4606;
+				public const int Contact = 2;
 				public const int StatusMap = 1075;
 				public const int WebLinkSet = 10255;
-				public const int Queue = 2020;
+				public const int BulkOperationLog = 4405;
 				public const int ReplicationBacklog = 1140;
 				public const int QuarterlyFiscalCalendar = 2002;
-				public const int Contact = 2;
+				public const int RatingModel = 1144;
 				public const int Campaign = 4400;
 				public const int PostConfiguration = 10001;
+				public const int Queue = 2020;
 				public const int Subject = 129;
 				public const int MobileOfflineProfile = 9866;
 				public const int Feedback = 9958;
@@ -19838,6 +20180,7 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionManuallyTrackedObject = 37;
 				public const int DiscountList = 1080;
 				public const int ActionCardUserSettings = 9973;
+				public const int SalesProcessInstance = 32;
 				public const int PublisherAddress = 7102;
 				public const int QuoteClose = 4211;
 				public const int KnowledgeArticleCategory = 9960;
@@ -19850,18 +20193,18 @@ namespace JosephM.Xrm.Schema
 				public const int PostRuleConfiguration = 10002;
 				public const int SubscriptionStatisticOffline = 45;
 				public const int DocumentSuggestions = 1189;
-				public const int AuthorizationServer = 1094;
 				public const int DuplicateDetectionRule = 4414;
 				public const int BookableResourceBookingtoExchangeIdMapping = 4421;
-				public const int SalesProcessInstance = 32;
+				public const int Dependency = 7105;
 				public const int TimeZoneDefinition = 4810;
 				public const int InvoiceProduct = 1091;
-				public const int ProcessConfiguration = 9650;
+				public const int AuthorizationServer = 1094;
 				public const int SalesAttachment = 1070;
+				public const int TestEntity3 = 10283;
 				public const int ProcessStage = 4724;
-				public const int Dependency = 7105;
 				public const int Privilege = 1023;
 				public const int WebForm = 10219;
+				public const int ProcessConfiguration = 9650;
 				public const int SolutionComponent = 7103;
 				public const int ChannelProperty = 1236;
 				public const int EntitlementChannel = 9701;
@@ -19869,9 +20212,9 @@ namespace JosephM.Xrm.Schema
 				public const int ConnectionRole = 3231;
 				public const int TopicModelConfiguration = 9942;
 				public const int ExternalParty = 3008;
+				public const int TestEntity2 = 10280;
 				public const int BookableResourceBookingHeader = 1146;
 				public const int UserEntityInstanceData = 2501;
-				public const int SystemUserPrincipal = 14;
 				public const int Post = 8000;
 				public const int QueueItem = 2029;
 				public const int Competitor = 123;
@@ -19887,6 +20230,7 @@ namespace JosephM.Xrm.Schema
 				public const int SLAKPIInstance = 9752;
 				public const int Category = 9959;
 				public const int Appointment = 4201;
+				public const int SystemUserPrincipal = 14;
 				public const int ContractTemplate = 2011;
 				public const int SimilarityRule = 9951;
 				public const int PluginTraceLog = 4619;
@@ -19899,19 +20243,19 @@ namespace JosephM.Xrm.Schema
 				public const int Invoice = 1090;
 				public const int PersonalDocumentTemplate = 9941;
 				public const int PropertyAssociation = 1235;
+				public const int SyncAttributeMappingProfile = 1400;
 				public const int Language = 9957;
 				public const int ModelEntityMapping = 9934;
-				public const int TimeZoneLocalizedName = 4812;
 				public const int SocialActivity = 4216;
 				public const int Teamtemplate = 92;
-				public const int SyncAttributeMappingProfile = 1400;
+				public const int ContentAccessLevel = 10291;
 				public const int DocumentLocation = 9508;
 				public const int WizardPage = 4802;
 				public const int ProductRelationship = 1028;
+				public const int TimeZoneLocalizedName = 4812;
 				public const int QueueMemberCount = 2024;
 				public const int TimeStampDateMapping = 9932;
-				public const int TestEntity3 = 10266;
-				public const int OpportunityClose = 4208;
+				public const int WebFormMetadata = 10220;
 				public const int PhoneToCaseProcess = 952;
 				public const int UnresolvedAddress = 2012;
 				public const int Attachment_1001 = 1001;
@@ -19936,30 +20280,31 @@ namespace JosephM.Xrm.Schema
 				public const int ProductRecommendationModel = 9933;
 				public const int PluginType = 4602;
 				public const int LeadAddress = 1017;
-				public const int Characteristic = 1141;
-				public const int DependencyNode = 7106;
+				public const int LookupMapping = 4419;
 				public const int SdkMessageProcessingStepImage = 4615;
-				public const int PropertyInstance = 1333;
-				public const int ActionCard = 9962;
-				public const int KnowledgeBaseRecord = 9930;
-				public const int EntitlementTemplateChannel = 9703;
-				public const int BusinessUnitMap = 6;
-				public const int BookableResourceCategoryAssn = 1149;
 				public const int Trace = 8050;
 				public const int SyncAttributeMapping = 1401;
+				public const int KnowledgeBaseRecord = 9930;
+				public const int Characteristic = 1141;
+				public const int DependencyNode = 7106;
+				public const int BookableResourceCategoryAssn = 1149;
+				public const int DuplicateRuleCondition = 4416;
+				public const int BusinessUnit = 10;
 				public const int Attachment_1002 = 1002;
-				public const int RibbonCommand = 1116;
-				public const int WebPageAccessControlRule = 10175;
+				public const int EntitlementTemplateChannel = 9703;
+				public const int BusinessUnitMap = 6;
 				public const int BusinessProcessFlowInstance = 4725;
-				public const int TestEntity2 = 10263;
-				public const int LookupMapping = 4419;
-				public const int SystemUserManagerMap = 51;
-				public const int BookableResourceCategory = 1147;
-				public const int LocalConfigStore = 9201;
-				public const int ArticleTemplate = 1016;
 				public const int ProfileAlbum = 10000;
 				public const int AttributeMap = 4601;
+				public const int SystemUserManagerMap = 51;
+				public const int RibbonCommand = 1116;
+				public const int WebPageAccessControlRule = 10175;
+				public const int ArticleTemplate = 1016;
+				public const int PropertyInstance = 1333;
+				public const int ActionCard = 9962;
 				public const int DataPerformanceDashboard = 4450;
+				public const int BookableResourceCategory = 1147;
+				public const int LocalConfigStore = 9201;
 				public const int InterProcessLock = 4011;
 				public const int QuickCampaign = 4406;
 				public const int HierarchyRule = 8840;
@@ -19985,80 +20330,82 @@ namespace JosephM.Xrm.Schema
 				public const int SecurityRole = 1036;
 				public const int CustomerRelationship = 4502;
 				public const int SubscriptionClients = 1072;
-				public const int ProcessLog = 4706;
+				public const int QuoteProduct = 1085;
 				public const int Article = 127;
 				public const int RuleItem = 8199;
-				public const int QueueItemCount = 2023;
+				public const int Like = 8006;
 				public const int RecommendationModelVersion = 9935;
 				public const int Organization = 1019;
-				public const int ImportLog = 4423;
+				public const int ProcessLog = 4706;
+				public const int PublishingState = 10288;
 				public const int ImportEntityMapping = 4428;
 				public const int MailboxAutoTrackingFolder = 9608;
-				public const int Like = 8006;
 				public const int ConnectionRoleObjectTypeCode = 3233;
 				public const int ImportData = 4413;
-				public const int RecommendationCache = 9938;
+				public const int ImportLog = 4423;
 				public const int FieldSecurityProfile = 1200;
 				public const int TestAggregateEntity = 10232;
-				public const int QuoteProduct = 1085;
+				public const int Connection = 3234;
 				public const int FieldPermission = 1201;
 				public const int EntityList = 10268;
-				public const int OrderProduct = 1089;
+				public const int RecommendationCache = 9938;
 				public const int IntegrationStatus = 3000;
 				public const int TestEntity = 10014;
-				public const int Connection = 3234;
+				public const int QueueItemCount = 2023;
 				public const int ActionCardUserState = 9968;
 				public const int InvalidDependency = 7107;
-				public const int DuplicateRuleCondition = 4416;
-				public const int ProductAssociation = 1025;
+				public const int OrderProduct = 1089;
+				public const int AdvancedSimilarityRule = 9949;
 				public const int View = 1039;
 				public const int Unit = 1055;
-				public const int ResourceSpecification = 4006;
+				public const int Opportunity = 3;
 				public const int RecurrenceRule = 4250;
 				public const int SdkMessageResponseField = 4611;
-				public const int ProcessSession = 4710;
+				public const int ProductAssociation = 1025;
 				public const int SchedulingGroup = 4005;
 				public const int OrganizationInsightsMetric = 9699;
-				public const int Opportunity = 3;
+				public const int Goal = 9600;
 				public const int ChannelAccessProfileRule = 9400;
 				public const int TeamProfiles = 1203;
-				public const int MailboxStatistics = 9607;
-				public const int OpportunityProduct = 1083;
+				public const int ProcessSession = 4710;
 				public const int Address = 1071;
-				public const int TestEntity1 = 10262;
-				public const int UserEntityUISettings = 2500;
-				public const int Report = 9100;
-				public const int SystemApplicationMetadata = 7000;
-				public const int SdkMessagePair = 4613;
-				public const int ContractLine = 1011;
 				public const int EntityForm = 10177;
 				public const int OpportunityRelationship = 4503;
+				public const int Report = 9100;
+				public const int MailboxStatistics = 9607;
+				public const int OpportunityProduct = 1083;
+				public const int ContractLine = 1011;
+				public const int SiteMarker = 10289;
+				public const int ResourceSpecification = 4006;
 				public const int Resource = 4002;
+				public const int SystemApplicationMetadata = 7000;
+				public const int SdkMessagePair = 4613;
+				public const int CaseResolution = 4206;
+				public const int DisplayStringMap = 4101;
+				public const int SiteSetting = 10290;
+				public const int WebWizard = 4800;
+				public const int CustomControlResource = 9754;
 				public const int Fax = 4204;
 				public const int Note = 5;
-				public const int DisplayStringMap = 4101;
-				public const int RoutingRuleSet = 8181;
-				public const int GoalMetric = 9603;
-				public const int CustomControlResource = 9754;
-				public const int ChannelAccessProfile = 3005;
 				public const int KnowledgeArticleViews = 9955;
 				public const int Publisher = 7101;
-				public const int WebWizard = 4800;
+				public const int OpportunityClose = 4208;
 				public const int ServiceEndpoint = 4618;
 				public const int Position = 50;
-				public const int CampaignResponse = 4401;
-				public const int KnowledgeSearchModel = 9947;
+				public const int ChannelAccessProfile = 3005;
 				public const int FacilityEquipment = 4000;
-				public const int Goal = 9600;
-				public const int CaseResolution = 4206;
-				public const int ReportLink = 9104;
-				public const int WebWizardAccessPrivilege = 4803;
-				public const int SharepointDocument = 9507;
-				public const int ISVConfig = 4705;
 				public const int WebResource = 9333;
 				public const int OpportunitySalesProcess = 953;
+				public const int ReportLink = 9104;
+				public const int CampaignResponse = 4401;
+				public const int KnowledgeSearchModel = 9947;
+				public const int ISVConfig = 4705;
+				public const int RoutingRuleSet = 8181;
+				public const int GoalMetric = 9603;
 				public const int PrincipalSyncAttributeMap = 1404;
-				public const int Comment = 8005;
+				public const int WebWizardAccessPrivilege = 4803;
+				public const int SharepointDocument = 9507;
+				public const int UserEntityUISettings = 2500;
 				public const int WebTemplate = 10267;
 				public const int SavedOrganizationInsightsConfiguration = 1309;
 				public const int SubscriptionSynchronizationInformation = 33;
@@ -20071,42 +20418,43 @@ namespace JosephM.Xrm.Schema
 				public const int Entitlement = 9700;
 				public const int DataMap = 4411;
 				public const int Case = 112;
-				public const int SyncError = 9869;
-				public const int SubscriptionStatisticOutlook = 46;
 				public const int CompetitorProduct = 1006;
-				public const int BusinessUnit = 10;
-				public const int AdvancedSimilarityRule = 9949;
-				public const int NewProcess = 950;
-				public const int TraceRegarding = 8052;
-				public const int RecurringAppointment = 4251;
-				public const int TransformationParameterMapping = 4427;
 				public const int EntityFormMetadata = 10178;
 				public const int Email = 4202;
+				public const int NewProcess = 950;
+				public const int SyncError = 9869;
+				public const int SubscriptionStatisticOutlook = 46;
+				public const int BusinessManager = 10284;
+				public const int TestEntity1 = 10279;
+				public const int TransformationParameterMapping = 4427;
 				public const int Product = 1024;
-				public const int UserSearchFacet = 52;
+				public const int TraceRegarding = 8052;
+				public const int RecurringAppointment = 4251;
+				public const int Service = 4001;
 				public const int CampaignActivityItem = 4404;
 				public const int RibbonDifference = 1130;
-				public const int Territory = 2013;
+				public const int Follow = 8003;
 				public const int CompetitorAddress = 1004;
 				public const int AzureServiceConnection = 9936;
-				public const int Solution = 7100;
+				public const int UserSearchFacet = 52;
 				public const int Task = 4212;
 				public const int Clientupdate = 36;
-				public const int Follow = 8003;
+				public const int Comment = 8005;
 				public const int CampaignItem = 4403;
 				public const int TextAnalyticsTopic = 9948;
-				public const int EmailServerProfile = 9605;
+				public const int Solution = 7100;
 				public const int RollupQuery = 9602;
 				public const int RibbonRule = 1117;
-				public const int Service = 4001;
+				public const int CalendarRule = 4004;
 				public const int OrganizationUI = 1021;
 				public const int OfficeDocument = 4490;
-				public const int WebPage = 10172;
+				public const int EmailServerProfile = 9605;
 				public const int MailMergeTemplate = 9106;
 				public const int HierarchySecurityConfiguration = 9919;
-				public const int CalendarRule = 4004;
+				public const int Territory = 2013;
 				public const int RecordCreationandUpdateRuleItem = 9301;
 				public const int BookingStatus = 1152;
+				public const int WebPage = 10172;
 			}
 		}
 		public static class PluginTraceLog
@@ -20756,27 +21104,28 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionSyncEntryOutlook = 48;
 				public const int ActionCardType = 9983;
 				public const int SLAItem = 9751;
-				public const int SiteMap = 4709;
+				public const int EntityPermission = 10286;
 				public const int FieldSharing = 44;
 				public const int PropertyOptionSetItem = 1049;
+				public const int Process = 4703;
 				public const int BusinessDataLocalizedLabel = 4232;
 				public const int PostRegarding = 8002;
-				public const int Notification = 4110;
+				public const int PageTemplate = 10287;
 				public const int RibbonContextGroup = 1115;
 				public const int ImportSourceFile = 4412;
-				public const int Process = 4703;
-				public const int WebFormStep = 10221;
 				public const int BulkDeleteFailure = 4425;
 				public const int ExpiredProcess = 955;
-				public const int AnnualFiscalCalendar = 2000;
+				public const int OwnerMapping = 4420;
 				public const int RelationshipRoleMap = 4501;
 				public const int Website = 10256;
-				public const int ImportJob = 9107;
+				public const int WebFormStep = 10221;
 				public const int MobileOfflineProfileItem = 9867;
 				public const int TestEntityThree = 10015;
-				public const int OwnerMapping = 4420;
+				public const int SiteMap = 4709;
 				public const int Lead = 4;
 				public const int TranslationProcess = 951;
+				public const int ImportJob = 9107;
+				public const int Notification = 4110;
 				public const int PriceList = 1022;
 				public const int EmailSearch = 4299;
 				public const int TransformationMapping = 4426;
@@ -20801,7 +21150,7 @@ namespace JosephM.Xrm.Schema
 				public const int ActivityParty = 135;
 				public const int ArticleComment = 1082;
 				public const int ResourceExpansion = 4010;
-				public const int UserSettings = 150;
+				public const int AnnualFiscalCalendar = 2000;
 				public const int Announcement = 132;
 				public const int RollupJob = 9511;
 				public const int KnowledgeArticle = 9953;
@@ -20814,42 +21163,43 @@ namespace JosephM.Xrm.Schema
 				public const int App = 9006;
 				public const int UserChart = 1112;
 				public const int LeadToOpportunitySalesProcess = 954;
-				public const int SdkMessageRequest = 4609;
 				public const int DependencyFeature = 7108;
 				public const int Auditing = 4567;
-				public const int WebFormMetadata = 10220;
+				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int FilterTemplate = 30;
 				public const int SystemChart = 1111;
-				public const int TimeZoneRule = 4811;
+				public const int SdkMessageRequest = 4609;
+				public const int ContentSnippet = 10285;
 				public const int DataImport = 4410;
 				public const int BookableResource = 1150;
-				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int ProcessTrigger = 4712;
 				public const int ServiceActivity = 4214;
-				public const int ApplicationFile = 4707;
+				public const int TimeZoneRule = 4811;
+				public const int SdkMessage = 4606;
 				public const int ImageDescriptor = 1007;
 				public const int WebLink = 10254;
-				public const int RatingModel = 1144;
+				public const int SalesLiterature = 1038;
 				public const int TextAnalyticsEntityMapping = 9945;
 				public const int RibbonTabToCommandMapping = 1113;
-				public const int UserDashboard = 1031;
+				public const int ApplicationFile = 4707;
 				public const int InteractionforEmail = 9986;
 				public const int PrivilegeObjectTypeCode = 31;
-				public const int SalesLiterature = 1038;
+				public const int UserSettings = 150;
 				public const int AppModuleComponent = 9007;
 				public const int DisplayString = 4102;
-				public const int BulkOperationLog = 4405;
+				public const int UserDashboard = 1031;
 				public const int TestAggregatedEntity = 10233;
 				public const int ReportRelatedEntity = 9101;
-				public const int SdkMessage = 4606;
+				public const int Contact = 2;
 				public const int StatusMap = 1075;
 				public const int WebLinkSet = 10255;
-				public const int Queue = 2020;
+				public const int BulkOperationLog = 4405;
 				public const int ReplicationBacklog = 1140;
 				public const int QuarterlyFiscalCalendar = 2002;
-				public const int Contact = 2;
+				public const int RatingModel = 1144;
 				public const int Campaign = 4400;
 				public const int PostConfiguration = 10001;
+				public const int Queue = 2020;
 				public const int Subject = 129;
 				public const int MobileOfflineProfile = 9866;
 				public const int Feedback = 9958;
@@ -20875,6 +21225,7 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionManuallyTrackedObject = 37;
 				public const int DiscountList = 1080;
 				public const int ActionCardUserSettings = 9973;
+				public const int SalesProcessInstance = 32;
 				public const int PublisherAddress = 7102;
 				public const int QuoteClose = 4211;
 				public const int KnowledgeArticleCategory = 9960;
@@ -20887,18 +21238,18 @@ namespace JosephM.Xrm.Schema
 				public const int PostRuleConfiguration = 10002;
 				public const int SubscriptionStatisticOffline = 45;
 				public const int DocumentSuggestions = 1189;
-				public const int AuthorizationServer = 1094;
 				public const int DuplicateDetectionRule = 4414;
 				public const int BookableResourceBookingtoExchangeIdMapping = 4421;
-				public const int SalesProcessInstance = 32;
+				public const int Dependency = 7105;
 				public const int TimeZoneDefinition = 4810;
 				public const int InvoiceProduct = 1091;
-				public const int ProcessConfiguration = 9650;
+				public const int AuthorizationServer = 1094;
 				public const int SalesAttachment = 1070;
+				public const int TestEntity3 = 10283;
 				public const int ProcessStage = 4724;
-				public const int Dependency = 7105;
 				public const int Privilege = 1023;
 				public const int WebForm = 10219;
+				public const int ProcessConfiguration = 9650;
 				public const int SolutionComponent = 7103;
 				public const int ChannelProperty = 1236;
 				public const int EntitlementChannel = 9701;
@@ -20906,9 +21257,9 @@ namespace JosephM.Xrm.Schema
 				public const int ConnectionRole = 3231;
 				public const int TopicModelConfiguration = 9942;
 				public const int ExternalParty = 3008;
+				public const int TestEntity2 = 10280;
 				public const int BookableResourceBookingHeader = 1146;
 				public const int UserEntityInstanceData = 2501;
-				public const int SystemUserPrincipal = 14;
 				public const int Post = 8000;
 				public const int QueueItem = 2029;
 				public const int Competitor = 123;
@@ -20924,6 +21275,7 @@ namespace JosephM.Xrm.Schema
 				public const int SLAKPIInstance = 9752;
 				public const int Category = 9959;
 				public const int Appointment = 4201;
+				public const int SystemUserPrincipal = 14;
 				public const int ContractTemplate = 2011;
 				public const int SimilarityRule = 9951;
 				public const int PluginTraceLog = 4619;
@@ -20936,19 +21288,19 @@ namespace JosephM.Xrm.Schema
 				public const int Invoice = 1090;
 				public const int PersonalDocumentTemplate = 9941;
 				public const int PropertyAssociation = 1235;
+				public const int SyncAttributeMappingProfile = 1400;
 				public const int Language = 9957;
 				public const int ModelEntityMapping = 9934;
-				public const int TimeZoneLocalizedName = 4812;
 				public const int SocialActivity = 4216;
 				public const int Teamtemplate = 92;
-				public const int SyncAttributeMappingProfile = 1400;
+				public const int ContentAccessLevel = 10291;
 				public const int DocumentLocation = 9508;
 				public const int WizardPage = 4802;
 				public const int ProductRelationship = 1028;
+				public const int TimeZoneLocalizedName = 4812;
 				public const int QueueMemberCount = 2024;
 				public const int TimeStampDateMapping = 9932;
-				public const int TestEntity3 = 10266;
-				public const int OpportunityClose = 4208;
+				public const int WebFormMetadata = 10220;
 				public const int PhoneToCaseProcess = 952;
 				public const int UnresolvedAddress = 2012;
 				public const int Attachment_1001 = 1001;
@@ -20973,30 +21325,31 @@ namespace JosephM.Xrm.Schema
 				public const int ProductRecommendationModel = 9933;
 				public const int PluginType = 4602;
 				public const int LeadAddress = 1017;
-				public const int Characteristic = 1141;
-				public const int DependencyNode = 7106;
+				public const int LookupMapping = 4419;
 				public const int SdkMessageProcessingStepImage = 4615;
-				public const int PropertyInstance = 1333;
-				public const int ActionCard = 9962;
-				public const int KnowledgeBaseRecord = 9930;
-				public const int EntitlementTemplateChannel = 9703;
-				public const int BusinessUnitMap = 6;
-				public const int BookableResourceCategoryAssn = 1149;
 				public const int Trace = 8050;
 				public const int SyncAttributeMapping = 1401;
+				public const int KnowledgeBaseRecord = 9930;
+				public const int Characteristic = 1141;
+				public const int DependencyNode = 7106;
+				public const int BookableResourceCategoryAssn = 1149;
+				public const int DuplicateRuleCondition = 4416;
+				public const int BusinessUnit = 10;
 				public const int Attachment_1002 = 1002;
-				public const int RibbonCommand = 1116;
-				public const int WebPageAccessControlRule = 10175;
+				public const int EntitlementTemplateChannel = 9703;
+				public const int BusinessUnitMap = 6;
 				public const int BusinessProcessFlowInstance = 4725;
-				public const int TestEntity2 = 10263;
-				public const int LookupMapping = 4419;
-				public const int SystemUserManagerMap = 51;
-				public const int BookableResourceCategory = 1147;
-				public const int LocalConfigStore = 9201;
-				public const int ArticleTemplate = 1016;
 				public const int ProfileAlbum = 10000;
 				public const int AttributeMap = 4601;
+				public const int SystemUserManagerMap = 51;
+				public const int RibbonCommand = 1116;
+				public const int WebPageAccessControlRule = 10175;
+				public const int ArticleTemplate = 1016;
+				public const int PropertyInstance = 1333;
+				public const int ActionCard = 9962;
 				public const int DataPerformanceDashboard = 4450;
+				public const int BookableResourceCategory = 1147;
+				public const int LocalConfigStore = 9201;
 				public const int InterProcessLock = 4011;
 				public const int QuickCampaign = 4406;
 				public const int HierarchyRule = 8840;
@@ -21022,80 +21375,82 @@ namespace JosephM.Xrm.Schema
 				public const int SecurityRole = 1036;
 				public const int CustomerRelationship = 4502;
 				public const int SubscriptionClients = 1072;
-				public const int ProcessLog = 4706;
+				public const int QuoteProduct = 1085;
 				public const int Article = 127;
 				public const int RuleItem = 8199;
-				public const int QueueItemCount = 2023;
+				public const int Like = 8006;
 				public const int RecommendationModelVersion = 9935;
 				public const int Organization = 1019;
-				public const int ImportLog = 4423;
+				public const int ProcessLog = 4706;
+				public const int PublishingState = 10288;
 				public const int ImportEntityMapping = 4428;
 				public const int MailboxAutoTrackingFolder = 9608;
-				public const int Like = 8006;
 				public const int ConnectionRoleObjectTypeCode = 3233;
 				public const int ImportData = 4413;
-				public const int RecommendationCache = 9938;
+				public const int ImportLog = 4423;
 				public const int FieldSecurityProfile = 1200;
 				public const int TestAggregateEntity = 10232;
-				public const int QuoteProduct = 1085;
+				public const int Connection = 3234;
 				public const int FieldPermission = 1201;
 				public const int EntityList = 10268;
-				public const int OrderProduct = 1089;
+				public const int RecommendationCache = 9938;
 				public const int IntegrationStatus = 3000;
 				public const int TestEntity = 10014;
-				public const int Connection = 3234;
+				public const int QueueItemCount = 2023;
 				public const int ActionCardUserState = 9968;
 				public const int InvalidDependency = 7107;
-				public const int DuplicateRuleCondition = 4416;
-				public const int ProductAssociation = 1025;
+				public const int OrderProduct = 1089;
+				public const int AdvancedSimilarityRule = 9949;
 				public const int View = 1039;
 				public const int Unit = 1055;
-				public const int ResourceSpecification = 4006;
+				public const int Opportunity = 3;
 				public const int RecurrenceRule = 4250;
 				public const int SdkMessageResponseField = 4611;
-				public const int ProcessSession = 4710;
+				public const int ProductAssociation = 1025;
 				public const int SchedulingGroup = 4005;
 				public const int OrganizationInsightsMetric = 9699;
-				public const int Opportunity = 3;
+				public const int Goal = 9600;
 				public const int ChannelAccessProfileRule = 9400;
 				public const int TeamProfiles = 1203;
-				public const int MailboxStatistics = 9607;
-				public const int OpportunityProduct = 1083;
+				public const int ProcessSession = 4710;
 				public const int Address = 1071;
-				public const int TestEntity1 = 10262;
-				public const int UserEntityUISettings = 2500;
-				public const int Report = 9100;
-				public const int SystemApplicationMetadata = 7000;
-				public const int SdkMessagePair = 4613;
-				public const int ContractLine = 1011;
 				public const int EntityForm = 10177;
 				public const int OpportunityRelationship = 4503;
+				public const int Report = 9100;
+				public const int MailboxStatistics = 9607;
+				public const int OpportunityProduct = 1083;
+				public const int ContractLine = 1011;
+				public const int SiteMarker = 10289;
+				public const int ResourceSpecification = 4006;
 				public const int Resource = 4002;
+				public const int SystemApplicationMetadata = 7000;
+				public const int SdkMessagePair = 4613;
+				public const int CaseResolution = 4206;
+				public const int DisplayStringMap = 4101;
+				public const int SiteSetting = 10290;
+				public const int WebWizard = 4800;
+				public const int CustomControlResource = 9754;
 				public const int Fax = 4204;
 				public const int Note = 5;
-				public const int DisplayStringMap = 4101;
-				public const int RoutingRuleSet = 8181;
-				public const int GoalMetric = 9603;
-				public const int CustomControlResource = 9754;
-				public const int ChannelAccessProfile = 3005;
 				public const int KnowledgeArticleViews = 9955;
 				public const int Publisher = 7101;
-				public const int WebWizard = 4800;
+				public const int OpportunityClose = 4208;
 				public const int ServiceEndpoint = 4618;
 				public const int Position = 50;
-				public const int CampaignResponse = 4401;
-				public const int KnowledgeSearchModel = 9947;
+				public const int ChannelAccessProfile = 3005;
 				public const int FacilityEquipment = 4000;
-				public const int Goal = 9600;
-				public const int CaseResolution = 4206;
-				public const int ReportLink = 9104;
-				public const int WebWizardAccessPrivilege = 4803;
-				public const int SharepointDocument = 9507;
-				public const int ISVConfig = 4705;
 				public const int WebResource = 9333;
 				public const int OpportunitySalesProcess = 953;
+				public const int ReportLink = 9104;
+				public const int CampaignResponse = 4401;
+				public const int KnowledgeSearchModel = 9947;
+				public const int ISVConfig = 4705;
+				public const int RoutingRuleSet = 8181;
+				public const int GoalMetric = 9603;
 				public const int PrincipalSyncAttributeMap = 1404;
-				public const int Comment = 8005;
+				public const int WebWizardAccessPrivilege = 4803;
+				public const int SharepointDocument = 9507;
+				public const int UserEntityUISettings = 2500;
 				public const int WebTemplate = 10267;
 				public const int SavedOrganizationInsightsConfiguration = 1309;
 				public const int SubscriptionSynchronizationInformation = 33;
@@ -21108,42 +21463,43 @@ namespace JosephM.Xrm.Schema
 				public const int Entitlement = 9700;
 				public const int DataMap = 4411;
 				public const int Case = 112;
-				public const int SyncError = 9869;
-				public const int SubscriptionStatisticOutlook = 46;
 				public const int CompetitorProduct = 1006;
-				public const int BusinessUnit = 10;
-				public const int AdvancedSimilarityRule = 9949;
-				public const int NewProcess = 950;
-				public const int TraceRegarding = 8052;
-				public const int RecurringAppointment = 4251;
-				public const int TransformationParameterMapping = 4427;
 				public const int EntityFormMetadata = 10178;
 				public const int Email = 4202;
+				public const int NewProcess = 950;
+				public const int SyncError = 9869;
+				public const int SubscriptionStatisticOutlook = 46;
+				public const int BusinessManager = 10284;
+				public const int TestEntity1 = 10279;
+				public const int TransformationParameterMapping = 4427;
 				public const int Product = 1024;
-				public const int UserSearchFacet = 52;
+				public const int TraceRegarding = 8052;
+				public const int RecurringAppointment = 4251;
+				public const int Service = 4001;
 				public const int CampaignActivityItem = 4404;
 				public const int RibbonDifference = 1130;
-				public const int Territory = 2013;
+				public const int Follow = 8003;
 				public const int CompetitorAddress = 1004;
 				public const int AzureServiceConnection = 9936;
-				public const int Solution = 7100;
+				public const int UserSearchFacet = 52;
 				public const int Task = 4212;
 				public const int Clientupdate = 36;
-				public const int Follow = 8003;
+				public const int Comment = 8005;
 				public const int CampaignItem = 4403;
 				public const int TextAnalyticsTopic = 9948;
-				public const int EmailServerProfile = 9605;
+				public const int Solution = 7100;
 				public const int RollupQuery = 9602;
 				public const int RibbonRule = 1117;
-				public const int Service = 4001;
+				public const int CalendarRule = 4004;
 				public const int OrganizationUI = 1021;
 				public const int OfficeDocument = 4490;
-				public const int WebPage = 10172;
+				public const int EmailServerProfile = 9605;
 				public const int MailMergeTemplate = 9106;
 				public const int HierarchySecurityConfiguration = 9919;
-				public const int CalendarRule = 4004;
+				public const int Territory = 2013;
 				public const int RecordCreationandUpdateRuleItem = 9301;
 				public const int BookingStatus = 1152;
+				public const int WebPage = 10172;
 			}
 			public static class StatusReason
 			{
@@ -21156,27 +21512,28 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionSyncEntryOutlook = 48;
 				public const int ActionCardType = 9983;
 				public const int SLAItem = 9751;
-				public const int SiteMap = 4709;
+				public const int EntityPermission = 10286;
 				public const int FieldSharing = 44;
 				public const int PropertyOptionSetItem = 1049;
+				public const int Process = 4703;
 				public const int BusinessDataLocalizedLabel = 4232;
 				public const int PostRegarding = 8002;
-				public const int Notification = 4110;
+				public const int PageTemplate = 10287;
 				public const int RibbonContextGroup = 1115;
 				public const int ImportSourceFile = 4412;
-				public const int Process = 4703;
-				public const int WebFormStep = 10221;
 				public const int BulkDeleteFailure = 4425;
 				public const int ExpiredProcess = 955;
-				public const int AnnualFiscalCalendar = 2000;
+				public const int OwnerMapping = 4420;
 				public const int RelationshipRoleMap = 4501;
 				public const int Website = 10256;
-				public const int ImportJob = 9107;
+				public const int WebFormStep = 10221;
 				public const int MobileOfflineProfileItem = 9867;
 				public const int TestEntityThree = 10015;
-				public const int OwnerMapping = 4420;
+				public const int SiteMap = 4709;
 				public const int Lead = 4;
 				public const int TranslationProcess = 951;
+				public const int ImportJob = 9107;
+				public const int Notification = 4110;
 				public const int PriceList = 1022;
 				public const int EmailSearch = 4299;
 				public const int TransformationMapping = 4426;
@@ -21201,7 +21558,7 @@ namespace JosephM.Xrm.Schema
 				public const int ActivityParty = 135;
 				public const int ArticleComment = 1082;
 				public const int ResourceExpansion = 4010;
-				public const int UserSettings = 150;
+				public const int AnnualFiscalCalendar = 2000;
 				public const int Announcement = 132;
 				public const int RollupJob = 9511;
 				public const int KnowledgeArticle = 9953;
@@ -21214,42 +21571,43 @@ namespace JosephM.Xrm.Schema
 				public const int App = 9006;
 				public const int UserChart = 1112;
 				public const int LeadToOpportunitySalesProcess = 954;
-				public const int SdkMessageRequest = 4609;
 				public const int DependencyFeature = 7108;
 				public const int Auditing = 4567;
-				public const int WebFormMetadata = 10220;
+				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int FilterTemplate = 30;
 				public const int SystemChart = 1111;
-				public const int TimeZoneRule = 4811;
+				public const int SdkMessageRequest = 4609;
+				public const int ContentSnippet = 10285;
 				public const int DataImport = 4410;
 				public const int BookableResource = 1150;
-				public const int RecommendationModelVersionExecutionHistory = 9937;
 				public const int ProcessTrigger = 4712;
 				public const int ServiceActivity = 4214;
-				public const int ApplicationFile = 4707;
+				public const int TimeZoneRule = 4811;
+				public const int SdkMessage = 4606;
 				public const int ImageDescriptor = 1007;
 				public const int WebLink = 10254;
-				public const int RatingModel = 1144;
+				public const int SalesLiterature = 1038;
 				public const int TextAnalyticsEntityMapping = 9945;
 				public const int RibbonTabToCommandMapping = 1113;
-				public const int UserDashboard = 1031;
+				public const int ApplicationFile = 4707;
 				public const int InteractionforEmail = 9986;
 				public const int PrivilegeObjectTypeCode = 31;
-				public const int SalesLiterature = 1038;
+				public const int UserSettings = 150;
 				public const int AppModuleComponent = 9007;
 				public const int DisplayString = 4102;
-				public const int BulkOperationLog = 4405;
+				public const int UserDashboard = 1031;
 				public const int TestAggregatedEntity = 10233;
 				public const int ReportRelatedEntity = 9101;
-				public const int SdkMessage = 4606;
+				public const int Contact = 2;
 				public const int StatusMap = 1075;
 				public const int WebLinkSet = 10255;
-				public const int Queue = 2020;
+				public const int BulkOperationLog = 4405;
 				public const int ReplicationBacklog = 1140;
 				public const int QuarterlyFiscalCalendar = 2002;
-				public const int Contact = 2;
+				public const int RatingModel = 1144;
 				public const int Campaign = 4400;
 				public const int PostConfiguration = 10001;
+				public const int Queue = 2020;
 				public const int Subject = 129;
 				public const int MobileOfflineProfile = 9866;
 				public const int Feedback = 9958;
@@ -21275,6 +21633,7 @@ namespace JosephM.Xrm.Schema
 				public const int SubscriptionManuallyTrackedObject = 37;
 				public const int DiscountList = 1080;
 				public const int ActionCardUserSettings = 9973;
+				public const int SalesProcessInstance = 32;
 				public const int PublisherAddress = 7102;
 				public const int QuoteClose = 4211;
 				public const int KnowledgeArticleCategory = 9960;
@@ -21287,18 +21646,18 @@ namespace JosephM.Xrm.Schema
 				public const int PostRuleConfiguration = 10002;
 				public const int SubscriptionStatisticOffline = 45;
 				public const int DocumentSuggestions = 1189;
-				public const int AuthorizationServer = 1094;
 				public const int DuplicateDetectionRule = 4414;
 				public const int BookableResourceBookingtoExchangeIdMapping = 4421;
-				public const int SalesProcessInstance = 32;
+				public const int Dependency = 7105;
 				public const int TimeZoneDefinition = 4810;
 				public const int InvoiceProduct = 1091;
-				public const int ProcessConfiguration = 9650;
+				public const int AuthorizationServer = 1094;
 				public const int SalesAttachment = 1070;
+				public const int TestEntity3 = 10283;
 				public const int ProcessStage = 4724;
-				public const int Dependency = 7105;
 				public const int Privilege = 1023;
 				public const int WebForm = 10219;
+				public const int ProcessConfiguration = 9650;
 				public const int SolutionComponent = 7103;
 				public const int ChannelProperty = 1236;
 				public const int EntitlementChannel = 9701;
@@ -21306,9 +21665,9 @@ namespace JosephM.Xrm.Schema
 				public const int ConnectionRole = 3231;
 				public const int TopicModelConfiguration = 9942;
 				public const int ExternalParty = 3008;
+				public const int TestEntity2 = 10280;
 				public const int BookableResourceBookingHeader = 1146;
 				public const int UserEntityInstanceData = 2501;
-				public const int SystemUserPrincipal = 14;
 				public const int Post = 8000;
 				public const int QueueItem = 2029;
 				public const int Competitor = 123;
@@ -21324,6 +21683,7 @@ namespace JosephM.Xrm.Schema
 				public const int SLAKPIInstance = 9752;
 				public const int Category = 9959;
 				public const int Appointment = 4201;
+				public const int SystemUserPrincipal = 14;
 				public const int ContractTemplate = 2011;
 				public const int SimilarityRule = 9951;
 				public const int PluginTraceLog = 4619;
@@ -21336,19 +21696,19 @@ namespace JosephM.Xrm.Schema
 				public const int Invoice = 1090;
 				public const int PersonalDocumentTemplate = 9941;
 				public const int PropertyAssociation = 1235;
+				public const int SyncAttributeMappingProfile = 1400;
 				public const int Language = 9957;
 				public const int ModelEntityMapping = 9934;
-				public const int TimeZoneLocalizedName = 4812;
 				public const int SocialActivity = 4216;
 				public const int Teamtemplate = 92;
-				public const int SyncAttributeMappingProfile = 1400;
+				public const int ContentAccessLevel = 10291;
 				public const int DocumentLocation = 9508;
 				public const int WizardPage = 4802;
 				public const int ProductRelationship = 1028;
+				public const int TimeZoneLocalizedName = 4812;
 				public const int QueueMemberCount = 2024;
 				public const int TimeStampDateMapping = 9932;
-				public const int TestEntity3 = 10266;
-				public const int OpportunityClose = 4208;
+				public const int WebFormMetadata = 10220;
 				public const int PhoneToCaseProcess = 952;
 				public const int UnresolvedAddress = 2012;
 				public const int Attachment_1001 = 1001;
@@ -21373,30 +21733,31 @@ namespace JosephM.Xrm.Schema
 				public const int ProductRecommendationModel = 9933;
 				public const int PluginType = 4602;
 				public const int LeadAddress = 1017;
-				public const int Characteristic = 1141;
-				public const int DependencyNode = 7106;
+				public const int LookupMapping = 4419;
 				public const int SdkMessageProcessingStepImage = 4615;
-				public const int PropertyInstance = 1333;
-				public const int ActionCard = 9962;
-				public const int KnowledgeBaseRecord = 9930;
-				public const int EntitlementTemplateChannel = 9703;
-				public const int BusinessUnitMap = 6;
-				public const int BookableResourceCategoryAssn = 1149;
 				public const int Trace = 8050;
 				public const int SyncAttributeMapping = 1401;
+				public const int KnowledgeBaseRecord = 9930;
+				public const int Characteristic = 1141;
+				public const int DependencyNode = 7106;
+				public const int BookableResourceCategoryAssn = 1149;
+				public const int DuplicateRuleCondition = 4416;
+				public const int BusinessUnit = 10;
 				public const int Attachment_1002 = 1002;
-				public const int RibbonCommand = 1116;
-				public const int WebPageAccessControlRule = 10175;
+				public const int EntitlementTemplateChannel = 9703;
+				public const int BusinessUnitMap = 6;
 				public const int BusinessProcessFlowInstance = 4725;
-				public const int TestEntity2 = 10263;
-				public const int LookupMapping = 4419;
-				public const int SystemUserManagerMap = 51;
-				public const int BookableResourceCategory = 1147;
-				public const int LocalConfigStore = 9201;
-				public const int ArticleTemplate = 1016;
 				public const int ProfileAlbum = 10000;
 				public const int AttributeMap = 4601;
+				public const int SystemUserManagerMap = 51;
+				public const int RibbonCommand = 1116;
+				public const int WebPageAccessControlRule = 10175;
+				public const int ArticleTemplate = 1016;
+				public const int PropertyInstance = 1333;
+				public const int ActionCard = 9962;
 				public const int DataPerformanceDashboard = 4450;
+				public const int BookableResourceCategory = 1147;
+				public const int LocalConfigStore = 9201;
 				public const int InterProcessLock = 4011;
 				public const int QuickCampaign = 4406;
 				public const int HierarchyRule = 8840;
@@ -21422,80 +21783,82 @@ namespace JosephM.Xrm.Schema
 				public const int SecurityRole = 1036;
 				public const int CustomerRelationship = 4502;
 				public const int SubscriptionClients = 1072;
-				public const int ProcessLog = 4706;
+				public const int QuoteProduct = 1085;
 				public const int Article = 127;
 				public const int RuleItem = 8199;
-				public const int QueueItemCount = 2023;
+				public const int Like = 8006;
 				public const int RecommendationModelVersion = 9935;
 				public const int Organization = 1019;
-				public const int ImportLog = 4423;
+				public const int ProcessLog = 4706;
+				public const int PublishingState = 10288;
 				public const int ImportEntityMapping = 4428;
 				public const int MailboxAutoTrackingFolder = 9608;
-				public const int Like = 8006;
 				public const int ConnectionRoleObjectTypeCode = 3233;
 				public const int ImportData = 4413;
-				public const int RecommendationCache = 9938;
+				public const int ImportLog = 4423;
 				public const int FieldSecurityProfile = 1200;
 				public const int TestAggregateEntity = 10232;
-				public const int QuoteProduct = 1085;
+				public const int Connection = 3234;
 				public const int FieldPermission = 1201;
 				public const int EntityList = 10268;
-				public const int OrderProduct = 1089;
+				public const int RecommendationCache = 9938;
 				public const int IntegrationStatus = 3000;
 				public const int TestEntity = 10014;
-				public const int Connection = 3234;
+				public const int QueueItemCount = 2023;
 				public const int ActionCardUserState = 9968;
 				public const int InvalidDependency = 7107;
-				public const int DuplicateRuleCondition = 4416;
-				public const int ProductAssociation = 1025;
+				public const int OrderProduct = 1089;
+				public const int AdvancedSimilarityRule = 9949;
 				public const int View = 1039;
 				public const int Unit = 1055;
-				public const int ResourceSpecification = 4006;
+				public const int Opportunity = 3;
 				public const int RecurrenceRule = 4250;
 				public const int SdkMessageResponseField = 4611;
-				public const int ProcessSession = 4710;
+				public const int ProductAssociation = 1025;
 				public const int SchedulingGroup = 4005;
 				public const int OrganizationInsightsMetric = 9699;
-				public const int Opportunity = 3;
+				public const int Goal = 9600;
 				public const int ChannelAccessProfileRule = 9400;
 				public const int TeamProfiles = 1203;
-				public const int MailboxStatistics = 9607;
-				public const int OpportunityProduct = 1083;
+				public const int ProcessSession = 4710;
 				public const int Address = 1071;
-				public const int TestEntity1 = 10262;
-				public const int UserEntityUISettings = 2500;
-				public const int Report = 9100;
-				public const int SystemApplicationMetadata = 7000;
-				public const int SdkMessagePair = 4613;
-				public const int ContractLine = 1011;
 				public const int EntityForm = 10177;
 				public const int OpportunityRelationship = 4503;
+				public const int Report = 9100;
+				public const int MailboxStatistics = 9607;
+				public const int OpportunityProduct = 1083;
+				public const int ContractLine = 1011;
+				public const int SiteMarker = 10289;
+				public const int ResourceSpecification = 4006;
 				public const int Resource = 4002;
+				public const int SystemApplicationMetadata = 7000;
+				public const int SdkMessagePair = 4613;
+				public const int CaseResolution = 4206;
+				public const int DisplayStringMap = 4101;
+				public const int SiteSetting = 10290;
+				public const int WebWizard = 4800;
+				public const int CustomControlResource = 9754;
 				public const int Fax = 4204;
 				public const int Note = 5;
-				public const int DisplayStringMap = 4101;
-				public const int RoutingRuleSet = 8181;
-				public const int GoalMetric = 9603;
-				public const int CustomControlResource = 9754;
-				public const int ChannelAccessProfile = 3005;
 				public const int KnowledgeArticleViews = 9955;
 				public const int Publisher = 7101;
-				public const int WebWizard = 4800;
+				public const int OpportunityClose = 4208;
 				public const int ServiceEndpoint = 4618;
 				public const int Position = 50;
-				public const int CampaignResponse = 4401;
-				public const int KnowledgeSearchModel = 9947;
+				public const int ChannelAccessProfile = 3005;
 				public const int FacilityEquipment = 4000;
-				public const int Goal = 9600;
-				public const int CaseResolution = 4206;
-				public const int ReportLink = 9104;
-				public const int WebWizardAccessPrivilege = 4803;
-				public const int SharepointDocument = 9507;
-				public const int ISVConfig = 4705;
 				public const int WebResource = 9333;
 				public const int OpportunitySalesProcess = 953;
+				public const int ReportLink = 9104;
+				public const int CampaignResponse = 4401;
+				public const int KnowledgeSearchModel = 9947;
+				public const int ISVConfig = 4705;
+				public const int RoutingRuleSet = 8181;
+				public const int GoalMetric = 9603;
 				public const int PrincipalSyncAttributeMap = 1404;
-				public const int Comment = 8005;
+				public const int WebWizardAccessPrivilege = 4803;
+				public const int SharepointDocument = 9507;
+				public const int UserEntityUISettings = 2500;
 				public const int WebTemplate = 10267;
 				public const int SavedOrganizationInsightsConfiguration = 1309;
 				public const int SubscriptionSynchronizationInformation = 33;
@@ -21508,42 +21871,43 @@ namespace JosephM.Xrm.Schema
 				public const int Entitlement = 9700;
 				public const int DataMap = 4411;
 				public const int Case = 112;
-				public const int SyncError = 9869;
-				public const int SubscriptionStatisticOutlook = 46;
 				public const int CompetitorProduct = 1006;
-				public const int BusinessUnit = 10;
-				public const int AdvancedSimilarityRule = 9949;
-				public const int NewProcess = 950;
-				public const int TraceRegarding = 8052;
-				public const int RecurringAppointment = 4251;
-				public const int TransformationParameterMapping = 4427;
 				public const int EntityFormMetadata = 10178;
 				public const int Email = 4202;
+				public const int NewProcess = 950;
+				public const int SyncError = 9869;
+				public const int SubscriptionStatisticOutlook = 46;
+				public const int BusinessManager = 10284;
+				public const int TestEntity1 = 10279;
+				public const int TransformationParameterMapping = 4427;
 				public const int Product = 1024;
-				public const int UserSearchFacet = 52;
+				public const int TraceRegarding = 8052;
+				public const int RecurringAppointment = 4251;
+				public const int Service = 4001;
 				public const int CampaignActivityItem = 4404;
 				public const int RibbonDifference = 1130;
-				public const int Territory = 2013;
+				public const int Follow = 8003;
 				public const int CompetitorAddress = 1004;
 				public const int AzureServiceConnection = 9936;
-				public const int Solution = 7100;
+				public const int UserSearchFacet = 52;
 				public const int Task = 4212;
 				public const int Clientupdate = 36;
-				public const int Follow = 8003;
+				public const int Comment = 8005;
 				public const int CampaignItem = 4403;
 				public const int TextAnalyticsTopic = 9948;
-				public const int EmailServerProfile = 9605;
+				public const int Solution = 7100;
 				public const int RollupQuery = 9602;
 				public const int RibbonRule = 1117;
-				public const int Service = 4001;
+				public const int CalendarRule = 4004;
 				public const int OrganizationUI = 1021;
 				public const int OfficeDocument = 4490;
-				public const int WebPage = 10172;
+				public const int EmailServerProfile = 9605;
 				public const int MailMergeTemplate = 9106;
 				public const int HierarchySecurityConfiguration = 9919;
-				public const int CalendarRule = 4004;
+				public const int Territory = 2013;
 				public const int RecordCreationandUpdateRuleItem = 9301;
 				public const int BookingStatus = 1152;
+				public const int WebPage = 10172;
 			}
 		}
 		public static class BookableResourceBookingtoExchangeIdMapping
@@ -21727,6 +22091,19 @@ namespace JosephM.Xrm.Schema
 			public static class FileType
 			{
 				public const int DefaultValue = 1;
+			}
+		}
+		public static class TestEntity3
+		{
+			public static class Status
+			{
+				public const int Active = 0;
+				public const int Inactive = 1;
+			}
+			public static class StatusReason
+			{
+				public const int Active = 1;
+				public const int Inactive = 2;
 			}
 		}
 		public static class ProcessStage
@@ -21937,6 +22314,22 @@ namespace JosephM.Xrm.Schema
 			{
 				public const int Active = 1;
 				public const int Inactive = 2;
+			}
+		}
+	}
+	public static class Actions
+	{
+		public static class new_TestAccountAction
+		{
+			public const string Name = "new_TestAccountAction";
+			public static class In
+			{
+				public const string InputArgumentName = "InputArgumentName";
+				public const string Target = "Target";
+			}
+			public static class Out
+			{
+				public const string OutputArgumentName = "OutputArgumentName";
 			}
 		}
 	}
