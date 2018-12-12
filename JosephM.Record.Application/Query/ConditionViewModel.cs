@@ -186,7 +186,21 @@ namespace JosephM.Application.ViewModel.Query
             [RequiredProperty]
             [DisplayOrder(30)]
             [Group(Sections.Main)]
-            [PropertyInContextByPropertyValues(nameof(ConditionType), new object[] { Record.Query.ConditionType.BeginsWith, Record.Query.ConditionType.Equal, Record.Query.ConditionType.NotEqual, Record.Query.ConditionType.Like, Record.Query.ConditionType.LessEqual, Record.Query.ConditionType.LessThan, Record.Query.ConditionType.GreaterEqual, Record.Query.ConditionType.GreaterThan, Record.Query.ConditionType.In, Record.Query.ConditionType.EndsWith })]
+            [PropertyInContextByPropertyValues(nameof(ConditionType), new object[] {
+                Record.Query.ConditionType.BeginsWith,
+                Record.Query.ConditionType.Equal,
+                Record.Query.ConditionType.NotEqual,
+                Record.Query.ConditionType.Like,
+                Record.Query.ConditionType.LessEqual,
+                Record.Query.ConditionType.LessThan,
+                Record.Query.ConditionType.GreaterEqual,
+                Record.Query.ConditionType.GreaterThan,
+                Record.Query.ConditionType.In,
+                Record.Query.ConditionType.EndsWith,
+                Record.Query.ConditionType.On,
+                Record.Query.ConditionType.OnOrBefore,
+                Record.Query.ConditionType.OnOrAfter,
+                Record.Query.ConditionType.NotOn,})]
             public object Value { get; set; }
 
             private Action OnFieldSelected { get; set; }

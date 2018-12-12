@@ -36,9 +36,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 if (!value.HasValue)
                     base.Value = null;
-                if (value.Value.Kind == DateTimeKind.Local)
+                else if (value.Value.Kind == DateTimeKind.Local)
                     base.Value = value.Value.ToUniversalTime();
-                base.Value = value;
+                else
+                    base.Value = value;
             }
         }
     }
