@@ -38,6 +38,8 @@ namespace JosephM.Deployment.Test
             customButtons.First(b => b.Id == "ADDPORTALDATA").ChildButtons.Last().Invoke();
 
             var gridRecords = dataToIncludeGrid.GridRecords;
+
+            Assert.IsTrue(gridRecords.Any());
         }
     }
 }
