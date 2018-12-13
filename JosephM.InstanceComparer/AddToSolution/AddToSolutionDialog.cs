@@ -2,7 +2,6 @@
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
 using System;
-using System.Collections.Generic;
 
 namespace JosephM.InstanceComparer.AddToSolution
 {
@@ -17,6 +16,7 @@ namespace JosephM.InstanceComparer.AddToSolution
         protected override void CompleteDialogExtention()
         {
             base.CompleteDialogExtention();
+            CompletionMessage = "Add To Solution Completed";
         }
     }
 }
