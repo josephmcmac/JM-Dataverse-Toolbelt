@@ -56,9 +56,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return new ValidationRuleBase[] { };
         }
 
-        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, RecordEntryViewModelBase entryViewModel)
+        public virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, RecordEntryViewModelBase entryViewModel)
         {
-            return new Action<RecordEntryViewModelBase>[] {};
+            return GetOnChanges(fieldName, entryViewModel.GetRecordType(), entryViewModel);
         }
 
         internal virtual IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> OrderPicklistItems<T>(string fieldName, string recordType, IEnumerable<ReferenceFieldViewModel<T>.ReferencePicklistItem> picklistItems)
@@ -71,7 +71,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return false;
         }
 
-        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string subGrid, RecordEntryViewModelBase entryViewModel)
+        public virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType, RecordEntryViewModelBase entryViewModel)
         {
             return new Action<RecordEntryViewModelBase>[] {};
         }
@@ -96,7 +96,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return null;
         }
 
-        internal virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
+        public virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
         {
             return new Action<RecordEntryViewModelBase>[0];
         }

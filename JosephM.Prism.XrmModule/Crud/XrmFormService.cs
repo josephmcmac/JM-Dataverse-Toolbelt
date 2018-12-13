@@ -1,10 +1,13 @@
-﻿using JosephM.Application.ViewModel.RecordEntry.Metadata;
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Attributes;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Xrm.Schema;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,8 +32,8 @@ namespace JosephM.XrmModule.Crud
                             new FormFieldSection("Solution", new []
                             {
                                 new PersistentFormField(Fields.solution_.friendlyname),
-                                new PersistentFormField(Fields.solution_.uniquename),
                                 new PersistentFormField(Fields.solution_.publisherid),
+                                new PersistentFormField(Fields.solution_.uniquename),
                                 new PersistentFormField(Fields.solution_.version),
                                 new PersistentFormField(Fields.solution_.configurationpageid),
                                 new PersistentFormField(Fields.solution_.description)
@@ -182,6 +185,56 @@ namespace JosephM.XrmModule.Crud
                     }
             }
             return conditions;
+        }
+
+        public override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType, RecordEntryViewModelBase entryViewModel)
+        {
+            var onChanges = new List<Action<RecordEntryViewModelBase>>();
+            if (recordType == Entities.solution)
+            {
+                switch (fieldName)
+                {
+                    case Fields.solution_.friendlyname:
+                        {
+                            onChanges.Add((rf) =>
+                            {
+                                var friendlyName = rf.GetStringFieldFieldViewModel(Fields.solution_.friendlyname).Value;
+                                var uniqueNameViewModel = rf.GetStringFieldFieldViewModel(Fields.solution_.uniquename);
+                                if (!string.IsNullOrEmpty(friendlyName)
+                                    && string.IsNullOrEmpty(uniqueNameViewModel.Value))
+                                {
+                                    uniqueNameViewModel.Value = friendlyName.Replace(" ", "");
+                                }
+                            });
+                            break;
+                        }
+                }
+            }
+            return base.GetOnChanges(fieldName, recordType, entryViewModel).Union(onChanges);
+        }
+
+        public override IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
+        {
+            var methods = new List<Action<RecordEntryViewModelBase>>();
+            if (recordType == Entities.solution)
+            {
+                switch (fieldName)
+                {
+                    case Fields.solution_.version:
+                        {
+                            methods.Add((rf) =>
+                            {
+                                var versionViewModel = rf.GetStringFieldFieldViewModel(Fields.solution_.version);
+                                if (string.IsNullOrEmpty(versionViewModel.Value))
+                                {
+                                    versionViewModel.Value = "1.0.0.0";
+                                }
+                            });
+                            break;
+                        }
+                }
+            }
+            return base.GetOnLoadTriggers(fieldName, recordType).Union(methods);
         }
     }
 }

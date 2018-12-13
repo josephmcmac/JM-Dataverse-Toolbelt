@@ -126,55 +126,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             return new IsValidResponse();
         }
 
-        internal override void RefreshEditabilityExtention()
-        {
-            if (FieldViewModels != null)
-            {
-                foreach (var field in FieldViewModels)
-                {
-                    var methods = FormService.GetOnLoadTriggers(field.FieldName, RecordType);
-                    foreach (var method in methods)
-                    {
-                        try
-                        {
-                            method(this);
-                        }
-                        catch (Exception ex)
-                        {
-                            ApplicationController.ThrowException(ex);
-                        }
-                    }
-                }
-            }
-            if (SubGrids != null)
-            {
-                foreach (var grid in SubGrids)
-                {
-                    if (grid.IsLoaded && !grid.HasError && grid.DynamicGridViewModel != null && !grid.DynamicGridViewModel.HasError)
-                    {
-                        foreach (var item in grid.GridRecords)
-                        {
-                            foreach (var field in item.FieldViewModels)
-                            {
-                                var methods = FormService.GetOnLoadTriggers(field.FieldName, item.GetRecordType());
-                                foreach (var method in methods)
-                                {
-                                    try
-                                    {
-                                        method(item);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ApplicationController.ThrowException(ex);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         protected override void PostLoading()
         {
             foreach(var field in FieldViewModels)

@@ -46,9 +46,11 @@ namespace JosephM.Xrm.Vsix.Test
             var solutionEntryForm = entryViewModel.ChildForms.First() as RecordEntryFormViewModel;
             Assert.IsNotNull(solutionEntryForm);
             solutionEntryForm.LoadFormSections();
-            solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.uniquename).Value = "TESTNEWLOOKUPSOLUTION";
-            solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.friendlyname).Value = "TESTNEWLOOKUPSOLUTION";
-            solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.version).Value = "1.0.0.0";
+            //version should intitialise
+            Assert.AreEqual("1.0.0.0", solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.version).Value);
+            solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.friendlyname).Value = "TEST NEW LOOKUP SOLUTION";
+            //unique name should set after the display name entered
+            Assert.AreEqual("TESTNEWLOOKUPSOLUTION", solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.uniquename).Value);
 
             DeleteTestNewLookupPublisher();
             //invoke new on the publisher field
