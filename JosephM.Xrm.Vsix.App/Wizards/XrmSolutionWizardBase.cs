@@ -29,10 +29,6 @@ namespace JosephM.Xrm.Vsix.Wizards
         {
             //get a xrm connection and package setting by loading the entry dialogs
             XrmPackageSettings = new XrmPackageSettings();
-            #if DEBUG
-                XrmPackageSettings.SolutionDynamicsCrmPrefix = "template";
-                XrmPackageSettings.SolutionObjectPrefix = "Template";
-            #endif
 
             var container = new DependencyContainer();
             var app = Factory.CreateJosephMXrmVsixApp(new VisualStudioService(DTE), container, isWizardContext: true);
@@ -42,8 +38,12 @@ namespace JosephM.Xrm.Vsix.Wizards
                 app.Controller.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");
             }
 
+            var solutionName = replacementsDictionary.ContainsKey("$specifiedsolutionname$")
+                && replacementsDictionary["$specifiedsolutionname$"] != null
+                ? replacementsDictionary["$specifiedsolutionname$"]
+                : null;
 
-            RunWizardSettingsEntry(XrmPackageSettings, app.VsixApplicationController);
+            RunWizardSettingsEntry(XrmPackageSettings, app.VsixApplicationController, solutionName);
 
             //add token replacements for the template projects
             AddReplacements(replacementsDictionary, XrmPackageSettings);
@@ -53,12 +53,17 @@ namespace JosephM.Xrm.Vsix.Wizards
             SafeProjectName = replacementsDictionary["$safeprojectname$"];
         }
 
-        public static void RunWizardSettingsEntry(XrmPackageSettings packageSettings, VsixApplicationController applicationController)
+        public static void RunWizardSettingsEntry(XrmPackageSettings packageSettings, VsixApplicationController applicationController, string solutionName)
         {
             //ensure the package settings resolves when the app settings dialog runs
             var resolvePackageSettings = applicationController.ResolveType(typeof(XrmPackageSettings));
             if (resolvePackageSettings == null)
                 applicationController.RegisterInstance(typeof(XrmPackageSettings), new XrmPackageSettings());
+
+            if (solutionName != null && string.IsNullOrWhiteSpace(packageSettings.SolutionObjectPrefix))
+            {
+                packageSettings.SolutionObjectPrefix = solutionName.Split('.').First();
+            }
 
             var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, new XrmRecordService(new XrmRecordConfiguration(), formService: new XrmFormService()), saveButtonLabel: "Next");
             settingsDialog.SaveSettings = false;

@@ -110,5 +110,10 @@ namespace JosephM.Xrm.Vsix.Test
                return null;
             return new FakeVisualStudioSolutionFolder(qualifiedDirectory);
         }
+
+        public override string GetSolutionName()
+        {
+            return new DirectoryInfo(SolutionDirectory).Name;
+        }
     }
 }

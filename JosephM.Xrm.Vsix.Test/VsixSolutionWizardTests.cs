@@ -19,19 +19,16 @@ namespace JosephM.Xrm.Vsix.Test
             //this script just verifies the settings are netered into the dialog wihtout a crash with no visual studio solutoion context etc.
 
 
-            var packageSettings = new XrmPackageSettings
-            {
-                 SolutionDynamicsCrmPrefix = "FAKE",
-                 SolutionObjectPrefix = "Fake"
-            };
+            var packageSettings = new XrmPackageSettings();
+
             //okay spawn the wizards entry method with a fake controller
             var container = new VsixDependencyContainer();
             var applicationController = new FakeVsixApplicationController(container);
-            XrmSolutionWizardBase.RunWizardSettingsEntry(packageSettings, applicationController);
+            XrmSolutionWizardBase.RunWizardSettingsEntry(packageSettings, applicationController, "Fake.Name");
 
             //fake applcation simply to use its navigation and entry methods
             var fakeVsixApplication = TestApplication.CreateTestApplication(applicationController);
-
+            fakeVsixApplication.AddModule<XrmPackageSettingsModule>();
             //okay so the package entry dialgo should redirect us to the conneciton entry when started as we don;t have a connection yet
             var dialog = fakeVsixApplication.GetNavigatedDialog<XrmPackageSettingsDialog>();
             var connectionEntryDialog = dialog.SubDialogs.First();
@@ -42,11 +39,13 @@ namespace JosephM.Xrm.Vsix.Test
 
             //okay now the conneciton is entered it should navigate to the package settings entry
             var packageSettingsEntry = fakeVsixApplication.GetSubObjectEntryViewModel(dialog, index: 1);
+            Assert.AreEqual("Fake", packageSettingsEntry.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionObjectPrefix)).Value);
 
             //we want to verify that the object had the settings passed into it as well as the lookup connection works
             packageSettingsEntry.GetBooleanFieldFieldViewModel(nameof(XrmPackageSettings.AddToSolution)).Value = true;
             var solutionPicklistField = packageSettingsEntry.GetLookupFieldFieldViewModel(nameof(XrmPackageSettings.Solution));
-            solutionPicklistField.SelectedItem = solutionPicklistField.ItemsSource.First();
+            solutionPicklistField.SelectedItem = solutionPicklistField.ItemsSource.ElementAt(1);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(packageSettingsEntry.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionDynamicsCrmPrefix)).Value));
 
             var connectionsubGrid = packageSettingsEntry.GetEnumerableFieldViewModel(nameof(XrmPackageSettings.Connections));
             Assert.IsTrue(connectionsubGrid.GridRecords.Any());
@@ -56,9 +55,6 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.IsTrue(packageSettings.Connections.Any());
             Assert.AreEqual(connectionToEnter.OrganizationUniqueName, packageSettings.Connections.First().OrganizationUniqueName);
-
-            if(applicationController.GetObjects().Any())
-                Assert.Inconclusive("Haven't verified closure of the form after entry instead of navigation to completion screen");
         }
     }
 }

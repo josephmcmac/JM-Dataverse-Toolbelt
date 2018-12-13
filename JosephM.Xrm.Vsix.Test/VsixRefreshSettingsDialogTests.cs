@@ -30,8 +30,6 @@ namespace JosephM.Xrm.Vsix.Test
             entryViewModel.LoadFormSections();
 
             //set dummy prefix values
-            entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionDynamicsCrmPrefix)).Value = "Foo";
-            entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionObjectPrefix)).Value = "Foo";
 
             DeleteTestNewLookupSolution();
             //invoke new on the solution lookup field
@@ -80,6 +78,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             //verify the package entry form is populated with the created solution
             Assert.IsNotNull(solutionField.Value);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionDynamicsCrmPrefix)).Value));
             Assert.IsNotNull(XrmRecordService.Get(solutionField.Value.RecordType, solutionField.Value.Id));
             //save package entry form
             SubmitEntryForm(dialog);

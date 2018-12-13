@@ -3,6 +3,7 @@ using EnvDTE80;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Application
 {
@@ -198,6 +199,17 @@ namespace JosephM.Xrm.Vsix.Application
                 }
             }
             return null;
+        }
+
+        public override string GetSolutionName()
+        {
+            var solution = Solution;
+            var fileName = solution?.FileName;
+            if (fileName == null)
+                return null;
+
+            var file = new FileInfo(fileName);
+            return file.Name.Split('.').First();
         }
     }
 }
