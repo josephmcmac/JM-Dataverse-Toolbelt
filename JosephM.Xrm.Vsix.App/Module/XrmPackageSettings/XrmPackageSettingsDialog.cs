@@ -109,6 +109,14 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     //No matter if this happens user may just add it in anyway
                 }
             }
+            if(VisualStudioService != null && string.IsNullOrWhiteSpace(SettingsObject.SolutionObjectPrefix))
+            {
+                var solutionName = VisualStudioService.GetSolutionName();
+                if(!string.IsNullOrWhiteSpace(solutionName))
+                {
+                    SettingsObject.SolutionObjectPrefix = solutionName.Split('.').First();
+                }
+            }
             StartNextAction();
         }
 

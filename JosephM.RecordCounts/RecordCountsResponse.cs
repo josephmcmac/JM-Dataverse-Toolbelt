@@ -7,6 +7,7 @@ namespace JosephM.RecordCounts
 {
     public class RecordCountsResponse : ServiceResponseBase<RecordCountsResponseItem>
     {
+        [DoNotAllowGridOpen]
         [AllowDownload]
         [PropertyInContextByPropertyValue(nameof(AreRecordCountsByOwner), false)]
         public IEnumerable<RecordCount> RecordCounts { get; set; }
@@ -20,6 +21,7 @@ namespace JosephM.RecordCounts
             }
         }
 
+        [DoNotAllowGridOpen]
         [AllowDownload]
         [PropertyInContextByPropertyValue(nameof(AreRecordCountsByOwner), true)]
         public IEnumerable<RecordCountByOwner> RecordCountsByOwner

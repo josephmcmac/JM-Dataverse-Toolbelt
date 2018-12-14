@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="DeploymentCreateAndDeployPackageModuleTests.cs" />
     <Compile Include="DeploymentImportExcelTests.cs" />
+    <Compile Include="DeploymentAddPortalDataModuleTests.cs" />
     <Compile Include="DeploymentMigrateRecordsModuleTests.cs" />
     <Compile Include="DeploymentExportXmlModuleTests.cs" />
     <Compile Include="DeploymentImportCsvsTests.cs" />

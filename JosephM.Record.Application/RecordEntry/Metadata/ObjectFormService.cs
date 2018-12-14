@@ -219,12 +219,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 return new ValidationRuleBase[0];
         }
 
-        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, RecordEntryViewModelBase entryViewModel)
+        public override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, RecordEntryViewModelBase entryViewModel)
         {
             return GetOnChanges(fieldName, ObjectType.AssemblyQualifiedName, entryViewModel);
         }
 
-        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType, RecordEntryViewModelBase entryViewModel)
+        public override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType, RecordEntryViewModelBase entryViewModel)
         {
             var onChanges = new List<Action<RecordEntryViewModelBase>>();
             AppendRecordTypeForChanges(fieldName, recordType, onChanges);
@@ -350,7 +350,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
-        internal override IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
+        public override IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
         {
             var methods = new List<Action<RecordEntryViewModelBase>>();
             AppendReadOnlyWhenSetAttributes(fieldName, recordType, methods);

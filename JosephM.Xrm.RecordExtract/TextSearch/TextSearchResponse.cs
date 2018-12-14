@@ -23,6 +23,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         private List<SummaryItem> _summaryItems = new List<SummaryItem>();
 
+        [DoNotAllowGridOpen]
         [AllowDownload]
         [DisplayName("Search Results")]
         public IEnumerable<SummaryItem> Summary

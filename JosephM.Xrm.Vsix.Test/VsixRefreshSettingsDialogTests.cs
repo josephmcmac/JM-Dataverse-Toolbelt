@@ -30,8 +30,6 @@ namespace JosephM.Xrm.Vsix.Test
             entryViewModel.LoadFormSections();
 
             //set dummy prefix values
-            entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionDynamicsCrmPrefix)).Value = "Foo";
-            entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionObjectPrefix)).Value = "Foo";
 
             DeleteTestNewLookupSolution();
             //invoke new on the solution lookup field
@@ -46,9 +44,11 @@ namespace JosephM.Xrm.Vsix.Test
             var solutionEntryForm = entryViewModel.ChildForms.First() as RecordEntryFormViewModel;
             Assert.IsNotNull(solutionEntryForm);
             solutionEntryForm.LoadFormSections();
-            solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.uniquename).Value = "TESTNEWLOOKUPSOLUTION";
-            solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.friendlyname).Value = "TESTNEWLOOKUPSOLUTION";
-            solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.version).Value = "1.0.0.0";
+            //version should intitialise
+            Assert.AreEqual("1.0.0.0", solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.version).Value);
+            solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.friendlyname).Value = "TEST NEW LOOKUP SOLUTION";
+            //unique name should set after the display name entered
+            Assert.AreEqual("TESTNEWLOOKUPSOLUTION", solutionEntryForm.GetStringFieldFieldViewModel(Fields.solution_.uniquename).Value);
 
             DeleteTestNewLookupPublisher();
             //invoke new on the publisher field
@@ -78,6 +78,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             //verify the package entry form is populated with the created solution
             Assert.IsNotNull(solutionField.Value);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(entryViewModel.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionDynamicsCrmPrefix)).Value));
             Assert.IsNotNull(XrmRecordService.Get(solutionField.Value.RecordType, solutionField.Value.Id));
             //save package entry form
             SubmitEntryForm(dialog);

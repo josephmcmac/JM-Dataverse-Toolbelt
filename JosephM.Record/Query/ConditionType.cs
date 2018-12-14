@@ -69,7 +69,7 @@ namespace JosephM.Record.Query
         ThisYear,
         [ValidForFieldTypes(RecordFieldType.Date)]
         NextYear,
-        [ValidForFieldTypes(RecordFieldType.Date)]
+        [ValidForFieldTypes(RecordFieldType.FileRef)]
         NotOn,
         [ValidForFieldTypes(RecordFieldType.Date)]
         ThisFiscalYear,

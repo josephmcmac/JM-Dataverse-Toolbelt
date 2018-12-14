@@ -390,7 +390,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                             list.Add(item == null ? "" : item.ToString());
                     }
                 }
-                return string.Join(",", list.ToArray());
+                return string.Join(Environment.NewLine, list.OrderBy(s => s).ToArray());
             }
         }
 

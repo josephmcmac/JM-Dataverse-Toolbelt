@@ -44,12 +44,12 @@ namespace JosephM.Application.ViewModel.Extentions
             module.ApplicationController.RegisterInstance(typeof(CustomGridFunctions), type.AssemblyQualifiedName, customGridFunctions);
         }
 
-        public static void AddOnChangeFunction(this ModuleBase module, OnChangeFunction customGridFunction, Type type)
+        public static void AddOnChangeFunction(this ModuleBase module, OnChangeFunction onChangeFunction, Type type)
         {
             //okay this one is autmatically created by the unity container 
             //but iteratively add and resolve 2 items and verify they are retained in the resolved list
             var customFunctions = (OnChangeFunctions)module.ApplicationController.ResolveInstance(typeof(OnChangeFunctions), type.AssemblyQualifiedName);
-            customFunctions.AddFunction(customGridFunction);
+            customFunctions.AddFunction(onChangeFunction);
             module.ApplicationController.RegisterInstance(typeof(OnChangeFunctions), type.AssemblyQualifiedName, customFunctions);
         }
 

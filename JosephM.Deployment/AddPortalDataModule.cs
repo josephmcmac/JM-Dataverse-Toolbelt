@@ -28,26 +28,36 @@ namespace JosephM.Deployment
         {
             var portalTypesToAdd = new[]
                     {
-                        "adx_contentsnippet",
-                        "adx_entityform",
-                        "adx_entityformmetadata",
-                        "adx_entitylist",
-                        "adx_entitypermission",
-                        "adx_pagetemplate",
-                        "adx_publishingstate",
-                        "adx_sitemarker",
-                        "adx_sitesetting",
-                        "adx_webfile",
-                        "adx_webform",
-                        "adx_webformmetadata",
-                        "adx_webformstep",
-                        "adx_weblink",
-                        "adx_weblinkset",
-                        "adx_webpage",
-                        "adx_webpageaccesscontrolrule",
-                        "adx_webrole",
-                        "adx_webtemplate",
+                        Entities.adx_contentsnippet,
+                        Entities.adx_entityform,
+                        Entities.adx_entityformmetadata,
+                        Entities.adx_entitylist,
+                        Entities.adx_entitypermission,
+                        Entities.adx_pagetemplate,
+                        Entities.adx_publishingstate,
+                        Entities.adx_sitemarker,
+                        Entities.adx_sitesetting,
+                        Entities.adx_webfile,
+                        Entities.adx_webform,
+                        Entities.adx_webformmetadata,
+                        Entities.adx_webformstep,
+                        Entities.adx_weblink,
+                        Entities.adx_weblinkset,
+                        Entities.adx_webpage,
+                        Entities.adx_webpageaccesscontrolrule,
+                        Entities.adx_webrole,
+                        Entities.adx_webtemplate,
+                        Entities.adx_contentaccesslevel,
                     };
+
+            var associationsToAdd = new Dictionary<string, IEnumerable<string>>
+            {
+                { Entities.adx_contentaccesslevel, new [] { Relationships.adx_contentaccesslevel_.adx_WebRoleContentAccessLevel.Name } },
+                { Entities.adx_entitypermission, new [] { Relationships.adx_entitypermission_.adx_entitypermission_webrole.Name } },
+                { Entities.adx_publishingstate, new [] { Relationships.adx_publishingstate_.adx_accesscontrolrule_publishingstate.Name } },
+                { Entities.adx_webpageaccesscontrolrule, new [] { Relationships.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolrule_webrole.Name, Relationships.adx_webpageaccesscontrolrule_.adx_accesscontrolrule_publishingstate.Name } },
+                { Entities.adx_webrole, new [] { Relationships.adx_webrole_.adx_entitypermission_webrole.Name, Relationships.adx_webrole_.adx_webpageaccesscontrolrule_webrole.Name, Relationships.adx_webrole_.adx_WebRoleContentAccessLevel.Name } },
+            };
 
             var childButtons = new List<CustomGridFunction>();
             childButtons.Add(new CustomGridFunction("ADDPORTALDATAALL", "All Records", (DynamicGridViewModel g) =>
@@ -59,7 +69,7 @@ namespace JosephM.Deployment
                 {
                     var enumerableField = r.GetEnumerableFieldViewModel(g.ReferenceName);
 
-                    foreach (var item in portalTypesToAdd.Reverse())
+                    foreach (var item in portalTypesToAdd.OrderByDescending(i => i))
                     {
                         var newRecord = g.RecordService.NewRecord(typeof(ExportRecordType).AssemblyQualifiedName);
                         newRecord.SetField(nameof(ExportRecordType.RecordType), new RecordType(item, item), g.RecordService);
@@ -99,6 +109,9 @@ namespace JosephM.Deployment
                             var enumerableField = recordForm.GetEnumerableFieldViewModel(g.ReferenceName);
                             var itemsAdded = false;
                             var lookupService = g.RecordService.GetLookupService(nameof(ExportRecordType.RecordType), typeof(ExportRecordType).AssemblyQualifiedName, g.ReferenceName, null);
+
+                            var dictionaryOfRecordsToAdd = new Dictionary<string, List<Lookup>>();
+
                             foreach (var item in portalTypesToAdd.Reverse())
                             {
                                 var query = new QueryDefinition(item);
@@ -123,13 +136,53 @@ namespace JosephM.Deployment
                                         }
                                     }
                                 }
-                                if (itemsLookups.Any())
+                                dictionaryOfRecordsToAdd.Add(item, itemsLookups);
+                            }
+                            var copyDictionary = dictionaryOfRecordsToAdd.ToDictionary(d => d.Key, d => d.Value.ToArray());
+                            foreach (var itemAddInInitialQueries in copyDictionary)
+                            {
+                                var thisType = itemAddInInitialQueries.Key;
+                                if (itemAddInInitialQueries.Value.Any() && associationsToAdd.ContainsKey(itemAddInInitialQueries.Key))
+                                {
+                                    foreach(var nnRelationship in associationsToAdd[itemAddInInitialQueries.Key])
+                                    {
+                                        var rMetadata = lookupService.GetManyRelationshipMetadata(nnRelationship, thisType);
+                                        var thisSideKey = lookupService.GetPrimaryKey(thisType);
+                                        var otherType = rMetadata.RecordType1 == thisType ? rMetadata.RecordType2 : rMetadata.RecordType1;
+                                        var otherSideKey = lookupService.GetPrimaryKey(otherType);
+                                        var associatedIds = lookupService.RetrieveAllOrClauses(rMetadata.IntersectEntityName,
+                                            itemAddInInitialQueries
+                                            .Value
+                                            .Select(l => new Condition(thisSideKey, ConditionType.Equal, l.Id)), new[] { otherSideKey })
+                                            .Select(a => a.GetIdField(otherSideKey))
+                                            .Distinct()
+                                            .ToArray();
+                                        if (associatedIds.Any())
+                                        {
+                                            if (!dictionaryOfRecordsToAdd.ContainsKey(otherType))
+                                                dictionaryOfRecordsToAdd.Add(otherType, new List<Lookup>());
+                                            var associatedRecords = lookupService.RetrieveAllOrClauses(otherType,
+                                                associatedIds
+                                                .Select(id => new Condition(otherSideKey, ConditionType.Equal, id)), null);
+                                            foreach (var associatedRecord in associatedRecords)
+                                            {
+                                                if (!dictionaryOfRecordsToAdd[otherType].Any(l => l.Id == associatedRecord.Id))
+                                                    dictionaryOfRecordsToAdd[otherType].Add(lookupService.ToLookupWithAltDisplayNameName(associatedRecord));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            foreach (var item in dictionaryOfRecordsToAdd.OrderByDescending(kv => kv.Key))
+                            {
+                                if (item.Value.Any())
                                 {
                                     var newRecord = g.RecordService.NewRecord(typeof(ExportRecordType).AssemblyQualifiedName);
-                                    newRecord.SetField(nameof(ExportRecordType.RecordType), new RecordType(item, item), g.RecordService);
+                                    newRecord.SetField(nameof(ExportRecordType.RecordType), new RecordType(item.Key, item.Key), g.RecordService);
                                     newRecord.SetField(nameof(ExportRecordType.Type), ExportType.SpecificRecords, g.RecordService);
                                     newRecord.SetField(nameof(ExportRecordType.IncludeInactive), true, g.RecordService);
-                                    newRecord.SetField(nameof(ExportRecordType.SpecificRecordsToExport), itemsLookups.Select(r => new LookupSetting
+                                    newRecord.SetField(nameof(ExportRecordType.SpecificRecordsToExport), item.Value.Select(r => new LookupSetting
                                     {
                                         Record = r
                                     }).ToArray(), g.RecordService);
@@ -137,6 +190,7 @@ namespace JosephM.Deployment
                                     itemsAdded = true;
                                 }
                             }
+
                             if (!itemsAdded)
                                 g.ApplicationController.UserMessage("No Items Were Found To Add For The Selected Period");
                         }

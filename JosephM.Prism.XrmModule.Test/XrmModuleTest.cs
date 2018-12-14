@@ -106,6 +106,14 @@ namespace JosephM.XrmModule.Test
             DeleteAll(Entities.adx_webfile);
             DeleteAll(Entities.adx_webtemplate);
 
+            DeleteAll(Entities.adx_contentsnippet);
+            DeleteAll(Entities.adx_entitypermission);
+            DeleteAll(Entities.adx_pagetemplate);
+            DeleteAll(Entities.adx_publishingstate);
+            DeleteAll(Entities.adx_sitesetting);
+            DeleteAll(Entities.adx_sitemarker);
+            DeleteAll(Entities.adx_contentaccesslevel);
+
             var website1 = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
             {
                 { Fields.adx_website_.adx_name, "Fake Site 1" }
@@ -238,8 +246,6 @@ namespace JosephM.XrmModule.Test
                 { Fields.adx_webpageaccesscontrolrule_.adx_webpageid, childWebPage.ToEntityReference() },
             });
 
-            XrmService.Associate(Relationships.adx_webrole_.adx_webpageaccesscontrolrule_webrole.Name, Fields.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolruleid, webpageAccessControlRule.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
-
             var entityForm = CreateTestRecord(Entities.adx_entityform, new Dictionary<string, object>
             {
                 { Fields.adx_entityform_.adx_name, "IScriptEntityForm" },
@@ -324,6 +330,46 @@ namespace JosephM.XrmModule.Test
                 { Fields.adx_webformmetadata_.adx_webformstep, webFormStep2.ToEntityReference() },
                 { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Notes) }
             });
+
+            var contentSnippet = CreateTestRecord(Entities.adx_contentsnippet, new Dictionary<string, object>
+            {
+                { Fields.adx_contentsnippet_.adx_name, "IContentSnippet" },
+            });
+
+            var entityPermission = CreateTestRecord(Entities.adx_entitypermission, new Dictionary<string, object>
+            {
+                { Fields.adx_entitypermission_.adx_name, "IEntityPermission" },
+            });
+
+            var pageTemplate = CreateTestRecord(Entities.adx_pagetemplate, new Dictionary<string, object>
+            {
+                { Fields.adx_pagetemplate_.adx_name, "IPageTemplate" },
+            });
+
+            var publishingState = CreateTestRecord(Entities.adx_publishingstate, new Dictionary<string, object>
+            {
+                { Fields.adx_publishingstate_.adx_name, "IPublishingState" },
+            });
+
+            var siteSetting = CreateTestRecord(Entities.adx_sitesetting, new Dictionary<string, object>
+            {
+                { Fields.adx_sitesetting_.adx_name, "ISiteSetting" },
+            });
+
+            var sitemarker = CreateTestRecord(Entities.adx_sitemarker, new Dictionary<string, object>
+            {
+                { Fields.adx_sitemarker_.adx_name, "ISiteMarker" },
+            });
+
+            var contentAccessLevel = CreateTestRecord(Entities.adx_contentaccesslevel, new Dictionary<string, object>
+            {
+                { Fields.adx_contentaccesslevel_.adx_name, "IContentAccessLevel" },
+            });
+
+            XrmService.Associate(Relationships.adx_contentaccesslevel_.adx_WebRoleContentAccessLevel.Name, Fields.adx_contentaccesslevel_.adx_contentaccesslevelid, contentAccessLevel.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
+            XrmService.Associate(Relationships.adx_entitypermission_.adx_entitypermission_webrole.Name, Fields.adx_entitypermission_.adx_entitypermissionid, entityPermission.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
+            XrmService.Associate(Relationships.adx_publishingstate_.adx_accesscontrolrule_publishingstate.Name, Fields.adx_publishingstate_.adx_publishingstateid, publishingState.Id, Fields.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolruleid, webpageAccessControlRule.Id);
+            XrmService.Associate(Relationships.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolrule_webrole.Name, Fields.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolruleid, webpageAccessControlRule.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
         }
     }
 }

@@ -38,6 +38,7 @@
         </Grid>
         <Grid Grid.Column="2">
             <TextBox
+                VerticalScrollBarVisibility="Auto"
                 Style="{StaticResource StringFieldEntryStyleReadOnly}"
                 Text="{Binding StringDisplay, Mode=OneWay, NotifyOnValidationError=True}" />
         </Grid>
