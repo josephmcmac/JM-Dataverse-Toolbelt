@@ -1,28 +1,13 @@
-# XRM-Developer-Tool
-
+# JosephM Dynamics 365 Dev App
 
 This repository contains source code for
 
-1. MVVM Framework With UI, Dialogs and Object Entry Forms
+1. A Window Desktop Application With Several Features For Dynamics CRM Developers/Customisers. This article provides details of features https://josephmcmac.wordpress.com/2018/12/12/josephm-dynamics-365-dev-app
 
-2. Libraries For Integration To Microsoft Dynamics CRM
+2. A Visual Studio extension (VSIX)n For Dynamics CRM Development. This article provides details of features https://josephmcmac.wordpress.com/2017/12/20/dynamics-365-visual-studio-extention-josephm-xrm-vsix
 
-3. A Window Application With Several Features For Dynamics CRM Developers/Customisers Including
+Both apps are built with a MVVM application pattern using with a Windows Presentation Foundation user interface
 
-	* Importing Customisations In Excel Spreadsheet Into CRM
+The master branch uses SDK V6 assemblies which have some incompatibilities with latest versions. The Latest branch uses more recent assemblies and is currently compatible with latest Microsoft Dyanmics 365 online instance
 
-	* Exporting Customisations Into CSV Files
-
-	* Exporting/Importing/Migrating Solutions And Data
-
-	* C# and JavaScript Code Generation For CRM Customisations
-
-	* Comparing Differences In Customisations Between CRM Instances
-
-4. A Visual Studio VSIX Plugin For Dynamics CRM Development
-
-	* A Solution Template For Plugins, JavaScript and Test Scripts
-
-	* Deploy Web Resources And Plugins In Visual Studio IDE
-
-	* Generate C# Constants In Visual Studio IDE
+The Latest branch is used to build the installation MSI and VSIX used for Releases
