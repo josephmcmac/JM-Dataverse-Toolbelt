@@ -279,5 +279,28 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return XrmService.GetFieldMetadata(FieldName, RecordType) is MultiSelectPicklistAttributeMetadata;
             }
         }
+
+        public string FormulaDefinition
+        {
+            get
+            {
+                var metadata = XrmService.GetFieldMetadata(FieldName, RecordType);
+                if (metadata is BooleanAttributeMetadata bmt)
+                    return bmt.FormulaDefinition;
+                if (metadata is DateTimeAttributeMetadata dtmt)
+                    return dtmt.FormulaDefinition;
+                if (metadata is DecimalAttributeMetadata dmt)
+                    return dmt.FormulaDefinition;
+                if (metadata is IntegerAttributeMetadata imt)
+                    return imt.FormulaDefinition;
+                if (metadata is MoneyAttributeMetadata mmt)
+                    return mmt.FormulaDefinition;
+                if (metadata is PicklistAttributeMetadata pmt)
+                    return pmt.FormulaDefinition;
+                if (metadata is StringAttributeMetadata smt)
+                    return smt.FormulaDefinition;
+                return null;
+            }
+        }
     }
 }

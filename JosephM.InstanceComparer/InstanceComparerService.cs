@@ -485,6 +485,7 @@ namespace JosephM.InstanceComparer
                     {
                         nameof(IFieldMetadata.MetadataId)
                     }), parentLinkProperty: nameof(IFieldMetadata.RecordType));
+            fieldsCompareParams.AddConversionObject(nameof(IFieldMetadata.FormulaDefinition), new ProcessCompareParams.RemoveLeadingXmlDefinitionNode(), new ProcessCompareParams.RemoveLeadingXmlDefinitionNode());
 
             var ignoreOptionFieldNames = new[]
             {
@@ -500,7 +501,6 @@ namespace JosephM.InstanceComparer
                 },
                 nameof(PicklistOption.Key),
                 GetReadableProperties(typeof(PicklistOption), null));
-
             fieldsCompareParams.ChildCompares = new[] { fieldsOptionParams };
 
             var manyToManyCompareParams = new ProcessCompareParams("Many To Many Relationship", typeof(IMany2ManyRelationshipMetadata),
@@ -942,17 +942,18 @@ namespace JosephM.InstanceComparer
                         {
                             displayValue1 = processContainer.ServiceOne.GetFieldAsDisplayString(item.First(), field);
                             displayValue2 = processContainer.ServiceTwo.GetFieldAsDisplayString(item.Last(), field);
-                            if (processContainer.ServiceOne.IsString(field, processCompareParams.RecordType))
-                            {
-                                displayValue1 = (string)processCompareParams.ConvertField1(field, displayValue1);
-                                displayValue2 = (string)processCompareParams.ConvertField2(field, displayValue2); ;
-                            }
-                            //okay for difference if it is a string we only really want to display part of string which is different
-                            var tempDisplayValue1 = GetDifferenceDisplayPartForValue1(displayValue1, displayValue2);
-                            var tempDisplayValue2 = GetDifferenceDisplayPartForValue1(displayValue2, displayValue1);
-                            displayValue1 = tempDisplayValue1;
-                            displayValue2 = tempDisplayValue2;
                         }
+                        if (field1 is string || field2 is string)
+                        {
+                            displayValue1 = (string)processCompareParams.ConvertField1(field, displayValue1);
+                            displayValue2 = (string)processCompareParams.ConvertField2(field, displayValue2); ;
+                        }
+                        //okay for difference if it is a string we only really want to display part of string which is different
+                        var tempDisplayValue1 = GetDifferenceDisplayPartForValue1(displayValue1, displayValue2);
+                        var tempDisplayValue2 = GetDifferenceDisplayPartForValue1(displayValue2, displayValue1);
+                        displayValue1 = tempDisplayValue1;
+                        displayValue2 = tempDisplayValue2;
+
                         var parentReference = parent1 == null ? null : parent1.GetStringField(parentCompareParams.MatchField);
                         var parentId1 = parent1 == null ? null : GetParentId(parentCompareParams, parent1);
                         var parentId2 = parent2 == null ? null : GetParentId(parentCompareParams, parent2);
@@ -1314,6 +1315,25 @@ namespace JosephM.InstanceComparer
                     theString = StripStartToEnd(theString, "id=\"{", "}");
                     theString = theString.Replace("<row></row>", "<row />");
                     return theString;
+                }
+            }
+
+            public class RemoveLeadingXmlDefinitionNode : ConvertField
+            {
+                public override object Convert(object sourceValue)
+                {
+                    if (sourceValue == null)
+                        return null;
+                    var theString = (string)sourceValue;
+                    //dynamics was adding a leading xml node when deployed
+                    if (theString.Left(5).Contains("xml") && theString.IndexOf(">") != -1)
+                        theString = theString.Substring(theString.IndexOf(">") + 1);
+                    //dynamics formatted xml in some case and not others so lets just strip all spaces and new lines
+                    theString = theString.Replace(" ", "");
+                    theString = theString.Replace("\r\n", "");
+                    theString = theString.Replace("\n", "");
+                    return theString;
+
                 }
             }
 
