@@ -942,17 +942,18 @@ namespace JosephM.InstanceComparer
                         {
                             displayValue1 = processContainer.ServiceOne.GetFieldAsDisplayString(item.First(), field);
                             displayValue2 = processContainer.ServiceTwo.GetFieldAsDisplayString(item.Last(), field);
-                            if (processContainer.ServiceOne.IsString(field, processCompareParams.RecordType))
-                            {
-                                displayValue1 = (string)processCompareParams.ConvertField1(field, displayValue1);
-                                displayValue2 = (string)processCompareParams.ConvertField2(field, displayValue2); ;
-                            }
-                            //okay for difference if it is a string we only really want to display part of string which is different
-                            var tempDisplayValue1 = GetDifferenceDisplayPartForValue1(displayValue1, displayValue2);
-                            var tempDisplayValue2 = GetDifferenceDisplayPartForValue1(displayValue2, displayValue1);
-                            displayValue1 = tempDisplayValue1;
-                            displayValue2 = tempDisplayValue2;
                         }
+                        if (field1 is string || field2 is string)
+                        {
+                            displayValue1 = (string)processCompareParams.ConvertField1(field, displayValue1);
+                            displayValue2 = (string)processCompareParams.ConvertField2(field, displayValue2); ;
+                        }
+                        //okay for difference if it is a string we only really want to display part of string which is different
+                        var tempDisplayValue1 = GetDifferenceDisplayPartForValue1(displayValue1, displayValue2);
+                        var tempDisplayValue2 = GetDifferenceDisplayPartForValue1(displayValue2, displayValue1);
+                        displayValue1 = tempDisplayValue1;
+                        displayValue2 = tempDisplayValue2;
+
                         var parentReference = parent1 == null ? null : parent1.GetStringField(parentCompareParams.MatchField);
                         var parentId1 = parent1 == null ? null : GetParentId(parentCompareParams, parent1);
                         var parentId2 = parent2 == null ? null : GetParentId(parentCompareParams, parent2);
@@ -1513,7 +1514,8 @@ namespace JosephM.InstanceComparer
                 var linkRecordType = recordType;
                 var linkId1 = id1;
                 var linkId2 = id2;
-                string additionalParams = null;
+                string additionalParams1 = null;
+                string additionalParams2 = null;
                 if (linkRecordType == Relationships.role_.roleprivileges_association.EntityName)
                 {
                     linkRecordType = Entities.role;
@@ -1532,14 +1534,16 @@ namespace JosephM.InstanceComparer
                     linkRecordType = "field";
                     linkId1 = id1 == null ? null : ServiceOne.GetFieldMetadata(name?.ToString(), parentReference).MetadataId;
                     linkId2 = id2 == null ? null : ServiceTwo.GetFieldMetadata(name?.ToString(), parentReference).MetadataId;
-                    additionalParams = "entityId=" + ServiceOne.GetRecordTypeMetadata(parentReference).MetadataId;
+                    additionalParams1 = "entityId=" + ServiceOne.GetRecordTypeMetadata(parentReference).MetadataId;
+                    additionalParams2 = "entityId=" + ServiceTwo.GetRecordTypeMetadata(parentReference).MetadataId;
                 }
                 else if (linkRecordType == typeof(IMany2ManyRelationshipMetadata).AssemblyQualifiedName)
                 {
                     linkRecordType = "manytomanyrelationship";
                     linkId1 = id1 == null ? null : ServiceOne.GetManyRelationshipMetadata(name?.ToString(), parentReference).MetadataId;
                     linkId2 = id2 == null ? null : ServiceTwo.GetManyRelationshipMetadata(name?.ToString(), parentReference).MetadataId;
-                    additionalParams = "entityId=" + ServiceOne.GetRecordTypeMetadata(parentReference).MetadataId;
+                    additionalParams1 = "entityId=" + ServiceOne.GetRecordTypeMetadata(parentReference).MetadataId;
+                    additionalParams2 = "entityId=" + ServiceTwo.GetRecordTypeMetadata(parentReference).MetadataId;
                 }
                 else if (linkRecordType == typeof(IPicklistSet).AssemblyQualifiedName)
                 {
@@ -1576,15 +1580,16 @@ namespace JosephM.InstanceComparer
                             .First(f => f.MetadataId == parentId2);
                         linkId1 = matchingFieldMetadata1 == null ? null : matchingFieldMetadata1.MetadataId;
                         linkId2 = matchingFieldMetadata2 == null ? null : matchingFieldMetadata2.MetadataId;
-                        var parentRecordType = matchingFieldMetadata1?.RecordType ?? matchingFieldMetadata2?.RecordType;
-                        var entityId = matchingFieldMetadata1 == null
-                            ? ServiceTwo.GetRecordTypeMetadata(parentRecordType).MetadataId
-                            : ServiceOne.GetRecordTypeMetadata(parentRecordType).MetadataId;
-                        additionalParams = "entityId=" + entityId;
+                        var parentRecordType1 = matchingFieldMetadata1?.RecordType;
+                        var entityId1 = parentRecordType1 == null ? null : ServiceOne.GetRecordTypeMetadata(parentRecordType1).MetadataId;
+                        additionalParams1 = "entityId=" + entityId1;
+                        var parentRecordType2 = matchingFieldMetadata2?.RecordType;
+                        var entityId2 = parentRecordType2 == null ? null : ServiceOne.GetRecordTypeMetadata(parentRecordType2).MetadataId;
+                        additionalParams2 = "entityId=" + entityId2;
                     }
                 }
-                var url1String = id1 == null ? null : ServiceOne.GetWebUrl(linkRecordType, linkId1, additionalParams);
-                var url2String = id2 == null ? null : ServiceTwo.GetWebUrl(linkRecordType, linkId2, additionalParams);
+                var url1String = id1 == null ? null : ServiceOne.GetWebUrl(linkRecordType, linkId1, additionalParams1);
+                var url2String = id2 == null ? null : ServiceTwo.GetWebUrl(linkRecordType, linkId2, additionalParams2);
 
                 var url1 = string.IsNullOrWhiteSpace(url1String)
                     ? null
