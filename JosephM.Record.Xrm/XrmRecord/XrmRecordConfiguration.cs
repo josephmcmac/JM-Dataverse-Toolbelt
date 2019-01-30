@@ -5,7 +5,7 @@ using JosephM.Core.Service;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
-    [Instruction("Enter Details For Connecting To The Dynamics Instance\n\nThe Discovery Service Address And Organisation Unique Name Are Found By Navigating To Settings -> Customizations -> Developer Resources In The Main Menu Of The Dynamics Web Application")]
+    [Instruction("Enter Details For Connecting To The Dynamics Instance\n\nThe Discovery Service Address And Organisation Unique Name Are Found By Navigating To Settings -> Customizations -> Developer Resources In The Main Menu Of The Dynamics Web Application\n\nNote Connections Will Not Work When They Require 2 Factor Authentication")]
     [ServiceConnection(typeof(XrmRecordService))]
     public class XrmRecordConfiguration : IXrmRecordConfiguration, IValidatableObject
     {
