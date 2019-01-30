@@ -1,15 +1,27 @@
-﻿using JosephM.Core.FieldType;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Application;
+using JosephM.Application.Desktop.Console;
+using JosephM.Application.Desktop.Console.Test;
+using JosephM.Application.Desktop.Test;
+using JosephM.Application.ViewModel.ApplicationOptions;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.AppConfig;
+using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.Core.Sql;
-using JosephM.Deployment.ImportExcel;
+using JosephM.Core.Utility;
 using JosephM.Deployment.ImportSql;
+using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Record.Sql;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.XrmModule.Test;
+using JosephM.XrmModule.XrmConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using JosephM.Record.Extentions;
 
 namespace JosephM.Deployment.Test
 {
@@ -20,7 +32,10 @@ namespace JosephM.Deployment.Test
         public void DeploymentImportSqlTest()
         {
             //this script create some data in a database
-            //then runs a synch into dynamics
+            //then runs a synch twice into dynamics with a reference change in between
+
+            //it also fakes the process running in a console app
+
 
             //script of basic database import
             PrepareTests();
@@ -99,15 +114,16 @@ namespace JosephM.Deployment.Test
             var recordMetadataService = new SqlRecordMetadataService(new SqlServerAndDbSettings(sqlServer, databaseName), recordMetadatas);
             recordMetadataService.RefreshSource();
 
-
+            //configure synch data
             var recordsToCreate = 3;
-
             foreach (var tableMapping in request.Mappings)
             {
+                //delete all in both
                 var truncate = $"truncate table {tableMapping.SourceTable.Key}";
                 recordMetadataService.ExecuteSql(truncate);
                 DeleteAll(tableMapping.TargetType.Key);
 
+                //create data in the db
                 for (var i = 1; i <= recordsToCreate; i++)
                 {
                     var newRecord = recordMetadataService.NewRecord(tableMapping.SourceTable.Key);
@@ -119,13 +135,14 @@ namespace JosephM.Deployment.Test
                 }
             }
 
+            //run the synch
             var app = CreateAndLoadTestApplication<ImportSqlModule>();
+            app.AddModule<ConsoleApplicationModule>();
 
             //navigate to the dialog
             var dialog = app.NavigateToDialog<ImportSqlModule, ImportSqlDialog>();
             var entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
             app.EnterObject(request, entryViewmodel);
-            //select the excel file with the errors and submit form
             entryViewmodel.SaveButtonViewModel.Invoke();
 
             var completionScreen = app.GetCompletionViewModel(dialog);
@@ -139,23 +156,110 @@ namespace JosephM.Deployment.Test
                 Assert.AreEqual(recordsToCreate, records.Count());
             }
 
+            //point the account field in the db to 3
             var linkAllToAccount3 = $"update TestRecords set Account = 3";
             recordMetadataService.ExecuteSql(linkAllToAccount3);
 
             dialog = app.NavigateToDialog<ImportSqlModule, ImportSqlDialog>();
             entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
             app.EnterObject(request, entryViewmodel);
-            //select the excel file with the errors and submit form
-            entryViewmodel.SaveButtonViewModel.Invoke();
 
+            //okay here we generate a saved request and get the command line for it
+            //to also run a console app after this second synch
+            ClearSavedRequests(app, entryViewmodel);
+            //trigger save request
+            var saveRequestButton = entryViewmodel.GetButton("SAVEREQUEST");
+            saveRequestButton.Invoke();
+
+            //enter and save details including autoload
+            var saveRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
+            var detailsEntered = new SaveAndLoadFields()
+            {
+                Name = "TestName"
+            };
+            app.EnterAndSaveObject(detailsEntered, saveRequestForm);
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+            Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
+
+            //invoke load request dialog
+            var loadRequestButton = entryViewmodel.GetButton("LOADREQUEST");
+            loadRequestButton.Invoke();
+            var loadRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
+
+            //verify there is a saved request and trigger the generate bat button
+            var subGrid = loadRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
+            Assert.IsTrue(subGrid.GridRecords.Count() == 1);
+            subGrid.GridRecords.First().IsSelected = true;
+
+            var generateBatButton = subGrid.DynamicGridViewModel.GetButton("GENERATEBAT");
+            generateBatButton.Invoke();
+
+            var testFiles = FileUtility.GetFiles(TestingFolder);
+            Assert.AreEqual(1, testFiles.Count());
+            Assert.IsTrue(testFiles.First().EndsWith(".bat"));
+            var batContent = File.ReadAllText(testFiles.First());
+            loadRequestForm.CancelButtonViewModel.Invoke();
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+            Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
+
+            //okay we now have the bat args for later so lets run the update synch in the app
+            entryViewmodel.SaveButtonViewModel.Invoke();
             completionScreen = app.GetCompletionViewModel(dialog);
             importResponse = completionScreen.GetObject() as ImportSqlResponse;
             Assert.IsNotNull(importResponse);
             Assert.IsFalse(importResponse.ResponseItems.Any());
 
+            //verify all point to account 3
             var updatedRecords = XrmRecordService.RetrieveAll(Entities.jmcg_testentity, null);
             Assert.AreEqual(3, updatedRecords.Count());
             Assert.IsTrue(updatedRecords.All(r => r.GetLookupName(Fields.jmcg_testentity_.jmcg_account) == "3"));
+
+            //okay lets fake run it for the console app args generated
+            var args = ConsoleTestUtility.CommandLineToArgs(batContent)
+                .Skip(1)
+                .ToArray();
+
+            var arguments = ConsoleApplication.ParseCommandLineArguments(args);
+            var applicationName = arguments.ContainsKey("SettingsFolderName") ? arguments["SettingsFolderName"] : "Unknown Console Context";
+
+            //okay need to create app
+            var dependencyResolver = new DependencyContainer();
+            var controller = new ConsoleApplicationController(applicationName, dependencyResolver);
+            var settingsManager = new DesktopSettingsManager(controller);
+            var applicationOptions = new ApplicationOptionsViewModel(controller);
+            var consoleApp = new ConsoleApplication(controller, applicationOptions, settingsManager);
+            //load modules in folder path
+            consoleApp.LoadModulesInExecutionFolder();
+
+            var connection = GetSavedXrmRecordConfiguration();
+
+            XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), app.Controller);
+            app.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections
+            {
+                Connections = new[] { connection }
+            });
+
+            //run app
+            consoleApp.Run(args);
+        }
+        
+        private void ClearSavedRequests(TestApplication app, RecordEntryFormViewModel entryViewmodel)
+        {
+            if (entryViewmodel.CustomFunctions.Any(cb => cb.Id == "LOADREQUEST"))
+            {
+                var loadRequestButton = entryViewmodel.GetButton("LOADREQUEST");
+                loadRequestButton.Invoke();
+                //enter and save details
+                var saveRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
+                var requestsGrid = saveRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
+                foreach (var item in requestsGrid.GridRecords.ToArray())
+                {
+                    requestsGrid.DynamicGridViewModel.DeleteRow(item);
+                }
+                saveRequestForm.SaveButtonViewModel.Invoke();
+                Assert.IsFalse(entryViewmodel.ChildForms.Any());
+                Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
+            }
         }
     }
 }
