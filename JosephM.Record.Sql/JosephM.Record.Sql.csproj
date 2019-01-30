@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SqlConnectionString.cs" />
     <Compile Include="ExcelFileConnection.cs" />
     <Compile Include="CsvFileConnection.cs" />
     <Compile Include="ExcelRecordService.cs" />

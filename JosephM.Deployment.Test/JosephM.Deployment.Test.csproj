@@ -67,6 +67,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DeploymentCreateAndDeployPackageModuleTests.cs" />
+    <Compile Include="DeploymentImportSqlTests.cs" />
     <Compile Include="DeploymentImportExcelTests.cs" />
     <Compile Include="DeploymentAddPortalDataModuleTests.cs" />
     <Compile Include="DeploymentMigrateRecordsModuleTests.cs" />
@@ -175,6 +176,10 @@
     <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Sql\JosephM.Record.Sql.csproj">
+      <Project>{53651F05-D505-4D59-8FED-E723D26E491F}</Project>
+      <Name>JosephM.Record.Sql</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Xrm.Test\JosephM.Record.Xrm.Test.csproj">
       <Project>{9DCC0511-0B90-4A74-BB91-83CEAA45EAA5}</Project>
