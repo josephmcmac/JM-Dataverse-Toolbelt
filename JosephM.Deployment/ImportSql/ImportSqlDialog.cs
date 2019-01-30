@@ -17,7 +17,7 @@ namespace JosephM.Deployment.ImportSql
             IDialogController dialogController, XrmRecordService lookupService)
             : base(service, dialogController, lookupService)
         {
-            SetTabLabel("Import Excel");
+            SetTabLabel("Import Sql");
             var validationDialog = new ImportSqlValidationDialog(this, Request);
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
         }
