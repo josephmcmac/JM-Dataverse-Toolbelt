@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Shared;
 
 namespace JosephM.Application.ViewModel.Extentions
 {
@@ -63,7 +64,7 @@ namespace JosephM.Application.ViewModel.Extentions
                 .ToArray();
         }
 
-        public static ViewMetadata GetView(this IRecordService recordService, string recordType,  ViewType preferredViewType)
+        public static ViewMetadata GetView(this IRecordService recordService, string recordType, ViewType preferredViewType)
         {
             var savedViews = recordService.GetViews(recordType);
             if (savedViews != null)
@@ -172,6 +173,22 @@ namespace JosephM.Application.ViewModel.Extentions
             if (!ignorePaging)
                 allRecords = allRecords.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();
             return new GetGridRecordsResponse(allRecords, hasMoreRows);
+        }
+
+        public static HorizontalJustify GetHorizontalJustify(this RecordFieldType fieldType, bool isReadonly)
+        {
+            if (new[] { RecordFieldType.Boolean, RecordFieldType.Url }.Contains(fieldType))
+            {
+                return HorizontalJustify.Middle;
+            }
+            else if (isReadonly && new[] { RecordFieldType.ManagedProperty, RecordFieldType.Object, RecordFieldType.BigInt, RecordFieldType.Password, RecordFieldType.Uniqueidentifier, RecordFieldType.Status, RecordFieldType.State, RecordFieldType.Owner, RecordFieldType.Customer, RecordFieldType.Lookup, RecordFieldType.Date, RecordFieldType.RecordType, RecordFieldType.RecordField, RecordFieldType.Picklist, RecordFieldType.Integer, RecordFieldType.Decimal, RecordFieldType.Double, RecordFieldType.Money }.Contains(fieldType))
+            {
+                return HorizontalJustify.Middle;
+            }
+            else
+            {
+                return HorizontalJustify.Left;
+            }
         }
     }
 }

@@ -3,15 +3,17 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Sql;
+using JosephM.Xrm.Schema;
 using System.Collections.Generic;
 
 namespace JosephM.Deployment.ImportSql
 {
-    [Instruction("Note this feature uses OLEDB connection so you must enter a valid OLEDB connection string\n\nThis example connection string is for a SQL Server database on the local machine using the current windows login\nProvider=sqloledb;Data Source=localhost;Initial Catalog=sourcedatabasename;Integrated Security=SSPI;")]
+    [Instruction("This feature has been implemented for an OLEDB connection to a SQL Server instance so you must enter a valid OLEDB connection string\n\nThis example connection string is for a SQL Server database on the local machine using the current windows login\nProvider=sqloledb;Data Source=localhost;Initial Catalog=sourcedatabasename;Integrated Security=SSPI;")]
     [DisplayName("Import Sql")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Misc, true, 20)]
+    [Group(Sections.SchedulingOptions, true, 20)]
     public class ImportSqlRequest : ServiceRequestBase, IValidatableObject
     {
         public ImportSqlRequest()
@@ -26,6 +28,33 @@ namespace JosephM.Deployment.ImportSql
         [ConnectionFor(nameof(Mappings) + "." + nameof(SqlImportTableMapping.SourceTable), typeof(SqlConnectionString))]
         [ConnectionFor(nameof(Mappings) + "." + nameof(SqlImportTableMapping.Mappings) + "." + nameof(SqlImportTableMapping.SqlImportFieldMapping.SourceColumn), typeof(SqlConnectionString))]
         public string ConnectionString { get; set; }
+
+        [Group(Sections.SchedulingOptions)]
+        [DisplayOrder(500)]
+        [RequiredProperty]
+        public bool SendNotificationAtCompletion { get; set; }
+
+        [Group(Sections.SchedulingOptions)]
+        [DisplayOrder(500)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(SendNotificationAtCompletion), true)]
+        public bool OnlySendNotificationIfError { get; set; }
+
+        [Group(Sections.SchedulingOptions)]
+        [DisplayOrder(510)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(SendNotificationAtCompletion), true)]
+        [ReferencedType(Entities.queue)]
+        [UsePicklist]
+        public Lookup SendNotificationFromQueue { get; set; }
+
+        [Group(Sections.SchedulingOptions)]
+        [DisplayOrder(510)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(SendNotificationAtCompletion), true)]
+        [ReferencedType(Entities.queue)]
+        [UsePicklist]
+        public Lookup SendNotificationToQueue { get; set; }
 
         [Group(Sections.Misc)]
         [DisplayOrder(400)]
@@ -58,6 +87,7 @@ namespace JosephM.Deployment.ImportSql
         {
             public const string Main = "Main";
             public const string Misc = "Misc";
+            public const string SchedulingOptions = "Scheduling Options";
         }
 
         [DoNotAllowGridOpen]
