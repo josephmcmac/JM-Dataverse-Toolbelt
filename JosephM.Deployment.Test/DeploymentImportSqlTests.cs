@@ -13,6 +13,7 @@ using JosephM.Core.Utility;
 using JosephM.Deployment.ImportSql;
 using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
+using JosephM.Record.Query;
 using JosephM.Record.Sql;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.SavedXrmConnections;
@@ -36,9 +37,19 @@ namespace JosephM.Deployment.Test
 
             //it also fakes the process running in a console app
 
+            //also verifies email sent with summary
+
+            var queues = XrmRecordService.RetrieveAllAndClauses(Entities.queue, new[]
+            {
+                new Condition(Fields.queue_.emailaddress, ConditionType.NotNull)
+            });
+            Assert.IsTrue(queues.Count() > 1);
+            var queueSendFrom = queues.ElementAt(0);
+            var queueSendTo = queues.ElementAt(1);
 
             //script of basic database import
             PrepareTests();
+            DeleteAll(Entities.email);
 
             var sqlServer = @"localhost\SQLEXPRESS";
             var databaseName = "TestScriptDatabaseImport";
@@ -47,6 +58,9 @@ namespace JosephM.Deployment.Test
             var request = new ImportSqlRequest()
             {
                 ConnectionString = $"Provider=sqloledb;Data Source={sqlServer};Initial Catalog={databaseName};Integrated Security=SSPI;",
+                SendNotificationAtCompletion = true,
+                SendNotificationFromQueue = XrmRecordService.ToLookup(queueSendFrom),
+                SendNotificationToQueue = XrmRecordService.ToLookup(queueSendTo),
                 Mappings = new[]
                 {
                       new ImportSqlRequest.SqlImportTableMapping
@@ -241,6 +255,11 @@ namespace JosephM.Deployment.Test
 
             //run app
             consoleApp.Run(args);
+
+            //email created for each synch
+            var emails = XrmRecordService.RetrieveAll(Entities.email, null);
+            Assert.AreEqual(3, emails.Count());
+            Assert.IsTrue(emails.All(e => e.GetOptionKey(Fields.email_.statecode) == OptionSets.Email.ActivityStatus.Completed.ToString()));
         }
         
         private void ClearSavedRequests(TestApplication app, RecordEntryFormViewModel entryViewmodel)
