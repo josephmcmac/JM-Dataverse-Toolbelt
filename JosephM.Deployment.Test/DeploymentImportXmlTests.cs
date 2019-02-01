@@ -526,7 +526,9 @@ namespace JosephM.Deployment.Test
 
             var entities = importService.LoadEntitiesFromXmlFiles(workFolder);
 
-            Assert.AreEqual(7, entities.Count());
+            // ? self referencing (parentid) field created on test entity 
+            //which meant extra one created
+            Assert.AreEqual(8, entities.Count());
 
             var importRequest = new ImportXmlRequest
             {
