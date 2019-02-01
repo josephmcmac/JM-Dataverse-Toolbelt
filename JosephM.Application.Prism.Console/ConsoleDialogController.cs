@@ -44,7 +44,8 @@ namespace JosephM.Application.Desktop.Console
                     throw new Exception(string.Format("The {0} Object Could Not Be Validated For Processing: {1}", oeVm.GetObject().GetType().Name, oeVm.GetValidationSummary()));
                 }
                 UserInterface.LogMessage("Validation Complete");
-                oeVm.OnSave();
+                if (oeVm.SaveButtonViewModel.IsVisible)
+                    oeVm.OnSave();
             }
 
             if (viewModel is ObjectEntryViewModel)

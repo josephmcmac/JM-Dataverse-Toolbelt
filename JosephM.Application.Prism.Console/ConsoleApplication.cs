@@ -228,9 +228,16 @@ namespace JosephM.Application.Desktop.Console
             var uri = new UriBuilder(codeBase);
             string path = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
 
+            var ignoreThese = new[]
+            {
+                @"Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter",
+                @"Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices"
+            };
+
             foreach (string dll in Directory.GetFiles(path, "*.dll"))
             {
                 var loadIt = Assembly.LoadFile(dll);
+                if(!ignoreThese.Any(s => loadIt.FullName.Contains(s)))
                 foreach (var type in loadIt.GetTypes())
                 {
                     if (type.IsTypeOf(typeof(ModuleBase)) && !type.IsGenericType && !type.IsAbstract)

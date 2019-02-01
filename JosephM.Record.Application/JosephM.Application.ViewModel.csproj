@@ -135,6 +135,7 @@
     <Compile Include="SettingTypes\RecordFieldSetting.cs" />
     <Compile Include="SettingTypes\RecordTypeSetting.cs" />
     <Compile Include="Shared\HorizontalJustify.cs" />
+    <Compile Include="Email\HtmlEmailGenerator.cs" />
     <Compile Include="Shared\MyCommand.cs" />
     <Compile Include="Shared\ProgressControlViewModel.cs" />
     <Compile Include="Shared\HeadingViewModel.cs" />

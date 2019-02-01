@@ -59,6 +59,17 @@ namespace JosephM.Xrm
 
         protected LogController Controller;
 
+        public void SendEmail(Guid emailId)
+        {
+            var request = new SendEmailRequest()
+            {
+                EmailId = emailId,
+                TrackingToken = "",
+                IssueSend = true
+            };
+            Execute(request);
+        }
+
 
         /// <summary>
         ///     DONT USE CALL THE EXECUTE METHOD OR THE PROPERTY

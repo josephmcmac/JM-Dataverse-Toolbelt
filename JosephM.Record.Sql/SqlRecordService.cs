@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Core.Sql;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
-using JosephM.Record.Query;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
 
 namespace JosephM.Record.Sql
 {
@@ -17,14 +16,24 @@ namespace JosephM.Record.Sql
     {
         private SqlServerAndDbSettings Connection { get; set; }
 
+        private string ConnectionString { get; set; }
+
         public SqlRecordService(SqlServerAndDbSettings connection)
         {
             Connection = connection;
         }
 
+        public SqlRecordService(SqlConnectionString connection)
+        {
+            ConnectionString = connection.ConnectionString;
+        }
+
         protected SqlProvider CreateSqlService()
         {
-            return new SqlProvider(Connection);
+            if (Connection != null)
+                return new SqlProvider(Connection);
+            else
+                return new SqlProvider(ConnectionString);
         }
 
         public void ExecuteSql(string sql, SqlProvider service, SqlTransaction transaction)
@@ -57,7 +66,7 @@ namespace JosephM.Record.Sql
 
         public override IEnumerable<string> GetAllRecordTypes()
         {
-            var sql = "select name from sys.tables";
+            var sql = "select name from sys.tables union select name from sys.views";
             var results = ExecuteSelect(sql);
             return results
                 .Select(r => r.GetFieldAsString("name"))

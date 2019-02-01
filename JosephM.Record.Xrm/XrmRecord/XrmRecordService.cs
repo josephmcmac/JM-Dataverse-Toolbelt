@@ -60,6 +60,18 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        public string SendEmail(Lookup from, Lookup to, string subject, string body)
+        {
+            var email = new Entity(Entities.email);
+            email.SetField(Fields.email_.subject, subject);
+            email.SetField(Fields.email_.description, body);
+            email.AddFromParty(from.RecordType, new Guid(from.Id));
+            email.AddToParty(to.RecordType, new Guid(to.Id));
+            email.Id = XrmService.Create(email);
+            XrmService.SendEmail(email.Id);
+            return email.Id.ToString();
+        }
+
         public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, IFormService formService = null)
             : this(iXrmRecordConfiguration, new LogController(), formService)
         {

@@ -77,7 +77,7 @@
                         </Grid>
                     </Grid>
                     <Grid Grid.Row="1" Visibility="{Binding Instruction, Converter={StaticResource NullToHiddenConverter}}">
-                        <TextBlock Style="{StaticResource HeadingStyle}"  Text="{Binding Instruction}"></TextBlock>
+                        <TextBox Style="{StaticResource HeadingStyleTextBox}"  Text="{Binding Mode=OneWay, Path=Instruction}"></TextBox>
                     </Grid>
                     <Grid Grid.Row="2"  Visibility="{Binding ValidationPrompt, Converter={StaticResource NullToHiddenConverter}}">
                     <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>

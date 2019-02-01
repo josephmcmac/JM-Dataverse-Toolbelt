@@ -201,12 +201,22 @@ namespace JosephM.Record.Sql
         {
 
             var updateFields = GetCreateOrUpdateFields(record, fieldsToSet);
-            var sql = SqlProvider.GetInsertString(record.Type, updateFields, true);
-            var idRow = ExecuteSelect(sql, sqlService, transaction);
-            if (!idRow.Any())
-                throw new NullReferenceException("Cannot determine id no identity row was returned");
-            var id = idRow.First().GetFieldAsString("ID");
-            return id;
+            var hasPrimaryKey = !string.IsNullOrWhiteSpace(this.GetPrimaryKey(record.Type));
+            var sql = SqlProvider.GetInsertString(record.Type, updateFields, hasPrimaryKey);
+            if (hasPrimaryKey)
+            {
+                var idRow = ExecuteSelect(sql, sqlService, transaction);
+                if (hasPrimaryKey && !idRow.Any())
+                    throw new NullReferenceException("Cannot determine id no identity row was returned");
+                var id = idRow.First().GetFieldAsString("ID");
+                return id;
+            }
+            else
+            {
+                ExecuteSql(sql);
+                return null;
+            }
+
         }
 
         protected void Update(IRecord record, IEnumerable<string> fieldsToSubmit, SqlProvider service, SqlTransaction transaction)
@@ -266,7 +276,9 @@ namespace JosephM.Record.Sql
             //need to replace select for aggregate fields
             if (fields == null)
                 fields = this.GetFields(recordType);
-            fields = fields.Union(new[] { this.GetPrimaryKey(recordType) });
+            var primaryKey = this.GetPrimaryKey(recordType);
+            if (!string.IsNullOrWhiteSpace(primaryKey))
+                fields = fields.Union(new[] { primaryKey });
 
             var fieldList = fields.Select(ToIdentifier).ToList();
             foreach (var field in GetAggregateFieldsFor(recordType, fields))
@@ -311,9 +323,12 @@ namespace JosephM.Record.Sql
         {
             var primaryKey = this.GetPrimaryKey(type);
             var temp = base.ToRecords(rows, type);
-            foreach (var item in temp)
+            if (primaryKey != null)
             {
-                item.Id = item.GetStringField(primaryKey);
+                foreach (var item in temp)
+                {
+                    item.Id = item.GetStringField(primaryKey);
+                }
             }
             var dictionary = new Dictionary<string, List<Lookup>>();
             foreach (var record in temp)
@@ -605,7 +620,7 @@ namespace JosephM.Record.Sql
         {
             var fields = base.GetCreateOrUpdateFields(record, fieldToUpdate);
             var primaryKey = this.GetPrimaryKey(record.Type);
-            if (fields.ContainsKey(primaryKey))
+            if (!string.IsNullOrWhiteSpace(primaryKey) && fields.ContainsKey(primaryKey))
                 fields.Remove(primaryKey);
             foreach (var field in fields.Keys.ToArray())
             {

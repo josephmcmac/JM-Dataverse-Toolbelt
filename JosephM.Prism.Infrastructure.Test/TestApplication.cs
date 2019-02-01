@@ -86,7 +86,20 @@ namespace JosephM.Application.Desktop.Test
                         else if (viewModel is GridRowViewModel)
                         {
                             var gridRow = (GridRowViewModel)viewModel;
-                            gridRow.EditRow();
+                            if (gridRow.CanEdit)
+                            {
+                                gridRow.EditRow();
+                            }
+                            else
+                            {
+                                var gridEnumField = gridRow.GetEnumerableFieldViewModel(property.Name);
+                                if (gridEnumField.EditAction != null)
+                                {
+                                    gridEnumField.EditButton.Invoke();
+                                }
+                                else
+                                    throw new Exception("Error determining how to enter values into enumerable field");
+                            }
                             var parentForm = gridRow.GridViewModel.ParentForm as RecordEntryFormViewModel;
                             Assert.IsNotNull(parentForm);
                             Assert.AreEqual(1, parentForm.ChildForms.Count);

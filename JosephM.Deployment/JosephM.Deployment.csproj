@@ -125,6 +125,13 @@
     <Compile Include="DeployPackage\DeployPackageService.cs" />
     <Compile Include="DeploymentModule.cs" />
     <Compile Include="ImportCsvs\ImportCsvsValidationDialog.cs" />
+    <Compile Include="ImportSql\ImportSqlDialog.cs" />
+    <Compile Include="ImportSql\ImportSqlModule.cs" />
+    <Compile Include="ImportSql\ImportSqlRequest.cs" />
+    <Compile Include="ImportSql\ImportSqlResponse.cs" />
+    <Compile Include="ImportSql\ImportSqlResponseItem.cs" />
+    <Compile Include="ImportSql\ImportSqlService.cs" />
+    <Compile Include="ImportSql\ImportSqlValidationDialog.cs" />
     <Compile Include="ImportExcel\ImportExcelValidationDialog.cs" />
     <Compile Include="SolutionImport\SolutionImportService.cs" />
     <Compile Include="SolutionImport\SolutionImportResult.cs" />
