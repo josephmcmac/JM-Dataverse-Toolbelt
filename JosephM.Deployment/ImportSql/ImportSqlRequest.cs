@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace JosephM.Deployment.ImportSql
 {
     [Instruction("This feature has been implemented for an OLEDB connection to a SQL Server instance so you must enter a valid OLEDB connection string\n\nThis example connection string is for a SQL Server database on the local machine using the current windows login\nProvider=sqloledb;Data Source=localhost;Initial Catalog=sourcedatabasename;Integrated Security=SSPI;")]
-    [DisplayName("Import Sql")]
+    [DisplayName("Import SQL")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Misc, true, 20)]
