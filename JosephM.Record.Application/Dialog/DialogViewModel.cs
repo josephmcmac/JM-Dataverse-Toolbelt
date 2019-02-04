@@ -189,13 +189,7 @@ namespace JosephM.Application.ViewModel.Dialog
             else
             {
                 CompletionMessage = string.Format("Fatal error:\n{0}", ex.DisplayString());
-                if (OverideCompletionScreenMethod != null)
-                {
-                    ApplicationController.UserMessage(CompletionMessage);
-                    OverideCompletionScreenMethod();
-                }
-                else
-                    Controller.ShowCompletionScreen(this);
+                Controller.ShowCompletionScreen(this);
             }
         }
 

@@ -7,6 +7,7 @@ using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

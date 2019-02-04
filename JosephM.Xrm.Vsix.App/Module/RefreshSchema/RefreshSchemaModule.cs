@@ -59,10 +59,16 @@ namespace JosephM.Xrm.Vsix.Module.RefreshSchema
                 IncludeAllRecordTypes = true
             };
 
-            var uri = new UriQuery();
-            uri.AddObject(nameof(CSharpDialog.Request), request);
-            uri.AddObject(nameof(CSharpDialog.SkipObjectEntry), true);
-            ApplicationController.NavigateTo(typeof(CSharpDialog), uri);
+            var uriQuery = new UriQuery();
+            uriQuery.AddObject(nameof(CSharpDialog.Request), request);
+            uriQuery.AddObject(nameof(CSharpDialog.SkipObjectEntry), true);
+            if (ApplicationController is VsixApplicationController vsixAppController)
+            {
+                var dialog = vsixAppController.ResolveType(typeof(CSharpDialog));
+                vsixAppController.NavigateTo(dialog, uriQuery, showCompletionScreen: false);
+            }
+            else
+                ApplicationController.NavigateTo(typeof(CSharpDialog), uriQuery);
         }
     }
 }
