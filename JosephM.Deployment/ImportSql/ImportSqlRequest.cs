@@ -89,7 +89,7 @@ namespace JosephM.Deployment.ImportSql
         {
             public const string Main = "Main";
             public const string Misc = "Misc";
-            public const string SchedulingOptions = "Scheduling Options";
+            public const string SchedulingOptions = "Scheduling Options - Selected Queues Should Have Email Addresses Populated And The From Queue Approved For Sending Emails";
         }
 
         [DoNotAllowGridOpen]
