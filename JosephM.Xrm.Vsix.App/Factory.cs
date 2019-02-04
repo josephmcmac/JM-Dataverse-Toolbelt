@@ -51,7 +51,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<VsixCreatePackageModule>(0x010E);
             app.AddModule<RefreshSchemaModule>(0x0100);
             app.AddModule<DeployWebResourceModule>(0x0102);
-            app.AddModule<VsixImportCsvsModule>(0x0108);
+            //app.AddModule<VsixImportCsvsModule>(0x0108);
             app.AddModule<VsixDeployPackageModule>(0x0110);
             app.AddModule<XrmTextSearchModule>(0x0116);
             app.AddModule<XrmPackageAboutModule>(0x0113);

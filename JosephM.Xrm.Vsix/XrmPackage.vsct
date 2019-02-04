@@ -160,14 +160,14 @@
           <ButtonText>Package Settings</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="ImportCsvsCommandId" priority="0x0100" type="Button">
+      <!--<Button guid="guidXrmPackageCmdSet" id="ImportCsvsCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Import Csvs</ButtonText>
         </Strings>
-      </Button>
+      </Button>-->
       <Button guid="guidXrmPackageCmdSet" id="ClearCacheCommandId" priority="0x0109" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
@@ -334,7 +334,7 @@
       <IDSymbol name="ManagePluginTriggersCommandId" value="0x0104" />
       <IDSymbol name="UpdatePluginAssemblyCommandId" value="0x0105" />
       <IDSymbol name="RefreshSettingsCommandId" value="0x0106" />
-      <IDSymbol name="ImportCsvsCommandId" value="0x0108" />
+      <!--<IDSymbol name="ImportCsvsCommandId" value="0x0108" />-->
       <IDSymbol name="ClearCacheCommandId" value="0x0109" />
       <IDSymbol name="ImportCustomisationsCommandId" value="0x010A" />
       <IDSymbol name="OpenCrmWebCommandId" value="0x010B" />

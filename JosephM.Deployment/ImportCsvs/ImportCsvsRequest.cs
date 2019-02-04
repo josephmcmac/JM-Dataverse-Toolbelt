@@ -1,14 +1,10 @@
-﻿#region
-
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Sql;
 using System.Collections.Generic;
-
-#endregion
 
 namespace JosephM.Deployment.ImportCsvs
 {
