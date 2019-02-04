@@ -18,6 +18,7 @@
       <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_jquery.js">$ext_jmxrmprefix$_jquery.js</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_pageutility.js">$ext_jmxrmprefix$_pageutility.js</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_webapiutility.js">$ext_jmxrmprefix$_webapiutility.js</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_webresourceutility.js">$ext_jmxrmprefix$_webresourceutility.js</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmxrmprefix$_webserviceutility.js">$ext_jmxrmprefix$_webserviceutility.js</ProjectItem>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
