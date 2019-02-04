@@ -68,7 +68,7 @@ namespace JosephM.CodeGenerator.CSharp
             var countDone = 0;
             stringBuilder.AppendLine(string.Format("\tpublic static class {0}", "Entities"));
             stringBuilder.AppendLine("\t{");
-            foreach (var recordType in types)
+            foreach (var recordType in types.OrderBy(t => t))
             {
                 controller.UpdateProgress(countDone, countToDo,
                     string.Format("Processing Entities ({0})", Service.GetDisplayName(recordType)));
@@ -90,7 +90,7 @@ namespace JosephM.CodeGenerator.CSharp
             var countDone = 0;
             var relationshipsAdded = false;
             countDone = 0;
-            foreach (var recordType in types)
+            foreach (var recordType in types.OrderBy(t => t))
             {
                 controller.UpdateProgress(countDone, countToDo,
                     string.Format("Processing Relationships ({0})", Service.GetDisplayName(recordType)));
@@ -107,7 +107,7 @@ namespace JosephM.CodeGenerator.CSharp
                         }
                         stringBuilder.AppendLine(string.Format("\t\tpublic static class {0}_", recordType));
                         stringBuilder.AppendLine("\t\t{");
-                        foreach (var relationship in relationships)
+                        foreach (var relationship in relationships.OrderBy(r => r.SchemaName))
                         {
                             stringBuilder.AppendLine(string.Format("\t\t\tpublic static class {0}", relationship.SchemaName));
                             stringBuilder.AppendLine("\t\t\t{");
@@ -135,7 +135,7 @@ namespace JosephM.CodeGenerator.CSharp
             stringBuilder.AppendLine("\tpublic static class Fields");
             stringBuilder.AppendLine("\t{");
             var countDone = 0;
-            foreach (var recordType in types)
+            foreach (var recordType in types.OrderBy(t => t))
             {
                 controller.UpdateProgress(countDone, countToDo,
                     string.Format("Processing Fields ({0})", Service.GetDisplayName(recordType)));
@@ -144,7 +144,7 @@ namespace JosephM.CodeGenerator.CSharp
                     stringBuilder.AppendLine(string.Format("\t\tpublic static class {0}_", recordType));
                     stringBuilder.AppendLine("\t\t{");
                     var fieldLabels = new Dictionary<string, string>();
-                    foreach (var field in Service.GetFields(recordType))
+                    foreach (var field in Service.GetFields(recordType).OrderBy(f => f))
                     {
                         if (!string.IsNullOrWhiteSpace(field))
                             stringBuilder.AppendLine(string.Format("\t\t\tpublic const string {0} = \"{1}\";",
@@ -189,7 +189,7 @@ namespace JosephM.CodeGenerator.CSharp
 
                 stringBuilder.AppendLine("\tpublic static class Actions");
                 stringBuilder.AppendLine("\t{");
-                foreach (var action in actions)
+                foreach (var action in actions.OrderBy(a => a.GetStringField(Fields.workflow_.name)))
                 {
                     var noTarget = action.GetStringField("primaryentity") == "none";
 
@@ -303,7 +303,7 @@ namespace JosephM.CodeGenerator.CSharp
 
                 stringBuilder.AppendLine("\t\tpublic static class Shared");
                 stringBuilder.AppendLine("\t\t{");
-                foreach (var item in picklists)
+                foreach (var item in picklists.OrderBy(s => CreateCodeLabel(string.IsNullOrWhiteSpace(s.DisplayName) ? s.SchemaName : s.DisplayName)))
                 {
                     controller.UpdateProgress(countOptionsDone, countOptionsToDo,
                         string.Format("Processing Shared Options ({0})", item.DisplayName));
@@ -344,7 +344,7 @@ namespace JosephM.CodeGenerator.CSharp
                     .Where(t => t.Count() > 1)
                     .Select(t => t.Key)
                     .ToArray();
-                foreach (var recordType in types)
+                foreach (var recordType in types.OrderBy(r => r))
                 {
                     controller.UpdateProgress(countDone, countToDo,
                         string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
@@ -359,7 +359,7 @@ namespace JosephM.CodeGenerator.CSharp
                         var optionFields = Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType));
                         var optionFieldLabels = optionFields.ToDictionary(f => f,
                             f => CreateCodeLabel(Service.GetFieldLabel(f, recordType)));
-                        foreach (var field in optionFieldLabels)
+                        foreach (var field in optionFieldLabels.OrderBy(f => f.Value))
                         {
                             var fieldLabel = field.Value;
                             if (optionFieldLabels.Any(kv => kv.Key != field.Key && kv.Value == field.Value))
