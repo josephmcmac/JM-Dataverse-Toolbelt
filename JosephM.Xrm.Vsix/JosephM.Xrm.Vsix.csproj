@@ -289,6 +289,10 @@
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Sql\JosephM.Record.Sql.csproj">
+      <Project>{53651f05-d505-4d59-8fed-e723d26e491f}</Project>
+      <Name>JosephM.Record.Sql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
       <Project>{850bb50c-d03d-4c6b-8fbb-6055936148c8}</Project>
       <Name>JosephM.Record.Xrm</Name>

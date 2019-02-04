@@ -7,21 +7,21 @@ if (typeof Xrm === 'undefined')
 $ext_jmobjprefix$WebApiUtility = function () {
     var that = this;
     this.FieldType =
-    {
-        Lookup: "EntityReference",
-        Guid: "guid",
-        Int: "int",
-        Decimal: "decimal",
-        Bool: "boolean",
-        Money: "money",
-        Date: "date",
-        OptionSet: "OptionSetValue",
-        String: "string"
-    };
+        {
+            Lookup: "EntityReference",
+            Guid: "guid",
+            Int: "int",
+            Decimal: "decimal",
+            Bool: "boolean",
+            Money: "money",
+            Date: "date",
+            OptionSet: "OptionSetValue",
+            String: "string"
+        };
     this.FilterOperator =
-    {
-        Equal: "eq",
-    };
+        {
+            Equal: "eq",
+        };
 
     this.FilterCondition = function (field, operator, value, type) {
         this.field = field;
@@ -35,8 +35,28 @@ $ext_jmobjprefix$WebApiUtility = function () {
         this.isDescending = isDescending == true;
     };
 
-    function executeGet(queryString, successCallback, errorCallback)
-    {
+    this.GeneratePluralName = function (typeName) {
+        return typeName + "s";
+    };
+
+    this.AddActivityParty = function (partiesArray, type, id, participationType) {
+        if (id != null) {
+            var typeplural = that.GeneratePluralName(type);
+            var party = new Object();
+            party["partyid_" + type + "@odata.bind"] = "/" + typeplural + "(" + id + ")";
+            party["participationtypemask"] = participationType; //To
+            partiesArray.push(party);
+        }
+    };
+
+    this.FieldValue = function (field, value, type) {
+        this.field = field;
+        this.value = value;
+        this.type = type;
+    };
+
+
+    function executeGet(queryString, successCallback, errorCallback) {
         var req = new XMLHttpRequest();
 
         req.open("Get", encodeURI(getWebAPIPath() + queryString), true);
@@ -68,16 +88,23 @@ $ext_jmobjprefix$WebApiUtility = function () {
         req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
         req.setRequestHeader("OData-MaxVersion", "4.0");
         req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Prefer", "return=representation");
         req.onreadystatechange = function () {
             if (this.readyState == 4 /* complete */) {
                 req.onreadystatechange = null;
-                if (this.status == 200) {
+                if (this.status == 200 || this.status == 201) {
                     if (successCallback)
                         successCallback(JSON.parse(this.response));
+                }
+                else if (this.status == 204) {
+                    if (successCallback)
+                        successCallback();
                 }
                 else {
                     if (errorCallback)
                         errorCallback(errorHandler(this.response));
+                    else
+                        console.log(errorHandler(this.response));
                 }
             }
         };
@@ -90,11 +117,17 @@ $ext_jmobjprefix$WebApiUtility = function () {
             var conditionStrings = new Array();
             for (var i in conditions) {
                 var thisOne = conditions[i];
+                var fieldString = thisOne.field;
                 var valueString = "" + thisOne.value;
+
                 if (thisOne.type == that.FieldType.Guid)
                     valueString = valueString.replace('{', '').replace('}', '');
+                if (thisOne.type == that.FieldType.EntityReference) {
+                    valueString = valueString.replace('{', '').replace('}', '');
+                    fieldString = "_" + fieldString + "_value";
+                }
 
-                var thisString = thisOne.field + " " + thisOne.operator + " " + valueString;
+                var thisString = fieldString + " " + thisOne.operator + " " + valueString;
                 conditionStrings.push(thisString);
             }
             if (conditionStrings.length > 0) {
@@ -140,8 +173,21 @@ $ext_jmobjprefix$WebApiUtility = function () {
         return appendString;
     }
 
-    this.executeAction = function (actionName, arguments, successCallback, errorCallback) {
+    this.executeUnboundAction = function (actionName, arguments, successCallback, errorCallback) {
         executePost(actionName, JSON.stringify(arguments), function (result) { successCallback(result); }, errorCallback);
+    };
+
+    this.executeBoundAction = function (actionName, targetTypePlural, targetId, arguments, successCallback, errorCallback) {
+        targetId = targetId.replace('{', '').replace('}', '');
+        executePost(targetTypePlural + "(" + targetId + ")/Microsoft.Dynamics.CRM." + actionName, JSON.stringify(arguments), function (result) { successCallback(result); }, errorCallback);
+    };
+
+    this.create = function (entitySetName, fields, successCallback, errorCallback) {
+        var entity = new Object();
+        for (var i in fields) {
+            entity[fields[i].field] = fields[i].value;
+        }
+        executePost(entitySetName, JSON.stringify(entity), successCallback, errorCallback);
     };
 
     this.get = function (entitySetName, id, fields, successCallback, errorCallback) {
@@ -176,13 +222,13 @@ $ext_jmobjprefix$WebApiUtility = function () {
         }
     }
     function getWebAPIPath() {
-        return getClientUrl() + "/api/data/v8.1/";
+        return getClientUrl() + "/api/data/v8.2/";
     }
 
     // This function is called when an error callback parses the JSON response
     // It is a public function because the error callback occurs within the onreadystatechange 
     // event handler and an internal function would not be in scope.
-    function errorHandler (resp) {
+    function errorHandler(resp) {
         try {
             return JSON.parse(resp).error;
         } catch (e) {

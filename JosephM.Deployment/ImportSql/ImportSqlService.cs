@@ -1,6 +1,7 @@
 using JosephM.Application.ViewModel.Email;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
+using JosephM.Deployment.DataImport;
 using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -46,31 +47,38 @@ namespace JosephM.Deployment.ImportSql
                     && (!request.OnlySendNotificationIfError
                         || tempEx != null || response.HasResponseItemError))
                 {
-                    //todo place the html generator somewhere appropriate
-                    var htmlGenerator = new HtmlEmailGenerator();
-                    //okay lets try create an email with the summary
-                    //plus perhaps a log of the errors
-
-                    if (tempEx != null)
+                    try
                     {
-                        htmlGenerator.AppendParagraph(tempEx.XrmDisplayString());
+                        //todo place the html generator somewhere appropriate
+                        var htmlGenerator = new HtmlEmailGenerator();
+                        //okay lets try create an email with the summary
+                        //plus perhaps a log of the errors
+
+                        if (tempEx != null)
+                        {
+                            htmlGenerator.AppendParagraph(tempEx.XrmDisplayString());
+                        }
+
+                        htmlGenerator.WriteObject(response);
+
+                        var subject = $"Sql Import '{request.Name ?? "No Name"}'";
+                        if (tempEx != null)
+                            subject = subject + " Fatal Error";
+                        else if (response.HasResponseItemError)
+                            subject = subject + " Completed With Errors";
+                        else
+                            subject = subject + " Completed";
+
+
+
+                        XrmRecordService.SendEmail(request.SendNotificationFromQueue, request.SendNotificationToQueue
+                            , subject.Left(XrmRecordService.GetMaxLength(Fields.email_.subject, Entities.email))
+                            , htmlGenerator.GetContent());
                     }
-
-                    htmlGenerator.WriteObject(response);
-
-                    var subject = $"Sql Import '{request.Name ?? "No Name"}'";
-                    if (tempEx != null)
-                        subject = subject + " Fatal Error";
-                    else if (response.HasResponseItemError)
-                        subject = subject + " Completed With Errors";
-                    else
-                        subject = subject + " Completed";
-
-
-
-                    XrmRecordService.SendEmail(request.SendNotificationFromQueue, request.SendNotificationToQueue
-                        , subject.Left(XrmRecordService.GetMaxLength(Fields.email_.subject, Entities.email))
-                        , htmlGenerator.GetContent());
+                    catch(Exception ex)
+                    {
+                        response.AddResponseItem(new ImportSqlResponseItem(new DataImportResponseItem("Error Sending Notification Email", ex)));
+                    }
                 }
             }
         }

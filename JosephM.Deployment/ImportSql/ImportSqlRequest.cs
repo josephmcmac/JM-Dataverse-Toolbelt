@@ -8,8 +8,10 @@ using System.Collections.Generic;
 
 namespace JosephM.Deployment.ImportSql
 {
-    [Instruction("This feature has been implemented for an OLEDB connection to a SQL Server instance so you must enter a valid OLEDB connection string\n\nThis example connection string is for a SQL Server database on the local machine using the current windows login\nProvider=sqloledb;Data Source=localhost;Initial Catalog=sourcedatabasename;Integrated Security=SSPI;")]
-    [DisplayName("Import Sql")]
+    [Instruction("This feature has been implemented for an OLEDB connection to a SQL Server instance so you must enter a valid OLEDB connection string\n\n" +
+        "This example connection string is for a SQL Server database on the local machine using the current windows login\nProvider=sqloledb;Data Source=localhost;Initial Catalog=sourcedatabasename;Integrated Security=SSPI;\n\n" +
+        "Also note being a standalone application this implementation is not designed for high volumes of data. All imported data is loaded into the applications runtime and if the volume is excessive out of memory errors will occur")]
+    [DisplayName("Import SQL")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Misc, true, 20)]
@@ -87,7 +89,7 @@ namespace JosephM.Deployment.ImportSql
         {
             public const string Main = "Main";
             public const string Misc = "Misc";
-            public const string SchedulingOptions = "Scheduling Options";
+            public const string SchedulingOptions = "Scheduling Options - Selected Queues Should Have Email Addresses Populated And The From Queue Approved For Sending Emails";
         }
 
         [DoNotAllowGridOpen]

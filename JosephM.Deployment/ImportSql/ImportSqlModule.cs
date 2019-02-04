@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
-using JosephM.Application.Desktop.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
+using System;
+using System.Linq;
 
 namespace JosephM.Deployment.ImportSql
 {
