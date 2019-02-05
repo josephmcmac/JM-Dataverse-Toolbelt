@@ -237,12 +237,21 @@ namespace JosephM.Application.Desktop.Console
             foreach (string dll in Directory.GetFiles(path, "*.dll"))
             {
                 var loadIt = Assembly.LoadFile(dll);
-                if(!ignoreThese.Any(s => loadIt.FullName.Contains(s)))
-                foreach (var type in loadIt.GetTypes())
+                if (!ignoreThese.Any(s => loadIt.FullName.Contains(s)))
                 {
-                    if (type.IsTypeOf(typeof(ModuleBase)) && !type.IsGenericType && !type.IsAbstract)
+                    try
                     {
-                        AddModule(type);
+                        foreach (var type in loadIt.GetTypes())
+                        {
+                            if (type.IsTypeOf(typeof(ModuleBase)) && !type.IsGenericType && !type.IsAbstract)
+                            {
+                                AddModule(type);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Error Loading Modules In Assembly {loadIt.FullName}", ex);
                     }
                 }
             }
