@@ -73,7 +73,7 @@ namespace JosephM.CodeGenerator
             return
                 OptionSetTypes.Contains(Service.GetFieldType(field, recordType))
                 && !string.IsNullOrWhiteSpace(CreateCodeLabel(Service.GetFieldLabel(field, recordType)))
-                && Service.GetPicklistKeyValues(field, recordType).Any(IsValidForCode);
+                && (Service.GetPicklistKeyValues(field, recordType)?.Any(IsValidForCode) ?? false);
         }
 
         protected bool IsValidForCode(PicklistOption option)

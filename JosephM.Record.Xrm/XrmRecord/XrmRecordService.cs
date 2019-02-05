@@ -109,14 +109,15 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<PicklistOption> GetPicklistKeyValues(string field, string recordType, string dependentValue, IRecord record)
         {
-            var type = _xrmService.GetFieldType(field, recordType);
-            if (type == AttributeTypeCode.EntityName)
+            var metadata = _xrmService.GetFieldMetadata(field, recordType);
+            if (metadata.AttributeType == AttributeTypeCode.EntityName)
                 return XrmService.GetAllEntityTypes().Select(s => new PicklistOption(s, XrmService.GetEntityDisplayName(s))).ToArray();
 
-            return type == AttributeTypeCode.Picklist
-                || type == AttributeTypeCode.State
-                || type == AttributeTypeCode.Status
-                || type == AttributeTypeCode.Integer
+            return metadata.AttributeType == AttributeTypeCode.Picklist
+                || metadata.AttributeType == AttributeTypeCode.State
+                || metadata.AttributeType == AttributeTypeCode.Status
+                || metadata.AttributeType == AttributeTypeCode.Integer
+                || metadata is EnumAttributeMetadata
                 ? _xrmService.GetPicklistKeyValues(recordType, field)
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value))
                 .ToArray()
