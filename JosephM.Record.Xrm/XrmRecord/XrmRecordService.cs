@@ -809,7 +809,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<Entity> GetViewsToUpdate(RecordMetadata recordMetadata)
         {
-            var typesToUpdate = new[] { ViewType.AdvancedSearch, ViewType.AssociatedView, ViewType.MainApplicationView, ViewType.QuickFindSearch }
+            var typesToUpdate = new[] { ViewType.AdvancedSearch, ViewType.AssociatedView, ViewType.MainApplicationView }
             .Cast<int>()
             .ToArray()
             .Cast<object>()

@@ -496,5 +496,16 @@ namespace JosephM.Record.Extentions
                 thisJoin.RootFilter.AddCondition(typeFieldPaths.Last().Value, conditionType, value);
             }
         }
+
+        public static IRecord Get(this IRecordService service,string recordType, string id, IEnumerable<string> fields)
+        {
+            var queryResult = service.RetrieveAllAndClauses(recordType, new[]
+            {
+                new Condition(service.GetPrimaryKey(recordType), ConditionType.Equal, id)
+            }, fields);
+            return queryResult.Any()
+                ? queryResult.First()
+                : null;
+        }
     }
 }

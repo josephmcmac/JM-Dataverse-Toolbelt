@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.ImportExcel
 {
-    [MyDescription("Import Records Defined In An Excel Sheet Into A CRM Instance")]
+    [MyDescription("Import Records Defined In An Excel Sheet Into A Dynamics CRM Instance")]
     public class ImportExcelModule
         : ServiceRequestModule<ImportExcelDialog, ImportExcelService, ImportExcelRequest, ImportExcelResponse, ImportExcelResponseItem>
     {

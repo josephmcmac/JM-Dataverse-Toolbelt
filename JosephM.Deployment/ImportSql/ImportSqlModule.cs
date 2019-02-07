@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.ImportSql
 {
-    [MyDescription("Import Records Defined In An Excel Sheet Into A CRM Instance")]
+    [MyDescription("Import Data In An SQL Server Database Into A Dynamics CRM Instance")]
     public class ImportSqlModule
         : ServiceRequestModule<ImportSqlDialog, ImportSqlService, ImportSqlRequest, ImportSqlResponse, ImportSqlResponseItem>
     {

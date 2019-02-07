@@ -92,6 +92,11 @@
     <Compile Include="Module\Crud\BulkReplace\BulkReplaceResponse.cs" />
     <Compile Include="Module\Crud\BulkReplace\BulkReplaceResponseItem.cs" />
     <Compile Include="Module\Crud\BulkReplace\BulkReplaceService.cs" />
+    <Compile Include="Module\Crud\BulkCopyFieldValue\BulkCopyFieldValueDialog.cs" />
+    <Compile Include="Module\Crud\BulkCopyFieldValue\BulkCopyFieldValueRequest.cs" />
+    <Compile Include="Module\Crud\BulkCopyFieldValue\BulkCopyFieldValueResponse.cs" />
+    <Compile Include="Module\Crud\BulkCopyFieldValue\BulkCopyFieldValueResponseItem.cs" />
+    <Compile Include="Module\Crud\BulkCopyFieldValue\BulkCopyFieldValueService.cs" />
     <Compile Include="Module\Settings\AppSettingDialog.cs" />
     <Compile Include="Module\ReleaseCheckModule\GithubRelease.cs" />
     <Compile Include="Module\ReleaseCheckModule\GitHubReleaseCheckModule.cs" />

@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.ImportCsvs
 {
-    [MyDescription("Import Records Defined In CSV Files Into A CRM Instance")]
+    [MyDescription("Import Records Defined In CSV Files Into A Dynamics CRM Instance")]
     public class ImportCsvsModule
         : ServiceRequestModule<ImportCsvsDialog, ImportCsvsService, ImportCsvsRequest, ImportCsvsResponse, ImportCsvsResponseItem>
     {
