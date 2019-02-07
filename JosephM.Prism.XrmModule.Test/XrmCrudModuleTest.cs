@@ -17,6 +17,7 @@ using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Application.Application;
 using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Core.Utility;
+using JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue;
 
 namespace JosephM.XrmModule.Test
 {
@@ -223,6 +224,7 @@ namespace JosephM.XrmModule.Test
             // doing a bulk delete on all records
             // create a new record
             // create a new record with an error thrown
+            DeleteAll(Entities.account);
             var count = XrmRecordService.GetFirstX(Entities.account, 3, null, null).Count();
             while (count < 3)
             {
@@ -328,6 +330,82 @@ namespace JosephM.XrmModule.Test
             foreach(var account in allAccounts)
                 Assert.AreEqual(newAddressLine1, account.GetStringField(Fields.account_.address1_line1));
 
+            //now do bulk copy field value
+
+            //select 2 record for bulk copy field value
+            queryViewModel.GridRecords.First().IsSelected = true;
+            queryViewModel.GridRecords.ElementAt(1).IsSelected = true;
+            id = queryViewModel.GridRecords.First().GetRecord().Id;
+            id2 = queryViewModel.GridRecords.ElementAt(1).GetRecord().Id;
+            record = XrmRecordService.Get(Entities.account, id);
+            record.SetField(Fields.account_.description, "WTF", XrmRecordService);
+            XrmRecordService.Update(record, new[] { Fields.account_.description });
+            record = XrmRecordService.Get(Entities.account, id2);
+            Assert.IsNull(record.GetStringField(Fields.account_.description));
+            //this triggered by ui event
+            queryViewModel.DynamicGridViewModel.OnSelectionsChanged();
+            //trigger and enter bulk update
+            queryViewModel.DynamicGridViewModel.GetButton("BULKCOPYFIELDVALUESELECTED").Invoke();
+            //todo verify description empty
+            DoBulkCopyFieldValue(dialog, Fields.account_.name, Fields.account_.description);
+            //verify records updated
+            //this dude doesnt get copied because already populated
+            record = XrmRecordService.Get(Entities.account, id);
+            Assert.AreEqual("WTF", record.GetStringField(Fields.account_.description));
+            record = XrmRecordService.Get(Entities.account, id2);
+            Assert.AreEqual(record.GetStringField(Fields.account_.name), record.GetStringField(Fields.account_.description));
+            Assert.IsFalse(queryViewModel.ChildForms.Any());
+
+            //now do bulk copy field value all
+            queryViewModel.DynamicGridViewModel.GetButton("BULKCOPYFIELDVALUEALL").Invoke();
+            DoBulkCopyFieldValue(dialog, Fields.account_.name, Fields.account_.description);
+            allAccounts = XrmRecordService.RetrieveAll(Entities.account, null);
+
+            //this dude doesnt get copied because already populated
+            Assert.IsTrue(allAccounts.Any(a => a.GetStringField(Fields.account_.description) == "WTF"));
+            foreach (var account in allAccounts)
+            {
+                if (account.Id == id)
+                    Assert.AreEqual("WTF", account.GetStringField(Fields.account_.description));
+                else
+                    Assert.AreEqual(account.GetStringField(Fields.account_.name), account.GetStringField(Fields.account_.description));
+            }
+            //okay lets just verify options
+            //do bulk copy field with overwrite
+            queryViewModel.DynamicGridViewModel.GetButton("BULKCOPYFIELDVALUEALL").Invoke();
+            DoBulkCopyFieldValue(dialog, Fields.account_.name, Fields.account_.description, overwriteIfPopulated: true);
+
+            allAccounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            foreach (var account in allAccounts)
+            {
+                //all got updated
+                Assert.AreEqual(account.GetStringField(Fields.account_.name), account.GetStringField(Fields.account_.description));
+
+                account.SetField(Fields.account_.description, "WTF", XrmRecordService);
+                XrmRecordService.Update(account, new[] { Fields.account_.description });
+                //set the name null to check doesnt copy next call
+                if (account.Id == id)
+                {
+                    account.SetField(Fields.account_.name, null, XrmRecordService);
+                    XrmRecordService.Update(account, new[] { Fields.account_.name });
+                }
+            }
+            //do another and verify the desciption wasnt cleared
+            queryViewModel.DynamicGridViewModel.GetButton("BULKCOPYFIELDVALUEALL").Invoke();
+            DoBulkCopyFieldValue(dialog, Fields.account_.name, Fields.account_.description, overwriteIfPopulated: true);
+            allAccounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            Assert.IsTrue(allAccounts.Any(a => a.GetStringField(Fields.account_.name) == null));
+            foreach (var account in allAccounts)
+            {
+                Assert.IsNotNull(account.GetStringField(Fields.account_.description));
+            }
+            //do one more with include nulls and verify we now have an empty description
+            queryViewModel.DynamicGridViewModel.GetButton("BULKCOPYFIELDVALUEALL").Invoke();
+            DoBulkCopyFieldValue(dialog, Fields.account_.name, Fields.account_.description, copyIfNull: true, overwriteIfPopulated: true);
+            allAccounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            Assert.IsTrue(allAccounts.Any(a => a.GetStringField(Fields.account_.description) == null));
+
+
             //select 2 record for bulk delete
             queryViewModel.GridRecords.First().IsSelected = true;
             queryViewModel.GridRecords.ElementAt(1).IsSelected = true;
@@ -406,6 +484,29 @@ namespace JosephM.XrmModule.Test
             Assert.IsNotNull(completionScreen);
             completionScreen.CompletionDetails.LoadFormSections();
             Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkUpdateResponse.ResponseItems)).GetGridRecords(false).Records.Any());
+            completionScreen.CloseButton.Invoke();
+            Assert.IsFalse(crudDialog.ChildForms.Any());
+        }
+
+        private void DoBulkCopyFieldValue(XrmCrudDialog crudDialog, string sourceField, string targetField, bool copyIfNull = false, bool overwriteIfPopulated = false)
+        {
+            var bulkUpdateDialog = crudDialog.ChildForms.First() as BulkCopyFieldValueDialog;
+            Assert.IsNotNull(bulkUpdateDialog);
+            bulkUpdateDialog.LoadDialog();
+            var bulkUpdateEntry = bulkUpdateDialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(bulkUpdateEntry);
+            bulkUpdateEntry.LoadFormSections();
+            var fieldField = bulkUpdateEntry.GetRecordFieldFieldViewModel(nameof(BulkCopyFieldValueRequest.SourceField));
+            fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == sourceField);
+            var valueField = bulkUpdateEntry.GetRecordFieldFieldViewModel(nameof(BulkCopyFieldValueRequest.TargetField));
+            valueField.Value = valueField.ItemsSource.First(kv => kv.Key == targetField);
+            bulkUpdateEntry.GetBooleanFieldFieldViewModel(nameof(BulkCopyFieldValueRequest.CopyIfNull)).Value = copyIfNull;
+            bulkUpdateEntry.GetBooleanFieldFieldViewModel(nameof(BulkCopyFieldValueRequest.OverwriteIfPopulated)).Value = overwriteIfPopulated;
+            bulkUpdateEntry.SaveButtonViewModel.Invoke();
+            var completionScreen = bulkUpdateDialog.Controller.UiItems.First() as CompletionScreenViewModel;
+            Assert.IsNotNull(completionScreen);
+            completionScreen.CompletionDetails.LoadFormSections();
+            Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkCopyFieldValueResponse.ResponseItems)).GetGridRecords(false).Records.Any());
             completionScreen.CloseButton.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }

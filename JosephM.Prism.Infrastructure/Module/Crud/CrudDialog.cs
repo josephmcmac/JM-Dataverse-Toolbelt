@@ -1,4 +1,5 @@
-﻿using JosephM.Application.Desktop.Module.Crud.BulkDelete;
+﻿using JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue;
+using JosephM.Application.Desktop.Module.Crud.BulkDelete;
 using JosephM.Application.Desktop.Module.Crud.BulkReplace;
 using JosephM.Application.Desktop.Module.Crud.BulkUpdate;
 using JosephM.Application.ViewModel.Dialog;
@@ -69,6 +70,17 @@ namespace JosephM.Application.Desktop.Module.Crud
                                 new CustomGridFunction("BULKREPLACEALL", "All Results", (g) =>
                                 {
                                     TriggerBulkReplace(false);
+                                }, (g) => g.GridRecords != null && g.GridRecords.Any()),
+                            }),
+                            new CustomGridFunction("BULKCOPYFIELDVALUE", "Bulk Copy Field Value", new []
+                            {
+                                new CustomGridFunction("BULKCOPYFIELDVALUESELECTED", "Selected Only", (g) =>
+                                {
+                                    TriggerBulkCopyFieldValue(true);
+                                }, (g) => g.SelectedRows.Any()),
+                                new CustomGridFunction("BULKCOPYFIELDVALUEALL", "All Results", (g) =>
+                                {
+                                    TriggerBulkCopyFieldValue(false);
                                 }, (g) => g.GridRecords != null && g.GridRecords.Any()),
                             }),
                             new CustomGridFunction("DELETE", "Bulk Delete", new []
@@ -164,5 +176,13 @@ namespace JosephM.Application.Desktop.Module.Crud
             LoadChildForm(bulkUpdateDialog);
         }
 
+        private void TriggerBulkCopyFieldValue(bool selectedOnly)
+        {
+            var recordsToUpdate = GetRecordsToProcess(selectedOnly);
+
+            var request = new BulkCopyFieldValueRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+            var bulkUpdateDialog = new BulkCopyFieldValueDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+            LoadChildForm(bulkUpdateDialog);
+        }
     }
 }
