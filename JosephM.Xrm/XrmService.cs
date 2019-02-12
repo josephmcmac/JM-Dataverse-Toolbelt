@@ -32,6 +32,28 @@ namespace JosephM.Xrm
             }
         }
 
+        private int _languageCode;
+        private int LanguageCode
+        {
+            get
+            {
+                if(_languageCode == 0)
+                {
+                    var userSettings = RetrieveAllAndClauses(Entities.usersettings, new[]
+                    {
+                        new ConditionExpression(Fields.usersettings_.systemuserid, ConditionOperator.EqualUserId)
+                    }, new[] { Fields.usersettings_.uilanguageid });
+                    if(userSettings.Any())
+                    {
+                        _languageCode = userSettings.First().GetInt(Fields.usersettings_.uilanguageid);
+                    }
+                    if (_languageCode == 0)
+                        _languageCode = 1033;
+                }
+                return _languageCode;
+            }
+        }
+
         private void SetServiceTimeout()
         {
             if (_service != null)
@@ -326,9 +348,7 @@ namespace JosephM.Xrm
 
         public string GetLabelDisplay(Label label)
         {
-            return label.LocalizedLabels.Any(l => l.LanguageCode == 1033)
-                ? label.LocalizedLabels.First(l => l.LanguageCode == 1033).Label
-                : string.Empty;
+            return label.UserLocalizedLabel?.Label;
         }
 
         public AttributeTypeCode GetFieldType(string field, string entity)
@@ -2229,8 +2249,8 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     metadata = GetEntityMetadata(schemaName);
                 metadata.SchemaName = schemaName;
                 metadata.LogicalName = schemaName;
-                metadata.DisplayName = new Label(displayName, 1033);
-                metadata.DisplayCollectionName = new Label(displayCollectionName, 1033);
+                metadata.DisplayName = new Label(displayName, LanguageCode);
+                metadata.DisplayCollectionName = new Label(displayCollectionName, LanguageCode);
                 metadata.IsAuditEnabled = new BooleanManagedProperty(audit);
                 metadata.IsActivity = isActivityType;
                 metadata.IsValidForQueue = new BooleanManagedProperty(queues);
@@ -2238,9 +2258,9 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 metadata.IsConnectionsEnabled = new BooleanManagedProperty(connections);
                 metadata.IsActivity = isActivityType;
                 if (!String.IsNullOrWhiteSpace(description))
-                    metadata.Description = new Label(description, 1033);
+                    metadata.Description = new Label(description, LanguageCode);
                 else
-                    metadata.Description = new Label(displayCollectionName, 1033);
+                    metadata.Description = new Label(displayCollectionName, LanguageCode);
 
                 if (exists)
                 {
@@ -2302,8 +2322,8 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             bool isRequired, bool audit, bool searchable, string recordType)
         {
             var optionSet = new BooleanOptionSetMetadata();
-            optionSet.FalseOption = new OptionMetadata(new Label("No", 1033), 0);
-            optionSet.TrueOption = new OptionMetadata(new Label("Yes", 1033), 1);
+            optionSet.FalseOption = new OptionMetadata(new Label("No", LanguageCode), 0);
+            optionSet.TrueOption = new OptionMetadata(new Label("Yes", LanguageCode), 1);
 
             BooleanAttributeMetadata metadata;
             if (FieldExists(schemaName, recordType))
@@ -2322,10 +2342,10 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
         {
             if (metadata.SchemaName.IsNullOrWhiteSpace())
                 metadata.SchemaName = schemaName;
-            metadata.DisplayName = new Label(displayName, 1033);
+            metadata.DisplayName = new Label(displayName, LanguageCode);
             metadata.LogicalName = schemaName;
             if (!string.IsNullOrWhiteSpace(description))
-                metadata.Description = new Label(description, 1033);
+                metadata.Description = new Label(description, LanguageCode);
             if (metadata.RequiredLevel == null
                 || (metadata.RequiredLevel.CanBeChanged
                     && (isRequired && metadata.RequiredLevel.Value != AttributeRequiredLevel.ApplicationRequired
@@ -2589,7 +2609,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     OptionSetType = OptionSetType.Picklist,
                     IsGlobal = false
                 };
-                optionSet.Options.AddRange(options.Select(o => new OptionMetadata(new Label(o.Value, 1033), o.Key)));
+                optionSet.Options.AddRange(options.Select(o => new OptionMetadata(new Label(o.Value, LanguageCode), o.Key)));
 
                 EnumAttributeMetadata metadata;
                 var exists = FieldExists(schemaName, recordType);
@@ -2639,7 +2659,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             AttributeLogicalName = fieldName,
                             EntityLogicalName = recordType,
                             Value = option.Key,
-                            Label = new Label(newValue.Value, 1033)
+                            Label = new Label(newValue.Value, LanguageCode)
                         };
                         Execute(request);
                         itemUpdated = true;
@@ -2654,7 +2674,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             AttributeLogicalName = fieldName,
                             EntityLogicalName = recordType,
                             Value = option.Key,
-                            Label = new Label(option.Value, 1033)
+                            Label = new Label(option.Value, LanguageCode)
                         };
                         Execute(request);
                         itemUpdated = true;
@@ -2858,7 +2878,7 @@ string recordType)
             else
                 associatedMenuConfiguration.Behavior = AssociatedMenuBehavior.UseCollectionName;
             if (associatedMenuConfiguration.Behavior == AssociatedMenuBehavior.UseLabel)
-                associatedMenuConfiguration.Label = new Label(customLabel, 1033);
+                associatedMenuConfiguration.Label = new Label(customLabel, LanguageCode);
             if (associatedMenuConfiguration.Behavior != AssociatedMenuBehavior.DoNotDisplay)
                 associatedMenuConfiguration.Order = displayOrder;
             return associatedMenuConfiguration;
@@ -2914,7 +2934,7 @@ string recordType)
             if (SharedOptionSetExists(schemaName))
             {
                 var optionSetMetadata = GetSharedOptionSet(schemaName);
-                optionSetMetadata.DisplayName = new Label(displayName, 1033);
+                optionSetMetadata.DisplayName = new Label(displayName, LanguageCode);
                 var updateOptionSetRequest = new UpdateOptionSetRequest
                 {
                     OptionSet = optionSetMetadata
@@ -2942,7 +2962,7 @@ string recordType)
                             {
                                 OptionSetName = schemaName,
                                 Value = option.Key,
-                                Label = new Label(newValue.Value, 1033)
+                                Label = new Label(newValue.Value, LanguageCode)
                             };
                             Execute(request);
                         }
@@ -2955,7 +2975,7 @@ string recordType)
                             {
                                 OptionSetName = schemaName,
                                 Value = option.Key,
-                                Label = new Label(option.Value, 1033)
+                                Label = new Label(option.Value, LanguageCode)
                             };
                             Execute(request);
                         }
@@ -2966,10 +2986,10 @@ string recordType)
             {
                 var optionSetMetadata = new OptionSetMetadata();
                 optionSetMetadata.Name = schemaName;
-                optionSetMetadata.DisplayName = new Label(displayName, 1033);
+                optionSetMetadata.DisplayName = new Label(displayName, LanguageCode);
                 optionSetMetadata.IsGlobal = true;
                 optionSetMetadata.Options.AddRange(
-                    options.Select(o => new OptionMetadata(new Label(o.Value, 1033), o.Key)).ToList());
+                    options.Select(o => new OptionMetadata(new Label(o.Value, LanguageCode), o.Key)).ToList());
 
                 var request = new CreateOptionSetRequest { OptionSet = optionSetMetadata };
                 Execute(request);

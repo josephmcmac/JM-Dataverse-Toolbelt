@@ -225,9 +225,7 @@ namespace $safeprojectname$.Xrm
 
         private string GetLabelDisplay(Label label)
         {
-            return label.LocalizedLabels.Any(l => l.LanguageCode == 1033)
-                ? label.LocalizedLabels.First(l => l.LanguageCode == 1033).Label
-                : string.Empty;
+            return label.UserLocalizedLabel?.Label;
         }
 
         public string GetOptionLabel(int optionValue, string field, string entity)

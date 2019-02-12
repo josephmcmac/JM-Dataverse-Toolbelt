@@ -481,9 +481,10 @@ namespace JosephM.InstanceComparer
             var fieldsCompareParams = new ProcessCompareParams("Field", typeof(IFieldMetadata),
                 (s, r) => r.GetFieldMetadata(s).ToArray(),
                 nameof(IFieldMetadata.SchemaName),
-                GetReadableProperties(typeof(IFieldMetadata), new[]
+                GetReadableProperties(typeof(IFieldMetadata)
+                , new[]
                     {
-                        nameof(IFieldMetadata.MetadataId)
+                        nameof(IFieldMetadata.MetadataId), nameof(IFieldMetadata.Readable), nameof(IFieldMetadata.Writeable), nameof(IFieldMetadata.Createable), nameof(IFieldMetadata.Order)
                     }), parentLinkProperty: nameof(IFieldMetadata.RecordType));
             fieldsCompareParams.AddConversionObject(nameof(IFieldMetadata.FormulaDefinition), new ProcessCompareParams.RemoveLeadingXmlDefinitionNode(), new ProcessCompareParams.RemoveLeadingXmlDefinitionNode());
 
