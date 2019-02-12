@@ -26,7 +26,7 @@ namespace JosephM.Wpf.Extentions
             if (appController != null)
             {
                 var theme = appController.ResolveType<Theme>();
-                var themePath = "Resources/Themes/Light.xaml";
+                var themePath = "Resources/Themes/Dark.xaml";
                 if (theme != null)
                 {
                     themePath = theme?.SelectedTheme?.ResourceRelativePathForLoading ?? themePath;
