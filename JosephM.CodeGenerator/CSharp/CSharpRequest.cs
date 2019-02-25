@@ -1,8 +1,10 @@
 ﻿using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.CodeGenerator.CSharp
 {
@@ -12,13 +14,27 @@ namespace JosephM.CodeGenerator.CSharp
     [Group(Sections.FileDetails, true, 20)]
     [Group(Sections.IncludeConstantsForTheseItems, true, order: 30, selectAll: true)]
     [Group(Sections.RecordTypes, true, 40)]
-    public class CSharpRequest : ServiceRequestBase
+    public class CSharpRequest : ServiceRequestBase, IValidatableObject
     {
         public CSharpRequest()
         {
             IncludeAllRecordTypes = true;
             Namespace = "Schema";
             FileName = "Schema";
+        }
+
+        public IsValidResponse Validate()
+        {
+            //lets just ensure at leats one valid oiton is selected
+            var validProperties = new[] { nameof(Entities), nameof(Fields), nameof(Relationships), nameof(FieldOptions), nameof(SharedOptions), nameof(Actions) };
+            var isOneSelected = validProperties.Any(p => (bool)this.GetPropertyValue(p));
+            var isValidResponse = new IsValidResponse();
+            if (!isOneSelected)
+            {
+                var thisType = GetType();
+                isValidResponse.AddInvalidReason($"At Least One Of {validProperties.Select(p => thisType.GetProperty(p).GetDisplayName()).JoinGrammarAnd()} Is Required To Be Selected");
+            }
+            return isValidResponse;
         }
 
 
