@@ -11,6 +11,7 @@ using JosephM.CustomisationImporter;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
+using JosephM.Xrm.Autonumber;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.XrmModule.AppConnection;
@@ -45,6 +46,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<XrmDeveloperToolAboutModule>();
             app.AddModule<DevAppReleaseCheckModule>();
             app.AddModule<SavedConnectionAppConnectionModule>();
+            app.AddModule<AutonumberModule>();
             app.AddModule<ThemeModule>();
             app.Run();
         }

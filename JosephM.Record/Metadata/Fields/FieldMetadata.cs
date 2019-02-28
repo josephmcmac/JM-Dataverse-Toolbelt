@@ -179,5 +179,7 @@ namespace JosephM.Record.Metadata
                 fm.Description = descriptionAttribute.Text;
             return fm;
         }
+
+        public string AutonumberFormat { get; set; }
     }
 }

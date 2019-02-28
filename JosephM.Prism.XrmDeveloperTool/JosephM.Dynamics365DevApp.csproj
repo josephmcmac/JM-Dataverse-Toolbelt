@@ -221,6 +221,10 @@
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.Autonumber\JosephM.Xrm.Autonumber.csproj">
+      <Project>{021a835c-5674-4f77-8713-420a6cc1c854}</Project>
+      <Name>JosephM.Xrm.Autonumber</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj">
       <Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>
       <Name>JosephM.Xrm.RecordExtract</Name>

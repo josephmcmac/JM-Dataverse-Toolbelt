@@ -2056,6 +2056,17 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     .ToArray();
         }
 
+        public void ClearFieldMetadataCache(string entity)
+        {
+            lock (LockObject)
+            {
+                if (!EntityFieldMetadata.ContainsKey(entity))
+                {
+                    EntityFieldMetadata.Remove(entity);
+                }
+            }
+        }
+
         public List<AttributeMetadata> GetEntityFieldMetadata(string entity)
         {
             lock (LockObject)
@@ -2357,7 +2368,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             metadata.IsValidForAdvancedFind = new BooleanManagedProperty(searchable);
         }
 
-        private void CreateOrUpdateAttribute(string schemaName, string recordType, AttributeMetadata metadata)
+        public void CreateOrUpdateAttribute(string schemaName, string recordType, AttributeMetadata metadata)
         {
             lock (LockObject)
             {

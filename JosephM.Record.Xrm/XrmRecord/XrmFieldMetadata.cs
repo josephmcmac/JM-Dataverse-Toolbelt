@@ -302,5 +302,16 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return null;
             }
         }
+
+        public string AutonumberFormat
+        {
+            get
+            {
+                var metadata = XrmService.GetFieldMetadata(FieldName, RecordType);
+                if (metadata is StringAttributeMetadata smt)
+                    return smt.AutoNumberFormat;
+                return null;
+            }
+        }
     }
 }

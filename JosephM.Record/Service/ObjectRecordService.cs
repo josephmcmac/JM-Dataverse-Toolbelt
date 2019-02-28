@@ -766,6 +766,16 @@ namespace JosephM.Record.Service
                 else
                     return int.Parse((string)value);
             }
+            if (fieldType == RecordFieldType.BigInt && value is string)
+            {
+                if (((string)value).IsNullOrWhiteSpace())
+                    return
+                        this.GetFieldMetadata(fieldName, recordType).IsNonNullable
+                            ? 0
+                            : (long?)null;
+                else
+                    return long.Parse((string)value);
+            }
             if (fieldType == RecordFieldType.Money)
             {
                 if (value is decimal)

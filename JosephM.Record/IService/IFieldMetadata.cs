@@ -64,5 +64,7 @@ namespace JosephM.Record.IService
         bool IsMultiSelect { get; }
         [Hidden]
         string FormulaDefinition { get; }
+        [Hidden]
+        string AutonumberFormat { get; }
     }
 }
