@@ -10,7 +10,9 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Record.Metadata;
+using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.Autonumber
@@ -21,7 +23,7 @@ namespace JosephM.Xrm.Autonumber
     {
         public override string MenuGroup => "Customisations";
 
-        public override string MainOperationName => "Autonumbers";
+        public override string MainOperationName => "Auto Numbers";
 
         public override void RegisterTypes()
         {
@@ -30,6 +32,31 @@ namespace JosephM.Xrm.Autonumber
             AddReconfigureAutonumberButtonToAutonumberFieldsGrid();
             AddLoadAuotnumberFieldsTrigger();
             AddOpenMicrosoftDocumentationButton();
+            AddAutonumbersToSavedConnectionsGrid();
+        }
+
+        private void AddAutonumbersToSavedConnectionsGrid()
+        {
+            var customGridFunction = new CustomGridFunction("AUTONUMBERS", "Auto Numbers", (g) =>
+            {
+                if (g.SelectedRows.Count() != 1)
+                {
+                    g.ApplicationController.UserMessage("Please Select One Row To Run This Function");
+                }
+                else
+                {
+                    var selectedRow = g.SelectedRows.First();
+                    var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
+                    if (instance != null)
+                    {
+                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var dialog = new AutonumberDialog(xrmRecordService, new DialogController(ApplicationController));
+                        dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
+                        g.ApplicationController.NavigateTo(dialog);
+                    }
+                }
+            }, (g) => g.GridRecords != null && g.GridRecords.Any());
+            this.AddCustomGridFunction(customGridFunction, typeof(SavedXrmRecordConfiguration));
         }
 
         private void AddOpenMicrosoftDocumentationButton()
@@ -65,7 +92,9 @@ namespace JosephM.Xrm.Autonumber
                             RecordType = recordType.Value
                         };
                         var dialogcontroller = (IDialogController)ApplicationController.ResolveType(typeof(IDialogController));
+                        Action closeChildDialog = () => { parentForm.ClearChildForms(); RefreshFieldGrid(parentForm); };
                         var dialog = new ConfigureAutonumberDialog(parentForm.RecordService.LookupService as XrmRecordService, dialogcontroller, req, () => { parentForm.ClearChildForms(); RefreshFieldGrid(parentForm); });
+                        dialog.OverideCompletionScreenMethod = closeChildDialog;
                         parentForm.LoadChildForm(dialog);
                     }
                     finally
@@ -73,7 +102,7 @@ namespace JosephM.Xrm.Autonumber
                         parentForm.LoadingViewModel.IsLoading = false;
                     }
                 });
-            }, (g) => { return true; }), typeof(AutonumberNavigator.AutonumberField));
+            }, (g) => true), typeof(AutonumberNavigator.AutonumberField));
         }
 
         private void AddReconfigureAutonumberButtonToAutonumberFieldsGrid()
@@ -113,7 +142,7 @@ namespace JosephM.Xrm.Autonumber
                     dialog.OverideCompletionScreenMethod = closeChildDialog;
                     parentForm.LoadChildForm(dialog);
                 }
-            }, (g) => { return true; }), typeof(AutonumberNavigator.AutonumberField));
+            }, (g) => { return g?.GridRecords.Any() ?? false; }), typeof(AutonumberNavigator.AutonumberField));
         }
 
         private void AddLoadAuotnumberFieldsTrigger()
@@ -160,6 +189,7 @@ namespace JosephM.Xrm.Autonumber
                             autonumberFieldsField.InsertRecord(newRecord, 0);
                         }
                     }
+                    ApplicationController.DoOnMainThread(() => autonumberFieldsField.DynamicGridViewModel.RefreshGridButtons());
                 }
                 finally
                 {

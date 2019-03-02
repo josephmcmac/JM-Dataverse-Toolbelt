@@ -232,6 +232,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                             DynamicGridViewModel.GridRecords.Insert(index, rowItem);
                             rowItem.OnLoad();
                             rowItem.RunOnChanges();
+                            DynamicGridViewModel.RefreshGridButtons();
                         }
                         finally
                         {
