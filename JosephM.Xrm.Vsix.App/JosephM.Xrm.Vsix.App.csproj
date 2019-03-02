@@ -328,6 +328,10 @@
       <Project>{ED23E8EF-1623-491E-A30F-BA55C8F65CE7}</Project>
       <Name>JosephM.Wpf</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.Autonumber\JosephM.Xrm.Autonumber.csproj">
+      <Project>{021a835c-5674-4f77-8713-420a6cc1c854}</Project>
+      <Name>JosephM.Xrm.Autonumber</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj">
       <Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>
       <Name>JosephM.Xrm.RecordExtract</Name>

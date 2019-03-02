@@ -292,6 +292,12 @@
           <ButtonText>Migrate Records</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ConfigureAutoNumberCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Configure Autonumber</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -354,6 +360,7 @@
       <IDSymbol name="ThemeCommandId" value="0x011A" />
       <IDSymbol name="AddPortalCodeCommandId" value="0x011B" />
       <IDSymbol name="MigrateRecordsCommandId" value="0x011C" />
+      <IDSymbol name="ConfigureAutoNumberCommandId" value="0x011D" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

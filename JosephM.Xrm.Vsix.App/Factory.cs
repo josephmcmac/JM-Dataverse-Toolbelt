@@ -8,6 +8,7 @@ using JosephM.Deployment.ImportExcel;
 using JosephM.Deployment.MigrateRecords;
 using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
+using JosephM.Xrm.Autonumber;
 using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
@@ -64,6 +65,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<AddPortalCodeModule>(0x011B);
             app.AddModule<PackageSettingsAppConnectionModule>();
             app.AddModule<MigrateRecordsModule>(0x011C);
+            app.AddModule<AutonumberModule>(0x011D);
             app.AddModule<ImportExcelModule>();
             app.AddModule<CustomisationExporterModule>();
             app.AddModule<RecordCountsModule>();

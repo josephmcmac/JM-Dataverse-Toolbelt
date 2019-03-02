@@ -20,15 +20,22 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
 
         }
 
+        [DisplayOrder(10)]
         [ReadOnlyWhenSet]
+        [RequiredProperty]
         [RecordTypeFor((nameof(Field)))]
         public RecordType RecordType { get; set; }
 
+        [DisplayOrder(20)]
         [ReadOnlyWhenSet]
+        [RequiredProperty]
         [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.Equal, RecordFieldType.String)]
         public RecordField Field { get; set; }
+
+        [DisplayOrder(30)]
         public string AutonumberFormat { get; set; }
 
+        [DisplayOrder(40)]
         [DisplayName("Set Seed (Optional)")]
         public long? SetSeed { get; set; }
     }
