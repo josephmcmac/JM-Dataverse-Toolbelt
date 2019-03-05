@@ -2060,7 +2060,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
         {
             lock (LockObject)
             {
-                if (!EntityFieldMetadata.ContainsKey(entity))
+                if (EntityFieldMetadata.ContainsKey(entity))
                 {
                     EntityFieldMetadata.Remove(entity);
                 }
