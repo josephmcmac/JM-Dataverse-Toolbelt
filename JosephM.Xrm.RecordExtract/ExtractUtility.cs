@@ -53,14 +53,14 @@ namespace JosephM.Xrm.RecordExtract
         {
             return new[]
             {
-                "solutioncomponent", "workflowdependency", "audit", "calendar", "importjob", "plugintypestatistic", "cdi_excludedemail", "postfollow", "sdkmessageprocessingstepsecureconfig", "activitypointer", "attributemap",
-                "organizationui", "lookupmapping", "unresolvedaddress", "subscription", "rollupfield", "picklistmapping",
-                "importentitymapping", "importlog", "workflowlog", "ribboncommand", "leadaddress", "invaliddependency",
-                "fieldpermission", "stringmap", "systemform", "customerrelationship", "timezonerule",
-                "partnerapplication", "calendarrule", "customeropportunityrole", "multientitysearch", "wizardpage",
-                "authorizationserver", "complexcontrol", "workflowwaitsubscription", "sdkmessagerequestfield",
-                "untrackedemail", "mailboxtrackingfolder", "sharepointdocument", "pluginassembly", "sdkmessageprocessingstep", "sdkmessageprocessingstepimage", "plugintracelog",
-                Entities.solutioncomponent, "msdyn_solutioncomponentsummary"
+                Entities.solutioncomponent, Entities.workflowdependency, Entities.audit, Entities.calendar, Entities.importjob, Entities.plugintypestatistic, "cdi_excludedemail", Entities.postfollow, Entities.sdkmessageprocessingstepsecureconfig, Entities.activitypointer, Entities.attributemap,
+                Entities.organizationui, Entities.lookupmapping, Entities.unresolvedaddress, Entities.subscription, Entities.rollupfield, Entities.picklistmapping,
+                Entities.importentitymapping, Entities.importlog, Entities.workflowlog, Entities.ribboncommand, Entities.leadaddress, Entities.invaliddependency,
+                Entities.fieldpermission, Entities.stringmap, Entities.systemform, Entities.customerrelationship, Entities.timezonerule,
+                Entities.partnerapplication, Entities.calendarrule, Entities.customeropportunityrole, Entities.multientitysearch, Entities.wizardpage,
+                Entities.authorizationserver, Entities.complexcontrol, Entities.workflowwaitsubscription, Entities.sdkmessagerequestfield,
+                Entities.untrackedemail, Entities.mailboxtrackingfolder, Entities.sharepointdocument, Entities.pluginassembly, Entities.sdkmessageprocessingstep, Entities.sdkmessageprocessingstepimage, Entities.plugintracelog,
+                Entities.solutioncomponent, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_componentlayer, Entities.msdyn_componentlayerdatasource, Entities.msdyn_solutioncomponentdatasource, Entities.msdyn_solutionhistory
             };
         }
 

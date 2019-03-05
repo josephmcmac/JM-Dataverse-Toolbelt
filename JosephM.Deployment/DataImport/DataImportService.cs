@@ -1153,7 +1153,7 @@ namespace JosephM.Deployment.DataImport
             {
                     "yomifullname", "administratorid", "owneridtype", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
                     "overriddencreatedon", "statuscode", "statecode", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid"
-                    , "address1_addressid", "address2_addressid", "processid", Fields.incident_.slaid, Fields.incident_.firstresponsebykpiid, Fields.incident_.resolvebykpiid
+                    , "address1_addressid", "address2_addressid", "processid", Fields.incident_.slaid, Fields.incident_.firstresponsebykpiid, Fields.incident_.resolvebykpiid, "entityimageid_url", "entityimage_timestamp"
             };
             if (!includeOwner)
                 fields = fields.Union(new[] { "ownerid" }).ToArray();
