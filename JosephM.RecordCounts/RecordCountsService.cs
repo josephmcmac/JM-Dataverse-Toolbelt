@@ -28,8 +28,11 @@ namespace JosephM.RecordCounts
         {
             controller.LogLiteral("Loading Types");
 
+            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary };
+
             var recordTypes = request.AllRecordTypes
                 ? Service.GetAllRecordTypes()
+                .Except(excludeTheseTypes)
                 .Where(r => Service.GetRecordTypeMetadata(r).Searchable)
                 .OrderBy(n => Service.GetDisplayName(n))
                 .ToArray()
