@@ -153,6 +153,7 @@ namespace JosephM.Application.Desktop.Module.Crud
             IEnumerable<IRecord> recordsToUpdate = null;
 
             var fieldsToGet = new List<string>();
+            fieldsToGet.Add(RecordService.GetPrimaryKey(QueryViewModel.RecordType));
             var primaryField = RecordService.GetPrimaryField(QueryViewModel.RecordType);
             if (!string.IsNullOrWhiteSpace(primaryField))
                 fieldsToGet.Add(primaryField);
