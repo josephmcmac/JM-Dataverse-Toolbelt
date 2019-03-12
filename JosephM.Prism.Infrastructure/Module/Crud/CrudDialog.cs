@@ -126,20 +126,26 @@ namespace JosephM.Application.Desktop.Module.Crud
 
         private void TriggerBulkUpdate(bool selectedOnly)
         {
-            var recordsToUpdate = GetRecordsToProcess(selectedOnly);
+            ApplicationController.DoOnAsyncThread(() =>
+            {
+                var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
-            var request = new BulkUpdateRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-            var bulkUpdateDialog = new BulkUpdateDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
-            LoadChildForm(bulkUpdateDialog);
+                var request = new BulkUpdateRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                var bulkUpdateDialog = new BulkUpdateDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+                LoadChildForm(bulkUpdateDialog);
+            });
         }
 
         private void TriggerBulkReplace(bool selectedOnly)
         {
-            var recordsToUpdate = GetRecordsToProcess(selectedOnly);
+            ApplicationController.DoOnAsyncThread(() =>
+            {
+                var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
-            var request = new BulkReplaceRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-            var bulkReplaceDialog = new BulkReplaceDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
-            LoadChildForm(bulkReplaceDialog);
+                var request = new BulkReplaceRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                var bulkReplaceDialog = new BulkReplaceDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+                LoadChildForm(bulkReplaceDialog);
+            });
         }
 
         private IEnumerable<IRecord> GetRecordsToProcess(bool selectedOnly)
@@ -148,7 +154,7 @@ namespace JosephM.Application.Desktop.Module.Crud
 
             var fieldsToGet = new List<string>();
             var primaryField = RecordService.GetPrimaryField(QueryViewModel.RecordType);
-            if (string.IsNullOrWhiteSpace(primaryField))
+            if (!string.IsNullOrWhiteSpace(primaryField))
                 fieldsToGet.Add(primaryField);
 
             if (selectedOnly)
@@ -169,20 +175,26 @@ namespace JosephM.Application.Desktop.Module.Crud
 
         private void TriggerBulkDelete(bool selectedOnly)
         {
-            var recordsToUpdate = GetRecordsToProcess(selectedOnly);
+            ApplicationController.DoOnAsyncThread(() =>
+            {
+                var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
-            var request = new BulkDeleteRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-            var bulkUpdateDialog = new BulkDeleteDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
-            LoadChildForm(bulkUpdateDialog);
+                var request = new BulkDeleteRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                var bulkUpdateDialog = new BulkDeleteDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+                LoadChildForm(bulkUpdateDialog);
+            });
         }
 
         private void TriggerBulkCopyFieldValue(bool selectedOnly)
         {
-            var recordsToUpdate = GetRecordsToProcess(selectedOnly);
+            ApplicationController.DoOnAsyncThread(() =>
+            {
+                var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
-            var request = new BulkCopyFieldValueRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-            var bulkUpdateDialog = new BulkCopyFieldValueDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
-            LoadChildForm(bulkUpdateDialog);
+                var request = new BulkCopyFieldValueRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                var bulkUpdateDialog = new BulkCopyFieldValueDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+                LoadChildForm(bulkUpdateDialog);
+            });
         }
     }
 }
