@@ -166,7 +166,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected override void MatchValueToSelectedItems()
         {
             object newValue = null;
-            if (SelectedItem != null)
+            if (SelectedItem != null && SelectedItem.Record != null)
                 newValue = ((ObjectRecord)SelectedItem.Record).Instance;
             if (newValue != Value)
                 Value = newValue;
@@ -174,9 +174,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         protected override IEnumerable<ReferencePicklistItem> GetPicklistOptions()
         {
-            return GetSearchResults()
+            var items = new List<ReferencePicklistItem>();
+            items.Add(new ReferencePicklistItem(null, null));
+            items.AddRange(GetSearchResults()
                 .Select(r => new ReferencePicklistItem(r, r.GetStringField(LookupService.GetPrimaryField(r.Type))))
-                .ToArray();
+                .ToArray());
+            return items;
         }
 
         protected override IEnumerable<IRecord> GetSearchResults()

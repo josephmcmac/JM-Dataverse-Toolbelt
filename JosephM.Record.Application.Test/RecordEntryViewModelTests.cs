@@ -184,7 +184,7 @@ namespace JosephM.Application.ViewModel.Test
             }
 
             var objectFieldViewModel = entryViewModel.GetObjectFieldFieldViewModel(nameof(TestAllFieldTypes.ObjectField));
-            objectFieldViewModel.SelectedItem = objectFieldViewModel.ItemsSource.First();
+            objectFieldViewModel.SelectedItem = objectFieldViewModel.ItemsSource.First(r => r.Record != null);
             Assert.IsNotNull(objectFieldViewModel.Value);
         }
     }
