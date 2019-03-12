@@ -231,7 +231,8 @@ namespace JosephM.Application.Desktop.Console
             var ignoreThese = new[]
             {
                 @"Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter",
-                @"Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices"
+                @"Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices",
+                "Microsoft.VisualStudio.GraphModel"
             };
 
             foreach (string dll in Directory.GetFiles(path, "*.dll"))
