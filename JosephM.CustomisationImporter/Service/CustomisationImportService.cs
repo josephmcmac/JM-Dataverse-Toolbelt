@@ -70,7 +70,9 @@ namespace JosephM.CustomisationImporter.Service
                 createdFields.AddRange(importFieldsResponse.CreatedFields);
             }
             if (request.FieldOptionSets)
+            {
                 ImportFieldOptionSets(readExcelResponse.GetFieldMetadataToImport().Values, controller.Controller, response, createdFields);
+            }
             if (request.Views)
                 ImportViews(readExcelResponse.GetRecordMetadataToImport().Values, controller.Controller, response, createdRecordTypes);
             if (request.Relationships)
@@ -406,6 +408,7 @@ namespace JosephM.CustomisationImporter.Service
             CustomisationImportResponse response, IEnumerable<FieldMetadata> createdFields)
         {
             var picklistFields = fieldMetadata
+                .Except(createdFields)
                 .Where(
                     f => f is PicklistFieldMetadata && !((PicklistFieldMetadata)f).PicklistOptionSet.IsSharedOptionSet)
                 .Cast<PicklistFieldMetadata>()
@@ -436,7 +439,8 @@ namespace JosephM.CustomisationImporter.Service
             if (numberCompleted > 0)
             {
                 controller.LogLiteral("Publishing Field Option Sets");
-                RecordService.Publish();
+                var publishXml = $"<importexportxml><entities>{string.Join("", picklistFields.Select(m => "<entity>" + m.RecordType + "</entity>"))}</entities></importexportxml>";
+                RecordService.Publish(publishXml);
             }
         }
 
@@ -469,7 +473,8 @@ namespace JosephM.CustomisationImporter.Service
             if (numberCompleted > 0)
             {
                 controller.LogLiteral("Publishing Option Sets");
-                RecordService.Publish();
+                var publishXml = $"<importexportxml><optionsets>{string.Join("", sharedOptionSets.Select(sop => "<optionset>" + sop.SchemaName + "</optionset>"))}</optionsets></importexportxml>";
+                RecordService.Publish(publishXml);
             }
         }
 
@@ -503,7 +508,8 @@ namespace JosephM.CustomisationImporter.Service
             if (numberCompleted > 0)
             {
                 controller.LogLiteral("Publishing Views");
-                RecordService.Publish();
+                var publishXml = $"<importexportxml><entities>{string.Join("", metadata.Select(m => "<entity>" + m.SchemaName + "</entity>"))}</entities></importexportxml>";
+                RecordService.Publish(publishXml);
             }
         }
 
@@ -538,7 +544,8 @@ namespace JosephM.CustomisationImporter.Service
             if (numberCompleted > 0)
             {
                 controller.LogLiteral("Publishing Relationships");
-                RecordService.Publish();
+                var publishXml = $"<importexportxml><entities>{string.Join("", metadata.Select(m => "<entity>" + m.Value.RecordType1 + "</entity>").Union(metadata.Select(m => "<entity>" + m.Value.RecordType2 + "</entity>")))}</entities></importexportxml>";
+                RecordService.Publish(publishXml);
             }
         }
 
@@ -576,7 +583,11 @@ namespace JosephM.CustomisationImporter.Service
                     RecordService.CreateOrUpdate(field, field.RecordType);
                     response.AddImportedItem(excelRow, field, isUpdate);
                     if (!isUpdate)
+                    {
                         importFieldsResponse.AddCreatedField(field);
+                        if (field is LookupFieldMetadata)
+                            lookupFieldsCreated.Add(excelRow, field);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -586,7 +597,8 @@ namespace JosephM.CustomisationImporter.Service
             if (numberCompleted > 0)
             {
                 controller.LogLiteral("Publishing Fields");
-                RecordService.Publish();
+                var publishXml = $"<importexportxml><entities>{string.Join("", metadata.Select(m => "<entity>" + m.Value.RecordType + "</entity>").Distinct())}</entities></importexportxml>";
+                RecordService.Publish(publishXml);
             }
             numberToDo = lookupFieldsCreated.Count();
             numberCompleted = 0;
@@ -608,7 +620,8 @@ namespace JosephM.CustomisationImporter.Service
             if (numberCompleted > 0)
             {
                 controller.LogLiteral("Publishing Fields");
-                RecordService.Publish();
+                var publishXml = $"<importexportxml><entities>{string.Join("", lookupFieldsCreated.Select(m => "<entity>" + m.Value.RecordType + "</entity>").Distinct())}</entities></importexportxml>";
+                RecordService.Publish(publishXml);
             }
             return importFieldsResponse;
         }
@@ -645,7 +658,8 @@ namespace JosephM.CustomisationImporter.Service
             if (numberCompleted > 0)
             {
                 controller.LogLiteral("Publishing Record Types");
-                RecordService.Publish();
+                var publishXml = $"<importexportxml><entities>{string.Join("", metadata.Select(m => "<entity>" + m.Value.SchemaName + "</entity>"))}</entities></importexportxml>";
+                RecordService.Publish(publishXml);
             }
             return thisResponse;
         }

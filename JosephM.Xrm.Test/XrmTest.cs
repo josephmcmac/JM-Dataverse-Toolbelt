@@ -18,11 +18,6 @@ namespace JosephM.Xrm.Test
 {
     public abstract class XrmTest : CoreTest
     {
-        public static string TestXrmConnectionFileName
-        {
-            get { return Path.Combine(TestConstants.TestSettingsFolder, "TestXrmConnection.xml"); }
-        }
-
         protected virtual string OverrideOrganisation
         {
             get
@@ -102,22 +97,6 @@ namespace JosephM.Xrm.Test
                 }
                 return xrmConfig;
             }
-        }
-
-        protected static EncryptedXrmConfiguration GetSavedTestEncryptedXrmConfiguration()
-        {
-            EncryptedXrmConfiguration settingsObject = null;
-            var serializer = new DataContractSerializer(typeof (EncryptedXrmConfiguration));
-            if (!File.Exists(TestXrmConnectionFileName))
-                throw new NullReferenceException(
-                    string.Format(
-                        "Error The Xrm Test Settings File Was Not Found At {0}. Create It Using The Save Xrm Connection Option In The Test Desktop Application",
-                        TestXrmConnectionFileName));
-            using (var fileStream = new FileStream(TestXrmConnectionFileName, FileMode.Open))
-            {
-                settingsObject = (EncryptedXrmConfiguration) serializer.ReadObject(fileStream);
-            }
-            return settingsObject;
         }
 
         public string ExecutionPath

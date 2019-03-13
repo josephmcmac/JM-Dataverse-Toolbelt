@@ -72,7 +72,6 @@
     <Compile Include="XrmDebug.cs" />
     <Compile Include="FakeOrganisationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EncryptedXrmConfiguration.cs" />
     <Compile Include="TestEntityConstants.cs" />
     <Compile Include="XrmServiceTest.cs" />
     <Compile Include="XrmTest.cs" />

@@ -77,8 +77,6 @@
     <Compile Include="DebugModule\DebugDialogResponseItem.cs" />
     <Compile Include="DebugModule\DebugDialogService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestSettings\XrmSettingsDialog.cs" />
-    <Compile Include="TestSettings\XrmSettingsModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

@@ -16,6 +16,7 @@ using JosephM.XrmModule.AppConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using JosephM.Core.FieldType;
 
 namespace JosephM.XrmModule.Test
 {
@@ -47,7 +48,7 @@ namespace JosephM.XrmModule.Test
 
         public SavedXrmRecordConfiguration GetSavedXrmRecordConfiguration()
         {
-            var xrmConfig = GetSavedTestEncryptedXrmConfiguration();
+            var xrmConfig = XrmConfiguration;
             var enumMapper = new EnumMapper<XrmRecordAuthenticationProviderType, AuthenticationProviderType>();
             var savedConfig = new SavedXrmRecordConfiguration()
             {
@@ -56,7 +57,7 @@ namespace JosephM.XrmModule.Test
                 DiscoveryServiceAddress = xrmConfig.DiscoveryServiceAddress,
                 Domain = xrmConfig.Domain,
                 OrganizationUniqueName = OverrideOrganisation ?? xrmConfig.OrganizationUniqueName,
-                Password = xrmConfig.Password,
+                Password = new Password(xrmConfig.Password, false, true),
                 Username = xrmConfig.Username,
                 Name = "TESTSCRIPTCONNECTION"
             };
