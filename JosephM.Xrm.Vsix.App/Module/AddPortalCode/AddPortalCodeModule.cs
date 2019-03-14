@@ -65,6 +65,11 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                                                 .ToArray();
                                             revm.GetFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.RecordsToInclude)).ValueObject = itemsForSelection;
                                             revm.OnPropertyChanged(nameof(AddPortalCodeRequest.PortalRecordsToExport.RecordsToInclude));
+
+                                            //okay so lets autoload the multi select
+                                            //if user has selected not to inlude all, then naturally they will have to select which specific ones
+                                            //so lets save a click!
+                                            grid.BulkAddButton.Invoke();
                                         }
                                     }
                                     catch (Exception ex)
