@@ -52,7 +52,8 @@ namespace JosephM.Xrm.Vsix.Test
                 .First(gr => gr.GetRecordTypeFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.RecordType)).Value.Key == Entities.adx_webtemplate);
 
             webTemplateRow.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.IncludeAll)).Value = false;
-            webTemplateRow.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.RecordsToInclude)).BulkAddButton.Invoke();
+            //this now auto runs when the flag above iunchecked
+            //webTemplateRow.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.RecordsToInclude)).BulkAddButton.Invoke();
 
             var templateRecordSelectionForm = entryForm.ChildForms.First() as MultiSelectDialogViewModel<PicklistOption>;
             templateRecordSelectionForm.ItemsSource.First().Select = true;
