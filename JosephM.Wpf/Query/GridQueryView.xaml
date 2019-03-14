@@ -23,8 +23,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <ScrollViewer Name="QueryScroll" VerticalScrollBarVisibility="Auto">
+    <Grid Name="MainQueryGrid">
+        <!--<ScrollViewer Name="QueryScroll" VerticalScrollBarVisibility="Auto">-->
             <Grid>
                 <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -65,52 +65,63 @@
                 <Grid Grid.Row="1" Visibility="{Binding RecordTypeSelected, Converter={StaticResource BoolToVis}}">
                     <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Visibility="{Binding QuickFindOrNotQueryRun, Converter={StaticResource BoolToVis}}" >
-                            <WrapPanel Orientation="Horizontal">
-                                <Grid Visibility="{Binding ReturnButton, Converter={StaticResource NullToHiddenConverter}}">
-                                    <shared:XrmButton DataContext="{Binding ReturnButton}" />
-                                </Grid>
-                                <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
-                                <WrapPanel Orientation="Horizontal"  Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
-                                    <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" />
-                                    <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" />
-                                    <shared:XrmButton DataContext="{Binding GroupSelectedConditionsAnd}" />
-                                    <shared:XrmButton DataContext="{Binding UngroupSelectedConditions}" />
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Visibility="{Binding QuickFindOrNotQueryRun, Converter={StaticResource BoolToVis}}" >
+                                <WrapPanel Orientation="Horizontal">
+                                    <Grid Visibility="{Binding ReturnButton, Converter={StaticResource NullToHiddenConverter}}">
+                                        <shared:XrmButton DataContext="{Binding ReturnButton}" />
+                                    </Grid>
+                                    <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
+                                    <WrapPanel Orientation="Horizontal"  Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                                        <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" />
+                                        <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" />
+                                        <shared:XrmButton DataContext="{Binding GroupSelectedConditionsAnd}" />
+                                        <shared:XrmButton DataContext="{Binding UngroupSelectedConditions}" />
+                                    </WrapPanel>
                                 </WrapPanel>
-                            </WrapPanel>
-                        </Grid>
-                    <Grid Grid.Row="1" Visibility="{Binding IsQuickFind, Converter={StaticResource BoolToVis}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition  />
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <TextBlock Text="Enter Search Text" Style="{StaticResource FieldLabelStyle}" />
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <TextBox Style="{StaticResource FieldEntryStyle}" Text="{Binding QuickFindText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="OnQuickFindKeyDown" >
-                            </TextBox>
-                        </Grid>
-                    </Grid>
-                        <Grid Grid.Row="2" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BoolToVis}}">
-                            <Border>
-                                    <StackPanel Orientation="Vertical">
-                                        <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
-                                        <query:JoinsView DataContext="{Binding Joins}" />
-                                    </StackPanel>
-                                </Border>
-                        </Grid>
-                        <Grid Grid.Row="3" >
+                            </Grid>
+                            <Grid Grid.Row="1" Visibility="{Binding IsQuickFind, Converter={StaticResource BoolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition  />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <TextBlock Text="Enter Search Text" Style="{StaticResource FieldLabelStyle}" />
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <TextBox Style="{StaticResource FieldEntryStyle}" Text="{Binding QuickFindText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="OnQuickFindKeyDown" >
+                                    </TextBox>
+                                </Grid>
+                            </Grid>
+                            <Grid MaxHeight="{Binding Path=ActualHeight,
+                       RelativeSource={RelativeSource FindAncestor,
+                                       AncestorType=Grid,
+                                       AncestorLevel=3}, Converter={StaticResource HeightAdjuster}, ConverterParameter=-140,
+                       UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BoolToVis}}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <Border>
+                                <StackPanel Orientation="Vertical">
+                                    <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
+                                    <query:JoinsView DataContext="{Binding Joins}" />
+                                </StackPanel>
+                                    </Border>
+                                </ScrollViewer>
+                            </Grid>
+                            <Grid Grid.Row="3" >
                                 <WrapPanel Orientation="Horizontal"  Visibility="{Binding QueryRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
                                     <shared:XrmButton DataContext="{Binding RunQueryButton}" />
                                 </WrapPanel>
                             </Grid>
-                            <Grid Grid.Row="4" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                        </Grid>
+                        <Grid Grid.Row="4" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
                         <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
                     </Grid>
                 </Grid>
@@ -123,6 +134,6 @@
             </Grid>
         </Grid>
         </Grid>
-    </ScrollViewer>
+    <!--</ScrollViewer>-->
   </Grid>
 </UserControl>

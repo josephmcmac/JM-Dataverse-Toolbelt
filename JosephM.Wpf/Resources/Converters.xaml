@@ -22,4 +22,5 @@
     <converters:LengthConverter x:Key="LengthConverter" />
     <converters:BooleanToMultiSelectConverter x:Key="BooleanToMultiSelectConverter" />
     <converters:StringTruncateConverter x:Key="StringTruncateConverter" />
+    <converters:HeightAdjuster x:Key="HeightAdjuster" />
 </ResourceDictionary>
