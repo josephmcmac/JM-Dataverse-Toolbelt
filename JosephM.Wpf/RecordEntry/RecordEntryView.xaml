@@ -79,9 +79,11 @@
                     <Grid Grid.Row="1" Visibility="{Binding Instruction, Converter={StaticResource NullToHiddenConverter}}">
                         <TextBox Style="{StaticResource HeadingStyleTextBox}"  Text="{Binding Mode=OneWay, Path=Instruction}"></TextBox>
                     </Grid>
-                    <Grid Grid.Row="2"  Visibility="{Binding ValidationPrompt, Converter={StaticResource NullToHiddenConverter}}">
-                    <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
-                </Grid>
+                    <Grid MaxHeight="250"  Grid.Row="2"  Visibility="{Binding ValidationPrompt, Converter={StaticResource NullToHiddenConverter}}">
+                        <ScrollViewer  VerticalScrollBarVisibility="Auto">
+                            <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
+                        </ScrollViewer>
+                    </Grid>
                     <Grid Grid.Row="3" Style="{StaticResource FormSectionsGrid}">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ItemsControl
