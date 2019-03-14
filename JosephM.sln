@@ -221,6 +221,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Autonumber", "Autonumber", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Autonumber", "JosephM.Xrm.Autonumber\JosephM.Xrm.Autonumber.csproj", "{021A835C-5674-4F77-8713-420A6CC1C854}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Autonumber.Test", "JosephM.Xrm.Autonumber.Test\JosephM.Xrm.Autonumber.Test.csproj", "{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -838,6 +840,18 @@ Global
 		{021A835C-5674-4F77-8713-420A6CC1C854}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{021A835C-5674-4F77-8713-420A6CC1C854}.Release|x86.ActiveCfg = Release|Any CPU
 		{021A835C-5674-4F77-8713-420A6CC1C854}.Release|x86.Build.0 = Release|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -914,10 +928,11 @@ Global
 		{47CB7C29-2618-4E81-A651-9880CA6CFC2E} = {750AC5D1-B85A-4912-8F27-1BC6541F79AA}
 		{761E90AB-DC0C-4CA8-AE05-3F4DC39EF926} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{021A835C-5674-4F77-8713-420A6CC1C854} = {761E90AB-DC0C-4CA8-AE05-3F4DC39EF926}
+		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D} = {761E90AB-DC0C-4CA8-AE05-3F4DC39EF926}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

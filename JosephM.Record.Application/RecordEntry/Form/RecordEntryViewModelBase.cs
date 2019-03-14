@@ -106,6 +106,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             return GetFieldViewModel<RecordTypeFieldViewModel>(fieldName);
         }
 
+        public BigIntFieldViewModel GetBigIntFieldViewModel(string fieldName)
+        {
+            return GetFieldViewModel<BigIntFieldViewModel>(fieldName);
+        }
+
         public RecordFieldFieldViewModel GetRecordFieldFieldViewModel(string fieldName)
         {
             return GetFieldViewModel<RecordFieldFieldViewModel>(fieldName);

@@ -1,10 +1,7 @@
-﻿using JosephM.Xrm.Schema;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Linq;
-using System.Xml;
 
 namespace JosephM.Xrm.Test
 {
@@ -15,8 +12,22 @@ namespace JosephM.Xrm.Test
         public void XrmDebug()
         {
             //var blah = XrmService.WhoAmI();
-            var eh = XrmConfiguration.OrganizationUniqueName;
-       }
+            //var eh = XrmConfiguration.OrganizationUniqueName;
+
+            //var folderContainingCsv = @"C:\ExampleFolderName";
+            //var csvFileName = "ExampleCsv.csv";
+            //var connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;"
+            //           + "Data Source=\"" + folderContainingCsv + "\\\";"
+            //           + "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"";
+            //var sql = "select * from [" + csvFileName + "]";
+
+            //var dTable = new DataTable();
+            //using (var dAdapter = new OleDbDataAdapter(sql, connectionString))
+            //{
+            //    dAdapter.Fill(dTable);
+            //}
+            //dTable.ro
+        }
 
         private void DeleteOnlineSampleData()
         {

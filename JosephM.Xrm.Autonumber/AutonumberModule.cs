@@ -160,9 +160,9 @@ namespace JosephM.Xrm.Autonumber
             }), typeof(AutonumberNavigator));
         }
 
-        private void RefreshFieldGrid(RecordEntryViewModelBase revm)
+        public static void RefreshFieldGrid(RecordEntryViewModelBase revm)
         {
-            ApplicationController.DoOnAsyncThread(() =>
+            revm.ApplicationController.DoOnAsyncThread(() =>
             {
                 revm.LoadingViewModel.IsLoading = true;
                 try
@@ -171,9 +171,9 @@ namespace JosephM.Xrm.Autonumber
                     var recordType = revm.GetRecordTypeFieldViewModel(nameof(AutonumberNavigator.RecordType));
                     var recordTypeName = recordType.Value?.Key;
                     var autonumberFieldsField = revm.GetEnumerableFieldViewModel(nameof(AutonumberNavigator.AutonumberFields));
-                    foreach (var gridRow in autonumberFieldsField.GridRecords)
+                    foreach (var gridRow in autonumberFieldsField.GridRecords.ToArray())
                     {
-                        ApplicationController.DoOnMainThread(() => autonumberFieldsField.GridRecords.Remove(gridRow));
+                        revm.ApplicationController.DoOnMainThread(() => autonumberFieldsField.GridRecords.Remove(gridRow));
                     }
                     if (!string.IsNullOrWhiteSpace(recordTypeName))
                     {
@@ -189,7 +189,7 @@ namespace JosephM.Xrm.Autonumber
                             autonumberFieldsField.InsertRecord(newRecord, 0);
                         }
                     }
-                    ApplicationController.DoOnMainThread(() => autonumberFieldsField.DynamicGridViewModel.RefreshGridButtons());
+                    revm.ApplicationController.DoOnMainThread(() => autonumberFieldsField.DynamicGridViewModel.RefreshGridButtons());
                 }
                 finally
                 {

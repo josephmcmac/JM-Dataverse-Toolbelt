@@ -253,7 +253,10 @@ namespace JosephM.Application.Desktop.Test
         {
             var typeSelection = addDialog.SubDialogs.ElementAt(index) as ObjectEntryDialogBase;
             Assert.IsNotNull(typeSelection);
+            if (typeSelection.ViewModel == null)
+                addDialog.LoadDialog();
             var viewModel = typeSelection.ViewModel;
+            Assert.IsNotNull(viewModel);
             viewModel.LoadFormSections();
             return viewModel;
         }

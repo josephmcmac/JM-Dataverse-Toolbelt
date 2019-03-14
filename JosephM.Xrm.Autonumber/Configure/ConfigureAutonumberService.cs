@@ -3,6 +3,7 @@ using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
+using System.Threading;
 
 namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
 {
@@ -29,6 +30,9 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
             if (stringFieldMetadata == null)
                 throw new Exception($"Field {fieldName} In {recordType} Is Not Of Type {nameof(StringAttributeMetadata)}");
 
+            //apparently if null doesnt apply the clear so lets set as empty string if null
+            request.AutonumberFormat = request.AutonumberFormat ?? string.Empty;
+
             if (stringFieldMetadata.AutoNumberFormat != request.AutonumberFormat)
             {
                 controller.UpdateProgress(2, 5, "Setting Format");
@@ -51,7 +55,10 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
                 };
                 xrmService.Execute(req);
             }
+
             controller.UpdateProgress(5, 5, "Finishing");
+
+            Thread.Sleep(5000);
         }
     }
 }
