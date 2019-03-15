@@ -536,7 +536,7 @@ namespace JosephM.Application.ViewModel.Grid
                     if (_fieldMetadata == null && RecordService != null)
                     {
                         _fieldMetadata =
-                            RecordType == null
+                            RecordType == null || RecordType == "none" //dynamics was oddly loading none as the record type for some system jobs. Possibly where the type got deleted?
                             ? new GridFieldMetadata[0]
                             : RecordService.GetGridFields(RecordType, ViewType);
                     }
