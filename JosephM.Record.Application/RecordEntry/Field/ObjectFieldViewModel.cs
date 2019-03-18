@@ -144,7 +144,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 foreach (var item in ItemsSource)
                 {
-                    if (((ObjectRecord) item.Record).Instance.ToString() == ValueObject.ToString())
+                    if (item.Record != null && ((ObjectRecord) item.Record).Instance.ToString() == ValueObject.ToString())
                     {
                         return item;
                     }
