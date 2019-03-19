@@ -13,5 +13,7 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             var applicationInsightsLogger = new ApplicationInsightsLogger(InstrumentationKey, ApplicationController);
             ApplicationController.AddLogger(applicationInsightsLogger);
         }
+
+        public override string MainOperationName => "Usage Logging";
     }
 }

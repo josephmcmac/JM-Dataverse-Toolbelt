@@ -70,7 +70,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<CustomisationExporterModule>();
             app.AddModule<RecordCountsModule>();
             app.AddModule<AddPortalDataModule>();
-            app.AddModule<XrmPackageApplicationInsightsModule>();
+            app.AddModule<XrmPackageApplicationInsightsModule>(0x011E);
             return app;
         }
 
