@@ -283,7 +283,7 @@
       <Button guid="guidXrmPackageCmdSet" id="UsageLoggingCommandId" priority="0x0108" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
-          <ButtonText>Usage Logging</ButtonText>
+          <ButtonText>Use Logging</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="AddPortalCodeCommandId" priority="0x0105" type="Button">

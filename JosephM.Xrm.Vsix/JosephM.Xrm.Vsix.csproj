@@ -65,6 +65,10 @@
     <Compile Include="XrmPackage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="JosephM.Xrm.Vsix EULA.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\RefreshSettingsCommand.png" />
     <Content Include="Resources\XrmPackage.ico" />
     <Content Include="_readme.txt" />

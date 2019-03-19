@@ -47,33 +47,21 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
 
         public void LogEvent(string eventName, IDictionary<string, string> properties = null)
         {
-            var settings = GetSettings();
-            if (!settings.AllowUsageStatisticsLoaded)
-            {
-                var allow = ApplicationController.UserConfirmation("This application wants to capture anonymous usage statistics to help improve features\n\nClick yes to allow anonymous usage statistics or click no to opt out");
-                settings.AllowUsageStatisticsLoaded = true;
-                settings.AllowUsageStatistics = allow;
-                ApplicationController.ResolveType<ISettingsManager>().SaveSettingsObject(settings);
-                ApplicationController.RegisterInstance<ApplicationInsightsSettings>(settings);
-            }
-            if (!IsDebugMode && settings.AllowUsageStatistics)
+            if (GetDoLogging())
             {
                 TelemetryClient.TrackEvent(eventName, properties);
             }
         }
 
-        private ApplicationInsightsSettings GetSettings()
-        {
-            return ApplicationController.ResolveType<ApplicationInsightsSettings>();
-        }
-
         public void LogException(Exception ex)
         {
-            var settings = GetSettings();
-            if (!IsDebugMode && settings.AllowUsageStatistics)
-            {
-                ApplicationController.LogEvent("General Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
-            }
+            LogEvent("General Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
+        }
+
+        private bool GetDoLogging()
+        {
+            var settings = ApplicationController.ResolveType<ApplicationInsightsSettings>();
+            return !IsDebugMode && settings.AllowUseLogging;
         }
     }
 }
