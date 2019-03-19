@@ -1,16 +1,13 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.Extentions;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.Dialog
 {
@@ -140,6 +137,7 @@ namespace JosephM.Application.ViewModel.Dialog
                     ParentDialog.StartNextAction();
                 else
                 {
+                    ApplicationController.LogEvent(DialogEventName + " Completed");
                     if (OverideCompletionScreenMethod != null)
                         OverideCompletionScreenMethod();
                     else
@@ -161,6 +159,8 @@ namespace JosephM.Application.ViewModel.Dialog
                     LoadingViewModel.IsLoading = true;
                     try
                     {
+                        if (ParentDialog == null)
+                            ApplicationController.LogEvent(DialogEventName + " Loaded");
                         LoadDialogExtention();
                     }
                     catch (Exception ex)
@@ -180,6 +180,8 @@ namespace JosephM.Application.ViewModel.Dialog
                 });
         }
 
+        private string DialogEventName => GetType().GetDisplayName();
+
         protected void ProcessError(Exception ex)
         {
             //note also used in CompleteDialog determining not to continue to next action
@@ -188,6 +190,7 @@ namespace JosephM.Application.ViewModel.Dialog
                 ParentDialog.ProcessError(ex);
             else
             {
+                ApplicationController.LogEvent(DialogEventName + " Fatal Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
                 CompletionMessage = string.Format("Fatal error:\n{0}", ex.DisplayString());
                 Controller.ShowCompletionScreen(this);
             }
@@ -224,7 +227,7 @@ namespace JosephM.Application.ViewModel.Dialog
                         //if we have an application which does not spawn async threads
                         //and a fatal error has been thrown at completion processing
                         //then allow that error to find its way up the stack
-                        if (DialogCompletionCommit)
+                        if (DialogCompletionCommit && !Thread.CurrentThread.IsBackground)
                             throw;
                         else
                             ProcessError(ex);

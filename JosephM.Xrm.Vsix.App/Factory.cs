@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Desktop.Module.AboutModule;
+using JosephM.Application.Desktop.Module.ApplicationInsights;
 using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.Core.AppConfig;
@@ -19,7 +20,6 @@ using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using JosephM.Xrm.Vsix.Module.DeployIntoField;
 using JosephM.Xrm.Vsix.Module.DeployPackage;
 using JosephM.Xrm.Vsix.Module.DeployWebResource;
-using JosephM.Xrm.Vsix.Module.ImportCsvs;
 using JosephM.Xrm.Vsix.Module.ImportRecords;
 using JosephM.Xrm.Vsix.Module.ImportSolution;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
@@ -70,6 +70,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<CustomisationExporterModule>();
             app.AddModule<RecordCountsModule>();
             app.AddModule<AddPortalDataModule>();
+            app.AddModule<XrmPackageApplicationInsightsModule>();
             return app;
         }
 
@@ -89,6 +90,11 @@ namespace JosephM.Xrm.Vsix.App
                 "My desktop application also shares many of these features, as well includes others. It can be download at the link shown below\n" +
                 "\n" +
                 "If you use this extention and experience issues, or have any suggestions for improvement, create an issue in github with the link shown below and I will look into it when I get a chance";
+        }
+
+        public class XrmPackageApplicationInsightsModule : ApplicationInsightsModule
+        {
+            public override string InstrumentationKey => "c4de0a87-25be-4678-8585-38caf2b1cfa0";
         }
     }
 }

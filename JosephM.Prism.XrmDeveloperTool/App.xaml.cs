@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.Desktop.Application;
 using JosephM.Application.Desktop.Console;
 using JosephM.Application.Desktop.Module.AboutModule;
+using JosephM.Application.Desktop.Module.ApplicationInsights;
 using JosephM.Application.Desktop.Module.ReleaseCheckModule;
 using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.Application.Desktop.Module.Themes;
@@ -48,6 +49,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<SavedConnectionAppConnectionModule>();
             app.AddModule<AutonumberModule>();
             app.AddModule<ThemeModule>();
+            app.AddModule<DevAppApplicationInsightsModule>();
             app.Run();
         }
 
@@ -72,6 +74,11 @@ namespace JosephM.XrmDeveloperTool
             public override string Githubusername { get { return "josephmcmac"; } }
 
             public override string GithubRepository { get { return "XRM-Developer-Tool"; } }
+        }
+
+        public class DevAppApplicationInsightsModule : ApplicationInsightsModule
+        {
+            public override string InstrumentationKey => "c4de0a87-25be-4678-8585-38caf2b1cfa0";
         }
     }
 }

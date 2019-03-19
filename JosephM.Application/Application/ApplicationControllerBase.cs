@@ -32,6 +32,19 @@ namespace JosephM.Application.Application
             Notifications = new ObservableCollection<Notification>();
         }
 
+        public void LogEvent(string eventName, IDictionary<string, string> properties = null)
+        {
+            foreach(var item in _loggers.ToArray())
+            {
+                item.LogEvent(eventName, properties);
+            }
+        }
+
+        public void AddLogger(IApplicationLogger applicationLogger)
+        {
+            _loggers.Add(applicationLogger);
+        }
+
         public void AddNotification(string id, string notification, bool isLoading = false)
         {
             DoOnMainThread(() =>
@@ -53,6 +66,8 @@ namespace JosephM.Application.Application
         }
 
         public ObservableCollection<Notification> Notifications { get; private set; }
+
+        private List<IApplicationLogger> _loggers = new List<IApplicationLogger>();
 
         public abstract void Remove(object item);
 
@@ -133,6 +148,10 @@ namespace JosephM.Application.Application
 
         public virtual void ThrowException(Exception ex)
         {
+            foreach (var item in _loggers.ToArray())
+            {
+                item.LogException(ex);
+            }
             UserMessage(ex.DisplayString());
         }
 

@@ -74,6 +74,7 @@
     <Compile Include="Application\ApplicationBase.cs" />
     <Compile Include="Application\ApplicationControllerBase.cs" />
     <Compile Include="Application\Extensions.cs" />
+    <Compile Include="Application\IApplicationLogger.cs" />
     <Compile Include="Application\ISettingsManager.cs" />
     <Compile Include="Application\DependencyContainer.cs" />
     <Compile Include="Application\NavigationEvents.cs" />

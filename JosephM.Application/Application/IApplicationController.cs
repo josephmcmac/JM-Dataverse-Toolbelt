@@ -1,11 +1,7 @@
-﻿#region
-
-using JosephM.Core.AppConfig;
+﻿using JosephM.Core.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
-#endregion
 
 namespace JosephM.Application.Application
 {
@@ -82,5 +78,9 @@ namespace JosephM.Application.Application
         bool IsTabbedApplication { get; }
 
         object ActiveTabItem { get; set; }
+
+        void AddLogger(IApplicationLogger applicationLogger);
+
+        void LogEvent(string eventame, IDictionary<string, string> properties = null);
     }
 }
