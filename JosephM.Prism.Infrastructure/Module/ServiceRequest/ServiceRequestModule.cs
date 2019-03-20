@@ -47,7 +47,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
         {
             return new CommandLineArgument[]
                 {
-                    new CommandLineArgument("Request", "name Of The Saved Reequiest To Process", (s) =>
+                    new CommandLineArgument("Request", "Name Of The Saved Request To Process", (s) =>
                         {
                             //load the saved object into the unity container
                             //so when the request dialog runs it loads it
