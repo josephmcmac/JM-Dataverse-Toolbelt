@@ -40,69 +40,78 @@ namespace JosephM.Application.Desktop.Console
 
         private void GenerateBat(DynamicGridViewModel grid)
         {
-            var selectedRows = grid.SelectedRows;
-            if(selectedRows.Count() != 1)
+            try
             {
-                ApplicationController.UserMessage("Only 1 Row May Be Selected For The Generate Bat Option");
-            }
-            else
-            {
-                var selectedRow = selectedRows.First();
-                var name = selectedRow.GetStringFieldFieldViewModel(nameof(IAllowSaveAndLoad.Name)).Value;
-                var codeBase = Assembly.GetExecutingAssembly().Location;
-                var uri = new UriBuilder(codeBase);
-                string executableConsoleApp = Uri.UnescapeDataString(uri.Path);
+                var selectedRows = grid.SelectedRows;
+                if (selectedRows.Count() != 1)
+                {
+                    ApplicationController.UserMessage("Only 1 Row May Be Selected For The Generate Bat Option");
+                }
+                else
+                {
+                    var selectedRow = selectedRows.First();
+                    var name = selectedRow.GetStringFieldFieldViewModel(nameof(IAllowSaveAndLoad.Name)).Value;
+                    var codeBase = Assembly.GetExecutingAssembly().Location;
+                    var uri = new UriBuilder(codeBase);
+                    string executableConsoleApp = Uri.UnescapeDataString(uri.Path);
 
-                var arguments = new Dictionary<string, string>
+                    var arguments = new Dictionary<string, string>
                 {
                     { "SettingsFolderName", ApplicationController.ApplicationName },
                     { "Request", name },
                     { "LogPath", "Log" },
                 };
 
-                //get the module implementing the request type
-                var moduleController = ApplicationController.ResolveType(typeof(ModuleController)) as ModuleController;
-                if (moduleController == null)
-                    throw new NullReferenceException(typeof(ModuleController).Name);
+                    //get the module implementing the request type
+                    var moduleController = ApplicationController.ResolveType(typeof(ModuleController)) as ModuleController;
+                    if (moduleController == null)
+                        throw new NullReferenceException(typeof(ModuleController).Name);
 
-                var matchingModules = moduleController
-                    .GetLoadedModules()
-                    .Where(module => module is ICommandLineExecutable && ((ICommandLineExecutable)module).RequestType.AssemblyQualifiedName == grid.RecordType)
-                    .Cast<ICommandLineExecutable>()
-                    .ToArray();
+                    var matchingModules = moduleController
+                        .GetLoadedModules()
+                        .Where(module => module is ICommandLineExecutable && ((ICommandLineExecutable)module).RequestType.AssemblyQualifiedName == grid.RecordType)
+                        .Cast<ICommandLineExecutable>()
+                        .ToArray();
 
-                if (!matchingModules.Any())
-                    throw new NullReferenceException(string.Format("Could Not Find {0} Implementing {1} With {2} {3}", typeof(ModuleBase).Name, typeof(ICommandLineExecutable).Name, nameof(ICommandLineExecutable.RequestType), grid.RecordType));
-                if (matchingModules.Count() > 1)
-                    throw new NullReferenceException(string.Format("Error Multiple {0} Found Implementing {1} With {2} {3}", typeof(ModuleBase).Name, typeof(ICommandLineExecutable).Name, nameof(ICommandLineExecutable.RequestType), grid.RecordType));
+                    if (!matchingModules.Any())
+                        throw new NullReferenceException(string.Format("Could Not Find {0} Implementing {1} With {2} {3}", typeof(ModuleBase).Name, typeof(ICommandLineExecutable).Name, nameof(ICommandLineExecutable.RequestType), grid.RecordType));
+                    if (matchingModules.Count() > 1)
+                        throw new NullReferenceException(string.Format("Error Multiple {0} Found Implementing {1} With {2} {3}", typeof(ModuleBase).Name, typeof(ICommandLineExecutable).Name, nameof(ICommandLineExecutable.RequestType), grid.RecordType));
 
-                var executableModule = matchingModules.First();
+                    var executableModule = matchingModules.First();
 
-                //okay so since some of the dialogs use the active xrm connection
-                //then we should use that specific connection in the generated bat
-                if(RequiresActiveConnection(executableModule.GetType()))
-                {
-                    var savedConnection = Controller.Container.ResolveType(typeof(IXrmRecordConfiguration)) as XrmRecordConfiguration;
-                    if (savedConnection == null)
-                        throw new NullReferenceException("The Active Connection Must Be A Saved Connection");
+                    //okay so since some of the dialogs use the active xrm connection
+                    //then we should use that specific connection in the generated bat
+                    if (RequiresActiveConnection(executableModule.GetType()))
+                    {
+                        var savedConnection = Controller.Container.ResolveType(typeof(IXrmRecordConfiguration)) as XrmRecordConfiguration;
+                        if (savedConnection == null)
+                            throw new NullReferenceException("The Active Connection Must Be A Saved Connection");
 
-                    arguments.Add("ActiveXrmConnection", savedConnection.Name);
+                        arguments.Add("ActiveXrmConnection", savedConnection.Name);
+                    }
+
+                    ApplicationController.LogEvent("Generate Bat", new Dictionary<string, string> { { "Type", executableModule.RequestType.Name } });
+
+                    //var blah = module.BaseType.GenericTypeArguments[1].GetConstructors().First().GetParameters().Any(p => p.ParameterType == typeof(XrmRecordService));
+
+
+                    var commandLine = string.Format("\"{0}\" \"{1}\" {2}", executableConsoleApp, executableModule.CommandName, string.Join(" ", arguments.Select(kv => string.Format("-\"{0}\" \"{1}\"", kv.Key, kv.Value))));
+
+                    var newFileName = ApplicationController.GetSaveFileName(string.Format("{0} {1}.bat", executableModule.CommandName, name), "bat");
+
+                    if (newFileName != null)
+                    {
+                        var folder = Path.GetDirectoryName(newFileName);
+                        var fileName = Path.GetFileName(newFileName);
+                        FileUtility.WriteToFile(folder, fileName, commandLine);
+                        ApplicationController.StartProcess("explorer.exe", "/select, \"" + Path.Combine(folder, fileName) + "\"");
+                    }
                 }
-
-                //var blah = module.BaseType.GenericTypeArguments[1].GetConstructors().First().GetParameters().Any(p => p.ParameterType == typeof(XrmRecordService));
-
-
-                var commandLine = string.Format("\"{0}\" \"{1}\" {2}", executableConsoleApp, executableModule.CommandName, string.Join(" ", arguments.Select(kv => string.Format("-\"{0}\" \"{1}\"", kv.Key, kv.Value))));
-
-                var newFileName = ApplicationController.GetSaveFileName(string.Format("{0} {1}.bat", executableModule.CommandName, name), "bat");
-
-                if (newFileName != null)
-                {
-                    var folder = Path.GetDirectoryName(newFileName);
-                    var fileName = Path.GetFileName(newFileName);
-                    FileUtility.WriteToFile(folder, fileName, commandLine);
-                    ApplicationController.StartProcess("explorer.exe", "/select, \"" + Path.Combine(folder, fileName) + "\"");
-                }
+            }
+            catch(Exception ex)
+            {
+                ApplicationController.ThrowException(ex);
             }
         }
 

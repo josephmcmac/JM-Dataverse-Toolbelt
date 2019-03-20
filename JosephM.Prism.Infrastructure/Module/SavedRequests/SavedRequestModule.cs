@@ -162,6 +162,8 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
         private static void LoadSavedObject(object selectedObject, ObjectEntryViewModel loadIntoForm)
         {
             var formObject = loadIntoForm.GetObject();
+            loadIntoForm.ApplicationController.LogEvent("Load Request Loaded", new Dictionary<string, string> { { "Type", formObject.GetType().Name } });
+
             var mapper = new ClassSelfMapper();
             mapper.Map(selectedObject, formObject);
             if (formObject is ServiceRequestBase)
@@ -177,6 +179,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
             {
                 grid.DynamicGridViewModel.ReloadGrid();
             }
+            loadIntoForm.ApplicationController.LogEvent("Load Request Completed", new Dictionary<string, string> { { "Type", formObject.GetType().Name } });
         }
 
         /// <summary>
@@ -191,6 +194,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                     var oevm = re as ObjectEntryViewModel;
                     var theObject = oevm.GetObject();
                     var theObjectType = theObject.GetType();
+                    ApplicationController.LogEvent("Edit Saved Requests Loaded", new Dictionary<string, string> { { "Type", theObjectType.Name } });
 
                     var settingsManager = ApplicationController.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
                     if (settingsManager == null)
@@ -241,6 +245,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                         new FormController(recordService, formService, ApplicationController), re, "LOADING", onlyValidate: onlyValidate);
 
                     oevm.LoadChildForm(vm);
+                    ApplicationController.LogEvent("Edit Saved Requests Completed", new Dictionary<string, string> { { "Type", theObjectType.Name } });
                 }
             }
             catch (Exception ex)
@@ -267,6 +272,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                     if (!theObjectType.IsTypeOf(typeof(IAllowSaveAndLoad)))
                         throw new Exception(string.Format("type {0} is not of type {1}", theObjectType.Name, typeof(IAllowSaveAndLoad).Name));
 
+                    ApplicationController.LogEvent("Save Request Loaded", new Dictionary<string,string> { { "Type", theObjectType.Name } });
                     //this is an object specifically for entering the name and autoload properties
                     //they are mapped into the IAllowSaveAndLoad object after entry then it is saved
                     var saveObject = new SaveAndLoadFields();
@@ -289,7 +295,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                         //add the one and save
                         settings.SavedRequests = settings.SavedRequests.Union(new[] { theObject }).ToArray();
                         settingsManager.SaveSettingsObject(settings, theObjectType);
-
+                        ApplicationController.LogEvent("Save Request Completed", new Dictionary<string, string> { { "Type", theObjectType.Name }, { "Autoload", saveObject.Autoload.ToString() } });
                         //reload the form and notify
                         viewModel.ClearChildForms();
                         viewModel.LoadCustomFunctions();
