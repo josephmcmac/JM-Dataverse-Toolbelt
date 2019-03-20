@@ -47,8 +47,10 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
 
         public void LogEvent(string eventName, IDictionary<string, string> properties = null)
         {
-            if (GetDoLogging())
+            var settings = ApplicationController.ResolveType<ApplicationInsightsSettings>();
+            if (!IsDebugMode && settings.AllowUseLogging)
             {
+                TelemetryClient.Context.User.Id = settings.AllowCaptureUsername ? Environment.UserName : "Anonymous";
                 TelemetryClient.TrackEvent(eventName, properties);
             }
         }
@@ -56,12 +58,6 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
         public void LogException(Exception ex)
         {
             LogEvent("General Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
-        }
-
-        private bool GetDoLogging()
-        {
-            var settings = ApplicationController.ResolveType<ApplicationInsightsSettings>();
-            return !IsDebugMode && settings.AllowUseLogging;
         }
     }
 }

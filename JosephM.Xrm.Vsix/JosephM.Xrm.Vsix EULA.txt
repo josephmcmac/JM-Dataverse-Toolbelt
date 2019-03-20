@@ -1,3 +1,4 @@
-This extension logs anonymous use statistics and errors to application insights. Some location information is automatically captured but no user or machine names are included in the data submitted
+This extension logs anonymous use statistics and errors to application insights. Some location information is automatically captured but unless you opt in no user information is included in the data submitted
 The logged data is used by the author to improve functionality, count feature use, and identify unknown errors being thrown
-By using this extension you agree to this. If you do not want to log use this can be changed in the Xrm menu by right clicking the solution in solution explorer
+By using this extension you agree to this. If you do not want to log use this can be changed in the extentions settings by right clicking a solution in solution explorer and selecting the Use Logging option in the Xrm menu
+To allow the extention to include your username in the information submitted please set this option in the Use Logging settings in the Xrm menu. This will assist with reporting on numbers of users
