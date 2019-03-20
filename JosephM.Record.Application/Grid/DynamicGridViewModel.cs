@@ -466,6 +466,7 @@ namespace JosephM.Application.ViewModel.Grid
                 {
                     GridLoadError = true;
                     ErrorMessage = string.Format("There was an error loading data into the grid: {0}", ex.DisplayString());
+                    ApplicationController.LogEvent("Grid Load Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() }, { "Record Type", RecordType } });
                     if (LoadedCallback != null)
                         LoadedCallback();
                     LoadingViewModel.IsLoading = false;

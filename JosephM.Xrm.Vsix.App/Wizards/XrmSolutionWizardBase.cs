@@ -21,6 +21,7 @@ namespace JosephM.Xrm.Vsix.Wizards
 {
     public class XrmSolutionWizardBase : MyWizardBase
     {
+        public VsixApplication VsixApplication { get; set; }
         public XrmPackageSettings XrmPackageSettings { get; set; }
         public string DestinationDirectory { get; private set; }
         public string SafeProjectName { get; private set; }
@@ -32,25 +33,34 @@ namespace JosephM.Xrm.Vsix.Wizards
 
             var container = new DependencyContainer();
             var app = Factory.CreateJosephMXrmVsixApp(new VisualStudioService(DTE), container, isWizardContext: true);
-
-            if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && (replacementsDictionary["$specifiedsolutionname$"] == null || replacementsDictionary["$specifiedsolutionname$"] == ""))
+            VsixApplication = app;
+            app.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Loaded");
+            try
             {
-                app.Controller.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");
+                if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && (replacementsDictionary["$specifiedsolutionname$"] == null || replacementsDictionary["$specifiedsolutionname$"] == ""))
+                {
+                    app.Controller.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");
+                }
+
+                var solutionName = replacementsDictionary.ContainsKey("$specifiedsolutionname$")
+                    && replacementsDictionary["$specifiedsolutionname$"] != null
+                    ? replacementsDictionary["$specifiedsolutionname$"]
+                    : null;
+
+                RunWizardSettingsEntry(XrmPackageSettings, app.VsixApplicationController, solutionName);
+
+                //add token replacements for the template projects
+                AddReplacements(replacementsDictionary, XrmPackageSettings);
+
+                //used later
+                DestinationDirectory = replacementsDictionary["$destinationdirectory$"];
+                SafeProjectName = replacementsDictionary["$safeprojectname$"];
             }
-
-            var solutionName = replacementsDictionary.ContainsKey("$specifiedsolutionname$")
-                && replacementsDictionary["$specifiedsolutionname$"] != null
-                ? replacementsDictionary["$specifiedsolutionname$"]
-                : null;
-
-            RunWizardSettingsEntry(XrmPackageSettings, app.VsixApplicationController, solutionName);
-
-            //add token replacements for the template projects
-            AddReplacements(replacementsDictionary, XrmPackageSettings);
-
-            //used later
-            DestinationDirectory = replacementsDictionary["$destinationdirectory$"];
-            SafeProjectName = replacementsDictionary["$safeprojectname$"];
+            catch (Exception ex)
+            {
+                app.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Fatal Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
+                throw;
+            }
         }
 
         public static void RunWizardSettingsEntry(XrmPackageSettings packageSettings, VsixApplicationController applicationController, string solutionName)
@@ -74,97 +84,107 @@ namespace JosephM.Xrm.Vsix.Wizards
 
         public override void RunFinishedExtention()
         {
-            if (DestinationDirectory.EndsWith(SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName))
+            try
             {
-                //The projects were created under a seperate folder -- lets fix it
-
-                //first move each projects up a directory
-                var projectsObjects = new List<Project>();
-                foreach (Project childProject in DTE.Solution.Projects)
+                if (DestinationDirectory.EndsWith(SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName))
                 {
-                    var fileName = childProject.FileName;
-                    if (!string.IsNullOrEmpty(fileName)) //Solution Folder
+                    //The projects were created under a seperate folder -- lets fix it
+
+                    //first move each projects up a directory
+                    var projectsObjects = new List<Project>();
+                    foreach (Project childProject in DTE.Solution.Projects)
                     {
-                        var projectBadPath = fileName;
-                        var projectGoodPath = projectBadPath.Replace(
-                            SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName + Path.DirectorySeparatorChar,
-                            SafeProjectName + Path.DirectorySeparatorChar);
-
-                        DTE.Solution.Remove(childProject);
-
-                        Directory.Move(Path.GetDirectoryName(projectBadPath), Path.GetDirectoryName(projectGoodPath));
-
-                        DTE.Solution.AddFromFile(projectGoodPath);
-                    }
-                }
-                //now add the references to the plugin project
-                //because they got removed when we move the project folders
-                Project pluginProject = null;
-                foreach (Project childProject in DTE.Solution.Projects)
-                {
-                    var fileName = childProject.FileName;
-                    if (!string.IsNullOrEmpty(fileName)) //Solution Folder
-                    {
-                        if (fileName.EndsWith(".Plugins.csproj"))
+                        var fileName = childProject.FileName;
+                        if (!string.IsNullOrEmpty(fileName)) //Solution Folder
                         {
-                            pluginProject = childProject;
+                            var projectBadPath = fileName;
+                            var projectGoodPath = projectBadPath.Replace(
+                                SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName + Path.DirectorySeparatorChar,
+                                SafeProjectName + Path.DirectorySeparatorChar);
+
+                            DTE.Solution.Remove(childProject);
+
+                            Directory.Move(Path.GetDirectoryName(projectBadPath), Path.GetDirectoryName(projectGoodPath));
+
+                            DTE.Solution.AddFromFile(projectGoodPath);
+                        }
+                    }
+                    //now add the references to the plugin project
+                    //because they got removed when we move the project folders
+                    Project pluginProject = null;
+                    foreach (Project childProject in DTE.Solution.Projects)
+                    {
+                        var fileName = childProject.FileName;
+                        if (!string.IsNullOrEmpty(fileName)) //Solution Folder
+                        {
+                            if (fileName.EndsWith(".Plugins.csproj"))
+                            {
+                                pluginProject = childProject;
+                            }
+                        }
+                    }
+                    foreach (Project childProject in DTE.Solution.Projects)
+                    {
+                        var fileName = childProject.FileName;
+                        if (!string.IsNullOrEmpty(fileName)) //Solution Folder
+                        {
+                            if (fileName.EndsWith(".Test.csproj")
+                                || fileName.EndsWith(".Console.csproj"))
+                            {
+                                VSProject vsProj = (VSProject)childProject.Object;
+                                vsProj.References.AddProject(pluginProject);
+                            }
                         }
                     }
                 }
-                foreach (Project childProject in DTE.Solution.Projects)
+
+                if (DestinationDirectory.EndsWith(SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName))
+                    DestinationDirectory = DestinationDirectory.Substring(0, DestinationDirectory.Length - (Path.DirectorySeparatorChar + SafeProjectName).Length);
+
+                //okay so lets update the encrypt connection bat and the xrmsetting.txt files in the console project
+                var consoleProjectPath = DestinationDirectory + Path.DirectorySeparatorChar + SafeProjectName + ".Console";
+                var encryptBatFileName = consoleProjectPath + Path.DirectorySeparatorChar + "Encrypt XRM Connection.bat";
+                if (File.Exists(encryptBatFileName))
                 {
-                    var fileName = childProject.FileName;
-                    if (!string.IsNullOrEmpty(fileName)) //Solution Folder
+                    var read = File.ReadAllText(encryptBatFileName);
+                    read = read.Replace("$ext_safeprojectname$", SafeProjectName);
+                    File.WriteAllText(encryptBatFileName, read);
+                }
+                var consoleConnectionFileName = consoleProjectPath + Path.DirectorySeparatorChar + "XrmSetting.txt";
+                if (File.Exists(consoleConnectionFileName))
+                {
+                    if (XrmPackageSettings != null && XrmPackageSettings.Connections != null && XrmPackageSettings.Connections.Any())
                     {
-                        if (fileName.EndsWith(".Test.csproj")
-                            || fileName.EndsWith(".Console.csproj"))
+                        try
                         {
-                            VSProject vsProj = (VSProject)childProject.Object;
-                            vsProj.References.AddProject(pluginProject);
+                            var connection = XrmPackageSettings.Connections.First();
+                            var serialise = ObjectToJsonString(connection);
+                            File.WriteAllText(consoleConnectionFileName, serialise);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error setting console application connection: " + ex.DisplayString());
                         }
                     }
                 }
+
+                var visualStudioService = new VisualStudioService(DTE, useSolutionDirectory: DestinationDirectory);
+                //add xrm connection and package settings to solution items
+                var vsixSettingsManager = new VsixSettingsManager(visualStudioService, null);
+                vsixSettingsManager.SaveSettingsObject(XrmPackageSettings);
+                if (XrmPackageSettings.Connections.Any())
+                    vsixSettingsManager.SaveSettingsObject(XrmPackageSettings.Connections.First());
+                visualStudioService.CloseAllDocuments();
+
+                RemoveEmptyFolders(DestinationDirectory);
+
+                VsixApplication.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Completed");
             }
-
-            if (DestinationDirectory.EndsWith(SafeProjectName + Path.DirectorySeparatorChar + SafeProjectName))
-                DestinationDirectory = DestinationDirectory.Substring(0, DestinationDirectory.Length - (Path.DirectorySeparatorChar + SafeProjectName).Length);
-
-            //okay so lets update the encrypt connection bat and the xrmsetting.txt files in the console project
-            var consoleProjectPath = DestinationDirectory + Path.DirectorySeparatorChar + SafeProjectName + ".Console";
-            var encryptBatFileName = consoleProjectPath + Path.DirectorySeparatorChar + "Encrypt XRM Connection.bat";
-            if(File.Exists(encryptBatFileName))
+            catch (Exception ex)
             {
-                var read = File.ReadAllText(encryptBatFileName);
-                read = read.Replace("$ext_safeprojectname$", SafeProjectName);
-                File.WriteAllText(encryptBatFileName, read);
+                VsixApplication.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Fatal Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
+                throw;
             }
-            var consoleConnectionFileName = consoleProjectPath + Path.DirectorySeparatorChar + "XrmSetting.txt";
-            if (File.Exists(consoleConnectionFileName))
-            {
-                if(XrmPackageSettings != null && XrmPackageSettings.Connections != null && XrmPackageSettings.Connections.Any())
-                {
-                    try
-                    {
-                        var connection = XrmPackageSettings.Connections.First();
-                        var serialise = ObjectToJsonString(connection);
-                        File.WriteAllText(consoleConnectionFileName, serialise);
-                    }
-                    catch(Exception ex)
-                    {
-                        MessageBox.Show("Error setting console application connection: " + ex.DisplayString());
-                    }
-                }
-            }
-
-            var visualStudioService = new VisualStudioService(DTE, useSolutionDirectory: DestinationDirectory);
-            //add xrm connection and package settings to solution items
-            var vsixSettingsManager = new VsixSettingsManager(visualStudioService, null);
-            vsixSettingsManager.SaveSettingsObject(XrmPackageSettings);
-            if (XrmPackageSettings.Connections.Any())
-                vsixSettingsManager.SaveSettingsObject(XrmPackageSettings.Connections.First());
-            visualStudioService.CloseAllDocuments();
-
-            RemoveEmptyFolders(DestinationDirectory);
         }
 
         public void RemoveEmptyFolders(string directory)
