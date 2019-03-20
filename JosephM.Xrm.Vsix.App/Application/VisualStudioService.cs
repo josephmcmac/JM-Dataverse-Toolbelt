@@ -140,7 +140,7 @@ namespace JosephM.Xrm.Vsix.Application
             var items = DTE.SelectedItems;
             foreach (SelectedItem item in items)
             {
-                if (item.ProjectItem != null)
+                if (item.ProjectItem != null && item.ProjectItem.IsOpen)
                 {
                     item.ProjectItem.Save();
                 }
