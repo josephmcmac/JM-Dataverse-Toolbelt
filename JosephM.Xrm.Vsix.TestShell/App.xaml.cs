@@ -7,6 +7,7 @@ using JosephM.Xrm.Vsix.Module.AddPortalCode;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
+using JosephM.Xrm.Vsix.Module.UpdateAssembly;
 using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.Xrm.Vsix.Test;
 using JosephM.XrmModule.Crud;
@@ -44,6 +45,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication.AddModule<OpenDefaultSolutionModule>();
             VsixApplication.AddModule<OpenSolutionModule>();
             VsixApplication.AddModule<DeployAssemblyModule>();
+            VsixApplication.AddModule<UpdateAssemblyModule>();
             VsixApplication.AddModule<ManagePluginTriggersModule>();
             VsixApplication.AddModule<XrmCrudModule>();
             VsixApplication.AddModule<TestDialogModule>();

@@ -17,8 +17,8 @@ namespace JosephM.Xrm
                 if (ex is FaultException<OrganizationServiceFault>)
                 {
                     var crmType = (FaultException<OrganizationServiceFault>)ex;
-                    if (crmType.Detail != null)
-                        result = string.Concat(result, (string)"\nTrace:\n", (string)crmType.Detail.TraceText);
+                    if (crmType.Detail != null && !string.IsNullOrWhiteSpace(crmType.Detail.TraceText))
+                        result = string.Concat(result, (string)"\nDynamics Trace:\n", (string)crmType.Detail.TraceText);
                 }
             }
             return result;
