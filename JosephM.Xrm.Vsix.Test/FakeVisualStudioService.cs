@@ -60,6 +60,10 @@ namespace JosephM.Xrm.Vsix.Test
             return _selectedItems.Cast<FakeVisualStudioProjectItem>().Select(i => i.FileName).ToArray();
         }
 
+        public override void SaveSelectedFiles()
+        {
+        }
+
         public override IEnumerable<IVisualStudioItem> GetSelectedItems()
         {
             return _selectedItems;

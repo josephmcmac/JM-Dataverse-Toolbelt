@@ -135,6 +135,18 @@ namespace JosephM.Xrm.Vsix.Application
             return fileNames;
         }
 
+        public override void SaveSelectedFiles()
+        {
+            var items = DTE.SelectedItems;
+            foreach (SelectedItem item in items)
+            {
+                if (item.ProjectItem != null)
+                {
+                    item.ProjectItem.Save();
+                }
+            }
+        }
+
         public override IEnumerable<IVisualStudioItem> GetSelectedItems()
         {
             var results = new List<IVisualStudioItem>();

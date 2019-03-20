@@ -19,6 +19,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
             if (visualStudioService == null)
                 throw new NullReferenceException("visualStudioService");
             var files = visualStudioService.GetSelectedFileNamesQualified();
+            visualStudioService.SaveSelectedFiles();
 
             var request = new DeployWebResourceRequest()
             {

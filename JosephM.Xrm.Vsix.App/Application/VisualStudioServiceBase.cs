@@ -97,6 +97,8 @@ namespace JosephM.Xrm.Vsix.Application
 
         public abstract IEnumerable<string> GetSelectedFileNamesQualified();
 
+        public abstract void SaveSelectedFiles();
+
         public abstract IEnumerable<IVisualStudioItem> GetSelectedItems();
 
         public abstract string GetSelectedProjectAssemblyName();

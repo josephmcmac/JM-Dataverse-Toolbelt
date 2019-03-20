@@ -15,6 +15,7 @@ namespace JosephM.Xrm.Vsix.Application
         string BuildSelectedProjectAndGetAssemblyName();
         string GetSelectedProjectAssemblyName();
         IEnumerable<string> GetSelectedFileNamesQualified();
+        void SaveSelectedFiles();
         IEnumerable<IVisualStudioItem> GetSelectedItems();
         ISolutionFolder GetSolutionFolder(string solutionFolderName);
         string ItemFolderName { get; }

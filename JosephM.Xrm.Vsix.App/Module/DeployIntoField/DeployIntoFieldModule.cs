@@ -18,7 +18,9 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
             var visualStudioService = ApplicationController.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService;
             if (visualStudioService == null)
                 throw new NullReferenceException("visualStudioService");
+
             var files = visualStudioService.GetSelectedFileNamesQualified();
+            visualStudioService.SaveSelectedFiles();
 
             var request = new DeployIntoFieldRequest()
             {
