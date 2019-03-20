@@ -1,4 +1,5 @@
-﻿using JosephM.Xrm.Vsix.Application;
+﻿using JosephM.Application.Application;
+using JosephM.Xrm.Vsix.Application;
 using Microsoft.VisualStudio.Shell;
 using System;
 
@@ -7,12 +8,12 @@ namespace JosephM.Xrm.Vsix.Module
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public abstract class MenuItemVisible : Attribute
     {
-        public abstract bool IsVisible(IVisualStudioService visualStudioService);
+        public abstract bool IsVisible(IApplicationController applicationController);
 
-        public void Process(IVisualStudioService visualStudioService, OleMenuCommand menuCommand)
+        public void Process(IApplicationController applicationController, OleMenuCommand menuCommand)
         {
             SetHidden(menuCommand);
-            if (IsVisible(visualStudioService))
+            if (IsVisible(applicationController))
                 SetVisible(menuCommand);
         }
 

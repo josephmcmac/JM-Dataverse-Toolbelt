@@ -1,13 +1,10 @@
-﻿using JosephM.Application.Application;
-using JosephM.Application.Modules;
-using JosephM.XrmModule.XrmConnection;
-using JosephM.Record.Xrm.XrmRecord;
+﻿using JosephM.Application.Modules;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using System;
-using System.Diagnostics;
+using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.Vsix.Module.Web
 {
+    [MenuItemVisibleSolutionConfigured]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
     public class OpenSolutionModule : OptionActionModule

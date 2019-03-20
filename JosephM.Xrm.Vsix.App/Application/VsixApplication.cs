@@ -69,7 +69,7 @@ namespace JosephM.Xrm.Vsix
                 var menuItemVisibleAttribute = typeof(T).GetCustomAttribute<MenuItemVisible>();
                 if (menuItemVisibleAttribute != null)
                 {
-                    EventHandler clickHandler = (o, e) => menuItemVisibleAttribute.Process(Controller.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService, menuItem);
+                    EventHandler clickHandler = (o, e) => menuItemVisibleAttribute.Process(Controller, menuItem);
                     menuItem.BeforeQueryStatus += clickHandler;
                 }
             }

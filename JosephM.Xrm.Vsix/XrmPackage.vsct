@@ -190,6 +190,8 @@
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="OpenCrmSolutionCommandId" priority="0x0108" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Open Solution in Browser</ButtonText>
         </Strings>
