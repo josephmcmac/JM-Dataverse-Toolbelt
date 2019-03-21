@@ -85,11 +85,7 @@
                         </ScrollViewer>
                     </Grid>
                     <Grid Grid.Row="3" Style="{StaticResource FormSectionsGrid}">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ItemsControl
-                        ItemsSource="{Binding FormSectionsAsync}"
-                        ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
-                        </ScrollViewer>
+                        <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource FormBodyTemplateSelector}"></ContentControl>
                     </Grid>
                     <Grid Margin="21,0,0,15" Grid.Row="4" Style="{StaticResource ButtonsGrid}">
                     <StackPanel

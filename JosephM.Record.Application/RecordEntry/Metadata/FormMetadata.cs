@@ -26,5 +26,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         }
 
         public IEnumerable<FormSection> FormSections { get; private set; }
+
+        public string GridOnlyField { get; set; }
     }
 }

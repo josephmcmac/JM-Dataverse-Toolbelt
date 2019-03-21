@@ -134,6 +134,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     item.IsVisible = FormService.IsSectionInContext(item.SectionIdentifier, GetRecord());
                 }
                 OnPropertyChanged(nameof(FormSectionsAsync));
+                OnPropertyChanged(nameof(PrimaryEnumerableFieldViewModel));
             }
         }
 
@@ -509,6 +510,24 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 }
             }
             base.RefreshEditabilityExtention();
+        }
+
+        public string GridOnlyField
+        {
+            get
+            {
+                return FormService.GetFormMetadata(RecordType, RecordService).GridOnlyField;
+            }
+        }
+
+        public EnumerableFieldViewModel PrimaryEnumerableFieldViewModel
+        {
+            get
+            {
+                return FieldSections != null && GridOnlyField != null && FieldViewModels.Any(f => f.FieldName == GridOnlyField)
+                    ? FieldViewModels.First(f => f.FieldName == GridOnlyField) as EnumerableFieldViewModel
+                    : null;
+            }
         }
     }
 }

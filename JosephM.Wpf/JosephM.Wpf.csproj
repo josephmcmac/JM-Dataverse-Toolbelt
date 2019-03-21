@@ -401,6 +401,7 @@
     <Compile Include="TemplateSelector\ConditionTemplateSelector.cs" />
     <Compile Include="TemplateSelector\DialogTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FieldTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\FormBodyTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FormSectionTemplateSelector.cs" />
     <Compile Include="TemplateSelector\LabelledFieldTemplateSelector.cs" />
     <Compile Include="TemplateSelector\MainTabRegionDataTemplateSelector.cs" />

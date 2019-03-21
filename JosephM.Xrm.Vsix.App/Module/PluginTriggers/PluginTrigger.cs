@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Record.Attributes;
@@ -6,6 +7,7 @@ using JosephM.Xrm.Schema;
 
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
+    [GridOnlyEntry(nameof(Triggers))]
     public class PluginTriggers
     {
         [Hidden]

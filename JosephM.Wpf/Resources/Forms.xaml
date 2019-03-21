@@ -149,4 +149,18 @@
         UnlabelledFieldTemplate="{StaticResource unlabelledFieldTemplate}"
         x:Key="labelledFieldTemplateSelector" 
         />
+    <DataTemplate x:Key="GridOnlyBodyTemplate">
+        <field:EnumerableFieldView DataContext="{Binding PrimaryEnumerableFieldViewModel}" />
+    </DataTemplate>
+    <DataTemplate x:Key="SectionsBodyTemplate">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl
+                                ItemsSource="{Binding FormSectionsAsync}"
+                                ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
+        </ScrollViewer>
+    </DataTemplate>
+    <templateSelector:FormBodyTemplateSelector
+        GridOnlyBodyTemplate="{StaticResource GridOnlyBodyTemplate}"
+        SectionsBodyTemplate="{StaticResource SectionsBodyTemplate}"
+        x:Key="FormBodyTemplateSelector" />
 </ResourceDictionary>

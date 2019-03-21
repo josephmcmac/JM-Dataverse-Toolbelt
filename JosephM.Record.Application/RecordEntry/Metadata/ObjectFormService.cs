@@ -161,6 +161,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 }
                 formSections = formSections.OrderBy(s => s.Order).ToList();
                 _formMetadata = new FormMetadata(formSections);
+                var gridOnlyProperty = type.GetCustomAttribute<GridOnlyEntry>();
+                if (gridOnlyProperty != null)
+                    _formMetadata.GridOnlyField = gridOnlyProperty.EnumerableProperty;
             }
             return _formMetadata;
         }
