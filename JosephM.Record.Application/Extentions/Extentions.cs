@@ -82,7 +82,8 @@ namespace JosephM.Application.ViewModel.Extentions
                     throw new NullReferenceException(string.Format("No primary field defined for type {0}", recordType));
                 return new ViewMetadata(new[] { new ViewField(recordService.GetPrimaryField(recordType), 10, 200) });
             }
-            return new ViewMetadata(recordService.GetFields(recordType).Select(f => new ViewField(f, 1, 200)));
+            var fields = recordService.GetFields(recordType).Select(f => new ViewField(f, 1, 200));
+            return new ViewMetadata(fields.Take(10));
         }
 
         public static IEnumerable<string> GetStringQuickfindFields(this IRecordService recordService, string recordType)
