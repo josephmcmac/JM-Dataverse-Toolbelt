@@ -3,6 +3,7 @@ using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.CustomisationImporter.Service;
 using JosephM.Record.Xrm.XrmRecord;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace JosephM.CustomisationImporter
@@ -27,6 +28,24 @@ namespace JosephM.CustomisationImporter
                 CompletionMessage = "The Import Completed But The Following Errors Were Encountered During The Import";
             else
                 CompletionMessage = "The Customisations Have Been Imported And Published";
+        }
+
+        protected override IDictionary<string, string> GetPropertiesForCompletedLog()
+        {
+            var dictionary = base.GetPropertiesForCompletedLog();
+            void addProperty(string name, string value)
+            {
+                if (!dictionary.ContainsKey(name))
+                    dictionary.Add(name, value);
+            }
+            if (Response.ImportedItems != null)
+            {
+                foreach(var typeGroup in Response.ImportedItems.GroupBy(it => it.Type))
+                {
+                    addProperty(($"Imported {typeGroup.Key} Count", typeGroup.Count().ToString());
+                }
+            }
+            return dictionary;
         }
     }
 }

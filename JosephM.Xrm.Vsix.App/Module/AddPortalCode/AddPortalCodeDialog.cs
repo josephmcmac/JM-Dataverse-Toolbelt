@@ -5,6 +5,7 @@ using JosephM.Record.Extentions;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Application;
 using System;
+using System.Collections.Generic;
 
 namespace JosephM.Xrm.Vsix.Module.AddPortalCode
 {
@@ -41,6 +42,26 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
         {
             CompletionMessage = "Export Completed";
             base.CompleteDialogExtention();
+        }
+
+        protected override IDictionary<string, string> GetPropertiesForCompletedLog()
+        {
+            var dictionary = base.GetPropertiesForCompletedLog();
+            void addProperty(string name, string value)
+            {
+                if (!dictionary.ContainsKey(name))
+                    dictionary.Add(name, value);
+            }
+            addProperty("Create Folder For Website", Request.CreateFolderForWebsiteName.ToString());
+            if (Request.RecordsToExport != null)
+            {
+                foreach(var type in Request.RecordsToExport)
+                {
+                    addProperty("Include " + type.RecordType?.Value, type.Selected.ToString());
+                    addProperty("Include All " + type.RecordType?.Value, type.IncludeAll.ToString());
+                }
+            }
+            return dictionary;
         }
     }
 }

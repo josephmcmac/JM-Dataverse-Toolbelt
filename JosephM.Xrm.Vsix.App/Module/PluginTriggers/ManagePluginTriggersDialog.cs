@@ -379,6 +379,28 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 CompletionMessage = "Plugins Updated";
         }
 
+        protected override IDictionary<string, string> GetPropertiesForCompletedLog()
+        {
+            var dictionary = base.GetPropertiesForCompletedLog();
+            void addProperty(string name, string value)
+            {
+                if (!dictionary.ContainsKey(name))
+                    dictionary.Add(name, value);
+            }
+            if (EntryObject.Triggers != null)
+            {
+                addProperty($"Trigger Count", EntryObject.Triggers.Count().ToString());
+                addProperty($"Trigger With Field Filters Count", EntryObject.Triggers.Count(t => (t.FilteringFields?.Count() ?? 0) > 0).ToString());
+                addProperty($"Trigger With PreImage Fields Count", EntryObject.Triggers.Count(t => (t.PreImageFields?.Count() ?? 0) > 0).ToString());
+                addProperty($"Trigger With Specific User Context Count", EntryObject.Triggers.Count(t => t.SpecificUserContext != null).ToString());
+                foreach (var messageGroup in EntryObject.Triggers.Where(t => t.Message != null).GroupBy(t => t.Message.Name))
+                {
+                    addProperty($"Trigger {messageGroup.Key} Message Count", messageGroup.Count().ToString());
+                }
+            }
+            return dictionary;
+        }
+
         public class Completionresponse
         {
             [Hidden]

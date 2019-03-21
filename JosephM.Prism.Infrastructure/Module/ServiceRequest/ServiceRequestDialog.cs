@@ -153,5 +153,14 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
                 ApplicationController.UserMessage(ex.DisplayString());
             }
         }
+
+        protected override IDictionary<string, string> GetPropertiesForCompletedLog()
+        {
+            var dictionary = base.GetPropertiesForCompletedLog();
+            var errorCount = Response.GetResponseItemsWithError().Count();
+            if (!dictionary.ContainsKey("Response Error Count"))
+                dictionary.Add("Response Error Count", errorCount.ToString());
+            return dictionary;
+        }
     }
 }

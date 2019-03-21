@@ -66,6 +66,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                         throw new NullReferenceException($"Could not find matching type by logical or display name for folder name of {containingFolderName}");
                     }
 
+                    thisResponseItem.RecordType = recordType;
+
                     if (recordType == Entities.adx_webfile)
                     {
                         //this one goes into an attachment

@@ -285,6 +285,29 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             return Assembly.LoadFrom(file);
         }
 
+        protected override IDictionary<string, string> GetPropertiesForCompletedLog()
+        {
+            var dictionary = base.GetPropertiesForCompletedLog();
+            void addProperty(string name, string value)
+            {
+                if (!dictionary.ContainsKey(name))
+                    dictionary.Add(name, value);
+            }
+            if(PluginAssembly != null)
+            {
+                addProperty("Isolation Mode", PluginAssembly.IsolationMode.ToString());
+                if(PluginAssembly.PluginTypes != null)
+                {
+                    var pluginCount = PluginAssembly.PluginTypes.Count(pt => !pt.IsWorkflowActivity);
+                    var workflowCount = PluginAssembly.PluginTypes.Count(pt => pt.IsWorkflowActivity);
+                    addProperty("Plugin Count", pluginCount.ToString());
+                    addProperty("Workflow Count", workflowCount.ToString());
+                }
+
+            }
+            return dictionary;
+        }
+
 
         public class PluginTypeDeployResponse
         {

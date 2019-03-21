@@ -3,6 +3,7 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Deployment.DataImport;
 using JosephM.Record.Xrm.XrmRecord;
 using System;
+using System.Collections.Generic;
 
 namespace JosephM.Deployment.DeployPackage
 {
@@ -32,6 +33,25 @@ namespace JosephM.Deployment.DeployPackage
                     ApplicationController.ThrowException(ex);
                 }
             });
+        }
+
+        protected override IDictionary<string, string> GetPropertiesForCompletedLog()
+        {
+            var dictionary = base.GetPropertiesForCompletedLog();
+            void addProperty(string name, string value)
+            {
+                if (!dictionary.ContainsKey(name))
+                    dictionary.Add(name, value);
+            }
+            if (Response.IsImportSummary)
+            {
+                foreach (var typeGroup in Response.ImportSummary)
+                {
+                    addProperty($"Import {typeGroup.Type} Count", typeGroup.Total.ToString());
+                    addProperty($"Import {typeGroup.Type} Errors", typeGroup.Errors.ToString());
+                }
+            }
+            return dictionary;
         }
     }
 }

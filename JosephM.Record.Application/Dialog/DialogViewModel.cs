@@ -137,13 +137,18 @@ namespace JosephM.Application.ViewModel.Dialog
                     ParentDialog.StartNextAction();
                 else
                 {
-                    ApplicationController.LogEvent(DialogEventName + " Completed");
+                    ApplicationController.LogEvent(DialogEventName + " Completed", GetPropertiesForCompletedLog());
                     if (OverideCompletionScreenMethod != null)
                         OverideCompletionScreenMethod();
                     else
                         Controller.ShowCompletionScreen(this);
                 }
             }
+        }
+
+        protected virtual IDictionary<string, string> GetPropertiesForCompletedLog()
+        {
+            return new Dictionary<string, string>();
         }
 
         public virtual string GetCompletionHeading()
