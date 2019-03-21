@@ -42,7 +42,7 @@ namespace JosephM.CustomisationImporter
             {
                 foreach(var typeGroup in Response.ImportedItems.GroupBy(it => it.Type))
                 {
-                    addProperty(($"Imported {typeGroup.Key} Count", typeGroup.Count().ToString());
+                    addProperty($"Imported {typeGroup.Key} Count", typeGroup.Count().ToString());
                 }
             }
             return dictionary;
