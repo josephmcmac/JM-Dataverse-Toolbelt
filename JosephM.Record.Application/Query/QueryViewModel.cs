@@ -101,6 +101,8 @@ namespace JosephM.Application.ViewModel.Query
                     IsReadOnly = true,
                     FormController = new FormController(RecordService, null, ApplicationController),
                     GetGridRecords = GetGridRecords,
+                    DisplayTotalCount = false,
+                    GetTotalCount = GetGridTotalCount,
                     MultiSelect = true,
                     GridLoaded = false,
                     FieldMetadata = ExplicitlySelectedColumns
@@ -109,7 +111,8 @@ namespace JosephM.Application.ViewModel.Query
                 {
                     new CustomGridFunction("QUERY", "Run Query", QuickFind),
                     new CustomGridFunction("BACKTOQUERY", "Back To Query", (g) => { ResetToQueryEntry(); }, (g) => !IsQuickFind && QueryRun),
-                    new CustomGridFunction("EDITCOLUMNS", "Edit Columns", (g) => LoadColumnEdit(), (g) => DynamicGridViewModel != null)
+                    new CustomGridFunction("EDITCOLUMNS", "Edit Columns", (g) => LoadColumnEdit(), (g) => DynamicGridViewModel != null),
+                    new CustomGridFunction("DISPLAYTOTALS", (g) => g.DisplayTotalCount ? "Hide Totals" : "Display Totals", (g) => { g.DisplayTotalCount = !g.DisplayTotalCount; g.ReloadGrid(); }, (g) => DynamicGridViewModel != null)
                 };
                 if (FormService != null && AllowCrud)
                 {
@@ -408,6 +411,18 @@ namespace JosephM.Application.ViewModel.Query
         public ObservableCollection<GridRowViewModel> GridRecords
         {
             get { return DynamicGridViewModel?.GridRecords; }
+        }
+
+        public int GetGridTotalCount()
+        {
+            var isValid = ValidateCurrentSearch();
+            if (!isValid)
+                return 0;
+            var query = GenerateQuery();
+            query.Fields = new string[0];
+            var totalCount = 0;
+            DynamicGridViewModel.RecordService.ProcessResults(query, (r) => totalCount+=r.Count());
+            return totalCount;
         }
 
         public GetGridRecordsResponse GetGridRecords(bool ignorePages)

@@ -1081,10 +1081,12 @@ namespace JosephM.Record.Xrm.XrmRecord
             return parsedValue;
         }
 
-        public void ProcessResults(string recordType, IEnumerable<string> fields, IEnumerable<Condition> conditions, Action<IEnumerable<IRecord>> processEachResultSet)
+        /// <summary>
+        /// Runs a query but rather than collecting and returning all results, processes each paged query result in turn to reduce risk of memory overload
+        /// </summary>
+        public void ProcessResults(QueryDefinition query, Action<IEnumerable<IRecord>> processEachResultSet)
         {
-            var query = XrmService.BuildQuery(recordType, fields, ToConditionExpressions(conditions, recordType), null);
-            XrmService.ProcessQueryResults(query, (entities) =>
+            XrmService.ProcessQueryResults(ToQueryExpression(query), (entities) =>
             {
                 var records = ToIRecords(entities);
                 processEachResultSet(records);
@@ -1100,13 +1102,19 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<IRecord> RetreiveAll(QueryDefinition query)
         {
+            var queryExpression = ToQueryExpression(query);
+            return ToIRecords(XrmService.RetrieveFirstX(queryExpression, query.Top));
+        }
+
+        private QueryExpression ToQueryExpression(QueryDefinition query)
+        {
             var queryExpression = new QueryExpression(query.RecordType);
             queryExpression.Distinct = query.Distinct;
             queryExpression.ColumnSet = XrmService.CreateColumnSet(query.Fields);
             queryExpression.Criteria = ToFilterExpression(query.RootFilter, query.RecordType);
-            if(query.Joins != null)
+            if (query.Joins != null)
             {
-                foreach(var join in query.Joins)
+                foreach (var join in query.Joins)
                 {
                     var link = queryExpression.AddLink(join.TargetType, join.SourceField, join.TargetField);
                     MapIntoLink(link, join);
@@ -1115,7 +1123,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             //if (query.Top > -1)
             //    queryExpression.TopCount = query.Top;
             queryExpression.Orders.AddRange(ToOrderExpressions(query.Sorts));
-            return ToIRecords(XrmService.RetrieveFirstX(queryExpression, query.Top));
+            return queryExpression;
         }
 
         private void MapIntoLink(LinkEntity link, Join join)

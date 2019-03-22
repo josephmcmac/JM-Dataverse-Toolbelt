@@ -340,5 +340,11 @@ namespace JosephM.Record.Service
         {
             return new[] { this.GetPrimaryField(recordType) };
         }
+
+        public void ProcessResults(QueryDefinition query, Action<IEnumerable<IRecord>> processEachResultSet)
+        {
+            var results = RetreiveAll(query);
+            processEachResultSet(results);
+        }
     }
 }

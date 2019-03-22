@@ -92,7 +92,11 @@ namespace JosephM.RecordCounts
                         ? new[] { new Condition("ownerid", ConditionType.Equal, request.Owner.Id) }
                         : new Condition[0];
 
-                    Service.ProcessResults(recordType, fields, conditions, func);
+                    var query = new QueryDefinition(recordType);
+                    var filter = new Filter();
+                    filter.Conditions.AddRange(conditions);
+                    query.Fields = fields;
+                    Service.ProcessResults(query, func);
                     recordCountsByUser.Add(recordType, thisDictionary);
                 }
                 catch (Exception ex)

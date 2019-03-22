@@ -157,6 +157,9 @@ namespace JosephM.Application.ViewModel.Grid
 
         public bool MultiSelect { get; set; }
 
+        public bool DisplayTotalCount { get; set; }
+        public Func<int> GetTotalCount { get; set; }
+
         public string PageDescription
         {
             get
@@ -168,8 +171,11 @@ namespace JosephM.Application.ViewModel.Grid
                     if (GridRecords == null || !GridRecords.Any())
                         description.Append("No Records");
                     else
-                        description.Append(string.Format("Records {0} to {1}", CurrentPageFloor + 1,
-                            CurrentPageFloor + GridRecords.Count));
+                    {
+                        description.Append($"Records {CurrentPageFloor} to { CurrentPageFloor + GridRecords.Count}");
+                        if(DisplayTotalCount)
+                            description.Append($" of {TotalCount}");
+                    }
                     return description.ToString();
                 }
                 else
@@ -441,7 +447,9 @@ namespace JosephM.Application.ViewModel.Grid
                         OnReloading();
                     var getRecordsResponse = GetGridRecords(false);
                     var records = getRecordsResponse.Records;
-
+                    TotalCount = DisplayTotalCount && GetTotalCount != null
+                        ? GetTotalCount()
+                        : (int?)null;
                     ApplicationController.DoOnMainThread(() =>
                     {
                         try
@@ -598,6 +606,7 @@ namespace JosephM.Application.ViewModel.Grid
         public IDictionary<string, IEnumerable<string>> OnlyValidate { get; internal set; }
         public Action<DialogViewModel> LoadDialog { get; set; }
         public Action RemoveParentDialog { get; set; }
+        public int? TotalCount { get; set; }
 
         public void DownloadCsv()
         {

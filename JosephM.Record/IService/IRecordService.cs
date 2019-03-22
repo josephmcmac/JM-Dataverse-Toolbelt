@@ -4,6 +4,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using System;
 using System.Collections.Generic;
 
 #endregion
@@ -182,5 +183,7 @@ namespace JosephM.Record.IService
         string GetWebUrl(string recordType, string id, string additionalparams = null);
 
         TypeConfigs GetTypeConfigs();
+
+        void ProcessResults(QueryDefinition query, Action<IEnumerable<IRecord>> processEachResultSet);
     }
 }
