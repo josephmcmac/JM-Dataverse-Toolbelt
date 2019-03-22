@@ -11,28 +11,48 @@
                       d:DataContext="{d:DesignInstance Type=fakes:FakeRecordEntryViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <WrapPanel>
-    <Border Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" >
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}">
-                <TextBlock
-                    Text="{Binding ErrorMessage}"
-                     Style="{StaticResource ValidationMessage}"  />
-            </Grid>
-            <Grid Grid.Row="1" >
-                <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
-            </Grid>
-        </Grid>
-        </Border>
-    </WrapPanel>
+    <Grid>
+        <WrapPanel Visibility="{Binding IsGridOnlyEntryField, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
+            <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock
+                        Text="{Binding ErrorMessage}"
+                         Style="{StaticResource ValidationMessage}"  />
+                    </Grid>
+                    <Grid Grid.Row="1" >
+                        <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
+                    </Grid>
+                </Grid>
+            </Border>
+        </WrapPanel>
+        <UniformGrid Visibility="{Binding IsGridOnlyEntryField, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock
+                        Text="{Binding ErrorMessage}"
+                         Style="{StaticResource ValidationMessage}"  />
+                    </Grid>
+                    <Grid Grid.Row="1" >
+                        <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
+                    </Grid>
+                </Grid>
+            </Border>
+        </UniformGrid>
+    </Grid>
 </UserControl>

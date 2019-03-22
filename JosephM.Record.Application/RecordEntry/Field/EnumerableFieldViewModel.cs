@@ -488,5 +488,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
             });
         }
+
+        public bool IsGridOnlyEntryField
+        {
+            get
+            {
+                return GetRecordForm().GridOnlyField == FieldName;
+            }
+        }
     }
 }

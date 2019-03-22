@@ -512,7 +512,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             base.RefreshEditabilityExtention();
         }
 
-        public string GridOnlyField
+        public override string GridOnlyField
         {
             get
             {

@@ -208,5 +208,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         public IDictionary<string, IEnumerable<string>> OnlyValidate { get; private set; }
 
         public virtual bool AllowNewLookup {  get { return true; } }
+
+        public virtual string GridOnlyField
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 }
