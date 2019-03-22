@@ -147,6 +147,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                             .ToArray();
                         trigger.PreImageName = preImage.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias);
                         trigger.PreImageId = preImage.Id;
+                        trigger.PreImageIdUnique = preImage.GetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageidunique)?.ToString();
                     }
                 }
                 triggers.Add(trigger);
@@ -309,6 +310,9 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                     imageRecord.Id = matchingPluginTrigger.PreImageId;
                     if (matchingPluginTrigger.PreImageId != null)
                         imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageid, matchingPluginTrigger.PreImageId, XrmRecordService);
+                    if (matchingPluginTrigger.PreImageIdUnique != null)
+                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageidunique, matchingPluginTrigger.PreImageIdUnique, XrmRecordService);
+
                     imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.name, matchingPluginTrigger.PreImageName, XrmRecordService);
                     imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.entityalias, matchingPluginTrigger.PreImageName, XrmRecordService);
                     imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.messagepropertyname, "Target", XrmRecordService);
@@ -324,7 +328,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             //submit create/update/deletion of pre-images
             var imageLoads = XrmRecordService.LoadIntoCrm(imagesToCreateOrUpdate,
-                Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageid);
+                Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageidunique);
             var imageDeletions = XrmRecordService.DeleteInCrm(imagesToDelete);
 
             //add any errors to the response object

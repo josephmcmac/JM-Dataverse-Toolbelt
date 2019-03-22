@@ -109,6 +109,9 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [Hidden]
         public string PreImageId { get; set; }
 
+        [Hidden]
+        public string PreImageIdUnique { get; set; }
+
         public enum PluginStage
         {
             PreValidationEvent = 10,

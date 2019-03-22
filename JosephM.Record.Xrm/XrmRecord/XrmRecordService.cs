@@ -1253,12 +1253,12 @@ namespace JosephM.Record.Xrm.XrmRecord
                             //added this for plugin types where workflow activity
                             //do not update the in/out arguments
                             //explicitly setting the pluginassemblyid seems to refresh them
-                            if (record.Type == "plugintype"
-                                && record.GetBoolField("isworkflowactivity")
-                                && record.ContainsField("pluginassemblyid")
-                                && !changedFields.Contains("pluginassemblyid"))
+                            if (record.Type == Entities.plugintype
+                                && record.GetBoolField(Fields.plugintype_.isworkflowactivity)
+                                && record.ContainsField(Fields.plugintype_.pluginassemblyid)
+                                && !changedFields.Contains(Fields.plugintype_.pluginassemblyid))
                             {
-                                changedFields.Add("pluginassemblyid");
+                                changedFields.Add(Fields.plugintype_.pluginassemblyid);
                             }
                             //for some obscure reason the matching entity loads the lookup as a different type despite the id being the same
                             //so lets just remove if the id matches the existing record
@@ -1268,7 +1268,16 @@ namespace JosephM.Record.Xrm.XrmRecord
 
                             if (changedFields.Any())
                             {
-                                Update(record, changedFields);
+                                if (record.Type == Entities.sdkmessageprocessingstepimage)
+                                {
+                                    foreach (var changedField in changedFields)
+                                        matchingItem.SetField(changedField, record.GetField(changedField), this);
+                                    Update(matchingItem, null);
+                                }
+                                else
+                                {
+                                    Update(record, changedFields);
+                                }
                                 response.AddUpdated(record);
                             }
                         }

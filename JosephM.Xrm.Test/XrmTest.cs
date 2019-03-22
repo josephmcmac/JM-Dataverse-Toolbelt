@@ -204,13 +204,18 @@ namespace JosephM.Xrm.Test
             get { return Entities.jmcg_testentity; }
         }
 
-        public Entity CreateRecordAllFieldsPopulated(string type)
+        public Entity CreateRecordAllFieldsPopulated(string type, Dictionary<string, object> explicitSetFields = null)
         {
+            explicitSetFields = explicitSetFields ?? new Dictionary<string, object>();
+
             var entity = new Entity(type);
+            foreach (var explictiSetField in explicitSetFields)
+                entity.SetField(explictiSetField.Key, explictiSetField.Value);
+
             var fieldsToExlcude = new[] { "traversedpath", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid" };
             var fields = XrmService.GetFields(type)
                 .Where(f => !fieldsToExlcude.Contains(f));
-            foreach (var field in fields)
+            foreach (var field in fields.Where(s => !explicitSetFields.ContainsKey(s)))
             {
                 if (XrmService.IsWritable(field, type))
                 {

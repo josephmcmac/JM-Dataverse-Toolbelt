@@ -6,7 +6,6 @@ using JosephM.Record.Extentions;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Linq;
 using Entities = JosephM.Xrm.Schema.Entities;
 using Fields = JosephM.Xrm.Schema.Fields;
@@ -90,10 +89,10 @@ namespace JosephM.Xrm.Vsix.Test
             letsAdjustThisOne.GetStringFieldFieldViewModel(nameof(PluginTrigger.PreImageName)).Value = "FooOthername";
             //set some specific fields in the preimage
             var preImageFieldsField = letsAdjustThisOne.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
-            SelectItems(preImageFieldsField, 1, 3);
+            SelectItems(preImageFieldsField, 3, 4);
             //set some specific filtering attributes
             var filteringAttributesField = letsAdjustThisOne.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
-            SelectItems(filteringAttributesField, 1, 3);
+            SelectItems(filteringAttributesField, 3, 4);
             //set impersonating user
             var impersonatingUserField = letsAdjustThisOne.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext));
             impersonatingUserField.SelectedItem = impersonatingUserField.ItemsSource.First(p => p.Record?.Id == CurrentUserId.ToString());
@@ -102,6 +101,9 @@ namespace JosephM.Xrm.Vsix.Test
             //save
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
+            var response = (ManagePluginTriggersDialog.Completionresponse)dialog.CompletionItem;
+            if (response.Errors.Any())
+                Assert.Fail(response.Errors.First().ErrorDetails);
 
             //verify still 3 triggers
             triggers = GetPluginTriggers(assemblyRecord);
