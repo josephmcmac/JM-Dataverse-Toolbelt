@@ -605,9 +605,11 @@ namespace JosephM.Deployment.Test
                 var workFolder = ClearFilesAndData();
 
                 //create or get a knowledge article
-                var knowledgeArticle = XrmService.GetFirst(type, "articlepublicnumber", PopulateStringValue);
+                var knowledgeArticle = XrmService.GetFirst(type, Fields.knowledgearticle_.articlepublicnumber, PopulateStringValue);
                 if (knowledgeArticle == null)
-                    knowledgeArticle = CreateRecordAllFieldsPopulated("knowledgearticle");
+                    knowledgeArticle = CreateRecordAllFieldsPopulated(Entities.knowledgearticle);
+
+                var articleNumber = knowledgeArticle.GetStringField(Fields.knowledgearticle_.articlepublicnumber);
 
                 //export to xml
                 var export = new ExportRecordType()
@@ -627,9 +629,15 @@ namespace JosephM.Deployment.Test
 
                 //okay we will delete then create one with the same article number
                 XrmService.Delete(knowledgeArticle);
-                knowledgeArticle = CreateRecordAllFieldsPopulated("knowledgearticle");
+                knowledgeArticle = CreateRecordAllFieldsPopulated(Entities.knowledgearticle, new Dictionary<string, object>
+                {
+                    { Fields.knowledgearticle_.articlepublicnumber, articleNumber }
+                });
 
-                var kaCount = XrmService.RetrieveAllEntityType(type).Count();
+                var kaCount = XrmService.RetrieveAllAndClauses(type, new[]
+                {
+                    new ConditionExpression(Fields.knowledgearticle_.isrootarticle, ConditionOperator.Equal, false)
+                }).Count();
 
                 //import should match them
                 var importRequest = new ImportXmlRequest
@@ -640,7 +648,10 @@ namespace JosephM.Deployment.Test
                 var application = CreateAndLoadTestApplication<ImportXmlModule>();
                 var immportResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
                 Assert.IsFalse(immportResponse.HasError);
-                Assert.AreEqual(kaCount, XrmService.RetrieveAllEntityType(type).Count());
+                Assert.AreEqual(kaCount, XrmService.RetrieveAllAndClauses(type, new[]
+                {
+                    new ConditionExpression(Fields.knowledgearticle_.isrootarticle, ConditionOperator.Equal, false)
+                }).Count());
 
                 //now lets just verify for create (delete it prioor to import)
                 XrmService.Delete(knowledgeArticle);
@@ -652,7 +663,10 @@ namespace JosephM.Deployment.Test
                 application = CreateAndLoadTestApplication<ImportXmlModule>();
                 immportResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
                 Assert.IsFalse(immportResponse.HasError);
-                Assert.AreEqual(kaCount, XrmService.RetrieveAllEntityType(type).Count());
+                Assert.AreEqual(kaCount, XrmService.RetrieveAllAndClauses(type, new[]
+                {
+                    new ConditionExpression(Fields.knowledgearticle_.isrootarticle, ConditionOperator.Equal, false)
+                }).Count());
             }
         }
 
