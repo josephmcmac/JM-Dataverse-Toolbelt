@@ -5,6 +5,7 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.InstanceComparer.AddToSolution;
 using JosephM.Record.Extentions;
+using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -59,7 +60,13 @@ namespace JosephM.InstanceComparer.Test
 
             var application = CreateAndLoadTestApplication<InstanceComparerModule>();
             var response = application.NavigateAndProcessDialog<InstanceComparerModule, InstanceComparerDialog, InstanceComparerResponse>(request);
-            Assert.IsFalse(response.HasError);
+            if(response.HasError)
+            {
+                if (response.Exception != null)
+                    Assert.Fail(response.Exception.XrmDisplayString());
+                else
+                    Assert.Fail(response.GetResponseItemsWithError().First().ErrorDetails);
+            }
             Assert.IsFalse(response.AreDifferences);
         }
 
