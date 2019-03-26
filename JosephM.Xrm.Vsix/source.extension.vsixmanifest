@@ -5,7 +5,7 @@
         <DisplayName>JosephM.Xrm.Vsix</DisplayName>
         <Description xml:space="preserve">Visual Studio Extention For Microsoft Dynamics</Description>
         <MoreInfo>https://josephmcmac.wordpress.com/2017/12/20/dynamics-365-visual-studio-extention-josephm-xrm-vsix/</MoreInfo>
-        <License>JosephM.Xrm.Vsix EULA.txt</License>
+        <License>JosephM.Xrm.Vsix EULA.rtf</License>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,17.0]" />

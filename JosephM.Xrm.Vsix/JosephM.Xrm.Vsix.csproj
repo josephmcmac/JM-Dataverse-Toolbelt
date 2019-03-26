@@ -65,10 +65,6 @@
     <Compile Include="XrmPackage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="JosephM.Xrm.Vsix EULA.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Resources\RefreshSettingsCommand.png" />
     <Content Include="Resources\XrmPackage.ico" />
     <Content Include="_readme.txt" />
@@ -89,6 +85,10 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="app.config" />
+    <Content Include="JosephM.Xrm.Vsix EULA.rtf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="JosephM.XRM.VSIX.snk" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
