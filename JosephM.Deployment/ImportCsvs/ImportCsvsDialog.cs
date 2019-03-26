@@ -54,8 +54,8 @@ namespace JosephM.Deployment.ImportCsvs
             {
                 foreach (var typeGroup in Response.ImportSummary)
                 {
-                    addProperty($"Import {typeGroup.Type} Count", typeGroup.Total.ToString());
-                    addProperty($"Import {typeGroup.Type} Errors", typeGroup.Errors.ToString());
+                    addProperty($"Import Count {typeGroup.Type}", typeGroup.Total.ToString());
+                    addProperty($"Import Errors {typeGroup.Type}", typeGroup.Errors.ToString());
                 }
             }
             return dictionary;

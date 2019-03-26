@@ -189,6 +189,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ApplicationInsights.config" />
     <None Include="JosephM.snk" />
     <None Include="packages.config" />
   </ItemGroup>

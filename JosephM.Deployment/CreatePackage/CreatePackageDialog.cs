@@ -42,16 +42,16 @@ namespace JosephM.Deployment.CreatePackage
             {
                 foreach (var data in Request.DataToInclude)
                 {
-                    addProperty($"Include {data.RecordType?.Key} Data", data.Type.ToString());
-                    addProperty($"Include {data.RecordType?.Key} Data All Fields", data.IncludeAllFields.ToString());
-                    addProperty($"Include {data.RecordType?.Key} Data Include Inactive", data.IncludeInactive.ToString());
+                    addProperty($"Include Data {data.RecordType?.Key}", data.Type.ToString());
+                    addProperty($"Include Data All Fields {data.RecordType?.Key}", data.IncludeAllFields.ToString());
+                    addProperty($"Include Data Include Inactive {data.RecordType?.Key}", data.IncludeInactive.ToString());
                     if (data.Type == ExportType.SpecificRecords)
                     {
-                        addProperty($"Include {data.RecordType?.Key} Data Specific Record Count", data.SpecificRecordsToExport.Count().ToString());
+                        addProperty($"Include Data Specific Record Count {data.RecordType?.Key}", data.SpecificRecordsToExport.Count().ToString());
                     }
                     if (!data.IncludeAllFields)
                     {
-                        addProperty($"Include {data.RecordType?.Key} Data Specific Field Count", data.IncludeOnlyTheseFields.Count().ToString());
+                        addProperty($"Include Data Specific Field Count {data.RecordType?.Key}", data.IncludeOnlyTheseFields.Count().ToString());
                     }
                 }
             }

@@ -42,6 +42,7 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
                 var publishXml = $"<importexportxml><entities><entity>{recordType}</entity></entities></importexportxml>";
                 xrmService.Publish(publishXml);
                 xrmService.ClearFieldMetadataCache(recordType);
+                response.FormatUpdated = true;
             }
 
             if (request.SetSeed.HasValue)
@@ -54,6 +55,7 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
                     Value = request.SetSeed.Value
                 };
                 xrmService.Execute(req);
+                response.SeedUpdated = true;
             }
 
             controller.UpdateProgress(5, 5, "Finishing");
