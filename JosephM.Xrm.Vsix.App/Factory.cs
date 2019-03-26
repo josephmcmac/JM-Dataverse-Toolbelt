@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.ApplicationInsights;
+using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.Core.AppConfig;
@@ -61,7 +62,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<DeployIntoFieldModule>(0x0117);
             app.AddModule<JavaScriptOptionsModule>(0x0118);
             app.AddModule<OpenDefaultSolutionModule>(0x0119);
-            app.AddModule<ThemeModule>(0x011A);
+            app.AddModule<SettingsAggregatorModule>(0x011E);
             app.AddModule<AddPortalCodeModule>(0x011B);
             app.AddModule<PackageSettingsAppConnectionModule>();
             app.AddModule<MigrateRecordsModule>(0x011C);
@@ -70,7 +71,8 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<CustomisationExporterModule>();
             app.AddModule<RecordCountsModule>();
             app.AddModule<AddPortalDataModule>();
-            app.AddModule<XrmPackageApplicationInsightsModule>(0x011E);
+            app.AddModule<ThemeModule>();
+            app.AddModule<XrmPackageApplicationInsightsModule>();
             return app;
         }
 

@@ -17,6 +17,8 @@ namespace JosephM.Wpf.TemplateSelector
 {
     public class DialogTemplateSelector : DataTemplateSelector
     {
+        public DataTemplate RecordEntryAggregatorTemplateTabSize { get; set; }
+        public DataTemplate RecordEntryAggregatorTemplateWindowSize { get; set; }
         public DataTemplate RecordEntryTemplateTabSize { get; set; }
         public DataTemplate RecordEntryTemplateWindowSize { get; set; }
         public DataTemplate ProgressTemplate { get; set; }
@@ -53,6 +55,8 @@ namespace JosephM.Wpf.TemplateSelector
                         return ColumnEditDialogTemplateWindowSize;
                     if (item is DynamicGridViewModel)
                         return DynamicGridTemplateWindowSize;
+                    if (item is RecordEntryAggregatorViewModel)
+                        return RecordEntryAggregatorTemplateWindowSize;
                 }
                 else
                 {
@@ -68,6 +72,8 @@ namespace JosephM.Wpf.TemplateSelector
                         return ColumnEditDialogTemplateTabSize;
                     if (item is DynamicGridViewModel)
                         return DynamicGridTemplateTabSize;
+                    if (item is RecordEntryAggregatorViewModel)
+                        return RecordEntryAggregatorTemplateTabSize;
                 }
             }
             if (item is ProgressControlViewModel)

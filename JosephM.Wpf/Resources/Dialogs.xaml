@@ -31,6 +31,16 @@
                                        AncestorType=TabControl,
                                        AncestorLevel=1}, Converter={StaticResource TabbedApplicationHeightConverter}}" />
     </Style>
+    <DataTemplate x:Key="RecordEntryAggregatorTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
+            <recordEntry:RecordEntryAggregatorView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="RecordEntryAggregatorTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
+            <recordEntry:RecordEntryAggregatorView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <DataTemplate x:Key="RecordEntryTemplateWindowSize">
         <Grid Style="{StaticResource WindowGridStyle}">
             <recordEntry:RecordEntryView DataContext="{Binding}" />
@@ -107,6 +117,8 @@
         </Grid>
     </DataTemplate>
     <templateSelector:DialogTemplateSelector
+        RecordEntryAggregatorTemplateTabSize="{StaticResource RecordEntryAggregatorTemplateTabSize}"
+        RecordEntryAggregatorTemplateWindowSize="{StaticResource RecordEntryAggregatorTemplateWindowSize}"
         RecordEntryTemplateTabSize="{StaticResource RecordEntryTemplateTabSize}"
         RecordEntryTemplateWindowSize="{StaticResource RecordEntryTemplateWindowSize}"
         ProgressTemplate="{StaticResource ProgressControlTemplate}"

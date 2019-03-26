@@ -343,6 +343,9 @@
     <Compile Include="RecordEntry\Field\UrlFieldView.xaml.cs">
       <DependentUpon>UrlFieldView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\RecordEntryAggregatorView.xaml.cs">
+      <DependentUpon>RecordEntryAggregatorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Themes\Theme.cs" />
     <Compile Include="Resources\Themes\XamlTheme.cs" />
     <Compile Include="Resources\Themes\XamlThemes.cs" />
@@ -598,6 +601,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\UrlFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\RecordEntryAggregatorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -15,6 +15,8 @@ namespace JosephM.Application.Desktop.Module.AboutModule
     /// </summary>
     public abstract class AboutModule : SettingsModuleBase
     {
+        public override int SettingsOrder => 99999;
+
         public override void RegisterTypes()
         {
             var about = new About()

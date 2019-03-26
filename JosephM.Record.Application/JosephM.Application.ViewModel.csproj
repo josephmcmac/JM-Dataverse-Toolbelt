@@ -131,6 +131,7 @@
     <Compile Include="RecordEntry\Form\CustomFormFunctions.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />
     <Compile Include="Grid\CustomGridFunction.cs" />
+    <Compile Include="RecordEntry\Form\RecordEntryAggregatorViewModel.cs" />
     <Compile Include="SettingTypes\LookupSetting.cs" />
     <Compile Include="SettingTypes\FieldSetting.cs" />
     <Compile Include="SettingTypes\RecordFieldSetting.cs" />

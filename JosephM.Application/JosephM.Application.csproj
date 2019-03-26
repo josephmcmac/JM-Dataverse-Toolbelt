@@ -83,7 +83,6 @@
     <Compile Include="Modules\SettingsModuleBase.cs" />
     <Compile Include="Modules\ActionModuleBase.cs" />
     <Compile Include="Modules\ModuleController.cs" />
-    <Compile Include="Options\ApplicationOptions.cs" />
     <Compile Include="Options\ApplicationOptionType.cs" />
     <Compile Include="Application\IApplicationController.cs" />
     <Compile Include="Options\IApplicationOption.cs" />

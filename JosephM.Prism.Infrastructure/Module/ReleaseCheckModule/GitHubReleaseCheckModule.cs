@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Desktop.Module.Settings;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
@@ -12,16 +13,16 @@ using System.Net;
 
 namespace JosephM.Application.Desktop.Module.ReleaseCheckModule
 {
+    [DependantModule(typeof(SettingsAggregatorModule))]
     [MyDescription("Module To Check For Newer Releases")]
     /// <summary>
     /// Module to check for a newer release on start up
     /// </summary>
-    public abstract class GitHubReleaseCheckModule : SettingsModule<UpdateSettingsDialog, UpdateSettings, UpdateSettings>
+    public abstract class GitHubReleaseCheckModule : AggregatedSettingModule<UpdateSettings>
     {
         public override void RegisterTypes()
         {
             base.RegisterTypes();
-
             //add a button to the update settings form to check for new release
             var customFormFunction = new CustomFormFunction("RELEASECHECK", "Check For Release", (x) => CheckNewForRelease(displayNoUpdate: true), (x) => true);
             this.AddCustomFormFunction(customFormFunction, typeof(UpdateSettings));
@@ -30,7 +31,6 @@ namespace JosephM.Application.Desktop.Module.ReleaseCheckModule
         public override void InitialiseModule()
         {
             base.InitialiseModule();
-
             if (ApplicationController.RunThreadsAsynch)
             {
                 ApplicationController.DoOnAsyncThread(() =>
@@ -44,7 +44,7 @@ namespace JosephM.Application.Desktop.Module.ReleaseCheckModule
             }
         }
 
-        public override string MainOperationName => "Update Settings";
+        public string MainOperationName => "Update Settings";
 
         public void CheckNewForRelease(bool displayNoUpdate = false)
         {

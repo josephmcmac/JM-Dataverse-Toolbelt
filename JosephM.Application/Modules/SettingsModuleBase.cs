@@ -17,11 +17,13 @@ namespace JosephM.Application.Modules
     {
         public override void InitialiseModule()
         {
-            AddSetting(MainOperationName, DialogCommand);
+            AddSetting(MainOperationName, DialogCommand, order: SettingsOrder);
         }
 
         public override void RegisterTypes()
         {
         }
+
+        public virtual int SettingsOrder => 0;
     }
 }

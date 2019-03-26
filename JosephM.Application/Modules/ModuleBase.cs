@@ -71,9 +71,9 @@ namespace JosephM.Application.Modules
             ApplicationOptions.AddOption(group, label, action, description: description);
         }
 
-        public void AddSetting(string label, Action action, string description = null)
+        public void AddSetting(string label, Action action, string description = null, int order = 0)
         {
-            ApplicationOptions.AddOption("Setting", label, action, description: description);
+            ApplicationOptions.AddOption("Setting", label, action, description: description, order: order);
         }
     }
 }

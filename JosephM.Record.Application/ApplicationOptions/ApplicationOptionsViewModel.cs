@@ -39,12 +39,12 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
 
         public ObservableCollection<ApplicationOption> Helps { get; private set; }
 
-        public void AddOption(string group, string optionLabel, Action action, string description = null)
+        public void AddOption(string group, string optionLabel, Action action, string description = null, int order = 0)
         {
             var option = new ApplicationOption(optionLabel, action, description);
             
             if (group == "Setting")
-                AddToSettingsCollection(optionLabel, action, description);
+                AddToSettingsCollection(optionLabel, action, description, order);
             else
             {
                 if(!Options.Any(o => o.Label == group))
@@ -85,32 +85,26 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
             }
         }
 
-        private void AddToSettingsCollection(string optionLabel, Action action, string description)
+        private void AddToSettingsCollection(string optionLabel, Action action, string description, int order)
         {
-            var option = new ApplicationOption(optionLabel, () => { OpenSettings = false; action(); }, description);
-
-            var forceLastLabel = "About";
-            if (option.Label == forceLastLabel)
-                Settings.Add(option);
-            else
+            var option = new ApplicationOption(optionLabel, () => { OpenSettings = false; action(); }, description, order: order);
+            var index = -1;
+            if (!option.Label.IsNullOrWhiteSpace())
             {
-                var index = -1;
-                if (!option.Label.IsNullOrWhiteSpace())
+                foreach (var item in Settings)
                 {
-                    foreach (var item in Settings)
+                    if (order < item.Order
+                        || (order == item.Order && String.Compare(option.Label, item.Label, StringComparison.Ordinal) < 0))
                     {
-                        if (item.Label == forceLastLabel || String.Compare(option.Label, item.Label, StringComparison.Ordinal) < 0)
-                        {
-                            index = Settings.IndexOf(item);
-                            break;
-                        }
+                        index = Settings.IndexOf(item);
+                        break;
                     }
                 }
-                if (index != -1)
-                    Settings.Insert(index, option);
-                else
-                    Settings.Add(option);
             }
+            if (index != -1)
+                Settings.Insert(index, option);
+            else
+                Settings.Add(option);
         }
 
         public MyCommand SettingsClick { get; set; }

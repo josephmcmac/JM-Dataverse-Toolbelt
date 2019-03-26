@@ -1,8 +1,11 @@
 ﻿using JosephM.Application.Desktop.Module.Settings;
+using JosephM.Application.Modules;
+using JosephM.Core.AppConfig;
 
 namespace JosephM.Application.Desktop.Module.ApplicationInsights
 {
-    public abstract class ApplicationInsightsModule : SettingsModule<ApplicationInsightsDialog, ApplicationInsightsSettings, ApplicationInsightsSettings>
+    [DependantModule(typeof(SettingsAggregatorModule))]
+    public abstract class ApplicationInsightsModule : AggregatedSettingModule<ApplicationInsightsSettings>
     {
         public abstract string InstrumentationKey { get; }
 
@@ -13,7 +16,5 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             var applicationInsightsLogger = new ApplicationInsightsLogger(InstrumentationKey, ApplicationController);
             ApplicationController.AddLogger(applicationInsightsLogger);
         }
-
-        public override string MainOperationName => "Use Logging";
     }
 }

@@ -2,9 +2,10 @@
 
 namespace JosephM.Wpf.Resources.Themes
 {
-    [Group(Sections.Theme, true, displayLabel: true)]
+    [Group(Sections.Theme, true, displayLabel: false)]
     public class Theme
     {
+        [DisplayName("Colour Theme")]
         [RequiredProperty]
         [Group(Sections.Theme)]
         [SettingsLookup(typeof(XamlThemes), nameof(XamlThemes.Themes), allowAddNew: false)]

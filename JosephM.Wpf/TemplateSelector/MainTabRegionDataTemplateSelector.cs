@@ -1,15 +1,10 @@
-﻿#region
-
-using JosephM.Application.ViewModel.Dialog;
-using JosephM.Application.ViewModel.Grid;
+﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Navigation;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-
-#endregion
 
 namespace JosephM.Wpf.TemplateSelector
 {

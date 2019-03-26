@@ -3,7 +3,7 @@ using JosephM.Wpf.Resources.Themes;
 
 namespace JosephM.Application.Desktop.Module.Themes
 {
-    public class ThemeModule : SettingsModule<ThemeDialog, Theme, Theme>
+    public class ThemeModule : AggregatedSettingModule<Theme>
     {
         public override void RegisterTypes()
         {
