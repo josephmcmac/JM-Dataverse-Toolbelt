@@ -33,6 +33,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
                 {
                     PageSize = RecordForm.GridPageSize,
+                    DisplayTotalCount = RecordForm.GridPageSize > 0,
+                    GetTotalCount = () => GetGridRecords(true).Records.Count(),
                     ViewType = ViewType.AssociatedView,
                     DeleteRow = !recordForm.IsReadOnly && FormService.AllowDelete(ReferenceName, GetRecordType()) ? RemoveRow : (Action<GridRowViewModel>)null,
                     EditRow = FormService.AllowGridOpen(ReferenceName, RecordForm) ? EditRow : (Action<GridRowViewModel>)null,
