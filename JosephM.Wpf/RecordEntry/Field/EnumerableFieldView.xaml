@@ -18,7 +18,9 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <WrapPanel Visibility="{Binding IsGridOnlyEntryField, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
+        <WrapPanel
+            MaxHeight="{Binding ElementName=FormSections,Path=ActualHeight, Converter={StaticResource HeightAdjuster}, ConverterParameter=-20}"
+            Visibility="{Binding IsGridOnlyEntryField, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
             <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
                 <Grid>
                     <Grid.RowDefinitions>

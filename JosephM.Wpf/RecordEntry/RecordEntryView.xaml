@@ -84,7 +84,7 @@
                             <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
                         </ScrollViewer>
                     </Grid>
-                    <Grid Grid.Row="3" Style="{StaticResource FormSectionsGrid}">
+                    <Grid Name="FormSections" Grid.Row="3" Style="{StaticResource FormSectionsGrid}">
                         <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource FormBodyTemplateSelector}"></ContentControl>
                     </Grid>
                     <Grid Margin="21,0,0,15" Grid.Row="4" Style="{StaticResource ButtonsGrid}">
