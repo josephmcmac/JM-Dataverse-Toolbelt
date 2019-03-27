@@ -110,9 +110,6 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             Controller.RemoveFromUi(progressControlViewModelLevel2);
 
             IsProcessing = false;
-
-            if (!Response.Success)
-                ProcessError(Response.Exception);
         }
 
         protected virtual void ProcessCompletionExtention()

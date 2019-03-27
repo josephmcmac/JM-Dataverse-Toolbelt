@@ -27,7 +27,6 @@ namespace JosephM.TestModule.TestDialog
 
         [DisplayOrder(15)]
         [Group(Sections.Main)]
-        [RequiredProperty]
         [FileMask(FileMasks.ExcelFile)]
         [ConnectionFor(nameof(ExcelRecordType), typeof(ExcelFileConnection))]
         [ConnectionFor(nameof(ExcelField), typeof(ExcelFileConnection))]

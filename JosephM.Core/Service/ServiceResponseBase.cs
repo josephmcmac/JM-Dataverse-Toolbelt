@@ -1,4 +1,5 @@
 ﻿using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,9 +42,21 @@ namespace JosephM.Core.Service
 
         [DoNotLimitDisplayHeight]
         [Group(Sections.Message)]
-        [DisplayOrder(-1)]
+        [DisplayOrder(-2)]
         [PropertyInContextByPropertyNotNull(nameof(Message))]
         public string Message { get; set; }
+
+        [DoNotLimitDisplayHeight]
+        [Group(Sections.Message)]
+        [DisplayOrder(-1)]
+        [PropertyInContextByPropertyNotNull(nameof(Exception))]
+        public string FatalErrorDescription
+        {
+            get
+            {
+                return "Fatal Error: " + Exception.DisplayString();
+            }
+        }
 
         [AllowDownload]
         [Group(Sections.ResponseItems)]
