@@ -29,7 +29,7 @@ namespace JosephM.CustomisationImporter.Test
             var testApplication = CreateAndLoadTestApplication<CustomisationImportModule>();
 
             //first script generation of C# entities and fields
-            var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).First();
+            var request = TestCustomisationImportRequest.GetTestRequests(ExecutionPath).ElementAt(1);
 
             var response = testApplication.NavigateAndProcessDialog<CustomisationImportModule, CustomisationImportDialog, CustomisationImportResponse>(request);
             if (response.HasError)
