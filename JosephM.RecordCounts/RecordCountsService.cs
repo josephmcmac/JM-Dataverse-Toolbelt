@@ -95,6 +95,7 @@ namespace JosephM.RecordCounts
                     var query = new QueryDefinition(recordType);
                     var filter = new Filter();
                     filter.Conditions.AddRange(conditions);
+                    query.RootFilter.SubFilters.Add(filter);
                     query.Fields = fields;
                     Service.ProcessResults(query, func);
                     recordCountsByUser.Add(recordType, thisDictionary);
