@@ -69,7 +69,7 @@ namespace JosephM.Application.Desktop.Console
                 var completionObject = completion.CompletionDetails?.GetObject() as IProcessCompletion;
                 if(completionObject == null)
                 {
-                    throw new Exception($"The Process Failed To Complete: {completion.CompletionHeadingText}");
+                    throw new Exception($"The Process Failed To Complete");
                 }
                 else
                 {

@@ -41,6 +41,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue
                 countUpdated++;
                 controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Updates"));
             }
+            response.Message = "Copies Completed";
         }
     }
 }

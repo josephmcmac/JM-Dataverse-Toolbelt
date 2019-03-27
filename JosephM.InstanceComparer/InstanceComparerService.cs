@@ -57,6 +57,11 @@ namespace JosephM.InstanceComparer
                 ProcessCompare(item, processContainer);
 
             CompareAssociations(processContainer);
+
+            if (response.AreDifferences)
+                response.Message = "Differences Were Found Between The Environments";
+            else
+                response.Message = "No Difference Were Found";
         }
 
         private void CompareAssociations(ProcessContainer processContainer)

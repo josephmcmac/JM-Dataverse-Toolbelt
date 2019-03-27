@@ -11,9 +11,8 @@ namespace JosephM.Deployment.ImportCsvs
     [Instruction("All CSV Files Will Be Imported Into The Dynamics Instance. Matches To Update Records In The Target Will By Done By Either Primary Key, Then Name, Else If No Match Is Found A New Record Will Be Created")]
     [DisplayName("Import CSVs")]
     [AllowSaveAndLoad]
-    [Group(Sections.Main, true, 10)]
+    [Group(Sections.CsvFiles, true, 50)]
     [Group(Sections.CsvImport, true, 20)]
-    [Group(Sections.Misc, true, 40)]
     public class ImportCsvsRequest : ServiceRequestBase, IValidatableObject
     {
         public ImportCsvsRequest()
@@ -21,7 +20,7 @@ namespace JosephM.Deployment.ImportCsvs
             MatchByName = true;
         }
 
-        [Group(Sections.Main)]
+        [Group(Sections.CsvFiles)]
         [DisplayOrder(30)]
         [RequiredProperty]
         public IEnumerable<CsvToImport> CsvsToImport { get; set; }
@@ -43,7 +42,7 @@ namespace JosephM.Deployment.ImportCsvs
         [RequiredProperty]
         public DateFormat DateFormat { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.CsvImport)]
         [DisplayOrder(400)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
@@ -152,9 +151,8 @@ namespace JosephM.Deployment.ImportCsvs
 
         private static class Sections
         {
-            public const string Main = "Main";
+            public const string CsvFiles = "Csv Files";
             public const string CsvImport = "CSV Import Options";
-            public const string Misc = "Misc";
         }
 
         public IsValidResponse Validate()

@@ -27,7 +27,9 @@ namespace JosephM.Deployment.ImportExcel
             var dictionary = LoadMappingDictionary(request);
             var importService = new SpreadsheetImportService(XrmRecordService);
             var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller);
+            response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.LoadSpreadsheetImport(responseItems);
+            response.Message = "The Import Process Has Completed";
         }
 
         public Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportExcelRequest request)

@@ -1,5 +1,4 @@
-﻿using JosephM.Core.Log;
-using JosephM.Core.Service;
+﻿using JosephM.Core.Service;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Linq;
@@ -17,6 +16,8 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
             var service = new DeployPackageService();
             var importItems = service.ImportSolutions(new[] { request.SolutionZip.FileName }, controller.Controller, xrmRecordService);
             response.AddResponseItems(importItems.Select(it => new ImportSolutionResponseItem(it)));
+            response.Connection = request.Connection;
+            response.Message = $"The Solution Has Been Deployed Into {request.Connection}";
         }
     }
 }

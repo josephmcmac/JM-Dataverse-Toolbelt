@@ -1,5 +1,4 @@
 ﻿using JosephM.Application.ViewModel.Fakes;
-using JosephM.Xrm.RecordExtract.Test.RecordExtract;
 using JosephM.Xrm.RecordExtract.TextSearch;
 
 namespace JosephM.Xrm.RecordExtract.Test.TextSearch

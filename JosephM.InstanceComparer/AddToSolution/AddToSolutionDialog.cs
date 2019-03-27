@@ -12,11 +12,5 @@ namespace JosephM.InstanceComparer.AddToSolution
             : base(new AddToSolutionService(xrmRecordService), dialogController, xrmRecordService, request: request, onClose: onClose)
         {
         }
-
-        protected override void CompleteDialogExtention()
-        {
-            base.CompleteDialogExtention();
-            CompletionMessage = "Add To Solution Completed";
-        }
     }
 }

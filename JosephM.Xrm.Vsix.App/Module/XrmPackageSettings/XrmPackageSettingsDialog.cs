@@ -154,7 +154,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     }
                 }
             }
-            CompletionMessage = "Settings Updated";
         }
     }
 }

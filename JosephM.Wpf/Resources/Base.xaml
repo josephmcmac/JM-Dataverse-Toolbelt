@@ -4,6 +4,14 @@
         <Setter Property="Margin" Value="8,8,8,8" />
         <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
     </Style>
+    <Style  x:Key="ValidationMessageTextBox" TargetType="{x:Type TextBox}" >
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+        <Setter Property="IsReadOnly" Value="True" />
+    </Style>
     <Style x:Key="HeadingStyle" TargetType="TextBlock">
         <Setter Property="Margin" Value="13,13,13,13" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />

@@ -12,11 +12,5 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
             : base(new BulkUpdateService(recordService), dialogController, recordService, request, onClose)
         {
         }
-
-        protected override void CompleteDialogExtention()
-        {
-            CompletionMessage = "Updates Completed";
-            base.CompleteDialogExtention();
-        }
     }
 }

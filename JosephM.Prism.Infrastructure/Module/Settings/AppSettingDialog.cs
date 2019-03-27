@@ -62,8 +62,6 @@ namespace JosephM.Application.Desktop.Module.Settings
         {
             ApplicationController.ResolveType<ISettingsManager>().SaveSettingsObject(SettingsObject);
             ApplicationController.RegisterInstance<TSettingsInterface>(SettingsObject);
-            if (CompletionMessage == null)
-                CompletionMessage = "The Settings Have Been Saved";
 
             if (OverideCompletionScreenMethod == null && !HasParentDialog)
             {

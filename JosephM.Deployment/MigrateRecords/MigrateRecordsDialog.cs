@@ -1,8 +1,6 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Deployment.DataImport;
-using JosephM.Record.Xrm.XrmRecord;
-using System;
 using System.Collections.Generic;
 
 namespace JosephM.Deployment.MigrateRecords
@@ -16,23 +14,6 @@ namespace JosephM.Deployment.MigrateRecords
             IDialogController dialogController)
             : base(service, dialogController)
         {
-        }
-
-        protected override void CompleteDialogExtention()
-        {
-            base.CompleteDialogExtention();
-            CompletionMessage = "The Record Migration Has Completed";
-            AddCompletionOption($"Open {Request.TargetConnection}", () =>
-            {
-                try
-                {
-                    ApplicationController.StartProcess(new XrmRecordService(Request.TargetConnection).WebUrl);
-                }
-                catch (Exception ex)
-                {
-                    ApplicationController.ThrowException(ex);
-                }
-            });
         }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()

@@ -2,6 +2,7 @@
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
@@ -41,6 +42,19 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             base.RegisterTypes();
             AddTextSearchButtonToSavedConnectionsGrid();
             AddPortalDataButtonToRequestFormGrid();
+            AddDialogCompletionLinks();
+        }
+
+        private void AddDialogCompletionLinks()
+        {
+            this.AddCustomFormFunction(new CustomFormFunction("OPENDOCUMENT", "Open Document"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(RecordExtractResponse.FileNameQualified)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(RecordExtractResponse.FileName))))
+                , typeof(TextSearchResponse));
+            this.AddCustomFormFunction(new CustomFormFunction("OPENFOLDER", "Open Folder"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(RecordExtractResponse.Folder)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(RecordExtractResponse.Folder))))
+                , typeof(TextSearchResponse));
         }
 
         private void AddTextSearchButtonToSavedConnectionsGrid()

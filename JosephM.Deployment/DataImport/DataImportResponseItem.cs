@@ -31,7 +31,7 @@ namespace JosephM.Deployment.DataImport
         public string Message { get; }
 
         [PropertyInContextByPropertyNotNull(nameof(Link))]
-        [GridWidth(62)]
+        [GridWidth(65)]
         [DisplayOrder(50)]
         public Url Link { get; }
 

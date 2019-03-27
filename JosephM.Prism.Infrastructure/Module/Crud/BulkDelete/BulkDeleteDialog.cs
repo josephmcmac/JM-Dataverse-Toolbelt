@@ -12,11 +12,5 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
             : base(new BulkDeleteService(recordService), dialogController, recordService, request, onClose)
         {
         }
-
-        protected override void CompleteDialogExtention()
-        {
-            CompletionMessage = "Deletions Completed";
-            base.CompleteDialogExtention();
-        }
     }
 }

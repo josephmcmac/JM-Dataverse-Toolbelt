@@ -12,6 +12,7 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,26 @@ namespace JosephM.Deployment.ImportCsvs
             AddProductTypesToCsvgenerationGrid();
             AddGenerateMappingsWhenCsvFileSelected();
             AddLoadFolderButton();
+            AddDialogCompletionLinks();
+        }
+
+        private void AddDialogCompletionLinks()
+        {
+            this.AddCustomFormFunction(new CustomFormFunction("OPENINSTANCE"
+                , (r) => $"Open {r.GetRecord().GetField(nameof(ImportCsvsResponse.Connection))}"
+                , (r) =>
+                {
+                    try
+                    {
+                        ApplicationController.StartProcess(new XrmRecordService(r.GetRecord().GetField(nameof(ImportCsvsResponse.Connection)) as IXrmRecordConfiguration).WebUrl);
+                    }
+                    catch (Exception ex)
+                    {
+                        ApplicationController.ThrowException(ex);
+                    }
+                }
+                , (r) => r.GetRecord().GetField(nameof(ImportCsvsResponse.Connection)) != null)
+                , typeof(ImportCsvsResponse));
         }
 
         /// <summary>

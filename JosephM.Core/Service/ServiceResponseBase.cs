@@ -1,15 +1,11 @@
-﻿#region
-
-using JosephM.Core.Attributes;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#endregion
-
 namespace JosephM.Core.Service
 {
+    [Group(Sections.Message, Group.DisplayLayoutEnum.HorizontalInputOnly, order: -1, displayLabel: false)]
     [Group(Sections.ResponseItems, true, 1, displayLabel: false)]
     public class ServiceResponseBase<TResponseItem> : IProcessCompletion
         where TResponseItem : ServiceResponseItem
@@ -42,6 +38,12 @@ namespace JosephM.Core.Service
         {
             _errors.AddRange(responseItems);
         }
+
+        [DoNotLimitDisplayHeight]
+        [Group(Sections.Message)]
+        [DisplayOrder(-1)]
+        [PropertyInContextByPropertyNotNull(nameof(Message))]
+        public string Message { get; set; }
 
         [AllowDownload]
         [Group(Sections.ResponseItems)]
@@ -86,6 +88,7 @@ namespace JosephM.Core.Service
 
         private static class Sections
         {
+            public const string Message = "Message";
             public const string ResponseItems = "Response Items";
         }
     }

@@ -101,9 +101,9 @@ namespace JosephM.Xrm.Vsix.Test
             //save
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
-            var response = (ManagePluginTriggersDialog.Completionresponse)dialog.CompletionItem;
-            if (response.Errors.Any())
-                Assert.Fail(response.Errors.First().ErrorDetails);
+            var response = (ManagePluginTriggersResponse)dialog.CompletionItem;
+            if (response.HasResponseItemError)
+                Assert.Fail(response.GetResponseItemsWithError().First().ErrorDetails);
 
             //verify still 3 triggers
             triggers = GetPluginTriggers(assemblyRecord);

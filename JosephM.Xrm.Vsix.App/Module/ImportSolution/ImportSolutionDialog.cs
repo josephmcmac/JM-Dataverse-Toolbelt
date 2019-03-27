@@ -13,22 +13,5 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
         {
 
         }
-
-        protected override void CompleteDialogExtention()
-        {
-            base.CompleteDialogExtention();
-            CompletionMessage = $"The Solution Has Been Deployed Into {Request.Connection}";
-            AddCompletionOption($"Open {Request.Connection}", () =>
-            {
-                try
-                {
-                    ApplicationController.StartProcess(new XrmRecordService(Request.Connection).WebUrl);
-                }
-                catch (Exception ex)
-                {
-                    ApplicationController.ThrowException(ex);
-                }
-            });
-        }
     }
 }

@@ -124,6 +124,7 @@
     <Compile Include="DeployPackage\DeployPackageRequest.cs" />
     <Compile Include="DeployPackage\DeployPackageService.cs" />
     <Compile Include="DeploymentModule.cs" />
+    <Compile Include="DeploySolution\DeploySolutionResponseItem.cs" />
     <Compile Include="ImportCsvs\ImportCsvsValidationDialog.cs" />
     <Compile Include="ImportSql\ImportSqlDialog.cs" />
     <Compile Include="ImportSql\ImportSqlModule.cs" />

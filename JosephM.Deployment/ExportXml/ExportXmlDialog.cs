@@ -18,12 +18,5 @@ namespace JosephM.Deployment.ExportXml
         {
             SetTabLabel("Export XML");
         }
-
-        protected override void CompleteDialogExtention()
-        {
-            base.CompleteDialogExtention();
-            CompletionMessage = "The XML Files Have Been Created";
-            AddCompletionOption("Open Folder", () => ApplicationController.StartProcess(Request.Folder.FolderPath));
-        }
     }
 }

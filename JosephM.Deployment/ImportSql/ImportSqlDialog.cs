@@ -23,22 +23,6 @@ namespace JosephM.Deployment.ImportSql
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
         }
 
-        protected override void CompleteDialogExtention()
-        {
-            base.CompleteDialogExtention();
-            CompletionMessage = "The Import Process Has Completed";
-            AddCompletionOption($"Open {Service?.XrmRecordService?.XrmRecordConfiguration?.ToString()}", () =>
-            {
-                try
-                {
-                    ApplicationController.StartProcess(Service?.XrmRecordService?.WebUrl);
-                }
-                catch (Exception ex)
-                {
-                    ApplicationController.ThrowException(ex);
-                }
-            });
-        }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {

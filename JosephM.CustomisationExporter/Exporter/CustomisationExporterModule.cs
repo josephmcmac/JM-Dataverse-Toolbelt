@@ -2,6 +2,7 @@
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
@@ -25,6 +26,31 @@ namespace JosephM.CustomisationExporter.Exporter
         {
             base.RegisterTypes();
             AddExportButtonToSavedConnectionsGrid();
+            AddDialogCompletionLinks();
+        }
+
+        private void AddDialogCompletionLinks()
+        {
+            this.AddCustomFormFunction(new CustomFormFunction("OPENTYPES", "Open Types"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.TypesFileNameQualified)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.TypesFileName))))
+                , typeof(CustomisationExporterResponse));
+            this.AddCustomFormFunction(new CustomFormFunction("OPENFIELDS", "Open Fields"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.FieldsFileNameQualified)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.FieldsFileName))))
+                , typeof(CustomisationExporterResponse));
+            this.AddCustomFormFunction(new CustomFormFunction("OPENRELATIONSHIPS", "Open Relationships"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.RelationshipsFileNameQualified)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.RelationshipsFileName))))
+                , typeof(CustomisationExporterResponse));
+            this.AddCustomFormFunction(new CustomFormFunction("OPENOPTIONS", "Open Options"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.OptionSetsFileNameQualified)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.OptionSetsFileName))))
+                , typeof(CustomisationExporterResponse));
+            this.AddCustomFormFunction(new CustomFormFunction("OPENFOLDER", "Open Folder"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.Folder)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.Folder))))
+                , typeof(CustomisationExporterResponse));
         }
 
         private void AddExportButtonToSavedConnectionsGrid()

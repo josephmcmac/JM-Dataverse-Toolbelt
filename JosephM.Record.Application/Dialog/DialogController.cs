@@ -3,6 +3,7 @@
 using System;
 using System.Collections.ObjectModel;
 using JosephM.Application.Application;
+using JosephM.Core.Extentions;
 
 #endregion
 
@@ -36,9 +37,10 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public virtual void ShowCompletionScreen(DialogViewModel dialog)
         {
-            var completionScreenViewModel = new CompletionScreenViewModel(dialog.OnCancel ?? Close, dialog.CompletionMessage,
-                dialog.CompletionOptions, dialog.CompletionItem,
+            var completionScreenViewModel = new CompletionScreenViewModel(dialog.OnCancel ?? Close, dialog.CompletionItem,
                 ApplicationController);
+            if(dialog.FatalException != null)
+                completionScreenViewModel.CompletionHeadingText = $"Fatal error:\n{dialog.FatalException.DisplayString()}";
             LoadToUi(completionScreenViewModel);
         }
 

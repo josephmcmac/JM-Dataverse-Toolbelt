@@ -123,7 +123,7 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
             Assert.IsNotNull(completionScreen);
             completionScreen.CompletionDetails.LoadFormSections();
             Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkReplaceResponse.ResponseItems)).GetGridRecords(false).Records.Any());
-            completionScreen.CloseButton.Invoke();
+            completionScreen.CompletionDetails.CancelButtonViewModel.Invoke();
             Assert.IsFalse(parentDialog.ChildForms.Any());
         }
     }

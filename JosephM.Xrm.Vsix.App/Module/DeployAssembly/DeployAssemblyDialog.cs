@@ -1,8 +1,6 @@
 ﻿using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
-using JosephM.Core.Service;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
@@ -175,10 +173,10 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
         protected override void CompleteDialogExtention()
         {
+            var response = new DeployAssemblyResponse();
             try
             {
-                var responses = new List<PluginTypeErrors>();
-
+                CompletionItem = response;
 
                 var service = Service;
 
@@ -232,16 +230,11 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
                 foreach (var item in pluginTypeLoadResponse.Errors)
                 {
-                    var responseItem = new PluginTypeErrors();
+                    var responseItem = new DeployAssemblyResponseItem();
                     responseItem.Name = item.Key.GetStringField(Fields.plugintype_.typename);
                     responseItem.Exception = item.Value;
-                    responses.Add(responseItem);
+                    response.AddResponseItem(responseItem);
                 }
-                CompletionItem = new PluginTypeDeployResponse()
-                {
-                    Responses = responses
-                };
-                //CompletionItems.AddRange(responses);
 
                 //add plugin assembly to the solution
                 var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
@@ -249,14 +242,14 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                 if (PackageSettings.AddToSolution)
                     service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
 
-                if (responses.Any())
-                    CompletionMessage = "There Were Errors Thrown Updating The Plugins";
+                if (response.ResponseItems.Any())
+                    response.Message = "There Were Errors Thrown Updating The Plugins";
                 else
-                    CompletionMessage = "Plugins Updated";
+                    response.Message = "Plugins Updated";
             }
             catch(Exception ex)
             {
-                CompletionMessage = "Fatal Error: " + ex.Message + Environment.NewLine + ex.XrmDisplayString();
+                response.Message = "Fatal Error: " + ex.Message + Environment.NewLine + ex.XrmDisplayString();
             }
         }
 
@@ -306,24 +299,6 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
             }
             return dictionary;
-        }
-
-
-        public class PluginTypeDeployResponse
-        {
-            [Hidden]
-            public bool HasResponses
-            {
-                get { return Responses != null && Responses.Any(); }
-            }
-
-            [PropertyInContextByPropertyValue(nameof(HasResponses), true)]
-            public IEnumerable<PluginTypeErrors> Responses { get; set; }
-        }
-
-        public class PluginTypeErrors : ServiceResponseItem
-        {
-            public string Name { get; set; }
         }
     }
 }

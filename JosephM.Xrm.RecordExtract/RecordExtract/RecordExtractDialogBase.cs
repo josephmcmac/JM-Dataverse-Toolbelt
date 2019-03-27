@@ -19,37 +19,6 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         {
         }
 
-        protected override void ProcessCompletionExtention()
-        {
-            AddCompletionOption("Open Document", OpenFile);
-            AddCompletionOption("Open Folder", OpenFolder);
-            CompletionMessage = "The Document Has Been Generated";
-        }
-
-        public void OpenFile()
-        {
-            try
-            {
-                ApplicationController.StartProcess(Response.FileNameQualified);
-            }
-            catch (Exception ex)
-            {
-                ApplicationController.UserMessage(ex.DisplayString());
-            }
-        }
-
-        public void OpenFolder()
-        {
-            try
-            {
-                ApplicationController.StartProcess(Response.Folder);
-            }
-            catch (Exception ex)
-            {
-                ApplicationController.UserMessage(ex.DisplayString());
-            }
-        }
-
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
             var dictionary = base.GetPropertiesForCompletedLog();

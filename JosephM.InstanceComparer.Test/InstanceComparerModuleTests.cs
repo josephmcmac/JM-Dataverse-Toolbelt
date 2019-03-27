@@ -146,7 +146,7 @@ namespace JosephM.InstanceComparer.Test
             //okay trigger to do the add to solution for our entered details
             addToSolutionEntry.SaveButtonViewModel.Invoke();
             var addToSolutionCompletion = addToSolutionDialog.Controller.UiItems.First() as CompletionScreenViewModel;
-            addToSolutionCompletion.CloseButton.Invoke();
+            addToSolutionCompletion.CompletionDetails.CancelButtonViewModel.Invoke();
             //verify after completion goes back to the differences response summary
             Assert.IsFalse(completionViewModel.ChildForms.Any());
 

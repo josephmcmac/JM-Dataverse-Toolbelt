@@ -61,6 +61,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 container.Response.FileName = fileName;
             }
             container.Response.GenerateSummaryItems(Service);
+            if (!container.Response.Summary.Any())
+                container.Response.Message = "No Matches Were Found For The Search Criteria";
         }
 
         private void ProcessRecordsReferencingTheWord(TextSearchContainer container)

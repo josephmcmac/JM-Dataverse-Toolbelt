@@ -21,15 +21,6 @@ namespace JosephM.CustomisationImporter
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
         }
 
-        protected override void CompleteDialogExtention()
-        {
-            base.CompleteDialogExtention();
-            if (Response.HasResponseItems)
-                CompletionMessage = "The Import Completed But The Following Errors Were Encountered During The Import";
-            else
-                CompletionMessage = "The Customisations Have Been Imported And Published";
-        }
-
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
             var dictionary = base.GetPropertiesForCompletedLog();

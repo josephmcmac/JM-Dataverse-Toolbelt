@@ -38,6 +38,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
                 countUpdated++;
                 controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Deletions"));
             }
+            response.Message = "Deletions Completed";
         }
     }
 }

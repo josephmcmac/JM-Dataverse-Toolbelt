@@ -23,6 +23,10 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
 
         private List<SummaryItem> _summaryItems = new List<SummaryItem>();
 
+        [Hidden]
+        public bool HasSummaryItems { get { return Summary != null && Summary.Any(); } }
+
+        [PropertyInContextByPropertyValue(nameof(HasSummaryItems), true)]
         [DoNotAllowGridOpen]
         [AllowDownload]
         [DisplayName("Search Results")]

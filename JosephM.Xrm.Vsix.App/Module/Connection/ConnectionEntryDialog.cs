@@ -51,7 +51,6 @@ namespace JosephM.Xrm.Vsix.Module.Connection
                     throw new NullReferenceException("settingsManager");
                 settingsManager.SaveSettingsObject(ObjectToEnter);
             }
-            CompletionMessage = "Connection Refreshed";
             if (DoPostEntry != null)
                 DoPostEntry();
         }

@@ -3,11 +3,11 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Deployment.SolutionImport;
 
-namespace JosephM.Xrm.Vsix.Module.ImportSolution
+namespace JosephM.Deployment.DeploySolution
 {
-    public class ImportSolutionResponseItem : ServiceResponseItem
+    public class DeploySolutionResponseItem : ServiceResponseItem
     {
-        public ImportSolutionResponseItem(SolutionImportResult solutionImportResult)
+        public DeploySolutionResponseItem(SolutionImportResult solutionImportResult)
         {
             SolutionImportResult = solutionImportResult;
         }

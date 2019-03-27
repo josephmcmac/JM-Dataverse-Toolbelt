@@ -33,6 +33,8 @@ namespace JosephM.CustomisationExporter.Exporter
             ProcessForFields(request, response, controller.Controller);
             ProcessForRelationships(request, response, controller.Controller);
             ProcessForOptionSets(request, response, controller.Controller);
+
+            response.Message = "The CSV Generation is Complete";
         }
 
         private void ProcessForRelationships(CustomisationExporterRequest request,

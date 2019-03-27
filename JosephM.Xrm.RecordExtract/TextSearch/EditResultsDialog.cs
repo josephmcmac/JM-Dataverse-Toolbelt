@@ -61,6 +61,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     {
                         return DynamicGridViewModel.GetGridRecord(GetAllTheseRecords(), b);
                     },
+                    DisplayTotalCount = true,
+                    GetTotalCount = () => GetAllTheseRecords().Count(),
                     MultiSelect = true,
                     GridLoaded = false,
                     FieldMetadata = ExplicitlySelectedColumns

@@ -12,11 +12,5 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
             : base(new BulkReplaceService(recordService), dialogController, recordService, request, onClose)
         {
         }
-
-        protected override void CompleteDialogExtention()
-        {
-            CompletionMessage = "Replaces Completed";
-            base.CompleteDialogExtention();
-        }
     }
 }

@@ -3,6 +3,9 @@ using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using JosephM.XrmModule.XrmConnection;
+using System;
+using JosephM.Application.ViewModel.Extentions;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
 namespace JosephM.CodeGenerator.CSharp
 {
@@ -15,5 +18,25 @@ namespace JosephM.CodeGenerator.CSharp
         public override string MenuGroup => "Code Generation";
 
         public override string MainOperationName => "C# Constants";
+
+        public override void RegisterTypes()
+        {
+            base.RegisterTypes();
+
+            AddDialogCompletionLinks();
+        }
+
+        private void AddDialogCompletionLinks()
+        {
+            this.AddCustomFormFunction(new CustomFormFunction("OPENFILE", "Open File"
+                , (r) => r.ApplicationController.StartProcess("notepad.exe", r.GetRecord().GetStringField(nameof(CSharpResponse.FileName)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CSharpResponse.FileName))))
+                , typeof(CSharpResponse));
+
+            this.AddCustomFormFunction(new CustomFormFunction("OPENFOLDER", "Open Folder"
+                , (r) => r.ApplicationController.StartProcess("explorer", r.GetRecord().GetStringField(nameof(CSharpResponse.Folder)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CSharpResponse.Folder))))
+                , typeof(CSharpResponse));
+        }
     }
 }

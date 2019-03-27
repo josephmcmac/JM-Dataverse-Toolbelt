@@ -36,7 +36,9 @@ namespace JosephM.Deployment.ImportXml
             var entities = LoadEntitiesFromXmlFiles(folder, controller.Controller);
             var matchOption = matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly;
             var importResponse = DataImportService.DoImport(entities, controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner);
+            response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.LoadDataImport(importResponse);
+            response.Message = "The Import Process Has Completed";
         }
 
         public IEnumerable<Entity> LoadEntitiesFromXmlFiles(string folder, LogController controller = null)

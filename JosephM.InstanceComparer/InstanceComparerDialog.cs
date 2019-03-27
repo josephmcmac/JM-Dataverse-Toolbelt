@@ -12,16 +12,6 @@ namespace JosephM.InstanceComparer
         {
         }
 
-        protected override void CompleteDialogExtention()
-        {
-            base.CompleteDialogExtention();
-
-            if (Response.AreDifferences)
-                CompletionMessage = "Differences Were Found Between The Environments";
-            else
-                CompletionMessage = "No Difference Were Found";
-        }
-
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
             var dictionary = base.GetPropertiesForCompletedLog();

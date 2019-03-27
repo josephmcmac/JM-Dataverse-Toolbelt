@@ -38,12 +38,6 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
             base.LoadDialogExtention();
         }
 
-        protected override void CompleteDialogExtention()
-        {
-            CompletionMessage = "Export Completed";
-            base.CompleteDialogExtention();
-        }
-
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
             var dictionary = base.GetPropertiesForCompletedLog();

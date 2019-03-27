@@ -97,6 +97,7 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                 }
                 controller.TurnOffLevel2();
             }
+            response.Message = "Export Completed";
         }
 
         public bool IncludeExtention(AddPortalCodeRequest request, string fileName)

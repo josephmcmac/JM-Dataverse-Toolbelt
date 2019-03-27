@@ -59,6 +59,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
 
             response.Folder = request.SaveToFolder.FolderPath;
             response.FileName = fileName;
+            response.Message = "The Document Has Been Generated";
         }
 
         private RecordExtractToDocumentResponse ExtractRecordToDocument(RecordExtractToDocumentRequest request)

@@ -43,6 +43,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
                 countUpdated++;
                 controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Updates"));
             }
+            response.Message = "Updates Completed";
         }
     }
 }

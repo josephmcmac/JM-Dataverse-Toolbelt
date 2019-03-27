@@ -21,8 +21,6 @@ namespace JosephM.Application.ViewModel.Fakes
             //attempt to load the grids and data
             if (viewModel is RecordEntryFormViewModel)
                 ProcessRecordEntryForm((RecordEntryFormViewModel)viewModel);
-            else if (viewModel is CompletionScreenViewModel)
-                ProcessCompletionScreen((CompletionScreenViewModel)viewModel);
         }
 
         public override void ShowCompletionScreen(DialogViewModel dialog)
@@ -30,25 +28,6 @@ namespace JosephM.Application.ViewModel.Fakes
             base.ShowCompletionScreen(dialog);
             if (dialog.FatalException != null)
                 throw dialog.FatalException;
-        }
-
-        private void ProcessCompletionScreen(CompletionScreenViewModel viewModel)
-        {
-            if (viewModel.CompletionOptions.Any())
-            {
-                foreach (var item in viewModel.CompletionOptions)
-                {
-                    try
-                    {
-                        item.Invoke();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Error trigger completion option " + item.Label, ex);
-                    }
-
-                }
-            }
         }
 
         protected virtual void ProcessRecordEntryForm(RecordEntryFormViewModel viewModel)

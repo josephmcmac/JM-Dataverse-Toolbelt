@@ -99,6 +99,8 @@ namespace JosephM.Deployment.CreatePackage
                     response.LoadDeployPackageResponse(deployPackageResponse);
                 }
             }
+
+            response.Message = "The Deployment Package Has Been Generated" + (request.DeployPackageInto == null ? "" : " And Deployed");
         }
 
         private string GetDataExportFolder(string rootFolder)

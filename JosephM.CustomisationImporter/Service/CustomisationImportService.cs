@@ -1,7 +1,4 @@
-﻿#region
-
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.CustomisationImporter.ImportMetadata;
@@ -17,8 +14,6 @@ using Microsoft.Crm.Sdk.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.CustomisationImporter.Service
 {
@@ -145,6 +140,10 @@ namespace JosephM.CustomisationImporter.Service
                 AddComponentsToSolution(OptionSets.SolutionComponent.ObjectTypeCode.Entity, theseObjectsToAdd, getMetadata, response, solution, controller.Controller);
 
             }
+
+            response.Message = response.HasResponseItemError
+                ? "The Import Completed But The Following Errors Were Encountered During The Import"
+                : "The Customisations Have Been Imported And Published";
 
             RecordService.ClearCache();
         }

@@ -1,36 +1,19 @@
-#region
-
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
 using JosephM.Deployment.DataImport;
-using JosephM.Deployment.ImportXml;
 using JosephM.Deployment.SolutionImport;
-using JosephM.Record.Extentions;
-using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Threading;
-using System.Xml;
-
-#endregion
 
 namespace JosephM.Deployment.DeploySolution
 {
     public class DeploySolutionService :
-        ServiceBase<DeploySolutionRequest, DeploySolutionResponse, DataImportResponseItem>
+        ServiceBase<DeploySolutionRequest, DeploySolutionResponse, DeploySolutionResponseItem>
     {
         public DeploySolutionService()
         {
@@ -70,10 +53,12 @@ namespace JosephM.Deployment.DeploySolution
             controller.UpdateProgress(tasksDone, totalTasks, "Exporting Solution " + request.Solution.Name);
             var targetXrmRecordService = new XrmRecordService(request.TargetConnection);
             var importSolutionService = new SolutionImportService(targetXrmRecordService);
-            importSolutionService.ImportSolutions(new Dictionary<string, byte[]>
+            var importResponse = importSolutionService.ImportSolutions(new Dictionary<string, byte[]>
             {
                 { uniqueName, exportResponse.ExportSolutionFile }
             }, controller);
+            response.AddResponseItems(importResponse.Select(i => new DeploySolutionResponseItem(i)).ToArray());
+            response.ConnectionDeployedInto = request.TargetConnection;
 
             tasksDone++;
             if (solution.GetStringField(Fields.solution_.version) != request.SetVersionPostRelease)
@@ -82,6 +67,8 @@ namespace JosephM.Deployment.DeploySolution
                 solution.SetField(Fields.solution_.version, request.SetVersionPostRelease);
                 service.Update(solution, new[] { Fields.solution_.version });
             }
+
+            response.Message = $"The Solution Has Been Deployed Into {request.TargetConnection}";
         }
     }
 }

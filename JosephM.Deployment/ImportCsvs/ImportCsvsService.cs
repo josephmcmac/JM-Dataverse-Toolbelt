@@ -27,7 +27,9 @@ namespace JosephM.Deployment.ImportCsvs
 
             var importService = new SpreadsheetImportService(XrmRecordService);
             var responseItem = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, request.UpdateOnly, controller, useAmericanDates: request.DateFormat == DateFormat.American);
+            response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.LoadSpreadsheetImport(responseItem);
+            response.Message = "The Import Process Has Completed";
         }
 
         public Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportCsvsRequest request)

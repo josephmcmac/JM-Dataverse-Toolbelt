@@ -40,6 +40,7 @@ namespace JosephM.InstanceComparer.AddToSolution
                     response.AddResponseItem(new AddToSolutionResponseItem() { Exception = ex });
                 }
             }
+            response.Message = "Add To Solution Completed";
         }
     }
 }

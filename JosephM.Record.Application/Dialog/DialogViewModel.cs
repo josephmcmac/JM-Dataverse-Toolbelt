@@ -71,21 +71,9 @@ namespace JosephM.Application.ViewModel.Dialog
             _tabLabel = newLabel;
         }
 
-        public string CompletionMessage { get; set; }
-
         public object CompletionItem
         {
             get; set;
-        }
-
-        public ObservableCollection<XrmButtonViewModel> CompletionOptions
-        {
-            get { return _completionOptions; }
-        }
-
-        protected void AddCompletionOption(string label, Action action)
-        {
-            CompletionOptions.Add(new XrmButtonViewModel(label, action, ApplicationController));
         }
 
         public Exception FatalException { get; private set; }
@@ -196,7 +184,6 @@ namespace JosephM.Application.ViewModel.Dialog
             else
             {
                 ApplicationController.LogEvent(DialogEventName + " Fatal Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
-                CompletionMessage = string.Format("Fatal error:\n{0}", ex.DisplayString());
                 Controller.ShowCompletionScreen(this);
             }
         }

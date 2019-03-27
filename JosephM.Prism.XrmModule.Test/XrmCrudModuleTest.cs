@@ -484,7 +484,7 @@ namespace JosephM.XrmModule.Test
             Assert.IsNotNull(completionScreen);
             completionScreen.CompletionDetails.LoadFormSections();
             Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkUpdateResponse.ResponseItems)).GetGridRecords(false).Records.Any());
-            completionScreen.CloseButton.Invoke();
+            completionScreen.CompletionDetails.CancelButtonViewModel.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }
 
@@ -507,7 +507,7 @@ namespace JosephM.XrmModule.Test
             Assert.IsNotNull(completionScreen);
             completionScreen.CompletionDetails.LoadFormSections();
             Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkCopyFieldValueResponse.ResponseItems)).GetGridRecords(false).Records.Any());
-            completionScreen.CloseButton.Invoke();
+            completionScreen.CompletionDetails.CancelButtonViewModel.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }
 
@@ -524,7 +524,7 @@ namespace JosephM.XrmModule.Test
             Assert.IsNotNull(completionScreen);
             completionScreen.CompletionDetails.LoadFormSections();
             Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkDeleteResponse.ResponseItems)).GetGridRecords(false).Records.Any());
-            completionScreen.CloseButton.Invoke();
+            completionScreen.CompletionDetails.CancelButtonViewModel.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }
     }

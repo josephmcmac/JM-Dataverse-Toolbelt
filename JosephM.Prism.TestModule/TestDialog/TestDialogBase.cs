@@ -13,14 +13,5 @@ namespace JosephM.TestModule.TestDialog
         {
             
         }
-
-        protected override void CompleteDialogExtention()
-        {
-
-            base.CompleteDialogExtention();
-
-            CompletionOptions.Add(new XrmButtonViewModel("Option 1", () => ApplicationController.UserMessage("Dummy"), ApplicationController));
-            CompletionOptions.Add(new XrmButtonViewModel("option 2", () => ApplicationController.UserMessage("Dummy 2"), ApplicationController));
-        }
     }
 }

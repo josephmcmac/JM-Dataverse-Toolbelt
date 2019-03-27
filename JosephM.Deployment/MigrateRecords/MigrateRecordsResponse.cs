@@ -1,6 +1,7 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
+using JosephM.XrmModule.SavedXrmConnections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,6 +36,9 @@ namespace JosephM.Deployment.MigrateRecords
                 return _importedRecords;
             }
         }
+
+        [Hidden]
+        public SavedXrmRecordConfiguration ConnectionMigratedInto { get; internal set; }
 
         private static class Sections
         {

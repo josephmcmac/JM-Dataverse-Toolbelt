@@ -13,8 +13,6 @@ namespace JosephM.Application.ViewModel.Fakes
         public FakeCompletionScreenViewModel()
             : base(
                 () => { },
-                "This Has Coimpleted Processing",
-                CreateFakeCompletionOptions(),
                 null,
                 new FakeApplicationController())
         {

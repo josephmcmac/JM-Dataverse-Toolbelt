@@ -2,6 +2,8 @@
 using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Core.Attributes;
 using JosephM.XrmModule.XrmConnection;
+using JosephM.Application.ViewModel.Extentions;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
@@ -17,5 +19,23 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
         }
 
         public override string MenuGroup => "Reports";
+
+        public override void RegisterTypes()
+        {
+            base.RegisterTypes();
+            AddDialogCompletionLinks();
+        }
+
+        private void AddDialogCompletionLinks()
+        {
+            this.AddCustomFormFunction(new CustomFormFunction("OPENDOCUMENT", "Open Document"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(RecordExtractResponse.FileNameQualified)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(RecordExtractResponse.FileNameQualified))))
+                , typeof(RecordExtractResponse));
+            this.AddCustomFormFunction(new CustomFormFunction("OPENFOLDER", "Open Folder"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(RecordExtractResponse.Folder)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(RecordExtractResponse.Folder))))
+                , typeof(RecordExtractResponse));
+        }
     }
 }

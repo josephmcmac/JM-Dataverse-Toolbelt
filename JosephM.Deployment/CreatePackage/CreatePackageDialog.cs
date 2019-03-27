@@ -20,12 +20,6 @@ namespace JosephM.Deployment.CreatePackage
         {
         }
 
-        protected override void CompleteDialogExtention()
-        {
-            base.CompleteDialogExtention();
-            CompletionMessage = "The Deployment Package Has Been Generated" + (Request.DeployPackageInto == null ? "" : " And Deployed");
-        }
-
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
             var dictionary = base.GetPropertiesForCompletedLog();

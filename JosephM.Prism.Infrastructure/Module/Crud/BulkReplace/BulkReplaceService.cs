@@ -43,6 +43,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
                 countUpdated++;
                 controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Replacements"));
             }
+            response.Message = "Replaces Completed";
         }
     }
 }

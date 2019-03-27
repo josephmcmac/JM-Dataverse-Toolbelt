@@ -1,5 +1,4 @@
-﻿using JosephM.Application.ViewModel.Navigation;
-using JosephM.Application.ViewModel.RecordEntry.Field;
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Application.ViewModel.Shared;
@@ -98,11 +97,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                     if (cf.GetChildFormFunctions != null && cf.GetChildFormFunctions(this).Any())
                     {
                         var childButtons = FormFunctionsToXrmButtons(cf.GetChildFormFunctions(this));
-                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, childButtons, ApplicationController) { Description = cf.Description });
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.LabelFunc(this), childButtons, ApplicationController) { Description = cf.Description });
                     }
                     else
                     {
-                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.Label, () => cf.Function(this), ApplicationController) { Description = cf.Description });
+                        buttons.Add(new XrmButtonViewModel(cf.Id, cf.LabelFunc(this), () => cf.Function(this), ApplicationController) { Description = cf.Description });
                     }
                 }
             }

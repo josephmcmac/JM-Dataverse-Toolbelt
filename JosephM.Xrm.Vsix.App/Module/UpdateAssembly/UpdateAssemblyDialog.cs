@@ -34,13 +34,14 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
         protected override void CompleteDialogExtention()
         {
             LoadingViewModel.IsLoading = true;
-
+            var response = new UpdateAssemblyResponse();
+            CompletionItem = response;
             try
             {
                 var assemblyFile = VisualStudioService.BuildSelectedProjectAndGetAssemblyName();
                 if (string.IsNullOrWhiteSpace(assemblyFile))
                 {
-                    CompletionMessage = "Could Not Find Built Assembly. Check The Build Results";
+                    response.CompletionMessage = "Could Not Find Built Assembly. Check The Build Results";
                 }
                 else
                 {
@@ -54,7 +55,7 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
                     var preAssembly = Service.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name, assemblyName);
                     if (preAssembly == null)
                     {
-                        CompletionMessage = "There is no plugin assembly deployed in the dynamics instance with a matching name. Try the deploy assembly option to deploy a new plugin assembly, or rename the assembly to match an existing assembly deployed to the instance";
+                        response.CompletionMessage = "There is no plugin assembly deployed in the dynamics instance with a matching name. Try the deploy assembly option to deploy a new plugin assembly, or rename the assembly to match an existing assembly deployed to the instance";
                     }
                     else
                     {
@@ -77,13 +78,13 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
                         if (PackageSettings.AddToSolution)
                             Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
 
-                        CompletionMessage = "Assembly Updated";
+                        response.CompletionMessage = "Assembly Updated";
                     }
                 }
             }
             catch(Exception ex)
             {
-                CompletionMessage = ex.XrmDisplayString();
+                response.CompletionMessage = ex.XrmDisplayString();
             }
             finally
             {

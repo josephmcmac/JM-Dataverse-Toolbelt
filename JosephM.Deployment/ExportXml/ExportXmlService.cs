@@ -45,8 +45,9 @@ namespace JosephM.Deployment.ExportXml
             ServiceRequestController controller)
         {
             ExportXml(request.RecordTypesToExport, request.Folder, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller.Controller);
+            response.Folder = request.Folder.FolderPath;
+            response.Message = "The XML Files Have Been Created";
         }
-
 
 
         public void ExportXml(IEnumerable<ExportRecordType> exports, Folder folder, bool includeNotes, bool includeNNBetweenEntities, LogController controller)

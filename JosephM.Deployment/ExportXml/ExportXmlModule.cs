@@ -2,6 +2,7 @@
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
@@ -15,13 +16,22 @@ namespace JosephM.Deployment.ExportXml
     public class ExportXmlModule
         : ServiceRequestModule<ExportXmlDialog, ExportXmlService, ExportXmlRequest, ExportXmlResponse, ExportXmlResponseItem>
     {
+        public override string MenuGroup => "Data Import/Export";
+
         public override void RegisterTypes()
         {
             base.RegisterTypes();
             AddExportXmlToSavedConnectionsGrid();
+            AddDialogCompletionLinks();
         }
 
-        public override string MenuGroup => "Data Import/Export";
+        private void AddDialogCompletionLinks()
+        {
+            this.AddCustomFormFunction(new CustomFormFunction("OPENFOLDER", "Open Folder"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(ExportXmlResponse.Folder)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(ExportXmlResponse.Folder))))
+                , typeof(ExportXmlResponse));
+        }
 
         private void AddExportXmlToSavedConnectionsGrid()
         {

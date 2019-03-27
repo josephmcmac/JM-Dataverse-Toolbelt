@@ -14,24 +14,5 @@ namespace JosephM.CodeGenerator.CSharp
             : base(service, dialogController, lookupService)
         {
         }
-
-        protected override void ProcessCompletionExtention()
-        {
-            if (!string.IsNullOrWhiteSpace(Response.FileName))
-                AddCompletionOption("Open File", OpenFile);
-            if (!string.IsNullOrWhiteSpace(Response.Folder))
-                AddCompletionOption("Open Folder", OpenFolder);
-            CompletionMessage = "Document Generation Complete";
-        }
-
-        public void OpenFile()
-        {
-            ApplicationController.StartProcess("notepad.exe", Response.FileName);
-        }
-
-        public void OpenFolder()
-        {
-            ApplicationController.StartProcess("explorer", Response.Folder);
-        }
     }
 }

@@ -186,6 +186,11 @@
     <Compile Include="Module\AddPortalCode\AddPortalCodeResponseItem.cs" />
     <Compile Include="Module\AddPortalCode\AddPortalCodeService.cs" />
     <Compile Include="Module\AddPortalCode\AddPortalCodeConfiguration.cs" />
+    <Compile Include="Module\DeployAssembly\DeployAssemblyResponse.cs" />
+    <Compile Include="Module\DeployAssembly\DeployAssemblyResponseItem.cs" />
+    <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponse.cs" />
+    <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponseitem.cs" />
+    <Compile Include="Module\UpdateAssembly\UpdateAssemblyResponse.cs" />
     <Compile Include="Module\Web\MenuItemVisibleSolutionConfigured.cs" />
     <Compile Include="Module\Web\OpenAdvancedFindDialog.cs" />
     <Compile Include="Module\Web\OpenDefaultSolutionDialog.cs" />

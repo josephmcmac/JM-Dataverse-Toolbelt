@@ -19,7 +19,7 @@
     </UserControl.Resources>
     <Grid>
         <WrapPanel
-            MaxHeight="{Binding ElementName=FormSections,Path=ActualHeight, Converter={StaticResource HeightAdjuster}, ConverterParameter=-20}"
+            MaxHeight="{Binding ElementName=FormSections,Path=ActualHeight, Converter={StaticResource HeightAdjuster}, ConverterParameter=-55}"
             Visibility="{Binding IsGridOnlyEntryField, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
             <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
                 <Grid>

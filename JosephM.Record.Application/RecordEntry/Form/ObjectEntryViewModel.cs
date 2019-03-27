@@ -1,27 +1,13 @@
-#region
-
-using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
-using JosephM.Application.ViewModel.RecordEntry.Section;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
 using JosephM.Core.Service;
-using JosephM.ObjectMapping;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
-using JosephM.Application.Application;
-using JosephM.Core.AppConfig;
-using JosephM.Application.ViewModel.Dialog;
+using System;
 using System.Collections.Generic;
-using JosephM.Application.ViewModel.Extentions;
-using JosephM.Application.ViewModel.RecordEntry.Field;
-using System.Threading;
-using System.Reflection;
-
-#endregion
+using System.Linq;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Form
 {

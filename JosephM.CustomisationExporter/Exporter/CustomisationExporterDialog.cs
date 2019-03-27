@@ -17,46 +17,5 @@ namespace JosephM.CustomisationExporter.Exporter
             : base(service, dialogController, recordService)
         {
         }
-
-        protected override void ProcessCompletionExtention()
-        {
-            if (!Response.TypesFileName.IsNullOrWhiteSpace())
-                AddCompletionOption("Open Types", OpenTypesFile);
-            if (!Response.FieldsFileName.IsNullOrWhiteSpace())
-                AddCompletionOption("Open Fields", OpenFieldsFile);
-            if (!Response.RelationshipsFileName.IsNullOrWhiteSpace())
-                AddCompletionOption("Open Relationships", OpenRelationshipsFile);
-            if (!Response.OptionSetsFileName.IsNullOrWhiteSpace())
-                AddCompletionOption("Open Options", OpenOptionsFile);
-            CompletionMessage = string.Format("The CSV {0} Been Generated",
-                CompletionOptions.Count > 1 ? "Files Have" : "File Has");
-            AddCompletionOption("Open Folder", OpenFolder);
-
-        }
-
-        public void OpenFolder()
-        {
-            ApplicationController.StartProcess("explorer", Response.Folder);
-        }
-
-        public void OpenOptionsFile()
-        {
-            ApplicationController.StartProcess(Response.OptionSetsFileNameQualified);
-        }
-
-        public void OpenTypesFile()
-        {
-            ApplicationController.StartProcess(Response.TypesFileNameQualified);
-        }
-
-        public void OpenFieldsFile()
-        {
-            ApplicationController.StartProcess(Response.FieldsFileNameQualified);
-        }
-
-        public void OpenRelationshipsFile()
-        {
-            ApplicationController.StartProcess(Response.RelationshipsFileNameQualified);
-        }
     }
 }

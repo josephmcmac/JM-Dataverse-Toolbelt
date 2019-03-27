@@ -58,6 +58,7 @@ namespace JosephM.CodeGenerator.CSharp
             response.CSharpCode = stringBuilder.ToString();
             response.Folder = request.Folder?.FolderPath;
             response.FileName = Path.Combine(response.Folder, fileName);
+            response.Message = "Document Generation Complete";
         }
 
         private void AppendEntities(LogController controller, CSharpRequest request, StringBuilder stringBuilder)

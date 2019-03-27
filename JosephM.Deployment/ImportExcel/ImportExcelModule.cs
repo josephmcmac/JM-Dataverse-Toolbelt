@@ -28,6 +28,26 @@ namespace JosephM.Deployment.ImportExcel
             base.RegisterTypes();
             AddGenerateMappingsWhenExcelFileSelected();
             AddOImportExcelToSavedConnectionsGrid();
+            AddDialogCompletionLinks();
+        }
+
+        private void AddDialogCompletionLinks()
+        {
+            this.AddCustomFormFunction(new CustomFormFunction("OPENINSTANCE"
+                , (r) => $"Open {r.GetRecord().GetField(nameof(ImportExcelResponse.Connection))}"
+                , (r) =>
+                {
+                    try
+                    {
+                        ApplicationController.StartProcess(new XrmRecordService(r.GetRecord().GetField(nameof(ImportExcelResponse.Connection)) as IXrmRecordConfiguration).WebUrl);
+                    }
+                    catch (Exception ex)
+                    {
+                        ApplicationController.ThrowException(ex);
+                    }
+                }
+                , (r) => r.GetRecord().GetField(nameof(ImportExcelResponse.Connection)) != null)
+                , typeof(ImportExcelResponse));
         }
 
         private void AddOImportExcelToSavedConnectionsGrid()
