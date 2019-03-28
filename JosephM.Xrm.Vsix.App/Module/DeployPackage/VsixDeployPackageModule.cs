@@ -20,6 +20,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployPackage
 
         public override void RegisterTypes()
         {
+            base.RegisterTypes();
         }
 
         public override void DialogCommand()
