@@ -618,17 +618,22 @@ namespace JosephM.Application.ViewModel.Grid
                     LoadingViewModel.IsLoading = true;
                     if (!string.IsNullOrWhiteSpace(newFileName))
                     {
-
                         var folder = Path.GetDirectoryName(newFileName);
                         var fileName = Path.GetFileName(newFileName);
                         var fields = FieldMetadata.Select(rf => rf.FieldName);
+                        var started = DateTime.UtcNow;
                         CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records, fields, (f) => RecordService.GetFieldLabel(f, RecordType), (r, f) => { return RecordService.GetFieldAsDisplayString((IRecord)r, f); });
+                        ApplicationController.LogEvent("Download CSV", new Dictionary<string, string>
+                        {
+                            { "Type", RecordType },
+                            { "Seconds Taken", (DateTime.UtcNow - started).TotalSeconds.ToString() },
+                        });
                         ApplicationController.StartProcess("explorer.exe", "/select, \"" + Path.Combine(folder, fileName) + "\"");
                     }
                 }
                 catch (Exception ex)
                 {
-                    ApplicationController.UserMessage("Error Downloading CSV: " + ex.DisplayString());
+                    ApplicationController.ThrowException(ex);
                 }
                 finally
                 {
