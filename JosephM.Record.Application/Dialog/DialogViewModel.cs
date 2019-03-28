@@ -136,7 +136,13 @@ namespace JosephM.Application.ViewModel.Dialog
 
         protected virtual IDictionary<string, string> GetPropertiesForCompletedLog()
         {
-            return new Dictionary<string, string>();
+            
+            var dictionary = new Dictionary<string, string>();
+            if(TimeCompleteMethodStarted.HasValue)
+            {
+                dictionary.Add("Complete Method Seconds Taken", (DateTime.UtcNow - TimeCompleteMethodStarted.Value).TotalSeconds.ToString());
+            }
+            return dictionary;
         }
 
         public virtual string GetCompletionHeading()
@@ -203,6 +209,7 @@ namespace JosephM.Application.ViewModel.Dialog
                 () =>
                 {
                     LoadingViewModel.IsLoading = true;
+                    TimeCompleteMethodStarted = DateTime.UtcNow;
                     try
                     {
                         CompleteDialogExtention();
@@ -252,6 +259,8 @@ namespace JosephM.Application.ViewModel.Dialog
                 OnPropertyChanged(nameof(ShowProgressControlViewModel));
             }
         }
+
+        private DateTime? TimeCompleteMethodStarted { get; set; }
 
         protected void AddObjectToUi(object objectToDisplay, Action backAction = null, Action nextAction = null)
         {
