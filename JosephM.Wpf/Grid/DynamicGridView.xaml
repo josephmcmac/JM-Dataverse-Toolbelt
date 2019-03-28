@@ -39,13 +39,12 @@
         <Grid Grid.Row="2"   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenNotCollapsedConverter}, Mode=OneWay}" >
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid Name="SortingLoadGrid" Grid.Row="0" Visibility="Collapsed" >
                     <shared:LoadingView DataContext="{Binding SortLoadingViewModel}" />
                 </Grid>
-                <Grid Name="SortingMainGrid" Grid.Row="1" Visibility="{Binding GridLoaded, Converter={StaticResource BoolToVis}}">
+                <Grid Name="SortingMainGrid" Grid.Row="0" Visibility="{Binding GridLoaded, Converter={StaticResource BoolToVis}}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
