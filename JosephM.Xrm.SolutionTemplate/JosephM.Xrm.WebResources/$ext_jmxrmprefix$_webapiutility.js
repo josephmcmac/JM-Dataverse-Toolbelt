@@ -126,6 +126,9 @@ $ext_jmobjprefix$WebApiUtility = function () {
                     valueString = valueString.replace('{', '').replace('}', '');
                     fieldString = "_" + fieldString + "_value";
                 }
+                if (thisOne.type == that.FieldType.Date) {
+                    valueString = thisOne.value.toISOString();
+                }
 
                 var thisString = fieldString + " " + thisOne.operator + " " + valueString;
                 conditionStrings.push(thisString);
