@@ -10,6 +10,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.AddPortalCode
 {
+    [MenuItemVisibleForDeployIntoFieldProject]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
     public class AddPortalCodeModule : ServiceRequestModule<AddPortalCodeDialog, AddPortalCodeService, AddPortalCodeRequest, AddPortalCodeResponse, AddPortalCodeResponseItem>

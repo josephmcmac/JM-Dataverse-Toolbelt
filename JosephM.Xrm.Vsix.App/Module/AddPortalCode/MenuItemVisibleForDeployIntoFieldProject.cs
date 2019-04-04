@@ -1,17 +1,14 @@
 ﻿using JosephM.Application.Application;
-using System.Collections.Generic;
 using JosephM.Core.AppConfig;
-using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Linq;
 
-namespace JosephM.Xrm.Vsix.Module.DeployIntoField
+namespace JosephM.Xrm.Vsix.Module.AddPortalCode
 {
-    public class DeployIntoFieldMenuItemVisible : MenuItemVisibleForFileTypes
+    public class MenuItemVisibleForDeployIntoFieldProject : MenuItemVisible
     {
-        public override IEnumerable<string> ValidExtentions => DeployIntoFieldService.IntoFieldTypes;
-
         public override bool IsVisible(IApplicationController applicationController)
         {
             var packageSettings = applicationController.ResolveType<XrmPackageSettings>();
@@ -20,11 +17,18 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
                 throw new NullReferenceException("visualStudioService");
 
             if (packageSettings.DeployIntoFieldProjects == null || !packageSettings.DeployIntoFieldProjects.Any())
-                return base.IsVisible(applicationController);
+                return true;
 
             var selectedItems = visualStudioService.GetSelectedItems();
-            return selectedItems.All(si => packageSettings.DeployIntoFieldProjects.Any(w => w.ProjectName == si.NameOfContainingProject))
-                && base.IsVisible(applicationController);
+            if (selectedItems.Count() == 1)
+            {
+                foreach (var selectedItem in selectedItems)
+                {
+                    if (packageSettings.DeployIntoFieldProjects.Any(p => p.ProjectName == selectedItem.Name))
+                        return true;
+                }
+            }
+            return false;
         }
     }
 }

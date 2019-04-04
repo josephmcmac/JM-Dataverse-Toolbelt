@@ -78,5 +78,15 @@ namespace JosephM.Xrm.Vsix.Application
             }
             return new VisualStudioSolutionFolder(SolutionFolder.AddSolutionFolder(folder));
         }
+
+        public string NameOfContainingProject
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        string IVisualStudioItem.FileName => null;
     }
 }

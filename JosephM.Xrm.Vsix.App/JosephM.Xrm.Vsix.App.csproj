@@ -186,8 +186,10 @@
     <Compile Include="Module\AddPortalCode\AddPortalCodeResponseItem.cs" />
     <Compile Include="Module\AddPortalCode\AddPortalCodeService.cs" />
     <Compile Include="Module\AddPortalCode\AddPortalCodeConfiguration.cs" />
+    <Compile Include="Module\AddPortalCode\MenuItemVisibleForDeployIntoFieldProject.cs" />
     <Compile Include="Module\DeployAssembly\DeployAssemblyResponse.cs" />
     <Compile Include="Module\DeployAssembly\DeployAssemblyResponseItem.cs" />
+    <Compile Include="Module\MenuItemVisibleForPluginProject.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponse.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponseitem.cs" />
     <Compile Include="Module\UpdateAssembly\UpdateAssemblyResponse.cs" />
@@ -232,7 +234,7 @@
     <Compile Include="Module\ImportRecords\ImportRecordsRequest.cs" />
     <Compile Include="Module\ImportRecords\ImportRecordsResponse.cs" />
     <Compile Include="Module\ImportRecords\ImportRecordsService.cs" />
-    <Compile Include="Module\ImportRecords\MenuItemVisibleXml.cs" />
+    <Compile Include="Module\ImportRecords\MenuItemVisibleImportRecords.cs" />
     <Compile Include="Module\ImportSolution\ImportSolutionDialog.cs" />
     <Compile Include="Module\ImportSolution\ImportSolutionModule.cs" />
     <Compile Include="Module\ImportSolution\ImportSolutionRequest.cs" />

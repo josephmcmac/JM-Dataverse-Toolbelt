@@ -1,6 +1,5 @@
 ﻿using JosephM.Core.Utility;
 using JosephM.Xrm.Vsix.Application;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -65,5 +64,15 @@ namespace JosephM.Xrm.Vsix.Test
         {
 
         }
+
+        public string NameOfContainingProject
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        string IVisualStudioItem.FileName => null;
     }
 }

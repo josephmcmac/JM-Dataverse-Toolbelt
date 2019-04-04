@@ -57,5 +57,13 @@ namespace JosephM.Xrm.Vsix.Application
                 return ProjectItem.Name;
             }
         }
+
+        public string NameOfContainingProject
+        {
+            get
+            {
+                return ProjectItem?.ContainingProject?.Name;
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {
-    [MenuItemVisibleXml]
+    [MenuItemVisibleImportRecords]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
     public class ImportRecordsModule : ServiceRequestModule<ImportRecordsDialog, ImportRecordsService, ImportRecordsRequest, ImportRecordsResponse, DataImportResponseItem>

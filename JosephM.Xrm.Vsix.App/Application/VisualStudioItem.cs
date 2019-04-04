@@ -12,5 +12,24 @@ namespace JosephM.Xrm.Vsix.Application
         {
             Item = item;
         }
+
+        public string NameOfContainingProject
+        {
+            get
+            {
+                return Item?.ProjectItem?.ContainingProject?.Name;
+            }
+        }
+
+        public string FileName
+        {
+            get
+            {
+                return Item.ProjectItem != null
+                    && Item.ProjectItem.FileCount > 0
+                    ? Item.ProjectItem.FileNames[1]
+                    : null;
+            }
+        }
     }
 }

@@ -138,18 +138,24 @@
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="DeployPluginAssemblyCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Deploy Plugin Assembly</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="UpdatePluginAssemblyCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Update Plugin Assembly (Assembly Only)</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="ManagePluginTriggersCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Manage Plugin Triggers</ButtonText>
         </Strings>
@@ -284,6 +290,8 @@
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="AddPortalCodeCommandId" priority="0x0105" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Add Portal Code</ButtonText>
         </Strings>

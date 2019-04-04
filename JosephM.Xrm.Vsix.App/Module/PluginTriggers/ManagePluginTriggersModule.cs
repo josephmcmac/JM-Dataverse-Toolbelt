@@ -1,10 +1,10 @@
-﻿using System;
-using JosephM.Application.Modules;
-using JosephM.XrmModule.XrmConnection;
+﻿using JosephM.Application.Modules;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
+    [MenuItemVisibleForPluginProject]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
     public class ManagePluginTriggersModule : OptionActionModule

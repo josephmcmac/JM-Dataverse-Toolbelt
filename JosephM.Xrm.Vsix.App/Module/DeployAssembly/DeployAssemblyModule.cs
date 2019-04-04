@@ -4,6 +4,7 @@ using JosephM.XrmModule.XrmConnection;
 
 namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 {
+    [MenuItemVisibleForPluginProject]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
     public class DeployAssemblyModule : OptionActionModule

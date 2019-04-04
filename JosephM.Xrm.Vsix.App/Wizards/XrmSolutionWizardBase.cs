@@ -30,6 +30,17 @@ namespace JosephM.Xrm.Vsix.Wizards
         {
             //get a xrm connection and package setting by loading the entry dialogs
             XrmPackageSettings = new XrmPackageSettings();
+            if (replacementsDictionary.ContainsKey("$projectname$"))
+            {
+                XrmPackageSettings.PluginProjects = new[]
+                {
+                    new XrmPackageSettings.PluginProject(replacementsDictionary["$projectname$"] + ".Plugins")
+                };
+                XrmPackageSettings.WebResourceProjects = new[]
+                {
+                    new XrmPackageSettings.WebResourceProject(replacementsDictionary["$projectname$"] + ".WebResources")
+                };
+            }
 
             var container = new DependencyContainer();
             var app = Factory.CreateJosephMXrmVsixApp(new VisualStudioService(DTE), container, isWizardContext: true);

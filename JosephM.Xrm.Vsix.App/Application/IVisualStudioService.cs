@@ -32,7 +32,6 @@ namespace JosephM.Xrm.Vsix.Application
     public interface IProjectItem : IVisualStudioItem
     {
         void SetProperty(string propertyName, object value);
-        string FileName { get; }
         string FileFolder { get; }
     }
 
@@ -49,5 +48,7 @@ namespace JosephM.Xrm.Vsix.Application
     public interface IVisualStudioItem
     {
         string Name { get; }
+        string NameOfContainingProject { get; }
+        string FileName { get; }
     }
 }

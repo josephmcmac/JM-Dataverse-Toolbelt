@@ -35,5 +35,13 @@ namespace JosephM.Xrm.Vsix.Test
         {
             
         }
+
+        public string NameOfContainingProject
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 }
