@@ -74,5 +74,13 @@ namespace JosephM.Core.Security
             }
             return returnValue;
         }
+
+        public static string HashString(string stringToHashIrreversibly)
+        {
+            var crypter = new SHA1CryptoServiceProvider();
+            var textWithSaltBytes = Encoding.UTF8.GetBytes(string.Concat(stringToHashIrreversibly, "MAC"));
+            var hashedBytes = crypter.ComputeHash(textWithSaltBytes);
+            return Convert.ToBase64String(hashedBytes);
+        }
     }
 }

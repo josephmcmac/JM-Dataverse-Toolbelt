@@ -5,6 +5,7 @@ using System;
 using JosephM.Core.AppConfig;
 using System.Collections.Generic;
 using JosephM.Core.Extentions;
+using JosephM.Core.Security;
 
 namespace JosephM.Application.Desktop.Module.ApplicationInsights
 {
@@ -15,6 +16,7 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             InstrumentationKey = instrumentationKey;
             ApplicationController = applicationController;
             SessionId = Guid.NewGuid().ToString();
+            AnonymousString = "Anonymous " + StringEncryptor.HashString(UserName);
 
             TelemetryConfiguration.Active.InstrumentationKey = InstrumentationKey;
 
@@ -45,12 +47,22 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
         public string SessionId { get; }
         public TelemetryClient TelemetryClient { get; }
 
+        private string AnonymousString { get; set; }
+
+        private string UserName
+        {
+            get
+            {
+                return Environment.UserName;
+            }
+        }
+
         public void LogEvent(string eventName, IDictionary<string, string> properties = null)
         {
             var settings = ApplicationController.ResolveType<ApplicationInsightsSettings>();
             if (!IsDebugMode && settings.AllowUseLogging)
             {
-                TelemetryClient.Context.User.Id = settings.AllowCaptureUsername ? Environment.UserName : "Anonymous";
+                TelemetryClient.Context.User.Id = settings.AllowCaptureUsername ? UserName : AnonymousString;
                 TelemetryClient.TrackEvent(eventName, properties);
             }
         }

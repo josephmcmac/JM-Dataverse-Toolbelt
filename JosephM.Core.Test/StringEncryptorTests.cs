@@ -15,5 +15,13 @@ namespace JosephM.Core.Test
             Assert.IsFalse(initial == encrypted);
             Assert.IsTrue(initial == decrypted);
         }
+
+        [TestMethod]
+        public void StringEncryptorHashStringTest()
+        {
+            const string initial = "THESTRING";
+            var hashed = StringEncryptor.HashString(initial);
+            Assert.IsFalse(hashed.Contains(initial));
+        }
     }
 }
