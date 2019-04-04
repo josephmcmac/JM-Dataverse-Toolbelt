@@ -33,6 +33,9 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 
         protected override void CompleteDialogExtention()
         {
+            var verify = Service.VerifyConnection();
+            if (!verify.IsValid)
+                throw new Exception($"Update assembly cannot proceed due to a connection error\n\n{string.Join(",", verify.InvalidReasons)}");
             LoadingViewModel.IsLoading = true;
             var response = new UpdateAssemblyResponse();
             CompletionItem = response;
