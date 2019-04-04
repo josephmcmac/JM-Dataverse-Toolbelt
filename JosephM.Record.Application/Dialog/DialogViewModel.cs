@@ -262,10 +262,10 @@ namespace JosephM.Application.ViewModel.Dialog
 
         private DateTime? TimeCompleteMethodStarted { get; set; }
 
-        protected void AddObjectToUi(object objectToDisplay, Action backAction = null, Action nextAction = null)
+        protected void AddObjectToUi(object objectToDisplay, Action nextAction = null, string nextActionLabel = null, Action cancelAction = null, Action backAction = null)
         {
             var vm = new ObjectDisplayViewModel(objectToDisplay, FormController.CreateForObject(objectToDisplay, ApplicationController, null)
-                , backAction: backAction, nextAction: nextAction);
+                , nextAction: nextAction, nextActionLabel: nextActionLabel, cancelAction: cancelAction, backAction: backAction);
             Controller.LoadToUi(vm);
         }
 

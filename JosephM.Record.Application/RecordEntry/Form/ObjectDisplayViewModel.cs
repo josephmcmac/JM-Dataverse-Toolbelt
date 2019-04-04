@@ -10,12 +10,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public override int GridPageSize { get { return 25; } }
 
-        public ObjectDisplayViewModel(object objectToEnter, FormController formController, Action backAction = null, Action nextAction = null)
-            : base(formController, saveButtonLabel: "Next")
+        public ObjectDisplayViewModel(object objectToEnter, FormController formController, Action nextAction = null, string nextActionLabel = null, Action cancelAction = null, Action backAction = null)
+            : base(formController, saveButtonLabel: nextActionLabel ?? "Next")
         {
             IsReadOnly = true;
             OnSave = nextAction;
             OnBack = backAction;
+            OnCancel = cancelAction;
 
             _objectRecord = new ObjectRecord(objectToEnter);
             RecordType = _objectRecord.Type;

@@ -15,7 +15,7 @@ namespace JosephM.Deployment.ImportCsvs
     {
         public ImportCsvsDialog(ImportCsvsService service,
             IDialogController dialogController, XrmRecordService lookupService)
-            : base(service, dialogController, lookupService)
+            : base(service, dialogController, lookupService, nextButtonLabel: "Import")
         {
             var validationDialog = new ImportCsvsValidationDialog(this, Request);
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();

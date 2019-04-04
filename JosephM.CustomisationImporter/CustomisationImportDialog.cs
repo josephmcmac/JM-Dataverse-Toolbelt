@@ -15,7 +15,7 @@ namespace JosephM.CustomisationImporter
                 CustomisationImportResponseItem>
     {
         public CustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController, XrmRecordService lookupService)
-            : base(service, dialogController, lookupService)
+            : base(service, dialogController, lookupService, nextButtonLabel: "Import")
         {
             var validationDialog = new CustomisationImportValidationDialog(this, Request);
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();

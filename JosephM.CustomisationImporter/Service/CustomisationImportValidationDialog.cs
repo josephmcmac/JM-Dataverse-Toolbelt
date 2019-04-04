@@ -33,8 +33,8 @@ namespace JosephM.CustomisationImporter.Service
 
             if (readExcelResponse.ResponseItems.Any())
             {
-                AddObjectToUi(readExcelResponse,
-                    backAction: () =>
+                AddObjectToUi(readExcelResponse
+                    , cancelAction: Controller.Close, backAction: () =>
                     {
                         RemoveObjectFromUi(readExcelResponse);
                         MoveBackToPrevious();

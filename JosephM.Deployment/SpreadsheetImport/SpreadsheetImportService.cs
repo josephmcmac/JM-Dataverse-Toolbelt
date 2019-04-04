@@ -138,7 +138,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                     {
                         if(!duplicateLogged)
                         {
-                            response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, null, null, null, "At Least One Duplicate For The Import Map Was Ignored", null));
+                            response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, null, null, null, "At Least One Duplicate Removed", null));
                             duplicateLogged = true;
                         }
                         continue;

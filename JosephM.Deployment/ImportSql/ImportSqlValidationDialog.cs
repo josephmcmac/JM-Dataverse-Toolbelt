@@ -35,13 +35,15 @@ namespace JosephM.Deployment.ImportSql
             var parseResponse = importService.ParseIntoEntities(dictionary);
             if (parseResponse.ResponseItems.Any())
             {
-                AddObjectToUi(parseResponse,
-                    nextAction: () =>
+                AddObjectToUi(parseResponse
+                    , cancelAction: Controller.Close
+                    , nextAction: () =>
                     {
                         RemoveObjectFromUi(parseResponse);
                         StartNextAction();
-                    },
-                    backAction: () =>
+                    }
+                    , nextActionLabel: "Import"
+                    , backAction: () =>
                     {
                         RemoveObjectFromUi(parseResponse);
                         MoveBackToPrevious();

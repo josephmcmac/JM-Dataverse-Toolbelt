@@ -16,13 +16,12 @@ namespace JosephM.Deployment.ImportSql
     {
         public ImportSqlDialog(ImportSqlService service,
             IDialogController dialogController, XrmRecordService lookupService)
-            : base(service, dialogController, lookupService)
+            : base(service, dialogController, lookupService, nextButtonLabel: "Import")
         {
             SetTabLabel("Import SQL");
             var validationDialog = new ImportSqlValidationDialog(this, Request);
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
         }
-
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {

@@ -15,7 +15,7 @@ namespace JosephM.Deployment.ImportExcel
     {
         public ImportExcelDialog(ImportExcelService service,
             IDialogController dialogController, XrmRecordService lookupService)
-            : base(service, dialogController, lookupService)
+            : base(service, dialogController, lookupService, nextButtonLabel: "Import")
         {
             SetTabLabel("Import Excel");
             var validationDialog = new ImportExcelValidationDialog(this, Request);
