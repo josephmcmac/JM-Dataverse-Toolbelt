@@ -320,28 +320,39 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         public virtual void LoadFormSections()
         {
-            //forcing enumeration up front
-            var sections = FormService.GetFormMetadata(RecordType, RecordService).FormSections.ToArray();
-            var sectionViewModels = new List<SectionViewModelBase>();
-            //Create the section view models
-
-            foreach (var section in sections)
+            var verifyConnection = RecordService.VerifyConnection();
+            if (!verifyConnection.IsValid)
             {
-                if (section is FormFieldSection)
-                {
-                    sectionViewModels.Add(new FieldSectionViewModel(
-                        (FormFieldSection)section,
-                        this
-                        ));
-                }
+                ValidationPrompt = $"This Form Could Not Be Loaded Due To A Connection Error\n\n{string.Join("\n" ,verifyConnection.InvalidReasons)}";
+                LoadingViewModel.IsLoading = false;
+                BackButtonViewModel.IsVisible = OnBack != null;
+                CancelButtonViewModel.IsVisible = OnCancel != null;
             }
-            //now set the section view model property in the ui thread which will notify the ui with the sections
-            DoOnMainThread(
-                () =>
+            else
+            {
+                //forcing enumeration up front
+                var sections = FormService.GetFormMetadata(RecordType, RecordService).FormSections.ToArray();
+                var sectionViewModels = new List<SectionViewModelBase>();
+                //Create the section view models
+
+                foreach (var section in sections)
                 {
-                    FormSectionsAsync = new ObservableCollection<SectionViewModelBase>(sectionViewModels);
-                    OnSectionLoaded();
-                });
+                    if (section is FormFieldSection)
+                    {
+                        sectionViewModels.Add(new FieldSectionViewModel(
+                            (FormFieldSection)section,
+                            this
+                            ));
+                    }
+                }
+                //now set the section view model property in the ui thread which will notify the ui with the sections
+                DoOnMainThread(
+                    () =>
+                    {
+                        FormSectionsAsync = new ObservableCollection<SectionViewModelBase>(sectionViewModels);
+                        OnSectionLoaded();
+                    });
+            }
         }
 
         protected override bool ConfirmTabClose()

@@ -7,6 +7,7 @@ using System.Threading;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -84,23 +85,30 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public void LoadPicklistItems()
         {
-            _itemsSource = new ReferencePicklistItem[0];
-            if (LookupService != null)
+            try
             {
-                ItemsSource = (FormService?.OrderPicklistItems(FieldName, GetRecordType(), GetPicklistOptions()) ?? GetPicklistOptions().OrderBy(p => p.Name)).ToArray();
-                if (Value == null && ItemsSource.Count(i => i.Record != null) == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordType()) ?? false))
-                    SelectedItem = ItemsSource.First(i => i.Record != null);
+                _itemsSource = new ReferencePicklistItem[0];
+                if (LookupService != null)
+                {
+                    ItemsSource = (FormService?.OrderPicklistItems(FieldName, GetRecordType(), GetPicklistOptions()) ?? GetPicklistOptions().OrderBy(p => p.Name)).ToArray();
+                    if (Value == null && ItemsSource.Count(i => i.Record != null) == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordType()) ?? false))
+                        SelectedItem = ItemsSource.First(i => i.Record != null);
+                }
+                var matchingItem = MatchSelectedItemInItemsSourceToValue();
+                if (matchingItem == null)
+                {
+                    SelectedItem = GetValueAsPicklistItem();
+                    if (SelectedItem != null)
+                        ItemsSource = ItemsSource.Union(new[] { SelectedItem });
+                }
+                else
+                    SelectedItem = matchingItem;
+                OnPropertyChanged(nameof(SelectedItem));
             }
-            var matchingItem = MatchSelectedItemInItemsSourceToValue();
-            if (matchingItem == null)
+            catch(Exception ex)
             {
-                SelectedItem = GetValueAsPicklistItem();
-                if (SelectedItem != null)
-                    ItemsSource = ItemsSource.Union(new[] { SelectedItem });
+                AddError($"Error Loading Picklist Options\n\n{ex.DisplayString()}");
             }
-            else
-                SelectedItem = matchingItem;
-            OnPropertyChanged(nameof(SelectedItem));
         }
 
         public abstract ReferencePicklistItem GetValueAsPicklistItem();

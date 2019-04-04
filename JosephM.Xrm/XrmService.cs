@@ -167,7 +167,11 @@ namespace JosephM.Xrm
                 }
                 return _service;
             }
-            set { _service = value; }
+            set
+            {
+                _service = value;
+                _connectionVerified = false;
+            }
         }
 
         private string _webUrl;
@@ -642,16 +646,21 @@ namespace JosephM.Xrm
             return GetEntityMetadata(targetType).PrimaryIdAttribute;
         }
 
+        private bool _connectionVerified;
         public IsValidResponse VerifyConnection()
         {
             var response = new IsValidResponse();
-            try
+            if (!_connectionVerified)
             {
-                Execute(new WhoAmIRequest());
-            }
-            catch (Exception ex)
-            {
-                response.AddInvalidReason(ex.DisplayString());
+                try
+                {
+                    Execute(new WhoAmIRequest());
+                    _connectionVerified = true;
+                }
+                catch (Exception ex)
+                {
+                    response.AddInvalidReason(ex.DisplayString());
+                }
             }
             return response;
         }

@@ -218,8 +218,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 else
                 {
+                    string recordTypeLabel = value;
+                    try
+                    {
+                        recordTypeLabel = LookupService.GetDisplayName(value);
+                    }
+                    catch(Exception)
+                    {
+                        recordTypeLabel = value;
+                    }
                     //dynamics was oddly loading none as the record type for some system jobs. Possibly where the type got deleted?
-                    SelectedRecordType = new RecordType(value, LookupService == null || value == "none" ? value : LookupService.GetDisplayName(value));
+                    SelectedRecordType = new RecordType(value, LookupService == null || value == "none" ? value : recordTypeLabel);
                     LookupGridViewModel = new LookupGridViewModel(this, OnRecordSelected);
                 }
             }
