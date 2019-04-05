@@ -66,6 +66,7 @@
     <Compile Include="ReleaseCheckModuleTests.cs" />
     <Compile Include="DesktopSettingsManagerTests.cs" />
     <Compile Include="DependencyContainerTests.cs" />
+    <Compile Include="AggregatedSettingsModuleTest.cs" />
     <Compile Include="SettingsModuleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestApplication.cs">

@@ -4,6 +4,7 @@ using JosephM.Core.AppConfig;
 
 namespace JosephM.Application.Desktop.Module.Settings
 {
+    [DependantModule(typeof(SettingsAggregatorModule))]
     /// <summary>
     ///     Base Class For A Module Which Plugs A Settings Type Into The Application
     /// </summary>

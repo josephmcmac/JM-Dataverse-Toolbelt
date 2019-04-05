@@ -3,9 +3,7 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.AppConfig;
-using JosephM.Core.Attributes;
 using JosephM.ObjectMapping;
-using System;
 using System.Collections.Generic;
 
 namespace JosephM.Application.Desktop.Module.Settings
