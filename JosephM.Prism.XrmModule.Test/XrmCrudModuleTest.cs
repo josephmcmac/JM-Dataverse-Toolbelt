@@ -118,6 +118,10 @@ namespace JosephM.XrmModule.Test
             queryViewModel.SelectedRecordType = queryViewModel.RecordTypeItemsSource.First(r => r.Key == Entities.account);
             queryViewModel.DynamicGridViewModel.GetButton("QUERY").Invoke();
             Assert.IsTrue(queryViewModel.GridRecords.Any());
+            queryViewModel.DynamicGridViewModel.GetButton("DISPLAYTOTALS").Invoke();
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.TotalCount > 0);
+            queryViewModel.DynamicGridViewModel.GetButton("DISPLAYTOTALS").Invoke();
+            Assert.IsFalse(queryViewModel.DynamicGridViewModel.TotalCount.HasValue);
 
             //change to query entry
             queryViewModel.QueryTypeButton.Invoke();
