@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}</ProjectGuid>
+    <ProjectGuid>{AC605EE5-3FBC-458A-8CB6-E2958C974FA6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JosephM.Application.Desktop.Test</RootNamespace>
-    <AssemblyName>JosephM.Application.Desktop.Test</AssemblyName>
+    <RootNamespace>JosephM.Record.Application.Test</RootNamespace>
+    <AssemblyName>JosephM.Record.Application.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,15 +38,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -61,19 +54,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AutoDialogController.cs" />
-    <Compile Include="DialogModuleTest.cs" />
-    <Compile Include="ReleaseCheckModuleTests.cs" />
-    <Compile Include="DesktopSettingsManagerTests.cs" />
-    <Compile Include="DependencyContainerTests.cs" />
-    <Compile Include="AggregatedSettingsModuleTest.cs" />
-    <Compile Include="SettingsModuleTest.cs" />
+    <Compile Include="DynamicsGridViewModelItemsTests.cs" />
+    <Compile Include="RecordApplicationTests.cs" />
+    <Compile Include="RecordEntryViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestApplication.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ModuleTest.cs" />
-    <Compile Include="TestingModule.cs" />
+    <Compile Include="TestAllFieldTypes.cs" />
+    <Compile Include="TestViewModelValidationObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
@@ -88,29 +74,22 @@
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
-      <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
-      <Name>JosephM.Application.Desktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
       <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>
       <Name>JosephM.Application.ViewModel.Fakes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Test\JosephM.Record.Test.csproj">
-      <Project>{5bd2132a-20d5-4a81-9cd4-e8be6bc43c4f}</Project>
+      <Project>{5BD2132A-20D5-4A81-9CD4-E8BE6BC43C4F}</Project>
       <Name>JosephM.Record.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
       <Project>{59CAC082-C1A8-474C-B73C-BC79267C9B51}</Project>
       <Name>JosephM.Record</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="JosephM.snk" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

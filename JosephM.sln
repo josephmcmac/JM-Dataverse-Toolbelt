@@ -76,23 +76,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Record", "JosephM.R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Record.Test", "JosephM.Record.Test\JosephM.Record.Test.csproj", "{5BD2132A-20D5-4A81-9CD4-E8BE6BC43C4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.ViewModel", "JosephM.Record.Application\JosephM.Application.ViewModel.csproj", "{8529CC18-AFDC-4222-B7B4-5305E3C97772}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.ViewModel", "JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj", "{8529CC18-AFDC-4222-B7B4-5305E3C97772}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.ViewModel.Test", "JosephM.Record.Application.Test\JosephM.Application.ViewModel.Test.csproj", "{AC605EE5-3FBC-458A-8CB6-E2958C974FA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.ViewModel.Test", "JosephM.Application.ViewModel.Test\JosephM.Application.ViewModel.Test.csproj", "{AC605EE5-3FBC-458A-8CB6-E2958C974FA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Record.Xrm", "JosephM.Record.Xrm\JosephM.Record.Xrm.csproj", "{850BB50C-D03D-4C6B-8FBB-6055936148C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Record.Xrm.Test", "JosephM.Record.Xrm.Test\JosephM.Record.Xrm.Test.csproj", "{9DCC0511-0B90-4A74-BB91-83CEAA45EAA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Desktop", "JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj", "{18E53D06-7B26-4314-8B4E-454F78E53F8B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Desktop", "JosephM.Application.Desktop\JosephM.Application.Desktop.csproj", "{18E53D06-7B26-4314-8B4E-454F78E53F8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Desktop.Test", "JosephM.Prism.Infrastructure.Test\JosephM.Application.Desktop.Test.csproj", "{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Desktop.Test", "JosephM.Application.Desktop.Test\JosephM.Application.Desktop.Test.csproj", "{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Wpf", "JosephM.Wpf\JosephM.Wpf.csproj", "{ED23E8EF-1623-491E-A30F-BA55C8F65CE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.XrmModule", "JosephM.Prism.XrmModule\JosephM.XrmModule.csproj", "{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.XrmModule", "JosephM.XrmModule\JosephM.XrmModule.csproj", "{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.XrmModule.Test", "JosephM.Prism.XrmModule.Test\JosephM.XrmModule.Test.csproj", "{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.XrmModule.Test", "JosephM.XrmModule.Test\JosephM.XrmModule.Test.csproj", "{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.MetadataImportExport", "JosephM.Xrm.MetadataImportExport\JosephM.Xrm.MetadataImportExport.csproj", "{73DF8422-96EE-46C2-B534-58BE8BB12678}"
 EndProject
@@ -106,11 +106,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.RecordExtract",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.RecordExtract.Test", "JosephM.Xrm.RecordExtract.Test\JosephM.Xrm.RecordExtract.Test.csproj", "{75C8A29D-5745-42B4-B48F-15EA035CA1CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.TestModule", "JosephM.Prism.TestModule\JosephM.TestModule.csproj", "{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.TestModule", "JosephM.TestModule\JosephM.TestModule.csproj", "{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.TestDesktopApplication", "JosephM.Prism.TestPrismApplication\JosephM.TestDesktopApplication.csproj", "{82C502F7-067E-414B-ABCA-3C5856F96EDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.TestDesktopApplication", "JosephM.TestDesktopApplication\JosephM.TestDesktopApplication.csproj", "{82C502F7-067E-414B-ABCA-3C5856F96EDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.XrmTestModule", "JosephM.Prism.XrmTestModule\JosephM.XrmTestModule.csproj", "{BB5BB40F-282B-4CF0-A165-533AB810D61D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.XrmTestModule", "JosephM.XrmTestModule\JosephM.XrmTestModule.csproj", "{BB5BB40F-282B-4CF0-A165-533AB810D61D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Spreadsheet", "JosephM.Spreadsheet\JosephM.Spreadsheet.csproj", "{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}"
 EndProject
@@ -120,7 +120,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application", "JosephM.Application\JosephM.Application.csproj", "{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.ViewModel.Fakes", "JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj", "{9D3EB2D4-EC55-4080-938F-EA409162171D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.ViewModel.Fakes", "JosephM.Application.ViewModel.Fakes\JosephM.Application.ViewModel.Fakes.csproj", "{9D3EB2D4-EC55-4080-938F-EA409162171D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.CodeGenerator", "JosephM.CodeGenerator\JosephM.CodeGenerator.csproj", "{0902CBF9-E77C-4B69-8021-3DA8E3999CCA}"
 EndProject
@@ -191,13 +191,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JavaScript", "JavaScript", 
 		SolutionItems\TestFiles\JavaScript\testxrmsolution_webserviceutility.js = SolutionItems\TestFiles\JavaScript\testxrmsolution_webserviceutility.js
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Desktop.Console", "JosephM.Application.Prism.Console\JosephM.Application.Desktop.Console.csproj", "{2B9CDBF2-1BF3-4733-8494-2F2F35198345}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Desktop.Console", "JosephM.Application.Desktop.Console\JosephM.Application.Desktop.Console.csproj", "{2B9CDBF2-1BF3-4733-8494-2F2F35198345}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Desktop.Console.Test", "JosephM.Application.Prism.Console.Test\JosephM.Application.Desktop.Console.Test.csproj", "{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Application.Desktop.Console.Test", "JosephM.Application.Desktop.Console.Test\JosephM.Application.Desktop.Console.Test.csproj", "{301B6CDF-DC9C-42BA-874A-EBA0C05214A3}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "JosephM.Dynamics365DevApp.Installer", "JosephM.Dynamics365DevApp.Installer\JosephM.Dynamics365DevApp.Installer.vdproj", "{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Dynamics365DevApp", "JosephM.Prism.XrmDeveloperTool\JosephM.Dynamics365DevApp.csproj", "{F303560E-2FD6-4198-BE27-3EAC2446103C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Dynamics365DevApp", "JosephM.Dynamics365DevApp\JosephM.Dynamics365DevApp.csproj", "{F303560E-2FD6-4198-BE27-3EAC2446103C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TEST ENTITY", "TEST ENTITY", "{C265479C-DAD5-4C4B-BB01-3A69392E2426}"
 	ProjectSection(SolutionItems) = preProject

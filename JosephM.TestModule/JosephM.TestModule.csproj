@@ -157,11 +157,11 @@
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
+    <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
       <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>
       <Name>JosephM.Application.ViewModel.Fakes</Name>
     </ProjectReference>
@@ -177,7 +177,7 @@
       <Project>{7f69213d-3efb-4736-9962-0151f92fa7d4}</Project>
       <Name>JosephM.Xrm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj">
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>

@@ -774,11 +774,11 @@
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
       <Project>{9d3eb2d4-ec55-4080-938f-ea409162171d}</Project>
       <Name>JosephM.Application.ViewModel.Fakes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj">
       <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>

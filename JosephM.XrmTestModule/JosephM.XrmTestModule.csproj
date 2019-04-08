@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</ProjectGuid>
+    <ProjectGuid>{BB5BB40F-282B-4CF0-A165-533AB810D61D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JosephM.XrmModule</RootNamespace>
-    <AssemblyName>JosephM.XrmModule</AssemblyName>
+    <RootNamespace>JosephM.XrmTestModule</RootNamespace>
+    <AssemblyName>JosephM.XrmTestModule</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -41,9 +41,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -60,21 +57,12 @@
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="microsoft.xrm.sdk">
-      <HintPath>..\Lib\microsoft.xrm.sdk.dll</HintPath>
-    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -82,19 +70,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppConnection\XrmRecordServiceAppConnectionModule.cs" />
-    <Compile Include="AppConnection\SavedConnectionAppConnectionModule.cs" />
-    <Compile Include="Crud\XrmCrudDialog.cs" />
-    <Compile Include="Crud\XrmCrudModule.cs" />
-    <Compile Include="Crud\XrmFormService.cs" />
-    <Compile Include="AppConnection\AppXrmConnectionEntryDialog.cs" />
-    <Compile Include="XrmConnection\XrmConnectionDialog.cs" />
-    <Compile Include="SavedXrmConnections\SavedXrmRecordConnection.cs" />
-    <Compile Include="SavedXrmConnections\SavedXrmConnectionsDialog.cs" />
-    <Compile Include="SavedXrmConnections\ISavedXrmConnections.cs" />
-    <Compile Include="SavedXrmConnections\SavedXrmConnections.cs" />
-    <Compile Include="SavedXrmConnections\SavedXrmConnectionsModule.cs" />
-    <Compile Include="XrmConnection\XrmConnectionModule.cs" />
+    <Compile Include="DebugModule\DebugDialog.cs" />
+    <Compile Include="DebugModule\DebugDialogModule.cs" />
+    <Compile Include="DebugModule\DebugDialogRequest.cs" />
+    <Compile Include="DebugModule\DebugDialogResponse.cs" />
+    <Compile Include="DebugModule\DebugDialogResponseItem.cs" />
+    <Compile Include="DebugModule\DebugDialogService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,39 +83,43 @@
       <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
       <Name>JosephM.Application</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Core.Test\JosephM.Core.Test.csproj">
+      <Project>{7A4CE94B-1F3B-46F0-9C7F-9F2CB5B3C5E8}</Project>
+      <Name>JosephM.Core.Test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
-      <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
+      <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
-      <Project>{EB4443BD-DEAD-4546-9C8C-BFC2A807AF3A}</Project>
-      <Name>JosephM.ObjectMapping</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
+    <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
-      <Project>{850bb50c-d03d-4c6b-8fbb-6055936148c8}</Project>
-      <Name>JosephM.Record.Xrm</Name>
+    <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
+      <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
+      <Name>JosephM.XrmModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
-      <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
-      <Name>JosephM.Record</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
-      <Project>{7f69213d-3efb-4736-9962-0151f92fa7d4}</Project>
-      <Name>JosephM.Xrm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj">
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
+      <Project>{59CAC082-C1A8-474C-B73C-BC79267C9B51}</Project>
+      <Name>JosephM.Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.Test\JosephM.Xrm.Test.csproj">
+      <Project>{5282BA96-7E87-49F3-9429-0CD8821EF4E5}</Project>
+      <Name>JosephM.Xrm.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
+      <Name>JosephM.Xrm</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="JosephM.snk" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

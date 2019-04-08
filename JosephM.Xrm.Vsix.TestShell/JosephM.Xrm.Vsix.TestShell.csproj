@@ -117,15 +117,15 @@
       <Project>{9D2F8F1B-CB77-46F2-A32B-AA7D7959A1D0}</Project>
       <Name>JosephM.InstanceComparer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
+    <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.TestModule\JosephM.TestModule.csproj">
+    <ProjectReference Include="..\JosephM.TestModule\JosephM.TestModule.csproj">
       <Project>{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}</Project>
       <Name>JosephM.TestModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.XrmModule.csproj">
+    <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
       <Name>JosephM.XrmModule</Name>
     </ProjectReference>

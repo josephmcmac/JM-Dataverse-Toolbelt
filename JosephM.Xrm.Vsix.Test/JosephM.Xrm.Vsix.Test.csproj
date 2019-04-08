@@ -101,27 +101,27 @@
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
       <Name>JosephM.ObjectMapping</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure.Test\JosephM.Application.Desktop.Test.csproj">
+    <ProjectReference Include="..\JosephM.Application.Desktop.Test\JosephM.Application.Desktop.Test.csproj">
       <Project>{C0618FC1-E1CA-4B95-A8D1-0359594DA1B4}</Project>
       <Name>JosephM.Application.Desktop.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.Infrastructure\JosephM.Application.Desktop.csproj">
+    <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule.Test\JosephM.XrmModule.Test.csproj">
+    <ProjectReference Include="..\JosephM.XrmModule.Test\JosephM.XrmModule.Test.csproj">
       <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
       <Name>JosephM.XrmModule.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Prism.XrmModule\JosephM.XrmModule.csproj">
+    <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
       <Name>JosephM.XrmModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel.Fakes\JosephM.Application.ViewModel.Fakes.csproj">
       <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>
       <Name>JosephM.Application.ViewModel.Fakes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Record.Application\JosephM.Application.ViewModel.csproj">
+    <ProjectReference Include="..\JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj">
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
