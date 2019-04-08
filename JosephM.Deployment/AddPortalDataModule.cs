@@ -62,11 +62,17 @@ namespace JosephM.Deployment
             var childButtons = new List<CustomGridFunction>();
             childButtons.Add(new CustomGridFunction("ADDPORTALDATAALL", "All Records", (DynamicGridViewModel g) =>
             {
-                var r = g.ParentForm;
-                if (r == null)
-                    throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
                 try
                 {
+                    var r = g.ParentForm;
+                    if (r == null)
+                        throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
+
+                    ApplicationController.LogEvent("Add Portal Data Loaded", new Dictionary<string, string>
+                    {
+                        { "Filter", "All" }
+                    });
+
                     var enumerableField = r.GetEnumerableFieldViewModel(g.ReferenceName);
 
                     foreach (var item in portalTypesToAdd.OrderByDescending(i => i))
@@ -76,6 +82,11 @@ namespace JosephM.Deployment
                         newRecord.SetField(nameof(ExportRecordType.IncludeInactive), true, g.RecordService);
                         enumerableField.InsertRecord(newRecord, 0);
                     }
+
+                    ApplicationController.LogEvent("Add Portal Data Completed", new Dictionary<string, string>
+                    {
+                        { "Filter", "All" }
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +95,7 @@ namespace JosephM.Deployment
             }, visibleFunction: (g) =>
             {
                 var lookupService = g.RecordService.GetLookupService(nameof(ExportRecordType.RecordType), typeof(ExportRecordType).AssemblyQualifiedName, g.ReferenceName, null);
-                return lookupService != null && lookupService.RecordTypeExists("adx_webfile");
+                return lookupService != null && lookupService.RecordTypeExists(Entities.adx_webfile);
             }));
             var todayUtc = DateTime.Today.ToUniversalTime();
             var modifedConditions = new Dictionary<string, Condition>
@@ -98,6 +109,11 @@ namespace JosephM.Deployment
             {
                 childButtons.Add(new CustomGridFunction("ADDPORTALDATA" + modifiedPeriod.Key, modifiedPeriod.Key, (DynamicGridViewModel g) =>
                 {
+                    ApplicationController.LogEvent("Add Portal Data Loaded", new Dictionary<string, string>
+                    {
+                        { "Filter", modifiedPeriod.Key }
+                    });
+
                     var recordForm = g.ParentForm;
                     if (recordForm == null)
                         throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
@@ -114,29 +130,36 @@ namespace JosephM.Deployment
 
                             foreach (var item in portalTypesToAdd.Reverse())
                             {
-                                var query = new QueryDefinition(item);
-                                query.RootFilter.Conditions.Add(modifiedPeriod.Value);
-                                var itemsLookups = lookupService
-                                    .RetreiveAll(query)
-                                    .Select(r => lookupService.ToLookupWithAltDisplayNameName(r))
-                                    .ToList();
-                                if (item == Entities.adx_webfile)
+                                try
                                 {
-                                    var queryNotes = new QueryDefinition(Entities.annotation);
-                                    queryNotes.RootFilter.Conditions.Add(modifiedPeriod.Value);
-                                    queryNotes.Joins.Add(new Join(Fields.annotation_.objectid, Entities.adx_webfile, Fields.adx_webfile_.adx_webfileid));
-                                    var webFileNotes = lookupService.RetreiveAll(queryNotes);
-                                    webFileNotes.PopulateEmptyLookups(lookupService, null);
-                                    foreach(var webFileNote in webFileNotes)
+                                    var query = new QueryDefinition(item);
+                                    query.RootFilter.Conditions.Add(modifiedPeriod.Value);
+                                    var itemsLookups = lookupService
+                                        .RetreiveAll(query)
+                                        .Select(r => lookupService.ToLookupWithAltDisplayNameName(r))
+                                        .ToList();
+                                    if (item == Entities.adx_webfile)
                                     {
-                                        if (!itemsLookups.Any(wf => wf.Id == webFileNote.GetLookupId(Fields.annotation_.objectid)))
+                                        var queryNotes = new QueryDefinition(Entities.annotation);
+                                        queryNotes.RootFilter.Conditions.Add(modifiedPeriod.Value);
+                                        queryNotes.Joins.Add(new Join(Fields.annotation_.objectid, Entities.adx_webfile, Fields.adx_webfile_.adx_webfileid));
+                                        var webFileNotes = lookupService.RetreiveAll(queryNotes);
+                                        webFileNotes.PopulateEmptyLookups(lookupService, null);
+                                        foreach (var webFileNote in webFileNotes)
                                         {
-                                            itemsAdded = true;
-                                            itemsLookups.Add(webFileNote.GetLookupField(Fields.annotation_.objectid));
+                                            if (!itemsLookups.Any(wf => wf.Id == webFileNote.GetLookupId(Fields.annotation_.objectid)))
+                                            {
+                                                itemsAdded = true;
+                                                itemsLookups.Add(webFileNote.GetLookupField(Fields.annotation_.objectid));
+                                            }
                                         }
                                     }
+                                    dictionaryOfRecordsToAdd.Add(item, itemsLookups);
                                 }
-                                dictionaryOfRecordsToAdd.Add(item, itemsLookups);
+                                catch(Exception ex)
+                                {
+                                    throw new Exception($"Error Querying For Portal Type '{item}'", ex);
+                                }
                             }
                             var copyDictionary = dictionaryOfRecordsToAdd.ToDictionary(d => d.Key, d => d.Value.ToArray());
                             foreach (var itemAddInInitialQueries in copyDictionary)
@@ -191,6 +214,17 @@ namespace JosephM.Deployment
                                 }
                             }
 
+                            var eventArgs = new Dictionary<string, string>
+                            {
+                                { "Filter", modifiedPeriod.Key }
+                            };
+                            foreach(var itemType in dictionaryOfRecordsToAdd)
+                            {
+                                if (itemType.Value.Count() > 0)
+                                    eventArgs.Add(itemType.Key + " Count", itemType.Value.Count().ToString());
+                            }
+                            ApplicationController.LogEvent("Add Portal Data Completed", eventArgs);
+
                             if (!itemsAdded)
                                 g.ApplicationController.UserMessage("No Items Were Found To Add For The Selected Period");
                         }
@@ -206,7 +240,7 @@ namespace JosephM.Deployment
                 }, visibleFunction: (g) =>
                 {
                     var lookupService = g.RecordService.GetLookupService(nameof(ExportRecordType.RecordType), typeof(ExportRecordType).AssemblyQualifiedName, g.ReferenceName, null);
-                    return lookupService != null && lookupService.RecordTypeExists("adx_webfile");
+                    return lookupService != null && lookupService.RecordTypeExists(Entities.adx_webfile);
                 }));
             }
 
