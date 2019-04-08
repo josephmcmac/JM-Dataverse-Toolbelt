@@ -74,8 +74,11 @@ namespace JosephM.Deployment
                     });
 
                     var enumerableField = r.GetEnumerableFieldViewModel(g.ReferenceName);
+                    var lookupService = g.RecordService.GetLookupService(nameof(ExportRecordType.RecordType), typeof(ExportRecordType).AssemblyQualifiedName, g.ReferenceName, null);
 
-                    foreach (var item in portalTypesToAdd.OrderByDescending(i => i))
+                    foreach (var item in portalTypesToAdd
+                        .Where(lookupService.RecordTypeExists)
+                        .OrderByDescending(i => i))
                     {
                         var newRecord = g.RecordService.NewRecord(typeof(ExportRecordType).AssemblyQualifiedName);
                         newRecord.SetField(nameof(ExportRecordType.RecordType), new RecordType(item, item), g.RecordService);
@@ -128,7 +131,9 @@ namespace JosephM.Deployment
 
                             var dictionaryOfRecordsToAdd = new Dictionary<string, List<Lookup>>();
 
-                            foreach (var item in portalTypesToAdd.Reverse())
+                            foreach (var item in portalTypesToAdd
+                                .Where(lookupService.RecordTypeExists)
+                                .OrderByDescending(i => i))
                             {
                                 try
                                 {
