@@ -452,7 +452,7 @@ namespace JosephM.InstanceComparer
                 null,
                 new[]
                 {
-                    Fields.sdkmessageprocessingstep_.description, Fields.sdkmessageprocessingstep_.filteringattributes, Fields.sdkmessageprocessingstep_.rank, Fields.sdkmessageprocessingstep_.statecode, Fields.sdkmessageprocessingstep_.name
+                    Fields.sdkmessageprocessingstep_.description, Fields.sdkmessageprocessingstep_.filteringattributes, Fields.sdkmessageprocessingstep_.rank, Fields.sdkmessageprocessingstep_.statecode, Fields.sdkmessageprocessingstep_.name, Fields.sdkmessageprocessingstep_.impersonatinguserid
                 },
                 Fields.sdkmessageprocessingstep_.plugintypeid, ParentLinkType.Lookup);
             pluginRegistrationParams.AddConversionObject(Fields.sdkmessageprocessingstep_.sdkmessagefilterid,
