@@ -30,7 +30,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             PackageSettings = packageSettings;
             Service = xrmRecordService;
 
-            var configEntryDialog = new ObjectGetEntryDialog(() => PluginAssembly, this, ApplicationController, Service);
+            var configEntryDialog = new ObjectGetEntryDialog(() => PluginAssembly, this, ApplicationController, Service, saveButtonLabel: "Deploy");
             SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
 

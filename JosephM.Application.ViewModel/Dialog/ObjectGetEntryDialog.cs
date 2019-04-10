@@ -26,8 +26,8 @@ namespace JosephM.Application.ViewModel.Dialog
         }
 
         public ObjectGetEntryDialog(Func<object> objectToEnter, DialogViewModel parentDialog,
-    IApplicationController applicationController, IRecordService lookupService, IDictionary<string, Type> objectTypeMaps = null)
-    : base(parentDialog, applicationController, lookupService, null, null, objectTypeMaps)
+    IApplicationController applicationController, IRecordService lookupService, IDictionary<string, Type> objectTypeMaps = null, string saveButtonLabel = null)
+    : base(parentDialog, applicationController, lookupService, null, null, objectTypeMaps, saveButtonLabel: saveButtonLabel)
         {
             _objectToEnter = objectToEnter;
         }
