@@ -61,7 +61,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="SetSelectedModule.cs" />
+    <Compile Include="SetSelectedProjectAssemblyModule.cs" />
+    <Compile Include="SetSelectedItemsModule.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

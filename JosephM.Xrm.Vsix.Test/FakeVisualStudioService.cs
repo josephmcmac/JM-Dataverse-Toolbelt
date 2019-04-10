@@ -15,6 +15,8 @@ namespace JosephM.Xrm.Vsix.Test
             _solutionDirectory = solutionDirectory ?? Path.Combine(TestConstants.TestFolder, "FakeVSSolutionFolder");
 
             var fakeProjectName = "FakeProject";
+            var rootFolder = GetActualSolutionRootFolder();
+            _selectedPluginAssembly = Path.Combine(rootFolder.FullName, "SolutionItems", "TestPluginAssemblyBin", "TestXrmSolution.Plugins.dll");
             var fakeProjectFolderPath = Path.Combine(SolutionDirectory, fakeProjectName);
             Directory.CreateDirectory(fakeProjectFolderPath);
             SetSelectedItem(new FakeVisualStudioSolutionFolder(fakeProjectFolderPath));
@@ -28,17 +30,18 @@ namespace JosephM.Xrm.Vsix.Test
             return GetTestPluginAssemblyFile();
         }
 
-        public static string GetTestPluginAssemblyFile()
+        public string GetTestPluginAssemblyFile()
         {
-            var rootFolder = GetActualSolutionRootFolder();
-            var pluginAssembly = Path.Combine(rootFolder.FullName, "SolutionItems", "TestPluginAssemblyBin",
-                PluginAssemblyName + ".dll");
-            return pluginAssembly;
+            return _selectedPluginAssembly;
         }
 
-        public static string PluginAssemblyName
+        public string PluginAssemblyName
         {
-            get { return "TestXrmSolution.Plugins"; }
+            get
+            {
+                var fileInfo = new FileInfo(_selectedPluginAssembly);
+                return fileInfo.Name.Substring(0, fileInfo.Name.Length - 4);
+            }
         }
 
         public static DirectoryInfo GetActualSolutionRootFolder()
@@ -86,6 +89,7 @@ namespace JosephM.Xrm.Vsix.Test
         }
 
         private List<IVisualStudioItem> _selectedItems = new List<IVisualStudioItem>();
+        private string _selectedPluginAssembly;
 
         internal void SetSelectedItem(IVisualStudioItem item)
         {
@@ -98,6 +102,11 @@ namespace JosephM.Xrm.Vsix.Test
             _selectedItems.Clear();
             _selectedItems.AddRange(items);
         }
+        public void SetSelectedProjectAssembly(string assemblyFile)
+        {
+            _selectedPluginAssembly = assemblyFile;
+        }
+
 
         protected override ISolutionFolder AddSolutionFolder(string name)
         {

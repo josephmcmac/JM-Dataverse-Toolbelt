@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.TestShell
 {
-    public class SetSelectedModule : OptionActionModule
+    public class SetSelectedItemsModule : OptionActionModule
     {
         public override string MainOperationName => "Set Selected Items";
 

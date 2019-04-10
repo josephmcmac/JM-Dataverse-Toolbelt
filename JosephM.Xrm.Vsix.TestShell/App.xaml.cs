@@ -57,7 +57,8 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication.AddModule<AddPortalCodeModule>();
             VsixApplication.AddModule<DeployWebResourceModule>();
 
-            VsixApplication.AddModule<SetSelectedModule>();
+            VsixApplication.AddModule<SetSelectedItemsModule>();
+            VsixApplication.AddModule<SetSelectedProjectAssemblyModule>();
         }
 
         public VsixApplication VsixApplication { get; set; }
