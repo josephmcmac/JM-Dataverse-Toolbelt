@@ -93,7 +93,7 @@ namespace JosephM.Xrm.Vsix.Test
             _selectedItems.Add(item);
         }
 
-        internal void SetSelectedItems(IEnumerable<IVisualStudioItem> items)
+        public void SetSelectedItems(IEnumerable<IVisualStudioItem> items)
         {
             _selectedItems.Clear();
             _selectedItems.AddRange(items);

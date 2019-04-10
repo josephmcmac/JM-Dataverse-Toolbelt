@@ -5,6 +5,7 @@ using JosephM.TestModule.TestDialog;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.AddPortalCode;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
+using JosephM.Xrm.Vsix.Module.DeployWebResource;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;
 using JosephM.Xrm.Vsix.Module.UpdateAssembly;
@@ -54,6 +55,9 @@ namespace JosephM.Xrm.Vsix.TestShell
             VsixApplication.AddModule<InstanceComparerModule>();
             VsixApplication.AddModule<DeploymentModule>();
             VsixApplication.AddModule<AddPortalCodeModule>();
+            VsixApplication.AddModule<DeployWebResourceModule>();
+
+            VsixApplication.AddModule<SetSelectedModule>();
         }
 
         public VsixApplication VsixApplication { get; set; }
