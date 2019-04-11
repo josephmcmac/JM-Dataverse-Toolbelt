@@ -154,9 +154,19 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
             var dictionary = base.GetPropertiesForCompletedLog();
-            var errorCount = Response.GetResponseItemsWithError().Count();
-            if (!dictionary.ContainsKey("Response Error Count"))
-                dictionary.Add("Response Error Count", errorCount.ToString());
+            void addProperty(string name, string value)
+            {
+                if (!dictionary.ContainsKey(name))
+                    dictionary.Add(name, value);
+            }
+            var responseErrors = Response.GetResponseItemsWithError();
+            if (responseErrors.Any())
+            {
+                addProperty("Response Error Count", responseErrors.Count().ToString());
+                addProperty("Response Error Count Distinct", responseErrors.Select(re => re.Exception.Message).Distinct().Count().ToString());
+                addProperty("Response Error Messages", string.Join(Environment.NewLine, responseErrors.Select(re => re.Exception.Message).Distinct().Take(20)));
+                addProperty("First Error Detail", responseErrors.First().ErrorDetails);
+            }
             return dictionary;
         }
     }
