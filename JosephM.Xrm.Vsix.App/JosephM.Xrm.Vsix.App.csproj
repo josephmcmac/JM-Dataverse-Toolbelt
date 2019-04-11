@@ -177,6 +177,7 @@
   <ItemGroup>
     <Compile Include="Application\VsixApplicationController.cs" />
     <Compile Include="Application\VsixDependencyContainer.cs" />
+    <Compile Include="Application\VsixManifest.cs" />
     <Compile Include="Application\VsixSettingsManager.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Module\AddPortalCode\AddPortalCodeDialog.cs" />

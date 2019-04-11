@@ -244,6 +244,8 @@ namespace JosephM.Application.Application
         //only implemented by tabbed application controllers
         public virtual object ActiveTabItem { get; set; }
 
+        public virtual string Version => null;
+
         //runs all registered on navigate events
         protected void OnNavigatedTo(object objectNavigatedTo)
         {

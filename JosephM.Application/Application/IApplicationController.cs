@@ -82,5 +82,7 @@ namespace JosephM.Application.Application
         void AddLogger(IApplicationLogger applicationLogger);
 
         void LogEvent(string eventame, IDictionary<string, string> properties = null);
+
+        string Version { get; }
     }
 }

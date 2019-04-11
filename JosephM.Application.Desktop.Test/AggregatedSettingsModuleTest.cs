@@ -19,7 +19,7 @@ namespace JosephM.Application.Desktop.Test
         {
             //Load several modules with their settings in the aggregator form
 
-            var app = CreateAndLoadTestApplication<ReleaseCheckModuleTests.TestReleaseCheckModule>();
+            var app = CreateAndLoadTestApplication<TestReleaseCheckModule>();
             app.AddModule<TestApplicationInsightsModule>();
             app.AddModule<ThemeModule>();
 
@@ -67,6 +67,13 @@ namespace JosephM.Application.Desktop.Test
         public class TestApplicationInsightsModule : ApplicationInsightsModule
         {
             public override string InstrumentationKey => Guid.Empty.ToString();
+        }
+
+        public class TestReleaseCheckModule : GitHubReleaseCheckModule
+        {
+            public override string Githubusername => "testingonly";
+
+            public override string GithubRepository => "testingonly";
         }
     }
 }

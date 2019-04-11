@@ -34,6 +34,7 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             var tc = new TelemetryClient(telemetryConfiguration);
             tc.InstrumentationKey = InstrumentationKey;
             tc.Context.Cloud.RoleInstance = ApplicationController.ApplicationName;
+            tc.Context.User.UserAgent = $"{ApplicationController.ApplicationName} {ApplicationController.Version}";
             tc.Context.User.Id = string.Empty;
             tc.Context.Session.Id = SessionId;
             tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();

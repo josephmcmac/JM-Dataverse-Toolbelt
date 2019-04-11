@@ -179,5 +179,22 @@ namespace JosephM.Xrm.Vsix.Application
             else
                 return base.ResolveType(type);
         }
+
+        public override string Version
+        {
+            get
+            {
+                try
+                {
+                    var manifest = VsixManifest.GetManifest();
+                    return manifest.Version;
+                }
+                catch (Exception ex)
+                {
+                    ThrowException(ex);
+                }
+                return null;
+            }
+        }
     }
 }

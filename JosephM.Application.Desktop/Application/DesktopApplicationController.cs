@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Shared;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.AppConfig;
 using System;
@@ -131,6 +132,50 @@ namespace JosephM.Application.Desktop.Application
                 return dialogResult == DialogResult.OK
                     ? selectFolderDialog.SelectedPath
                     : null;
+            }
+        }
+
+        public override string Version
+        {
+            get
+            {
+                try
+                {
+                    var rKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall");
+
+                    var insApplication = new List<string>();
+
+                    if (rKey != null && rKey.SubKeyCount > 0)
+                    {
+                        insApplication = rKey.GetSubKeyNames().ToList();
+                    }
+
+                    int i = 0;
+
+                    string result = null;
+
+                    foreach (string appName in insApplication)
+                    {
+
+                        Microsoft.Win32.RegistryKey finalKey = rKey.OpenSubKey(insApplication[i]);
+
+                        string installedApp = finalKey.GetValue("DisplayName")?.ToString();
+
+                        if (installedApp == ApplicationName)
+                        {
+                            var thisOne = finalKey.GetValue("DisplayVersion").ToString();
+                            if (result == null || VersionHelper.IsNewerVersion(thisOne, result))
+                                result = thisOne;
+                        }
+                        i++;
+                    }
+                    return result;
+                }
+                catch(Exception ex)
+                {
+                    ThrowException(ex);
+                }
+                return null;
             }
         }
     }
