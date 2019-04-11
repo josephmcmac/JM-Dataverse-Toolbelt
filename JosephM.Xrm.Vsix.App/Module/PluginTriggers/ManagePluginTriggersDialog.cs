@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Attributes;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
@@ -16,29 +17,42 @@ using System.Linq;
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
     [RequiresConnection]
-    public partial class ManagePluginTriggersDialog : DialogViewModel
+    public partial class ManagePluginTriggersDialog : ServiceRequestDialog<ManagePluginTriggersService, ManagePluginTriggersRequest, ManagePluginTriggersResponse, ManagePluginTriggersResponseitem>
     {
         public XrmRecordService XrmRecordService { get; set; }
         public XrmPackageSettings PackageSettings { get; set; }
         IVisualStudioService VisualStudioService { get; set; }
 
-        public ManagePluginTriggersDialog(IDialogController dialogController, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
-            : base(dialogController)
+        public ManagePluginTriggersDialog(ManagePluginTriggersService service, IDialogController dialogController, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
+            : base(service, dialogController, lookupService: xrmRecordService, nextButtonLabel: "Save")
         {
             PackageSettings = packageSettings;
             VisualStudioService = visualStudioService;
             XrmRecordService = xrmRecordService;
-
-            var configEntryDialog = new ObjectGetEntryDialog(() => EntryObject, this, ApplicationController, XrmRecordService);
-            SubDialogs = new DialogViewModel[] { configEntryDialog };
         }
 
-        private void Load(string assemblyName)
+        protected override void LoadDialogExtention()
+        {
+            //hijack the load method so that we can prepopulate
+            //the entered request with various details
+            LoadAssemblyDetails();
+
+            StartNextAction();
+        }
+
+        private void LoadAssemblyDetails()
         {
             LoadingViewModel.LoadingMessage = "Loading Assembly";
 
+            Request.AssemblyName = VisualStudioService.GetSelectedProjectAssemblyName();
+
+            if (string.IsNullOrWhiteSpace(Request.AssemblyName))
+            {
+                throw new NullReferenceException("Could Not Find Assembly Name");
+            }
+
             var assemblyRecord = XrmRecordService.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name,
-                assemblyName);
+                Request.AssemblyName);
             if (assemblyRecord == null)
                 throw new NullReferenceException("There is no plugin assembly deployed in the dynamics instance with a matching name. Try the deploy assembly option to deploy a new plugin assembly, or rename the assembly to match an existing assembly deployed to the instance");
 
@@ -51,10 +65,10 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             LoadingViewModel.LoadingMessage = "Loading Plugin Triggers";
 
-            SdkMessageStepsPre = XrmRecordService.RetrieveAllOrClauses(Entities.sdkmessageprocessingstep,
+            Request.SetSdkMessageStepsPre(XrmRecordService.RetrieveAllOrClauses(Entities.sdkmessageprocessingstep,
                 pluginTypes.Select(
-                    pt => new Condition(Fields.sdkmessageprocessingstep_.plugintypeid, ConditionType.Equal, pt.Id)));
-            var sdkMessageStepsWithFilter = SdkMessageStepsPre
+                    pt => new Condition(Fields.sdkmessageprocessingstep_.plugintypeid, ConditionType.Equal, pt.Id))));
+            var sdkMessageStepsWithFilter = Request.GetSdkMessageStepsPre()
                 .Where(sms => sms.GetField(Fields.sdkmessageprocessingstep_.sdkmessagefilterid) != null);
 
             LoadingViewModel.LoadingMessage = "Loading Plugin Filters";
@@ -69,31 +83,33 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             LoadingViewModel.LoadingMessage = "Loading Plugin Images";
 
-            var preImages = SdkMessageStepsPre.Any()
-                ? XrmRecordService.RetrieveAllOrClauses(Entities.sdkmessageprocessingstepimage, SdkMessageStepsPre.Select(m => new Condition(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, ConditionType.Equal, m.Id)))
+            var preImages = Request.GetSdkMessageStepsPre().Any()
+                ? XrmRecordService.RetrieveAllOrClauses(Entities.sdkmessageprocessingstepimage, Request.GetSdkMessageStepsPre().Select(m => new Condition(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, ConditionType.Equal, m.Id)))
                 .Where(i => i.GetOptionKey(Fields.sdkmessageprocessingstepimage_.imagetype) == OptionSets.SdkMessageProcessingStepImage.ImageType.PreImage.ToString())
                 .GroupBy(i => i.GetLookupField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid))
                 .Where(g => g.Key != null && g.Key.Id != null)
                 .ToDictionary(i => i.Key.Id, g => g.First())
                 : new Dictionary<string, IRecord>();
 
-            _entryObject = new PluginTriggers();
             var triggers = new List<PluginTrigger>();
-            foreach (var item in SdkMessageStepsPre)
+            foreach (var item in Request.GetSdkMessageStepsPre())
             {
                 var filterId = item.GetLookupId(Fields.sdkmessageprocessingstep_.sdkmessagefilterid);
                 var matchingFilters = filters.Where(f => f.Id == filterId);
                 var filter = matchingFilters.Any() ? matchingFilters.First() : null;
                 var recordType = filter == null ? null : filter.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode);
-                LoadingViewModel.LoadingMessage = $"Loading {XrmRecordService.GetDisplayName(recordType)} Type";
                 RecordType recordTypeObj = null;
-                try
+                if (recordType != null)
                 {
+                    LoadingViewModel.LoadingMessage = $"Loading {XrmRecordService.GetDisplayName(recordType)} Type";
+                    try
+                    {
 
-                    recordTypeObj = new RecordType(recordType, XrmRecordService.GetDisplayName(recordType));
-                }
-                catch (Exception)
-                {
+                        recordTypeObj = new RecordType(recordType, XrmRecordService.GetDisplayName(recordType));
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
                 var rank = item.GetIntegerField(Fields.sdkmessageprocessingstep_.rank);
@@ -108,7 +124,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 //for some unknown reason this field was setting the target type ot sdkmessage filter 
                 //despite the target being plugin type so I had to implement this to correct the type 
                 //the name is popuated after the loop
-                trigger.Message = filter == null ? null : filter.GetLookupField(Fields.sdkmessagefilter_.sdkmessageid);
+                trigger.Message = item.GetField(Fields.sdkmessageprocessingstep_.sdkmessageid) as Lookup;// filter == null ? null : filter.GetLookupField(Fields.sdkmessagefilter_.sdkmessageid);
                 item.SetField(Fields.sdkmessageprocessingstep_.plugintypeid, new Lookup(Entities.plugintype, item.GetLookupId(Fields.sdkmessageprocessingstep_.plugintypeid), null), XrmRecordService);
                 trigger.Plugin = item.GetLookupField(Fields.sdkmessageprocessingstep_.plugintypeid);
                 trigger.RecordType = recordTypeObj;
@@ -164,227 +180,10 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 .ThenBy(t => t.Message?.Name)
                 .ThenByDescending(t => t.Stage)
                 .ThenByDescending(t => t.Mode).ToList();
-            EntryObject.Triggers = triggers;
-            EntryObject.Assembly = assemblyRecord.ToLookup();
+            Request.Triggers = triggers;
+            Request.Assembly = assemblyRecord.ToLookup();
 
             LoadingViewModel.LoadingMessage = "Loading Plugins Into Grid";
-        }
-
-        public IEnumerable<IRecord> SdkMessageStepsPre { get; set; }
-
-        private PluginTriggers _entryObject;
-
-        public PluginTriggers EntryObject
-        {
-            get
-            {
-                if (_entryObject == null)
-                {
-                    Load(AssemblyName);
-                }
-                return _entryObject;
-            }
-        }
-
-        public string AssemblyName { get; private set; }
-        protected override void LoadDialogExtention()
-        {
-            LoadingViewModel.LoadingMessage = "Getting Assembly Name";
-            AssemblyName = VisualStudioService.GetSelectedProjectAssemblyName();
-            if (string.IsNullOrWhiteSpace(AssemblyName))
-            {
-                throw new NullReferenceException("Could Not Find Assembly Name");
-            }
-            else
-                StartNextAction();
-        }
-
-        protected override void CompleteDialogExtention()
-        {
-            var response = new ManagePluginTriggersResponse();
-            try
-            {
-                CompletionItem = response;
-
-                //delete any removed plugins
-                var removedPlugins = SdkMessageStepsPre.Where(smsp => EntryObject.Triggers.All(pt => pt.Id != smsp.Id)).ToArray();
-                var deletions = XrmRecordService.DeleteInCrm(removedPlugins);
-                foreach (var trigger in deletions.Errors)
-                {
-                    var error = new ManagePluginTriggersResponseitem()
-                    {
-                        Type = "Deletion",
-                        Name = trigger.Key.GetLookupName(Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid),
-                        Exception = trigger.Value
-                    };
-                    response.AddResponseItem(error);
-                }
-
-                //load the filter entities which exist for each entity type, message combination
-                var filters = EntryObject.Triggers.Select(t =>
-                {
-                    var filter = new Filter();
-                    filter.AddCondition(Fields.sdkmessagefilter_.primaryobjecttypecode, ConditionType.Equal, t.RecordType == null ? "none" : t.RecordType.Key);
-                    filter.AddCondition(Fields.sdkmessagefilter_.sdkmessageid, ConditionType.Equal, t.Message.Id);
-                    return filter;
-                }).ToArray();
-                var pluginFilters = XrmRecordService.RetrieveAllOrClauses(Entities.sdkmessagefilter, filters);
-
-                //unload the triggers into an entity object referencing it in a dictionary
-                var unloadedObjects = new Dictionary<IRecord, PluginTrigger>();
-                foreach (var item in EntryObject.Triggers)
-                {
-                    var matchingPluginFilters =
-                        pluginFilters.Where(f => f.GetLookupId(Fields.sdkmessagefilter_.sdkmessageid) == item.Message.Id
-                                                 &&
-                                                 ((item.RecordType == null && f.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode) == "none")
-                                                  ||
-                                                  (item.RecordType != null && f.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode) == item.RecordType.Key)))
-                                                   .ToArray();
-                    var record = XrmRecordService.NewRecord(Entities.sdkmessageprocessingstep);
-                    var name = string.Format("{0} {1} {2} {3} {4}", item.Plugin, item.RecordType?.Key ?? "none", item.Message, item.Stage, item.Mode).Left(XrmRecordService.GetMaxLength(Fields.sdkmessageprocessingstep_.name, Entities.sdkmessageprocessingstep));
-                    record.SetField(Fields.sdkmessageprocessingstep_.name, name, XrmRecordService);
-                    record.SetField(Fields.sdkmessageprocessingstep_.rank, item.Rank, XrmRecordService);
-                    if (item.Stage != null)
-                        record.SetField(Fields.sdkmessageprocessingstep_.stage, (int)item.Stage, XrmRecordService);
-                    if (item.Mode != null)
-                        record.SetField(Fields.sdkmessageprocessingstep_.mode, (int)item.Mode, XrmRecordService);
-                    record.SetField(Fields.sdkmessageprocessingstep_.plugintypeid, item.Plugin, XrmRecordService);
-                    record.SetField(Fields.sdkmessageprocessingstep_.sdkmessagefilterid, !matchingPluginFilters.Any() ? null : matchingPluginFilters.First().ToLookup(), XrmRecordService);
-                    record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageid, item.Message, XrmRecordService);
-                    record.SetField(Fields.sdkmessageprocessingstep_.impersonatinguserid, item.SpecificUserContext == null || item.SpecificUserContext.Id == null ? null : item.SpecificUserContext, XrmRecordService);
-                    if (item.Id != null)
-                        record.SetField(Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid, item.Id, XrmRecordService);
-                    record.SetField(Fields.sdkmessageprocessingstep_.asyncautodelete, item.Mode == PluginTrigger.PluginMode.Asynch, XrmRecordService);
-                    record.SetField(Fields.sdkmessageprocessingstep_.filteringattributes, item.FilteringFields != null && item.FilteringFields.Any() ? string.Join(",", item.FilteringFields.OrderBy(r => r.Key).Select(r => r.Key)) : null, XrmRecordService);
-                    unloadedObjects.Add(record, item);
-                }
-
-                //submit them to crm create/update
-                var triggerLoads = XrmRecordService.LoadIntoCrm(unloadedObjects.Keys,
-                    Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid);
-
-                var updatesAndDeletes =
-                    unloadedObjects.Keys.Where(
-                        r =>
-                            new[] { "Update", "Delete" }.Contains(
-                                r.GetLookupName(Fields.sdkmessageprocessingstep_.sdkmessageid)))
-                                .ToArray();
-
-                var solutionItemsToAdd = new List<string>();
-                //update/delete pre-images
-                var imagesToCreateOrUpdate = new List<IRecord>();
-                var imagesToDelete = new List<IRecord>();
-                foreach (var item in updatesAndDeletes
-                    .Where(i => !triggerLoads.Errors.Keys.Contains(CompletionItem)))
-                {
-                    var matchingPluginTrigger = unloadedObjects[item];
-                    //the plugin will only have an image if all fields, or there are specific fields selected
-                    var hasImage = matchingPluginTrigger.PreImageAllFields || (matchingPluginTrigger.PreImageFields != null && matchingPluginTrigger.PreImageFields.Any());
-                    if (!hasImage)
-                    {
-                        //delete the existing image if is has been changed to not have an image
-                        if (matchingPluginTrigger.PreImageId != null)
-                        {
-                            try
-                            {
-                                imagesToDelete.Add(XrmRecordService.Get(Entities.sdkmessageprocessingstepimage, matchingPluginTrigger.PreImageId));
-                                solutionItemsToAdd.Add(matchingPluginTrigger.Id);
-                            }
-                            catch (Exception ex)
-                            {
-                                var error = new ManagePluginTriggersResponseitem()
-                                {
-                                    Type = "Image Deletion",
-                                    Name = matchingPluginTrigger.PreImageId,
-                                    Exception = ex
-                                };
-                                response.AddResponseItem(error);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //set the details to create/update in the pre-image
-                        var isUpdate = triggerLoads.Updated.Contains(item);
-                        var imageRecord = XrmRecordService.NewRecord(Entities.sdkmessageprocessingstepimage);
-                        imageRecord.Id = matchingPluginTrigger.PreImageId;
-                        if (matchingPluginTrigger.PreImageId != null)
-                            imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageid, matchingPluginTrigger.PreImageId, XrmRecordService);
-                        if (matchingPluginTrigger.PreImageIdUnique != null)
-                            imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageidunique, matchingPluginTrigger.PreImageIdUnique, XrmRecordService);
-
-                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.name, matchingPluginTrigger.PreImageName, XrmRecordService);
-                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.entityalias, matchingPluginTrigger.PreImageName, XrmRecordService);
-                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.messagepropertyname, "Target", XrmRecordService);
-                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid, XrmRecordService.ToLookup(item), XrmRecordService);
-                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.imagetype, OptionSets.SdkMessageProcessingStepImage.ImageType.PreImage, XrmRecordService);
-                        var attributesString = matchingPluginTrigger.PreImageAllFields || matchingPluginTrigger.PreImageFields == null || !matchingPluginTrigger.PreImageFields.Any()
-                            ? null
-                            : string.Join(",", matchingPluginTrigger.PreImageFields.Select(f => f.Key).OrderBy(s => s).ToArray());
-                        imageRecord.SetField(Fields.sdkmessageprocessingstepimage_.attributes, attributesString, XrmRecordService);
-                        imagesToCreateOrUpdate.Add(imageRecord);
-                    }
-                }
-
-                //submit create/update/deletion of pre-images
-                var imageLoads = XrmRecordService.LoadIntoCrm(imagesToCreateOrUpdate,
-                    Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageidunique);
-                var imageDeletions = XrmRecordService.DeleteInCrm(imagesToDelete);
-
-                //add any errors to the response object
-                foreach (var trigger in imageDeletions.Errors)
-                {
-                    var error = new ManagePluginTriggersResponseitem()
-                    {
-                        Type = "Image Deletion",
-                        Name = trigger.Key.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid),
-                        Exception = trigger.Value
-                    };
-                    response.AddResponseItem(error);
-                }
-
-                foreach (var trigger in triggerLoads.Errors)
-                {
-                    var error = new ManagePluginTriggersResponseitem()
-                    {
-                        Type = "Plugin Step",
-                        Name = trigger.Key.GetStringField(Fields.sdkmessageprocessingstep_.name),
-                        Exception = trigger.Value
-                    };
-                    response.AddResponseItem(error);
-                }
-                foreach (var trigger in imageLoads.Errors)
-                {
-                    var error = new ManagePluginTriggersResponseitem()
-                    {
-                        Type = "Image",
-                        Name = trigger.Key.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid),
-                        Exception = trigger.Value
-                    };
-                    response.AddResponseItem(error);
-                }
-
-                //add plugin steps to the solution
-                var componentType = OptionSets.SolutionComponent.ObjectTypeCode.SDKMessageProcessingStep;
-                solutionItemsToAdd.AddRange(triggerLoads.Created.Union(triggerLoads.Updated).Select(r => r.Id).ToList());
-                var imagesReferences = imageLoads.Created.Union(imageLoads.Updated)
-                    .Select(i => i.GetLookupId(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid))
-                    .Where(id => !string.IsNullOrWhiteSpace(id));
-                solutionItemsToAdd.AddRange(imagesReferences);
-
-                if (PackageSettings.AddToSolution)
-                    XrmRecordService.AddSolutionComponents(PackageSettings.Solution.Id, componentType, solutionItemsToAdd);
-
-                if (response.ResponseItems.Any())
-                    response.Message = "There Were Errors Thrown Updating The Plugins";
-                else
-                    response.Message = "Plugins Updated";
-            }
-            catch (Exception ex)
-            {
-                response.Message = "Fatal Error: " + ex.Message + Environment.NewLine + ex.XrmDisplayString();
-            }
         }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
@@ -395,13 +194,13 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 if (!dictionary.ContainsKey(name))
                     dictionary.Add(name, value);
             }
-            if (EntryObject.Triggers != null)
+            if (Request.Triggers != null)
             {
-                addProperty($"Trigger Count", EntryObject.Triggers.Count().ToString());
-                addProperty($"Trigger With Field Filters Count", EntryObject.Triggers.Count(t => (t.FilteringFields?.Count() ?? 0) > 0).ToString());
-                addProperty($"Trigger With PreImage Fields Count", EntryObject.Triggers.Count(t => (t.PreImageFields?.Count() ?? 0) > 0).ToString());
-                addProperty($"Trigger With Specific User Context Count", EntryObject.Triggers.Count(t => t.SpecificUserContext != null).ToString());
-                foreach (var messageGroup in EntryObject.Triggers.Where(t => t.Message != null).GroupBy(t => t.Message.Name))
+                addProperty($"Trigger Count", Request.Triggers.Count().ToString());
+                addProperty($"Trigger With Field Filters Count", Request.Triggers.Count(t => (t.FilteringFields?.Count() ?? 0) > 0).ToString());
+                addProperty($"Trigger With PreImage Fields Count", Request.Triggers.Count(t => (t.PreImageFields?.Count() ?? 0) > 0).ToString());
+                addProperty($"Trigger With Specific User Context Count", Request.Triggers.Count(t => t.SpecificUserContext != null).ToString());
+                foreach (var messageGroup in Request.Triggers.Where(t => t.Message != null).GroupBy(t => t.Message.Name))
                 {
                     addProperty($"Trigger {messageGroup.Key} Message Count", messageGroup.Count().ToString());
                 }

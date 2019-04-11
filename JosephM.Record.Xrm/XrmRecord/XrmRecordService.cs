@@ -1223,7 +1223,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                         .ToList();
         }
 
-        public LoadToCrmResponse LoadIntoCrm(IEnumerable<IRecord> records, string matchField)
+        public LoadToCrmResponse LoadIntoCrm(IEnumerable<IRecord> records, string matchField, bool setWorkflowRefreshField = false)
         {
             var response = new LoadToCrmResponse();
             if (records.Any())
@@ -1261,7 +1261,8 @@ namespace JosephM.Record.Xrm.XrmRecord
                             //added this for plugin types where workflow activity
                             //do not update the in/out arguments
                             //explicitly setting the pluginassemblyid seems to refresh them
-                            if (record.Type == Entities.plugintype
+                            if (setWorkflowRefreshField
+                                && record.Type == Entities.plugintype
                                 && record.GetBoolField(Fields.plugintype_.isworkflowactivity)
                                 && record.ContainsField(Fields.plugintype_.pluginassemblyid)
                                 && !changedFields.Contains(Fields.plugintype_.pluginassemblyid))

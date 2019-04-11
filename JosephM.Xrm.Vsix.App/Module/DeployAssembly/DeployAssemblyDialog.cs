@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Attributes;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
 using JosephM.Record.Extentions;
@@ -17,49 +18,36 @@ using System.Reflection;
 namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 {
     [RequiresConnection]
-    public class DeployAssemblyDialog : DialogViewModel
+    public class DeployAssemblyDialog : ServiceRequestDialog<DeployAssemblyService, DeployAssemblyRequest, DeployAssemblyResponse, DeployAssemblyResponseItem>
     {
-        public XrmRecordService Service { get; set; }
+        public XrmRecordService XrmRecordService { get; set; }
         public XrmPackageSettings PackageSettings { get; set; }
         IVisualStudioService VisualStudioService { get; set; }
 
-        public DeployAssemblyDialog(IDialogController dialogController, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
-            : base(dialogController)
+        public DeployAssemblyDialog(DeployAssemblyService service, IDialogController dialogController, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, XrmPackageSettings packageSettings)
+            : base(service, dialogController, null, nextButtonLabel: "Deploy")
         {
             VisualStudioService = visualStudioService;
             PackageSettings = packageSettings;
-            Service = xrmRecordService;
-
-            var configEntryDialog = new ObjectGetEntryDialog(() => PluginAssembly, this, ApplicationController, Service, saveButtonLabel: "Deploy");
-            SubDialogs = new DialogViewModel[] { configEntryDialog };
+            XrmRecordService = xrmRecordService;
         }
 
         protected override void LoadDialogExtention()
         {
+            //hijack the load method so that we can prepopulate
+            //the entered request with various details
+            LoadAssemblyDetails();
+
+            StartNextAction();
+        }
+
+        private void LoadAssemblyDetails()
+        {
             AssemblyFile = VisualStudioService.BuildSelectedProjectAndGetAssemblyName();
             if (string.IsNullOrWhiteSpace(AssemblyFile))
-            {
                 throw new NullReferenceException("Could Not Find Built Assembly. Check The Build Results");
-            }
-            else
-                StartNextAction();
-        }
 
-        private PluginAssembly _pluginAssembly;
-        public PluginAssembly PluginAssembly
-        {
-            get
-            {
-                if (_pluginAssembly == null )
-                {
-                    Load();
-                }
-                return _pluginAssembly;
-            }
-        }
 
-        private void Load()
-        {
             var fileInfo = new FileInfo(AssemblyFile);
             var assemblyName = fileInfo.Name.Substring(0,
                 fileInfo.Name.LastIndexOf(fileInfo.Extension, StringComparison.Ordinal));
@@ -98,19 +86,18 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             if (!plugins.Any())
                 throw new Exception("There are no plugin classes in the assembly");
 
-            _pluginAssembly = new PluginAssembly();
-            PluginAssembly.Name = assemblyName;
-            PluginAssembly.Content = assemblyContent;
+            Request.AssemblyName = assemblyName;
+            Request.Content = assemblyContent;
 
-            var preAssembly = Service.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name, assemblyName);
+            var preAssembly = XrmRecordService.GetFirst(Entities.pluginassembly, Fields.pluginassembly_.name, assemblyName);
             if (preAssembly != null)
             {
-                PluginAssembly.Id = preAssembly.Id;
-                PluginAssembly.IsolationMode = preAssembly.GetOptionKey(Fields.pluginassembly_.isolationmode).ParseEnum<PluginAssembly.IsolationMode_>();
+                Request.Id = preAssembly.Id;
+                Request.IsolationMode = preAssembly.GetOptionKey(Fields.pluginassembly_.isolationmode).ParseEnum<DeployAssemblyRequest.IsolationMode_>();
             }
 
             var pluginTypes = new List<PluginType>();
-            PluginAssembly.PluginTypes = pluginTypes;
+            Request.PluginTypes = pluginTypes;
             foreach (var item in plugins)
             {
                 var pluginType = new PluginType();
@@ -127,11 +114,11 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                 pluginType.InAssembly = true;
                 pluginTypes.Add(pluginType);
             }
-            PreTypeRecords = preAssembly == null
+            Request.SetPreTypeRecords(preAssembly == null
                 ? new IRecord[0]
-                : Service.RetrieveAllAndClauses(Entities.plugintype, new[] { new Condition(Fields.plugintype_.pluginassemblyid, ConditionType.Equal, PluginAssembly.Id) });
+                : XrmRecordService.RetrieveAllAndClauses(Entities.plugintype, new[] { new Condition(Fields.plugintype_.pluginassemblyid, ConditionType.Equal, Request.Id) }));
 
-            foreach (var item in PreTypeRecords)
+            foreach (var item in Request.GetPreTypeRecords())
             {
                 var matchingItems =
                     pluginTypes.Where(pt => item.GetStringField(Fields.plugintype_.typename) == pt.TypeName);
@@ -157,7 +144,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             foreach (var item in pluginTypes)
             {
                 var matchingItems =
-                    PreTypeRecords.Where(pt => pt.GetStringField(Fields.plugintype_.typename) == item.TypeName);
+                    Request.GetPreTypeRecords().Where(pt => pt.GetStringField(Fields.plugintype_.typename) == item.TypeName);
                 if (matchingItems.Any())
                 {
                     var matchingItem = matchingItems.First();
@@ -168,90 +155,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             }
         }
 
-        public IEnumerable<IRecord> PreTypeRecords { get; set; }
         public string AssemblyFile { get; private set; }
-
-        protected override void CompleteDialogExtention()
-        {
-            var response = new DeployAssemblyResponse();
-            try
-            {
-                CompletionItem = response;
-
-                var service = Service;
-
-                var removedPlugins = PreTypeRecords.Where(ptr => PluginAssembly.PluginTypes.All(pt => pt.Id != ptr.Id)).ToArray();
-                foreach (var record in removedPlugins)
-                {
-                    try
-                    {
-                        service.Delete(record);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(string.Format("Error deleting plugin {0}", record.GetStringField(Fields.plugintype_.name)), ex);
-                    }
-                }
-
-                //okay first create/update the plugin assembly
-                var assemblyRecord = service.NewRecord(Entities.pluginassembly);
-                assemblyRecord.Id = PluginAssembly.Id;
-                if (PluginAssembly.Id != null)
-                    assemblyRecord.SetField(Fields.pluginassembly_.pluginassemblyid, PluginAssembly.Id, service);
-                assemblyRecord.SetField(Fields.pluginassembly_.name, PluginAssembly.Name, service);
-                assemblyRecord.SetField(Fields.pluginassembly_.content, PluginAssembly.Content, service);
-                assemblyRecord.SetField(Fields.pluginassembly_.isolationmode, (int)PluginAssembly.IsolationMode, service);
-                var matchField = Fields.pluginassembly_.pluginassemblyid;
-
-                var assemblyLoadResponse = service.LoadIntoCrm(new[] { assemblyRecord }, matchField);
-                if (assemblyLoadResponse.Errors.Any())
-                {
-                    throw new Exception("Error Deploying Assembly", assemblyLoadResponse.Errors.Values.First());
-                }
-                //okay create/update the plugin types
-                var pluginTypes = new List<IRecord>();
-                foreach (var pluginType in PluginAssembly.PluginTypes)
-                {
-                    var pluginTypeRecord = service.NewRecord(Entities.plugintype);
-                    pluginTypeRecord.Id = pluginType.Id;
-                    if (pluginType.Id != null)
-                        pluginTypeRecord.SetField(Fields.plugintype_.plugintypeid, pluginType.Id, service);
-                    pluginTypeRecord.SetField(Fields.plugintype_.typename, pluginType.TypeName, service);
-                    pluginTypeRecord.SetField(Fields.plugintype_.name, pluginType.Name, service);
-                    pluginTypeRecord.SetField(Fields.plugintype_.friendlyname, pluginType.FriendlyName, service);
-                    pluginTypeRecord.SetField(Fields.plugintype_.assemblyname, PluginAssembly.Name, service);
-                    pluginTypeRecord.SetLookup(Fields.plugintype_.pluginassemblyid, assemblyRecord.Id, assemblyRecord.Type);
-                    pluginTypeRecord.SetField(Fields.plugintype_.isworkflowactivity, pluginType.IsWorkflowActivity, service);
-                    pluginTypeRecord.SetField(Fields.plugintype_.workflowactivitygroupname, pluginType.GroupName, service);
-                    pluginTypes.Add(pluginTypeRecord);
-                }
-
-                var pluginTypeLoadResponse = service.LoadIntoCrm(pluginTypes, Fields.plugintype_.plugintypeid);
-
-                foreach (var item in pluginTypeLoadResponse.Errors)
-                {
-                    var responseItem = new DeployAssemblyResponseItem();
-                    responseItem.Name = item.Key.GetStringField(Fields.plugintype_.typename);
-                    responseItem.Exception = item.Value;
-                    response.AddResponseItem(responseItem);
-                }
-
-                //add plugin assembly to the solution
-                var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
-                var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
-                if (PackageSettings.AddToSolution)
-                    service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
-
-                if (response.ResponseItems.Any())
-                    response.Message = "There Were Errors Thrown Updating The Plugins";
-                else
-                    response.Message = "Plugins Updated";
-            }
-            catch(Exception ex)
-            {
-                response.Message = "Fatal Error: " + ex.Message + Environment.NewLine + ex.XrmDisplayString();
-            }
-        }
 
         //code copied - http://weblog.west-wind.com/posts/2009/Jan/19/Assembly-Loading-across-AppDomains
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -286,13 +190,13 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                 if (!dictionary.ContainsKey(name))
                     dictionary.Add(name, value);
             }
-            if(PluginAssembly != null)
+            if(Request != null)
             {
-                addProperty("Isolation Mode", PluginAssembly.IsolationMode.ToString());
-                if(PluginAssembly.PluginTypes != null)
+                addProperty("Isolation Mode", Request.IsolationMode.ToString());
+                if(Request.PluginTypes != null)
                 {
-                    var pluginCount = PluginAssembly.PluginTypes.Count(pt => !pt.IsWorkflowActivity);
-                    var workflowCount = PluginAssembly.PluginTypes.Count(pt => pt.IsWorkflowActivity);
+                    var pluginCount = Request.PluginTypes.Count(pt => !pt.IsWorkflowActivity);
+                    var workflowCount = Request.PluginTypes.Count(pt => pt.IsWorkflowActivity);
                     addProperty("Plugin Count", pluginCount.ToString());
                     addProperty("Workflow Count", workflowCount.ToString());
                 }

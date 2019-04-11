@@ -116,7 +116,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public void DeployAssembly(XrmPackageSettings settings)
         {
-            var createDialog = new DeployAssemblyDialog(new FakeDialogController(new FakeApplicationController()),
+            var createDialog = new DeployAssemblyDialog(new DeployAssemblyService(XrmRecordService, settings), new FakeDialogController(new FakeApplicationController()),
                 new FakeVisualStudioService(), XrmRecordService, settings);
             createDialog.Controller.BeginDialog();
 

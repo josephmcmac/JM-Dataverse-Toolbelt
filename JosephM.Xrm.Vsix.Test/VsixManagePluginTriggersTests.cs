@@ -54,7 +54,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual(2, triggers.Count());
 
             //delete a trigger
-            var dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            var dialog =  new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -76,7 +76,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual(3, triggers.Count());
 
             //okay now lets inspect and adjust the filtering attributes and preimages and impersonating user in one of the update messages
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             triggersSubGrid = entryViewModel.SubGrids.First();
@@ -123,7 +123,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual("FooOthername", image.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias));
 
             //lets just verify if we go through te dialog without touching the record we adjusted that it is still the same after the save
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             Assert.IsTrue(entryViewModel.Validate());
@@ -138,7 +138,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual("FooOthername", image.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias));
 
             //now lets verify deletion of an image if changed to not have one (image deleted) as well as clear impersonating user
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             triggersSubGrid = entryViewModel.SubGrids.First();
@@ -164,7 +164,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNull(image);
 
             //lets just verify if we go through te dialog without touching the record still doesn't have one
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             Assert.IsTrue(entryViewModel.Validate());
@@ -178,7 +178,7 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNull(image);
 
             //add the image again
-            dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
             entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             triggersSubGrid = entryViewModel.SubGrids.First();
@@ -202,7 +202,7 @@ namespace JosephM.Xrm.Vsix.Test
         private void RunDialogAndAddMessage(string message)
         {
             var packageSettings = GetTestPackageSettings(); ;
-            var dialog = new ManagePluginTriggersDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            var dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
             var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             var triggersSubGrid = entryViewModel.SubGrids.First();

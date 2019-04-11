@@ -21,7 +21,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.IsFalse(GetTestPluginAssemblyRecords().Any());
 
-            var dialog = new DeployAssemblyDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            var dialog = new DeployAssemblyDialog(new DeployAssemblyService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             var objectEntry = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
@@ -29,7 +29,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             Assert.AreEqual(1, GetTestPluginAssemblyRecords().Count());
 
-            dialog = new DeployAssemblyDialog(CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
+            dialog = new DeployAssemblyDialog(new DeployAssemblyService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
             dialog.Controller.BeginDialog();
 
             objectEntry = (ObjectEntryViewModel)dialog.Controller.UiItems.First();

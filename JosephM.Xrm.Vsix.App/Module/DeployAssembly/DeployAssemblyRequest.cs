@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using JosephM.Core.Attributes;
+using JosephM.Core.Service;
+using JosephM.Record.IService;
 
 namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 {
     [Group(Sections.PluginAssembly, true, 10)]
-    public class PluginAssembly
+    public class DeployAssemblyRequest : ServiceRequestBase
     {
-        public PluginAssembly()
+        public DeployAssemblyRequest()
         {
             IsolationMode = IsolationMode_.Sandbox;
         }
@@ -20,16 +22,33 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
         [DisplayOrder(10)]
         [Group(Sections.PluginAssembly)]
         [ReadOnlyWhenSet]
-        [DisplayName("Assembly Name")]
-        public string Name { get; set; }
+        public string AssemblyName { get; set; }
 
         [RequiredProperty]
         [DisplayOrder(20)]
         [Group(Sections.PluginAssembly)]
         public IsolationMode_ IsolationMode { get; set; }
 
+        [RequiredProperty]
+        [DisplayOrder(30)]
+        [Group(Sections.PluginAssembly)]
+        [MyDescription("If Set The Deploy Process Sets A Field On Each Custom Workflow Activity Intended To Refresh It's Input & Output Arguments")]
+        public bool TriggerWorkflowActivityRefreshes { get; set; }
+
         [DoNotAllowAdd]
         public IEnumerable<PluginType> PluginTypes { get; set; }
+
+        private IEnumerable<IRecord> _preTypeRecords;
+
+        public IEnumerable<IRecord> GetPreTypeRecords()
+        {
+            return _preTypeRecords;
+        }
+
+        public void SetPreTypeRecords(IEnumerable<IRecord> value)
+        {
+            _preTypeRecords = value;
+        }
 
         public enum IsolationMode_
         {
