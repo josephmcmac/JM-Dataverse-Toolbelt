@@ -134,7 +134,6 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                     matchingItem.TypeName = item.GetStringField(Fields.plugintype_.typename);
                     matchingItem.IsWorkflowActivity = item.GetBoolField(Fields.plugintype_.isworkflowactivity);
                 }
-
                 matchingItem.Id = item.Id;
                 matchingItem.FriendlyName = item.GetStringField(Fields.plugintype_.friendlyname);
                 matchingItem.Name = item.GetStringField(Fields.plugintype_.name);
@@ -148,6 +147,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                 if (matchingItems.Any())
                 {
                     var matchingItem = matchingItems.First();
+                    item.IsDeployed = true;
                     item.Id = matchingItem.Id;
                     item.Name = matchingItem.GetStringField(Fields.plugintype_.friendlyname);
                     item.GroupName = matchingItem.GetStringField(Fields.plugintype_.workflowactivitygroupname);
