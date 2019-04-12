@@ -138,7 +138,8 @@ namespace JosephM.Application.ViewModel.Dialog
         {
             
             var dictionary = new Dictionary<string, string>();
-            if(TimeCompleteMethodStarted.HasValue)
+            dictionary.Add("Is Completed Event", true.ToString());
+            if (TimeCompleteMethodStarted.HasValue)
             {
                 dictionary.Add("Complete Method Seconds Taken", (DateTime.UtcNow - TimeCompleteMethodStarted.Value).TotalSeconds.ToString());
             }
@@ -189,7 +190,7 @@ namespace JosephM.Application.ViewModel.Dialog
                 ParentDialog.ProcessError(ex);
             else
             {
-                ApplicationController.LogEvent(DialogEventName + " Fatal Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
+                ApplicationController.LogEvent(DialogEventName + " Fatal Error", new Dictionary<string, string> { { "Is Error", true.ToString() }, { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
                 Controller.ShowCompletionScreen(this);
             }
         }

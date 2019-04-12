@@ -70,7 +70,7 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
 
         public void LogException(Exception ex)
         {
-            LogEvent("General Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
+            LogEvent("General Error", new Dictionary<string, string> { { "Is Error", true.ToString() }, { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
         }
     }
 }

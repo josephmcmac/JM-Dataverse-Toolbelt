@@ -88,6 +88,7 @@ namespace JosephM.Deployment
 
                     ApplicationController.LogEvent("Add Portal Data Completed", new Dictionary<string, string>
                     {
+                        { "Is Completed Event", true.ToString() },
                         { "Filter", "All" }
                     });
                 }
@@ -221,6 +222,7 @@ namespace JosephM.Deployment
 
                             var eventArgs = new Dictionary<string, string>
                             {
+                                { "Is Completed Event", true.ToString() },
                                 { "Filter", modifiedPeriod.Key }
                             };
                             foreach(var itemType in dictionaryOfRecordsToAdd)

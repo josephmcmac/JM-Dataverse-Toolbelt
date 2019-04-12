@@ -69,7 +69,7 @@ namespace JosephM.Xrm.Vsix.Wizards
             }
             catch (Exception ex)
             {
-                app.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Fatal Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
+                app.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Fatal Error", new Dictionary<string, string> { { "Is Error", true.ToString() }, { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
                 throw;
             }
         }
@@ -189,11 +189,11 @@ namespace JosephM.Xrm.Vsix.Wizards
 
                 RemoveEmptyFolders(DestinationDirectory);
 
-                VsixApplication.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Completed");
+                VsixApplication.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Completed", new Dictionary<string, string> { { "Is Completed Event", true.ToString() } });
             }
             catch (Exception ex)
             {
-                VsixApplication.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Fatal Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
+                VsixApplication.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Fatal Error", new Dictionary<string, string> { { "Is Error", true.ToString() }, { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
                 throw;
             }
         }

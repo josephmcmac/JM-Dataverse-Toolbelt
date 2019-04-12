@@ -179,7 +179,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
             {
                 grid.DynamicGridViewModel.ReloadGrid();
             }
-            loadIntoForm.ApplicationController.LogEvent("Load Request Completed", new Dictionary<string, string> { { "Type", formObject.GetType().Name } });
+            loadIntoForm.ApplicationController.LogEvent("Load Request Completed", new Dictionary<string, string> { { "Type", formObject.GetType().Name }, { "Is Completed Event", true.ToString() } });
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                         new FormController(recordService, formService, ApplicationController), re, "LOADING", onlyValidate: onlyValidate);
 
                     oevm.LoadChildForm(vm);
-                    ApplicationController.LogEvent("Edit Saved Requests Completed", new Dictionary<string, string> { { "Type", theObjectType.Name } });
+                    ApplicationController.LogEvent("Edit Saved Requests Completed", new Dictionary<string, string> { { "Type", theObjectType.Name }, { "Is Completed Event", true.ToString() } });
                 }
             }
             catch (Exception ex)
@@ -295,7 +295,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                         //add the one and save
                         settings.SavedRequests = settings.SavedRequests.Union(new[] { theObject }).ToArray();
                         settingsManager.SaveSettingsObject(settings, theObjectType);
-                        ApplicationController.LogEvent("Save Request Completed", new Dictionary<string, string> { { "Type", theObjectType.Name }, { "Autoload", saveObject.Autoload.ToString() } });
+                        ApplicationController.LogEvent("Save Request Completed", new Dictionary<string, string> { { "Type", theObjectType.Name }, { "Is Completed Event", true.ToString() }, { "Autoload", saveObject.Autoload.ToString() } });
                         //reload the form and notify
                         viewModel.ClearChildForms();
                         viewModel.LoadCustomFunctions();

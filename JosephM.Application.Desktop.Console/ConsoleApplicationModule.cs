@@ -91,7 +91,7 @@ namespace JosephM.Application.Desktop.Console
                         arguments.Add("ActiveXrmConnection", savedConnection.Name);
                     }
 
-                    ApplicationController.LogEvent("Generate Bat", new Dictionary<string, string> { { "Type", executableModule.RequestType.Name } });
+                    ApplicationController.LogEvent("Generate Bat", new Dictionary<string, string> { { "Type", executableModule.RequestType.Name }, { "Is Completed Event", true.ToString() } });
 
                     //var blah = module.BaseType.GenericTypeArguments[1].GetConstructors().First().GetParameters().Any(p => p.ParameterType == typeof(XrmRecordService));
 

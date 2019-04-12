@@ -48,6 +48,7 @@ namespace JosephM.XrmModule.AppConnection
                         dialog.SubDialogs = subDialogList;
                         ApplicationController.LogEvent("Injected Connection Entry To Dialog", new Dictionary<string, string>
                         {
+                            { "Is Completed Event", true.ToString() },
                             { "Dialog Type", dialog.GetType().Name }
                         });
                     }

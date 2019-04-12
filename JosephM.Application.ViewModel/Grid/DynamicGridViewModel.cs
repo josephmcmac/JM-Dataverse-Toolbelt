@@ -474,7 +474,7 @@ namespace JosephM.Application.ViewModel.Grid
                 {
                     GridLoadError = true;
                     ErrorMessage = string.Format("There was an error loading data into the grid: {0}", ex.DisplayString());
-                    ApplicationController.LogEvent("Grid Load Error", new Dictionary<string, string> { { "Error", ex.Message }, { "Error Trace", ex.DisplayString() }, { "Record Type", RecordType } });
+                    ApplicationController.LogEvent("Grid Load Error", new Dictionary<string, string> { { "Is Error", true.ToString() }, { "Error", ex.Message }, { "Error Trace", ex.DisplayString() }, { "Record Type", RecordType } });
                     if (LoadedCallback != null)
                         LoadedCallback();
                     LoadingViewModel.IsLoading = false;
@@ -625,6 +625,7 @@ namespace JosephM.Application.ViewModel.Grid
                         CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records, fields, (f) => RecordService.GetFieldLabel(f, RecordType), (r, f) => { return RecordService.GetFieldAsDisplayString((IRecord)r, f); });
                         ApplicationController.LogEvent("Download CSV", new Dictionary<string, string>
                         {
+                            { "Is Completed Event", true.ToString() },
                             { "Type", RecordType },
                             { "Seconds Taken", (DateTime.UtcNow - started).TotalSeconds.ToString() },
                         });

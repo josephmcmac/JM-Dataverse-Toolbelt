@@ -110,6 +110,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 AddError($"Error Loading Picklist Options\n\n{ex.DisplayString()}");
                 ApplicationController.LogEvent("Error Loading Picklist Options", new Dictionary<string, string>
                 {
+                    { "Is Error", true.ToString() },
                     { "Record Type", GetRecordType() },
                     { "Field", FieldName },
                     { "ReferencedType", RecordTypeToLookup },

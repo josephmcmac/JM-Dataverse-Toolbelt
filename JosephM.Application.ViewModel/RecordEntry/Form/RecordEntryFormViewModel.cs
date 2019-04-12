@@ -329,6 +329,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 CancelButtonViewModel.IsVisible = OnCancel != null;
                 ApplicationController.LogEvent("Loading Form Connection Error", new Dictionary<string, string>
                 {
+                    { "Is Error", true.ToString() },
                     { "Record Type", GetRecordType() }
                 });
             }
