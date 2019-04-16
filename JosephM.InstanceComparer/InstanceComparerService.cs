@@ -41,7 +41,6 @@ namespace JosephM.InstanceComparer
             AppendReports(processContainer);
             AppendCaseCreationRules(processContainer);
             AppendSlas(processContainer);
-            AppendApps(processContainer);
             AppendRoutingRules(processContainer);
 
             AppendData(processContainer);
@@ -185,39 +184,6 @@ namespace JosephM.InstanceComparer
 
             if (processContainer.ServiceOne.RecordTypeExists(processCompareParams.RecordType))
                 processContainer.Comparisons.Add(processCompareParams);
-        }
-
-        private void AppendApps(ProcessContainer processContainer)
-        {
-            if (!processContainer.Request.Apps)
-                return;
-
-            var appCompareParams = new ProcessCompareParams("Apps",
-                Entities.appmodule,
-                Fields.appmodule_.uniquename,
-                Fields.appmodule_.uniquename,
-                null,
-                new[]
-                {
-                    Fields.appmodule_.description, Fields.appmodule_.clienttype, Fields.appmodule_.formfactor, Fields.appmodule_.isdefault, Fields.appmodule_.name
-                });
-
-            var appComponentCompareParams = new ProcessCompareParams("App Components",
-                Entities.appmodulecomponent, Fields.appmodulecomponent_.objectid, Fields.appmodulecomponent_.objectid, null,
-                new[] { Fields.appmodulecomponent_.objectid },
-                Fields.appmodulecomponent_.appmoduleidunique, ParentLinkType.Lookup)
-            {
-                OverrideParentId = Fields.appmodule_.appmoduleidunique
-            };
-
-            var appRoleCompareParams = new ProcessCompareParams("App Roles",
-                Relationships.appmodule_.appmoduleroles_association.EntityName, Fields.role_.roleid, Fields.role_.roleid, null,
-                new[] { "roleid" },
-                Fields.appmodule_.appmoduleid, ParentLinkType.Lookup);
-
-            appCompareParams.ChildCompares = new[] { appRoleCompareParams, appComponentCompareParams };
-
-            processContainer.Comparisons.Add(appCompareParams);
         }
 
         private void AppendSlas(ProcessContainer processContainer)
@@ -565,7 +531,8 @@ namespace JosephM.InstanceComparer
                 new[] { new Condition(Fields.webresource_.ishidden, ConditionType.NotEqual, true) },
                 new[] { Fields.webresource_.content, Fields.webresource_.description, Fields.webresource_.displayname, Fields.webresource_.webresourcetype, Fields.webresource_.languagecode })
             {
-                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.webresource_.webresourceid, OptionSets.SolutionComponent.ObjectTypeCode.WebResource)
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.webresource_.webresourceid, OptionSets.SolutionComponent.ObjectTypeCode.WebResource),
+                LoadCompareDataInSets = 100
             };
 
             processArgs.AddConversionObject(Fields.webresource_.content,
@@ -716,14 +683,23 @@ namespace JosephM.InstanceComparer
                 {
                     if (processCompareParams.Type == ProcessCompareType.Records)
                     {
+                        List<string> fieldForInitialLoad = null;
+                        if(processCompareParams.LoadCompareDataInSets > 0)
+                        {
+                            fieldForInitialLoad = new List<string>();
+                            fieldForInitialLoad.AddRange(processCompareParams.MatchFields);
+                            fieldForInitialLoad.Add(processCompareParams.DisplayField);
+                            fieldForInitialLoad = fieldForInitialLoad.Distinct().ToList();
+                        }
+
                         processContainer.Controller.UpdateLevel2Progress(1, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionOne.Name));
                         var serviceOneItems = processContainer.ServiceOne.RetrieveAllAndClauses(
-                            processCompareParams.RecordType, processCompareParams.Conditions, null);
+                            processCompareParams.RecordType, processCompareParams.Conditions, fieldForInitialLoad);
                         AddRequiredParentFields(serviceOneItems, processContainer.ServiceOne);
 
                         processContainer.Controller.UpdateLevel2Progress(2, 4, string.Format("Loading {0} Items", processContainer.Request.ConnectionTwo.Name));
                         var serviceTwoItems = processContainer.ServiceTwo.RetrieveAllAndClauses(
-                            processCompareParams.RecordType, processCompareParams.Conditions, null);
+                            processCompareParams.RecordType, processCompareParams.Conditions, fieldForInitialLoad);
                         AddRequiredParentFields(serviceTwoItems, processContainer.ServiceTwo);
 
                         processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
@@ -745,6 +721,7 @@ namespace JosephM.InstanceComparer
                                 .Where(r => processCompareParams.Conditions == null || processCompareParams.Conditions.All(c => c.MeetsCondition(r)))
                                 .ToArray();
                         processContainer.Controller.UpdateLevel2Progress(3, 4, "Comparing");
+
                         inBoth.AddRange(DoCompare(processCompareParams, processContainer, serviceOneItems, serviceTwoItems));
                     }
                 }
@@ -839,7 +816,7 @@ namespace JosephM.InstanceComparer
                     ? (indexService2Items.ContainsKey(processContainer.ServiceOne.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField))))
                     ? indexService2Items[processContainer.ServiceOne.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField)))]
                     : new IRecord[0])
-                    
+
                     : serviceTwoItems
                     .Where(
                     w =>
@@ -852,7 +829,7 @@ namespace JosephM.InstanceComparer
 
                 if (matches.Any())
                 {
-                    if(matches.Count() > 1)
+                    if (matches.Count() > 1)
                     {
                         var displayName = GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams, false);
                         foreach (var duplicate in matches.Skip(1))
@@ -865,7 +842,7 @@ namespace JosephM.InstanceComparer
                             //but theirs differentiates by filtering attributes
                             if ((displayName + "").StartsWith("Microsoft.Crm.Surveys"))
                                 continue;
-                            
+
                             var displayName2 = GetItemDisplayName(duplicate, processContainer.ServiceTwo, processCompareParams, true);
                             processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType, displayName
                                 , "Duplicate match. Only the first will be compared", displayName, displayName2, item.Id, duplicate.Id);
@@ -908,16 +885,16 @@ namespace JosephM.InstanceComparer
 
             //this part creates a dictionary mapping the matched records
             //it is used to compare associations for the records
-            if(processContainer.Request.Data
+            if (processContainer.Request.Data
                 && processContainer.Request.DataComparisons != null
                 && processContainer.Request.DataComparisons.Select(dc => dc.Type).Contains(processCompareParams.RecordType))
             {
-                if(!processContainer.MatchedRecordDictionary.ContainsKey(processCompareParams.RecordType))
+                if (!processContainer.MatchedRecordDictionary.ContainsKey(processCompareParams.RecordType))
                 {
                     processContainer.MatchedRecordDictionary.Add(processCompareParams.RecordType, new Dictionary<IRecord, IRecord>());
-                    foreach(var item in thisInBoth)
+                    foreach (var item in thisInBoth)
                     {
-                        if(!processContainer.MatchedRecordDictionary[processCompareParams.RecordType].ContainsKey(item.First()))
+                        if (!processContainer.MatchedRecordDictionary[processCompareParams.RecordType].ContainsKey(item.First()))
                         {
                             processContainer.MatchedRecordDictionary[processCompareParams.RecordType][item.First()] = item.Last();
                         }
@@ -926,6 +903,48 @@ namespace JosephM.InstanceComparer
             }
 
             //differences
+            if (processCompareParams.LoadCompareDataInSets == 0)
+                ProcessThisSetInBoth(processCompareParams, processContainer, parentCompareParams, parent1, parent2, thisInBoth);
+            else
+            {
+                //if we are comparing in sets to reduce memory use (e.g. web resources)
+                //then we have only loaded the names and main/name field initially
+                //so we load the detail fields in temporary sets
+                //within a loop
+
+                //copy the list of all macthes to a temporary list for removing each set
+                var remainingToDo = thisInBoth.ToList();
+                while (remainingToDo.Any())
+                {
+                    //process a set and remove from the remianing to do
+                    var thisSet = remainingToDo.Take(processCompareParams.LoadCompareDataInSets).ToArray();
+                    remainingToDo.RemoveRange(0, thisSet.Count());
+                    processContainer.Controller.GetLevel2Controller().LogLiteral($"Comparing {thisInBoth.Count() - remainingToDo.Count()} / {thisInBoth.Count()}");
+                    var primarykey = processContainer.ServiceOne.GetPrimaryKey(processCompareParams.RecordType);
+                    //query this details for this set from service one and two
+                    var thisSetItems1 = processContainer.ServiceOne.RetrieveAllOrClauses(processCompareParams.RecordType, thisSet.Select(ts => new Condition(primarykey, ConditionType.Equal, ts.First().Id)));
+                    var thisSetItems2 = processContainer.ServiceTwo.RetrieveAllOrClauses(processCompareParams.RecordType, thisSet.Select(ts => new Condition(primarykey, ConditionType.Equal, ts.Last().Id)));
+                    //this replicates the items for comparing this set  - but with all fields populated
+                    var thisSetWithAllFieldsPopulated = new List<List<IRecord>>();
+                    foreach(var item in thisSet)
+                    {
+                        var match1 = thisSetItems1.Where(e => e.Id == item.First().Id).ToArray();
+                        var match2 = thisSetItems2.Where(e => e.Id == item.Last().Id).ToArray();
+                        if (!match1.Any())
+                            processContainer.Response.AddResponseItem(new InstanceComparerResponseItem("Couldnt Compare Item In Set", processCompareParams.Context, new Exception($"Error Loading Match Into Set. Record With Id {item.First().Id} Not Found In Set For Service One")));
+                        else if (!match2.Any())
+                            processContainer.Response.AddResponseItem(new InstanceComparerResponseItem("Couldnt Compare Item In Set", processCompareParams.Context, new Exception($"Error Loading Match Into Set. Record With Id {item.Last().Id} Not Found In Set For Service Two")));
+                        else
+                            thisSetWithAllFieldsPopulated.Add(new List<IRecord> { match1.First(), match2.First() });
+                    }
+                    ProcessThisSetInBoth(processCompareParams, processContainer, parentCompareParams, parent1, parent2, thisSetWithAllFieldsPopulated);
+                }
+            }
+            return thisInBoth;
+        }
+
+        private static void ProcessThisSetInBoth(ProcessCompareParams processCompareParams, ProcessContainer processContainer, ProcessCompareParams parentCompareParams, IRecord parent1, IRecord parent2, List<List<IRecord>> thisInBoth)
+        {
             foreach (var item in thisInBoth)
             {
                 if (item.First().Type == Entities.solution && !processContainer.Request.Solutions)
@@ -968,7 +987,7 @@ namespace JosephM.InstanceComparer
                             "Different " + fieldLabel, displayValue1, displayValue2, item.First().Id, item.Last().Id, parentReference: parentReference, parentId1: parentId1, parentId2: parentId2);
                     }
                 }
-                if(processCompareParams.RecordType == Entities.adx_webfile)
+                if (processCompareParams.RecordType == Entities.adx_webfile)
                 {
                     //for adx web files lets get the latest attachment for each and comare the docuemnt body field as well
                     var query = new QueryDefinition(Entities.annotation);
@@ -993,7 +1012,6 @@ namespace JosephM.InstanceComparer
                     }
                 }
             }
-            return thisInBoth;
         }
 
         private static string GetDifferenceDisplayPartForValue1(string value1, string value2)
@@ -1104,6 +1122,7 @@ namespace JosephM.InstanceComparer
             public IEnumerable<string> FieldsCheckDifference { get; set; }
             public string RecordType { get; set; }
             public string ParentLink { get; set; }
+            public int LoadCompareDataInSets{ get; set; }
 
             public IEnumerable<ProcessCompareParams> ChildCompares { get; set; }
 

@@ -91,10 +91,6 @@ namespace JosephM.InstanceComparer
         [DisplayName("SLAs")]
         [DisplayOrder(89)]
         public bool SLAs { get; set; }
-        [GridWidth(110)]
-        [Group(Sections.CompareOptions)]
-        [DisplayOrder(95)]
-        public bool Apps { get; set; }
 
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]
