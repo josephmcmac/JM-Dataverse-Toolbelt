@@ -6,6 +6,10 @@ using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using System.Windows.Forms;
 using JosephM.Xrm.Schema;
+using JosephM.Core.AppConfig;
+using JosephM.Xrm.Vsix.Application;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.PackageSettings
 {
@@ -17,6 +21,27 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
             base.RegisterTypes();
             AddCopyNewCodeButton();
             InitialisePrefixFields();
+            AddProjectAutocomplete();
+        }
+
+        private void AddProjectAutocomplete()
+        {
+            var props = new[]
+            {
+                new KeyValuePair<Type,string>(typeof(XrmPackageSettings.DeployIntoFieldProject), nameof(XrmPackageSettings.DeployIntoFieldProject.ProjectName)),
+                new KeyValuePair<Type,string>(typeof(XrmPackageSettings.PluginProject), nameof(XrmPackageSettings.PluginProject.ProjectName)),
+                new KeyValuePair<Type,string>(typeof(XrmPackageSettings.WebResourceProject), nameof(XrmPackageSettings.WebResourceProject.ProjectName)),
+            };
+            foreach (var prop in props)
+            {
+                this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
+                {
+                    var visualStudioService = recordForm.ApplicationController.ResolveType<IVisualStudioService>();
+                    if (visualStudioService == null)
+                        throw new NullReferenceException("visualStudioService");
+                    return visualStudioService.GetProjects().Select(p => p.Name).ToArray();
+                }), prop.Key, prop.Value);
+            }
         }
 
         private void InitialisePrefixFields()

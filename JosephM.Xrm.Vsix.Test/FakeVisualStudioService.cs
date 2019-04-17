@@ -128,5 +128,10 @@ namespace JosephM.Xrm.Vsix.Test
         {
             return new DirectoryInfo(SolutionDirectory).Name;
         }
+
+        public override IEnumerable<IVisualStudioProject> GetProjects()
+        {
+            return Directory.GetDirectories(SolutionDirectory).Select(di => new FakeVisualStudioProject(di)).ToArray();
+        }
     }
 }

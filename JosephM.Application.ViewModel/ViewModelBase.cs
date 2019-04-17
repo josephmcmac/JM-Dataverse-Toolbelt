@@ -1,10 +1,6 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using JosephM.Application.Application;
-
-#endregion
 
 namespace JosephM.Application.ViewModel
 {

@@ -40,8 +40,22 @@
                 TabIndex="1"
                 Text="{Binding Mode=TwoWay, Path=ValueObject}"
                 DataContext="{Binding NotifyOnValidationError=True}"
+                TextChanged="TextBox_TextChanged"
+                PreviewKeyDown="OnPreviewKeyDown"
                 VerticalScrollBarVisibility="Auto"
                 IsReadOnly="False" />
+            <Grid Name="PopupGrid" Grid.Column="0" Row="1" >
+                <Popup
+                     Visibility="{Binding DisplayAutocomplete, Converter={StaticResource BoolToVis}}"
+                    PlacementTarget="{Binding ElementName=TextBox}" IsOpen="{Binding DisplayAutocomplete}" StaysOpen="False">
+                    <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" >
+                        <field:StringAutocompleteView
+                            Background="{DynamicResource BackgroundColor}"
+                            DataContext="{Binding AutocompleteViewModel}"/>
+                    </Border>
+                </Popup>
+            </Grid>
         </Grid>
+
     </Grid>
 </field:FieldControlBase>

@@ -54,6 +54,13 @@ namespace JosephM.Application.ViewModel.Extentions
             module.ApplicationController.RegisterInstance(typeof(OnChangeFunctions), type.AssemblyQualifiedName, customFunctions);
         }
 
+        public static void AddAutocompleteFunction(this ModuleBase module, AutocompleteFunction autocompleteFunction, Type type, string property)
+        {
+            var functions = (AutocompleteFunctions)module.ApplicationController.ResolveInstance(typeof(AutocompleteFunctions), type.AssemblyQualifiedName);
+            functions.AddAutocompleteFunction(property, autocompleteFunction);
+            module.ApplicationController.RegisterInstance(typeof(AutocompleteFunctions), type.AssemblyQualifiedName, functions);
+        }
+
         public static IEnumerable<GridFieldMetadata> GetGridFields(this IRecordService recordService, string recordType,
             ViewType preferredViewType)
         {

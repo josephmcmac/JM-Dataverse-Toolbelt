@@ -11,6 +11,11 @@
         <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding NoMargins}" Value="True">
+                <Setter Property="Margin" Value="0,0,0,0" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
     <Style TargetType="{x:Type DataGridRow}" >
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
@@ -23,6 +28,11 @@
     <Style x:Key="DynamicGridContainer" TargetType="{x:Type Grid}" >
         <Setter Property="Margin" Value="9,9,9,9" />
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding NoMargins}" Value="True">
+                <Setter Property="Margin" Value="0,0,0,0" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
     <Style TargetType="{x:Type DataGridColumnHeader}" >
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />

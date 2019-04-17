@@ -223,5 +223,16 @@ namespace JosephM.Xrm.Vsix.Application
             var file = new FileInfo(fileName);
             return file.Name.Split('.').First();
         }
+
+        public override IEnumerable<IVisualStudioProject> GetProjects()
+        {
+            var results = new List<IVisualStudioProject>();
+            foreach (Project item in Solution.Projects)
+            {
+                if (item.FileName != null)
+                    results.Add(new VisualStudioProject(item));
+            }
+            return results;
+        }
     }
 }

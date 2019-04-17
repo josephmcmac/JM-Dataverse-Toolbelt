@@ -20,6 +20,7 @@ namespace JosephM.Xrm.Vsix.Application
         ISolutionFolder GetSolutionFolder(string solutionFolderName);
         string ItemFolderName { get; }
         string GetSolutionName();
+        IEnumerable<IVisualStudioProject> GetProjects();
     }
 
     public interface IVisualStudioProject

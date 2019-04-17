@@ -108,6 +108,7 @@
     <Compile Include="Query\ConditionViewModel.cs" />
     <Compile Include="Query\FilterConditionsViewModel.cs" />
     <Compile Include="RecordEntry\Field\ActivityPartyFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\StringAutocompleteViewModel.cs" />
     <Compile Include="RecordEntry\Field\MultiSelectDialogViewModel.cs" />
     <Compile Include="RecordEntry\Field\MultiSelectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\MoneyFieldViewModel.cs" />
@@ -124,7 +125,9 @@
     <Compile Include="RecordEntry\Field\UrlFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Form\AutocompleteFunctions.cs" />
     <Compile Include="RecordEntry\Form\CreateOrUpdateViewModel.cs" />
+    <Compile Include="RecordEntry\Form\AutocompleteFunction.cs" />
     <Compile Include="RecordEntry\Form\OnChangeFunction.cs" />
     <Compile Include="RecordEntry\Form\CustomFormFunction.cs" />
     <Compile Include="RecordEntry\Form\OnChangeFunctions.cs" />

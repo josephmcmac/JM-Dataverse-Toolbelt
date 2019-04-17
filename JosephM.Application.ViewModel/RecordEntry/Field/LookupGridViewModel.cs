@@ -1,15 +1,10 @@
-﻿#region
-
-using System;
-using System.Linq;
-using JosephM.Application.ViewModel.Extentions;
+﻿using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
-using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
-
-#endregion
+using System;
+using System.Linq;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {

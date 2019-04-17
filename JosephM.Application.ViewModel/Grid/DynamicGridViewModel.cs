@@ -30,6 +30,7 @@ namespace JosephM.Application.ViewModel.Grid
         public DynamicGridViewModel(IApplicationController applicationController)
             : base(applicationController)
         {
+            DisplayHeaders = true;
             LoadingViewModel = new LoadingViewModel(applicationController);
             //this one a bit of a hack as loading/display controlled in code behind so set the vm as always loading
             SortLoadingViewModel = new LoadingViewModel(applicationController) { LoadingMessage = "Please Wait While Reloading Sorted Items", IsLoading = true };
@@ -62,6 +63,10 @@ namespace JosephM.Application.ViewModel.Grid
             LoadDialog = (d) => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(LoadDialog))); };
             RemoveParentDialog = () => { ApplicationController.UserMessage(string.Format("Error The {0} Method Has Not Been Set In This Context", nameof(RemoveParentDialog))); };
         }
+
+        public bool DisplayHeaders { get; set; }
+
+        public bool NoMargins { get; set; }
 
         public HorizontalJustify GetHorizontalJustify(RecordFieldType fieldType)
         {

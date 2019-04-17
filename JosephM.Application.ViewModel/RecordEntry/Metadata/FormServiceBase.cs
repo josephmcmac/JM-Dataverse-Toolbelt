@@ -201,5 +201,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public virtual void LoadPropertyChangedEvent(FieldViewModelBase fieldViewModelBase)
         {
         }
+
+        public virtual IEnumerable<string> GetAutocompletesStrings(StringFieldViewModel stringFieldViewModel)
+        {
+            return null;
+        }
     }
 }

@@ -108,7 +108,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 _label = value;
-                OnPropertyChanged("Label");
+                OnPropertyChanged(nameof(Label));
             }
         }
 

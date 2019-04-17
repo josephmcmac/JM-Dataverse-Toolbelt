@@ -103,6 +103,9 @@ namespace JosephM.TestModule.TestDialog
         public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
 
         [Group(Sections.DisplayFirst)]
+        public string AutocompleteField { get; set; }
+
+        [Group(Sections.DisplayFirst)]
         [DoNotAllowAdd]
         public IEnumerable<TestDialogRequestItem> Items { get; set; }
 
@@ -121,6 +124,8 @@ namespace JosephM.TestModule.TestDialog
             {
                 ReadOnlyProp = "I Read Only";
             }
+
+            public string AutocompleteField { get; set; }
 
             public IEnumerable<TestEnum> MultiSelect { get; set; }
 

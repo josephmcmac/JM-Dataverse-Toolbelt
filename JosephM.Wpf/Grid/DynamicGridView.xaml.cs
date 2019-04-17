@@ -161,6 +161,7 @@ namespace JosephM.Wpf.Grid
             dynamicDataGrid.Columns.Clear();
             if (gridSectionViewModel != null)
             {
+                dynamicDataGrid.HeadersVisibility = gridSectionViewModel.DisplayHeaders ? DataGridHeadersVisibility.Column : DataGridHeadersVisibility.None;
                 gridSectionViewModel.ApplicationController.DoOnAsyncThread(() =>
                 {
                     if (gridSectionViewModel.FieldMetadata == null)
@@ -176,7 +177,7 @@ namespace JosephM.Wpf.Grid
                                 gridSectionViewModel
                                     .RecordType);
                             var thisColumn = new ColumnMetadata(fieldName, fieldMetadata.DisplayName ?? fieldName, fieldMetadata.FieldType, gridField.WidthPart,
-                                gridField.IsEditable, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType));
+                                gridField.IsEditable, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType), gridSectionViewModel.DisplayHeaders);
                             columnMetadata.Add(thisColumn);
                         }
                     }
@@ -429,8 +430,9 @@ namespace JosephM.Wpf.Grid
         public class ColumnMetadata
         {
             public ColumnMetadata(string fieldName, string fieldLabel, RecordFieldType fieldType, double widthPart,
-                bool isEditable, string tooltip, HorizontalJustify justify)
+                bool isEditable, string tooltip, HorizontalJustify justify, bool displayColumnHeader)
             {
+                DisplayColumnHeader = displayColumnHeader;
                 FieldName = fieldName;
                 FieldLabel = fieldLabel;
                 FieldType = fieldType;
@@ -444,6 +446,8 @@ namespace JosephM.Wpf.Grid
             {
                 get { return FieldLabel != null; }
             }
+
+            public bool DisplayColumnHeader { get; set; }
 
             public string FieldName { get; private set; }
             public string FieldLabel { get; private set; }

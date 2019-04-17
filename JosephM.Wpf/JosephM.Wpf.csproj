@@ -288,6 +288,9 @@
     <Compile Include="RecordEntry\Field\IntegerPicklistFieldView.xaml.cs">
       <DependentUpon>IntegerPicklistFieldView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\StringAutocompleteView.xaml.cs">
+      <DependentUpon>StringAutocompleteView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\LookupPicklistView.xaml.cs">
       <DependentUpon>LookupPicklistView.xaml</DependentUpon>
     </Compile>
@@ -549,6 +552,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\IntegerPicklistFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\StringAutocompleteView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
