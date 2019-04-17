@@ -874,7 +874,7 @@ namespace JosephM.Deployment.DataImport
                                 ? new Entity[0]
                                 : GetMatchingEntities(thisEntity.LogicalName, new Dictionary<string, object>
                                 {
-                                    { XrmService.GetPrimaryKeyName(thisEntity.LogicalName), thisEntity.Id }
+                                    { XrmService.GetPrimaryKeyField(thisEntity.LogicalName), thisEntity.Id }
                                 });
                 if (!existingMatches.Any())
                 {

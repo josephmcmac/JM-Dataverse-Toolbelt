@@ -593,11 +593,6 @@ namespace JosephM.Xrm
             return GetRelationshipMetadata(relationshipName).IntersectEntityName;
         }
 
-        public string GetPrimaryKeyName(string entityTo)
-        {
-            return XrmEntity.GetPrimaryKeyName(entityTo);
-        }
-
         public string GetFilteredViewName(string entity)
         {
             return GetEntityMetadata(entity).ReportViewName;
@@ -1361,7 +1356,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
         {
             var query = new QueryExpression(entityTo);
             query.ColumnSet = CreateColumnSet(fields);
-            var link = query.AddLink(GetRelationshipEntityName(relationshipName), GetPrimaryKeyName(entityTo),
+            var link = query.AddLink(GetRelationshipEntityName(relationshipName), GetPrimaryKeyField(entityTo),
                 toRelationShipId);
             link.LinkCriteria.AddCondition(entityFromRelationShipId, ConditionOperator.Equal, entityFromId);
             return RetrieveAll(query);

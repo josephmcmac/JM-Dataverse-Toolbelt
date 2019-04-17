@@ -4,14 +4,12 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
-using JosephM.Record.IService;
-using JosephM.Record.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -196,10 +194,25 @@ namespace JosephM.Deployment.ExportXml
 
                 var toDo = entities.Count();
                 var done = 0;
+
+                var typesDontInlcudeNull = new[] { AttributeTypeCode.Uniqueidentifier };
+                var fieldsPopulateIfNull = exportType.IncludeAllFields
+                    ? XrmService.GetFields(exportType.RecordType.Key)
+                    .Select(f => XrmService.GetFieldMetadata(f, exportType.RecordType.Key))
+                    .Where(fm => fm.AttributeType.HasValue && !typesDontInlcudeNull.Contains(fm.AttributeType.Value))
+                    .Select(fm => fm.LogicalName)
+                    .ToArray()
+                    : exportType.IncludeOnlyTheseFields.Select(f => f.RecordField.Key);
+
                 foreach (var entity in entities)
                 {
                     controller.UpdateLevel2Progress(done++, toDo, string.Format("Processing {0} Records", type));
                     entity.RemoveFields(excludeFields);
+                    var fieldsSetNull = fieldsPopulateIfNull
+                        .Where(k => entity.GetField(k) == null)
+                        .ToArray();
+                    foreach (var setNull in fieldsSetNull)
+                        entity.SetField(setNull, null);
                     processEntity(entity);
                 }
                 controller.TurnOffLevel2();
