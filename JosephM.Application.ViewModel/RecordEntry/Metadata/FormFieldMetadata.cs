@@ -191,17 +191,24 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     {
                         fieldVm = new RecordTypeFieldViewModel(field, label, recordForm)
                         {
-                            IsRecordServiceField = isRecordServiceField,
-                            ItemsSource =
-                                explicitPicklistOptions != null
-                                ? explicitPicklistOptions.Select(p => new RecordType(p.Key, p.Value)).Where(rt => !string.IsNullOrWhiteSpace(rt.Value)).OrderBy(rt => rt.Value).ToArray()
-                                : recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference,
-                                    recordForm.GetRecord())
-                                    .Select(p =>  new RecordType(p.Key, p.Value))
-                                    .Where(rt => !rt.Value.IsNullOrWhiteSpace())
-                                    .OrderBy(rt => rt.Value)
-                                    .ToArray()
+                            IsRecordServiceField = isRecordServiceField
                         };
+                        try
+                        {
+                            ((RecordTypeFieldViewModel)fieldVm).ItemsSource =
+                            explicitPicklistOptions != null
+                            ? explicitPicklistOptions.Select(p => new RecordType(p.Key, p.Value)).Where(rt => !string.IsNullOrWhiteSpace(rt.Value)).OrderBy(rt => rt.Value).ToArray()
+                            : recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference,
+                                recordForm.GetRecord())
+                                .Select(p => new RecordType(p.Key, p.Value))
+                                .Where(rt => !rt.Value.IsNullOrWhiteSpace())
+                                .OrderBy(rt => rt.Value)
+                                .ToArray();
+                        }
+                        catch(Exception ex)
+                        {
+                            fieldVm.AddError($"Error Loading Picklist Options\n\n{ex.DisplayString()}");
+                        }
                         break;
                     }
                     case RecordFieldType.RecordField:
