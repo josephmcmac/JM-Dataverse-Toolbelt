@@ -44,10 +44,12 @@
                 PreviewKeyDown="OnPreviewKeyDown"
                 VerticalScrollBarVisibility="Auto"
                 IsReadOnly="False" />
-            <Grid Name="PopupGrid" Grid.Column="0" Row="1" >
+            <Grid>
                 <Popup
-                     Visibility="{Binding DisplayAutocomplete, Converter={StaticResource BoolToVis}}"
-                    PlacementTarget="{Binding ElementName=TextBox}" IsOpen="{Binding DisplayAutocomplete}" StaysOpen="False">
+                    Visibility="{Binding DisplayAutocomplete, Converter={StaticResource BoolToVis}}"
+                    PlacementTarget="{Binding ElementName=TextBox}"
+                    IsOpen="{Binding DisplayAutocomplete}"
+                    StaysOpen="False">
                     <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" >
                         <field:StringAutocompleteView
                             Background="{DynamicResource BackgroundColor}"

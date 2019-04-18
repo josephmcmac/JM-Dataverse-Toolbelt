@@ -5,6 +5,7 @@
                     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
+        <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
     <Style x:Key="SectionHeadingStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadingStyle}" >
@@ -79,7 +80,14 @@
         <field:RecordFieldFieldView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="EnumerableFieldTemplate">
-        <field:EnumerableFieldView DataContext="{Binding}" />
+        <WrapPanel MaxHeight="{Binding ElementName=FormSections,Path=ActualHeight, Converter={StaticResource HeightAdjuster}, ConverterParameter=-55}">
+            <field:EnumerableFieldView DataContext="{Binding}" />
+        </WrapPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="EnumerableFieldTemplateUniform">
+        <UniformGrid>
+            <field:EnumerableFieldView DataContext="{Binding}" />
+        </UniformGrid>
     </DataTemplate>
     <DataTemplate x:Key="DecimalFieldTemplate">
         <field:DecimalFieldView DataContext="{Binding}" />
@@ -110,6 +118,7 @@
         RecordTypeFieldTemplate="{StaticResource RecordTypeFieldTemplate}"
         RecordFieldFieldTemplate="{StaticResource RecordFieldFieldTemplate}"
         EnumerableFieldTemplate="{StaticResource EnumerableFieldTemplate}"
+        EnumerableFieldTemplateUniform="{StaticResource EnumerableFieldTemplateUniform}"
         DecimalFieldTemplate="{StaticResource DecimalFieldTemplate}"
         UrlFieldTemplate="{StaticResource UrlFieldTemplate}"
         MultiSelectFieldTemplate="{StaticResource MultiSelectFieldTemplate}"

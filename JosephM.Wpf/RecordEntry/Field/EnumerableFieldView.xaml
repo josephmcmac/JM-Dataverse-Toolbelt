@@ -18,43 +18,21 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <WrapPanel
-            MaxHeight="{Binding ElementName=FormSections,Path=ActualHeight, Converter={StaticResource HeightAdjuster}, ConverterParameter=-55}"
-            Visibility="{Binding IsGridOnlyEntryField, Converter={StaticResource BooleanToVisibilityHiddenConverter}}">
-            <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <TextBlock
+        <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock
                         Text="{Binding ErrorMessage}"
                          Style="{StaticResource ValidationMessage}"  />
-                    </Grid>
-                    <Grid Grid.Row="1" >
-                        <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
-                    </Grid>
                 </Grid>
-            </Border>
-        </WrapPanel>
-        <UniformGrid Visibility="{Binding IsGridOnlyEntryField, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <TextBlock
-                        Text="{Binding ErrorMessage}"
-                         Style="{StaticResource ValidationMessage}"  />
-                    </Grid>
-                    <Grid Grid.Row="1" >
-                        <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
-                    </Grid>
+                <Grid Grid.Row="1" >
+                    <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
                 </Grid>
-            </Border>
-        </UniformGrid>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

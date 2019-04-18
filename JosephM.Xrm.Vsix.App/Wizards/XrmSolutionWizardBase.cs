@@ -16,6 +16,7 @@ using System.Text;
 using System.Windows;
 using VSLangProj;
 using JosephM.Xrm.Vsix.App;
+using JosephM.Core.AppConfig;
 
 namespace JosephM.Xrm.Vsix.Wizards
 {
@@ -41,9 +42,10 @@ namespace JosephM.Xrm.Vsix.Wizards
                     new XrmPackageSettings.WebResourceProject(replacementsDictionary["$projectname$"] + ".WebResources")
                 };
             }
-
+            var visualStudioService = new VisualStudioService(DTE);
             var container = new DependencyContainer();
-            var app = Factory.CreateJosephMXrmVsixApp(new VisualStudioService(DTE), container, isWizardContext: true);
+            container.RegisterInstance<IVisualStudioService>(visualStudioService);
+            var app = Factory.CreateJosephMXrmVsixApp(visualStudioService, container, isWizardContext: true);
             VsixApplication = app;
             app.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Loaded");
             try

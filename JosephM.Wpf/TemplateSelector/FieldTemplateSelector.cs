@@ -27,6 +27,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate RecordFieldFieldTemplate { get; set; }
         public DataTemplate FileRefFieldTemplate { get; set; }
         public DataTemplate EnumerableFieldTemplate { get; set; }
+        public DataTemplate EnumerableFieldTemplateUniform { get; set; }
         public DataTemplate DecimalFieldTemplate { get; set; }
         public DataTemplate UrlFieldTemplate { get; set; }
         public DataTemplate MultiSelectFieldTemplate { get; set; }
@@ -81,8 +82,13 @@ namespace JosephM.Wpf.TemplateSelector
             }
             if (item is FileRefFieldViewModel)
                 return FileRefFieldTemplate;
-            if (item is EnumerableFieldViewModel)
-                return EnumerableFieldTemplate;
+            if (item is EnumerableFieldViewModel enumerableVm)
+            {
+                if (enumerableVm.IsGridOnlyEntryField)
+                    return EnumerableFieldTemplateUniform;
+                else
+                    return EnumerableFieldTemplate;
+            }
             if (item is DecimalFieldViewModel)
                 return DecimalFieldTemplate;
             if (item is DoubleFieldViewModel)

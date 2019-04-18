@@ -102,6 +102,12 @@
     <Compile Include="AllPropertyTypes\AllPropertyTypesResponse.cs" />
     <Compile Include="AllPropertyTypes\AllPropertyTypesResponseItem.cs" />
     <Compile Include="AllPropertyTypes\AllPropertyTypesService.cs" />
+    <Compile Include="TestGridOnlyEntry\TestGridOnlyDialog.cs" />
+    <Compile Include="TestGridOnlyEntry\TestGridOnlyModule.cs" />
+    <Compile Include="TestGridOnlyEntry\TestGridOnlyRequest.cs" />
+    <Compile Include="TestGridOnlyEntry\TestGridOnlyResponse.cs" />
+    <Compile Include="TestGridOnlyEntry\TestGridOnlyResponseItem.cs" />
+    <Compile Include="TestGridOnlyEntry\TestGridOnlyService.cs" />
     <Compile Include="TestGridEdit\TestDialogBase.cs" />
     <Compile Include="TestGridEdit\TestDialogModule.cs" />
     <Compile Include="TestGridEdit\TestDialogRequest.cs" />

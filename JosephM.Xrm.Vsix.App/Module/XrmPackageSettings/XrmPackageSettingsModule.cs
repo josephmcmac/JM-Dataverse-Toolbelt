@@ -10,6 +10,9 @@ using JosephM.Core.AppConfig;
 using JosephM.Xrm.Vsix.Application;
 using System.Collections.Generic;
 using System.Linq;
+using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.Record.Service;
+using JosephM.Core.Extentions;
 
 namespace JosephM.Xrm.Vsix.Module.PackageSettings
 {

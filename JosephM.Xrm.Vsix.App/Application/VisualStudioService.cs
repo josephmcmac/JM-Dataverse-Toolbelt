@@ -227,10 +227,30 @@ namespace JosephM.Xrm.Vsix.Application
         public override IEnumerable<IVisualStudioProject> GetProjects()
         {
             var results = new List<IVisualStudioProject>();
-            foreach (Project item in Solution.Projects)
+            if (Solution != null)
             {
-                if (item.FileName != null)
-                    results.Add(new VisualStudioProject(item));
+                foreach (Project item in Solution.Projects)
+                {
+                    results.AddRange(GetProjects(item));
+                }
+            }
+            return results;
+        }
+
+        public IEnumerable<IVisualStudioProject> GetProjects(Project project)
+        {
+            var results = new List<IVisualStudioProject>();
+            if (!string.IsNullOrWhiteSpace(project.FileName))
+                results.Add(new VisualStudioProject(project));
+            else if (project.ProjectItems != null)
+            {
+                foreach (ProjectItem projectItem in project.ProjectItems)
+                {
+                    if (projectItem.SubProject is Project)
+                    {
+                        results.AddRange(GetProjects(projectItem.SubProject as Project));
+                    }
+                }
             }
             return results;
         }

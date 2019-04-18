@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -32,7 +33,9 @@ namespace JosephM.Wpf.RecordEntry.Field
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (ViewModel == null
+            if (
+                !TextBox.IsKeyboardFocusWithin
+                || ViewModel == null
                 || (!_startAutocomplete && TextBox.Text == ViewModel.Value)
                 || !ViewModel.IsEditable
                 || ViewModel.AutocompleteViewModel == null)

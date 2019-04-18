@@ -5,126 +5,23 @@ using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Record.Sql;
 using System.Collections.Generic;
 
-namespace JosephM.TestModule.TestDialog
+namespace JosephM.TestModule.TestGridOnly
 {
     [GridOnlyEntry(nameof(Items))]
-    [AllowSaveAndLoad]
-    [Group(Sections.DisplayFirst, true, 5)]
-    [Group(Sections.DisplaySecond, true, 5)]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.SelectAll, true, order: 20, selectAll: true)]
-    [Group(Sections.TypesAndLookups, true, order: 30)]
-    [Group(Sections.Setting, true, order: 40)]
-    [DisplayName("Test Dialog")]
-    public class TestDialogRequest : ServiceRequestBase
+    public class TestGridOnlyRequest : ServiceRequestBase
     {
-        public TestDialogRequest()
+        public TestGridOnlyRequest()
         {
-            Items = new[] {new TestDialogRequestItem()};
+            Items = new[] {new TestGridOnlyRequestItem()};
         }
 
-        public IEnumerable<TestEnum> MultiSelect { get; set; }
+        public IEnumerable<TestGridOnlyRequestItem> Items { get; set; }
 
-        [DisplayOrder(15)]
-        [Group(Sections.Main)]
-        [FileMask(FileMasks.ExcelFile)]
-        [ConnectionFor(nameof(ExcelRecordType), typeof(ExcelFileConnection))]
-        [ConnectionFor(nameof(ExcelField), typeof(ExcelFileConnection))]
-        public FileReference ExcelFile { get; set; }
-
-        [PropertyInContextByPropertyNotNull(nameof(ExcelFile))]
-        [RecordTypeFor(nameof(ExcelField))]
-        [DisplayOrder(16)]
-        [Group(Sections.Main)]
-        public RecordType ExcelRecordType { get; set; }
-
-        [PropertyInContextByPropertyNotNull(nameof(ExcelRecordType))]
-        [DisplayOrder(17)]
-        [Group(Sections.Main)]
-        public RecordField ExcelField { get; set; }
-
-
-        [MyDescription("If set this will log a heap of errors in the service response")]
-        [Group(Sections.Main)]
-        public bool ThrowFatalErrors { get; set; }
-
-        [MyDescription("If set this will log a heap of errors in the service response")]
-        [Group(Sections.Main)]
-        public bool ThrowResponseErrors { get; set; }
-
-        [MyDescription("Will Wait Halfway Through Completion")]
-        [Group(Sections.Main)]
-        public bool Wait10SecondsHalfwayThrough { get; set; }
-
-        [Group(Sections.Main)]
-        [FileMask(FileMasks.ZipFile)]
-        public FileReference ZipFile { get; set; }
-
-        [Group(Sections.Main)]
-        [FileMask(FileMasks.XmlFile)]
-        public FileReference XmlFile { get; set; }
-
-        [Group(Sections.Main)]
-        public Folder Folder { get; set; }
-
-        [Group(Sections.SelectAll)]
-        public bool Bool1 { get; set; }
-
-        [Group(Sections.SelectAll)]
-        public bool Bool2 { get; set; }
-
-        [Group(Sections.SelectAll)]
-        public bool Bool3 { get; set; }
-
-        //[Group(Sections.Setting)]
-        //[SettingsLookup(typeof(ITestSettings), nameof(ITestSettings.Settings))]
-        //public TestSetting TestSetting { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        [RecordTypeFor(nameof(Fields) + "." + nameof(FieldSetting.RecordField))]
-        [RecordTypeFor(nameof(SpecificRecordsToExport) + "." + nameof(LookupSetting.Record))]
-        public RecordType RecordType { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        [ReferencedType(FakeConstants.RecordType)]
-        [UsePicklist]
-        [OrderPriority(FakeConstants.MainRecordName, "TestingString")]
-        public Lookup LookupField { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        public IEnumerable<FieldSetting> Fields { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        public IEnumerable<LookupSetting> SpecificRecordsToExport { get; set; }
-
-        [Group(Sections.TypesAndLookups)]
-        public IEnumerable<RecordTypeSetting> RecordTypes { get; set; }
-
-        [Group(Sections.DisplayFirst)]
-        public string AutocompleteField { get; set; }
-
-        [Group(Sections.DisplaySecond)]
-        [DoNotAllowAdd]
-        public IEnumerable<TestDialogRequestItem> Items { get; set; }
-
-        private static class Sections
+        public class TestGridOnlyRequestItem
         {
-            public const string DisplayFirst = "DisplayFirst";
-            public const string DisplaySecond = "DisplaySecond";
-            public const string Main = "Main";
-            public const string Setting = "Setting";
-            public const string TypesAndLookups = "TypesAndLookups";
-            public const string SelectAll = "SelectAll";
-        }
-
-        public class TestDialogRequestItem
-        {
-            public TestDialogRequestItem()
+            public TestGridOnlyRequestItem()
             {
                 ReadOnlyProp = "I Read Only";
             }

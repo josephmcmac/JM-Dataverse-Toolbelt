@@ -9,6 +9,8 @@ using JosephM.Record.Xrm.XrmRecord;
 using System.Diagnostics;
 using System.Linq;
 using JosephM.Application.Application;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Extentions;
 
 namespace JosephM.XrmModule.SavedXrmConnections
 {
@@ -29,6 +31,38 @@ namespace JosephM.XrmModule.SavedXrmConnections
             configManager.ProcessNamespaceChange(GetType().Namespace, "JosephM.Prism.XrmModule.SavedXrmConnections");
             base.RegisterTypes();
             AddWebBrowseGridFunction();
+            AddConnectionFieldsAutocomplete();
+        }
+
+        private void AddConnectionFieldsAutocomplete()
+        {
+            var propertiesForAutocomplete = new[]
+            {
+                nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress),
+                nameof(SavedXrmRecordConfiguration.Domain),
+                nameof(SavedXrmRecordConfiguration.Username),
+            };
+            foreach (var prop in propertiesForAutocomplete)
+            {
+                this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
+                {
+                    var parentForm = recordForm.ParentForm;
+                    if (parentForm == null)
+                        return null;
+                    var objectRecord = parentForm.GetRecord() as ObjectRecord;
+                    if (objectRecord == null)
+                        return null;
+                    var instance = objectRecord.Instance as ISavedXrmConnections;
+                    if (instance == null)
+                        return null;
+                    return instance
+                        .Connections
+                        .Select(pt => (string)pt.GetPropertyValue(prop))
+                        .Where(g => !string.IsNullOrWhiteSpace(g))
+                        .Distinct()
+                        .ToArray();
+                }), typeof(SavedXrmRecordConfiguration), prop);
+            }
         }
 
         private void AddWebBrowseGridFunction()
