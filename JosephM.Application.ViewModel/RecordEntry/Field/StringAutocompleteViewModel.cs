@@ -29,7 +29,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     .GetLinkedRecords(typeof(TypeAheadOption).AssemblyQualifiedName, typeof(TypeAheadOptions).AssemblyQualifiedName, nameof(TypeAheadOptions.Options), typeAheads.ToString())
                     .Take(MaxRecordsForLookup)
                     .ToArray();
-                    if(stringField.DisplayAutocomplete && !records.Any())
+                    if(stringField.DisplayAutocomplete
+                        && (!records.Any()
+                            || (records.Count() == 1 && records.First().GetStringField(nameof(TypeAheadOption.Value)) == SearchText)))
                         stringField.DisplayAutocomplete = false;
                     return new GetGridRecordsResponse(records);
                 };
