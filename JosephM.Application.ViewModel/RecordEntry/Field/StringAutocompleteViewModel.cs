@@ -16,7 +16,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             : base(stringField.ApplicationController)
         {
             SearchText = stringField.Value;
-            var typeAheads = autocompleteStrings.Select(s => new TypeAheadOption(s)).ToArray();
+            var typeAheads = autocompleteStrings.OrderBy(s => s).Select(s => new TypeAheadOption(s)).ToArray();
             var typeAheadOptions = new TypeAheadOptions();
             typeAheadOptions.Options = typeAheads
                 .Where(ta => SearchText == null || (ta.Value?.ToLower().StartsWith(SearchText.ToLower()) ?? false));
