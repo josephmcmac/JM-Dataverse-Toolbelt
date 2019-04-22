@@ -234,7 +234,8 @@ namespace JosephM.Application.Desktop.Console
                 "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices",
                 "Microsoft.VisualStudio.GraphModel",
                 "Microsoft.VisualStudio.Shell.Framework",
-                "Microsoft.VisualStudio.Utilities"
+                "Microsoft.VisualStudio.Utilities",
+                "Microsoft.VisualStudio.Telemetry"
             };
 
             foreach (string dll in Directory.GetFiles(path, "*.dll"))

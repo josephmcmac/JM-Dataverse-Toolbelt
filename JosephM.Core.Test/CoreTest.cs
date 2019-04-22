@@ -97,21 +97,21 @@ namespace JosephM.Core.Test
                 type = type.GetGenericArguments()[0];
 
             object value = null;
-            if (type == typeof (string))
+            if (type == typeof(string))
                 value = Guid.NewGuid().ToString(); //required when mapping to Guid
-            else if (type == typeof (Guid))
+            else if (type == typeof(Guid))
                 value = Guid.NewGuid();
-            else if (type == typeof (bool))
+            else if (type == typeof(bool))
                 value = true;
-            else if (type == typeof (RecordType))
+            else if (type == typeof(RecordType))
                 value = new RecordType("type", "type");
-            else if (type == typeof (RecordField))
+            else if (type == typeof(RecordField))
                 value = new RecordField("field", "field");
             else if (type == typeof(Folder))
                 value = new Folder(TestingFolder);
             else if (type == typeof(int))
                 value = 1;
-            else if (type == typeof (Password))
+            else if (type == typeof(Password))
                 value = new Password("FakePassword", false, true);
             else if (type.IsEnum)
             {
@@ -135,8 +135,11 @@ namespace JosephM.Core.Test
                 value = tType.ToNewTypedEnumerable(objectList);
             }
             else if (type.HasParameterlessConstructor())
+            {
                 value = type.CreateFromParameterlessConstructor();
-            else if (type == typeof (ExtensionDataObject))
+                PopulateObject(value);
+            }
+            else if (type == typeof(ExtensionDataObject))
                 value = null;
             else
                 throw new Exception(string.Format("Type {0} Not Matched For Initialising Property",
