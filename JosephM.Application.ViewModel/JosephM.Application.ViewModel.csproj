@@ -125,6 +125,7 @@
     <Compile Include="RecordEntry\Field\UrlFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Form\AutocompleteOption.cs" />
     <Compile Include="RecordEntry\Form\AutocompleteFunctions.cs" />
     <Compile Include="RecordEntry\Form\CreateOrUpdateViewModel.cs" />
     <Compile Include="RecordEntry\Form\AutocompleteFunction.cs" />

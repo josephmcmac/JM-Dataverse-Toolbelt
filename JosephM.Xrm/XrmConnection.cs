@@ -1,9 +1,10 @@
-﻿using System;
-using System.Net;
-using System.ServiceModel.Description;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.ServiceModel.Description;
 
 namespace JosephM.Xrm
 {
@@ -14,6 +15,28 @@ namespace JosephM.Xrm
         public XrmConnection(IXrmConfiguration crmConfig)
         {
             CrmConfig = crmConfig;
+        }
+
+        public IEnumerable<Organisation> GetActiveOrganisations()
+        {
+            var organisations = new List<Organisation>();
+
+            using (var discoveryProxy = GetDiscoveryService())
+            {
+                if (discoveryProxy != null)
+                {
+                    var orgs = DiscoverOrganizations(discoveryProxy);
+                    foreach(var org in orgs)
+                    {
+                        if(org.State == OrganizationState.Enabled)
+                        {
+                            organisations.Add(new Organisation(org));
+                        }
+                    }
+                }
+            }
+
+            return organisations;
         }
 
         /// <summary>

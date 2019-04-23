@@ -46,6 +46,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                     .Select(pt => pt.GroupName)
                     .Where(g => !string.IsNullOrWhiteSpace(g))
                     .Distinct()
+                    .Select(s => new AutocompleteOption(s))
                     .ToArray();
             }), typeof(PluginType), nameof(PluginType.GroupName));
         }

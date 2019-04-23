@@ -1,4 +1,6 @@
-﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Shared;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -7,9 +9,24 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public StringFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            var autocompletes = FormService?.GetAutocompletesStrings(this);
-            if (autocompletes != null)
-                AutocompleteViewModel = new StringAutocompleteViewModel(this, autocompletes);
+            var autocomplete = FormService?.GetAutocompletesFunction(this);
+            if (autocomplete != null
+                && autocomplete.IsValidForForm(RecordEntryViewModel)
+                && (autocomplete.DisplayInGrid || !(RecordEntryViewModel is GridRowViewModel)))
+            {
+                AutocompleteViewModel = new StringAutocompleteViewModel(this, autocomplete);
+                SearchButton = new XrmButtonViewModel("Search", Search, ApplicationController);
+            }
+        }
+
+        private void Search()
+        {
+            if (AutocompleteViewModel != null)
+            {
+                DisplayAutocomplete = true;
+                AutocompleteViewModel.SearchText = Value;
+                AutocompleteViewModel.DynamicGridViewModel.ReloadGrid();
+            }
         }
 
         public override string Value
@@ -52,6 +69,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 AutocompleteViewModel.DynamicGridViewModel.IsFocused = false;
                 AutocompleteViewModel.MoveDown();
                 AutocompleteViewModel.DynamicGridViewModel.IsFocused = true;
+            }
+        }
+
+        private XrmButtonViewModel _searchButton;
+
+        public XrmButtonViewModel SearchButton
+        {
+            get { return _searchButton; }
+            set
+            {
+                _searchButton = value;
+                OnPropertyChanged("SearchButton");
             }
         }
     }

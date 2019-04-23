@@ -1,18 +1,15 @@
-﻿using JosephM.Application.Modules;
-using JosephM.Application.Desktop.Module.Settings;
-using JosephM.XrmModule.XrmConnection;
-using System;
+﻿using JosephM.Application.Desktop.Module.Settings;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using System.Windows.Forms;
-using JosephM.Xrm.Schema;
 using JosephM.Core.AppConfig;
+using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.XrmModule.XrmConnection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.Record.Service;
-using JosephM.Core.Extentions;
+using System.Windows.Forms;
 
 namespace JosephM.Xrm.Vsix.Module.PackageSettings
 {
@@ -42,7 +39,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                     var visualStudioService = recordForm.ApplicationController.ResolveType<IVisualStudioService>();
                     if (visualStudioService == null)
                         throw new NullReferenceException("visualStudioService");
-                    return visualStudioService.GetProjects().Select(p => p.Name).ToArray();
+                    return visualStudioService.GetProjects().Select(p => new AutocompleteOption(p.Name));
                 }), prop.Key, prop.Value);
             }
         }

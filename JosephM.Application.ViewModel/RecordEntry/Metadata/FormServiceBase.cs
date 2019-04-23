@@ -202,7 +202,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
         }
 
-        public virtual IEnumerable<string> GetAutocompletesStrings(StringFieldViewModel stringFieldViewModel)
+        public virtual AutocompleteFunction GetAutocompletesFunction(StringFieldViewModel stringFieldViewModel)
         {
             return null;
         }

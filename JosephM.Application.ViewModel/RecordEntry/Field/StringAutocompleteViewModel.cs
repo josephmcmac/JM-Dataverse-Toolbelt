@@ -1,5 +1,7 @@
 ﻿using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
+using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Service;
 using System;
@@ -12,26 +14,38 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
     {
         private bool _displayTypeAhead;
 
-        public StringAutocompleteViewModel(StringFieldViewModel stringField, IEnumerable<string> autocompleteStrings)
+        public StringAutocompleteViewModel(StringFieldViewModel stringField, AutocompleteFunction autocompleteFunction)
             : base(stringField.ApplicationController)
         {
             SearchText = stringField.Value;
-            var typeAheads = autocompleteStrings.OrderBy(s => s).Select(s => new TypeAheadOption(s)).ToArray();
+            StringField = stringField;
+            AutocompleteFunction = autocompleteFunction;
             var typeAheadOptions = new TypeAheadOptions();
-            typeAheadOptions.Options = typeAheads
-                .Where(ta => SearchText == null || (ta.Value?.ToLower().StartsWith(SearchText.ToLower()) ?? false));
+            typeAheadOptions.Options = new[]
+            {
+                //fake initial option before actual loading
+                new AutocompleteOption(AutocompleteFunction.DisplayNames ? "Loading..." : null, "Loading...")
+            };
+                
             var typeAheadRecordService = new ObjectRecordService(typeAheadOptions, ApplicationController);
-            var formController = FormController.CreateForObject(typeAheads, ApplicationController, null);
+            var formController = FormController.CreateForObject(typeAheadOptions, ApplicationController, null);
 
             Func<bool, GetGridRecordsResponse> getGridRecords = (ignorePages) =>
                 {
+                    var autoCompleteStrings = autocompleteFunction
+                        .GetAutocompleteStrings(StringField.RecordEntryViewModel);
+                    if(autoCompleteStrings == null)
+                        return new GetGridRecordsResponse(new IRecord[0]);
+                    typeAheadOptions.Options = autoCompleteStrings
+                        .Where(ta => SearchText == null || (ta.Value?.ToLower().StartsWith(SearchText.ToLower()) ?? false) || (ta.Name?.ToLower().StartsWith(SearchText.ToLower()) ?? false))
+                        .OrderBy(s => s.Name).ThenBy(s => s.Value);
                     var records = typeAheadRecordService
-                    .GetLinkedRecords(typeof(TypeAheadOption).AssemblyQualifiedName, typeof(TypeAheadOptions).AssemblyQualifiedName, nameof(TypeAheadOptions.Options), typeAheads.ToString())
+                    .GetLinkedRecords(typeof(AutocompleteOption).AssemblyQualifiedName, typeof(TypeAheadOptions).AssemblyQualifiedName, nameof(TypeAheadOptions.Options), typeAheadOptions.ToString())
                     .Take(MaxRecordsForLookup)
                     .ToArray();
                     if(stringField.DisplayAutocomplete
                         && (!records.Any()
-                            || (records.Count() == 1 && records.First().GetStringField(nameof(TypeAheadOption.Value)) == SearchText)))
+                            || (records.Count() == 1 && records.First().GetStringField(nameof(AutocompleteOption.Value)) == SearchText)))
                         stringField.DisplayAutocomplete = false;
                     return new GetGridRecordsResponse(records);
                 };
@@ -43,19 +57,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 OnDoubleClick = OnDoubleClick,
                 ViewType = ViewType.LookupView,
                 RecordService = typeAheadRecordService,
-                RecordType = typeof(TypeAheadOption).AssemblyQualifiedName,
+                RecordType = typeof(AutocompleteOption).AssemblyQualifiedName,
                 IsReadOnly = true,
                 DisplayHeaders= false,
                 NoMargins = true
             };
-            StringField = stringField;
         }
 
         protected bool DisplayTypeAhead { get => _displayTypeAhead; set => _displayTypeAhead = value; }
 
         protected int MaxRecordsForLookup
         {
-            get { return 11; }
+            get { return 15; }
         }
 
         public void OnKeyDown()
@@ -71,7 +84,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             if (DynamicGridViewModel.SelectedRow != null)
             {
-                StringField.Value = DynamicGridViewModel.SelectedRow.GetStringFieldFieldViewModel(nameof(TypeAheadOption.Value)).Value;
+                StringField.Value = DynamicGridViewModel.SelectedRow.GetStringFieldFieldViewModel(nameof(AutocompleteOption.Value)).Value;
                 StringField.DisplayAutocomplete = false;
             }
         }
@@ -118,23 +131,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public DynamicGridViewModel DynamicGridViewModel { get; set; }
         public StringFieldViewModel StringField { get; }
-
+        private AutocompleteFunction AutocompleteFunction { get; }
+        public bool AutoSearch => AutocompleteFunction.Autosearch;
         public string SearchText { get; set; }
 
         public class TypeAheadOptions
         {
-            public IEnumerable<TypeAheadOption> Options { get; set; }
-        }
-
-        public class TypeAheadOption
-        {
-            public TypeAheadOption(string value)
-            {
-                Value = value;
-            }
-
-            [GridWidth(400)]
-            public string Value { get; set; }
+            public IEnumerable<AutocompleteOption> Options { get; set; }
         }
     }
 }

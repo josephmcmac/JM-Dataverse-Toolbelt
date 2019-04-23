@@ -14,6 +14,7 @@
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
@@ -32,7 +33,12 @@
             </TextBox>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <TextBox 
+                Grid.Column="0"
                 Style="{StaticResource  StringFieldEntryStyle}"
                 Name="TextBox"
                 AcceptsReturn="{Binding IsMultiline}"
@@ -44,6 +50,15 @@
                 PreviewKeyDown="OnPreviewKeyDown"
                 VerticalScrollBarVisibility="Auto"
                 IsReadOnly="False" />
+            <Grid
+            Style="{StaticResource FieldEntryButtonGridStyle}"
+            Grid.Column="1"
+            Row="0"
+            Visibility="{Binding SearchButton, Converter={StaticResource NullToHiddenConverter}}">
+                <Button DataContext="{Binding Path=SearchButton}"
+                        Style="{StaticResource SearchButton}"
+                            Command="{Binding Command}" ToolTip="Click To Search" />
+            </Grid>
             <Grid>
                 <Popup
                     Visibility="{Binding DisplayAutocomplete, Converter={StaticResource BoolToVis}}"

@@ -32,15 +32,15 @@ namespace JosephM.TestModule.TestDialog
                 {
                     return new[]
                     {
-                        "aaaaa",
-                        "abcde",
-                        "abcdef",
-                        "abcdeg",
-                        "abcdeh",
-                        "abcdeabcde",
-                        "ZZZZZZZZ",
-                        "blah",
-                        "BLAHs"
+                        new AutocompleteOption("aaaaa"),
+                        new AutocompleteOption("abcde"),
+                        new AutocompleteOption("abcdef"),
+                        new AutocompleteOption("abcdeg"),
+                        new AutocompleteOption("abcdeh"),
+                        new AutocompleteOption("abcdeabcde"),
+                        new AutocompleteOption("ZZZZZZZZ"),
+                        new AutocompleteOption("blah"),
+                        new AutocompleteOption("BLAHs"),
                     };
                 }), prop.Key, prop.Value);
             }

@@ -964,10 +964,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
         }
 
-        public override IEnumerable<string> GetAutocompletesStrings(StringFieldViewModel stringFieldViewModel)
+        public override AutocompleteFunction GetAutocompletesFunction(StringFieldViewModel stringFieldViewModel)
         {
             var autocompletes = (AutocompleteFunctions)stringFieldViewModel.ApplicationController.ResolveInstance(typeof(AutocompleteFunctions), stringFieldViewModel.GetRecordType());
-            return autocompletes.GetAutocompleteFunction(stringFieldViewModel.FieldName)?.GetAutocompleteStrings(stringFieldViewModel.RecordEntryViewModel);
+            return autocompletes
+                .GetAutocompleteFunction(stringFieldViewModel.FieldName);
         }
     }
 }

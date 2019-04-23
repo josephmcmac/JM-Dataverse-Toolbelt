@@ -97,6 +97,7 @@
     <Compile Include="DeviceIdManager.cs" />
     <Compile Include="ExceptionExtentions.cs" />
     <Compile Include="IXrmConfiguration.cs" />
+    <Compile Include="Organisation.cs" />
     <Compile Include="OrganisationSettings.cs" />
     <Compile Include="Schema\Schema.cs" />
     <Compile Include="XrmConnection.cs" />

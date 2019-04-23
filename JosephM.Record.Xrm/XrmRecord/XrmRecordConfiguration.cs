@@ -1,4 +1,5 @@
 ﻿using JosephM.Core.Attributes;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
@@ -32,8 +33,9 @@ namespace JosephM.Record.Xrm.XrmRecord
         [GridWidth(400)]
         public string DiscoveryServiceAddress { get; set; }
 
+        [PropertyInContextByPropertyValue(nameof(AreDiscoveryDetailsEntered), true)]
         [MyDescription("The Unique Name Of The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
-        [DisplayOrder(40)]
+        [DisplayOrder(80)]
         [RequiredProperty]
         [GridWidth(160)]
         [DisplayName("Org Unique Name")]
@@ -43,7 +45,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [DisplayOrder(50)]
         [RequiredProperty]
         [GridWidth(100)]
-        [PropertyInContextByPropertyValues("AuthenticationProviderType",
+        [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
             new object[]
             {
                 XrmRecordAuthenticationProviderType.ActiveDirectory
@@ -54,7 +56,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [MyDescription("The Username Used To Login To The Instance")]
         [DisplayOrder(60)]
         [RequiredProperty]
-        [PropertyInContextByPropertyValues("AuthenticationProviderType",
+        [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
             new object[]
             {
                 XrmRecordAuthenticationProviderType.ActiveDirectory, XrmRecordAuthenticationProviderType.Federation
@@ -67,7 +69,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [MyDescription("The Password For Your User")]
         [DisplayOrder(70)]
         [RequiredProperty]
-        [PropertyInContextByPropertyValues("AuthenticationProviderType",
+        [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
             new object[]
             {
                 XrmRecordAuthenticationProviderType.ActiveDirectory, XrmRecordAuthenticationProviderType.Federation
@@ -79,6 +81,18 @@ namespace JosephM.Record.Xrm.XrmRecord
         public IsValidResponse Validate()
         {
             return new XrmRecordService(this, new LogController()).VerifyConnection();
+        }
+
+        [Hidden]
+        public bool AreDiscoveryDetailsEntered
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(DiscoveryServiceAddress)
+                    && (!this.IsInContext(nameof(Domain)) || !string.IsNullOrWhiteSpace(Domain))
+                    && (!this.IsInContext(nameof(Username)) || !string.IsNullOrWhiteSpace(Username))
+                    && (!this.IsInContext(nameof(Password)) || (Password != null && !string.IsNullOrWhiteSpace(Password.GetRawPassword())));
+            }
         }
     }
 }

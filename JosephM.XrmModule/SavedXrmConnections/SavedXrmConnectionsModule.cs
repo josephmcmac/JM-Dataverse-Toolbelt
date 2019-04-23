@@ -11,6 +11,7 @@ using System.Linq;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Extentions;
+using JosephM.Record.Xrm.Mappers;
 
 namespace JosephM.XrmModule.SavedXrmConnections
 {
@@ -36,13 +37,13 @@ namespace JosephM.XrmModule.SavedXrmConnections
 
         private void AddConnectionFieldsAutocomplete()
         {
-            var propertiesForAutocomplete = new[]
+            //existing values for these
+            var propertiesForAutocompleteExistingValues = new[]
             {
-                nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress),
                 nameof(SavedXrmRecordConfiguration.Domain),
                 nameof(SavedXrmRecordConfiguration.Username),
             };
-            foreach (var prop in propertiesForAutocomplete)
+            foreach (var prop in propertiesForAutocompleteExistingValues)
             {
                 this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
                 {
@@ -60,9 +61,60 @@ namespace JosephM.XrmModule.SavedXrmConnections
                         .Select(pt => (string)pt.GetPropertyValue(prop))
                         .Where(g => !string.IsNullOrWhiteSpace(g))
                         .Distinct()
+                        .Select(s => new AutocompleteOption(s))
                         .ToArray();
-                }), typeof(SavedXrmRecordConfiguration), prop);
+                }, isValidForFormFunction: (f) => f.ParentForm != null, displayInGrid: false), typeof(SavedXrmRecordConfiguration), prop);
             }
+
+            //existing values + the standard online regional endpoints
+            var onlineDiscoveryServices = new[]
+            {
+                new AutocompleteOption("North America", "https://disco.crm.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("North America 2", "https://disco.crm9.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("EMEA", "https://disco.crm4.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("Asia Pacific Area", "https://disco.crm5.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("Oceania", "https://disco.crm6.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("Japan", "https://disco.crm7.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("South America", "https://disco.crm2.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("India", "https://disco.crm8.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("Canada", "https://disco.crm3.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new AutocompleteOption("United Kingdom", "https://disco.crm11.dynamics.com/XRMServices/2011/Discovery.svc"),
+            };
+            this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
+            {
+                var parentForm = recordForm.ParentForm;
+                if (parentForm == null)
+                    return onlineDiscoveryServices;
+                var objectRecord = parentForm.GetRecord() as ObjectRecord;
+                if (objectRecord == null)
+                    return onlineDiscoveryServices;
+                var instance = objectRecord.Instance as ISavedXrmConnections;
+                var otherSavedConnections = instance == null
+                    ? new string[0]
+                    : instance
+                    .Connections
+                    .Select(pt => (string)pt.GetPropertyValue(nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress)))
+                    .Where(g => !string.IsNullOrWhiteSpace(g) && !onlineDiscoveryServices.Any(sv => sv.Value.ToLower() == g.ToLower()));
+                return onlineDiscoveryServices
+                    .Union(otherSavedConnections.Select(s => new AutocompleteOption(" ", s)));
+            }, displayInGrid: false, displayNames: true), typeof(SavedXrmRecordConfiguration), nameof(SavedXrmRecordConfiguration.DiscoveryServiceAddress));
+
+            //get the organisations based on details entered
+            this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
+            {
+                var objectRecord = recordForm.GetRecord() as ObjectRecord;
+                if (objectRecord == null)
+                    return null;
+                var thisConnectionEntered = objectRecord.Instance as XrmRecordConfiguration;
+                if (thisConnectionEntered == null)
+                    return null;
+                var xrmRecordConfiguration = new XrmRecordConfigurationInterfaceMapper().Map(thisConnectionEntered);
+                var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
+                var xrmConnection = new Xrm.XrmConnection(xrmConfiguration);
+                return xrmConnection
+                    .GetActiveOrganisations()
+                    .Select(org => new AutocompleteOption(org.FriendlyName, org.UniqueName));
+            }, displayInGrid: false, autosearch: false, displayNames: true), typeof(SavedXrmRecordConfiguration), nameof(SavedXrmRecordConfiguration.OrganizationUniqueName));
         }
 
         private void AddWebBrowseGridFunction()

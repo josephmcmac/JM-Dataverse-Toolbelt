@@ -29,18 +29,15 @@ namespace JosephM.Wpf.RecordEntry.Field
             set { DataContext = value; }
         }
 
-        private bool _startAutocomplete = false;
-
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (
                 !TextBox.IsKeyboardFocusWithin
                 || ViewModel == null
-                || (!_startAutocomplete && TextBox.Text == ViewModel.Value)
                 || !ViewModel.IsEditable
-                || ViewModel.AutocompleteViewModel == null)
+                || ViewModel.AutocompleteViewModel == null
+                || !ViewModel.AutocompleteViewModel.AutoSearch)
                 return;
-            _startAutocomplete = true;
             ViewModel.AutocompleteViewModel.SearchText = TextBox.Text;
             ViewModel.AutocompleteViewModel.DynamicGridViewModel.ReloadGrid();
             ViewModel.DisplayAutocomplete = true;

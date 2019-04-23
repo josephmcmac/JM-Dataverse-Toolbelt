@@ -95,7 +95,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                 ProjectName = projectName;
             }
 
-            [GridWidth(300)]
+            [GridWidth(330)]
             [RequiredProperty]
             public string ProjectName { get; set; }
         }
@@ -113,7 +113,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                 ProjectName = projectName;
             }
 
-            [GridWidth(300)]
+            [GridWidth(330)]
             [RequiredProperty]
             public string ProjectName { get; set; }
         }
@@ -131,7 +131,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                 ProjectName = projectName;
             }
 
-            [GridWidth(300)]
+            [GridWidth(330)]
             [RequiredProperty]
             public string ProjectName { get; set; }
         }
