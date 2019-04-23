@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using JosephM.Core.Service;
 using System.Reflection;
+using System.Linq;
 
 namespace JosephM.Core.Test
 {
@@ -86,8 +87,15 @@ namespace JosephM.Core.Test
             foreach (var property in type.GetWritableProperties())
             {
                 var value = InstantiatePopulated(property.PropertyType);
-
-                property.GetSetMethod().Invoke(instance, new object[] {value});
+                var setMethod = property.GetSetMethod();
+                if (setMethod != null)
+                {
+                    var parameters = setMethod.GetParameters();
+                    if (parameters.Count() == 1)
+                    {
+                        property.GetSetMethod().Invoke(instance, new object[] { value });
+                    }
+                }
             }
         }
 
