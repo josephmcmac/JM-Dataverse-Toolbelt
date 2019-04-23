@@ -68,7 +68,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         protected int MaxRecordsForLookup
         {
-            get { return 15; }
+            get { return 50; }
         }
 
         public void OnKeyDown()
