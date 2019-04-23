@@ -1,12 +1,12 @@
 ﻿using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Attributes;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JosephM.Core.Extentions;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -21,11 +21,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             StringField = stringField;
             AutocompleteFunction = autocompleteFunction;
             var typeAheadOptions = new TypeAheadOptions();
-            typeAheadOptions.Options = new[]
-            {
-                //fake initial option before actual loading
-                new AutocompleteOption(AutocompleteFunction.DisplayNames ? "Loading..." : null, "Loading...")
-            };
                 
             var typeAheadRecordService = new ObjectRecordService(typeAheadOptions, ApplicationController);
             var formController = FormController.CreateForObject(typeAheadOptions, ApplicationController, null);
@@ -36,17 +31,23 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         .GetAutocompleteStrings(StringField.RecordEntryViewModel);
                     if(autoCompleteStrings == null)
                         return new GetGridRecordsResponse(new IRecord[0]);
+                    var searchToLower = SearchText?.ToLower();
                     typeAheadOptions.Options = autoCompleteStrings
-                        .Where(ta => SearchText == null || (ta.Value?.ToLower().StartsWith(SearchText.ToLower()) ?? false) || (ta.Name?.ToLower().StartsWith(SearchText.ToLower()) ?? false))
-                        .OrderBy(s => s.Name).ThenBy(s => s.Value);
-                    var records = typeAheadRecordService
-                    .GetLinkedRecords(typeof(AutocompleteOption).AssemblyQualifiedName, typeof(TypeAheadOptions).AssemblyQualifiedName, nameof(TypeAheadOptions.Options), typeAheadOptions.ToString())
-                    .Take(MaxRecordsForLookup)
-                    .ToArray();
-                    if(stringField.DisplayAutocomplete
+                        .Where(ta => searchToLower == null || AutocompleteFunction.SearchFields.Any(sf => ta.GetPropertyValue(sf)?.ToString().ToLower().StartsWith(searchToLower) ?? false))
+                        .OrderBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.SortField))
+                        .ThenBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.ValueField));
+
+                    var records = typeAheadOptions
+                        .Options
+                        .Select(o => new ObjectRecord(o))
+                        .Take(MaxRecordsForLookup)
+                        .ToArray();
+                    if (stringField.DisplayAutocomplete
                         && (!records.Any()
-                            || (records.Count() == 1 && records.First().GetStringField(nameof(AutocompleteOption.Value)) == SearchText)))
+                            || (records.Count() == 1 && records.First().GetStringField(AutocompleteFunction.ValueField)?.ToLower() == searchToLower)))
+                    {
                         stringField.DisplayAutocomplete = false;
+                    }
                     return new GetGridRecordsResponse(records);
                 };
 
@@ -57,10 +58,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 OnDoubleClick = OnDoubleClick,
                 ViewType = ViewType.LookupView,
                 RecordService = typeAheadRecordService,
-                RecordType = typeof(AutocompleteOption).AssemblyQualifiedName,
+                RecordType = AutocompleteFunction.RecordType,
                 IsReadOnly = true,
                 DisplayHeaders= false,
-                NoMargins = true
+                NoMargins = true,
+                FieldMetadata = AutocompleteFunction.GridFields
             };
         }
 
@@ -84,7 +86,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             if (DynamicGridViewModel.SelectedRow != null)
             {
-                StringField.Value = DynamicGridViewModel.SelectedRow.GetStringFieldFieldViewModel(nameof(AutocompleteOption.Value)).Value;
+                StringField.Value = DynamicGridViewModel.SelectedRow.GetStringFieldFieldViewModel(AutocompleteFunction.ValueField).Value;
                 StringField.DisplayAutocomplete = false;
             }
         }
@@ -137,7 +139,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public class TypeAheadOptions
         {
-            public IEnumerable<AutocompleteOption> Options { get; set; }
+            public IEnumerable<object> Options { get; set; }
         }
     }
 }

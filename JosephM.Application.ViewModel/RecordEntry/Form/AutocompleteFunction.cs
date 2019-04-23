@@ -1,25 +1,41 @@
-﻿using System;
+﻿using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public class AutocompleteFunction
     {
-        public AutocompleteFunction(Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> getAutocompleteStringsFunction, Func<RecordEntryViewModelBase, bool> isValidForFormFunction = null, bool displayInGrid = true, bool autosearch = true, bool displayNames = false)
+        public AutocompleteFunction(Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> getAutocompleteStringsFunction, double? gridWidth = null, Func<RecordEntryViewModelBase, bool> isValidForFormFunction = null, bool displayInGrid = true, bool autosearch = true)
+            : this(getAutocompleteStringsFunction, typeof(AutocompleteOption), nameof(AutocompleteOption.Value), new[] { new GridFieldMetadata(nameof(AutocompleteOption.Value), gridWidth ?? 450) }, isValidForFormFunction: isValidForFormFunction, displayInGrid: displayInGrid, autosearch: autosearch)
+        {
+        }
+
+        public AutocompleteFunction(Func<RecordEntryViewModelBase, IEnumerable<object>> getAutocompleteStringsFunction, Type objectType, string valueField, IEnumerable<GridFieldMetadata> gridFields, string sortField = null, Func<RecordEntryViewModelBase, bool> isValidForFormFunction = null, bool displayInGrid = true, bool autosearch = true)
         {
             DisplayInGrid = displayInGrid;
             Autosearch = autosearch;
-            DisplayNames = displayNames;
             GetAutocompleteStringsFunction = getAutocompleteStringsFunction;
+            ValueField = valueField;
+            GridFields = gridFields;
+            SortField = sortField ?? valueField;
+            SearchFields = GridFields.Select(g => g.FieldName);
+            RecordType = objectType.AssemblyQualifiedName;
             IsValidForFormFunction = isValidForFormFunction;
         }
 
+        public IEnumerable<string> SearchFields { get; set; }
+        public IEnumerable<GridFieldMetadata> GridFields { get; }
+        public string SortField { get; }
         public bool DisplayInGrid { get; set; }
         public bool Autosearch { get; }
         public bool DisplayNames { get; }
-        private Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> GetAutocompleteStringsFunction { get; set; }
+        private Func<RecordEntryViewModelBase, IEnumerable<object>> GetAutocompleteStringsFunction { get; set; }
+        public string ValueField { get; }
+        public string RecordType { get; }
 
-        public IEnumerable<AutocompleteOption> GetAutocompleteStrings(RecordEntryViewModelBase entryViewModel)
+        public IEnumerable<object> GetAutocompleteStrings(RecordEntryViewModelBase entryViewModel)
         {
             return GetAutocompleteStringsFunction(entryViewModel);
         }

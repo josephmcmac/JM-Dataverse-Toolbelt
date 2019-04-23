@@ -2,6 +2,7 @@
 using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
@@ -12,7 +13,6 @@ using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XrmModule.Crud;
 using System;
 using System.Configuration;
-using System.Linq;
 
 namespace JosephM.XrmModule.XrmConnection
 {
@@ -97,24 +97,24 @@ namespace JosephM.XrmModule.XrmConnection
 
         private void AddConnectionFieldsAutocomplete()
         {
-            //existing values + the standard online regional endpoints
+            //standard online regional endpoints
             var onlineDiscoveryServices = new[]
             {
-                new AutocompleteOption("North America", "https://disco.crm.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("North America 2", "https://disco.crm9.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("EMEA", "https://disco.crm4.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("Asia Pacific Area", "https://disco.crm5.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("Oceania", "https://disco.crm6.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("Japan", "https://disco.crm7.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("South America", "https://disco.crm2.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("India", "https://disco.crm8.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("Canada", "https://disco.crm3.dynamics.com/XRMServices/2011/Discovery.svc"),
-                new AutocompleteOption("United Kingdom", "https://disco.crm11.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("North America", "https://disco.crm.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("North America 2", "https://disco.crm9.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("EMEA", "https://disco.crm4.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("Asia Pacific Area", "https://disco.crm5.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("Oceania", "https://disco.crm6.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("Japan", "https://disco.crm7.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("South America", "https://disco.crm2.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("India", "https://disco.crm8.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("Canada", "https://disco.crm3.dynamics.com/XRMServices/2011/Discovery.svc"),
+                new DiscoveryAutocomplete("United Kingdom", "https://disco.crm11.dynamics.com/XRMServices/2011/Discovery.svc"),
             };
             this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
             {
                 return onlineDiscoveryServices;
-            }, displayInGrid: false, displayNames: true), typeof(XrmRecordConfiguration), nameof(XrmRecordConfiguration.DiscoveryServiceAddress));
+            }, typeof(DiscoveryAutocomplete), nameof(DiscoveryAutocomplete.Value), new[] { new GridFieldMetadata(nameof(DiscoveryAutocomplete.Name), 120), new GridFieldMetadata(nameof(DiscoveryAutocomplete.Value), 450) }, sortField: nameof(DiscoveryAutocomplete.Name), displayInGrid: false), typeof(XrmRecordConfiguration), nameof(XrmRecordConfiguration.DiscoveryServiceAddress));
 
             //get the organisations based on details entered
             this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
@@ -129,9 +129,8 @@ namespace JosephM.XrmModule.XrmConnection
                 var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
                 var xrmConnection = new Xrm.XrmConnection(xrmConfiguration);
                 return xrmConnection
-                    .GetActiveOrganisations()
-                    .Select(org => new AutocompleteOption(org.FriendlyName, org.UniqueName));
-            }, displayInGrid: false, autosearch: false, displayNames: true), typeof(XrmRecordConfiguration), nameof(XrmRecordConfiguration.OrganizationUniqueName));
+                    .GetActiveOrganisations(); ;
+            }, typeof(Xrm.Organisation), nameof(Xrm.Organisation.UniqueName), new[] { new GridFieldMetadata(nameof(Xrm.Organisation.UniqueName), 100), new GridFieldMetadata(nameof(Xrm.Organisation.FriendlyName), 400) }, sortField: nameof(Xrm.Organisation.FriendlyName), displayInGrid: false, autosearch: false), typeof(XrmRecordConfiguration), nameof(XrmRecordConfiguration.OrganizationUniqueName));
         }
     }
 }

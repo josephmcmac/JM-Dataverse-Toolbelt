@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +13,6 @@ using JosephM.Core.AppConfig;
 using JosephM.Core.Service;
 using JosephM.Record.Attributes;
 using JosephM.Record.Query;
-
-#endregion
 
 namespace JosephM.Record.Service
 {
@@ -806,7 +802,7 @@ namespace JosephM.Record.Service
                         areExplicitGridFields = true;
                         viewFields.Clear();
                     }
-                    //so lets not display a field if it is read only and is out of contxt for all records
+                    //so lets not display a field if it is read only and is out of context for all records
                     if (!propertyInfo.CanWrite && allObjects.All(o => {
                         var instance = ((ObjectRecord)o).Instance;
                         return instance.GetPropertyValue(propertyInfo.Name) == null || !instance.IsInContext(propertyInfo.Name);

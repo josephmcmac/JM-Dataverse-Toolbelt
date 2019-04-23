@@ -4,10 +4,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     public class GridFieldMetadata : FormFieldMetadata
     {
-        public GridFieldMetadata(string fieldName)
+        public GridFieldMetadata(string fieldName, double? widthPart = null)
             : base(fieldName)
         {
-            WidthPart = 200;
+            WidthPart = widthPart ?? 200;
         }
 
         public GridFieldMetadata(ViewField viewField)

@@ -88,6 +88,7 @@
     <Compile Include="Crud\XrmCrudModule.cs" />
     <Compile Include="Crud\XrmFormService.cs" />
     <Compile Include="AppConnection\AppXrmConnectionEntryDialog.cs" />
+    <Compile Include="XrmConnection\DiscoveryAutocomplete.cs" />
     <Compile Include="XrmConnection\XrmConnectionDialog.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmRecordConnection.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmConnectionsDialog.cs" />

@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using JosephM.Record.Extentions;
@@ -8,8 +6,6 @@ using JosephM.Record.IService;
 using System.Reflection;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
-
-#endregion
 
 namespace JosephM.Record.Service
 {
