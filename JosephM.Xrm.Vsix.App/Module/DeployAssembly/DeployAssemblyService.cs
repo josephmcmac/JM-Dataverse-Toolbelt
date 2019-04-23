@@ -27,13 +27,15 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
         {
             var service = Service;
 
+            controller.UpdateProgress(0, 4, "Processing Deletions");
+
             var removedPlugins = request.GetPreTypeRecords().Where(ptr => request.PluginTypes.All(pt => pt.Id != ptr.Id)).ToArray();
 
             var deletions = service.DeleteInCrm(removedPlugins);
             response.AddResponseItems(deletions.Errors.Select(e => new DeployAssemblyResponseItem("Plugin Type Delete", e.Key.GetStringField(Fields.plugintype_.typename), e.Value)));
             response.AddResponseItems(deletions.Deleted.Select(d => new DeployAssemblyResponseItem("Plugin Type Delete", d.GetStringField(Fields.plugintype_.typename))));
 
-
+            controller.UpdateProgress(1, 4, "Deploying Assembly");
             //okay first create/update the plugin assembly
             var assemblyRecord = service.NewRecord(Entities.pluginassembly);
             assemblyRecord.Id = request.Id;
@@ -57,6 +59,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             }
             else
             {
+                controller.UpdateProgress(2, 4, "Updating Plugin Types");
+
                 //okay create/update the plugin types
                 var pluginTypes = new List<IRecord>();
                 foreach (var pluginType in request.PluginTypes)
@@ -87,8 +91,12 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                 var componentType = OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly;
                 var itemsToAdd = assemblyLoadResponse.Created.Union(assemblyLoadResponse.Updated);
                 if (PackageSettings.AddToSolution)
+                {
+                    controller.UpdateProgress(3, 4, "Adding Components To Solution");
                     service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, itemsToAdd.Select(i => i.Id));
+                }
 
+                controller.UpdateProgress(4, 4, "Completing");
                 if (response.HasResponseItemError)
                     response.Message = "There Were Errors Thrown Updating The Plugins";
                 else if (response.HasResponseItems)

@@ -26,6 +26,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
         public override void ExecuteExtention(ManagePluginTriggersRequest request, ManagePluginTriggersResponse response, ServiceRequestController controller)
         {
+            controller.UpdateProgress(0, 4, "Processing Deletions");
             //delete any removed plugins
             var removedPlugins = request.GetSdkMessageStepsPre().Where(smsp => request.Triggers.All(pt => pt.Id != smsp.Id)).ToArray();
             var deletions = Service.DeleteInCrm(removedPlugins);
@@ -42,6 +43,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
             }).ToArray();
             var pluginFilters = Service.RetrieveAllOrClauses(Entities.sdkmessagefilter, filters);
 
+            controller.UpdateProgress(1, 4, "Unloading Triggers");
             //unload the triggers into an entity object referencing it in a dictionary
             var unloadedObjects = new Dictionary<IRecord, PluginTrigger>();
             foreach (var item in request.Triggers)
@@ -83,6 +85,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 }
             }
 
+            controller.UpdateProgress(2, 4, "Creating/Updating Triggers");
             //submit them to crm create/update
             var triggerLoads = Service.LoadIntoCrm(unloadedObjects.Keys,
                 Fields.sdkmessageprocessingstep_.sdkmessageprocessingstepid);
@@ -93,6 +96,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
             }
             response.AddResponseItems(triggerLoads.Created.Select(d => new ManagePluginTriggersResponseitem("Event Create", d.GetStringField(Fields.sdkmessageprocessingstep_.name))));
             response.AddResponseItems(triggerLoads.Updated.Select(d => new ManagePluginTriggersResponseitem("Event Update", d.GetStringField(Fields.sdkmessageprocessingstep_.name))));
+
+            controller.UpdateProgress(3, 4, "Creating/Updating Images");
 
             var updatesAndDeletes =
                 unloadedObjects.Keys.Where(
@@ -181,7 +186,10 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
             solutionItemsToAdd.AddRange(imagesReferences);
 
             if (PackageSettings.AddToSolution)
+            {
+                controller.UpdateProgress(4, 4, "Adding Components To Solution");
                 Service.AddSolutionComponents(PackageSettings.Solution.Id, componentType, solutionItemsToAdd);
+            }
 
             if (response.HasResponseItemError)
                 response.Message = "There Were Errors Thrown Updating The Plugins";
