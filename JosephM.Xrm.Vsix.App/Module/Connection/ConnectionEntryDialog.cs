@@ -1,6 +1,5 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;

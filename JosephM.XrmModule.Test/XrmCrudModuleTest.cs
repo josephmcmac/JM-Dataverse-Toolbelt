@@ -1,23 +1,22 @@
-﻿using JosephM.Application.Desktop.Module.Crud.BulkDelete;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue;
+using JosephM.Application.Desktop.Module.Crud.BulkDelete;
 using JosephM.Application.Desktop.Module.Crud.BulkUpdate;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.Query;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.XrmModule.Crud;
+using JosephM.Core.AppConfig;
+using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using JosephM.Core.AppConfig;
-using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.Application.Application;
-using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.Core.Utility;
-using JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue;
 
 namespace JosephM.XrmModule.Test
 {
