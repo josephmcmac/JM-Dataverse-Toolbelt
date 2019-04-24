@@ -32,20 +32,39 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             XrmRecordService = xrmRecordService;
         }
 
+        protected override void CompleteDialogExtention()
+        {
+            if (AssemblyLoadErrorMessage != null)
+            {
+                Response = new DeployAssemblyResponse
+                {
+                    Message = AssemblyLoadErrorMessage
+                };
+                CompletionItem = Response;
+            }
+            else
+            {
+                base.CompleteDialogExtention();
+            }
+        }
+
+        private string AssemblyLoadErrorMessage { get; set; }
+
         protected override void LoadDialogExtention()
         {
             //hijack the load method so that we can prepopulate
             //the entered request with various details
-            LoadAssemblyDetails();
-
-            StartNextAction();
+            AssemblyLoadErrorMessage = LoadAssemblyDetails();
+            if (AssemblyLoadErrorMessage != null)
+                SkipObjectEntry = true;
+            base.LoadDialogExtention();
         }
 
-        private void LoadAssemblyDetails()
+        private string LoadAssemblyDetails()
         {
             AssemblyFile = VisualStudioService.BuildSelectedProjectAndGetAssemblyName();
             if (string.IsNullOrWhiteSpace(AssemblyFile))
-                throw new NullReferenceException("Could Not Find Built Assembly. Check The Build Results");
+                return "Could Not Find Built Assembly. Check The Build Result For Errors";
 
 
             var fileInfo = new FileInfo(AssemblyFile);
@@ -84,7 +103,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                 }
             }
             if (!plugins.Any())
-                throw new Exception("There are no plugin classes in the assembly");
+                return "Assembly Cannot By Deployed. No Plugin Classes Were Found In The Assembly";
 
             Request.AssemblyName = assemblyName;
             Request.Content = assemblyContent;
@@ -153,6 +172,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                     item.GroupName = matchingItem.GetStringField(Fields.plugintype_.workflowactivitygroupname);
                 }
             }
+
+            return null;
         }
 
         public string AssemblyFile { get; private set; }
