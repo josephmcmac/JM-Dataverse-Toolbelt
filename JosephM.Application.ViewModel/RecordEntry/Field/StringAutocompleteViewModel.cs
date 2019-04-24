@@ -13,6 +13,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
     public class StringAutocompleteViewModel : ViewModelBase
     {
         private bool _displayTypeAhead;
+        private string _loadOptionsError;
 
         public StringAutocompleteViewModel(StringFieldViewModel stringField, AutocompleteFunction autocompleteFunction)
             : base(stringField.ApplicationController)
@@ -21,34 +22,43 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             StringField = stringField;
             AutocompleteFunction = autocompleteFunction;
             var typeAheadOptions = new TypeAheadOptions();
-                
+
             var typeAheadRecordService = new ObjectRecordService(typeAheadOptions, ApplicationController);
             var formController = FormController.CreateForObject(typeAheadOptions, ApplicationController, null);
 
             Func<bool, GetGridRecordsResponse> getGridRecords = (ignorePages) =>
                 {
-                    var autoCompleteStrings = autocompleteFunction
-                        .GetAutocompleteStrings(StringField.RecordEntryViewModel);
-                    if(autoCompleteStrings == null)
-                        return new GetGridRecordsResponse(new IRecord[0]);
-                    var searchToLower = SearchText?.ToLower();
-                    typeAheadOptions.Options = autoCompleteStrings
-                        .Where(ta => searchToLower == null || AutocompleteFunction.SearchFields.Any(sf => ta.GetPropertyValue(sf)?.ToString().ToLower().StartsWith(searchToLower) ?? false))
-                        .OrderBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.SortField))
-                        .ThenBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.ValueField));
-
-                    var records = typeAheadOptions
-                        .Options
-                        .Select(o => new ObjectRecord(o))
-                        .Take(MaxRecordsForLookup)
-                        .ToArray();
-                    if (stringField.DisplayAutocomplete
-                        && (!records.Any()
-                            || (records.Count() == 1 && records.First().GetStringField(AutocompleteFunction.ValueField)?.ToLower() == searchToLower)))
+                    try
                     {
-                        stringField.DisplayAutocomplete = false;
+                        LoadOptionsError = null;
+                        var autoCompleteStrings = autocompleteFunction
+                            .GetAutocompleteStrings(StringField.RecordEntryViewModel);
+                        if (autoCompleteStrings == null)
+                            return new GetGridRecordsResponse(new IRecord[0]);
+                        var searchToLower = SearchText?.ToLower();
+                        typeAheadOptions.Options = autoCompleteStrings
+                            .Where(ta => searchToLower == null || AutocompleteFunction.SearchFields.Any(sf => ta.GetPropertyValue(sf)?.ToString().ToLower().StartsWith(searchToLower) ?? false))
+                            .OrderBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.SortField))
+                            .ThenBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.ValueField));
+
+                        var records = typeAheadOptions
+                            .Options
+                            .Select(o => new ObjectRecord(o))
+                            .Take(MaxRecordsForLookup)
+                            .ToArray();
+                        if (stringField.DisplayAutocomplete
+                            && (!records.Any()
+                                || (records.Count() == 1 && records.First().GetStringField(AutocompleteFunction.ValueField)?.ToLower() == searchToLower)))
+                        {
+                            stringField.DisplayAutocomplete = false;
+                        }
+                        return new GetGridRecordsResponse(records);
                     }
-                    return new GetGridRecordsResponse(records);
+                    catch(Exception ex)
+                    {
+                        LoadOptionsError = $"Autocomplete could not be loaded\n\n{ex.Message}{(ex.InnerException == null ? null : ("\n\n" + ex.InnerException.Message))}\n\n{ex.StackTrace}";
+                        return new GetGridRecordsResponse(new IRecord[0]);
+                    }
                 };
 
             DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
@@ -60,7 +70,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 RecordService = typeAheadRecordService,
                 RecordType = AutocompleteFunction.RecordType,
                 IsReadOnly = true,
-                DisplayHeaders= false,
+                DisplayHeaders = false,
                 NoMargins = true,
                 FieldMetadata = AutocompleteFunction.GridFields
             };
@@ -140,6 +150,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public class TypeAheadOptions
         {
             public IEnumerable<object> Options { get; set; }
+        }
+
+        public string LoadOptionsError
+        {
+            get { return _loadOptionsError; }
+            set
+            {
+                _loadOptionsError = value;
+                OnPropertyChanged(nameof(LoadOptionsError));
+            }
         }
     }
 }

@@ -13,8 +13,10 @@
             <converters:BooleanToVisibilityHiddenConverter x:Key="BoolToHidden" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
@@ -51,10 +53,10 @@
                 VerticalScrollBarVisibility="Auto"
                 IsReadOnly="False" />
             <Grid
-            Style="{StaticResource FieldEntryButtonGridStyle}"
-            Grid.Column="1"
-            Row="0"
-            Visibility="{Binding SearchButton, Converter={StaticResource NullToHiddenConverter}}">
+                Style="{StaticResource FieldEntryButtonGridStyle}"
+                Grid.Column="1"
+                Row="0"
+                Visibility="{Binding SearchButton, Converter={StaticResource NullToHiddenConverter}}">
                 <Button DataContext="{Binding Path=SearchButton}"
                         Style="{StaticResource SearchButton}"
                             Command="{Binding Command}" ToolTip="Click To Search" />
@@ -66,9 +68,23 @@
                     IsOpen="{Binding DisplayAutocomplete}"
                     StaysOpen="False">
                     <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" >
-                        <field:StringAutocompleteView
-                            Background="{DynamicResource BackgroundColor}"
-                            DataContext="{Binding AutocompleteViewModel}"/>
+                        <Grid Background="{DynamicResource BackgroundColor}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Background="{DynamicResource BackgroundColor}"
+                                Visibility="{Binding AutocompleteViewModel.LoadOptionsError,Converter={StaticResource NullToHiddenConverter}}"
+                                Grid.Row="0"
+                                Text="{Binding AutocompleteViewModel.LoadOptionsError}"
+                                Style="{StaticResource ValidationMessage}"  />
+                            <field:StringAutocompleteView
+                                Visibility="{Binding AutocompleteViewModel.LoadOptionsError,Converter={StaticResource NullToVisibilityConverter}}"
+                                Grid.Row="1"
+                                Background="{DynamicResource BackgroundColor}"
+                                DataContext="{Binding AutocompleteViewModel}"/>
+                        </Grid>
                     </Border>
                 </Popup>
             </Grid>
