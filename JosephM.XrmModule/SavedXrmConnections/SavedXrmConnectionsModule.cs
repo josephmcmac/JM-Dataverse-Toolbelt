@@ -14,6 +14,7 @@ using JosephM.Core.Extentions;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using System.Collections.Generic;
+using System;
 
 namespace JosephM.XrmModule.SavedXrmConnections
 {
@@ -47,17 +48,17 @@ namespace JosephM.XrmModule.SavedXrmConnections
             };
             foreach (var prop in propertiesForAutocompleteExistingValues)
             {
-                this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
+                Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> getExistingValues = (recordForm) =>
                 {
                     var parentForm = recordForm.ParentForm;
                     if (parentForm == null)
-                        return null;
+                        return new AutocompleteOption[0];
                     var objectRecord = parentForm.GetRecord() as ObjectRecord;
                     if (objectRecord == null)
-                        return null;
+                        return new AutocompleteOption[0];
                     var instance = objectRecord.Instance as ISavedXrmConnections;
-                    if (instance == null)
-                        return null;
+                    if (instance == null || instance.Connections == null)
+                        return new AutocompleteOption[0];
                     return instance
                         .Connections
                         .Select(pt => (string)pt.GetPropertyValue(prop.Key))
@@ -65,7 +66,9 @@ namespace JosephM.XrmModule.SavedXrmConnections
                         .Distinct()
                         .Select(s => new AutocompleteOption(s))
                         .ToArray();
-                }, gridWidth: prop.Value, isValidForFormFunction: (f) => f.ParentForm != null, displayInGrid: false), typeof(SavedXrmRecordConfiguration), prop.Key);
+                };
+                this.AddAutocompleteFunction(new AutocompleteFunction(getExistingValues, gridWidth: prop.Value
+                    , isValidForFormFunction: (f) => getExistingValues(f).Any(), displayInGrid: false), typeof(SavedXrmRecordConfiguration), prop.Key);
             }
 
             //existing values + the standard online regional endpoints
@@ -91,7 +94,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
                 if (objectRecord == null)
                     return onlineDiscoveryServices;
                 var instance = objectRecord.Instance as ISavedXrmConnections;
-                var otherSavedConnections = instance == null
+                var otherSavedConnections = instance == null || instance.Connections == null
                     ? new string[0]
                     : instance
                     .Connections
