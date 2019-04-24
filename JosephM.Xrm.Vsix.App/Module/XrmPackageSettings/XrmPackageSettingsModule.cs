@@ -32,15 +32,16 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                 new KeyValuePair<Type,string>(typeof(XrmPackageSettings.PluginProject), nameof(XrmPackageSettings.PluginProject.ProjectName)),
                 new KeyValuePair<Type,string>(typeof(XrmPackageSettings.WebResourceProject), nameof(XrmPackageSettings.WebResourceProject.ProjectName)),
             };
+            Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> getProjectsFunc = (recordForm) =>
+            {
+                var visualStudioService = recordForm.ApplicationController.ResolveType<IVisualStudioService>();
+                if (visualStudioService == null)
+                    return new AutocompleteOption[0];
+                return visualStudioService.GetProjects().Select(p => new AutocompleteOption(p.Name)).ToArray();
+            };
             foreach (var prop in props)
             {
-                this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
-                {
-                    var visualStudioService = recordForm.ApplicationController.ResolveType<IVisualStudioService>();
-                    if (visualStudioService == null)
-                        throw new NullReferenceException("visualStudioService");
-                    return visualStudioService.GetProjects().Select(p => new AutocompleteOption(p.Name));
-                }), prop.Key, prop.Value);
+                this.AddAutocompleteFunction(new AutocompleteFunction(getProjectsFunc, isValidForFormFunction: (form) => getProjectsFunc(form).Any()), prop.Key, prop.Value);
             }
         }
 

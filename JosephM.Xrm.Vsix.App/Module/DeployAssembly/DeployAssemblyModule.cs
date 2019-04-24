@@ -4,6 +4,8 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.Service;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.XrmModule.XrmConnection;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.DeployAssembly
@@ -30,17 +32,17 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
         private void AddWorkflowGroupAutocomplete()
         {
-            this.AddAutocompleteFunction(new AutocompleteFunction((recordForm) =>
+            Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> getExistingWorkflowGroups = (recordForm) =>
             {
                 var parentForm = recordForm.ParentForm;
                 if (parentForm == null)
-                    return null;
+                    return new AutocompleteOption[0];
                 var objectRecord = parentForm.GetRecord() as ObjectRecord;
-                if(objectRecord == null)
-                    return null;
+                if (objectRecord == null)
+                    return new AutocompleteOption[0];
                 var instance = objectRecord.Instance as DeployAssemblyRequest;
                 if (instance == null)
-                    return null;
+                    return new AutocompleteOption[0];
                 return instance
                     .PluginTypes
                     .Select(pt => pt.GroupName)
@@ -48,7 +50,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                     .Distinct()
                     .Select(s => new AutocompleteOption(s))
                     .ToArray();
-            }), typeof(PluginType), nameof(PluginType.GroupName));
+            };
+            this.AddAutocompleteFunction(new AutocompleteFunction(getExistingWorkflowGroups, isValidForFormFunction: (form) => getExistingWorkflowGroups(form).Any()), typeof(PluginType), nameof(PluginType.GroupName));
         }
     }
 }
