@@ -116,13 +116,13 @@ namespace JosephM.Xrm.Vsix.Test
 
         public void DeployAssembly(XrmPackageSettings settings)
         {
-            var createDialog = new DeployAssemblyDialog(new DeployAssemblyService(XrmRecordService, settings), new FakeDialogController(new FakeApplicationController()),
-                new FakeVisualStudioService(), XrmRecordService, settings);
-            createDialog.Controller.BeginDialog();
-
-            var objectEntry = (ObjectEntryViewModel)createDialog.Controller.UiItems.First();
+            var testApplication = CreateAndLoadTestApplication<DeployAssemblyModule>(loadXrmConnection: false);
+            var module = testApplication.GetModule<DeployAssemblyModule>();
+            module.DialogCommand();
+            var dialog = testApplication.GetNavigatedDialog<DeployAssemblyDialog>();
+            var objectEntry = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
             objectEntry.OnSave();
-
+            //and verify the assembly now deployed
             Assert.AreEqual(1, GetTestPluginAssemblyRecords().Count());
         }
 
