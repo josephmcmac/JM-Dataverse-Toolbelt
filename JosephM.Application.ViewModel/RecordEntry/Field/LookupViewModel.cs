@@ -74,7 +74,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
                     Action onSave = () =>
                     {
-                        Value = LookupService.ToLookup(newRecord);
+                        Value = LookupService.ToLookup(newRecord, getNameIfEmpty: true);
                         if (UsePicklist)
                         {
                             var newPicklistItem = new ReferencePicklistItem(newRecord, Value.Name);

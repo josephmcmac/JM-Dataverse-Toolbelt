@@ -42,7 +42,7 @@ namespace JosephM.Record.Extentions
             return ToLookup(null, record);
         }
 
-        public static Lookup ToLookup(this IRecordService service, IRecord record)
+        public static Lookup ToLookup(this IRecordService service, IRecord record, bool getNameIfEmpty = false)
         {
             var lookup = new Lookup(record.Type, record.Id, null);
             if (service != null)
@@ -52,7 +52,12 @@ namespace JosephM.Record.Extentions
                     lookup.Name = record.GetStringField(primaryField);
             }
             if (lookup.Name.IsNullOrWhiteSpace())
+            {
+                if (getNameIfEmpty)
+                    service.PopulateLookups(new Dictionary<string, List<Lookup>> { { lookup.RecordType, new[] { lookup }.ToList() } }, null);
+                else
                 lookup.Name = "Name Not Loaded";
+            }
             return lookup;
         }
 
