@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -11,8 +9,6 @@ using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {

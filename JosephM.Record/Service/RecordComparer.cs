@@ -25,6 +25,10 @@ namespace JosephM.Record.Service
             {
                 return 1;
             }
+            if (value1 == null)
+            {
+                return -1;
+            }
             else if (!(value1 is Enum) && value1 is IComparable)
             {
                 return ((IComparable)value1).CompareTo(value2);
