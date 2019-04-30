@@ -26,13 +26,28 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             var typeAheadRecordService = new ObjectRecordService(typeAheadOptions, ApplicationController);
             var formController = FormController.CreateForObject(typeAheadOptions, ApplicationController, null);
 
+            IEnumerable<object> autoCompleteStrings = null;
+            if (AutocompleteFunction.CacheAsStaticList)
+            {
+                try
+                {
+                    autoCompleteStrings = autocompleteFunction.GetAutocompleteStrings(StringField.RecordEntryViewModel);
+                }
+                catch(Exception ex)
+                {
+                    StringField.AddError($"Error Loading Autocomplete {ex.Message}\n{ex.DisplayString()}");
+                }
+            }
+
             Func<bool, GetGridRecordsResponse> getGridRecords = (ignorePages) =>
                 {
                     try
                     {
                         LoadOptionsError = null;
-                        var autoCompleteStrings = autocompleteFunction
-                            .GetAutocompleteStrings(StringField.RecordEntryViewModel);
+                        autoCompleteStrings = autoCompleteStrings != null && AutocompleteFunction.CacheAsStaticList
+                            ? autoCompleteStrings
+                            : autocompleteFunction
+                                .GetAutocompleteStrings(StringField.RecordEntryViewModel);
                         if (autoCompleteStrings == null)
                             return new GetGridRecordsResponse(new IRecord[0]);
                         var searchToLower = SearchText?.ToLower();

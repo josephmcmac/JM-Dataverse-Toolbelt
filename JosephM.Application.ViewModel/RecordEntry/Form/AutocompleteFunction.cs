@@ -7,9 +7,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 {
     public class AutocompleteFunction
     {
-        public AutocompleteFunction(Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> getAutocompleteStringsFunction, double? gridWidth = null, Func<RecordEntryViewModelBase, bool> isValidForFormFunction = null, bool displayInGrid = true, bool autosearch = true)
+        public AutocompleteFunction(Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> getAutocompleteStringsFunction, double? gridWidth = null, Func<RecordEntryViewModelBase, bool> isValidForFormFunction = null, bool displayInGrid = true, bool autosearch = true, bool cacheAsStaticList = false)
             : this(getAutocompleteStringsFunction, typeof(AutocompleteOption), nameof(AutocompleteOption.Value), new[] { new GridFieldMetadata(nameof(AutocompleteOption.Value), gridWidth ?? 450) }, isValidForFormFunction: isValidForFormFunction, displayInGrid: displayInGrid, autosearch: autosearch)
         {
+            CacheAsStaticList = cacheAsStaticList;
         }
 
         public AutocompleteFunction(Func<RecordEntryViewModelBase, IEnumerable<object>> getAutocompleteStringsFunction, Type objectType, string valueField, IEnumerable<GridFieldMetadata> gridFields, string sortField = null, Func<RecordEntryViewModelBase, bool> isValidForFormFunction = null, bool displayInGrid = true, bool autosearch = true)
@@ -25,6 +26,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             IsValidForFormFunction = isValidForFormFunction;
         }
 
+        public bool CacheAsStaticList { get; set; }
         public IEnumerable<string> SearchFields { get; set; }
         public IEnumerable<GridFieldMetadata> GridFields { get; }
         public string SortField { get; }

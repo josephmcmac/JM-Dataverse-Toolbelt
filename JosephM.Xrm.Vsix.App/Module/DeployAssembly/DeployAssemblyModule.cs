@@ -51,7 +51,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                     .Select(s => new AutocompleteOption(s))
                     .ToArray();
             };
-            this.AddAutocompleteFunction(new AutocompleteFunction(getExistingWorkflowGroups, isValidForFormFunction: (form) => getExistingWorkflowGroups(form).Any()), typeof(PluginType), nameof(PluginType.GroupName));
+            this.AddAutocompleteFunction(new AutocompleteFunction(getExistingWorkflowGroups, isValidForFormFunction: (form) => getExistingWorkflowGroups(form).Any(), cacheAsStaticList: true), typeof(PluginType), nameof(PluginType.GroupName));
         }
     }
 }
