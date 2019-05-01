@@ -1,6 +1,7 @@
 using JosephM.Core.Service;
 using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
 using System.Threading;
@@ -24,7 +25,6 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
             var fieldName = request.Field?.Key;
             var recordType = request.RecordType?.Key;
             var xrmService = XrmRecordService.XrmService;
-            xrmService.ClearFieldMetadataCache(recordType);
             controller.UpdateProgress(1, 5, "Loading Field metadata");
             var stringFieldMetadata = xrmService.GetFieldMetadata(fieldName, recordType) as StringAttributeMetadata;
             if (stringFieldMetadata == null)
@@ -35,14 +35,52 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
 
             if (stringFieldMetadata.AutoNumberFormat != request.AutonumberFormat)
             {
-                controller.UpdateProgress(2, 5, "Setting Format");
-                stringFieldMetadata.AutoNumberFormat = request.AutonumberFormat;
-                xrmService.CreateOrUpdateAttribute(fieldName, recordType, stringFieldMetadata);
-                controller.UpdateProgress(3, 5, "Publishing");
-                var publishXml = $"<importexportxml><entities><entity>{recordType}</entity></entities></importexportxml>";
-                xrmService.Publish(publishXml);
-                xrmService.ClearFieldMetadataCache(recordType);
-                response.FormatUpdated = true;
+                //okay I have noted that the autonumber does not seem to always apply immediatelly
+                //that is when querying the metadata after setting the autonumber config
+                //sometimes it does not return the applied value
+                //so lets do wait/retry
+
+                var numberOfSecondsToCheckUpdated = 4;
+                var retryAfterNumberOfChecks = 3;
+                var numberOfRetriesLeft = 3;
+
+                var isUpdated = false;
+                while (true)
+                {
+                    controller.UpdateProgress(2, 5, "Setting Format");
+                    stringFieldMetadata.AutoNumberFormat = request.AutonumberFormat;
+                    xrmService.CreateOrUpdateAttribute(fieldName, recordType, stringFieldMetadata);
+                    controller.UpdateProgress(3, 5, "Publishing");
+                    var publishXml = $"<importexportxml><entities><entity>{recordType}</entity></entities></importexportxml>";
+                    xrmService.Publish(publishXml);
+
+                    for(var i = 0; i < retryAfterNumberOfChecks; i++)
+                    {
+                        var getAttributeResponse = (RetrieveAttributeResponse)xrmService.Execute(new RetrieveAttributeRequest()
+                        {
+                            EntityLogicalName = request.RecordType.Key,
+                            LogicalName = request.Field.Key
+                        });
+                        var stringAttributeMetadata = getAttributeResponse.AttributeMetadata as StringAttributeMetadata;
+                        if (stringAttributeMetadata.AutoNumberFormat == request.AutonumberFormat)
+                        {
+                            isUpdated = true;
+                            response.FormatUpdated = true;
+                            xrmService.SetFieldMetadataCache(request.RecordType.Key, request.Field.Key, stringAttributeMetadata);
+                            break;
+                        }
+
+                        Thread.Sleep(numberOfSecondsToCheckUpdated * 1000);
+                    }
+                    if (isUpdated)
+                        break;
+
+                    numberOfRetriesLeft--;
+                    if(numberOfRetriesLeft == 0)
+                    {
+                        throw new Exception("The Autonumber Configuration May Not be Applied. The New Format Was Sent To The Web Service Several Times But Dynamics Has Not Applied The Settings According To The Metadata Provided By The Web Service. Perhaps Retry");
+                    }
+                }
             }
 
             if (request.SetSeed.HasValue)
@@ -59,8 +97,6 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
             }
 
             controller.UpdateProgress(5, 5, "Finishing");
-
-            Thread.Sleep(5000);
         }
     }
 }

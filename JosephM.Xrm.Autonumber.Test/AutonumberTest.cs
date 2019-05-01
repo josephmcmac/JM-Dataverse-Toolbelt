@@ -17,8 +17,6 @@ namespace JosephM.CustomisationImporter.Test
         [TestMethod]
         public void AutonumberTest()
         {
-            Assert.Inconclusive("For unknown reasons not getting consistency in behaviour in this script after changes to the autonumber");
-
             //create test application with module loaded
             var testApplication = CreateAndLoadTestApplication<AutonumberModule>();
 
@@ -58,11 +56,8 @@ namespace JosephM.CustomisationImporter.Test
 
             Assert.AreEqual(1, fieldsViewModel.DynamicGridViewModel.GridRecords.Count);
 
-            var account = CreateAccount();
-            Assert.AreEqual("ACC-001234", account.GetStringField(Fields.account_.accountnumber));
-
-            account = CreateAccount();
-            Assert.AreEqual("ACC-001235", account.GetStringField(Fields.account_.accountnumber));
+            WaitTillTrue(() => CreateAccount().GetStringField(Fields.account_.accountnumber) == "ACC-001234");
+            WaitTillTrue(() => CreateAccount().GetStringField(Fields.account_.accountnumber) == "ACC-001235");
 
             var gridRow = fieldsViewModel.DynamicGridViewModel.GridRecords.First();
             gridRow.IsSelected = true;
@@ -72,13 +67,11 @@ namespace JosephM.CustomisationImporter.Test
             var configureEntry = testApplication.GetSubObjectEntryViewModel(configureDialog);
             Assert.IsNotNull(configureEntry.GetRecordFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Field)).Value);
             Assert.AreEqual("ACC-{SEQNUM:6}", configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value);
-            addEntry.GetBigIntFieldViewModel(nameof(ConfigureAutonumberRequest.SetSeed)).Value = 2345;
+            configureEntry.GetBigIntFieldViewModel(nameof(ConfigureAutonumberRequest.SetSeed)).Value = 2345;
             configureEntry.SaveButtonViewModel.Invoke();
             Assert.AreEqual(1, fieldsViewModel.DynamicGridViewModel.GridRecords.Count);
 
-            account = CreateAccount();
-            Assert.AreEqual("ACC-002346", account.GetStringField(Fields.account_.accountnumber));
-
+            WaitTillTrue(() => CreateAccount().GetStringField(Fields.account_.accountnumber) == "ACC-002345");
 
             gridRow = fieldsViewModel.DynamicGridViewModel.GridRecords.First();
             gridRow.IsSelected = true;
@@ -87,12 +80,11 @@ namespace JosephM.CustomisationImporter.Test
             configureDialog = autonumbersViewModel.ChildForms.First() as ConfigureAutonumberDialog;
             configureEntry = testApplication.GetSubObjectEntryViewModel(configureDialog);
             Assert.IsNotNull(configureEntry.GetRecordFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Field)).Value);
-            addEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value = "ACC-{SEQNUM:5}";
+            configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value = "ACC-{SEQNUM:5}";
             configureEntry.SaveButtonViewModel.Invoke();
             Assert.AreEqual(1, fieldsViewModel.DynamicGridViewModel.GridRecords.Count);
 
-            account = CreateAccount();
-            Assert.AreEqual("ACC-02347", account.GetStringField(Fields.account_.accountnumber));
+            WaitTillTrue(() => CreateAccount().GetStringField(Fields.account_.accountnumber) == "ACC-02346");
 
             gridRow = fieldsViewModel.DynamicGridViewModel.GridRecords.First();
             gridRow.IsSelected = true;
@@ -102,11 +94,9 @@ namespace JosephM.CustomisationImporter.Test
             configureEntry = testApplication.GetSubObjectEntryViewModel(configureDialog);
             Assert.IsNotNull(configureEntry.GetRecordFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Field)).Value);
             Assert.AreEqual("ACC-{SEQNUM:5}", configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value);
-            addEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value = null;
+            configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value = null;
             configureEntry.SaveButtonViewModel.Invoke();
             Assert.IsFalse(autonumbersViewModel.ChildForms.Any());
-
-            var fieldMetadata = XrmRecordService.GetFieldMetadata(Fields.account_.accountnumber, Entities.account);
 
             DeleteMyToday();
         }

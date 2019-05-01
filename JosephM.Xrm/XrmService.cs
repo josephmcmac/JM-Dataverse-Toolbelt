@@ -2060,14 +2060,13 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     .ToArray();
         }
 
-        public void ClearFieldMetadataCache(string entity)
+        public void SetFieldMetadataCache(string entity, string field, AttributeMetadata attributeMetadata)
         {
             lock (LockObject)
             {
-                if (EntityFieldMetadata.ContainsKey(entity))
-                {
-                    EntityFieldMetadata.Remove(entity);
-                }
+                var entityFieldMetadata = GetEntityFieldMetadata(entity);
+                entityFieldMetadata.RemoveAll(mt => mt.LogicalName == field);
+                entityFieldMetadata.Add(attributeMetadata);
             }
         }
 

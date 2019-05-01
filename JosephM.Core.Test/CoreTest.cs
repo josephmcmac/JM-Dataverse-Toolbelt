@@ -163,7 +163,7 @@ namespace JosephM.Core.Test
             return stringer.ToString();
         }
 
-        public void WaitTillTrue(Func<bool> assertInTime, int seconds)
+        public void WaitTillTrue(Func<bool> assertInTime, int seconds = 30)
         {
             var secondsWaited = 0;
             while (!assertInTime())
