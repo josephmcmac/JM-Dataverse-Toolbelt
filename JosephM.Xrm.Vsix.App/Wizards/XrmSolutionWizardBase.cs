@@ -52,7 +52,7 @@ namespace JosephM.Xrm.Vsix.Wizards
             {
                 if (replacementsDictionary.ContainsKey("$specifiedsolutionname$") && (replacementsDictionary["$specifiedsolutionname$"] == null || replacementsDictionary["$specifiedsolutionname$"] == ""))
                 {
-                    app.Controller.UserMessage("Warning! The XRM Solution Generation Will Not Work Correctly If Create Directory For Solution Was Not Specified In The New Solution Dialog");
+                    app.Controller.UserMessage("Warning! When Creating The Solution If 'Create Directory For Solution' Is Not Set In Visual Studio 2017, Or If 'Place Solution And Project In The Same Directory' Is Set In Visual Studio 2019, Then The New Solution May Not Be Created Correctly Due To Visual Studio Placing The .sln File In An Incorrect Folder Or Creating A Nested Projects Folder. Recommend Restarting The Solution Creation With This Checked Appropriately");
                 }
 
                 var solutionName = replacementsDictionary.ContainsKey("$specifiedsolutionname$")
