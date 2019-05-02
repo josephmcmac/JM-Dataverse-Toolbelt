@@ -12,7 +12,7 @@ namespace JosephM.Application.ViewModel.Dialog
         /// </summary>
         public ObjectEntryDialog(object objectsToEnter, DialogViewModel parentDialog,
             IApplicationController applicationController, string saveButtonLabel = null)
-            : this(objectsToEnter, parentDialog, applicationController, null, null)
+            : this(objectsToEnter, parentDialog, applicationController, null, null, saveButtonLabel: saveButtonLabel)
         {
         }
 
