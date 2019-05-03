@@ -60,9 +60,19 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
 
         public void LogEvent(string eventName, IDictionary<string, string> properties = null)
         {
+
             var settings = ApplicationController.ResolveType<ApplicationInsightsSettings>();
             if (!IsDebugMode && settings.AllowUseLogging)
             {
+                properties = properties ?? new Dictionary<string, string>();
+                void addProperty(string name, string value)
+                {
+                    if (!properties.ContainsKey(name))
+                        properties.Add(name, value);
+                }
+                addProperty("App", ApplicationController.ApplicationName);
+                addProperty("App Version", ApplicationController.Version);
+
                 TelemetryClient.Context.User.Id = settings.AllowCaptureUsername ? UserName : AnonymousString;
                 TelemetryClient.TrackEvent(eventName, properties);
             }
