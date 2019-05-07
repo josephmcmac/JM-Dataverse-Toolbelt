@@ -40,7 +40,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                     matchKeyDictionary.Add(map.TargetType, map.AltMatchKeys.Select(mk => mk.TargetField).ToArray());
                 }
             }
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, updateOnly: updateOnly, includeOwner: true));
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, updateOnly: updateOnly, includeOwner: true, containsExportedConfigFields: false));
             return response;
         }
 

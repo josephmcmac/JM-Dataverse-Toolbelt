@@ -3417,5 +3417,43 @@ string recordType)
             }
             return result;
         }
+
+        public void PopulateReferenceNames(IEnumerable<EntityReference> references)
+        {
+            if (references == null)
+                return;
+            var toDictionary = references
+                .Where(r => string.IsNullOrWhiteSpace(r.Name))
+                .Where(r => r != null && string.IsNullOrWhiteSpace(r.Name))
+                .GroupBy(r => r.LogicalName, r => r)
+                .ToDictionary(g => g.Key, g => g.ToArray());
+
+            foreach (var type in toDictionary.Keys)
+            {
+                try
+                {
+                    var typePrimaryKey = GetPrimaryKeyField(type);
+                    var typePrimaryField = GetPrimaryNameField(type);
+                    if (!typePrimaryField.IsNullOrWhiteSpace() && !typePrimaryKey.IsNullOrWhiteSpace())
+                    {
+                        var distinctIds =
+                            toDictionary[type].Select(l => l.Id).Distinct();
+                        var conditions =
+                            distinctIds.Select(id => new ConditionExpression(typePrimaryKey, ConditionOperator.Equal, id));
+                        var theseRecords = RetrieveAllOrClauses(type, conditions, new[] { typePrimaryField }).ToArray();
+                        foreach (var lookup in toDictionary[type])
+                        {
+                            if (theseRecords.Any(r => r.Id == lookup.Id))
+                                lookup.Name = theseRecords.First(r => r.Id == lookup.Id)
+                                    .GetStringField(typePrimaryField);
+                        }
+                    }
+                }
+                // ReSharper disable once EmptyGeneralCatchClause
+                catch (Exception ex)
+                {
+                }
+            }
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace JosephM.Record.IService
             if (thisTypeConfig == null)
                 return null;
             var thisTypesParentsConfig = GetFor(thisTypeConfig.ParentLookupType);
-            if (thisTypesParentsConfig == null || thisTypeConfig.Type == thisTypeConfig.ParentLookupType)
+            if (thisTypesParentsConfig == null)
                 return null;
 
             //if the parent also has a config then we need to use it when matching the parent

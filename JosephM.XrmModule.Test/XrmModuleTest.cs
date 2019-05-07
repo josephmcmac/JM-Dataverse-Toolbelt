@@ -17,6 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using JosephM.Core.FieldType;
+using System.Linq;
 
 namespace JosephM.XrmModule.Test
 {
@@ -91,29 +92,7 @@ namespace JosephM.XrmModule.Test
 
         public void RecreatePortalData(bool createSecondDuplicateSite = false)
         {
-            DeleteAll(Entities.adx_websitelanguage);
-            DeleteAll(Entities.adx_webrole);
-            DeleteAll(Entities.adx_webpage);
-            DeleteAll(Entities.adx_webpageaccesscontrolrule);
-            DeleteAll(Entities.adx_entityform);
-            DeleteAll(Entities.adx_entityformmetadata);
-            DeleteAll(Entities.adx_entitylist);
-            DeleteAll(Entities.adx_webform);
-            DeleteAll(Entities.adx_webformstep);
-            DeleteAll(Entities.adx_webformmetadata);
-            DeleteAll(Entities.adx_weblink);
-            DeleteAll(Entities.adx_weblinkset);
-            DeleteAll(Entities.adx_website);
-            DeleteAll(Entities.adx_webfile);
-            DeleteAll(Entities.adx_webtemplate);
-
-            DeleteAll(Entities.adx_contentsnippet);
-            DeleteAll(Entities.adx_entitypermission);
-            DeleteAll(Entities.adx_pagetemplate);
-            DeleteAll(Entities.adx_publishingstate);
-            DeleteAll(Entities.adx_sitesetting);
-            DeleteAll(Entities.adx_sitemarker);
-            DeleteAll(Entities.adx_contentaccesslevel);
+            DeleteAllPortalData();
 
             var website1 = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
             {
@@ -131,12 +110,49 @@ namespace JosephM.XrmModule.Test
             }
         }
 
+        public void DeleteAllPortalData(params string[] dontDeleteTypes)
+        {
+            var typesToDelete = new[]
+            {
+                Entities.adx_websitelanguage,
+                Entities.adx_webrole,
+                Entities.adx_webpage,
+                Entities.adx_webpageaccesscontrolrule,
+                Entities.adx_entityform,
+                Entities.adx_entityformmetadata,
+                Entities.adx_entitylist,
+                Entities.adx_webform,
+                Entities.adx_webformstep,
+                Entities.adx_webformmetadata,
+                Entities.adx_weblink,
+                Entities.adx_weblinkset,
+                Entities.adx_website,
+                Entities.adx_webfile,
+                Entities.adx_webtemplate,
+                Entities.adx_contentsnippet,
+                Entities.adx_entitypermission,
+                Entities.adx_pagetemplate,
+                Entities.adx_publishingstate,
+                Entities.adx_sitesetting,
+                Entities.adx_sitemarker,
+                Entities.adx_contentaccesslevel,
+            };
+            if(dontDeleteTypes != null)
+            {
+                typesToDelete = typesToDelete.Except(dontDeleteTypes).ToArray();
+            }
+            foreach(var type in typesToDelete)
+            {
+                DeleteAll(type);
+            }
+        }
+
         private void CreateWebsiteRecords(Entity website)
         {
             var webFile = CreateTestRecord(Entities.adx_webfile, new Dictionary<string, object>
             {
+                { Fields.adx_webfile_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_webfile_.adx_name, "Fake Web File.css" },
-                { Fields.adx_webfile_.adx_websiteid, website.ToEntityReference() }
             });
 
             var file = Path.Combine(GetSolutionRootFolder().FullName, "SolutionItems", "TestFiles", "WEB FILE", "TESTDEPLOYINTO.css");
@@ -151,8 +167,8 @@ namespace JosephM.XrmModule.Test
 
             var webFile2 = CreateTestRecord(Entities.adx_webfile, new Dictionary<string, object>
             {
+                { Fields.adx_webfile_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_webfile_.adx_name, "Fake Web File 2.css" },
-                { Fields.adx_webfile_.adx_websiteid, website.ToEntityReference() }
             });
 
             var webTemplate1 = CreateTestRecord(Entities.adx_webtemplate, new Dictionary<string, object>
@@ -177,11 +193,13 @@ namespace JosephM.XrmModule.Test
 
             var weblinkSet1 = CreateTestRecord(Entities.adx_weblinkset, new Dictionary<string, object>
             {
+                { Fields.adx_weblinkset_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_weblinkset_.adx_name, "Fake Link Set 1" }
             });
 
             var weblinkSet2 = CreateTestRecord(Entities.adx_weblinkset, new Dictionary<string, object>
             {
+                { Fields.adx_weblinkset_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_weblinkset_.adx_name, "Fake Link Set 2" }
             });
 
@@ -222,6 +240,7 @@ namespace JosephM.XrmModule.Test
 
             var webRole = CreateTestRecord(Entities.adx_webrole, new Dictionary<string, object>
             {
+                { Fields.adx_webrole_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_webrole_.adx_name, "TestScriptRole" }
             });
 
@@ -334,38 +353,48 @@ namespace JosephM.XrmModule.Test
 
             var contentSnippet = CreateTestRecord(Entities.adx_contentsnippet, new Dictionary<string, object>
             {
+                { Fields.adx_contentsnippet_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_contentsnippet_.adx_name, "IContentSnippet" },
             });
 
             var entityPermission = CreateTestRecord(Entities.adx_entitypermission, new Dictionary<string, object>
             {
+                { Fields.adx_entitypermission_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_entitypermission_.adx_name, "IEntityPermission" },
             });
 
             var pageTemplate = CreateTestRecord(Entities.adx_pagetemplate, new Dictionary<string, object>
             {
+                { Fields.adx_pagetemplate_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_pagetemplate_.adx_name, "IPageTemplate" },
             });
 
             var publishingState = CreateTestRecord(Entities.adx_publishingstate, new Dictionary<string, object>
             {
+                { Fields.adx_publishingstate_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_publishingstate_.adx_name, "IPublishingState" },
             });
 
             var siteSetting = CreateTestRecord(Entities.adx_sitesetting, new Dictionary<string, object>
             {
+                { Fields.adx_sitesetting_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_sitesetting_.adx_name, "ISiteSetting" },
             });
 
             var sitemarker = CreateTestRecord(Entities.adx_sitemarker, new Dictionary<string, object>
             {
+                { Fields.adx_sitemarker_.adx_websiteid, website.ToEntityReference() },
                 { Fields.adx_sitemarker_.adx_name, "ISiteMarker" },
             });
 
-            var contentAccessLevel = CreateTestRecord(Entities.adx_contentaccesslevel, new Dictionary<string, object>
+            var contentAccessLevel = XrmService.GetFirst(Entities.adx_contentaccesslevel, Fields.adx_contentaccesslevel_.adx_name, "IContentAccessLevel");
+            if (contentAccessLevel == null)
             {
-                { Fields.adx_contentaccesslevel_.adx_name, "IContentAccessLevel" },
-            });
+                contentAccessLevel = CreateTestRecord(Entities.adx_contentaccesslevel, new Dictionary<string, object>
+                {
+                    { Fields.adx_contentaccesslevel_.adx_name, "IContentAccessLevel" },
+                });
+            }
 
             XrmService.Associate(Relationships.adx_contentaccesslevel_.adx_WebRoleContentAccessLevel.Name, Fields.adx_contentaccesslevel_.adx_contentaccesslevelid, contentAccessLevel.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
             XrmService.Associate(Relationships.adx_entitypermission_.adx_entitypermission_webrole.Name, Fields.adx_entitypermission_.adx_entitypermissionid, entityPermission.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);

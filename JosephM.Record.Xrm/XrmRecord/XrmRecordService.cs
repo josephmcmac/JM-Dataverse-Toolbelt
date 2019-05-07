@@ -1363,55 +1363,118 @@ namespace JosephM.Record.Xrm.XrmRecord
                     Type = Entities.adx_webpage,
                     ParentLookupField = Fields.adx_webpage_.adx_rootwebpageid,
                     ParentLookupType = Entities.adx_webpage,
-                    UniqueChildFields = new [] { Fields.adx_webpage_.adx_webpagelanguageid },
+                    UniqueChildFields = new [] { Fields.adx_webpage_.adx_name, Fields.adx_webpage_.adx_websiteid, Fields.adx_webpage_.adx_webpagelanguageid },
                     BlockCreateChild = true
                 },
             new TypeConfigs.Config()
                 {
                     Type = Entities.adx_entityformmetadata,
-                    ParentLookupField = Fields.adx_entityformmetadata_.adx_entityform,
-                    ParentLookupType = Entities.adx_entityform,
-                    UniqueChildFields = new [] { Fields.adx_entityformmetadata_.adx_type, Fields.adx_entityformmetadata_.adx_sectionname, Fields.adx_entityformmetadata_.adx_attributelogicalname, Fields.adx_entityformmetadata_.adx_tabname, Fields.adx_entityformmetadata_.adx_subgrid_name }
+                    UniqueChildFields = new [] { Fields.adx_entityformmetadata_.adx_entityform, Fields.adx_entityformmetadata_.adx_type, Fields.adx_entityformmetadata_.adx_sectionname, Fields.adx_entityformmetadata_.adx_attributelogicalname, Fields.adx_entityformmetadata_.adx_tabname, Fields.adx_entityformmetadata_.adx_subgrid_name }
+                },
+           new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_entityform,
+                    UniqueChildFields = new [] { Fields.adx_entityform_.adx_websiteid, Fields.adx_entityform_.adx_name }
                 },
             new TypeConfigs.Config()
                 {
                     Type = Entities.adx_webpageaccesscontrolrule,
-                    ParentLookupField = Fields.adx_webpageaccesscontrolrule_.adx_webpageid,
-                    ParentLookupType = Entities.adx_webpage,
-                    UniqueChildFields = new [] { Fields.adx_webpageaccesscontrolrule_.adx_name }
+                    UniqueChildFields = new [] { Fields.adx_webpageaccesscontrolrule_.adx_webpageid, Fields.adx_webpageaccesscontrolrule_.adx_name }
                 },
             new TypeConfigs.Config()
                 {
                     Type = Entities.productpricelevel,
-                    ParentLookupField = Fields.productpricelevel_.pricelevelid,
-                    ParentLookupType = Entities.pricelevel,
-                    UniqueChildFields = new [] { Fields.productpricelevel_.productid, Fields.productpricelevel_.uomid }
+                    UniqueChildFields = new [] { Fields.productpricelevel_.pricelevelid, Fields.productpricelevel_.productid, Fields.productpricelevel_.uomid }
                 },
             new TypeConfigs.Config()
                 {
                     Type = Entities.uom,
-                    ParentLookupField = Fields.uom_.uomscheduleid,
-                    ParentLookupType = Entities.uomschedule,
-                    UniqueChildFields = new [] { Fields.uom_.baseuom, Fields.uom_.name }
+                    UniqueChildFields = new [] { Fields.uom_.uomscheduleid, Fields.uom_.baseuom, Fields.uom_.name }
                 },
              new TypeConfigs.Config()
                 {
                     Type = Entities.salesorderdetail,
-                    ParentLookupField = Fields.salesorderdetail_.salesorderid,
-                    ParentLookupType = Entities.salesorder,
-                    UniqueChildFields = new [] { Fields.salesorderdetail_.salesorderdetailid, Fields.salesorderdetail_.productid }
+                    UniqueChildFields = new [] { Fields.salesorderdetail_.salesorderid, Fields.salesorderdetail_.salesorderdetailid, Fields.salesorderdetail_.productid }
                 },
              new TypeConfigs.Config()
                 {
                     Type = Entities.adx_webformmetadata,
-                    ParentLookupField = Fields.adx_webformmetadata_.adx_webformstep,
-                    ParentLookupType = Entities.adx_webformstep,
-                    UniqueChildFields = new [] { Fields.adx_webformmetadata_.adx_type, Fields.adx_webformmetadata_.adx_sectionname, Fields.adx_webformmetadata_.adx_attributelogicalname, Fields.adx_webformmetadata_.adx_tabname, Fields.adx_webformmetadata_.adx_subgrid_name }
+                    UniqueChildFields = new [] { Fields.adx_webformmetadata_.adx_webformstep, Fields.adx_webformmetadata_.adx_type, Fields.adx_webformmetadata_.adx_sectionname, Fields.adx_webformmetadata_.adx_attributelogicalname, Fields.adx_webformmetadata_.adx_tabname, Fields.adx_webformmetadata_.adx_subgrid_name }
+                },
+            new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_webform,
+                    UniqueChildFields = new [] { Fields.adx_webform_.adx_websiteid, Fields.adx_webform_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_webformstep,
+                    UniqueChildFields = new [] { Fields.adx_webformstep_.adx_webform, Fields.adx_webform_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_weblinkset,
+                    UniqueChildFields = new [] { Fields.adx_weblinkset_.adx_websiteid, Fields.adx_weblinkset_.adx_name }
                 },
              new TypeConfigs.Config()
                 {
                     Type = Entities.adx_weblink,
                     UniqueChildFields = new [] { Fields.adx_weblink_.adx_weblinksetid, Fields.adx_weblink_.adx_parentweblinkid, Fields.adx_weblink_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_webtemplate,
+                    UniqueChildFields = new [] { Fields.adx_webtemplate_.adx_websiteid, Fields.adx_webtemplate_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_webfile,
+                    UniqueChildFields = new [] { Fields.adx_webfile_.adx_websiteid, Fields.adx_webfile_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_webrole,
+                    UniqueChildFields = new [] { Fields.adx_webrole_.adx_websiteid, Fields.adx_website_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_sitesetting,
+                    UniqueChildFields = new [] { Fields.adx_sitesetting_.adx_websiteid, Fields.adx_sitesetting_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_sitemarker,
+                    UniqueChildFields = new [] { Fields.adx_sitemarker_.adx_websiteid, Fields.adx_sitemarker_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_publishingstate,
+                    UniqueChildFields = new [] { Fields.adx_publishingstate_.adx_websiteid, Fields.adx_publishingstate_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_pagetemplate,
+                    UniqueChildFields = new [] { Fields.adx_pagetemplate_.adx_websiteid, Fields.adx_pagetemplate_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_entitypermission,
+                    UniqueChildFields = new [] { Fields.adx_entitypermission_.adx_websiteid, Fields.adx_entitypermission_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_entitylist,
+                    UniqueChildFields = new [] { Fields.adx_entitylist_.adx_websiteid, Fields.adx_entitylist_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.adx_contentsnippet,
+                    UniqueChildFields = new [] { Fields.adx_contentsnippet_.adx_websiteid, Fields.adx_contentsnippet_.adx_name }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.annotation,
+                    UniqueChildFields = new [] { Fields.annotation_.objectid, Fields.annotation_.subject, Fields.annotation_.filename }
                 },
         });
         public TypeConfigs GetTypeConfigs()

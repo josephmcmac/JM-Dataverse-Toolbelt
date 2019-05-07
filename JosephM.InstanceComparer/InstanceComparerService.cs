@@ -1134,8 +1134,6 @@ namespace JosephM.InstanceComparer
 
             public Dictionary<string, List<ConvertField>> _conversionsObjects =
                 new Dictionary<string, List<ConvertField>>();
-            private InstanceComparerRequest.InstanceCompareDataCompare c;
-            private object r;
 
             public object ConvertField1(string field, object value)
             {

@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
@@ -222,15 +223,13 @@ namespace JosephM.Deployment.Test
         public void DeploymentImportXmlPortalTypeConfigTest()
         {
             PrepareTests();
-            var types = new[] { Entities.jmcg_testentitytwo, Entities.jmcg_testentitythree, Entities.jmcg_testentity };
-            var workFolder = ClearFilesAndData(types);
+            var workFolder = ClearFilesAndData();
 
             //okay this script is to verify importing microsoft portal types
             //which aren't so simple as to just match by name
             //as for example webpage have a root page, and language specific page(s)
 
-            //create a web page with an access control rule
-            RecreatePortalData();
+            RecreatePortalData(createSecondDuplicateSite: true);
 
             var parentWebPage = XrmService.RetrieveAllAndClauses(Entities.adx_webpage, new[]
             {
@@ -238,36 +237,22 @@ namespace JosephM.Deployment.Test
             }).First();
 
             //export to xml
-            var exportApp = new ExportXmlService(XrmRecordService);// CreateAndLoadTestApplication<ExportXmlModule>();
-            var exportRequest = new ExportXmlRequest
-            {
-                Folder = new Folder(workFolder),
-                IncludeNNRelationshipsBetweenEntities = true,
-                RecordTypesToExport = new[]
-                 {
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webrole, Entities.adx_webrole)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webpage, Entities.adx_webpage)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_websitelanguage, Entities.adx_websitelanguage)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webpageaccesscontrolrule, Entities.adx_webpageaccesscontrolrule)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webform, Entities.adx_webform)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webformstep, Entities.adx_webformstep)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webformmetadata, Entities.adx_webformmetadata)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_website, Entities.adx_website)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_weblinkset, Entities.adx_weblinkset)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_weblink, Entities.adx_weblink)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_entityform, Entities.adx_entityform)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_entityformmetadata, Entities.adx_entityformmetadata)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_webtemplate, Entities.adx_webtemplate)},
-                     new ExportRecordType() { RecordType = new RecordType(Entities.adx_entitylist, Entities.adx_entitylist)},
-                 }
-            };
-
-            var exportResponse = exportApp.Execute(exportRequest, new ServiceRequestController(Controller));
-            Assert.IsFalse(exportResponse.HasError);
+            var exportApp = CreateAndLoadTestApplication<ExportXmlModule>();
+            exportApp.AddModule<AddPortalDataModule>();
+            var exportDialog = exportApp.NavigateToDialog<ExportXmlModule, ExportXmlDialog>();
+            var exportEntry = exportApp.GetSubObjectEntryViewModel(exportDialog);
+            exportEntry.GetFieldViewModel<FolderFieldViewModel>(nameof(ExportXmlRequest.Folder)).Value = new Folder(workFolder);
+            var dataToExport = exportEntry.GetEnumerableFieldViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
+            var addAllPortalDataButtonButton = dataToExport.DynamicGridViewModel.GridsFunctionsToXrmButtons(exportEntry.FormService.GetCustomFunctionsFor(dataToExport.FieldName, exportEntry));
+            addAllPortalDataButtonButton.First(b => b.Id == "ADDPORTALDATA").ChildButtons.First().Invoke();
+            Assert.IsTrue(exportEntry.Validate());
+            exportEntry.SaveButtonViewModel.Invoke();
+            var response = exportDialog.CompletionItem as ExportXmlResponse;
+            Assert.IsFalse(response.HasError);
 
             //lets recreate all the web page data so the ids don't match when importing
             //this will verify it matches them based on the root/unique field configs in XrmTypesConfig
-            RecreatePortalData();
+            RecreatePortalData(createSecondDuplicateSite: true);
 
             var application = CreateAndLoadTestApplication<ImportXmlModule>();
             var importRequest = new ImportXmlRequest
@@ -312,9 +297,36 @@ namespace JosephM.Deployment.Test
             Assert.IsFalse(importResponse.HasError);
 
             VerifyImportedPortalData();
+
+            //okay lets do one last import where we delete all the data and do an import creating all the records new
+
+            workFolder = ClearFilesAndData();
+            //export again
+            exportApp = CreateAndLoadTestApplication<ExportXmlModule>();
+            exportApp.AddModule<AddPortalDataModule>();
+            exportDialog = exportApp.NavigateToDialog<ExportXmlModule, ExportXmlDialog>();
+            exportEntry = exportApp.GetSubObjectEntryViewModel(exportDialog);
+            exportEntry.GetFieldViewModel<FolderFieldViewModel>(nameof(ExportXmlRequest.Folder)).Value = new Folder(workFolder);
+            dataToExport = exportEntry.GetEnumerableFieldViewModel(nameof(ExportXmlRequest.RecordTypesToExport));
+            addAllPortalDataButtonButton = dataToExport.DynamicGridViewModel.GridsFunctionsToXrmButtons(exportEntry.FormService.GetCustomFunctionsFor(dataToExport.FieldName, exportEntry));
+            addAllPortalDataButtonButton.First(b => b.Id == "ADDPORTALDATA").ChildButtons.First().Invoke();
+            Assert.IsTrue(exportEntry.Validate());
+            exportEntry.SaveButtonViewModel.Invoke();
+            response = exportDialog.CompletionItem as ExportXmlResponse;
+            Assert.IsFalse(response.HasError);
+
+            //delete all the data
+            DeleteAllPortalData(Entities.adx_webpage, Entities.adx_websitelanguage, Entities.adx_website);
+
+            //import
+            importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importResponse.HasError);
+
+            //verify
+            VerifyImportedPortalData();
         }
 
-        private void VerifyImportedPortalData()
+        private void VerifyImportedPortalData(int numberOfSites = 2)
         {
             var webSiteRecords = XrmService.RetrieveAllEntityType(Entities.adx_website);
             var webFileRecords = XrmService.RetrieveAllEntityType(Entities.adx_webfile);
@@ -333,31 +345,44 @@ namespace JosephM.Deployment.Test
             var webFormMetadataRecords = XrmService.RetrieveAllEntityType(Entities.adx_webformmetadata);
             var webTemplateRecords = XrmService.RetrieveAllEntityType(Entities.adx_webtemplate);
             var entityListRecords = XrmService.RetrieveAllEntityType(Entities.adx_entitylist);
-
+            var contentSnippetRecords = XrmService.RetrieveAllEntityType(Entities.adx_contentsnippet);
+            var entityPermissionRecords = XrmService.RetrieveAllEntityType(Entities.adx_entitypermission);
+            var pageTemplateRecords = XrmService.RetrieveAllEntityType(Entities.adx_pagetemplate);
+            var publishingStateRecords = XrmService.RetrieveAllEntityType(Entities.adx_publishingstate);
+            var siteSettingRecords = XrmService.RetrieveAllEntityType(Entities.adx_sitesetting);
+            var siteMarkerRecords = XrmService.RetrieveAllEntityType(Entities.adx_sitemarker);
+            var contentAccessLevelRecords = XrmService.RetrieveAllEntityType(Entities.adx_contentaccesslevel);
 
             //the records wont; have been updated as data the same - but we verify that the system matched
             //them and therefore didn't create duplicates or throw errors
-            Assert.AreEqual(1, webSiteRecords.Count());
-            Assert.AreEqual(2, webFileRecords.Count());
-            Assert.AreEqual(1, webFileAttachmentRecords.Count());
-            Assert.AreEqual(2, webLinkSetRecords.Count());
-            Assert.AreEqual(5, webLinkRecords.Count());
-            Assert.AreEqual(1, languageRecords.Count());
-            Assert.AreEqual(1, roleRecords.Count());
-            Assert.AreEqual(2, pageRecords.Count());
-            Assert.AreEqual(1, accessRecords.Count());
-            Assert.AreEqual(1, accessRoleAssociations.Count());
-            Assert.AreEqual(1, entityFormRecords.Count());
-            Assert.AreEqual(3, entityFormMetadataRecords.Count());
-            Assert.AreEqual(1, webFormRecords.Count());
-            Assert.AreEqual(2, webFormStepRecords.Count());
-            Assert.AreEqual(4, webFormMetadataRecords.Count());
-            Assert.AreEqual(3, webTemplateRecords.Count());
-            Assert.AreEqual(1, entityListRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, webSiteRecords.Count());
+            Assert.AreEqual(numberOfSites * 2, webFileRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, webFileAttachmentRecords.Count());
+            Assert.AreEqual(numberOfSites * 2, webLinkSetRecords.Count());
+            Assert.AreEqual(numberOfSites * 5, webLinkRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, languageRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, roleRecords.Count());
+            Assert.AreEqual(numberOfSites * 2, pageRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, accessRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, accessRoleAssociations.Count());
+            Assert.AreEqual(numberOfSites * 1, entityFormRecords.Count());
+            Assert.AreEqual(numberOfSites * 3, entityFormMetadataRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, webFormRecords.Count());
+            Assert.AreEqual(numberOfSites * 2, webFormStepRecords.Count());
+            Assert.AreEqual(numberOfSites * 4, webFormMetadataRecords.Count());
+            Assert.AreEqual(numberOfSites * 3, webTemplateRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, entityListRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, contentSnippetRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, entityPermissionRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, pageTemplateRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, publishingStateRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, siteSettingRecords.Count());
+            Assert.AreEqual(numberOfSites * 1, siteMarkerRecords.Count());
+            Assert.AreEqual(1, contentAccessLevelRecords.Count());
 
             //verify the access control rule is correctly linked to the child web page
             var childWebPage = pageRecords.First(e => e.GetLookupGuid(Fields.adx_webpage_.adx_rootwebpageid).HasValue);
-            Assert.AreEqual(childWebPage.Id, accessRecords.First().GetLookupGuid(Fields.adx_webpageaccesscontrolrule_.adx_webpageid));
+            Assert.IsTrue(accessRecords.Any(ar => ar.GetLookupGuid(Fields.adx_webpageaccesscontrolrule_.adx_webpageid) == childWebPage.Id));
         }
 
         [TestMethod]
@@ -704,8 +729,11 @@ namespace JosephM.Deployment.Test
 
         private string ClearFilesAndData(params string[] typesToDelete)
         {
-            foreach (var type in typesToDelete)
-                DeleteAll(type);
+            if (typesToDelete != null)
+            {
+                foreach (var type in typesToDelete)
+                    DeleteAll(type);
+            }
             var workFolder = WorkFolder;
 
             FileUtility.DeleteFiles(workFolder);

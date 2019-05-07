@@ -128,7 +128,18 @@ namespace JosephM.Deployment.ExportXml
                     //which need to include the fields if they are needed for parentchild configs
                     excludeFields = excludeFields.Except(new[] { thisTypeConfig.ParentLookupField }).ToArray();
                     if (thisTypeConfig.UniqueChildFields != null)
-                        excludeFields = excludeFields.Except(thisTypeConfig.UniqueChildFields).ToArray();
+                    {
+                        foreach (var item in entities)
+                        {
+                            excludeFields = excludeFields.Except(thisTypeConfig.UniqueChildFields).ToArray();
+                            foreach (var uniqueField in thisTypeConfig
+                                .UniqueChildFields
+                                .Where(ucf => XrmService.IsLookup(ucf, thisTypeConfig.Type)))
+                            {
+                                AddReferencedFieldsConfigFields(item, item, uniqueField);
+                            }
+                        }
+                    }
 
                     var fieldsToIncludeInParent = XrmRecordService.GetTypeConfigs().GetParentFieldsRequiredForComparison(type);
                     var thisTypesParentsConfig = XrmRecordService.GetTypeConfigs().GetFor(thisTypeConfig.ParentLookupType);
@@ -139,12 +150,7 @@ namespace JosephM.Deployment.ExportXml
                         //so lets include the parents config fields as aliased fields in the exported entity
                         foreach (var item in entities)
                         {
-                            var parentId = item.GetLookupGuid(thisTypeConfig.ParentLookupField);
-                            if (parentId.HasValue)
-                            {
-                                var parent = XrmService.Retrieve(thisTypeConfig.ParentLookupType, parentId.Value, fieldsToIncludeInParent);
-                                item.Attributes.AddRange(parent.Attributes.Select(f => new KeyValuePair<string, object>($"{thisTypeConfig.ParentLookupField}.{f.Key}", new AliasedValue(thisTypeConfig.ParentLookupType, f.Key, f.Value))));
-                            }
+                            AddReferencedFieldsConfigFields(item, item, thisTypeConfig.ParentLookupField);
                         }
                     }
 
@@ -223,16 +229,21 @@ namespace JosephM.Deployment.ExportXml
                 {
                     controller.LogLiteral(string.Format("Querying Notes For {0} Records", type));
                     var notes = XrmService
-                        .RetrieveAllOrClauses("annotation",
-                            new[] { new ConditionExpression("objecttypecode", ConditionOperator.Equal, type) });
+                        .RetrieveAllOrClauses(Entities.annotation,
+                            new[] { new ConditionExpression(Fields.annotation_.objecttypecode, ConditionOperator.Equal, type) });
 
                     toDo = notes.Count();
                     done = 0;
+                    XrmService.PopulateReferenceNames(notes
+                        .Select(n => n.GetField(Fields.annotation_.objectid))
+                        .Where(rf => rf != null)
+                        .Cast<EntityReference>());
                     foreach (var note in notes)
                     {
-                        var objectId = note.GetLookupGuid("objectid");
+                        var objectId = note.GetLookupGuid(Fields.annotation_.objectid);
                         if (objectId.HasValue && entities.Select(e => e.Id).Contains(objectId.Value))
                         {
+                            AddReferencedFieldsConfigFields(note, note, Fields.annotation_.objectid);
                             controller.UpdateLevel2Progress(done++, toDo, string.Format("Processing Notes For {0} Records", type));
                             processEntity(note);
                         }
@@ -278,6 +289,37 @@ namespace JosephM.Deployment.ExportXml
                 }
             }
             controller.TurnOffLevel2();
+        }
+
+        private void AddReferencedFieldsConfigFields(Entity entitySetFieldsIn, Entity currentCarryEntity, string field, string carryPrefix = null)
+        {
+            var refId = currentCarryEntity.GetLookupGuid(field);
+            if (refId.HasValue)
+            {
+                var refType = currentCarryEntity.GetLookupType(field);
+                var reffedConfigType = XrmRecordService.GetTypeConfigs().GetFor(refType);
+                if (reffedConfigType != null)
+                {
+                    var requiredFields = new List<string>();
+                    if (reffedConfigType.ParentLookupField != null)
+                        requiredFields.Add(reffedConfigType.ParentLookupField);
+                    if(reffedConfigType.UniqueChildFields != null)
+                        requiredFields.AddRange(reffedConfigType.UniqueChildFields);
+                    if (requiredFields.Any())
+                    {
+                        var reffed = XrmService.Retrieve(refType, refId.Value, requiredFields);
+                        foreach (var reffedAttribute in reffed.Attributes.Keys)
+                        {
+                            var fieldValue = reffed.GetField(reffedAttribute);
+                            entitySetFieldsIn.Attributes.Add(new KeyValuePair<string, object>($"{carryPrefix}{field}.{reffedAttribute}", new AliasedValue(refType, reffedAttribute, fieldValue)));
+                            if (fieldValue is EntityReference)
+                            {
+                                AddReferencedFieldsConfigFields(entitySetFieldsIn, reffed, reffedAttribute, $"{carryPrefix}{field}.");
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void WriteToXml(Entity entity, string folder, bool association)

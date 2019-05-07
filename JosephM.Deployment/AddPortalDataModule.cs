@@ -46,6 +46,7 @@ namespace JosephM.Deployment
                         Entities.adx_webpage,
                         Entities.adx_webpageaccesscontrolrule,
                         Entities.adx_webrole,
+                        Entities.adx_website,
                         Entities.adx_webtemplate,
                         Entities.adx_contentaccesslevel,
                     };
