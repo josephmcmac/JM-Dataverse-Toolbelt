@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -101,6 +102,9 @@ namespace JosephM.Wpf.Grid
 
         private void LoadingRow(object sender, DataGridRowEventArgs e)
         {
+            //okay so this method is because the asynch nature of the grid means it takes a while to for the ui 
+            //to reload the sorted grid
+            //so display loading while counting the number of rows added during loading until they are all added
             if (DynamicGridViewModel != null)
             {
                 if (DynamicGridViewModel.SortCount > 0)
@@ -114,6 +118,47 @@ namespace JosephM.Wpf.Grid
                     if (SortingMainGrid.Visibility == Visibility.Hidden)
                         SortingMainGrid.Visibility = Visibility.Visible;
                 }
+                if (DynamicGridViewModel.SortCount > 0)
+                {
+                    //uggh so this seems to have stopped working if the grid exceeds the height of the monitor
+                    //think it is only loading the rows in frame
+                    //so let do a timeout for a second and if it is still loading with the same counter then display
+                    new SortSpawn(DynamicGridViewModel.SortCount, DynamicGridViewModel, SortingMainGrid, SortingLoadGrid).DoIt();
+                }
+            }
+        }
+
+        public class SortSpawn
+        {
+            public SortSpawn(int currentCount, DynamicGridViewModel grid, System.Windows.Controls.Grid sortingMainGrid, System.Windows.Controls.Grid sortingLoadGrid)
+            {
+                CurrentCount = currentCount;
+                Grid = grid;
+                SortingMainGrid = sortingMainGrid;
+                SortingLoadGrid = sortingLoadGrid;
+            }
+
+            public int CurrentCount { get; }
+            public DynamicGridViewModel Grid { get; }
+            public System.Windows.Controls.Grid SortingMainGrid { get; }
+            public System.Windows.Controls.Grid SortingLoadGrid { get; }
+
+            public void DoIt()
+            {
+                Grid.ApplicationController.DoOnAsyncThread(() =>
+                {
+                    Thread.Sleep(1000);
+                    if(Grid.SortCount == CurrentCount)
+                    {
+                        Grid.ApplicationController.DoOnMainThread(() =>
+                        {
+                            if (SortingLoadGrid.Visibility == Visibility.Visible)
+                                SortingLoadGrid.Visibility = Visibility.Collapsed;
+                            if (SortingMainGrid.Visibility == Visibility.Hidden)
+                                SortingMainGrid.Visibility = Visibility.Visible;
+                        });
+                    }
+                });
             }
         }
 
