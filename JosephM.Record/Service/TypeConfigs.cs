@@ -1,4 +1,5 @@
 ﻿using JosephM.Record.Extentions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,12 +44,54 @@ namespace JosephM.Record.IService
                     fields.Add(config.ParentLookupField);
                 if (config.UniqueChildFields != null)
                     fields.AddRange(config.UniqueChildFields);
-                var parentComparisonFields = GetParentFieldsRequiredForComparison(type);
-                if(parentComparisonFields != null)
-                    fields.AddRange(parentComparisonFields.Select(pc => config.ParentLookupField + "." + pc));
+                foreach(var field in fields.ToArray())
+                {
+                    if(recordService.IsLookup(field, type))
+                    {
+                        var reffedTypeConfig = GetFor(recordService.GetLookupTargetType(field, type));
+                        if(reffedTypeConfig != null)
+                        {
+                            AddLinkedFields(reffedTypeConfig, fields, field + ".", recordService);
+                        }
+                    }
+                }
             }
             fields.Add(recordService.GetPrimaryField(type));
             return fields;
+        }
+
+        private void AddLinkedFields(Config typeConfig, List<string> fieldsList, string prefix, IRecordService recordService)
+        {
+
+            var fields = new List<string>();
+            if (typeConfig.ParentLookupField != null)
+                fields.Add(typeConfig.ParentLookupField);
+            if (typeConfig.UniqueChildFields != null)
+                fields.AddRange(typeConfig.UniqueChildFields);
+            foreach (var field in fields)
+            {
+                if (recordService.IsLookup(field, typeConfig.Type))
+                {
+                    var reffedTypeConfig = GetFor(recordService.GetLookupTargetType(field, typeConfig.Type));
+                    if (reffedTypeConfig != null)
+                    {
+                        //if it is self referencing only go one level
+                        //otherwise we infinite loop
+                        if (prefix != null && prefix.EndsWith(field + "."))
+                            continue;
+
+                        AddLinkedFields(reffedTypeConfig, fieldsList, $"{prefix}{field}.", recordService);
+                    }
+                    else
+                    {
+                        fieldsList.Add($"{prefix}{field}");
+                    }
+                }
+                else
+                {
+                    fieldsList.Add($"{prefix}{field}");
+                }
+            }
         }
 
         public IEnumerable<string> GetParentFieldsRequiredForComparison(string type)

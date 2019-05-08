@@ -7,7 +7,6 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
-using JosephM.Record.Xrm;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Crud;
@@ -24,7 +23,7 @@ namespace JosephM.InstanceComparer
         public override void ExecuteExtention(InstanceComparerRequest request, InstanceComparerResponse response,
             ServiceRequestController controller)
         {
-
+            controller.Controller.UpdateProgress(0, 1, "Loading");
             var processContainer = new ProcessContainer(request, response, controller.Controller);
             response.AllDifferences = processContainer.Differences;
             //ENSURE TO INCREASE THIS IF ADDING TO PROCESSES
@@ -745,20 +744,55 @@ namespace JosephM.InstanceComparer
         {
             if (records.Any())
             {
-                foreach(var record in records)
+                var typeConfig = xrmRecordService.GetTypeConfigs().GetFor(records.First().Type);
+                if (typeConfig != null)
                 {
-                    var typeConfig = xrmRecordService.GetTypeConfigs().GetFor(record.Type);
-                    var requiredParentFields = xrmRecordService.GetTypeConfigs().GetParentFieldsRequiredForComparison(record.Type);
-                    if(typeConfig != null && requiredParentFields != null)
+                    var requiredFieldsForCompare = new List<string>();
+                    if (typeConfig.ParentLookupField != null)
+                        requiredFieldsForCompare.Add(typeConfig.ParentLookupField);
+                    if (typeConfig.UniqueChildFields != null)
+                        requiredFieldsForCompare.AddRange(typeConfig.UniqueChildFields);
+                    if (requiredFieldsForCompare.Any())
                     {
-                        var parentId = record.GetLookupId(typeConfig.ParentLookupField);
-                        var parentType = record.GetLookupType(typeConfig.ParentLookupField);
-                        if(parentId != null && parentType != null)
+                        foreach (var record in records)
                         {
-                            var parent = xrmRecordService.Get(parentType, parentId);
-                            foreach (var parentField in requiredParentFields)
+                            foreach (var field in requiredFieldsForCompare)
                             {
-                                record[typeConfig.ParentLookupField + "." + parentField] = parent.GetField(parentField);
+                                if (record.GetField(field) is Lookup)
+                                {
+                                    AddReferencedFieldsConfigFields(record, record, field, xrmRecordService);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AddReferencedFieldsConfigFields(IRecord entitySetFieldsIn, IRecord currentCarryEntity, string field, XrmRecordService xrmRecordService, string carryPrefix = null)
+        {
+            var refId = currentCarryEntity.GetLookupId(field);
+            if (refId != null)
+            {
+                var refType = currentCarryEntity.GetLookupType(field);
+                var reffedConfigType = xrmRecordService.GetTypeConfigs().GetFor(refType);
+                if (reffedConfigType != null)
+                {
+                    var requiredFields = new List<string>();
+                    if (reffedConfigType.ParentLookupField != null)
+                        requiredFields.Add(reffedConfigType.ParentLookupField);
+                    if (reffedConfigType.UniqueChildFields != null)
+                        requiredFields.AddRange(reffedConfigType.UniqueChildFields);
+                    if (requiredFields.Any())
+                    {
+                        var reffed = xrmRecordService.Get(refType, refId, requiredFields);
+                        foreach (var reffedAttribute in requiredFields)
+                        {
+                            var fieldValue = reffed.GetField(reffedAttribute);
+                            entitySetFieldsIn[$"{carryPrefix}{field}.{reffedAttribute}"] = fieldValue;
+                            if (fieldValue is Lookup)
+                            {
+                                AddReferencedFieldsConfigFields(entitySetFieldsIn, reffed, reffedAttribute, xrmRecordService, $"{carryPrefix}{field}.");
                             }
                         }
                     }
