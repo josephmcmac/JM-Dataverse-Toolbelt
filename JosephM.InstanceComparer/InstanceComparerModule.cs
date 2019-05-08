@@ -9,6 +9,7 @@ using JosephM.Core.FieldType;
 using JosephM.InstanceComparer.AddToSolution;
 using JosephM.Record.Extentions;
 using JosephM.Record.Service;
+using JosephM.Xrm.Schema;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Linq;
@@ -185,25 +186,25 @@ namespace JosephM.InstanceComparer
                     var typesGrid = r.GetEnumerableFieldViewModel(nameof(InstanceComparerRequest.DataComparisons));
                     var typesToAdd = new[]
                     {
-                        "adx_contentsnippet",
-                        "adx_entityform",
-                        "adx_entityformmetadata",
-                        "adx_entitylist",
-                        "adx_entitypermission",
-                        "adx_pagetemplate",
-                        "adx_publishingstate",
-                        "adx_sitemarker",
-                        "adx_sitesetting",
-                        "adx_webfile",
-                        "adx_webform",
-                        "adx_webformmetadata",
-                        "adx_webformstep",
-                        "adx_weblink",
-                        "adx_weblinkset",
-                        "adx_webpage",
-                        "adx_webpageaccesscontrolrule",
-                        "adx_webrole",
-                        "adx_webtemplate",
+                        Entities.adx_contentsnippet,
+                        Entities.adx_entityform,
+                        Entities.adx_entityformmetadata,
+                        Entities.adx_entitylist,
+                        Entities.adx_entitypermission,
+                        Entities.adx_pagetemplate,
+                        Entities.adx_publishingstate,
+                        Entities.adx_sitemarker,
+                        Entities.adx_sitesetting,
+                        Entities.adx_webfile,
+                        Entities.adx_webform,
+                        Entities.adx_webformmetadata,
+                        Entities.adx_webformstep,
+                        Entities.adx_weblink,
+                        Entities.adx_weblinkset,
+                        Entities.adx_webpage,
+                        Entities.adx_webpageaccesscontrolrule,
+                        Entities.adx_webrole,
+                        Entities.adx_webtemplate,
                     };
                     var typesGridService = typesGrid.GetRecordService();
                     foreach (var item in typesToAdd.Reverse())

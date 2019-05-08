@@ -1,6 +1,5 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.SettingTypes;
-using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
@@ -316,7 +315,7 @@ namespace JosephM.Deployment.Test
             Assert.IsFalse(response.HasError);
 
             //delete all the data
-            DeleteAllPortalData(Entities.adx_webpage, Entities.adx_websitelanguage, Entities.adx_website);
+            DeleteAllPortalData(dontDeleteTypes: new[] { Entities.adx_webpage, Entities.adx_websitelanguage, Entities.adx_website });
 
             //import
             importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);

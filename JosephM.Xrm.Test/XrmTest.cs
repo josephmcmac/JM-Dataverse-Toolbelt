@@ -158,11 +158,12 @@ namespace JosephM.Xrm.Test
             }
         }
 
-        public void DeleteAll(string entityType)
+        public void DeleteAll(string entityType, XrmService serviceToUse = null)
         {
+            serviceToUse = serviceToUse ?? XrmService;
             var query = new QueryExpression(entityType);
-            var items = XrmService.RetrieveAll(query);
-            XrmService.DeleteMultiple(items);
+            var items = serviceToUse.RetrieveAll(query);
+            serviceToUse.DeleteMultiple(items);
         }
 
         public Entity CreateTestRecord(string entityType)
@@ -171,9 +172,10 @@ namespace JosephM.Xrm.Test
             return CreateAndRetrieve(entity);
         }
 
-        public Entity CreateAndRetrieve(Entity entity)
+        public Entity CreateAndRetrieve(Entity entity, XrmService useService = null)
         {
-            var primaryField = XrmService.GetPrimaryNameField(entity.LogicalName);
+            useService = useService ?? XrmService;
+            var primaryField = useService.GetPrimaryNameField(entity.LogicalName);
             if (!entity.Contains(primaryField))
                 entity.SetField(primaryField, "Test Record " + DateTime.Now.ToFileTimeUtc());
             switch (entity.LogicalName)
@@ -185,7 +187,7 @@ namespace JosephM.Xrm.Test
                         break;
                     }
             }
-            return XrmService.CreateAndRetreive(entity);
+            return useService.CreateAndRetreive(entity);
         }
 
         public Entity UpdateAndRetrieve(Entity entity)
@@ -452,14 +454,14 @@ namespace JosephM.Xrm.Test
             }
         }
 
-        public Entity CreateTestRecord(string entityType, Dictionary<string, object> fields)
+        public Entity CreateTestRecord(string entityType, Dictionary<string, object> fields, XrmService useService = null)
         {
             var entity = new Entity(entityType);
             foreach (var field in fields)
             {
                 entity.SetField(field.Key, field.Value);
             }
-            return CreateAndRetrieve(entity);
+            return CreateAndRetrieve(entity, useService: useService);
         }
 
         public object CreateNewEntityFieldValue(string fieldName, string recordType, Entity currentRecord)

@@ -5,6 +5,7 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.InstanceComparer.AddToSolution;
 using JosephM.Record.Extentions;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
@@ -15,8 +16,77 @@ using System.Linq;
 namespace JosephM.InstanceComparer.Test
 {
     [TestClass]
-    public class InstanceComparerModuleTests : XrmModuleTest
+    public class InstanceComparerPortalConfigurationsTests : XrmModuleTest
     {
+        [TestMethod]
+        public void InstanceComparerComparePortalTest()
+        {
+            //okay this compares portal configuration data between 2 instances
+
+            var altConnection = GetAltSavedXrmRecordConfiguration();
+            var altService = new XrmRecordService(altConnection);
+
+            //create portal data in 1 instance
+            RecreatePortalData(createSecondDuplicateSite: true);
+
+            //create portal data in other instance
+            RecreatePortalData(createSecondDuplicateSite: true, useRecordService: altService);
+
+            //compare instances ingorning primary key differences
+            var request = new InstanceComparerRequest();
+            request.ConnectionOne = GetSavedXrmRecordConfiguration();
+            request.ConnectionTwo = GetAltSavedXrmRecordConfiguration();
+            request.Data = true;
+            request.IgnorePrimaryKeyDifferencesInComparedData = true;
+            request.DataComparisons = new[]
+            {
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_contentsnippet, Entities.adx_contentsnippet)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_entityform, Entities.adx_entityform)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_entityformmetadata, Entities.adx_entityformmetadata)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_entitylist, Entities.adx_entitylist)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_entitypermission, Entities.adx_entitypermission)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_pagetemplate, Entities.adx_pagetemplate)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_publishingstate, Entities.adx_publishingstate)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_sitemarker, Entities.adx_sitemarker)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_sitesetting, Entities.adx_sitesetting)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webfile, Entities.adx_webfile)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webform, Entities.adx_webform)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webformmetadata, Entities.adx_webformmetadata)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webformstep, Entities.adx_webformstep)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_weblink, Entities.adx_weblink)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_weblinkset, Entities.adx_weblinkset)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webpage, Entities.adx_webpage)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webpageaccesscontrolrule, Entities.adx_webpageaccesscontrolrule)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webrole, Entities.adx_webrole)},
+                new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webtemplate, Entities.adx_webtemplate)},
+            };
+
+            var application = CreateAndLoadTestApplication<InstanceComparerModule>();
+            var response = application.NavigateAndProcessDialog<InstanceComparerModule, InstanceComparerDialog, InstanceComparerResponse>(request);
+            //verify no errors or differences found
+            if (response.HasError)
+            {
+                if (response.Exception != null)
+                    Assert.Fail(response.Exception.XrmDisplayString());
+                else
+                    Assert.Fail(response.GetResponseItemsWithError().First().ErrorDetails);
+            }
+            Assert.IsFalse(response.AreDifferences);
+
+            //okay run again including primary key differences
+            request.IgnorePrimaryKeyDifferencesInComparedData = false;
+            response = application.NavigateAndProcessDialog<InstanceComparerModule, InstanceComparerDialog, InstanceComparerResponse>(request);
+            if (response.HasError)
+            {
+                if (response.Exception != null)
+                    Assert.Fail(response.Exception.XrmDisplayString());
+                else
+                    Assert.Fail(response.GetResponseItemsWithError().First().ErrorDetails);
+            }
+            //verify there ae differences this time as different primary keys
+            Assert.IsTrue(response.AreDifferences);
+        }
+
         [TestMethod]
         public void InstanceComparerModuleTest()
         {
