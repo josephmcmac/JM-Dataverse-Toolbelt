@@ -13,7 +13,7 @@ using System.Linq;
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
     public class ManagePluginTriggersService :
-        ServiceBase<ManagePluginTriggersRequest, ManagePluginTriggersResponse, ManagePluginTriggersResponseitem>
+        ServiceBase<ManagePluginTriggersRequest, ManagePluginTriggersResponse, ManagePluginTriggersResponseItem>
     {
         public ManagePluginTriggersService(XrmRecordService service, XrmPackageSettings packageSettings)
         {
@@ -30,8 +30,8 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
             //delete any removed plugins
             var removedPlugins = request.GetSdkMessageStepsPre().Where(smsp => request.Triggers.All(pt => pt.Id != smsp.Id)).ToArray();
             var deletions = Service.DeleteInCrm(removedPlugins);
-            response.AddResponseItems(deletions.Errors.Select(e => new ManagePluginTriggersResponseitem("Event Delete", e.Key.GetStringField(Fields.sdkmessageprocessingstep_.name), e.Value)));
-            response.AddResponseItems(deletions.Deleted.Select(d => new ManagePluginTriggersResponseitem("Event Delete", d.GetStringField(Fields.sdkmessageprocessingstep_.name))));
+            response.AddResponseItems(deletions.Errors.Select(e => new ManagePluginTriggersResponseItem("Event Delete", e.Key.GetStringField(Fields.sdkmessageprocessingstep_.name), e.Value)));
+            response.AddResponseItems(deletions.Deleted.Select(d => new ManagePluginTriggersResponseItem("Event Delete", d.GetStringField(Fields.sdkmessageprocessingstep_.name))));
 
             //load the filter entities which exist for each entity type, message combination
             var filters = request.Triggers.Select(t =>
@@ -60,7 +60,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 try
                 {
                     if (!matchingPluginFilters.Any())
-                        response.AddResponseItem(new ManagePluginTriggersResponseitem("Warning", name, new NullReferenceException($"No Matching {Service.GetDisplayName(Entities.sdkmessagefilter)} Could Be Found For The Trigger Configuration")));
+                        response.AddResponseItem(new ManagePluginTriggersResponseItem("Warning", name, new NullReferenceException($"No Matching {Service.GetDisplayName(Entities.sdkmessagefilter)} Could Be Found For The Trigger Configuration")));
                         
 
                     record.SetField(Fields.sdkmessageprocessingstep_.name, name, Service);
@@ -81,7 +81,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 }
                 catch(Exception ex)
                 {
-                    response.AddResponseItem(new ManagePluginTriggersResponseitem("Unload Error", name, ex));
+                    response.AddResponseItem(new ManagePluginTriggersResponseItem("Unload Error", name, ex));
                 }
             }
 
@@ -92,10 +92,10 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
             foreach(var e in triggerLoads.Errors)
             {
-                response.AddResponseItem(new ManagePluginTriggersResponseitem(e.Key.Id != null ? "Event Update" : "Event Create", e.Key.GetStringField(Fields.sdkmessageprocessingstep_.name), e.Value));
+                response.AddResponseItem(new ManagePluginTriggersResponseItem(e.Key.Id != null ? "Event Update" : "Event Create", e.Key.GetStringField(Fields.sdkmessageprocessingstep_.name), e.Value));
             }
-            response.AddResponseItems(triggerLoads.Created.Select(d => new ManagePluginTriggersResponseitem("Event Create", d.GetStringField(Fields.sdkmessageprocessingstep_.name))));
-            response.AddResponseItems(triggerLoads.Updated.Select(d => new ManagePluginTriggersResponseitem("Event Update", d.GetStringField(Fields.sdkmessageprocessingstep_.name))));
+            response.AddResponseItems(triggerLoads.Created.Select(d => new ManagePluginTriggersResponseItem("Event Create", d.GetStringField(Fields.sdkmessageprocessingstep_.name))));
+            response.AddResponseItems(triggerLoads.Updated.Select(d => new ManagePluginTriggersResponseItem("Event Update", d.GetStringField(Fields.sdkmessageprocessingstep_.name))));
 
             controller.UpdateProgress(3, 4, "Creating/Updating Images");
 
@@ -128,7 +128,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                         }
                         catch (Exception ex)
                         {
-                            response.AddResponseItem(new ManagePluginTriggersResponseitem("Pre Image Delete", matchingPluginTrigger.Id, ex));
+                            response.AddResponseItem(new ManagePluginTriggersResponseItem("Pre Image Delete", matchingPluginTrigger.Id, ex));
                         }
                     }
                 }
@@ -158,7 +158,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                     }
                     catch (Exception ex)
                     {
-                        response.AddResponseItem(new ManagePluginTriggersResponseitem("Image Error", item.GetStringField(Fields.sdkmessageprocessingstep_.name), ex));
+                        response.AddResponseItem(new ManagePluginTriggersResponseItem("Image Error", item.GetStringField(Fields.sdkmessageprocessingstep_.name), ex));
                     }
                 }
             }
@@ -168,14 +168,14 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepimageidunique);
             foreach (var e in imageLoads.Errors)
             {
-                response.AddResponseItem(new ManagePluginTriggersResponseitem(e.Key.Id != null ? "Pre Image Update" : "Pre Image Create", e.Key.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid), e.Value));
+                response.AddResponseItem(new ManagePluginTriggersResponseItem(e.Key.Id != null ? "Pre Image Update" : "Pre Image Create", e.Key.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid), e.Value));
             }
-            response.AddResponseItems(imageLoads.Created.Select(d => new ManagePluginTriggersResponseitem("Pre Image Create", d.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid))));
-            response.AddResponseItems(imageLoads.Updated.Select(d => new ManagePluginTriggersResponseitem("Pre Image Update", d.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid))));
+            response.AddResponseItems(imageLoads.Created.Select(d => new ManagePluginTriggersResponseItem("Pre Image Create", d.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid))));
+            response.AddResponseItems(imageLoads.Updated.Select(d => new ManagePluginTriggersResponseItem("Pre Image Update", d.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid))));
 
 
             var imageDeletions = Service.DeleteInCrm(imagesToDelete);
-            response.AddResponseItems(imageDeletions.Errors.Select(e => new ManagePluginTriggersResponseitem("Pre Image Delete", e.Key.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid), e.Value)));
+            response.AddResponseItems(imageDeletions.Errors.Select(e => new ManagePluginTriggersResponseItem("Pre Image Delete", e.Key.GetLookupName(Fields.sdkmessageprocessingstepimage_.sdkmessageprocessingstepid), e.Value)));
 
             //add plugin steps to the solution
             var componentType = OptionSets.SolutionComponent.ObjectTypeCode.SDKMessageProcessingStep;

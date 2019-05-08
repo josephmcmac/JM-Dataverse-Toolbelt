@@ -1,4 +1,5 @@
-﻿using JosephM.Application.Modules;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.Service;
@@ -13,16 +14,9 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
     [MenuItemVisibleForPluginProject]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(XrmConnectionModule))]
-    public class DeployAssemblyModule : OptionActionModule
+    public class DeployAssemblyModule : ServiceRequestModule<DeployAssemblyDialog, DeployAssemblyService, DeployAssemblyRequest, DeployAssemblyResponse, DeployAssemblyResponseItem>
     {
-        public override string MainOperationName => "Deploy Assembly";
-
         public override string MenuGroup => "Plugins";
-
-        public override void DialogCommand()
-        {
-            ApplicationController.NavigateTo(typeof(DeployAssemblyDialog), null);
-        }
 
         public override void RegisterTypes()
         {

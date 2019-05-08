@@ -140,9 +140,10 @@ namespace JosephM.Xrm.Vsix.Test
             get { return "TestXrmSolution.Plugins"; }
         }
 
-        public void DeleteTestPluginAssembly()
+        public void DeleteTestPluginAssembly(string useAssemblyName = null)
         {
-            var assemblyRecords = GetTestPluginAssemblyRecords();
+
+            var assemblyRecords = GetTestPluginAssemblyRecords(useAssemblyName);
             foreach (var assembly in assemblyRecords)
             {
                 DeletePluginTriggers(assembly);
@@ -161,8 +162,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         public IEnumerable<IRecord> GetPluginTriggers(IRecord assemblyRecord)
         {
-            var pluginTypes = XrmRecordService.RetrieveAllAndClauses(Entities.plugintype,
-                new[] { new Condition(Fields.plugintype_.pluginassemblyid, ConditionType.Equal, assemblyRecord.Id) });
+            IEnumerable<IRecord> pluginTypes = GetPluginTypes(assemblyRecord);
             if (!pluginTypes.Any())
                 throw new NullReferenceException("Not Plugin Types Deployed For Assembly");
 
@@ -171,11 +171,18 @@ namespace JosephM.Xrm.Vsix.Test
                     pt => new Condition(Fields.sdkmessageprocessingstep_.plugintypeid, ConditionType.Equal, pt.Id)));
         }
 
-        public IEnumerable<IRecord> GetTestPluginAssemblyRecords()
+        public IEnumerable<IRecord> GetPluginTypes(IRecord assemblyRecord)
         {
-            var assemblyRecords = XrmRecordService.RetrieveAllAndClauses(Schema.Entities.pluginassembly, new[]
+            return XrmRecordService.RetrieveAllAndClauses(Entities.plugintype,
+                            new[] { new Condition(Fields.plugintype_.pluginassemblyid, ConditionType.Equal, assemblyRecord.Id) });
+        }
+
+        public IEnumerable<IRecord> GetTestPluginAssemblyRecords(string useAssemblyName = null)
+        {
+            useAssemblyName = useAssemblyName ?? PluginAssemblyName;
+            var assemblyRecords = XrmRecordService.RetrieveAllAndClauses(Entities.pluginassembly, new[]
             {
-                new Condition(Fields.pluginassembly_.name, ConditionType.Equal, PluginAssemblyName)
+                new Condition(Fields.pluginassembly_.name, ConditionType.Equal, useAssemblyName)
             });
             return assemblyRecords;
         }

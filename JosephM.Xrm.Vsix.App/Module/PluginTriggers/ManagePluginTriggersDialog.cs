@@ -17,7 +17,7 @@ using System.Linq;
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
     [RequiresConnection]
-    public partial class ManagePluginTriggersDialog : ServiceRequestDialog<ManagePluginTriggersService, ManagePluginTriggersRequest, ManagePluginTriggersResponse, ManagePluginTriggersResponseitem>
+    public partial class ManagePluginTriggersDialog : ServiceRequestDialog<ManagePluginTriggersService, ManagePluginTriggersRequest, ManagePluginTriggersResponse, ManagePluginTriggersResponseItem>
     {
         public XrmRecordService XrmRecordService { get; set; }
         public XrmPackageSettings PackageSettings { get; set; }

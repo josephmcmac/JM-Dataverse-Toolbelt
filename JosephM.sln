@@ -223,6 +223,35 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Autonumber", "J
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Autonumber.Test", "JosephM.Xrm.Autonumber.Test\JosephM.Xrm.Autonumber.Test.csproj", "{5F57B89B-6823-4F80-BFDF-E47A45E61A3D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestAssemblyDeploy", "TestAssemblyDeploy", "{B09D0DB0-7BD0-4DC9-848B-3D7E4B450390}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Version1", "Version1", "{0A7DFA0A-669C-4E66-B9CA-89DD9B5F569E}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionItems\TestAssemblyDeploy\Version1\Microsoft.Crm.Sdk.Proxy.dll = SolutionItems\TestAssemblyDeploy\Version1\Microsoft.Crm.Sdk.Proxy.dll
+		SolutionItems\TestAssemblyDeploy\Version1\Microsoft.Xrm.Sdk.dll = SolutionItems\TestAssemblyDeploy\Version1\Microsoft.Xrm.Sdk.dll
+		SolutionItems\TestAssemblyDeploy\Version1\Microsoft.Xrm.Sdk.Workflow.dll = SolutionItems\TestAssemblyDeploy\Version1\Microsoft.Xrm.Sdk.Workflow.dll
+		SolutionItems\TestAssemblyDeploy\Version1\TestAssemblyDeploy.Plugins.dll = SolutionItems\TestAssemblyDeploy\Version1\TestAssemblyDeploy.Plugins.dll
+		SolutionItems\TestAssemblyDeploy\Version1\TestAssemblyDeploy.Plugins.pdb = SolutionItems\TestAssemblyDeploy\Version1\TestAssemblyDeploy.Plugins.pdb
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Version2", "Version2", "{7C913B03-2A50-4461-868F-14C262E15492}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionItems\TestAssemblyDeploy\Version2\Microsoft.Crm.Sdk.Proxy.dll = SolutionItems\TestAssemblyDeploy\Version2\Microsoft.Crm.Sdk.Proxy.dll
+		SolutionItems\TestAssemblyDeploy\Version2\Microsoft.Xrm.Sdk.dll = SolutionItems\TestAssemblyDeploy\Version2\Microsoft.Xrm.Sdk.dll
+		SolutionItems\TestAssemblyDeploy\Version2\Microsoft.Xrm.Sdk.Workflow.dll = SolutionItems\TestAssemblyDeploy\Version2\Microsoft.Xrm.Sdk.Workflow.dll
+		SolutionItems\TestAssemblyDeploy\Version2\TestAssemblyDeploy.Plugins.dll = SolutionItems\TestAssemblyDeploy\Version2\TestAssemblyDeploy.Plugins.dll
+		SolutionItems\TestAssemblyDeploy\Version2\TestAssemblyDeploy.Plugins.pdb = SolutionItems\TestAssemblyDeploy\Version2\TestAssemblyDeploy.Plugins.pdb
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Version3", "Version3", "{726A2A68-5E84-4874-B954-77B10F9038A8}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionItems\TestAssemblyDeploy\Version3\Microsoft.Crm.Sdk.Proxy.dll = SolutionItems\TestAssemblyDeploy\Version3\Microsoft.Crm.Sdk.Proxy.dll
+		SolutionItems\TestAssemblyDeploy\Version3\Microsoft.Xrm.Sdk.dll = SolutionItems\TestAssemblyDeploy\Version3\Microsoft.Xrm.Sdk.dll
+		SolutionItems\TestAssemblyDeploy\Version3\Microsoft.Xrm.Sdk.Workflow.dll = SolutionItems\TestAssemblyDeploy\Version3\Microsoft.Xrm.Sdk.Workflow.dll
+		SolutionItems\TestAssemblyDeploy\Version3\TestAssemblyDeploy.Plugins.dll = SolutionItems\TestAssemblyDeploy\Version3\TestAssemblyDeploy.Plugins.dll
+		SolutionItems\TestAssemblyDeploy\Version3\TestAssemblyDeploy.Plugins.pdb = SolutionItems\TestAssemblyDeploy\Version3\TestAssemblyDeploy.Plugins.pdb
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -929,6 +958,10 @@ Global
 		{761E90AB-DC0C-4CA8-AE05-3F4DC39EF926} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{021A835C-5674-4F77-8713-420A6CC1C854} = {761E90AB-DC0C-4CA8-AE05-3F4DC39EF926}
 		{5F57B89B-6823-4F80-BFDF-E47A45E61A3D} = {761E90AB-DC0C-4CA8-AE05-3F4DC39EF926}
+		{B09D0DB0-7BD0-4DC9-848B-3D7E4B450390} = {D0951EBD-01E1-465A-8CE4-4026FF36D400}
+		{0A7DFA0A-669C-4E66-B9CA-89DD9B5F569E} = {B09D0DB0-7BD0-4DC9-848B-3D7E4B450390}
+		{7C913B03-2A50-4461-868F-14C262E15492} = {B09D0DB0-7BD0-4DC9-848B-3D7E4B450390}
+		{726A2A68-5E84-4874-B954-77B10F9038A8} = {B09D0DB0-7BD0-4DC9-848B-3D7E4B450390}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}

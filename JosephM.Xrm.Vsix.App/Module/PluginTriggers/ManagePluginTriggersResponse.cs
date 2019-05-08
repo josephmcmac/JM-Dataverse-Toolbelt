@@ -2,7 +2,7 @@
 
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
-    public class ManagePluginTriggersResponse : ServiceResponseBase<ManagePluginTriggersResponseitem>
+    public class ManagePluginTriggersResponse : ServiceResponseBase<ManagePluginTriggersResponseItem>
     {
     }
 }

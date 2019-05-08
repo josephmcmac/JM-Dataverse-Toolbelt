@@ -192,11 +192,13 @@
     <Compile Include="Module\DeployAssembly\DeployAssemblyResponse.cs" />
     <Compile Include="Module\DeployAssembly\DeployAssemblyResponseItem.cs" />
     <Compile Include="Module\DeployAssembly\DeployAssemblyService.cs" />
+    <Compile Include="Module\DeployAssembly\PluginType.cs" />
     <Compile Include="Module\MenuItemVisibleForPluginProject.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersRequest.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponse.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponseitem.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersService.cs" />
+    <Compile Include="Module\PluginTriggers\PluginTrigger.cs" />
     <Compile Include="Module\UpdateAssembly\UpdateAssemblyResponse.cs" />
     <Compile Include="Module\Web\MenuItemVisibleSolutionConfigured.cs" />
     <Compile Include="Module\Web\OpenAdvancedFindDialog.cs" />

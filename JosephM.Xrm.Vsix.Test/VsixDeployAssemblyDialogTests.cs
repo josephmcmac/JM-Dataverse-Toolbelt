@@ -17,7 +17,7 @@ namespace JosephM.Xrm.Vsix.Test
         [TestMethod]
         public void VsixDeployAssemblyDialogTest()
         {
-            //delet the plugin assembly so we verify it gets deployed
+            //delete the plugin assembly so we verify it gets deployed
             DeleteTestPluginAssembly();
             Assert.IsFalse(GetTestPluginAssemblyRecords().Any());
 

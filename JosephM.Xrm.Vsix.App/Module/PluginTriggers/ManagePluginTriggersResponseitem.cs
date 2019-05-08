@@ -4,9 +4,9 @@ using JosephM.Core.Service;
 
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
-    public class ManagePluginTriggersResponseitem : ServiceResponseItem
+    public class ManagePluginTriggersResponseItem : ServiceResponseItem
     {
-        public ManagePluginTriggersResponseitem(string change, string name, Exception exception = null)
+        public ManagePluginTriggersResponseItem(string change, string name, Exception exception = null)
         {
             Exception = exception;
             ChangeMade = change;
