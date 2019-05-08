@@ -35,10 +35,12 @@
                 DataContext="{Binding ProgressControlViewModel}" />
             </Grid>
             <Grid Grid.Row="1"  Visibility="{Binding MainFormInContext, Converter={StaticResource BoolToVis}, Mode=OneWay}">
-                <ItemsControl
-                Name="DialogPanel"
-                ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
-                ItemsSource="{Binding Controller.UiItems}" />
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl
+                        Name="DialogPanel"
+                        ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
+                        ItemsSource="{Binding Controller.UiItems}" />
+                </ScrollViewer>
             </Grid>
             <Grid Grid.Row="2"  Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}" >
                 <ItemsControl
