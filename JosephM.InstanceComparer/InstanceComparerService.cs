@@ -311,7 +311,7 @@ namespace JosephM.InstanceComparer
                 return;
             var compares = processContainer
                 .Request.DataComparisons
-                .Select(c => new ProcessCompareParams(c, processContainer.ServiceOne))
+                .Select(c => new ProcessCompareParams(c, processContainer.ServiceOne, processContainer.Request))
                 .ToArray();
             foreach (var compare in compares)
             {
@@ -1240,7 +1240,7 @@ namespace JosephM.InstanceComparer
                 Type = ProcessCompareType.Records;
             }
 
-            public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, XrmRecordService recordService)
+            public ProcessCompareParams(InstanceComparerRequest.InstanceCompareDataCompare dataComparison, XrmRecordService recordService, InstanceComparerRequest request)
                 : this("Data - " + dataComparison.Type,
                       dataComparison.Type,
                       recordService.GetTypeConfigs().GetComparisonFieldsFor(dataComparison.Type, recordService),
@@ -1251,7 +1251,7 @@ namespace JosephM.InstanceComparer
                             .Where(f =>
                             {
                                 var mt = recordService.GetFieldMetadata(f, dataComparison.Type);
-                                return mt.IsCustomField || mt.IsPrimaryKey;
+                                return mt.IsCustomField || (mt.IsPrimaryKey && !request.IgnorePrimaryKeyDifferencesInComparedData);
                             })
                             .ToArray(),
                       null,

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace JosephM.InstanceComparer
 {
     [DisplayName("Instance Comparison")]
-    [Instruction("The System Will Query And Compare The Components Across The 2 Dynamics Instances. After Completion A Detailed Report Will Output Of Differences Identified. The Report Will Include Hyperlinks To Open Items, As Well As A Feature To Add Some, Or All, Of The Components Into A Solution For Correcting The Different Components \n\nNote The Comparison Does Not Include Every Property Of The Components")]
+    [Instruction("The System Will Query And Compare The Components Across The 2 Dynamics Instances. After Completion A Detailed Report Will Output Of Differences Identified. The Report Will Include Hyperlinks To Open Items, As Well As A Feature To Add Some, Or All, Of The Components Into A Solution For Correcting The Different Components \n\nNote The Comparison Does Not Include Every Property Of The Components \n\nIf Comparing Data Matches Are Done By The Name Of The Record. Some Types Also Have Additional Fields Configured To Match (Mainly Microsoft Portal Types) Due To The Potential For Multiple Records With The Same Name")]
     [AllowSaveAndLoad]
     [Group(Sections.Connections, true, 10)]
     [Group(Sections.CompareOptions, true, order: 20, selectAll: true)]
@@ -42,9 +42,17 @@ namespace JosephM.InstanceComparer
         [DisplayOrder(14)]
         [MyDescription("When checked components in a managed solution which is not installed in either environment will be ignored")]
         public bool IgnoreMissingManagedComponentDifferences { get; set; }
+
+        [GridWidth(120)]
+        [Group(Sections.GeneralOptions)]
+        [PropertyInContextByPropertyValue(nameof(Data), true)]
+        [DisplayOrder(15)]
+        [MyDescription("This option is to ignore primary key differences when comparing data")]
+        public bool IgnorePrimaryKeyDifferencesInComparedData { get; set; }
+
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]
-        [DisplayOrder(15)]
+        [DisplayOrder(16)]
         public bool Solutions { get; set; }
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]
