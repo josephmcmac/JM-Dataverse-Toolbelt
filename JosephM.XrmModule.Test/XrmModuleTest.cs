@@ -364,7 +364,7 @@ namespace JosephM.XrmModule.Test
             var entityPermission = CreateTestRecord(Entities.adx_entitypermission, new Dictionary<string, object>
             {
                 { Fields.adx_entitypermission_.adx_websiteid, website.ToEntityReference() },
-                { Fields.adx_entitypermission_.adx_name, "IEntityPermission" },
+                { Fields.adx_entitypermission_.adx_entityname, "IEntityPermission" },
             }, useService: useRecordService.XrmService);
 
             var pageTemplate = CreateTestRecord(Entities.adx_pagetemplate, new Dictionary<string, object>
