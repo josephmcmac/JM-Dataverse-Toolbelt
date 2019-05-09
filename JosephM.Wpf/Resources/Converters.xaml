@@ -23,4 +23,5 @@
     <converters:BooleanToMultiSelectConverter x:Key="BooleanToMultiSelectConverter" />
     <converters:StringTruncateConverter x:Key="StringTruncateConverter" />
     <converters:HeightAdjuster x:Key="HeightAdjuster" />
+    <converters:ScrollWhereGreaterThanOneConverter x:Key="ScrollWhereGreaterThanOneConverter" />
 </ResourceDictionary>

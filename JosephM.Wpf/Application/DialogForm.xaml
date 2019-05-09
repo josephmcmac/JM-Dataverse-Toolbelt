@@ -35,7 +35,7 @@
                 DataContext="{Binding ProgressControlViewModel}" />
             </Grid>
             <Grid Grid.Row="1"  Visibility="{Binding MainFormInContext, Converter={StaticResource BoolToVis}, Mode=OneWay}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="{Binding Controller.UiItems.Count, Converter={StaticResource ScrollWhereGreaterThanOneConverter}}">
                     <ItemsControl
                         Name="DialogPanel"
                         ItemTemplateSelector="{StaticResource DialogTemplateSelector}"

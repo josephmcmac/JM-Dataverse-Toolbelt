@@ -172,6 +172,7 @@
     <Compile Include="Converters\TabbedApplicationHeightConverter.cs" />
     <Compile Include="Converters\ShellApplicationHeightConverter.cs" />
     <Compile Include="Converters\HeightAdjuster.cs" />
+    <Compile Include="Converters\ScrollWhereGreaterThanOneConverter.cs" />
     <Compile Include="Extentions\UserControlExtentions.cs" />
     <Compile Include="Grid\DynamicGridView.xaml.cs">
       <DependentUpon>DynamicGridView.xaml</DependentUpon>
