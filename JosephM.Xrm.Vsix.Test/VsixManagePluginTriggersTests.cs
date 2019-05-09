@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.Grid;
+﻿using JosephM.Application.Desktop.Test;
+using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
@@ -26,11 +27,11 @@ namespace JosephM.Xrm.Vsix.Test
             DeployAssembly(packageSettings);
 
             var assemblyRecord = GetTestPluginAssemblyRecords().First();
-
             DeletePluginTriggers(assemblyRecord);
 
+            var testApplication = CreateAndLoadTestApplication<ManagePluginTriggersModule>();
             //add one update trigger
-            RunDialogAndAddMessage("Update");
+            RunDialogAndAddMessage(testApplication, "Update");
 
             //verify trigger created
             var triggers = GetPluginTriggers(assemblyRecord);
@@ -47,20 +48,18 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual("PreImage", image.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias));
 
             //add one create trigger
-            RunDialogAndAddMessage("Create");
+            RunDialogAndAddMessage(testApplication, "Create");
             
             //verify created
             triggers = GetPluginTriggers(assemblyRecord);
             Assert.AreEqual(2, triggers.Count());
 
             //delete a trigger
-            var dialog =  new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
-            dialog.Controller.BeginDialog();
-
-            var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            var dialog = testApplication.NavigateToDialog<ManagePluginTriggersModule, ManagePluginTriggersDialog>();
+            var entryViewModel = testApplication.GetSubObjectEntryViewModel(dialog);
             var triggersSubGrid = entryViewModel.SubGrids.First();
 
-            triggersSubGrid.GridRecords.First().DeleteRow();
+            triggersSubGrid.GridRecords.First().DeleteRowViewModel.Invoke();
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
 
@@ -68,21 +67,20 @@ namespace JosephM.Xrm.Vsix.Test
             triggers = GetPluginTriggers(assemblyRecord);
             Assert.AreEqual(1, triggers.Count());
 
-
             //add 2 update triggers
-            RunDialogAndAddMessage("Update");
-            RunDialogAndAddMessage("Update");
+            RunDialogAndAddMessage(testApplication, "Update");
+            RunDialogAndAddMessage(testApplication, "Update");
             triggers = GetPluginTriggers(assemblyRecord);
             Assert.AreEqual(3, triggers.Count());
 
             //okay now lets inspect and adjust the filtering attributes and preimages and impersonating user in one of the update messages
-            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
-            dialog.Controller.BeginDialog();
-            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            dialog = testApplication.NavigateToDialog<ManagePluginTriggersModule, ManagePluginTriggersDialog>();
+            entryViewModel = testApplication.GetSubObjectEntryViewModel(dialog);
             triggersSubGrid = entryViewModel.SubGrids.First();
 
             var updateRows = triggersSubGrid.GridRecords.Where(r => r.GetLookupFieldFieldViewModel(nameof(PluginTrigger.Message)).Value.Name == "Update");
-            var letsAdjustThisOne = updateRows.First();
+            updateRows.First().EditRowViewModel.Invoke();
+            var letsAdjustThisOne = testApplication.GetSubObjectEntryViewModel(entryViewModel);
             //set no not all preimage fields
             letsAdjustThisOne.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = false;
             //set some arbitrary other image name
@@ -97,10 +95,11 @@ namespace JosephM.Xrm.Vsix.Test
             var impersonatingUserField = letsAdjustThisOne.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext));
             impersonatingUserField.SelectedItem = impersonatingUserField.ItemsSource.First(p => p.Record?.Id == CurrentUserId.ToString());
 
-
+            Assert.IsTrue(letsAdjustThisOne.Validate());
+            letsAdjustThisOne.SaveButtonViewModel.Invoke();
             //save
             Assert.IsTrue(entryViewModel.Validate());
-            entryViewModel.OnSave();
+            entryViewModel.SaveButtonViewModel.Invoke();
             var response = (ManagePluginTriggersResponse)dialog.CompletionItem;
             if (response.HasResponseItemError)
                 Assert.Fail(response.GetResponseItemsWithError().First().ErrorDetails);
@@ -123,11 +122,10 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual("FooOthername", image.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias));
 
             //lets just verify if we go through te dialog without touching the record we adjusted that it is still the same after the save
-            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
-            dialog.Controller.BeginDialog();
-            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            dialog = testApplication.NavigateToDialog<ManagePluginTriggersModule, ManagePluginTriggersDialog>();
+            entryViewModel = testApplication.GetSubObjectEntryViewModel(dialog);
             Assert.IsTrue(entryViewModel.Validate());
-            entryViewModel.OnSave();
+            entryViewModel.SaveButtonViewModel.Invoke();
 
             updatedTrigger = XrmRecordService.Get(updatedTrigger.Type, updatedTrigger.Id);
             Assert.IsNotNull(updatedTrigger.GetStringField(Fields.sdkmessageprocessingstep_.filteringattributes));
@@ -138,12 +136,13 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.AreEqual("FooOthername", image.GetStringField(Fields.sdkmessageprocessingstepimage_.entityalias));
 
             //now lets verify deletion of an image if changed to not have one (image deleted) as well as clear impersonating user
-            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
-            dialog.Controller.BeginDialog();
-            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            dialog = testApplication.NavigateToDialog<ManagePluginTriggersModule, ManagePluginTriggersDialog>();
+            entryViewModel = testApplication.GetSubObjectEntryViewModel(dialog);
             triggersSubGrid = entryViewModel.SubGrids.First();
 
-            letsAdjustThisOne = triggersSubGrid.GridRecords.First(r => r.GetRecord().GetStringField(nameof(PluginTrigger.Id)) == updatedTrigger.Id);
+            triggersSubGrid.GridRecords.First(r => r.GetRecord().GetStringField(nameof(PluginTrigger.Id)) == updatedTrigger.Id).EditRowViewModel.Invoke();
+            letsAdjustThisOne = testApplication.GetSubObjectEntryViewModel(entryViewModel);
+
             impersonatingUserField = letsAdjustThisOne.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext));
             impersonatingUserField.SelectedItem = impersonatingUserField.ItemsSource.First(p => p.Record == null);
             //set no not all preimage fields
@@ -151,6 +150,10 @@ namespace JosephM.Xrm.Vsix.Test
             //set no fields on the preimage
             preImageFieldsField = letsAdjustThisOne.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
             DeselectAll(preImageFieldsField);
+
+            Assert.IsTrue(letsAdjustThisOne.Validate());
+            letsAdjustThisOne.OnSave();
+
             //save
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
@@ -164,9 +167,8 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNull(image);
 
             //lets just verify if we go through te dialog without touching the record still doesn't have one
-            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
-            dialog.Controller.BeginDialog();
-            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            dialog = testApplication.NavigateToDialog<ManagePluginTriggersModule, ManagePluginTriggersDialog>();
+            entryViewModel = testApplication.GetSubObjectEntryViewModel(dialog);
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
 
@@ -178,14 +180,16 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsNull(image);
 
             //add the image again
-            dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
-            dialog.Controller.BeginDialog();
-            entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            dialog = testApplication.NavigateToDialog<ManagePluginTriggersModule, ManagePluginTriggersDialog>();
+            entryViewModel = testApplication.GetSubObjectEntryViewModel(dialog);
             triggersSubGrid = entryViewModel.SubGrids.First();
 
-            letsAdjustThisOne = triggersSubGrid.GridRecords.First(r => r.GetRecord().GetStringField(nameof(PluginTrigger.Id)) == updatedTrigger.Id);
+            triggersSubGrid.GridRecords.First(r => r.GetRecord().GetStringField(nameof(PluginTrigger.Id)) == updatedTrigger.Id).EditRowViewModel.Invoke();
+            letsAdjustThisOne = testApplication.GetSubObjectEntryViewModel(entryViewModel);
             //set no not all preimage fields
             letsAdjustThisOne.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = true;
+            Assert.IsTrue(letsAdjustThisOne.Validate());
+            letsAdjustThisOne.OnSave();
             //save
             Assert.IsTrue(entryViewModel.Validate());
             entryViewModel.OnSave();
@@ -199,31 +203,16 @@ namespace JosephM.Xrm.Vsix.Test
             Assert.IsTrue(triggers.All(t => solutionComponents.Contains(t.Id)));
         }
 
-        private void RunDialogAndAddMessage(string message)
+        private void RunDialogAndAddMessage(TestApplication testApplication, string message)
         {
-            var packageSettings = GetTestPackageSettings(); ;
-            var dialog = new ManagePluginTriggersDialog(new ManagePluginTriggersService(XrmRecordService, packageSettings), CreateDialogController(), new FakeVisualStudioService(), XrmRecordService, packageSettings);
-            dialog.Controller.BeginDialog();
-            var entryViewModel = (ObjectEntryViewModel)dialog.Controller.UiItems.First();
+            var dialog = testApplication.NavigateToDialog<ManagePluginTriggersModule, ManagePluginTriggersDialog>();
+            var entryViewModel = testApplication.GetSubObjectEntryViewModel(dialog);
             var triggersSubGrid = entryViewModel.SubGrids.First();
-            AddtriggerForMessage(triggersSubGrid, message);
-            Assert.IsTrue(entryViewModel.Validate());
-            entryViewModel.OnSave();
-        }
 
-        private static void AddtriggerForMessage(EnumerableFieldViewModel triggersSubGrid, string message)
-        {
-            triggersSubGrid.AddRow();
-            var entryForm = triggersSubGrid.GetRecordForm().ChildForms.First() as ObjectEntryViewModel;
-            entryForm.LoadFormSections();
-            PopulateRowForMessage(entryForm, message);
-            Assert.IsTrue(entryForm.Validate());
-            entryForm.SaveButtonViewModel.Invoke();
-        }
+            triggersSubGrid.DynamicGridViewModel.AddRowButton.Invoke();
+            var triggerEntryForm = testApplication.GetSubObjectEntryViewModel(entryViewModel);
 
-        private static void PopulateRowForMessage(ObjectEntryViewModel triggerEntry, string message)
-        {
-            foreach (var field in triggerEntry.FieldViewModels)
+            foreach (var field in triggerEntryForm.FieldViewModels)
             {
                 if (field.ValueObject == null)
                 {
@@ -249,26 +238,35 @@ namespace JosephM.Xrm.Vsix.Test
                     }
                     if (field.FieldName == nameof(PluginTrigger.FilteringFields) && message == "Update")
                     {
-                        var multiSelectField = triggerEntry.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
+                        var multiSelectField = triggerEntryForm.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
                         SelectItems(multiSelectField, 1, 2);
                     }
                     if (field.FieldName == nameof(PluginTrigger.PreImageAllFields) && message == "Update")
                     {
-                        triggerEntry.GetFieldViewModel<BooleanFieldViewModel>(nameof(PluginTrigger.PreImageAllFields)).Value = false;
+                        triggerEntryForm.GetFieldViewModel<BooleanFieldViewModel>(nameof(PluginTrigger.PreImageAllFields)).Value = false;
                     }
                     if (field.FieldName == nameof(PluginTrigger.PreImageFields) && message == "Update")
                     {
-                        var multiSelectField = triggerEntry.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
+                        var multiSelectField = triggerEntryForm.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.PreImageFields));
                         SelectItems(multiSelectField, 1, 2);
                     }
                 }
             }
-            triggerEntry.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Mode)).ValueObject = PluginTrigger.PluginMode.Asynch;
-            triggerEntry.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Stage)).ValueObject = PluginTrigger.PluginStage.PostEvent;
-            triggerEntry.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = true;
-            triggerEntry.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext)).Value = null;
-            var filteringAttributesField = triggerEntry.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
+            triggerEntryForm.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Mode)).ValueObject = PluginTrigger.PluginMode.Asynch;
+            triggerEntryForm.GetPicklistFieldFieldViewModel(nameof(PluginTrigger.Stage)).ValueObject = PluginTrigger.PluginStage.PostEvent;
+            triggerEntryForm.GetBooleanFieldFieldViewModel(nameof(PluginTrigger.PreImageAllFields)).Value = true;
+            triggerEntryForm.GetLookupFieldFieldViewModel(nameof(PluginTrigger.SpecificUserContext)).Value = null;
+            var filteringAttributesField = triggerEntryForm.GetFieldViewModel<RecordFieldMultiSelectFieldViewModel>(nameof(PluginTrigger.FilteringFields));
             DeselectAll(filteringAttributesField);
+
+            Assert.IsTrue(triggerEntryForm.Validate());
+            triggerEntryForm.SaveButtonViewModel.Invoke();
+
+            Assert.IsTrue(entryViewModel.Validate());
+            entryViewModel.SaveButtonViewModel.Invoke();
+
+            var response = dialog.CompletionItem as ManagePluginTriggersResponse;
+            Assert.IsFalse(response.HasError);
         }
 
         private static void DeselectAll(RecordFieldMultiSelectFieldViewModel filteringAttributesField)
