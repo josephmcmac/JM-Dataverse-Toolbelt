@@ -1,7 +1,4 @@
-﻿using JosephM.Application.ViewModel.Dialog;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.FieldType;
-using JosephM.Record.Query;
+﻿using JosephM.Core.FieldType;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
 using JosephM.Xrm.Vsix.Module.PluginTriggers;

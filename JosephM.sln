@@ -50,6 +50,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SolutionItems\Customisations.xlsx = SolutionItems\Customisations.xlsx
 		SolutionItems\DeviceRegistration.exe = SolutionItems\DeviceRegistration.exe
 		SolutionItems\JosephM.snk = SolutionItems\JosephM.snk
+		SolutionItems\TestAssemblyDeploy\TestAssemblyDeploy.zip = SolutionItems\TestAssemblyDeploy\TestAssemblyDeploy.zip
 		SolutionItems\TestComponents_unmanaged.zip = SolutionItems\TestComponents_unmanaged.zip
 	EndProjectSection
 EndProject
