@@ -1459,7 +1459,7 @@ namespace JosephM.Record.Xrm.XrmRecord
              new TypeConfigs.Config()
                 {
                     Type = Entities.adx_entitypermission,
-                    UniqueChildFields = new [] { Fields.adx_entitypermission_.adx_websiteid, Fields.adx_entitypermission_.adx_name }
+                    UniqueChildFields = new [] { Fields.adx_entitypermission_.adx_websiteid, Fields.adx_entitypermission_.adx_entityname }
                 },
              new TypeConfigs.Config()
                 {
