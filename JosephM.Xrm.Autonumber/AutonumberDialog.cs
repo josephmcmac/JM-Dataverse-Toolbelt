@@ -13,6 +13,8 @@ namespace JosephM.Xrm.Autonumber
             : base(dialogController)
         {
             XrmRecordService = xrmRecordService;
+
+            OverideCompletionScreenMethod = () => { };
         }
 
         public XrmRecordService XrmRecordService { get; }
