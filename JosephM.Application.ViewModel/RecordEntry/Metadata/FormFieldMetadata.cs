@@ -350,10 +350,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }
                 }
                 if (fieldVm == null)
+                {
                     fieldVm = new UnmatchedFieldViewModel(field, label, recordForm)
                     {
                         IsRecordServiceField = isRecordServiceField
                     };
+                }
                 fieldVm.IsEditable = thisFieldEditable;
                 fieldVm.DisplayLabel = DisplayLabel;
                 if (!explicitFieldType.HasValue)

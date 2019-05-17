@@ -101,6 +101,9 @@
     <DataTemplate x:Key="ActivityPartyFieldTemplate">
         <field:ActivityPartyFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="UnmatchedFieldTemplate">
+        <field:UnmatchedFieldView DataContext="{Binding}" MinWidth="270" />
+    </DataTemplate>
     <templateSelector:FieldTemplateSelector
         ActivityPartyFieldTemplate="{StaticResource ActivityPartyFieldTemplate}"
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
@@ -122,6 +125,7 @@
         DecimalFieldTemplate="{StaticResource DecimalFieldTemplate}"
         UrlFieldTemplate="{StaticResource UrlFieldTemplate}"
         MultiSelectFieldTemplate="{StaticResource MultiSelectFieldTemplate}"
+        UnmatchedFieldTemplate="{StaticResource UnmatchedFieldTemplate}"
         x:Key="fieldTemplateSelector" />
     <DataTemplate x:Key="labelledFieldTemplate">
         <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" ToolTip="{Binding Description}">

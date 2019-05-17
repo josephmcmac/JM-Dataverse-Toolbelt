@@ -344,6 +344,9 @@
     <Compile Include="RecordEntry\Field\StringFieldDisplayOnlyView.xaml.cs">
       <DependentUpon>StringFieldDisplayOnlyView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\UnmatchedFieldView.xaml.cs">
+      <DependentUpon>UnmatchedFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\UrlFieldView.xaml.cs">
       <DependentUpon>UrlFieldView.xaml</DependentUpon>
     </Compile>
@@ -605,6 +608,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\StringFieldDisplayOnlyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\UnmatchedFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -1,10 +1,6 @@
-﻿#region
-
-using JosephM.Application.ViewModel.RecordEntry.Field;
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
 using System.Windows;
 using System.Windows.Controls;
-
-#endregion
 
 namespace JosephM.Wpf.TemplateSelector
 {
