@@ -8,6 +8,7 @@ using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.DeployAssembly.AssemblyReader;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
 using System.Collections.Generic;
@@ -82,15 +83,17 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
             var myDomain = AppDomain.CreateDomain("JosephM.XRM.VSIX.DeployAssemblyCommand", null, null);
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             IEnumerable<PluginAssemblyReader.PluginType> plugins;
+            bool isSigned = false;
             try
             {
-
                 var reader =
                     (PluginAssemblyReader)
                     myDomain.CreateInstanceFrom(
                         Assembly.GetExecutingAssembly().Location,
                         typeof(PluginAssemblyReader).FullName).Unwrap();
-                var loadedPlugins = reader.LoadTypes(AssemblyFile);
+                var loadResponse = reader.LoadTypes(AssemblyFile);
+                isSigned = loadResponse.IsSigned;
+                var loadedPlugins = loadResponse.PluginTypes;
                 plugins =
                     loadedPlugins.Select(p => new PluginAssemblyReader.PluginType(p.Type, p.TypeName)).ToArray();
             }
@@ -102,6 +105,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                     AppDomain.Unload(myDomain);
                 }
             }
+            if (!isSigned)
+                return "Assembly Cannot By Deployed. You Need To Sign The Assembly With A Strong Named Key File";
             if (!plugins.Any())
                 return "Assembly Cannot By Deployed. No Plugin Classes Were Found In The Assembly";
 

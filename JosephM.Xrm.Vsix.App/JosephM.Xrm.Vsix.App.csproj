@@ -261,7 +261,7 @@
     <Compile Include="Module\Web\OpenWebModule.cs" />
     <Compile Include="Module\XrmPackageSettings\XrmPackageSettingsDialog.cs" />
     <Compile Include="Module\XrmPackageSettings\XrmPackageSettingsModule.cs" />
-    <Compile Include="Module\PluginAssemblyReader.cs" />
+    <Compile Include="Module\DeployAssembly\AssemblyReader\PluginAssemblyReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Application\IVisualStudioService.cs" />
     <Compile Include="Application\VisualStudioItem.cs" />

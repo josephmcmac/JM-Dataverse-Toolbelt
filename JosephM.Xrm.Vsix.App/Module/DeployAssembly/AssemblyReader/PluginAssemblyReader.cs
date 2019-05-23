@@ -4,13 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace JosephM.Xrm.Vsix
+namespace JosephM.Xrm.Vsix.DeployAssembly.AssemblyReader
 {
     public class PluginAssemblyReader : MarshalByRefObject
     {
-        public IEnumerable<PluginType> LoadTypes(string assemblyFile)
+        public LoadPluginAssemblyResponse LoadTypes(string assemblyFile)
         {
+            var response = new LoadPluginAssemblyResponse();
             var results = new List<PluginType>();
+            response.PluginTypes = results;
 
             var loaded = new List<Assembly>();
 
@@ -30,6 +32,9 @@ namespace JosephM.Xrm.Vsix
             var name = new AssemblyName();
             name.CodeBase = assemblyFile;
             var assembly = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(assemblyFile));
+
+            response.IsSigned = assembly.GetName().GetPublicKey().Length > 0;
+
             var references = assembly.GetReferencedAssemblies();
             Type codeActivityType = null;
             //load assembly references not in the bin folder
@@ -77,7 +82,13 @@ namespace JosephM.Xrm.Vsix
                 }
             }
 
-            return results;
+            return response;
+        }
+
+        public class LoadPluginAssemblyResponse : MarshalByRefObject
+        {
+            public bool IsSigned { get; set; }
+            public IEnumerable<PluginType> PluginTypes { get; set; }
         }
 
         public class PluginType : MarshalByRefObject
