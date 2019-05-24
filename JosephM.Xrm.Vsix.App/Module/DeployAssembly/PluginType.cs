@@ -35,6 +35,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
         [PropertyInContextByPropertyValue(nameof(IsWorkflowActivity), true)]
         public string GroupName { get; set; }
 
+        [RequiredPropertyValue(true, "This Plugin Type Is Missing In The Assembly. You Will Need To Ensure Any Dependencies To It Are Removed In The Target System, Then Remove This Row To Delete It, Or Deployment Will Fail")]
         [GridWidth(100)]
         [DisplayOrder(1)]
         [ReadOnlyWhenSet]
