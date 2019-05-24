@@ -284,7 +284,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 }
                 if (!isValid)
                 {
-                    ValidationPrompt = "There Were Validation Errors - Please Review Your Input And Retry";
+                    ValidationPrompt = "There Were Validation Errors. Please Review Your Input And Retry. To View Validation Details Hover Over The Error Icon";
                 }
                 else
                 {

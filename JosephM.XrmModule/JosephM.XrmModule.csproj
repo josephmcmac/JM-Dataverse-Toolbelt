@@ -84,6 +84,8 @@
   <ItemGroup>
     <Compile Include="AppConnection\XrmRecordServiceAppConnectionModule.cs" />
     <Compile Include="AppConnection\SavedConnectionAppConnectionModule.cs" />
+    <Compile Include="Crud\Validations\PrefixValidation.cs" />
+    <Compile Include="Crud\Validations\SolutionOrPublisherNameValidation.cs" />
     <Compile Include="Crud\XrmCrudDialog.cs" />
     <Compile Include="Crud\XrmCrudModule.cs" />
     <Compile Include="Crud\XrmFormService.cs" />

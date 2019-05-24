@@ -7,6 +7,7 @@ using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.Crud.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,6 +137,7 @@ namespace JosephM.XrmModule.Crud
                             case Fields.publisher_.uniquename:
                                 {
                                     conditions.Add(new PropertyAttributeValidationRule(new RequiredProperty()));
+                                    conditions.Add(new PropertyAttributeValidationRule(new SolutionOrPublisherNameValidation()));
                                     break;
                                 }
                             case Fields.publisher_.friendlyname:
@@ -146,6 +148,7 @@ namespace JosephM.XrmModule.Crud
                             case Fields.publisher_.customizationprefix:
                                 {
                                     conditions.Add(new PropertyAttributeValidationRule(new RequiredProperty()));
+                                    conditions.Add(new PropertyAttributeValidationRule(new PrefixValidation()));
                                     break;
                                 }
                             case Fields.publisher_.customizationoptionvalueprefix:
@@ -163,6 +166,7 @@ namespace JosephM.XrmModule.Crud
                             case Fields.solution_.uniquename:
                                 {
                                     conditions.Add(new PropertyAttributeValidationRule(new RequiredProperty()));
+                                    conditions.Add(new PropertyAttributeValidationRule(new SolutionOrPublisherNameValidation()));
                                     break;
                                 }
                             case Fields.solution_.friendlyname:
@@ -190,25 +194,50 @@ namespace JosephM.XrmModule.Crud
         public override IEnumerable<Action<RecordEntryViewModelBase>> GetOnChanges(string fieldName, string recordType, RecordEntryViewModelBase entryViewModel)
         {
             var onChanges = new List<Action<RecordEntryViewModelBase>>();
-            if (recordType == Entities.solution)
+            switch (recordType)
             {
-                switch (fieldName)
-                {
-                    case Fields.solution_.friendlyname:
+                case Entities.solution:
+                    {
+                        switch (fieldName)
                         {
-                            onChanges.Add((rf) =>
-                            {
-                                var friendlyName = rf.GetStringFieldFieldViewModel(Fields.solution_.friendlyname).Value;
-                                var uniqueNameViewModel = rf.GetStringFieldFieldViewModel(Fields.solution_.uniquename);
-                                if (!string.IsNullOrEmpty(friendlyName)
-                                    && string.IsNullOrEmpty(uniqueNameViewModel.Value))
+                            case Fields.solution_.friendlyname:
                                 {
-                                    uniqueNameViewModel.Value = friendlyName.Replace(" ", "");
+                                    onChanges.Add((rf) =>
+                                    {
+                                        var friendlyName = rf.GetStringFieldFieldViewModel(Fields.solution_.friendlyname).Value;
+                                        var uniqueNameViewModel = rf.GetStringFieldFieldViewModel(Fields.solution_.uniquename);
+                                        if (!string.IsNullOrEmpty(friendlyName)
+                                            && string.IsNullOrEmpty(uniqueNameViewModel.Value))
+                                        {
+                                            uniqueNameViewModel.Value = friendlyName.Replace(" ", "");
+                                        }
+                                    });
+                                    break;
                                 }
-                            });
-                            break;
                         }
-                }
+                        break;
+                    }
+                case Entities.publisher:
+                    {
+                        switch (fieldName)
+                        {
+                            case Fields.publisher_.friendlyname:
+                                {
+                                    onChanges.Add((rf) =>
+                                    {
+                                        var friendlyName = rf.GetStringFieldFieldViewModel(Fields.publisher_.friendlyname).Value;
+                                        var uniqueNameViewModel = rf.GetStringFieldFieldViewModel(Fields.publisher_.uniquename);
+                                        if (!string.IsNullOrEmpty(friendlyName)
+                                            && string.IsNullOrEmpty(uniqueNameViewModel.Value))
+                                        {
+                                            uniqueNameViewModel.Value = friendlyName.Replace(" ", "");
+                                        }
+                                    });
+                                    break;
+                                }
+                        }
+                        break;
+                    }
             }
             return base.GetOnChanges(fieldName, recordType, entryViewModel).Union(onChanges);
         }
