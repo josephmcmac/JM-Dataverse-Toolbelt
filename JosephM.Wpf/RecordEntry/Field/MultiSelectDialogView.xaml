@@ -55,14 +55,14 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource BorderStyleLight}" >
-                                <Grid>
+                                <Grid Style="{StaticResource MultiSelectCellGridStyle}">
                                     <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0">
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
                                         <CheckBox IsChecked="{Binding Select}" Style="{StaticResource BooleanFieldEntryStyle}"></CheckBox>
-                                </Grid>
+                                    </Grid>
                                     <Grid Grid.Column="1">
                                         <TextBlock
                                         Background="Transparent" 

@@ -184,7 +184,6 @@
         <Style.Triggers>
         </Style.Triggers>
     </Style>
-
     <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
@@ -209,5 +208,12 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style x:Key="MultiSelectCellGridStyle" TargetType="Grid" >
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Select}" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SelectedBackgroundColor}"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>
