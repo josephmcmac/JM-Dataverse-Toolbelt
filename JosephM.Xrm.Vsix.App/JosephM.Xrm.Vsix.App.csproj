@@ -259,6 +259,7 @@
     <Compile Include="Module\Web\OpenAdvancedFindModule.cs" />
     <Compile Include="Module\Web\OpenSolutionModule.cs" />
     <Compile Include="Module\Web\OpenWebModule.cs" />
+    <Compile Include="Module\XrmPackageSettings\ClassPrefixValidation.cs" />
     <Compile Include="Module\XrmPackageSettings\XrmPackageSettingsDialog.cs" />
     <Compile Include="Module\XrmPackageSettings\XrmPackageSettingsModule.cs" />
     <Compile Include="Module\DeployAssembly\AssemblyReader\PluginAssemblyReader.cs" />

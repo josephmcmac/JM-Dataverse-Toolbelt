@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace JosephM.XrmModule.Crud.Validations
+namespace JosephM.Xrm.Vsix.Module.PackageSettings
 {
     /// <summary>
     ///     Attribute To Define A Property As Required To Be Non-Empty To Be Valid
@@ -10,7 +10,7 @@ namespace JosephM.XrmModule.Crud.Validations
     [AttributeUsage(
         AttributeTargets.Property,
         AllowMultiple = false)]
-    public class PrefixValidation : PropertyValidator
+    public class ClassPrefixValidation : PropertyValidator
     {
         public override bool IsValid(object value)
         {
@@ -18,13 +18,9 @@ namespace JosephM.XrmModule.Crud.Validations
             if(value is string valueString && !string.IsNullOrWhiteSpace(valueString))
             {
                 var firstCharacter = valueString.First();
-                if (valueString.ToLower().StartsWith("mscrm"))
+                if (!char.IsLetter(firstCharacter) && !(firstCharacter == '_'))
                     isValid = false;
-                else if (valueString.Length < 2)
-                    isValid = false;
-                else if (!char.IsLetter(firstCharacter))
-                    isValid = false;
-                else if(valueString.Any(c => !char.IsLetterOrDigit(c)))
+                else if(valueString.Any(c => !char.IsLetterOrDigit(c) && !(c == '_')))
                     isValid = false;
             }
             return isValid;
@@ -32,7 +28,7 @@ namespace JosephM.XrmModule.Crud.Validations
 
         public override string GetErrorMessage(string propertyLabel)
         {
-            return "The prefix can contain only alphanumeric characters. The prefix must have at least 2 characters and start with a letter. It cannot start with \"mscrm\"";
+            return "Invalid character specified. Only characters within the ranges [A-Z], [a-z], [0-9] or _ are allowed. The first character may only be in the ranges [A-Z], [a-z] or _";
         }
     }
 }
