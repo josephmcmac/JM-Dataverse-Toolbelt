@@ -1364,7 +1364,8 @@ namespace JosephM.Record.Xrm.XrmRecord
                     ParentLookupField = Fields.adx_webpage_.adx_rootwebpageid,
                     ParentLookupType = Entities.adx_webpage,
                     UniqueChildFields = new [] { Fields.adx_webpage_.adx_name, Fields.adx_webpage_.adx_websiteid, Fields.adx_webpage_.adx_webpagelanguageid },
-                    BlockCreateChild = true
+                    BlockCreateChild = true,
+                    ExplicitDisplayNameFields = new [] { Fields.adx_webpage_.adx_websiteid, Fields.adx_webpage_.adx_name, Fields.adx_webpage_.adx_webpagelanguageid },
                 },
             new TypeConfigs.Config()
                 {

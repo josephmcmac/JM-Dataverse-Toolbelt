@@ -68,20 +68,21 @@ namespace JosephM.Record.Extentions
             var config = service.GetTypeConfigs().GetFor(record.Type);
             if (config != null)
             {
-                if (config.ParentLookupField != null)
+                var fieldsForDisplay = new List<string>();
+                if (config.ExplicitDisplayNameFields != null)
+                    fieldsForDisplay.AddRange(config.ExplicitDisplayNameFields);
+                if (!fieldsForDisplay.Any())
                 {
-                    var thisOne = service.GetFieldAsDisplayString(record, config.ParentLookupField);
+                    if (config.ParentLookupField != null)
+                        fieldsForDisplay.Add(config.ParentLookupField);
+                    if (config.UniqueChildFields != null)
+                        fieldsForDisplay.AddRange(config.UniqueChildFields);
+                }
+                foreach(var fieldForDisplay in fieldsForDisplay)
+                {
+                    var thisOne = service.GetFieldAsDisplayString(record, fieldForDisplay);
                     if (!string.IsNullOrWhiteSpace(thisOne))
                         displayStrings.Add(thisOne);
-                }
-                if (config.UniqueChildFields != null)
-                {
-                    foreach (var unique in (config.UniqueChildFields))
-                    {
-                        var thisOne = service.GetFieldAsDisplayString(record, unique);
-                        if (!string.IsNullOrWhiteSpace(thisOne))
-                            displayStrings.Add(thisOne);
-                    }
                 }
             }
             if (!displayStrings.Any())

@@ -25,6 +25,7 @@ namespace JosephM.Record.IService
             public string ParentLookupField { get; set; }
             public bool BlockCreateChild { get; set; }
             public IEnumerable<string> UniqueChildFields { get; set; }
+            public IEnumerable<string> ExplicitDisplayNameFields { get; set; }
         }
 
         public Config GetFor(string type)
