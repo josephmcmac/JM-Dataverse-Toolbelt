@@ -145,7 +145,7 @@ namespace JosephM.XrmModule.Test
             }
             foreach(var type in typesToDelete)
             {
-                DeleteAll(type, serviceToUse: useRecordService.XrmService);
+                DeleteAll(type, serviceToUse: useRecordService?.XrmService);
             }
         }
 
