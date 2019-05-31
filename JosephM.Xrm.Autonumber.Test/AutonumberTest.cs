@@ -17,6 +17,11 @@ namespace JosephM.CustomisationImporter.Test
         [TestMethod]
         public void AutonumberTest()
         {
+            if(int.Parse(XrmService.OrganisationVersion.Split('.')[0]) < 9)
+            {
+                Assert.Inconclusive("Organisation must be at least V9");
+            }
+
             //create test application with module loaded
             var testApplication = CreateAndLoadTestApplication<AutonumberModule>();
 

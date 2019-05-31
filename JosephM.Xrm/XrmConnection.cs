@@ -80,6 +80,46 @@ namespace JosephM.Xrm
         }
 
         /// <summary>
+        ///     Return Organisation Version
+        /// </summary>
+        /// <returns></returns>
+        public string GetOrganisationVersion()
+        {
+            try
+            {
+                string result = null;
+
+                // Set the credentials.
+                var authCredentials = GetCredentials(CrmConfig.AuthenticationProviderType);
+
+                var serviceManagement =
+                    ServiceConfigurationFactory.CreateManagement<IDiscoveryService>(
+                        new Uri(CrmConfig.DiscoveryServiceAddress));
+
+                // Get the discovery service proxy.
+                using (var discoveryProxy =
+                    GetProxy<IDiscoveryService, DiscoveryServiceProxy>(serviceManagement, authCredentials))
+                {
+                    // Obtain organization information from the Discovery service. 
+                    if (discoveryProxy != null)
+                    {
+                        // Obtain information about the organizations that the system user belongs to.
+                        var orgs = DiscoverOrganizations(discoveryProxy);
+                        // Obtains the Web address (Uri) of the target organization.
+                        result = FindOrganization(CrmConfig.OrganizationUniqueName,
+                            orgs.ToArray()).OrganizationVersion;
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting organisation version - check your crm connection details", ex);
+            }
+        }
+
+        /// <summary>
         ///     Return Organisation Service Proxy
         /// </summary>
         /// <returns></returns>

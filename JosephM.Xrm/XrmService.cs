@@ -174,6 +174,21 @@ namespace JosephM.Xrm
             }
         }
 
+        private string _organisationVersion;
+        public string OrganisationVersion
+        {
+            get
+            {
+                if (_organisationVersion == null)
+                {
+                    if (XrmConfiguration == null)
+                        throw new NotImplementedException(string.Format("XrmConfiguration is null"));
+                    _organisationVersion = new XrmConnection(XrmConfiguration).GetOrganisationVersion();
+                }
+                return _organisationVersion;
+            }
+        }
+
         private string _webUrl;
         public string WebUrl
         {
