@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Xrm.Vsix.Application;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,9 +11,25 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
     public class DeployWebResourceDialog
         : ServiceRequestDialog<DeployWebResourceService, DeployWebResourceRequest, DeployWebResourceResponse, DeployWebResourceResponseItem>
     {
-        public DeployWebResourceDialog(DeployWebResourceService service, IDialogController dialogController)
+        public DeployWebResourceDialog(DeployWebResourceService service, IVisualStudioService visualStudioService, IDialogController dialogController)
             : base(service, dialogController)
         {
+            VisualStudioService = visualStudioService;
+        }
+
+        private string AssemblyLoadErrorMessage { get; set; }
+        public IVisualStudioService VisualStudioService { get; }
+
+        protected override void LoadDialogExtention()
+        {
+            //hijack the load method so that we can prepopulate
+            //the entered request with various details
+            var files = VisualStudioService.GetSelectedFileNamesQualified();
+            VisualStudioService.SaveSelectedFiles();
+            Request.Files = files;
+            SkipObjectEntry = true;
+
+            base.LoadDialogExtention();
         }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()

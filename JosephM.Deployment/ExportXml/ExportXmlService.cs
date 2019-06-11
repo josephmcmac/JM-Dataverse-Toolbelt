@@ -308,6 +308,13 @@ namespace JosephM.Deployment.ExportXml
                     if (requiredFields.Any())
                     {
                         var reffed = XrmService.Retrieve(refType, refId.Value, requiredFields);
+
+                        XrmService.PopulateReferenceNames(reffed
+                            .GetFieldsInEntity()
+                            .Select(f => reffed.GetField(f))
+                            .Where(fv => fv is EntityReference)
+                            .Cast<EntityReference>());
+
                         foreach (var reffedAttribute in reffed.Attributes.Keys)
                         {
                             var fieldValue = reffed.GetField(reffedAttribute);

@@ -1158,6 +1158,8 @@ namespace JosephM.Deployment.DataImport
                 return true;
             if (fieldName == "salesliteratureid")
                 return true;
+            if (fieldName == "transactioncurrencyid")
+                return true;
             if (fieldName == Fields.product_.productstructure)
                 return true;
             return

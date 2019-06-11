@@ -3455,12 +3455,15 @@ string recordType)
                             toDictionary[type].Select(l => l.Id).Distinct();
                         var conditions =
                             distinctIds.Select(id => new ConditionExpression(typePrimaryKey, ConditionOperator.Equal, id));
-                        var theseRecords = RetrieveAllOrClauses(type, conditions, new[] { typePrimaryField }).ToArray();
-                        foreach (var lookup in toDictionary[type])
+                        if (conditions.Any())
                         {
-                            if (theseRecords.Any(r => r.Id == lookup.Id))
-                                lookup.Name = theseRecords.First(r => r.Id == lookup.Id)
-                                    .GetStringField(typePrimaryField);
+                            var theseRecords = RetrieveAllOrClauses(type, conditions, new[] { typePrimaryField }).ToArray();
+                            foreach (var lookup in toDictionary[type])
+                            {
+                                if (theseRecords.Any(r => r.Id == lookup.Id))
+                                    lookup.Name = theseRecords.First(r => r.Id == lookup.Id)
+                                        .GetStringField(typePrimaryField);
+                            }
                         }
                     }
                 }

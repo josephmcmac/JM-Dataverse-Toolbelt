@@ -87,6 +87,8 @@ namespace JosephM.Xrm.Vsix.Test
                 packageSettings.AddToSolution = true;
                 packageSettings.Solution = testSolution.ToLookup();
                 packageSettings.Connections = new SavedXrmRecordConfiguration[] { savedConnection };
+                packageSettings.SolutionObjectPrefix = "FakeScriptPrefix";
+                packageSettings.SolutionDynamicsCrmPrefix = "fake";
                 _testPackageSettings = packageSettings;
             }
             return _testPackageSettings;
@@ -234,6 +236,7 @@ namespace JosephM.Xrm.Vsix.Test
             var packageSettingsEntryViewModel = dialog.Controller.UiItems[0] as ObjectEntryViewModel;
             var newPackageSettings = packageSettingsEntryViewModel.GetObject() as XrmPackageSettings;
             newPackageSettings.SolutionObjectPrefix = "FAKEIT";
+            newPackageSettings.SolutionDynamicsCrmPrefix = "fake";
             packageSettingsEntryViewModel.SaveButtonViewModel.Invoke();
 
             //lets just verify the connections were saved as well
