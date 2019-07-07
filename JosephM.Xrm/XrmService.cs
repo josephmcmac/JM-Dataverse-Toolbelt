@@ -567,8 +567,7 @@ namespace JosephM.Xrm
                 if (option.Value == optionValue)
                     return GetOptionLabel(option);
             }
-            throw new ArgumentOutOfRangeException("Field " + field + " in entity " + entity +
-                                                  " does not contain option with value " + optionValue);
+            return optionValue.ToString();
         }
 
         public SortedDictionary<int, string> GetOptions(string field, string entity)
