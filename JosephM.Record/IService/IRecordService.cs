@@ -153,6 +153,11 @@ namespace JosephM.Record.IService
         string GetFieldAsDisplayString(IRecord record, string fieldName);
 
         /// <summary>
+        ///     Returns A Human Readable String For The Value In The Field Of The Record
+        /// </summary>
+        string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue);
+
+        /// <summary>
         ///     Service To Get Data For Lookup Fields In The Data Store
         /// </summary>
         IRecordService LookupService { get; }

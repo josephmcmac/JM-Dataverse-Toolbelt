@@ -58,15 +58,17 @@ namespace JosephM.Application.ViewModel.Grid
                 try
                 {
                     var viewModel = field.CreateFieldViewModel(RecordType, RecordService, this, ApplicationController);
-                    var isWriteable = RecordService?.GetFieldMetadata(field.FieldName, RecordType).Createable == true
-                        || RecordService?.GetFieldMetadata(field.FieldName, RecordType).Writeable == true;
+                    if (field.AliasedFieldName == null)
+                    {
+                        var isWriteable = RecordService?.GetFieldMetadata(field.FieldName, RecordType).Createable == true
+                            || RecordService?.GetFieldMetadata(field.FieldName, RecordType).Writeable == true;
 
-                    viewModel.IsEditable = !IsReadOnly
-                        && isWriteable
-                        && FormService != null
-                        && FormService.AllowGridFieldEditEdit(ParentFormReference)
-                        && (!(viewModel is LookupFieldViewModel) || FormService.AllowLookupFunctions);
-
+                        viewModel.IsEditable = !IsReadOnly
+                            && isWriteable
+                            && FormService != null
+                            && FormService.AllowGridFieldEditEdit(ParentFormReference)
+                            && (!(viewModel is LookupFieldViewModel) || FormService.AllowLookupFunctions);
+                    }
                     AddField(viewModel);
                 }
                 catch (Exception ex)
@@ -136,12 +138,12 @@ namespace JosephM.Application.ViewModel.Grid
 
         private readonly List<FieldViewModelBase> _gridFields = new List<FieldViewModelBase>();
 
-        public FieldViewModelBase this[string fieldName]
+        public FieldViewModelBase this[string indexFieldName]
         {
             get
             {
-                if (_gridFields.Any(gr => gr.FieldName == fieldName))
-                    return _gridFields.First(gr => gr.FieldName == fieldName);
+                if (_gridFields.Any(gr => gr.IndexFieldName == indexFieldName))
+                    return _gridFields.First(gr => gr.IndexFieldName == indexFieldName);
                 return null;
             }
             set { throw new NotImplementedException(); }

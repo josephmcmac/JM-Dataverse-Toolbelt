@@ -21,131 +21,149 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition  Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <TextBlock
-                Text="Edit View Columns"
-                Style="{StaticResource HeadingStyle}" />
+        <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToVis}, Mode=OneWay}">
+            <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
-        <Grid Grid.Row="1">
-            <WrapPanel>
-                <shared:XrmButton DataContext="{Binding CancelButtonViewModel}" />
-                <shared:XrmButton DataContext="{Binding ApplyButtonViewModel}" />
-            </WrapPanel>
-        </Grid>
-        <Grid Grid.Row="2">
-            <TextBlock
-                Text="Current Columns - Click And Drag To Reorder"
-                Style="{StaticResource HeadingStyle}" />
-        </Grid>
-        <Grid Grid.Row="3" Margin="8">
-            <ScrollViewer
-                VerticalScrollBarVisibility="Disabled"
-                          HorizontalScrollBarVisibility="Auto"
-                          >
-                <ItemsControl
-                   BorderThickness="0"
-                    ItemsSource="{Binding CurrentColumns}" >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Grid AllowDrop="True" Drop="SelectDropBefore" Visibility="{Binding IsFirstColumn, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <Border Style="{StaticResource DropZoneBorder}" >
-                                        <GroupBox BorderThickness="0" Style="{StaticResource HighlightDropZone}">
-                                        </GroupBox>
-                                    </Border>
-                                </Grid>
-                                <Border BorderThickness="0" Style="{StaticResource BorderStyleLight}"  Width="{Binding Width}" >
-                                    <Grid MouseMove="SelectMouseMoveEvent" Background="{DynamicResource BackgroundColor}">
+        <Grid Grid.Row="1"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <TextBlock
+                    Text="Edit View Columns"
+                    Style="{StaticResource HeadingStyle}" />
+            </Grid>
+            <Grid Grid.Row="1">
+                <WrapPanel>
+                    <shared:XrmButton DataContext="{Binding CancelButtonViewModel}" />
+                    <shared:XrmButton DataContext="{Binding ApplyButtonViewModel}" />
+                </WrapPanel>
+            </Grid>
+            <Grid Grid.Row="2">
+                <TextBlock
+                    Text="Current Columns - Click And Drag To Reorder"
+                    Style="{StaticResource HeadingStyle}" />
+            </Grid>
+            <Grid Grid.Row="3" Margin="8">
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Disabled"
+                              HorizontalScrollBarVisibility="Auto"
+                              >
+                    <ItemsControl
+                       BorderThickness="0"
+                        ItemsSource="{Binding CurrentColumns}" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid AllowDrop="True" Drop="SelectDropBefore" Visibility="{Binding IsFirstColumn, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Border Style="{StaticResource DropZoneBorder}" >
-                                            <GroupBox BorderThickness="0">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"  />
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
-                                                    <Button
-                                                    HorizontalAlignment="Right"
-                                                    Grid.Row="0" 
-                                                    Style="{StaticResource RemoveButtonStyle}" 
-                                                    Command="{Binding RemoveCommand}"
-                                                        ToolTip="Remove This Field">
-                                                    </Button>
-                                                <TextBlock Grid.Row="1"
-                                        Text="{Binding FieldLabel}"
-                                        Style="{StaticResource FieldLabelStyle}" />
-                                            </Grid>
-                                        </GroupBox>
+                                            <GroupBox BorderThickness="0" Style="{StaticResource HighlightDropZone}">
+                                            </GroupBox>
                                         </Border>
                                     </Grid>
-                                </Border>
-                                <Grid  AllowDrop="True" Drop="SelectDropAfter">
-                                    <Border Style="{StaticResource DropZoneBorder}" >
-                                        <GroupBox BorderThickness="0" Style="{StaticResource HighlightDropZone}">
-                                        </GroupBox>
+                                    <Border BorderThickness="0" Style="{StaticResource BorderStyleLight}"  Width="{Binding Width}" >
+                                        <Grid MouseMove="SelectMouseMoveEvent" Background="{DynamicResource BackgroundColor}">
+                                            <Border Style="{StaticResource DropZoneBorder}" >
+                                                <GroupBox BorderThickness="0">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"  />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <Button
+                                                        HorizontalAlignment="Right"
+                                                        Grid.Row="0" 
+                                                        Style="{StaticResource RemoveButtonStyle}" 
+                                                        Command="{Binding RemoveCommand}"
+                                                            ToolTip="Remove This Field">
+                                                        </Button>
+                                                        <TextBlock Grid.Row="1"
+                                            Text="{Binding FieldLabel}"
+                                            Style="{StaticResource FieldLabelStyle}" />
+                                                    </Grid>
+                                                </GroupBox>
+                                            </Border>
+                                        </Grid>
                                     </Border>
-                                </Grid>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </Grid>
-        <Grid Grid.Row="4">
-            <TextBlock
-                Text="Available Columns - Click + Icon Or Drag Into The Current Columns To Add To The View"
-                Style="{StaticResource HeadingStyle}" />
-        </Grid>
-        <Grid Grid.Row="5" Margin="8">
-            <ScrollViewer
-                VerticalScrollBarVisibility="Disabled"
-                          HorizontalScrollBarVisibility="Auto"
-                          >
-                <ItemsControl 
-                    x:Name="sectionControl"
-                    ItemsSource="{Binding SelectableColumns}"
-                    HorizontalContentAlignment="Stretch" >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel  Orientation="Vertical"  />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Style="{StaticResource BorderStyleLight}"  MouseMove="SelectMouseMoveEvent">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"  />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0"
-                                        Text="{Binding FieldLabel}"
-                                        Style="{StaticResource FieldLabelStyle}" />
-                                    <Button HorizontalAlignment="Right" Grid.Column="1"  Style="{StaticResource AddNewButton}"  Command="{Binding AddCommand}"
-                                            ToolTip="Add This Field">
-                                    </Button>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </Grid>
-        <Grid Grid.Row="6" Height="20px">
+                                    <Grid  AllowDrop="True" Drop="SelectDropAfter">
+                                        <Border Style="{StaticResource DropZoneBorder}" >
+                                            <GroupBox BorderThickness="0" Style="{StaticResource HighlightDropZone}">
+                                            </GroupBox>
+                                        </Border>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Row="4">
+                <WrapPanel>
+                    <TextBlock
+                        Text="Available Columns - Click + Icon Or Drag Into The Current Columns To Add To The View"
+                        Style="{StaticResource HeadingStyle}" 
+                        />
+                    <ComboBox
+                        VerticalAlignment="Top"
+                        MinWidth="150"
+                        DisplayMemberPath="Value"
+                        ItemsSource="{Binding LinkOptions}"
+                        SelectedItem="{Binding SelectedLink, Mode=TwoWay}"
+                        />
+                </WrapPanel>
+            </Grid>
+            <Grid Grid.Row="5" Margin="8">
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Disabled"
+                              HorizontalScrollBarVisibility="Auto"
+                              >
+                    <ItemsControl 
+                        x:Name="sectionControl"
+                        ItemsSource="{Binding SelectableColumns}"
+                        HorizontalContentAlignment="Stretch" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel  Orientation="Vertical"  />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource BorderStyleLight}"  MouseMove="SelectMouseMoveEvent">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"  />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                            Text="{Binding FieldLabel}"
+                                            Style="{StaticResource FieldLabelStyle}" />
+                                        <Button HorizontalAlignment="Right" Grid.Column="1"  Style="{StaticResource AddNewButton}"  Command="{Binding AddCommand}"
+                                                ToolTip="Add This Field">
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Row="6" Height="20px">
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

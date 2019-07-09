@@ -14,6 +14,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
     public abstract class FormFieldMetadata
     {
+        public string AltRecordType { get; set; }
+        public string AliasedFieldName { get; set; }
+
         public virtual bool IsNonPersistentField
         {
             get { return false; }
@@ -41,6 +44,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             RecordEntryViewModelBase recordForm, IApplicationController applicationController, RecordFieldType? explicitFieldType = null, string explicitLookupTargetType = null, IEnumerable<PicklistOption> explicitPicklistOptions = null)
         {
             var field = FieldName;
+            recordType = AltRecordType ?? recordType;
             try
             {
                 RecordFieldType? fieldType = explicitFieldType;
@@ -358,6 +362,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 }
                 fieldVm.IsEditable = thisFieldEditable;
                 fieldVm.DisplayLabel = DisplayLabel;
+                fieldVm.AltRecordType = AltRecordType;
+                fieldVm.AliasedFieldName = AliasedFieldName;
                 if (!explicitFieldType.HasValue)
                 {
                     var metadata = recordService.GetFieldMetadata(field, recordType);

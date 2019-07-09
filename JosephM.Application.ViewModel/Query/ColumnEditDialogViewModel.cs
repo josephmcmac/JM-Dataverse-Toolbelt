@@ -1,6 +1,8 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.TabArea;
+using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
@@ -12,32 +14,133 @@ namespace JosephM.Application.ViewModel.Query
 {
     public class ColumnEditDialogViewModel : TabAreaViewModelBase
     {
+        private PicklistOption _selectedLink;
+
         private string RecordType { get; set; }
         public Action<IEnumerable<SelectableColumn>> ApplySelections { get; private set; }
         private IRecordService RecordService { get; set; }
 
-        public ColumnEditDialogViewModel(string recordType, IEnumerable<KeyValuePair<string, double>> currentColumns, IRecordService recordService, Action<IEnumerable<SelectableColumn>> applySelections, Action onCancel, IApplicationController applicationController)
+        public ColumnEditDialogViewModel(string recordType, IEnumerable<GridFieldMetadata> currentColumns, IRecordService recordService, Action<IEnumerable<SelectableColumn>> applySelections, Action onCancel, IApplicationController applicationController)
             : base(applicationController)
         {
             RecordService = recordService;
             RecordType = recordType;
             ApplySelections = applySelections;
-            var columnsCurrenltySelected =
-                currentColumns.Select(si => new SelectableColumn(si.Key, RecordService.GetFieldLabel(si.Key, RecordType), si.Value, RemoveCurrentField, AddCurrentField, ApplicationController))
-                .ToArray();
-            CurrentColumns = new ObservableCollection<SelectableColumn>(columnsCurrenltySelected);
-            var selectableFields = RecordService
-                .GetFields(RecordType)
-                .Where(f => !CurrentColumns.Any(c => c.FieldName == f))
-                .Select(f => new SelectableColumn(f, RecordService.GetFieldLabel(f, RecordType), 200, RemoveCurrentField, AddCurrentField, ApplicationController))
-                .OrderBy(sc => sc.FieldLabel)
-                .ToArray();
-            SelectableColumns = new ObservableCollection<SelectableColumn>(selectableFields);
+
+            var currentColumnsSelectables = new List<SelectableColumn>();
+            foreach(GridFieldMetadata column in currentColumns)
+            {
+                string fieldNameIncludingPrefix = column.AliasedFieldName ?? column.FieldName;
+                if (fieldNameIncludingPrefix.Contains("."))
+                {
+                    //aliased columns are stored within this vm in form
+                    //lookup|recordtype.fieldname
+                    //but externally in form
+                    //lookup_recordtype.fieldname
+                    //due to | not being a valid alias value
+                    fieldNameIncludingPrefix = fieldNameIncludingPrefix.Replace("_" + column.AltRecordType + ".", "|" + column.AltRecordType + ".");
+                }
+                currentColumnsSelectables.Add(new SelectableColumn(fieldNameIncludingPrefix, column.OverrideLabel ?? RecordService.GetFieldLabel(column.FieldName, RecordType), column.WidthPart, RemoveCurrentField, AddCurrentField, ApplicationController));
+            }
+            CurrentColumns = new ObservableCollection<SelectableColumn>(currentColumnsSelectables);
+
+            LinkOptions = GetLinkOptionsList(RecordType);
+            _selectedLink = LinkOptions.First();
+
+            SelectableColumns = new ObservableCollection<SelectableColumn>(GetSelectableColumnsFor(RecordType));
 
             ApplyButtonViewModel = new XrmButtonViewModel("Apply Changes", ApplyChanges, ApplicationController, "Apply The Selection Changes");
             CancelButtonViewModel = new XrmButtonViewModel("Cancel Changes", onCancel, ApplicationController, "Cancel The Selection Changes And Return");
 
             RefreshIsFirstColumn();
+        }
+
+        private IEnumerable<SelectableColumn> GetSelectableColumnsFor(string thisType)
+        {
+            var keyPrefix = "";
+            var labelPrefix = "";
+            if (SelectedLink != null && SelectedLink.Key.Contains("|"))
+            {
+                keyPrefix = SelectedLink.Key + ".";
+                labelPrefix = SelectedLink.Value + " > ";
+            }
+            return RecordService
+                .GetFields(thisType)
+                .Select(f => new SelectableColumn(keyPrefix + f, labelPrefix + RecordService.GetFieldLabel(f, thisType), 200, RemoveCurrentField, AddCurrentField, ApplicationController))
+                .Where(sc => !CurrentColumns.Any(c => c.FieldName == sc.FieldName))
+                .OrderBy(sc => sc.FieldLabel)
+                .ToArray();
+        }
+
+        private IEnumerable<PicklistOption> GetLinkOptionsList(string thisType)
+        {
+            //allow selection of lookup fields to allow inclusion of fields in related entities
+            //or the primary entity being queried
+            var thisTypeSelection = new PicklistOption(thisType, RecordService.GetDisplayName(thisType));
+            var linkOptions = new List<PicklistOption>();
+            var lookupFields = RecordService
+                .GetFields(thisType)
+                .Where(f => RecordService.IsLookup(f, thisType));
+            foreach (var field in lookupFields)
+            {
+                var targetTypes = RecordService.GetLookupTargetType(field, thisType);
+                if (targetTypes != null)
+                {
+                    var fieldLabel = RecordService.GetFieldLabel(field, thisType);
+                    var split = targetTypes.Split(',');
+                    var areMultipleTypes = split.Count() > 1;
+                    foreach (var type in split)
+                    {
+                        var key = field + "|" + type;
+                        var label = fieldLabel + (areMultipleTypes ? $" ({RecordService.GetDisplayName(type)})" : "");
+                        linkOptions.Add(new PicklistOption(key, label));
+                    }
+                }
+            }
+            linkOptions.Sort();
+            linkOptions.Insert(0, thisTypeSelection);
+            return linkOptions;
+        }
+
+        public IEnumerable<PicklistOption> LinkOptions { get; set; }
+
+        public PicklistOption SelectedLink
+        {
+            get { return _selectedLink; }
+            set
+            {
+                _selectedLink = value;
+                if (value != null)
+                {
+                    LoadingViewModel.IsLoading = true;
+                    //when selected spawn process to change the selectable fields
+                    //to those in the selections type
+                    ApplicationController.DoOnMainThread(() =>
+                    {
+                        try
+                        {
+                            var split = value.Key.Split('|');
+                            var targetType = split.Count() > 1
+                                ? split[1]
+                                : RecordType;
+                            SelectableColumns.Clear();
+                            var newColumns = GetSelectableColumnsFor(targetType);
+                            foreach (var column in newColumns)
+                            {
+                                SelectableColumns.Add(column);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ApplicationController.ThrowException(ex);
+                        }
+                        finally
+                        {
+                            LoadingViewModel.IsLoading = false;
+                        }
+                    });
+                }
+            }
         }
 
         public void AddCurrentItem(SelectableColumn draggedItem, SelectableColumn target = null, bool isAfter = true)
@@ -56,14 +159,14 @@ namespace JosephM.Application.ViewModel.Query
 
         public void RefreshIsFirstColumn()
         {
-            if(CurrentColumns != null)
+            if (CurrentColumns != null)
             {
-                foreach(var column in CurrentColumns.ToArray().Skip(1))
+                foreach (var column in CurrentColumns.ToArray().Skip(1))
                 {
                     if (column.IsFirstColumn)
                         column.IsFirstColumn = false;
                 }
-                if(CurrentColumns.Any())
+                if (CurrentColumns.Any())
                 {
                     CurrentColumns.First().IsFirstColumn = true;
                 }
@@ -83,31 +186,36 @@ namespace JosephM.Application.ViewModel.Query
         {
             if (CurrentColumns.Count == 1 && CurrentColumns.First().FieldName == fieldName)
             {
-                ApplicationController.UserMessage("The Must Be At Least One View Column");
+                ApplicationController.UserMessage("There Must Be At Least One View Column");
             }
             else
             {
-                var selectedResults = CurrentColumns.Where(c => c.FieldName == fieldName).ToArray();
-                foreach (var result in selectedResults)
+                //if removed field active for the current selected link then add it as an option
+                if ((!fieldName.Contains(".") && SelectedLink.Key == RecordType)
+                    || (fieldName.Contains(".") && fieldName.Split('.')[0] == SelectedLink.Key))
                 {
-                    CurrentColumns.Remove(result);
-                    foreach (var item in SelectableColumns)
+                    var selectedResults = CurrentColumns.Where(c => c.FieldName == fieldName).ToArray();
+                    foreach (var result in selectedResults)
                     {
-                        if (item.FieldLabel != null && item.FieldLabel.CompareTo(result.FieldLabel) > 0)
+                        CurrentColumns.Remove(result);
+                        foreach (var item in SelectableColumns)
                         {
-                            SelectableColumns.Insert(SelectableColumns.IndexOf(item), result);
-                            break;
+                            if (item.FieldLabel != null && item.FieldLabel.CompareTo(result.FieldLabel) > 0)
+                            {
+                                SelectableColumns.Insert(SelectableColumns.IndexOf(item), result);
+                                break;
+                            }
                         }
+                        if (!SelectableColumns.Contains(result))
+                            SelectableColumns.Add(result);
                     }
-                    if (!SelectableColumns.Contains(result))
-                        SelectableColumns.Add(result);
                 }
             }
         }
 
-        public ObservableCollection<SelectableColumn>  CurrentColumns { get; set; }
+        public ObservableCollection<SelectableColumn> CurrentColumns { get; set; }
 
-        public ObservableCollection<SelectableColumn>  SelectableColumns { get; set; }
+        public ObservableCollection<SelectableColumn> SelectableColumns { get; set; }
         public XrmButtonViewModel ApplyButtonViewModel { get; private set; }
         public XrmButtonViewModel CancelButtonViewModel { get; private set; }
         public void ApplyChanges()

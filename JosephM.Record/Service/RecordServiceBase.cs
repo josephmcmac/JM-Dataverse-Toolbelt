@@ -165,9 +165,14 @@ namespace JosephM.Record.Service
             return parsedValue;
         }
 
-        public virtual string GetFieldAsDisplayString(IRecord record, string fieldName)
+        public string GetFieldAsDisplayString(IRecord record, string fieldName)
         {
             var fieldValue = record.GetField(fieldName);
+            return GetFieldAsDisplayString(record.Type, fieldName, fieldValue);
+        }
+
+        public virtual string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue)
+        {
             return fieldValue == null ? "" : fieldValue.ToString();
         }
 

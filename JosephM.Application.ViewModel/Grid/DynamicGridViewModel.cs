@@ -352,7 +352,7 @@ namespace JosephM.Application.ViewModel.Grid
                     var newList = new List<GridRowViewModel>();
                     foreach (var item in GridRecords)
                     {
-                        var value1 = item.GetFieldViewModel(sortField).ValueObject;
+                        var value1 = item[sortField].ValueObject;
                         if (value1 == null)
                         {
                             newList.Insert(0, item);
@@ -360,7 +360,7 @@ namespace JosephM.Application.ViewModel.Grid
                         }
                         foreach (var item2 in newList)
                         {
-                            var value2 = item2.GetFieldViewModel(sortField).ValueObject;
+                            var value2 = item2[sortField].ValueObject;
                             if (value2 == null)
                             {
                                 continue;
@@ -625,9 +625,27 @@ namespace JosephM.Application.ViewModel.Grid
                     {
                         var folder = Path.GetDirectoryName(newFileName);
                         var fileName = Path.GetFileName(newFileName);
-                        var fields = FieldMetadata.Select(rf => rf.FieldName);
+                        var fields = FieldMetadata.ToArray();
                         var started = DateTime.UtcNow;
-                        CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records, fields, (f) => RecordService.GetFieldLabel(f, RecordType), (r, f) => { return RecordService.GetFieldAsDisplayString((IRecord)r, f); });
+
+                        var labelFuncDictionary = new Dictionary<string, Func<string, string>>();
+                        foreach(var fm in FieldMetadata)
+                        {
+                            labelFuncDictionary.Add(fm.AliasedFieldName ?? fm.FieldName, s => fm.OverrideLabel ?? RecordService.GetFieldLabel(fm.FieldName, fm.AltRecordType ?? RecordType));
+                        }
+
+                        var displayFuncDictionary = new Dictionary<string, Func<object, string, string>>();
+                        foreach (var fm in FieldMetadata)
+                        {
+                            displayFuncDictionary.Add(fm.AliasedFieldName ?? fm.FieldName, (o,s) => RecordService.GetFieldAsDisplayString(fm.AltRecordType ?? RecordType, fm.FieldName, ((IRecord)o).GetField(s)));
+                        }
+
+                        CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records,
+                            fields.Select(f => f.AliasedFieldName ?? f.FieldName),
+                            (f) => labelFuncDictionary[f](f),
+                            (r, f) => displayFuncDictionary[f](r, f));
+
+
                         ApplicationController.LogEvent("Download CSV", new Dictionary<string, string>
                         {
                             { "Is Completed Event", true.ToString() },

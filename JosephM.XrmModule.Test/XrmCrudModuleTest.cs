@@ -11,6 +11,7 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
@@ -23,6 +24,82 @@ namespace JosephM.XrmModule.Test
     [TestClass]
     public class XrmCrudModuleTest : XrmModuleTest
     {
+        /// <summary>
+        /// scripts through running a query where fields in a referenced record are added to the grid view
+        /// </summary>
+        [TestMethod]
+        public void XrmCrudQueryTestScriptWithRelatedColumns()
+        {
+            DeleteAll(Entities.jmcg_testentity);
+
+            //create a record with a parent to add fields from
+
+            var testEntity = CreateRecordAllFieldsPopulated(Entities.jmcg_testentity);
+            var testEntityParent = CreateRecordAllFieldsPopulated(Entities.jmcg_testentity);
+            testEntity.SetLookupField(Fields.jmcg_testentity_.jmcg_parentid, testEntityParent);
+            testEntity = UpdateFieldsAndRetreive(testEntity, Fields.jmcg_testentity_.jmcg_parentid);
+
+            //Create test app and load query
+            var app = CreateAndLoadTestApplication<XrmCrudModule>();
+            var crudDialog = app.NavigateToDialog<XrmCrudModule, XrmCrudDialog>();
+            var queryViewModel = crudDialog.Controller.UiItems[0] as QueryViewModel;
+            Assert.IsNotNull(queryViewModel);
+            queryViewModel.SelectedRecordType = queryViewModel.RecordTypeItemsSource.First(r => r.Key == Entities.jmcg_testentity);
+            queryViewModel.RunQueryButton.Invoke();
+
+            //spawn edit columns
+            queryViewModel.DynamicGridViewModel.GetButton("EDITCOLUMNS").Invoke();
+            Assert.AreEqual(1, queryViewModel.ChildForms.Count);
+            var editColumnsDialog = queryViewModel.ChildForms.First() as ColumnEditDialogViewModel;
+            Assert.IsNotNull(editColumnsDialog);
+            Assert.IsTrue(editColumnsDialog.SelectableColumns.Any());
+            
+            //select to add fields in the parent record
+            editColumnsDialog.SelectedLink = editColumnsDialog.LinkOptions.First(lo => lo.Key.StartsWith(Fields.jmcg_testentity_.jmcg_parentid + "|"));
+            Assert.IsTrue(editColumnsDialog.SelectableColumns.Any());
+            Assert.IsTrue(editColumnsDialog.SelectableColumns.All(sc => sc.FieldName.StartsWith(editColumnsDialog.SelectedLink.Key)));
+
+            //add all fields in the parent record
+            var allParentColumns = editColumnsDialog.SelectableColumns.ToArray();
+            foreach (var field in allParentColumns)
+            {
+                editColumnsDialog.AddCurrentItem(field);
+            }
+
+            //lets also add a created by field
+            editColumnsDialog.SelectedLink = editColumnsDialog.LinkOptions.First(lo => lo.Key.StartsWith(Fields.jmcg_testentity_.createdby + "|" + Entities.systemuser));
+            Assert.IsTrue(editColumnsDialog.SelectableColumns.Any());
+            Assert.IsTrue(editColumnsDialog.SelectableColumns.All(sc => sc.FieldName.StartsWith(editColumnsDialog.SelectedLink.Key)));
+            editColumnsDialog.AddCurrentItem(editColumnsDialog.SelectableColumns.First(sc => sc.FieldName.EndsWith(Fields.systemuser_.firstname)));
+
+            //apply changes
+            editColumnsDialog.ApplyChanges();
+            Assert.AreEqual(0, queryViewModel.ChildForms.Count);
+            Assert.IsFalse(queryViewModel.DynamicGridViewModel.GridLoadError);
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.GridRecords.Any());
+
+            //verify a field in the parent record is populated in the grid view
+            var childRow = queryViewModel.DynamicGridViewModel.GridRecords.First(gr => gr.GetRecord().Id == testEntity.Id.ToString());
+            Assert.IsTrue(childRow.FieldViewModels.Any(pc => pc.AliasedFieldName != null && pc.AliasedFieldName.Contains(".") && !(pc.ValueObject is bool) && pc.ValueObject != null));
+
+            //check sort works
+            queryViewModel.DynamicGridViewModel.SortIt(Fields.jmcg_testentity_.jmcg_parentid + "_" + Entities.jmcg_testentity + "." + Fields.jmcg_testentity_.jmcg_name);
+            Assert.IsFalse(queryViewModel.DynamicGridViewModel.GridLoadError);
+
+            //hit edit columns again
+            queryViewModel.DynamicGridViewModel.GetButton("EDITCOLUMNS").Invoke();
+            Assert.AreEqual(1, queryViewModel.ChildForms.Count);
+            editColumnsDialog = queryViewModel.ChildForms.First() as ColumnEditDialogViewModel;
+            Assert.IsNotNull(editColumnsDialog);
+            Assert.IsTrue(editColumnsDialog.SelectableColumns.Any());
+
+            //apply changes
+            editColumnsDialog.ApplyChanges();
+            Assert.AreEqual(0, queryViewModel.ChildForms.Count);
+            Assert.IsFalse(queryViewModel.DynamicGridViewModel.GridLoadError);
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.GridRecords.Any());
+        }
+
         /// <summary>
         /// scripts through running a query with joins and conditions
         /// </summary>

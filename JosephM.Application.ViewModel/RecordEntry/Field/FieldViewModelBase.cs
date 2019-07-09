@@ -46,8 +46,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                return RecordEntryViewModel.GetHorizontalJustify(GetRecordService().GetFieldType(FieldName, GetRecordType()));
+                return RecordEntryViewModel.GetHorizontalJustify(GetRecordService().GetFieldType(FieldName, GetThisFieldsRecordType()));
             }
+        }
+
+        public string GetThisFieldsRecordType()
+        {
+            return AltRecordType ?? GetRecordType();
         }
 
         public bool IsNotNullable { get; set; }
@@ -116,7 +121,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public virtual object ValueObject
         {
-            get { return Record[FieldName]; }
+            get { return Record[IndexFieldName]; }
             set
             {
                 if (value == null && ValueObject == null)
@@ -316,5 +321,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public string Description { get; set; }
 
         public bool DoNotLimitDisplayHeight { get; set; }
+        public string AltRecordType { get; set; }
+        public string AliasedFieldName { get; set; }
+
+        public string IndexFieldName
+        {
+            get { return AliasedFieldName ?? FieldName; }
+        }
     }
 }

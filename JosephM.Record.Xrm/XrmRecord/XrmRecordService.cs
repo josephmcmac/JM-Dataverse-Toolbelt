@@ -280,6 +280,10 @@ namespace JosephM.Record.Xrm.XrmRecord
         private object ToRecordField(object originalValue, string fieldName, string recordType)
         {
             var newValue = originalValue;
+            if(originalValue is AliasedValue aliased)
+            {
+                return ToRecordField(aliased.Value, fieldName.Split('.')[1], aliased.EntityLogicalName);
+            }
             if (newValue == null || newValue is string)
             {
                 //do nothing
@@ -855,7 +859,12 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public string GetFieldAsDisplayString(IRecord record, string fieldName)
         {
-            return _xrmService.GetFieldAsDisplayString(record.Type, fieldName, ToEntityValue(record.GetField(fieldName)));
+            return GetFieldAsDisplayString(record.Type, fieldName, ToEntityValue(record.GetField(fieldName)));
+        }
+
+        public string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue)
+        {
+            return _xrmService.GetFieldAsDisplayString(recordType, fieldName, ToEntityValue(fieldValue));
         }
 
         public IRecordService LookupService
@@ -1128,6 +1137,12 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         private void MapIntoLink(LinkEntity link, Join join)
         {
+            link.JoinOperator = new JoinTypeMapper().Map(join.JoinType);
+            link.EntityAlias = join.Alias;
+            if(join.Fields != null && join.Fields.Any())
+            {
+                link.Columns = new ColumnSet(join.Fields.ToArray());
+            }
             if (join.RootFilter != null)
             {
                 link.LinkCriteria = ToFilterExpression(join.RootFilter, join.TargetType);
@@ -1139,6 +1154,11 @@ namespace JosephM.Record.Xrm.XrmRecord
                     var childLink = link.AddLink(childJoin.TargetType, childJoin.SourceField, childJoin.TargetField);
                     MapIntoLink(childLink, childJoin);
                 }
+            }
+            if (join.Sorts != null)
+            {
+                var sortMapper = new SortTypeMapper();
+                link.Orders.AddRange(ToOrderExpressions(join.Sorts));
             }
         }
 

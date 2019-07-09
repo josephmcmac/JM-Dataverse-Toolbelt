@@ -224,16 +224,15 @@ namespace JosephM.Record.Service
             return cloneResults;
         }
 
-        public override string GetFieldAsDisplayString(IRecord record, string fieldName)
+        public override string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue)
         {
-            var fieldValue = record.GetField(fieldName);
             if (fieldValue == null)
                 return null;
             if (fieldValue is string)
                 return (string)fieldValue;
             if (fieldValue is Lookup)
                 return ((Lookup)fieldValue).Name;
-            if (this.GetFieldMetadata(fieldName, record.Type).IsActivityParty())
+            if (this.GetFieldMetadata(fieldName, recordType).IsActivityParty())
             {
                 if (fieldValue is IRecord[])
                 {

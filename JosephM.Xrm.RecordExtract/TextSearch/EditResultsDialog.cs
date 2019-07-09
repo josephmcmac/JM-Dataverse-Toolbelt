@@ -150,8 +150,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             {
                 //okay lets spawn a dialog for editing the columns in the grid
                 var currentColumns = DynamicGridViewModel.FieldMetadata
-                    .OrderBy(f => f.Order)
-                    .Select(f => new KeyValuePair<string, double>(f.FieldName, f.WidthPart))
                     .ToArray();
 
                 Action<IEnumerable<ColumnEditDialogViewModel.SelectableColumn>> letsLoadTheColumns = (newColumnSet) =>

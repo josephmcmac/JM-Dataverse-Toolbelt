@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mappers\ConditionTypeMapper.cs" />
+    <Compile Include="Mappers\JoinTypeMapper.cs" />
     <Compile Include="Mappers\XrmConfigurationMapper.cs" />
     <Compile Include="Mappers\LookupMapper.cs" />
     <Compile Include="Mappers\SortTypeMapper.cs" />

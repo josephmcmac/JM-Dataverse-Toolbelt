@@ -24,32 +24,31 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Name="MainQueryGrid">
-        <!--<ScrollViewer Name="QueryScroll" VerticalScrollBarVisibility="Auto">-->
-            <Grid>
-                <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition  Height="*" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToVis}, Mode=OneWay}">
-            <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
-        </Grid>
-        <Grid Grid.Row="1"
-              Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto"  />
+                <RowDefinition Height="Auto" />
+                <RowDefinition  Height="*" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0"  Visibility="{Binding MainFormInContext, Converter={StaticResource BoolToVis}}">
+            <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToVis}, Mode=OneWay}">
+                <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
+            </Grid>
+            <Grid Grid.Row="1"
+              Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"  />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0"  Visibility="{Binding MainFormInContext, Converter={StaticResource BoolToVis}}">
+                    <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*"  />
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0"  Visibility="{Binding MultipleRecordTypes, Converter={StaticResource BoolToVis}}">
                         <WrapPanel>
                             <TextBlock
-                                    Text="Select Record Type"
-                                    Style="{StaticResource FieldLabelStyle}"
-                                     />
+                                Text="Select Record Type"
+                                Style="{StaticResource FieldLabelStyle}"
+                                    />
                             <ComboBox
                                     MinWidth="150"
                                     VerticalAlignment="Top"
@@ -62,8 +61,8 @@
                                      />
                         </WrapPanel>
                     </Grid>
-                <Grid Grid.Row="1" Visibility="{Binding RecordTypeSelected, Converter={StaticResource BoolToVis}}">
-                    <Grid.RowDefinitions>
+                    <Grid Grid.Row="1" Visibility="{Binding RecordTypeSelected, Converter={StaticResource BoolToVis}}">
+                        <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
@@ -108,10 +107,10 @@
                        UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BoolToVis}}">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <Border>
-                                <StackPanel Orientation="Vertical">
-                                    <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
-                                    <query:JoinsView DataContext="{Binding Joins}" />
-                                </StackPanel>
+                                        <StackPanel Orientation="Vertical">
+                                            <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
+                                            <query:JoinsView DataContext="{Binding Joins}" />
+                                        </StackPanel>
                                     </Border>
                                 </ScrollViewer>
                             </Grid>
@@ -122,18 +121,17 @@
                             </Grid>
                         </Grid>
                         <Grid Grid.Row="4" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
-                        <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
+                            <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid Grid.Row="1" >
-                <ItemsControl
+                <Grid Grid.Row="1" >
+                    <ItemsControl
                         Name="DialogPanel"
                         ItemTemplateSelector="{StaticResource DialogTemplateSelector}"
                         ItemsSource="{Binding ChildForms}" />
+                </Grid>
             </Grid>
         </Grid>
-        </Grid>
-    <!--</ScrollViewer>-->
-  </Grid>
+    </Grid>
 </UserControl>

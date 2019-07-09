@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JosephM.Application.ViewModel.Query
@@ -188,32 +189,72 @@ namespace JosephM.Application.ViewModel.Query
 
         private void LoadColumnEdit()
         {
+            LoadingViewModel.IsLoading = true;
             DoOnMainThread(() =>
             {
-                //okay lets spawn a dialog for editing the columns in the grid
-                var currentColumns = DynamicGridViewModel.FieldMetadata
-                    .OrderBy(f => f.Order)
-                    .Select(f => new KeyValuePair<string,double>(f.FieldName, f.WidthPart))
-                    .ToArray();
-
-                Action<IEnumerable<ColumnEditDialogViewModel.SelectableColumn>> letsLoadTheColumns = (newColumnSet) =>
+                try
                 {
-                    DoOnMainThread(() =>
-                    {
-                        ExplicitlySelectedColumns = new List<GridFieldMetadata>();
-                        for (var i = 1; i <= newColumnSet.Count(); i++)
-                        {
-                            var thisOne = newColumnSet.ElementAt(i - 1);
-                            ExplicitlySelectedColumns.Add(new GridFieldMetadata(new ViewField(thisOne.FieldName, i, Convert.ToInt32(thisOne.Width))));
-                        }
-                        ClearChildForm();
-                        RecreateGrid();
-                        QuickFind();
-                    });
-                };
+                    //okay lets spawn a dialog for editing the columns in the grid
+                    var currentColumns = DynamicGridViewModel.FieldMetadata
+                        .ToArray();
 
-                var columnEditDialog = new ColumnEditDialogViewModel(RecordType, currentColumns, RecordService, letsLoadTheColumns, ClearChildForm, ApplicationController);
-                LoadChildForm(columnEditDialog);
+                    Action<IEnumerable<ColumnEditDialogViewModel.SelectableColumn>> letsLoadTheColumns = (newColumnSet) =>
+                    {
+                        LoadingViewModel.IsLoading = true;
+                        DoOnMainThread(() =>
+                        {
+                            try
+                            {
+                                ExplicitlySelectedColumns = new List<GridFieldMetadata>();
+                                for (var i = 1; i <= newColumnSet.Count(); i++)
+                                {
+                                    var thisOne = newColumnSet.ElementAt(i - 1);
+                                    string overWriteRecordType = null;
+                                    string aliasedFieldName = null;
+                                    string fieldName = thisOne.FieldName;
+                                    if (thisOne.FieldName != null && thisOne.FieldName.Contains("."))
+                                    {
+                                        //any fields in related witll be of form
+                                        //lookupfield|recordtype.fieldname
+                                        //so we need to capture their detail form the grid field metadata
+                                        var splitPaths = thisOne.FieldName.Split('.');
+                                        fieldName = splitPaths[splitPaths.Length - 1];
+                                        var lastPath = splitPaths[splitPaths.Length - 2];
+                                        var splitlookupType = lastPath.Split('|');
+                                        if (splitlookupType.Count() < 2)
+                                            throw new Exception("There was an error determining tyo eof the field named " + thisOne.FieldName);
+                                        overWriteRecordType = splitlookupType[1];
+                                        //change alias to lookupfield_recordtype.fieldname as | is not a vlaid character
+                                        aliasedFieldName = splitlookupType[0] + "_" + splitlookupType[1] + "." + fieldName;
+                                    }
+                                    ExplicitlySelectedColumns.Add(new GridFieldMetadata(new ViewField(fieldName, i, Convert.ToInt32(thisOne.Width))) { AltRecordType = overWriteRecordType, AliasedFieldName = aliasedFieldName, OverrideLabel = thisOne.FieldLabel });
+                                }
+                                ClearChildForm();
+                                RecreateGrid();
+                                QuickFind();
+                            }
+                            catch (Exception ex)
+                            {
+                                ApplicationController.ThrowException(ex);
+                            }
+                            finally
+                            {
+                                LoadingViewModel.IsLoading = false;
+                            }
+                        });
+                    };
+
+                    var columnEditDialog = new ColumnEditDialogViewModel(RecordType, currentColumns, RecordService, letsLoadTheColumns, ClearChildForm, ApplicationController);
+                    LoadChildForm(columnEditDialog);
+                }
+                catch (Exception ex)
+                {
+                    ApplicationController.ThrowException(ex);
+                }
+                finally
+                {
+                    ApplicationController.DoOnAsyncThread(() => LoadingViewModel.IsLoading = false);
+                }
             });
         }
 
@@ -470,7 +511,26 @@ namespace JosephM.Application.ViewModel.Query
                 query.Joins = Joins.GetAsJoins().ToList();
             }
             var view = DynamicGridViewModel.RecordService.GetView(DynamicGridViewModel.RecordType, DynamicGridViewModel.ViewType);
-            query.Sorts = view.Sorts.ToList();
+            query.Sorts = view.Sorts.Where(s => !s.FieldName.Contains(".")).ToList();
+
+            //okay lets add joins for all the columns in referenced types
+            if (ExplicitlySelectedColumns != null)
+            {
+                var linkGroups = ExplicitlySelectedColumns
+                    .Where(c => c.AliasedFieldName != null)
+                    .GroupBy(c => c.AliasedFieldName.Split('.')[0]);
+                foreach (var linkGroup in linkGroups)
+                {
+                    var joinToRecordType = linkGroup.First().AltRecordType;
+                    var lookupField = linkGroup.Key.Substring(0, linkGroup.Key.Length - (joinToRecordType.Length + 1));
+                    var join = new Join(lookupField, joinToRecordType, RecordService.GetPrimaryKey(joinToRecordType));
+                    join.JoinType = JoinType.LeftOuter;
+                    join.Fields = linkGroup.Select(lgf => lgf.FieldName);
+                    join.Alias = linkGroup.Key;
+                    query.Joins.Add(join);
+                }
+            }
+
             return query;
         }
 

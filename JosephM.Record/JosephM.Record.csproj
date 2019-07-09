@@ -125,6 +125,7 @@
     <Compile Include="Query\ConditionType.cs" />
     <Compile Include="Query\Filter.cs" />
     <Compile Include="Query\FilterOperator.cs" />
+    <Compile Include="Query\JoinType.cs" />
     <Compile Include="Query\Join.cs" />
     <Compile Include="Query\QueryDefinition.cs" />
     <Compile Include="Service\ObjectRecordMetadata.cs" />

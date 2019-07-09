@@ -63,7 +63,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public string StringDisplay
+        public override string StringDisplay
         {
             get { return Value == null ? null : string.Join(",", Value.OrderBy(p => p.Value).Select(p => p.Value)); }
         }

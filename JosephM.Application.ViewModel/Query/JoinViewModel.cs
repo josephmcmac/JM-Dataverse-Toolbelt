@@ -218,7 +218,6 @@ namespace JosephM.Application.ViewModel.Query
                 if (selectedKey != null)
                 {
                     var splitIt = selectedKey.Split(':');
-                    Join join = null;
                     RelationshipType = splitIt[0];
                     if (RelationshipType == "nn")
                     {

@@ -19,5 +19,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public double WidthPart { get; set; }
 
         public bool IsEditable { get; set; }
+        public string OverrideLabel { get; internal set; }
     }
 }

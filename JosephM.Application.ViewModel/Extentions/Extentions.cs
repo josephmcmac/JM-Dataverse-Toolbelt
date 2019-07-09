@@ -117,8 +117,27 @@ namespace JosephM.Application.ViewModel.Extentions
         public static GetGridRecordsResponse GetGridRecordPage(this DynamicGridViewModel gridViewModel, QueryDefinition query)
         {
             query.Top = gridViewModel.CurrentPageCeiling + 1;
-            if (gridViewModel.GetLastSortExpression() != null)
-                query.Sorts.Insert(0, gridViewModel.GetLastSortExpression());
+
+            var sortExpression = gridViewModel.GetLastSortExpression();
+            if (sortExpression != null)
+            {
+                if (!sortExpression.FieldName.Contains("."))
+                {
+                    query.Sorts.Insert(0, gridViewModel.GetLastSortExpression());
+                }
+                else
+                {
+                    //if we have a sort on a field in a linked field
+                    //we need to add the sort to the appropriate join in the query
+                    var splitName = sortExpression.FieldName.Split('.');
+                    var matchingJoins = query.Joins.Where(j => j.Alias != null && j.Alias == splitName[0]);
+                    if(matchingJoins.Any())
+                    {
+                        matchingJoins.First().Sorts.Add(new SortExpression(splitName[1], sortExpression.SortType));
+                    }
+                }
+            }
+
             var records = gridViewModel.RecordService.RetreiveAll(query);
             records.PopulateEmptyLookups(gridViewModel.RecordService, null);
             var hasMoreRows = records.Count() > gridViewModel.CurrentPageCeiling;

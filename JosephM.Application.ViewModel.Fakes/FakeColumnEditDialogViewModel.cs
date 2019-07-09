@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.ViewModel.Query;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using System.Collections.Generic;
 
 namespace JosephM.Application.ViewModel.Fakes
@@ -9,7 +10,7 @@ namespace JosephM.Application.ViewModel.Fakes
     public class FakeColumnEditDialogViewModel : ColumnEditDialogViewModel
     {
         public FakeColumnEditDialogViewModel()
-            : base(FakeConstants.RecordType, new [] { new KeyValuePair<string,double>(FakeConstants.StringField, 200) }, FakeRecordService.Get(), null, null,  new FakeApplicationController())
+            : base(FakeConstants.RecordType, new [] { new GridFieldMetadata(FakeConstants.StringField, 200) }, FakeRecordService.Get(), null, null,  new FakeApplicationController())
         {
         }
     }

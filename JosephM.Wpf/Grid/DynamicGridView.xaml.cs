@@ -214,15 +214,13 @@ namespace JosephM.Wpf.Grid
                     var columnMetadata = new List<ColumnMetadata>();
                     foreach (var gridField in gridSectionViewModel.FieldMetadata.OrderBy(gf => gf.Order))
                     {
+                        var thisRecordType = gridField.AltRecordType ?? gridSectionViewModel.RecordType;
                         var fieldName = gridField.FieldName;
-                        if (gridSectionViewModel.RecordService.FieldExists(fieldName,
-                            gridSectionViewModel.RecordType))
+                        if (gridSectionViewModel.RecordService.FieldExists(fieldName, thisRecordType))
                         {
-                            var fieldMetadata = gridSectionViewModel.RecordService.GetFieldMetadata(fieldName,
-                                gridSectionViewModel
-                                    .RecordType);
-                            var thisColumn = new ColumnMetadata(fieldName, fieldMetadata.DisplayName ?? fieldName, fieldMetadata.FieldType, gridField.WidthPart,
-                                gridField.IsEditable, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType), gridSectionViewModel.DisplayHeaders);
+                            var fieldMetadata = gridSectionViewModel.RecordService.GetFieldMetadata(fieldName, thisRecordType);
+                            var thisColumn = new ColumnMetadata(thisRecordType, fieldName, gridField.OverrideLabel ?? fieldMetadata.DisplayName ?? fieldName, fieldMetadata.FieldType, gridField.WidthPart,
+                                gridField.IsEditable, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType), gridSectionViewModel.DisplayHeaders, gridField.AliasedFieldName);
                             columnMetadata.Add(thisColumn);
                         }
                     }
@@ -246,7 +244,7 @@ namespace JosephM.Wpf.Grid
                         {
                             var cellBinding = new Binding
                             {
-                                Path = new PropertyPath(string.Concat("[", column.FieldName, "]")),
+                                Path = new PropertyPath(string.Concat("[", column.AliasedFieldName ?? column.FieldName, "]")),
                                 Mode = BindingMode.TwoWay
                             };
                             DataGridColumn dataGridField;
@@ -281,7 +279,7 @@ namespace JosephM.Wpf.Grid
                             }
                             else if (column.FieldType == RecordFieldType.RecordField)
                             {
-                                var metadata = gridSectionViewModel.RecordService.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType);
+                                var metadata = gridSectionViewModel.RecordService.GetFieldMetadata(column.FieldName, column.RecordType);
                                 if (metadata.IsMultiSelect)
                                 {
                                     dataGridField = new GridMultiSelectColumn()
@@ -299,7 +297,7 @@ namespace JosephM.Wpf.Grid
                             }
                             else if (column.FieldType == RecordFieldType.Picklist)
                             {
-                                var metadata = gridSectionViewModel.RecordService.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType);
+                                var metadata = gridSectionViewModel.RecordService.GetFieldMetadata(column.FieldName, column.RecordType);
                                 if (metadata.IsMultiSelect)
                                 {
                                     dataGridField = new GridMultiSelectColumn()
@@ -320,7 +318,7 @@ namespace JosephM.Wpf.Grid
                                 if (gridSectionViewModel.FormController.FormService != null
                                     &&
                                     gridSectionViewModel.FormController.FormService.UsePicklist(column.FieldName,
-                                        gridSectionViewModel.RecordType))
+                                        column.RecordType))
                                 {
                                     dataGridField = new GridLookupPicklistColumn()
                                     {
@@ -366,7 +364,7 @@ namespace JosephM.Wpf.Grid
                             else if (column.FieldType == RecordFieldType.Integer)
                             {
                                 var format = gridSectionViewModel.RecordService.GetIntegerFormat(column.FieldName,
-                                        gridSectionViewModel.RecordType);
+                                        column.RecordType);
                                 if (format == IntegerType.TimeZone || format == IntegerType.Language)
                                 {
                                     dataGridField = new GridIntPicklistColumn()
@@ -435,10 +433,10 @@ namespace JosephM.Wpf.Grid
                             dataGridField.Width = new DataGridLength(column.WidthPart,
                                 DataGridLengthUnitType.Pixel);
                             var isFormReadonly = gridSectionViewModel.IsReadOnly;
-                            var isWriteable = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Createable == true
-                                || gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Writeable == true;
+                            var isWriteable = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, column.RecordType).Createable == true
+                                || gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, column.RecordType).Writeable == true;
                             dataGridField.IsReadOnly = isFormReadonly || !isWriteable;
-                            var description = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, gridSectionViewModel.RecordType).Description;
+                            var description = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, column.RecordType).Description;
                             dynamicDataGrid.Columns.Add(dataGridField);
                         }
                         var dataGridBinding = new Binding
@@ -474,9 +472,11 @@ namespace JosephM.Wpf.Grid
 
         public class ColumnMetadata
         {
-            public ColumnMetadata(string fieldName, string fieldLabel, RecordFieldType fieldType, double widthPart,
-                bool isEditable, string tooltip, HorizontalJustify justify, bool displayColumnHeader)
+            public ColumnMetadata(string recordType, string fieldName, string fieldLabel, RecordFieldType fieldType, double widthPart,
+                bool isEditable, string tooltip, HorizontalJustify justify, bool displayColumnHeader, string aliasedFieldName)
             {
+                RecordType = recordType;
+                AliasedFieldName = aliasedFieldName;
                 DisplayColumnHeader = displayColumnHeader;
                 FieldName = fieldName;
                 FieldLabel = fieldLabel;
@@ -494,6 +494,8 @@ namespace JosephM.Wpf.Grid
 
             public bool DisplayColumnHeader { get; set; }
 
+            public string RecordType { get; private set; }
+            public string AliasedFieldName { get; private set; }
             public string FieldName { get; private set; }
             public string FieldLabel { get; private set; }
             public RecordFieldType FieldType { get; private set; }
