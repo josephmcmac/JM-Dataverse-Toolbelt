@@ -198,37 +198,14 @@ namespace JosephM.Application.ViewModel.Query
                     var currentColumns = DynamicGridViewModel.FieldMetadata
                         .ToArray();
 
-                    Action<IEnumerable<ColumnEditDialogViewModel.SelectableColumn>> letsLoadTheColumns = (newColumnSet) =>
+                    Action<IEnumerable<GridFieldMetadata>> letsLoadTheColumns = (newColumnSet) =>
                     {
                         LoadingViewModel.IsLoading = true;
                         DoOnMainThread(() =>
                         {
                             try
                             {
-                                ExplicitlySelectedColumns = new List<GridFieldMetadata>();
-                                for (var i = 1; i <= newColumnSet.Count(); i++)
-                                {
-                                    var thisOne = newColumnSet.ElementAt(i - 1);
-                                    string overWriteRecordType = null;
-                                    string aliasedFieldName = null;
-                                    string fieldName = thisOne.FieldName;
-                                    if (thisOne.FieldName != null && thisOne.FieldName.Contains("."))
-                                    {
-                                        //any fields in related witll be of form
-                                        //lookupfield|recordtype.fieldname
-                                        //so we need to capture their detail form the grid field metadata
-                                        var splitPaths = thisOne.FieldName.Split('.');
-                                        fieldName = splitPaths[splitPaths.Length - 1];
-                                        var lastPath = splitPaths[splitPaths.Length - 2];
-                                        var splitlookupType = lastPath.Split('|');
-                                        if (splitlookupType.Count() < 2)
-                                            throw new Exception("There was an error determining tyo eof the field named " + thisOne.FieldName);
-                                        overWriteRecordType = splitlookupType[1];
-                                        //change alias to lookupfield_recordtype.fieldname as | is not a vlaid character
-                                        aliasedFieldName = splitlookupType[0] + "_" + splitlookupType[1] + "." + fieldName;
-                                    }
-                                    ExplicitlySelectedColumns.Add(new GridFieldMetadata(new ViewField(fieldName, i, Convert.ToInt32(thisOne.Width))) { AltRecordType = overWriteRecordType, AliasedFieldName = aliasedFieldName, OverrideLabel = thisOne.FieldLabel });
-                                }
+                                ExplicitlySelectedColumns = newColumnSet.ToList();
                                 ClearChildForm();
                                 RecreateGrid();
                                 QuickFind();
@@ -244,7 +221,7 @@ namespace JosephM.Application.ViewModel.Query
                         });
                     };
 
-                    var columnEditDialog = new ColumnEditDialogViewModel(RecordType, currentColumns, RecordService, letsLoadTheColumns, ClearChildForm, ApplicationController);
+                    var columnEditDialog = new ColumnEditDialogViewModel(RecordType, currentColumns, RecordService, letsLoadTheColumns, ClearChildForm, ApplicationController, allowLinkedFields: true);
                     LoadChildForm(columnEditDialog);
                 }
                 catch (Exception ex)

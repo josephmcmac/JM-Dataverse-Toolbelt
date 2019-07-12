@@ -152,16 +152,11 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 var currentColumns = DynamicGridViewModel.FieldMetadata
                     .ToArray();
 
-                Action<IEnumerable<ColumnEditDialogViewModel.SelectableColumn>> letsLoadTheColumns = (newColumnSet) =>
+                Action<IEnumerable<GridFieldMetadata>> letsLoadTheColumns = (newColumnSet) =>
                 {
                     DoOnMainThread(() =>
                     {
-                        ExplicitlySelectedColumns = new List<GridFieldMetadata>();
-                        for (var i = 1; i <= newColumnSet.Count(); i++)
-                        {
-                            var thisOne = newColumnSet.ElementAt(i - 1);
-                            ExplicitlySelectedColumns.Add(new GridFieldMetadata(new ViewField(thisOne.FieldName, i, Convert.ToInt32(thisOne.Width))));
-                        }
+                        ExplicitlySelectedColumns = newColumnSet.ToList();
                         ClearChildForm();
                         RecreateGrid();
                     });

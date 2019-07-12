@@ -5,6 +5,7 @@ using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
+using JosephM.Record.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,16 +18,17 @@ namespace JosephM.Application.ViewModel.Query
         private PicklistOption _selectedLink;
 
         private string RecordType { get; set; }
-        public Action<IEnumerable<SelectableColumn>> ApplySelections { get; private set; }
+        public Action<IEnumerable<GridFieldMetadata>> ApplySelections { get; private set; }
+        public bool AllowLinkedFields { get; }
         private IRecordService RecordService { get; set; }
 
-        public ColumnEditDialogViewModel(string recordType, IEnumerable<GridFieldMetadata> currentColumns, IRecordService recordService, Action<IEnumerable<SelectableColumn>> applySelections, Action onCancel, IApplicationController applicationController)
+        public ColumnEditDialogViewModel(string recordType, IEnumerable<GridFieldMetadata> currentColumns, IRecordService recordService, Action<IEnumerable<GridFieldMetadata>> applySelections, Action onCancel, IApplicationController applicationController, bool allowLinkedFields = false)
             : base(applicationController)
         {
             RecordService = recordService;
             RecordType = recordType;
             ApplySelections = applySelections;
-
+            AllowLinkedFields = allowLinkedFields;
             var currentColumnsSelectables = new List<SelectableColumn>();
             foreach(GridFieldMetadata column in currentColumns)
             {
@@ -78,26 +80,29 @@ namespace JosephM.Application.ViewModel.Query
             //or the primary entity being queried
             var thisTypeSelection = new PicklistOption(thisType, RecordService.GetDisplayName(thisType));
             var linkOptions = new List<PicklistOption>();
-            var lookupFields = RecordService
-                .GetFields(thisType)
-                .Where(f => RecordService.IsLookup(f, thisType));
-            foreach (var field in lookupFields)
+            if (AllowLinkedFields)
             {
-                var targetTypes = RecordService.GetLookupTargetType(field, thisType);
-                if (targetTypes != null)
+                var lookupFields = RecordService
+                    .GetFields(thisType)
+                    .Where(f => RecordService.IsLookup(f, thisType));
+                foreach (var field in lookupFields)
                 {
-                    var fieldLabel = RecordService.GetFieldLabel(field, thisType);
-                    var split = targetTypes.Split(',');
-                    var areMultipleTypes = split.Count() > 1;
-                    foreach (var type in split)
+                    var targetTypes = RecordService.GetLookupTargetType(field, thisType);
+                    if (targetTypes != null)
                     {
-                        var key = field + "|" + type;
-                        var label = fieldLabel + (areMultipleTypes ? $" ({RecordService.GetDisplayName(type)})" : "");
-                        linkOptions.Add(new PicklistOption(key, label));
+                        var fieldLabel = RecordService.GetFieldLabel(field, thisType);
+                        var split = targetTypes.Split(',');
+                        var areMultipleTypes = split.Count() > 1;
+                        foreach (var type in split)
+                        {
+                            var key = field + "|" + type;
+                            var label = fieldLabel + (areMultipleTypes ? $" ({RecordService.GetDisplayName(type)})" : "");
+                            linkOptions.Add(new PicklistOption(key, label));
+                        }
                     }
                 }
+                linkOptions.Sort();
             }
-            linkOptions.Sort();
             linkOptions.Insert(0, thisTypeSelection);
             return linkOptions;
         }
@@ -220,7 +225,31 @@ namespace JosephM.Application.ViewModel.Query
         public XrmButtonViewModel CancelButtonViewModel { get; private set; }
         public void ApplyChanges()
         {
-            ApplySelections(CurrentColumns);
+            var newGridColumns = new List<GridFieldMetadata>();
+            for (var i = 1; i <= CurrentColumns.Count(); i++)
+            {
+                var thisOne = CurrentColumns.ElementAt(i - 1);
+                string overWriteRecordType = null;
+                string aliasedFieldName = null;
+                string fieldName = thisOne.FieldName;
+                if (thisOne.FieldName != null && thisOne.FieldName.Contains("."))
+                {
+                    //any fields in related witll be of form
+                    //lookupfield|recordtype.fieldname
+                    //so we need to capture their detail form the grid field metadata
+                    var splitPaths = thisOne.FieldName.Split('.');
+                    fieldName = splitPaths[splitPaths.Length - 1];
+                    var lastPath = splitPaths[splitPaths.Length - 2];
+                    var splitlookupType = lastPath.Split('|');
+                    if (splitlookupType.Count() < 2)
+                        throw new Exception("There was an error determining tyo eof the field named " + thisOne.FieldName);
+                    overWriteRecordType = splitlookupType[1];
+                    //change alias to lookupfield_recordtype.fieldname as | is not a vlaid character
+                    aliasedFieldName = splitlookupType[0] + "_" + splitlookupType[1] + "." + fieldName;
+                }
+                newGridColumns.Add(new GridFieldMetadata(new ViewField(fieldName, i, Convert.ToInt32(thisOne.Width))) { AltRecordType = overWriteRecordType, AliasedFieldName = aliasedFieldName, OverrideLabel = thisOne.FieldLabel });
+            }
+            ApplySelections(newGridColumns);
         }
 
         public class SelectableColumn : ViewModelBase

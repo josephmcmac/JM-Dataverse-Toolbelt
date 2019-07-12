@@ -119,6 +119,7 @@
                         Style="{StaticResource HeadingStyle}" 
                         />
                     <ComboBox
+                        Visibility="{Binding AllowLinkedFields, Converter={StaticResource BooleanToVisibilityConverter}}"
                         VerticalAlignment="Top"
                         MinWidth="150"
                         DisplayMemberPath="Value"
