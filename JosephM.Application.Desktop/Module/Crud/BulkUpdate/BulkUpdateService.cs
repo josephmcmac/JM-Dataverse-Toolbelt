@@ -25,6 +25,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
             var estimator = new TaskEstimator(countToUpdate);
             foreach (var record in request.GetRecordsToUpdate())
             {
+                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Updates"));
                 try
                 {
 
@@ -41,8 +42,8 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
                     response.AddResponseItem(new BulkUpdateResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
                 }
                 countUpdated++;
-                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Updates"));
             }
+            controller.UpdateProgress(1, 1, "Updates Completed");
             response.Message = "Updates Completed";
         }
     }

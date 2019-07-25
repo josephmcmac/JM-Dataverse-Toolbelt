@@ -25,6 +25,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
             var estimator = new TaskEstimator(countToUpdate);
             foreach (var record in request.GetRecordsToUpdate())
             {
+                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Deletions"));
                 try
                 {
                     var newRecord = RecordService.NewRecord(request.RecordType.Key);
@@ -36,8 +37,8 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
                     response.AddResponseItem(new BulkDeleteResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
                 }
                 countUpdated++;
-                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Deletions"));
             }
+            controller.UpdateProgress(1, 1, "Deletions Completed");
             response.Message = "Deletions Completed";
         }
     }

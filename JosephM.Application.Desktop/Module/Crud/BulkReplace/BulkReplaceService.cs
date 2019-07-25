@@ -25,6 +25,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
             var estimator = new TaskEstimator(countToUpdate);
             foreach (var record in request.GetRecordsToUpdate())
             {
+                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Replacements"));
                 try
                 {
                     var recordWithFieldLoaded = RecordService.Get(request.RecordType.Key, record.Id);
@@ -41,8 +42,8 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
                     response.AddResponseItem(new BulkReplaceResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
                 }
                 countUpdated++;
-                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Replacements"));
             }
+            controller.UpdateProgress(1, 1, "Replaces Completed");
             response.Message = "Replaces Completed";
         }
     }

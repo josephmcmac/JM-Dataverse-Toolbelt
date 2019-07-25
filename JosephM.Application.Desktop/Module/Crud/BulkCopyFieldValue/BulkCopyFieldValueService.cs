@@ -24,6 +24,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue
             var estimator = new TaskEstimator(countToUpdate);
             foreach (var record in request.GetRecordsToUpdate())
             {
+                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Updates"));
                 try
                 {
                     var reloadRecord = RecordService.Get(record.Type, record.Id, new[] { request.SourceField.Key, request.TargetField.Key });
@@ -39,8 +40,8 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue
                     response.AddResponseItem(new BulkCopyFieldValueResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
                 }
                 countUpdated++;
-                controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Updates"));
             }
+            controller.UpdateProgress(1, 1, "Copies Completed");
             response.Message = "Copies Completed";
         }
     }
