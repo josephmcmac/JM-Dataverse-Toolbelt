@@ -89,6 +89,7 @@
     <Compile Include="AddToSolution\AddToSolutionResponse.cs" />
     <Compile Include="AddToSolution\AddToSolutionResponseItem.cs" />
     <Compile Include="AddToSolution\AddToSolutionService.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="InstanceComparerTypeSummary.cs" />
     <Compile Include="InstanceComparerDifference.cs" />
     <Compile Include="InstanceComparerModule.cs" />

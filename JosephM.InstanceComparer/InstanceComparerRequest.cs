@@ -107,6 +107,11 @@ namespace JosephM.InstanceComparer
 
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]
+        [DisplayOrder(110)]
+        public bool Apps { get; set; }
+
+        [GridWidth(110)]
+        [Group(Sections.CompareOptions)]
         [DisplayOrder(9000)]
         public bool Data { get; set; }
 

@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static JosephM.InstanceComparer.Extensions;
 
 namespace JosephM.InstanceComparer
 {
@@ -41,6 +42,7 @@ namespace JosephM.InstanceComparer
             AppendCaseCreationRules(processContainer);
             AppendSlas(processContainer);
             AppendRoutingRules(processContainer);
+            AppendApps(processContainer);
 
             AppendData(processContainer);
 
@@ -61,6 +63,27 @@ namespace JosephM.InstanceComparer
             else
                 response.Message = "No Difference Were Found";
         }
+
+        private void AppendApps(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.Apps)
+                return;
+            var processCompareParams = new ProcessCompareParams("App",
+                Entities.appmodule, Fields.appmodule_.name, Fields.appmodule_.name, null, null)
+            {
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.appmodule_.appmoduleid, 80)
+            };
+
+            var appComponentCompareParams = new ProcessCompareParams("App Component", typeof(AppComponent),
+                (s, r) => r.GetAppComponents(s).ToArray(),
+                nameof(AppComponent.CompareString), new[] { nameof(AppComponent.CompareString), nameof(AppComponent.SiteMapXml) });
+            
+            processCompareParams.ChildCompares = new[] { appComponentCompareParams };
+
+            if (processContainer.ServiceOne.RecordTypeExists(processCompareParams.RecordType))
+                processContainer.Comparisons.Add(processCompareParams);
+        }
+
 
         private void CompareAssociations(ProcessContainer processContainer)
         {
@@ -878,8 +901,11 @@ namespace JosephM.InstanceComparer
                                 continue;
 
                             var displayName2 = GetItemDisplayName(duplicate, processContainer.ServiceTwo, processCompareParams, true);
+                            string parentRef = null;
+                            if (parent2 != null)
+                                parentRef = parent2.GetStringField(parentCompareParams.MatchField);
                             processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType, displayName
-                                , "Duplicate match. Only the first will be compared", displayName, displayName2, item.Id, duplicate.Id);
+                                , "Duplicate match. Only the first will be compared", displayName, displayName2, item.Id, duplicate.Id, parentReference: parentRef);
                         }
                     }
                     var match = matches.First();
@@ -1182,6 +1208,8 @@ namespace JosephM.InstanceComparer
                     return value;
                 return _conversionsObjects[field].Last().Convert(value);
             }
+
+            //todo constructors are a mess
 
             public ProcessCompareParams(string context, Type type, Func<IRecordService, IEnumerable<object>> getObjects, string keyProperty, IEnumerable<string> fieldsCheckDifference)
                 : this(context, type, (s, r) => getObjects(r), keyProperty, fieldsCheckDifference)
