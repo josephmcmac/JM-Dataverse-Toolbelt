@@ -67,7 +67,6 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                     var savedSettings = settingsManager.Resolve<SavedSettings>(Type.GetType(type));
                     if (savedSettings != null && savedSettings.SavedRequests.Any())
                     {
-                        var i = 0;
                         foreach (var item in savedSettings.SavedRequests)
                         {
                             if (item is IAllowSaveAndLoad)

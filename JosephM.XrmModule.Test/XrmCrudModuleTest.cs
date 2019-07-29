@@ -426,7 +426,7 @@ namespace JosephM.XrmModule.Test
             queryViewModel.DynamicGridViewModel.OnSelectionsChanged();
             //trigger and enter bulk update
             queryViewModel.DynamicGridViewModel.GetButton("BULKCOPYFIELDVALUESELECTED").Invoke();
-            //todo verify description empty
+
             DoBulkCopyFieldValue(dialog, Fields.account_.name, Fields.account_.description);
             //verify records updated
             //this dude doesnt get copied because already populated
