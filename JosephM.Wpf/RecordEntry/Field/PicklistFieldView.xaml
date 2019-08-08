@@ -36,6 +36,7 @@
                   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <ComboBox
                 Name="ComboBox"
+                TabIndex="1"
                 DisplayMemberPath="Value"
                 ItemsSource="{Binding ItemsSource}"
                 IsEnabled="{Binding IsEditable}"

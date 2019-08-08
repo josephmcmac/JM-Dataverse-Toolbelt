@@ -19,7 +19,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        private void Search()
+        public void Search()
         {
             if (AutocompleteViewModel != null)
             {

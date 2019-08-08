@@ -51,6 +51,11 @@ namespace JosephM.Wpf.RecordEntry.Field
                 ViewModel.SelectAutocompleteGrid();
             if (e.Key == Key.Tab || e.Key == Key.Escape)
                 ViewModel.DisplayAutocomplete = false;
+            if (e.Key == Key.Enter)
+                ViewModel.Search();
+            else if (e.Key == Key.K &&
+                     (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)))
+                ViewModel.Search();
         }
     }
 }
