@@ -352,6 +352,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             };
                             break;
                         }
+                    case RecordFieldType.Uniqueidentifier:
+                        {
+                            fieldVm = new UniqueIdentifierFieldViewModel(field, label, recordForm)
+                            {
+                                IsRecordServiceField = isRecordServiceField
+                            };
+                            break;
+                        }
                 }
                 if (fieldVm == null)
                 {

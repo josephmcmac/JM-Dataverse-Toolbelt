@@ -221,6 +221,10 @@
       <DependentUpon>GridMultiSelectFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\Fields\GridMultiSelectColumn.cs" />
+    <Compile Include="Grid\Fields\UniqueIdentifierColumn.cs" />
+    <Compile Include="Grid\Fields\GridUniqueIdentifierFieldView.xaml.cs">
+      <DependentUpon>GridUniqueIdentifierFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\Fields\GridStringDisplayOnlyColumn.cs" />
     <Compile Include="Grid\Fields\GridStringDisplayOnlyView.xaml.cs">
       <DependentUpon>GridStringDisplayOnlyView.xaml</DependentUpon>
@@ -343,6 +347,9 @@
     <Compile Include="Grid\Fields\GridLookupPicklistColumn.cs" />
     <Compile Include="RecordEntry\Field\StringFieldDisplayOnlyView.xaml.cs">
       <DependentUpon>StringFieldDisplayOnlyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\UniqueIdentifierFieldView.xaml.cs">
+      <DependentUpon>UniqueIdentifierFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\UnmatchedFieldView.xaml.cs">
       <DependentUpon>UnmatchedFieldView.xaml</DependentUpon>
@@ -479,6 +486,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\Fields\GridUniqueIdentifierFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\Fields\GridStringDisplayOnlyView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -608,6 +619,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\StringFieldDisplayOnlyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\UniqueIdentifierFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

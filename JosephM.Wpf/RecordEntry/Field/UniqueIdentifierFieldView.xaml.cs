@@ -8,9 +8,9 @@ using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace JosephM.Wpf.RecordEntry.Field
 {
-    public partial class UnmatchedFieldView : FieldControlBase
+    public partial class UniqueIdentifierFieldView : FieldControlBase
     {
-        public UnmatchedFieldView()
+        public UniqueIdentifierFieldView()
         {
             InitializeComponent();
         }
@@ -19,5 +19,6 @@ namespace JosephM.Wpf.RecordEntry.Field
         {
             return BindingOperations.GetBinding(TextBox, TextBox.TextProperty);
         }
+
     }
 }

@@ -101,6 +101,9 @@
     <DataTemplate x:Key="ActivityPartyFieldTemplate">
         <field:ActivityPartyFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="UniqueIdentifierFieldTemplate">
+        <field:UniqueIdentifierFieldView DataContext="{Binding}" MinWidth="270" />
+    </DataTemplate>
     <DataTemplate x:Key="UnmatchedFieldTemplate">
         <field:UnmatchedFieldView DataContext="{Binding}" MinWidth="270" />
     </DataTemplate>
@@ -125,6 +128,7 @@
         DecimalFieldTemplate="{StaticResource DecimalFieldTemplate}"
         UrlFieldTemplate="{StaticResource UrlFieldTemplate}"
         MultiSelectFieldTemplate="{StaticResource MultiSelectFieldTemplate}"
+        UniqueIdentifierFieldTemplate="{StaticResource UniqueIdentifierFieldTemplate}"
         UnmatchedFieldTemplate="{StaticResource UnmatchedFieldTemplate}"
         x:Key="fieldTemplateSelector" />
     <DataTemplate x:Key="labelledFieldTemplate">

@@ -122,6 +122,7 @@
     <Compile Include="RecordEntry\Field\PicklistMultiSelectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\RecordFieldMultiSelectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\ReferenceFieldViewModel.cs" />
+    <Compile Include="RecordEntry\Field\UniqueIdentifierFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\UrlFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\UnmatchedFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\EnumerableFieldViewModel.cs" />

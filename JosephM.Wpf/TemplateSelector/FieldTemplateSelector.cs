@@ -32,7 +32,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate UrlFieldTemplate { get; set; }
         public DataTemplate MultiSelectFieldTemplate { get; set; }
         public DataTemplate ActivityPartyFieldTemplate { get; set; }
-
+        public DataTemplate UniqueIdentifierFieldTemplate { get; set; }
         public DataTemplate UnmatchedFieldTemplate { get; set; }
 
 
@@ -103,6 +103,8 @@ namespace JosephM.Wpf.TemplateSelector
                 return MultiSelectFieldTemplate;
             if (item is ActivityPartyFieldViewModel)
                 return ActivityPartyFieldTemplate;
+            if (item is UniqueIdentifierFieldViewModel)
+                return UniqueIdentifierFieldTemplate;
             else
                 return UnmatchedFieldTemplate;
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",

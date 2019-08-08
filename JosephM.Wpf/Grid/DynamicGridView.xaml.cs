@@ -422,6 +422,13 @@ namespace JosephM.Wpf.Grid
                                     Binding = cellBinding
                                 };
                             }
+                            else if (column.FieldType == RecordFieldType.Uniqueidentifier)
+                            {
+                                dataGridField = new GridUniqueIdentifierColumn()
+                                {
+                                    Binding = cellBinding
+                                };
+                            }
                             else
                             {
                                 dataGridField = new GridStringColumn()
