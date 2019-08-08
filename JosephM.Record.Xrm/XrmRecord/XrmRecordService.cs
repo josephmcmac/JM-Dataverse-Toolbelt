@@ -1135,6 +1135,12 @@ namespace JosephM.Record.Xrm.XrmRecord
             return queryExpression;
         }
 
+        public string ToFetchXml(QueryDefinition query)
+        {
+            var queryExpression = ToQueryExpression(query);
+            return XrmService.ConvertQueryExpressionToFetch(queryExpression);
+        }
+
         private void MapIntoLink(LinkEntity link, Join join)
         {
             link.JoinOperator = new JoinTypeMapper().Map(join.JoinType);

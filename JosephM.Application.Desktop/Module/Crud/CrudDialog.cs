@@ -95,7 +95,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                                 }, (g) => g.GridRecords != null && g.GridRecords.Any()),
                             })
                         };
-
+                        customFunctionList.AddRange(GetExtendedGridFunctions());
                         QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
                         Controller.LoadToUi(QueryViewModel);
                     }
@@ -109,6 +109,11 @@ namespace JosephM.Application.Desktop.Module.Crud
             {
                 ApplicationController.ThrowException(ex);
             }
+        }
+
+        public virtual IEnumerable<CustomGridFunction> GetExtendedGridFunctions()
+        {
+            return new CustomGridFunction[0];
         }
 
         public virtual IEnumerable<string> AdditionalExplicitTypes

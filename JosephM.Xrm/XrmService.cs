@@ -3377,13 +3377,22 @@ string recordType)
 
         public QueryExpression ConvertFetchToQueryExpression(string fetchXml)
         {
-
             var req = new FetchXmlToQueryExpressionRequest()
             {
                 FetchXml = fetchXml
             };
             var response = (FetchXmlToQueryExpressionResponse)Execute(req);
             return response.Query;
+        }
+
+        public string ConvertQueryExpressionToFetch(QueryExpression query)
+        {
+            var req = new QueryExpressionToFetchXmlRequest()
+            {
+                Query = query
+            };
+            var response = (QueryExpressionToFetchXmlResponse)Execute(req);
+            return response.FetchXml;
         }
 
         public object ConvertToQueryValue(string fieldName, string entityType, object value)
