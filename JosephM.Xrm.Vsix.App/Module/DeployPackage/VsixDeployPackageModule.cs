@@ -1,17 +1,17 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Modules;
+using JosephM.Core.Utility;
 using JosephM.Deployment.DeployPackage;
-using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.IO;
 using System.Linq;
-using JosephM.Core.Utility;
 
 namespace JosephM.Xrm.Vsix.Module.DeployPackage
 {
     [MenuItemVisibleDeployPackage]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class VsixDeployPackageModule : DeployPackageModule
     {
         public override void InitialiseModule()

@@ -5,7 +5,7 @@ using JosephM.Core.FieldType;
 using JosephM.Deployment.DataImport;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.XrmModule.XrmConnection;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Linq;
 
@@ -13,7 +13,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {
     [MenuItemVisibleImportRecords]
     [DependantModule(typeof(XrmPackageSettingsModule))]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class ImportRecordsModule : ServiceRequestModule<ImportRecordsDialog, ImportRecordsService, ImportRecordsRequest, ImportRecordsResponse, DataImportResponseItem>
     {
         public override void DialogCommand()

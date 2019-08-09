@@ -7,7 +7,6 @@ using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.XrmModule.Test;
-using JosephM.XrmModule.XrmConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Linq;
@@ -112,7 +111,7 @@ namespace JosephM.Application.Desktop.Console.Test
             //    Connections = new[] { c2 }
             //});
 
-            XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), app.Controller);
+            SavedXrmConnectionsModule.RefreshXrmServices(GetXrmRecordConfiguration(), app.Controller);
             app.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections
             {
                 Connections = new[] { GetSavedXrmRecordConfiguration() }

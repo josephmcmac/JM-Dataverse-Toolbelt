@@ -2,15 +2,15 @@
 using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
 using JosephM.Deployment.ImportCsvs;
-using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportCsvs
 {
     [MenuItemVisibleCsvs]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class VsixImportCsvsModule : ImportCsvsModule
     {
         public override void InitialiseModule()

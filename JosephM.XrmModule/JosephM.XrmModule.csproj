@@ -90,15 +90,13 @@
     <Compile Include="Crud\XrmCrudDialog.cs" />
     <Compile Include="Crud\XrmCrudModule.cs" />
     <Compile Include="Crud\XrmFormService.cs" />
-    <Compile Include="AppConnection\AppXrmConnectionEntryDialog.cs" />
-    <Compile Include="XrmConnection\DiscoveryAutocomplete.cs" />
-    <Compile Include="XrmConnection\XrmConnectionDialog.cs" />
+    <Compile Include="SavedXrmConnections\AppXrmConnectionEntryDialog.cs" />
+    <Compile Include="SavedXrmConnections\DiscoveryAutocomplete.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmRecordConnection.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmConnectionsDialog.cs" />
     <Compile Include="SavedXrmConnections\ISavedXrmConnections.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmConnections.cs" />
     <Compile Include="SavedXrmConnections\SavedXrmConnectionsModule.cs" />
-    <Compile Include="XrmConnection\XrmConnectionModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

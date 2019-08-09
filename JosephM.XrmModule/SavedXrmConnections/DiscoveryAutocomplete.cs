@@ -1,4 +1,4 @@
-﻿namespace JosephM.XrmModule.XrmConnection
+﻿namespace JosephM.XrmModule.SavedXrmConnections
 {
     public class DiscoveryAutocomplete
     {

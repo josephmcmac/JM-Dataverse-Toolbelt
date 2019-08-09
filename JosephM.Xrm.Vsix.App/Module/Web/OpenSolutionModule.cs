@@ -1,12 +1,12 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.XrmModule.XrmConnection;
+using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.Vsix.Module.Web
 {
     [MenuItemVisibleSolutionConfigured]
     [DependantModule(typeof(XrmPackageSettingsModule))]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class OpenSolutionModule : OptionActionModule
     {
         public override string MainOperationName => "Open Solution";

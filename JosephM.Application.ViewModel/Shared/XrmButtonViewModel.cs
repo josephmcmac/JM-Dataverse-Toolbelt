@@ -1,11 +1,7 @@
-﻿#region
-
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.Shared
 {

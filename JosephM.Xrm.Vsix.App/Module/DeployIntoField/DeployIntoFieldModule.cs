@@ -1,16 +1,16 @@
 ﻿using JosephM.Application;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.Modules;
-using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
-using JosephM.Application.Desktop.Module.ServiceRequest;
 
 namespace JosephM.Xrm.Vsix.Module.DeployIntoField
 {
     [DeployIntoFieldMenuItemVisible]
     [DependantModule(typeof(XrmPackageSettingsModule))]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class DeployIntoFieldModule : ServiceRequestModule<DeployIntoFieldDialog, DeployIntoFieldService, DeployIntoFieldRequest, DeployIntoFieldResponse, DeployIntoFieldResponseItem>
     {
         public override void DialogCommand()

@@ -1,11 +1,10 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Module.CommandLine;
 using JosephM.Application.Modules;
 using JosephM.Application.Options;
-using JosephM.Application.Desktop.Module.CommandLine;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Extentions;
 using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.XrmModule.XrmConnection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -122,7 +121,7 @@ namespace JosephM.Application.Desktop.Console
                 if (!validate.IsValid)
                     throw new Exception($"Error Loading ActiveXrmConnection '{savedConnection}': {validate.GetErrorString()}");
 
-                XrmConnectionModule.RefreshXrmServices(matchingConnections.First(), Controller);
+                SavedXrmConnectionsModule.RefreshXrmServices(matchingConnections.First(), Controller);
             }
         }
 

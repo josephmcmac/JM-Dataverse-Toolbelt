@@ -4,7 +4,7 @@ using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.Extentions;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.XrmModule.XrmConnection;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Linq;
 
@@ -12,7 +12,7 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
 {
     [MenuItemVisibleForDeployIntoFieldProject]
     [DependantModule(typeof(XrmPackageSettingsModule))]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class AddPortalCodeModule : ServiceRequestModule<AddPortalCodeDialog, AddPortalCodeService, AddPortalCodeRequest, AddPortalCodeResponse, AddPortalCodeResponseItem>
     {
         public override void RegisterTypes()

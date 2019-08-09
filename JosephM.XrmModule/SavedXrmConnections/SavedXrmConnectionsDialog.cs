@@ -2,7 +2,6 @@
 using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
-using JosephM.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Linq;
 
@@ -25,7 +24,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
                 var recordconfig =
                     new ObjectMapping.ClassMapperFor<SavedXrmRecordConfiguration, XrmRecordConfiguration>().Map(savedConfig);
                 ApplicationController.ResolveType<ISettingsManager>().SaveSettingsObject(recordconfig);
-                XrmConnectionModule.RefreshXrmServices(recordconfig, ApplicationController);
+                SavedXrmConnectionsModule.RefreshXrmServices(recordconfig, ApplicationController);
             }
         }
     }

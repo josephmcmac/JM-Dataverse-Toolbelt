@@ -1,16 +1,15 @@
-﻿using JosephM.Application.Modules;
-using JosephM.Application.Desktop.Module.ServiceRequest;
-using JosephM.Core.Attributes;
-using JosephM.Core.Service;
-using JosephM.XrmModule.XrmConnection;
-using System;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Attributes;
+using JosephM.Core.Service;
+using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.CodeGenerator.CSharp
 {
     [MyDescription("Generate C# Code Constants For The Customisations In A CRM Instance")]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class CSharpModule :
         ServiceRequestModule
             <CSharpDialog, CSharpService, CSharpRequest, CSharpResponse, ServiceResponseItem>

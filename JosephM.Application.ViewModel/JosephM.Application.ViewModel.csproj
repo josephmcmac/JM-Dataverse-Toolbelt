@@ -101,6 +101,8 @@
     <Compile Include="ApplicationOptions\ApplicationOption.cs" />
     <Compile Include="ApplicationOptions\ApplicationOptionsViewModel.cs" />
     <Compile Include="Dialog\CompletionScreenViewModel.cs" />
+    <Compile Include="Notification\NotificationsViewModel.cs" />
+    <Compile Include="Notification\NotificationViewModel.cs" />
     <Compile Include="Query\ColumnEditDialogViewModel.cs" />
     <Compile Include="Query\JoinViewModel.cs" />
     <Compile Include="Query\JoinsViewModel.cs" />

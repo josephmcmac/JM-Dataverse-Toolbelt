@@ -1,9 +1,9 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.XrmModule.XrmConnection;
+using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.Vsix.Module.Web
 {
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class OpenAdvancedFindModule : OptionActionModule
     {
         public override string MainOperationName => "Open Advanced Find";

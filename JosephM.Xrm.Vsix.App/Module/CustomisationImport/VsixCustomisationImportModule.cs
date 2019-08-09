@@ -3,19 +3,19 @@ using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
 using JosephM.CustomisationImporter;
 using JosephM.CustomisationImporter.Service;
-using JosephM.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Vsix.App.Module.CustomisationImport;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Linq;
-using JosephM.Xrm.Vsix.App.Module.CustomisationImport;
 
 namespace JosephM.Xrm.Vsix.Module.CustomisationImport
 {
     [MenuItemVisibleXlsx]
     [DependantModule(typeof(XrmPackageSettingsModule))]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class VsixCustomisationImportModule : CustomisationImportModule
     {
         protected override bool AddGetTemplateLink

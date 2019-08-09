@@ -1,16 +1,16 @@
-﻿using JosephM.Application.Modules;
-using JosephM.Application.Desktop.Module.ServiceRequest;
-using JosephM.Core.Attributes;
-using JosephM.Core.Service;
-using JosephM.XrmModule.XrmConnection;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Attributes;
+using JosephM.Core.Service;
+using JosephM.XrmModule.SavedXrmConnections;
 using System.Windows.Forms;
 
 namespace JosephM.CodeGenerator.JavaScriptOptions
 {
     [MyDescription("Generate JavaScript Code Constants For A Picklist Field")]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class JavaScriptOptionsModule :
         ServiceRequestModule
             <JavaScriptOptionsDialog, JavaScriptOptionsService, JavaScriptOptionsRequest, JavaScriptOptionsResponse, ServiceResponseItem>

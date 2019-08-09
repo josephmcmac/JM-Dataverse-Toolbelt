@@ -28,7 +28,7 @@
         </Grid>
         <Grid Column="1">
                 <ItemsControl
-                ItemsSource="{Binding Notifications}"
+                ItemsSource="{Binding Notifications.Notifications}"
                 ItemTemplate="{StaticResource NotificationTemplate}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>

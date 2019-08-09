@@ -29,7 +29,6 @@ namespace JosephM.Application.Application
             Container = container;
             Dispatcher = Dispatcher.CurrentDispatcher;
             ApplicationName = applicationName;
-            Notifications = new ObservableCollection<Notification>();
         }
 
         public void LogEvent(string eventName, IDictionary<string, string> properties = null)
@@ -45,27 +44,14 @@ namespace JosephM.Application.Application
             _loggers.Add(applicationLogger);
         }
 
-        public void AddNotification(string id, string notification, bool isLoading = false)
+        public virtual void AddNotification(string id, string notification, bool isLoading = false, Dictionary<string, Action> actions = null)
         {
-            DoOnMainThread(() =>
-            {
-                var matchingIds = Notifications
-                    .Where(kv => kv.Key == id)
-                    .ToArray();
-                foreach (var item in matchingIds)
-                {
-                    Notifications.Remove(item);
-                }
-                Notifications.Add(new Notification(id, notification, isLoading));
-            });
         }
 
         public virtual void OpenFile(string fileName)
         {
             Process.Start(fileName);
         }
-
-        public ObservableCollection<Notification> Notifications { get; private set; }
 
         private List<IApplicationLogger> _loggers = new List<IApplicationLogger>();
 
@@ -252,20 +238,6 @@ namespace JosephM.Application.Application
             var navigationEvents = Container.ResolveType<NavigationEvents>();
             foreach (var eventAction in navigationEvents.EventActions)
                 eventAction(objectNavigatedTo);
-        }
-
-        public class Notification
-        {
-            public Notification(string key, string value, bool isLoading)
-            {
-                Key = key;
-                Value = value;
-                IsLoading = isLoading;
-            }
-
-            public string Key { get; set; }
-            public string Value { get; set; }
-            public bool IsLoading { get; set; }
         }
     }
 }

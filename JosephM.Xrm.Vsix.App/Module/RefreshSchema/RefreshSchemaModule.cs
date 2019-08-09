@@ -2,9 +2,9 @@
 using JosephM.Application.Modules;
 using JosephM.CodeGenerator.CSharp;
 using JosephM.Core.FieldType;
-using JosephM.XrmModule.XrmConnection;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.IO;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Linq;
 namespace JosephM.Xrm.Vsix.Module.RefreshSchema
 {
     [MenuItemVisibleSchemaCs]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class RefreshSchemaModule : OptionActionModule
     {
         public override string MainOperationName => "Refresh Schema";

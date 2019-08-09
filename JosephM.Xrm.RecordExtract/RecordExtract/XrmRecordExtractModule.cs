@@ -1,13 +1,13 @@
-﻿using JosephM.Application.Modules;
-using JosephM.Application.Desktop.Module.ServiceRequest;
-using JosephM.Core.Attributes;
-using JosephM.XrmModule.XrmConnection;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.Attributes;
+using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.RecordExtract.RecordExtract
 {
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     [MyDescription("Generate A Document Detailing The Field Values And Related Records For A Specific Record In The Dynamics Instance")]
     public class XrmRecordExtractModule :
         ServiceRequestModule

@@ -1,21 +1,21 @@
 ﻿using JosephM.Application;
-using JosephM.Application.Modules;
 using JosephM.Application.Desktop.Module.ServiceRequest;
-using JosephM.Core.FieldType;
-using JosephM.XrmModule.XrmConnection;
-using JosephM.Xrm.Vsix.Application;
-using JosephM.Xrm.Vsix.Module.PackageSettings;
-using System;
-using System.Linq;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.FieldType;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Vsix.Application;
+using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.SavedXrmConnections;
+using System;
+using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportSolution
 {
     [MenuItemVisibleZip]
     [DependantModule(typeof(XrmPackageSettingsModule))]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class ImportSolutionModule : ServiceRequestModule<ImportSolutionDialog, ImportSolutionService, ImportSolutionRequest, ImportSolutionResponse, ImportSolutionResponseItem>
     {
         public override void RegisterTypes()

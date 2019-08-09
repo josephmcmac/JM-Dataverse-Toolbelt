@@ -1,6 +1,4 @@
-﻿#region
-
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Application.Options;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Extentions;
@@ -8,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.ApplicationOptions
 {
@@ -55,8 +51,8 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
                 groupMenu.AddOption(optionLabel, action, description);
             }
 
-            OnPropertyChanged("HasSettings");
-            OnPropertyChanged("HasHelp");
+            OnPropertyChanged(nameof(HasSettings));
+            OnPropertyChanged(nameof(HasHelp));
         }
 
         private void AddToCollection(MenuGroupViewModel menuGroup, ObservableCollection<MenuGroupViewModel> menuGroups)
@@ -117,7 +113,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
             set
             {
                 _openSettings = value;
-                OnPropertyChanged("OpenSettings");
+                OnPropertyChanged(nameof(OpenSettings));
             }
         }
 
@@ -136,7 +132,7 @@ namespace JosephM.Application.ViewModel.ApplicationOptions
             set
             {
                 _openHelp = value;
-                OnPropertyChanged("OpenHelp");
+                OnPropertyChanged(nameof(OpenHelp));
             }
         }
 

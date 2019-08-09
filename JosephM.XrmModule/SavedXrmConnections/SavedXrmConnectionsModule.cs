@@ -1,25 +1,27 @@
-﻿using JosephM.Application.Modules;
+﻿using JosephM.Application.Application;
 using JosephM.Application.Desktop.Module.Settings;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.RecordEntry.Metadata;
+using JosephM.Core.AppConfig;
 using JosephM.Core.Attributes;
-using JosephM.XrmModule.XrmConnection;
+using JosephM.Core.Extentions;
+using JosephM.Core.Log;
 using JosephM.Record.Service;
+using JosephM.Record.Xrm.Mappers;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.XrmModule.Crud;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
-using JosephM.Application.Application;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Extentions;
-using JosephM.Record.Xrm.Mappers;
-using JosephM.Application.ViewModel.RecordEntry.Metadata;
-using System.Collections.Generic;
-using System;
 
 namespace JosephM.XrmModule.SavedXrmConnections
 {
     [MyDescription("Multiple Saved Connections To CRM Instances")]
-    [DependantModule(typeof(XrmConnectionModule))]
     public class SavedXrmConnectionsModule : SettingsModule<SavedXrmConnectionsDialog, ISavedXrmConnections, SavedXrmConnections>
     {
         public override string MainOperationName => "Saved Connections";
@@ -34,8 +36,84 @@ namespace JosephM.XrmModule.SavedXrmConnections
             var configManager = Resolve<ISettingsManager>();
             configManager.ProcessNamespaceChange(GetType().Namespace, "JosephM.Prism.XrmModule.SavedXrmConnections");
             base.RegisterTypes();
+
+            try
+            {
+                var xrmConfiguration = configManager.Resolve<XrmRecordConfiguration>();
+                RefreshXrmServices(xrmConfiguration, ApplicationController);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                ApplicationController.UserMessage(
+                    string.Concat("Warning!! There was an error reading the crm connection from config\n",
+                        ex.DisplayString()));
+            }
             AddWebBrowseGridFunction();
             AddConnectionFieldsAutocomplete();
+        }
+
+        private static IXrmRecordConfiguration LastXrmConfiguration { get; set; }
+
+        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller, XrmRecordService xrmRecordService = null)
+        {
+            controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
+            xrmRecordService = xrmRecordService ?? new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>(), formService: new XrmFormService());
+            xrmRecordService.XrmRecordConfiguration = xrmConfiguration;
+            controller.RegisterInstance(xrmRecordService);
+            LastXrmConfiguration = xrmConfiguration;
+            if (xrmConfiguration.OrganizationUniqueName == null)
+                RefreshConnectionNotification(controller, "No Active Connection");
+            else if (controller.RunThreadsAsynch)
+            {
+                controller.DoOnAsyncThread(() =>
+                {
+                    try
+                    {
+                        RefreshConnectionNotification(controller, $"Connecting To '{xrmConfiguration}'", isLoading: true);
+                        var verify = xrmRecordService.VerifyConnection();
+                        if (LastXrmConfiguration != xrmConfiguration)
+                            return;
+                        if (verify.IsValid)
+                        {
+                            RefreshConnectionNotification(controller, string.Format("Connected To '{0}'", xrmConfiguration));
+                            var preLoadRecordTypes = xrmRecordService.GetAllRecordTypes();
+                        }
+                        else
+                        {
+                            RefreshConnectionNotification(controller, string.Format("Error Connecting To '{0}'", xrmConfiguration));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (LastXrmConfiguration != xrmConfiguration)
+                            return;
+                        RefreshConnectionNotification(controller, ex.Message);
+                        controller.ThrowException(ex);
+                    }
+                });
+            }
+        }
+
+        private static void RefreshConnectionNotification(IApplicationController controller, string message, bool isLoading = false)
+        {
+            var actions = new Dictionary<string, Action>();
+            actions.Add("Create New", () =>
+            {
+                var dialog = new AppXrmConnectionEntryDialog(controller.ResolveType<IDialogController>());
+                controller.NavigateTo(dialog);
+            });
+            var savedConnections = controller.ResolveType<ISavedXrmConnections>();
+            if(savedConnections.Connections != null)
+            {
+                foreach (var connection in savedConnections.Connections.OrderBy(c => c.Name).ToArray())
+                {
+                    if (!string.IsNullOrWhiteSpace(connection.Name) && !actions.ContainsKey(connection.Name))
+                    {
+                        actions.Add(connection.Name, () => SavedXrmConnectionsModule.RefreshXrmServices(connection, controller));
+                    }
+                }       
+            }
+            controller.AddNotification("XRMCONNECTION", message, isLoading: isLoading, actions: actions);
         }
 
         private void AddConnectionFieldsAutocomplete()
@@ -51,21 +129,36 @@ namespace JosephM.XrmModule.SavedXrmConnections
                 Func<RecordEntryViewModelBase, IEnumerable<AutocompleteOption>> getExistingValues = (recordForm) =>
                 {
                     var parentForm = recordForm.ParentForm;
-                    if (parentForm == null)
-                        return new AutocompleteOption[0];
-                    var objectRecord = parentForm.GetRecord() as ObjectRecord;
-                    if (objectRecord == null)
-                        return new AutocompleteOption[0];
-                    var instance = objectRecord.Instance as ISavedXrmConnections;
-                    if (instance == null || instance.Connections == null)
-                        return new AutocompleteOption[0];
-                    return instance
-                        .Connections
-                        .Select(pt => (string)pt.GetPropertyValue(prop.Key))
-                        .Where(g => !string.IsNullOrWhiteSpace(g))
-                        .Distinct()
-                        .Select(s => new AutocompleteOption(s))
-                        .ToArray();
+                    if (parentForm != null)
+                    {
+                        var objectRecord = parentForm.GetRecord() as ObjectRecord;
+                        if (objectRecord != null)
+                        {
+                            var instance = objectRecord.Instance as ISavedXrmConnections;
+                            if (instance != null && instance.Connections != null)
+                            {
+                                return instance
+                                   .Connections
+                                   .Select(pt => (string)pt.GetPropertyValue(prop.Key))
+                                   .Where(g => !string.IsNullOrWhiteSpace(g))
+                                   .Distinct()
+                                   .Select(s => new AutocompleteOption(s))
+                                   .ToArray();
+                            }
+                        }
+                    }
+                    var savedConnections = ApplicationController.ResolveType<ISavedXrmConnections>();
+                    if (savedConnections != null && savedConnections.Connections != null)
+                    {
+                        return savedConnections
+                           .Connections
+                           .Select(pt => (string)pt.GetPropertyValue(prop.Key))
+                           .Where(g => !string.IsNullOrWhiteSpace(g))
+                           .Distinct()
+                           .Select(s => new AutocompleteOption(s))
+                           .ToArray();
+                    }
+                    return new AutocompleteOption[0];
                 };
                 this.AddAutocompleteFunction(new AutocompleteFunction(getExistingValues, gridWidth: prop.Value
                     , isValidForFormFunction: (f) => getExistingValues(f).Any(), displayInGrid: false), typeof(SavedXrmRecordConfiguration), prop.Key);

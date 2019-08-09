@@ -24,7 +24,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <application:ApplicationHeadingView DataContext="{Binding ApplicationController}" />
+            <application:ApplicationHeadingView />
         </Grid>
         <Grid Grid.Row="1" MaxHeight="190" >
             <ScrollViewer VerticalScrollBarVisibility="Auto">

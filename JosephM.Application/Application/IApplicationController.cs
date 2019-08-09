@@ -69,7 +69,7 @@ namespace JosephM.Application.Application
 
         Process StartProcess(string fileName, string arguments = null);
 
-        void AddNotification(string id, string notification, bool isLoading = false);
+        void AddNotification(string id, string notification, bool isLoading = false, Dictionary<string, Action> actions = null);
 
         void OpenFile(string fileName);
 

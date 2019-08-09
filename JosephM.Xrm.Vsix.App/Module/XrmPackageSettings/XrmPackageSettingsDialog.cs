@@ -7,7 +7,6 @@ using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.Connection;
 using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.XrmModule.XrmConnection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -139,7 +138,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
                             throw new NullReferenceException("settingsManager");
                         settingsManager.SaveSettingsObject(activeConnection);
 
-                        XrmConnectionModule.RefreshXrmServices(activeConnection, ApplicationController, xrmRecordService: (RefreshActiveServiceConnection ? XrmRecordService : null));
+                        SavedXrmConnectionsModule.RefreshXrmServices(activeConnection, ApplicationController, xrmRecordService: (RefreshActiveServiceConnection ? XrmRecordService : null));
                         LookupService = (XrmRecordService)ApplicationController.ResolveType(typeof(XrmRecordService));
                     }
                 }

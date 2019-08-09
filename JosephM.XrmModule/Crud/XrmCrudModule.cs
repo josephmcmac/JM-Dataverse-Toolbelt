@@ -1,19 +1,18 @@
-﻿using JosephM.Application.Modules;
+﻿using JosephM.Application.Desktop.Module.Crud;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.Attributes;
-using JosephM.XrmModule.XrmConnection;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
-using System.Linq;
-using JosephM.Application.Desktop.Module.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
+using System.Linq;
 
 namespace JosephM.XrmModule.Crud
 {
     [MyDescription("Query And Create Or Update Records In The CRM Instance")]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class XrmCrudModule : CrudModule<XrmCrudDialog>
     {
         public override void InitialiseModule()

@@ -43,16 +43,16 @@
         <Setter Property="Margin" Value="8,8,8,8" />
         <Setter Property="Padding" Value="0" />
     </Style>
+    <Style x:Key="NotificationButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="Height" Value="30px" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
     <DataTemplate x:Key="OptionDropdownTemplate" DataType="applicationOptions:ApplicationOption" >
         <Button  BorderThickness="1,0,1,1" Margin="0,0,0,0" Content="{Binding Label}"
                 Command="{Binding DelegateCommand}" Style="{StaticResource MainMenuButton}" 
                 ToolTip="{Binding Description}" />
-    </DataTemplate>
-    <DataTemplate x:Key="NotificationTemplate">
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />
-            <shared:ModernProgressRing  Style="{StaticResource NotificationProgressRing}" IsActive="{Binding IsLoading}" />
-        </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="applicationHeadingTemplate">
         <application:ApplicationHeadingView DataContext="{Binding ApplicationController}" />
@@ -66,5 +66,49 @@
     <DataTemplate x:Key="ButtonDropdownTemplate" DataType="applicationOptions:ApplicationOption">
         <Button BorderThickness="1,0,1,1" Style="{StaticResource SettingsMenuButton}" Margin="0,0,0,0" Content="{Binding Label}"
                 Command="{Binding DelegateCommand}" ToolTip="{Binding Description}" />
+    </DataTemplate>
+    <DataTemplate x:Key="NotificationTemplate">
+        <Grid
+        VerticalAlignment="Top">
+            <Button
+            Name="NotificationButton"
+            Style="{StaticResource NotificationButton}"
+            Height="Auto"
+            Command="{Binding OpenActionsCommand}"
+            ToolTip="Click to change the connection"
+            >
+                <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                    <TextBlock Width="{Binding ElementName=LoadingImage, Path=ActualWidth}" Text=" " ></TextBlock>
+                    <TextBlock Text="{Binding Value}" Style="{StaticResource NotificationTextBlock}" />
+                    <shared:ModernProgressRing Width="30" x:Name="LoadingImage"  Style="{StaticResource NotificationProgressRing}" IsActive="{Binding IsLoading}" />
+                </StackPanel>
+            </Button>
+            <Popup
+            Style="{StaticResource ButtonDropDownPopup}"
+            PlacementTarget="{Binding ElementName=NotificationButton}"
+            IsOpen="{Binding OpenActions}"
+                >
+                <ItemsControl
+                ItemsSource="{Binding Actions}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button
+                                BorderThickness="1,0,1,1"
+                                Style="{StaticResource NotificationButton}"
+                                MinWidth="{Binding ElementName=NotificationButton, Path=ActualWidth}"
+                                Margin="0,0,0,0"
+                                Content="{Binding Label}"
+                                Command="{Binding Command}"
+                                />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Popup>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

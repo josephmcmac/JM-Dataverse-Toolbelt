@@ -1,11 +1,11 @@
 ﻿using JosephM.Application.Modules;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.XrmModule.XrmConnection;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 
 namespace JosephM.Xrm.Vsix.Module
 {
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class ClearCacheModule : OptionActionModule
     {
         public override string MainOperationName => "Cache Cleared";

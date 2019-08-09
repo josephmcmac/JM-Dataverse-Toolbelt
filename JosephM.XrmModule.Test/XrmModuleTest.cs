@@ -1,22 +1,21 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Modules;
 using JosephM.Application.Desktop.Test;
+using JosephM.Application.Modules;
 using JosephM.Core.AppConfig;
+using JosephM.Core.FieldType;
 using JosephM.ObjectMapping;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Schema;
+using JosephM.XrmModule.AppConnection;
 using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.XrmModule.XrmConnection;
-using Microsoft.Xrm.Sdk.Client;
-using JosephM.Xrm.Schema;
-using System.Collections.Generic;
-using Microsoft.Xrm.Sdk;
-using JosephM.XrmModule.AppConnection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using JosephM.Core.FieldType;
 using System.Linq;
 
 namespace JosephM.XrmModule.Test
@@ -38,7 +37,7 @@ namespace JosephM.XrmModule.Test
                 testApplication.AddModule<SavedConnectionAppConnectionModule>();
             if (loadXrmConnection)
             {
-                XrmConnectionModule.RefreshXrmServices(GetXrmRecordConfiguration(), testApplication.Controller);
+                SavedXrmConnectionsModule.RefreshXrmServices(GetXrmRecordConfiguration(), testApplication.Controller);
                 testApplication.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections.SavedXrmConnections
                 {
                     Connections = new[] { GetSavedXrmRecordConfiguration() }

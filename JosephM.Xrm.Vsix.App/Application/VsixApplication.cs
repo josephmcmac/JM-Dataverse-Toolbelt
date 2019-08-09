@@ -1,18 +1,18 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Application;
 using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.XrmModule.XrmConnection;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.SavedXrmConnections;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
 using System.Reflection;
-using JosephM.Core.AppConfig;
-using JosephM.Application.Desktop.Application;
 
 namespace JosephM.Xrm.Vsix
 {
@@ -93,7 +93,7 @@ namespace JosephM.Xrm.Vsix
                 || settingsConnection.Username != containerConnection.Username
                 || settingsConnection.Password?.GetRawPassword() != containerConnection.Password?.GetRawPassword())
             {
-                XrmConnectionModule.RefreshXrmServices(settingsConnection, Controller);
+                SavedXrmConnectionsModule.RefreshXrmServices(settingsConnection, Controller);
             }
             var packageSettings = settingsManager.Resolve<XrmPackageSettings>();
             Controller.RegisterInstance(typeof(XrmPackageSettings), packageSettings);

@@ -1,12 +1,12 @@
 ﻿using JosephM.Application.Modules;
-using JosephM.XrmModule.XrmConnection;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 {
     [MenuItemVisibleForPluginProject]
     [DependantModule(typeof(XrmPackageSettingsModule))]
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class UpdateAssemblyModule : OptionActionModule
     {
         public override string MainOperationName => "Update Assembly";

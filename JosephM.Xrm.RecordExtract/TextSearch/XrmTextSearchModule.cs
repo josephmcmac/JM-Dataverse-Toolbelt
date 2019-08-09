@@ -3,7 +3,6 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
@@ -12,13 +11,12 @@ using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.XrmModule.XrmConnection;
 using System;
 using System.Linq;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {
-    [DependantModule(typeof(XrmConnectionModule))]
+    [DependantModule(typeof(SavedXrmConnectionsModule))]
     [DependantModule(typeof(XrmRecordExtractModule))]
     [MyDescription("Search Records In Dynamics For A Specific Piece Of Text")]
     public class XrmTextSearchModule :

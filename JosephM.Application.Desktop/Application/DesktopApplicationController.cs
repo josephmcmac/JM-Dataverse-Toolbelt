@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Desktop.Shared;
+using JosephM.Application.ViewModel.Notification;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.AppConfig;
 using System;
@@ -176,6 +177,15 @@ namespace JosephM.Application.Desktop.Application
                     ThrowException(ex);
                 }
                 return null;
+            }
+        }
+
+        public override void AddNotification(string id, string notification, bool isLoading = false, Dictionary<string, Action> actions = null)
+        {
+            var notifications = ResolveType(typeof(NotificationsViewModel)) as NotificationsViewModel;
+            if (notifications != null)
+            {
+                notifications.SetNotification(id, notification, isLoading: isLoading, actions: actions);
             }
         }
     }
