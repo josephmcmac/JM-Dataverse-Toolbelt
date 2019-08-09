@@ -109,7 +109,16 @@ namespace JosephM.XrmModule.SavedXrmConnections
                 {
                     if (!string.IsNullOrWhiteSpace(connection.Name) && !actions.ContainsKey(connection.Name))
                     {
-                        actions.Add(connection.Name, () => SavedXrmConnectionsModule.RefreshXrmServices(connection, controller));
+                        actions.Add(connection.Name, () =>
+                        {
+                            controller.DoOnAsyncThread(() =>
+                            {
+                                var appSettingsManager = controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
+                                var recordconfig = new ObjectMapping.ClassMapperFor<SavedXrmRecordConfiguration, XrmRecordConfiguration>().Map(connection);
+                                appSettingsManager.SaveSettingsObject(recordconfig);
+                                SavedXrmConnectionsModule.RefreshXrmServices(connection, controller);
+                            });
+                        });
                     }
                 }       
             }
