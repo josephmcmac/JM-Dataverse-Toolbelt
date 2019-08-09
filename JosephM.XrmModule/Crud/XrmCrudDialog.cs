@@ -31,30 +31,51 @@ namespace JosephM.XrmModule.Crud
         public override IEnumerable<CustomGridFunction> GetExtendedGridFunctions()
         {
             var extraFunctions = new List<CustomGridFunction>();
-            extraFunctions.Add(new CustomGridFunction("COPYFETCH", "Copy FetchXML", (g) =>
+            extraFunctions.Add(new CustomGridFunction("COPYQUERY", "Copy FetchXML", new[]
+            {
+                new CustomGridFunction("RAWFETCHXML", "Raw FetchXML", (g) =>
                                 {
                                     DoOnAsynchThread(() =>
                                     {
-                                        var queryDefinition = this.QueryViewModel.GenerateQuery();
-                                        queryDefinition.Top = 0;
-                                        var fields = new List<string>();
-
-                                        if (QueryViewModel.DynamicGridViewModel.FieldMetadata != null)
-                                            fields.AddRange(QueryViewModel.DynamicGridViewModel.FieldMetadata
-                                                .Select(fm => fm.FieldName)
-                                                .Where(s => !s.Contains(".")));
-                                        if (!fields.Contains(XrmRecordService.GetPrimaryKey(queryDefinition.RecordType)))
-                                            fields.Insert(0, XrmRecordService.GetPrimaryKey(queryDefinition.RecordType));
-                                        queryDefinition.Fields = fields;
-                                        var fetchXml = XrmRecordService.ToFetchXml(queryDefinition);
+                                        var fetchXml = GetQueryFetchXml();
                                         DoOnMainThread(() =>
                                         {
-                                            Clipboard.SetText(FormatXml(fetchXml));
+                                            Clipboard.SetText(fetchXml);
                                             ApplicationController.UserMessage("Fetch Copied To Clipboard!");
                                         });
                                     });
-                                }));
+                                }),
+                new CustomGridFunction("JSFETCHXML", "JavaScript FetchXML", (g) =>
+                                {
+                                    DoOnAsynchThread(() =>
+                                    {
+                                        var fetchXml = GetQueryFetchXml();
+                                        DoOnMainThread(() =>
+                                        {
+                                            Clipboard.SetText(WriteFetchToJavascript(fetchXml));
+                                            ApplicationController.UserMessage("JavaScript Copied To Clipboard!");
+                                        });
+                                    });
+                                })
+            }));
             return extraFunctions;
+        }
+
+        private string GetQueryFetchXml()
+        {
+            var queryDefinition = this.QueryViewModel.GenerateQuery();
+            queryDefinition.Top = 0;
+            var fields = new List<string>();
+
+            if (QueryViewModel.DynamicGridViewModel.FieldMetadata != null)
+                fields.AddRange(QueryViewModel.DynamicGridViewModel.FieldMetadata
+                    .Select(fm => fm.FieldName)
+                    .Where(s => !s.Contains(".")));
+            if (!fields.Contains(XrmRecordService.GetPrimaryKey(queryDefinition.RecordType)))
+                fields.Insert(0, XrmRecordService.GetPrimaryKey(queryDefinition.RecordType));
+            queryDefinition.Fields = fields;
+            var fetchXml = FormatXml(XrmRecordService.ToFetchXml(queryDefinition));
+            return fetchXml;
         }
 
 
@@ -77,6 +98,30 @@ namespace JosephM.XrmModule.Crud
             }
 
             return builder.ToString();
+        }
+
+        private string WriteFetchToJavascript(string fetchXml)
+        {
+            var stringCharacter = "\'";
+            var variableName = "xml";
+
+            var fetch = fetchXml;
+            if (fetch != null)
+                fetch = fetch.Replace("'", "\\'");
+            var splitLines = fetch
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
+
+            var conversionList = new List<string>();
+            for (var i = 0; i < splitLines.Length; i++)
+            {
+
+                if (i == 0)
+                    conversionList.Add(string.Format("var {0} = {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
+                else
+                    conversionList.Add(string.Format("{0} += {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
+            }
+            return string.Join(Environment.NewLine, conversionList);
         }
     }
 }
