@@ -176,6 +176,10 @@ $ext_jmobjprefix$WebApiUtility = function () {
         return appendString;
     }
 
+    this.getFetch = function (entitySetName, fetchXml, successCallback, errorCallback) {
+        executeGet(entitySetName + "?fetchXml=" + encodeURIComponent(fetchXml), function (result) { successCallback(result.value); }, errorCallback);
+    };
+
     this.executeUnboundAction = function (actionName, arguments, successCallback, errorCallback) {
         executePost(actionName, JSON.stringify(arguments), function (result) { successCallback(result); }, errorCallback);
     };
