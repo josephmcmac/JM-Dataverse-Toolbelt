@@ -122,7 +122,7 @@ namespace JosephM.Deployment.ExportXml
                 var excludeFields = exportType.IncludeAllFields
                     ? new string[0]
                     : XrmService.GetFields(exportType.RecordType.Key).Except(exportType.IncludeOnlyTheseFields.Select(f => f.RecordField == null ? null : f.RecordField.Key).Distinct().ToArray());
-
+                
                 if (thisTypeConfig != null)
                 {
                     //which need to include the fields if they are needed for parentchild configs
@@ -213,7 +213,7 @@ namespace JosephM.Deployment.ExportXml
                 foreach (var entity in entities)
                 {
                     controller.UpdateLevel2Progress(done++, toDo, string.Format("Processing {0} Records", type));
-                    entity.RemoveFields(excludeFields);
+                    entity.RemoveFields(excludeFields.Union(new[] { "safedescription" }));
                     var fieldsSetNull = fieldsPopulateIfNull
                         .Where(k => entity.GetField(k) == null)
                         .ToArray();
