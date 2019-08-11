@@ -42,6 +42,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                     .Where(r =>
                     RecordService.GetRecordTypeMetadata(r).Searchable)
                     .Union(AdditionalExplicitTypes)
+                    .Where(r => RecordService.RecordTypeExists(r))
                     .ToArray()).Result;
 
                 DoOnMainThread(() =>
