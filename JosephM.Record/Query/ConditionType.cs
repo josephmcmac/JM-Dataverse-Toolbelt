@@ -27,11 +27,11 @@ namespace JosephM.Record.Query
         DoesNotEndWith,
         [ValidForFieldTypes(RecordFieldType.String, RecordFieldType.Memo)]
         Like,
-        [ValidForFieldTypes(RecordFieldType.Owner)]
+        [ValidForFieldTypes("systemuser", RecordFieldType.Owner, RecordFieldType.Lookup, RecordFieldType.Uniqueidentifier)]
         EqualUserId,
-        [ValidForFieldTypes(RecordFieldType.Owner)]
+        [ValidForFieldTypes("systemuser", RecordFieldType.Owner, RecordFieldType.Lookup, RecordFieldType.Uniqueidentifier)]
         NotEqualUserId,
-        [ValidForFieldTypes(RecordFieldType.Owner)]
+        [ValidForFieldTypes("team", RecordFieldType.Owner, RecordFieldType.Lookup, RecordFieldType.Uniqueidentifier)]
         EqualUserTeams,
         [ValidForFieldTypes(RecordFieldType.Owner)]
         EqualUserOrUserTeams,

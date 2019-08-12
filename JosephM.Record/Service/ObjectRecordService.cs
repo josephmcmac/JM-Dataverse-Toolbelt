@@ -474,9 +474,22 @@ namespace JosephM.Record.Service
                             }
                             else
                             {
-                                if(validForFieldAttribute.FieldTypes.Contains(dependantValue.ParseEnum<RecordFieldType>()))
+                                var dependencySplit = dependantValue.Split('|');
+                                var fieldTypeEnum = dependencySplit[0].ParseEnum<RecordFieldType>();
+                                var targetTypes = dependencySplit.Length == 1 || dependencySplit[1] == ""
+                                    ? null
+                                    : dependencySplit[1].Split(',');
+
+                                if (validForFieldAttribute.FieldTypes.Contains(fieldTypeEnum))
                                 {
-                                    options.Add(PicklistOption.EnumToPicklistOption(item));
+                                    if (validForFieldAttribute.TargetType == null || targetTypes == null)
+                                    {
+                                        options.Add(PicklistOption.EnumToPicklistOption(item));
+                                    }
+                                    else if(targetTypes.Contains(validForFieldAttribute.TargetType))
+                                    {
+                                        options.Add(PicklistOption.EnumToPicklistOption(item));
+                                    }
                                 }
                             }
                         }

@@ -613,7 +613,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                         {
                                             //if target is an enum then filter the items source for the field type
                                             var picklistFieldViewModel = fieldViewModel as PicklistFieldViewModel;
-                                            var picklistOptions = ObjectRecordService.GetPicklistKeyValues(picklistFieldViewModel.FieldName, picklistFieldViewModel.GetRecordType(), fieldType.ToString(), picklistFieldViewModel.RecordEntryViewModel.GetRecord());
+                                            var dependencyString = fieldType.ToString();
+                                            if(lookupService.IsLookup(selectedFieldName, selectedFieldRecordType))
+                                            {
+                                                dependencyString += "|" + lookupService.GetLookupTargetType(selectedFieldName, selectedFieldRecordType);
+                                            }
+                                            if (fieldType == RecordFieldType.Uniqueidentifier
+                                                && lookupService.GetPrimaryKey(selectedFieldRecordType) == selectedFieldName)
+                                            {
+                                                dependencyString += "|" + selectedFieldRecordType;
+                                            }
+                                            var picklistOptions = ObjectRecordService.GetPicklistKeyValues(picklistFieldViewModel.FieldName, picklistFieldViewModel.GetRecordType(), dependencyString, picklistFieldViewModel.RecordEntryViewModel.GetRecord());
                                             if (clearValue)
                                                 picklistFieldViewModel.Value = null;
                                             picklistFieldViewModel.ItemsSource = picklistOptions;
