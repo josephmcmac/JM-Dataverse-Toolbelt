@@ -25,6 +25,8 @@ namespace JosephM.Core.Utility
 
         private string GetEstimateRemainingDisplayString(int done)
         {
+            if (done == 0)
+                return "Unknown";
             var t = GetEstimateRemaining(done);
             if (t.TotalMinutes <= 1)
             {
@@ -51,7 +53,8 @@ namespace JosephM.Core.Utility
 
         public string GetProgressString(int countUpdated, string taskName = null)
         {
-            return $"{(string.IsNullOrWhiteSpace(taskName) ? null : (taskName + " - "))}{ToDo - countUpdated} Remaining - Estimated Time {GetEstimateRemainingDisplayString(countUpdated)}";
+            var estimateRemainingString = countUpdated == 0 ? "" : $" - Estimated Time {GetEstimateRemainingDisplayString(countUpdated)}";
+            return $"{(string.IsNullOrWhiteSpace(taskName) ? null : (taskName + " - "))}{ToDo - countUpdated} Remaining{estimateRemainingString}";
         }
     }
 }
