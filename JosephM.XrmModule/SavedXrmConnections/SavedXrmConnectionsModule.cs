@@ -116,7 +116,13 @@ namespace JosephM.XrmModule.SavedXrmConnections
                                 var appSettingsManager = controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
                                 var recordconfig = new ObjectMapping.ClassMapperFor<SavedXrmRecordConfiguration, XrmRecordConfiguration>().Map(connection);
                                 appSettingsManager.SaveSettingsObject(recordconfig);
-                                SavedXrmConnectionsModule.RefreshXrmServices(connection, controller);
+                                savedConnections = controller.ResolveType<ISavedXrmConnections>();
+                                foreach (var item in savedConnections.Connections.OrderBy(c => c.Name).ToArray())
+                                {
+                                    item.Active = item.Name == connection.Name;
+                                }
+                                appSettingsManager.SaveSettingsObject(savedConnections);
+                                RefreshXrmServices(connection, controller);
                             });
                         });
                     }
