@@ -242,13 +242,63 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         private ConditionExpression ToConditionExpression(Condition condition, string recordType)
         {
+            var skipParsingConditionTypes = new ConditionType[]
+            {
+                ConditionType.In,
+                ConditionType.NotIn,
+                ConditionType.Between,
+                ConditionType.NotBetween,
+                ConditionType.LastXHours,
+                ConditionType.NextXHours,
+                ConditionType.LastXDays,
+                ConditionType.NextXDays,
+                ConditionType.LastXWeeks,
+                ConditionType.NextXWeeks,
+                ConditionType.LastXMonths,
+                ConditionType.NextXMonths,
+                ConditionType.LastXYears,
+                ConditionType.NextXYears,
+                ConditionType.EqualBusinessId,
+                ConditionType.NotEqualBusinessId,
+                ConditionType.ChildOf,
+                ConditionType.Mask,
+                ConditionType.NotMask,
+                ConditionType.MasksSelect,
+                ConditionType.Contains,
+                ConditionType.DoesNotContain,
+                ConditionType.EqualUserLanguage,
+                ConditionType.OlderThanXMonths,
+                ConditionType.LastXFiscalYears,
+                ConditionType.NextXFiscalYears,
+                ConditionType.LastXFiscalPeriods,
+                ConditionType.NextXFiscalPeriods,
+                ConditionType.InFiscalYear,
+                ConditionType.InFiscalPeriod,
+                ConditionType.InFiscalPeriodAndYear,
+                ConditionType.InOrBeforeFiscalPeriodAndYear,
+                ConditionType.InOrAfterFiscalPeriodAndYear
+            };
+
             if (condition.Value != null)
-                return new ConditionExpression(condition.FieldName,
-                    new ConditionTypeMapper().Map(condition.ConditionType),
-                    ConvertToQueryValue(condition.FieldName, recordType, condition.Value));
+            {
+                if (skipParsingConditionTypes.Contains(condition.ConditionType))
+                {
+                    return new ConditionExpression(condition.FieldName,
+                        new ConditionTypeMapper().Map(condition.ConditionType),
+                            condition.Value);
+                }
+                else
+                {
+                    return new ConditionExpression(condition.FieldName,
+                        new ConditionTypeMapper().Map(condition.ConditionType),
+                            ConvertToQueryValue(condition.FieldName, recordType, condition.Value));
+                }
+            }
             else
+            {
                 return new ConditionExpression(condition.FieldName,
                     new ConditionTypeMapper().Map(condition.ConditionType));
+            }
         }
 
         private Condition ToCondition(ConditionExpression conditionexpression, string recordType)

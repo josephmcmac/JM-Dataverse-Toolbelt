@@ -113,10 +113,12 @@ namespace JosephM.Application.ViewModel.Query
 
         public Condition GetAsCondition()
         {
-            var condition = new Condition(_queryCondition.FieldName?.Key, _queryCondition.ConditionType.HasValue ? _queryCondition.ConditionType.Value : ConditionType.Equal, _queryCondition.Value);
-            //clear any condition value if the operator does not require one
-            if (!_queryCondition.IsInContext(nameof(QueryCondition.Value)))
-                condition.Value = null;
+            object value = null;
+            if (_queryCondition.IsInContext(nameof(QueryCondition.Value)))
+                value = _queryCondition.Value;
+            if (_queryCondition.IsInContext(nameof(QueryCondition.ValueInt)))
+                value = _queryCondition.ValueInt;
+            var condition = new Condition(_queryCondition.FieldName?.Key, _queryCondition.ConditionType.HasValue ? _queryCondition.ConditionType.Value : ConditionType.Equal, value);
             return condition;
         }
 
@@ -202,6 +204,33 @@ namespace JosephM.Application.ViewModel.Query
                 Record.Query.ConditionType.OnOrAfter,
                 Record.Query.ConditionType.NotOn,})]
             public object Value { get; set; }
+
+            [MinimumIntValue(1)]
+            [RequiredProperty]
+            [DisplayOrder(30)]
+            [Group(Sections.Main)]
+            [PropertyInContextByPropertyValues(nameof(ConditionType), new object[] {
+                Record.Query.ConditionType.LastXHours,
+                Record.Query.ConditionType.NextXHours,
+                Record.Query.ConditionType.LastXDays,
+                Record.Query.ConditionType.NextXDays,
+                Record.Query.ConditionType.LastXWeeks,
+                Record.Query.ConditionType.NextXWeeks,
+                Record.Query.ConditionType.LastXMonths,
+                Record.Query.ConditionType.NextXMonths,
+                Record.Query.ConditionType.LastXYears,
+                Record.Query.ConditionType.NextXYears,
+                Record.Query.ConditionType.LastXFiscalYears,
+                Record.Query.ConditionType.NextXFiscalYears,
+                Record.Query.ConditionType.LastXFiscalPeriods,
+                Record.Query.ConditionType.NextXFiscalPeriods,
+                Record.Query.ConditionType.OlderThanXMinutes,
+                Record.Query.ConditionType.OlderThanXHours,
+                Record.Query.ConditionType.OlderThanXDays,
+                Record.Query.ConditionType.OlderThanXWeeks,
+                Record.Query.ConditionType.OlderThanXMonths,
+                Record.Query.ConditionType.OlderThanXYears,})]
+            public int? ValueInt { get; set; }
 
             private Action OnFieldSelected { get; set; }
             private Action OnSelectedChanged { get; set; }

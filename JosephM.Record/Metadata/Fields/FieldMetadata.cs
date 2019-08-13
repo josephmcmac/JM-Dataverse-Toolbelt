@@ -118,6 +118,9 @@ namespace JosephM.Record.Metadata
             else if (type == typeof(int))
             {
                 fm = new IntegerFieldMetadata(recordType, internalName, label) { NotNullable = !isNullableType };
+                var minimumAttribute = propertyInfo.GetCustomAttribute<MinimumIntValue>();
+                if (minimumAttribute != null)
+                    fm.MinValue = minimumAttribute.Value;
             }
             else if (type == typeof(Lookup))
                 fm = new LookupFieldMetadata(recordType, internalName, label, null);
