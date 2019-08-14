@@ -476,20 +476,33 @@ namespace JosephM.Record.Service
                             {
                                 var dependencySplit = dependantValue.Split('|');
                                 var fieldTypeEnum = dependencySplit[0].ParseEnum<RecordFieldType>();
-                                var targetTypes = dependencySplit.Length == 1 || dependencySplit[1] == ""
+                                var supplementaryDependencyArguments = dependencySplit.Length == 1 || dependencySplit[1] == ""
                                     ? null
                                     : dependencySplit[1].Split(',');
 
                                 if (validForFieldAttribute.FieldTypes.Contains(fieldTypeEnum))
                                 {
-                                    if (validForFieldAttribute.TargetType == null || targetTypes == null)
+                                    if (validForFieldAttribute.IntegerType.HasValue)
+                                    {
+                                        if (supplementaryDependencyArguments != null
+                                            && supplementaryDependencyArguments.Contains(validForFieldAttribute.IntegerType.Value.ToString()))
+                                        {
+                                            options.Add(PicklistOption.EnumToPicklistOption(item));
+                                        }
+                                    }
+                                    else if (validForFieldAttribute.TargetType != null)
+                                    {
+                                        if (supplementaryDependencyArguments != null
+                                            && supplementaryDependencyArguments.Contains(validForFieldAttribute.TargetType))
+                                        {
+                                            options.Add(PicklistOption.EnumToPicklistOption(item));
+                                        }
+                                    }
+                                    else if (validForFieldAttribute.TargetType == null || supplementaryDependencyArguments == null)
                                     {
                                         options.Add(PicklistOption.EnumToPicklistOption(item));
                                     }
-                                    else if(targetTypes.Contains(validForFieldAttribute.TargetType))
-                                    {
-                                        options.Add(PicklistOption.EnumToPicklistOption(item));
-                                    }
+
                                 }
                             }
                         }

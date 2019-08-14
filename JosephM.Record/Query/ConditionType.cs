@@ -41,6 +41,8 @@ namespace JosephM.Record.Query
         EqualBusinessId,
         [ValidForFieldTypes("businessunit", RecordFieldType.Lookup, RecordFieldType.Uniqueidentifier)]
         NotEqualBusinessId,
+        [ValidForFieldTypes(IntegerType.Language, RecordFieldType.Integer)]
+        EqualUserLanguage,
 
         [ValidForFieldTypes(RecordFieldType.Date)]
         Yesterday,
@@ -150,8 +152,6 @@ namespace JosephM.Record.Query
         Contains,
         [ValidForFieldTypes(RecordFieldType.FileRef)]
         DoesNotContain,
-        [ValidForFieldTypes(RecordFieldType.FileRef)]
-        EqualUserLanguage,
         [ValidForFieldTypes(RecordFieldType.FileRef)]
         In,
         [ValidForFieldTypes(RecordFieldType.FileRef)]

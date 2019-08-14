@@ -6,6 +6,8 @@ namespace JosephM.Record.Attributes
 {
     public class ValidForFieldTypes : Attribute
     {
+        public IntegerType? IntegerType { get; set; }
+
         public IEnumerable<RecordFieldType> FieldTypes { get; set; }
         public string TargetType { get; set; }
 
@@ -17,6 +19,12 @@ namespace JosephM.Record.Attributes
         public ValidForFieldTypes(string targetType, params RecordFieldType[] fieldTypes)
         {
             TargetType = targetType;
+            FieldTypes = fieldTypes;
+        }
+
+        public ValidForFieldTypes(IntegerType integerType, params RecordFieldType[] fieldTypes)
+        {
+            IntegerType = integerType;
             FieldTypes = fieldTypes;
         }
     }
