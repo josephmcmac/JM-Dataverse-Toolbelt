@@ -37,6 +37,10 @@ namespace JosephM.Record.Query
         EqualUserTeams,
         [ValidForFieldTypes(RecordFieldType.Owner)]
         EqualUserOrUserTeams,
+        [ValidForFieldTypes("businessunit", RecordFieldType.Lookup, RecordFieldType.Uniqueidentifier)]
+        EqualBusinessId,
+        [ValidForFieldTypes("businessunit", RecordFieldType.Lookup, RecordFieldType.Uniqueidentifier)]
+        NotEqualBusinessId,
 
         [ValidForFieldTypes(RecordFieldType.Date)]
         Yesterday,
@@ -134,10 +138,6 @@ namespace JosephM.Record.Query
         //as haven't implemented multiselect
         [ValidForFieldTypes(RecordFieldType.FileRef)]
         NotOn,
-        [ValidForFieldTypes(RecordFieldType.FileRef)]
-        EqualBusinessId,
-        [ValidForFieldTypes(RecordFieldType.FileRef)]
-        NotEqualBusinessId,
         [ValidForFieldTypes(RecordFieldType.FileRef)]
         ChildOf,
         [ValidForFieldTypes(RecordFieldType.FileRef)]
