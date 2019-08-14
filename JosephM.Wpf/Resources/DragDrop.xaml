@@ -25,6 +25,11 @@
         <Setter Property="Margin" Value="-3,-3,-3,-7" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsDragOver}" Value="True">
+                <Setter Property="Background" Value="Red" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
     <Style TargetType="{x:Type Border}" x:Key="DropZoneBorder" >
         <Setter Property="Margin" Value="2,2,2,2" />

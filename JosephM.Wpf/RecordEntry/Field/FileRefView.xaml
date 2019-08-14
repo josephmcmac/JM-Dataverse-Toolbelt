@@ -34,19 +34,23 @@
             <Grid Grid.Column="0" MinWidth="150" >
                 <Border Style="{StaticResource FieldDropZoneBorder}" >
                     <GroupBox
-                Width="Auto"
-                AllowDrop="True"
-                Drop="DropFile" 
-                Style="{StaticResource FieldDropZone}">
+                        Width="Auto"
+                        AllowDrop="True"
+                        Drop="DropFile" 
+                        Name="DragGroupBox"
+                        PreviewDragEnter="DragGroupBox_PreviewDragEnter"
+                        PreviewDragLeave="DragGroupBox_PreviewDragLeave"
+                        PreviewDragOver="DragGroupBox_PreviewDragOver"
+                        Style="{StaticResource FieldDropZone}">
                         <TextBox
-                    AllowDrop="True" PreviewDragOver="TextBoxDragOver" Drop="DropFile"  
-                    TabIndex="1"
-                    DataContext="{Binding NotifyOnValidationError=True}"
-                    Text="{Binding Path=ValueObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FileRefToString}}"
-                    Name="FileNameTextBox"
-                    Style="{StaticResource FieldEntryStyle}"
+                            AllowDrop="True" PreviewDragOver="TextBoxDragOver" Drop="DropFile"  
+                            TabIndex="1"
+                            DataContext="{Binding NotifyOnValidationError=True}"
+                            Text="{Binding Path=ValueObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FileRefToString}}"
+                            Name="FileNameTextBox"
+                            Style="{StaticResource FieldEntryStyle}"
                             TextWrapping="Wrap"
-                    IsReadOnly="True" />
+                            IsReadOnly="True" />
                     </GroupBox>
                 </Border>
             </Grid>
