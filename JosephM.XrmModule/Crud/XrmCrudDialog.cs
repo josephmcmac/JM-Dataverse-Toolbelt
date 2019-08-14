@@ -69,6 +69,7 @@ namespace JosephM.XrmModule.Crud
 
             if (QueryViewModel.DynamicGridViewModel.FieldMetadata != null)
                 fields.AddRange(QueryViewModel.DynamicGridViewModel.FieldMetadata
+                    .Where(fm => fm.AltRecordType == null)
                     .Select(fm => fm.FieldName)
                     .Where(s => !s.Contains(".")));
             if (!fields.Contains(XrmRecordService.GetPrimaryKey(queryDefinition.RecordType)))
