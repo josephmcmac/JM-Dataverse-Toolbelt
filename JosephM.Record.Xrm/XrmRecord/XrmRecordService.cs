@@ -244,10 +244,6 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             var skipParsingConditionTypes = new ConditionType[]
             {
-                ConditionType.In,
-                ConditionType.NotIn,
-                ConditionType.Between,
-                ConditionType.NotBetween,
                 ConditionType.LastXHours,
                 ConditionType.NextXHours,
                 ConditionType.LastXDays,
@@ -258,25 +254,16 @@ namespace JosephM.Record.Xrm.XrmRecord
                 ConditionType.NextXMonths,
                 ConditionType.LastXYears,
                 ConditionType.NextXYears,
-                ConditionType.EqualBusinessId,
-                ConditionType.NotEqualBusinessId,
-                ConditionType.ChildOf,
-                ConditionType.Mask,
-                ConditionType.NotMask,
-                ConditionType.MasksSelect,
-                ConditionType.Contains,
-                ConditionType.DoesNotContain,
-                ConditionType.EqualUserLanguage,
-                ConditionType.OlderThanXMonths,
                 ConditionType.LastXFiscalYears,
                 ConditionType.NextXFiscalYears,
                 ConditionType.LastXFiscalPeriods,
                 ConditionType.NextXFiscalPeriods,
-                ConditionType.InFiscalYear,
-                ConditionType.InFiscalPeriod,
-                ConditionType.InFiscalPeriodAndYear,
-                ConditionType.InOrBeforeFiscalPeriodAndYear,
-                ConditionType.InOrAfterFiscalPeriodAndYear
+                ConditionType.OlderThanXMinutes,
+                ConditionType.OlderThanXHours,
+                ConditionType.OlderThanXDays,
+                ConditionType.OlderThanXWeeks,
+                ConditionType.OlderThanXMonths,
+                ConditionType.OlderThanXYears,
             };
 
             if (condition.Value != null)
