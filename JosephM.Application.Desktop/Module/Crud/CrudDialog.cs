@@ -99,6 +99,11 @@ namespace JosephM.Application.Desktop.Module.Crud
                         customFunctionList.AddRange(GetExtendedGridFunctions());
                         QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
                         Controller.LoadToUi(QueryViewModel);
+                        DoOnAsynchThread(() =>
+                        {
+                            RecordService.LoadFieldsForAllEntities();
+                            RecordService.LoadRelationshipsForAllEntities();
+                        });
                     }
                     catch (Exception ex)
                     {

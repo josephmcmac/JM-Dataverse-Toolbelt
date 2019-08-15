@@ -76,6 +76,12 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             var done = 0;
             //load all the activity party references
 
+            if(container.Request.SearchAllTypes)
+            {
+                container.Controller.LogLiteral("Loading Field Metadata");
+                Service.LoadFieldsForAllEntities();
+            }
+
 
             foreach (var recordType in recordTypes)
             {

@@ -53,6 +53,18 @@ namespace JosephM.InstanceComparer
 
             processContainer.NumberOfProcesses = processContainer.Comparisons.Sum(GetProcessCount) + numberOfDataToProcess;//add data again for associations
 
+            if(request.Entities && request.AllTypesForEntityMetadata)
+            {
+                processContainer.Controller.LogLiteral($"Loading Field Metadata For {request.ConnectionOne.Name}");
+                processContainer.ServiceOne.LoadFieldsForAllEntities();
+                processContainer.Controller.LogLiteral($"Loading Relationship Metadata For {request.ConnectionOne.Name}");
+                processContainer.ServiceOne.LoadRelationshipsForAllEntities();
+                processContainer.Controller.LogLiteral($"Loading Field Metadata For {request.ConnectionTwo.Name}");
+                processContainer.ServiceTwo.LoadFieldsForAllEntities();
+                processContainer.Controller.LogLiteral($"Loading Relationship Metadata For {request.ConnectionTwo.Name}");
+                processContainer.ServiceTwo.LoadRelationshipsForAllEntities();
+            }
+
             foreach (var item in processContainer.Comparisons)
                 ProcessCompare(item, processContainer);
 

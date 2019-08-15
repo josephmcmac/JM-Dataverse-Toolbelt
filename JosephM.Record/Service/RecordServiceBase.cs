@@ -351,5 +351,13 @@ namespace JosephM.Record.Service
             var results = RetreiveAll(query);
             processEachResultSet(results);
         }
+
+        public void LoadFieldsForAllEntities()
+        {
+        }
+
+        public void LoadRelationshipsForAllEntities()
+        {
+        }
     }
 }

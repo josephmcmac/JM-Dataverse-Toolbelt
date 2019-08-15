@@ -1,13 +1,9 @@
-#region
-
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using System;
 using System.Collections.Generic;
-
-#endregion
 
 namespace JosephM.Record.IService
 {
@@ -190,5 +186,9 @@ namespace JosephM.Record.IService
         TypeConfigs GetTypeConfigs();
 
         void ProcessResults(QueryDefinition query, Action<IEnumerable<IRecord>> processEachResultSet);
+
+        void LoadFieldsForAllEntities();
+
+        void LoadRelationshipsForAllEntities();
     }
 }

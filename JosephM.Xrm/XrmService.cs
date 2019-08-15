@@ -831,6 +831,8 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 AllRelationshipMetadata = null;
                 SharedOptionSets = null;
                 _loadedAllEntities = false;
+                _allFieldsLoaded = false;
+                _allRelationshipsLoaded = false;
                 _intPicklistCache.Clear();
             }
         }
@@ -3487,53 +3489,63 @@ string recordType)
             }
         }
 
+        private bool _allFieldsLoaded;
         public void LoadFieldsForAllEntities()
         {
             lock (LockObject)
             {
-                var request = new RetrieveAllEntitiesRequest()
+                if (!_allFieldsLoaded)
                 {
-                    EntityFilters = EntityFilters.Attributes
-                };
-                var response = (RetrieveAllEntitiesResponse)Execute(request);
-                EntityFieldMetadata.Clear();
-                foreach (var item in response.EntityMetadata)
-                {
-                    if (item.Attributes != null && !EntityFieldMetadata.ContainsKey(item.LogicalName))
-                        EntityFieldMetadata.Add(item.LogicalName, FilterAttributeMetadata(item.Attributes).ToList());
+                    var request = new RetrieveAllEntitiesRequest()
+                    {
+                        EntityFilters = EntityFilters.Attributes
+                    };
+                    var response = (RetrieveAllEntitiesResponse)Execute(request);
+                    EntityFieldMetadata.Clear();
+                    foreach (var item in response.EntityMetadata)
+                    {
+                        if (item.Attributes != null && !EntityFieldMetadata.ContainsKey(item.LogicalName))
+                            EntityFieldMetadata.Add(item.LogicalName, FilterAttributeMetadata(item.Attributes).ToList());
+                    }
+                    _allFieldsLoaded = true;
                 }
             }
         }
 
+        private bool _allRelationshipsLoaded;
         public void LoadRelationshipsForAllEntities()
         {
             lock (LockObject)
             {
-                var request = new RetrieveAllEntitiesRequest()
+                if (!_allRelationshipsLoaded)
                 {
-                    EntityFilters = EntityFilters.Relationships
-                };
-                var response = (RetrieveAllEntitiesResponse)Execute(request);
-                EntityRelationships.Clear();
-                foreach (var item in response.EntityMetadata)
-                {
-                    var relationships = new List<RelationshipMetadataBase>();
-                    if (item.OneToManyRelationships != null)
+                    var request = new RetrieveAllEntitiesRequest()
                     {
-                        relationships.AddRange(item.OneToManyRelationships);
-                    }
-                    if (item.ManyToManyRelationships != null)
+                        EntityFilters = EntityFilters.Relationships
+                    };
+                    var response = (RetrieveAllEntitiesResponse)Execute(request);
+                    EntityRelationships.Clear();
+                    foreach (var item in response.EntityMetadata)
                     {
-                        relationships.AddRange(item.ManyToManyRelationships);
+                        var relationships = new List<RelationshipMetadataBase>();
+                        if (item.OneToManyRelationships != null)
+                        {
+                            relationships.AddRange(item.OneToManyRelationships);
+                        }
+                        if (item.ManyToManyRelationships != null)
+                        {
+                            relationships.AddRange(item.ManyToManyRelationships);
+                        }
+                        if (item.ManyToOneRelationships != null)
+                        {
+                            relationships.AddRange(item.ManyToOneRelationships);
+                        }
+                        if (!EntityRelationships.ContainsKey(item.LogicalName))
+                        {
+                            EntityRelationships.Add(item.LogicalName, relationships.ToArray());
+                        }
                     }
-                    if (item.ManyToOneRelationships != null)
-                    {
-                        relationships.AddRange(item.ManyToOneRelationships);
-                    }
-                    if(!EntityRelationships.ContainsKey(item.LogicalName))
-                    {
-                        EntityRelationships.Add(item.LogicalName, relationships.ToArray());
-                    }
+                    _allRelationshipsLoaded = true;
                 }
             }
         }
