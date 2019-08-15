@@ -3481,5 +3481,56 @@ string recordType)
                 }
             }
         }
+
+        public void LoadFieldsForAllEntities()
+        {
+            lock (LockObject)
+            {
+                var request = new RetrieveAllEntitiesRequest()
+                {
+                    EntityFilters = EntityFilters.Attributes
+                };
+                var response = (RetrieveAllEntitiesResponse)Execute(request);
+                EntityFieldMetadata.Clear();
+                foreach (var item in response.EntityMetadata)
+                {
+                    if (item.Attributes != null && !EntityFieldMetadata.ContainsKey(item.LogicalName))
+                        EntityFieldMetadata.Add(item.LogicalName, item.Attributes.ToList());
+                }
+            }
+        }
+
+        public void LoadRelationshipsForAllEntities()
+        {
+            lock (LockObject)
+            {
+                var request = new RetrieveAllEntitiesRequest()
+                {
+                    EntityFilters = EntityFilters.Relationships
+                };
+                var response = (RetrieveAllEntitiesResponse)Execute(request);
+                EntityRelationships.Clear();
+                foreach (var item in response.EntityMetadata)
+                {
+                    var relationships = new List<RelationshipMetadataBase>();
+                    if (item.OneToManyRelationships != null)
+                    {
+                        relationships.AddRange(item.OneToManyRelationships);
+                    }
+                    if (item.ManyToManyRelationships != null)
+                    {
+                        relationships.AddRange(item.ManyToManyRelationships);
+                    }
+                    if (item.ManyToOneRelationships != null)
+                    {
+                        relationships.AddRange(item.ManyToOneRelationships);
+                    }
+                    if(!EntityFieldMetadata.ContainsKey(item.LogicalName))
+                    {
+                        EntityRelationships.Add(item.LogicalName, relationships.ToArray());
+                    }
+                }
+            }
+        }
     }
 }

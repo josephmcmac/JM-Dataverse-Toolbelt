@@ -60,6 +60,16 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        public void LoadFieldsForAllEntities()
+        {
+            XrmService.LoadFieldsForAllEntities();
+        }
+
+        public void LoadRelationshipsForAllEntities()
+        {
+            XrmService.LoadRelationshipsForAllEntities();
+        }
+
         public string SendEmail(Lookup from, Lookup to, string subject, string body)
         {
             var email = new Entity(Entities.email);

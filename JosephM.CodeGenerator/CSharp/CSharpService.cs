@@ -46,9 +46,19 @@ namespace JosephM.CodeGenerator.CSharp
             AppendGenerationComments(stringBuilder);
             stringBuilder.AppendLine("namespace " + request.Namespace);
             stringBuilder.AppendLine("{");
-            controller.LogLiteral("Loading Types.....");
+            controller.LogLiteral("Loading All Types.....");
             AppendEntities(controller, request, stringBuilder);
+            if (request.Relationships && request.IncludeAllRecordTypes)
+            {
+                controller.UpdateProgress(0, 1, "Loading All Relationships.....");
+                Service.LoadRelationshipsForAllEntities();
+            }
             AppendRelationships(controller, request, stringBuilder);
+            if ((request.Fields || request.FieldOptions) && request.IncludeAllRecordTypes)
+            {
+                controller.UpdateProgress(0, 1, "Loading All Fields.....");
+                Service.LoadFieldsForAllEntities();
+            }
             AppendFields(controller, stringBuilder, request);
             AppendOptionSets(stringBuilder, request, controller);
             AppendActions(stringBuilder, request, controller);
