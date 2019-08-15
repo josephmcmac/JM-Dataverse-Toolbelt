@@ -2099,19 +2099,24 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     };
                     var response = (RetrieveEntityResponse)Execute(request);
                     Controller.LogLiteral("Retrieved " + entity + " field metadata");
-                    var fieldMetadata =
-                        response.EntityMetadata.Attributes.Where(f =>
-                        {
-                            if (!(f.IsValidForRead ?? false)
-                                || !f.AttributeOf.IsNullOrWhiteSpace())
-                                return false;
-                            return (!(f is StringAttributeMetadata) ||
-                                    ((StringAttributeMetadata)f).YomiOf.IsNullOrWhiteSpace());
-                        });
+                    var attributeMetadata = response.EntityMetadata.Attributes;
+                    AttributeMetadata[] fieldMetadata = FilterAttributeMetadata(attributeMetadata);
                     EntityFieldMetadata.Add(entity, new List<AttributeMetadata>(fieldMetadata));
                 }
             }
             return EntityFieldMetadata[entity];
+        }
+
+        private static AttributeMetadata[] FilterAttributeMetadata(AttributeMetadata[] attributeMetadata)
+        {
+            return attributeMetadata.Where(f =>
+            {
+                if (!(f.IsValidForRead ?? false)
+                    || !f.AttributeOf.IsNullOrWhiteSpace())
+                    return false;
+                return (!(f is StringAttributeMetadata) ||
+                        ((StringAttributeMetadata)f).YomiOf.IsNullOrWhiteSpace());
+            }).ToArray();
         }
 
         #endregion
@@ -3495,7 +3500,7 @@ string recordType)
                 foreach (var item in response.EntityMetadata)
                 {
                     if (item.Attributes != null && !EntityFieldMetadata.ContainsKey(item.LogicalName))
-                        EntityFieldMetadata.Add(item.LogicalName, item.Attributes.ToList());
+                        EntityFieldMetadata.Add(item.LogicalName, FilterAttributeMetadata(item.Attributes).ToList());
                 }
             }
         }
