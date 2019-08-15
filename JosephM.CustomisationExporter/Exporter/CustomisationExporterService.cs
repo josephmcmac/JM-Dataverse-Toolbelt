@@ -21,7 +21,7 @@ namespace JosephM.CustomisationExporter.Exporter
             Service = service;
         }
 
-        private IRecordService Service { get; set; }
+        private XrmRecordService Service { get; set; }
 
         public override void ExecuteExtention(CustomisationExporterRequest request,
             CustomisationExporterResponse response,
@@ -30,7 +30,19 @@ namespace JosephM.CustomisationExporter.Exporter
             response.Folder = request.SaveToFolder.FolderPath;
             controller.LogLiteral("Loading Metadata");
             ProcessForEntities(request, response, controller.Controller);
+
+            if ((request.Fields || request.FieldOptionSets) && request.IncludeAllRecordTypes)
+            {
+                controller.UpdateProgress(0, 1, "Loading All Fields.....");
+                Service.LoadFieldsForAllEntities();
+            }
+            if ((request.Fields || request.Relationships) && request.IncludeAllRecordTypes)
+            {
+                controller.UpdateProgress(0, 1, "Loading All Relationships.....");
+                Service.LoadRelationshipsForAllEntities();
+            }
             ProcessForFields(request, response, controller.Controller);
+
             ProcessForRelationships(request, response, controller.Controller);
             ProcessForOptionSets(request, response, controller.Controller);
 

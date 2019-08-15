@@ -3530,7 +3530,7 @@ string recordType)
                     {
                         relationships.AddRange(item.ManyToOneRelationships);
                     }
-                    if(!EntityFieldMetadata.ContainsKey(item.LogicalName))
+                    if(!EntityRelationships.ContainsKey(item.LogicalName))
                     {
                         EntityRelationships.Add(item.LogicalName, relationships.ToArray());
                     }
