@@ -13,6 +13,7 @@ using JosephM.XrmModule.Crud;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using static JosephM.InstanceComparer.Extensions;
 
@@ -502,8 +503,9 @@ namespace JosephM.InstanceComparer
             var fieldsOptionParams = new ProcessCompareParams("Field Options", typeof(PicklistOption),
                 (field, recordType, service) =>
                 {
+                    var fieldType = service.GetFieldType(field, recordType);
                     var picklist = service.GetPicklistKeyValues(field, recordType);
-                    return picklist == null || ignoreOptionFieldNames.Contains(field) ? new PicklistOption[0] : picklist.ToArray();
+                    return picklist == null || fieldType != RecordFieldType.Picklist ? new PicklistOption[0] : picklist.ToArray();
                 },
                 nameof(PicklistOption.Key),
                 GetReadableProperties(typeof(PicklistOption), null));
@@ -861,6 +863,46 @@ namespace JosephM.InstanceComparer
             return parentRecord.Id == null ? parentRecord.GetStringField(parentCompareParams.MatchField) : parentRecord.Id;
         }
 
+        //https://stackoverflow.com/questions/358835/getproperties-to-return-all-properties-for-an-interface-inheritance-hierarchy/2444090
+        public static PropertyInfo[] GetPublicProperties(Type type)
+        {
+            if (type.IsInterface)
+            {
+                var propertyInfos = new List<PropertyInfo>();
+
+                var considered = new List<Type>();
+                var queue = new Queue<Type>();
+                considered.Add(type);
+                queue.Enqueue(type);
+                while (queue.Count > 0)
+                {
+                    var subType = queue.Dequeue();
+                    foreach (var subInterface in subType.GetInterfaces())
+                    {
+                        if (considered.Contains(subInterface)) continue;
+
+                        considered.Add(subInterface);
+                        queue.Enqueue(subInterface);
+                    }
+
+                    var typeProperties = subType.GetProperties(
+                        BindingFlags.FlattenHierarchy
+                        | BindingFlags.Public
+                        | BindingFlags.Instance);
+
+                    var newPropertyInfos = typeProperties
+                        .Where(x => !propertyInfos.Contains(x));
+
+                    propertyInfos.InsertRange(0, newPropertyInfos);
+                }
+
+                return propertyInfos.ToArray();
+            }
+
+            return type.GetProperties(BindingFlags.FlattenHierarchy
+                | BindingFlags.Public | BindingFlags.Instance);
+        }
+
         private List<List<IRecord>> DoCompare(ProcessCompareParams processCompareParams,
             ProcessContainer processContainer,
             IEnumerable<IRecord> serviceOneItems, IEnumerable<IRecord> serviceTwoItems, ProcessCompareParams parentCompareParams = null, IRecord parent1 = null, IRecord parent2 = null)
@@ -870,23 +912,46 @@ namespace JosephM.InstanceComparer
 
             var typeConfig = processContainer.ServiceOne.GetTypeConfigs().GetFor(processCompareParams.RecordType);
 
-            var indexService2Items =
-                processCompareParams.MatchFields.Count() == 1
-                && processCompareParams.Type == ProcessCompareType.Records
-                ? serviceTwoItems.GroupBy(e => processContainer.ServiceTwo.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField2(processCompareParams.MatchField, e.GetField(processCompareParams.MatchField))))
+            Dictionary<string, IRecord[]> indexService2Items = null;
+            if (processCompareParams.MatchFields.Count() == 1 && processCompareParams.Type == ProcessCompareType.Records)
+            {
+                indexService2Items = serviceTwoItems.GroupBy(e => processContainer.ServiceTwo.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField2(processCompareParams.MatchField, e.GetField(processCompareParams.MatchField))))
                     .Where(g => g.Key != null)
-                    .ToDictionary(g => g.Key, g => g.ToArray())
-                : null;
+                    .ToDictionary(g => g.Key, g => g.ToArray());
+            }
+            if(processCompareParams.MatchFields.Count() == 1
+                && processCompareParams.Type == ProcessCompareType.Objects
+                && (GetPublicProperties(Type.GetType(processCompareParams.RecordType)).First(pi => pi.Name == processCompareParams.MatchFields.First())).PropertyType == typeof(string))
+            {
+                indexService2Items = serviceTwoItems.GroupBy(e => (string)processCompareParams.ConvertField2(processCompareParams.MatchField, e.GetField(processCompareParams.MatchField)))
+                    .Where(g => g.Key != null)
+                    .ToDictionary(g => g.Key, g => g.ToArray());
+            }
 
             foreach (var item in serviceOneItems)
             {
-                var matches =
-                    indexService2Items != null
-                    ? (indexService2Items.ContainsKey(processContainer.ServiceOne.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField))))
-                    ? indexService2Items[processContainer.ServiceOne.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField)))]
-                    : new IRecord[0])
-
-                    : serviceTwoItems
+                var matches = new IRecord[0];
+                if (indexService2Items != null)
+                {
+                    if (processCompareParams.Type == ProcessCompareType.Records)
+                    {
+                        matches =
+                            indexService2Items.ContainsKey(processContainer.ServiceOne.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField))))
+                            ? indexService2Items[processContainer.ServiceOne.GetFieldAsMatchString(processCompareParams.RecordType, processCompareParams.MatchField, processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField)))]
+                            : new IRecord[0];
+                    }
+                    else
+                    {
+                        matches =
+                            processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField)) != null
+                            && indexService2Items.ContainsKey((string)processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField)))
+                            ? indexService2Items[(string)processCompareParams.ConvertField1(processCompareParams.MatchField, item.GetField(processCompareParams.MatchField))]
+                            : new IRecord[0];
+                    }
+                }
+                else
+                {
+                    matches = serviceTwoItems
                     .Where(
                     w =>
                         processCompareParams.MatchFields.All(f =>
@@ -895,7 +960,7 @@ namespace JosephM.InstanceComparer
                                 processCompareParams.ConvertField2(f, w.GetField(f)))))
                     .Where(r => !service2AlreadyAdded.Contains(r))
                     .ToArray();
-
+                }
                 if (matches.Any())
                 {
                     if (matches.Count() > 1)
@@ -937,7 +1002,7 @@ namespace JosephM.InstanceComparer
                     var parentId = parent1 == null ? null : GetParentId(parentCompareParams, parent1);
                     var displayName = GetItemDisplayName(item, processContainer.ServiceOne, processCompareParams, false);
                     processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
-                        displayName, "Only In " + processContainer.Request.ConnectionOne.Name, displayName, null, item.Id, null, parentReference: parentReference, parentId1: parentId);
+                        displayName, "Only In " + processContainer.Request.ConnectionOne.Name, displayName, null, item.Id, null, parentReference: parentReference, parentId1: parentId, record1: item);
                 }
             }
             var inTwoNotInOne = serviceTwoItems
@@ -951,7 +1016,7 @@ namespace JosephM.InstanceComparer
                     var parentId = parent2 == null ? null : GetParentId(parentCompareParams, parent2);
                     var displayName = GetItemDisplayName(item, processContainer.ServiceTwo, processCompareParams, true);
                     processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
-                        displayName, "Only In " + processContainer.Request.ConnectionTwo.Name, null, displayName, null, item.Id, parentReference: parentReference, parentId2: parentId);
+                        displayName, "Only In " + processContainer.Request.ConnectionTwo.Name, null, displayName, null, item.Id, parentReference: parentReference, parentId2: parentId, record2: item);
                 }
             }
 
@@ -1056,7 +1121,7 @@ namespace JosephM.InstanceComparer
                         var parentId2 = parent2 == null ? null : GetParentId(parentCompareParams, parent2);
                         processContainer.AddDifference(processCompareParams.Context, processCompareParams.RecordType,
                             displayName1,
-                            "Different " + fieldLabel, displayValue1, displayValue2, item.First().Id, item.Last().Id, parentReference: parentReference, parentId1: parentId1, parentId2: parentId2);
+                            "Different " + fieldLabel, displayValue1, displayValue2, item.First().Id, item.Last().Id, parentReference: parentReference, parentId1: parentId1, parentId2: parentId2, record1: item.First(), record2: item.Last());
                     }
                 }
                 if (processCompareParams.RecordType == Entities.adx_webfile)
@@ -1606,6 +1671,51 @@ namespace JosephM.InstanceComparer
             public Dictionary<string, Dictionary<string, List<string>>> MissingManagedSolutionComponents { get; private set; }
             public Dictionary<string, Dictionary<IRecord, IRecord>> MatchedRecordDictionary { get; internal set; }
 
+            private SortedDictionary<string, IFieldMetadata> _indexFieldMetadataIdsService1;
+            public SortedDictionary<string, IFieldMetadata> IndexFieldMetadataIdsService1
+            {
+                get
+                {
+                    if (_indexFieldMetadataIdsService1 == null)
+                    {
+                        _indexFieldMetadataIdsService1 = new SortedDictionary<string, IFieldMetadata>();
+                        foreach (var item in ServiceOne
+                            .GetAllRecordTypes()
+                            .Select(r => ServiceOne.GetFieldMetadata(r))
+                            .SelectMany(f => f))
+                        {
+                            if (!_indexFieldMetadataIdsService1.ContainsKey(item.MetadataId))
+                            {
+                                _indexFieldMetadataIdsService1.Add(item.MetadataId, item);
+                            }
+                        }
+                    }
+                    return _indexFieldMetadataIdsService1;
+                }
+            }
+            private SortedDictionary<string, IFieldMetadata> _indexFieldMetadataIdsService2;
+            public SortedDictionary<string, IFieldMetadata> IndexFieldMetadataIdsService2
+            {
+                get
+                {
+                    if (_indexFieldMetadataIdsService2 == null)
+                    {
+                        _indexFieldMetadataIdsService2 = new SortedDictionary<string, IFieldMetadata>();
+                        foreach (var item in ServiceTwo
+                            .GetAllRecordTypes()
+                            .Select(r => ServiceTwo.GetFieldMetadata(r))
+                            .SelectMany(f => f))
+                        {
+                            if (!_indexFieldMetadataIdsService2.ContainsKey(item.MetadataId))
+                            {
+                                _indexFieldMetadataIdsService2.Add(item.MetadataId, item);
+                            }
+                        }
+                    }
+                    return _indexFieldMetadataIdsService2;
+                }
+            }
+
             public ProcessContainer(InstanceComparerRequest request, InstanceComparerResponse response,
                 LogController controller)
             {
@@ -1624,7 +1734,7 @@ namespace JosephM.InstanceComparer
                 MatchedRecordDictionary = new Dictionary<string, Dictionary<IRecord, IRecord>>();
             }
 
-            internal void AddDifference(string type, string recordType, object name, string difference, object value1, object value2, string id1, string id2, string parentReference = null, string parentId1 = null, string parentId2 = null)
+            internal void AddDifference(string type, string recordType, object name, string difference, object value1, object value2, string id1, string id2, string parentReference = null, string parentId1 = null, string parentId2 = null, IRecord record1 = null, IRecord record2 = null)
             {
                 //this part generating url logic then adds the difference
                 var linkRecordType = recordType;
@@ -1682,18 +1792,10 @@ namespace JosephM.InstanceComparer
                     else
                     {
                         linkRecordType = "field";
-                        var matchingFieldMetadata1 = parentId1 == null ? null :
-                            ServiceOne
-                            .GetAllRecordTypes()
-                            .Select(r => ServiceOne.GetFieldMetadata(r))
-                            .SelectMany(f => f.ToArray())
-                            .First(f => f.MetadataId == parentId1);
-                        var matchingFieldMetadata2 = parentId2 == null ? null : 
-                            ServiceTwo
-                            .GetAllRecordTypes()
-                            .Select(r => ServiceTwo.GetFieldMetadata(r))
-                            .SelectMany(f => f.ToArray())
-                            .First(f => f.MetadataId == parentId2);
+                        var matchingFieldMetadata1 = parentId1 == null || !IndexFieldMetadataIdsService1.ContainsKey(parentId1) ? null :
+                            IndexFieldMetadataIdsService1[parentId1];
+                        var matchingFieldMetadata2 = parentId2 == null || !IndexFieldMetadataIdsService2.ContainsKey(parentId2) ? null :
+                            IndexFieldMetadataIdsService2[parentId2];
                         linkId1 = matchingFieldMetadata1 == null ? null : matchingFieldMetadata1.MetadataId;
                         linkId2 = matchingFieldMetadata2 == null ? null : matchingFieldMetadata2.MetadataId;
                         var parentRecordType1 = matchingFieldMetadata1?.RecordType;
@@ -1704,8 +1806,8 @@ namespace JosephM.InstanceComparer
                         additionalParams2 = "entityId=" + entityId2;
                     }
                 }
-                var url1String = id1 == null ? null : ServiceOne.GetWebUrl(linkRecordType, linkId1, additionalParams1);
-                var url2String = id2 == null ? null : ServiceTwo.GetWebUrl(linkRecordType, linkId2, additionalParams2);
+                var url1String = id1 == null ? null : ServiceOne.GetWebUrl(linkRecordType, linkId1, additionalparams: additionalParams1, record: record1);
+                var url2String = id2 == null ? null : ServiceTwo.GetWebUrl(linkRecordType, linkId2, additionalparams: additionalParams2, record: record2);
 
                 var url1 = string.IsNullOrWhiteSpace(url1String)
                     ? null
@@ -1765,22 +1867,13 @@ namespace JosephM.InstanceComparer
                     }
                     else
                     {
-                        var matchingFieldMetadata1 = parentId1 == null ? null :
-                            ServiceOne
-                            .GetAllRecordTypes()
-                            .Select(r => ServiceOne.GetFieldMetadata(r))
-                            .SelectMany(f => f.ToArray())
-                            .First(f => f.MetadataId == parentId1);
-                        var matchingFieldMetadata2 = parentId2 == null ? null :
-                            ServiceTwo
-                            .GetAllRecordTypes()
-                            .Select(r => ServiceTwo.GetFieldMetadata(r))
-                            .SelectMany(f => f.ToArray())
-                            .First(f => f.MetadataId == parentId2);
+                        var matchingFieldMetadata1 = parentId1 == null || !IndexFieldMetadataIdsService1.ContainsKey(parentId1)
+                            ? null :
+                            IndexFieldMetadataIdsService1[parentId1];
+                        var matchingFieldMetadata2 = parentId2 == null || !IndexFieldMetadataIdsService2.ContainsKey(parentId2)
+                            ? null :
+                            IndexFieldMetadataIdsService2[parentId2];
                         var parentRecordType = matchingFieldMetadata1?.RecordType ?? matchingFieldMetadata2?.RecordType;
-                        var entityId = matchingFieldMetadata1 == null
-                            ? ServiceTwo.GetRecordTypeMetadata(parentRecordType).MetadataId
-                            : ServiceOne.GetRecordTypeMetadata(parentRecordType).MetadataId;
                         componentTypeForSolution = OptionSets.SolutionComponent.ObjectTypeCode.Entity;
                         idForSolution1 = matchingFieldMetadata1 == null ? null : ServiceOne.GetRecordTypeMetadata(parentRecordType).MetadataId;
                         idForSolution2 = matchingFieldMetadata2 == null ? null : ServiceTwo.GetRecordTypeMetadata(parentRecordType).MetadataId;

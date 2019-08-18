@@ -62,11 +62,11 @@ namespace JosephM.Xrm
 
         public static DateTime MinCrmDateTime = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc);
 
-        private readonly SortedDictionary<string, List<AttributeMetadata>>
-            _entityFieldMetadata = new SortedDictionary<string, List<AttributeMetadata>>();
+        private readonly SortedDictionary<string, SortedDictionary<string, AttributeMetadata>>
+            _entityFieldMetadata = new SortedDictionary<string, SortedDictionary<string, AttributeMetadata>>();
 
         private bool _loadedAllEntities;
-        private readonly List<EntityMetadata> _entityMetadata = new List<EntityMetadata>();
+        private readonly SortedDictionary<string, EntityMetadata> _entityMetadata = new SortedDictionary<string, EntityMetadata>();
 
         private readonly SortedDictionary<string, RelationshipMetadataBase[]> _entityRelationships
             = new SortedDictionary<string, RelationshipMetadataBase[]>();
@@ -122,12 +122,12 @@ namespace JosephM.Xrm
             get { return _lockObject; }
         }
 
-        private SortedDictionary<string, List<AttributeMetadata>> EntityFieldMetadata
+        private SortedDictionary<string, SortedDictionary<string, AttributeMetadata>> EntityFieldMetadata
         {
             get { return _entityFieldMetadata; }
         }
 
-        private List<EntityMetadata> EntityMetadata
+        private SortedDictionary<string, EntityMetadata> EntityMetadata
         {
             get { return _entityMetadata; }
         }
@@ -312,7 +312,7 @@ namespace JosephM.Xrm
         {
             lock (LockObject)
             {
-                if (!EntityMetadata.Any(em => em.LogicalName == entity))
+                if (!EntityMetadata.ContainsKey(entity))
                 {
                     Controller.LogLiteral("Retrieving " + entity + " entity metadata");
                     var request = new RetrieveEntityRequest
@@ -322,23 +322,21 @@ namespace JosephM.Xrm
                     };
                     var response = (RetrieveEntityResponse)Execute(request);
                     Controller.LogLiteral("Retrieved " + entity + " entity metadata");
-                    EntityMetadata.Add(response.EntityMetadata);
+                    EntityMetadata.Add(entity, response.EntityMetadata);
                 }
             }
-            return EntityMetadata.First(em => em.LogicalName == entity);
+            return EntityMetadata[entity];
         }
 
         public virtual AttributeMetadata GetFieldMetadata(string field, string entity)
         {
             var entityFieldMetadata = GetEntityFieldMetadata(entity);
 
-            if (entityFieldMetadata.Any(efm => efm.LogicalName == field))
+            if (!entityFieldMetadata.ContainsKey(field))
             {
-                var fieldMetadata = entityFieldMetadata.First(efm => efm.LogicalName == field);
-                return fieldMetadata;
+                throw new Exception("Error Getting field metadata\nEntity: " + entity + "\nField: " + field);
             }
-
-            throw new Exception("Error Getting field metadata\nEntity: " + entity + "\nField: " + field);
+            return entityFieldMetadata[field];
         }
 
         public string GetRelationshipFieldName(string relationshipName, string entityType, bool isReferencing)
@@ -1130,7 +1128,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 return null;
         }
 
-        public string GetWebUrl(string recordType, Guid id, string additionalparams = null)
+        public string GetWebUrl(string recordType, Guid id, string additionalparams = null, Entity entity = null)
         {
             if (recordType == null)
                 return null;
@@ -1151,7 +1149,8 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     }
                 case Entities.workflow:
                     {
-                        var workflow = Retrieve(Entities.workflow, id, new[] { Fields.workflow_.category });
+
+                        var workflow = entity ?? Retrieve(Entities.workflow, id, new[] { Fields.workflow_.category });
                         if (workflow.GetOptionSetValue(Fields.workflow_.category) == OptionSets.Process.Category.BusinessProcessFlow)
                             result = string.Format("{0}/Tools/ProcessControl/bpfConfigurator.aspx?id={1}", WebUrl, id);
                         else
@@ -1165,7 +1164,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     }
                 case Entities.systemform:
                     {
-                        var systemForm = Retrieve(Entities.systemform, id, new[] { Fields.systemform_.type });
+                        var systemForm = entity ?? Retrieve(Entities.systemform, id, new[] { Fields.systemform_.type });
                         if (systemForm.GetOptionSetValue(Fields.systemform_.type) == OptionSets.SystemForm.FormType.Dashboard)
                             result = string.Format("{0}/main.aspx?extraqs=%26formId%3d%7b{1}%7d%26dashboardType%3d1030&pagetype=dashboardeditor", WebUrl, id);
                         else
@@ -2081,12 +2080,15 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             lock (LockObject)
             {
                 var entityFieldMetadata = GetEntityFieldMetadata(entity);
-                entityFieldMetadata.RemoveAll(mt => mt.LogicalName == field);
-                entityFieldMetadata.Add(attributeMetadata);
+                if(entityFieldMetadata.ContainsKey(field))
+                {
+                    entityFieldMetadata.Remove(field);
+                }
+                entityFieldMetadata.Add(field, attributeMetadata);
             }
         }
 
-        public List<AttributeMetadata> GetEntityFieldMetadata(string entity)
+        public SortedDictionary<string, AttributeMetadata> GetEntityFieldMetadata(string entity)
         {
             lock (LockObject)
             {
@@ -2103,7 +2105,18 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     Controller.LogLiteral("Retrieved " + entity + " field metadata");
                     var attributeMetadata = response.EntityMetadata.Attributes;
                     AttributeMetadata[] fieldMetadata = FilterAttributeMetadata(attributeMetadata);
-                    EntityFieldMetadata.Add(entity, new List<AttributeMetadata>(fieldMetadata));
+                    var dictionary = new SortedDictionary<string, AttributeMetadata>();
+                    if (fieldMetadata != null)
+                    {
+                        foreach (var field in fieldMetadata)
+                        {
+                            if (!dictionary.ContainsKey(field.LogicalName))
+                            {
+                                dictionary.Add(field.LogicalName, field);
+                            }
+                        }
+                    }
+                    EntityFieldMetadata.Add(entity, dictionary);
                 }
             }
             return EntityFieldMetadata[entity];
@@ -2185,7 +2198,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
         /// </summary>
         private List<OptionSetMetadata> _sharedOptionSets;
 
-        public List<EntityMetadata> GetAllEntityMetadata()
+        public IDictionary<string, EntityMetadata> GetAllEntityMetadata()
         {
             lock (LockObject)
             {
@@ -2197,7 +2210,13 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     };
                     var response = (RetrieveAllEntitiesResponse)Execute(request);
                     _entityMetadata.Clear();
-                    _entityMetadata.AddRange(response.EntityMetadata);
+                    foreach(var item in response.EntityMetadata)
+                    {
+                        if(item.LogicalName != null && !_entityMetadata.ContainsKey(item.LogicalName))
+                        {
+                            _entityMetadata.Add(item.LogicalName, item);
+                        }
+                    }
                     _loadedAllEntities = true;
                 }
                 return _entityMetadata;
@@ -2331,7 +2350,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public bool EntityExists(string schemaName)
         {
-            return GetAllEntityMetadata().Any(m => m.LogicalName == schemaName);
+            return GetAllEntityMetadata().ContainsKey(schemaName);
         }
 
         private AttributeRequiredLevelManagedProperty GetRequiredLevel(bool isRequired)
@@ -2419,7 +2438,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public bool FieldExists(string fieldName, string recordType)
         {
-            return GetEntityFieldMetadata(recordType).Any(m => m.LogicalName == fieldName);
+            return GetEntityFieldMetadata(recordType).ContainsKey(fieldName);
         }
 
         public void CreateOrUpdateDateAttribute(string schemaName, string displayName, string description,
@@ -2861,8 +2880,8 @@ string recordType)
                 var request = new DeleteEntityRequest();
                 request.LogicalName = schemaName;
                 Execute(request);
-                if (GetAllEntityMetadata().Any(m => m.LogicalName == schemaName))
-                    GetAllEntityMetadata().Remove(GetAllEntityMetadata().Single(m => m.LogicalName == schemaName));
+                if (GetAllEntityMetadata().ContainsKey(schemaName))
+                    GetAllEntityMetadata().Remove(schemaName);
                 if (_entityFieldMetadata.ContainsKey(schemaName))
                     _entityFieldMetadata.Remove(schemaName);
             }
@@ -3062,6 +3081,7 @@ string recordType)
         public IEnumerable<string> GetAllEntityTypes()
         {
             return GetAllEntityMetadata()
+                .Values
                 .Where(m => !(m.IsIntersect ?? false))
                 .Select(e => e.LogicalName)
                .ToArray();
@@ -3070,6 +3090,7 @@ string recordType)
         public IEnumerable<string> GetAllNnRelationshipEntityNames()
         {
             return GetAllEntityMetadata()
+                .Values
                 .Where(m => m.IsIntersect ?? false)
                 .Select(e => e.LogicalName)
                .ToArray();
@@ -3320,7 +3341,7 @@ string recordType)
 
         public IEnumerable<string> GetFields(string recordType)
         {
-            return GetEntityFieldMetadata(recordType).Select(a => a.LogicalName).ToArray();
+            return GetEntityFieldMetadata(recordType).Keys.ToArray();
         }
 
         public bool IsReadable(string fieldName, string recordType)
@@ -3505,7 +3526,20 @@ string recordType)
                     foreach (var item in response.EntityMetadata)
                     {
                         if (item.Attributes != null && !EntityFieldMetadata.ContainsKey(item.LogicalName))
-                            EntityFieldMetadata.Add(item.LogicalName, FilterAttributeMetadata(item.Attributes).ToList());
+                        {
+                            var dictionary = new SortedDictionary<string, AttributeMetadata>();
+                            if (item.Attributes != null)
+                            {
+                                foreach (var field in item.Attributes)
+                                {
+                                    if (!dictionary.ContainsKey(field.LogicalName))
+                                    {
+                                        dictionary.Add(field.LogicalName, field);
+                                    }
+                                }
+                            }
+                            EntityFieldMetadata.Add(item.LogicalName, dictionary);
+                        }
                     }
                     _allFieldsLoaded = true;
                 }

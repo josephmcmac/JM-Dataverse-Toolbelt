@@ -1078,6 +1078,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             return _xrmService
                 .GetAllEntityMetadata()
+                .Values
                 .Where(m => m.IsActivityParty ?? false)
                 .Select(m => m.LogicalName);
         }
@@ -1090,7 +1091,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<string> GetActivityTypes()
         {
-            return _xrmService.GetAllEntityMetadata().Where(m => m.IsActivity ?? false).Select(m => m.LogicalName);
+            return _xrmService.GetAllEntityMetadata().Values.Where(m => m.IsActivity ?? false).Select(m => m.LogicalName);
         }
 
 
@@ -1242,12 +1243,19 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public LogController Controller { get; private set; }
 
-        public string GetWebUrl(string recordType, string id, string additionalparams = null)
+        public string GetWebUrl(string recordType, string id, string additionalparams = null, IRecord record = null)
         {
             var idGuid = Guid.Empty;
             if (!Guid.TryParse(id, out idGuid))
                 return null;
-            return XrmService.GetWebUrl(recordType, idGuid, additionalparams);
+            if (record is XrmRecord)
+            {
+                return XrmService.GetWebUrl(recordType, idGuid, additionalparams: additionalparams, entity: ToEntity(record));
+            }
+            else
+            {
+                return XrmService.GetWebUrl(recordType, idGuid, additionalparams: additionalparams);
+            }
         }
 
         public IFormService GetFormService()

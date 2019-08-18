@@ -331,7 +331,7 @@ namespace JosephM.Record.Service
             return null;
         }
 
-        public string GetWebUrl(string recordType, string id, string additionalparams = null)
+        public string GetWebUrl(string recordType, string id, string additionalparams = null, IRecord record = null)
         {
             return null;
         }
