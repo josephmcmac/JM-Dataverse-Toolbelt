@@ -97,8 +97,8 @@ namespace JosephM.XrmModule.Crud
                 writer.Formatting = Formatting.Indented;
                 document.Save(writer);
             }
-
-            return builder.ToString();
+            var toString = builder.ToString();
+            return toString.Substring(toString.IndexOf("<fetch"));
         }
 
         private string WriteFetchToJavascript(string fetchXml)
