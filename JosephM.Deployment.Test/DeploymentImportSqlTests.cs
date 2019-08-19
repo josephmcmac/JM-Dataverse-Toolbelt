@@ -246,8 +246,8 @@ namespace JosephM.Deployment.Test
 
             var connection = GetSavedXrmRecordConfiguration();
 
-            SavedXrmConnectionsModule.RefreshXrmServices(GetXrmRecordConfiguration(), app.Controller);
-            app.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections
+            SavedXrmConnectionsModule.RefreshXrmServices(GetXrmRecordConfiguration(), consoleApp.Controller);
+            consoleApp.Controller.RegisterInstance<ISavedXrmConnections>(new SavedXrmConnections
             {
                 Connections = new[] { connection }
             });
