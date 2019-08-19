@@ -3530,7 +3530,8 @@ string recordType)
                             var dictionary = new SortedDictionary<string, AttributeMetadata>();
                             if (item.Attributes != null)
                             {
-                                foreach (var field in item.Attributes)
+                                var filteredFields = FilterAttributeMetadata(item.Attributes);
+                                foreach (var field in filteredFields)
                                 {
                                     if (!dictionary.ContainsKey(field.LogicalName))
                                     {
