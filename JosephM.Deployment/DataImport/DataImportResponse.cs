@@ -50,7 +50,7 @@ namespace JosephM.Deployment.DataImport
             importObject.AddedCreated(thisEntity);
         }
 
-        private ImportingRecords GetImportForType(string logicalName)
+        public ImportingRecords GetImportForType(string logicalName)
         {
             if (!_importedRecords.Any(ir => ir.Type == logicalName))
                 _importedRecords.Add(new ImportingRecords() { Type = logicalName });

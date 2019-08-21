@@ -11,19 +11,24 @@ namespace JosephM.Deployment.DataImport
     public class ImportingRecords : INotifyPropertyChanged
     {
         private object _lockObject = new object();
-        private List<Entity> _createdEntities = new List<Entity>();
+        private IDictionary<Guid, Entity> _createdEntities = new SortedDictionary<Guid, Entity>();
         private List<Entity> _updatedEntities = new List<Entity>();
         private List<Entity> _skippedNoChangeEntities = new List<Entity>();
-        private Dictionary<Entity, List<string>> _fieldsForRetry = new Dictionary<Entity, List<string>>();
+        private IDictionary<Entity, List<string>> _fieldsForRetry = new SortedDictionary<Entity, List<string>>();
         private int _errors;
+
+        public IDictionary<Guid, Entity> GetCreatedEntities()
+        {
+            return _createdEntities;
+        }
 
         public void AddedCreated(Entity entity)
         {
             lock (_lockObject)
             {
-                if (!_createdEntities.Contains(entity))
+                if (!_createdEntities.ContainsKey(entity.Id))
                 {
-                    _createdEntities.Add(entity);
+                    _createdEntities.Add(entity.Id, entity);
                     OnPropertyChanged(nameof(Created));
                 }
             }
@@ -33,7 +38,7 @@ namespace JosephM.Deployment.DataImport
         {
             lock (_lockObject)
             {
-                if (!_createdEntities.Contains(entity)
+                if (!_createdEntities.ContainsKey(entity.Id)
                 && !_updatedEntities.Contains(entity))
                 {
                     _updatedEntities.Add(entity);

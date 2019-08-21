@@ -293,6 +293,8 @@ namespace JosephM.Deployment.DataImport
                         var countRecordsImported = 0;
                         estimator = new TaskEstimator(countRecordsToImport);
 
+                        var thisTypeCreatedDictionary = response.GetImportForType(recordType).GetCreatedEntities();
+
                         foreach (var entity in orderedEntities)
                         {
                             var thisEntity = entity;
@@ -312,7 +314,7 @@ namespace JosephM.Deployment.DataImport
                                 }
                                 else if (matchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
                                 {
-                                    existingMatchingIds = GetMatchForExistingRecord(thisEntity, containsExportedConfigFields);
+                                    existingMatchingIds = GetMatchForExistingRecord(thisEntity, containsExportedConfigFields, thisTypeCreatedDictionary);
                                 }
                                 else if (matchOption == MatchOption.PrimaryKeyOnly && thisEntity.Id != Guid.Empty)
                                 {
@@ -865,7 +867,7 @@ namespace JosephM.Deployment.DataImport
             return targetTypesToTry;
         }
 
-        private IEnumerable<Entity> GetMatchForExistingRecord(Entity thisEntity, bool containsExportedConfigFields)
+        private IEnumerable<Entity> GetMatchForExistingRecord(Entity thisEntity, bool containsExportedConfigFields, IDictionary<Guid, Entity> thisTypeCreatedDictionary)
         {
             //okay this matching is somewhat complicated due to implementing
             //type configs
@@ -918,6 +920,15 @@ namespace JosephM.Deployment.DataImport
                         if (name.IsNullOrWhiteSpace())
                             throw new NullReferenceException(string.Format("{0} Is Required On The {1}", XrmService.GetFieldLabel(primaryField, thisEntity.LogicalName), XrmService.GetEntityLabel(thisEntity.LogicalName)));
                         existingMatches = GetMatchingEntities(thisEntity.LogicalName, primaryField, name);
+                        foreach (var item in existingMatches.ToArray())
+                        {
+                            //if creating multiple items with the same name during an import
+                            //then items should not match to those created during this import
+                            if (thisTypeCreatedDictionary.ContainsKey(item.Id))
+                            {
+                                existingMatches = existingMatches.Except(new[] { item }).ToArray();
+                            }
+                        }
                         if (existingMatches.Count() > 1)
                             throw new Exception(string.Format("More Than One Record Match To The {0} Of {1} When Matching The Name",
                                 "Name", name));

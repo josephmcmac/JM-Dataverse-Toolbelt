@@ -24,6 +24,55 @@ namespace JosephM.Deployment.Test
     [TestClass]
     public class DeploymentImportXmlTests : XrmModuleTest
     {
+        /// <summary>
+        /// When creating mu;ltiple records during an import where multiple have the same name
+        /// verify each is created (they dont match to each other)
+        /// </summary>
+        [TestMethod]
+        public void DeploymentImportXmlCreateMultipleWithSameNameTest()
+        {
+            var type = Entities.jmcg_testentity;
+            PrepareTests();
+            var workFolder = ClearFilesAndData(type);
+
+            var recordName1a = CreateTestRecord(TestEntityType, new Dictionary<string, object>
+            {
+                { Fields.jmcg_testentity_.jmcg_name, "TestName1" }
+            });
+            var recordName1b = CreateTestRecord(TestEntityType, new Dictionary<string, object>
+            {
+                { Fields.jmcg_testentity_.jmcg_name, "TestName1" }
+            });
+            var recordName2 = CreateTestRecord(TestEntityType, new Dictionary<string, object>
+            {
+                { Fields.jmcg_testentity_.jmcg_name, "TestName2" }
+            });
+
+            var exportService = new ExportXmlService(XrmRecordService);
+            var exportRequest = new ExportXmlRequest
+            {
+                Folder = new Folder(workFolder),
+                RecordTypesToExport = new[] { new ExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
+            };
+            var exportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
+            Assert.IsTrue(exportResponse.Success);
+
+            DeleteAll(type);
+
+            var application = CreateAndLoadTestApplication<ImportXmlModule>();
+
+            var importRequest = new ImportXmlRequest
+            {
+                Folder = new Folder(workFolder)
+            };
+
+            var response = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(response.HasError);
+
+            var records = XrmRecordService.RetrieveAll(type, new string[0]);
+            Assert.AreEqual(3, records.Count());
+        }
+
         [TestMethod]
         public void DeploymentImportXmlAssociationsAndNotesTest()
         {
