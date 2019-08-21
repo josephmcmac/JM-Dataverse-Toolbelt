@@ -362,5 +362,21 @@ namespace JosephM.Core.Extentions
                 return null;
             return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(severalWords.ToLower());
         }
+
+        public static string ReplaceIgnoreCase(this string sourceString, string oldString, string newString)
+        {
+            if (sourceString == null)
+                return null;
+            var startCompareAt = 0;
+            while (sourceString.Length > startCompareAt
+                && sourceString.IndexOf(oldString, startCompareAt, StringComparison.OrdinalIgnoreCase) > -1)
+            {
+                var indexOfOldString = sourceString.IndexOf(oldString, StringComparison.OrdinalIgnoreCase);
+                sourceString = sourceString.Remove(indexOfOldString, oldString.Length);
+                sourceString = sourceString.Insert(indexOfOldString, newString);
+                startCompareAt = indexOfOldString + newString.Length;
+            }
+            return sourceString;
+        }
     }
 }

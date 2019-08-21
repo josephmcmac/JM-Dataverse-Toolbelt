@@ -13,6 +13,17 @@ namespace JosephM.Core.Test
     public class StringExtentionsTests
     {
         [TestMethod]
+        public void StringExtentionsReplaceIgnoreCaseTest()
+        {
+            Assert.AreEqual(null, ((string)null).ReplaceIgnoreCase("a", "b"));
+            Assert.AreEqual("abcdefghijkl", "abcdefghijkl".ReplaceIgnoreCase("zz", "yy"));
+            Assert.AreEqual("bbbbbbbbbbbbbb", "aaaaaaaaaaaaaa".ReplaceIgnoreCase("a", "b"));
+            Assert.AreEqual("wtf wtf wtf", "abcd wtf abcd".ReplaceIgnoreCase("abcd", "wtf"));
+            Assert.AreEqual("wtf wtf wtf", "abcd wtf ABCD".ReplaceIgnoreCase("abcd", "wtf"));
+            Assert.AreEqual("wtf wtf wtf", "wtf aBcD wtf".ReplaceIgnoreCase("abcd", "wtf"));
+        }
+
+        [TestMethod]
         public void StringExtentionsParseEnumTest()
         {
             Assert.AreEqual(TestEnum.Enum1, TestEnum.Enum1.ToString().ParseEnum<TestEnum>());

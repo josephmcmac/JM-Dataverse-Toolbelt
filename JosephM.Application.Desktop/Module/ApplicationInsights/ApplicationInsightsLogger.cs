@@ -6,6 +6,7 @@ using JosephM.Core.AppConfig;
 using System.Collections.Generic;
 using JosephM.Core.Extentions;
 using JosephM.Core.Security;
+using System.Linq;
 
 namespace JosephM.Application.Desktop.Module.ApplicationInsights
 {
@@ -21,14 +22,14 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             TelemetryConfiguration.Active.InstrumentationKey = InstrumentationKey;
 
             #if DEBUG
-                IsDebugMode = true;
+                //IsDebugMode = true;
             #endif
 
             var telemetryConfiguration = new TelemetryConfiguration(InstrumentationKey);
 
             //this tells to promptly send data if debugging
             telemetryConfiguration.TelemetryChannel.DeveloperMode = IsDebugMode;
-            //for when debuuging if want to send data uncomment this line
+            //for when debugging if want to send data uncomment this line
             //IsDebugMode = false;
 
             var tc = new TelemetryClient(telemetryConfiguration);
@@ -68,10 +69,20 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
                 void addProperty(string name, string value)
                 {
                     if (!properties.ContainsKey(name))
+                    {
                         properties.Add(name, value);
+                    }
                 }
                 addProperty("App", ApplicationController.ApplicationName);
                 addProperty("App Version", ApplicationController.Version);
+
+                if (!settings.AllowCaptureUsername)
+                {
+                    foreach (var property in properties.ToArray())
+                    {
+                        properties[property.Key] = property.Value.ReplaceIgnoreCase(UserName, "{UserName}");
+                    }
+                }
 
                 TelemetryClient.Context.User.Id = settings.AllowCaptureUsername ? UserName : AnonymousString;
                 TelemetryClient.TrackEvent(eventName, properties);
