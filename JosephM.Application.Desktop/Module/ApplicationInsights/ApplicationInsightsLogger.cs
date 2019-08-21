@@ -22,7 +22,7 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             TelemetryConfiguration.Active.InstrumentationKey = InstrumentationKey;
 
             #if DEBUG
-                //IsDebugMode = true;
+                IsDebugMode = true;
             #endif
 
             var telemetryConfiguration = new TelemetryConfiguration(InstrumentationKey);
