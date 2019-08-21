@@ -115,6 +115,7 @@
     <Compile Include="Attributes\Multiline.cs" />
     <Compile Include="Attributes\PropertyInContextForAny.cs" />
     <Compile Include="Attributes\RecordFieldFor.cs" />
+    <Compile Include="Attributes\RecordTypeExclusions.cs" />
     <Compile Include="Attributes\RequiredPropertyValue.cs" />
     <Compile Include="Attributes\ServiceConnection.cs" />
     <Compile Include="Attributes\FileMask.cs" />

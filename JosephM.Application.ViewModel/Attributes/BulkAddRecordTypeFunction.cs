@@ -1,9 +1,5 @@
-﻿using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.Extentions;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-using JosephM.Record.IService;
-using JosephM.Record.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,18 +29,11 @@ namespace JosephM.Application.ViewModel.Attributes
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
             var gridRecords = gridField.GridRecords;
 
-            var lookupService = GetLookupService(recordForm, subGridReference);
+            var picklistOptions = recordForm.RecordService.GetPicklistKeyValues(targetPropertyname, gridField.RecordType, subGridReference, null);
             var includeExplicit = new[] { "subject", "uom", "productpricelevel" };
-            var types = lookupService
-                .GetAllRecordTypes()
-                .Where(r => AllowTypeMultipleTimes || (!gridRecords?.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value?.Key == r) ?? true))
-                .Select(r => lookupService.GetRecordTypeMetadata(r))
-                .Where(r => r.Searchable || includeExplicit.Contains(r.SchemaName))
-                .OrderBy(r => r.DisplayName)
-                .ToArray();
-
-            return types
-                .Select(f => new PicklistOption(f.SchemaName, f.DisplayName))
+            return picklistOptions
+                .Where(r => AllowTypeMultipleTimes || (!gridRecords?.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value?.Key == r.Key) ?? true))
+                .OrderBy(r => r.Value)
                 .ToArray();
         }
     }

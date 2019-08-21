@@ -404,8 +404,11 @@ namespace JosephM.Record.Service
                             if (lookupService == null)
                                 return new RecordType[0];
                             var recordTypes = lookupService.GetAllRecordTypes();
+                            var includeExplicit = new[] { "subject", "uom", "productpricelevel" };
                             var options = recordTypes
-                                .Select(r => new RecordType(r, lookupService.GetRecordTypeMetadata(r).DisplayName))
+                                .Select(rt => lookupService.GetRecordTypeMetadata(rt))
+                                .Where(mt => mt.Searchable || includeExplicit.Contains(mt.SchemaName))
+                                .Select(mt => new RecordType(mt.SchemaName, mt.DisplayName))
                                 .ToList();
                             var classType = GetClassType(recordType);
                             var prop = classType.GetProperty(fieldName);
@@ -418,6 +421,12 @@ namespace JosephM.Record.Service
                                         options.Add(new RecordType(manyToMany.IntersectEntityName, manyToMany.PicklistDisplay));
                                 }
                             }
+                            var exclusionAttribute = prop.GetCustomAttribute<RecordTypeExclusions>();
+                            if(exclusionAttribute != null)
+                            {
+                                options.RemoveAll(o => exclusionAttribute.RecordTypes.Contains(o.Key));
+                            }
+                            options.RemoveAll(o => string.IsNullOrWhiteSpace(o.Value));
                             return options;
                         }
                     }

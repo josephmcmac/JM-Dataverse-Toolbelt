@@ -3,6 +3,7 @@ using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
+using JosephM.Xrm.Schema;
 using System.Collections.Generic;
 
 namespace JosephM.Deployment.ExportXml
@@ -31,6 +32,7 @@ namespace JosephM.Deployment.ExportXml
         [Group(Sections.Main)]
         [RequiredProperty]
         [ReadOnlyWhenSet]
+        [RecordTypeExclusions(Entities.activitypointer, Entities.workflow, Entities.asyncoperation, Entities.pluginassembly, Entities.plugintracelog, Entities.plugintype, Entities.plugintypestatistic, Entities.tracelog, Entities.convertrule, Entities.importjob, Entities.emailserverprofile, Entities.sharepointdocument, Entities.serviceendpoint, Entities.role, Entities.sdkmessage, Entities.sdkmessagefilter, Entities.sdkmessageprocessingstep, Entities.sdkmessageprocessingstepimage, Entities.sdkmessageprocessingstepsecureconfig, Entities.routingrule)]
         [RecordTypeFor(nameof(IncludeOnlyTheseFields) + "." + nameof(RecordField))]
         [RecordTypeFor(nameof(SpecificRecordsToExport) + "." + nameof(LookupSetting.Record))]
         [RecordTypeFor(nameof(ExplicitValuesToSet) + "." + nameof(ExplicitFieldValues.FieldToSet))]

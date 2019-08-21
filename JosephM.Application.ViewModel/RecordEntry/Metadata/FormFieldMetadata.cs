@@ -205,7 +205,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             : recordService.GetPicklistKeyValues(field, recordType, recordForm.ParentFormReference,
                                 recordForm.GetRecord())
                                 .Select(p => new RecordType(p.Key, p.Value))
-                                .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                                 .OrderBy(rt => rt.Value)
                                 .ToArray();
                         }
