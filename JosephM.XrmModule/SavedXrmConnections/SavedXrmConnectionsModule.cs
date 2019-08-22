@@ -107,7 +107,9 @@ namespace JosephM.XrmModule.SavedXrmConnections
             {
                 foreach (var connection in savedConnections.Connections.OrderBy(c => c.Name).ToArray())
                 {
-                    if (!string.IsNullOrWhiteSpace(connection.Name) && !actions.ContainsKey(connection.Name))
+                    if (!string.IsNullOrWhiteSpace(connection.Name)
+                        && !connection.Active
+                        && !actions.ContainsKey(connection.Name))
                     {
                         actions.Add(connection.Name, () =>
                         {
