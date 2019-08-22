@@ -16,10 +16,9 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
             //just use the method in ImportXmlService to do the import
             var xrmRecordService = new XrmRecordService(request.Connection);
             var service = new ImportXmlService(xrmRecordService);
-            var entities = service.LoadEntitiesFromXmlFiles(request.XmlFiles.Select(fr => fr.FileName).ToArray());
-
-            var importResponses = service.DataImportService.DoImport(entities, controller, false);
-            response.LoadDataImport(importResponses);
+            var importXmlResponse = new ImportXmlResponse();
+            service.ImportXml(request, controller, importXmlResponse);
+            response.LoadDataImport(importXmlResponse);
         }
     }
 }

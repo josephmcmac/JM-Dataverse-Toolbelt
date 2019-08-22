@@ -134,6 +134,8 @@
     <Compile Include="ImportSql\ImportSqlService.cs" />
     <Compile Include="ImportSql\ImportSqlValidationDialog.cs" />
     <Compile Include="ImportExcel\ImportExcelValidationDialog.cs" />
+    <Compile Include="ImportXml\IImportXmlRequest.cs" />
+    <Compile Include="ImportXml\ImportXmlValidationDialog.cs" />
     <Compile Include="SolutionImport\SolutionImportService.cs" />
     <Compile Include="SolutionImport\SolutionImportResult.cs" />
     <Compile Include="ExportXml\ExportType.cs" />

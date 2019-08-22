@@ -45,7 +45,7 @@ namespace JosephM.Xrm.Vsix.Wizards
             var visualStudioService = new VisualStudioService(DTE);
             var container = new DependencyContainer();
             container.RegisterInstance<IVisualStudioService>(visualStudioService);
-            var app = Factory.CreateJosephMXrmVsixApp(visualStudioService, container, isWizardContext: true);
+            var app = Factory.CreateJosephMXrmVsixApp(visualStudioService, container, isNonSolutionExplorerContext: true);
             VsixApplication = app;
             app.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Loaded");
             try

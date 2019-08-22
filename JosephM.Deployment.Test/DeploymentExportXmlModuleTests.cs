@@ -56,7 +56,7 @@ namespace JosephM.Deployment.Test
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
             var importXmlService = new ImportXmlService(XrmRecordService);
-            var loaded = importXmlService.LoadEntitiesFromXmlFiles(TestingFolder);
+            var loaded = ImportXmlService.LoadEntitiesFromXmlFiles(TestingFolder).Values;
             foreach(var item in loaded)
             {
                 Assert.IsNull(item.GetField(Fields.account_.createdon));
@@ -88,7 +88,7 @@ namespace JosephM.Deployment.Test
 
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
-            loaded = importXmlService.LoadEntitiesFromXmlFiles(TestingFolder);
+            loaded = ImportXmlService.LoadEntitiesFromXmlFiles(TestingFolder).Values;
             foreach (var item in loaded)
             {
                 Assert.IsNotNull(item.GetField(Fields.account_.createdon));
@@ -491,7 +491,7 @@ namespace JosephM.Deployment.Test
 
             //verify the exported records had the explicit value we set in them
             var importServoice = new ImportXmlService(XrmRecordService);
-            var loadEntities = importServoice.LoadEntitiesFromXmlFiles(TestingFolder);
+            var loadEntities = ImportXmlService.LoadEntitiesFromXmlFiles(TestingFolder).Values;
 
             foreach(var entity in loadEntities)
             {

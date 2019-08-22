@@ -1,6 +1,7 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
+using JosephM.Deployment.ImportXml;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,10 +15,12 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
         {
         }
 
-        public void LoadDataImport(DataImportResponse dataImportResponse)
+        public void LoadDataImport(ImportXmlResponse dataImportResponse)
         {
+            if (dataImportResponse.Exception != null)
+                AddResponseItem(new DataImportResponseItem("Fatal Data Import Error", dataImportResponse.Exception));
             AddResponseItems(dataImportResponse.ResponseItems);
-            _importedRecords.AddRange(dataImportResponse.GetImportSummary());
+            _importedRecords.AddRange(dataImportResponse.ImportSummary);
         }
 
         [Hidden]

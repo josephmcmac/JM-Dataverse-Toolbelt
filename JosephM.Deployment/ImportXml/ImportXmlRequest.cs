@@ -3,7 +3,10 @@
 using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
+using JosephM.Core.Log;
 using JosephM.Core.Service;
+using Microsoft.Xrm.Sdk;
+using System;
 using System.Collections.Generic;
 
 #endregion
@@ -15,7 +18,7 @@ namespace JosephM.Deployment.ImportXml
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Misc, true, 40)]
-    public class ImportXmlRequest : ServiceRequestBase
+    public class ImportXmlRequest : ServiceRequestBase, IImportXmlRequest
     {
         public ImportXmlRequest()
         {
@@ -46,6 +49,23 @@ namespace JosephM.Deployment.ImportXml
         [DisplayOrder(400)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
+
+        public void ClearLoadedEntities()
+        {
+            _loadedEntities = null;
+        }
+
+        private IDictionary<string, Entity> _loadedEntities;
+        public IDictionary<string, Entity> GetOrLoadEntitiesForImport(LogController logController)
+        {
+            if (Folder == null)
+                throw new NullReferenceException($"Cannot load files {nameof(Folder)} property is null");
+            if(_loadedEntities == null)
+            {
+                _loadedEntities = ImportXmlService.LoadEntitiesFromXmlFiles(Folder.FolderPath, controller: logController);
+            }
+            return _loadedEntities;
+        }
 
         private static class Sections
         {

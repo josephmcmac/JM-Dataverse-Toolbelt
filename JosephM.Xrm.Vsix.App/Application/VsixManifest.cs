@@ -41,16 +41,19 @@ namespace JosephM.Xrm.Vsix.Application
 
         public VsixManifest(string manifestPath)
         {
-            var doc = new XmlDocument();
-            doc.Load(manifestPath);
+            if (File.Exists(manifestPath))
+            {
+                var doc = new XmlDocument();
+                doc.Load(manifestPath);
 
-            if (doc.DocumentElement == null || doc.DocumentElement.Name != "PackageManifest") return;
+                if (doc.DocumentElement == null || doc.DocumentElement.Name != "PackageManifest") return;
 
-            var metaData = doc.DocumentElement.ChildNodes.Cast<XmlElement>().First(x => x.Name == "Metadata");
-            var identity = metaData.ChildNodes.Cast<XmlElement>().First(x => x.Name == "Identity");
+                var metaData = doc.DocumentElement.ChildNodes.Cast<XmlElement>().First(x => x.Name == "Metadata");
+                var identity = metaData.ChildNodes.Cast<XmlElement>().First(x => x.Name == "Identity");
 
-            Id = identity.GetAttribute("Id");
-            Version = identity.GetAttribute("Version");
+                Id = identity.GetAttribute("Id");
+                Version = identity.GetAttribute("Version");
+            }
         }
 
         public static VsixManifest GetManifest()

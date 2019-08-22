@@ -4,11 +4,16 @@ using JosephM.Core.Attributes;
 using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Core.FieldType;
 using JosephM.Core.Constants;
+using JosephM.Deployment.ImportXml;
+using Microsoft.Xrm.Sdk;
+using JosephM.Core.Log;
+using System;
+using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {
     [Group(Sections.Connection, true, 20)]
-    public class ImportRecordsRequest : ServiceRequestBase
+    public class ImportRecordsRequest : ServiceRequestBase, IImportXmlRequest
     {
         [Group(Sections.Connection)]
         [DisplayName("Saved Connection To Import Into")]
@@ -20,6 +25,23 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
         [RequiredProperty]
         [FileMask(FileMasks.XmlFile)]
         public IEnumerable<FileReference> XmlFiles{ get; set; }
+
+        public void ClearLoadedEntities()
+        {
+            _loadedEntities = null;
+        }
+
+        private IDictionary<string, Entity> _loadedEntities;
+        public IDictionary<string, Entity> GetOrLoadEntitiesForImport(LogController logController)
+        {
+            if (XmlFiles == null)
+                throw new NullReferenceException($"Cannot load files {nameof(XmlFiles)} property is null");
+            if (_loadedEntities == null)
+            {
+                _loadedEntities = ImportXmlService.LoadEntitiesFromXmlFiles(XmlFiles.Select(fr => fr.FileName).ToArray());
+            }
+            return _loadedEntities;
+        }
 
         private static class Sections
         {

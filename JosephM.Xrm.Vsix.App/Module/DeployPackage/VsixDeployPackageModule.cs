@@ -14,10 +14,6 @@ namespace JosephM.Xrm.Vsix.Module.DeployPackage
     [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class VsixDeployPackageModule : DeployPackageModule
     {
-        public override void InitialiseModule()
-        {
-        }
-
         public override void RegisterTypes()
         {
             base.RegisterTypes();
@@ -84,7 +80,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployPackage
                         && Directory.Exists(dataFolderOnDisk)
                         && FileUtility.GetFiles(dataFolderOnDisk).Any())
                     {
-                        throw new Exception($"There Is A Data Folder On Disk With Items Within The Solution Package Directory, But Those Items Are Not Added In The Visual Studio Release Folder. For The Deployment Process To Run All Items On Disk Within The Folder Must Be In Added In The Visual Studio Folder. The First Unexpected Item Is Located At {FileUtility.GetFiles(dataFolderOnDisk).First()}");
+                        throw new Exception($"There Is A Data Folder On Disk With Items Within The Solution Package Directory, But Those Items Are Not Added In The Visual Studio Release Folder. For The Deployment Process To Run All Items On Disk Within The Folder Must Be Added In The Visual Studio Folder. The First Unexpected Item Is Located At {FileUtility.GetFiles(dataFolderOnDisk).First()}");
                     }
                 }
             }

@@ -1,31 +1,12 @@
-#region
-
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
 using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ImportXml;
 using JosephM.Deployment.SolutionImport;
-using JosephM.Record.Extentions;
-using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm;
-using JosephM.Xrm.Schema;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Threading;
-using System.Xml;
-
-#endregion
 
 namespace JosephM.Deployment.DeployPackage
 {
@@ -60,7 +41,7 @@ namespace JosephM.Deployment.DeployPackage
                 {
                     var dataImportService = new ImportXmlService(xrmRecordService);
                     var importResponse = new ImportXmlResponse();
-                    dataImportService.ImportXml(childFolder, controller, importResponse);
+                    dataImportService.ImportXml(request, controller, importResponse);
                     response.LoadImportxmlResponse(importResponse);
                 }
             }

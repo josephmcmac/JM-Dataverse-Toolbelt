@@ -1,7 +1,13 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
+using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.Deployment.ImportXml;
 using JosephM.XrmModule.SavedXrmConnections;
+using Microsoft.Xrm.Sdk;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace JosephM.Deployment.DeployPackage
 {
@@ -9,7 +15,7 @@ namespace JosephM.Deployment.DeployPackage
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Connection, true, 20)]
-    public class DeployPackageRequest : ServiceRequestBase
+    public class DeployPackageRequest : ServiceRequestBase, IImportXmlRequest
     {
         public static DeployPackageRequest CreateForDeployPackage(string folder)
         {
@@ -37,6 +43,33 @@ namespace JosephM.Deployment.DeployPackage
 
         [Hidden]
         public bool HideTypeAndFolder { get; set; }
+
+        public void ClearLoadedEntities()
+        {
+            _loadedEntities = null;
+        }
+
+        private IDictionary<string, Entity> _loadedEntities;
+        public IDictionary<string, Entity> GetOrLoadEntitiesForImport(LogController logController)
+        {
+            if (FolderContainingPackage == null)
+                throw new NullReferenceException($"Cannot load files {nameof(FolderContainingPackage)} property is null");
+            if (_loadedEntities == null)
+            {
+                foreach (var childFolder in Directory.GetDirectories(FolderContainingPackage.FolderPath))
+                {
+                    if (new DirectoryInfo(childFolder).Name == "Data")
+                    {
+                        _loadedEntities = ImportXmlService.LoadEntitiesFromXmlFiles(childFolder, logController);
+                    }
+                }
+            }
+            if (_loadedEntities == null)
+            {
+                _loadedEntities = new Dictionary<string, Entity>();
+            }
+            return _loadedEntities;
+        }
 
         private static class Sections
         {

@@ -180,14 +180,18 @@ namespace JosephM.Xrm.Vsix.Application
                 return base.ResolveType(type);
         }
 
+        private VsixManifest _manifest;
         public override string Version
         {
             get
             {
                 try
                 {
-                    var manifest = VsixManifest.GetManifest();
-                    return manifest.Version;
+                    if (_manifest == null)
+                    {
+                        _manifest = VsixManifest.GetManifest();
+                    }
+                    return _manifest.Version;
                 }
                 catch (Exception ex)
                 {

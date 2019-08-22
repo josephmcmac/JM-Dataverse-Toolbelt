@@ -1,8 +1,10 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Deployment.DataImport;
+using JosephM.Deployment.ImportXml;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Deployment.DeployPackage
 {
@@ -15,6 +17,8 @@ namespace JosephM.Deployment.DeployPackage
             IDialogController dialogController, XrmRecordService lookupService)
             : base(service, dialogController, lookupService)
         {
+            var validationDialog = new ImportXmlValidationDialog(this, Request);
+            SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
         }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()

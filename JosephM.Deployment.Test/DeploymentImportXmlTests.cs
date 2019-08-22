@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
@@ -24,6 +25,62 @@ namespace JosephM.Deployment.Test
     [TestClass]
     public class DeploymentImportXmlTests : XrmModuleTest
     {
+        /// <summary>
+        /// When creating mu;ltiple records during an import where multiple have the same name
+        /// verify each is created (they dont match to each other)
+        /// </summary>
+        [TestMethod]
+        public void DeploymentImportXmlMultipleFilesForSameRecordTest()
+        {
+            var type = Entities.jmcg_testentity;
+            PrepareTests();
+            var workFolder = ClearFilesAndData(type);
+
+            var recordName1 = CreateTestRecord(TestEntityType, new Dictionary<string, object>
+            {
+                { Fields.jmcg_testentity_.jmcg_name, "TestName1" }
+            });
+            var recordName2 = CreateTestRecord(TestEntityType, new Dictionary<string, object>
+            {
+                { Fields.jmcg_testentity_.jmcg_name, "TestName2" }
+            });
+
+            var exportService = new ExportXmlService(XrmRecordService);
+            var exportRequest = new ExportXmlRequest
+            {
+                Folder = new Folder(workFolder),
+                RecordTypesToExport = new[] { new ExportRecordType() { RecordType = new RecordType(TestEntityType, TestEntityType) } }
+            };
+            var exportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
+            Assert.IsTrue(exportResponse.Success);
+
+            recordName1.SetField(Fields.jmcg_testentity_.jmcg_name, "TestName1 - Updated!");
+            recordName1 = UpdateFieldsAndRetreive(recordName1, Fields.jmcg_testentity_.jmcg_name);
+            exportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
+            Assert.IsTrue(exportResponse.Success);
+
+            Assert.AreEqual(3, FileUtility.GetFiles(workFolder).Count());
+
+            var app = CreateAndLoadTestApplication<ImportXmlModule>();
+
+            var importRequest = new ImportXmlRequest
+            {
+                Folder = new Folder(workFolder)
+            };
+
+            var dialog = app.NavigateToDialog<ImportXmlModule, ImportXmlDialog>();
+            var entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
+            //select the excel file with the errors and submit form
+            app.EnterAndSaveObject(importRequest, entryViewmodel);
+
+            //check validation results displayed
+            var validationResults = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
+            Assert.IsNotNull(validationResults);
+            Assert.IsTrue(validationResults.GetObject() is ImportXmlValidationDialog.DuplicateImportXmlRecords);
+
+            Assert.AreEqual(2, ((ImportXmlValidationDialog.DuplicateImportXmlRecords)validationResults.GetObject()).Duplicates.Count());
+        }
+
         /// <summary>
         /// When creating mu;ltiple records during an import where multiple have the same name
         /// verify each is created (they dont match to each other)
@@ -597,7 +654,7 @@ namespace JosephM.Deployment.Test
             var exportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
             Assert.IsFalse(exportResponse.HasError);
 
-            var entities = importService.LoadEntitiesFromXmlFiles(workFolder);
+            var entities = ImportXmlService.LoadEntitiesFromXmlFiles(workFolder);
 
             // ? self referencing (parentid) field created on test entity 
             //which meant extra one created

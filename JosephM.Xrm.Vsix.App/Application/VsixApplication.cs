@@ -18,12 +18,12 @@ namespace JosephM.Xrm.Vsix
 {
     public class VsixApplication : ApplicationBase
     {
-        public VsixApplication(VsixApplicationController applicationController, ISettingsManager settingsManager, Guid commandSetId, bool isWizardContext)
+        public VsixApplication(VsixApplicationController applicationController, ISettingsManager settingsManager, Guid commandSetId, bool isNonSolutionExplorerContext)
             : base(applicationController, new ApplicationOptionsViewModel(applicationController), settingsManager)
         {
             VsixApplicationController = applicationController;
             CommandSetId = commandSetId;
-            IsWizardContext = isWizardContext;
+            IsNonSolutionExplorerContext = isNonSolutionExplorerContext;
             ApplicationName = applicationController.ApplicationName;
             Controller.RegisterType<IDialogController, DialogController>();
         }
@@ -34,7 +34,7 @@ namespace JosephM.Xrm.Vsix
         }
 
         public Guid CommandSetId { get; set; }
-        public bool IsWizardContext { get; }
+        public bool IsNonSolutionExplorerContext { get; }
         public string ApplicationName { get; set; }
 
         public void AddModule<T>(int commandId)
@@ -42,7 +42,7 @@ namespace JosephM.Xrm.Vsix
         {
             var module = AddModule<T>();
 
-            if (!IsWizardContext)
+            if (!IsNonSolutionExplorerContext)
             {
                 var commandService = Controller.ResolveType(typeof(IMenuCommandService)) as IMenuCommandService;
                 if (commandService == null)
@@ -99,11 +99,11 @@ namespace JosephM.Xrm.Vsix
             Controller.RegisterInstance(typeof(XrmPackageSettings), packageSettings);
         }
 
-        public static VsixApplication Create(IVisualStudioService visualStudioService, IDependencyResolver dependencyResolver, string applicationName, Guid commandSetId, bool isWizardContext = false)
+        public static VsixApplication Create(IVisualStudioService visualStudioService, IDependencyResolver dependencyResolver, string applicationName, Guid commandSetId, bool isNonSolutionExplorerContext = false)
         {
             var applicationController = new VsixApplicationController(dependencyResolver, applicationName);
             var vsixSettingsManager = new VsixSettingsManager(visualStudioService, new DesktopSettingsManager(applicationController));
-            var app = new VsixApplication(applicationController, vsixSettingsManager, commandSetId, isWizardContext);
+            var app = new VsixApplication(applicationController, vsixSettingsManager, commandSetId, isNonSolutionExplorerContext);
             return app;
         }
     }
