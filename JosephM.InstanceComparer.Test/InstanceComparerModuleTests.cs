@@ -121,7 +121,7 @@ namespace JosephM.InstanceComparer.Test
                 new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_webrole, Entities.account)},
                 new InstanceComparerRequest.InstanceCompareDataCompare() { RecordType = new RecordType(Entities.adx_websitelanguage, Entities.account)},
             };
-            foreach(var prop in request.GetType().GetProperties())
+            foreach (var prop in request.GetType().GetProperties())
             {
                 if (prop.PropertyType == typeof(bool))
                     request.SetPropertyValue(prop.Name, true);
@@ -130,14 +130,18 @@ namespace JosephM.InstanceComparer.Test
 
             var application = CreateAndLoadTestApplication<InstanceComparerModule>();
             var response = application.NavigateAndProcessDialog<InstanceComparerModule, InstanceComparerDialog, InstanceComparerResponse>(request);
-            if(response.HasError)
+            if (response.HasError)
             {
                 if (response.Exception != null)
                     Assert.Fail(response.Exception.XrmDisplayString());
                 else
                     Assert.Fail(response.GetResponseItemsWithError().First().ErrorDetails);
             }
-            Assert.IsFalse(response.AreDifferences);
+            var differences = response.AllDifferences.Where(d => !d.Difference.Contains("Duplicate"));
+            if (differences.Any())
+            {
+                Assert.Fail($"Unexpected difference: Type={differences.First().Type} Name={differences.First().Name} Difference={differences.First().Difference}");
+            }
         }
 
         [TestMethod]
