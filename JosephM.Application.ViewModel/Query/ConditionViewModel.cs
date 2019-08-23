@@ -202,7 +202,9 @@ namespace JosephM.Application.ViewModel.Query
                 Record.Query.ConditionType.On,
                 Record.Query.ConditionType.OnOrBefore,
                 Record.Query.ConditionType.OnOrAfter,
-                Record.Query.ConditionType.NotOn,})]
+                Record.Query.ConditionType.NotOn,
+                Record.Query.ConditionType.DoesNotBeginWith,
+                Record.Query.ConditionType.DoesNotEndWith,})]
             public object Value { get; set; }
 
             [MinimumIntValue(1)]
