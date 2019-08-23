@@ -12,7 +12,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public override RecordType Value
         {
-            get { return ValueObject as RecordType; }
+            get
+            {
+                return ValueObject is string
+                    ? new RecordType(ValueObject.ToString(), ValueObject.ToString())
+                    : ValueObject as RecordType;
+            }
             set
             {
                 ValueObject = value;
