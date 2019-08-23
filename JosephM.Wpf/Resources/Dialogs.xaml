@@ -51,8 +51,13 @@
             <recordEntry:RecordEntryView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="ProgressControlTemplate">
-        <Grid>
+    <DataTemplate x:Key="ProgressControlTemplateWindowSize">
+        <Grid Style="{StaticResource WindowGridStyle}">
+            <shared:ProgressControl DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="ProgressControlTemplateTabSize">
+        <Grid Style="{StaticResource TabGridStyle}">
             <shared:ProgressControl DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
@@ -121,7 +126,8 @@
         RecordEntryAggregatorTemplateWindowSize="{StaticResource RecordEntryAggregatorTemplateWindowSize}"
         RecordEntryTemplateTabSize="{StaticResource RecordEntryTemplateTabSize}"
         RecordEntryTemplateWindowSize="{StaticResource RecordEntryTemplateWindowSize}"
-        ProgressTemplate="{StaticResource ProgressControlTemplate}"
+        ProgressControlTemplateTabSize="{StaticResource ProgressControlTemplateTabSize}"
+        ProgressControlTemplateWindowSize="{StaticResource ProgressControlTemplateWindowSize}"
         CompletionTemplateTabSize="{StaticResource CompletionTemplateTabSize}"
         CompletionTemplateWindowSize="{StaticResource CompletionTemplateWindowSize}"
         LoadingTemplate="{StaticResource LoadingTemplate}"

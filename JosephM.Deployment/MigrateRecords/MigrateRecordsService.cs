@@ -1,27 +1,10 @@
-#region
-
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
-using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
 using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ExportXml;
-using JosephM.Deployment.ImportXml;
-using JosephM.Record.Extentions;
-using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm;
-using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-
-#endregion
 
 namespace JosephM.Deployment.MigrateRecords
 {

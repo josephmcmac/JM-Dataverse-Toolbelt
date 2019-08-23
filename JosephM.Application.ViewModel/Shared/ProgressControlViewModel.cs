@@ -1,9 +1,7 @@
-﻿#region
-
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Log;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.Shared
 {
@@ -13,10 +11,31 @@ namespace JosephM.Application.ViewModel.Shared
 
         private string _message;
 
-        public ProgressControlViewModel(IApplicationController controller)
+        public ProgressControlViewModel(IApplicationController controller, bool createLevel2 = true)
             : base(controller)
         {
+            if (createLevel2)
+                Level2ProgressControlViewModel = new ProgressControlViewModel(controller, createLevel2: false);
         }
+
+        public ProgressControlViewModel Level2ProgressControlViewModel { get; set; }
+
+        public ObjectDisplayViewModel DetailObjectViewModel { get; set; }
+
+        public void SetDetailObject(object detailObject)
+        {
+            ApplicationController.DoOnAsyncThread(() =>
+            {
+                DetailObjectViewModel = new ObjectDisplayViewModel(detailObject, FormController.CreateForObject(detailObject, ApplicationController, null));
+                OnPropertyChanged(nameof(DetailObjectViewModel));
+            });
+        }
+        public void ClearDetailObject()
+        {
+            DetailObjectViewModel = null;
+            OnPropertyChanged(nameof(DetailObjectViewModel));
+        }
+
 
         #region IUserInterface Members
 
@@ -75,6 +94,13 @@ namespace JosephM.Application.ViewModel.Shared
                 _uiActive = value;
                 OnPropertyChanged(nameof(UiActive));
             }
+        }
+
+        public LogController CreateLogControllerFor()
+        {
+            var logController = new LogController(this);
+            logController.AddLevel2Ui(Level2ProgressControlViewModel);
+            return logController;
         }
     }
 }

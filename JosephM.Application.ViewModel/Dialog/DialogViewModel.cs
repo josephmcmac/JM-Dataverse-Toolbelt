@@ -38,7 +38,6 @@ namespace JosephM.Application.ViewModel.Dialog
             LoadingViewModel = parentDialog.LoadingViewModel;
             ParentDialog = parentDialog;
             Controller = parentDialog.Controller;
-            ProgressControlViewModel = new ProgressControlViewModel(ApplicationController);
             OnCancel = Controller.Close;
         }
 
@@ -47,7 +46,6 @@ namespace JosephM.Application.ViewModel.Dialog
         {
             Controller = controller;
             Controller.MainDialog = this;
-            ProgressControlViewModel = new ProgressControlViewModel(ApplicationController);
             OnCancel = Controller.Close;
         }
 
@@ -246,8 +244,6 @@ namespace JosephM.Application.ViewModel.Dialog
 
             return false;
         }
-
-        public ProgressControlViewModel ProgressControlViewModel { get; set; }
 
         private bool _showProgressControlViewModel;
 

@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using JosephM.Application.ViewModel;
@@ -11,8 +9,6 @@ using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 
-#endregion
-
 namespace JosephM.Wpf.TemplateSelector
 {
     public class DialogTemplateSelector : DataTemplateSelector
@@ -21,7 +17,8 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate RecordEntryAggregatorTemplateWindowSize { get; set; }
         public DataTemplate RecordEntryTemplateTabSize { get; set; }
         public DataTemplate RecordEntryTemplateWindowSize { get; set; }
-        public DataTemplate ProgressTemplate { get; set; }
+        public DataTemplate ProgressControlTemplateTabSize { get; set; }
+        public DataTemplate ProgressControlTemplateWindowSize { get; set; }
         public DataTemplate CompletionTemplateTabSize { get; set; }
         public DataTemplate CompletionTemplateWindowSize { get; set; }
         public DataTemplate LoadingTemplate { get; set; }
@@ -43,6 +40,8 @@ namespace JosephM.Wpf.TemplateSelector
                 var viewModel = (ViewModelBase)item;
                 if (!viewModel.ApplicationController?.IsTabbedApplication ?? true)
                 {
+                    if (item is ProgressControlViewModel)
+                        return ProgressControlTemplateWindowSize;
                     if (item is RecordEntryFormViewModel)
                         return RecordEntryTemplateWindowSize;
                     if (item is CompletionScreenViewModel)
@@ -60,6 +59,8 @@ namespace JosephM.Wpf.TemplateSelector
                 }
                 else
                 {
+                    if (item is ProgressControlViewModel)
+                        return ProgressControlTemplateTabSize;
                     if (item is RecordEntryFormViewModel)
                         return RecordEntryTemplateTabSize;
                     if (item is CompletionScreenViewModel)
@@ -76,8 +77,6 @@ namespace JosephM.Wpf.TemplateSelector
                         return RecordEntryAggregatorTemplateTabSize;
                 }
             }
-            if (item is ProgressControlViewModel)
-                return ProgressTemplate;
             if (item is LoadingViewModel)
                 return LoadingTemplate;
             if (item is DialogViewModel)

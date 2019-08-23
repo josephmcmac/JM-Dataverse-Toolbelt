@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
+             xmlns:recordentry="clr-namespace:JosephM.Wpf.RecordEntry"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=fakes:FakeProgressControlViewModel, IsDesignTimeCreatable=True}"
              d:DesignWidth="400"
@@ -17,16 +18,54 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical" Visibility="{Binding UiActive, Converter={StaticResource BoolToVis}}">
-        <TextBlock
-            Text="{Binding Message}"
-            Style="{StaticResource HeadingStyle}" />
-        <ProgressBar
-            Value="{Binding FractionCompleted}"
-            Minimum="0"
-            Maximum="1"
-            Foreground="{DynamicResource BorderColor}"
-            Background="Transparent"
-            />
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Text="{Binding Message}"
+                    Style="{StaticResource HeadingStyle}" />
+                <ProgressBar
+                    Grid.Row="1"
+                    Value="{Binding FractionCompleted}"
+                    Minimum="0"
+                    Maximum="1"
+                    Foreground="{DynamicResource BorderColor}"
+                    Background="Transparent"
+                    />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Visibility="{Binding Level2ProgressControlViewModel.UiActive, Converter={StaticResource BoolToVis}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Text="{Binding Level2ProgressControlViewModel.Message}"
+                    Style="{StaticResource HeadingStyle}" />
+                <ProgressBar
+                    Grid.Row="1"
+                    Value="{Binding Level2ProgressControlViewModel.FractionCompleted}"
+                    Minimum="0"
+                    Maximum="1"
+                    Foreground="{DynamicResource BorderColor}"
+                    Background="Transparent"
+                    />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2" Visibility="{Binding DetailObjectViewModel, Converter={StaticResource NullToHiddenConverter}}">
+            <recordentry:RecordEntryView DataContext="{Binding DetailObjectViewModel}" />
+        </Grid>
+    </Grid>
 </UserControl>

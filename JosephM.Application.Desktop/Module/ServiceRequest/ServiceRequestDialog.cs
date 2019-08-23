@@ -94,11 +94,8 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
 
             var progressControlViewModel = new ProgressControlViewModel(ApplicationController);
             Controller.LoadToUi(progressControlViewModel);
-            var progressControlViewModelLevel2 = new ProgressControlViewModel(ApplicationController);
-            Controller.LoadToUi(progressControlViewModelLevel2);
-            LogController = new LogController(progressControlViewModel);
-            LogController.AddLevel2Ui(progressControlViewModelLevel2);
-            var serviceRequestController = new ServiceRequestController(LogController, (o) => AddObjectToUi(o), RemoveObjectFromUi);
+            LogController = progressControlViewModel.CreateLogControllerFor();
+            var serviceRequestController = new ServiceRequestController(LogController, (o) => progressControlViewModel.SetDetailObject(o), (o) => progressControlViewModel.ClearDetailObject());
             Response = Service.Execute(Request, serviceRequestController);
 
             CompletionItem = Response;
@@ -107,7 +104,6 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
                 ProcessCompletionExtention();
 
             Controller.RemoveFromUi(progressControlViewModel);
-            Controller.RemoveFromUi(progressControlViewModelLevel2);
 
             IsProcessing = false;
         }
