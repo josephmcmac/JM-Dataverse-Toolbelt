@@ -36,6 +36,7 @@
       <Folder Name="Core" TargetFolderName="Core">
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleSettings.cs">ConsoleSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleUserInterface.cs">ConsoleUserInterface.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="CsvUtility.cs">CsvUtility.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ExceptionExtentions.cs">ExceptionExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="IUserInterface.cs">IUserInterface.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="JsonHelper.cs">JsonHelper.cs</ProjectItem>

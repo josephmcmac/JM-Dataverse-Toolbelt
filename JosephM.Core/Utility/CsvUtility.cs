@@ -1,6 +1,4 @@
-﻿#region
-
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Sql;
 using System;
@@ -11,8 +9,6 @@ using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Text;
-
-#endregion
 
 namespace JosephM.Core.Utility
 {
@@ -51,7 +47,16 @@ namespace JosephM.Core.Utility
         {
             var propertyLabels = propertyNames.Select(getLabel).ToArray();
             var propertyNamesText = String.Join(",", propertyLabels);
-            FileUtility.CheckCreateFile(path, name, propertyNamesText);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            var filePath = path + @"\" + name;
+            if (File.Exists(filePath))
+            {
+                var fileInfo = new FileInfo(filePath);
+                if (fileInfo.IsReadOnly)
+                    fileInfo.IsReadOnly = false;
+            }
+            File.WriteAllText(path + @"\" + name, propertyNamesText);
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
@@ -74,7 +79,7 @@ namespace JosephM.Core.Utility
                 }
                 stringBuilder.AppendLine(string.Join(",", valueStrings));
             }
-            FileUtility.AppendToFile(path, name, stringBuilder.ToString());
+            File.AppendAllText(path + @"\" + name, stringBuilder.ToString());
         }
 
         private static string GetCsvFileName(string name)
@@ -89,7 +94,7 @@ namespace JosephM.Core.Utility
         /// <param name="fileName"></param>
         public static void ConstructTextSchema(string folder, string fileName)
         {
-            if (folder.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(folder))
                 folder = AppDomain.CurrentDomain.BaseDirectory;
             if (File.Exists(folder + @"\Schema.ini"))
                 File.Delete(folder + @"\Schema.ini");
@@ -124,7 +129,7 @@ namespace JosephM.Core.Utility
             OleDbDataAdapter dAdapter = null;
             try
             {
-                if (folder.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(folder))
                     folder = AppDomain.CurrentDomain.BaseDirectory;
                 var connString = GetConnectionString(folder);
                 var dTable = new DataTable();

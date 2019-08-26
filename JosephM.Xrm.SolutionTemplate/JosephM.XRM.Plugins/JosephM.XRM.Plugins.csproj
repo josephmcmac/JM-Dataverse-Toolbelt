@@ -61,6 +61,7 @@
     <Compile Include="$ext_jmobjprefix$PluginRegistration.cs" />
     <Compile Include="$ext_jmobjprefix$Settings.cs" />
     <Compile Include="Core\ConsoleUserInterface.cs" />
+	<Compile Include="Core\CsvUtility.cs" />
     <Compile Include="Core\ExceptionExtentions.cs" />
     <Compile Include="Core\IUserInterface.cs" />
     <Compile Include="Core\JsonHelper.cs" />
