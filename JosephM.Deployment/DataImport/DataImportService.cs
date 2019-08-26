@@ -440,6 +440,7 @@ namespace JosephM.Deployment.DataImport
                                         || (thisStatus != -1 && thisState != matchStatus))
                                     {
                                         SetState(thisEntity);
+                                        response.AddUpdated(thisEntity);
                                     }
                                 }
                             }
