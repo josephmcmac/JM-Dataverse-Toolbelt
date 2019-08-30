@@ -142,9 +142,16 @@ namespace JosephM.Application.Desktop.Module.Crud
                 var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
                 var request = new BulkUpdateRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-                var bulkUpdateDialog = new BulkUpdateDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
-                LoadChildForm(bulkUpdateDialog);
+                var bulkUpdateDialog = new BulkUpdateDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
+                base.LoadChildForm(bulkUpdateDialog);
             });
+        }
+
+        private void CompleteChildDialogAndReload()
+        {
+            ClearChildForms();
+            QueryViewModel.ClearNotInIds();
+            QueryViewModel.DynamicGridViewModel.ReloadGrid();
         }
 
         private void TriggerBulkReplace(bool selectedOnly)
@@ -154,7 +161,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                 var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
                 var request = new BulkReplaceRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-                var bulkReplaceDialog = new BulkReplaceDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+                var bulkReplaceDialog = new BulkReplaceDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
                 LoadChildForm(bulkReplaceDialog);
             });
         }
@@ -163,21 +170,31 @@ namespace JosephM.Application.Desktop.Module.Crud
         {
             IEnumerable<IRecord> recordsToUpdate = null;
 
-            var fieldsToGet = new List<string>();
-            fieldsToGet.Add(RecordService.GetPrimaryKey(QueryViewModel.RecordType));
-            var primaryField = RecordService.GetPrimaryField(QueryViewModel.RecordType);
-            if (!string.IsNullOrWhiteSpace(primaryField))
-                fieldsToGet.Add(primaryField);
+            QueryViewModel.DynamicGridViewModel.LoadingViewModel.IsLoading = true;
+            QueryViewModel.DynamicGridViewModel.LoadingViewModel.LoadingMessage = "Loading Dialog";
+            try
+            {
 
-            if (selectedOnly)
-            {
-                var ids = QueryViewModel.DynamicGridViewModel.SelectedRows.Select(r => r.Record.Id).ToArray();
-                recordsToUpdate = RecordService.RetrieveAllOrClauses(QueryViewModel.RecordType, ids.Select(i => new Condition(RecordService.GetPrimaryKey(QueryViewModel.RecordType), ConditionType.Equal, i)), fieldsToGet);
+                var fieldsToGet = new List<string>();
+                fieldsToGet.Add(RecordService.GetPrimaryKey(QueryViewModel.RecordType));
+                var primaryField = RecordService.GetPrimaryField(QueryViewModel.RecordType);
+                if (!string.IsNullOrWhiteSpace(primaryField))
+                    fieldsToGet.Add(primaryField);
+
+                if (selectedOnly)
+                {
+                    var ids = QueryViewModel.DynamicGridViewModel.SelectedRows.Select(r => r.Record.Id).ToArray();
+                    recordsToUpdate = RecordService.RetrieveAllOrClauses(QueryViewModel.RecordType, ids.Select(i => new Condition(RecordService.GetPrimaryKey(QueryViewModel.RecordType), ConditionType.Equal, i)), fieldsToGet);
+                }
+                else
+                {
+                    var getRecordsResults = QueryViewModel.GetGridRecords(true, fields: fieldsToGet);
+                    recordsToUpdate = getRecordsResults.Records;
+                }
             }
-            else
+            finally
             {
-                var getRecordsResults = QueryViewModel.GetGridRecords(true, fields: fieldsToGet);
-                recordsToUpdate = getRecordsResults.Records;
+                QueryViewModel.DynamicGridViewModel.LoadingViewModel.IsLoading = false;
             }
 
             return recordsToUpdate;
@@ -190,7 +207,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                 var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
                 var request = new BulkDeleteRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-                var bulkUpdateDialog = new BulkDeleteDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+                var bulkUpdateDialog = new BulkDeleteDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
                 LoadChildForm(bulkUpdateDialog);
             });
         }
@@ -202,7 +219,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                 var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
                 var request = new BulkCopyFieldValueRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-                var bulkUpdateDialog = new BulkCopyFieldValueDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, () => { ClearChildForms(); QueryViewModel.DynamicGridViewModel.ReloadGrid(); });
+                var bulkUpdateDialog = new BulkCopyFieldValueDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
                 LoadChildForm(bulkUpdateDialog);
             });
         }

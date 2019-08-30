@@ -153,12 +153,14 @@ namespace JosephM.Application.ViewModel.Query
                             Action onSave = () =>
                             {
                                 ClearChildForm();
+                                ClearNotInIds();
                                 DynamicGridViewModel.ReloadGrid();
                             };
                             var record = selectedRow.Record;
                             var createOrUpdateRecord = RecordService.Get(record.Type, record.Id);
                             new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
                             var newForm = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, onSave, ClearChildForm);
+                            ClearNotInIds();
                             LoadChildForm(newForm);
                         }
                     };
@@ -175,6 +177,7 @@ namespace JosephM.Application.ViewModel.Query
                             new[] { createOrUpdateRecord }.PopulateEmptyLookups(RecordService, null);
                             vmRef = new CreateOrUpdateViewModel(createOrUpdateRecord, formController, () => {
                                 vmRef.ValidationPrompt = "Changes Have Been Saved";
+                                ClearNotInIds();
                                 DynamicGridViewModel.ReloadGrid();
                             }, () => ApplicationController.Remove(vmRef), cancelButtonLabel: "Close");
                             ApplicationController.NavigateTo(vmRef);
@@ -188,6 +191,7 @@ namespace JosephM.Application.ViewModel.Query
                         Action onSave = () =>
                         {
                             ClearChildForm();
+                            ClearNotInIds();
                             DynamicGridViewModel.ReloadGrid();
                         };
                         var newForm = new CreateOrUpdateViewModel(RecordService.NewRecord(RecordType), formController, onSave, ClearChildForm, explicitIsCreate: true);
@@ -271,6 +275,7 @@ namespace JosephM.Application.ViewModel.Query
         public void ResetToQueryEntry()
         {
             QueryRun = false;
+            ClearNotInIds();
             RecreateGrid();
         }
 
@@ -345,6 +350,37 @@ namespace JosephM.Application.ViewModel.Query
                     }
                 }
             }
+        }
+
+        private HashSet<string> _cachedNotinIds;
+
+        private object _lockObject = new object();
+        private HashSet<string> GetNotInIds()
+        {
+            lock (_lockObject)
+            {
+                if (_cachedNotinIds == null)
+                {
+                    _cachedNotinIds = new HashSet<string>();
+                    var notInQuery = GenerateNotInQuery();
+                    var loadingVm = DynamicGridViewModel.LoadingViewModel;
+                    DynamicGridViewModel.RecordService.ProcessResults(notInQuery, (r) =>
+                    {
+                        foreach (var item in r)
+                            _cachedNotinIds.Add(item.Id);
+                        if (loadingVm != null)
+                            loadingVm.LoadingMessage = "Loading Not In Ids - " + _cachedNotinIds.Count;
+                    });
+                    if (loadingVm != null)
+                        loadingVm.LoadingMessage = "Please Wait While Loading";
+                }
+                return _cachedNotinIds;
+            }
+        }
+
+        public void ClearNotInIds()
+        {
+            _cachedNotinIds = null;
         }
 
 
@@ -482,15 +518,18 @@ namespace JosephM.Application.ViewModel.Query
             var notInList = new HashSet<string>();
             if(IncludeNotIn)
             {
-                var notInQuery = GenerateNotInQuery();
-                DynamicGridViewModel.RecordService.ProcessResults(notInQuery, (r) =>
-                {
-                    foreach (var item in r)
-                        notInList.Add(item.Id);
-                });
+                notInList = GetNotInIds();
             }
 
-            DynamicGridViewModel.RecordService.ProcessResults(query, (r) => totalCount+=r.Count(t => !notInList.Contains(t.Id)));
+            var loadingVm = DynamicGridViewModel.LoadingViewModel;
+            DynamicGridViewModel.RecordService.ProcessResults(query, (r) =>
+            {
+                totalCount += r.Count(t => !notInList.Contains(t.Id));
+                if (loadingVm != null)
+                    loadingVm.LoadingMessage = "Getting Total Record Count - " + totalCount;
+            });
+            if (loadingVm != null)
+                loadingVm.LoadingMessage = "Please Wait While Loading";
             return totalCount;
         }
 
@@ -505,20 +544,24 @@ namespace JosephM.Application.ViewModel.Query
             var notInList = new HashSet<string>();
             if (IncludeNotIn)
             {
-                var notInQuery = GenerateNotInQuery();
-                DynamicGridViewModel.RecordService.ProcessResults(notInQuery, (r) =>
-                {
-                    foreach (var item in r)
-                        notInList.Add(item.Id);
-                });
+                notInList = GetNotInIds();
             }
 
             if (!DynamicGridViewModel.HasPaging || ignorePages)
             {
+                var loadingVm = DynamicGridViewModel.LoadingViewModel;
                 var records = new List<IRecord>();
-                DynamicGridViewModel.RecordService.ProcessResults(query, (r) => records.AddRange(r.Where(t => !notInList.Contains(t.Id))));
+                DynamicGridViewModel.RecordService.ProcessResults(query, (r) =>
+                {
+                    records.AddRange(r.Where(t => !notInList.Contains(t.Id)));
+                    if (loadingVm != null)
+                        loadingVm.LoadingMessage = "Running Main Query - " + records.Count;
+                });
+                if (loadingVm != null)
+                    loadingVm.LoadingMessage = "Populating Empty Lookups";
                 records.PopulateEmptyLookups(RecordService, null);
-
+                if (loadingVm != null)
+                    loadingVm.LoadingMessage = "Please Wait While Loading";
                 return new GetGridRecordsResponse(records);
             }
             else
