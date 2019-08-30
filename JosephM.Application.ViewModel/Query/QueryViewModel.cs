@@ -1,5 +1,4 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry;
@@ -17,7 +16,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace JosephM.Application.ViewModel.Query
@@ -36,11 +34,19 @@ namespace JosephM.Application.ViewModel.Query
             if (closeFunction != null)
                 ReturnButton = new XrmButtonViewModel(closeFunction.LabelFunc(null), () => { closeFunction.Function(DynamicGridViewModel); }, controller);
             QueryTypeButton = new XrmButtonViewModel("Change Query Type", ChangeQueryType, ApplicationController);
+
             DeleteSelectedConditionsButton = new XrmButtonViewModel("Delete Selected", () => DeleteSelected(), ApplicationController);
             GroupSelectedConditionsOr = new XrmButtonViewModel("Group Selected Or", () => GroupSelected(FilterOperator.Or), ApplicationController);
             GroupSelectedConditionsAnd = new XrmButtonViewModel("Group Selected And", () => GroupSelected(FilterOperator.And), ApplicationController);
             UngroupSelectedConditions = new XrmButtonViewModel("Ungroup Selected", () => UnGroupSelected(), ApplicationController);
+
+            NotInDeleteSelectedConditionsButton = new XrmButtonViewModel("Delete Selected", () => DeleteSelected(isNotIn: true), ApplicationController);
+            NotInGroupSelectedConditionsOr = new XrmButtonViewModel("Group Selected Or", () => GroupSelected(FilterOperator.Or, isNotIn: true), ApplicationController);
+            NotInGroupSelectedConditionsAnd = new XrmButtonViewModel("Group Selected And", () => GroupSelected(FilterOperator.And, isNotIn: true), ApplicationController);
+            NotInUngroupSelectedConditions = new XrmButtonViewModel("Ungroup Selected", () => UnGroupSelected(isNotIn: true), ApplicationController);
+
             RunQueryButton = new XrmButtonViewModel("Run Query", QuickFind, ApplicationController);
+            IncludeNotInButton = new XrmButtonViewModel("Add Not In Query", NotInSwitch, ApplicationController);
             ChangeQueryType();
 
             QueryTypeButton.IsVisible = AllowQuery;
@@ -48,6 +54,12 @@ namespace JosephM.Application.ViewModel.Query
             _recordTypes = recordTypes;
             if (_recordTypes.Count() == 1)
                 RecordType = _recordTypes.First();
+        }
+
+        private void NotInSwitch()
+        {
+            IncludeNotIn = !IncludeNotIn;
+            IncludeNotInButton.Label = IncludeNotIn ? "Remove Not In Query" : "Add Not In Query";
         }
 
         public bool AllowCrud { get; set; }
@@ -70,6 +82,20 @@ namespace JosephM.Application.ViewModel.Query
                 OnPropertyChanged(nameof(QueryRun));
                 OnPropertyChanged(nameof(QuickFindOrNotQueryRun));
                 OnPropertyChanged(nameof(QueryAndNotRun));
+            }
+        }
+
+        private bool _includeNotIn;
+        public bool IncludeNotIn
+        {
+            get
+            {
+                return _includeNotIn;
+            }
+            set
+            {
+                _includeNotIn = value;
+                OnPropertyChanged(nameof(IncludeNotIn));
             }
         }
 
@@ -101,7 +127,7 @@ namespace JosephM.Application.ViewModel.Query
                     RecordType = RecordType,
                     IsReadOnly = true,
                     FormController = new FormController(RecordService, null, ApplicationController),
-                    GetGridRecords = GetGridRecords,
+                    GetGridRecords = (b) => GetGridRecords(b),
                     DisplayTotalCount = false,
                     GetTotalCount = GetGridTotalCount,
                     MultiSelect = true,
@@ -181,6 +207,7 @@ namespace JosephM.Application.ViewModel.Query
                     DynamicGridViewModel.ReloadGrid();
 
                 RefreshConditionButtons();
+                RefreshConditionButtons(isNotIn: true);
 
                 if (resetQueryRun)
                     QueryRun = false;
@@ -241,7 +268,7 @@ namespace JosephM.Application.ViewModel.Query
             get; set;
         }
 
-        private void ResetToQueryEntry()
+        public void ResetToQueryEntry()
         {
             QueryRun = false;
             RecreateGrid();
@@ -249,39 +276,46 @@ namespace JosephM.Application.ViewModel.Query
 
         private bool AllowQuery { get; set; }
 
-        private FilterConditionsViewModel CreateFilterCondition()
+        private FilterConditionsViewModel CreateFilterCondition(bool isNotIn = false)
         {
-            return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons());
+            return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons(isNotIn: isNotIn));
         }
 
-        private JoinsViewModel CreateJoins()
+        private JoinsViewModel CreateJoins(bool isNotIn = false)
         {
-            return new JoinsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons());
+            return new JoinsViewModel(RecordType, RecordService, ApplicationController, () => RefreshConditionButtons(isNotIn: isNotIn));
         }
 
-        private void GroupSelected(FilterOperator filterOperator)
+        private void GroupSelected(FilterOperator filterOperator, bool isNotIn = false)
         {
-            FilterConditions?.GroupSelected(filterOperator);
-            if (Joins != null && Joins.Joins != null)
+            var filterConditions = isNotIn ? NotInFilterConditions : FilterConditions;
+            filterConditions?.GroupSelected(filterOperator);
+            var joins = isNotIn ? NotInJoins : Joins;
+            if (joins != null && joins.Joins != null)
             {
-                foreach (var join in Joins.Joins)
+                foreach (var join in joins.Joins)
                 {
                     join.GroupSelected(filterOperator);
                 }
             }
-            RefreshConditionButtons();
+            RefreshConditionButtons(isNotIn: isNotIn);
         }
 
-        public void RefreshConditionButtons(FilterConditionsViewModel filter = null, bool isRootFilter = true, bool processJoins = true, JoinsViewModel joins = null)
+        public void RefreshConditionButtons(FilterConditionsViewModel filter = null, bool isRootFilter = true, bool processJoins = true, JoinsViewModel joins = null, bool isNotIn = false)
         {
-            joins = joins ?? Joins;
+            joins = joins ?? (isNotIn ? NotInJoins : Joins);
+            var deleteButton = isNotIn ? NotInDeleteSelectedConditionsButton : DeleteSelectedConditionsButton;
+            var groupAndButton = isNotIn ? NotInGroupSelectedConditionsAnd : GroupSelectedConditionsAnd;
+            var groupOrButton = isNotIn ? NotInGroupSelectedConditionsOr : GroupSelectedConditionsOr;
+            var ungroupButton = isNotIn ? NotInUngroupSelectedConditions : UngroupSelectedConditions;
+
             if (filter == null)
             {
-                DeleteSelectedConditionsButton.IsVisible = false;
-                GroupSelectedConditionsAnd.IsVisible = false;
-                GroupSelectedConditionsOr.IsVisible = false;
-                UngroupSelectedConditions.IsVisible = false;
-                filter = FilterConditions;
+                deleteButton.IsVisible = false;
+                groupAndButton.IsVisible = false;
+                groupOrButton.IsVisible = false;
+                ungroupButton.IsVisible = false;
+                filter = (isNotIn ? NotInFilterConditions : FilterConditions);
                 if (!AllowQuery)
                     return;
             }
@@ -289,16 +323,16 @@ namespace JosephM.Application.ViewModel.Query
             {
                 var selectedCount = filter.SelectedConditions.Count();
                 if (selectedCount > 0)
-                    DeleteSelectedConditionsButton.IsVisible = true;
+                    deleteButton.IsVisible = true;
                 if (selectedCount > 0 && !isRootFilter)
-                    UngroupSelectedConditions.IsVisible = true;
+                    ungroupButton.IsVisible = true;
                 if (selectedCount > 1 && filter.FilterOperator == FilterOperator.And)
-                    GroupSelectedConditionsOr.IsVisible = true;
+                    groupOrButton.IsVisible = true;
                 if (selectedCount > 1 && filter.FilterOperator == FilterOperator.Or)
-                    GroupSelectedConditionsAnd.IsVisible = true;
+                    groupAndButton.IsVisible = true;
                 foreach (var item in filter.FilterConditions)
                 {
-                    RefreshConditionButtons(item, isRootFilter: false, processJoins: false);
+                    RefreshConditionButtons(item, isRootFilter: false, processJoins: false, isNotIn: isNotIn);
                 }
                 if (processJoins && joins != null && joins.Joins != null)
                 {
@@ -306,7 +340,7 @@ namespace JosephM.Application.ViewModel.Query
                     {
                         if (join.FilterConditions != null)
                         {
-                            RefreshConditionButtons(join.FilterConditions, isRootFilter: true, processJoins: join.Joins != null, joins: join.Joins);
+                            RefreshConditionButtons(join.FilterConditions, isRootFilter: true, processJoins: join.Joins != null, joins: join.Joins, isNotIn: isNotIn);
                         }
                     }
                 }
@@ -314,38 +348,34 @@ namespace JosephM.Application.ViewModel.Query
         }
 
 
-        private void UnGroupSelected(FilterConditionsViewModel filterConditions = null, FilterConditionsViewModel parentFilterConditions = null)
+        private void UnGroupSelected(bool isNotIn = false)
         {
-            FilterConditions?.UnGroupSelected(null);
-            if (Joins != null && Joins.Joins != null)
+            var filterConditions = isNotIn ? NotInFilterConditions : FilterConditions;
+            filterConditions?.UnGroupSelected(null);
+            var joins = isNotIn ? NotInJoins : Joins;
+            if (joins != null && joins.Joins != null)
             {
-                foreach (var join in Joins.Joins)
+                foreach (var join in joins.Joins)
                 {
                     join.UngroupSelectedConditions();
                 }
             }
-            RefreshConditionButtons();
+            RefreshConditionButtons(isNotIn: isNotIn);
         }
 
-        private static void CheckRemoveFilter(FilterConditionsViewModel filterConditions, FilterConditionsViewModel parentFilterConditions)
+        private void DeleteSelected(bool isNotIn = false)
         {
-            if (filterConditions.Conditions.Count == 1
-                && filterConditions.FilterConditions.Count == 0
-                    && parentFilterConditions != null)
-                parentFilterConditions.FilterConditions.Remove(filterConditions);
-        }
-
-        private void DeleteSelected()
-        {
-            FilterConditions?.DeleteSelected(null);
-            if(Joins != null && Joins.Joins != null)
+            var filterConditions = isNotIn ? NotInFilterConditions : FilterConditions;
+            filterConditions?.DeleteSelected(null);
+            var joins = isNotIn ? NotInJoins : Joins;
+            if (joins != null && joins.Joins != null)
             {
-                foreach(var join in Joins.Joins)
+                foreach(var join in joins.Joins)
                 {
                     join.DeleteSelectedConditions();
                 }
             }
-            RefreshConditionButtons();
+            RefreshConditionButtons(isNotIn: isNotIn);
         }
 
         private bool _isQuickFind;
@@ -370,6 +400,7 @@ namespace JosephM.Application.ViewModel.Query
         {
             IsQuickFind = !IsQuickFind;
             QueryTypeButton.Label = IsQuickFind ? "Use Query" : "Use Quick Find";
+            IncludeNotInButton.IsVisible = !IsQuickFind;
             if (!IsQuickFind)
             {
                 CreateFilterCondition();
@@ -394,7 +425,15 @@ namespace JosephM.Application.ViewModel.Query
                 result = FilterConditions.Validate();
                 var joinValidate = Joins.Validate();
                 if (!joinValidate)
-                    result = false;
+                    result = result && joinValidate;
+
+                if (IncludeNotIn)
+                {
+                    var notInFilterValidate = NotInFilterConditions.Validate();
+                    result = result && notInFilterValidate;
+                    var notInJoinsValidate = NotInJoins.Validate();
+                    result = result && notInJoinsValidate;
+                }
             }
 
             return result;
@@ -439,27 +478,63 @@ namespace JosephM.Application.ViewModel.Query
             var query = GenerateQuery();
             query.Fields = new string[0];
             var totalCount = 0;
-            DynamicGridViewModel.RecordService.ProcessResults(query, (r) => totalCount+=r.Count());
+
+            var notInList = new HashSet<string>();
+            if(IncludeNotIn)
+            {
+                var notInQuery = GenerateNotInQuery();
+                DynamicGridViewModel.RecordService.ProcessResults(notInQuery, (r) =>
+                {
+                    foreach (var item in r)
+                        notInList.Add(item.Id);
+                });
+            }
+
+            DynamicGridViewModel.RecordService.ProcessResults(query, (r) => totalCount+=r.Count(t => !notInList.Contains(t.Id)));
             return totalCount;
         }
 
-        public GetGridRecordsResponse GetGridRecords(bool ignorePages)
+        public GetGridRecordsResponse GetGridRecords(bool ignorePages, IEnumerable<string> fields = null)
         {
             var isValid = ValidateCurrentSearch();
             if (!isValid)
                 return new GetGridRecordsResponse(new IRecord[0]);
             var query = GenerateQuery();
+            query.Fields = fields;
+
+            var notInList = new HashSet<string>();
+            if (IncludeNotIn)
+            {
+                var notInQuery = GenerateNotInQuery();
+                DynamicGridViewModel.RecordService.ProcessResults(notInQuery, (r) =>
+                {
+                    foreach (var item in r)
+                        notInList.Add(item.Id);
+                });
+            }
 
             if (!DynamicGridViewModel.HasPaging || ignorePages)
             {
-                var records = DynamicGridViewModel.RecordService.RetreiveAll(query);
+                var records = new List<IRecord>();
+                DynamicGridViewModel.RecordService.ProcessResults(query, (r) => records.AddRange(r.Where(t => !notInList.Contains(t.Id))));
                 records.PopulateEmptyLookups(RecordService, null);
+
                 return new GetGridRecordsResponse(records);
             }
             else
             {
-                return DynamicGridViewModel.GetGridRecordPage(query);
+                return DynamicGridViewModel.GetGridRecordPage(query, notInList);
             }
+        }
+
+        public QueryDefinition GenerateNotInQuery()
+        {
+            var query = new QueryDefinition(RecordType);
+            query.Distinct = true;
+            query.RootFilter = NotInFilterConditions.GetAsFilter();
+            query.Joins = NotInJoins.GetAsJoins().ToList();
+            query.Fields = new string[0];
+            return query;
         }
 
         public QueryDefinition GenerateQuery()
@@ -544,6 +619,20 @@ namespace JosephM.Application.ViewModel.Query
             }
         }
 
+        private FilterConditionsViewModel _notInFilterConditions;
+        public FilterConditionsViewModel NotInFilterConditions
+        {
+            get
+            {
+                return _notInFilterConditions;
+            }
+            set
+            {
+                _notInFilterConditions = value;
+                OnPropertyChanged(nameof(NotInFilterConditions));
+            }
+        }
+
         private JoinsViewModel _joins;
         public JoinsViewModel Joins
         {
@@ -558,14 +647,30 @@ namespace JosephM.Application.ViewModel.Query
             }
         }
 
+        private JoinsViewModel _notInJoins;
+        public JoinsViewModel NotInJoins
+        {
+            get
+            {
+                return _notInJoins;
+            }
+            set
+            {
+                _notInJoins = value;
+                OnPropertyChanged(nameof(NotInJoins));
+            }
+        }
+
         public XrmButtonViewModel DeleteSelectedConditionsButton { get; set; }
-
         public XrmButtonViewModel GroupSelectedConditionsOr { get; set; }
-
         public XrmButtonViewModel GroupSelectedConditionsAnd { get; set; }
-
         public XrmButtonViewModel UngroupSelectedConditions { get; set; }
+        public XrmButtonViewModel NotInDeleteSelectedConditionsButton { get; set; }
+        public XrmButtonViewModel NotInGroupSelectedConditionsOr { get; set; }
+        public XrmButtonViewModel NotInGroupSelectedConditionsAnd { get; set; }
+        public XrmButtonViewModel NotInUngroupSelectedConditions { get; set; }
         public XrmButtonViewModel RunQueryButton { get; private set; }
+        public XrmButtonViewModel IncludeNotInButton { get; private set; }
 
         private IEnumerable<string> _recordTypes;
         private IEnumerable<RecordType> _recordTypeItemsSource;
@@ -623,6 +728,8 @@ namespace JosephM.Application.ViewModel.Query
                     {
                         FilterConditions = CreateFilterCondition();
                         Joins = CreateJoins();
+                        NotInFilterConditions = CreateFilterCondition(isNotIn: true);
+                        NotInJoins = CreateJoins(isNotIn: true);
                     }
                     OnPropertyChanged(nameof(RecordTypeSelected));
                     if (_recordType != null)

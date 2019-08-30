@@ -17,6 +17,7 @@ using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace JosephM.XrmModule.Test
@@ -24,6 +25,104 @@ namespace JosephM.XrmModule.Test
     [TestClass]
     public class XrmCrudModuleTest : XrmModuleTest
     {
+        /// <summary>
+        /// scripts through running a query whcih includes not in
+        /// </summary>
+        [TestMethod]
+        public void XrmCrudQueryWithNotInTestScript()
+        {
+            DeleteAll(Entities.account);
+
+            var conditionFieldIn = Fields.account_.address1_line1;
+            var conditionFieldOut = Fields.account_.address1_line2;
+            var conditionValueIn = "In";
+            var conditionValueOut = "Out";
+
+            var recordsInToCreate = 54;
+            for (var i = 0; i < recordsInToCreate; i++)
+            {
+                CreateTestRecord(Entities.account, new Dictionary<string, object>
+                {
+                    { conditionFieldIn, conditionValueIn }
+                });
+            }
+
+            var recordsOutToCreate = 2;
+            for (var i = 0; i < recordsOutToCreate; i++)
+            {
+                CreateTestRecord(Entities.account, new Dictionary<string, object>
+                {
+                    { conditionFieldIn, conditionValueIn },
+                    { conditionFieldOut, conditionValueOut }
+                });
+            }
+
+            //Create test app and load query
+            var app = CreateAndLoadTestApplication<XrmCrudModule>();
+            var crudDialog = app.NavigateToDialog<XrmCrudModule, XrmCrudDialog>();
+            var queryViewModel = crudDialog.Controller.UiItems[0] as QueryViewModel;
+            Assert.IsNotNull(queryViewModel);
+            queryViewModel.SelectedRecordType = queryViewModel.RecordTypeItemsSource.First(r => r.Key == Entities.account);
+
+            //change to query entry
+            queryViewModel.QueryTypeButton.Invoke();
+            queryViewModel.IncludeNotInButton.Invoke();
+
+            //in condition
+            var lastCondition = queryViewModel.FilterConditions.Conditions.Last();
+            var fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First(s => s.Key == conditionFieldIn);
+            var conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
+            conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Key == ((int)ConditionType.Equal).ToString());
+            lastCondition.GetStringFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.Value)).Value = conditionValueIn;
+            
+            //out condition
+            lastCondition = queryViewModel.NotInFilterConditions.Conditions.Last();
+            fieldViewModel = lastCondition.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+            fieldViewModel.Value = fieldViewModel.ItemsSource.ToArray().First(s => s.Key == conditionFieldOut);
+            conditionTypeViewModel = lastCondition.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType));
+            conditionTypeViewModel.Value = conditionTypeViewModel.ItemsSource.First(i => i.Key == ((int)ConditionType.Equal).ToString());
+            lastCondition.GetStringFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.Value)).Value = conditionValueOut;
+
+            //run query
+            queryViewModel.DynamicGridViewModel.GetButton("QUERY").Invoke();
+            Assert.IsTrue(queryViewModel.GridRecords.Any());
+
+            //set to display totals
+            queryViewModel.DynamicGridViewModel.GetButton("DISPLAYTOTALS").Invoke();
+
+            //verify totals for first page
+            Assert.AreEqual(50, queryViewModel.DynamicGridViewModel.PageSize);
+            Assert.AreEqual(50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.TotalCount.HasValue);
+            Assert.AreEqual(recordsInToCreate, queryViewModel.DynamicGridViewModel.TotalCount.Value);
+
+            //navigate to next page and verify totals
+            queryViewModel.DynamicGridViewModel.NextPageButton.Invoke();
+            Assert.AreEqual(recordsInToCreate -50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+
+            //remove not in
+
+            queryViewModel.ResetToQueryEntry();
+            queryViewModel.IncludeNotInButton.Invoke();
+
+            queryViewModel.DynamicGridViewModel.GetButton("QUERY").Invoke();
+            Assert.IsTrue(queryViewModel.GridRecords.Any());
+
+            //set to display totals
+            queryViewModel.DynamicGridViewModel.GetButton("DISPLAYTOTALS").Invoke();
+
+            //verify totals for first page
+            Assert.AreEqual(50, queryViewModel.DynamicGridViewModel.PageSize);
+            Assert.AreEqual(50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.TotalCount.HasValue);
+            Assert.AreEqual(recordsInToCreate + recordsOutToCreate, queryViewModel.DynamicGridViewModel.TotalCount.Value);
+
+            //navigate to next page and verify totals
+            queryViewModel.DynamicGridViewModel.NextPageButton.Invoke();
+            Assert.AreEqual((recordsInToCreate + recordsOutToCreate) - 50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+        }
+
         /// <summary>
         /// scripts through running a query where fields in a referenced record are added to the grid view
         /// </summary>

@@ -17,6 +17,7 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Dialogs.xaml" />
@@ -74,18 +75,47 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0" Visibility="{Binding QuickFindOrNotQueryRun, Converter={StaticResource BoolToVis}}" >
-                                <WrapPanel Orientation="Horizontal">
-                                    <Grid Visibility="{Binding ReturnButton, Converter={StaticResource NullToHiddenConverter}}">
-                                        <shared:XrmButton DataContext="{Binding ReturnButton}" />
-                                    </Grid>
-                                    <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
-                                    <WrapPanel Orientation="Horizontal"  Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
-                                        <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" />
-                                        <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" />
-                                        <shared:XrmButton DataContext="{Binding GroupSelectedConditionsAnd}" />
-                                        <shared:XrmButton DataContext="{Binding UngroupSelectedConditions}" />
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <WrapPanel Orientation="Horizontal">
+                                        <Grid Visibility="{Binding ReturnButton, Converter={StaticResource NullToHiddenConverter}}">
+                                            <shared:XrmButton DataContext="{Binding ReturnButton}" />
+                                        </Grid>
+                                        <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
+                                        <Grid Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                                            <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" />
+                                        </Grid>
+                                        <Grid Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                                            <shared:XrmButton DataContext="{Binding GroupSelectedConditionsOr}" />
+                                        </Grid>
+                                        <Grid Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                                            <shared:XrmButton DataContext="{Binding GroupSelectedConditionsAnd}" />
+                                        </Grid>
+                                        <Grid Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                                            <shared:XrmButton DataContext="{Binding UngroupSelectedConditions}" />
+                                        </Grid>
                                     </WrapPanel>
-                                </WrapPanel>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <WrapPanel Orientation="Horizontal">
+                                        <shared:XrmButton DataContext="{Binding IncludeNotInButton}" />
+                                        <Grid Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <shared:XrmButton DataContext="{Binding NotInDeleteSelectedConditionsButton}"   />
+                                        </Grid>
+                                        <Grid Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <shared:XrmButton DataContext="{Binding NotInGroupSelectedConditionsOr}" Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        </Grid>
+                                        <Grid Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <shared:XrmButton DataContext="{Binding NotInGroupSelectedConditionsAnd}" Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        </Grid>
+                                        <Grid Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <shared:XrmButton DataContext="{Binding NotInUngroupSelectedConditions}" Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        </Grid>
+                                    </WrapPanel>
+                                </Grid>
                             </Grid>
                             <Grid Grid.Row="1" Visibility="{Binding IsQuickFind, Converter={StaticResource BoolToVis}}">
                                 <Grid.ColumnDefinitions>
@@ -105,14 +135,35 @@
                                        AncestorType=Grid,
                                        AncestorLevel=3}, Converter={StaticResource HeightAdjuster}, ConverterParameter=-140,
                        UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BoolToVis}}">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <Border>
-                                        <StackPanel Orientation="Vertical">
-                                            <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
-                                            <query:JoinsView DataContext="{Binding Joins}" />
-                                        </StackPanel>
-                                    </Border>
-                                </ScrollViewer>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="{Binding IncludeNotIn, Converter={StaticResource BoolToStar}}" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                            <Border>
+                                                <StackPanel Orientation="Vertical">
+                                                    <query:FilterConditionsView DataContext="{Binding FilterConditions}" />
+                                                    <query:JoinsView DataContext="{Binding Joins}" />
+                                                </StackPanel>
+                                            </Border>
+                                        </ScrollViewer>
+                                    </Grid>
+                                    <Grid Grid.Column="1" Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                            <Border>
+                                                <StackPanel Orientation="Vertical">
+                                                    <WrapPanel>
+                                                        <TextBox Text="Where Not In - note not in will perform slowly on large volumes of data"  Style="{StaticResource ValidationMessageTextBox}" />
+                                                    </WrapPanel>
+                                                    <query:FilterConditionsView DataContext="{Binding NotInFilterConditions}" />
+                                                    <query:JoinsView DataContext="{Binding NotInJoins}" />
+                                                </StackPanel>
+                                            </Border>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                             <Grid Grid.Row="3" >
                                 <WrapPanel Orientation="Horizontal"  Visibility="{Binding QueryRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >

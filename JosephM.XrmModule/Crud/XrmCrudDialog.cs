@@ -44,7 +44,7 @@ namespace JosephM.XrmModule.Crud
                                             ApplicationController.UserMessage("Fetch Copied To Clipboard!");
                                         });
                                     });
-                                }),
+                                }, (g) => !QueryViewModel.IncludeNotIn),
                 new CustomGridFunction("JSFETCHXML", "JavaScript FetchXML", (g) =>
                                 {
                                     DoOnAsynchThread(() =>
@@ -56,7 +56,7 @@ namespace JosephM.XrmModule.Crud
                                             ApplicationController.UserMessage("JavaScript Copied To Clipboard!");
                                         });
                                     });
-                                })
+                                }, (g) => !QueryViewModel.IncludeNotIn)
             }));
             return extraFunctions;
         }

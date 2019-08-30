@@ -176,10 +176,8 @@ namespace JosephM.Application.Desktop.Module.Crud
             }
             else
             {
-                var query = QueryViewModel.GenerateQuery();
-                query.Fields = fieldsToGet;
-                query.Top = -1;
-                recordsToUpdate = RecordService.RetreiveAll(query);
+                var getRecordsResults = QueryViewModel.GetGridRecords(true, fields: fieldsToGet);
+                recordsToUpdate = getRecordsResults.Records;
             }
 
             return recordsToUpdate;

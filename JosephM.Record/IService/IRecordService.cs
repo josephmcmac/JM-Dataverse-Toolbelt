@@ -187,6 +187,8 @@ namespace JosephM.Record.IService
 
         void ProcessResults(QueryDefinition query, Action<IEnumerable<IRecord>> processEachResultSet);
 
+        void ProcessResults(QueryDefinition query, Func<IEnumerable<IRecord>, bool> processEachResultSet);
+
         void LoadFieldsForAllEntities();
 
         void LoadRelationshipsForAllEntities();

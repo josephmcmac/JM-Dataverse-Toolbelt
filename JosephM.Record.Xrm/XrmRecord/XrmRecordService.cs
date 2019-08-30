@@ -1143,10 +1143,15 @@ namespace JosephM.Record.Xrm.XrmRecord
         /// </summary>
         public void ProcessResults(QueryDefinition query, Action<IEnumerable<IRecord>> processEachResultSet)
         {
+            ProcessResults(query, (r) => { processEachResultSet(r); return true; });
+        }
+
+        public void ProcessResults(QueryDefinition query, Func<IEnumerable<IRecord>, bool> processEachResultSet)
+        {
             XrmService.ProcessQueryResults(ToQueryExpression(query), (entities) =>
             {
                 var records = ToIRecords(entities);
-                processEachResultSet(records);
+                return processEachResultSet(records);
             });
         }
 

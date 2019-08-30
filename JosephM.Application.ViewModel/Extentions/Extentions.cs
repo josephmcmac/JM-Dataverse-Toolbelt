@@ -114,9 +114,9 @@ namespace JosephM.Application.ViewModel.Extentions
             return new GetGridRecordsResponse(records, hasMoreRows);
         }
 
-        public static GetGridRecordsResponse GetGridRecordPage(this DynamicGridViewModel gridViewModel, QueryDefinition query)
+        public static GetGridRecordsResponse GetGridRecordPage(this DynamicGridViewModel gridViewModel, QueryDefinition query, IEnumerable<string> notInList = null)
         {
-            query.Top = gridViewModel.CurrentPageCeiling + 1;
+            notInList = notInList ?? new string[0];
 
             var sortExpression = gridViewModel.GetLastSortExpression();
             if (sortExpression != null)
@@ -138,7 +138,23 @@ namespace JosephM.Application.ViewModel.Extentions
                 }
             }
 
-            var records = gridViewModel.RecordService.RetreiveAll(query);
+            IEnumerable<IRecord> records = null;
+            if (!notInList.Any())
+            {
+                query.Top = gridViewModel.CurrentPageCeiling + 1;
+                records = gridViewModel.RecordService.RetreiveAll(query);
+            }
+            else
+            {
+                var recordList = new List<IRecord>();
+                gridViewModel.RecordService.ProcessResults(query, (r) =>
+                {
+                    recordList.AddRange(r.Where(t => !notInList.Contains(t.Id)));
+                    return recordList.Count() > gridViewModel.CurrentPageCeiling;
+                });
+                records = recordList;
+            }
+
             records.PopulateEmptyLookups(gridViewModel.RecordService, null);
             var hasMoreRows = records.Count() > gridViewModel.CurrentPageCeiling;
             records = records.Skip(gridViewModel.CurrentPageFloor).Take(gridViewModel.PageSize).ToArray();

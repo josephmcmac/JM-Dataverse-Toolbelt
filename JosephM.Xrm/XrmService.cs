@@ -799,21 +799,22 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             return result;
         }
 
-        public void ProcessQueryResults(QueryExpression query, Action<IEnumerable<Entity>> processEachResultSet)
+        public void ProcessQueryResults(QueryExpression query, Func<IEnumerable<Entity>, bool> processEachResultSet)
         {
             query.PageInfo.PageNumber = 1;
             var response = RetrieveMultiple(query);
-            processEachResultSet(response.Entities);
+            var shallContinue = processEachResultSet(response.Entities);
 
             //If there is more than one page of records then keep retrieving until we get them all
-            if (response.MoreRecords)
+            if (shallContinue && response.MoreRecords)
             {
                 while (response.MoreRecords)
                 {
                     query.PageInfo.PagingCookie = response.PagingCookie;
                     query.PageInfo.PageNumber = query.PageInfo.PageNumber + 1;
                     response = RetrieveMultiple(query);
-                    processEachResultSet(response.Entities);
+                    if (!processEachResultSet(response.Entities))
+                        return;
                 }
             }
         }

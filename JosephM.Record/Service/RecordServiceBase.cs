@@ -352,6 +352,12 @@ namespace JosephM.Record.Service
             processEachResultSet(results);
         }
 
+        public void ProcessResults(QueryDefinition query, Func<IEnumerable<IRecord>, bool> processEachResultSet)
+        {
+            var results = RetreiveAll(query);
+            processEachResultSet(results);
+        }
+
         public void LoadFieldsForAllEntities()
         {
         }
