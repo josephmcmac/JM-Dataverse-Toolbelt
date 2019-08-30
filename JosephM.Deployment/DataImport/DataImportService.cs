@@ -437,7 +437,7 @@ namespace JosephM.Deployment.DataImport
                                     var matchState = matchRecord.GetOptionSetValue("statecode");
                                     var matchStatus = matchRecord.GetOptionSetValue("statuscode");
                                     if ((thisState != -1 && thisState != matchState)
-                                        || (thisStatus != -1 && thisState != matchStatus))
+                                        || (thisStatus != -1 && thisStatus != matchStatus))
                                     {
                                         SetState(thisEntity);
                                         response.AddUpdated(thisEntity);
