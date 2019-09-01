@@ -100,9 +100,28 @@ namespace JosephM.XrmModule.Test
             //navigate to next page and verify totals
             queryViewModel.DynamicGridViewModel.NextPageButton.Invoke();
             Assert.AreEqual(recordsInToCreate -50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.TotalCount.HasValue);
+            Assert.AreEqual(recordsInToCreate, queryViewModel.DynamicGridViewModel.TotalCount.Value);
+
+            //okay lets create an additonal not in record and verify does not get included
+            CreateTestRecord(Entities.account, new Dictionary<string, object>
+                {
+                    { conditionFieldIn, conditionValueIn },
+                    { conditionFieldOut, conditionValueOut }
+                });
+
+            queryViewModel.DynamicGridViewModel.PreviousPageButton.Invoke();
+            Assert.AreEqual(50, queryViewModel.DynamicGridViewModel.PageSize);
+            Assert.AreEqual(50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.TotalCount.HasValue);
+            Assert.AreEqual(recordsInToCreate, queryViewModel.DynamicGridViewModel.TotalCount.Value);
+
+            queryViewModel.DynamicGridViewModel.NextPageButton.Invoke();
+            Assert.AreEqual(recordsInToCreate - 50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.TotalCount.HasValue);
+            Assert.AreEqual(recordsInToCreate, queryViewModel.DynamicGridViewModel.TotalCount.Value);
 
             //remove not in
-
             queryViewModel.ResetToQueryEntry();
             queryViewModel.IncludeNotInButton.Invoke();
 
@@ -116,11 +135,13 @@ namespace JosephM.XrmModule.Test
             Assert.AreEqual(50, queryViewModel.DynamicGridViewModel.PageSize);
             Assert.AreEqual(50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
             Assert.IsTrue(queryViewModel.DynamicGridViewModel.TotalCount.HasValue);
-            Assert.AreEqual(recordsInToCreate + recordsOutToCreate, queryViewModel.DynamicGridViewModel.TotalCount.Value);
+            Assert.AreEqual(recordsInToCreate + recordsOutToCreate + 1, queryViewModel.DynamicGridViewModel.TotalCount.Value);
 
             //navigate to next page and verify totals
             queryViewModel.DynamicGridViewModel.NextPageButton.Invoke();
-            Assert.AreEqual((recordsInToCreate + recordsOutToCreate) - 50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+            Assert.AreEqual((recordsInToCreate + recordsOutToCreate + 1) - 50, queryViewModel.DynamicGridViewModel.GridRecords.Count);
+            Assert.IsTrue(queryViewModel.DynamicGridViewModel.TotalCount.HasValue);
+            Assert.AreEqual(recordsInToCreate + recordsOutToCreate + 1, queryViewModel.DynamicGridViewModel.TotalCount.Value);
         }
 
         /// <summary>

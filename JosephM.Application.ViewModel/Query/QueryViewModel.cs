@@ -354,13 +354,16 @@ namespace JosephM.Application.ViewModel.Query
 
         private HashSet<string> _cachedNotinIds;
 
+        private DateTime? _notInQueryStartTime;
+
         private object _lockObject = new object();
-        private HashSet<string> GetNotInIds()
+        private HashSet<string> GetNotInIds(out DateTime notInQueryStartTime)
         {
             lock (_lockObject)
             {
                 if (_cachedNotinIds == null)
                 {
+                    _notInQueryStartTime = DateTime.UtcNow;
                     _cachedNotinIds = new HashSet<string>();
                     var notInQuery = GenerateNotInQuery();
                     var loadingVm = DynamicGridViewModel.LoadingViewModel;
@@ -374,12 +377,14 @@ namespace JosephM.Application.ViewModel.Query
                     if (loadingVm != null)
                         loadingVm.LoadingMessage = "Please Wait While Loading";
                 }
+                notInQueryStartTime = _notInQueryStartTime ?? DateTime.UtcNow;
                 return _cachedNotinIds;
             }
         }
 
         public void ClearNotInIds()
         {
+            _notInQueryStartTime = null;
             _cachedNotinIds = null;
         }
 
@@ -518,7 +523,9 @@ namespace JosephM.Application.ViewModel.Query
             var notInList = new HashSet<string>();
             if(IncludeNotIn)
             {
-                notInList = GetNotInIds();
+                DateTime notInThreshold;
+                notInList = GetNotInIds(out notInThreshold);
+                AdjustQueryForCreatedThreshold(query, notInThreshold);
             }
 
             var loadingVm = DynamicGridViewModel.LoadingViewModel;
@@ -533,6 +540,17 @@ namespace JosephM.Application.ViewModel.Query
             return totalCount;
         }
 
+        private static void AdjustQueryForCreatedThreshold(QueryDefinition query, DateTime notInThreshold)
+        {
+            //if we have a not in query then we want to ensure any records created after the not in set was generated
+            //arent included in the main query as they wont have been considered for exlcusion when running the not in query
+            var rootFilter = query.RootFilter;
+            var newFilter = new Filter();
+            newFilter.SubFilters.Add(rootFilter);
+            newFilter.AddCondition("createdon", ConditionType.LessThan, notInThreshold);
+            query.RootFilter = newFilter;
+        }
+
         public GetGridRecordsResponse GetGridRecords(bool ignorePages, IEnumerable<string> fields = null)
         {
             var isValid = ValidateCurrentSearch();
@@ -544,7 +562,9 @@ namespace JosephM.Application.ViewModel.Query
             var notInList = new HashSet<string>();
             if (IncludeNotIn)
             {
-                notInList = GetNotInIds();
+                DateTime notInThreshold;
+                notInList = GetNotInIds(out notInThreshold);
+                AdjustQueryForCreatedThreshold(query, notInThreshold);
             }
 
             if (!DynamicGridViewModel.HasPaging || ignorePages)
