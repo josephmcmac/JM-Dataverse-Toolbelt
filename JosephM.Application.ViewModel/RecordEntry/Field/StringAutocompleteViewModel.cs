@@ -67,6 +67,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         {
                             stringField.DisplayAutocomplete = false;
                         }
+                        else
+                        {
+                            stringField.DisplayAutocomplete = true;
+                        }
                         return new GetGridRecordsResponse(records);
                     }
                     catch(Exception ex)

@@ -15,7 +15,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 && (autocomplete.DisplayInGrid || !(RecordEntryViewModel is GridRowViewModel)))
             {
                 AutocompleteViewModel = new StringAutocompleteViewModel(this, autocomplete);
-                SearchButton = new XrmButtonViewModel("Search", Search, ApplicationController);
+                SearchButton = new XrmButtonViewModel("Search", () => { AutocompleteViewModel.SearchText = Value; Search(); }, ApplicationController);
             }
         }
 
@@ -24,7 +24,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             if (AutocompleteViewModel != null)
             {
                 DisplayAutocomplete = true;
-                AutocompleteViewModel.SearchText = Value;
                 AutocompleteViewModel.DynamicGridViewModel.ReloadGrid();
             }
         }

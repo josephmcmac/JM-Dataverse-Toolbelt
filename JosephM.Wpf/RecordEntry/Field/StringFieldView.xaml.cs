@@ -52,10 +52,18 @@ namespace JosephM.Wpf.RecordEntry.Field
             if (e.Key == Key.Tab || e.Key == Key.Escape)
                 ViewModel.DisplayAutocomplete = false;
             if (e.Key == Key.Enter)
+            {
+                if (ViewModel.AutocompleteViewModel != null)
+                    ViewModel.AutocompleteViewModel.SearchText = TextBox.Text;
                 ViewModel.Search();
+            }
             else if (e.Key == Key.K &&
                      (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)))
+            {
+                if (ViewModel.AutocompleteViewModel != null)
+                    ViewModel.AutocompleteViewModel.SearchText = TextBox.Text;
                 ViewModel.Search();
+            }
         }
     }
 }
