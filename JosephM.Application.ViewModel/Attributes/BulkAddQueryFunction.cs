@@ -65,9 +65,19 @@ namespace JosephM.Application.ViewModel.Attributes
                     var targetType = GetTargetType(recordForm, subGridReference);
 
                     var selectedFunction = new CustomGridFunction("ADDSELECTED", "Add Selected", (g) => AddSelectedItems(g, recordForm, subGridReference)
-                    , visibleFunction: (g) => g.GridRecords != null && g.GridRecords.Any());
+                        , visibleFunction: (g) => g.GridRecords != null && g.GridRecords.Any());
 
-                    var childForm = new QueryViewModel(new[] { targetType }, GetQueryLookupService(recordForm, subGridReference), recordForm.ApplicationController, allowQuery: AllowQuery, loadInitially: !AllowQuery, closeFunction: closeFunction, customFunctions: new[] { selectedFunction }, allowCrud: false);
+                    var addAllFunction = new CustomGridFunction("ADDALLRESULTS", "Add All Results", (g) => AddAllResults(g, recordForm, subGridReference)
+                        , visibleFunction: (g) => g.GridRecords != null && g.GridRecords.Any());
+
+                    var childForm = new QueryViewModel(new[] { targetType },
+                        GetQueryLookupService(recordForm, subGridReference),
+                        recordForm.ApplicationController,
+                        allowQuery: AllowQuery,
+                        loadInitially: !AllowQuery,
+                        closeFunction: closeFunction,
+                        customFunctions: new[] { selectedFunction, addAllFunction },
+                        allowCrud: false);
                     childForm.TypeAhead = TypeAhead;
                     mainFormInContext.LoadChildForm(childForm);
                 }
@@ -100,11 +110,11 @@ namespace JosephM.Application.ViewModel.Attributes
                     Thread.Sleep(100);
                     foreach (var selectedRow in grid.SelectedRows)
                     {
-                        AddSelectedItem(selectedRow, recordForm, subGridReference);
+                        AddSelectedItem(selectedRow.GetRecord(), recordForm, subGridReference);
                     }
                     mainFormInContext.ClearChildForm();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     mainFormInContext.ApplicationController.ThrowException(ex);
                 }
@@ -115,6 +125,35 @@ namespace JosephM.Application.ViewModel.Attributes
             });
         }
 
-        public abstract void AddSelectedItem(GridRowViewModel gridRow, RecordEntryViewModelBase recordForm, string subGridReference);
+        public void AddAllResults(DynamicGridViewModel grid, RecordEntryViewModelBase recordForm, string subGridReference)
+        {
+            var mainFormInContext = recordForm;
+            if (recordForm is GridRowViewModel)
+                mainFormInContext = recordForm.ParentForm;
+            mainFormInContext.ApplicationController.DoOnAsyncThread(() =>
+            {
+                mainFormInContext.LoadingViewModel.IsLoading = true;
+                try
+                {
+                    Thread.Sleep(100);
+                    var records = grid.GetGridRecords(true);
+                    foreach(var item in records.Records)
+                    {
+                        AddSelectedItem(item, recordForm, subGridReference);
+                    }
+                    mainFormInContext.ClearChildForm();
+                }
+                catch (Exception ex)
+                {
+                    mainFormInContext.ApplicationController.ThrowException(ex);
+                }
+                finally
+                {
+                    mainFormInContext.LoadingViewModel.IsLoading = false;
+                }
+            });
+        }
+
+        public abstract void AddSelectedItem(IRecord record, RecordEntryViewModelBase recordForm, string subGridReference);
     }
 }

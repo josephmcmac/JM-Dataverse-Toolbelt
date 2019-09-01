@@ -27,17 +27,12 @@ namespace JosephM.Application.ViewModel.Attributes
             return GetLookupService(recordForm, subGridReference);
         }
 
-        public override void AddSelectedItem(GridRowViewModel selectedRow, RecordEntryViewModelBase recordForm, string subGridReference)
+        public override void AddSelectedItem(IRecord record, RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
             var newRecord = recordForm.RecordService.NewRecord(GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName);
-            var lookup = GetLookupService(recordForm, subGridReference).ToLookupWithAltDisplayNameName(selectedRow.GetRecord());
-
+            var lookup = GetLookupService(recordForm, subGridReference).ToLookupWithAltDisplayNameName(record);
             newRecord.SetField(targetPropertyname, lookup, recordForm.RecordService);
-            //if (gridField.GridRecords.Any(g => g.GetLookupFieldFieldViewModel(targetPropertyname).Value == lookup))
-            //    return;
-            //gridField.InsertRecord(newRecord, 0);
             InsertNewItem(recordForm, subGridReference, newRecord);
         }
     }
