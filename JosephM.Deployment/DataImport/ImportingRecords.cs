@@ -14,7 +14,7 @@ namespace JosephM.Deployment.DataImport
         private IDictionary<Guid, Entity> _createdEntities = new SortedDictionary<Guid, Entity>();
         private List<Entity> _updatedEntities = new List<Entity>();
         private List<Entity> _skippedNoChangeEntities = new List<Entity>();
-        private IDictionary<Entity, List<string>> _fieldsForRetry = new SortedDictionary<Entity, List<string>>();
+        private IDictionary<Entity, List<string>> _fieldsForRetry = new Dictionary<Entity, List<string>>();
         private int _errors;
 
         public IDictionary<Guid, Entity> GetCreatedEntities()
