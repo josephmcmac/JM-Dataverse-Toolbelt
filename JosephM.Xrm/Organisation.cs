@@ -16,5 +16,16 @@ namespace JosephM.Xrm
         public string FriendlyName => _organisation.FriendlyName;
 
         public string Version => _organisation.OrganizationVersion;
+
+        public string WebUrl
+        {
+            get
+            {
+                var webUrl = _organisation.Endpoints[EndpointType.WebApplication];
+                if (webUrl != null && webUrl.EndsWith("/"))
+                    webUrl = webUrl.Substring(0, webUrl.Length - 1);
+                return webUrl;
+            }
+        }
     }
 }

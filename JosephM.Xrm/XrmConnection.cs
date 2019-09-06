@@ -43,35 +43,34 @@ namespace JosephM.Xrm
         ///     Return Organisation Service Proxy
         /// </summary>
         /// <returns></returns>
-        public OrganizationServiceProxy GetOrgServiceProxy()
+        public GetOrganisationConnectionResponse GetOrganisationConnection()
         {
             try
             {
                 OrganizationServiceProxy organizationProxy = null;
 
+                var organisation = GetOrganisation();
+                var organizationUri = organisation.Endpoints[EndpointType.OrganizationService];
 
-                var endPointType = EndpointType.OrganizationService;
-                var organizationUri = GetEndpointUrl(endPointType);
+                if (string.IsNullOrWhiteSpace(organizationUri))
+                    throw new NullReferenceException("organizationUri");
 
-                if (!String.IsNullOrWhiteSpace(organizationUri))
-                {
-                    //test branch
-                    //noted this code throws a WCF nametable quote exceeded error
-                    //when connecting to CRM 2016 with old SDK assembly versions
-                    //if this occurs the assemblies will require updating to v8.1+
-                    //note this may cause regression for old CRM versions due to new request properties
-                    //e.g. the HasFeedback property on the CreateEntityRequest
-                    var orgServiceManagement =
-                        ServiceConfigurationFactory.CreateManagement<IOrganizationService>(
-                            new Uri(organizationUri));
+                //noted this code throws a WCF nametable quote exceeded error
+                //when connecting to CRM 2016 with old SDK assembly versions
+                //if this occurs the assemblies will require updating to v8.1+
+                //note this may cause regression for old CRM versions due to new request properties
+                //e.g. the HasFeedback property on the CreateEntityRequest
+                var orgServiceManagement =
+                    ServiceConfigurationFactory.CreateManagement<IOrganizationService>(
+                        new Uri(organizationUri));
 
-                    // Set the credentials.
-                    var credentials = GetCredentials(CrmConfig.AuthenticationProviderType);
+                // Set the credentials.
+                var credentials = GetCredentials(CrmConfig.AuthenticationProviderType);
 
-                    organizationProxy = GetProxy<IOrganizationService, OrganizationServiceProxy>(orgServiceManagement,
-                        credentials);
-                }
-                return organizationProxy;
+                organizationProxy = GetProxy<IOrganizationService, OrganizationServiceProxy>(orgServiceManagement,
+                    credentials);
+
+                return new GetOrganisationConnectionResponse(organizationProxy, organisation);
             }
             catch (Exception ex)
             {
@@ -83,12 +82,10 @@ namespace JosephM.Xrm
         ///     Return Organisation Version
         /// </summary>
         /// <returns></returns>
-        public string GetOrganisationVersion()
+        public OrganizationDetail GetOrganisation()
         {
             try
             {
-                string result = null;
-
                 // Set the credentials.
                 var authCredentials = GetCredentials(CrmConfig.AuthenticationProviderType);
 
@@ -101,38 +98,18 @@ namespace JosephM.Xrm
                     GetProxy<IDiscoveryService, DiscoveryServiceProxy>(serviceManagement, authCredentials))
                 {
                     // Obtain organization information from the Discovery service. 
-                    if (discoveryProxy != null)
-                    {
-                        // Obtain information about the organizations that the system user belongs to.
-                        var orgs = DiscoverOrganizations(discoveryProxy);
-                        // Obtains the Web address (Uri) of the target organization.
-                        result = FindOrganization(CrmConfig.OrganizationUniqueName,
-                            orgs.ToArray()).OrganizationVersion;
-                    }
-                }
+                    if (discoveryProxy == null)
+                        throw new NullReferenceException("discoveryProxy");
 
-                return result;
+                    // Obtain information about the organizations that the system user belongs to.
+                    var orgs = DiscoverOrganizations(discoveryProxy);
+                    // Obtains the Web address (Uri) of the target organization.
+                    return FindOrganization(CrmConfig.OrganizationUniqueName, orgs.ToArray());
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception("Error getting organisation version - check your crm connection details", ex);
-            }
-        }
-
-        /// <summary>
-        ///     Return Organisation Service Proxy
-        /// </summary>
-        /// <returns></returns>
-        public string GetWebUrl()
-        {
-            try
-            {
-                var endPointType = EndpointType.WebApplication;
-                return GetEndpointUrl(endPointType);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error getting web url - check your crm connection details", ex);
             }
         }
 
@@ -309,6 +286,18 @@ namespace JosephM.Xrm
                 .GetConstructor(new[]
                 {typeof (IServiceManagement<TService>), typeof (ClientCredentials)})
                 .Invoke(new object[] {serviceManagement, authCredentials.ClientCredentials});
+        }
+
+        public class GetOrganisationConnectionResponse
+        {
+            public GetOrganisationConnectionResponse(OrganizationServiceProxy serviceProxy, OrganizationDetail organisation)
+            {
+                Organisation = new Organisation(organisation);
+                ServiceProxy = serviceProxy;
+            }
+
+            public Organisation Organisation { get; private set; }
+            public OrganizationServiceProxy ServiceProxy { get; private set; }
         }
     }
 }

@@ -162,7 +162,9 @@ namespace JosephM.Xrm
                 {
                     if (_service == null)
                     {
-                        _service = new XrmConnection(XrmConfiguration).GetOrgServiceProxy();
+                        var getConnection = new XrmConnection(XrmConfiguration).GetOrganisationConnection();
+                        _service = getConnection.ServiceProxy;
+                        _organisation = getConnection.Organisation;
                         SetServiceTimeout();
                     }
                 }
@@ -175,35 +177,34 @@ namespace JosephM.Xrm
             }
         }
 
-        private string _organisationVersion;
+        private Organisation _organisation;
+        private Organisation GetOrganisation()
+        {
+            lock (_lockObject)
+            {
+                if (_organisation == null)
+                {
+                    if (XrmConfiguration == null)
+                        throw new NullReferenceException("Cannot get organisation as the connection is null");
+                    _organisation = new Organisation(new XrmConnection(XrmConfiguration).GetOrganisation());
+                }
+                return _organisation;
+            }
+        }
+
         public string OrganisationVersion
         {
             get
             {
-                if (_organisationVersion == null)
-                {
-                    if (XrmConfiguration == null)
-                        throw new NotImplementedException(string.Format("XrmConfiguration is null"));
-                    _organisationVersion = new XrmConnection(XrmConfiguration).GetOrganisationVersion();
-                }
-                return _organisationVersion;
+                return GetOrganisation().Version;
             }
         }
 
-        private string _webUrl;
         public string WebUrl
         {
             get
             {
-                if (_webUrl == null)
-                {
-                    if (XrmConfiguration == null)
-                        throw new NotImplementedException(string.Format("XrmConfiguration is null"));
-                    _webUrl = new XrmConnection(XrmConfiguration).GetWebUrl();
-                    if (_webUrl != null && _webUrl.EndsWith("/"))
-                        _webUrl = _webUrl.Left(_webUrl.Length - 1);
-                }
-                return _webUrl;
+                return GetOrganisation().WebUrl;
             }
         }
 
@@ -263,7 +264,9 @@ namespace JosephM.Xrm
                     if (XrmConfiguration != null)
                     {
                         Controller.LogLiteral("Crm config found attempting to reconnect..");
-                        Service = new XrmConnection(XrmConfiguration).GetOrgServiceProxy();
+                        var getConnection = new XrmConnection(XrmConfiguration).GetOrganisationConnection();
+                        Service = getConnection.ServiceProxy;
+                        _organisation = getConnection.Organisation;
                         SetServiceTimeout();
                         result = Service.Execute(request);
                         Controller.LogLiteral("Reconnected..");
