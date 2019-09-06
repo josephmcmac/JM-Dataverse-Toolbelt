@@ -12,9 +12,13 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
 {
     [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalWrap, 10)]
     [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalWrap, 20)]
+    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.HorizontalWrap, 30)]
     public class BulkReplaceRequest : ServiceRequestBase
     {
+        private bool _allowExecuteMultiples = true;
+
         public BulkReplaceRequest(RecordType recordType, IEnumerable<IRecord> recordsToUpdate)
+            : this()
         {
             RecordType = recordType;
             _recordsToUpdate = recordsToUpdate;
@@ -22,7 +26,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
 
         public BulkReplaceRequest()
         {
-
+            ExecuteMultipleSetSize = 50;
         }
 
         private IEnumerable<IRecord> _recordsToUpdate { get; set; }
@@ -59,11 +63,29 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
         [PropertyInContextByPropertyNotNull(nameof(FieldToReplaceIn))]
         public string NewValue { get; set; }
 
+        [Group(Sections.AdditionalOptions)]
+        [DisplayOrder(50)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(1000)]
+        [PropertyInContextByPropertyValue(nameof(AllowExecuteMultiples), true)]
+        public int? ExecuteMultipleSetSize { get; set; }
 
+        [Hidden]
+        public bool AllowExecuteMultiples
+        {
+            get => _allowExecuteMultiples; set
+            {
+                _allowExecuteMultiples = value;
+                if (!value)
+                    ExecuteMultipleSetSize = 1;
+            }
+        }
         private static class Sections
         {
             public const string RecordDetails = "Selected Replace Details";
             public const string FieldUpdate = "Field Value To Replace";
+            public const string AdditionalOptions = "Additional Options";
         }
     }
 }

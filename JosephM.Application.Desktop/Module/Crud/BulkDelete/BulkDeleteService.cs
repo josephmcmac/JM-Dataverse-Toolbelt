@@ -4,6 +4,7 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
+using System.Linq;
 
 namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 {
@@ -23,21 +24,59 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
             var countUpdated = 0;
             controller.UpdateProgress(0, countToUpdate, "Executing Deletions");
             var estimator = new TaskEstimator(countToUpdate);
-            foreach (var record in request.GetRecordsToUpdate())
+
+            var recordsRemaining = request.GetRecordsToDelete().ToList();
+            while (recordsRemaining.Any())
             {
                 controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Deletions"));
-                try
+
+                var thisSetOfRecords = recordsRemaining
+                    .Take(request.ExecuteMultipleSetSize ?? 50)
+                    .ToList();
+
+                recordsRemaining.RemoveRange(0, thisSetOfRecords.Count);
+
+                var thisSetOfRecordsNew = thisSetOfRecords
+                    .Select(r =>
+                    {
+                        var newRecord = RecordService.NewRecord(request.RecordType.Key);
+                        newRecord.Id = r.Id;
+                        return newRecord;
+                    })
+                    .ToArray();
+
+                var errorsThisIteration = 0;
+
+                //old versions dont have execute multiple so if 1 then do each request
+                if (thisSetOfRecordsNew.Count() == 1)
                 {
-                    var newRecord = RecordService.NewRecord(request.RecordType.Key);
-                    newRecord.Id = record.Id;
-                    RecordService.Delete(newRecord);
+                    var record = thisSetOfRecordsNew.First();
+                    try
+                    {
+                        RecordService.Delete(record);
+                    }
+                    catch (Exception ex)
+                    {
+                        response.AddResponseItem(new BulkDeleteResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
+                        errorsThisIteration++;
+                    }
                 }
-                catch(Exception ex)
+                else
                 {
-                    response.AddResponseItem(new BulkDeleteResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
+                    var multipleResponse = RecordService.DeleteMultiple(thisSetOfRecordsNew);
+                    foreach (var item in multipleResponse)
+                    {
+                        var originalRecord = thisSetOfRecords[item.Key];
+                        response.AddResponseItem(new BulkDeleteResponseItem(originalRecord.Id, originalRecord.GetStringField(RecordService.GetPrimaryField(originalRecord.Type)), item.Value));
+                    }
+                    errorsThisIteration += multipleResponse.Count;
                 }
-                countUpdated++;
+
+                countUpdated += thisSetOfRecords.Count();
+                response.NumberOfErrors += errorsThisIteration;
+                response.TotalRecordsProcessed = countUpdated;
             }
+
             controller.UpdateProgress(1, 1, "Deletions Completed");
             response.Message = "Deletions Completed";
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Application.Desktop.Shared
+namespace JosephM.Core.Utility
 {
     public static class VersionHelper
     {

@@ -11,6 +11,9 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
         public BulkUpdateDialog(IRecordService recordService, IDialogController dialogController, BulkUpdateRequest request, Action onClose)
             : base(new BulkUpdateService(recordService), dialogController, recordService, request, onClose)
         {
+            
         }
+
+        public override bool DisplayResponseDuringServiceRequestExecution => true;
     }
 }

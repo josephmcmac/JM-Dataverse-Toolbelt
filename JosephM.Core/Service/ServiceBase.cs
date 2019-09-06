@@ -12,18 +12,18 @@ namespace JosephM.Core.Service
         where TResponse : ServiceResponseBase<TResponseItem>, new()
         where TResponseItem : ServiceResponseItem
     {
-        public TResponse Execute(TRequest request, ServiceRequestController controller)
+        public TResponse Execute(TRequest request, ServiceRequestController controller, TResponse response = null)
         {
-            var response = new TResponse();
+            var thisResponse = response ?? new TResponse();
             try
             {
-                ExecuteExtention(request, response, controller);
+                ExecuteExtention(request, thisResponse, controller);
             }
             catch (Exception ex)
             {
-                response.SetFatalError(ex);
+                thisResponse.SetFatalError(ex);
             }
-            return response;
+            return thisResponse;
         }
 
         public abstract void ExecuteExtention(TRequest request, TResponse response, ServiceRequestController controller);

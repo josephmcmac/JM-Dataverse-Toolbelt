@@ -1,8 +1,8 @@
-﻿using JosephM.Application.Desktop.Shared;
+﻿using JosephM.Core.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace JosephM.Application.Desktop.Test
+namespace JosephM.Core.Test
 {
     [TestClass]
     public class VersionHelperTests

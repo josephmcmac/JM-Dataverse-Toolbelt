@@ -63,7 +63,6 @@
   <ItemGroup>
     <Compile Include="AutoDialogController.cs" />
     <Compile Include="DialogModuleTest.cs" />
-    <Compile Include="VersionHelperTests.cs" />
     <Compile Include="DesktopSettingsManagerTests.cs" />
     <Compile Include="DependencyContainerTests.cs" />
     <Compile Include="AggregatedSettingsModuleTest.cs" />

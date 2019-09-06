@@ -14,5 +14,7 @@ namespace JosephM.Xrm
         public string UniqueName => _organisation.UniqueName;
 
         public string FriendlyName => _organisation.FriendlyName;
+
+        public string Version => _organisation.OrganizationVersion;
     }
 }

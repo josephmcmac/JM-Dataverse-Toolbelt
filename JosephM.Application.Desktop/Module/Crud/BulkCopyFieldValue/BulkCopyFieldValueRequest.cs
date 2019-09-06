@@ -12,7 +12,10 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue
     [Group(Sections.Options, Group.DisplayLayoutEnum.HorizontalWrap, 30)]
     public class BulkCopyFieldValueRequest : ServiceRequestBase
     {
+        private bool _allowExecuteMultiples = true;
+
         public BulkCopyFieldValueRequest(RecordType recordType, IEnumerable<IRecord> recordsToUpdate)
+            : this()
         {
             RecordType = recordType;
             _recordsToUpdate = recordsToUpdate;
@@ -20,7 +23,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue
 
         public BulkCopyFieldValueRequest()
         {
-
+            ExecuteMultipleSetSize = 50;
         }
 
         private IEnumerable<IRecord> _recordsToUpdate { get; set; }
@@ -59,6 +62,25 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue
         [DisplayOrder(60)]
         [RequiredProperty]
         public bool OverwriteIfPopulated { get; set; }
+
+        [Group(Sections.Options)]
+        [DisplayOrder(70)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(1000)]
+        [PropertyInContextByPropertyValue(nameof(AllowExecuteMultiples), true)]
+        public int? ExecuteMultipleSetSize { get; set; }
+
+        [Hidden]
+        public bool AllowExecuteMultiples
+        {
+            get => _allowExecuteMultiples; set
+            {
+                _allowExecuteMultiples = value;
+                if (!value)
+                    ExecuteMultipleSetSize = 1;
+            }
+        }
 
         private static class Sections
         {

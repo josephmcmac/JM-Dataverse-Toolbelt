@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue;
 using JosephM.Application.Desktop.Module.Crud.BulkDelete;
+using JosephM.Application.Desktop.Module.Crud.BulkReplace;
 using JosephM.Application.Desktop.Module.Crud.BulkUpdate;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Fakes;
@@ -25,6 +26,76 @@ namespace JosephM.XrmModule.Test
     [TestClass]
     public class XrmCrudModuleTest : XrmModuleTest
     {
+        /// <summary>
+        /// runs through several xrm crud scenarios - quickfind, edit, bulk update, bulk delete, create
+        /// </summary>
+        [TestMethod]
+        public void XrmCrudModuleBulkOperationsTestScript()
+        {
+            // this script runs through several scenarios in the crud module
+            // opening and running quickfind
+            // opening a record updating a field and saving
+            // selecting 2 records and doing a bulk update on them
+            // doing a bulk update on all records
+            // selecting 2 records and doing a bulk delete on them
+            // doing a bulk delete on all records
+            // create a new record
+            // create a new record with an error thrown
+            DeleteAll(Entities.account);
+            var count = XrmRecordService.GetFirstX(Entities.account, 3, null, null).Count();
+            while (count < 10)
+            {
+                CreateAccount();
+                count++;
+            }
+
+            //Create test app and load query
+            var app = CreateAndLoadTestApplication<XrmCrudModule>();
+            var crudDialog = app.NavigateToDialog<XrmCrudModule, XrmCrudDialog>();
+            var queryViewModel = crudDialog.Controller.UiItems[0] as QueryViewModel;
+            Assert.IsNotNull(queryViewModel);
+            queryViewModel.SelectedRecordType = queryViewModel.RecordTypeItemsSource.First(r => r.Key == Entities.account);
+            queryViewModel.DynamicGridViewModel.GetButton("QUERY").Invoke();
+            Assert.IsTrue(queryViewModel.GridRecords.Any());
+
+            //okay this just updates all
+            queryViewModel.DynamicGridViewModel.GetButton("BULKUPDATEALL").Invoke();
+            DoBulkUpdate(crudDialog, "I Update", Fields.account_.address1_line1, doExecuteMultiples: true);
+
+            var accounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            foreach(var account in accounts)
+            {
+                Assert.AreEqual("I Update", account.GetStringField(Fields.account_.address1_line1));
+            }
+
+            //bulk replace
+            queryViewModel.DynamicGridViewModel.GetButton("BULKREPLACEALL").Invoke();
+            DoBulkReplace(crudDialog, Fields.account_.address1_line1, "I Update", "I Updated", doExecuteMultiples: true);
+
+            accounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            foreach (var account in accounts)
+            {
+                Assert.AreEqual("I Updated", account.GetStringField(Fields.account_.address1_line1));
+            }
+
+            //bulk copy field value
+            queryViewModel.DynamicGridViewModel.GetButton("BULKCOPYFIELDVALUEALL").Invoke();
+            DoBulkCopyFieldValue(crudDialog, Fields.account_.accountid, Fields.account_.address1_line2, doExecuteMultiples: true);
+
+            accounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            foreach (var account in accounts)
+            {
+                Assert.AreEqual(account.Id.ToString(), account.GetStringField(Fields.account_.address1_line2));
+            }
+
+            //bulk delete
+            queryViewModel.DynamicGridViewModel.GetButton("BULKDELETEALL").Invoke();
+            DoBulkDelete(crudDialog, doExecuteMultiples: true);
+
+            accounts = XrmRecordService.RetrieveAll(Entities.account, null);
+            Assert.IsFalse(accounts.Any());
+        }
+
         /// <summary>
         /// scripts through running a query whcih includes not in
         /// </summary>
@@ -447,7 +518,7 @@ namespace JosephM.XrmModule.Test
 
             var dialog = app.NavigateToDialog<XrmCrudModule, XrmCrudDialog>();
 
-            //okay we should have been dir4ected to a connection entry
+            //okay we should have been directed to a connection entry
 
             var connectionEntryViewModel = dialog.Controller.UiItems[0] as ObjectEntryViewModel;
             var newConnection = connectionEntryViewModel.GetObject() as SavedXrmRecordConfiguration;
@@ -667,7 +738,7 @@ namespace JosephM.XrmModule.Test
             Assert.IsFalse(crudDialog.QueryViewModel.ChildForms.Any());
         }
 
-        private static void DoBulkUpdate(XrmCrudDialog crudDialog, string newValue, string field)
+        private static void DoBulkUpdate(XrmCrudDialog crudDialog, string newValue, string field, bool doExecuteMultiples = false)
         {
             var bulkUpdateDialog = crudDialog.ChildForms.First() as BulkUpdateDialog;
             Assert.IsNotNull(bulkUpdateDialog);
@@ -679,6 +750,10 @@ namespace JosephM.XrmModule.Test
             fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == field);
             var valueField = bulkUpdateEntry.GetStringFieldFieldViewModel(nameof(BulkUpdateRequest.ValueToSet));
             valueField.Value = newValue;
+            var setSizeField = bulkUpdateEntry.GetIntegerFieldFieldViewModel(nameof(BulkUpdateRequest.ExecuteMultipleSetSize));
+            setSizeField.Value = doExecuteMultiples ? 3 : 1;
+            if (!bulkUpdateEntry.Validate())
+                Assert.Fail(bulkUpdateEntry.GetValidationSummary());
             bulkUpdateEntry.SaveButtonViewModel.Invoke();
             var completionScreen = bulkUpdateDialog.Controller.UiItems.First() as CompletionScreenViewModel;
             Assert.IsNotNull(completionScreen);
@@ -688,7 +763,7 @@ namespace JosephM.XrmModule.Test
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }
 
-        private void DoBulkCopyFieldValue(XrmCrudDialog crudDialog, string sourceField, string targetField, bool copyIfNull = false, bool overwriteIfPopulated = false)
+        private void DoBulkCopyFieldValue(XrmCrudDialog crudDialog, string sourceField, string targetField, bool copyIfNull = false, bool overwriteIfPopulated = false, bool doExecuteMultiples = false)
         {
             var bulkUpdateDialog = crudDialog.ChildForms.First() as BulkCopyFieldValueDialog;
             Assert.IsNotNull(bulkUpdateDialog);
@@ -700,8 +775,12 @@ namespace JosephM.XrmModule.Test
             fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == sourceField);
             var valueField = bulkUpdateEntry.GetRecordFieldFieldViewModel(nameof(BulkCopyFieldValueRequest.TargetField));
             valueField.Value = valueField.ItemsSource.First(kv => kv.Key == targetField);
+            var setSizeField = bulkUpdateEntry.GetIntegerFieldFieldViewModel(nameof(BulkUpdateRequest.ExecuteMultipleSetSize));
+            setSizeField.Value = doExecuteMultiples ? 3 : 1;
             bulkUpdateEntry.GetBooleanFieldFieldViewModel(nameof(BulkCopyFieldValueRequest.CopyIfNull)).Value = copyIfNull;
             bulkUpdateEntry.GetBooleanFieldFieldViewModel(nameof(BulkCopyFieldValueRequest.OverwriteIfPopulated)).Value = overwriteIfPopulated;
+            if (!bulkUpdateEntry.Validate())
+                Assert.Fail(bulkUpdateEntry.GetValidationSummary());
             bulkUpdateEntry.SaveButtonViewModel.Invoke();
             var completionScreen = bulkUpdateDialog.Controller.UiItems.First() as CompletionScreenViewModel;
             Assert.IsNotNull(completionScreen);
@@ -711,19 +790,50 @@ namespace JosephM.XrmModule.Test
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }
 
-        private static void DoBulkDelete(XrmCrudDialog crudDialog)
+        private static void DoBulkDelete(XrmCrudDialog crudDialog, bool doExecuteMultiples = false)
         {
             var bulkDeleteDialog = crudDialog.ChildForms.First() as BulkDeleteDialog;
             Assert.IsNotNull(bulkDeleteDialog);
             bulkDeleteDialog.LoadDialog();
             bulkDeleteDialog.LoadDialog();
             var bulkUpdateEntry = bulkDeleteDialog.Controller.UiItems.First() as ObjectEntryViewModel;
-            Assert.IsNotNull(bulkDeleteDialog);
+            Assert.IsNotNull(bulkUpdateEntry);
+            var setSizeField = bulkUpdateEntry.GetIntegerFieldFieldViewModel(nameof(BulkUpdateRequest.ExecuteMultipleSetSize));
+            setSizeField.Value = doExecuteMultiples ? 3 : 1;
+            if (!bulkUpdateEntry.Validate())
+                Assert.Fail(bulkUpdateEntry.GetValidationSummary());
             bulkUpdateEntry.SaveButtonViewModel.Invoke();
             var completionScreen = bulkDeleteDialog.Controller.UiItems.First() as CompletionScreenViewModel;
             Assert.IsNotNull(completionScreen);
             completionScreen.CompletionDetails.LoadFormSections();
             Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkDeleteResponse.ResponseItems)).GetGridRecords(false).Records.Any());
+            completionScreen.CompletionDetails.CancelButtonViewModel.Invoke();
+            Assert.IsFalse(crudDialog.ChildForms.Any());
+        }
+
+        private static void DoBulkReplace(XrmCrudDialog crudDialog, string field, string oldValue, string newValue, bool doExecuteMultiples = false)
+        {
+            var bulkUpdateDialog = crudDialog.ChildForms.First() as BulkReplaceDialog;
+            Assert.IsNotNull(bulkUpdateDialog);
+            bulkUpdateDialog.LoadDialog();
+            var bulkUpdateEntry = bulkUpdateDialog.Controller.UiItems.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(bulkUpdateEntry);
+            bulkUpdateEntry.LoadFormSections();
+            var fieldField = bulkUpdateEntry.GetRecordFieldFieldViewModel(nameof(BulkReplaceRequest.FieldToReplaceIn));
+            fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == field);
+            var oldValueField = bulkUpdateEntry.GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.OldValue));
+            oldValueField.Value = oldValue;
+            var newValueField = bulkUpdateEntry.GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.NewValue));
+            newValueField.Value = newValue;
+            var setSizeField = bulkUpdateEntry.GetIntegerFieldFieldViewModel(nameof(BulkReplaceRequest.ExecuteMultipleSetSize));
+            setSizeField.Value = doExecuteMultiples ? 3 : 1;
+            if (!bulkUpdateEntry.Validate())
+                Assert.Fail(bulkUpdateEntry.GetValidationSummary());
+            bulkUpdateEntry.SaveButtonViewModel.Invoke();
+            var completionScreen = bulkUpdateDialog.Controller.UiItems.First() as CompletionScreenViewModel;
+            Assert.IsNotNull(completionScreen);
+            completionScreen.CompletionDetails.LoadFormSections();
+            Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkReplaceResponse.ResponseItems)).GetGridRecords(false).Records.Any());
             completionScreen.CompletionDetails.CancelButtonViewModel.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }

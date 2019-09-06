@@ -142,6 +142,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                 var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
                 var request = new BulkUpdateRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                request.AllowExecuteMultiples = RecordService.SupportsExecuteMultiple;
                 var bulkUpdateDialog = new BulkUpdateDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
                 base.LoadChildForm(bulkUpdateDialog);
             });
@@ -161,6 +162,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                 var recordsToUpdate = GetRecordsToProcess(selectedOnly);
 
                 var request = new BulkReplaceRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                request.AllowExecuteMultiples = RecordService.SupportsExecuteMultiple;
                 var bulkReplaceDialog = new BulkReplaceDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
                 LoadChildForm(bulkReplaceDialog);
             });
@@ -205,8 +207,8 @@ namespace JosephM.Application.Desktop.Module.Crud
             ApplicationController.DoOnAsyncThread(() =>
             {
                 var recordsToUpdate = GetRecordsToProcess(selectedOnly);
-
                 var request = new BulkDeleteRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                request.AllowExecuteMultiples = RecordService.SupportsExecuteMultiple;
                 var bulkUpdateDialog = new BulkDeleteDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
                 LoadChildForm(bulkUpdateDialog);
             });
@@ -217,8 +219,8 @@ namespace JosephM.Application.Desktop.Module.Crud
             ApplicationController.DoOnAsyncThread(() =>
             {
                 var recordsToUpdate = GetRecordsToProcess(selectedOnly);
-
                 var request = new BulkCopyFieldValueRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                request.AllowExecuteMultiples = RecordService.SupportsExecuteMultiple;
                 var bulkUpdateDialog = new BulkCopyFieldValueDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
                 LoadChildForm(bulkUpdateDialog);
             });

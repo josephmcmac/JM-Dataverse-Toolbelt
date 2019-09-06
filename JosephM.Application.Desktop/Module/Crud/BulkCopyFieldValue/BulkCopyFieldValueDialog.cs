@@ -12,5 +12,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue
             : base(new BulkCopyFieldValueService(recordService), dialogController, recordService, request, onClose)
         {
         }
+
+        public override bool DisplayResponseDuringServiceRequestExecution => true;
     }
 }

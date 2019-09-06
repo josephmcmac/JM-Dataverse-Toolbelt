@@ -83,6 +83,7 @@
     <Compile Include="StringExtentionsTests.cs" />
     <Compile Include="TestClasses.cs" />
     <Compile Include="AppConfigManagerTests.cs" />
+    <Compile Include="VersionHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">

@@ -49,6 +49,12 @@ namespace JosephM.Record.IService
         IEnumerable<IRecord> GetLinkedRecords(string linkedRecordType, string recordTypeFrom, string linkedRecordLookup,
             string recordFromId);
 
+        IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate);
+
+        IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete);
+
+        IEnumerable<IRecord> GetMultiple(string recordType, IEnumerable<string> ids, IEnumerable<string> fields);
+
         /// <summary>
         ///     Returns All Records Linked To A Record By A Lookup Field
         /// </summary>
@@ -192,5 +198,7 @@ namespace JosephM.Record.IService
         void LoadFieldsForAllEntities();
 
         void LoadRelationshipsForAllEntities();
+
+        bool SupportsExecuteMultiple { get; }
     }
 }

@@ -12,5 +12,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
             : base(new BulkDeleteService(recordService), dialogController, recordService, request, onClose)
         {
         }
+
+        public override bool DisplayResponseDuringServiceRequestExecution => true;
     }
 }

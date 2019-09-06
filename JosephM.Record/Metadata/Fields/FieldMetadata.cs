@@ -121,6 +121,9 @@ namespace JosephM.Record.Metadata
                 var minimumAttribute = propertyInfo.GetCustomAttribute<MinimumIntValue>();
                 if (minimumAttribute != null)
                     fm.MinValue = minimumAttribute.Value;
+                var maximumAttribute = propertyInfo.GetCustomAttribute<MaximumIntValue>();
+                if (maximumAttribute != null)
+                    fm.MaxValue = maximumAttribute.Value;
             }
             else if (type == typeof(Lookup))
                 fm = new LookupFieldMetadata(recordType, internalName, label, null);

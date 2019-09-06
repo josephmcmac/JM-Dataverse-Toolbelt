@@ -1,11 +1,7 @@
-﻿#region
-
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
-
-#endregion
 
 namespace JosephM.Core.Test
 {

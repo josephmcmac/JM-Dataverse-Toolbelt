@@ -2,6 +2,7 @@
 using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
+using JosephM.Core.Utility;
 using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
@@ -1815,6 +1816,25 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             return ((RetrieveResponse)Execute(request)).Entity;
         }
 
+        public IEnumerable<Entity> RetrieveMultiple(string recordType, IEnumerable<Guid> ids, IEnumerable<string> fields)
+        {
+            var responses = ExecuteMultiple(ids
+                .Select(id => new RetrieveRequest()
+                    {
+                        Target = new EntityReference(recordType, id),
+                        ColumnSet = CreateColumnSet(fields)
+                    }).ToArray());
+
+            foreach(var item in responses.Cast<ExecuteMultipleResponseItem>())
+            {
+                if (item.Fault != null)
+                    throw new FaultException<OrganizationServiceFault>(item.Fault);
+
+                yield return ((RetrieveResponse)item.Response).Entity;
+            }
+
+        }
+
         public EntityCollection RetrieveMultiple(QueryBase query)
         {
             var request = new RetrieveMultipleRequest
@@ -2284,6 +2304,14 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 {
                     _allRelationshipMetadata = value;
                 }
+            }
+        }
+
+        public bool SupportsExecuteMultiple
+        {
+            get
+            {
+                return VersionHelper.IsNewerVersion(OrganisationVersion, "5.0.9690.3235");
             }
         }
 
@@ -3143,7 +3171,7 @@ string recordType)
 
                 request.Requests.Add(organizationRequest);
                 currentSetSize++;
-                if (currentSetSize == 50 || i == requestsArrayCount - 1)
+                if (currentSetSize == 1000 || i == requestsArrayCount - 1)
                 {
                     var response = (ExecuteMultipleResponse)Execute(request);
                     foreach (var r in response.Responses)

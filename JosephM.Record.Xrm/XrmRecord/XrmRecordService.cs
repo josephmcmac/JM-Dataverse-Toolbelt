@@ -17,6 +17,7 @@ using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Xml;
 
 namespace JosephM.Record.Xrm.XrmRecord
@@ -156,6 +157,23 @@ namespace JosephM.Record.Xrm.XrmRecord
                 _xrmService.Update(ToEntity(record), changedPersistentFields);
         }
 
+        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate)
+        {
+            var result = new Dictionary<int, Exception>();
+
+            var response = XrmService.UpdateMultiple(ToEntities(updateRecords), fieldsToUpdate);
+            var i = 0;
+            foreach (var item in response)
+            {
+                if (item.Fault != null)
+                {
+                    result.Add(i, new FaultException<OrganizationServiceFault>(item.Fault));
+                }
+                i++;
+            }
+            return result;
+        }
+
         public string GetLookupTargetType(string field, string recordType)
         {
             return _xrmService.GetLookupTargetEntity(field, recordType);
@@ -179,6 +197,11 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             var record = XrmService.GetFirst(recordType, XrmService.GetPrimaryKeyField(recordType), new Guid(id));
             return record == null ? null : ToIRecord(_xrmService.Retrieve(recordType, new Guid(id)));
+        }
+
+        public IEnumerable<IRecord> GetMultiple(string recordType, IEnumerable<string> ids, IEnumerable<string> fields)
+        {
+            return ToIRecords(XrmService.RetrieveMultiple(recordType, ids.Select(s => new Guid(s)), fields));
         }
 
 
@@ -235,6 +258,23 @@ namespace JosephM.Record.Xrm.XrmRecord
         public void Delete(string recordType, string id)
         {
             _xrmService.Delete(recordType, new Guid(id));
+        }
+
+        public IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete)
+        {
+            var result = new Dictionary<int, Exception>();
+
+            var response = XrmService.DeleteMultiple(ToEntities(recordsToDelete));
+            var i = 0;
+            foreach (var item in response)
+            {
+                if (item.Fault != null)
+                {
+                    result.Add(i, new FaultException<OrganizationServiceFault>(item.Fault));
+                }
+                i++;
+            }
+            return result;
         }
 
         public IEnumerable<IRecord> GetFirstX(string recordType, int x, IEnumerable<Condition> conditions,
@@ -327,7 +367,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         private object ToRecordField(object originalValue, string fieldName, string recordType)
         {
             var newValue = originalValue;
-            if(originalValue is AliasedValue aliased)
+            if (originalValue is AliasedValue aliased)
             {
                 return ToRecordField(aliased.Value, fieldName.Split('.')[1], aliased.EntityLogicalName);
             }
@@ -385,7 +425,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         private IEnumerable<Entity> ToEntities(IEnumerable<IRecord> iRecords)
         {
-            return iRecords != null ? iRecords.Select(ToEntity) : null;
+            return iRecords != null ? iRecords.Select(ToEntity).ToArray() : null;
         }
 
         private Entity ToEntity(IRecord iRecord)
@@ -761,7 +801,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                                     {
                                         //exclude where null or where a linked field
                                         //linked fields in view not implemented in UI
-                                        if (item.Attributes["name"] == null 
+                                        if (item.Attributes["name"] == null
                                             || item.Attributes["width"] == null
                                             || item.Attributes["name"].Value == null
                                             || item.Attributes["name"].Value.Contains(".")
@@ -938,19 +978,6 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             return _xrmService.GetSharedOptionSetKeyValues(name)
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value));
-        }
-
-        public IEnumerable<IsValidResponse> UpdateMultiple(List<IRecord> recordsToUpdate,
-            IEnumerable<string> fieldsToUpdate)
-        {
-            return _xrmService.UpdateMultiple(recordsToUpdate.Select(ToEntity), fieldsToUpdate)
-                .Select(r =>
-                {
-                    var isValid = new IsValidResponse();
-                    if (r.Fault != null)
-                        isValid.AddInvalidReason(r.Fault.Message);
-                    return isValid;
-                });
         }
 
         private IEnumerable<OrderExpression> ToOrderExpressions(IEnumerable<SortExpression> sortExpressions)
@@ -1198,7 +1225,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             link.JoinOperator = new JoinTypeMapper().Map(join.JoinType);
             link.EntityAlias = join.Alias;
-            if(join.Fields != null && join.Fields.Any())
+            if (join.Fields != null && join.Fields.Any())
             {
                 link.Columns = new ColumnSet(join.Fields.ToArray());
             }
@@ -1208,7 +1235,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
             if (join.Joins != null)
             {
-                foreach(var childJoin in join.Joins)
+                foreach (var childJoin in join.Joins)
                 {
                     var childLink = link.AddLink(childJoin.TargetType, childJoin.SourceField, childJoin.TargetField);
                     MapIntoLink(childLink, childJoin);
@@ -1610,6 +1637,14 @@ namespace JosephM.Record.Xrm.XrmRecord
             if (!results.Any())
                 results.Add(XrmService.GetPrimaryNameField(recordType));
             return results;
+        }
+
+        public bool SupportsExecuteMultiple
+        {
+            get
+            {
+                return XrmService.SupportsExecuteMultiple;
+            }
         }
 
         public class DeleteInCrmResponse

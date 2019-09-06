@@ -33,6 +33,14 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
         {
         }
 
+        public virtual bool DisplayResponseDuringServiceRequestExecution
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public ServiceRequestDialog(TService service, IDialogController dialogController, IRecordService lookupService, TRequest request = null, Action onClose = null, string nextButtonLabel = null)
             : base(dialogController)
         {
@@ -93,10 +101,17 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             IsProcessing = true;
 
             var progressControlViewModel = new ProgressControlViewModel(ApplicationController);
+
+            Response = new TResponse();
+            Response.HideResponseItems = true;
+            if (DisplayResponseDuringServiceRequestExecution)
+                progressControlViewModel.SetDetailObject(Response);
+
+
             Controller.LoadToUi(progressControlViewModel);
             LogController = progressControlViewModel.CreateLogControllerFor();
             var serviceRequestController = new ServiceRequestController(LogController, (o) => progressControlViewModel.SetDetailObject(o), (o) => progressControlViewModel.ClearDetailObject());
-            Response = Service.Execute(Request, serviceRequestController);
+            Response = Service.Execute(Request, serviceRequestController, response: Response);
 
             CompletionItem = Response;
 
@@ -104,6 +119,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
                 ProcessCompletionExtention();
 
             Controller.RemoveFromUi(progressControlViewModel);
+            Response.HideResponseItems = false;
 
             IsProcessing = false;
         }

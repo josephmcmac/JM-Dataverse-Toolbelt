@@ -2,6 +2,7 @@
 using JosephM.Core.Extentions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace JosephM.Core.Service
@@ -12,6 +13,7 @@ namespace JosephM.Core.Service
         where TResponseItem : ServiceResponseItem
     {
         private readonly List<TResponseItem> _errors = new List<TResponseItem>();
+        private bool _hideResponseItems;
 
         public ServiceResponseBase()
         {
@@ -58,10 +60,21 @@ namespace JosephM.Core.Service
             }
         }
 
+        [Hidden]
+        public bool HideResponseItems
+        {
+            get { return _hideResponseItems; }
+            set
+            {
+                _hideResponseItems = value;
+            }
+        }
+
         [AllowDownload]
         [Group(Sections.ResponseItems)]
         [DisplayOrder(20)]
         [PropertyInContextByPropertyValue(nameof(HasResponseItems), true)]
+        [PropertyInContextByPropertyValue(nameof(HideResponseItems), false)]
         public IEnumerable<TResponseItem> ResponseItems
         {
             get { return _errors; }
@@ -103,6 +116,13 @@ namespace JosephM.Core.Service
         {
             public const string Message = "Message";
             public const string ResponseItems = "Response Items";
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

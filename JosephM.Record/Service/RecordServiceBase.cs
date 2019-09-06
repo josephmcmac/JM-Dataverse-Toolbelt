@@ -365,5 +365,52 @@ namespace JosephM.Record.Service
         public void LoadRelationshipsForAllEntities()
         {
         }
+
+        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate)
+        {
+            var result = new Dictionary<int, Exception>();
+
+            var i = 0;
+            foreach (var item in updateRecords)
+            {
+                try
+                {
+                    Update(item, fieldsToUpdate);
+                }
+                catch (Exception ex)
+                {
+                    result.Add(i, ex);
+                }
+                i++;
+            }
+            return result;
+        }
+
+        public IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete)
+        {
+            var result = new Dictionary<int, Exception>();
+
+            var i = 0;
+            foreach (var item in recordsToDelete)
+            {
+                try
+                {
+                    Delete(item.Type, item.Id);
+                }
+                catch (Exception ex)
+                {
+                    result.Add(i, ex);
+                }
+                i++;
+            }
+            return result;
+        }
+
+        public IEnumerable<IRecord> GetMultiple(string recordType, IEnumerable<string> ids, IEnumerable<string> fields)
+        {
+            return ids.Select(id => Get(recordType, id)).ToArray();
+        }
+
+        public virtual bool SupportsExecuteMultiple { get { return false; } }
     }
 }

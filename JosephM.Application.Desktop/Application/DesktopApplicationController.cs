@@ -1,8 +1,8 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Application.Desktop.Shared;
 using JosephM.Application.ViewModel.Notification;
 using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.AppConfig;
+using JosephM.Core.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

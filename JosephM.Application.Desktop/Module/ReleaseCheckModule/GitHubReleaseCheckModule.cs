@@ -1,10 +1,10 @@
 ﻿using JosephM.Application.Desktop.Module.Settings;
-using JosephM.Application.Desktop.Shared;
 using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.Serialisation;
+using JosephM.Core.Utility;
 using System;
 using System.IO;
 using System.Net;

@@ -99,6 +99,7 @@
     <Compile Include="Attributes\IncludeManyToManyIntersects.cs" />
     <Compile Include="Attributes\ISelectable.cs" />
     <Compile Include="Attributes\Instruction.cs" />
+    <Compile Include="Attributes\MaximumIntValue.cs" />
     <Compile Include="Attributes\MinimumIntValue.cs" />
     <Compile Include="Attributes\MyDescription.cs" />
     <Compile Include="Attributes\DisplayNameForPropertyValue.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="AppConfig\AppConfigManager.cs" />
     <Compile Include="Log\LogController.cs" />
     <Compile Include="Utility\TaskEstimator.cs" />
+    <Compile Include="Utility\VersionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="JosephM.snk" />

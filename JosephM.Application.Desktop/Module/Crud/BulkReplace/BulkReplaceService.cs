@@ -4,6 +4,8 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
 {
@@ -23,26 +25,74 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
             var countUpdated = 0;
             controller.UpdateProgress(0, countToUpdate, "Executing Replacements");
             var estimator = new TaskEstimator(countToUpdate);
-            foreach (var record in request.GetRecordsToUpdate())
+
+            var recordsRemaining = request.GetRecordsToUpdate().ToList();
+            while (recordsRemaining.Any())
             {
                 controller.UpdateProgress(countUpdated, countToUpdate, estimator.GetProgressString(countUpdated, taskName: "Executing Replacements"));
-                try
+
+                var thisSetOfRecords = recordsRemaining
+                    .Take(request.ExecuteMultipleSetSize ?? 50)
+                    .ToList();
+
+                recordsRemaining.RemoveRange(0, thisSetOfRecords.Count);
+
+                var thisSetOfRecordsNew = RecordService.GetMultiple(thisSetOfRecords.First().Type,
+                    thisSetOfRecords.Select(r => r.Id),
+                    new[] { request.FieldToReplaceIn.Key })
+                    .ToArray();
+
+                var recordsToUpdate = new List<IRecord>();
+                foreach (var record in thisSetOfRecordsNew)
                 {
-                    var recordWithFieldLoaded = RecordService.Get(request.RecordType.Key, record.Id);
-                    var previousValue = recordWithFieldLoaded.GetStringField(request.FieldToReplaceIn.Key);
-                    var newValue = previousValue == null ? null : previousValue.Replace(request.OldValue, request.NewValue);
-                    if(previousValue != newValue)
+                    try
                     {
-                        recordWithFieldLoaded.SetField(request.FieldToReplaceIn.Key, newValue, RecordService);
-                        RecordService.Update(recordWithFieldLoaded, new[] { request.FieldToReplaceIn.Key });
+                        var previousValue = record.GetStringField(request.FieldToReplaceIn.Key);
+                        var newValue = previousValue == null ? null : previousValue.Replace(request.OldValue, request.NewValue);
+                        if (previousValue != newValue)
+                        {
+                            record.SetField(request.FieldToReplaceIn.Key, newValue, RecordService);
+                            recordsToUpdate.Add(record);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        response.AddResponseItem(new BulkReplaceResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
                     }
                 }
-                catch(Exception ex)
+
+                var errorsThisIteration = 0;
+
+                //old versions dont have execute multiple so if 1 then do each request
+                if (recordsToUpdate.Count() == 1)
                 {
-                    response.AddResponseItem(new BulkReplaceResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
+                    var record = recordsToUpdate.First();
+                    try
+                    {
+                        RecordService.Update(record, new[] { request.FieldToReplaceIn.Key });
+                    }
+                    catch (Exception ex)
+                    {
+                        response.AddResponseItem(new BulkReplaceResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
+                    }
                 }
-                countUpdated++;
+                else
+                {
+                    var multipleResponse = RecordService.UpdateMultiple(recordsToUpdate, new[] { request.FieldToReplaceIn.Key });
+                    foreach (var item in multipleResponse)
+                    {
+                        var originalRecord = recordsToUpdate[item.Key];
+                        response.AddResponseItem(new BulkReplaceResponseItem(originalRecord.Id, originalRecord.GetStringField(RecordService.GetPrimaryField(originalRecord.Type)), item.Value));
+                    }
+                    errorsThisIteration += multipleResponse.Count;
+                }
+
+                countUpdated += thisSetOfRecords.Count();
+                response.TotalRecordsProcessed = countUpdated;
+                response.TotalRecordsUpdated += recordsToUpdate.Count();
+                response.NumberOfErrors += errorsThisIteration;
             }
+
             controller.UpdateProgress(1, 1, "Replaces Completed");
             response.Message = "Replaces Completed";
         }
