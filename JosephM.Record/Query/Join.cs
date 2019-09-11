@@ -12,7 +12,7 @@ namespace JosephM.Record.Query
             RootFilter = new Filter();
             Sorts = new List<SortExpression>();
             Joins = new List<Join>();
-            JoinType = Query.JoinType.Inner;
+            JoinType = JoinType.Inner;
             Fields = new string[0];
         }
 

@@ -1243,7 +1243,6 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
             if (join.Sorts != null)
             {
-                var sortMapper = new SortTypeMapper();
                 link.Orders.AddRange(ToOrderExpressions(join.Sorts));
             }
         }

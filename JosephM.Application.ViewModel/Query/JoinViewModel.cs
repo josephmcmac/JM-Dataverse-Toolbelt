@@ -202,10 +202,22 @@ namespace JosephM.Application.ViewModel.Query
             var selected = SelectedItem?.Key;
             if (selected == null)
                 return null;
-            Join join = new ParsedSelection(selected, RecordType, RecordService).GetAsJoin();
-            join.RootFilter = FilterConditions.GetAsFilter();
-            var childJoins = Joins != null ? Joins.GetAsJoins() : new Join[0];
-            join.Joins = childJoins.ToList();
+            var join = new ParsedSelection(selected, RecordType, RecordService).GetAsJoin();
+            if (join.Joins.Any())
+            {
+                //if this is an nn relationship then ther will be a child join to the actual target
+                var otherSideTarget = join.Joins.First();
+                otherSideTarget.RootFilter = FilterConditions.GetAsFilter();
+                var childJoins = Joins != null ? Joins.GetAsJoins() : new Join[0];
+                otherSideTarget.Joins = childJoins.ToList();
+            }
+            else
+            {
+                //else the join is to the target
+                join.RootFilter = FilterConditions.GetAsFilter();
+                var childJoins = Joins != null ? Joins.GetAsJoins() : new Join[0];
+                join.Joins = childJoins.ToList();
+            }
             return join;
         }
 
