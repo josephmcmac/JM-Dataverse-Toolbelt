@@ -795,6 +795,8 @@ namespace JosephM.Application.ViewModel.Query
                     }
                     _recordType = value;
                     ClearNotInIds();
+                    if (IncludeNotIn)
+                        NotInSwitch();
                     ExplicitlySelectedColumns = null;
                     if (_recordType != null && AllowQuery)
                     {
