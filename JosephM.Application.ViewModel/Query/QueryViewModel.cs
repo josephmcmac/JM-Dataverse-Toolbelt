@@ -363,19 +363,27 @@ namespace JosephM.Application.ViewModel.Query
             {
                 if (_cachedNotinIds == null)
                 {
-                    _notInQueryStartTime = DateTime.UtcNow;
-                    _cachedNotinIds = new HashSet<string>();
-                    var notInQuery = GenerateNotInQuery();
-                    var loadingVm = DynamicGridViewModel.LoadingViewModel;
-                    DynamicGridViewModel.RecordService.ProcessResults(notInQuery, (r) =>
+                    try
                     {
-                        foreach (var item in r)
-                            _cachedNotinIds.Add(item.Id);
+                        _notInQueryStartTime = DateTime.UtcNow;
+                        _cachedNotinIds = new HashSet<string>();
+                        var notInQuery = GenerateNotInQuery();
+                        var loadingVm = DynamicGridViewModel.LoadingViewModel;
+                        DynamicGridViewModel.RecordService.ProcessResults(notInQuery, (r) =>
+                        {
+                            foreach (var item in r)
+                                _cachedNotinIds.Add(item.Id);
+                            if (loadingVm != null)
+                                loadingVm.LoadingMessage = "Loading Not In Ids - " + _cachedNotinIds.Count;
+                        });
                         if (loadingVm != null)
-                            loadingVm.LoadingMessage = "Loading Not In Ids - " + _cachedNotinIds.Count;
-                    });
-                    if (loadingVm != null)
-                        loadingVm.LoadingMessage = "Please Wait While Loading";
+                            loadingVm.LoadingMessage = "Please Wait While Loading";
+                    }
+                    catch(Exception)
+                    {
+                        ClearNotInIds();
+                        throw;
+                    }
                 }
                 notInQueryStartTime = _notInQueryStartTime ?? DateTime.UtcNow;
                 return _cachedNotinIds;
@@ -786,6 +794,7 @@ namespace JosephM.Application.ViewModel.Query
                         var fieldNames = Task.Run(() => RecordService.GetFields(value)).Result;
                     }
                     _recordType = value;
+                    ClearNotInIds();
                     ExplicitlySelectedColumns = null;
                     if (_recordType != null && AllowQuery)
                     {
