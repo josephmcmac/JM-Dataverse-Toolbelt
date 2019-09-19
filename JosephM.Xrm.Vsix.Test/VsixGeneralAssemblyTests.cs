@@ -86,7 +86,7 @@ namespace JosephM.Xrm.Vsix.Test
             pluginGrid = deployEntryForm.GetEnumerableFieldViewModel(nameof(DeployAssemblyRequest.PluginTypes));
             //verify correct plugin types
             Assert.AreEqual(4, pluginGrid.GridRecords.Count);
-            Assert.AreEqual(2, pluginGrid.GridRecords.Count(p => p.GetBooleanFieldFieldViewModel(nameof(PluginType.IsDeployed)).Value));
+            Assert.AreEqual(2, pluginGrid.GridRecords.Count(p => p.GetBooleanFieldFieldViewModel(nameof(PluginType.IsDeployed)).Value ?? false));
             Assert.AreEqual(2, pluginGrid.GridRecords.Count(p => p.GetRecord().GetBoolField(nameof(PluginType.IsWorkflowActivity))));
             Assert.AreEqual(2, pluginGrid.GridRecords.Count(p => !p.GetRecord().GetBoolField(nameof(PluginType.IsWorkflowActivity))));
 

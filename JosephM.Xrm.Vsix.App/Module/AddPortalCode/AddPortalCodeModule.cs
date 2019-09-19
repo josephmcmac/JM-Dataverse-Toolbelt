@@ -29,7 +29,7 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                 {
                     case nameof(AddPortalCodeRequest.PortalRecordsToExport.IncludeAll):
                         {
-                            if (!revm.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.IncludeAll)).Value)
+                            if (!revm.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.IncludeAll)).Value ?? false)
                             {
                                 var parentForm = revm.ParentForm;
                                 if (parentForm == null)
