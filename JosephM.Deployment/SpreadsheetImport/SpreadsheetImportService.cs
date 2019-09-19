@@ -3,6 +3,7 @@ using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
@@ -51,8 +52,23 @@ namespace JosephM.Deployment.SpreadsheetImport
             {
                 response.AddEntities(MapToEntities(mapping.Value, mapping.Key, response, useAmericanDates));
             }
-            PopulateEmptyNameFields(response.GetParsedEntities());
+            var entities = response.GetParsedEntities();
+            PopulateEmptyNameFields(entities);
+            PopulateIds(entities);
             return response;
+        }
+
+        private void PopulateIds(IEnumerable<Entity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                var primaryKeyField = XrmRecordService.GetPrimaryKey(entity.LogicalName);
+                if(primaryKeyField != null)
+                {
+                    var primarykey = entity.GetGuidField(primaryKeyField);
+                    entity.Id = primarykey;
+                }
+            }
         }
 
         private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, ParseIntoEntitiesResponse response, bool useAmericanDates)
