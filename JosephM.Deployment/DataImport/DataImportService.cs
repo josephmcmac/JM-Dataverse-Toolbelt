@@ -397,6 +397,7 @@ namespace JosephM.Deployment.DataImport
                                 var copyEntity = XrmEntity.ReplicateToNewEntity(entity);
                                 copyEntity.Id = entity.Id;
                                 copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Except(fieldsToSet));
+                                copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Where(f => copyEntity.GetField(f) == null));
                                 forCreateEntitiesCopy.Add(copyEntity, entity);
                             }
                             else
@@ -418,7 +419,7 @@ namespace JosephM.Deployment.DataImport
                                 {
                                     var copyEntity = XrmEntity.ReplicateToNewEntity(entity);
                                     copyEntity.Id = entity.Id;
-                                    copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Except(fieldsToSet));
+                                    copyEntity.RemoveFields(copyEntity.GetFieldsInEntity().Except(fieldsToSetWhichAreChanged));
                                     forUpdateEntitiesCopy.Add(copyEntity, entity);
                                 }
                                 else
