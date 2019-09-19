@@ -49,7 +49,7 @@ namespace JosephM.Record.IService
         IEnumerable<IRecord> GetLinkedRecords(string linkedRecordType, string recordTypeFrom, string linkedRecordLookup,
             string recordFromId);
 
-        IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate);
+        IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null);
 
         IDictionary<int, Exception> DeleteMultiple(IEnumerable<IRecord> recordsToDelete);
 

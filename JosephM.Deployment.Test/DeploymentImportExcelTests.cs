@@ -284,25 +284,6 @@ namespace JosephM.Deployment.Test
             Assert.IsTrue(completionScreen.ImportSummary.All(i => i.Created == 0 && i.Updated == 0));
         }
 
-        private void ClearSavedRequests(TestApplication app, RecordEntryFormViewModel entryViewmodel)
-        {
-            if (entryViewmodel.CustomFunctions.Any(cb => cb.Id == "LOADREQUEST"))
-            {
-                var loadRequestButton = entryViewmodel.GetButton("LOADREQUEST");
-                loadRequestButton.Invoke();
-                //enter and save details
-                var saveRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
-                var requestsGrid = saveRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
-                foreach (var item in requestsGrid.GridRecords.ToArray())
-                {
-                    requestsGrid.DynamicGridViewModel.DeleteRow(item);
-                }
-                saveRequestForm.SaveButtonViewModel.Invoke();
-                Assert.IsFalse(entryViewmodel.ChildForms.Any());
-                Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
-            }
-        }
-
         private static void SaveWithAutoload(Application.Desktop.Test.TestApplication app, Application.ViewModel.RecordEntry.Form.RecordEntryFormViewModel entryViewmodel)
         {
             var saveRequestButton = entryViewmodel.GetButton("SAVEREQUEST");

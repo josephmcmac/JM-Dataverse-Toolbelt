@@ -157,7 +157,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 _xrmService.Update(ToEntity(record), changedPersistentFields);
         }
 
-        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate)
+        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null)
         {
             var result = new Dictionary<int, Exception>();
 
@@ -167,7 +167,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 if (item.Fault != null)
                 {
-                    result.Add(i, new FaultException<OrganizationServiceFault>(item.Fault));
+                    result.Add(i, new FaultException<OrganizationServiceFault>(item.Fault, item.Fault.Message));
                 }
                 i++;
             }
@@ -270,7 +270,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 if (item.Fault != null)
                 {
-                    result.Add(i, new FaultException<OrganizationServiceFault>(item.Fault));
+                    result.Add(i, new FaultException<OrganizationServiceFault>(item.Fault, item.Fault.Message));
                 }
                 i++;
             }
@@ -1243,6 +1243,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
             if (join.Sorts != null)
             {
+                var sortMapper = new SortTypeMapper();
                 link.Orders.AddRange(ToOrderExpressions(join.Sorts));
             }
         }
@@ -1588,6 +1589,11 @@ namespace JosephM.Record.Xrm.XrmRecord
                 {
                     Type = Entities.annotation,
                     UniqueChildFields = new [] { Fields.annotation_.objectid, Fields.annotation_.subject, Fields.annotation_.filename }
+                },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.knowledgearticle,
+                    UniqueChildFields = new [] { Fields.knowledgearticle_.articlepublicnumber, Fields.knowledgearticle_.minorversionnumber, Fields.knowledgearticle_.majorversionnumber, Fields.knowledgearticle_.isrootarticle, Fields.knowledgearticle_.languagelocaleid }
                 },
         });
         public TypeConfigs GetTypeConfigs()

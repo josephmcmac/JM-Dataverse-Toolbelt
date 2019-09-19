@@ -1831,7 +1831,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             foreach(var item in responses.Cast<ExecuteMultipleResponseItem>())
             {
                 if (item.Fault != null)
-                    throw new FaultException<OrganizationServiceFault>(item.Fault);
+                    throw new FaultException<OrganizationServiceFault>(item.Fault, item.Fault.Message);
 
                 yield return ((RetrieveResponse)item.Response).Entity;
             }
@@ -3137,7 +3137,7 @@ string recordType)
             IEnumerable<string> fields)
         {
             var responses = ExecuteMultiple(entities
-                .Select(e => ReplicateWithFields(e, fields))
+                .Select(e => fields == null ? e : ReplicateWithFields(e, fields))
                 .Select(e => new UpdateRequest() { Target = e }));
 
             return responses.ToArray();
@@ -3158,30 +3158,33 @@ string recordType)
             return response.ToArray();
         }
 
-        private IEnumerable<ExecuteMultipleResponseItem> ExecuteMultiple(IEnumerable<OrganizationRequest> requests)
+        public IEnumerable<ExecuteMultipleResponseItem> ExecuteMultiple(IEnumerable<OrganizationRequest> requests)
         {
             var responses = new List<ExecuteMultipleResponseItem>();
-
-            var requestsArray = requests.ToArray();
-            var requestsArrayCount = requestsArray.Count();
-
-            var request = CreateExecuteMultipleRequest();
-
-            var currentSetSize = 0;
-            for (var i = 0; i < requestsArrayCount; i++)
+            if (requests.Any())
             {
-                var organizationRequest = requestsArray.ElementAt(i);
 
-                request.Requests.Add(organizationRequest);
-                currentSetSize++;
-                if (currentSetSize == 1000 || i == requestsArrayCount - 1)
+                var requestsArray = requests.ToArray();
+                var requestsArrayCount = requestsArray.Count();
+
+                var request = CreateExecuteMultipleRequest();
+
+                var currentSetSize = 0;
+                for (var i = 0; i < requestsArrayCount; i++)
                 {
-                    var response = (ExecuteMultipleResponse)Execute(request);
-                    foreach (var r in response.Responses)
-                        r.RequestIndex = i - currentSetSize + r.RequestIndex + 1;
-                    responses.AddRange(response.Responses);
-                    request = CreateExecuteMultipleRequest();
-                    currentSetSize = 0;
+                    var organizationRequest = requestsArray.ElementAt(i);
+
+                    request.Requests.Add(organizationRequest);
+                    currentSetSize++;
+                    if (currentSetSize == 1000 || i == requestsArrayCount - 1)
+                    {
+                        var response = (ExecuteMultipleResponse)Execute(request);
+                        foreach (var r in response.Responses)
+                            r.RequestIndex = i - currentSetSize + r.RequestIndex + 1;
+                        responses.AddRange(response.Responses);
+                        request = CreateExecuteMultipleRequest();
+                        currentSetSize = 0;
+                    }
                 }
             }
             return responses;

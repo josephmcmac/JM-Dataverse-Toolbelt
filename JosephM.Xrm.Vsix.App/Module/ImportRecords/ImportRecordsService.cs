@@ -1,9 +1,7 @@
-﻿using JosephM.Core.Log;
-using JosephM.Core.Service;
+﻿using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ImportXml;
 using JosephM.Record.Xrm.XrmRecord;
-using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {
@@ -17,7 +15,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportRecords
             var xrmRecordService = new XrmRecordService(request.Connection);
             var service = new ImportXmlService(xrmRecordService);
             var importXmlResponse = new ImportXmlResponse();
-            service.ImportXml(request, controller, importXmlResponse);
+            service.ImportXml(request, controller, importXmlResponse, executeMultipleSetSize: 10, targetCacheLimit: 200);
             response.LoadDataImport(importXmlResponse);
         }
     }

@@ -36,8 +36,8 @@ namespace JosephM.Deployment.MigrateRecords
             }
 
             var importService = new DataImportService(new XrmRecordService(request.TargetConnection));
-            var matchOption = request.MatchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly;
-            var dataImportResponse = importService.DoImport(removeDuplicates, controller, request.MaskEmails, matchOption: matchOption, includeOwner: request.IncludeOwner);
+            var matchOption = request.MatchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly;
+            var dataImportResponse = importService.DoImport(removeDuplicates, controller, request.MaskEmails, matchOption: matchOption, includeOwner: request.IncludeOwner, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
             response.ConnectionMigratedInto = request.TargetConnection;
             response.LoadDataImport(dataImportResponse);
             response.Message = "The Record Migration Has Completed";

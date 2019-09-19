@@ -33,7 +33,7 @@ namespace JosephM.Deployment.ImportSql
                 controller.Controller.UpdateProgress(0, 1, "Loading Records For Import");
                 var dictionary = LoadMappingDictionary(request);
                 var importService = new SpreadsheetImportService(XrmRecordService);
-                var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller);
+                var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
                 response.Connection = XrmRecordService.XrmRecordConfiguration;
                 response.LoadSpreadsheetImport(responseItems);
                 response.Message = "The Import Process Has Completed";

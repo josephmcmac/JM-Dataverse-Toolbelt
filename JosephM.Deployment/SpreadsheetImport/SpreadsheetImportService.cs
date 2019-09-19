@@ -24,7 +24,7 @@ namespace JosephM.Deployment.SpreadsheetImport
         public XrmRecordService XrmRecordService { get; }
         public IApplicationController ApplicationController { get; }
 
-        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, bool useAmericanDates = false)
+        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null)
         {
             var response = new SpreadsheetImportResponse();
             var parseResponse = ParseIntoEntities(mappings, useAmericanDates: useAmericanDates);
@@ -40,7 +40,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                     matchKeyDictionary.Add(map.TargetType, map.AltMatchKeys.Select(mk => mk.TargetField).ToArray());
                 }
             }
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, updateOnly: updateOnly, includeOwner: true, containsExportedConfigFields: false));
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, updateOnly: updateOnly, includeOwner: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit));
             return response;
         }
 

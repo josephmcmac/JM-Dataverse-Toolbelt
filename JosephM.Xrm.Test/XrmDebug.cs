@@ -12,6 +12,16 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+            var typesToDelete = new[]
+            {
+                Entities.jmcg_testentity,
+                Entities.account,
+                Entities.contact
+            };
+            foreach (var type in typesToDelete)
+                XrmService.DeleteMultiple(XrmService.RetrieveAllEntityType(type));
+
+
             //var blah = XrmService.WhoAmI();
             //var eh = XrmConfiguration.OrganizationUniqueName;
 

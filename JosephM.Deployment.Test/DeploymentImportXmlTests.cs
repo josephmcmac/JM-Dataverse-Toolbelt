@@ -4,6 +4,7 @@ using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
+using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ExportXml;
 using JosephM.Deployment.ImportCsvs;
 using JosephM.Deployment.ImportXml;
@@ -26,7 +27,7 @@ namespace JosephM.Deployment.Test
     public class DeploymentImportXmlTests : XrmModuleTest
     {
         /// <summary>
-        /// When creating mu;ltiple records during an import where multiple have the same name
+        /// When creating multiple records during an import where multiple have the same name
         /// verify each is created (they dont match to each other)
         /// </summary>
         [TestMethod]
@@ -82,7 +83,7 @@ namespace JosephM.Deployment.Test
         }
 
         /// <summary>
-        /// When creating mu;ltiple records during an import where multiple have the same name
+        /// When creating multiple records during an import where multiple have the same name
         /// verify each is created (they dont match to each other)
         /// </summary>
         [TestMethod]
@@ -727,7 +728,7 @@ namespace JosephM.Deployment.Test
         {
             PrepareTests();
 
-            var type = "knowledgearticle";
+            var type = Entities.knowledgearticle;
             if (XrmRecordService.RecordTypeExists(type))
             {
                 DeleteAll(type);
@@ -776,8 +777,8 @@ namespace JosephM.Deployment.Test
                     MaskEmails = true
                 };
                 var application = CreateAndLoadTestApplication<ImportXmlModule>();
-                var immportResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
-                Assert.IsFalse(immportResponse.HasError);
+                var importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+                Assert.IsFalse(importResponse.HasError);
                 Assert.AreEqual(kaCount, XrmService.RetrieveAllAndClauses(type, new[]
                 {
                     new ConditionExpression(Fields.knowledgearticle_.isrootarticle, ConditionOperator.Equal, false)
@@ -791,8 +792,8 @@ namespace JosephM.Deployment.Test
                     MaskEmails = true
                 };
                 application = CreateAndLoadTestApplication<ImportXmlModule>();
-                immportResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
-                Assert.IsFalse(immportResponse.HasError);
+                importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+                Assert.IsFalse(importResponse.HasError);
                 Assert.AreEqual(kaCount, XrmService.RetrieveAllAndClauses(type, new[]
                 {
                     new ConditionExpression(Fields.knowledgearticle_.isrootarticle, ConditionOperator.Equal, false)
@@ -822,13 +823,16 @@ namespace JosephM.Deployment.Test
 
         private IEnumerable<string> GetFields(string type, ImportXmlService importService)
         {
-            var fields = XrmService.GetFields(type).Where(f => importService.DataImportService.IsIncludeField(f, type));
+            var fields = XrmService
+                .GetFields(type)
+                .Where(f => DataImportContainer.IsIncludeField(f, type, importService.XrmRecordService, false));
+            fields = fields.Except(new[] { "statecode", "statuscode" }).ToArray();
             return fields;
         }
 
         private IEnumerable<string> GetUpdateFields(string type, ImportXmlService importService)
         {
-            var updateFields = XrmService.GetFields(type).Where(f => importService.DataImportService.IsIncludeField(f, type));
+            var updateFields = XrmService.GetFields(type).Where(f => DataImportContainer.IsIncludeField(f, type, importService.XrmRecordService, false));
             return updateFields;
         }
 

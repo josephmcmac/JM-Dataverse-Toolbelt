@@ -9,7 +9,7 @@ namespace JosephM.Deployment.MigrateRecords
     [Instruction("Records Will Be Queried From The Source Instance, Then Imported Into The Target Instance\n\nTurn The Match By Name Flag Off If You Want To Allow Mulitple Records Created With The Same Name. If Left On Each Record Will Check For A Record With The Same Name To Update, Otherwise Only Primary Key Will Be Matched. Note Several Types Including Knowledge Articles And Price List Items Will Always Check By Name/Id Due To Duplicate Key Constraints")]
     [AllowSaveAndLoad]
     [Group(Sections.Connections, true, 10)]
-    [Group(Sections.RecordTypesOptions, true, 30)]
+    [Group(Sections.ImportOptions, true, 30)]
     [Group(Sections.RecordTypes, true, order: 35, displayLabel: false)]
     public class MigrateRecordsRequest : ServiceRequestBase
     {
@@ -18,6 +18,8 @@ namespace JosephM.Deployment.MigrateRecords
             MatchByName = true;
             IncludeNNRelationshipsBetweenEntities = true;
             IncludeNotes = true;
+            ExecuteMultipleSetSize = 50;
+            TargetCacheLimit = 1000;
         }
 
         [MyDescription("The Connection Which Records Will Be Migrated From")]
@@ -36,14 +38,14 @@ namespace JosephM.Deployment.MigrateRecords
         public SavedXrmRecordConfiguration TargetConnection { get; set; }
 
         [GridWidth(110)]
-        [Group(Sections.RecordTypesOptions)]
-        [DisplayOrder(399)]
+        [Group(Sections.ImportOptions)]
+        [DisplayOrder(221)]
         [RequiredProperty]
         public bool IncludeOwner { get; set; }
 
         [GridWidth(110)]
         [MyDescription("If Set Any Email Addresses In Contact Or Account Records Will Be Rewritten To Fake Email Addresses")]
-        [Group(Sections.RecordTypesOptions)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(200)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
@@ -51,7 +53,7 @@ namespace JosephM.Deployment.MigrateRecords
         [GridWidth(110)]
         [MyDescription("If Set Any Notes Attached To Records Will Be Included In The Migration")]
         [DisplayOrder(205)]
-        [Group(Sections.RecordTypesOptions)]
+        [Group(Sections.ImportOptions)]
         [DisplayName("Include Attached Notes")]
         [RequiredProperty]
         public bool IncludeNotes { get; set; }
@@ -59,16 +61,30 @@ namespace JosephM.Deployment.MigrateRecords
         [GridWidth(110)]
         [MyDescription("If Set Any N:N Relationship Associations Between Records Being Migrated WIll Be Included In The Migration")]
         [DisplayOrder(210)]
-        [Group(Sections.RecordTypesOptions)]
+        [Group(Sections.ImportOptions)]
         [DisplayName("Include N:N Links Between Records")]
         [RequiredProperty]
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }
 
         [GridWidth(110)]
         [DisplayOrder(215)]
-        [Group(Sections.RecordTypesOptions)]
+        [Group(Sections.ImportOptions)]
         [RequiredProperty]
         public bool MatchByName { get; set; }
+
+        [Group(Sections.ImportOptions)]
+        [DisplayOrder(222)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(1000)]
+        public int? ExecuteMultipleSetSize { get; set; }
+
+        [Group(Sections.ImportOptions)]
+        [DisplayOrder(225)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(5000)]
+        public int? TargetCacheLimit { get; set; }
 
         [Group(Sections.RecordTypes)]
         [GridWidth(500)]
@@ -81,7 +97,7 @@ namespace JosephM.Deployment.MigrateRecords
         private static class Sections
         {
             public const string Connections = "Connections";
-            public const string RecordTypesOptions = "Record Types To Migrate";
+            public const string ImportOptions = "ImportOptions";
             public const string RecordTypes = "Record Types";
         }
     }

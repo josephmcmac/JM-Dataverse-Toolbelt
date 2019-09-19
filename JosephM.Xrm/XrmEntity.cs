@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using JosephM.Core.Constants;
+using JosephM.Xrm.Schema;
 
 #endregion
 
@@ -58,7 +59,7 @@ namespace JosephM.Xrm
 
         public static IEnumerable<string> GetFieldsInEntity(this Entity entity)
         {
-            return entity.Attributes.Select(a => a.Key);
+            return entity.Attributes.Select(a => a.Key).ToArray();
         }
 
         /// <summary>
@@ -523,7 +524,7 @@ namespace JosephM.Xrm
         /// <summary>
         ///     Returns true if all conditions resolve to true with the value returned by the getFieldDelegate function
         /// </summary>
-        public static bool MeetsConditions(Func<string, object> getFieldDelegate, ConditionExpression[] conditions)
+        public static bool MeetsConditions(Func<string, object> getFieldDelegate, IEnumerable<ConditionExpression> conditions)
         {
             var result = true;
             foreach (var condition in conditions)
@@ -545,6 +546,8 @@ namespace JosephM.Xrm
         {
             if (condition.Operator == ConditionOperator.Equal && condition.Values.Count == 1)
                 return FieldsEqual(fieldValue, condition.Values[0]);
+            if (condition.Operator == ConditionOperator.NotEqual && condition.Values.Count == 1)
+                return !FieldsEqual(fieldValue, condition.Values[0]);
             else
                 throw new InvalidPluginExecutionException("MeetsCondition not implemented for condition type");
         }
@@ -651,6 +654,24 @@ namespace JosephM.Xrm
             entity.AddActivityParty("to", type, id);
         }
 
+        public static void AddActivityParty(this Entity entity, string fieldName, string emailAddress)
+        {
+            var parties = new List<Entity>();
+            var currentParties = entity.GetField(fieldName);
+            if (currentParties != null)
+            {
+                if (currentParties is Entity[])
+                    parties.AddRange((Entity[])currentParties);
+                else if (currentParties is EntityCollection)
+                    parties.AddRange(((EntityCollection)currentParties).Entities);
+                else throw new Exception("No Add Logic Implemented For Type " + currentParties.GetType().Name);
+            }
+            var partyEntity = new Entity(Entities.activityparty);
+            partyEntity.SetField(Fields.activityparty_.addressused, emailAddress);
+            parties.Add(partyEntity);
+            entity.SetField(fieldName, parties.ToArray());
+        }
+
         public static void AddActivityParty(this Entity entity, string fieldName, string type, Guid id)
         {
             var parties = new List<Entity>();
@@ -671,15 +692,15 @@ namespace JosephM.Xrm
 
         public static Entity CreatePartyEntity(EntityReference entityReference)
         {
-            var partyEntity = new Entity("activityparty");
-            partyEntity.SetField("partyid", entityReference);
+            var partyEntity = new Entity(Entities.activityparty);
+            partyEntity.SetField(Fields.activityparty_.partyid, entityReference);
             return partyEntity;
         }
 
         public static IEnumerable<EntityReference> GetActivityPartyReferences(this Entity entity, string fieldName)
         {
             var parties = entity.GetActivityParties(fieldName);
-            return parties.Select(p => (EntityReference)p.GetField("partyid"));
+            return parties.Select(p => (EntityReference)p.GetField(Fields.activityparty_.partyid));
         }
 
         /// <summary>

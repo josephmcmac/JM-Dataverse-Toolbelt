@@ -1,5 +1,3 @@
-#region
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +8,6 @@ using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 
-#endregion
-
 namespace JosephM.Record.Service
 {
     /// <summary>
@@ -19,8 +15,6 @@ namespace JosephM.Record.Service
     /// </summary>
     public abstract class RecordServiceBase : IRecordService
     {
-        #region retain
-
         public abstract IRecord NewRecord(string recordType);
 
         public abstract IRecord Get(string recordType, string id);
@@ -193,10 +187,6 @@ namespace JosephM.Record.Service
             return LookupService;
         }
 
-        #endregion retain
-
-        #region unsure
-
         public virtual IEnumerable<string> GetAllRecordTypes()
         {
             throw new NotImplementedException();
@@ -222,8 +212,6 @@ namespace JosephM.Record.Service
         {
             throw new NotImplementedException();
         }
-
-        #endregion unsure
 
         #region see remove
 
@@ -366,7 +354,7 @@ namespace JosephM.Record.Service
         {
         }
 
-        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate)
+        public IDictionary<int, Exception> UpdateMultiple(IEnumerable<IRecord> updateRecords, IEnumerable<string> fieldsToUpdate = null)
         {
             var result = new Dictionary<int, Exception>();
 

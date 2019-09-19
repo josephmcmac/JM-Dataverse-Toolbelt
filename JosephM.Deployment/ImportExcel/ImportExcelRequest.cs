@@ -5,19 +5,20 @@ using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Sql;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JosephM.Deployment.ImportExcel
 {
     [DisplayName("Import Excel")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
-    [Group(Sections.Misc, true, 20)]
+    [Group(Sections.Options, true, 20)]
     public class ImportExcelRequest : ServiceRequestBase, IValidatableObject
     {
         public ImportExcelRequest()
         {
             MatchRecordsByName = true;
+            ExecuteMultipleSetSize = 50;
+            TargetCacheLimit = 1000;
         }
 
         [DisplayOrder(15)]
@@ -28,20 +29,34 @@ namespace JosephM.Deployment.ImportExcel
         [ConnectionFor(nameof(Mappings) + "." + nameof(ExcelImportTabMapping.Mappings) + "." + nameof(ExcelImportTabMapping.ExcelImportFieldMapping.SourceColumn), typeof(ExcelFileConnection))]
         public FileReference ExcelFile { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.Options)]
         [DisplayOrder(400)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.Options)]
         [DisplayOrder(410)]
         [RequiredProperty]
         public bool MatchRecordsByName { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.Options)]
         [DisplayOrder(415)]
         [RequiredProperty]
         public bool UpdateOnly { get; set; }
+
+        [Group(Sections.Options)]
+        [DisplayOrder(420)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(1000)]
+        public int? ExecuteMultipleSetSize { get; set; }
+
+        [Group(Sections.Options)]
+        [DisplayOrder(425)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(5000)]
+        public int? TargetCacheLimit { get; set; }
 
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull(nameof(ExcelFile))]
@@ -58,7 +73,7 @@ namespace JosephM.Deployment.ImportExcel
         private static class Sections
         {
             public const string Main = "Main";
-            public const string Misc = "Misc";
+            public const string Options = "Options";
         }
 
         [DoNotAllowGridOpen]

@@ -1,6 +1,4 @@
-using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Deployment.DataImport;
 using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -26,7 +24,7 @@ namespace JosephM.Deployment.ImportCsvs
             var dictionary = LoadMappingDictionary(request);
 
             var importService = new SpreadsheetImportService(XrmRecordService);
-            var responseItem = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, request.UpdateOnly, controller, useAmericanDates: request.DateFormat == DateFormat.American);
+            var responseItem = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, request.UpdateOnly, controller, useAmericanDates: request.DateFormat == DateFormat.American, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
             response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.LoadSpreadsheetImport(responseItem);
             response.Message = "The Import Process Has Completed";

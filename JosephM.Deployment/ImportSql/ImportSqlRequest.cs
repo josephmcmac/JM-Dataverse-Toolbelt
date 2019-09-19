@@ -21,6 +21,8 @@ namespace JosephM.Deployment.ImportSql
         public ImportSqlRequest()
         {
             MatchRecordsByName = true;
+            ExecuteMultipleSetSize = 50;
+            TargetCacheLimit = 1000;
         }
 
         [DisplayName("OLEDB Connection String")]
@@ -72,6 +74,20 @@ namespace JosephM.Deployment.ImportSql
         [DisplayOrder(415)]
         [RequiredProperty]
         public bool UpdateOnly { get; set; }
+
+        [Group(Sections.Misc)]
+        [DisplayOrder(420)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(1000)]
+        public int? ExecuteMultipleSetSize { get; set; }
+
+        [Group(Sections.Misc)]
+        [DisplayOrder(425)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(5000)]
+        public int? TargetCacheLimit { get; set; }
 
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull(nameof(ConnectionString))]

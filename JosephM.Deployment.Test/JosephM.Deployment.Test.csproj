@@ -70,6 +70,7 @@
     <Compile Include="DeploymentImportSqlTests.cs" />
     <Compile Include="DeploymentImportExcelTests.cs" />
     <Compile Include="DeploymentAddPortalDataModuleTests.cs" />
+    <Compile Include="DeploymentImportGeneralTests.cs" />
     <Compile Include="DeploymentMigrateRecordsModuleTests.cs" />
     <Compile Include="DeploymentExportXmlModuleTests.cs" />
     <Compile Include="DeploymentImportCsvsTests.cs" />
@@ -109,6 +110,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Files\Team.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Files\TestImportMultiples.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Files\TestExcelImportValidationErrors.xlsx">

@@ -25,17 +25,17 @@ namespace JosephM.Deployment.ImportXml
         public override void ExecuteExtention(ImportXmlRequest request, ImportXmlResponse response,
             ServiceRequestController controller)
         {
-            ImportXml(request, controller, response, maskEmails: request.MaskEmails, includeOwner: request.IncludeOwner, matchByName: request.MatchByName);
+            ImportXml(request, controller, response, maskEmails: request.MaskEmails, includeOwner: request.IncludeOwner, matchByName: request.MatchByName, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
         }
 
 
         public void ImportXml(IImportXmlRequest request, ServiceRequestController controller,
-            ImportXmlResponse response, bool maskEmails = false, bool includeOwner = false, bool matchByName = true)
+            ImportXmlResponse response, bool maskEmails = false, bool includeOwner = false, bool matchByName = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null)
         {
             controller.UpdateProgress(0, 1, "Loading XML Files");
             var entities = request.GetOrLoadEntitiesForImport(controller.Controller).Values.ToArray();
-            var matchOption = matchByName ? DataImportService.MatchOption.PrimaryKeyThenName : DataImportService.MatchOption.PrimaryKeyOnly;
-            var importResponse = DataImportService.DoImport(entities, controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner);
+            var matchOption = matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly;
+            var importResponse = DataImportService.DoImport(entities, controller, maskEmails, matchOption: matchOption, includeOwner: includeOwner, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit);
             response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.LoadDataImport(importResponse);
             response.Message = "The Import Process Has Completed";

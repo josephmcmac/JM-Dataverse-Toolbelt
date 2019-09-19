@@ -1,15 +1,10 @@
-﻿#region
-
-using JosephM.Core.Attributes;
-using JosephM.Core.Constants;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
-
-#endregion
 
 namespace JosephM.Deployment.ImportXml
 {
@@ -23,6 +18,8 @@ namespace JosephM.Deployment.ImportXml
         public ImportXmlRequest()
         {
             MatchByName = true;
+            ExecuteMultipleSetSize = 50;
+            TargetCacheLimit = 1000;
         }
 
         [GridWidth(350)]
@@ -49,6 +46,20 @@ namespace JosephM.Deployment.ImportXml
         [DisplayOrder(400)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
+
+        [Group(Sections.Misc)]
+        [DisplayOrder(410)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(1000)]
+        public int? ExecuteMultipleSetSize { get; set; }
+
+        [Group(Sections.Misc)]
+        [DisplayOrder(420)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(5000)]
+        public int? TargetCacheLimit { get; set; }
 
         public void ClearLoadedEntities()
         {

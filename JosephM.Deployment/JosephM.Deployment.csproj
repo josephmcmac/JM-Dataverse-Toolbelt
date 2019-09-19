@@ -108,8 +108,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreatePackage\CreatePackageResponse.cs" />
+    <Compile Include="DataImport\DataImportContainer.cs" />
     <Compile Include="DataImport\DataImportResponse.cs" />
     <Compile Include="DataImport\DataImportService.cs" />
+    <Compile Include="DataImport\MatchOption.cs" />
     <Compile Include="DataImport\ImportedRecords.cs" />
     <Compile Include="DataImport\ImportingRecords.cs" />
     <Compile Include="AddPortalDataModule.cs" />

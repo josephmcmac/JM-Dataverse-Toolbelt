@@ -12,12 +12,14 @@ namespace JosephM.Deployment.ImportCsvs
     [DisplayName("Import CSVs")]
     [AllowSaveAndLoad]
     [Group(Sections.CsvFiles, true, 50)]
-    [Group(Sections.CsvImport, true, 20)]
+    [Group(Sections.Options, true, 20)]
     public class ImportCsvsRequest : ServiceRequestBase, IValidatableObject
     {
         public ImportCsvsRequest()
         {
             MatchByName = true;
+            ExecuteMultipleSetSize = 50;
+            TargetCacheLimit = 1000;
         }
 
         [Group(Sections.CsvFiles)]
@@ -26,26 +28,40 @@ namespace JosephM.Deployment.ImportCsvs
         public IEnumerable<CsvToImport> CsvsToImport { get; set; }
 
         [DisplayOrder(100)]
-        [Group(Sections.CsvImport)]
+        [Group(Sections.Options)]
         [DisplayName("Match Existing Records By Name When Importing")]
         [RequiredProperty]
         public bool MatchByName { get; set; }
 
-        [Group(Sections.CsvImport)]
+        [Group(Sections.Options)]
         [DisplayOrder(105)]
         [RequiredProperty]
         public bool UpdateOnly { get; set; }
 
         [DisplayOrder(110)]
-        [Group(Sections.CsvImport)]
+        [Group(Sections.Options)]
         [DisplayName("Select The Format Of Any Dates In The CSV File")]
         [RequiredProperty]
         public DateFormat DateFormat { get; set; }
 
-        [Group(Sections.CsvImport)]
+        [Group(Sections.Options)]
         [DisplayOrder(400)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
+
+        [Group(Sections.Options)]
+        [DisplayOrder(410)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(1000)]
+        public int? ExecuteMultipleSetSize { get; set; }
+
+        [Group(Sections.Options)]
+        [DisplayOrder(420)]
+        [RequiredProperty]
+        [MinimumIntValue(1)]
+        [MaximumIntValue(5000)]
+        public int? TargetCacheLimit { get; set; }
 
         public enum CsvImportOption
         {
@@ -152,7 +168,7 @@ namespace JosephM.Deployment.ImportCsvs
         private static class Sections
         {
             public const string CsvFiles = "Csv Files";
-            public const string CsvImport = "CSV Import Options";
+            public const string Options = "Options";
         }
 
         public IsValidResponse Validate()

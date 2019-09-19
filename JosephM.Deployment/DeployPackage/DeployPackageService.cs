@@ -41,7 +41,7 @@ namespace JosephM.Deployment.DeployPackage
                 {
                     var dataImportService = new ImportXmlService(xrmRecordService);
                     var importResponse = new ImportXmlResponse();
-                    dataImportService.ImportXml(request, controller, importResponse);
+                    dataImportService.ImportXml(request, controller, importResponse, executeMultipleSetSize: 10, targetCacheLimit: 200);
                     response.LoadImportxmlResponse(importResponse);
                 }
             }

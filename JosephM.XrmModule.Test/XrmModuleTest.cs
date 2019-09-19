@@ -1,6 +1,9 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Module.Dialog;
 using JosephM.Application.Desktop.Test;
 using JosephM.Application.Modules;
+using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.AppConfig;
 using JosephM.Core.FieldType;
 using JosephM.ObjectMapping;
@@ -403,6 +406,33 @@ namespace JosephM.XrmModule.Test
             useRecordService.XrmService.Associate(Relationships.adx_entitypermission_.adx_entitypermission_webrole.Name, Fields.adx_entitypermission_.adx_entitypermissionid, entityPermission.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
             useRecordService.XrmService.Associate(Relationships.adx_publishingstate_.adx_accesscontrolrule_publishingstate.Name, Fields.adx_publishingstate_.adx_publishingstateid, publishingState.Id, Fields.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolruleid, webpageAccessControlRule.Id);
             useRecordService.XrmService.Associate(Relationships.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolrule_webrole.Name, Fields.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolruleid, webpageAccessControlRule.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
+        }
+
+        public void ClearSavedRequests<TDialogModule, TDialog>(TestApplication app)
+            where TDialogModule : DialogModule<TDialog>, new()
+            where TDialog : DialogViewModel
+        {
+            var entryViewmodel = app.NavigateToDialogModuleEntryForm<TDialogModule, TDialog>() as ObjectEntryViewModel;
+            ClearSavedRequests(app, entryViewmodel);
+        }
+
+        public void ClearSavedRequests(TestApplication app, RecordEntryFormViewModel entryViewmodel)
+        {
+            if (entryViewmodel.CustomFunctions.Any(cb => cb.Id == "LOADREQUEST"))
+            {
+                var loadRequestButton = entryViewmodel.GetButton("LOADREQUEST");
+                loadRequestButton.Invoke();
+                //enter and save details
+                var saveRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
+                var requestsGrid = saveRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
+                foreach (var item in requestsGrid.GridRecords.ToArray())
+                {
+                    requestsGrid.DynamicGridViewModel.DeleteRow(item);
+                }
+                saveRequestForm.SaveButtonViewModel.Invoke();
+                Assert.IsFalse(entryViewmodel.ChildForms.Any());
+                Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
+            }
         }
     }
 }
