@@ -73,12 +73,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     case RecordFieldType.Boolean:
                     case RecordFieldType.ManagedProperty:
                         {
-                        fieldVm = new BooleanFieldViewModel(field, label, recordForm)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
-                        break;
-                    }
+                            var picklist = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType);
+                            fieldVm = new BooleanFieldViewModel(field, label, recordForm, picklist)
+                            {
+                                IsRecordServiceField = isRecordServiceField
+                            };
+                            break;
+                        }
                     case RecordFieldType.Integer:
                     {
                         var picklist = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType);

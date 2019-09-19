@@ -13,6 +13,7 @@ namespace JosephM.Wpf.TemplateSelector
     public class FieldTemplateSelector : DataTemplateSelector
     {
         public DataTemplate BooleanFieldTemplate { get; set; }
+        public DataTemplate BooleanPicklistFieldTemplate { get; set; }
         public DataTemplate ComboBoxFieldTemplate { get; set; }
         public DataTemplate DateFieldTemplate { get; set; }
         public DataTemplate StringFieldTemplate { get; set; }
@@ -39,17 +40,22 @@ namespace JosephM.Wpf.TemplateSelector
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
         {
-            if (item is BooleanFieldViewModel)
-                return BooleanFieldTemplate;
+            if (item is BooleanFieldViewModel bfvm)
+            {
+                if (bfvm.UsePicklist)
+                    return BooleanPicklistFieldTemplate;
+                else
+                    return BooleanFieldTemplate;
+            }
             if (item is PicklistFieldViewModel)
                 return ComboBoxFieldTemplate;
             if (item is DateFieldViewModel)
                 return DateFieldTemplate;
             if (item is StringFieldViewModel)
                 return StringFieldTemplate;
-            if (item is IntegerFieldViewModel)
+            if (item is IntegerFieldViewModel ifvm)
             {
-                if (((IntegerFieldViewModel)item).UsePicklist)
+                if (ifvm.UsePicklist)
                     return IntegerPicklistFieldTemplate;
                 else
                     return IntegerFieldTemplate;

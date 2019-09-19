@@ -69,7 +69,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             {
                                 var thisSection = entryForm.GetFieldSection(section.Name);
                                 var booleanFields = thisSection.Fields.Where(f => f is BooleanFieldViewModel).Cast<BooleanFieldViewModel>();
-                                var turnOff = booleanFields.All(b => b.Value);
+                                var turnOff = booleanFields.All(b => b.Value.Value);
                                 foreach (var field in booleanFields)
                                     field.Value = !turnOff;
 
@@ -78,7 +78,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                 {
                                     if (ObjectRecordService.GetClassType(field.RecordType).IsTypeOf(typeof(ISelectable)))
                                     {
-                                        turnOff = field.GridRecords.All(r => r.GetBooleanFieldFieldViewModel(nameof(ISelectable.Selected)).Value);
+                                        turnOff = field.GridRecords.All(r => r.GetBooleanFieldFieldViewModel(nameof(ISelectable.Selected)).Value.Value);
                                         foreach (var record in field.GridRecords)
                                         {
                                             record.GetBooleanFieldFieldViewModel(nameof(ISelectable.Selected)).Value = !turnOff;
@@ -444,7 +444,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         {
                             var gridRowViewModel = (GridRowViewModel)re;
                             var fieldViewModel = gridRowViewModel.GetFieldViewModel(fieldName) as BooleanFieldViewModel;
-                            if (fieldViewModel != null && fieldViewModel.Value)
+                            if (fieldViewModel != null && fieldViewModel.Value.Value)
                             {
                                 foreach (var row in gridRowViewModel.GridViewModel.GridRecords.ToArray())
                                 {
@@ -646,6 +646,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                                                         || fieldType == RecordFieldType.State
                                                                         || fieldType == RecordFieldType.Integer
                                                                         || fieldType == RecordFieldType.RecordType
+                                                                        || fieldType == RecordFieldType.Boolean
                                                 ? lookupService.GetPicklistKeyValues(selectedFieldName, selectedFieldRecordType)
                                                 : null;
                                             if (clearValue)

@@ -40,6 +40,9 @@
     <DataTemplate x:Key="booleanFieldTemplate">
         <field:BooleanFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="booleanPicklistFieldTemplate">
+        <field:BooleanPicklistFieldView DataContext="{Binding}" />
+    </DataTemplate>
     <DataTemplate x:Key="comboBoxFieldTemplate">
         <field:PicklistFieldView DataContext="{Binding}" MinWidth="100" />
     </DataTemplate>
@@ -110,6 +113,7 @@
     <templateSelector:FieldTemplateSelector
         ActivityPartyFieldTemplate="{StaticResource ActivityPartyFieldTemplate}"
         BooleanFieldTemplate="{StaticResource booleanFieldTemplate}"
+        BooleanPicklistFieldTemplate="{StaticResource booleanPicklistFieldTemplate}"
         ComboBoxFieldTemplate="{StaticResource comboBoxFieldTemplate}"
         DateFieldTemplate="{StaticResource dateFieldTemplate}"
         StringFieldTemplate="{StaticResource stringFieldTemplate}"

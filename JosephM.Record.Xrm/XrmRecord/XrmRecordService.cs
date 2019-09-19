@@ -128,6 +128,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 || metadata.AttributeType == AttributeTypeCode.State
                 || metadata.AttributeType == AttributeTypeCode.Status
                 || metadata.AttributeType == AttributeTypeCode.Integer
+                || metadata.AttributeType == AttributeTypeCode.Boolean
                 || metadata is EnumAttributeMetadata
                 ? _xrmService.GetPicklistKeyValues(recordType, field)
                 .Select(kv => new PicklistOption(kv.Key.ToString(), kv.Value))

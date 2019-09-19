@@ -290,6 +290,9 @@
     <Compile Include="RecordEntry\Field\DecimalFieldView.xaml.cs">
       <DependentUpon>DecimalFieldView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\Field\BooleanPicklistFieldView.xaml.cs">
+      <DependentUpon>BooleanPicklistFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\Field\IntegerPicklistFieldView.xaml.cs">
       <DependentUpon>IntegerPicklistFieldView.xaml</DependentUpon>
     </Compile>
@@ -563,6 +566,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\Field\DecimalFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\BooleanPicklistFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

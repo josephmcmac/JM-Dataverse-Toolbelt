@@ -446,16 +446,21 @@ namespace JosephM.Xrm
 
         public IEnumerable<KeyValuePair<int, string>> GetPicklistKeyValues(string entityType, string fieldName)
         {
-            var fieldType = GetFieldType(fieldName, entityType);
             var fieldMetadata = GetFieldMetadata(fieldName, entityType);
-            if (fieldMetadata is EnumAttributeMetadata && ((EnumAttributeMetadata)fieldMetadata).OptionSet != null)
+            if (fieldMetadata is EnumAttributeMetadata enumFm && enumFm.OptionSet != null)
             {
-                return OptionSetToKeyValues(((EnumAttributeMetadata)fieldMetadata).OptionSet.Options);
+                return OptionSetToKeyValues(enumFm.OptionSet.Options);
             }
-            if (fieldMetadata is IntegerAttributeMetadata)
+            if (fieldMetadata is IntegerAttributeMetadata intMt)
             {
-                var intMt = fieldMetadata as IntegerAttributeMetadata;
                 return GetIntPicklistCache(intMt.Format ?? IntegerFormat.None);
+            }
+            if (fieldMetadata is BooleanAttributeMetadata bFm
+                && bFm.OptionSet != null
+                && bFm.OptionSet.FalseOption != null
+                && bFm.OptionSet.TrueOption != null)
+            {
+                return OptionSetToKeyValues(new[] { bFm.OptionSet.FalseOption, bFm.OptionSet.TrueOption });
             }
             return new KeyValuePair<int, string>[0];
         }
@@ -1057,7 +1062,21 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             if (value is bool)
                                 return value;
                             else if (value is string)
-                                return new[] { "true", "yes", "1", "of course" }.Contains(((string)value).ToLower());
+                            {
+                                var picklist = GetPicklistKeyValues(entityType, fieldName);
+                                var trueLabel = picklist.Any(p => p.Key == 1)
+                                    ? picklist.First(p => p.Key == 1).Value
+                                    : null;
+                                var falseLabel = picklist.Any(p => p.Key == 0)
+                                    ? picklist.First(p => p.Key == 0).Value
+                                    : null;
+                                var valueToLower = value.ToString().ToLower();
+                                if (new string[] { trueLabel?.ToLower(), "1", true.ToString().ToLower() }.Contains(valueToLower))
+                                    return true;
+                                if (new string[] { falseLabel?.ToLower(), "0", false.ToString().ToLower() }.Contains(valueToLower))
+                                    return false;
+                                throw new ArgumentException($"Could not parse matching boolean for string value of '{value}'");
+                            }
                             else
                                 throw new ArgumentException("Parse bool not implemented for argument type: " +
                                                             value.GetType().Name);
@@ -3212,6 +3231,15 @@ string recordType)
                 return "";
             else if (value is string)
                 return (string)value;
+            else if (value is bool boolean)
+            {
+                var options = GetPicklistKeyValues(recordType, fieldName);
+                if (boolean && options.Any(p => p.Key == 1))
+                    return options.First(p => p.Key == 1).Value;
+                else if (!boolean && options.Any(p => p.Key == 0))
+                    return options.First(p => p.Key == 0).Value;
+                return boolean.ToString();
+            }
             else if (IsLookup(fieldName, recordType))
             {
                 return XrmEntity.GetLookupName(value);
