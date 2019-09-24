@@ -653,6 +653,21 @@ namespace JosephM.Application.ViewModel.Query
                     query.Joins.Add(join);
                 }
             }
+            //for whatever reason the dynamics web service throws an error
+            //if you query for distinct with an activity party field explicitly included
+            //so only limit fields in the query if no activity parties included
+            var fieldsRequiredInQuery = ExplicitlySelectedColumns ?? view.Fields.Select(f => new GridFieldMetadata(f)).ToList();
+            var includeAll = false;
+            foreach(var field in fieldsRequiredInQuery)
+            {
+                if (RecordService.GetFieldType(field.FieldName, field.AltRecordType ?? RecordType) == RecordFieldType.ActivityParty)
+                {
+                    includeAll = true;
+                    break;
+                }
+            }
+            if (!includeAll)
+                query.Fields = fieldsRequiredInQuery.Where(f => f.AltRecordType == null).Select(f => f.FieldName).ToArray();
 
             return query;
         }
