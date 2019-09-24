@@ -114,17 +114,47 @@ namespace JosephM.Deployment.Test
             var importedEmail = XrmService.Retrieve(email.LogicalName, email.Id);
 
             Assert.AreEqual(OptionSets.Email.StatusReason.Sent, importedEmail.GetOptionSetValue(Fields.email_.statuscode));
-            email.AddFromParty(queue.LogicalName, queue.Id);
-            email.AddToParty(contact1.LogicalName, contact1.Id);
-            email.AddToParty(contact2.LogicalName, contact2.Id);
-            email.AddToParty(account.LogicalName, account.Id);
-            email.AddActivityParty(Fields.email_.to, "testtoemail@example.com");
             Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.from).Count() == 1);
             Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.from).Count(p => Entities.queue == p.GetLookupType(Fields.activityparty_.partyid)) == 1);
             Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.to).Count() == 4);
             Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.to).Count(p => Entities.contact == p.GetLookupType(Fields.activityparty_.partyid)) == 2);
             Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.to).Count(p => Entities.account == p.GetLookupType(Fields.activityparty_.partyid)) == 1);
             Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.to).Count(p => null == p.GetField(Fields.activityparty_.partyid) && p.GetStringField(Fields.activityparty_.addressused) == "testtoemail@example.com") == 1);
+
+            importXmlResponse = importXmlApplication.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importXmlResponse.HasError);
+
+            Assert.AreEqual(1, importXmlResponse.ImportSummary.Count());
+            Assert.IsTrue(importXmlResponse.ImportSummary.All(i => i.Created == 0));
+            Assert.IsTrue(importXmlResponse.ImportSummary.All(i => i.Updated == 0));
+            Assert.IsTrue(importXmlResponse.ImportSummary.All(i => i.NoChange == 1));
+            Assert.IsTrue(importXmlResponse.ImportSummary.All(i => i.Errors == 0));
+
+            importedEmail = XrmService.Retrieve(email.LogicalName, email.Id);
+            XrmService.SetState(importedEmail, OptionSets.Email.ActivityStatus.Open);
+
+            var toParties = importedEmail.GetActivityParties(Fields.email_.to);
+            importedEmail.SetField(Fields.email_.to, toParties.Skip(1).ToArray());
+            importedEmail = UpdateFieldsAndRetreive(importedEmail, Fields.email_.to);
+
+            importXmlResponse = importXmlApplication.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(importXmlResponse.HasError);
+
+            Assert.AreEqual(1, importXmlResponse.ImportSummary.Count());
+            Assert.IsTrue(importXmlResponse.ImportSummary.All(i => i.Created == 0));
+            Assert.IsTrue(importXmlResponse.ImportSummary.All(i => i.Updated == 1));
+            Assert.IsTrue(importXmlResponse.ImportSummary.All(i => i.NoChange == 0));
+            Assert.IsTrue(importXmlResponse.ImportSummary.All(i => i.Errors == 0));
+
+            importedEmail = XrmService.Retrieve(email.LogicalName, email.Id);
+
+            Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.from).Count() == 1);
+            Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.from).Count(p => Entities.queue == p.GetLookupType(Fields.activityparty_.partyid)) == 1);
+            Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.to).Count() == 4);
+            Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.to).Count(p => Entities.contact == p.GetLookupType(Fields.activityparty_.partyid)) == 2);
+            Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.to).Count(p => Entities.account == p.GetLookupType(Fields.activityparty_.partyid)) == 1);
+            Assert.IsTrue(importedEmail.GetActivityParties(Fields.email_.to).Count(p => null == p.GetField(Fields.activityparty_.partyid) && p.GetStringField(Fields.activityparty_.addressused) == "testtoemail@example.com") == 1);
+
         }
 
         [DeploymentItem(@"Files\TestImportMultiples.xlsx")]

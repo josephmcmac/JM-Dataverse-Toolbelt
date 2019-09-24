@@ -1,14 +1,10 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using JosephM.Core.Constants;
 using JosephM.Xrm.Schema;
-
-#endregion
 
 namespace JosephM.Xrm
 {
@@ -353,7 +349,7 @@ namespace JosephM.Xrm
             {
                 var dt1 = (DateTime)field1;
                 var dt2 = (DateTime)field2;
-                if(dt1.Kind == DateTimeKind.Utc && (dt2.Kind == DateTimeKind.Local || dt2.Kind == DateTimeKind.Unspecified))
+                if (dt1.Kind == DateTimeKind.Utc && (dt2.Kind == DateTimeKind.Local || dt2.Kind == DateTimeKind.Unspecified))
                 {
                     dt2 = dt2.ToUniversalTime();
                 }
@@ -393,10 +389,48 @@ namespace JosephM.Xrm
                 return (field1).Equals((field2));
             else if (field1 is Decimal && field2 is Decimal)
                 return ((Decimal)field1).Equals(((Decimal)field2));
+            else if (field1 is Entity[] || field1 is EntityCollection)
+                return EntityListFieldEqual(field1, field2);
             else
                 throw new InvalidPluginExecutionException(
                     string.Concat("FieldsEqualCrmTarget type not implemented for types ", field1.GetType(), " and ",
                         field2.GetType()));
+        }
+
+        private static bool EntityListFieldEqual(object field1, object field2)
+        {
+            Entity[] fieldList1 = new Entity[0];
+            Entity[] fieldList2 = new Entity[0];
+            if (field1 is EntityCollection ec1)
+                fieldList1 = ec1.Entities.ToArray();
+            else if (field1 is Entity[])
+                fieldList1 = (Entity[])field1;
+            if (field2 is EntityCollection ec2)
+                fieldList2 = ec2.Entities.ToArray();
+            else if (field2 is Entity[])
+                fieldList2 = (Entity[])field2;
+
+            if (!fieldList1.Any() && !fieldList2.Any())
+                return true;
+            else if (!fieldList1.Any() || !fieldList2.Any())
+                return false;
+            else if (fieldList1.Count() != fieldList2.Count())
+                return false;
+
+            var entityType = fieldList1.First().LogicalName;
+            if (entityType != Entities.activityparty)
+                throw new NotImplementedException($"EntityListFieldEqual not implemented for entity type {entityType}");
+
+            var fieldToMatch = new[] { Fields.activityparty_.partyid, Fields.activityparty_.addressused };
+
+            foreach (var entity in fieldList1)
+            {
+                var matchingIn1 = fieldList1.Where(e => fieldToMatch.All(f => FieldsEqual(e.GetField(f), entity.GetField(f)))).ToArray();
+                var matchingIn2 = fieldList2.Where(e => fieldToMatch.All(f => FieldsEqual(e.GetField(f), entity.GetField(f)))).ToArray();
+                if (matchingIn1.Count() != matchingIn2.Count())
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>
