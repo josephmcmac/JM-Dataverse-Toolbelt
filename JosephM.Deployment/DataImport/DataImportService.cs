@@ -360,7 +360,7 @@ namespace JosephM.Deployment.DataImport
                         var forCreateEntitiesCopy = new Dictionary<Entity, Entity>();
                         var forUpdateEntitiesCopy = new Dictionary<Entity, Entity>();
 
-                        foreach (var entity in thisSetOfEntities)
+                        foreach (var entity in thisSetOfEntities.ToArray())
                         {
                             var fieldsToSet = new List<string>();
                             fieldsToSet.AddRange(entity.GetFieldsInEntity()
@@ -393,6 +393,7 @@ namespace JosephM.Deployment.DataImport
                                 {
                                     dataImportContainer.LogEntityError(entity, ex);
                                     thisSetOfEntities.Remove(entity);
+                                    continue;
                                 }
                                 var copyEntity = XrmEntity.ReplicateToNewEntity(entity);
                                 copyEntity.Id = entity.Id;
@@ -1258,18 +1259,32 @@ namespace JosephM.Deployment.DataImport
             {
                 switch (thisEntity.LogicalName)
                 {
-                    case "annotation":
-                        if (!fieldsToSet.Contains("objectid"))
-                            throw new NullReferenceException(string.Format("Cannot create {0} {1} as its parent {2} does not exist"
-                                , XrmService.GetEntityLabel(thisEntity.LogicalName), thisEntity.GetStringField(XrmService.GetPrimaryNameField(thisEntity.LogicalName))
-                                , thisEntity.GetStringField("objecttypecode") != null ? XrmService.GetEntityLabel(thisEntity.GetStringField("objecttypecode")) : "Unknown Type"));
-                        break;
-                    case "productpricelevel":
-                        if (!fieldsToSet.Contains("pricelevelid"))
-                            throw new NullReferenceException(string.Format("Cannot create {0} {1} as its parent {2} is empty"
-                                , XrmService.GetEntityLabel(thisEntity.LogicalName), thisEntity.GetStringField(XrmService.GetPrimaryNameField(thisEntity.LogicalName))
-                                , XrmService.GetEntityLabel("pricelevel")));
-                        break;
+                    case Entities.annotation:
+                        {
+                            if (!fieldsToSet.Contains(Fields.annotation_.objectid))
+                                throw new NullReferenceException(string.Format("Cannot create {0} {1} as its parent {2} does not exist"
+                                    , XrmService.GetEntityLabel(thisEntity.LogicalName), thisEntity.GetStringField(XrmService.GetPrimaryNameField(thisEntity.LogicalName))
+                                    , thisEntity.GetStringField(Fields.annotation_.objecttypecode) != null ? XrmService.GetEntityLabel(thisEntity.GetStringField(Fields.annotation_.objecttypecode)) : "Unknown Type"));
+                            break;
+                        }
+                    case Entities.productpricelevel:
+                        {
+                            if (!fieldsToSet.Contains(Fields.productpricelevel_.pricelevelid))
+                                throw new NullReferenceException(string.Format("Cannot create {0} {1} as its parent {2} is empty"
+                                    , XrmService.GetEntityLabel(thisEntity.LogicalName), thisEntity.GetStringField(XrmService.GetPrimaryNameField(thisEntity.LogicalName))
+                                    , XrmService.GetEntityLabel(Entities.pricelevel)));
+                            break;
+                        }
+                    case Entities.product:
+                        {
+                            if (!fieldsToSet.Contains(Fields.product_.defaultuomid))
+                                throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.product_.defaultuomid, Entities.product)} is required on the {XrmService.GetEntityLabel(Entities.product)}");
+                            if (!fieldsToSet.Contains(Fields.product_.defaultuomscheduleid))
+                                throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.product_.defaultuomscheduleid, Entities.product)} is required on the {XrmService.GetEntityLabel(Entities.product)}");
+                            if (!fieldsToSet.Contains(Fields.product_.quantitydecimal))
+                                throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.product_.quantitydecimal, Entities.product)} is required on the {XrmService.GetEntityLabel(Entities.product)}");
+                            break;
+                        }
                 }
             }
             return;
