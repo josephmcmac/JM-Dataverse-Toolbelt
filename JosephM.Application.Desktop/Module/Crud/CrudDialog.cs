@@ -12,6 +12,7 @@ using JosephM.Record.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JosephM.Application.Desktop.Module.Crud
@@ -38,6 +39,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                 //this bit messy because may take a while to load the record types
                 //so spawn on async thread, then back to the main thread for th ui objects
                 LoadingViewModel.LoadingMessage = "Loading Types";
+                Thread.Sleep(100);
                 var recordTypesForBrowsing = Task.Run<IEnumerable<string>>(() => RecordService.GetAllRecordTypes()
                     .Where(r =>
                     RecordService.GetRecordTypeMetadata(r).Searchable)
