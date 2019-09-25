@@ -422,15 +422,21 @@ namespace JosephM.Xrm
                     {
                         var dictionary = new Dictionary<int, string>();
 
-                        var req = new RetrieveAvailableLanguagesRequest();
-                        var res = (RetrieveAvailableLanguagesResponse)Execute(req);
-
-                        foreach (var tz in RetrieveAllEntityType(Entities.languagelocale))
+                        //early versions dont have this type and were throwing error
+                        //so for them lets just return empty list and use as standard integer
+                        if (EntityExists(Entities.languagelocale))
                         {
-                            var localeId = tz.GetInt(Fields.languagelocale_.localeid);
-                            if (res.LocaleIds.Contains(localeId) && !dictionary.ContainsKey(localeId))
-                                dictionary.Add(localeId, tz.GetStringField(Fields.languagelocale_.language));
+                            var req = new RetrieveAvailableLanguagesRequest();
+                            var res = (RetrieveAvailableLanguagesResponse)Execute(req);
+
+                            foreach (var tz in RetrieveAllEntityType(Entities.languagelocale))
+                            {
+                                var localeId = tz.GetInt(Fields.languagelocale_.localeid);
+                                if (res.LocaleIds.Contains(localeId) && !dictionary.ContainsKey(localeId))
+                                    dictionary.Add(localeId, tz.GetStringField(Fields.languagelocale_.language));
+                            }
                         }
+
                         dictionary = dictionary
                             .OrderBy(kv => kv.Value)
                             .ToDictionary(kv => kv.Key, kv => kv.Value);
