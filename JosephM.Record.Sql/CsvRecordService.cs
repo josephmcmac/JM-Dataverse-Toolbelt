@@ -70,9 +70,13 @@ namespace JosephM.Record.Sql
             {
                 if (_fieldMetadata == null)
                 {
-                    _fieldMetadata = CsvUtility.GetColumns(CsvNameQualified).Select(c =>
-                        new StringFieldMetadata(recordType, c, c))
-                        .ToArray();
+                    var fields = new List<IFieldMetadata>();
+                    var columns = CsvUtility.GetColumns(CsvNameQualified);
+                    foreach (var column in columns)
+                    {
+                        fields.Add(new StringFieldMetadata(recordType, column, column?.Replace("#", ".")));
+                    }
+                    _fieldMetadata = fields;
                 }
                 return _fieldMetadata;
             }
