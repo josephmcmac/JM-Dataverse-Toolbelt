@@ -3182,27 +3182,43 @@ string recordType)
             var responses = new List<ExecuteMultipleResponseItem>();
             if (requests.Any())
             {
-
-                var requestsArray = requests.ToArray();
-                var requestsArrayCount = requestsArray.Count();
-
-                var request = CreateExecuteMultipleRequest();
-
-                var currentSetSize = 0;
-                for (var i = 0; i < requestsArrayCount; i++)
+                if (SupportsExecuteMultiple)
                 {
-                    var organizationRequest = requestsArray.ElementAt(i);
+                    var requestsArray = requests.ToArray();
+                    var requestsArrayCount = requestsArray.Count();
 
-                    request.Requests.Add(organizationRequest);
-                    currentSetSize++;
-                    if (currentSetSize == 1000 || i == requestsArrayCount - 1)
+                    var request = CreateExecuteMultipleRequest();
+
+                    var currentSetSize = 0;
+                    for (var i = 0; i < requestsArrayCount; i++)
                     {
-                        var response = (ExecuteMultipleResponse)Execute(request);
-                        foreach (var r in response.Responses)
-                            r.RequestIndex = i - currentSetSize + r.RequestIndex + 1;
-                        responses.AddRange(response.Responses);
-                        request = CreateExecuteMultipleRequest();
-                        currentSetSize = 0;
+                        var organizationRequest = requestsArray.ElementAt(i);
+
+                        request.Requests.Add(organizationRequest);
+                        currentSetSize++;
+                        if (currentSetSize == 1000 || i == requestsArrayCount - 1)
+                        {
+                            var response = (ExecuteMultipleResponse)Execute(request);
+                            foreach (var r in response.Responses)
+                                r.RequestIndex = i - currentSetSize + r.RequestIndex + 1;
+                            responses.AddRange(response.Responses);
+                            request = CreateExecuteMultipleRequest();
+                            currentSetSize = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach(var request in requests)
+                    {
+                        try
+                        {
+                            responses.Add(new ExecuteMultipleResponseItem() { Response = Execute(request) });
+                        }
+                        catch(FaultException<OrganizationServiceFault> ex)
+                        {
+                            responses.Add(new ExecuteMultipleResponseItem() { Fault = ex.Detail });
+                        }
                     }
                 }
             }

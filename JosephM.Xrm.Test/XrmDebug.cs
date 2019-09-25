@@ -12,9 +12,6 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            var metadata = XrmService.GetFieldMetadata(Fields.report_.ispersonal, Entities.report);
-
-
             //var blah = XrmService.WhoAmI();
             //var eh = XrmConfiguration.OrganizationUniqueName;
 
