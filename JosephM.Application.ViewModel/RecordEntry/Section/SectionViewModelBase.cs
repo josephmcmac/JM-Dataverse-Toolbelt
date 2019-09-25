@@ -1,14 +1,8 @@
-﻿#region
-
-using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Record.IService;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Section
 {
@@ -77,7 +71,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
             set
             {
                 _isVisible = value;
-                OnPropertyChanged("IsVisible");
+                OnPropertyChanged(nameof(IsVisible));
             }
         }
 

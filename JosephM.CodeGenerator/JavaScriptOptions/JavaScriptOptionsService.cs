@@ -25,7 +25,6 @@ namespace JosephM.CodeGenerator.JavaScriptOptions
         private string WriteJavaScriptOptionSets(JavaScriptOptionsRequest request, LogController controller)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(string.Format("{0} = new Object()", request.NamespaceOfTheJavaScriptObject));
             AppendJavaScriptOptionSets(stringBuilder, request, controller);
             return stringBuilder.ToString();
         }
@@ -42,35 +41,55 @@ namespace JosephM.CodeGenerator.JavaScriptOptions
 
             controller.UpdateProgress(countDone, countToDo,
                 string.Format("Processing Options ({0})", Service.GetDisplayName(recordType)));
+
             if (IsValidForCode(recordType))
             {
-                stringBuilder.AppendLine(string.Format("{0}.Options = new Object();", request.NamespaceOfTheJavaScriptObject));
                 var fieldsToProcess = request.AllOptionSetFields
                     ? Service.GetFields(recordType).Where(f => IsValidForOptionSetCode(f, recordType))
                     : new[] { request.SpecificOptionSetField != null ? request.SpecificOptionSetField.Key : null };
 
+                var optionDictionary = new SortedDictionary<string, SortedDictionary<string, string>>();
+
                 foreach (var field in fieldsToProcess)
                 {
                     var fieldLabel = CreateCodeLabel(Service.GetFieldLabel(field, recordType));
-                    stringBuilder.AppendLine(string.Format("{0}.{1}.{2} = new Object();", request.NamespaceOfTheJavaScriptObject,
-                        "Options",
-                        fieldLabel));
-                    var options = Service.GetPicklistKeyValues(field, recordType);
-                    var used = new List<string>();
-                    foreach (var option in options)
+                    if (!optionDictionary.ContainsKey(fieldLabel))
                     {
-                        if (IsValidForCode(option))
+                        optionDictionary.Add(fieldLabel, new SortedDictionary<string, string>());
+                        var options = Service.GetPicklistKeyValues(field, recordType);
+                        var used = new List<string>();
+                        foreach (var option in options)
                         {
-                            var label = CreateCodeLabel(option.Value);
-                            if (!used.Contains(label))
+                            if (IsValidForCode(option))
                             {
-                                stringBuilder.AppendLine(string.Format("{0}.{1}.{2}.{3} = {4};",
-                                    request.NamespaceOfTheJavaScriptObject, "Options", fieldLabel, label, option.Key));
-                                used.Add(label);
+                                var optionLabel = CreateCodeLabel(option.Value);
+                                if (!optionDictionary[fieldLabel].ContainsKey(optionLabel))
+                                {
+                                    optionDictionary[fieldLabel].Add(optionLabel, option.Key);
+                                }
                             }
                         }
                     }
                 }
+
+                stringBuilder.AppendLine("var options = {");
+                var picklistsToInclude = optionDictionary.Where(i => i.Value.Any()).ToArray();
+                var numberOfPicklistsRemaining = picklistsToInclude.Count();
+                foreach (var optionSet in picklistsToInclude)
+                {
+                    stringBuilder.AppendLine("\t" + optionSet.Key + " : {");
+                    var numberOfoptionsRemaining = optionSet.Value.Count();
+                    foreach (var option in optionSet.Value)
+                    {
+                        var isLastOption = numberOfoptionsRemaining == 1;
+                        stringBuilder.AppendLine("\t\t" + option.Key + " : " + option.Value + (isLastOption ? "" : ","));
+                        numberOfoptionsRemaining--;
+                    }
+                    var isLastItem = numberOfPicklistsRemaining == 1;
+                    stringBuilder.AppendLine("\t}" + (isLastItem ? "" : ","));
+                    numberOfPicklistsRemaining--;
+                }
+                stringBuilder.AppendLine("};");
             }
             countDone++;
         }

@@ -34,11 +34,6 @@ namespace JosephM.CodeGenerator.JavaScriptOptions
         [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.In, new[] { RecordFieldType.Picklist, RecordFieldType.State, RecordFieldType.Status })]
         public RecordField SpecificOptionSetField { get; set; }
 
-        [Group(Sections.Other)]
-        [DisplayOrder(5000)]
-        [RequiredProperty]
-        public string NamespaceOfTheJavaScriptObject { get; set; }
-
         private static class Sections
         {
             public const string OptionSetSelection = "Select Details Of The Option Set Field(s) To Generate Constants For";
