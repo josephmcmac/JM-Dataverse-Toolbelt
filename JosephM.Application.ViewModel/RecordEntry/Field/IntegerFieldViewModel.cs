@@ -1,14 +1,9 @@
-﻿#region
-
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.ViewModel.Shared;
-using JosephM.Core.FieldType;
-using JosephM.Core.Service;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -80,6 +75,25 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 response.AddInvalidReason(string.Format("A Value Is Required"));
             }
             return response;
+        }
+
+        public override string StringDisplay
+        {
+            get
+            {
+                if (!Value.HasValue)
+                {
+                    return null;
+                }
+                if (UsePicklist && SelectedOption != null)
+                {
+                    return SelectedOption.Value;
+                }
+                else
+                {
+                    return Value.Value.ToString();
+                }
+            }
         }
     }
 }

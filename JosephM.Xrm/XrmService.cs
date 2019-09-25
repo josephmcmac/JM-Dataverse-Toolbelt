@@ -889,7 +889,18 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             else if (value is string && value.ToString().IsNullOrWhiteSpace())
                                 return null;
                             else
-                                temp = int.Parse(value.ToString().Replace(",", ""));
+                            {
+                                var intAsString = value.ToString();
+                                var picklist = GetPicklistKeyValues(entityType, fieldName);
+                                if (picklist != null && picklist.Any(kv => kv.Value == intAsString))
+                                {
+                                    temp = picklist.First(kv => kv.Value == intAsString).Key;
+                                }
+                                else
+                                {
+                                    temp = int.Parse(intAsString.Replace(",", ""));
+                                }
+                            }
                             if (!IntInRange(fieldName, entityType, temp))
                                 throw new ArgumentOutOfRangeException("Field " + fieldName +
                                                                       " outside permitted range of " +
@@ -3261,6 +3272,13 @@ string recordType)
                 else if (!boolean && options.Any(p => p.Key == 0))
                     return options.First(p => p.Key == 0).Value;
                 return boolean.ToString();
+            }
+            else if (value is int integer)
+            {
+                var options = GetPicklistKeyValues(recordType, fieldName);
+                if (options != null && options.Any(kv => kv.Key == integer))
+                    return options.First(kv => kv.Key == integer).Value;
+                return integer.ToString();
             }
             else if (IsLookup(fieldName, recordType))
             {
