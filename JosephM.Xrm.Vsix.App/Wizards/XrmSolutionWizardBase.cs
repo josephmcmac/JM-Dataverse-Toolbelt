@@ -17,6 +17,7 @@ using System.Windows;
 using VSLangProj;
 using JosephM.Xrm.Vsix.App;
 using JosephM.Core.AppConfig;
+using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.Vsix.Wizards
 {
@@ -170,9 +171,12 @@ namespace JosephM.Xrm.Vsix.Wizards
                     {
                         try
                         {
-                            var connection = XrmPackageSettings.Connections.First();
-                            var serialise = ObjectToJsonString(connection);
-                            File.WriteAllText(consoleConnectionFileName, serialise);
+                            var connection = GetActiveConnectionToSave();
+                            if (connection != null)
+                            {
+                                var serialise = ObjectToJsonString(connection);
+                                File.WriteAllText(consoleConnectionFileName, serialise);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -186,7 +190,13 @@ namespace JosephM.Xrm.Vsix.Wizards
                 var vsixSettingsManager = new VsixSettingsManager(visualStudioService, null);
                 vsixSettingsManager.SaveSettingsObject(XrmPackageSettings);
                 if (XrmPackageSettings.Connections.Any())
-                    vsixSettingsManager.SaveSettingsObject(XrmPackageSettings.Connections.First());
+                {
+                    var connection = GetActiveConnectionToSave();
+                    if (connection != null)
+                    {
+                        vsixSettingsManager.SaveSettingsObject(connection);
+                    }
+                }
                 visualStudioService.CloseAllDocuments();
 
                 RemoveEmptyFolders(DestinationDirectory);
@@ -198,6 +208,16 @@ namespace JosephM.Xrm.Vsix.Wizards
                 VsixApplication.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Fatal Error", new Dictionary<string, string> { { "Is Error", true.ToString() }, { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
                 throw;
             }
+        }
+
+        private SavedXrmRecordConfiguration GetActiveConnectionToSave()
+        {
+            SavedXrmRecordConfiguration connection = null;
+            if (XrmPackageSettings.Connections.Count() == 1)
+                connection = XrmPackageSettings.Connections.First();
+            else if (XrmPackageSettings.Connections.Count(c => c.Active) == 1)
+                connection = XrmPackageSettings.Connections.First(c => c.Active);
+            return connection;
         }
 
         public void RemoveEmptyFolders(string directory)
