@@ -107,6 +107,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExportDataTypeUsabilitiesModule.cs" />
     <Compile Include="CreatePackage\CreatePackageResponse.cs" />
     <Compile Include="DataImport\DataImportContainer.cs" />
     <Compile Include="DataImport\DataImportResponse.cs" />

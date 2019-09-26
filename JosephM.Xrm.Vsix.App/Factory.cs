@@ -73,6 +73,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<AddPortalDataModule>();
             app.AddModule<ThemeModule>();
             app.AddModule<XrmPackageApplicationInsightsModule>();
+            app.AddModule<ExportDataTypeUsabilitiesModule>(); 
             return app;
         }
 

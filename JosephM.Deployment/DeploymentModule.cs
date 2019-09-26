@@ -21,6 +21,7 @@ namespace JosephM.Deployment
     [DependantModule(typeof(MigrateRecordsModule))]
     [DependantModule(typeof(DeploySolutionModule))]
     [DependantModule(typeof(AddPortalDataModule))]
+    [DependantModule(typeof(ExportDataTypeUsabilitiesModule))] 
     public class DeploymentModule : ModuleBase
     {
         public override void InitialiseModule()
