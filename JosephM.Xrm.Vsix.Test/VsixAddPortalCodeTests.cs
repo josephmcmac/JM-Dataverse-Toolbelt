@@ -45,7 +45,7 @@ namespace JosephM.Xrm.Vsix.Test
             var func = section.CustomFunctions.First(c => c.Id == "SELECTALL");
             func.Invoke();
             Assert.IsTrue(entryForm.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.RecordsToExport)).GridRecords
-                .All(r => r.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.Selected)).Value));
+                .All(r => r.GetBooleanFieldFieldViewModel(nameof(AddPortalCodeRequest.PortalRecordsToExport.Selected)).Value ?? false));
 
             var webTemplateRow = entryForm.GetEnumerableFieldViewModel(nameof(AddPortalCodeRequest.RecordsToExport))
                 .GridRecords

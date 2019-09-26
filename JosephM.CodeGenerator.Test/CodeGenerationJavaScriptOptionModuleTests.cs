@@ -21,13 +21,23 @@ namespace JosephM.CodeGenerator.Test
 
             var request = new JavaScriptOptionsRequest()
             {
-                NamespaceOfTheJavaScriptObject = "accountJS",
                 RecordType = new RecordType(Entities.account, Entities.account),
                 AllOptionSetFields = true
             };
 
             testApplication.ClearTabs();
             var response = testApplication.NavigateAndProcessDialog<JavaScriptOptionsModule, JavaScriptOptionsDialog, JavaScriptOptionsResponse>(request);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(response.Javascript));
+
+            request = new JavaScriptOptionsRequest()
+            {
+                RecordType = new RecordType(Entities.account, Entities.account),
+                AllOptionSetFields = false,
+                SpecificOptionSetField = new RecordField(Fields.account_.industrycode, Fields.account_.industrycode)
+            };
+
+            testApplication.ClearTabs();
+            response = testApplication.NavigateAndProcessDialog<JavaScriptOptionsModule, JavaScriptOptionsDialog, JavaScriptOptionsResponse>(request);
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.Javascript));
 
             FileUtility.DeleteFiles(TestingFolder);
