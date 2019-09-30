@@ -1147,5 +1147,95 @@ namespace $safeprojectname$.Xrm
         {
             return (AttributeTypeCode)GetFieldMetadata(field, entity).AttributeType;
         }
+
+        public IEnumerable<ExecuteMultipleResponseItem> ExecuteMultiple(IEnumerable<OrganizationRequest> requests)
+        {
+            var responses = new List<ExecuteMultipleResponseItem>();
+            if (requests.Any())
+            {
+                var requestsArray = requests.ToArray();
+                var requestsArrayCount = requestsArray.Count();
+
+                var request = CreateExecuteMultipleRequest();
+
+                var currentSetSize = 0;
+                for (var i = 0; i < requestsArrayCount; i++)
+                {
+                    var organizationRequest = requestsArray.ElementAt(i);
+
+                    request.Requests.Add(organizationRequest);
+                    currentSetSize++;
+                    if (currentSetSize == 1000 || i == requestsArrayCount - 1)
+                    {
+                        var response = (ExecuteMultipleResponse)Execute(request);
+                        foreach (var r in response.Responses)
+                            r.RequestIndex = i - currentSetSize + r.RequestIndex + 1;
+                        responses.AddRange(response.Responses);
+                        request = CreateExecuteMultipleRequest();
+                        currentSetSize = 0;
+                    }
+                }
+            }
+            return responses;
+        }
+
+        private static ExecuteMultipleRequest CreateExecuteMultipleRequest()
+        {
+            var request = new ExecuteMultipleRequest()
+            {
+                // Assign settings that define execution behavior: continue on error, return responses. 
+                Settings = new ExecuteMultipleSettings()
+                {
+                    ContinueOnError = true,
+                    ReturnResponses = true
+                },
+                // Create an empty organization request collection.
+                Requests = new OrganizationRequestCollection()
+            };
+            return request;
+        }
+
+        public IEnumerable<ExecuteMultipleResponseItem> CreateMultiple(IEnumerable<Entity> entities)
+        {
+            var response = ExecuteMultiple(entities.Where(e => e != null).Select(e => new CreateRequest() { Target = e }));
+            return response.ToArray();
+        }
+
+        public IEnumerable<ExecuteMultipleResponseItem> UpdateMultiple(IEnumerable<Entity> entities,
+        IEnumerable<string> fields)
+        {
+            var responses = ExecuteMultiple(entities
+                .Select(e => fields == null ? e : ReplicateWithFields(e, fields))
+                .Select(e => new UpdateRequest() { Target = e }));
+
+            return responses.ToArray();
+        }
+
+        public IEnumerable<Entity> RetrieveMultiple(string recordType, IEnumerable<Guid> ids, IEnumerable<string> fields)
+        {
+            var responses = ExecuteMultiple(ids
+                .Select(id => new RetrieveRequest()
+                {
+                    Target = new EntityReference(recordType, id),
+                    ColumnSet = CreateColumnSet(fields)
+                }).ToArray());
+
+            foreach (var item in responses.Cast<ExecuteMultipleResponseItem>())
+            {
+                if (item.Fault != null)
+                    throw new FaultException<OrganizationServiceFault>(item.Fault, item.Fault.Message);
+
+                yield return ((RetrieveResponse)item.Response).Entity;
+            }
+        }
+
+        public IEnumerable<ExecuteMultipleResponseItem> DeleteMultiple(IEnumerable<Entity> entities)
+        {
+            var response =
+                ExecuteMultiple(
+                    entities.Where(e => e != null)
+                        .Select(e => new DeleteRequest() { Target = new EntityReference(e.LogicalName, e.Id) }));
+            return response.ToArray();
+        }
     }
 }

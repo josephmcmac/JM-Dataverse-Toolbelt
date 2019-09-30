@@ -31,7 +31,7 @@ namespace $safeprojectname$.Xrm
                 if (MessageName == PluginMessage.Create || MessageName == PluginMessage.Update)
                     return TargetEntity.Id;
                 else if (MessageName == PluginMessage.SetStateDynamicEntity || MessageName == PluginMessage.Delete ||
-                         MessageName == PluginMessage.QualifyLead || MessageName == PluginMessage.Assign)
+                         MessageName == PluginMessage.QualifyLead || MessageName == PluginMessage.Assign || MessageName == PluginMessage.Merge)
                     return TargetEntityReference.Id;
                 else if (Context.InputParameters.Contains("EmailId") && Context.InputParameters["EmailId"] is Guid)
                     return (Guid)Context.InputParameters["EmailId"];

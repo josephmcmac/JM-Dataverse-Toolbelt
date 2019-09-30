@@ -389,7 +389,7 @@ namespace $safeprojectname$.Xrm
                         result = (int)result + (int)fieldValue;
                     else
                         throw new InvalidPluginExecutionException("SumField function not implemented for field type " +
-                                                                  result.GetType());
+                                                                  fieldValue.GetType());
                 }
             }
             return result;
@@ -420,9 +420,11 @@ namespace $safeprojectname$.Xrm
                             result = (Double)result + (Double)temp;
                         else if (temp is Money)
                             result = new Money(((Money)result).Value + ((Money)temp).Value);
+                        else if (temp is int)
+                            result = (int)result + (int)temp;
                         else
                             throw new InvalidPluginExecutionException(
-                                "SumField function not implemented for field type " + result.GetType());
+                                "SumField function not implemented for field type " + temp.GetType());
                     }
                 }
             }
