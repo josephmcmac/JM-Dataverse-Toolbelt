@@ -455,11 +455,13 @@ namespace JosephM.Application.ViewModel.Grid
                     TotalCount = DisplayTotalCount && GetTotalCount != null
                         ? GetTotalCount()
                         : (int?)null;
+
+                    var gridRows = GridRowViewModel.CreateGridRows(records, this, isReadOnly: IsReadOnly); 
                     ApplicationController.DoOnMainThread(() =>
                     {
                         try
                         {
-                            GridRecords = GridRowViewModel.LoadRows(records, this, isReadOnly: IsReadOnly);
+                            GridRecords = new ObservableCollection<GridRowViewModel>(gridRows);
                             OnPropertyChanged(nameof(PageDescription));
                             HasMoreRows = getRecordsResponse.HasMoreRecords;
                         }

@@ -76,15 +76,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                                 {
                                     ApplicationController.DoOnAsyncThread(() =>
                                     {
-                                        try
-                                        {
-                                            r.LoadingViewModel.IsLoading = true;
-                                            LoadSavedObject(item, (ObjectEntryViewModel)r);
-                                        }
-                                        finally
-                                        {
-                                            r.LoadingViewModel.IsLoading = false;
-                                        }
+                                        LoadSavedObject(item, (ObjectEntryViewModel)r);
                                     });
                                 }));
                             }
@@ -169,6 +161,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                 ((ServiceRequestBase)formObject).DisplaySavedSettingFields = false;
 
             loadIntoForm.LoadingViewModel.IsLoading = true;
+            loadIntoForm.LoadingViewModel.LoadingMessage = "Please Wait While Loading";
             //allow loading to display
             Thread.Sleep(1000);
 

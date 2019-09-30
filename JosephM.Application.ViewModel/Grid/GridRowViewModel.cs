@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
@@ -175,16 +176,14 @@ namespace JosephM.Application.ViewModel.Grid
             }
         }
 
-        public static ObservableCollection<GridRowViewModel> LoadRows(IEnumerable<IRecord> records,
+        public static IEnumerable<GridRowViewModel> CreateGridRows(IEnumerable<IRecord> records,
             DynamicGridViewModel gridVm, bool isReadOnly = false)
         {
-            var gridRows = new ObservableCollection<GridRowViewModel>();
-
+            var gridRows = new List<GridRowViewModel>();
             foreach (var record in records)
             {
                 gridRows.Add(new GridRowViewModel(record, gridVm, isReadOnly: isReadOnly));
             }
-
             return gridRows;
         }
 

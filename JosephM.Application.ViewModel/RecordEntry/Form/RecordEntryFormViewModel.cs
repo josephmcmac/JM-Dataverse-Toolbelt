@@ -342,12 +342,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
                 foreach (var section in sections)
                 {
-                    if (section is FormFieldSection)
+                    if (section is FormFieldSection ffs)
                     {
-                        sectionViewModels.Add(new FieldSectionViewModel(
-                            (FormFieldSection)section,
+                        var sectionVm = new FieldSectionViewModel(
+                            ffs,
                             this
-                            ));
+                            );
+                        sectionVm.IsVisible = ffs.FormFields.Any(f => FormService.IsFieldInContext(f.FieldName, GetRecord()));
+                        sectionViewModels.Add(sectionVm);
                     }
                 }
                 //now set the section view model property in the ui thread which will notify the ui with the sections

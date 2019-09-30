@@ -47,11 +47,7 @@ namespace JosephM.Application.Desktop.Module.Crud
                     .Where(r => RecordService.RecordTypeExists(r))
                     .ToArray()).Result;
 
-                DoOnMainThread(() =>
-                {
-                    try
-                    {
-                        var customFunctionList = new List<CustomGridFunction>()
+                var customFunctionList = new List<CustomGridFunction>()
                         {
                             new CustomGridFunction("BULKUPDATE", "Bulk Update", new []
                             {
@@ -98,20 +94,12 @@ namespace JosephM.Application.Desktop.Module.Crud
                                 }, (g) => g.GridRecords != null && g.GridRecords.Any()),
                             })
                         };
-                        customFunctionList.AddRange(GetExtendedGridFunctions());
-                        QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
-                        Controller.LoadToUi(QueryViewModel);
-                        DoOnAsynchThread(() =>
-                        {
-                            RecordService.LoadFieldsForAllEntities();
-                            RecordService.LoadRelationshipsForAllEntities();
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        ApplicationController.ThrowException(ex);
-                    }
-                });
+                customFunctionList.AddRange(GetExtendedGridFunctions());
+                QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
+                Controller.LoadToUi(QueryViewModel);
+
+                RecordService.LoadFieldsForAllEntities();
+                RecordService.LoadRelationshipsForAllEntities();
             }
             catch (Exception ex)
             {
