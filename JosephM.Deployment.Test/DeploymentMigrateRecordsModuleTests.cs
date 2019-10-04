@@ -73,7 +73,7 @@ namespace JosephM.Deployment.Test
             account2 = UpdateFieldsAndRetreive(account2, Fields.account_.name);
 
             var altConnection = GetAltSavedXrmRecordConfiguration();
-            var altService = new XrmRecordService(altConnection);
+            var altService = new XrmRecordService(altConnection, ServiceFactory);
             var accountsAlt = altService.RetrieveAllAndClauses(Entities.account, null);
             foreach (var account in accountsAlt)
                 altService.Delete(account);

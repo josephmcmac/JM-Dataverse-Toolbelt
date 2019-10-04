@@ -70,7 +70,8 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
 
         private void AddRedirectToConnectionEntryIfNotConnected(IVisualStudioService visualStudioService)
         {
-            if (string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
+            if (string.IsNullOrWhiteSpace(XrmRecordService.XrmRecordConfiguration.OrganizationUniqueName)
+                && !XrmRecordService.XrmRecordConfiguration.UseXrmToolingConnector)
             {
                 //if there was no connection then lets redirect to the connection entry first
                 var newConnection = new SavedXrmRecordConfiguration();

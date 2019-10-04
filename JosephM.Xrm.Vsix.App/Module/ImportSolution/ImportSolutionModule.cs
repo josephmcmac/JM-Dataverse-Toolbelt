@@ -4,6 +4,7 @@ using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
@@ -33,7 +34,9 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
                 {
                     try
                     {
-                        ApplicationController.StartProcess(new XrmRecordService(r.GetRecord().GetField(nameof(ImportSolutionResponse.Connection)) as IXrmRecordConfiguration).WebUrl);
+                        var connection = r.GetRecord().GetField(nameof(ImportSolutionResponse.Connection)) as IXrmRecordConfiguration;
+                        var serviceFactory = ApplicationController.ResolveType<IOrganizationConnectionFactory>();
+                        ApplicationController.StartProcess(new XrmRecordService(connection, serviceFactory).WebUrl);
                     }
                     catch (Exception ex)
                     {

@@ -9,6 +9,7 @@ using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
@@ -17,6 +18,7 @@ using JosephM.Xrm.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JosephM.Xrm;
 
 namespace JosephM.Deployment.ImportCsvs
 {
@@ -44,7 +46,9 @@ namespace JosephM.Deployment.ImportCsvs
                 {
                     try
                     {
-                        ApplicationController.StartProcess(new XrmRecordService(r.GetRecord().GetField(nameof(ImportCsvsResponse.Connection)) as IXrmRecordConfiguration).WebUrl);
+                        var connection = r.GetRecord().GetField(nameof(ImportCsvsResponse.Connection)) as IXrmRecordConfiguration;
+                        var serviceFactory = ApplicationController.ResolveType<IOrganizationConnectionFactory>();
+                        ApplicationController.StartProcess(new XrmRecordService(connection, serviceFactory).WebUrl);
                     }
                     catch (Exception ex)
                     {

@@ -25,7 +25,7 @@ namespace JosephM.Deployment.Test
             request.ThisReleaseVersion = "3.0.0.0";
             request.SetVersionPostRelease = "4.0.0.0";
 
-            var altService = new XrmRecordService(altConnection);
+            var altService = new XrmRecordService(altConnection, ServiceFactory);
             var targetSolution = altService.GetFirst(Entities.solution, Fields.solution_.uniquename, sourceSolution.GetStringField(Fields.solution_.uniquename));
             if (targetSolution != null)
                 altService.Delete(targetSolution);

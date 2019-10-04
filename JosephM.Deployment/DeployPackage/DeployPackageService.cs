@@ -4,6 +4,7 @@ using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ImportXml;
 using JosephM.Deployment.SolutionImport;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,8 +14,11 @@ namespace JosephM.Deployment.DeployPackage
     public class DeployPackageService :
         ServiceBase<DeployPackageRequest, DeployPackageResponse, DataImportResponseItem>
     {
-        public DeployPackageService()
+        private XrmOrganizationConnectionFactory XrmServiceFactory { get; }
+
+        public DeployPackageService(XrmOrganizationConnectionFactory xrmServiceFactory)
         {
+            XrmServiceFactory = xrmServiceFactory;
         }
 
         public override void ExecuteExtention(DeployPackageRequest request, DeployPackageResponse response,
@@ -25,7 +29,7 @@ namespace JosephM.Deployment.DeployPackage
 
         private void DeployPackage(DeployPackageRequest request, ServiceRequestController controller, DeployPackageResponse response)
         {
-            var xrmRecordService = new XrmRecordService(request.Connection, controller.Controller);
+            var xrmRecordService = new XrmRecordService(request.Connection, controller.Controller, XrmServiceFactory);
             var packageFolder = request.FolderContainingPackage.FolderPath;
             var solutionFiles = Directory.GetFiles(packageFolder, "*.zip")
                 .OrderBy(s => s)

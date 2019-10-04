@@ -52,7 +52,7 @@ namespace JosephM.Xrm.Test
             get
             {
                 if(_xrmService == null)
-                    _xrmService = new XrmService(XrmConfiguration, Controller);
+                    _xrmService = new XrmService(XrmConfiguration, Controller, null);
                 return _xrmService;
             }
         }
@@ -618,5 +618,14 @@ namespace JosephM.Xrm.Test
             var blah = XrmService.RetrieveAllOrClauses(type, names.Select(n => new ConditionExpression(XrmService.GetPrimaryNameField(type), ConditionOperator.Equal, n)));
             DeleteMultiple(blah);
         }
+
+        public virtual IOrganizationConnectionFactory ServiceFactory
+        {
+            get
+            {
+                return new XrmOrganizationConnectionFactory();
+            }
+        }
+
     }
 }

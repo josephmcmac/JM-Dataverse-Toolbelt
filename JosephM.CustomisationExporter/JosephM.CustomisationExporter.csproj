@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.CustomisationExporter</RootNamespace>
     <AssemblyName>JosephM.CustomisationExporter</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -94,6 +94,10 @@
     <ProjectReference Include="..\JosephM.Xrm.MetadataImportExport\JosephM.Xrm.MetadataImportExport.csproj">
       <Project>{73DF8422-96EE-46C2-B534-58BE8BB12678}</Project>
       <Name>JosephM.Xrm.MetadataImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7F69213D-3EFB-4736-9962-0151F92FA7D4}</Project>
+      <Name>JosephM.Xrm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -2,8 +2,9 @@
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
-using JosephM.Deployment.DataImport;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using System;
 
 namespace JosephM.Deployment.DeploySolution
@@ -29,7 +30,9 @@ namespace JosephM.Deployment.DeploySolution
                 {
                     try
                     {
-                        ApplicationController.StartProcess(new XrmRecordService(r.GetRecord().GetField(nameof(DeploySolutionResponse.ConnectionDeployedInto)) as IXrmRecordConfiguration).WebUrl);
+                        var connection = r.GetRecord().GetField(nameof(DeploySolutionResponse.ConnectionDeployedInto)) as IXrmRecordConfiguration;
+                        var serviceFactory = ApplicationController.ResolveType<IOrganizationConnectionFactory>();
+                        ApplicationController.StartProcess(new XrmRecordService(connection, serviceFactory).WebUrl);
                     }
                     catch (Exception ex)
                     {

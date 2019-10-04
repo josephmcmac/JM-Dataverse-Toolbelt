@@ -4,10 +4,12 @@ using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using System;
 using System.Linq;
 
@@ -34,7 +36,9 @@ namespace JosephM.Deployment.ImportSql
                 {
                     try
                     {
-                        ApplicationController.StartProcess(new XrmRecordService(r.GetRecord().GetField(nameof(ImportSqlResponse.Connection)) as IXrmRecordConfiguration).WebUrl);
+                        var connection = r.GetRecord().GetField(nameof(ImportSqlResponse.Connection)) as IXrmRecordConfiguration;
+                        var serviceFactory = ApplicationController.ResolveType<IOrganizationConnectionFactory>();
+                        ApplicationController.StartProcess(new XrmRecordService(connection, serviceFactory).WebUrl);
                     }
                     catch (Exception ex)
                     {

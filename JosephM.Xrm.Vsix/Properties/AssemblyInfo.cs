@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Microsoft.VisualStudio.Shell;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -7,6 +8,13 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("JosephM.Xrm.Vsix")]
 [assembly: AssemblyCompany("JosephM")]
 [assembly: AssemblyProduct("JosephM.Xrm.Vsix")]
+[assembly: ProvideBindingRedirection(AssemblyName = "Microsoft.IdentityModel.Clients.ActiveDirectory",
+        PublicKeyToken = "31bf3856ad364e35",
+        Culture = "neutral",
+        NewVersion = "5.2.2.0",
+        OldVersionLowerBound = "0.0.0.0",
+        OldVersionUpperBound = "5.2.2.0")]
+
 
 //WARNING!! DON:T CHANGE THIS UNLESS ALSO CHANGING THE REFERENCING .vstemplate files
 [assembly: AssemblyVersion("2.0.0.0")]

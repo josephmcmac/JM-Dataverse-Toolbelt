@@ -10,12 +10,14 @@ using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace JosephM.Xrm
 {
@@ -57,8 +59,10 @@ namespace JosephM.Xrm
 
         private void SetServiceTimeout()
         {
-            if (_service != null)
-                _service.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
+            if (_service is OrganizationServiceProxy proxy)
+                proxy.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
+            else if (_service is CrmServiceClient client && client.OrganizationServiceProxy != null)
+                client.OrganizationServiceProxy.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
         }
 
         public static DateTime MinCrmDateTime = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc);
@@ -97,26 +101,14 @@ namespace JosephM.Xrm
         /// <summary>
         ///     DONT USE CALL THE EXECUTE METHOD OR THE PROPERTY
         /// </summary>
-        private OrganizationServiceProxy _service;
+        private IOrganizationService _service;
 
-        internal XrmService(OrganizationServiceProxy actualService, LogController uiController)
-        {
-            _service = actualService;
-            Controller = uiController;
-        }
-
-        public XrmService(IXrmConfiguration crmConfig, LogController controller)
+        public XrmService(IXrmConfiguration crmConfig, LogController controller, IOrganizationConnectionFactory serviceFactory)
         {
             XrmConfiguration = crmConfig;
             Controller = controller;
+            ServiceFactory = serviceFactory ?? new XrmOrganizationConnectionFactory();
         }
-
-        public XrmService(IXrmConfiguration crmConfig)
-        {
-            XrmConfiguration = crmConfig;
-            Controller = new LogController();
-        }
-
 
         protected object LockObject
         {
@@ -150,11 +142,12 @@ namespace JosephM.Xrm
         }
 
         public IXrmConfiguration XrmConfiguration { get; set; }
+        public IOrganizationConnectionFactory ServiceFactory { get; }
 
         /// <summary>
         ///     DON'T USE CALL THE EXECUTE METHOD
         /// </summary>
-        private OrganizationServiceProxy Service
+        private IOrganizationService Service
         {
             get
             {
@@ -162,8 +155,8 @@ namespace JosephM.Xrm
                 {
                     if (_service == null)
                     {
-                        var getConnection = new XrmConnection(XrmConfiguration).GetOrganisationConnection();
-                        _service = getConnection.ServiceProxy;
+                        var getConnection = ServiceFactory.GetOrganisationConnection(XrmConfiguration);
+                        _service = getConnection.Service;
                         _organisation = getConnection.Organisation;
                         SetServiceTimeout();
                     }
@@ -260,14 +253,10 @@ namespace JosephM.Xrm
                 {
                     //Error was being thrown after service running overnight with no activity
                     //adding logic to reconnect when this error thrown
-                    Controller.LogLiteral("Received " + ex.GetType().Name + " checking for Crm config to reconnect..");
                     if (XrmConfiguration != null)
                     {
-                        Controller.LogLiteral("Crm config found attempting to reconnect..");
-                        var getConnection = new XrmConnection(XrmConfiguration).GetOrganisationConnection();
-                        Service = getConnection.ServiceProxy;
-                        _organisation = getConnection.Organisation;
-                        SetServiceTimeout();
+                        Controller.LogLiteral("Attempting to reconnect..");
+                        _service = null;
                         result = Service.Execute(request);
                         Controller.LogLiteral("Reconnected..");
                     }

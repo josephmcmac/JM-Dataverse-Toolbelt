@@ -70,7 +70,7 @@ namespace JosephM.Xrm
                 organizationProxy = GetProxy<IOrganizationService, OrganizationServiceProxy>(orgServiceManagement,
                     credentials);
 
-                return new GetOrganisationConnectionResponse(organizationProxy, organisation);
+                return new GetOrganisationConnectionResponse(organizationProxy, new Organisation(organisation));
             }
             catch (Exception ex)
             {
@@ -286,18 +286,6 @@ namespace JosephM.Xrm
                 .GetConstructor(new[]
                 {typeof (IServiceManagement<TService>), typeof (ClientCredentials)})
                 .Invoke(new object[] {serviceManagement, authCredentials.ClientCredentials});
-        }
-
-        public class GetOrganisationConnectionResponse
-        {
-            public GetOrganisationConnectionResponse(OrganizationServiceProxy serviceProxy, OrganizationDetail organisation)
-            {
-                Organisation = new Organisation(organisation);
-                ServiceProxy = serviceProxy;
-            }
-
-            public Organisation Organisation { get; private set; }
-            public OrganizationServiceProxy ServiceProxy { get; private set; }
         }
     }
 }

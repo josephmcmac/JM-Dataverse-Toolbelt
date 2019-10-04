@@ -703,7 +703,7 @@ namespace JosephM.Record.Service
                                     typeof (ServiceConnection).Name, typeof (IRecordService).Name));
                         serviceType = serviceConnectionAttr.ServiceType;
                     }
-                    var service = TypeLoader.LoadServiceForConnection(connectionObject, serviceType);
+                    var service = TypeLoader.LoadServiceForConnection(connectionObject, serviceType, ObjectResolver);
                     _serviceConnections.Add(value, service);
                     return service;
                 }

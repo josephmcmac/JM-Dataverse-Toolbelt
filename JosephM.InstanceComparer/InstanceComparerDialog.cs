@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Xrm;
 using System.Collections.Generic;
 
 namespace JosephM.InstanceComparer
@@ -7,8 +8,8 @@ namespace JosephM.InstanceComparer
     public class InstanceComparerDialog :
         ServiceRequestDialog<InstanceComparerService, InstanceComparerRequest, InstanceComparerResponse, InstanceComparerResponseItem>
     {
-        public InstanceComparerDialog(IDialogController dialogController)
-            : base(new InstanceComparerService(), dialogController)
+        public InstanceComparerDialog(IOrganizationConnectionFactory serviceFactory, DialogController dialogController)
+            : base(new InstanceComparerService(serviceFactory), dialogController)
         {
         }
 

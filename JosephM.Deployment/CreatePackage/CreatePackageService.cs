@@ -93,7 +93,7 @@ namespace JosephM.Deployment.CreatePackage
                         FolderContainingPackage = request.FolderPath,
                         Connection = request.DeployPackageInto
                     };
-                    var deployService = new DeployPackageService();
+                    var deployService = new DeployPackageService(null);
                     var deployPackageResponse = new DeployPackageResponse();
                     deployService.ExecuteExtention(deployRequest, deployPackageResponse, controller);
                     response.LoadDeployPackageResponse(deployPackageResponse);

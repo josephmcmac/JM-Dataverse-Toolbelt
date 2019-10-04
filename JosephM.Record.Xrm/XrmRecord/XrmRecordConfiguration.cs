@@ -6,10 +6,12 @@ using JosephM.Core.Service;
 
 namespace JosephM.Record.Xrm.XrmRecord
 {
-    [Instruction("Enter Details For Connecting To The Dynamics Instance\n\nThe Discovery Service Address And Organisation Unique Name Are Found By Navigating To Settings -> Customizations -> Developer Resources In The Main Menu Of The Dynamics Web Application\n\nNote Connections Will Not Work When They Require 2 Factor Authentication")]
+    [Instruction("Enter Details For Connecting To The Dynamics Instance\n\nIf The Connection Requires Multi Factor Authentication Then The Xrm Tooling Connector Option Must Be Used\n\nOtherwise If Not Using The Xrm Tooling Connector Option, Connection Details Are Stored By This App And Passed Through Using The SDKs AuthenticationCredentials Class. Using This Method Authentication Will Fail If Multi Factor Authentication is Required For The User")]
     [ServiceConnection(typeof(XrmRecordService))]
     public class XrmRecordConfiguration : IXrmRecordConfiguration, IValidatableObject
     {
+        [RequiredProperty]
+        [GridField]
         [GridWidth(150)]
         [MyDescription("Name For Your Connection")]
         [DisplayOrder(2)]
@@ -20,6 +22,19 @@ namespace JosephM.Record.Xrm.XrmRecord
             return Name ?? OrganizationUniqueName;
         }
 
+        [GridField]
+        [GridWidth(85)]
+        [DisplayOrder(15)]
+        [MyDescription("This Option Will Use The Connection Controls Provided By Assemblies Within The SDK. This Option Supports MFA And Stored Connections Will Be Managed By The SDK Assemblies")]
+        public bool UseXrmToolingConnector { get; set; }
+
+        [DisplayOrder(16)]
+        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), true)]
+        [ReadOnlyWhenSet]
+        public string ToolingConnectionId { get; set; }
+
+        [GridField]
+        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [GridWidth(160)]
         [MyDescription("The User Authentication Type For The CRM Instance")]
         [DisplayOrder(20)]
@@ -27,12 +42,15 @@ namespace JosephM.Record.Xrm.XrmRecord
         [DisplayName("Authentication Type")]
         public XrmRecordAuthenticationProviderType AuthenticationProviderType { get; set; }
 
+        [GridField]
+        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [MyDescription("The Discovery Service Address For The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(30)]
         [RequiredProperty]
         [GridWidth(400)]
         public string DiscoveryServiceAddress { get; set; }
 
+        [GridField]
         [PropertyInContextByPropertyValue(nameof(AreDiscoveryDetailsEntered), true)]
         [MyDescription("The Unique Name Of The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(80)]
@@ -41,6 +59,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [DisplayName("Org Unique Name")]
         public string OrganizationUniqueName { get; set; }
 
+        [GridField]
         [MyDescription("If Active Directory Authentication The Domain For Your Login")]
         [DisplayOrder(50)]
         [RequiredProperty]
@@ -52,6 +71,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             })]
         public string Domain { get; set; }
 
+        [GridField]
         [GridWidth(300)]
         [MyDescription("The Username Used To Login To The Instance")]
         [DisplayOrder(60)]
@@ -65,6 +85,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             })]
         public string Username { get; set; }
 
+        [GridField]
         [GridWidth(150)]
         [MyDescription("The Password For Your User")]
         [DisplayOrder(70)]
@@ -80,7 +101,9 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IsValidResponse Validate()
         {
-            return new XrmRecordService(this, new LogController()).VerifyConnection();
+            if (UseXrmToolingConnector)
+                return new IsValidResponse();
+            return new XrmRecordService(this, new LogController(), null).VerifyConnection();
         }
 
         [Hidden]

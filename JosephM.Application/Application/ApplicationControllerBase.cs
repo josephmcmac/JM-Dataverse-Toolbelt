@@ -65,6 +65,11 @@ namespace JosephM.Application.Application
 
         public abstract bool UserConfirmation(string message);
 
+        public bool CurrentThreadIsDispatcher()
+        {
+            return Dispatcher.Thread == Thread.CurrentThread;
+        }
+
         public void DoOnMainThread(Action action)
         {
             if (!RunThreadsAsynch)

@@ -4,6 +4,9 @@ namespace JosephM.Xrm
 {
     public interface IXrmConfiguration
     {
+        string Name { get; }
+        bool UseXrmToolingConnector { get; }
+        string ToolingConnectionId { get; }
         AuthenticationProviderType AuthenticationProviderType { get; }
         string DiscoveryServiceAddress { get; }
         string OrganizationUniqueName { get; }

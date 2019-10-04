@@ -8,6 +8,7 @@ using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Crud;
 using System;
@@ -22,11 +23,18 @@ namespace JosephM.InstanceComparer
     public class InstanceComparerService :
         ServiceBase<InstanceComparerRequest, InstanceComparerResponse, InstanceComparerResponseItem>
     {
+        public InstanceComparerService(IOrganizationConnectionFactory connectionFactory)
+        {
+            ConnectionFactory = connectionFactory;
+        }
+
+        private IOrganizationConnectionFactory ConnectionFactory { get; }
+
         public override void ExecuteExtention(InstanceComparerRequest request, InstanceComparerResponse response,
             ServiceRequestController controller)
         {
             controller.Controller.UpdateProgress(0, 1, "Loading");
-            var processContainer = new ProcessContainer(request, response, controller.Controller);
+            var processContainer = new ProcessContainer(request, response, controller.Controller, ConnectionFactory);
             response.AllDifferences = processContainer.Differences;
             //ENSURE TO INCREASE THIS IF ADDING TO PROCESSES
 
@@ -1717,14 +1725,14 @@ namespace JosephM.InstanceComparer
             }
 
             public ProcessContainer(InstanceComparerRequest request, InstanceComparerResponse response,
-                LogController controller)
+                LogController controller, IOrganizationConnectionFactory connectionFactory)
             {
                 Request = request;
                 Response = response;
                 Controller = controller;
-                ServiceOne = new XrmRecordService(request.ConnectionOne);
+                ServiceOne = new XrmRecordService(request.ConnectionOne, connectionFactory);
                 ServiceOne.SetFormService(new XrmFormService());
-                ServiceTwo = new XrmRecordService(request.ConnectionTwo);
+                ServiceTwo = new XrmRecordService(request.ConnectionTwo, connectionFactory);
                 ServiceTwo.SetFormService(new XrmFormService());
                 Response.ServiceOne = ServiceOne;
                 Response.ServiceTwo = ServiceTwo;

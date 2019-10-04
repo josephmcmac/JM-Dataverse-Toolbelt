@@ -5,10 +5,12 @@ using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
@@ -39,7 +41,9 @@ namespace JosephM.Deployment.ImportExcel
                 {
                     try
                     {
-                        ApplicationController.StartProcess(new XrmRecordService(r.GetRecord().GetField(nameof(ImportExcelResponse.Connection)) as IXrmRecordConfiguration).WebUrl);
+                        var connection = r.GetRecord().GetField(nameof(ImportExcelResponse.Connection)) as IXrmRecordConfiguration;
+                        var serviceFactory = ApplicationController.ResolveType<IOrganizationConnectionFactory>();
+                        ApplicationController.StartProcess(new XrmRecordService(connection, serviceFactory).WebUrl);
                     }
                     catch (Exception ex)
                     {
@@ -64,7 +68,7 @@ namespace JosephM.Deployment.ImportExcel
                     var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
                     if (instance != null)
                     {
-                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var exportXmlService = new ImportExcelService(xrmRecordService);
                         var dialog = new ImportExcelDialog(exportXmlService, new DialogController(ApplicationController), xrmRecordService);
                         dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);

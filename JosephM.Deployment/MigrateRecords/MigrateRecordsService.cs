@@ -2,6 +2,7 @@ using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using JosephM.Deployment.ExportXml;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using Microsoft.Xrm.Sdk;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,17 @@ namespace JosephM.Deployment.MigrateRecords
     public class MigrateRecordsService :
         ServiceBase<MigrateRecordsRequest, MigrateRecordsResponse, DataImportResponseItem>
     {
-        public MigrateRecordsService()
+        public MigrateRecordsService(IOrganizationConnectionFactory connectionFactory)
         {
+            ConnectionFactory = connectionFactory;
         }
+
+        private IOrganizationConnectionFactory ConnectionFactory { get; }
 
         public override void ExecuteExtention(MigrateRecordsRequest request, MigrateRecordsResponse response,
             ServiceRequestController controller)
         {
-            var exportService = new ExportXmlService(new XrmRecordService(request.SourceConnection));
+            var exportService = new ExportXmlService(new XrmRecordService(request.SourceConnection, ConnectionFactory));
 
             var exportedEntities = new List<Entity>();
 
@@ -35,7 +39,7 @@ namespace JosephM.Deployment.MigrateRecords
                 }
             }
 
-            var importService = new DataImportService(new XrmRecordService(request.TargetConnection));
+            var importService = new DataImportService(new XrmRecordService(request.TargetConnection, ConnectionFactory));
             var matchOption = request.MatchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly;
             var dataImportResponse = importService.DoImport(removeDuplicates, controller, request.MaskEmails, matchOption: matchOption, includeOwner: request.IncludeOwner, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
             response.ConnectionMigratedInto = request.TargetConnection;

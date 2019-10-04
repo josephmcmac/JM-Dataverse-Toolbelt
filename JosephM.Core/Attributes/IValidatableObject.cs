@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Service;
+﻿using JosephM.Core.AppConfig;
+using JosephM.Core.Service;
 
 namespace JosephM.Core.Attributes
 {

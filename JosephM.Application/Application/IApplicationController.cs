@@ -10,6 +10,7 @@ namespace JosephM.Application.Application
     /// </summary>
     public interface IApplicationController : IDependencyResolver
     {
+        bool CurrentThreadIsDispatcher();
         bool RunThreadsAsynch { get; }
         /// <summary>
         ///     The Name Of The Application

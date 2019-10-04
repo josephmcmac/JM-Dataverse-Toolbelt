@@ -5,6 +5,7 @@ using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Extentions;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
@@ -69,7 +70,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
                     if (instance != null)
                     {
-                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var xrmTextSearchService = new XrmTextSearchService(xrmRecordService, new DocumentWriter.DocumentWriter());
                         var dialog = new XrmTextSearchDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService);
                         dialog.SetTabLabel(instance.Name + " " + dialog.TabLabel);

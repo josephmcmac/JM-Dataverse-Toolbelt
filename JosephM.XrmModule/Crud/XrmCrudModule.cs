@@ -6,8 +6,10 @@ using JosephM.Application.ViewModel.Grid;
 using JosephM.Core.Attributes;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using JosephM.XrmModule.SavedXrmConnections;
 using System.Linq;
+using JosephM.Core.AppConfig;
 
 namespace JosephM.XrmModule.Crud
 {
@@ -40,7 +42,7 @@ namespace JosephM.XrmModule.Crud
                     var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
                     if (instance != null)
                     {
-                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var xrmRecordService = new XrmRecordService(instance, serviceFactory: ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var dialog = new XrmCrudDialog(xrmRecordService, new DialogController(ApplicationController));
                         dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);

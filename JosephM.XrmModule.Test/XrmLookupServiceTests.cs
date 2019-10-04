@@ -28,7 +28,7 @@ namespace JosephM.XrmModule.Test
                 var classSelfMapper = new ClassSelfMapper();
                 var newConnection = classSelfMapper.Map(GetXrmRecordConfiguration());
                 newConnection.OrganizationUniqueName = "Foo";
-                var newService = new XrmRecordService(newConnection);
+                var newService = new XrmRecordService(newConnection, ServiceFactory);
                 var objectEntryViewModel = new ObjectEntryViewModel(null, null, testEntryObject, FakeFormController.CreateForObject(testEntryObject, new FakeApplicationController(), newService));
                 objectEntryViewModel.LoadFormSections();
                 Assert.IsNotNull(testEntryObject.XrmLookupField);

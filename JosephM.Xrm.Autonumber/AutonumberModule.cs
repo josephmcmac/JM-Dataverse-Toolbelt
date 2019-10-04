@@ -9,7 +9,7 @@ using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
-using JosephM.Record.Metadata;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.XrmModule.Crud;
@@ -49,7 +49,7 @@ namespace JosephM.Xrm.Autonumber
                     var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
                     if (instance != null)
                     {
-                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var dialog = new AutonumberDialog(xrmRecordService, new DialogController(ApplicationController));
                         dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);

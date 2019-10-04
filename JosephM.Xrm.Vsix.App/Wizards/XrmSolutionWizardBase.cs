@@ -18,6 +18,7 @@ using VSLangProj;
 using JosephM.Xrm.Vsix.App;
 using JosephM.Core.AppConfig;
 using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.Xrm;
 
 namespace JosephM.Xrm.Vsix.Wizards
 {
@@ -89,7 +90,9 @@ namespace JosephM.Xrm.Vsix.Wizards
                 packageSettings.SolutionObjectPrefix = solutionName.Split('.').First();
             }
 
-            var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, new XrmRecordService(new XrmRecordConfiguration(), formService: new XrmFormService()), saveButtonLabel: "Next");
+            var serviceFactory = applicationController.ResolveType<IOrganizationConnectionFactory>();
+            var recordService = new XrmRecordService(new XrmRecordConfiguration(), serviceFactory, formService: new XrmFormService());
+            var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, recordService, saveButtonLabel: "Next");
             settingsDialog.SaveSettings = false;
             var uriQuery = new UriQuery();
             uriQuery.Add("Modal", true.ToString());

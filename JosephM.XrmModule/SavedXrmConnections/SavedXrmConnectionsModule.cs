@@ -12,6 +12,7 @@ using JosephM.Core.Log;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.Mappers;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using JosephM.XrmModule.Crud;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,8 @@ namespace JosephM.XrmModule.SavedXrmConnections
 
         public override void RegisterTypes()
         {
+            if (!Controller.GetLoadedModules().Any(m => m is ToolingConnector.ToolingConnectorModule))
+                RegisterInstance<IOrganizationConnectionFactory>(new XrmOrganizationConnectionFactory());
             var configManager = Resolve<ISettingsManager>();
             configManager.ProcessNamespaceChange(GetType().Namespace, "JosephM.Prism.XrmModule.SavedXrmConnections");
             base.RegisterTypes();
@@ -40,7 +43,8 @@ namespace JosephM.XrmModule.SavedXrmConnections
             try
             {
                 var xrmConfiguration = configManager.Resolve<XrmRecordConfiguration>();
-                RefreshXrmServices(xrmConfiguration, ApplicationController);
+                var spawnConnectAsynch = !xrmConfiguration.UseXrmToolingConnector;
+                RefreshXrmServices(xrmConfiguration, ApplicationController, spawnConnectAsynch: spawnConnectAsynch);
             }
             catch (ConfigurationErrorsException ex)
             {
@@ -54,16 +58,21 @@ namespace JosephM.XrmModule.SavedXrmConnections
 
         private static IXrmRecordConfiguration LastXrmConfiguration { get; set; }
 
-        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller, XrmRecordService xrmRecordService = null)
+        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller, XrmRecordService xrmRecordService = null, bool spawnConnectAsynch = true)
         {
             controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
-            xrmRecordService = xrmRecordService ?? new XrmRecordService(xrmConfiguration, controller.ResolveType<LogController>(), formService: new XrmFormService());
+            var serviceFactory = controller.ResolveType<IOrganizationConnectionFactory>();
+            xrmRecordService = xrmRecordService ?? new XrmRecordService(xrmConfiguration, serviceFactory, formService: new XrmFormService());
             xrmRecordService.XrmRecordConfiguration = xrmConfiguration;
             controller.RegisterInstance(xrmRecordService);
             LastXrmConfiguration = xrmConfiguration;
-            if (xrmConfiguration.OrganizationUniqueName == null)
+            if (xrmConfiguration.OrganizationUniqueName == null && !xrmConfiguration.UseXrmToolingConnector)
                 RefreshConnectionNotification(controller, "No Active Connection");
-            else if (controller.RunThreadsAsynch)
+            else if(!spawnConnectAsynch)
+            {
+                RefreshConnectionNotification(controller, string.Format("Connected To '{0}'", xrmConfiguration));
+            }
+            else if (controller.RunThreadsAsynch && spawnConnectAsynch)
             {
                 controller.DoOnAsyncThread(() =>
                 {
@@ -108,7 +117,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
                 foreach (var connection in savedConnections.Connections.OrderBy(c => c.Name).ToArray())
                 {
                     if (!string.IsNullOrWhiteSpace(connection.Name)
-                        && !connection.Active
+                        && !connection.Active 
                         && !actions.ContainsKey(connection.Name))
                     {
                         actions.Add(connection.Name, () =>
@@ -245,7 +254,8 @@ namespace JosephM.XrmModule.SavedXrmConnections
                     var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
                     if (instance != null)
                     {
-                        var xrmRecordService = new XrmRecordService(instance);
+                        var serviceFactory = ApplicationController.ResolveType<IOrganizationConnectionFactory>();
+                        var xrmRecordService = new XrmRecordService(instance, serviceFactory);
                         Process.Start(xrmRecordService.WebUrl);
                     }
                 }

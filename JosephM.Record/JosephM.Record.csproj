@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\EnumerableRecordFieldMap.cs" />
+    <Compile Include="Attributes\ConnectionConstructor.cs" />
     <Compile Include="Attributes\QuickFind.cs" />
     <Compile Include="Attributes\NotSearchable.cs" />
     <Compile Include="Attributes\ValidForFieldTypes.cs" />

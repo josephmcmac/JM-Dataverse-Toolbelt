@@ -3,6 +3,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.ObjectMapping;
+using JosephM.Record.Attributes;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
@@ -35,10 +36,22 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService = xrmService;
         }
 
-        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, LogController controller, IFormService formService = null)
+        [ConnectionConstructor]
+        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, IOrganizationConnectionFactory serviceFactory)
+            : this(iXrmRecordConfiguration, serviceFactory, null)
+        {
+        }
+
+        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, IOrganizationConnectionFactory serviceFactory, IFormService formService)
+            : this(iXrmRecordConfiguration, new LogController(), serviceFactory, formService: formService)
+        {
+        }
+
+        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, LogController controller, IOrganizationConnectionFactory serviceFactory, IFormService formService = null)
         {
             _formService = formService;
             Controller = controller;
+            ServiceFactory = serviceFactory;
             XrmRecordConfiguration = iXrmRecordConfiguration;
         }
 
@@ -56,7 +69,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 {
                     var xrmRecordConfiguration = new XrmRecordConfigurationInterfaceMapper().Map(_xrmRecordConfiguration);
                     var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
-                    _xrmService = new XrmService(xrmConfiguration, Controller);
+                    _xrmService = new XrmService(xrmConfiguration, Controller, ServiceFactory);
                 }
             }
         }
@@ -82,18 +95,6 @@ namespace JosephM.Record.Xrm.XrmRecord
             XrmService.SendEmail(email.Id);
             return email.Id.ToString();
         }
-
-        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration, IFormService formService = null)
-            : this(iXrmRecordConfiguration, new LogController(), formService)
-        {
-        }
-
-        //DON'T REMOVE THIS CONSTRUCTOR - REQUIRED BY ServiceConnection Attribute
-        public XrmRecordService(IXrmRecordConfiguration iXrmRecordConfiguration)
-            : this(iXrmRecordConfiguration, new LogController())
-        {
-        }
-
 
         public XrmService XrmService
         {
@@ -1275,6 +1276,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         }
 
         public LogController Controller { get; private set; }
+        private IOrganizationConnectionFactory ServiceFactory { get; }
 
         public string GetWebUrl(string recordType, string id, string additionalparams = null, IRecord record = null)
         {

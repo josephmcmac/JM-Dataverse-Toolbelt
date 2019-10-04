@@ -24,7 +24,7 @@ namespace JosephM.InstanceComparer.Test
             //okay this compares portal configuration data between 2 instances
 
             var altConnection = GetAltSavedXrmRecordConfiguration();
-            var altService = new XrmRecordService(altConnection);
+            var altService = new XrmRecordService(altConnection, ServiceFactory);
 
             //create portal data in 1 instance
             RecreatePortalData(createSecondDuplicateSite: true);

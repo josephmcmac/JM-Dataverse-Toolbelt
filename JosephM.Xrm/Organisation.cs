@@ -4,28 +4,30 @@ namespace JosephM.Xrm
 {
     public class Organisation
     {
-        private OrganizationDetail _organisation;
-
         public Organisation(OrganizationDetail organisation)
+            : this(organisation.UniqueName, organisation.FriendlyName, organisation.OrganizationVersion, organisation.Endpoints)
         {
-            _organisation = organisation;
         }
 
-        public string UniqueName => _organisation.UniqueName;
-
-        public string FriendlyName => _organisation.FriendlyName;
-
-        public string Version => _organisation.OrganizationVersion;
-
-        public string WebUrl
+        public Organisation(string uniqueName, string friendlyName, string version, EndpointCollection endPoints)
         {
-            get
+            UniqueName = uniqueName;
+            FriendlyName = friendlyName;
+            Version = version;
+            if (endPoints.ContainsKey(EndpointType.WebApplication))
             {
-                var webUrl = _organisation.Endpoints[EndpointType.WebApplication];
-                if (webUrl != null && webUrl.EndsWith("/"))
-                    webUrl = webUrl.Substring(0, webUrl.Length - 1);
-                return webUrl;
+                WebUrl = endPoints[EndpointType.WebApplication];
+                if (WebUrl != null && WebUrl.EndsWith("/"))
+                    WebUrl = WebUrl.Substring(0, WebUrl.Length - 1);
             }
         }
+
+        public string UniqueName { get; }
+
+        public string FriendlyName { get; }
+
+        public string Version { get; }
+
+        public string WebUrl { get; }
     }
 }

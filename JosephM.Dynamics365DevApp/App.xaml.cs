@@ -18,6 +18,7 @@ using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.XrmModule.AppConnection;
 using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.XrmModule.ToolingConnector;
 using System.Windows;
 
 namespace JosephM.XrmDeveloperTool
@@ -32,7 +33,9 @@ namespace JosephM.XrmDeveloperTool
             base.OnStartup(e);
 
             var app = DesktopApplication.Create("JosephM Dynamics 365 Dev App");
+            app.AddModule<ToolingConnectorModule>();
             app.AddModule<SavedXrmConnectionsModule>();
+            app.AddModule<DevAppApplicationInsightsModule>();
             app.AddModule<DeploymentModule>();
             app.AddModule<CodeGeneratorModule>();
             app.AddModule<XrmRecordExtractModule>();

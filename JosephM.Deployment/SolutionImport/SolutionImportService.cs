@@ -48,7 +48,7 @@ namespace JosephM.Deployment.SolutionImport
                     req.OverwriteUnmanagedCustomizations = true;
 
                     var finished = new Processor();
-                    var extraService = new XrmService(xrmService.XrmConfiguration);
+                    var extraService = new XrmService(xrmService.XrmConfiguration, new LogController(), xrmService.ServiceFactory);
                     var monitoreProgressThread = new Thread(() => DoProgress(importId, controller.GetLevel2Controller(), finished, extraService));
                     monitoreProgressThread.IsBackground = true;
                     monitoreProgressThread.Start();

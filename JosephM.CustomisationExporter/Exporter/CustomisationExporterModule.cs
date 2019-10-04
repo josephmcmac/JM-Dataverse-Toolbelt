@@ -4,8 +4,10 @@ using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
+using JosephM.Core.AppConfig;
 using JosephM.Record.Service;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
 using System.Linq;
@@ -67,7 +69,7 @@ namespace JosephM.CustomisationExporter.Exporter
                     var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
                     if (instance != null)
                     {
-                        var xrmRecordService = new XrmRecordService(instance, formService: new XrmFormService());
+                        var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var xrmTextSearchService = new CustomisationExporterService(xrmRecordService);
                         var dialog = new CustomisationExporterDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService);
                         dialog.SetTabLabel(instance.Name + " " + dialog.TabLabel);

@@ -15,9 +15,12 @@ namespace JosephM.Deployment.DeploySolution
     public class DeploySolutionService :
         ServiceBase<DeploySolutionRequest, DeploySolutionResponse, DeploySolutionResponseItem>
     {
-        public DeploySolutionService()
+        public DeploySolutionService(IOrganizationConnectionFactory connectionFactory)
         {
+            ConnectionFactory = connectionFactory;
         }
+
+        private IOrganizationConnectionFactory ConnectionFactory { get; }
 
         public override void ExecuteExtention(DeploySolutionRequest request, DeploySolutionResponse response,
             ServiceRequestController controller)
@@ -30,7 +33,7 @@ namespace JosephM.Deployment.DeploySolution
             var tasksDone = 0;
             var totalTasks = 4;
 
-            var sourceXrmRecordService = new XrmRecordService(request.SourceConnection);
+            var sourceXrmRecordService = new XrmRecordService(request.SourceConnection, ConnectionFactory);
             var service = sourceXrmRecordService.XrmService;
             var solution = service.Retrieve(Entities.solution, new Guid(request.Solution.Id));
             tasksDone++;
@@ -51,7 +54,7 @@ namespace JosephM.Deployment.DeploySolution
 
             tasksDone++;
             controller.UpdateProgress(tasksDone, totalTasks, "Exporting Solution " + request.Solution.Name);
-            var targetXrmRecordService = new XrmRecordService(request.TargetConnection);
+            var targetXrmRecordService = new XrmRecordService(request.TargetConnection, ConnectionFactory);
             var importSolutionService = new SolutionImportService(targetXrmRecordService);
             var importResponse = importSolutionService.ImportSolutions(new Dictionary<string, byte[]>
             {
