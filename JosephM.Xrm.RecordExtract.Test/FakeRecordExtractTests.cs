@@ -2,7 +2,6 @@
 using JosephM.Core.Test;
 using JosephM.Xrm.RecordExtract.Test.RecordExtract;
 using JosephM.Xrm.RecordExtract.Test.TextSearch;
-using JosephM.Xrm.RecordExtract.TextSearch;
 
 namespace JosephM.Xrm.RecordExtract.Test
 {

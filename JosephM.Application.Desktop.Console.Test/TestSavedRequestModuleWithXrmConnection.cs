@@ -1,11 +1,10 @@
-﻿using JosephM.Application.Modules;
-using JosephM.Application.Desktop.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.Attributes;
-using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 
 namespace JosephM.Application.Desktop.Console.Test
