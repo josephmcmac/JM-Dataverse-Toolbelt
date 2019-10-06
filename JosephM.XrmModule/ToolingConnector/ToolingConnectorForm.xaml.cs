@@ -11,7 +11,7 @@ namespace JosephM.XrmModule.ToolingConnector
     /// The code in this class was taken from https://github.com/microsoft/PowerApps-Samples
     /// with various tweaks as required
     /// </summary>
-    public partial class ExampleLoginForm : Window
+    public partial class ToolingConnectorForm : Window
     {
         private static Assembly ResolveToolingUiStylesHandler(object sender, ResolveEventArgs args)
         {
@@ -47,6 +47,7 @@ namespace JosephM.XrmModule.ToolingConnector
         /// </summary>
         public CrmConnectionManager CrmConnectionMgr { get { return mgr; } }
 
+        public string ConnectionLabel { get; }
         public string ConnectionId { get; }
         public string ApplicationName { get; }
         #endregion
@@ -59,7 +60,7 @@ namespace JosephM.XrmModule.ToolingConnector
         #endregion
 
 
-        public ExampleLoginForm(string id)
+        public ToolingConnectorForm(string id, string label)
         {
             var currentDomain = AppDomain.CurrentDomain;
             var assemblyresolveHandler = new ResolveEventHandler(ResolveToolingUiStylesHandler);
@@ -69,6 +70,7 @@ namespace JosephM.XrmModule.ToolingConnector
 
             currentDomain.AssemblyResolve -= assemblyresolveHandler;
 
+            ConnectionLabel = label ?? "Unnamed Connection";
             ConnectionId = id;
             //// Should be used for testing only.
             //ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
@@ -85,7 +87,7 @@ namespace JosephM.XrmModule.ToolingConnector
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Headingtext.Text = "Connecting to " + Name;
+            Headingtext.Text = "Connecting to " + ConnectionLabel;
             /*
 				This is the setup process for the login control, 
 				The login control uses a class called CrmConnectionManager to manage the interaction with CRM, this class and also be queried as later points for information about the current connection. 

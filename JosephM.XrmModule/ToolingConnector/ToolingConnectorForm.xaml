@@ -1,4 +1,4 @@
-﻿<Window x:Class="JosephM.XrmModule.ToolingConnector.ExampleLoginForm"
+﻿<Window x:Class="JosephM.XrmModule.ToolingConnector.ToolingConnectorForm"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:CrmLoginCtrl="clr-namespace:Microsoft.Xrm.Tooling.CrmConnectControl;assembly=Microsoft.Xrm.Tooling.CrmConnectControl" 

@@ -40,7 +40,7 @@ namespace JosephM.XrmModule.ToolingConnector
                     {
                         if (!_cachedToolingConnections.ContainsKey(xrmConfiguration.ToolingConnectionId))
                         {
-                            var loginFrm = new ExampleLoginForm(xrmConfiguration.ToolingConnectionId);
+                            var loginFrm = new ToolingConnectorForm(xrmConfiguration.ToolingConnectionId, xrmConfiguration.Name);
                             // Login process is Async, thus we need to detect when login is completed and close the form. 
                             loginFrm.ConnectionToCrmCompleted += LoginFrm_ConnectionToCrmCompleted;
                             // Show the dialog here. 
@@ -86,7 +86,9 @@ namespace JosephM.XrmModule.ToolingConnector
                     while (!isFinished)
                     {
                         if ((DateTime.UtcNow - startWaitTime) > new TimeSpan(0, 5, 0))
+                        {
                             throw new Exception("Timed Out Waiting For Connection Entry After 5 Minutes");
+                        }
 
                         Thread.Sleep(1000);
                     }
@@ -100,9 +102,9 @@ namespace JosephM.XrmModule.ToolingConnector
 
         private static void LoginFrm_ConnectionToCrmCompleted(object sender, EventArgs e)
         {
-            if (sender is ExampleLoginForm)
+            if (sender is ToolingConnectorForm)
             {
-                ((ExampleLoginForm)sender).Close();
+                ((ToolingConnectorForm)sender).Close();
             }
         }
     }
