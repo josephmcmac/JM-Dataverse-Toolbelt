@@ -82,14 +82,8 @@ namespace JosephM.XrmModule.ToolingConnector
                             isFinished = true;
                         }
                     });
-                    var startWaitTime = DateTime.UtcNow;
                     while (!isFinished)
                     {
-                        if ((DateTime.UtcNow - startWaitTime) > new TimeSpan(0, 5, 0))
-                        {
-                            throw new Exception("Timed Out Waiting For Connection Entry After 5 Minutes");
-                        }
-
                         Thread.Sleep(1000);
                     }
                     if (tempEx != null)
