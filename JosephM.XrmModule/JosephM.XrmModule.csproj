@@ -184,7 +184,6 @@
     <Compile Include="ToolingConnector\ToolingConnectorForm.xaml.cs">
       <DependentUpon>ToolingConnectorForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ToolingConnector\ToolingConnectorModule.cs" />
     <Compile Include="ToolingConnector\ToolingOrganizationConnectionFactory.cs" />
   </ItemGroup>
   <ItemGroup>

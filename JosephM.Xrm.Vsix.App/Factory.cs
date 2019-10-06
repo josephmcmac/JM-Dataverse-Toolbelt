@@ -40,7 +40,6 @@ namespace JosephM.Xrm.Vsix.App
         {
             var app = VsixApplication.Create(visualStudioService, container, appName ?? "JosephM.Xrm.Vsix", new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"), isNonSolutionExplorerContext: isNonSolutionExplorerContext);
 
-            app.AddModule<ToolingConnectorModule>();
             app.AddModule<OpenWebModule>(0x010B);
             app.AddModule<OpenSolutionModule>(0x010C);
             app.AddModule<OpenAdvancedFindModule>(0x010D);
