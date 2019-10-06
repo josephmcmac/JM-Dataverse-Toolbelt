@@ -17,7 +17,6 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
-using System.Windows.Threading;
 
 namespace JosephM.Xrm
 {

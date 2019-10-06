@@ -116,7 +116,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.3\lib\net452\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.17\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -213,7 +213,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.3\lib\net452\Microsoft.Xrm.Sdk.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.17\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.1.0.13\lib\net462\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
@@ -224,9 +224,8 @@
     <Reference Include="Microsoft.Xrm.Tooling.WebResourceUtility, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.1.0.13\lib\net462\Microsoft.Xrm.Tooling.WebResourceUtility.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

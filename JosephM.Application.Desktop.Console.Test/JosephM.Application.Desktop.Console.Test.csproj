@@ -63,6 +63,7 @@
     <Compile Include="TestSavedRequestModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="JosephM.snk" />
     <None Include="packages.config" />
   </ItemGroup>

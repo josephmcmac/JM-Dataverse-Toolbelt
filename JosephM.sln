@@ -5,15 +5,6 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
-		Lib\Microsoft.Crm.Sdk.Proxy.dll = Lib\Microsoft.Crm.Sdk.Proxy.dll
-		Lib\Microsoft.Practices.Prism.dll = Lib\Microsoft.Practices.Prism.dll
-		Lib\Microsoft.Practices.Prism.Interactivity.dll = Lib\Microsoft.Practices.Prism.Interactivity.dll
-		Lib\Microsoft.Practices.Prism.MefExtensions.dll = Lib\Microsoft.Practices.Prism.MefExtensions.dll
-		Lib\Microsoft.Practices.Prism.UnityExtensions.dll = Lib\Microsoft.Practices.Prism.UnityExtensions.dll
-		Lib\Microsoft.Practices.ServiceLocation.dll = Lib\Microsoft.Practices.ServiceLocation.dll
-		Lib\Microsoft.Practices.Unity.dll = Lib\Microsoft.Practices.Unity.dll
-		Lib\microsoft.xrm.sdk.dll = Lib\microsoft.xrm.sdk.dll
-		Lib\microsoft.xrm.sdk.workflow.dll = Lib\microsoft.xrm.sdk.workflow.dll
 		Lib\MigraDoc.DocumentObjectModel-WPF.dll = Lib\MigraDoc.DocumentObjectModel-WPF.dll
 		Lib\MigraDoc.Rendering-WPF.dll = Lib\MigraDoc.Rendering-WPF.dll
 		Lib\MigraDoc.RtfRendering-WPF.dll = Lib\MigraDoc.RtfRendering-WPF.dll
@@ -965,8 +956,8 @@ Global
 		{726A2A68-5E84-4874-B954-77B10F9038A8} = {B09D0DB0-7BD0-4DC9-848B-3D7E4B450390}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
