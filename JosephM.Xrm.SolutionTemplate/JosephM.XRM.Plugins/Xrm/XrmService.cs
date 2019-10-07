@@ -51,13 +51,8 @@ namespace $safeprojectname$.Xrm
         public XrmService(IXrmConfiguration crmConfig, LogController controller)
         {
             XrmConfiguration = crmConfig;
+            _serviceFactory = new XrmOrganizationServiceFactory();
             _controller = controller;
-        }
-
-        public XrmService(IXrmConfiguration crmConfig)
-        {
-            XrmConfiguration = crmConfig;
-            _controller = new LogController();
         }
 
 
@@ -94,6 +89,8 @@ namespace $safeprojectname$.Xrm
 
         private IXrmConfiguration XrmConfiguration { get; set; }
 
+        private readonly XrmOrganizationServiceFactory _serviceFactory;
+
         /// <summary>
         ///     DON'T USE CALL THE EXECUTE METHOD
         /// </summary>
@@ -106,7 +103,9 @@ namespace $safeprojectname$.Xrm
                     if (_service == null)
                     {
                         UIController.LogLiteral("Initialising Dynamics Connection");
-                        _service = XrmConnection.GetOrgServiceProxy(XrmConfiguration);
+                        if (_serviceFactory == null)
+                            throw new NullReferenceException("Cannot create service as factory not populated");
+                        _service = _serviceFactory.GetOrganisationService(XrmConfiguration);
                         UIController.LogLiteral("Dynamics Connection Created");
                     }
                 }
@@ -136,6 +135,7 @@ namespace $safeprojectname$.Xrm
                     _controller.LogLiteral("Received FaultException<OrganizationServiceFault> retrying.. Details:" +
                                           ex.DisplayString());
                     Thread.Sleep(50);
+                    _service = null;
                     result = Service.Execute(request);
                     _controller.LogLiteral("Successful retry");
                 }

@@ -6,6 +6,7 @@ namespace $ext_safeprojectname$
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             try

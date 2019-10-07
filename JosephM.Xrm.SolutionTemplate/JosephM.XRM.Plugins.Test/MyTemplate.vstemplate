@@ -19,6 +19,7 @@
       <ProjectItem ReplaceParameters="true" TargetFileName="DebugUserInterface.cs">DebugUserInterface.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$XrmTest.cs">$ext_jmobjprefix$XrmTest.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="packages.config">packages.config</ProjectItem>
+	  <ProjectItem ReplaceParameters="true" TargetFileName="app.config">packages.config</ProjectItem>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>

@@ -49,7 +49,7 @@ namespace $safeprojectname$.Core
             object newValue = null;
 
             if (propertyType == typeof(bool))
-                newValue = rawConfigString == "1" || rawConfigString == "true";
+                newValue = rawConfigString == "1" || rawConfigString.ToLower() == "true";
             else if (propertyType.IsEnum)
                 newValue = Enum.Parse(propertyType, rawConfigString);
             else if (propertyType == typeof(IEnumerable<string>))

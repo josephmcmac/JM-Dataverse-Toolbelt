@@ -12,22 +12,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            //var blah = XrmService.WhoAmI();
-            //var eh = XrmConfiguration.OrganizationUniqueName;
-
-            //var folderContainingCsv = @"C:\ExampleFolderName";
-            //var csvFileName = "ExampleCsv.csv";
-            //var connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;"
-            //           + "Data Source=\"" + folderContainingCsv + "\\\";"
-            //           + "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"";
-            //var sql = "select * from [" + csvFileName + "]";
-
-            //var dTable = new DataTable();
-            //using (var dAdapter = new OleDbDataAdapter(sql, connectionString))
-            //{
-            //    dAdapter.Fill(dTable);
-            //}
-            //dTable.ro
+            var blah = XrmService.WhoAmI();
         }
 
         private void DeleteOnlineSampleData()
