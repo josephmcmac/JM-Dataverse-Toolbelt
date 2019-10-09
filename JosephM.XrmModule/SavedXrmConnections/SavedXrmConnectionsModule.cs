@@ -42,8 +42,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
             try
             {
                 var xrmConfiguration = configManager.Resolve<XrmRecordConfiguration>();
-                var spawnConnectAsynch = !xrmConfiguration.UseXrmToolingConnector;
-                RefreshXrmServices(xrmConfiguration, ApplicationController, spawnConnectAsynch: spawnConnectAsynch);
+                RefreshXrmServices(xrmConfiguration, ApplicationController);
             }
             catch (ConfigurationErrorsException ex)
             {
@@ -58,7 +57,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
 
         private static IXrmRecordConfiguration LastXrmConfiguration { get; set; }
 
-        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller, XrmRecordService xrmRecordService = null, bool spawnConnectAsynch = true)
+        public static void RefreshXrmServices(IXrmRecordConfiguration xrmConfiguration, IApplicationController controller, XrmRecordService xrmRecordService = null)
         {
             controller.RegisterInstance<IXrmRecordConfiguration>(xrmConfiguration);
             var serviceFactory = controller.ResolveType<IOrganizationConnectionFactory>();
@@ -66,6 +65,9 @@ namespace JosephM.XrmModule.SavedXrmConnections
             xrmRecordService.XrmRecordConfiguration = xrmConfiguration;
             controller.RegisterInstance(xrmRecordService);
             LastXrmConfiguration = xrmConfiguration;
+
+            var spawnConnectAsynch = !xrmConfiguration.UseXrmToolingConnector;
+
             if (xrmConfiguration.OrganizationUniqueName == null && !xrmConfiguration.UseXrmToolingConnector)
                 RefreshConnectionNotification(controller, "No Active Connection");
             else if(!spawnConnectAsynch)

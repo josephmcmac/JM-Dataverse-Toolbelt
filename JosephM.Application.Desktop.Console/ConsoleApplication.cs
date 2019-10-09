@@ -96,15 +96,7 @@ namespace JosephM.Application.Desktop.Console
                     throw new NullReferenceException("Command Argument ActiveXrmConnection Is Empty");
 
                 ConsoleApplicationController.WriteToConsole($"Loading ActiveXrmConnection: '{savedConnection}'");
-                //var settingsManager = Controller.ResolveType(typeof(ISettingsManager)) as ISettingsManager;
-                //if (settingsManager == null)
-                //    throw new NullReferenceException(nameof(settingsManager));
 
-                //var savedConnections = settingsManager
-                //    .Resolve<SavedSettings>(typeof(IXrmRecordConfiguration))
-                //    .SavedRequests
-                //    .Cast<XrmRecordConfiguration>()
-                //    .ToArray();
                 var savedConnections = Controller.ResolveType(typeof(ISavedXrmConnections)) as ISavedXrmConnections;
                 if (savedConnections == null)
                     throw new NullReferenceException(nameof(savedConnections));
