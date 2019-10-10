@@ -1,0 +1,1143 @@
+﻿<?xml version="1.0" encoding="utf-8"?><doc>
+  <assembly>
+    <name>Microsoft.Xrm.Tooling.CrmConnectControl</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.CultureUtils">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CultureUtils.SetDisplayCulture(System.Int32)">
+      <param name="languageCode"></param>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.ErrorWindow">
+      <summary>Interaction logic for ErrorWindow.xaml</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ErrorWindow.#ctor(System.Exception)">
+      <summary>Error window constructor</summary>
+      <param name="e"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ErrorWindow.#ctor(System.Uri)">
+      <summary>Error window constructor</summary>
+      <param name="uri"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ErrorWindow.#ctor(System.String,System.String)">
+      <summary>Error window constructor</summary>
+      <param name="message"></param>
+      <param name="details"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ErrorWindow.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ErrorWindow.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <param name="connectionId"></param>
+      <param name="target"></param>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.SavedCredentials">
+      <summary>Represents a credential stored in credential manager</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.SavedCredentials.#ctor">
+      <summary>Instantiates an instance of the SavedCredentials class</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.SavedCredentials.#ctor(System.String,System.Security.SecureString)">
+      <summary>Instantiates an instance of the SavedCredentials class</summary>
+      <param name="userName"></param>
+      <param name="password"></param>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.SavedCredentials.Password">
+      <summary>Password</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.SavedCredentials.UserName">
+      <summary>Username</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.StorageUtils">
+      <summary>Provides utility services for accessing, loading and describing configuration entries used by the CrmConnect classes.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.StorageUtils.#ctor">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.StorageUtils.GetConfigKey``1(System.Collections.Generic.Dictionary{Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys,System.Object},Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys)">
+      <summary>Gets a key from the Server config Keys</summary>
+      <param name="ServerConfigKeys"></param>
+      <param name="key">Key to get</param>
+      <typeparam name="T"></typeparam>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.StorageUtils.ReadHomeRealmConfigFile">
+      <summary>Reads the HomeRealmsStore.xml file and loads the results into an HomeRealmOptions class.</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.StorageUtils.SetConfigKey``1(System.Collections.Generic.Dictionary{Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys,System.Object},Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys,``0)">
+      <summary>Set a key in the server config keys list.</summary>
+      <param name="ServerConfigKeys"></param>
+      <param name="key"></param>
+      <param name="value"></param>
+      <typeparam name="T"></typeparam>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectStatusEventArgs">
+      <summary>Data Payload for the Connection status events</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectStatusEventArgs.#ctor">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectStatusEventArgs.#ctor(System.Boolean)">
+      <param name="bConnected"></param>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectStatusEventArgs.ConnectSucceeded">
+      <summary>Flag indicating connection state.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectStatusEventArgs.Status">
+      <summary>Status of the connection process</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer">
+      <summary>Describes a Single Organization returned from a CRM Discovery server</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer.#ctor">
+      
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer.DiscoveryServer">
+      <summary>This is the URI needed to connect to the Organization</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer.DiscoveryServerName">
+      <summary>This is the name assigned to the Discovery Server, this is used to visual separate organizations returned by Discovery server used, or Premise solutions.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer.FriendlyName">
+      <summary>This is the display name for the organization that a user sees when working in CRM</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer.OrdDetail">
+      <summary>This is the details of the Organization, returned directly from CRM</summary>
+      <returns></returns>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer.PropertyChanged">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer.ToString">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer.UniqueOrdName">
+      <summary>This is the actual name for the organization in CRM, and is required to connect to CRM</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgList">
+      <summary>Describes the Collection of Orgs that a user may select from. This is used to display the list to the user</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgList.#ctor">
+      <summary>Dictionary of Orgs.</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgList.OrgsList">
+      <summary>List of Orgs</summary>
+      <returns></returns>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgList.PropertyChanged">
+      
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager">
+      <summary>This class exposes methods to read, write and delete user credentials</summary>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager.CrmTargetPrefix">
+      <summary>Target Name against which all credentials are stored on the disk.</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager.DeleteCredentials(System.String,System.Boolean)">
+      <summary>Deletes the credentials.</summary>
+      <param name="target">Target is the key with which associated credentials can be fetched</param>
+      <param name="deletePasswordOnly">Indicates that the password should be overwritten, but the credential should not be removed from the credential cache.</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager.DeleteCredentials(System.Uri,System.Boolean)">
+      <summary>Deletes the credentials.</summary>
+      <param name="target">Target is the key with which associated credentials can be fetched</param>
+      <param name="deletePasswordOnly">Indicates that the password should be overwritten, but the credential should not be removed from the credential cache.</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager.GetCredentialTarget(System.Uri)">
+      <summary>Retrieves the URI (for a given target URI) that will be present in the saved credentials</summary>
+      <param name="target">Target to be read</param>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager.ReadCredentials(System.String)">
+      <summary>Reads the saved credentials for a given target</summary>
+      <param name="target">Target that is persisted</param>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager.ReadCredentials(System.Uri)">
+      <summary>Reads the credentials for the given target URI</summary>
+      <param name="target">URI for the target</param>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager.WriteCredentials(System.String,Microsoft.Xrm.Tooling.CrmConnectControl.Utility.SavedCredentials,System.Boolean)">
+      <summary>Writes the credentials.</summary>
+      <param name="target">Target is the key with which associated credentials can be fetched</param>
+      <param name="userCredentials">It is the in parameter which contains the username and password</param>
+      <param name="storePasswordInCredentialCache">Indicates that the password should be persisted to the credential cache</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CredentialManager.WriteCredentials(System.Uri,Microsoft.Xrm.Tooling.CrmConnectControl.Utility.SavedCredentials,System.Boolean)">
+      <summary>Writes the credentials.</summary>
+      <param name="target">Target is the key with which associated credentials can be fetched</param>
+      <param name="userCredentials">It is the in parameter which contains the username and password</param>
+      <param name="storePasswordInCredentialCache">Indicates that the password should be persisted to the credential cache</param>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CrmDeploymentType">
+      <summary>This identifies the authentication type used.</summary>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CrmDeploymentType.O365">
+      <summary>Using Office365</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CrmDeploymentType.Online">
+      <summary>Using CRM Online</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.CrmDeploymentType.Prem">
+      <summary>Using Premise</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager">
+      <summary>Provides Connection logic and error handling for connecting to CRM2011. This class is designed to operate in the background, off the primary user UI thread. This class raises events that can be used to update the user with progress reports.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.#ctor">
+      <summary>Default constructor.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.CancelConnectToServerCheck">
+      <summary>Cancel Connection process.</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ClientId">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ConnectedOrgFriendlyName">
+      <summary>Returns the friendly name of the connected org.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ConnectedOrgId">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ConnectedOrgPublishedEndpoints">
+      <summary>Returns the endpoint collection for the connected org.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ConnectedOrgUniqueName">
+      <summary>Returns the unique name for the org that has been connected.</summary>
+      <returns></returns>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ConnectionCheckComplete">
+      <summary>Raised when the connection process completes</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ConnectToServerCheck">
+      <summary>Begins the authentication process for CRM.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ConnectToServerCheck(Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOrgByServer)">
+      <summary>Begin Connect check to server</summary>
+      <param name="selectedOrgToConnectTo"></param>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.CrmOnlineDiscoveryServerList">
+      <summary>Collection of CRM Discovery Servers if a server list has not been submitted to this property, and get is called, a new instance of the CrmOnlineDiscoveryServers is created.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.CrmOrgsFoundForUser">
+      <summary>List of Organizations that have been requested by the user.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.CrmSvc">
+      <summary>CRM Connection Object.</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.Dispose">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.Dispose(System.Boolean)">
+      <param name="disposing"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.Finalize">
+      <summary>Clean up background worker on exit.</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ForceFirstOAuthPrompt">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.HomeRealmServersList">
+      <summary>Collection of HomeRealms Loaded by Configuration</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.HostApplicatioNameOveride">
+      <summary>Used in conjunction with the UseUserLocalDirecotryForConfigStore, Allows you to set a name for the config application to use. This is used when the host application cannot provide a proper AppDomain.Current.FriendlyName</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.LastError">
+      <summary>last error from the connection manager</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.LastException">
+      <summary>Last Exception from the connection manager.</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.LoadConfigFromFile(System.Boolean)">
+      <summary>Loads the Configuration key&amp;#39;s from file b/c some things are missing</summary>
+      <param name="readLocalFirst"></param>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ParentControl">
+      <summary>This the parent control that invoked me.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ProfileName">
+      <summary>Profile name to use for this login process.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.RedirectUri">
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.RemoveUserLocalDirectoryConfigFile">
+      <summary>Will remove the user connection data settings from the users app config directory, useable only when the UseUserLocalDirectoryForConfigStore is set to true. this should be called after the connection has been established, or before the connect attempt in order to be effective.</summary>
+      <returns>true on success, false on fail.</returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.RequireUserLogin">
+      <summary>This will check the configuration to determine if a user login is required. and if so, return true.</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.SaveConfigToFile(System.Collections.Generic.Dictionary{Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys,System.Object})">
+      <summary>Save the configuration Keys to the configuration file.</summary>
+      <param name="configToSave">Config key dictionary</param>
+      <returns>true on success</returns>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.ServerConnectionStatusUpdate">
+      <summary>Raised when a status is updated</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.SetConfigKeyInformation(System.Collections.Generic.Dictionary{Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys,System.Object})">
+      <summary>Sets the current connection information for the server.
+    this can be used to pass in a preconfigured list of keys</summary>
+      <param name="configKeys"></param>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.TokenCachePath">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.UserId">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager.UseUserLocalDirectoryForConfigStore">
+      <summary>Tells the system to store the user config in the users local app directory instead of the Exe directory.</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.SelectOrgDlg">
+      <summary>Provides a UI to allow users to select an Organization to login into, if the user has more than one organization available to login to.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.SelectOrgDlg.#ctor">
+      <summary>Constructor</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.SelectOrgDlg.GetSelectedCrmOrg">
+      <summary>returns the user selected CrmOrganization</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.SelectOrgDlg.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.SelectOrgDlg.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <param name="connectionId"></param>
+      <param name="target"></param>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.TraceControlSettings">
+      <summary>This class provides an override for the default trace settings. These settings must be set before the components in the control are used for them to be effective.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.TraceControlSettings.#ctor">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.TraceControlSettings.AddTraceListener(System.Diagnostics.TraceListener)">
+      <summary>Adds a listener to the trace listen array</summary>
+      <param name="listenerToAdd">Trace Listener you wish to add</param>
+      <returns>true on success, false on fail.</returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.TraceControlSettings.CloseListeners">
+      <summary>Closes any trace listeners that were configured</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.TraceControlSettings.TraceLevel">
+      <summary>Override Trace Level setting.</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectErrorEventArgs">
+      <summary>Data Payload for the Connection Error Events</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectErrorEventArgs.#ctor">
+      
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectErrorEventArgs.ErrorMessage">
+      <summary>Error message</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ConnectErrorEventArgs.Ex">
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServer">
+      <summary>Describes a discovery server that can be used to determine what organizations a user is a member of.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServer.#ctor">
+      
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServer.DiscoveryServer">
+      <summary>Discovery server Uri, this is the URI necessary to connect to the Discovery server</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServer.DisplayName">
+      <summary>Display name of the Discovery Server</summary>
+      <returns></returns>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServer.PropertyChanged">
+      
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServer.ShortName">
+      <summary>Short name of the Discovery Server, this is used to store the server in the users config for later use.</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServer.ToString">
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers">
+      <summary>CRM online Discovery server enumeration This is accurate at the time of release of the CRM 2011 Online system. This may changed in the future. Check the CRM SDK for the most current list.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers.#ctor">
+      <summary>Default constructor, Builds baseline data for the Servers.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers.Dispose">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers.Dispose(System.Boolean)">
+      <param name="disposing"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers.GetServerByShortName(System.String,System.Boolean)">
+      <summary>Finds a Server by Name in the List or return null.</summary>
+      <param name="shortName">Short Name of the server you are looking for</param>
+      <param name="isO365">if set, uses the office 365 server list.</param>
+      <returns>CrmOnlineDiscoveryServer Data or Null</returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers.GetServerShortNameByDisplayName(System.String,System.Boolean)">
+      <summary>Finds the server short name by server Uri</summary>
+      <param name="serverDisplayName">Name of the Server to find</param>
+      <param name="isO365">if set, uses the office 365 server list.</param>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers.OSDPServers">
+      <summary>Public Property to Access Office 365 discovery servers</summary>
+      <returns></returns>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers.PropertyChanged">
+      
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.CrmOnlineDiscoveryServers.Servers">
+      <summary>Public Property to Access the Servers available.</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.OrgNameFormater">
+      <summary>Formats the org name for to append the Unique Name to the List View.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.OrgNameFormater.#ctor">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.OrgNameFormater.Convert(System.Object[],System.Type,System.Object,System.Globalization.CultureInfo)">
+      <summary>Convert an In value to a string</summary>
+      <param name="values"></param>
+      <param name="targetType"></param>
+      <param name="parameter"></param>
+      <param name="culture"></param>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.OrgNameFormater.ConvertBack(System.Object,System.Type[],System.Object,System.Globalization.CultureInfo)">
+      <summary>Not used.</summary>
+      <param name="value"></param>
+      <param name="targetTypes"></param>
+      <param name="parameter"></param>
+      <param name="culture"></param>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.RadioButtonAccessibleNameFormater">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.RadioButtonAccessibleNameFormater.#ctor">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.RadioButtonAccessibleNameFormater.Convert(System.Object[],System.Type,System.Object,System.Globalization.CultureInfo)">
+      <param name="values"></param>
+      <param name="targetType"></param>
+      <param name="parameter"></param>
+      <param name="culture"></param>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.RadioButtonAccessibleNameFormater.ConvertBack(System.Object,System.Type[],System.Object,System.Globalization.CultureInfo)">
+      <param name="value"></param>
+      <param name="targetTypes"></param>
+      <param name="parameter"></param>
+      <param name="culture"></param>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptions">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptions.#ctor">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptions.GetServerByDisplayName(System.String)">
+      <summary>Finds the Home Realm information for the Display Name</summary>
+      <param name="shortName">Display Name of the server you are looking for</param>
+      <returns>ClaimsHomeRealmOptionsHomeRealm Data or Null</returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptions.Items">
+      <returns></returns>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptions.PropertyChanged">
+      <summary>Default Propertly changed event.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptions.RaisePropertyChanged(System.String)">
+      <summary>Raised when a property changes</summary>
+      <param name="propertyName"></param>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptionsHomeRealm">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptionsHomeRealm.#ctor">
+      
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptionsHomeRealm.DisplayName">
+      <returns></returns>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptionsHomeRealm.PropertyChanged">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptionsHomeRealm.RaisePropertyChanged(System.String)">
+      <param name="propertyName"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptionsHomeRealm.ToString">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Model.ClaimsHomeRealmOptionsHomeRealm.Uri">
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys">
+      <summary>Enum for CrmConnection Configuration Keys in the app.config.</summary>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.AdvancedCheck">
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.AskForOrg">
+      <summary>Use the system ask for the org each login.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.AuthHomeRealm">
+      <summary>what Home Realm to use</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.Authority">
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CacheCredentials">
+      <summary>Flag, encrypt and hold creds.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmDeploymentType">
+      <summary>Type of CRM deployment used indicating where CRM is running used to be UiiCrmUseOnPrem</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmDomain">
+      <summary>Domain used when connecting to CRM</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmOnlineRegion">
+      <summary>What CRM online Region to use</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmOrg">
+      <summary>CRM Org Connecting too.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmPassword">
+      <summary>Password used when connecting to CRM</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmPort">
+      <summary>Port CRM server is listening on</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmServerName">
+      <summary>CRM Server name</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmUserName">
+      <summary>User name to connect to CRM with</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.CrmUseSSL">
+      <summary>Use SSL ?</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.UseDefaultCreds">
+      <summary>Use Default Credentials.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.Dynamics_ConfigFileServerKeys.UserId">
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.ErrorLogger">
+      <summary>Used to log errors to disk as part of connection logic for debugging or reporting an error concerning connecting to CRM</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.ErrorLogger.#ctor">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.ErrorLogger.LaunchLogFile">
+      <summary>Loads the log file in Notepad</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.ErrorLogger.LogfileDirectoryOverride">
+      <summary>If Set, the directory requested here is used to set the</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.Utility.ErrorLogger.WriteToFile(System.Exception)">
+      <summary>Writes a Exception to the log file.</summary>
+      <param name="objException"></param>
+    </member>
+    <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+      
+    </member>
+    <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.#ctor">
+      
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl">
+      <summary>This control provides the UI components and interaction logic with the CrmConnectionManager Class.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.#ctor">
+      <summary>Default constructor</summary>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.ConnectErrorEvent">
+      <summary>Raised when there is an error</summary>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.ConnectionCheckBegining">
+      <summary>Raised when the connection process has begun</summary>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.ConnectionStatusEvent">
+      <summary>Raised when a Status event is raised</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.GetConnectedOrgName">
+      <summary>Returns the Friendly name of the connected org.</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.GoBackToLogin">
+      <summary>API Called when Client wants to go back to login and cancel connect.</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.HideCancel">
+      <summary>Show Cancel Button or Not</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.IsConnected">
+      <summary>Complete Connect Check</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.IsOrgSelect">
+      <summary>Returns true if orgeselect grid visible</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.SetControlMode(Microsoft.Xrm.Tooling.CrmConnectControl.ServerLoginConfigCtrlMode)">
+      <summary>Sets the Mode of the control..</summary>
+      <param name="mode"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.SetGlobalStoreAccess(Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager)">
+      <summary>Sets the Server storage pointer.</summary>
+      <param name="globalStore"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.ShowMessageGrid">
+      <summary>Called when the client wants to show the message grid.</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.ShowTitle">
+      <summary>Show Title or Not</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.StartCancelSave">
+      <summary>API Called when Client wants to cancel connect.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.StartConnectCheck">
+      <summary>Starts the connect check process</summary>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.UserCancelClicked">
+      <summary>Raised when the user clicked cancel.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <param name="connectionId"></param>
+      <param name="target"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginControl.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <param name="connectionId"></param>
+      <param name="target"></param>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots">
+      <summary>Interaction logic for PendulumDots.xaml</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.#ctor">
+      <summary>Ctor</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.Delay">
+      <summary>Gets or sets the Delay property. This dependency property indicates the delay between adjacent animation timelines.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DelayProperty">
+      <summary>Delay Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.Dispose">
+      <summary>Releases all resources used by an instance of the PendulumDots class.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.Dispose(System.Boolean)">
+      <summary>Releases the unmanaged resources used by an instance of the PendulumDots class and optionally releases the managed resources.</summary>
+      <param name="disposing">&amp;#39;true&amp;#39; to release both managed and unmanaged resources; &amp;#39;false&amp;#39; to release only unmanaged resources.</param>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DotHeight">
+      <summary>Gets or sets the DotHeight property. This dependency property indicates the height of each of the dots.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DotHeightProperty">
+      <summary>DotHeight Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DotRadiusX">
+      <summary>Gets or sets the DotRadiusX property. This dependency property indicates the corner radius width of each of the dot.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DotRadiusXProperty">
+      <summary>DotRadiusX Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DotRadiusY">
+      <summary>Gets or sets the DotRadiusY property. This dependency property indicates the corner height of each of the dots.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DotRadiusYProperty">
+      <summary>DotRadiusY Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DotWidth">
+      <summary>Gets or sets the DotWidth property. This dependency property indicates the width of each of the dots.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DotWidthProperty">
+      <summary>DotWidth Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DurationA">
+      <summary>Gets or sets the DurationA property. This dependency property indicates the duration of the animation from the start point till KeyFrameA.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DurationAProperty">
+      <summary>DurationA Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DurationB">
+      <summary>Gets or sets the DurationB property. This dependency property indicates the duration of the animation from the KeyFrameA till KeyFrameB.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DurationBProperty">
+      <summary>DurationB Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DurationC">
+      <summary>Gets or sets the DurationC property. This dependency property indicates the duration of the animation from KeyFrameB till the end point.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.DurationCProperty">
+      <summary>DurationC Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.Finalize">
+      <summary>Releases unmanaged resources before an instance of the PendulumDots class is reclaimed by garbage collection.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.KeyFrameA">
+      <summary>Gets or sets the KeyFrameA property. This dependency property indicates the first KeyFrame position after the initial keyframe.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.KeyFrameAProperty">
+      <summary>KeyFrameA Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.KeyFrameB">
+      <summary>Gets or sets the KeyFrameB property. This dependency property indicates the second KeyFrame position after the initial keyframe.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.KeyFrameBProperty">
+      <summary>KeyFrameB Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnDelayChanged(System.Windows.Duration,System.Windows.Duration)">
+      <summary>Provides derived classes an opportunity to handle changes to the Delay property.</summary>
+      <param name="oldDelay">Old Value</param>
+      <param name="newDelay">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnDotHeightChanged(System.Double,System.Double)">
+      <summary>Provides derived classes an opportunity to handle changes to the DotHeight property.</summary>
+      <param name="oldDotHeight">Old Value</param>
+      <param name="newDotHeight">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnDotRadiusXChanged(System.Double,System.Double)">
+      <summary>Provides derived classes an opportunity to handle changes to the DotRadiusX property.</summary>
+      <param name="oldDotRadiusX">Old Value</param>
+      <param name="newDotRadiusX">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnDotRadiusYChanged(System.Double,System.Double)">
+      <summary>Provides derived classes an opportunity to handle changes to the DotRadiusY property.</summary>
+      <param name="oldDotRadiusY">Old Value</param>
+      <param name="newDotRadiusY">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnDotWidthChanged(System.Double,System.Double)">
+      <summary>Provides derived classes an opportunity to handle changes to the DotWidth property.</summary>
+      <param name="oldDotWidth">Old Value</param>
+      <param name="newDotWidth">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnDurationAChanged(System.Windows.Duration,System.Windows.Duration)">
+      <summary>Provides derived classes an opportunity to handle changes to the DurationA property.</summary>
+      <param name="oldDurationA">Old Value</param>
+      <param name="newDurationA">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnDurationBChanged(System.Windows.Duration,System.Windows.Duration)">
+      <summary>Provides derived classes an opportunity to handle changes to the DurationB property.</summary>
+      <param name="oldDurationB">Old Value</param>
+      <param name="newDurationB">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnDurationCChanged(System.Windows.Duration,System.Windows.Duration)">
+      <summary>Provides derived classes an opportunity to handle changes to the DurationC property.</summary>
+      <param name="oldDurationC">Old Value</param>
+      <param name="newDurationC">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnKeyFrameAChanged(System.Double,System.Double)">
+      <summary>Provides derived classes an opportunity to handle changes to the KeyFrameA property.</summary>
+      <param name="oldKeyFrameA">Old Value</param>
+      <param name="newKeyFrameA">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnKeyFrameBChanged(System.Double,System.Double)">
+      <summary>Provides derived classes an opportunity to handle changes to the KeyFrameB property.</summary>
+      <param name="oldKeyFrameB">Old Value</param>
+      <param name="newKeyFrameB">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnReverseDurationChanged(System.Windows.Duration,System.Windows.Duration)">
+      <summary>Provides derived classes an opportunity to handle changes to the ReverseDuration property.</summary>
+      <param name="oldReverseDuration">Old Value</param>
+      <param name="newReverseDuration">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnTotalDurationChanged(System.Windows.Duration,System.Windows.Duration)">
+      <summary>Provides derived classes an opportunity to handle changes to the TotalDuration property.</summary>
+      <param name="oldTotalDuration">Old Value</param>
+      <param name="newTotalDuration">New Value</param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.OnUnlikeWPChanged(System.Boolean,System.Boolean)">
+      <summary>Provides derived classes an opportunity to handle changes to the UnlikeWP property.</summary>
+      <param name="oldUnlikeWP">Old Value</param>
+      <param name="newUnlikeWP">New Value</param>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.ReverseDuration">
+      <summary>Gets or sets the ReverseDuration property. This dependency property indicates the duration of the total animation in reverse.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.ReverseDurationProperty">
+      <summary>ReverseDuration Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.TotalDuration">
+      <summary>Gets or sets the TotalDuration property. This dependency property indicates the duration of the complete animation.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.TotalDurationProperty">
+      <summary>TotalDuration Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.UnlikeWP">
+      <summary>Gets or sets the UnlikeWP property. This dependency property indicates whether the animation should UnlikeWP.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.UnlikeWPProperty">
+      <summary>UnlikeWP Dependency Property</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.PendulumDots.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <param name="connectionId"></param>
+      <param name="target"></param>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs">
+      <summary>Event Raised when the Server Validate Connection Command operates.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.#ctor">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.#ctor(System.String)">
+      <param name="statusMsg"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.#ctor(System.String,System.Boolean)">
+      <param name="errMsg"></param>
+      <param name="connected"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.#ctor(System.String,System.Boolean,System.Boolean)">
+      <param name="errMsg"></param>
+      <param name="connected"></param>
+      <param name="multiOrgFound"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.#ctor(System.String,System.Boolean,System.Exception)">
+      <param name="errMsg"></param>
+      <param name="connected"></param>
+      <param name="except"></param>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.Connected">
+      <summary>if true, connected to CRM, else not connected to CRM</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.ErrorMessage">
+      <summary>Error Message from the originating source</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.exEvent">
+      <summary>Exception that goes with the error message</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.MultiOrgsFound">
+      <summary>If true, there were multiple organizations found, the user will need to select the correct org and re logon.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.ServerConnectStatusEventArgs.StatusMessage">
+      <summary>Text status message, usually communicating the current state of the login process.</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.ServerLoginConfigCtrlMode">
+      <summary>Config Mode to run this control in.</summary>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.ServerLoginConfigCtrlMode.ConfigPanel">
+      <summary>Hide the Cancel button and Show the Org Select UI.</summary>
+      <returns></returns>
+    </member>
+    <member name="F:Microsoft.Xrm.Tooling.CrmConnectControl.ServerLoginConfigCtrlMode.FullLoginPanel">
+      <summary>Show the Cancel button</summary>
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl">
+      <summary>This control provides the UI components and interaction logic with the CrmConnectionManager Class.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.#ctor">
+      <summary>Default constructor</summary>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.ConnectErrorEvent">
+      <summary>Raised when there is an error</summary>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.ConnectionCheckBegining">
+      <summary>Raised when the connection process has begun</summary>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.ConnectionStatusEvent">
+      <summary>Raised when a Status event is raised</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.GetConnectedOrgName">
+      <summary>Returns the Friendly name of the connected org.</summary>
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.SetControlMode(Microsoft.Xrm.Tooling.CrmConnectControl.ServerLoginConfigCtrlMode)">
+      <summary>Sets the Mode of the control..</summary>
+      <param name="mode"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.SetGlobalStoreAccess(Microsoft.Xrm.Tooling.CrmConnectControl.CrmConnectionManager)">
+      <summary>Sets the Server storage pointer.</summary>
+      <param name="globalStore"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.StartConnectCheck">
+      <summary>Starts the connect check process</summary>
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.UserCancelClicked">
+      <summary>Raised when the user clicked cancel.</summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.CrmServerLoginConfigControl.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <param name="connectionId"></param>
+      <param name="target"></param>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources">
+      <summary>A strongly-typed resource class, for looking up localized strings, etc.</summary>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.Culture">
+      <summary>Overrides the current thread&amp;#39;s CurrentUICulture property for all resource lookups using this strongly typed resource class.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.ERROR_DETAILS">
+      <summary>Looks up a localized string similar to Error details.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.ERROR_LOGIN_REQUEST">
+      <summary>Looks up a localized string similar to An Error occured processing the login request..</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_ADVANCED">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_ASK_FOR_ORG">
+      <summary>Looks up a localized string similar to Always display list of available orgs.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_AUTHTYPE_AD">
+      <summary>Looks up a localized string similar to Active Directory.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_AUTHTYPE_CONFIG_FILE_NAME">
+      <summary>Looks up a localized string similar to HomeRealmsStore.xml.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_AUTHTYPE_IFD">
+      <summary>Looks up a localized string similar to Internet-facing deployment(IFD).</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_AUTHTYPE_OAUTH">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_CANCEL_BTN">
+      <summary>Looks up a localized string similar to Cancel.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_CONNECTSTATUS">
+      <summary>Looks up a localized string similar to Connection Status.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_CRM_AUTH_SOURCE">
+      <summary>Looks up a localized string similar to Auth Source.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_CRM_PREM_NAME">
+      <summary>Looks up a localized string similar to On-premises.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_DEPLOYMENT_O365">
+      <summary>Looks up a localized string similar to Office 365.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_DEPLOYMENT_ONLINE">
+      <summary>Looks up a localized string similar to Online.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_DEPLOYMENT_PREM">
+      <summary>Looks up a localized string similar to On-premises.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_DEPLOYMENT_TYPE">
+      <summary>Looks up a localized string similar to Deployment Type.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_DOMAIN">
+      <summary>Looks up a localized string similar to Domain.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_ERR_FIRST">
+      <summary>Looks up a localized string similar to An Error occurred while processing the login request. .</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_ERR_SECOND">
+      <summary>Looks up a localized string similar to View Error Log.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_GB_HEADER">
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_GROUP_TITLE">
+      <summary>Looks up a localized string similar to Agent Desktop Logon.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_LOGIN_BTN">
+      <summary>Looks up a localized string similar to Log On.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_LOGIN_LBL">
+      <summary>Looks up a localized string similar to Login.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_MULT_ORG">
+      <summary>Looks up a localized string similar to Multiple CRM Organizations are available to you. Please choose the CRM Organization you would like to connect to..</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_ONLINE_REGION">
+      <summary>Looks up a localized string similar to Online Region.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_ORG_HEADER">
+      <summary>Looks up a localized string similar to Organization Name.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_PASSWORD">
+      <summary>Looks up a localized string similar to Password.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_REG_HEADER">
+      <summary>Looks up a localized string similar to CRM Region.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_RETRIEVE">
+      <summary>Looks up a localized string similar to Retrieving Organizations from CRM.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_RETRIEVE_DEF">
+      <summary>Looks up a localized string similar to Log in to Default Organization ({0}).</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_SERVERNAME">
+      <summary>Looks up a localized string similar to Server.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_SERVERORG">
+      <summary>Looks up a localized string similar to CRM Organization.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_SERVERPORT">
+      <summary>Looks up a localized string similar to Port.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_TITLE">
+      <summary>Looks up a localized string similar to Uii Agent Desktop Logon.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_USE_DEF_CREDS">
+      <summary>Looks up a localized string similar to Use Default Credentials.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_USE_SSL">
+      <summary>Looks up a localized string similar to Use SSL.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.LOGIN_FRM_USERNAME">
+      <summary>Looks up a localized string similar to User Name.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.ResourceManager">
+      <summary>Returns the cached ResourceManager instance used by this class.</summary>
+      <returns></returns>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.Properties.Resources.TITLE">
+      <returns></returns>
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.ServerLoginConfig_ViewModel">
+      
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.ServerLoginConfig_ViewModel.#ctor">
+      
+    </member>
+    <member name="E:Microsoft.Xrm.Tooling.CrmConnectControl.ServerLoginConfig_ViewModel.PropertyChanged">
+      
+    </member>
+    <member name="T:Microsoft.Xrm.Tooling.CrmConnectControl.SortAdorner">
+      <summary>Creates a Adorner to indicate sort direction. This class was taken from <see cref="http://www.switchonthecode.com/tutorials/wpf-tutorial-using-the-listview-part-2-sorting">http://www.switchonthecode.com/tutorials/wpf-tutorial-using-the-listview-part-2-sorting</see></summary>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.SortAdorner.#ctor(System.Windows.UIElement,System.ComponentModel.ListSortDirection)">
+      <param name="element"></param>
+      <param name="dir"></param>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.SortAdorner.#ctor(System.Windows.UIElement,System.ComponentModel.ListSortDirection,System.String)">
+      <param name="element"></param>
+      <param name="dir"></param>
+      <param name="sortOrderBrushKey"></param>
+    </member>
+    <member name="P:Microsoft.Xrm.Tooling.CrmConnectControl.SortAdorner.Direction">
+      <returns></returns>
+    </member>
+    <member name="M:Microsoft.Xrm.Tooling.CrmConnectControl.SortAdorner.OnRender(System.Windows.Media.DrawingContext)">
+      <param name="drawingContext"></param>
+    </member>
+  </members>
+</doc>

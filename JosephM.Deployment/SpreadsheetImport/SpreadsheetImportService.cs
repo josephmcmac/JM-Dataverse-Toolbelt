@@ -1,6 +1,5 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Core.Extentions;
-using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using JosephM.Record.Extentions;

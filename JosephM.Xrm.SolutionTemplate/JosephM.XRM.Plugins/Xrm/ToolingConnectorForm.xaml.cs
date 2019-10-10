@@ -89,15 +89,12 @@ namespace $safeprojectname$.Xrm
         {
             Headingtext.Text = "Connecting to " + ConnectionLabel;
             /*
-				This is the setup process for the login control, 
-				The login control uses a class called CrmConnectionManager to manage the interaction with CRM, this class and also be queried as later points for information about the current connection. 
-				In this case, the login control is referred to as CrmLoginCtrl
-			 */
+                This is the setup process for the login control, 
+                The login control uses a class called CrmConnectionManager to manage the interaction with CRM, this class and also be queried as later points for information about the current connection. 
+                In this case, the login control is referred to as CrmLoginCtrl
+             */
 
             // Set off flag. 
-            bIsConnectedComplete = false;
-
-            // Init the CRM Connection manager.. 
             mgr = new CrmConnectionManager();
             // Pass a reference to the current UI or container control,  this is used to synchronize UI threads In the login control
             mgr.ParentControl = CrmLoginCtrl;
@@ -108,9 +105,8 @@ namespace $safeprojectname$.Xrm
             // Client ID to use for oAuth.  ID: 51f81489-12ee-4a9e-aaae-a2591f45987d is a sample ID that should be replaced by a ID created for your use. 
             mgr.ClientId = "51f81489-12ee-4a9e-aaae-a2591f45987d";
             // Redirect URI required for oAuth.
-            //mgr.RedirectUri = new Uri("app://58145B91-0C36-4500-8554-080854F2AC97");
+            mgr.RedirectUri = new Uri("app://58145B91-0C36-4500-8554-080854F2AC97");
 
-            mgr.ProfileName = ConnectionId;
             // if you are using an unmanaged client,  you need to provide the name of an exe to use to create app config key's for. 
             //mgr.HostApplicatioNameOveride = "MyExecName.exe";
             // CrmLoginCtrl is the Login control,  this sets the CrmConnection Manager into it. 
@@ -125,21 +121,24 @@ namespace $safeprojectname$.Xrm
             CrmLoginCtrl.ConnectionStatusEvent += new EventHandler<ConnectStatusEventArgs>(CrmLoginCtrl_ConnectionStatusEvent);
             // this wires an event that is raised when the user clicks the cancel button. 
             CrmLoginCtrl.UserCancelClicked += new EventHandler(CrmLoginCtrl_UserCancelClicked);
-            // Check to see if its possible to do an Auto Login 
-            if (!mgr.RequireUserLogin())
-            {
-                // If RequireUserLogin is false, it means that there has been a successful login here before and the credentials are cached. 
-                CrmLoginCtrl.IsEnabled = false;
-                // When running an auto login,  you need to wire and listen to the events from the connection manager.
-                // Run Auto User Login process, Wire events. 
-                mgr.ServerConnectionStatusUpdate += new EventHandler<ServerConnectStatusEventArgs>(mgr_ServerConnectionStatusUpdate);
-                mgr.ConnectionCheckComplete += new EventHandler<ServerConnectStatusEventArgs>(mgr_ConnectionCheckComplete);
-                // Start the connection process. 
-                mgr.ConnectToServerCheck();
+            
+            //dont ever autologin
 
-                // Show the message grid. 
-                CrmLoginCtrl.ShowMessageGrid();
-            }
+            // Check to see if its possible to do an Auto Login 
+            //if (!mgr.RequireUserLogin())
+            //{
+            //    // If RequireUserLogin is false, it means that there has been a successful login here before and the credentials are cached. 
+            //    CrmLoginCtrl.IsEnabled = false;
+            //    // When running an auto login,  you need to wire and listen to the events from the connection manager.
+            //    // Run Auto User Login process, Wire events. 
+            //    mgr.ServerConnectionStatusUpdate += new EventHandler<ServerConnectStatusEventArgs>(mgr_ServerConnectionStatusUpdate);
+            //    mgr.ConnectionCheckComplete += new EventHandler<ServerConnectStatusEventArgs>(mgr_ConnectionCheckComplete);
+            //    // Start the connection process. 
+            //    mgr.ConnectToServerCheck();
+
+            //    // Show the message grid. 
+            //    CrmLoginCtrl.ShowMessageGrid();
+            //}
         }
 
         #region Events

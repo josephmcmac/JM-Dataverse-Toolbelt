@@ -116,20 +116,19 @@ namespace JosephM.Xrm.Test
             * */
             //Valid values
             Assert.IsTrue(
-                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", Entities.jmcg_testentity, "Active")) ==
-                TestEntityConstants.Statusses.TestStatus);
+                XrmEntity.GetOptionSetValue(XrmService.ParseField(Fields.jmcg_testentity_.statuscode, Entities.jmcg_testentity, "Active")) ==
+                    OptionSets.TestEntity.StatusReason.Active);
             Assert.IsTrue(
-                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", Entities.jmcg_testentity,
-                    TestEntityConstants.Statusses.TestStatus)) ==
-                TestEntityConstants.Statusses.TestStatus);
+                XrmEntity.GetOptionSetValue(XrmService.ParseField(Fields.jmcg_testentity_.statuscode, Entities.jmcg_testentity,
+                    OptionSets.TestEntity.StatusReason.Active)) ==
+                OptionSets.TestEntity.StatusReason.Active);
             Assert.IsTrue(
-                XrmEntity.GetOptionSetValue(XrmService.ParseField("statuscode", Entities.jmcg_testentity,
-                    XrmEntity.CreateOptionSet(
-                        TestEntityConstants.Statusses.TestStatus))) ==
-                TestEntityConstants.Statusses.TestStatus);
+                XrmEntity.GetOptionSetValue(XrmService.ParseField(Fields.jmcg_testentity_.statuscode, Entities.jmcg_testentity,
+                    XrmEntity.CreateOptionSet(OptionSets.TestEntity.StatusReason.Active))) ==
+                OptionSets.TestEntity.StatusReason.Active);
             try
             {
-                var blah = XrmService.ParseField("statuscode", Entities.jmcg_testentity, "NOTASTATUS");
+                var blah = XrmService.ParseField(Fields.jmcg_testentity_.statuscode, Entities.jmcg_testentity, "NOTASTATUS");
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -180,10 +179,10 @@ namespace JosephM.Xrm.Test
             * Lookup field
             * */
             //Valid values
-            var expectedLookup = XrmEntity.CreateLookup("account", Guid.Empty);
+            var expectedLookup = XrmEntity.CreateLookup(Entities.account, Guid.Empty);
             var actualLookup = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_account, Entities.jmcg_testentity, expectedLookup);
             Assert.IsTrue(XrmEntity.GetLookupGuid(expectedLookup) == Guid.Empty);
-            Assert.IsTrue(XrmEntity.GetLookupType(expectedLookup) == "account");
+            Assert.IsTrue(XrmEntity.GetLookupType(expectedLookup) == Entities.account);
         }
 
         private void PicklistTest()
@@ -194,11 +193,11 @@ namespace JosephM.Xrm.Test
             //Valid values
             Assert.IsTrue(
                 XrmEntity.GetOptionSetValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_picklist, Entities.jmcg_testentity, "Option 1")) ==
-                TestEntityConstants.TestPicklist.Option1);
+                OptionSets.TestEntity.Picklist.Option1);
             Assert.IsTrue(
                 XrmEntity.GetOptionSetValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_picklist, Entities.jmcg_testentity,
-                    TestEntityConstants.TestPicklist.Option1)) ==
-                TestEntityConstants.TestPicklist.Option1);
+                    OptionSets.TestEntity.Picklist.Option1)) ==
+                OptionSets.TestEntity.Picklist.Option1);
             try
             {
                 var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_picklist, Entities.jmcg_testentity, "NOTANOPTION");

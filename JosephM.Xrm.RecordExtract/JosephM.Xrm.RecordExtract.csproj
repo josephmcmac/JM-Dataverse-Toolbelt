@@ -130,7 +130,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="JosephM.snk" />
     <Content Include="HelpFiles\Record Extract Help.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
