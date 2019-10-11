@@ -14,9 +14,9 @@ namespace JosephM.Deployment.DeployPackage
     public class DeployPackageService :
         ServiceBase<DeployPackageRequest, DeployPackageResponse, DataImportResponseItem>
     {
-        private XrmOrganizationConnectionFactory XrmServiceFactory { get; }
+        private IOrganizationConnectionFactory XrmServiceFactory { get; }
 
-        public DeployPackageService(XrmOrganizationConnectionFactory xrmServiceFactory)
+        public DeployPackageService(IOrganizationConnectionFactory xrmServiceFactory)
         {
             XrmServiceFactory = xrmServiceFactory;
         }

@@ -178,7 +178,11 @@ namespace JosephM.Xrm
                 {
                     if (XrmConfiguration == null)
                         throw new NullReferenceException("Cannot get organisation as the connection is null");
-                    _organisation = new Organisation(new XrmConnection(XrmConfiguration).GetOrganisation());
+                    var verifyConnection = VerifyConnection();
+                    if (!verifyConnection.IsValid)
+                        throw new Exception(verifyConnection.GetErrorString());
+                    if(_organisation == null)
+                        throw new NullReferenceException("Error loading organisation details. A connection was successfully made but the organisation details were not populated");
                 }
                 return _organisation;
             }

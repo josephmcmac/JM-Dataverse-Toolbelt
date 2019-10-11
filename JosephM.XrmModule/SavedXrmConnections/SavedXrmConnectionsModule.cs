@@ -252,14 +252,17 @@ namespace JosephM.XrmModule.SavedXrmConnections
                 }
                 else
                 {
-                    var selectedRow = g.SelectedRows.First();
-                    var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
-                    if (instance != null)
+                    ApplicationController.DoOnAsyncThread(() =>
                     {
-                        var serviceFactory = ApplicationController.ResolveType<IOrganizationConnectionFactory>();
-                        var xrmRecordService = new XrmRecordService(instance, serviceFactory);
-                        Process.Start(xrmRecordService.WebUrl);
-                    }
+                        var selectedRow = g.SelectedRows.First();
+                        var instance = ((ObjectRecord)selectedRow.Record).Instance as SavedXrmRecordConfiguration;
+                        if (instance != null)
+                        {
+                            var serviceFactory = ApplicationController.ResolveType<IOrganizationConnectionFactory>();
+                            var xrmRecordService = new XrmRecordService(instance, serviceFactory);
+                            Process.Start(xrmRecordService.WebUrl);
+                        }
+                    });
                 }
             }, (g) => g.GridRecords != null && g.GridRecords.Any());
             this.AddCustomGridFunction(customGridFunction, typeof(SavedXrmRecordConfiguration));

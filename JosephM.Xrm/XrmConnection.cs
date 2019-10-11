@@ -82,7 +82,7 @@ namespace JosephM.Xrm
         ///     Return Organisation Version
         /// </summary>
         /// <returns></returns>
-        public OrganizationDetail GetOrganisation()
+        private OrganizationDetail GetOrganisation()
         {
             try
             {
