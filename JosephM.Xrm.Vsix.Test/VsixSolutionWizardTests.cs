@@ -5,6 +5,8 @@ using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.Xrm.Vsix.Wizards;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using JosephM.Xrm.Vsix.App;
+using JosephM.Core.Extentions;
 
 namespace JosephM.Xrm.Vsix.Test
 {
@@ -21,23 +23,32 @@ namespace JosephM.Xrm.Vsix.Test
 
             var packageSettings = new XrmPackageSettings();
 
-            //okay spawn the wizards entry method with a fake controller
             var container = new VsixDependencyContainer();
+
+            //purpose of this is to load modules registrations into the container as per done in the actual wizard
+            Factory.CreateJosephMXrmVsixApp(new FakeVisualStudioService(), container, isNonSolutionExplorerContext: true);
+
+            //okay spawn the wizards entry method with a fake controller
             var applicationController = new FakeVsixApplicationController(container);
             XrmSolutionWizardBase.RunWizardSettingsEntry(packageSettings, applicationController, "Fake.Name");
 
-            //fake applcation simply to use its navigation and entry methods
+            //okay so now we have navigated to the package entry
+            //in our application controller via the wizard 
+
+            //here I inject that application conctroller into a fake application
+            //so that I can use methods for auto testing the dialog which has spawned
             var fakeVsixApplication = TestApplication.CreateTestApplication(applicationController);
             fakeVsixApplication.AddModule<XrmPackageSettingsModule>();
-            //okay so the package entry dialgo should redirect us to the conneciton entry when started as we don;t have a connection yet
             var dialog = fakeVsixApplication.GetNavigatedDialog<XrmPackageSettingsDialog>();
+
+            //okay so the package entry dialog should redirect us to the connection entry when started as we dont have a connection yet
             var connectionEntryDialog = dialog.SubDialogs.First();
             var connectionEntry = fakeVsixApplication.GetSubObjectEntryViewModel(connectionEntryDialog);
 
             var connectionToEnter = GetXrmRecordConfiguration();
             fakeVsixApplication.EnterAndSaveObject(connectionToEnter, connectionEntry);
 
-            //okay now the conneciton is entered it should navigate to the package settings entry
+            //okay now the connection is entered it should navigate to the package settings entry
             var packageSettingsEntry = fakeVsixApplication.GetSubObjectEntryViewModel(dialog, index: 1);
             Assert.AreEqual("Fake", packageSettingsEntry.GetStringFieldFieldViewModel(nameof(XrmPackageSettings.SolutionObjectPrefix)).Value);
 
