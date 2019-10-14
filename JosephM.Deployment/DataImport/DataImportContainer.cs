@@ -100,7 +100,7 @@ namespace JosephM.Deployment.DataImport
 
         public IEnumerable<string> GetFieldsInEntities(IEnumerable<Entity> thisTypeEntities)
         {
-            return thisTypeEntities.SelectMany(e => e.GetFieldsInEntity());
+            return thisTypeEntities.SelectMany(e => e.GetFieldsInEntity()).Distinct().ToArray();
         }
 
         public IEnumerable<string> GetFieldsToImport(IEnumerable<Entity> thisTypeEntities, string type)
