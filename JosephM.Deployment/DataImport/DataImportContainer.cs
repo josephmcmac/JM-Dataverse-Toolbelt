@@ -408,7 +408,7 @@ namespace JosephM.Deployment.DataImport
                     matchQuery.Criteria.FilterOperator = LogicalOperator.Or;
                     matchQuery.Criteria.Conditions.Add(
                         new ConditionExpression(primaryKey, ConditionOperator.Equal, thisEntity.Id));
-                    if (primaryName != null)
+                    if (primaryName != null && thisEntity.GetStringField(primaryName) != null)
                         matchQuery.Criteria.Conditions.Add(
                             new ConditionExpression(primaryName, ConditionOperator.Equal, thisEntity.GetStringField(primaryName)));
                 }
