@@ -42,15 +42,18 @@ namespace JosephM.XrmModule.ToolingConnector
                         if (!_cachedToolingConnections.ContainsKey(xrmConfiguration.ToolingConnectionId))
                         {
                             var loginFrm = new ToolingConnectorForm(xrmConfiguration.ToolingConnectionId, xrmConfiguration.Name);
-                        // Login process is Async, thus we need to detect when login is completed and close the form. 
-                        loginFrm.ConnectionToCrmCompleted += LoginFrm_ConnectionToCrmCompleted;
-                        // Show the dialog here. 
-                        loginFrm.ShowDialog();
+                            // Login process is Async, thus we need to detect when login is completed and close the form. 
+                            loginFrm.ConnectionToCrmCompleted += LoginFrm_ConnectionToCrmCompleted;
+                            // Show the dialog here. 
+                            loginFrm.ShowDialog();
 
-                        // If the login process completed, assign the connected service to the CRMServiceClient var 
-                        if (loginFrm.CrmConnectionMgr != null && loginFrm.CrmConnectionMgr.CrmSvc != null && loginFrm.CrmConnectionMgr.CrmSvc.IsReady)
+                            // If the login process completed, assign the connected service to the CRMServiceClient var 
+                            if (loginFrm.CrmConnectionMgr != null && loginFrm.CrmConnectionMgr.CrmSvc != null && loginFrm.CrmConnectionMgr.CrmSvc.IsReady)
                             {
-                                _cachedToolingConnections.Add(xrmConfiguration.ToolingConnectionId, loginFrm.CrmConnectionMgr.CrmSvc);
+                                if (!_cachedToolingConnections.ContainsKey(xrmConfiguration.ToolingConnectionId))
+                                {
+                                    _cachedToolingConnections.Add(xrmConfiguration.ToolingConnectionId, loginFrm.CrmConnectionMgr.CrmSvc);
+                                }
                             }
                             else
                             {

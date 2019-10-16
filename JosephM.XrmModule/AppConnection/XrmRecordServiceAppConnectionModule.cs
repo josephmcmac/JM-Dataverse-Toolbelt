@@ -32,8 +32,15 @@ namespace JosephM.XrmModule.AppConnection
                 {
                     var dialog = o as DialogViewModel;
                     var xrmRecordService = dialog.ApplicationController.ResolveType<XrmRecordService>();
-                    if (string.IsNullOrWhiteSpace(xrmRecordService.XrmRecordConfiguration.OrganizationUniqueName)
-                        && !xrmRecordService.XrmRecordConfiguration.UseXrmToolingConnector)
+                    if(xrmRecordService.XrmRecordConfiguration.UseXrmToolingConnector)
+                    {
+                        var verifyConnection = xrmRecordService.VerifyConnection();
+                        if(!verifyConnection.IsValid)
+                        {
+                            throw new Exception(verifyConnection.GetErrorString());
+                        }
+                    }
+                    else if (string.IsNullOrWhiteSpace(xrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
                     {
                         //if there was no connection then lets redirect to the connection entry first
                         var connectionEntryDialog = CreateRedirectDialog(dialog, xrmRecordService);
