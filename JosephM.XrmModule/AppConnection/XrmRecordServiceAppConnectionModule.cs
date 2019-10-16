@@ -34,11 +34,11 @@ namespace JosephM.XrmModule.AppConnection
                     var xrmRecordService = dialog.ApplicationController.ResolveType<XrmRecordService>();
                     if(xrmRecordService.XrmRecordConfiguration.UseXrmToolingConnector)
                     {
-                        var verifyConnection = xrmRecordService.VerifyConnection();
-                        if(!verifyConnection.IsValid)
-                        {
-                            throw new Exception(verifyConnection.GetErrorString());
-                        }
+                        var connectToolingDialog = new ConnectToolingDialog(xrmRecordService, dialog);
+                        var subDialogList = new List<DialogViewModel>();
+                        subDialogList.Add(connectToolingDialog);
+                        subDialogList.AddRange(dialog.SubDialogs);
+                        dialog.SubDialogs = subDialogList;
                     }
                     else if (string.IsNullOrWhiteSpace(xrmRecordService.XrmRecordConfiguration.OrganizationUniqueName))
                     {

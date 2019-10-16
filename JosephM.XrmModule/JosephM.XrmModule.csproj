@@ -132,6 +132,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConnection\ConnectToolingDialog.cs" />
     <Compile Include="AppConnection\XrmRecordServiceAppConnectionModule.cs" />
     <Compile Include="AppConnection\SavedConnectionAppConnectionModule.cs" />
     <Compile Include="Crud\Validations\PrefixValidation.cs" />
