@@ -18,12 +18,14 @@ namespace JosephM.Deployment.CreatePackage
     public class CreatePackageService :
         ServiceBase<CreatePackageRequest, CreatePackageResponse, DataImportResponseItem>
     {
-        public CreatePackageService(XrmRecordService xrmRecordService)
+        public CreatePackageService(XrmRecordService xrmRecordService, IOrganizationConnectionFactory organizationConnectionFactory)
         {
             XrmRecordService = xrmRecordService;
+            OrganizationConnectionFactory = organizationConnectionFactory;
         }
 
         public XrmRecordService XrmRecordService { get; }
+        public IOrganizationConnectionFactory OrganizationConnectionFactory { get; }
 
         public override void ExecuteExtention(CreatePackageRequest request, CreatePackageResponse response,
             ServiceRequestController controller)
@@ -93,7 +95,7 @@ namespace JosephM.Deployment.CreatePackage
                         FolderContainingPackage = request.FolderPath,
                         Connection = request.DeployPackageInto
                     };
-                    var deployService = new DeployPackageService(null);
+                    var deployService = new DeployPackageService(OrganizationConnectionFactory);
                     var deployPackageResponse = new DeployPackageResponse();
                     deployService.ExecuteExtention(deployRequest, deployPackageResponse, controller);
                     response.LoadDeployPackageResponse(deployPackageResponse);
