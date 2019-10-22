@@ -412,7 +412,7 @@ namespace JosephM.Deployment.DataImport
                         matchQuery.Criteria.Conditions.Add(
                             new ConditionExpression(primaryName, ConditionOperator.Equal, thisEntity.GetStringField(primaryName)));
                 }
-                else if (MatchOption == MatchOption.PrimaryKeyOnly && thisEntity.Id != Guid.Empty)
+                else if (MatchOption == MatchOption.PrimaryKeyOnly)
                 {
                     matchQuery.Criteria.Conditions.Add(
                         new ConditionExpression(primaryKey, ConditionOperator.Equal, thisEntity.Id));
