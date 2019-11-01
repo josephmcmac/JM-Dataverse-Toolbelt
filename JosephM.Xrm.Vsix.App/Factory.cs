@@ -86,14 +86,12 @@ namespace JosephM.Xrm.Vsix.App
 
             public override Core.FieldType.Url OtherLink => new Core.FieldType.Url("https://github.com/josephmcmac/XRM-Developer-Tool/releases/latest", "Download Desktop App");
 
-            //public override Assembly MainAssembly => Assembly.GetExecutingAssembly();
-
             public override string AboutDetail =>
-                "This extention has been created to improve productivity developing, customising, and deploying solutions in Miscrosoft Dynamics CRM (now know as Dynamics 365)\n" +
+                "This extension has been created to improve productivity developing, customising, and deploying solutions in Microsoft Dynamics for CE and PowerApps Common Data Service\n" +
                 "\n" +
-                "My desktop application also shares many of these features, as well includes others. It can be download at the link shown below\n" +
+                "My desktop application shares many of these features, as well as includes others. It can be download at the link shown below\n" +
                 "\n" +
-                "If you use this extention and experience issues, or have any suggestions for improvement, create an issue in github with the link shown below and I will look into it when I get a chance";
+                "If you use this extension and experience issues, or have suggestions for improvement, create an issue in github with the link shown below and I will look into it when I get a chance";
         }
 
         public class XrmPackageApplicationInsightsModule : ApplicationInsightsModule
