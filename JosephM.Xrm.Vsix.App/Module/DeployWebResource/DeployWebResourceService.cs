@@ -126,6 +126,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
                     { "xap",  OptionSets.WebResource.Type.SilverlightXAP},
                     { "css",  OptionSets.WebResource.Type.StyleSheetCSS},
                     { "xsl",  OptionSets.WebResource.Type.StyleSheetXSL},
+                    { "svg",  OptionSets.WebResource.Type.VectorformatSVG},
                     { "html",  OptionSets.WebResource.Type.WebpageHTML},
                     { "htm",  OptionSets.WebResource.Type.WebpageHTML},
                 };
