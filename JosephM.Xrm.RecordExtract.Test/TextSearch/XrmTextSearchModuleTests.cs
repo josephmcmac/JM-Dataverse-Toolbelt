@@ -112,12 +112,17 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
             var entryViewModel = dialog.Controller.UiItems.First() as ObjectEntryViewModel;
             Assert.IsNotNull(entryViewModel);
             entryViewModel.LoadFormSections();
-            var fieldField = entryViewModel.GetRecordFieldFieldViewModel(nameof(BulkReplaceRequest.FieldToReplaceIn));
-            fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == field);
-            var oldValueField = entryViewModel.GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.OldValue));
-            oldValueField.Value = oldValue;
-            var newValueField = entryViewModel.GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.NewValue));
-            newValueField.Value = newValue;
+
+            var fieldGrid = entryViewModel.GetEnumerableFieldViewModel(nameof(BulkReplaceRequest.FieldsToReplace));
+            fieldGrid.AddRow();
+            var fieldSelection = fieldGrid.GridRecords.First().GetRecordFieldFieldViewModel(nameof(BulkReplaceRequest.FieldToReplace.RecordField));
+            fieldSelection.Value = fieldSelection.ItemsSource.First(kv => kv.Key == field);
+
+            var replacementsGrid = entryViewModel.GetEnumerableFieldViewModel(nameof(BulkReplaceRequest.ReplacementTexts));
+            replacementsGrid.AddRow();
+            replacementsGrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.ReplacementText.OldText)).Value = oldValue;
+            replacementsGrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.ReplacementText.NewText)).Value = newValue;
+
             entryViewModel.SaveButtonViewModel.Invoke();
             var completionScreen = dialog.Controller.UiItems.First() as CompletionScreenViewModel;
             Assert.IsNotNull(completionScreen);
