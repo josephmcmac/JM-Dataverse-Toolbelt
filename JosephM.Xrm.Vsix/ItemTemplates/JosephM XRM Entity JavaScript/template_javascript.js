@@ -1,15 +1,22 @@
-﻿$safeitemname$ = new Object();
+﻿$safeitemname$ = new function()
+{
+    var that = this;
 
-$safeitemname$.RunOnLoad = function () {
-    $jminstprefix$PageUtility.CommonForm($safeitemname$.RunOnChange, $safeitemname$.RunOnSave);
-}
+    this.RunOnLoad = function(context) {
+        that.context = context;
+        that.$jminstprefix$PageUtility = new $jmobjprefix$PageUtility(context.getFormContext());
+        that.$jminstprefix$PageUtility.CommonForm(that.RunOnChange, that.RunOnSave);
+    };
 
-$safeitemname$.RunOnChange = function (fieldName) {
-    switch (fieldName) {
-        case "name":
-            break;
-    }
-}
+    this.RunOnChange = function(fieldName) {
+        switch (fieldName)
+        {
+            case "fieldname":
+                break;
+        }
+    };
 
-$safeitemname$.RunOnSave = function () {
+    this.RunOnSave = function() {
+    };
 }
+();

@@ -12,7 +12,7 @@
     <ProjectItem SubType="" TargetFileName="$fileinputname$.cs" ReplaceParameters="true" CopyParameters="true">WorkflowActivityTemplate.cs</ProjectItem>
   </TemplateContent>
   <WizardExtension>
-    <Assembly>JosephM.XRM.VSIX, Version=1.0.0.0, Culture=Neutral, PublicKeyToken=25a4b5603b9d4ed3</Assembly>
+    <Assembly>JosephM.XRM.VSIX, Version=2.0.0.0, Culture=Neutral, PublicKeyToken=25a4b5603b9d4ed3</Assembly>
     <FullClassName>JosephM.XRM.VSIX.Wizards.XrmWorkflowActivityWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>
