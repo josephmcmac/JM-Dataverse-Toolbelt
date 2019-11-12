@@ -75,6 +75,10 @@
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Spreadsheet\JosephM.Spreadsheet.csproj">
+      <Project>{cafb2299-a90b-4faa-aafa-9bb958742d45}</Project>
+      <Name>JosephM.Spreadsheet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
       <Project>{ca2bb834-77fa-43db-8ddc-b0d1b5f519b9}</Project>
       <Name>JosephM.XrmModule</Name>

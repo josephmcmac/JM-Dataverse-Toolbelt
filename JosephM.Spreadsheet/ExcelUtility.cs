@@ -1,10 +1,12 @@
-﻿using System;
+﻿using JosephM.Core.Extentions;
+using JosephM.Core.Sql;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.IO;
 using System.Linq;
-using JosephM.Core.Extentions;
-using JosephM.Core.Sql;
 
 namespace JosephM.Spreadsheet
 {
@@ -13,6 +15,70 @@ namespace JosephM.Spreadsheet
     /// </summary>
     public static class ExcelUtility
     {
+        private static string GetXlsxFileName(string name)
+        {
+            return name.ToLower().EndsWith(".xlsx") ? name : name + ".xlsx";
+        }
+
+        public static void CreateXlsx(string path, string name, IDictionary<string, IEnumerable> sheets)
+        {
+            name = GetXlsxFileName(name);
+
+            var workSheets = new List<WorksheetDfn>();
+
+            foreach (var sheet in sheets)
+            {
+                var typeToOutput = sheet.Value.GetType().GenericTypeArguments[0];
+                var propertyNames = typeToOutput.GetReadableProperties().Select(s => s.Name).ToArray();
+                Func<string, string> getLabel = (s) => typeToOutput.GetProperty(s).GetDisplayName();
+                Func<object, string, object> getField = (o, s) => o.GetPropertyValue(s)?.ToString();
+                var cellTypes = new Dictionary<string, CellDataType>();
+                foreach (var property in propertyNames)
+                {
+                    var propertyType = typeToOutput.GetProperty(property).PropertyType;
+                    if (propertyType.Name == "Nullable`1")
+                        propertyType = propertyType.GetGenericArguments()[0];
+
+                    if(propertyType == typeof(DateTime))
+                        cellTypes.Add(property, CellDataType.Date);
+                    else if (propertyType == typeof(int) || propertyType == typeof(decimal) || propertyType == typeof(double) || propertyType == typeof(float))
+                        cellTypes.Add(property, CellDataType.Number);
+                    else
+                        cellTypes.Add(property, CellDataType.String);
+                }
+
+                var workSheet = new WorksheetDfn();
+                workSheet.Name = sheet.Key.Replace(" ", "_");
+                workSheet.TableName = sheet.Key.Replace(" ", "_");
+                workSheet.ColumnHeadings = propertyNames.Select(p => new CellDfn()
+                {
+                    Bold = true,
+                    Value = getLabel(p)
+                }).ToArray();
+
+                var rows = new List<RowDfn>();
+                foreach (var e in sheet.Value)
+                {
+                    rows.Add(new RowDfn
+                    {
+                        Cells = propertyNames.Select(p => new CellDfn
+                        {
+                            Value = getField(e, p),
+                            CellDataType = cellTypes[p]
+                        }).ToArray()
+                    });
+                }
+                workSheet.Rows = rows.ToArray();
+                workSheets.Add(workSheet);
+            }
+
+            var wb = new WorkbookDfn();
+            wb.Worksheets = workSheets.ToArray();
+            var outXlsx = new FileInfo(Path.Combine(path, name));
+            SpreadsheetWriter.Write(outXlsx.FullName, wb);
+        }
+
+
         /// <summary>
         ///     Converts a sheets display name into the internal name used by excel
         /// </summary>

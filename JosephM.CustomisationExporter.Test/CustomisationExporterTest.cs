@@ -24,6 +24,8 @@ namespace JosephM.CustomisationExporter.Test
             //create test application with module loaded
             var testApplication = CreateAndLoadTestApplication<CustomisationExporterModule>();
 
+            //xlsx
+
             //first script generation of C# entities and fields
             var request = new CustomisationExporterRequest();
             request.IncludeAllRecordTypes = true;
@@ -72,6 +74,31 @@ namespace JosephM.CustomisationExporter.Test
 
             Thread.Sleep(1000);
             FileUtility.DeleteFiles(TestingFolder);
+
+            response = testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog, CustomisationExporterResponse>(request);
+            Assert.IsFalse(response.HasError);
+            Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
+
+            request = new CustomisationExporterRequest
+            {
+                Format = CustomisationExporterRequest.FileFormat.Csv,
+                IncludeAllRecordTypes = true,
+                DuplicateManyToManyRelationshipSides = true,
+                Entities = true,
+                Fields = true,
+                FieldOptionSets = true,
+                Relationships = true,
+                SharedOptionSets = true,
+                IncludeOneToManyRelationships = true,
+                SaveToFolder = new Folder(TestingFolder)
+            };
+
+            Thread.Sleep(1000);
+            FileUtility.DeleteFiles(TestingFolder);
+
+            response = testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog, CustomisationExporterResponse>(request);
+            Assert.IsFalse(response.HasError);
+            Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
         }
     }
 }
