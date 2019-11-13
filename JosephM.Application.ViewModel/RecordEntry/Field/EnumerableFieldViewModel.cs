@@ -335,44 +335,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             ApplicationController.DoOnMainThread(() => DynamicGridViewModel.GridRecords.Clear());
         }
 
-        public void DownloadCsv()
-        {
-            try
-            {
-                var fileName = ApplicationController.GetSaveFileName(RecordType, ".csv");
-                if (!fileName.IsNullOrWhiteSpace())
-                {
-                    RecordForm.LoadingViewModel.IsLoading = true;
-                    DoOnAsynchThread(() =>
-                    {
-                        try
-                        {
-                            Thread.Sleep(5000);
-                            var records = GetGridRecords(true);
-                            CsvUtility.CreateCsv(Path.GetDirectoryName(fileName), Path.GetFileName(fileName),
-                                records.Records
-                                , GetRecordService().GetFields(RecordType),
-                                (f) => GetRecordService().GetFieldLabel(f, RecordType),
-                                (r, f) => GetRecordService().GetFieldAsDisplayString((IRecord)r, f));
-                            ApplicationController.StartProcess(fileName);
-                        }
-                        catch (Exception ex)
-                        {
-                            ApplicationController.ThrowException(ex);
-                        }
-                        finally
-                        {
-                            RecordForm.LoadingViewModel.IsLoading = false;
-                        }
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                ApplicationController.ThrowException(ex);
-            }
-        }
-
         public override string StringDisplay
         {
             get
