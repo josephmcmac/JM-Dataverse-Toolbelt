@@ -24,8 +24,6 @@ namespace JosephM.Core.Utility
 
         public static void CreateCsv<T>(string path, string name, IEnumerable<T> objects, LogController ui)
         {
-            name = GetCsvFileName(name);
-
             if (objects != null && objects.Any(o => o != null))
             {
                 var typeToOutput = objects.First(o => o != null).GetType();
@@ -41,6 +39,18 @@ namespace JosephM.Core.Utility
                     return o.GetPropertyValue(s);
                 });
             }
+        }
+
+        public static void CreateCsv(string path, string name, IEnumerable sheet)
+        {
+            name = GetCsvFileName(name);
+
+            var typeToOutput = sheet.GetType().GenericTypeArguments[0];
+            var propertyNames = typeToOutput.GetReadableProperties().Select(s => s.Name).ToArray();
+            Func<string, string> getLabel = (s) => typeToOutput.GetProperty(s).GetDisplayName();
+            Func<object, string, object> getField = (o, s) => o.GetPropertyValue(s);
+
+            CreateCsv(path, name, sheet, propertyNames, getLabel, getField);
         }
 
         public static void CreateCsv(string path, string name, IEnumerable objects, IEnumerable<string> propertyNames, Func<string, string> getLabel, Func<object, string, object> getField)

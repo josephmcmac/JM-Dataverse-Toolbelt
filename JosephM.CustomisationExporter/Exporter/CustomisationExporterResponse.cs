@@ -1,5 +1,8 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
 namespace JosephM.CustomisationExporter.Exporter
 {
@@ -8,32 +11,23 @@ namespace JosephM.CustomisationExporter.Exporter
         [Hidden]
         public string Folder { get; set; }
         [Hidden]
-        public string FieldsFileName { get; set; }
+        public string ExcelFileName { get; set; }
         [Hidden]
-        public string FieldsFileNameQualified
+        public string ExcelFileNameQualified
         {
-            get { return string.Format("{0}/{1}", Folder, FieldsFileName); }
+            get { return ExcelFileName != null ? Path.Combine(Folder, ExcelFileName) : null; }
         }
-        [Hidden]
-        public string TypesFileName { get; set; }
-        [Hidden]
-        public string TypesFileNameQualified
+
+        private Dictionary<string, IEnumerable> _listsToOutput = new Dictionary<string, IEnumerable>();
+
+        public void AddListToOutput(string name, IEnumerable items)
         {
-            get { return string.Format("{0}/{1}", Folder, TypesFileName); }
+            _listsToOutput.Add(name, items);
         }
-        [Hidden]
-        public string RelationshipsFileName { get; set; }
-        [Hidden]
-        public string RelationshipsFileNameQualified
+
+        public IDictionary<string, IEnumerable> GetListsToOutput()
         {
-            get { return string.Format("{0}/{1}", Folder, RelationshipsFileName); }
-        }
-        [Hidden]
-        public string OptionSetsFileName { get; set; }
-        [Hidden]
-        public string OptionSetsFileNameQualified
-        {
-            get { return string.Format("{0}/{1}", Folder, OptionSetsFileName); }
+            return _listsToOutput;
         }
     }
 }

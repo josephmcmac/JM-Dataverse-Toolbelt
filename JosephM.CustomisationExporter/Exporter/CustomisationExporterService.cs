@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
-using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Spreadsheet;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace JosephM.CustomisationExporter.Exporter
 {
@@ -29,6 +29,7 @@ namespace JosephM.CustomisationExporter.Exporter
         {
             response.Folder = request.SaveToFolder.FolderPath;
             controller.LogLiteral("Loading Metadata");
+            
             ProcessForEntities(request, response, controller.Controller);
 
             if ((request.Fields || request.FieldOptionSets) && request.IncludeAllRecordTypes)
@@ -46,7 +47,24 @@ namespace JosephM.CustomisationExporter.Exporter
             ProcessForRelationships(request, response, controller.Controller);
             ProcessForOptionSets(request, response, controller.Controller);
 
-            response.Message = "The CSV Generation is Complete";
+            response.Folder = request.SaveToFolder.FolderPath;
+
+            if (request.Format == CustomisationExporterRequest.FileFormat.Xlsx)
+            {
+                var excelFileName = "Customisation Export " + DateTime.Now.ToFileTime() + ".xlsx";
+                ExcelUtility.CreateXlsx(request.SaveToFolder.FolderPath, excelFileName, response.GetListsToOutput());
+                response.ExcelFileName = excelFileName;
+            }
+            else
+            {
+                foreach(var item in response.GetListsToOutput())
+                {
+                    var csvName = item.Key + " " + DateTime.Now.ToFileTime() + ".csv";
+                    CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, csvName, item.Value);
+                }
+            }
+
+            response.Message = "The Export is Complete";
         }
 
         private void ProcessForRelationships(CustomisationExporterRequest request,
@@ -148,10 +166,7 @@ namespace JosephM.CustomisationExporter.Exporter
                             thisType, ex));
                     }
                 }
-                var fileName = "RelationshipExport_" + DateTime.Now.ToFileTime() + ".csv";
-                CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, fileName, allRelationship);
-                response.RelationshipsFileName = fileName;
-                response.Folder = request.SaveToFolder.FolderPath;
+                response.AddListToOutput("Relationships", allRelationship);
             }
         }
 
@@ -241,10 +256,7 @@ namespace JosephM.CustomisationExporter.Exporter
                     }
                 }
             }
-            var fileName = "OptionsExport_" + DateTime.Now.ToFileTime() + ".csv";
-            CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, fileName, allOptions);
-            response.OptionSetsFileName = fileName;
-            response.Folder = request.SaveToFolder.FolderPath;
+            response.AddListToOutput("Option Sets", allOptions);
         }
 
         private void ProcessForFields(CustomisationExporterRequest request, CustomisationExporterResponse response,
@@ -373,10 +385,7 @@ namespace JosephM.CustomisationExporter.Exporter
                                 thisType, ex));
                     }
                 }
-                var fileName = "FieldExport_" + DateTime.Now.ToFileTime() + ".csv";
-                CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, fileName, allFields);
-                response.FieldsFileName = fileName;
-                response.Folder = request.SaveToFolder.FolderPath;
+                response.AddListToOutput("Fields", allFields);
             }
         }
 
@@ -435,9 +444,8 @@ namespace JosephM.CustomisationExporter.Exporter
                             thisType, ex));
                     }
                 }
-                var fileName = "TypesExport_" + DateTime.Now.ToFileTime() + ".csv";
-                CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, fileName, allEntities);
-                response.TypesFileName = fileName;
+
+                response.AddListToOutput("Record Types", allEntities);
             }
         }
 

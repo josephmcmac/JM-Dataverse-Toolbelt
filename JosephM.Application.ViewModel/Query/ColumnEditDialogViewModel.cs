@@ -84,7 +84,7 @@ namespace JosephM.Application.ViewModel.Query
             {
                 var lookupFields = RecordService
                     .GetFields(thisType)
-                    .Where(f => RecordService.IsLookup(f, thisType));
+                    .Where(f => new[] { RecordFieldType.Lookup, RecordFieldType.Customer }.Contains(RecordService.GetFieldType(f, thisType)));
                 foreach (var field in lookupFields)
                 {
                     var targetTypes = RecordService.GetLookupTargetType(field, thisType);

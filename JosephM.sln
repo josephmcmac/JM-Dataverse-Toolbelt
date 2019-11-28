@@ -5,6 +5,7 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
+		Lib\DocumentFormat.OpenXml.dll = Lib\DocumentFormat.OpenXml.dll
 		Lib\MigraDoc.DocumentObjectModel-WPF.dll = Lib\MigraDoc.DocumentObjectModel-WPF.dll
 		Lib\MigraDoc.Rendering-WPF.dll = Lib\MigraDoc.Rendering-WPF.dll
 		Lib\MigraDoc.RtfRendering-WPF.dll = Lib\MigraDoc.RtfRendering-WPF.dll

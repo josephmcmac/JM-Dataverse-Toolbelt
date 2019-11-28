@@ -55,6 +55,7 @@ namespace JosephM.XrmModule.Test
             var queryViewModel = crudDialog.Controller.UiItems[0] as QueryViewModel;
             Assert.IsNotNull(queryViewModel);
             queryViewModel.SelectedRecordType = queryViewModel.RecordTypeItemsSource.First(r => r.Key == Entities.account);
+
             queryViewModel.DynamicGridViewModel.GetButton("QUERY").Invoke();
             Assert.IsTrue(queryViewModel.GridRecords.Any());
 
@@ -819,12 +820,17 @@ namespace JosephM.XrmModule.Test
             var bulkUpdateEntry = bulkUpdateDialog.Controller.UiItems.First() as ObjectEntryViewModel;
             Assert.IsNotNull(bulkUpdateEntry);
             bulkUpdateEntry.LoadFormSections();
-            var fieldField = bulkUpdateEntry.GetRecordFieldFieldViewModel(nameof(BulkReplaceRequest.FieldToReplaceIn));
-            fieldField.Value = fieldField.ItemsSource.First(kv => kv.Key == field);
-            var oldValueField = bulkUpdateEntry.GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.OldValue));
-            oldValueField.Value = oldValue;
-            var newValueField = bulkUpdateEntry.GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.NewValue));
-            newValueField.Value = newValue;
+
+            var fieldGrid = bulkUpdateEntry.GetEnumerableFieldViewModel(nameof(BulkReplaceRequest.FieldsToReplace));
+            fieldGrid.AddRow();
+            var fieldSelection = fieldGrid.GridRecords.First().GetRecordFieldFieldViewModel(nameof(BulkReplaceRequest.FieldToReplace.RecordField));
+            fieldSelection.Value = fieldSelection.ItemsSource.First(kv => kv.Key == field);
+
+            var replacementsGrid = bulkUpdateEntry.GetEnumerableFieldViewModel(nameof(BulkReplaceRequest.ReplacementTexts));
+            replacementsGrid.AddRow();
+            replacementsGrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.ReplacementText.OldText)).Value = oldValue;
+            replacementsGrid.GridRecords.First().GetStringFieldFieldViewModel(nameof(BulkReplaceRequest.ReplacementText.NewText)).Value = newValue;
+
             var setSizeField = bulkUpdateEntry.GetIntegerFieldFieldViewModel(nameof(BulkReplaceRequest.ExecuteMultipleSetSize));
             setSizeField.Value = doExecuteMultiples ? 3 : 1;
             if (!bulkUpdateEntry.Validate())

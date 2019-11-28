@@ -18,6 +18,8 @@ using JosephM.Core.Utility;
 using System.IO;
 using JosephM.Record.Extentions;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Spreadsheet;
+using System.Collections;
 
 namespace JosephM.Application.ViewModel.Grid
 {
@@ -615,9 +617,21 @@ namespace JosephM.Application.ViewModel.Grid
         public Action RemoveParentDialog { get; set; }
         public int? TotalCount { get; set; }
 
+
         public void DownloadCsv()
         {
-            var newFileName = ApplicationController.GetSaveFileName(string.Format("{0}", RecordService.GetCollectionName(RecordType)), "csv");
+            DownloadSpreadsheet(csv: true);
+        }
+
+        public void DownloadExcel()
+        {
+            DownloadSpreadsheet(csv: false);
+        }
+
+        private void DownloadSpreadsheet(bool csv = false)
+        {
+            var extension = csv ? "csv" : "xlsx";
+            var newFileName = ApplicationController.GetSaveFileName(string.Format("{0}", RecordService.GetCollectionName(RecordType)), extension);
             ApplicationController.DoOnAsyncThread(() =>
             {
                 try
@@ -642,13 +656,38 @@ namespace JosephM.Application.ViewModel.Grid
                             displayFuncDictionary.Add(fm.AliasedFieldName ?? fm.FieldName, (o,s) => RecordService.GetFieldAsDisplayString(fm.AltRecordType ?? RecordType, fm.FieldName, ((IRecord)o).GetField(s)));
                         }
 
-                        CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records,
-                            fields.Select(f => f.AliasedFieldName ?? f.FieldName),
-                            (f) => labelFuncDictionary[f](f),
-                            (r, f) => displayFuncDictionary[f](r, f));
+                        if (csv)
+                        {
+                            CsvUtility.CreateCsv(folder, fileName, GetGridRecords(true).Records,
+                                fields.Select(f => f.AliasedFieldName ?? f.FieldName),
+                                (f) => labelFuncDictionary[f](f),
+                                (r, f) => displayFuncDictionary[f](r, f));
+                        }
+                        else
+                        {
+                            var sheetName = "Records";
+                            var excelCellTypes = new Dictionary<string, CellDataType>();
+                            foreach(var field in fields)
+                            {
+                                var fieldType = field.AltRecordType != null
+                                    ? RecordService.GetFieldType(field.FieldName, field.AltRecordType)
+                                    : RecordService.GetFieldType(field.FieldName, RecordType);
+                                if (fieldType == RecordFieldType.BigInt || fieldType == RecordFieldType.Decimal || fieldType == RecordFieldType.Double || fieldType == RecordFieldType.Integer || fieldType == RecordFieldType.Money)
+                                    excelCellTypes.Add(field.AliasedFieldName ?? field.FieldName, CellDataType.Number);
+                                else if (fieldType == RecordFieldType.Date)
+                                    excelCellTypes.Add(field.AliasedFieldName ?? field.FieldName, CellDataType.Date);
+                                else
+                                    excelCellTypes.Add(field.AliasedFieldName ?? field.FieldName, CellDataType.String);
+                            }
 
-
-                        ApplicationController.LogEvent("Download CSV", new Dictionary<string, string>
+                            ExcelUtility.CreateXlsx(folder, fileName,
+                                new Dictionary<string, IEnumerable>() { { sheetName, GetGridRecords(true).Records } },
+                                new Dictionary<string, IEnumerable<string>>() { { sheetName, fields.Select(f => f.AliasedFieldName ?? f.FieldName) } },
+                                new Dictionary<string, Func<object, string, object>>() { { sheetName, (r, f) => displayFuncDictionary[f](r, f) } },
+                                new Dictionary<string, Func<string, string>>() { { sheetName, (f) => labelFuncDictionary[f](f) } },
+                                new Dictionary<string, Func<string, CellDataType>>() { { sheetName, (f) => excelCellTypes[f] } });
+                        }
+                        ApplicationController.LogEvent("Download " + extension.ToUpper(), new Dictionary<string, string>
                         {
                             { "Is Completed Event", true.ToString() },
                             { "Type", RecordType },

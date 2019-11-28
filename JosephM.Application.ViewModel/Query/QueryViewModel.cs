@@ -198,7 +198,11 @@ namespace JosephM.Application.ViewModel.Query
                         LoadChildForm(newForm);
                     };
                 }
-                customFunctionList.Add(new CustomGridFunction("CSV", "Download CSV", (g) => g.DownloadCsv(), (g) => g.GridRecords != null && g.GridRecords.Any()));
+                customFunctionList.Add(new CustomGridFunction("DOWNLOAD", "Download", new[]
+                {
+                    new CustomGridFunction("DOWNLOADEXCEL", "Excel", (g) => g.DownloadExcel(), (g) => g.GridRecords != null && g.GridRecords.Any()),
+                    new CustomGridFunction("DOWNLOADCSV", "CSV", (g) => g.DownloadCsv(), (g) => g.GridRecords != null && g.GridRecords.Any())
+                }));
 
                 if (CustomFunctions != null)
                 {

@@ -17,6 +17,11 @@ namespace JosephM.CustomisationExporter.Exporter
     [Group(Sections.RecordTypes, true, 40)]
     public class CustomisationExporterRequest : ServiceRequestBase, IValidatableObject
     {
+        [GridWidth(100)]
+        [DisplayOrder(5)]
+        [Group(Sections.Folder)]
+        [RequiredProperty]
+        public FileFormat Format { get; set; }
         [GridWidth(300)]
         [DisplayOrder(10)]
         [Group(Sections.Folder)]
@@ -82,6 +87,13 @@ namespace JosephM.CustomisationExporter.Exporter
             }
             return isValidResponse;
         }
+
+        public enum FileFormat
+        {
+            Xlsx,
+            Csv
+        }
+
 
         private static class Sections
         {

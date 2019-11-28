@@ -215,6 +215,10 @@
       <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
       <Name>JosephM.Record</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Spreadsheet\JosephM.Spreadsheet.csproj">
+      <Project>{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}</Project>
+      <Name>JosephM.Spreadsheet</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

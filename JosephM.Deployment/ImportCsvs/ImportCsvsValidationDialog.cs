@@ -32,7 +32,7 @@ namespace JosephM.Deployment.ImportCsvs
             var dictionary = ImportCsvsService.LoadMappingDictionary(Request);
 
             var importService = new SpreadsheetImportService(XrmRecordService);
-            var parseResponse = importService.ParseIntoEntities(dictionary);
+            var parseResponse = importService.ParseIntoEntities(dictionary, useAmericanDates: Request.DateFormat == DateFormat.American);
             if (parseResponse.ResponseItems.Any())
             {
                 AddObjectToUi(parseResponse

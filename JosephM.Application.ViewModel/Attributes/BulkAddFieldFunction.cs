@@ -30,11 +30,30 @@ namespace JosephM.Application.ViewModel.Attributes
             var recordType = recordForm.FormService.GetDependantValue(subGridReference + "." + targetPropertyInfo.Name, GetEnumeratedType(recordForm, subGridReference).AssemblyQualifiedName, recordForm);
             var lookupService = GetLookupService(recordForm, subGridReference);
 
+            var limitFields = new string[0];
+            try
+            {
+                limitFields = gridField
+                    .GetRecordService()
+                    .GetPicklistKeyValues(targetPropertyInfo.Name, gridField.RecordType, recordType, null)
+                    .Select(p => p.Key)
+                    .ToArray();
+            }
+            catch(Exception)
+            {
+                //oh well
+            }
+
             //removed field searchable as inadvertently left out fields
             var fields = lookupService.GetFieldMetadata(recordType)
                 .Where(f => (!alreadySelected?.Any(k => k == f.SchemaName) ?? true))
                 .OrderBy(r => r.DisplayName)
                 .ToArray();
+
+            if(limitFields.Any())
+            {
+                fields = fields.Where(f => limitFields.Contains(f.SchemaName)).ToArray();
+            }
 
             return fields
                 .Select(f => new PicklistOption(f.SchemaName, f.DisplayName))

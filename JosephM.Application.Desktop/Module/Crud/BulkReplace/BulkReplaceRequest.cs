@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Attributes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Record.Attributes;
@@ -36,7 +37,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
             return _recordsToUpdate;
         }
 
-        [RecordTypeFor(nameof(FieldToReplaceIn))]
+        [RecordTypeFor(nameof(FieldsToReplace) + "." + nameof(FieldToReplace.RecordField))]
         [Group(Sections.RecordDetails)]
         [DisplayOrder(10)]
         public RecordType RecordType { get; private set; }
@@ -46,22 +47,14 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
         public int RecordCount { get { return _recordsToUpdate?.Count() ?? 0; } }
 
         [Group(Sections.FieldUpdate)]
-        [DisplayOrder(20)]
-        [RequiredProperty]
-        [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.In, new[] { RecordFieldType.String, RecordFieldType.Memo })]
-        public RecordField FieldToReplaceIn { get; set; }
-
-        [Group(Sections.FieldUpdate)]
         [DisplayOrder(30)]
         [RequiredProperty]
-        [PropertyInContextByPropertyNotNull(nameof(FieldToReplaceIn))]
-        public string OldValue { get; set; }
+        public IEnumerable<FieldToReplace> FieldsToReplace { get; set; }
 
         [Group(Sections.FieldUpdate)]
         [DisplayOrder(40)]
         [RequiredProperty]
-        [PropertyInContextByPropertyNotNull(nameof(FieldToReplaceIn))]
-        public string NewValue { get; set; }
+        public IEnumerable<ReplacementText> ReplacementTexts { get; set; }
 
         [Group(Sections.AdditionalOptions)]
         [DisplayOrder(50)]
@@ -81,6 +74,28 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
                     ExecuteMultipleSetSize = 1;
             }
         }
+
+        [DoNotAllowGridOpen]
+        [BulkAddFieldFunction]
+        public class FieldToReplace
+        {
+            [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.In, new[] { RecordFieldType.String, RecordFieldType.Memo })]
+            [RequiredProperty]
+            public RecordField RecordField { get; set; }
+        }
+
+        [DoNotAllowGridOpen]
+        public class ReplacementText
+        {
+            [DisplayOrder(10)]
+            [RequiredProperty]
+            public string OldText { get; set; }
+
+            [DisplayOrder(20)]
+            [RequiredProperty]
+            public string NewText { get; set; }
+        }
+
         private static class Sections
         {
             public const string RecordDetails = "Selected Replace Details";

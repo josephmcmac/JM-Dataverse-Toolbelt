@@ -915,12 +915,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     functions.Add(item.GetFunctionLabel(), item.GetCustomFunction(recordForm, referenceName));
                 }
             }
+            var customGridFunctions = functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToList();
             var allowDownloadAttribute = ObjectRecordService.GetPropertyInfo(referenceName, recordForm.RecordType).GetCustomAttribute<AllowDownload>();
             if (allowDownloadAttribute != null)
             {
-                functions.Add("Download CSV", () => { recordForm.GetEnumerableFieldViewModel(referenceName).DynamicGridViewModel.DownloadCsv(); });
+                customGridFunctions.Add(new CustomGridFunction("DOWNLOAD", "Download", new[]
+                {
+                    new CustomGridFunction("DOWNLOADEXCEL", "Excel", () => recordForm.GetEnumerableFieldViewModel(referenceName).DynamicGridViewModel.DownloadExcel()),
+                    new CustomGridFunction("DOWNLOADCSV", "CSV", () => recordForm.GetEnumerableFieldViewModel(referenceName).DynamicGridViewModel.DownloadCsv())
+                }));
             }
-            var customGridFunctions = functions.Select(kv => new CustomGridFunction(kv.Key, kv.Key, kv.Value)).ToList();
+
             var typesToResolve = GetTypesToResolve(enumeratedType);
             foreach (var typeToResolve in typesToResolve)
             {

@@ -33,21 +33,9 @@ namespace JosephM.CustomisationExporter.Exporter
 
         private void AddDialogCompletionLinks()
         {
-            this.AddCustomFormFunction(new CustomFormFunction("OPENTYPES", "Open Types"
-                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.TypesFileNameQualified)))
-                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.TypesFileName))))
-                , typeof(CustomisationExporterResponse));
-            this.AddCustomFormFunction(new CustomFormFunction("OPENFIELDS", "Open Fields"
-                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.FieldsFileNameQualified)))
-                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.FieldsFileName))))
-                , typeof(CustomisationExporterResponse));
-            this.AddCustomFormFunction(new CustomFormFunction("OPENRELATIONSHIPS", "Open Relationships"
-                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.RelationshipsFileNameQualified)))
-                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.RelationshipsFileName))))
-                , typeof(CustomisationExporterResponse));
-            this.AddCustomFormFunction(new CustomFormFunction("OPENOPTIONS", "Open Options"
-                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.OptionSetsFileNameQualified)))
-                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.OptionSetsFileName))))
+            this.AddCustomFormFunction(new CustomFormFunction("OPENEXCEL", "Open Excel File"
+                , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.ExcelFileNameQualified)))
+                , (r) => !string.IsNullOrWhiteSpace(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.ExcelFileName))))
                 , typeof(CustomisationExporterResponse));
             this.AddCustomFormFunction(new CustomFormFunction("OPENFOLDER", "Open Folder"
                 , (r) => r.ApplicationController.StartProcess(r.GetRecord().GetStringField(nameof(CustomisationExporterResponse.Folder)))
