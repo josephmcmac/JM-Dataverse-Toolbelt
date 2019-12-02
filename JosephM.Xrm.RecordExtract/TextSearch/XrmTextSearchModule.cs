@@ -72,7 +72,10 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                     {
                         var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var xrmTextSearchService = new XrmTextSearchService(xrmRecordService, new DocumentWriter.DocumentWriter());
-                        var dialog = new XrmTextSearchDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService);
+                        var dialog = new XrmTextSearchDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService)
+                        {
+                            LoadedFromConnection = true
+                        };
                         dialog.SetTabLabel(instance.Name + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);
                     }

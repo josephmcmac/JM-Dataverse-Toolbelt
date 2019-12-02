@@ -50,7 +50,10 @@ namespace JosephM.Xrm.Autonumber
                     if (instance != null)
                     {
                         var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
-                        var dialog = new AutonumberDialog(xrmRecordService, new DialogController(ApplicationController));
+                        var dialog = new AutonumberDialog(xrmRecordService, new DialogController(ApplicationController))
+                        {
+                            LoadedFromConnection = true
+                        };
                         dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);
                     }

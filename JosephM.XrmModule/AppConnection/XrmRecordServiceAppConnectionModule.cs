@@ -31,6 +31,11 @@ namespace JosephM.XrmModule.AppConnection
                 if (attr != null)
                 {
                     var dialog = o as DialogViewModel;
+                    if(attr.EscapeConnectionCheckProperty != null)
+                    {
+                        if ((bool)dialog.GetPropertyValue(attr.EscapeConnectionCheckProperty))
+                            return;
+                    }
                     var xrmRecordService = dialog.ApplicationController.ResolveType<XrmRecordService>();
                     if(xrmRecordService.XrmRecordConfiguration.UseXrmToolingConnector)
                     {

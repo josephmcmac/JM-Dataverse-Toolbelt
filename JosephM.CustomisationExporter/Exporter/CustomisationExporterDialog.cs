@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace JosephM.CustomisationExporter.Exporter
 {
-    [RequiresConnection]
+    [RequiresConnection(escapeConnectionCheckProperty: nameof(LoadedFromConnection))]
     public class CustomisationExporterDialog :
         ServiceRequestDialog
             <CustomisationExporterService, CustomisationExporterRequest, CustomisationExporterResponse,
@@ -18,6 +18,8 @@ namespace JosephM.CustomisationExporter.Exporter
             : base(service, dialogController, recordService)
         {
         }
+
+        public bool LoadedFromConnection { get; set; }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
