@@ -166,7 +166,7 @@ namespace JosephM.Deployment.ExportXml
                     }
                     foreach (var field in lookupFieldsEnsureNamePopulated)
                     {
-                        controller.UpdateProgress(countsExported++, countToExport, string.Format("Populating Empty Lookups For {0} Records", type));
+                        controller.UpdateProgress(countsExported, countToExport, string.Format("Populating Empty Lookups For {0} Records", type));
                         foreach (var item in entities)
                         {
                             var entityReference = item.GetField(field) as EntityReference;
