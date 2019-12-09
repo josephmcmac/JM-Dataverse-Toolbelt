@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml;
 
 #endregion
 
@@ -347,9 +348,12 @@ namespace JosephM.Deployment.ExportXml
             //ensure dont exceed max filename length
             fileName = string.Format(@"{0}\{1}", folder, fileName).Left(240);
             fileName = fileName + ".xml";
-            using (var fileStream = new FileStream(fileName, FileMode.Create))
+
+            var settings = new XmlWriterSettings { Indent = true };
+
+            using (var w = XmlWriter.Create(fileName, settings))
             {
-                lateBoundSerializer.WriteObject(fileStream, entity);
+                lateBoundSerializer.WriteObject(w, entity);
             }
         }
 
