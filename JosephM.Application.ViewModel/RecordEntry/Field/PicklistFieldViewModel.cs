@@ -15,9 +15,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                if (ValueObject is Enum)
+                if (ValueObject is Enum item)
                 {
-                    var item = (Enum) ValueObject;
                     return PicklistOption.EnumToPicklistOption(item);
                 }
                 return ValueObject as PicklistOption;

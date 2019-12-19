@@ -1,9 +1,5 @@
-﻿#region
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JosephM.Record.Query;
-
-#endregion
 
 namespace JosephM.Record.Metadata
 {
@@ -25,5 +21,6 @@ namespace JosephM.Record.Metadata
         public ViewType ViewType { get; set; }
         public string Id { get; set; }
         public string RawQuery { get; set; }
+        public string ViewName { get; set; }
     }
 }

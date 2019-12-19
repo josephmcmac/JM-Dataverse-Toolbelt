@@ -200,5 +200,7 @@ namespace JosephM.Record.IService
         void LoadRelationshipsForAllEntities();
 
         bool SupportsExecuteMultiple { get; }
+
+        QueryDefinition GetViewAsQueryDefinition(string viewId);
     }
 }
