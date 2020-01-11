@@ -43,7 +43,10 @@ namespace JosephM.RecordCounts
                     {
                         var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var xrmTextSearchService = new RecordCountsService(xrmRecordService);
-                        var dialog = new RecordCountsDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService);
+                        var dialog = new RecordCountsDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService)
+                        {
+                            LoadedFromConnection = true
+                        };
                         dialog.SetTabLabel(instance.Name + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);
                     }

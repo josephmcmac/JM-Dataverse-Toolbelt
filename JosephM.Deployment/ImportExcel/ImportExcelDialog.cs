@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.ImportExcel
 {
-    [RequiresConnection]
+    [RequiresConnection(escapeConnectionCheckProperty: nameof(LoadedFromConnection))]
     public class ImportExcelDialog :
         ServiceRequestDialog
             <ImportExcelService, ImportExcelRequest,
@@ -21,6 +21,8 @@ namespace JosephM.Deployment.ImportExcel
             var validationDialog = new ImportExcelValidationDialog(this, Request);
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
         }
+
+        public bool LoadedFromConnection { get; set; }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {

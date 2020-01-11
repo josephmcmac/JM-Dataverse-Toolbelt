@@ -399,6 +399,11 @@ namespace JosephM.Record.Service
             return ids.Select(id => Get(recordType, id)).ToArray();
         }
 
+        public QueryDefinition GetViewAsQueryDefinition(string viewId)
+        {
+            return null;
+        }
+
         public virtual bool SupportsExecuteMultiple { get { return false; } }
     }
 }

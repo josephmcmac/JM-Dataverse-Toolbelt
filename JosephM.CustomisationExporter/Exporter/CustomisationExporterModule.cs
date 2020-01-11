@@ -59,7 +59,10 @@ namespace JosephM.CustomisationExporter.Exporter
                     {
                         var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var xrmTextSearchService = new CustomisationExporterService(xrmRecordService);
-                        var dialog = new CustomisationExporterDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService);
+                        var dialog = new CustomisationExporterDialog(xrmTextSearchService, new DialogController(ApplicationController), xrmRecordService)
+                        {
+                            LoadedFromConnection = true
+                        };
                         dialog.SetTabLabel(instance.Name + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);
                     }

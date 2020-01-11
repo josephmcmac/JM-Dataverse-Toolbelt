@@ -328,5 +328,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get { return AliasedFieldName ?? FieldName; }
         }
+
+        public virtual string StringDisplay
+        {
+            get
+            {
+                return ValueObject?.ToString();
+            }
+        }
     }
 }

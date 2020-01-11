@@ -10,7 +10,7 @@ using System.IO;
 
 namespace JosephM.Xrm.Vsix.Module.CreatePackage
 {
-    [RequiresConnection(nameof(ProcessEnteredSettings))]
+    [RequiresConnection(processEnteredSettingsMethodName: nameof(ProcessEnteredSettings))]
     public class VsixCreatePackageDialog : CreatePackageDialog
     {
         public IVisualStudioService VisualStudioService { get; set; }

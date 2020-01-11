@@ -549,5 +549,48 @@ namespace JosephM.Wpf.Grid
                 }
             }
         }
+
+        private void DataGrid_CopyingRowClipboardContent(object sender, DataGridRowClipboardEventArgs e)
+        {
+            var fieldNames = new Dictionary<string, string>();
+            var columns = new List<DataGridColumn>();
+
+            foreach (var column in DynamicDataGrid.Columns)
+            {
+                if (column.Header is ColumnMetadata columnMetadata)
+                {
+                    if (!fieldNames.ContainsKey(columnMetadata.AliasedFieldName ?? columnMetadata.FieldName))
+                    {
+                        columns.Add(column);
+                        fieldNames.Add(columnMetadata.AliasedFieldName ?? columnMetadata.FieldName, columnMetadata.FieldLabel);
+                    }
+                }
+            }
+
+            if (fieldNames.Any())
+            {
+                if (e.IsColumnHeadersRow)
+                {
+                    e.ClipboardRowContent.Clear();
+                    var i = 0;
+                    foreach (var label in fieldNames.Values)
+                    {
+                        e.ClipboardRowContent.Add(new DataGridClipboardCellContent(e.Item, columns[i++], label));
+                    }
+                }
+                else
+                {
+                    if(e.Item is GridRowViewModel rowViewModel)
+                    {
+                        e.ClipboardRowContent.Clear();
+                        var i = 0;
+                        foreach (var field in fieldNames.Keys)
+                        {
+                            e.ClipboardRowContent.Add(new DataGridClipboardCellContent(e.Item, columns[i++], rowViewModel.GetFieldViewModel(field).StringDisplay));
+                        }
+                    }
+                }
+            }
+        }
     }
 }

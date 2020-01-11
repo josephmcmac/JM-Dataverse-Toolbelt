@@ -90,6 +90,7 @@
                                 controlExtentions:FocusExtension.IsFocused="{Binding IsFocused, Mode=TwoWay}"
                                 CanUserSortColumns="False" Style="{StaticResource SectionDataGrid}" Name="DataGrid"
                                 CanUserAddRows="True" SelectionChanged="DataGrid_SelectionChanged" SelectionMode="{Binding MultiSelect, Converter={StaticResource BooleanToMultiSelectConverter}}"
+                                ClipboardCopyMode="IncludeHeader" CopyingRowClipboardContent="DataGrid_CopyingRowClipboardContent"
                                 >
                                 <DataGrid.Resources>
                                     <Style TargetType="{x:Type DataGridCell}">

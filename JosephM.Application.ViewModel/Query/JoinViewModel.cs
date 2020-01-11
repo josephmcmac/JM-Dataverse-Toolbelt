@@ -125,24 +125,24 @@ namespace JosephM.Application.ViewModel.Query
                 }
                 if (isChanging && value != null)
                 {
-                    DoOnAsynchThread(() =>
-                    {
-                        try
-                        {
-                            LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(SelectedRelationshipTarget)} Fields";
-                            LoadingViewModel.IsLoading = true;
+                    //DoOnAsynchThread(() =>
+                    //{
+                    //    try
+                    //    {
+                            //LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(SelectedRelationshipTarget)} Fields";
+                            //LoadingViewModel.IsLoading = true;
                             FilterConditions = CreateFilterCondition();
                             Joins = new JoinsViewModel(SelectedRelationshipTarget, RecordService, ApplicationController, OnConditionSelectedChanged);
-                        }
-                        catch(Exception ex)
-                        {
-                            ApplicationController.ThrowException(ex);
-                        }
-                        finally
-                        {
-                            LoadingViewModel.IsLoading = false;
-                        }
-                    });
+                    //    }
+                    //    catch(Exception ex)
+                    //    {
+                    //        ApplicationController.ThrowException(ex);
+                    //    }
+                    //    finally
+                    //    {
+                    //        LoadingViewModel.IsLoading = false;
+                    //    }
+                    //});
                 }
                 OnPropertyChanged(nameof(SelectedItem));
             }

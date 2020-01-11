@@ -152,7 +152,7 @@ namespace JosephM.Application.ViewModel.Query
             }
         }
 
-        private FilterConditionsViewModel CreateFilterCondition()
+        public FilterConditionsViewModel CreateFilterCondition()
         {
             return new FilterConditionsViewModel(RecordType, RecordService, ApplicationController, OnConditionSelectedChanged);
         }

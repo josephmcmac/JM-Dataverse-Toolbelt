@@ -340,17 +340,6 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
-        private Condition ToCondition(ConditionExpression conditionexpression, string recordType)
-        {
-            if (conditionexpression.Values != null && conditionexpression.Values.Any())
-                return new Condition(conditionexpression.AttributeName,
-                    new ConditionTypeMapper().Map(conditionexpression.Operator),
-                    conditionexpression.Values);
-            else
-                return new Condition(conditionexpression.AttributeName,
-                    new ConditionTypeMapper().Map(conditionexpression.Operator));
-        }
-
         private IRecord ToIRecord(Entity entity)
         {
             var xrmRecord = new XrmRecord(entity.LogicalName);
@@ -776,10 +765,10 @@ namespace JosephM.Record.Xrm.XrmRecord
                 if (!_recordViews.ContainsKey(recordType))
                 {
                     var savedQueries =
-                        _xrmService.RetrieveAllActive("savedquery", null,
+                        _xrmService.RetrieveAllActive(Entities.savedquery, null,
                             new[]
                             {
-                                new ConditionExpression("returnedtypecode",
+                                new ConditionExpression(Fields.savedquery_.returnedtypecode,
                                     ConditionOperator.Equal,
                                     recordType)
                             },
@@ -788,7 +777,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                     foreach (var query in savedQueries)
                     {
                         var viewFields = new List<ViewField>();
-                        var layoutXmlString = query.GetStringField("layoutxml");
+                        var layoutXmlString = query.GetStringField(Fields.savedquery_.layoutxml);
                         if (layoutXmlString != null)
                         {
                             var layoutXml = new XmlDocument();
@@ -815,11 +804,11 @@ namespace JosephM.Record.Xrm.XrmRecord
                                 }
                             }
                             var viewType = ViewType.Unmatched;
-                            if (query.GetField("querytype") != null)
+                            if (query.GetField(Fields.savedquery_.querytype) != null)
                             {
-                                Enum.TryParse(query.GetInt("querytype").ToString(), out viewType);
+                                Enum.TryParse(query.GetInt(Fields.savedquery_.querytype).ToString(), out viewType);
                             }
-                            var view = new ViewMetadata(viewFields) { ViewType = viewType, Id = query.Id.ToString() };
+                            var view = new ViewMetadata(viewFields) { ViewType = viewType, Id = query.Id.ToString(), ViewName = query.GetStringField(Fields.savedquery_.name) };
                             view.RawQuery = query.GetStringField(Fields.savedquery_.fetchxml);
                             viewMetadatas.Add(view);
                         }
@@ -1042,7 +1031,47 @@ namespace JosephM.Record.Xrm.XrmRecord
             if (filterExpression.Conditions != null)
             {
                 foreach (var c in filterExpression.Conditions)
-                    filter.Conditions.Add(ToCondition(c, recordType));
+                {
+                    if (c.Operator == ConditionOperator.In)
+                    {
+                        var inFilter = new Filter();
+                        inFilter.ConditionOperator = FilterOperator.Or;
+                        foreach (var value in c.Values)
+                        {
+                            var newValue = QueryExpressionValueToRecordValue(c.AttributeName, recordType, value);
+                            inFilter.AddCondition(c.AttributeName, ConditionType.Equal, newValue);
+                        }
+                        filter.SubFilters.Add(inFilter);
+                    }
+                    else if (c.Operator == ConditionOperator.NotIn)
+                    {
+                        var inFilter = new Filter();
+                        inFilter.ConditionOperator = FilterOperator.Or;
+                        foreach (var value in c.Values)
+                        {
+                            var newValue = QueryExpressionValueToRecordValue(c.AttributeName, recordType, value);
+                            inFilter.AddCondition(c.AttributeName, ConditionType.NotEqual, newValue);
+                        }
+                        filter.SubFilters.Add(inFilter);
+                    }
+                    else if (c.Values != null && c.Values.Any())
+                    {
+                        if(c.Values.Count > 1)
+                        {
+                            throw new NotImplementedException($"Condition Type {c.Operator} Not Implemented For Multiple Values");
+                        }
+                        var condition = new Condition(c.AttributeName,
+                            new ConditionTypeMapper().Map(c.Operator),
+                            QueryExpressionValueToRecordValue(c.AttributeName, recordType, c.Values.First()));
+                        filter.Conditions.Add(condition);
+                    }
+                    else
+                    {
+                        var condition = new Condition(c.AttributeName,
+                            new ConditionTypeMapper().Map(c.Operator));
+                        filter.Conditions.Add(condition);
+                    }
+                }
             }
             if (filterExpression.Filters != null)
             {
@@ -1050,6 +1079,17 @@ namespace JosephM.Record.Xrm.XrmRecord
                     filter.SubFilters.Add(ToFilter(f, recordType));
             }
             return filter;
+        }
+
+        private object QueryExpressionValueToRecordValue(string fieldName, string recordType, object queryExpressionValue)
+        {
+            var entityFieldValue = XrmService.ParseField(fieldName, recordType, queryExpressionValue);
+            var recordFieldValue = ToRecordField(entityFieldValue, fieldName, recordType);
+            if(recordFieldValue is Lookup lookup)
+            {
+                this.PopulateLookups(new Dictionary<string, List<Lookup>> { { lookup.RecordType, new[] { lookup }.ToList() } }, null);
+            }
+            return recordFieldValue;
         }
 
         public string GetRelationshipLabel(One2ManyRelationshipMetadata relationship)
@@ -1245,14 +1285,18 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
             if (join.Sorts != null)
             {
-                var sortMapper = new SortTypeMapper();
                 link.Orders.AddRange(ToOrderExpressions(join.Sorts));
             }
         }
 
         private Join ToJoin(LinkEntity link)
         {
-            var join = new Join(link.LinkFromAttributeName, link.LinkFromEntityName, link.LinkToAttributeName);
+            var join = new Join(link.LinkFromAttributeName, link.LinkToEntityName, link.LinkToAttributeName);
+            join.Fields = link.Columns != null && link.Columns.AllColumns == false
+                ? link.Columns.Columns.ToArray()
+                : null;
+            join.Alias = link.EntityAlias;
+            join.JoinType = new JoinTypeMapper().Map(link.JoinOperator);
             if (link.LinkCriteria != null)
             {
                 join.RootFilter = ToFilter(link.LinkCriteria, link.LinkToEntityName);
@@ -1447,6 +1491,22 @@ namespace JosephM.Record.Xrm.XrmRecord
             public IEnumerable<IRecord> Created { get { return _created; } }
 
             public Dictionary<IRecord, Exception> Errors { get { return _errors; } }
+        }
+
+        public QueryDefinition GetViewAsQueryDefinition(string viewId)
+        {
+            var view = Get(Entities.savedquery, viewId);
+            var fetchXml = view.GetStringField(Fields.savedquery_.fetchxml);
+            var queryExpression = XrmService.ConvertFetchToQueryExpression(fetchXml);
+
+            var queryDefinition = new QueryDefinition(queryExpression.EntityName);
+            queryDefinition.Fields = queryExpression.ColumnSet != null && queryExpression.ColumnSet.AllColumns == false
+                ? queryExpression.ColumnSet.Columns.ToArray()
+                : null;
+            queryDefinition.Distinct = queryExpression.Distinct;
+            queryDefinition.RootFilter = ToFilter(queryExpression.Criteria, queryExpression.EntityName);
+            queryDefinition.Joins = queryExpression.LinkEntities.Select(ToJoin).ToList();
+            return queryDefinition;
         }
 
         public DeleteInCrmResponse DeleteInCrm(IEnumerable<IRecord> records)

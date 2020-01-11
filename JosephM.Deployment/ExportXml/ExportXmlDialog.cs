@@ -6,7 +6,7 @@ using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.Deployment.ExportXml
 {
-    [RequiresConnection]
+    [RequiresConnection(escapeConnectionCheckProperty: nameof(LoadedFromConnection))]
     public class ExportXmlDialog :
         ServiceRequestDialog
             <ExportXmlService, ExportXmlRequest,
@@ -18,5 +18,7 @@ namespace JosephM.Deployment.ExportXml
         {
             SetTabLabel("Export XML");
         }
+
+        public bool LoadedFromConnection { get; set; }
     }
 }

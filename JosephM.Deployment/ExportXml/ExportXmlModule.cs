@@ -51,7 +51,10 @@ namespace JosephM.Deployment.ExportXml
                     {
                         var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var exportXmlService = new ExportXmlService(xrmRecordService);
-                        var dialog = new ExportXmlDialog(exportXmlService, new DialogController(ApplicationController), xrmRecordService);
+                        var dialog = new ExportXmlDialog(exportXmlService, new DialogController(ApplicationController), xrmRecordService)
+                        {
+                            LoadedFromConnection = true
+                        };
                         dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);
                     }

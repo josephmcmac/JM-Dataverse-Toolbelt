@@ -1,5 +1,6 @@
 ﻿using JosephM.Core.Extentions;
 using JosephM.Record.IService;
+using JosephM.Record.Query;
 using System;
 using System.Collections.Generic;
 
@@ -40,6 +41,14 @@ namespace JosephM.Record.Service
             if (value2 is Enum)
                 sortString2 = ((Enum)value2).GetDisplayString();
             return String.Compare(sortString1, sortString2, StringComparison.Ordinal);
+        }
+
+        public static void SortList(List<IRecord> list, SortExpression sortExpression)
+        {
+            var comparer = new RecordComparer(sortExpression.FieldName);
+            list.Sort(comparer);
+            if (sortExpression.SortType == SortType.Descending)
+                list.Reverse();
         }
     }
 }

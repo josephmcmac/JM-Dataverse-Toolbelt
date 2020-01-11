@@ -4,7 +4,7 @@ using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.Xrm.RecordExtract.TextSearch
 {
-    [RequiresConnection]
+    [RequiresConnection(escapeConnectionCheckProperty: nameof(LoadedFromConnection))]
     public class XrmTextSearchDialog : TextSearchDialogBase<XrmTextSearchService>
     {
         public XrmTextSearchDialog(XrmTextSearchService service, IDialogController dialogController,
@@ -12,5 +12,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             : base(service, dialogController, xrmRecordService)
         {
         }
+
+        public bool LoadedFromConnection { get; set; }
     }
 }

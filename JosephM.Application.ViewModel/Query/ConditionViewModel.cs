@@ -88,6 +88,24 @@ namespace JosephM.Application.ViewModel.Query
 
         internal override void RefreshEditabilityExtention()
         {
+            if (FieldViewModels != null)
+            {
+                foreach (var field in FieldViewModels)
+                {
+                    var methods = FormService.GetOnLoadTriggers(field.FieldName, GetRecordType());
+                    foreach (var method in methods)
+                    {
+                        try
+                        {
+                            method(this);
+                        }
+                        catch (Exception ex)
+                        {
+                            ApplicationController.ThrowException(ex);
+                        }
+                    }
+                }
+            }
             base.RefreshEditabilityExtention();
         }
 
@@ -158,6 +176,7 @@ namespace JosephM.Application.ViewModel.Query
             }
 
             private RecordField _fieldName;
+            private ConditionType? conditionType;
 
             //don't set this required as empty one always appended at end of query
             [RecordFieldFor(nameof(ConditionType))]
@@ -183,7 +202,13 @@ namespace JosephM.Application.ViewModel.Query
             [DisplayOrder(20)]
             [Group(Sections.Main)]
             [PropertyInContextByPropertyNotNull(nameof(FieldName))]
-            public ConditionType? ConditionType { get; set; }
+            public ConditionType? ConditionType
+            {
+                get => conditionType; set
+                {
+                    conditionType = value;
+                }
+            }
 
             [RequiredProperty]
             [DisplayOrder(30)]

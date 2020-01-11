@@ -20,7 +20,7 @@ namespace JosephM.Application.ViewModel.Query
         }
 
         public Action OnConditionSelectedChanged { get; private set; }
-        private string RecordType { get; set; }
+        public string RecordType { get; set; }
 
         private IRecordService RecordService { get; set; }
 

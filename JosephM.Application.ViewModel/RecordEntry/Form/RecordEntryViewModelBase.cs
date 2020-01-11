@@ -196,6 +196,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         {
         }
 
+        //todo poorly named for use - runs all on load triggers
         internal virtual void RefreshEditabilityExtention()
         {
         }

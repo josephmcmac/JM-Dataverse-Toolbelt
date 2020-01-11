@@ -131,6 +131,12 @@ namespace JosephM.Record.Extentions
             PopulateLookups(service, emptyLookupNames, ignoreType);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="emptyLookupNames">key is the referenced type</param>
+        /// <param name="ignoreType"></param>
         public static void PopulateLookups(this IRecordService service, Dictionary<string, List<Lookup>> emptyLookupNames, IEnumerable<string> ignoreType)
         {
             if (ignoreType == null)

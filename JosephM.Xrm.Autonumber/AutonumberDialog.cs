@@ -6,7 +6,7 @@ using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.Xrm.Autonumber
 {
-    [RequiresConnection]
+    [RequiresConnection(escapeConnectionCheckProperty: nameof(LoadedFromConnection))]
     public class AutonumberDialog : DialogViewModel
     {
         public AutonumberDialog(XrmRecordService xrmRecordService, IDialogController dialogController)
@@ -16,6 +16,8 @@ namespace JosephM.Xrm.Autonumber
 
             OverideCompletionScreenMethod = () => { };
         }
+
+        public bool LoadedFromConnection { get; set; }
 
         public XrmRecordService XrmRecordService { get; }
 

@@ -15,14 +15,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set { ValueObject = value; }
         }
 
-        public virtual string StringDisplay
-        {
-            get
-            {
-                return Value?.ToString();
-            }
-        }
-
         public override void CallOnPropertyChangeEvents()
         {
             OnPropertyChanged(nameof(ValueObject));
