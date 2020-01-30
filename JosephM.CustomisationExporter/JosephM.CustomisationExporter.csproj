@@ -50,6 +50,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exporter\FormOrDashboardExport.cs" />
+    <Compile Include="Exporter\PluginTriggerExport.cs" />
+    <Compile Include="Exporter\PluginAssemblyExport.cs" />
+    <Compile Include="Exporter\FieldSecurityProfileExport.cs" />
+    <Compile Include="Exporter\WebResourcesExport.cs" />
+    <Compile Include="Exporter\ReportExport.cs" />
+    <Compile Include="Exporter\SecurityRoleExport.cs" />
+    <Compile Include="Exporter\UserExport.cs" />
+    <Compile Include="Exporter\TeamExport.cs" />
+    <Compile Include="Exporter\WorkflowExport.cs" />
     <Compile Include="Exporter\OptionExport.cs" />
     <Compile Include="Exporter\RelationshipExport.cs" />
     <Compile Include="Exporter\EntityExport.cs" />
@@ -61,6 +71,7 @@
     <Compile Include="Exporter\CustomisationExporterResponse.cs" />
     <Compile Include="Exporter\CustomisationExporterResponseItem.cs" />
     <Compile Include="Exporter\CustomisationExporterService.cs" />
+    <Compile Include="Exporter\SolutionExport.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

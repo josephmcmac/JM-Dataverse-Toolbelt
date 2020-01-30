@@ -27,16 +27,31 @@ namespace JosephM.CustomisationExporter.Test
             //xlsx
 
             //first script generation of C# entities and fields
-            var request = new CustomisationExporterRequest();
-            request.IncludeAllRecordTypes = true;
-            request.DuplicateManyToManyRelationshipSides = true;
-            request.Entities = true;
-            request.Fields = true;
-            request.FieldOptionSets = true;
-            request.Relationships = true;
-            request.SharedOptionSets = true;
-            request.IncludeOneToManyRelationships = true;
-            request.SaveToFolder = new Folder(TestingFolder);
+            var request = new CustomisationExporterRequest
+            {
+                IncludeAllRecordTypes = true,
+                DuplicateManyToManyRelationshipSides = true,
+                Entities = true,
+                Fields = true,
+                FieldOptionSets = true,
+                Relationships = true,
+                SharedOptionSets = true,
+                IncludeOneToManyRelationships = true,
+
+                Solutions = true,
+                Workflows = true,
+                PluginAssemblies = true,
+                PluginTriggers = true,
+                SecurityRoles = true,
+                FieldSecurityProfiles = true,
+                Users = true,
+                Teams = true,
+                Reports = true,
+                WebResources = true,
+                FormsAndDashboards = true,
+
+                SaveToFolder = new Folder(TestingFolder)
+            };
 
             var response = testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog, CustomisationExporterResponse>(request);
             Assert.IsFalse(response.HasError);
@@ -50,6 +65,18 @@ namespace JosephM.CustomisationExporter.Test
             request.Relationships = true;
             request.SharedOptionSets = false;
             request.IncludeOneToManyRelationships = false;
+
+            request.Solutions = false;
+            request.Workflows = false;
+            request.PluginAssemblies = false;
+            request.PluginTriggers = false;
+            request.SecurityRoles = false;
+            request.FieldSecurityProfiles = false;
+            request.Users = false;
+            request.Teams = false;
+            request.Reports = false;
+            request.WebResources = false;
+            request.FormsAndDashboards = false;
 
             Thread.Sleep(1000);
             FileUtility.DeleteFiles(TestingFolder);
@@ -90,6 +117,19 @@ namespace JosephM.CustomisationExporter.Test
                 Relationships = true,
                 SharedOptionSets = true,
                 IncludeOneToManyRelationships = true,
+
+                Solutions = true,
+                Workflows = true,
+                PluginAssemblies = true,
+                PluginTriggers = true,
+                SecurityRoles = true,
+                FieldSecurityProfiles = true,
+                Users = true,
+                Teams = true,
+                Reports = true,
+                WebResources = true,
+                FormsAndDashboards = true,
+
                 SaveToFolder = new Folder(TestingFolder)
             };
 

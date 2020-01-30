@@ -1715,6 +1715,12 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
+        public IDictionary<string, List<IRecord>> IndexAssociatedRecords(string relationshipEntityName, string thisTypeId, string otherSideId, string otherType)
+        {
+            var temp = XrmService.IndexAssociatedEntities(relationshipEntityName, thisTypeId, otherSideId, otherType);
+            return temp.ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.Select(v => ToIRecord(v)).ToList());
+        }
+
         public class DeleteInCrmResponse
         {
             private List<IRecord> _deleted = new List<IRecord>();

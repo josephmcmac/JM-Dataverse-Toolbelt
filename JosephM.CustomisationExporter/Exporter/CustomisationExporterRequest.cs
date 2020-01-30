@@ -44,6 +44,51 @@ namespace JosephM.CustomisationExporter.Exporter
         [Group(Sections.RecordsFieldsoptions)]
         public bool SharedOptionSets { get; set; }
         [GridWidth(110)]
+        [DisplayOrder(140)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool Solutions { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(145)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool Workflows { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(150)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool PluginAssemblies { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(151)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool PluginTriggers { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(155)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool SecurityRoles { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(160)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool FieldSecurityProfiles { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(165)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool Users { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(170)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool Teams { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(175)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool Reports { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(175)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool WebResources { get; set; }
+        [GridWidth(110)]
+        [DisplayOrder(180)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool FormsAndDashboards { get; set; }
+
+        [GridWidth(110)]
         [DisplayOrder(200)]
         [Group(Sections.Relationships)]
         public bool Relationships { get; set; }
@@ -77,7 +122,7 @@ namespace JosephM.CustomisationExporter.Exporter
         public IsValidResponse Validate()
         {
             //lets just ensure at leats one valid oiton is selected
-            var validProperties = new[] { nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(SharedOptionSets), nameof(Relationships) };
+            var validProperties = new[] { nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(SharedOptionSets), nameof(Relationships), nameof(Solutions), nameof(Workflows), nameof(PluginAssemblies), nameof(SecurityRoles), nameof(FieldSecurityProfiles), nameof(Users), nameof(Teams), nameof(Reports), nameof(WebResources), nameof(PluginTriggers), nameof(FormsAndDashboards) };
             var isOneSelected = validProperties.Any(p => (bool)this.GetPropertyValue(p));
             var isValidResponse = new IsValidResponse();
             if(!isOneSelected)
