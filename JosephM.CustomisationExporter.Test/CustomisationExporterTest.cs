@@ -43,6 +43,7 @@ namespace JosephM.CustomisationExporter.Test
                 PluginAssemblies = true,
                 PluginTriggers = true,
                 SecurityRoles = true,
+                RolesPrivileges = true,
                 FieldSecurityProfiles = true,
                 Users = true,
                 Teams = true,
@@ -70,6 +71,7 @@ namespace JosephM.CustomisationExporter.Test
             request.Workflows = false;
             request.PluginAssemblies = false;
             request.PluginTriggers = false;
+            request.RolesPrivileges = false;
             request.SecurityRoles = false;
             request.FieldSecurityProfiles = false;
             request.Users = false;
@@ -123,6 +125,7 @@ namespace JosephM.CustomisationExporter.Test
                 PluginAssemblies = true,
                 PluginTriggers = true,
                 SecurityRoles = true,
+                RolesPrivileges = true,
                 FieldSecurityProfiles = true,
                 Users = true,
                 Teams = true,

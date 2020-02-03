@@ -58,22 +58,20 @@ namespace JosephM.CustomisationExporter.Exporter
                 { nameof(CustomisationExporterRequest.PluginAssemblies), ProcessForPluginAssemblies },
                 { nameof(CustomisationExporterRequest.PluginTriggers), ProcessForPluginTriggers },
                 { nameof(CustomisationExporterRequest.SecurityRoles), ProcessForSecurityRoles },
-
+                { nameof(CustomisationExporterRequest.RolesPrivileges), ProcessForRolePrivileges },
                 { nameof(CustomisationExporterRequest.FieldSecurityProfiles), ProcessForFieldSecurityProfiles },
                 { nameof(CustomisationExporterRequest.Users), ProcessForUsers },
                 { nameof(CustomisationExporterRequest.Teams), ProcessForTeams },
                 { nameof(CustomisationExporterRequest.Reports), ProcessForReports },
                 { nameof(CustomisationExporterRequest.WebResources), ProcessForWebResources },
                 { nameof(CustomisationExporterRequest.FormsAndDashboards), ProcessForFormsAndDashboards },
-            };
+            }
+            .Where(kv => (bool)request.GetPropertyValue(kv.Key));
             var i = 1;
             foreach (var todo in remainingToDo)
             {
-                if ((bool)request.GetPropertyValue(todo.Key))
-                {
-                    controller.Controller.UpdateProgress(i++, remainingToDo.Count, "Exporting " + typeof(CustomisationExporterRequest).GetPropertyDisplayName(todo.Key));
-                    todo.Value(request, response, controller.Controller);
-                }
+                controller.Controller.UpdateProgress(i++, remainingToDo.Count(), "Exporting " + typeof(CustomisationExporterRequest).GetPropertyDisplayName(todo.Key));
+                todo.Value(request, response, controller.Controller);
             }
 
             response.Folder = request.SaveToFolder.FolderPath;
@@ -386,6 +384,45 @@ namespace JosephM.CustomisationExporter.Exporter
             catch (Exception ex)
             {
                 response.AddResponseItem(new CustomisationExporterResponseItem("Error Exporting Security Roles", null, ex));
+            }
+        }
+
+        private void ProcessForRolePrivileges(CustomisationExporterRequest request, CustomisationExporterResponse response, LogController controller)
+        {
+            try
+            {
+                var query = new QueryDefinition(Entities.role);
+                var joinAssocation = new Join(Fields.role_.roleid, Relationships.role_.roleprivileges_association.EntityName, Fields.role_.roleid);
+                joinAssocation.Alias = "A";
+                joinAssocation.Fields = new[] { "privilegedepthmask" };
+                query.Joins = new List<Join> { joinAssocation };
+                var joinPrivilege = new Join(Fields.privilege_.privilegeid, Entities.privilege, Fields.privilege_.privilegeid);
+                joinAssocation.Joins = new List<Join> { joinPrivilege };
+                joinPrivilege.Alias = "P";
+                joinPrivilege.Fields = new[] { Fields.privilege_.name, Fields.privilege_.accessright };
+                var joinPrivilegeEntity = new Join(Fields.privilege_.privilegeid, Entities.privilegeobjecttypecodes, Fields.privilegeobjecttypecodes_.privilegeid);
+                joinPrivilegeEntity.JoinType = JoinType.LeftOuter;
+                joinPrivilege.Joins = new List<Join> { joinPrivilegeEntity };
+                joinPrivilegeEntity.Alias = "PE";
+                joinPrivilegeEntity.Fields = new[] { Fields.privilegeobjecttypecodes_.objecttypecode };
+
+                var results = Service.RetreiveAll(query);
+
+                var objects = results
+                    .Select(r => new PrivilegeExport(
+
+                        r.GetStringField(Fields.role_.name),
+                        r.GetIntegerField("A.privilegedepthmask"),
+                        r.GetStringField("P." + Fields.privilege_.name),
+                        r.GetIntegerField("P." + Fields.privilege_.accessright),
+                        r.GetStringField("PE." + Fields.privilegeobjecttypecodes_.objecttypecode)))
+                        .ToList();
+
+                response.AddListToOutput("Role Privileges", objects);
+            }
+            catch (Exception ex)
+            {
+                response.AddResponseItem(new CustomisationExporterResponseItem("Error Exporting Role Privilegess", null, ex));
             }
         }
 

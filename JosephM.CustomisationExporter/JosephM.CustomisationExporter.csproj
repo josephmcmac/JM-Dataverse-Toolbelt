@@ -72,6 +72,7 @@
     <Compile Include="Exporter\CustomisationExporterResponseItem.cs" />
     <Compile Include="Exporter\CustomisationExporterService.cs" />
     <Compile Include="Exporter\SolutionExport.cs" />
+    <Compile Include="Exporter\PrivilegeExport.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

@@ -64,6 +64,10 @@ namespace JosephM.CustomisationExporter.Exporter
         [Group(Sections.RecordsFieldsoptions)]
         public bool SecurityRoles { get; set; }
         [GridWidth(110)]
+        [DisplayOrder(156)]
+        [Group(Sections.RecordsFieldsoptions)]
+        public bool RolesPrivileges { get; set; }
+        [GridWidth(110)]
         [DisplayOrder(160)]
         [Group(Sections.RecordsFieldsoptions)]
         public bool FieldSecurityProfiles { get; set; }
@@ -122,7 +126,7 @@ namespace JosephM.CustomisationExporter.Exporter
         public IsValidResponse Validate()
         {
             //lets just ensure at leats one valid oiton is selected
-            var validProperties = new[] { nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(SharedOptionSets), nameof(Relationships), nameof(Solutions), nameof(Workflows), nameof(PluginAssemblies), nameof(SecurityRoles), nameof(FieldSecurityProfiles), nameof(Users), nameof(Teams), nameof(Reports), nameof(WebResources), nameof(PluginTriggers), nameof(FormsAndDashboards) };
+            var validProperties = new[] { nameof(Entities), nameof(Fields), nameof(FieldOptionSets), nameof(SharedOptionSets), nameof(Relationships), nameof(Solutions), nameof(Workflows), nameof(PluginAssemblies), nameof(SecurityRoles), nameof(FieldSecurityProfiles), nameof(Users), nameof(Teams), nameof(Reports), nameof(WebResources), nameof(PluginTriggers), nameof(FormsAndDashboards), nameof(RolesPrivileges) };
             var isOneSelected = validProperties.Any(p => (bool)this.GetPropertyValue(p));
             var isValidResponse = new IsValidResponse();
             if(!isOneSelected)

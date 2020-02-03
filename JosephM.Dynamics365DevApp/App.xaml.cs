@@ -18,7 +18,6 @@ using JosephM.Xrm.RecordExtract.TextSearch;
 using JosephM.XrmModule.AppConnection;
 using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.XrmModule.ToolingConnector;
 using System.Windows;
 
 namespace JosephM.XrmDeveloperTool

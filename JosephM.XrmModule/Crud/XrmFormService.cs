@@ -22,6 +22,7 @@ namespace JosephM.XrmModule.Crud
             {
                 case Entities.webresource:
                 case Entities.plugintype:
+                case Entities.role:
                 case Entities.sdkmessage:
                     {
                         return null;
