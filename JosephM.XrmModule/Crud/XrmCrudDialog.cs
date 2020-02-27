@@ -15,7 +15,7 @@ using System.Xml;
 
 namespace JosephM.XrmModule.Crud
 {
-    [RequiresConnection]
+    [RequiresConnection(escapeConnectionCheckProperty: nameof(LoadedFromConnection))]
     public class XrmCrudDialog : CrudDialog
     {
         public XrmCrudDialog(XrmRecordService xrmrecordService, IDialogController dialogController)
@@ -23,6 +23,8 @@ namespace JosephM.XrmModule.Crud
         {
             XrmRecordService = xrmrecordService;
         }
+
+        public bool LoadedFromConnection { get; set; }
 
         public override IEnumerable<string> AdditionalExplicitTypes => new[] { Entities.webresource, Entities.savedqueryvisualization, Entities.userqueryvisualization, Entities.appmodule, Entities.appmodulecomponent, Entities.solutioncomponent, Entities.solution, Entities.timezonedefinition, Entities.activityparty, Entities.userquery, Entities.sitemap, Entities.subject, Entities.systemform, Entities.uom, Entities.savedquery, Entities.calendar, Entities.role, Entities.sdkmessageprocessingstep, Entities.activitymimeattachment, Entities.organization, Entities.usersettings, Entities.productpricelevel };
 

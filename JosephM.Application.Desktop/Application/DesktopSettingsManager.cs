@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml;
 
 namespace JosephM.Application.Desktop.Application
 {
@@ -107,11 +108,11 @@ namespace JosephM.Application.Desktop.Application
             var folder = ApplicationController.SettingsPath;
             FileUtility.CheckCreateFolder(folder);
 
-            using (
-                var fileStream = new FileStream(Path.Combine(folder, type.Name + GenerateSuffix(settingsType) + ".xml"),
-                    FileMode.Create))
+            var settings = new XmlWriterSettings { Indent = true };
+
+            using (var w = XmlWriter.Create(Path.Combine(folder, type.Name + GenerateSuffix(settingsType) + ".xml"), settings))
             {
-                serializer.WriteObject(fileStream, settingsObject);
+                serializer.WriteObject(w, settingsObject);
             }
         }
 

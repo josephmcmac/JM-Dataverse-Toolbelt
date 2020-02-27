@@ -5,18 +5,15 @@ using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
-using JosephM.Core.Utility;
-using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
+using JosephM.Record.Service;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Threading;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -204,15 +201,26 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         public GetGridRecordsResponse GetGridRecords(bool ignorePages)
         {
+
+
             if (DynamicGridViewModel.HasPaging && !ignorePages)
             {
                 var conditions = new[]
-                {new Condition(LinkedRecordLookup, ConditionType.Equal, RecordForm.RecordId)};
+                    {new Condition(LinkedRecordLookup, ConditionType.Equal, RecordForm.RecordId)};
                 return DynamicGridViewModel.GetGridRecordPage(conditions, null);
             }
             else
-                return new GetGridRecordsResponse(GetRecordService().GetLinkedRecords(LinkedRecordType, RecordForm.RecordType,
-                    LinkedRecordLookup, RecordForm.RecordId));
+            {
+                var lastSortExpression = DynamicGridViewModel.GetLastSortExpression();
+                var records = GetRecordService().GetLinkedRecords(LinkedRecordType, RecordForm.RecordType,
+                    LinkedRecordLookup, RecordForm.RecordId).ToList();
+                if (lastSortExpression != null)
+                {
+                    RecordComparer.SortList(records, lastSortExpression);
+                }
+
+                return new GetGridRecordsResponse(records);
+            }
         }
 
         public void InsertRecord(IRecord record, int index)

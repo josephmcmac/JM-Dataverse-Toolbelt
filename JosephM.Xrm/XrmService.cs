@@ -1464,6 +1464,31 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             return result;
         }
 
+        /// <summary>
+        ///     Warning! Unlimited results
+        /// </summary>
+        public IDictionary<Guid, List<Entity>> IndexAssociatedEntities(string relationshipEntityName, string thisTypeId, string otherSideId, string otherType)
+        {
+            var result = new SortedDictionary<Guid, List<Entity>>();
+
+            var query = BuildQuery(otherType, null, null, null);
+            var relationshipLink = query.AddLink(relationshipEntityName, otherSideId, otherSideId);
+            relationshipLink.Columns = new ColumnSet(thisTypeId);
+            relationshipLink.EntityAlias = "R";
+            var allAssociated = RetrieveAll(query);
+
+            foreach (var item in allAssociated)
+            {
+                var associatedFromId = (Guid)item.GetFieldValue("R." + thisTypeId);
+                if (!result.ContainsKey(associatedFromId))
+                {
+                    result.Add(associatedFromId, new List<Entity>());
+                }
+                result[associatedFromId].Add(item);
+            }
+            return result;
+        }
+
         public string GetFieldAsMatchString(string entityType, string fieldName, object fieldValue)
         {
             if (fieldValue == null)

@@ -43,7 +43,10 @@ namespace JosephM.XrmModule.Crud
                     if (instance != null)
                     {
                         var xrmRecordService = new XrmRecordService(instance, serviceFactory: ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
-                        var dialog = new XrmCrudDialog(xrmRecordService, new DialogController(ApplicationController));
+                        var dialog = new XrmCrudDialog(xrmRecordService, new DialogController(ApplicationController))
+                        {
+                            LoadedFromConnection = true
+                        };
                         dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);
                     }

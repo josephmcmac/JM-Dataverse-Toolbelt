@@ -85,6 +85,9 @@
                                             <shared:XrmButton DataContext="{Binding ReturnButton}" />
                                         </Grid>
                                         <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
+                                        <!--<Grid Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                                            <shared:XrmButton DataContext="{Binding LoadSavedViewButton}" />
+                                        </Grid>-->
                                         <Grid Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
                                             <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" />
                                         </Grid>

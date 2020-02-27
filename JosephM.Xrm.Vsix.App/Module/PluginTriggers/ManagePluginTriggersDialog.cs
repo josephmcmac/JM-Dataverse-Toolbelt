@@ -99,12 +99,11 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
                 var filter = matchingFilters.Any() ? matchingFilters.First() : null;
                 var recordType = filter == null ? null : filter.GetStringField(Fields.sdkmessagefilter_.primaryobjecttypecode);
                 RecordType recordTypeObj = null;
-                if (recordType != null)
+
+                if (recordType != null && recordType != "none")
                 {
-                    LoadingViewModel.LoadingMessage = $"Loading {XrmRecordService.GetDisplayName(recordType)} Type";
                     try
                     {
-
                         recordTypeObj = new RecordType(recordType, XrmRecordService.GetDisplayName(recordType));
                     }
                     catch (Exception)

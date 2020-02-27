@@ -19,9 +19,7 @@ namespace JosephM.Record.Xrm.Test
         [TestMethod]
         public void XrmRecordDebug()
         {
-            var config = XrmConfiguration;
-
-            var views = XrmRecordService.GetFirst("sdkmessagefilter", "primaryobjecttypecode", "none");
+            var query = XrmRecordService.GetViewAsQueryDefinition("50E599B0-341A-EA11-8410-06E6E6094FD1");
         }
     }
 }

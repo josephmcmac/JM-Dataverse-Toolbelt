@@ -63,7 +63,7 @@ namespace JosephM.Xrm.Vsix.Application
                     var value = objectToSerialise.GetPropertyValue(prop.Name);
                     dictionary.Add(prop.Name, value?.ToString());
                 }
-                var serialised = JsonHelper.ObjectToJsonString(dictionary);
+                var serialised = JsonHelper.ObjectToJsonString(dictionary, format: true);
 
                 var solutionItemFile = AddVsixSetting(name, serialised);
 
@@ -71,7 +71,7 @@ namespace JosephM.Xrm.Vsix.Application
             }
             else
             {
-                var json = JsonHelper.ObjectAsTypeToJsonString(objectToSerialise);
+                var json = JsonHelper.ObjectAsTypeToJsonString(objectToSerialise, format: true);
                 return AddVsixSetting(name, json);
             }
         }

@@ -88,9 +88,10 @@ namespace JosephM.Spreadsheet
                     if (propertyType.Name == "Nullable`1")
                         propertyType = propertyType.GetGenericArguments()[0];
 
-                    if (propertyType == typeof(DateTime))
-                        cellTypes.Add(property, CellDataType.Date);
-                    else if (propertyType == typeof(int) || propertyType == typeof(decimal) || propertyType == typeof(double) || propertyType == typeof(float) || propertyType == typeof(long))
+                    //if (propertyType == typeof(DateTime))
+                    //    cellTypes.Add(property, CellDataType.Date);
+                    //else
+                    if (propertyType == typeof(int) || propertyType == typeof(decimal) || propertyType == typeof(double) || propertyType == typeof(float) || propertyType == typeof(long))
                         cellTypes.Add(property, CellDataType.Number);
                     else
                         cellTypes.Add(property, CellDataType.String);

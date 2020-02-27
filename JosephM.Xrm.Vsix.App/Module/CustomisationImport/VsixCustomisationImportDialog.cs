@@ -7,7 +7,7 @@ using JosephM.Xrm.Vsix.Module.PackageSettings;
 
 namespace JosephM.Xrm.Vsix.App.Module.CustomisationImport
 {
-    [RequiresConnection(nameof(ProcessEnteredSettings))]
+    [RequiresConnection(processEnteredSettingsMethodName: nameof(ProcessEnteredSettings))]
     public class VsixCustomisationImportDialog : CustomisationImportDialog
     {
         public VsixCustomisationImportDialog(XrmCustomisationImportService service, IDialogController dialogController, XrmPackageSettings xrmPackageSettings, XrmRecordService lookupService)

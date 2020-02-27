@@ -33,10 +33,6 @@ namespace JosephM.Application.ViewModel.Shared
             Label = label;
             Command = new MyCommand(() => { OpenChildButtons = true; });
             ChildButtons = childButtons;
-            foreach(var button in childButtons)
-            {
-                button.Command = new MyCommand(() => { OpenChildButtons = false; button.ClickAction(); });
-            }
         }
 
         private bool _openChildButtons;
@@ -53,8 +49,23 @@ namespace JosephM.Application.ViewModel.Shared
             }
         }
 
-        public bool HasChildOptions {  get { return ChildButtons != null && ChildButtons.Any(); } }
-        public IEnumerable<XrmButtonViewModel> ChildButtons { get; set; }
+        public bool HasChildOptions { get { return ChildButtons != null && ChildButtons.Any(); } }
+        public IEnumerable<XrmButtonViewModel> ChildButtons
+        {
+            get { return _childButtons; }
+            set
+            {
+                _childButtons = value;
+                if (value != null)
+                {
+                    foreach (var button in value)
+                    {
+                        button.Command = new MyCommand(() => { OpenChildButtons = false; button.ClickAction(); });
+                    }
+                }
+                OnPropertyChanged(nameof(ChildButtons));
+            }
+        }
 
         public string Id { get; set; }
 
@@ -77,7 +88,7 @@ namespace JosephM.Application.ViewModel.Shared
             set
             {
                 _saveButtonVisible = value;
-                OnPropertyChanged("IsVisible");
+                OnPropertyChanged(nameof(IsVisible));
             }
         }
 
@@ -88,7 +99,7 @@ namespace JosephM.Application.ViewModel.Shared
             set
             {
                 _enabled = value;
-                OnPropertyChanged("Enabled");
+                OnPropertyChanged(nameof(Enabled));
             }
         }
 
@@ -98,6 +109,8 @@ namespace JosephM.Application.ViewModel.Shared
         }
 
         private string _description;
+        private IEnumerable<XrmButtonViewModel> _childButtons;
+
         public string Description
         {
             get { return _description; }

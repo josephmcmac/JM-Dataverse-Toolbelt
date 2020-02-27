@@ -70,7 +70,10 @@ namespace JosephM.Deployment.ImportExcel
                     {
                         var xrmRecordService = new XrmRecordService(instance, ApplicationController.ResolveType<IOrganizationConnectionFactory>(), formService: new XrmFormService());
                         var exportXmlService = new ImportExcelService(xrmRecordService);
-                        var dialog = new ImportExcelDialog(exportXmlService, new DialogController(ApplicationController), xrmRecordService);
+                        var dialog = new ImportExcelDialog(exportXmlService, new DialogController(ApplicationController), xrmRecordService)
+                        {
+                            LoadedFromConnection = true
+                        };
                         dialog.SetTabLabel(instance.ToString() + " " + dialog.TabLabel);
                         g.ApplicationController.NavigateTo(dialog);
                     }

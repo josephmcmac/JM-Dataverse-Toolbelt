@@ -7,16 +7,13 @@ namespace JosephM.Application.ViewModel.Attributes
     /// </summary>
     public class RequiresConnection : Attribute
     {
-        public RequiresConnection()
-        {
-            
-        }
-
-        public RequiresConnection(string processEnteredSettingsMethodName)
+        public RequiresConnection(string processEnteredSettingsMethodName = null, string escapeConnectionCheckProperty = null)
         {
             ProcessEnteredSettingsMethodName = processEnteredSettingsMethodName;
+            EscapeConnectionCheckProperty = escapeConnectionCheckProperty;
         }
 
         public string ProcessEnteredSettingsMethodName { get; }
+        public string EscapeConnectionCheckProperty { get; }
     }
 }

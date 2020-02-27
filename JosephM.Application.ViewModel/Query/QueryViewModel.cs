@@ -2,10 +2,12 @@
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.TabArea;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
@@ -34,6 +36,7 @@ namespace JosephM.Application.ViewModel.Query
             if (closeFunction != null)
                 ReturnButton = new XrmButtonViewModel(closeFunction.LabelFunc(null), () => { closeFunction.Function(DynamicGridViewModel); }, controller);
             QueryTypeButton = new XrmButtonViewModel("Change Query Type", ChangeQueryType, ApplicationController);
+            LoadSavedViewButton = new XrmButtonViewModel("LOADVIEW", "Load Saved View", new XrmButtonViewModel[0], ApplicationController);
 
             DeleteSelectedConditionsButton = new XrmButtonViewModel("Delete Selected", () => DeleteSelected(), ApplicationController);
             GroupSelectedConditionsOr = new XrmButtonViewModel("Group Selected Or", () => GroupSelected(FilterOperator.Or), ApplicationController);
@@ -693,6 +696,7 @@ namespace JosephM.Application.ViewModel.Query
         public XrmButtonViewModel ReturnButton { get; set; }
 
         public XrmButtonViewModel QueryTypeButton { get; set; }
+        public XrmButtonViewModel LoadSavedViewButton { get; private set; }
 
         private FilterConditionsViewModel _filterConditions;
         public FilterConditionsViewModel FilterConditions
@@ -810,7 +814,9 @@ namespace JosephM.Application.ViewModel.Query
                     if(value != null)
                     {
                         LoadingViewModel.LoadingMessage = $"Loading {RecordService.GetDisplayName(value)} Fields";
-                        var fieldNames = Task.Run(() => RecordService.GetFields(value)).Result;
+                        var fieldNames = Task.Run(() => RecordService.GetFields(value).ToArray()).Result;
+                        //var manyRelationships = Task.Run(() => RecordService.GetManyToManyRelationships(RecordType).ToArray()).Result;
+                        //var oneToManyRelationships = Task.Run(() => RecordService.GetOneToManyRelationships(RecordType).ToArray()).Result;
                     }
                     _recordType = value;
                     ClearNotInIds();
@@ -823,6 +829,7 @@ namespace JosephM.Application.ViewModel.Query
                         Joins = CreateJoins();
                         NotInFilterConditions = CreateFilterCondition(isNotIn: true);
                         NotInJoins = CreateJoins(isNotIn: true);
+                        //LoadViewButtons();
                     }
                     OnPropertyChanged(nameof(RecordTypeSelected));
                     if (_recordType != null)
@@ -836,6 +843,127 @@ namespace JosephM.Application.ViewModel.Query
                 {
                     LoadingViewModel.IsLoading = false;
                 }
+            }
+        }
+
+        private void LoadViewButtons()
+        {
+            var views = RecordService.GetViews(RecordType);
+            var buttons = new List<XrmButtonViewModel>();
+            foreach (var view in views
+                .Where(v => v.ViewType == ViewType.MainApplicationView && v.Id != null)
+                .OrderBy(v => v.ViewName))
+            {
+                var button = new XrmButtonViewModel(view.ViewName, () =>
+                {
+                    LoadingViewModel.IsLoading = true;
+
+                    DoOnAsynchThread(() =>
+                    {
+                        try
+                        {
+                            var queryDefinition = RecordService.GetViewAsQueryDefinition(view.Id);
+                            if (queryDefinition == null)
+                            {
+                                throw new NullReferenceException("Error Loading Query. The Result Provided By The Record Service Was Null");
+                            }
+
+                            DoOnMainThread(() =>
+                            {
+                                try
+                                {
+                                    FilterConditions = CreateFilterCondition();
+                                    AppendIntoFilterConditions(queryDefinition.RootFilter, FilterConditions, RecordType);
+                                    Joins = CreateJoins();
+                                    foreach (var join in queryDefinition.Joins.Where(j => j.JoinType != JoinType.LeftOuter).ToArray())
+                                    {
+                                        AppendJoinsViewModel(join, Joins);
+                                    }
+                                }
+                                finally
+                                {
+                                    LoadingViewModel.IsLoading = false;
+                                }
+                            });
+                        }
+                        catch (Exception)
+                        {
+                            LoadingViewModel.IsLoading = false;
+                            throw;
+                        }
+                    });
+                }, ApplicationController);
+                buttons.Add(button);
+            }
+            LoadSavedViewButton.ChildButtons = buttons;
+        }
+
+        private void AppendJoinsViewModel(Join join, JoinsViewModel joins)
+        {
+            var joinViewModel = joins.Joins.Last();
+
+            if(joinViewModel.LinkSelections.Any(ls => ls.Key.StartsWith($"nn:{join.TargetType}:{join.TargetField}")))
+            {
+                joinViewModel.SelectedItem = joinViewModel.LinkSelections.First(ls => ls.Key.StartsWith($"nn:{join.TargetType}:{join.TargetField}"));
+            }
+            else if (joinViewModel.LinkSelections.Any(ls => ls.Key.StartsWith($"n1:{join.SourceField}:{join.TargetType}")))
+            {
+                joinViewModel.SelectedItem = joinViewModel.LinkSelections.First(ls => ls.Key.StartsWith($"n1:{join.SourceField}:{join.TargetType}"));
+            }
+            else if (joinViewModel.LinkSelections.Any(ls => ls.Key.StartsWith($"1n:{join.TargetType}:{join.TargetField}")))
+            {
+                joinViewModel.SelectedItem = joinViewModel.LinkSelections.First(ls => ls.Key.StartsWith($"1n:{join.TargetType}:{join.TargetField}"));
+            }
+            else
+            {
+                throw new NullReferenceException($"Could Not Find Matching Join For {joins.RecordType}.{join.SourceField} = {join.TargetType}.{join.TargetField}");
+            }
+
+            AppendIntoFilterConditions(join.RootFilter, joinViewModel.FilterConditions, Joins.RecordType);
+            if (joinViewModel.SelectedItem.Key.StartsWith("nn"))
+            {
+                foreach (var subJoin in join.Joins.First().Joins)
+                {
+                    AppendJoinsViewModel(subJoin, joinViewModel.Joins);
+                }
+            }
+            else
+            {
+                foreach (var subJoin in join.Joins)
+                {
+                    AppendJoinsViewModel(subJoin, joinViewModel.Joins);
+                }
+            }
+        }
+
+        private void AppendIntoFilterConditions(Filter rootFilter, FilterConditionsViewModel filterConditions, string recordType)
+        {
+            filterConditions.FilterOperator = rootFilter.ConditionOperator;
+            foreach (var condition in rootFilter.Conditions)
+            {
+                var conditionViewModel = filterConditions.Conditions.Last();
+                var conditionObject = conditionViewModel.QueryConditionObject;
+
+                var fieldViewModel = conditionViewModel.GetRecordFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.FieldName));
+                conditionObject.FieldName = fieldViewModel.ItemsSource.First(p => p.Key == condition.FieldName);
+                fieldViewModel.OnPropertyChanged(nameof(RecordFieldFieldViewModel.Value));
+                conditionObject.ConditionType = condition.ConditionType;
+                conditionViewModel.GetPicklistFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ConditionType)).OnPropertyChanged(nameof(PicklistFieldViewModel.Value));
+                if (conditionObject.IsInContext(nameof(ConditionViewModel.QueryCondition.ValueInt)) && condition.Value is int)
+                {
+                    conditionViewModel.GetIntegerFieldFieldViewModel(nameof(ConditionViewModel.QueryCondition.ValueInt)).Value = (int)condition.Value;
+                }
+                else
+                {
+                    conditionViewModel.GetFieldViewModel(nameof(ConditionViewModel.QueryCondition.Value)).ValueObject = condition.Value;
+                }
+                conditionViewModel.OnLoad();
+            }
+            foreach(var subFilter in rootFilter.SubFilters)
+            {
+                var newFilterCondition = filterConditions.CreateFilterCondition();
+                AppendIntoFilterConditions(subFilter, newFilterCondition, recordType);
+                filterConditions.FilterConditions.Add(newFilterCondition);
             }
         }
 

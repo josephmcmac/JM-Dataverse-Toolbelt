@@ -104,23 +104,30 @@ namespace JosephM.Application.ViewModel.Attributes
                 mainFormInContext = recordForm.ParentForm;
             mainFormInContext.ApplicationController.DoOnAsyncThread(() =>
             {
-                mainFormInContext.LoadingViewModel.IsLoading = true;
-                try
+                if (grid.SelectedRows == null || !grid.SelectedRows.Any())
                 {
-                    Thread.Sleep(100);
-                    foreach (var selectedRow in grid.SelectedRows)
+                    mainFormInContext.ApplicationController.UserMessage("You Must Select The Rows To Add For This Function!");
+                }
+                else
+                {
+                    mainFormInContext.LoadingViewModel.IsLoading = true;
+                    try
                     {
-                        AddSelectedItem(selectedRow.GetRecord(), recordForm, subGridReference);
+                        Thread.Sleep(100);
+                        foreach (var selectedRow in grid.SelectedRows)
+                        {
+                            AddSelectedItem(selectedRow.GetRecord(), recordForm, subGridReference);
+                        }
+                        mainFormInContext.ClearChildForm();
                     }
-                    mainFormInContext.ClearChildForm();
-                }
-                catch (Exception ex)
-                {
-                    mainFormInContext.ApplicationController.ThrowException(ex);
-                }
-                finally
-                {
-                    mainFormInContext.LoadingViewModel.IsLoading = false;
+                    catch (Exception ex)
+                    {
+                        mainFormInContext.ApplicationController.ThrowException(ex);
+                    }
+                    finally
+                    {
+                        mainFormInContext.LoadingViewModel.IsLoading = false;
+                    }
                 }
             });
         }

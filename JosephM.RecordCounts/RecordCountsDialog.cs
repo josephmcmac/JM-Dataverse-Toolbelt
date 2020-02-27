@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace JosephM.RecordCounts
 {
-    [RequiresConnection]
+    [RequiresConnection(escapeConnectionCheckProperty: nameof(LoadedFromConnection))]
     public class RecordCountsDialog :
         ServiceRequestDialog
             <RecordCountsService, RecordCountsRequest, RecordCountsResponse,
@@ -18,6 +18,8 @@ namespace JosephM.RecordCounts
             : base(service, dialogController, recordService)
         {
         }
+
+        public bool LoadedFromConnection { get; set; }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {

@@ -10,23 +10,57 @@ namespace JosephM.Core.Serialisation
     /// </summary>
     public static class JsonHelper
     {
-        public static string ObjectAsTypeToJsonString(object objectValue)
+        public static string ObjectAsTypeToJsonString(object objectValue, bool format = false)
         {
-            var serializer = new DataContractJsonSerializer(objectValue.GetType());
-            using (var stream = new MemoryStream())
+            if (format)
             {
-                serializer.WriteObject(stream, objectValue);
-                return Encoding.Default.GetString(stream.ToArray());
+                using (var stream = new MemoryStream())
+                {
+                    using (var writer = JsonReaderWriterFactory.CreateJsonWriter(
+                        stream, Encoding.UTF8, true, true, "  "))
+                    {
+                        var serializer = new DataContractJsonSerializer(objectValue.GetType());
+                        serializer.WriteObject(writer, objectValue);
+                        writer.Flush();
+                    }
+                    return Encoding.Default.GetString(stream.ToArray());
+                }
+            }
+            else
+            {
+                var serializer = new DataContractJsonSerializer(objectValue.GetType());
+                using (var stream = new MemoryStream())
+                {
+                    serializer.WriteObject(stream, objectValue);
+                    return Encoding.Default.GetString(stream.ToArray());
+                }
             }
         }
 
-        public static string ObjectToJsonString<T>(T objectValue)
+        public static string ObjectToJsonString<T>(T objectValue, bool format = false)
         {
-            var serializer = new DataContractJsonSerializer(typeof(T));
-            using (var stream = new MemoryStream())
+            if (format)
             {
-                serializer.WriteObject(stream, objectValue);
-                return Encoding.Default.GetString(stream.ToArray());
+                using (var stream = new MemoryStream())
+                {
+                    using (var writer = JsonReaderWriterFactory.CreateJsonWriter(
+                        stream, Encoding.UTF8, true, true, "  "))
+                    {
+                        var serializer = new DataContractJsonSerializer(typeof(T));
+                        serializer.WriteObject(writer, objectValue);
+                        writer.Flush();
+                    }
+                    return Encoding.Default.GetString(stream.ToArray());
+                }
+            }
+            else
+            {
+                var serializer = new DataContractJsonSerializer(typeof(T));
+                using (var stream = new MemoryStream())
+                {
+                    serializer.WriteObject(stream, objectValue);
+                    return Encoding.Default.GetString(stream.ToArray());
+                }
             }
         }
 
