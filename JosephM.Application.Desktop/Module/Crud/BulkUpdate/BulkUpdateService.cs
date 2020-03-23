@@ -43,6 +43,34 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
                             newRecord.SetField(request.FieldToSet.Key, null, RecordService);
                         else
                             newRecord.SetField(request.FieldToSet.Key, request.ValueToSet, RecordService);
+                        if (request.AddUpdateField2)
+                        {
+                            if (request.ClearValue2)
+                                newRecord.SetField(request.FieldToSet2.Key, null, RecordService);
+                            else
+                                newRecord.SetField(request.FieldToSet2.Key, request.ValueToSet2, RecordService);
+                        }
+                        if (request.AddUpdateField3)
+                        {
+                            if (request.ClearValue3)
+                                newRecord.SetField(request.FieldToSet3.Key, null, RecordService);
+                            else
+                                newRecord.SetField(request.FieldToSet3.Key, request.ValueToSet3, RecordService);
+                        }
+                        if (request.AddUpdateField4)
+                        {
+                            if (request.ClearValue4)
+                                newRecord.SetField(request.FieldToSet4.Key, null, RecordService);
+                            else
+                                newRecord.SetField(request.FieldToSet4.Key, request.ValueToSet4, RecordService);
+                        }
+                        if (request.AddUpdateField5)
+                        {
+                            if (request.ClearValue5)
+                                newRecord.SetField(request.FieldToSet5.Key, null, RecordService);
+                            else
+                                newRecord.SetField(request.FieldToSet5.Key, request.ValueToSet5, RecordService);
+                        }
                         return newRecord;
                     })
                     .ToArray();
