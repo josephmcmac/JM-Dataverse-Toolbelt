@@ -106,7 +106,7 @@ namespace JosephM.XrmModule.Crud
         private string WriteFetchToJavascript(string fetchXml)
         {
             var stringCharacter = "\'";
-            var variableName = "xml";
+            var variableName = "fetchXml";
 
             var fetch = fetchXml;
             if (fetch != null)
