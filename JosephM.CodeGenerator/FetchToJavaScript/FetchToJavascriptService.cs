@@ -17,7 +17,7 @@ namespace JosephM.CodeGenerator.FetchToJavascript
         private string WriteFetchToJavascript(FetchToJavascriptRequest request, LogController controller)
         {
             var stringCharacter = "\"";
-            var variableName = "xml";
+            var variableName = "fetchXml";
 
             var fetch = request.Fetch;
             if (fetch != null)

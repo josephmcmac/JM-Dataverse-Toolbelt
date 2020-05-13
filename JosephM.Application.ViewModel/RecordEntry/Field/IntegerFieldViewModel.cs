@@ -27,7 +27,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                if (Value.HasValue && PicklistOptions.Any(p => p.Key == Value.Value.ToString()))
+                if (Value.HasValue && PicklistOptions != null && PicklistOptions.Any(p => p.Key == Value.Value.ToString()))
                     return PicklistOptions.First(p => p.Key == Value.Value.ToString());
                 return null;
             }

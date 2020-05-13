@@ -14,7 +14,7 @@ namespace JosephM.CodeGenerator.FetchToJavascript
     {
         public override string MenuGroup => "Code Generation";
 
-        public override string MainOperationName => "Convert Fetch To Javascript";
+        public override string MainOperationName => "Fetch To Javascript";
 
         public override void RegisterTypes()
         {

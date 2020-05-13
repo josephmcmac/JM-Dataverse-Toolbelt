@@ -52,26 +52,37 @@
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" Style="{StaticResource ButtonsGrid}">
                                 <ItemsControl
-                                    ItemsSource="{Binding CustomFunctions}"
-                                    ItemTemplate="{StaticResource XrmButtonTemplate}">
-                                        <ItemsControl.ItemsPanel>
+                                    ItemsSource="{Binding CustomFunctions}">
+                                    <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <WrapPanel Orientation="Horizontal" />
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid  Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+                                                <shared:XrmButton
+                                                    Style="{StaticResource FormActionButton}"
+                                                    DataContext="{Binding}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                             </Grid>
                             <Grid Grid.Column="1" Visibility="{Binding DisplayRightEdgeButtons, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <StackPanel
+                                <StackPanel 
                                     Orientation="Horizontal"
                                     VerticalAlignment="Top"
                                     HorizontalAlignment="Right">
                                                 <shared:XrmButton
-                                        DataContext="{Binding BackButtonViewModel}" />
+                                                    Style="{StaticResource FormActionButton}"
+                                                    DataContext="{Binding BackButtonViewModel}" />
                                                 <shared:XrmButton
-                                        DataContext="{Binding SaveButtonViewModel}" />
+                                                    Style="{StaticResource FormActionButton}"
+                                                    DataContext="{Binding SaveButtonViewModel}" />
                                                 <shared:XrmButton
-                                        DataContext="{Binding CancelButtonViewModel}" />
+                                                    Style="{StaticResource FormActionButton}"
+                                                    DataContext="{Binding CancelButtonViewModel}" />
                                 </StackPanel>
                             </Grid>
                         </Grid>
@@ -93,11 +104,14 @@
                         VerticalAlignment="Top"
                         HorizontalAlignment="Left">
                             <shared:XrmButton
-                            DataContext="{Binding BackButtonViewModel}" />
+                                Style="{StaticResource FormActionButton}"
+                                DataContext="{Binding BackButtonViewModel}" />
                             <shared:XrmButton
-                            DataContext="{Binding SaveButtonViewModel}" />
+                                Style="{StaticResource FormActionButton}"
+                                DataContext="{Binding SaveButtonViewModel}" />
                         <shared:XrmButton
-                            DataContext="{Binding CancelButtonViewModel}" />
+                            Style="{StaticResource FormActionButton}"
+                                DataContext="{Binding CancelButtonViewModel}" />
                         </StackPanel>
                         <StackPanel
                             Visibility="{Binding DisplayRightEdgeButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -105,11 +119,14 @@
                             VerticalAlignment="Top"
                             HorizontalAlignment="Right">
                             <shared:XrmButton
-                            DataContext="{Binding BackButtonViewModel}" />
+                                Style="{StaticResource FormActionButton}"
+                                DataContext="{Binding BackButtonViewModel}" />
                             <shared:XrmButton
-                            DataContext="{Binding SaveButtonViewModel}" />
+                                Style="{StaticResource FormActionButton}"
+                                DataContext="{Binding SaveButtonViewModel}" />
                             <shared:XrmButton
-                            DataContext="{Binding CancelButtonViewModel}" />
+                                Style="{StaticResource FormActionButton}"
+                                DataContext="{Binding CancelButtonViewModel}" />
                         </StackPanel>
                     </Grid>
             </Grid>

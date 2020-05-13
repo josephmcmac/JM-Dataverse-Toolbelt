@@ -4,7 +4,7 @@ using JosephM.Core.Service;
 namespace JosephM.CodeGenerator.FetchToJavascript
 {
     [Group(Sections.Fetch)]
-    [DisplayName("Convert Fetch To Javascript")]
+    [DisplayName("Fetch To Javascript")]
     [Instruction("A JavaScript Statement Will Be Output Which Initialises A JavaScript Variable To The Entered FetchXml String")]
     public class FetchToJavascriptRequest : ServiceRequestBase
     {

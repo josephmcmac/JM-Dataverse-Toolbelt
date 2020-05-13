@@ -115,6 +115,7 @@ namespace JosephM.Deployment.CreatePackage
         [DisplayOrder(1070)]
         [GridWidth(400)]
         [Group(Sections.DataIncludedRecordTypes)]
+        [AllowGridFullScreen]
         public IEnumerable<ExportRecordType> DataToInclude { get; set; }
 
         [Hidden]
