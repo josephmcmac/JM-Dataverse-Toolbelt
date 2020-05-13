@@ -5,6 +5,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Record.Extentions;
+using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -232,7 +233,21 @@ namespace JosephM.Deployment.ExportXml
                 if (includeNotes)
                 {
                     controller.LogLiteral(string.Format("Querying Notes For {0} Records", type));
-                    var notes = XrmService
+                    if (entities.Count() < 1000)
+                    {
+
+                    }
+                    //if less than 10k entities query matching ids, else just get all for entity type
+                    var notes = entities.Count() < 10000
+                        ? XrmService.RetrieveAllOrClauses(Entities.annotation,
+                            entities.Select(e =>
+                            {
+                                var filter = new FilterExpression(LogicalOperator.And);
+                                filter.AddCondition(new ConditionExpression(Fields.annotation_.objecttypecode, ConditionOperator.Equal, type));
+                                filter.AddCondition(new ConditionExpression(Fields.annotation_.objectid, ConditionOperator.Equal, e.Id));
+                                return filter;
+                            }), null)
+                        : XrmService
                         .RetrieveAllOrClauses(Entities.annotation,
                             new[] { new ConditionExpression(Fields.annotation_.objecttypecode, ConditionOperator.Equal, type) });
 
