@@ -6,13 +6,17 @@ using System.Linq;
 
 namespace JosephM.Xrm.Test
 {
+    //test brahim
     [TestClass]
     public class XrmDebugScript : XrmTest
     {
         [TestMethod]
         public void XrmDebug()
         {
-            var blah = XrmService.WhoAmI();
+            var query = new Microsoft.Xrm.Sdk.Query.QueryExpression(Entities.activitymimeattachment);
+            var activityJoin = query.AddLink(Entities.email, Fields.activitymimeattachment_.activityid, Fields.emailhash_.activityid);
+
+            var top1 = XrmService.RetrieveFirst(query);
         }
 
         private void DeleteOnlineSampleData()
