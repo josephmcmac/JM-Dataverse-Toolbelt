@@ -13,7 +13,7 @@
         <Setter Property="IsReadOnly" Value="True" />
     </Style>
     <Style x:Key="HeadingStyle" TargetType="TextBlock">
-        <Setter Property="Margin" Value="13,4,13,0" />
+        <Setter Property="Margin" Value="13,4,13,4" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
         <Setter Property="FontWeight" Value="Bold" />

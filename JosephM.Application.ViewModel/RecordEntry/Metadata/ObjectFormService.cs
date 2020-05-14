@@ -873,7 +873,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public override RecordEntryFormViewModel GetFullScreenEnumerableViewModel(string fieldName, RecordEntryViewModelBase entryForm)
         {
             var recordEntryForm = entryForm as ObjectEntryViewModel;
-            recordEntryForm.LoadSubgridsToObject();
+            if (!recordEntryForm.IsReadOnly)
+                recordEntryForm.LoadSubgridsToObject();
             var record = entryForm.GetRecord() as ObjectRecord;
             var recordService = entryForm.RecordService as ObjectRecordService;
             var formService = new ObjectFormService(record.Instance, recordService, limitFields: new[] { fieldName });
@@ -883,10 +884,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 { entryForm.GetRecordType(), new string[0] }
             };
             var viewModel = new ObjectEntryViewModel(
-                entryForm.IsReadOnly ? (Action)null : () => { entryForm.ClearChildForm(); recordEntryForm.Reload(); },
-                null,
+                entryForm.IsReadOnly
+                ? (Action)null
+                : () => { entryForm.ClearChildForm(); recordEntryForm.Reload(); },
+                entryForm.IsReadOnly
+                ? (Action)entryForm.ClearChildForm
+                : (Action)null,
                 record.Instance, new FormController(recordService, formService, entryForm.FormController.ApplicationController),
-                saveButtonLabel: "Back to Main Form", onlyValidate: onlyValidate)
+                saveButtonLabel: "Back to Main Form", cancelButtonLabel: "Back to Main Form", onlyValidate: onlyValidate)
             {
                 IsGridFullScreenForm = true
             };
