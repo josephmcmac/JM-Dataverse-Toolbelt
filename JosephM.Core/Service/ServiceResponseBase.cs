@@ -70,6 +70,7 @@ namespace JosephM.Core.Service
             }
         }
 
+        [AllowGridFullScreen]
         [AllowDownload]
         [Group(Sections.ResponseItems)]
         [DisplayOrder(20)]

@@ -9,22 +9,22 @@
         <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernProgressRing.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="AppContainerStyle" TargetType="{x:Type Grid}">
-        <Setter Property="Margin" Value="20" />
+        <Setter Property="Margin" Value="10,5,10,5" />
     </Style>
     <Style TargetType="{x:Type ProgressBar}">
         <Setter Property="Height" Value="25px" />
         <Setter Property="Margin" Value="13,13,13,13" />
     </Style>
     <Style  x:Key="ApplicationTitle" TargetType="{x:Type TextBlock}" >
-        <Setter Property="Margin" Value="8,8,8,8"  />
+        <Setter Property="Margin" Value="8,4,8,4"  />
         <Setter Property="FontWeight" Value="Bold"></Setter>
         <Setter Property="FontStyle" Value="Italic"></Setter>
-        <Setter Property="FontSize" Value="24px"></Setter>
+        <Setter Property="FontSize" Value="20px"></Setter>
         <Setter Property="Foreground" Value="{DynamicResource TextColor}"></Setter>
     </Style>
     <Style x:Key="NotificationTextBlock" TargetType="{x:Type TextBlock}">
         <Setter Property="FontWeight"  Value="Bold" />
-        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Margin" Value="8,4,8,4" />
         <Setter Property="Foreground" Value="{DynamicResource TextColor}"></Setter>
     </Style>
     <Style x:Key="NotificationProgressRing" TargetType="{x:Type shared:ModernProgressRing}" BasedOn="{StaticResource CircleProgressRingStyle}" >
@@ -34,19 +34,19 @@
     <Style x:Key="MainMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="Width" Value="{Binding Path=ActualWidth,ElementName=MainMenuGrid, Converter={StaticResource LengthConverter}, ConverterParameter=.10}" />
         <Setter Property="Height" Value="30px" />
-        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Margin" Value="8,4,8,4" />
         <Setter Property="Padding" Value="0" />
     </Style>
     <Style x:Key="SettingsMenuButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="Width" Value="{Binding Path=ActualWidth,ElementName=MainMenuGrid, Converter={StaticResource LengthConverter}, ConverterParameter=.12}" />
         <Setter Property="Height" Value="30px" />
-        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Margin" Value="8,4,8,4" />
         <Setter Property="Padding" Value="0" />
     </Style>
     <Style x:Key="NotificationButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Height" Value="30px" />
-        <Setter Property="Margin" Value="8,8,8,8" />
+        <Setter Property="Margin" Value="8,4,8,4" />
         <Setter Property="Padding" Value="0" />
     </Style>
     <DataTemplate x:Key="OptionDropdownTemplate" DataType="applicationOptions:ApplicationOption" >

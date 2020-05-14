@@ -534,6 +534,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
         {
             get
             {
+                var formMetadata = FormService.GetFormMetadata(RecordType, RecordService);
                 return FormService.GetFormMetadata(RecordType, RecordService).GridOnlyField;
             }
         }

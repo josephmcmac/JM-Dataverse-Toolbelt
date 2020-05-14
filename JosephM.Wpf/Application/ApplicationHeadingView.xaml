@@ -24,7 +24,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid Column="0">
-            <TextBlock Text="{Binding ApplicationName}" Style="{StaticResource ApplicationTitle}" ></TextBlock>
+            <TextBlock Text="{Binding ApplicationName}" Style="{StaticResource ApplicationTitle}"  ></TextBlock>
         </Grid>
         <Grid Column="1">
                 <ItemsControl

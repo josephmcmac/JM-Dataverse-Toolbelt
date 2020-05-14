@@ -37,6 +37,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     EditRow = FormService.AllowGridOpen(ReferenceName, RecordForm) ? EditRow : (Action<GridRowViewModel>)null,
                     AddRow = !recordForm.IsReadOnly && FormService.AllowAddNew(ReferenceName, GetRecordType()) ? AddRow : (Action)null,
                     AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel),
+                    ExpandGrid = FormService.AllowGridFullScreen(FieldName) ? LoadGridEditDialog : (Action)null,
                     IsReadOnly = !FormService.AllowGridFieldEditEdit(FieldName) || recordForm.IsReadOnly,
                     ParentForm = recordForm,
                     ReferenceName = ReferenceName,
@@ -60,6 +61,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     RemoveParentDialog = () => { RecordEntryViewModel.ClearChildForms(); }
                 };
                 DynamicGridViewModel.AddMultipleRow = FormService.GetBulkAddFunctionFor(ReferenceName, RecordEntryViewModel);
+                DynamicGridViewModel.ExpandGrid = FormService.AllowGridFullScreen(FieldName) ? LoadGridEditDialog : (Action)null;
             }
             else
             {
@@ -423,31 +425,39 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     var mainFormInContext = RecordEntryViewModel;
                     if (RecordEntryViewModel is GridRowViewModel)
+                    {
                         mainFormInContext = RecordEntryViewModel.ParentForm;
 
-                    var gridRow = RecordEntryViewModel as GridRowViewModel;
-                    if (gridRow != null)
-                    {
-                        var enumerableFieldThisFieldIsIn = mainFormInContext.GetEnumerableFieldViewModel(gridRow.ParentFormReference);
-                        var viewModel = FormService.GetEditEnumerableViewModel(gridRow.ParentFormReference, FieldName, mainFormInContext, (record) =>
+                        var gridRow = RecordEntryViewModel as GridRowViewModel;
+                        if (gridRow != null)
                         {
-                            mainFormInContext.ClearChildForm();
-                            var index = enumerableFieldThisFieldIsIn.DynamicGridViewModel.GridRecords.IndexOf(gridRow);
-                            DoOnMainThread(() =>
+                            var enumerableFieldThisFieldIsIn = mainFormInContext.GetEnumerableFieldViewModel(gridRow.ParentFormReference);
+                            var viewModel = FormService.GetEditEnumerableViewModel(gridRow.ParentFormReference, FieldName, mainFormInContext, (record) =>
                             {
-                                enumerableFieldThisFieldIsIn.RemoveRow(gridRow);
-                                enumerableFieldThisFieldIsIn.InsertRecord(record, index == -1 ? 0 : index);
-                            });
-                        }, () => mainFormInContext.ClearChildForm(), gridRow);
-                        if (viewModel == null)
-                        {
-                            throw new NotImplementedException("No Form For Type");
+                                mainFormInContext.ClearChildForm();
+                                var index = enumerableFieldThisFieldIsIn.DynamicGridViewModel.GridRecords.IndexOf(gridRow);
+                                DoOnMainThread(() =>
+                                {
+                                    enumerableFieldThisFieldIsIn.RemoveRow(gridRow);
+                                    enumerableFieldThisFieldIsIn.InsertRecord(record, index == -1 ? 0 : index);
+                                });
+                            }, () => mainFormInContext.ClearChildForm(), gridRow);
+                            if (viewModel == null)
+                            {
+                                throw new NotImplementedException("No Form For Type");
+                            }
+                            else
+                            {
+                                viewModel.IsReadOnly = IsReadOnly;
+                                mainFormInContext.LoadChildForm(viewModel);
+                            }
                         }
-                        else
-                        {
-                            viewModel.IsReadOnly = IsReadOnly;
-                            mainFormInContext.LoadChildForm(viewModel);
-                        }
+                    }
+                    else
+                    {
+                        var viewModel = FormService.GetFullScreenEnumerableViewModel(FieldName, RecordEntryViewModel);
+                        viewModel.IsReadOnly = IsReadOnly; 
+                        mainFormInContext.LoadChildForm(viewModel);
                     }
                 }
                 catch (Exception ex)

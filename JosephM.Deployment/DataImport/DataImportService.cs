@@ -1197,7 +1197,7 @@ namespace JosephM.Deployment.DataImport
                 else
                 {
                     if (baseUnitName == null)
-                        throw new NullReferenceException("{Fields.uom_.baseuom} name is required");
+                        throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} is required");
                     baseUnitMatchQuery.Criteria.AddCondition(new ConditionExpression(Fields.uom_.name, ConditionOperator.Equal, baseUnitName));
                     var unitGroupLink = baseUnitMatchQuery.AddLink(Entities.uomschedule, Fields.uom_.uomscheduleid, Fields.uomschedule_.uomscheduleid);
                     unitGroupLink.LinkCriteria.AddCondition(new ConditionExpression(Fields.uomschedule_.name, ConditionOperator.Equal, unitGroupName));
@@ -1219,6 +1219,25 @@ namespace JosephM.Deployment.DataImport
                 var unitId = thisEntity.GetLookupGuid(Fields.product_.defaultuomid);
                 if (unitId.HasValue)
                     fieldsToSet.Add(Fields.product_.defaultuomid);
+            }
+            if (thisEntity.LogicalName == Entities.list)
+            {
+                if(!fieldsToSet.Contains(Fields.list_.createdfromcode))
+                {
+                    if(!thisEntity.Contains(Fields.list_.createdfromcode))
+                    {
+                        throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.list_.createdfromcode, Entities.list)} is required");
+                    }
+                    fieldsToSet.Add(Fields.list_.createdfromcode);
+                }
+                if (!fieldsToSet.Contains(Fields.list_.type))
+                {
+                    if (!thisEntity.Contains(Fields.list_.type))
+                    {
+                        throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.list_.type, Entities.list)} is required");
+                    }
+                    fieldsToSet.Add(Fields.list_.type);
+                }
             }
         }
 

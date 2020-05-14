@@ -49,6 +49,7 @@ namespace JosephM.Deployment.ExportXml
         [GridWidth(500)]
         [DisplayOrder(300)]
         [RequiredProperty]
+        [AllowGridFullScreen]
         public IEnumerable<ExportRecordType> RecordTypesToExport { get; set; }
 
         private static class Sections

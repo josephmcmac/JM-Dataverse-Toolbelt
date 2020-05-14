@@ -23,8 +23,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <application:ApplicationHeadingView />
+        <Grid Grid.Row="0" MaxHeight="40">
+            <application:ApplicationHeadingView   />
         </Grid>
         <Grid Grid.Row="1" MaxHeight="190" >
             <ScrollViewer VerticalScrollBarVisibility="Auto">

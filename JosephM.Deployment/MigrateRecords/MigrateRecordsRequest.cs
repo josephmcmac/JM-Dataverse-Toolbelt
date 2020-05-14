@@ -92,6 +92,7 @@ namespace JosephM.Deployment.MigrateRecords
         [PropertyInContextByPropertyNotNull(nameof(SourceConnection))]
         [DisplayOrder(300)]
         [RequiredProperty]
+        [AllowGridFullScreen]
         public IEnumerable<ExportRecordType> RecordTypesToMigrate { get; set; }
 
         private static class Sections

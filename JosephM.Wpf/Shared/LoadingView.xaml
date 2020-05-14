@@ -28,7 +28,7 @@
         <Grid Row="0" Visibility="{Binding LoadingMessage, Converter={StaticResource NullToHiddenConverter}}">
             <TextBlock Style="{StaticResource HeadingStyle}" Text="{Binding LoadingMessage}" />
         </Grid>
-        <Grid Row="1">
+        <Grid Row="1" Margin="0,10,0,0">
             <shared:ModernProgressRing IsActive="{Binding IsLoading}"
                                        Style="{StaticResource CircleProgressRingStyle}" />
         </Grid>

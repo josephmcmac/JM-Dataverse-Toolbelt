@@ -48,6 +48,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         {
             if (_formMetadata == null)
             {
+                string gridOnlyField = null;
+
                 var formSections = new List<FormFieldSection>();
 
                 var type = ObjectToEnter.GetType();
@@ -102,7 +104,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                     string enumerableType = null;
                     if (property is EnumerableFieldMetadata)
+                    {
                         enumerableType = ((EnumerableFieldMetadata)property).EnumeratedTypeQualifiedName;
+                        if (LimitFields != null && LimitFields.Count() == 1 && LimitFields.First() == property.SchemaName)
+                        {
+                            gridOnlyField = property.SchemaName;
+                        }
+                    }
 
                     var displayLabel = property.FieldType != RecordFieldType.Enumerable
                         || groupAttribute != null;
@@ -161,6 +169,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 }
                 formSections = formSections.OrderBy(s => s.Order).ToList();
                 _formMetadata = new FormMetadata(formSections);
+                _formMetadata.GridOnlyField = gridOnlyField;
                 var gridOnlyProperty = type.GetCustomAttribute<GridOnlyEntry>();
                 if (gridOnlyProperty != null)
                     _formMetadata.GridOnlyField = gridOnlyProperty.EnumerableProperty;
@@ -804,6 +813,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return propertyInfo == null || !propertyInfo.PropertyType.GenericTypeArguments.Any() || propertyInfo.PropertyType.GenericTypeArguments[0].GetCustomAttribute<DoNotAllowGridEdit>() == null;
         }
 
+        public override bool AllowGridFullScreen(string fieldName)
+        {
+            if (LimitFields != null && LimitFields.Count() == 1 && LimitFields.First() == fieldName)
+                return false;
+            var propertyInfo = ObjectToEnter.GetType().GetProperty(fieldName);
+            return propertyInfo.GetCustomAttribute<AllowGridFullScreen>() != null;
+        }
+
         public override bool AllowNestedGridEdit(string subGridName, string fieldName)
         {
             var gridClass = GetPropertyInfo(subGridName, ObjectType.AssemblyQualifiedName);
@@ -850,6 +867,34 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 onCancel,
                 newObject, new FormController(recordService, formService, parentForm.FormController.ApplicationController), parentForm, subGridName, parentForm.OnlyValidate
                 , saveButtonLabel: "Apply Changes", cancelButtonLabel: parentForm.IsReadOnly ? "Return" : null);
+            return viewModel;
+        }
+
+        public override RecordEntryFormViewModel GetFullScreenEnumerableViewModel(string fieldName, RecordEntryViewModelBase entryForm)
+        {
+            var recordEntryForm = entryForm as ObjectEntryViewModel;
+            if (!recordEntryForm.IsReadOnly)
+                recordEntryForm.LoadSubgridsToObject();
+            var record = entryForm.GetRecord() as ObjectRecord;
+            var recordService = entryForm.RecordService as ObjectRecordService;
+            var formService = new ObjectFormService(record.Instance, recordService, limitFields: new[] { fieldName });
+            formService.AllowLookupFunctions = AllowLookupFunctions;
+            var onlyValidate = new Dictionary<string, IEnumerable<string>>
+            {
+                { entryForm.GetRecordType(), new string[0] }
+            };
+            var viewModel = new ObjectEntryViewModel(
+                entryForm.IsReadOnly
+                ? (Action)null
+                : () => { entryForm.ClearChildForm(); recordEntryForm.Reload(); },
+                entryForm.IsReadOnly
+                ? (Action)entryForm.ClearChildForm
+                : (Action)null,
+                record.Instance, new FormController(recordService, formService, entryForm.FormController.ApplicationController),
+                saveButtonLabel: "Back to Main Form", cancelButtonLabel: "Back to Main Form", onlyValidate: onlyValidate)
+            {
+                IsGridFullScreenForm = true
+            };
             return viewModel;
         }
 

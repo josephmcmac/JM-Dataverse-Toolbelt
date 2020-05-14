@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -10,8 +8,6 @@ using JosephM.Record.Query;
 using System.Linq;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Record.Extentions;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
@@ -25,6 +21,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public virtual bool AllowGridFieldEditEdit(string fieldName)
         {
             return true;
+        }
+
+        public virtual bool AllowGridFullScreen(string fieldName)
+        {
+            return false;
         }
 
         public abstract FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null);
@@ -87,6 +88,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         }
 
         public virtual RecordEntryFormViewModel GetEditEnumerableViewModel(string subGridName, string fieldName, RecordEntryViewModelBase parentForm, Action<IRecord> onSave, Action onCancel, GridRowViewModel gridRow)
+        {
+            return null;
+        }
+
+        public virtual RecordEntryFormViewModel GetFullScreenEnumerableViewModel(string fieldName, RecordEntryViewModelBase entryForm)
         {
             return null;
         }

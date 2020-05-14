@@ -7,7 +7,7 @@
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
-    <!--icons ripped off http://modernuiicons.com/-->
+    <!--icons ripped off http://modernuiicons.com-->
     <Style x:Key="DrawnIconButton" TargetType="{x:Type Button}">
         <Setter Property="Margin" Value="10" />
         <Setter Property="Height" Value="20" />
@@ -83,6 +83,14 @@
     <Style x:Key="AddMultipleRowButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DrawnIconButton}">
         <Setter Property="ContentTemplate" Value="{StaticResource AddMultipleButtonTemplate}" />
         <Setter Property="Margin" Value="8,0,8,0" />
+    </Style>
+    <DataTemplate x:Key="FullScreenButtonTemplate"  DataType="shared:XrmButtonViewModel">
+        <Grid Background="{DynamicResource BackgroundColor}" >
+            <Path Margin="1,1,1,1" Width="15" Height="15" Canvas.Left="18" Canvas.Top="18" Stretch="Fill" Fill="{DynamicResource BorderColor}" Data="F1 M 19,57L 19,19L 57,19L 57,57L 19,57 Z M 24,29L 47,29L 47,52L 52,52L 52,24L 24,24L 24,29 Z M 24,34L 24,52L 42,52L 42,34L 24,34 Z "/>
+        </Grid>
+    </DataTemplate>
+    <Style x:Key="FullScreenButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DrawnIconButton}">
+        <Setter Property="ContentTemplate" Value="{StaticResource FullScreenButtonTemplate}" />
     </Style>
     <DataTemplate x:Key="PreviousButtonTemplate"  DataType="shared:XrmButtonViewModel">
         <Grid Background="{DynamicResource BackgroundColor}" >
