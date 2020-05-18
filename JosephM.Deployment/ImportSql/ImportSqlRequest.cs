@@ -89,6 +89,7 @@ namespace JosephM.Deployment.ImportSql
         [MaximumIntValue(5000)]
         public int? TargetCacheLimit { get; set; }
 
+        [AllowGridFullScreen]
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull(nameof(ConnectionString))]
         public IEnumerable<SqlImportTableMapping> Mappings { get; set; }

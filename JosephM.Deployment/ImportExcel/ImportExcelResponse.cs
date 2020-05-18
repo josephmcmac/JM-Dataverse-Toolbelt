@@ -25,6 +25,7 @@ namespace JosephM.Deployment.ImportExcel
             get { return ImportSummary != null && ImportSummary.Any(); }
         }
 
+        [AllowGridFullScreen]
         [Group(Sections.Summary)]
         [PropertyInContextByPropertyValue(nameof(IsImportSummary), true)]
         public IEnumerable<ImportedRecords> ImportSummary
