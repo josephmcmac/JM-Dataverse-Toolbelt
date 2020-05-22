@@ -58,6 +58,7 @@ namespace JosephM.Deployment.ImportExcel
         [MaximumIntValue(5000)]
         public int? TargetCacheLimit { get; set; }
 
+        [AllowGridFullScreen]
         [RequiredProperty]
         [PropertyInContextByPropertyNotNull(nameof(ExcelFile))]
         public IEnumerable<ExcelImportTabMapping> Mappings { get; set; }

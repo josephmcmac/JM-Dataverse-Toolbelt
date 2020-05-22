@@ -22,6 +22,7 @@ namespace JosephM.Deployment.ImportCsvs
             TargetCacheLimit = 1000;
         }
 
+        [AllowGridFullScreen]
         [Group(Sections.CsvFiles)]
         [DisplayOrder(30)]
         [RequiredProperty]

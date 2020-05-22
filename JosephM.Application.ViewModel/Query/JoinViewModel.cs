@@ -41,6 +41,10 @@ namespace JosephM.Application.ViewModel.Query
             foreach(var lookupField in lookupFields)
             {
                 var targetTypes = RecordService.GetLookupTargetType(lookupField.SchemaName, RecordType);
+                if(RecordType == "activitymimeattachment" && lookupField.SchemaName == "objectid")
+                {
+                    targetTypes = "email,appointment";
+                }
                 if(!string.IsNullOrWhiteSpace(targetTypes))
                 {
                     var relationshipLabel = lookupField.DisplayName;

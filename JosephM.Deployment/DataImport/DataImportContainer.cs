@@ -114,7 +114,7 @@ namespace JosephM.Deployment.DataImport
 
         public static bool IsIncludeField(string fieldName, string entityType, XrmRecordService xrmRecordService, bool includeOwner)
         {
-            var hardcodeInvalidFields = GetIgnoreFields(includeOwner);
+            var hardcodeInvalidFields = GetIgnoreFields(entityType, includeOwner);
             if (hardcodeInvalidFields.Contains(fieldName))
                 return false;
             //these are just hack since they are not updateable fields (IsWriteable)
@@ -134,21 +134,23 @@ namespace JosephM.Deployment.DataImport
                 xrmRecordService.FieldExists(fieldName, entityType) && xrmRecordService.GetFieldMetadata(fieldName, entityType).Writeable;
         }
 
-        public IEnumerable<string> GetIgnoreFields()
+        public IEnumerable<string> GetIgnoreFields(string recordType)
         {
-            return GetIgnoreFields(IncludeOwner);
+            return GetIgnoreFields(recordType, IncludeOwner);
         }
 
-        public static IEnumerable<string> GetIgnoreFields(bool includeOwner)
+        public static IEnumerable<string> GetIgnoreFields(string recordType, bool includeOwner)
         {
             var fields = new[]
             {
                     "yomifullname", "administratorid", "owneridtype", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
                     "overriddencreatedon", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid"
-                    , "address1_addressid", "address2_addressid", "address3_addressid", "processid", Fields.incident_.slaid, Fields.incident_.firstresponsebykpiid, Fields.incident_.resolvebykpiid, "entityimage_url", "entityimage_timestamp", "safedescription"
+                    , "address1_addressid", "address2_addressid", "address3_addressid", "processid", Fields.incident_.slaid, Fields.incident_.firstresponsebykpiid, Fields.incident_.resolvebykpiid, "entityimage_url", "entityimage_timestamp", "safedescription", "attachmentid"
             };
             if (!includeOwner)
                 fields = fields.Union(new[] { "ownerid" }).ToArray();
+            if(recordType == Entities.activitymimeattachment)
+                fields = fields.Union(new[] { "objectid" }).ToArray();
             return fields;
         }
 
@@ -179,6 +181,7 @@ namespace JosephM.Deployment.DataImport
             CheckLoadCache(recordsReferenced);
         }
 
+        private string[] _dontCacheTheseTypes = new[] { Entities.activitymimeattachment, Entities.attachment };
         private int _maxCacheCount = 1000;
         private void CheckLoadCache(IEnumerable<string> recordsReferenced)
         {
@@ -186,6 +189,10 @@ namespace JosephM.Deployment.DataImport
             var typeConfigs = XrmRecordService.GetTypeConfigs();
             foreach (var one in loadTheseOnes.ToArray())
             {
+                if(_dontCacheTheseTypes.Contains(one))
+                {
+                    loadTheseOnes.Remove(one);
+                }
                 if(_cachedRecords.ContainsKey(one))
                 {
                     loadTheseOnes.Remove(one);

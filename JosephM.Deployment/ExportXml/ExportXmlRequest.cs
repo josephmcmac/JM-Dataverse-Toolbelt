@@ -34,7 +34,7 @@ namespace JosephM.Deployment.ExportXml
         [GridWidth(110)]
         [DisplayOrder(200)]
         [Group(Sections.RecordTypesOptions)]
-        [DisplayName("Include Attached Notes")]
+        [DisplayName("Include Notes & Attachments")]
         [RequiredProperty]
         public bool IncludeNotes { get; set; }
 

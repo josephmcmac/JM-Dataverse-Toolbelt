@@ -1658,6 +1658,11 @@ namespace JosephM.Record.Xrm.XrmRecord
                     Type = Entities.knowledgearticle,
                     UniqueChildFields = new [] { Fields.knowledgearticle_.articlepublicnumber, Fields.knowledgearticle_.minorversionnumber, Fields.knowledgearticle_.majorversionnumber, Fields.knowledgearticle_.isrootarticle, Fields.knowledgearticle_.languagelocaleid }
                 },
+             new TypeConfigs.Config()
+                {
+                    Type = Entities.activitymimeattachment,
+                    UniqueChildFields = new [] { Fields.activitymimeattachment_.activitymimeattachmentid }
+                },
         });
         public TypeConfigs GetTypeConfigs()
         {

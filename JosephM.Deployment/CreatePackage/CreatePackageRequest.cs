@@ -99,7 +99,7 @@ namespace JosephM.Deployment.CreatePackage
         [RequiredProperty]
         public string SetVersionPostRelease { get; set; }
 
-        [DisplayName("Include Attached Notes")]
+        [DisplayName("Include Notes & Attachments")]
         [GridWidth(110)]
         [Group(Sections.DataIncluded)]
         [DisplayOrder(1050)]

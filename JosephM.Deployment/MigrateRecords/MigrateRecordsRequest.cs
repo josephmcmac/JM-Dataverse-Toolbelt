@@ -51,10 +51,10 @@ namespace JosephM.Deployment.MigrateRecords
         public bool MaskEmails { get; set; }
 
         [GridWidth(110)]
-        [MyDescription("If Set Any Notes Attached To Records Will Be Included In The Migration")]
+        [MyDescription("If Set Any Notes or Attachments for Records Will Be Included In The Migration")]
         [DisplayOrder(205)]
         [Group(Sections.ImportOptions)]
-        [DisplayName("Include Attached Notes")]
+        [DisplayName("Include Notes & Attachments")]
         [RequiredProperty]
         public bool IncludeNotes { get; set; }
 
