@@ -34,9 +34,10 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
 
             var numberToDo = request.Files.Count();
             var numberDone = 0;
-            foreach (var file in request.Files)
+            foreach (var file in request.Files.Select(f => f?.Replace("âˆ•", "∕")))
             {
                 var fileInfo = new FileInfo(file);
+
                 controller.UpdateProgress(++numberDone, numberToDo, "Importing " + fileInfo.Name);
                 var thisResponseItem = new DeployIntoFieldResponseItem()
                 {
@@ -46,7 +47,6 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
 
                 try
                 {
-
                     var containingFolderName = fileInfo.Directory.Name;
                     var containingFolderParentName = fileInfo.Directory.Parent != null
                         ? fileInfo.Directory.Parent.Name
@@ -140,6 +140,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
 
         private IRecord GetRecordToDeployInto(string recordType, string nameToMatch, string containingFolderParentName)
         {
+            nameToMatch = nameToMatch?.Replace("∕", "/");
+
             var conditions = new List<Condition>
                         {
                             new Condition(Service.GetPrimaryField(recordType), ConditionType.Equal, nameToMatch)
@@ -215,6 +217,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployIntoField
             {
                 if (recordType == Entities.adx_webpage)
                     return "adx_copy";
+                if (recordType == Entities.adx_contentsnippet)
+                    return "adx_value";
                 var matchingFields = Service.GetFields(recordType).Where(f => f.Contains("source"));
                 if (matchingFields.Count() != 1)
                     throw new Exception($"Could not find unique field in {recordType} with name containing 'source'");

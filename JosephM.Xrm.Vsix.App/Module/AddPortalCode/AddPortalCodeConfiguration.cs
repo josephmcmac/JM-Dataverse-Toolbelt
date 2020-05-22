@@ -121,6 +121,19 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                     },
                     new AddPortalCodeConfiguration
                     {
+                        RecordType = Entities.adx_contentsnippet,
+                        WebSiteField = Fields.adx_contentsnippet_.adx_websiteid,
+                        FieldsToExport = new []
+                        {
+                            new AddPortalCodeConfiguration.ExportFieldConfigration
+                            {
+                                FieldName = Fields.adx_contentsnippet_.adx_value,
+                                Extention = "html"
+                            }
+                        }
+                    },
+                    new AddPortalCodeConfiguration
+                    {
                         RecordType = Entities.adx_webfile,
                         WebSiteField = Fields.adx_webfile_.adx_websiteid
                     }

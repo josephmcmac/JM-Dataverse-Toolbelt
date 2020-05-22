@@ -1854,6 +1854,7 @@ namespace JosephM.Xrm.Schema
 		{
 			public const string adx_contentsnippetid = "adx_contentsnippetid";
 			public const string adx_name = "adx_name";
+			public const string adx_value = "adx_value";
 			public const string adx_websiteid = "adx_websiteid";
 			public const string createdby = "createdby";
 			public const string createdon = "createdon";

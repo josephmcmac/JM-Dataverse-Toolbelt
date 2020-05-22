@@ -84,8 +84,15 @@ namespace JosephM.Xrm.Vsix.Module.AddPortalCode
                                 {
                                     var fileExtention = field.Extention;
                                     var fileName = recordName + "." + fileExtention;
+                                    //https://superuser.com/questions/187469/how-would-i-go-about-creating-a-filename-with-invalid-characters-such-as
+                                    // / -you can use a division symbol ∕
+                                    // : -you can use the modifier letter colon ꞉
+                                    fileName = fileName?.Replace("/", "∕");
+                                    fileName = fileName?.Replace(":", "꞉");
                                     if (IncludeExtention(request, fileName))
+                                    {
                                         project.AddItem(fileName, content, path.ToArray());
+                                    }
                                 }
                             }
                         }
