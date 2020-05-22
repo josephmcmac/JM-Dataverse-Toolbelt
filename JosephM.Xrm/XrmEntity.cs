@@ -672,6 +672,10 @@ namespace JosephM.Xrm
             var fieldValue = entity.GetField(fieldName);
             if (fieldValue == null)
                 return new Entity[] { };
+            else if(fieldValue is Entity[] array)
+            {
+                return array;
+            }
             else
             {
                 return ((EntityCollection)fieldValue).Entities;
