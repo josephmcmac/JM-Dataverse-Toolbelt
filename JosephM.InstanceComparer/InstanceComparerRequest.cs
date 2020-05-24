@@ -13,8 +13,7 @@ namespace JosephM.InstanceComparer
     [Group(Sections.Connections, true, 10)]
     [Group(Sections.CompareOptions, true, order: 20, selectAll: true)]
     [Group(Sections.GeneralOptions, true, order: 25)]
-    [Group(Sections.DataComparisonOptions, true, order: 30)]
-    [Group(Sections.EntityMetadataComparisonOptions, true, order: 40)]
+    [Group(Sections.TypesToInclude, true, order: 30)]
     public class InstanceComparerRequest : ServiceRequestBase
     {
         public InstanceComparerRequest()
@@ -115,22 +114,24 @@ namespace JosephM.InstanceComparer
         [DisplayOrder(9000)]
         public bool Data { get; set; }
 
+        [DisplayName("Entity Types for Data Comparison")]
         [GridWidth(400)]
         [RequiredProperty]
-        [Group(Sections.DataComparisonOptions)]
+        [Group(Sections.TypesToInclude)]
         [PropertyInContextByPropertyValue(nameof(Data), true)]
         [PropertyInContextByPropertyNotNull(nameof(ConnectionOne))]
         public IEnumerable<InstanceCompareDataCompare> DataComparisons { get; set; }
 
-        [GridWidth(110)]
-        [Group(Sections.EntityMetadataComparisonOptions)]
+        [GridWidth(390)]
+        [Group(Sections.TypesToInclude)]
         [DisplayOrder(10)]
         [PropertyInContextByPropertyValue(nameof(Entities), true)]
-        [DisplayName("All Types")]
+        [DisplayName("All Entity Type Metadata")]
         public bool AllTypesForEntityMetadata { get; set; }
 
-        [Group(Sections.EntityMetadataComparisonOptions)]
-        [DisplayOrder(20)]
+        [DisplayName("Entity Types for Metadata Comparison")]
+        [Group(Sections.TypesToInclude)]
+        [DisplayOrder(395)]
         [RequiredProperty]
         [PropertyInContextByPropertyValue(nameof(Entities), true)]
         [PropertyInContextByPropertyValue(nameof(AllTypesForEntityMetadata), false)]
@@ -172,8 +173,7 @@ namespace JosephM.InstanceComparer
             public const string Connections = "Select The Saved Connections For The CRM Instances To Compare";
             public const string CompareOptions = "Compare Options";
             public const string GeneralOptions = "General Options";
-            public const string DataComparisonOptions = "Data Comparison Options";
-            public const string EntityMetadataComparisonOptions = "Entity Metadata Comparison Options";
+            public const string TypesToInclude = "Types to Include";
         }
     }
 }
