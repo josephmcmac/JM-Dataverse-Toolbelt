@@ -1893,7 +1893,7 @@ namespace JosephM.InstanceComparer
                         var entityId1 = parentRecordType1 == null ? null : ServiceOne.GetRecordTypeMetadata(parentRecordType1).MetadataId;
                         additionalParams1 = "entityId=" + entityId1;
                         var parentRecordType2 = matchingFieldMetadata2?.RecordType;
-                        var entityId2 = parentRecordType2 == null ? null : ServiceOne.GetRecordTypeMetadata(parentRecordType2).MetadataId;
+                        var entityId2 = parentRecordType2 == null ? null : ServiceTwo.GetRecordTypeMetadata(parentRecordType2).MetadataId;
                         additionalParams2 = "entityId=" + entityId2;
                     }
                 }
