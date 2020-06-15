@@ -240,17 +240,25 @@ namespace JosephM.Xrm.Vsix.Application
         public IEnumerable<IVisualStudioProject> GetProjects(Project project)
         {
             var results = new List<IVisualStudioProject>();
-            if (!string.IsNullOrWhiteSpace(project.FileName))
-                results.Add(new VisualStudioProject(project));
-            else if (project.ProjectItems != null)
+            try
             {
-                foreach (ProjectItem projectItem in project.ProjectItems)
+                if (!string.IsNullOrWhiteSpace(project.FileName))
+                    results.Add(new VisualStudioProject(project));
+                else if (project.ProjectItems != null)
                 {
-                    if (projectItem.SubProject is Project)
+                    foreach (ProjectItem projectItem in project.ProjectItems)
                     {
-                        results.AddRange(GetProjects(projectItem.SubProject as Project));
+                        if (projectItem.SubProject is Project)
+                        {
+                            results.AddRange(GetProjects(projectItem.SubProject as Project));
+                        }
                     }
                 }
+            }
+            catch(Exception)
+            {
+                //unloaded projects throw error when getting the FileName
+                //only used for autocomplete so lets just suppress
             }
             return results;
         }
