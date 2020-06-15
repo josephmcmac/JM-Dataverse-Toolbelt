@@ -1,9 +1,5 @@
-﻿#region
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JosephM.Core.FieldType;
-
-#endregion
 
 namespace JosephM.Record.Metadata
 {

@@ -66,5 +66,7 @@ namespace JosephM.Record.IService
         string FormulaDefinition { get; }
         [Hidden]
         string AutonumberFormat { get; }
+        [Hidden]
+        bool HasFieldSecurity { get; }
     }
 }

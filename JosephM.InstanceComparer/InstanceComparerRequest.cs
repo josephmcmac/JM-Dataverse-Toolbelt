@@ -79,6 +79,10 @@ namespace JosephM.InstanceComparer
         public bool SecurityRoles { get; set; }
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]
+        [DisplayOrder(75)]
+        public bool FieldSecurityProfiles { get; set; }
+        [GridWidth(110)]
+        [Group(Sections.CompareOptions)]
         [DisplayOrder(80)]
         public bool Dashboards { get; set; }
         [GridWidth(110)]
@@ -108,6 +112,11 @@ namespace JosephM.InstanceComparer
         [Group(Sections.CompareOptions)]
         [DisplayOrder(110)]
         public bool Apps { get; set; }
+
+        [GridWidth(110)]
+        [Group(Sections.CompareOptions)]
+        [DisplayOrder(120)]
+        public bool OrganisationSettings { get; set; }
 
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]

@@ -1,11 +1,7 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using JosephM.Record.IService;
-
-#endregion
 
 namespace JosephM.Record.Metadata
 {
@@ -140,5 +136,47 @@ namespace JosephM.Record.Metadata
                 return false;
             }
         }
+
+        public string PrimaryImage => null;
+
+        public string Colour => null;
+
+        public bool BusinessProcessEnabled => false;
+
+        public string IconSmall => null;
+
+        public string IconMedium => null;
+
+        public string IconLarge => null;
+
+        public string IconVector => null;
+
+        public bool OneNote => false;
+
+        public bool AccessTeams => false;
+
+        public bool AutoRouteToOwner => false;
+
+        public bool KnowledgeManagement => false;
+
+        public bool Slas => false;
+
+        public bool DuplicateDetection => false;
+
+        public bool Mobile => false;
+
+        public bool MobileClient => false;
+
+        public bool MobileClientReadOnly => false;
+
+        public bool MobileClientOffline => false;
+
+        public string MobileOfflineFilters => null;
+
+        public bool ReadingPane => false;
+
+        public bool HelpUrlEnabled => false;
+
+        public string HelpUrl => null;
     }
 }

@@ -10,7 +10,7 @@ namespace JosephM.CustomisationExporter.Exporter
             string fieldSchemaName, RecordFieldType fieldType, bool isCustomField, bool isMandatory, string description,
             bool isPrimaryField, bool audit, bool searchable, bool displayInRelated, string referencedType,
             int maxLength, string textFormat, string integerFormat, string dateBehaviour, bool includeTime, string minValue, string maxValue,
-            string decimalPrecision, string picklistOptions, string metadataId, bool isMultiSelect)
+            string decimalPrecision, string picklistOptions, string metadataId, bool isMultiSelect, bool hasFieldSecurity)
         {
             DecimalPrecision = decimalPrecision;
             RecordTypeSchemaName = recordTypeSchemaName;
@@ -39,6 +39,7 @@ namespace JosephM.CustomisationExporter.Exporter
             MetadataId = metadataId;
 
             IsMultiSelect = isMultiSelect;
+            HasFieldSecurity = hasFieldSecurity;
         }
 
         [DisplayName(Headings.Fields.RecordTypeSchemaName)]
@@ -109,6 +110,8 @@ namespace JosephM.CustomisationExporter.Exporter
 
         [DisplayName(Headings.Fields.IsMultiSelect)]
         public bool IsMultiSelect { get; set; }
+
+        public bool HasFieldSecurity { get; set; }
 
         public string RecordTypeLabel { get; set; }
         public bool IsCustomField { get; set; }

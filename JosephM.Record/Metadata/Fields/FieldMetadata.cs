@@ -187,5 +187,7 @@ namespace JosephM.Record.Metadata
         }
 
         public string AutonumberFormat { get; set; }
+
+        public bool HasFieldSecurity { get; set; }
     }
 }

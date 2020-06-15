@@ -45,6 +45,7 @@ namespace JosephM.InstanceComparer
             AppendPlugins(processContainer);
             AppendOptions(processContainer);
             AppendSecurityRoles(processContainer);
+            AppendFieldSecurities(processContainer);
             AppendDashboards(processContainer);
             AppendEmailTemplates(processContainer);
             AppendReports(processContainer);
@@ -52,7 +53,7 @@ namespace JosephM.InstanceComparer
             AppendSlas(processContainer);
             AppendRoutingRules(processContainer);
             AppendApps(processContainer);
-
+            AppendOrganisationSettings(processContainer);
             AppendData(processContainer);
 
             var numberOfDataToProcess = processContainer.Request.Data
@@ -83,6 +84,74 @@ namespace JosephM.InstanceComparer
                 response.Message = "Differences Were Found Between The Environments";
             else
                 response.Message = "No Difference Were Found";
+        }
+
+        private void AppendOrganisationSettings(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.OrganisationSettings)
+                return;
+
+            var organisationSettingsCompareParams = new ProcessCompareParams("Organisation Settings",
+                Entities.organization,
+                Fields.organization_.name,
+                Fields.organization_.name,
+                null,
+                processContainer.ServiceOne.GetFields(Entities.organization)
+                .Except(new[]
+                {
+                    Fields.organization_.name,
+                    Fields.organization_.businessclosurecalendarid,
+                    Fields.organization_.createdon,
+                    Fields.organization_.createdby,
+                    Fields.organization_.createdonbehalfby,
+                    Fields.organization_.modifiedon,
+                    Fields.organization_.modifiedby,
+                    Fields.organization_.modifiedonbehalfby,
+                    Fields.organization_.currentimportsequencenumber,
+                    Fields.organization_.currentparsedtablenumber,
+                    Fields.organization_.defaultthemedata,
+                    Fields.organization_.delegatedadminuserid,
+                    Fields.organization_.featureset,
+                    Fields.organization_.highcontrastthemedata,
+                    Fields.organization_.integrationuserid,
+                    Fields.organization_.organizationid,
+                    Fields.organization_.privreportinggroupid,
+                    Fields.organization_.privreportinggroupname,
+                    Fields.organization_.privilegeusergroupid,
+                    Fields.organization_.reportinggroupid,
+                    Fields.organization_.reportinggroupname,
+                    Fields.organization_.sqlaccessgroupid,
+                    Fields.organization_.sqlaccessgroupname,
+                    Fields.organization_.supportuserid,
+                    Fields.organization_.systemuserid,
+                }).ToArray());
+            organisationSettingsCompareParams.AddConversionObject(Fields.organization_.name, new ProcessCompareParams.ReturnOrganisationSettings(), new ProcessCompareParams.ReturnOrganisationSettings());
+            processContainer.Comparisons.Add(organisationSettingsCompareParams);
+        }
+
+        private void AppendFieldSecurities(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.FieldSecurityProfiles)
+                return;
+
+            var fieldSecurityCompareParams = new ProcessCompareParams("Field Security Profiles",
+                Entities.fieldsecurityprofile,
+                Fields.fieldsecurityprofile_.name,
+                Fields.fieldsecurityprofile_.name,
+                null,
+                new[]
+                {
+                    Fields.fieldsecurityprofile_.description
+                });
+
+            var fieldSecurityItemCompareParams = new ProcessCompareParams("Field Security Permission",
+                Entities.fieldpermission, new[] { Fields.fieldpermission_.attributelogicalname, Fields.fieldpermission_.entityname },
+                new[] { Fields.fieldpermission_.entityname, Fields.fieldpermission_.attributelogicalname }, null, new string[] { Fields.fieldpermission_.cancreate, Fields.fieldpermission_.canread, Fields.fieldpermission_.canupdate }
+                , Fields.fieldpermission_.fieldsecurityprofileid, ParentLinkType.Lookup);
+
+            fieldSecurityCompareParams.ChildCompares = new[] { fieldSecurityItemCompareParams };
+
+            processContainer.Comparisons.Add(fieldSecurityCompareParams);
         }
 
         private void AppendApps(ProcessContainer processContainer)
@@ -241,7 +310,7 @@ namespace JosephM.InstanceComparer
                 null,
                 new[]
                 {
-                    Fields.sla_.description, Fields.sla_.applicablefrom, Fields.sla_.businesshoursid, Fields.sla_.statuscode, Fields.sla_.slatype, Fields.sla_.allowpauseresume
+                    Fields.sla_.description, Fields.sla_.applicablefrom, Fields.sla_.businesshoursid, Fields.sla_.statuscode, Fields.sla_.slatype, Fields.sla_.allowpauseresume, Fields.sla_.isdefault
                 });
 
             var slaItemCompareParams = new ProcessCompareParams("SLA Items",
@@ -457,7 +526,7 @@ namespace JosephM.InstanceComparer
                     Fields.sdkmessageprocessingstep_.sdkmessageid, Fields.sdkmessageprocessingstep_.sdkmessagefilterid
                     , Fields.sdkmessageprocessingstep_.plugintypeid, Fields.sdkmessageprocessingstep_.eventhandler
                 },
-                Fields.sdkmessageprocessingstep_.name,
+                new[] { Fields.sdkmessageprocessingstep_.name },
                 null,
                 new[]
                 {
@@ -528,7 +597,7 @@ namespace JosephM.InstanceComparer
                     }));
 
             var formCompareParams = new ProcessCompareParams("Form",
-                Entities.systemform, new[] { Fields.systemform_.formid, Fields.systemform_.type }, Fields.systemform_.name,
+                Entities.systemform, new[] { Fields.systemform_.formid, Fields.systemform_.type }, new[] { Fields.systemform_.name },
                 new[] { new Condition(Fields.systemform_.formid, ConditionType.NotNull) },
                 new[] { Fields.systemform_.formpresentation, Fields.systemform_.formxml, Fields.systemform_.formactivationstate, Fields.systemform_.name, Fields.systemform_.description, Fields.systemform_.isdefault },
                  Fields.systemform_.objecttypecode, ParentLinkType.Lookup);
@@ -732,7 +801,7 @@ namespace JosephM.InstanceComparer
                         {
                             fieldForInitialLoad = new List<string>();
                             fieldForInitialLoad.AddRange(processCompareParams.MatchFields);
-                            fieldForInitialLoad.Add(processCompareParams.DisplayField);
+                            fieldForInitialLoad.AddRange(processCompareParams.DisplayFields);
                             fieldForInitialLoad = fieldForInitialLoad.Distinct().ToList();
                         }
 
@@ -1188,8 +1257,8 @@ namespace JosephM.InstanceComparer
             if(config == null)
             {
                 return is2
-                    ? processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField))
-                    : processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
+                    ? string.Join(".", processCompareParams.DisplayFields.Select(f => processCompareParams.ConvertField2(f, item.GetStringField(f))))
+                    : string.Join(".", processCompareParams.DisplayFields.Select(f => processCompareParams.ConvertField1(f, item.GetStringField(f))));
             }
 
             var displayStrings = new List<string>();
@@ -1263,7 +1332,7 @@ namespace JosephM.InstanceComparer
                     return MatchFields.First();
                 }
             }
-            public string DisplayField { get; set; }
+            public IEnumerable<string> DisplayFields { get; set; }
             public IEnumerable<string> FieldsCheckDifference { get; set; }
             public string RecordType { get; set; }
             public string ParentLink { get; set; }
@@ -1314,10 +1383,10 @@ namespace JosephM.InstanceComparer
                 GetObjects = getObjects;
 
                 MatchFields = new[] { keyProperty };
-                DisplayField = keyProperty;
+                DisplayFields = new[] { keyProperty };
                 Type = ProcessCompareType.Objects;
                 Conditions = new Condition[0];
-                FieldsCheckDifference = fieldsCheckDifference ?? new string[0]; ;
+                FieldsCheckDifference = fieldsCheckDifference ?? new string[0];
                 ChildCompares = new ProcessCompareParams[0];
             }
 
@@ -1333,19 +1402,19 @@ namespace JosephM.InstanceComparer
                 IEnumerable<Condition> conditions, IEnumerable<string> fieldsCheckDifference,
                 string parentlink, ParentLinkType? parentLinkType)
                 : this(
-                    context, recordType, new[] { matchField }, displayField, conditions, fieldsCheckDifference,
+                    context, recordType, new[] { matchField }, new[] { displayField }, conditions, fieldsCheckDifference,
                     parentlink, parentLinkType)
             {
             }
 
             public ProcessCompareParams(string context, string recordType, IEnumerable<string> matchFields,
-                string displayField, IEnumerable<Condition> conditions, IEnumerable<string> fieldsCheckDifference,
+                IEnumerable<string> displayFields, IEnumerable<Condition> conditions, IEnumerable<string> fieldsCheckDifference,
                 string parentlink, ParentLinkType? parentLinkType)
             {
                 Context = context;
                 Conditions = conditions ?? new Condition[0];
                 MatchFields = matchFields;
-                DisplayField = displayField;
+                DisplayFields = displayFields;
                 FieldsCheckDifference = fieldsCheckDifference ?? new string[0];
                 RecordType = recordType;
                 ParentLink = parentlink;
@@ -1357,7 +1426,7 @@ namespace JosephM.InstanceComparer
                 : this("Data - " + dataComparison.Type,
                       dataComparison.Type,
                       recordService.GetTypeConfigs().GetComparisonFieldsFor(dataComparison.Type, recordService),
-                      recordService.GetPrimaryField(dataComparison.Type),
+                      new[] { recordService.GetPrimaryField(dataComparison.Type) },
                       new Condition[0],
                       recordService
                             .GetFields(dataComparison.Type)
@@ -1504,6 +1573,14 @@ namespace JosephM.InstanceComparer
                     theString = theString.Replace("\n", "");
                     return theString;
 
+                }
+            }
+
+            public class ReturnOrganisationSettings : ConvertField
+            {
+                public override object Convert(object sourceValue)
+                {
+                    return "Organisation Settings";
                 }
             }
 
@@ -1753,6 +1830,12 @@ namespace JosephM.InstanceComparer
                 if (linkRecordType == Relationships.role_.roleprivileges_association.EntityName)
                 {
                     linkRecordType = Entities.role;
+                    linkId1 = parentId1;
+                    linkId2 = parentId2;
+                }
+                else if (linkRecordType == Entities.fieldpermission)
+                {
+                    linkRecordType = Entities.fieldsecurityprofile;
                     linkId1 = parentId1;
                     linkId2 = parentId2;
                 }
