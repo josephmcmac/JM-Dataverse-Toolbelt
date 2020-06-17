@@ -1,1 +1,75 @@
-{"AddToSolution":true,"Connections":[{"AuthenticationProviderType":3,"DiscoveryServiceAddress":"https:\/\/disco.crm.dynamics.com\/XRMServices\/2011\/Discovery.svc","Domain":null,"Name":"EDX Course Instance","OrganizationUniqueName":"org1f0728f9","Password":{"_password":"AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAF9zNfUtg6kG2YiLbAirEZQAAAAACAAAAAAADZgAAwAAAABAAAAAqDqhxHAgIpOirvU+8WyeBAAAAAASAAACgAAAAEAAAADwm2twsvybw+ujpPP6mjKwYAAAAvCIB+ZNgj6l\/Qf2VUvvreu2DBmX4YlXWFAAAAMbMY64u\/LdiF4PnzfjRYsAfNkR8","<EncryptPassword>k__BackingField":true},"ToolingConnectionId":null,"UseXrmToolingConnector":false,"Username":"admin@CRM426212.onmicrosoft.com","Active":false,"HideActive":false},{"AuthenticationProviderType":1,"DiscoveryServiceAddress":"http:\/\/10.160.6.100\/XRMServices\/2011\/Discovery.svc","Domain":"swvic","Name":"CrmAuto","OrganizationUniqueName":"CRMAuto","Password":{"_password":"AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAqctS+pQbbEW3zKiQd1dQXgAAAAACAAAAAAADZgAAwAAAABAAAABRJA6CZiFBZ9W9uUxuMmsrAAAAAASAAACgAAAAEAAAAHBiGictyd4m9Zm76JbPR6EYAAAAD18dFSY5Mbuq0Iy4cvSdIyhoVpvK7\/iRFAAAAGrYhdR5WjmvM43tT25K2zAml2Gl","<EncryptPassword>k__BackingField":true},"ToolingConnectionId":null,"UseXrmToolingConnector":false,"Username":"administrator","Active":false,"HideActive":false},{"AuthenticationProviderType":3,"DiscoveryServiceAddress":"https:\/\/disco.crm6.dynamics.com\/XRMServices\/2011\/Discovery.svc","Domain":null,"Name":"Online Trial","OrganizationUniqueName":"org3b30ac77","Password":{"_password":"AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAF9zNfUtg6kG2YiLbAirEZQAAAAACAAAAAAADZgAAwAAAABAAAAAWysf9toCTvd8++TX5DXx9AAAAAASAAACgAAAAEAAAANJnKjjoLHZIob0isfl9FM0YAAAAUbF8rbxwL0Eq917cqyXoAZX6IiaF6o83FAAAANYyURdGisjHDACPYxpJ\/bcJHs3n","<EncryptPassword>k__BackingField":true},"ToolingConnectionId":null,"UseXrmToolingConnector":false,"Username":"joseph@mcgregor2019e.onmicrosoft.com","Active":false,"HideActive":false},{"AuthenticationProviderType":1,"DiscoveryServiceAddress":"http:\/\/10.160.6.100\/XRMServices\/2011\/Discovery.svc","Domain":"swvic","Name":"AWS VM","OrganizationUniqueName":"JOSEPHM","Password":{"_password":"AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAiHxRBid2202txyVFWrt8wQAAAAACAAAAAAADZgAAwAAAABAAAADleltRhqTMTi\/TEteKFqLvAAAAAASAAACgAAAAEAAAANEnAbt\/LheimKwzmQtYbuQYAAAAMe5y2L0VLxehcnBZWcjzUvdQUl4QIBD7FAAAAEyG2x4h4DE+lDJ6Rfyi4BGYMMw5","<EncryptPassword>k__BackingField":true},"ToolingConnectionId":null,"UseXrmToolingConnector":false,"Username":"administrator","Active":true,"HideActive":false}],"DeployIntoFieldProjects":[{"ProjectName":"Nope"}],"PluginProjects":[{"ProjectName":"Nope"}],"Solution":{"Id":"754f76af-1340-4264-91a8-d7e115e5c857","Name":"TestComponents","RecordType":"solution"},"SolutionDynamicsCrmPrefix":"JosephM","SolutionObjectPrefix":"jmcg","WebResourceProjects":[{"ProjectName":"Nope"}]}
+{
+  "AddToSolution": true,
+  "Connections": [
+    {
+      "AuthenticationProviderType": 3,
+      "DiscoveryServiceAddress": "https:\/\/disco.crm.dynamics.com\/XRMServices\/2011\/Discovery.svc",
+      "Domain": null,
+      "Name": "CDX https:\/\/cdx.transform.microsoft.com",
+      "OrganizationUniqueName": "org7ae45537",
+      "Password": {
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAqqxr+OiUaU6nPa5Z1GLhhgAAAAACAAAAAAADZgAAwAAAABAAAABfEmjMa+vjxJGX1l\/JwtKtAAAAAASAAACgAAAAEAAAAEp7PjhqD9mdXeqhSS7025QYAAAATRWyOBqRKhT2Mxk11Pi4XLZrYAOI7vvHFAAAAFdcoGSSA4K7nN1vJyEY3F199kfT",
+        "<EncryptPassword>k__BackingField": true
+      },
+      "ToolingConnectionId": null,
+      "UseXrmToolingConnector": false,
+      "Username": "admin@CRM840007.onmicrosoft.com",
+      "Active": true,
+      "HideActive": false
+    },
+    {
+      "AuthenticationProviderType": 1,
+      "DiscoveryServiceAddress": "http:\/\/10.160.6.100\/XRMServices\/2011\/Discovery.svc",
+      "Domain": "swvic",
+      "Name": "CrmAuto",
+      "OrganizationUniqueName": "CRMAuto",
+      "Password": {
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAqctS+pQbbEW3zKiQd1dQXgAAAAACAAAAAAADZgAAwAAAABAAAABRJA6CZiFBZ9W9uUxuMmsrAAAAAASAAACgAAAAEAAAAHBiGictyd4m9Zm76JbPR6EYAAAAD18dFSY5Mbuq0Iy4cvSdIyhoVpvK7\/iRFAAAAGrYhdR5WjmvM43tT25K2zAml2Gl",
+        "<EncryptPassword>k__BackingField": true
+      },
+      "ToolingConnectionId": null,
+      "UseXrmToolingConnector": false,
+      "Username": "administrator",
+      "Active": false,
+      "HideActive": false
+    },
+    {
+      "AuthenticationProviderType": 1,
+      "DiscoveryServiceAddress": "http:\/\/10.160.6.100\/XRMServices\/2011\/Discovery.svc",
+      "Domain": "swvic",
+      "Name": "AWS VM",
+      "OrganizationUniqueName": "JOSEPHM",
+      "Password": {
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAiHxRBid2202txyVFWrt8wQAAAAACAAAAAAADZgAAwAAAABAAAADleltRhqTMTi\/TEteKFqLvAAAAAASAAACgAAAAEAAAANEnAbt\/LheimKwzmQtYbuQYAAAAMe5y2L0VLxehcnBZWcjzUvdQUl4QIBD7FAAAAEyG2x4h4DE+lDJ6Rfyi4BGYMMw5",
+        "<EncryptPassword>k__BackingField": true
+      },
+      "ToolingConnectionId": null,
+      "UseXrmToolingConnector": false,
+      "Username": "administrator",
+      "Active": false,
+      "HideActive": false
+    }
+  ],
+  "DeployIntoFieldProjects": [
+    {
+      "ProjectName": "Nope"
+    }
+  ],
+  "PluginProjects": [
+    {
+      "ProjectName": "Nope"
+    }
+  ],
+  "Solution": {
+    "Id": "754f76af-1340-4264-91a8-d7e115e5c857",
+    "Name": "TestComponents",
+    "RecordType": "solution"
+  },
+  "SolutionDynamicsCrmPrefix": "JosephM",
+  "SolutionObjectPrefix": "jmcg",
+  "WebResourceProjects": [
+    {
+      "ProjectName": "Nope"
+    }
+  ]
+}

@@ -1,1 +1,46 @@
-[{"Key":"Active","Value":"True"},{"Key":"HideActive","Value":"False"},{"Key":"Name","Value":"AWS VM"},{"Key":"UseXrmToolingConnector","Value":"False"},{"Key":"ToolingConnectionId","Value":null},{"Key":"AuthenticationProviderType","Value":"ActiveDirectory"},{"Key":"DiscoveryServiceAddress","Value":"http:\/\/10.160.6.100\/XRMServices\/2011\/Discovery.svc"},{"Key":"OrganizationUniqueName","Value":"JOSEPHM"},{"Key":"Domain","Value":"swvic"},{"Key":"Username","Value":"administrator"},{"Key":"Password","Value":"AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAiHxRBid2202txyVFWrt8wQAAAAACAAAAAAADZgAAwAAAABAAAADleltRhqTMTi\/TEteKFqLvAAAAAASAAACgAAAAEAAAANEnAbt\/LheimKwzmQtYbuQYAAAAMe5y2L0VLxehcnBZWcjzUvdQUl4QIBD7FAAAAEyG2x4h4DE+lDJ6Rfyi4BGYMMw5"}]
+[
+  {
+    "Key": "Active",
+    "Value": "True"
+  },
+  {
+    "Key": "HideActive",
+    "Value": "False"
+  },
+  {
+    "Key": "Name",
+    "Value": "CDX https:\/\/cdx.transform.microsoft.com"
+  },
+  {
+    "Key": "UseXrmToolingConnector",
+    "Value": "False"
+  },
+  {
+    "Key": "ToolingConnectionId",
+    "Value": null
+  },
+  {
+    "Key": "AuthenticationProviderType",
+    "Value": "LiveId"
+  },
+  {
+    "Key": "DiscoveryServiceAddress",
+    "Value": "https:\/\/disco.crm.dynamics.com\/XRMServices\/2011\/Discovery.svc"
+  },
+  {
+    "Key": "OrganizationUniqueName",
+    "Value": "org7ae45537"
+  },
+  {
+    "Key": "Domain",
+    "Value": null
+  },
+  {
+    "Key": "Username",
+    "Value": "admin@CRM840007.onmicrosoft.com"
+  },
+  {
+    "Key": "Password",
+    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAqqxr+OiUaU6nPa5Z1GLhhgAAAAACAAAAAAADZgAAwAAAABAAAABfEmjMa+vjxJGX1l\/JwtKtAAAAAASAAACgAAAAEAAAAEp7PjhqD9mdXeqhSS7025QYAAAATRWyOBqRKhT2Mxk11Pi4XLZrYAOI7vvHFAAAAFdcoGSSA4K7nN1vJyEY3F199kfT"
+  }
+]

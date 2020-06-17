@@ -506,7 +506,8 @@ namespace JosephM.InstanceComparer
                 new[] { new Condition(Fields.pluginassembly_.ishidden, ConditionType.NotEqual, true) },
                 new[] { Fields.pluginassembly_.content, Fields.pluginassembly_.isolationmode, Fields.pluginassembly_.description })
             {
-                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.pluginassembly_.pluginassemblyid, OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly)
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.pluginassembly_.pluginassemblyid, OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly),
+                LoadCompareDataInSets = 25
             };
 
             var pluginTypeCompareParams = new ProcessCompareParams("Plugin Type",
