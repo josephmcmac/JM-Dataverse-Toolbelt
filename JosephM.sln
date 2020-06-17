@@ -714,13 +714,11 @@ Global
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.ActiveCfg = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.Build.0 = Release|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -827,13 +825,11 @@ Global
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|Any CPU.ActiveCfg = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|Any CPU.Build.0 = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|Mixed Platforms.Build.0 = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|x86.ActiveCfg = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|x86.Build.0 = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|Any CPU.ActiveCfg = Release
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|Any CPU.Build.0 = Release
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|Mixed Platforms.ActiveCfg = Release
-		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|Mixed Platforms.Build.0 = Release
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|x86.ActiveCfg = Release
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|x86.Build.0 = Release
 		{F303560E-2FD6-4198-BE27-3EAC2446103C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -968,8 +964,8 @@ Global
 		{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
