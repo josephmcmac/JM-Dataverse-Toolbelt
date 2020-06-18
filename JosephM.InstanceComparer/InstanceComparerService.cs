@@ -487,7 +487,14 @@ namespace JosephM.InstanceComparer
 
             //note the Shared word is used for the url to point to a shared picklist
             var optionCompareParams = new ProcessCompareParams("Shared Picklist Option", typeof(PicklistOption),
-                (s, r) => r.GetSharedPicklistOptions(s).ToArray(),
+                (s, r) =>
+                {
+                    var picklist = r.GetSharedPicklistOptions(s).ToArray();
+                    return picklist == null
+                        || (processContainer.Request.IgnoreObjectTypeCodeDifferences && IsPicklistOfObjectTypeCodes(picklist, r, processContainer))
+                    ? new PicklistOption[0]
+                    : picklist.ToArray();
+                },
                 nameof(PicklistOption.Key),
                 GetReadableProperties(typeof(PicklistOption), null));
 
@@ -572,18 +579,16 @@ namespace JosephM.InstanceComparer
                     }), parentLinkProperty: nameof(IFieldMetadata.RecordType));
             fieldsCompareParams.AddConversionObject(nameof(IFieldMetadata.FormulaDefinition), new ProcessCompareParams.RemoveLeadingXmlDefinitionNode(), new ProcessCompareParams.RemoveLeadingXmlDefinitionNode());
 
-            var ignoreOptionFieldNames = new[]
-            {
-                //these ones are system sets reference object type codes so lets ignore them
-                //may be a better way to identify them but this will do for now
-                "objecttypecode", "targetentity", "baseentitytypecode", "matchingentitytypecode", "baseentitytypecode", "matchingentitytypecode"
-            };
             var fieldsOptionParams = new ProcessCompareParams("Field Options", typeof(PicklistOption),
                 (field, recordType, service) =>
                 {
                     var fieldType = service.GetFieldType(field, recordType);
                     var picklist = service.GetPicklistKeyValues(field, recordType);
-                    return picklist == null || fieldType != RecordFieldType.Picklist ? new PicklistOption[0] : picklist.ToArray();
+                    return picklist == null
+                        || (fieldType != RecordFieldType.Picklist && fieldType != RecordFieldType.Status)
+                        || (processContainer.Request.IgnoreObjectTypeCodeDifferences && IsPicklistOfObjectTypeCodes(picklist, service, processContainer))
+                    ? new PicklistOption[0]
+                    : picklist.ToArray();
                 },
                 nameof(PicklistOption.Key),
                 GetReadableProperties(typeof(PicklistOption), null));
@@ -620,6 +625,31 @@ namespace JosephM.InstanceComparer
             };
 
             processContainer.Comparisons.Add(processCompareParams);
+        }
+
+        private bool IsPicklistOfObjectTypeCodes(IEnumerable<PicklistOption> picklist, IRecordService service, ProcessContainer processContainer)
+        {
+            if (picklist == null)
+                return false;
+
+            //if 80% match to enitty type codes and entity labels
+            //we will assume is a pickist of object type codes
+            double threshold = .8;
+
+            var typeCodes = service == processContainer.ServiceOne
+                ? processContainer.CachedService1ObjectTypeCodes
+                : processContainer.CachedService2ObjectTypeCodes;
+
+            double numberMatched = 0;
+
+            foreach (var item in picklist)
+            {
+                if (typeCodes.ContainsKey(item.Key) && typeCodes[item.Key] == item.Value)
+                {
+                    numberMatched++;
+                }
+            }
+            return (numberMatched / picklist.Count()) > threshold;
         }
 
 
@@ -1758,6 +1788,50 @@ namespace JosephM.InstanceComparer
             public List<InstanceComparerDifference> Differences { get; set; }
             public Dictionary<string, Dictionary<string, List<string>>> MissingManagedSolutionComponents { get; private set; }
             public Dictionary<string, Dictionary<IRecord, IRecord>> MatchedRecordDictionary { get; internal set; }
+
+            private SortedDictionary<string, string> _cachedService1ObjectTypeCodes;
+            public SortedDictionary<string, string> CachedService1ObjectTypeCodes
+            {
+                get
+                {
+                    if (_cachedService1ObjectTypeCodes == null)
+                    {
+                        _cachedService1ObjectTypeCodes = new SortedDictionary<string, string>();
+                        var recordTypes = ServiceOne.GetAllRecordTypes();
+                        foreach(var recordType in recordTypes)
+                        {
+                            var mt = ServiceOne.GetRecordTypeMetadata(recordType);
+                            if(!_cachedService1ObjectTypeCodes.ContainsKey(mt.RecordTypeCode))
+                            {
+                                _cachedService1ObjectTypeCodes.Add(mt.RecordTypeCode, mt.DisplayName);
+                            }
+                        }
+                    }
+                    return _cachedService1ObjectTypeCodes;
+                }
+            }
+
+            private SortedDictionary<string, string> _cachedService2ObjectTypeCodes;
+            public SortedDictionary<string, string> CachedService2ObjectTypeCodes
+            {
+                get
+                {
+                    if (_cachedService2ObjectTypeCodes == null)
+                    {
+                        _cachedService2ObjectTypeCodes = new SortedDictionary<string, string>();
+                        var recordTypes = ServiceTwo.GetAllRecordTypes();
+                        foreach (var recordType in recordTypes)
+                        {
+                            var mt = ServiceTwo.GetRecordTypeMetadata(recordType);
+                            if (!_cachedService2ObjectTypeCodes.ContainsKey(mt.RecordTypeCode))
+                            {
+                                _cachedService2ObjectTypeCodes.Add(mt.RecordTypeCode, mt.DisplayName);
+                            }
+                        }
+                    }
+                    return _cachedService2ObjectTypeCodes;
+                }
+            }
 
             private SortedDictionary<string, IFieldMetadata> _indexFieldMetadataIdsService1;
             public SortedDictionary<string, IFieldMetadata> IndexFieldMetadataIdsService1
