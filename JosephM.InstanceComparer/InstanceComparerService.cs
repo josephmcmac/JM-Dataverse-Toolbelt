@@ -1539,6 +1539,8 @@ namespace JosephM.InstanceComparer
                     //strips out id in e.g. object="10010"
                     theString = StripStartToEnd(theString, "object=\"", "\"");
                     theString = theString.Replace(" />", "/>");
+                    theString = theString.Replace("  jump", " jump");
+                    theString = theString.Replace("\" >", "\">"); 
                     return theString;
                 }
             }
