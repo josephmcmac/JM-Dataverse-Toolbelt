@@ -60,7 +60,8 @@ namespace JosephM.Xrm.RecordExtract
                 Entities.partnerapplication, Entities.calendarrule, Entities.customeropportunityrole, Entities.multientitysearch, Entities.wizardpage,
                 Entities.authorizationserver, Entities.complexcontrol, Entities.workflowwaitsubscription, Entities.sdkmessagerequestfield,
                 Entities.untrackedemail, Entities.mailboxtrackingfolder, Entities.sharepointdocument, Entities.pluginassembly, Entities.sdkmessageprocessingstep, Entities.sdkmessageprocessingstepimage, Entities.plugintracelog,
-                Entities.solutioncomponent, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_componentlayer, Entities.msdyn_componentlayerdatasource, Entities.msdyn_solutioncomponentdatasource, Entities.msdyn_solutionhistory
+                Entities.solutioncomponent, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_componentlayer, Entities.msdyn_componentlayerdatasource, Entities.msdyn_solutioncomponentdatasource, Entities.msdyn_solutionhistory,
+                Entities.msdyn_nonrelationalds
             };
         }
 

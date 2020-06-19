@@ -99,6 +99,14 @@ namespace JosephM.CustomisationExporter.Exporter
             try
             {
                 var query = new QueryDefinition(Entities.systemform);
+                query.Fields = new[]
+                {
+                    Fields.systemform_.type,
+                    Fields.systemform_.objecttypecode,
+                    Fields.systemform_.name,
+                    Fields.systemform_.description,
+                    Fields.systemform_.formactivationstate
+                };
                 query.Sorts = new List<SortExpression>
                     {
                         new SortExpression(Fields.systemform_.type, SortType.Ascending),
@@ -431,6 +439,17 @@ namespace JosephM.CustomisationExporter.Exporter
             try
             {
                 var query = new QueryDefinition(Entities.pluginassembly);
+                query.Fields = new[]
+                {
+                    Fields.pluginassembly_.pluginassemblyid,
+                    Fields.pluginassembly_.ishidden,
+                    Fields.pluginassembly_.name,
+                    Fields.pluginassembly_.isolationmode,
+                    Fields.pluginassembly_.sourcetype,
+                    Fields.pluginassembly_.version,
+                    Fields.pluginassembly_.modifiedby,
+                    Fields.pluginassembly_.modifiedon
+                };
                 query.RootFilter = new Filter()
                 {
                     Conditions = new List<Condition>
@@ -499,6 +518,27 @@ namespace JosephM.CustomisationExporter.Exporter
             try
             {
                 var query = new QueryDefinition(Entities.workflow);
+                query.Fields = new[]
+                {
+                    Fields.workflow_.statecode,
+                    Fields.workflow_.category,
+                    Fields.workflow_.name,
+                    Fields.workflow_.primaryentity,
+                    Fields.workflow_.mode,
+                    Fields.workflow_.scope,
+                    Fields.workflow_.runas,
+                    Fields.workflow_.ondemand,
+                    Fields.workflow_.subprocess,
+                    Fields.workflow_.triggeroncreate,
+                    Fields.workflow_.triggeronupdateattributelist,
+                    Fields.workflow_.updatestage,
+                    Fields.workflow_.triggerondelete,
+                    Fields.workflow_.deletestage,
+                    Fields.workflow_.istransacted,
+                    Fields.workflow_.syncworkflowlogonfailure,
+                    Fields.workflow_.asyncautodelete,
+                    Fields.workflow_.businessprocesstype
+                };
                 query.RootFilter = new Filter()
                 {
                     Conditions = new List<Condition>
