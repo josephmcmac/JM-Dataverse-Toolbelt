@@ -55,5 +55,47 @@ namespace JosephM.Record.IService
         bool DocumentManagement { get; }
         [Hidden]
         bool QuickCreate { get; }
+        [Hidden]
+        string PrimaryImage { get; }
+        [Hidden]
+        string Colour { get; }
+        [Hidden]
+        bool BusinessProcessEnabled { get; }
+        [Hidden]
+        string IconSmall { get; }
+        [Hidden]
+        string IconMedium { get; }
+        [Hidden]
+        string IconLarge { get; }
+        [Hidden]
+        string IconVector { get; }
+        [Hidden]
+        bool OneNote { get; }
+        [Hidden]
+        bool AccessTeams { get; }
+        [Hidden]
+        bool AutoRouteToOwner { get; }
+        [Hidden]
+        bool KnowledgeManagement { get; }
+        [Hidden]
+        bool Slas { get; }
+        [Hidden]
+        bool DuplicateDetection { get; }
+        [Hidden]
+        bool Mobile { get; }
+        [Hidden]
+        bool MobileClient { get; }
+        [Hidden]
+        bool MobileClientReadOnly { get; }
+        [Hidden]
+        bool MobileClientOffline { get; }
+        [Hidden]
+        string MobileOfflineFilters { get; }
+        [Hidden]
+        bool ReadingPane { get; }
+        [Hidden]
+        bool HelpUrlEnabled { get; }
+        [Hidden]
+        string HelpUrl { get; }
     }
 }

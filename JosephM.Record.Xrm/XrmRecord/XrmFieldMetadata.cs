@@ -313,5 +313,14 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return null;
             }
         }
+
+        public bool HasFieldSecurity
+        {
+            get
+            {
+                var metadata = XrmService.GetFieldMetadata(FieldName, RecordType);
+                return metadata.IsSecured.HasValue && metadata.IsSecured.Value;
+            }
+        }
     }
 }

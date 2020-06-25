@@ -26,7 +26,7 @@ namespace JosephM.XrmModule.Crud
 
         public bool LoadedFromConnection { get; set; }
 
-        public override IEnumerable<string> AdditionalExplicitTypes => new[] { Entities.webresource, Entities.savedqueryvisualization, Entities.userqueryvisualization, Entities.appmodule, Entities.appmodulecomponent, Entities.solutioncomponent, Entities.solution, Entities.timezonedefinition, Entities.activityparty, Entities.userquery, Entities.sitemap, Entities.subject, Entities.systemform, Entities.uom, Entities.savedquery, Entities.calendar, Entities.role, Entities.sdkmessageprocessingstep, Entities.activitymimeattachment, Entities.organization, Entities.usersettings, Entities.productpricelevel };
+        public override IEnumerable<string> AdditionalExplicitTypes => new[] { Entities.webresource, Entities.savedqueryvisualization, Entities.userqueryvisualization, Entities.appmodule, Entities.appmodulecomponent, Entities.solutioncomponent, Entities.solution, Entities.timezonedefinition, Entities.activityparty, Entities.userquery, Entities.sitemap, Entities.subject, Entities.systemform, Entities.uom, Entities.savedquery, Entities.calendar, Entities.role, Entities.sdkmessageprocessingstep, Entities.activitymimeattachment, Entities.organization, Entities.usersettings, Entities.productpricelevel, Entities.fieldpermission };
 
         public XrmRecordService XrmRecordService { get; }
 
@@ -106,7 +106,7 @@ namespace JosephM.XrmModule.Crud
         private string WriteFetchToJavascript(string fetchXml)
         {
             var stringCharacter = "\'";
-            var variableName = "xml";
+            var variableName = "fetchXml";
 
             var fetch = fetchXml;
             if (fetch != null)

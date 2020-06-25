@@ -13,12 +13,14 @@
         <Setter Property="IsReadOnly" Value="True" />
     </Style>
     <Style x:Key="HeadingStyle" TargetType="TextBlock">
-        <Setter Property="Margin" Value="13,13,13,13" />
+        <Setter Property="Margin" Value="13,4,13,4" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
     </Style>
     <Style x:Key="HeadingStyleTextBox" TargetType="TextBox" >
+        <Setter Property="FontSize" Value="11" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="MinWidth" Value="100" />
         <Setter Property="IsReadOnly" Value="True" />

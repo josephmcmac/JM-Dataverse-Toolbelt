@@ -28,7 +28,7 @@ namespace JosephM.RecordCounts
         {
             controller.LogLiteral("Loading Types");
 
-            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary };
+            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds };
 
             var recordTypes = request.AllRecordTypes
                 ? Service.GetAllRecordTypes()

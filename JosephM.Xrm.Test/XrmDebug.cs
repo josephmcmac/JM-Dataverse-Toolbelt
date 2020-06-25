@@ -6,18 +6,24 @@ using System.Linq;
 
 namespace JosephM.Xrm.Test
 {
+    //test brahim
     [TestClass]
     public class XrmDebugScript : XrmTest
     {
         [TestMethod]
         public void XrmDebug()
         {
-            var blah = XrmService.WhoAmI();
+            //DeleteOnlineSampleData();
+
+            //var query = new Microsoft.Xrm.Sdk.Query.QueryExpression(Entities.activitymimeattachment);
+            //var activityJoin = query.AddLink(Entities.email, Fields.activitymimeattachment_.activityid, Fields.emailhash_.activityid);
+
+            //var top1 = XrmService.RetrieveFirst(query);
         }
 
         private void DeleteOnlineSampleData()
         {
-            throw new NotImplementedException("need to turn off plugins for actuals and quote line details");
+            //throw new NotImplementedException("need to turn off plugins for actuals and quote line details");
 
             var toDelete = new[]
             {
@@ -50,20 +56,23 @@ namespace JosephM.Xrm.Test
 
             foreach (var entity in toDelete)
             {
-                var getAll = XrmService.RetrieveAllEntityType(entity);
-                if (entity == "msdyn_project")
+                if (XrmService.EntityExists(entity))
                 {
-                    foreach (var item in getAll)
+                    var getAll = XrmService.RetrieveAllEntityType(entity);
+                    if (entity == "msdyn_project")
                     {
-                        XrmService.Delete(item);
+                        foreach (var item in getAll)
+                        {
+                            XrmService.Delete(item);
+                        }
                     }
-                }
-                else
-                {
-                    var allDelete = XrmService.DeleteMultiple(getAll);
-                    var errors = allDelete.Where(r => r.Fault != null);
-                    foreach (var item in errors)
-                        throw new Exception(item.Fault.Message);
+                    else
+                    {
+                        var allDelete = XrmService.DeleteMultiple(getAll);
+                        var errors = allDelete.Where(r => r.Fault != null);
+                        foreach (var item in errors)
+                            throw new Exception(item.Fault.Message);
+                    }
                 }
             }
         }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -43,6 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SolutionItems\DeviceRegistration.exe = SolutionItems\DeviceRegistration.exe
 		SolutionItems\JosephM.snk = SolutionItems\JosephM.snk
 		SolutionItems\TestAssemblyDeploy\TestAssemblyDeploy.zip = SolutionItems\TestAssemblyDeploy\TestAssemblyDeploy.zip
+		SolutionItems\TestComponents_new_unmanaged.zip = SolutionItems\TestComponents_new_unmanaged.zip
 		SolutionItems\TestComponents_unmanaged.zip = SolutionItems\TestComponents_unmanaged.zip
 	EndProjectSection
 EndProject
@@ -714,13 +715,11 @@ Global
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.ActiveCfg = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.Build.0 = Release|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -827,13 +826,11 @@ Global
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|Any CPU.ActiveCfg = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|Any CPU.Build.0 = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|Mixed Platforms.Build.0 = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|x86.ActiveCfg = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Debug|x86.Build.0 = Debug
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|Any CPU.ActiveCfg = Release
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|Any CPU.Build.0 = Release
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|Mixed Platforms.ActiveCfg = Release
-		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|Mixed Platforms.Build.0 = Release
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|x86.ActiveCfg = Release
 		{B9B0966B-1599-48E6-BAE6-58A0B8FBAAEB}.Release|x86.Build.0 = Release
 		{F303560E-2FD6-4198-BE27-3EAC2446103C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -968,8 +965,8 @@ Global
 		{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

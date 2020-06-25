@@ -120,6 +120,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        public override string Instruction => GetObjectRecordService().GetInstruction(RecordType);
+        public override string Instruction => IsGridFullScreenForm
+            ? null
+            : GetObjectRecordService().GetInstruction(RecordType);
+
+        public bool IsGridFullScreenForm { get; set; }
     }
 }

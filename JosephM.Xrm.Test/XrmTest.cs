@@ -366,10 +366,15 @@ namespace JosephM.Xrm.Test
             {
                 if (!_notCurrentUserId.HasValue)
                 {
+
                     var conditions = new[] { new ConditionExpression("systemuserid", ConditionOperator.NotEqual, CurrentUserId), new ConditionExpression("isdisabled", ConditionOperator.Equal, false), new ConditionExpression("fullname", ConditionOperator.NotEqual, "Support User") };
-                    var user = XrmService.RetrieveFirst(XrmService.BuildQuery("systemuser", new string[0], conditions, null));
+                    var query = XrmService.BuildQuery("systemuser", new string[0], conditions, null);
+                    var roleAssociationLink = query.AddLink(Relationships.systemuser_.systemuserroles_association.EntityName, Fields.systemuser_.systemuserid, Fields.systemuser_.systemuserid);
+                    var roleLink = roleAssociationLink.AddLink(Entities.role, Fields.role_.roleid, Fields.role_.roleid);
+                    roleLink.LinkCriteria.AddCondition(new ConditionExpression(Fields.role_.name, ConditionOperator.Equal, "System Administrator"));
+                    var user = XrmService.RetrieveFirst(query);
                     if (user == null)
-                        throw new NullReferenceException("Could not find other user");
+                        throw new NullReferenceException("Could not find other system administrator user");
                     _notCurrentUserId = user.Id;
                 }
                 return _notCurrentUserId.Value;

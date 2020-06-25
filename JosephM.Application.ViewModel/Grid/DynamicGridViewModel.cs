@@ -329,6 +329,23 @@ namespace JosephM.Application.ViewModel.Grid
         }
         public XrmButtonViewModel AddMultipleRowButton { get; set; }
 
+        public bool CanExpandGrid { get { return ExpandGrid != null; } }
+        private Action _expandGrid;
+
+        public Action ExpandGrid
+        {
+            get { return _expandGrid; }
+            set
+            {
+                _expandGrid = value;
+
+                ExpandGridButton = _expandGrid == null
+                    ? null
+                    : new XrmButtonViewModel("Expand Grid", _expandGrid, ApplicationController);
+            }
+        }
+        public XrmButtonViewModel ExpandGridButton { get; set; }
+
         public string LastSortField { get; set; }
         public bool LastSortAscending { get; set; }
 

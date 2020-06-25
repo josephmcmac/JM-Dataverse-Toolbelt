@@ -12,10 +12,13 @@
         <Setter Property="TextDecorations" Value="Underline" />
     </Style>
     <Style x:Key="SectionContainer" TargetType="Grid" >
-        <Setter Property="Margin" Value="0,0,0,10" />
+        <Setter Property="Margin" Value="0,0,0,0" />
     </Style>
     <Style x:Key="FormSectionsGrid" TargetType="Grid" >
-        <Setter Property="Margin" Value="0,0,0,10" />
+        <Setter Property="Margin" Value="0,0,0,4" />
+    </Style>
+    <Style x:Key="FormActionButton" TargetType="UserControl" >
+        <Setter Property="Margin" Value="4,0,4,0" />
     </Style>
     <DataTemplate x:Key="FieldSectionTemplate">
         <Grid Grid.Row="1">

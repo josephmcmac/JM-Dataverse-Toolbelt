@@ -45,6 +45,7 @@ namespace JosephM.InstanceComparer
             AppendPlugins(processContainer);
             AppendOptions(processContainer);
             AppendSecurityRoles(processContainer);
+            AppendFieldSecurities(processContainer);
             AppendDashboards(processContainer);
             AppendEmailTemplates(processContainer);
             AppendReports(processContainer);
@@ -52,7 +53,7 @@ namespace JosephM.InstanceComparer
             AppendSlas(processContainer);
             AppendRoutingRules(processContainer);
             AppendApps(processContainer);
-
+            AppendOrganisationSettings(processContainer);
             AppendData(processContainer);
 
             var numberOfDataToProcess = processContainer.Request.Data
@@ -83,6 +84,74 @@ namespace JosephM.InstanceComparer
                 response.Message = "Differences Were Found Between The Environments";
             else
                 response.Message = "No Difference Were Found";
+        }
+
+        private void AppendOrganisationSettings(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.OrganisationSettings)
+                return;
+
+            var organisationSettingsCompareParams = new ProcessCompareParams("Organisation Settings",
+                Entities.organization,
+                Fields.organization_.name,
+                Fields.organization_.name,
+                null,
+                processContainer.ServiceOne.GetFields(Entities.organization)
+                .Except(new[]
+                {
+                    Fields.organization_.name,
+                    Fields.organization_.businessclosurecalendarid,
+                    Fields.organization_.createdon,
+                    Fields.organization_.createdby,
+                    Fields.organization_.createdonbehalfby,
+                    Fields.organization_.modifiedon,
+                    Fields.organization_.modifiedby,
+                    Fields.organization_.modifiedonbehalfby,
+                    Fields.organization_.currentimportsequencenumber,
+                    Fields.organization_.currentparsedtablenumber,
+                    Fields.organization_.defaultthemedata,
+                    Fields.organization_.delegatedadminuserid,
+                    Fields.organization_.featureset,
+                    Fields.organization_.highcontrastthemedata,
+                    Fields.organization_.integrationuserid,
+                    Fields.organization_.organizationid,
+                    Fields.organization_.privreportinggroupid,
+                    Fields.organization_.privreportinggroupname,
+                    Fields.organization_.privilegeusergroupid,
+                    Fields.organization_.reportinggroupid,
+                    Fields.organization_.reportinggroupname,
+                    Fields.organization_.sqlaccessgroupid,
+                    Fields.organization_.sqlaccessgroupname,
+                    Fields.organization_.supportuserid,
+                    Fields.organization_.systemuserid,
+                }).ToArray());
+            organisationSettingsCompareParams.AddConversionObject(Fields.organization_.name, new ProcessCompareParams.ReturnOrganisationSettings(), new ProcessCompareParams.ReturnOrganisationSettings());
+            processContainer.Comparisons.Add(organisationSettingsCompareParams);
+        }
+
+        private void AppendFieldSecurities(ProcessContainer processContainer)
+        {
+            if (!processContainer.Request.FieldSecurityProfiles)
+                return;
+
+            var fieldSecurityCompareParams = new ProcessCompareParams("Field Security Profiles",
+                Entities.fieldsecurityprofile,
+                Fields.fieldsecurityprofile_.name,
+                Fields.fieldsecurityprofile_.name,
+                null,
+                new[]
+                {
+                    Fields.fieldsecurityprofile_.description
+                });
+
+            var fieldSecurityItemCompareParams = new ProcessCompareParams("Field Security Permission",
+                Entities.fieldpermission, new[] { Fields.fieldpermission_.attributelogicalname, Fields.fieldpermission_.entityname },
+                new[] { Fields.fieldpermission_.entityname, Fields.fieldpermission_.attributelogicalname }, null, new string[] { Fields.fieldpermission_.cancreate, Fields.fieldpermission_.canread, Fields.fieldpermission_.canupdate }
+                , Fields.fieldpermission_.fieldsecurityprofileid, ParentLinkType.Lookup);
+
+            fieldSecurityCompareParams.ChildCompares = new[] { fieldSecurityItemCompareParams };
+
+            processContainer.Comparisons.Add(fieldSecurityCompareParams);
         }
 
         private void AppendApps(ProcessContainer processContainer)
@@ -241,7 +310,7 @@ namespace JosephM.InstanceComparer
                 null,
                 new[]
                 {
-                    Fields.sla_.description, Fields.sla_.applicablefrom, Fields.sla_.businesshoursid, Fields.sla_.statuscode, Fields.sla_.slatype, Fields.sla_.allowpauseresume
+                    Fields.sla_.description, Fields.sla_.applicablefrom, Fields.sla_.businesshoursid, Fields.sla_.statuscode, Fields.sla_.slatype, Fields.sla_.allowpauseresume, Fields.sla_.isdefault
                 });
 
             var slaItemCompareParams = new ProcessCompareParams("SLA Items",
@@ -418,7 +487,14 @@ namespace JosephM.InstanceComparer
 
             //note the Shared word is used for the url to point to a shared picklist
             var optionCompareParams = new ProcessCompareParams("Shared Picklist Option", typeof(PicklistOption),
-                (s, r) => r.GetSharedPicklistOptions(s).ToArray(),
+                (s, r) =>
+                {
+                    var picklist = r.GetSharedPicklistOptions(s).ToArray();
+                    return picklist == null
+                        || (processContainer.Request.IgnoreObjectTypeCodeDifferences && IsPicklistOfObjectTypeCodes(picklist, r, processContainer))
+                    ? new PicklistOption[0]
+                    : picklist.ToArray();
+                },
                 nameof(PicklistOption.Key),
                 GetReadableProperties(typeof(PicklistOption), null));
 
@@ -437,7 +513,8 @@ namespace JosephM.InstanceComparer
                 new[] { new Condition(Fields.pluginassembly_.ishidden, ConditionType.NotEqual, true) },
                 new[] { Fields.pluginassembly_.content, Fields.pluginassembly_.isolationmode, Fields.pluginassembly_.description })
             {
-                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.pluginassembly_.pluginassemblyid, OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly)
+                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.pluginassembly_.pluginassemblyid, OptionSets.SolutionComponent.ObjectTypeCode.PluginAssembly),
+                LoadCompareDataInSets = 25
             };
 
             var pluginTypeCompareParams = new ProcessCompareParams("Plugin Type",
@@ -457,7 +534,7 @@ namespace JosephM.InstanceComparer
                     Fields.sdkmessageprocessingstep_.sdkmessageid, Fields.sdkmessageprocessingstep_.sdkmessagefilterid
                     , Fields.sdkmessageprocessingstep_.plugintypeid, Fields.sdkmessageprocessingstep_.eventhandler
                 },
-                Fields.sdkmessageprocessingstep_.name,
+                new[] { Fields.sdkmessageprocessingstep_.name },
                 null,
                 new[]
                 {
@@ -502,18 +579,16 @@ namespace JosephM.InstanceComparer
                     }), parentLinkProperty: nameof(IFieldMetadata.RecordType));
             fieldsCompareParams.AddConversionObject(nameof(IFieldMetadata.FormulaDefinition), new ProcessCompareParams.RemoveLeadingXmlDefinitionNode(), new ProcessCompareParams.RemoveLeadingXmlDefinitionNode());
 
-            var ignoreOptionFieldNames = new[]
-            {
-                //these ones are system sets reference object type codes so lets ignore them
-                //may be a better way to identify them but this will do for now
-                "objecttypecode", "targetentity", "baseentitytypecode", "matchingentitytypecode", "baseentitytypecode", "matchingentitytypecode"
-            };
             var fieldsOptionParams = new ProcessCompareParams("Field Options", typeof(PicklistOption),
                 (field, recordType, service) =>
                 {
                     var fieldType = service.GetFieldType(field, recordType);
                     var picklist = service.GetPicklistKeyValues(field, recordType);
-                    return picklist == null || fieldType != RecordFieldType.Picklist ? new PicklistOption[0] : picklist.ToArray();
+                    return picklist == null
+                        || (fieldType != RecordFieldType.Picklist && fieldType != RecordFieldType.Status)
+                        || (processContainer.Request.IgnoreObjectTypeCodeDifferences && IsPicklistOfObjectTypeCodes(picklist, service, processContainer))
+                    ? new PicklistOption[0]
+                    : picklist.ToArray();
                 },
                 nameof(PicklistOption.Key),
                 GetReadableProperties(typeof(PicklistOption), null));
@@ -528,7 +603,7 @@ namespace JosephM.InstanceComparer
                     }));
 
             var formCompareParams = new ProcessCompareParams("Form",
-                Entities.systemform, new[] { Fields.systemform_.formid, Fields.systemform_.type }, Fields.systemform_.name,
+                Entities.systemform, new[] { Fields.systemform_.formid, Fields.systemform_.type }, new[] { Fields.systemform_.name },
                 new[] { new Condition(Fields.systemform_.formid, ConditionType.NotNull) },
                 new[] { Fields.systemform_.formpresentation, Fields.systemform_.formxml, Fields.systemform_.formactivationstate, Fields.systemform_.name, Fields.systemform_.description, Fields.systemform_.isdefault },
                  Fields.systemform_.objecttypecode, ParentLinkType.Lookup);
@@ -550,6 +625,31 @@ namespace JosephM.InstanceComparer
             };
 
             processContainer.Comparisons.Add(processCompareParams);
+        }
+
+        private bool IsPicklistOfObjectTypeCodes(IEnumerable<PicklistOption> picklist, IRecordService service, ProcessContainer processContainer)
+        {
+            if (picklist == null)
+                return false;
+
+            //if 80% match to enitty type codes and entity labels
+            //we will assume is a pickist of object type codes
+            double threshold = .8;
+
+            var typeCodes = service == processContainer.ServiceOne
+                ? processContainer.CachedService1ObjectTypeCodes
+                : processContainer.CachedService2ObjectTypeCodes;
+
+            double numberMatched = 0;
+
+            foreach (var item in picklist)
+            {
+                if (typeCodes.ContainsKey(item.Key) && typeCodes[item.Key] == item.Value)
+                {
+                    numberMatched++;
+                }
+            }
+            return (numberMatched / picklist.Count()) > threshold;
         }
 
 
@@ -732,7 +832,7 @@ namespace JosephM.InstanceComparer
                         {
                             fieldForInitialLoad = new List<string>();
                             fieldForInitialLoad.AddRange(processCompareParams.MatchFields);
-                            fieldForInitialLoad.Add(processCompareParams.DisplayField);
+                            fieldForInitialLoad.AddRange(processCompareParams.DisplayFields);
                             fieldForInitialLoad = fieldForInitialLoad.Distinct().ToList();
                         }
 
@@ -1188,8 +1288,8 @@ namespace JosephM.InstanceComparer
             if(config == null)
             {
                 return is2
-                    ? processCompareParams.ConvertField2(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField))
-                    : processCompareParams.ConvertField1(processCompareParams.DisplayField, item.GetStringField(processCompareParams.DisplayField));
+                    ? string.Join(".", processCompareParams.DisplayFields.Select(f => processCompareParams.ConvertField2(f, item.GetStringField(f))))
+                    : string.Join(".", processCompareParams.DisplayFields.Select(f => processCompareParams.ConvertField1(f, item.GetStringField(f))));
             }
 
             var displayStrings = new List<string>();
@@ -1263,7 +1363,7 @@ namespace JosephM.InstanceComparer
                     return MatchFields.First();
                 }
             }
-            public string DisplayField { get; set; }
+            public IEnumerable<string> DisplayFields { get; set; }
             public IEnumerable<string> FieldsCheckDifference { get; set; }
             public string RecordType { get; set; }
             public string ParentLink { get; set; }
@@ -1314,10 +1414,10 @@ namespace JosephM.InstanceComparer
                 GetObjects = getObjects;
 
                 MatchFields = new[] { keyProperty };
-                DisplayField = keyProperty;
+                DisplayFields = new[] { keyProperty };
                 Type = ProcessCompareType.Objects;
                 Conditions = new Condition[0];
-                FieldsCheckDifference = fieldsCheckDifference ?? new string[0]; ;
+                FieldsCheckDifference = fieldsCheckDifference ?? new string[0];
                 ChildCompares = new ProcessCompareParams[0];
             }
 
@@ -1333,19 +1433,19 @@ namespace JosephM.InstanceComparer
                 IEnumerable<Condition> conditions, IEnumerable<string> fieldsCheckDifference,
                 string parentlink, ParentLinkType? parentLinkType)
                 : this(
-                    context, recordType, new[] { matchField }, displayField, conditions, fieldsCheckDifference,
+                    context, recordType, new[] { matchField }, new[] { displayField }, conditions, fieldsCheckDifference,
                     parentlink, parentLinkType)
             {
             }
 
             public ProcessCompareParams(string context, string recordType, IEnumerable<string> matchFields,
-                string displayField, IEnumerable<Condition> conditions, IEnumerable<string> fieldsCheckDifference,
+                IEnumerable<string> displayFields, IEnumerable<Condition> conditions, IEnumerable<string> fieldsCheckDifference,
                 string parentlink, ParentLinkType? parentLinkType)
             {
                 Context = context;
                 Conditions = conditions ?? new Condition[0];
                 MatchFields = matchFields;
-                DisplayField = displayField;
+                DisplayFields = displayFields;
                 FieldsCheckDifference = fieldsCheckDifference ?? new string[0];
                 RecordType = recordType;
                 ParentLink = parentlink;
@@ -1357,7 +1457,7 @@ namespace JosephM.InstanceComparer
                 : this("Data - " + dataComparison.Type,
                       dataComparison.Type,
                       recordService.GetTypeConfigs().GetComparisonFieldsFor(dataComparison.Type, recordService),
-                      recordService.GetPrimaryField(dataComparison.Type),
+                      new[] { recordService.GetPrimaryField(dataComparison.Type) },
                       new Condition[0],
                       recordService
                             .GetFields(dataComparison.Type)
@@ -1469,6 +1569,8 @@ namespace JosephM.InstanceComparer
                     //strips out id in e.g. object="10010"
                     theString = StripStartToEnd(theString, "object=\"", "\"");
                     theString = theString.Replace(" />", "/>");
+                    theString = theString.Replace("  jump", " jump");
+                    theString = theString.Replace("\" >", "\">"); 
                     return theString;
                 }
             }
@@ -1504,6 +1606,14 @@ namespace JosephM.InstanceComparer
                     theString = theString.Replace("\n", "");
                     return theString;
 
+                }
+            }
+
+            public class ReturnOrganisationSettings : ConvertField
+            {
+                public override object Convert(object sourceValue)
+                {
+                    return "Organisation Settings";
                 }
             }
 
@@ -1679,6 +1789,50 @@ namespace JosephM.InstanceComparer
             public Dictionary<string, Dictionary<string, List<string>>> MissingManagedSolutionComponents { get; private set; }
             public Dictionary<string, Dictionary<IRecord, IRecord>> MatchedRecordDictionary { get; internal set; }
 
+            private SortedDictionary<string, string> _cachedService1ObjectTypeCodes;
+            public SortedDictionary<string, string> CachedService1ObjectTypeCodes
+            {
+                get
+                {
+                    if (_cachedService1ObjectTypeCodes == null)
+                    {
+                        _cachedService1ObjectTypeCodes = new SortedDictionary<string, string>();
+                        var recordTypes = ServiceOne.GetAllRecordTypes();
+                        foreach(var recordType in recordTypes)
+                        {
+                            var mt = ServiceOne.GetRecordTypeMetadata(recordType);
+                            if(!_cachedService1ObjectTypeCodes.ContainsKey(mt.RecordTypeCode))
+                            {
+                                _cachedService1ObjectTypeCodes.Add(mt.RecordTypeCode, mt.DisplayName);
+                            }
+                        }
+                    }
+                    return _cachedService1ObjectTypeCodes;
+                }
+            }
+
+            private SortedDictionary<string, string> _cachedService2ObjectTypeCodes;
+            public SortedDictionary<string, string> CachedService2ObjectTypeCodes
+            {
+                get
+                {
+                    if (_cachedService2ObjectTypeCodes == null)
+                    {
+                        _cachedService2ObjectTypeCodes = new SortedDictionary<string, string>();
+                        var recordTypes = ServiceTwo.GetAllRecordTypes();
+                        foreach (var recordType in recordTypes)
+                        {
+                            var mt = ServiceTwo.GetRecordTypeMetadata(recordType);
+                            if (!_cachedService2ObjectTypeCodes.ContainsKey(mt.RecordTypeCode))
+                            {
+                                _cachedService2ObjectTypeCodes.Add(mt.RecordTypeCode, mt.DisplayName);
+                            }
+                        }
+                    }
+                    return _cachedService2ObjectTypeCodes;
+                }
+            }
+
             private SortedDictionary<string, IFieldMetadata> _indexFieldMetadataIdsService1;
             public SortedDictionary<string, IFieldMetadata> IndexFieldMetadataIdsService1
             {
@@ -1756,6 +1910,12 @@ namespace JosephM.InstanceComparer
                     linkId1 = parentId1;
                     linkId2 = parentId2;
                 }
+                else if (linkRecordType == Entities.fieldpermission)
+                {
+                    linkRecordType = Entities.fieldsecurityprofile;
+                    linkId1 = parentId1;
+                    linkId2 = parentId2;
+                }
                 else if (linkRecordType == Relationships.appmodule_.appmoduleroles_association.EntityName
                     || linkRecordType == Entities.appmodulecomponent)
                 {
@@ -1810,7 +1970,7 @@ namespace JosephM.InstanceComparer
                         var entityId1 = parentRecordType1 == null ? null : ServiceOne.GetRecordTypeMetadata(parentRecordType1).MetadataId;
                         additionalParams1 = "entityId=" + entityId1;
                         var parentRecordType2 = matchingFieldMetadata2?.RecordType;
-                        var entityId2 = parentRecordType2 == null ? null : ServiceOne.GetRecordTypeMetadata(parentRecordType2).MetadataId;
+                        var entityId2 = parentRecordType2 == null ? null : ServiceTwo.GetRecordTypeMetadata(parentRecordType2).MetadataId;
                         additionalParams2 = "entityId=" + entityId2;
                     }
                 }

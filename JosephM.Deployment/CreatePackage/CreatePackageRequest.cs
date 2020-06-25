@@ -99,7 +99,7 @@ namespace JosephM.Deployment.CreatePackage
         [RequiredProperty]
         public string SetVersionPostRelease { get; set; }
 
-        [DisplayName("Include Attached Notes")]
+        [DisplayName("Include Notes & Attachments")]
         [GridWidth(110)]
         [Group(Sections.DataIncluded)]
         [DisplayOrder(1050)]
@@ -115,6 +115,7 @@ namespace JosephM.Deployment.CreatePackage
         [DisplayOrder(1070)]
         [GridWidth(400)]
         [Group(Sections.DataIncludedRecordTypes)]
+        [AllowGridFullScreen]
         public IEnumerable<ExportRecordType> DataToInclude { get; set; }
 
         [Hidden]

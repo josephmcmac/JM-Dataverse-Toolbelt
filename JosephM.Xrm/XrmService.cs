@@ -1172,12 +1172,18 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 case Entities.plugintype:
                 case Entities.sdkmessageprocessingstep:
                 case Entities.sdkmessageprocessingstepimage:
+                case Entities.organization:
                     {
                         return null;
                     }
                 case Entities.solution:
                     {
                         result = string.Format("{0}/tools/solution/edit.aspx?id={1}", WebUrl, id);
+                        break;
+                    }
+                case Entities.fieldsecurityprofile:
+                    {
+                        result = string.Format("{0}/biz/fieldsecurityprofiles/edit.aspx?id={1}", WebUrl, id);
                         break;
                     }
                 case Entities.workflow:

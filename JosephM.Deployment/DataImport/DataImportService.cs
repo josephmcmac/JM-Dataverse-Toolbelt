@@ -1,8 +1,6 @@
-using JosephM.Core.Extentions;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
-using JosephM.Record.IService;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -292,15 +290,15 @@ namespace JosephM.Deployment.DataImport
             var countImported = 0;
             foreach (var recordType in orderedTypes)
             {
+                var displayPrefix = $"Importing {recordType} Records ({countImported + 1}/{countToImport})";
+                dataImportContainer.Controller.UpdateProgress(countImported++, countToImport, string.Format("Importing {0} Records", recordType));
+                dataImportContainer.Controller.UpdateLevel2Progress(0, 1, "Loading");
+
                 if (_cachedRecords.ContainsKey(recordType))
                     _cachedRecords.Remove(recordType);
                 try
                 {
                     dataImportContainer.LoadTargetsToCache(recordType);
-
-                    var displayPrefix = $"Importing {recordType} Records ({countImported + 1}/{countToImport})";
-                    dataImportContainer.Controller.UpdateProgress(countImported++, countToImport, string.Format("Importing {0} Records", recordType));
-                    dataImportContainer.Controller.UpdateLevel2Progress(0, 1, "Loading");
 
                     var thisTypeEntities = dataImportContainer.EntitiesToImport.Where(e => e.LogicalName == recordType).ToList();
                     var importFieldsForEntity = dataImportContainer.GetFieldsToImport(thisTypeEntities, recordType).ToArray();
@@ -877,7 +875,7 @@ namespace JosephM.Deployment.DataImport
             {
                 var recordType = thisTypeEntities.First().LogicalName;
                 var primaryField = XrmService.GetPrimaryNameField(recordType);
-                var ignoreFields = dataImportContainer.GetIgnoreFields();
+                var ignoreFields = dataImportContainer.GetIgnoreFields(recordType);
                 var fieldsDontExist = dataImportContainer.GetFieldsInEntities(thisTypeEntities)
                     .Where(f => !f.Contains("."))
                     .Where(f => !XrmService.FieldExists(f, recordType))
@@ -985,6 +983,7 @@ namespace JosephM.Deployment.DataImport
             var prioritiseOver = new List<KeyValuePair<string, string>>();
             prioritiseOver.Add(new KeyValuePair<string, string>(Entities.team, Entities.queue));
             prioritiseOver.Add(new KeyValuePair<string, string>(Entities.uomschedule, Entities.uom));
+            prioritiseOver.Add(new KeyValuePair<string, string>(Entities.email, Entities.activitymimeattachment));
             foreach (var item in prioritiseOver)
             {
                 //if the first item is after the second item in the list
@@ -1197,7 +1196,7 @@ namespace JosephM.Deployment.DataImport
                 else
                 {
                     if (baseUnitName == null)
-                        throw new NullReferenceException("{Fields.uom_.baseuom} name is required");
+                        throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.uom_.baseuom, Entities.uom)} is required");
                     baseUnitMatchQuery.Criteria.AddCondition(new ConditionExpression(Fields.uom_.name, ConditionOperator.Equal, baseUnitName));
                     var unitGroupLink = baseUnitMatchQuery.AddLink(Entities.uomschedule, Fields.uom_.uomscheduleid, Fields.uomschedule_.uomscheduleid);
                     unitGroupLink.LinkCriteria.AddCondition(new ConditionExpression(Fields.uomschedule_.name, ConditionOperator.Equal, unitGroupName));
@@ -1219,6 +1218,39 @@ namespace JosephM.Deployment.DataImport
                 var unitId = thisEntity.GetLookupGuid(Fields.product_.defaultuomid);
                 if (unitId.HasValue)
                     fieldsToSet.Add(Fields.product_.defaultuomid);
+            }
+            if (thisEntity.LogicalName == Entities.list)
+            {
+                if(!fieldsToSet.Contains(Fields.list_.createdfromcode))
+                {
+                    if(!thisEntity.Contains(Fields.list_.createdfromcode))
+                    {
+                        throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.list_.createdfromcode, Entities.list)} is required");
+                    }
+                    fieldsToSet.Add(Fields.list_.createdfromcode);
+                }
+                if (!fieldsToSet.Contains(Fields.list_.type))
+                {
+                    if (!thisEntity.Contains(Fields.list_.type))
+                    {
+                        throw new NullReferenceException($"{XrmService.GetFieldLabel(Fields.list_.type, Entities.list)} is required");
+                    }
+                    fieldsToSet.Add(Fields.list_.type);
+                }
+            }
+            if (thisEntity.LogicalName == Entities.activitymimeattachment)
+            {
+                if (fieldsToSet.Contains(Fields.activitymimeattachment_.activityid))
+                {
+                    if (fieldsToSet.Contains(Fields.activitymimeattachment_.objecttypecode))
+                    {
+                        fieldsToSet.Remove(Fields.activitymimeattachment_.objecttypecode);
+                    }
+                    if (fieldsToSet.Contains(Fields.activitymimeattachment_.objectid))
+                    {
+                        fieldsToSet.Remove(Fields.activitymimeattachment_.objectid);
+                    }
+                }
             }
         }
 

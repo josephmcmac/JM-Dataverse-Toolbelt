@@ -5,6 +5,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Record.Extentions;
+using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -232,7 +233,17 @@ namespace JosephM.Deployment.ExportXml
                 if (includeNotes)
                 {
                     controller.LogLiteral(string.Format("Querying Notes For {0} Records", type));
-                    var notes = XrmService
+                    //if less than 10k entities query matching ids, else just get all for entity type
+                    var notes = entities.Count() < 10000
+                        ? XrmService.RetrieveAllOrClauses(Entities.annotation,
+                            entities.Select(e =>
+                            {
+                                var filter = new FilterExpression(LogicalOperator.And);
+                                filter.AddCondition(new ConditionExpression(Fields.annotation_.objecttypecode, ConditionOperator.Equal, type));
+                                filter.AddCondition(new ConditionExpression(Fields.annotation_.objectid, ConditionOperator.Equal, e.Id));
+                                return filter;
+                            }), null)
+                        : XrmService
                         .RetrieveAllOrClauses(Entities.annotation,
                             new[] { new ConditionExpression(Fields.annotation_.objecttypecode, ConditionOperator.Equal, type) });
 
@@ -252,6 +263,37 @@ namespace JosephM.Deployment.ExportXml
                             processEntity(note);
                         }
                     }
+                    controller.TurnOffLevel2();
+
+                    if(type == Entities.email)
+                    {
+                        controller.LogLiteral("Querying Email Attachments");
+                        //if less than 10k entities query matching ids, else just get all for entity type
+                        var attachments = entities.Count() < 10000
+                            ? XrmService.RetrieveAllOrClauses(Entities.activitymimeattachment,
+                                entities.Select(e => new ConditionExpression(Fields.activitymimeattachment_.activityid, ConditionOperator.Equal, e.Id)))
+                            : XrmService
+                            .RetrieveAllOrClauses(Entities.activitymimeattachment,
+                                new[] { new ConditionExpression(Fields.activitymimeattachment_.objecttypecode, ConditionOperator.Equal, type) });
+
+                        toDo = attachments.Count();
+                        done = 0;
+                        XrmService.PopulateReferenceNames(attachments
+                            .Select(n => n.GetField(Fields.activitymimeattachment_.activityid))
+                            .Union(attachments.Select(n => n.GetField(Fields.activitymimeattachment_.objectid)))
+                            .Where(rf => rf != null)
+                            .Cast<EntityReference>());
+                        foreach (var attachment in attachments)
+                        {
+                            var objectId = attachment.GetLookupGuid(Fields.activitymimeattachment_.activityid);
+                            if (objectId.HasValue && entities.Select(e => e.Id).Contains(objectId.Value))
+                            {
+                                controller.UpdateLevel2Progress(done++, toDo, "Querying Email Attachments");
+                                processEntity(attachment);
+                            }
+                        }
+                    }
+
                     controller.TurnOffLevel2();
                 }
                 controller.TurnOffLevel2();
