@@ -50,7 +50,7 @@ namespace JosephM.Deployment.Test
             PrepareTests();
             DeleteAll(Entities.email);
 
-            var sqlServer = @"localhost\SQLEXPRESS";
+            var sqlServer = @"LT5CG0110PZT";
             var databaseName = "TestScriptDatabaseImport";
 
             //request with mappings from sql to dynamics
