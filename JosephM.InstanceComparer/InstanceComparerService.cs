@@ -610,7 +610,7 @@ namespace JosephM.InstanceComparer
             formCompareParams.AddConversionObject(Fields.systemform_.formxml, new ProcessCompareParams.RemoveMiscFormXml(), new ProcessCompareParams.RemoveMiscFormXml());
 
             var viewCompareParams = new ProcessCompareParams("View",
-                Entities.savedquery, Fields.savedquery_.savedqueryid, Fields.savedquery_.name,
+                Entities.savedquery, Fields.savedquery_.name, Fields.savedquery_.name,
                 new[] { new Condition(Fields.savedquery_.savedqueryid, ConditionType.NotNull) },
                 new[] { Fields.savedquery_.fetchxml, Fields.savedquery_.layoutxml, Fields.savedquery_.name, Fields.savedquery_.description, Fields.savedquery_.statecode },
                 Fields.savedquery_.returnedtypecode, ParentLinkType.Lookup);
