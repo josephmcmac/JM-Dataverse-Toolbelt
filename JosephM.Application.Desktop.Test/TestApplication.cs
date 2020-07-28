@@ -167,11 +167,26 @@ namespace JosephM.Application.Desktop.Test
 
         public ObjectEntryViewModel GetCompletionViewModel(DialogViewModel dialog)
         {
-            var completionScreen = dialog.Controller.UiItems.First() as CompletionScreenViewModel;
-            Assert.IsNotNull(completionScreen);
-            Assert.IsNotNull(completionScreen.CompletionDetails);
-            LoadForm(completionScreen.CompletionDetails);
-            return completionScreen.CompletionDetails;
+            var uiItem = dialog.Controller.UiItems.First();
+            if(dialog.FatalException != null)
+            {
+                throw dialog.FatalException;
+            }
+            if (uiItem is CompletionScreenViewModel completionScreen)
+            {
+                Assert.IsNotNull(completionScreen.CompletionDetails);
+                LoadForm(completionScreen.CompletionDetails);
+                return completionScreen.CompletionDetails;
+            }
+            if (uiItem is ObjectEntryViewModel entryViewModel)
+            {
+                if(entryViewModel.ValidationPrompt != null)
+                {
+                    Assert.Fail("Validation Message: " + entryViewModel.ValidationPrompt);
+                }
+            }
+            Assert.Fail("Could not get completion screen for dialog");
+            throw new Exception("Huh?");
         }
 
         private TDialog NavigateAndProcessDialog<TDialogModule, TDialog>(object instanceEntered)

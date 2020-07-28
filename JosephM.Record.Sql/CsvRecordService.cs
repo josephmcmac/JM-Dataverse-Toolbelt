@@ -10,6 +10,7 @@ using JosephM.Core.Utility;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
+using JosephM.Spreadsheet;
 
 namespace JosephM.Record.Sql
 {
@@ -45,8 +46,6 @@ namespace JosephM.Record.Sql
         public CsvRecordService(FileReference fileReference)
         {
             FileReference = fileReference;
-
-            CsvUtility.ConstructTextSchema(CsvFolder, CsvNamePart);
         }
 
         public CsvRecordService(string csvName)

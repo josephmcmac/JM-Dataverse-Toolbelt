@@ -906,11 +906,18 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     case AttributeTypeCode.DateTime:
                         {
                             DateTime? temp = null;
-                            if (value is DateTime)
-                                temp = (DateTime)value;
-                            else
+                            if (value is DateTime dt)
                             {
-                                if (!String.IsNullOrWhiteSpace(value.ToString()))
+                                temp = dt;
+                            }
+                            else if (!String.IsNullOrWhiteSpace(value.ToString()))
+                            {
+                                if (value.ToString().All(c => char.IsDigit(c)))
+                                {
+                                    temp = DateTime.FromOADate(double.Parse(value.ToString()));
+                                }
+                                else
+                                {
                                     try
                                     {
                                         temp = DateTime.Parse(value.ToString(), new CultureInfo(datesAmericanFormat ? "en-US" : "en-GB"));
@@ -921,6 +928,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                             "Error Parsing Field " + fieldName + " in entity " + entityType + " value " +
                                             value, ex);
                                     }
+                                }
                             }
                             if (temp != null && temp < MinCrmDateTime)
                                 throw new ArgumentOutOfRangeException("Field " + fieldName + " in entity " + entityType +

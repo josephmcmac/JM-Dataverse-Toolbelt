@@ -10,6 +10,7 @@ using JosephM.Deployment.ImportCsvs;
 using JosephM.Deployment.ImportXml;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Spreadsheet;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Test;
@@ -466,9 +467,8 @@ namespace JosephM.Deployment.Test
             Assert.AreEqual(numberOfSites * 1, webFileAttachmentRecords.Count());
             Assert.AreEqual(numberOfSites * 2, webLinkSetRecords.Count());
             Assert.AreEqual(numberOfSites * 5, webLinkRecords.Count());
-            Assert.AreEqual(numberOfSites * 1, languageRecords.Count());
             Assert.AreEqual(numberOfSites * 1, roleRecords.Count());
-            Assert.AreEqual(numberOfSites * 2, pageRecords.Count());
+            Assert.IsTrue(numberOfSites * 4 == pageRecords.Count() || numberOfSites * 2 == pageRecords.Count());
             Assert.AreEqual(numberOfSites * 1, accessRecords.Count());
             Assert.AreEqual(numberOfSites * 1, accessRoleAssociations.Count());
             Assert.AreEqual(numberOfSites * 1, entityFormRecords.Count());
@@ -487,8 +487,8 @@ namespace JosephM.Deployment.Test
             Assert.AreEqual(1, contentAccessLevelRecords.Count());
 
             //verify the access control rule is correctly linked to the child web page
-            var childWebPage = pageRecords.First(e => e.GetLookupGuid(Fields.adx_webpage_.adx_rootwebpageid).HasValue);
-            Assert.IsTrue(accessRecords.Any(ar => ar.GetLookupGuid(Fields.adx_webpageaccesscontrolrule_.adx_webpageid) == childWebPage.Id));
+            var rootChildWebPage = pageRecords.First(e => e.GetLookupGuid(Fields.adx_webpage_.adx_parentpageid).HasValue && !e.GetLookupGuid(Fields.adx_webpage_.adx_rootwebpageid).HasValue);
+            Assert.IsTrue(accessRecords.Any(ar => ar.GetLookupGuid(Fields.adx_webpageaccesscontrolrule_.adx_webpageid) == rootChildWebPage.Id));
         }
 
         [TestMethod]

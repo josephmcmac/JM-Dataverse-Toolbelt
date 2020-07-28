@@ -25,8 +25,8 @@ namespace JosephM.Spreadsheet.Test
         {
             var fileName = "TestXlsx.xlsx";
             var tabs = ExcelUtility.GetExcelTabNames(fileName);
-            var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(fileName, "Fields");
-            var rows2 = ExcelUtility.SelectPropertyBagsFromExcelTabName(fileName, "Option Sets");
+            var rows = ExcelUtility.SelectPropertyBagsFromExcelTab(fileName, "Fields");
+            var rows2 = ExcelUtility.SelectPropertyBagsFromExcelTab(fileName, "Option Sets");
 
             var fieldName = rows.First().GetFieldAsString("Schema Name");
         }

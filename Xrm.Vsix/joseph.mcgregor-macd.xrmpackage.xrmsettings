@@ -5,6 +5,22 @@
       "AuthenticationProviderType": 3,
       "DiscoveryServiceAddress": "https:\/\/disco.crm.dynamics.com\/XRMServices\/2011\/Discovery.svc",
       "Domain": null,
+      "Name": "CDX https:\/\/cdx.transform.microsoft.com 2",
+      "OrganizationUniqueName": "org01d2a141",
+      "Password": {
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAl5mlp2cibkKtxRpVoUILQQAAAAACAAAAAAADZgAAwAAAABAAAAAEj7uTxWAMw52sgoDEbGKdAAAAAASAAACgAAAAEAAAAL9UasPUuvhsqGqyGSbT\/8UYAAAAqhIq9ZmNJcWtwonR1LZKDgIIMjtjr0DwFAAAAIYuLH05vUOLLpIXwTJhOEXSKgBR",
+        "<EncryptPassword>k__BackingField": true
+      },
+      "ToolingConnectionId": null,
+      "UseXrmToolingConnector": false,
+      "Username": "admin@CRM476006.onmicrosoft.com",
+      "Active": false,
+      "HideActive": false
+    },
+    {
+      "AuthenticationProviderType": 3,
+      "DiscoveryServiceAddress": "https:\/\/disco.crm.dynamics.com\/XRMServices\/2011\/Discovery.svc",
+      "Domain": null,
       "Name": "CDX https:\/\/cdx.transform.microsoft.com",
       "OrganizationUniqueName": "org7ae45537",
       "Password": {

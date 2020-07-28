@@ -9,6 +9,7 @@ using JosephM.Core.FieldType;
 using JosephM.ObjectMapping;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.AppConnection;
 using JosephM.XrmModule.Crud;
@@ -98,9 +99,19 @@ namespace JosephM.XrmModule.Test
 
             DeleteAllPortalData(useRecordService: useRecordService);
 
+            var websiteLanguage = 
+                (useRecordService.XrmService ?? XrmService)
+                .GetFirst(Entities.adx_websitelanguage, Fields.adx_websitelanguage_.adx_name, "English")
+                ??
+                CreateTestRecord(Entities.adx_websitelanguage, new Dictionary<string, object>
+                {
+                    { Fields.adx_websitelanguage_.adx_name, "English" }
+                }, useService: useRecordService.XrmService);
+
             var website1 = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
             {
-                { Fields.adx_website_.adx_name, "Fake Site 1" }
+                { Fields.adx_website_.adx_name, "Fake Site 1" },
+                { Fields.adx_website_.adx_defaultlanguage, websiteLanguage.ToEntityReference() },
             }, useService: useRecordService.XrmService);
             CreateWebsiteRecords(website1, useRecordService: useRecordService);
 
@@ -108,7 +119,8 @@ namespace JosephM.XrmModule.Test
             {
                 var website2 = CreateTestRecord(Entities.adx_website, new Dictionary<string, object>
                 {
-                    { Fields.adx_website_.adx_name, "Fake Site 2" }
+                    { Fields.adx_website_.adx_name, "Fake Site 2" },
+                { Fields.adx_website_.adx_defaultlanguage, websiteLanguage.ToEntityReference() },
                 }, useService: useRecordService.XrmService);
                 CreateWebsiteRecords(website2, useRecordService: useRecordService);
             }
@@ -118,7 +130,6 @@ namespace JosephM.XrmModule.Test
         {
             var typesToDelete = new[]
             {
-                Entities.adx_websitelanguage,
                 Entities.adx_webrole,
                 Entities.adx_webpage,
                 Entities.adx_webpageaccesscontrolrule,
@@ -239,11 +250,6 @@ namespace JosephM.XrmModule.Test
                 { Fields.adx_weblink_.adx_parentweblinkid, weblink2c.ToEntityReference() }
             }, useService: useRecordService.XrmService);
 
-            var websiteLanguage = CreateTestRecord(Entities.adx_websitelanguage, new Dictionary<string, object>
-            {
-                { Fields.adx_websitelanguage_.adx_name, "English" }
-            }, useService: useRecordService.XrmService);
-
             var webRole = CreateTestRecord(Entities.adx_webrole, new Dictionary<string, object>
             {
                 { Fields.adx_webrole_.adx_websiteid, website.ToEntityReference() },
@@ -252,19 +258,21 @@ namespace JosephM.XrmModule.Test
 
             var webPage = CreateTestRecord(Entities.adx_webpage, new Dictionary<string, object>
             {
-                { Fields.adx_webpage_.adx_name, "IScriptWebPage" },
+                { Fields.adx_webpage_.adx_name, "Home" },
                 { Fields.adx_webpage_.adx_websiteid, website.ToEntityReference() },
-                { Fields.adx_webpage_.adx_copy, "<div>Page Copy Parent</div>" }
+                { Fields.adx_webpage_.adx_copy, "<div>Page Copy Parent</div>" },
+                { Fields.adx_webpage_.adx_partialurl, "/" }
             }, useService: useRecordService.XrmService);
             var childWebPage = CreateTestRecord(Entities.adx_webpage, new Dictionary<string, object>
             {
                 { Fields.adx_webpage_.adx_name, "IScriptWebPage" },
                 { Fields.adx_webpage_.adx_websiteid, website.ToEntityReference() },
-                { Fields.adx_webpage_.adx_rootwebpageid, webPage.ToEntityReference() },
-                { Fields.adx_webpage_.adx_webpagelanguageid, websiteLanguage.ToEntityReference() },
+                { Fields.adx_webpage_.adx_parentpageid, webPage.ToEntityReference() },
+                { Fields.adx_webpage_.adx_webpagelanguageid, website.GetField(Fields.adx_website_.adx_defaultlanguage) },
                 { Fields.adx_webpage_.adx_copy, "<div>Page Copy</div>" },
                 { Fields.adx_webpage_.adx_customcss, ".class { color : white }" },
                 { Fields.adx_webpage_.adx_customjavascript, "var blah = 'javascript'" },
+                { Fields.adx_webpage_.adx_partialurl, "IScriptChildWebPage" }
             }, useService: useRecordService.XrmService);
             var webpageAccessControlRule = CreateTestRecord(Entities.adx_webpageaccesscontrolrule, new Dictionary<string, object>
             {

@@ -3,7 +3,9 @@ using JosephM.Application.Desktop.Console;
 using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.Application.Desktop.Module.Themes;
+using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
+using JosephM.Spreadsheet;
 using JosephM.TestModule.AllPropertyTypesCompact;
 using JosephM.TestModule.AllPropertyTypesModule;
 using JosephM.TestModule.TestCrud;
@@ -44,7 +46,20 @@ namespace JosephM.TestDesktopApplication
             app.AddModule<AllPropertyTypesDialogModule>();
             app.AddModule<AllPropertyTypesCompactModule>();
             app.AddModule<TestAppAboutModule>();
+            app.AddModule<TestReadExcelModule>(); 
             app.Run();
+        }
+
+        public class TestReadExcelModule : OptionActionModule
+        {
+            public override string MainOperationName => "Read Excel";
+
+            public override string MenuGroup => "Read Excel";
+
+            public override void DialogCommand()
+            {
+                var blah = SpreadsheetReader.Read(@"C:\Users\joseph.mcgregor-macd\Desktop\temp\Customisations Import Template V2.xlsx", "Fields");
+            }
         }
 
         public class TestAppAboutModule : AboutModule

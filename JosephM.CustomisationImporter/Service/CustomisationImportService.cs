@@ -208,7 +208,7 @@ namespace JosephM.CustomisationImporter.Service
             IEnumerable<PicklistOptionSet>
                 picklistOptionSets, CustomisationImportResponse response)
         {
-            var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
+            var rows = ExcelUtility.SelectPropertyBagsFromExcelTab(excelFile,
                 FieldsTabName);
             var fields = new Dictionary<int,FieldMetadata>();
             foreach (var row in rows)
@@ -671,7 +671,7 @@ namespace JosephM.CustomisationImporter.Service
         {
             var result = new Dictionary<int, Many2ManyRelationshipMetadata>();
 
-            var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
+            var rows = ExcelUtility.SelectPropertyBagsFromExcelTab(excelFile,
                 RelationshipTabName);
             //For each row log errors
             foreach (var row in rows)
@@ -722,7 +722,7 @@ namespace JosephM.CustomisationImporter.Service
         {
             var result = new Dictionary<int, ImportRecordMetadata>();
 
-            var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
+            var rows = ExcelUtility.SelectPropertyBagsFromExcelTab(excelFile,
                 EntityTabName);
             //For each row
             foreach (var row in rows)
@@ -773,7 +773,7 @@ namespace JosephM.CustomisationImporter.Service
             var result = new List<PicklistOptionSet>();
             try
             {
-                var rows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
+                var rows = ExcelUtility.SelectPropertyBagsFromExcelTab(excelFile,
                     OptionSetsTabName);
 
                 rows = rows.Where(row => !row.GetColumnNames().Contains(Headings.OptionSets.Ignore)
@@ -841,7 +841,7 @@ namespace JosephM.CustomisationImporter.Service
         private static ViewMetadata GetView(RecordMetadata recordMetadata, string excelFile, LogController controller, CustomisationImportResponse response)
         {
             var recordType = recordMetadata.SchemaName;
-            var fieldRows = ExcelUtility.SelectPropertyBagsFromExcelTabName(excelFile,
+            var fieldRows = ExcelUtility.SelectPropertyBagsFromExcelTab(excelFile,
                 FieldsTabName);
 
             var viewFields = new List<ViewField>();

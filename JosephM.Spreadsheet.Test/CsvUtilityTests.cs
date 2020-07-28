@@ -1,9 +1,8 @@
-﻿using System;
+﻿using JosephM.Spreadsheet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JosephM.Core.Extentions;
-using JosephM.Core.Utility;
 
 namespace JosephM.Core.Test
 {
@@ -42,11 +41,8 @@ namespace JosephM.Core.Test
         [TestMethod]
         public void CsvUtilityReadCsvTest()
         {
-            Assert.Inconclusive("Need to set the file TestCsv.csv Copy To Output Directory which breaks VSIX build");
-
-            CsvUtility.ConstructTextSchema(null, "TestCsv.csv");
             var rows = CsvUtility.SelectAllRows("TestCsv.csv");
-            Assert.IsTrue(rows.Count() == 3);
+            Assert.IsTrue(rows.Count() == 4);
             var textString = rows.Last().GetFieldAsString("TextStringField");
             Assert.IsTrue(textString.Length >= 300);
             var phoneString = rows.Last().GetFieldAsString("PhoneNumber");

@@ -60,7 +60,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Debug\</OutputPath>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
@@ -179,6 +179,10 @@
     <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
       <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Spreadsheet\JosephM.Spreadsheet.csproj">
+      <Project>{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}</Project>
+      <Name>JosephM.Spreadsheet</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.TestModule\JosephM.TestModule.csproj">
       <Project>{4322b728-aaa7-45f0-9bde-8f227fa8c73d}</Project>

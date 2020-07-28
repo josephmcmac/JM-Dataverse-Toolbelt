@@ -79,7 +79,6 @@
     <Compile Include="ObjectExtentionsTests.cs" />
     <Compile Include="TypeExtentionsTests.cs" />
     <Compile Include="CoreTest.cs" />
-    <Compile Include="CsvUtilityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringEncryptorTests.cs" />
     <Compile Include="StringExtentionsTests.cs" />
@@ -92,13 +91,14 @@
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Spreadsheet\JosephM.Spreadsheet.csproj">
+      <Project>{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}</Project>
+      <Name>JosephM.Spreadsheet</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="JosephM.snk" />
-    <None Include="TestCsv.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

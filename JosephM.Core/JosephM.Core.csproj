@@ -181,7 +181,6 @@
     <Compile Include="Sql\SqlProvider.cs" />
     <Compile Include="Log\ConsoleUserInterface.cs" />
     <Compile Include="Log\IUserInterface.cs" />
-    <Compile Include="Utility\CsvUtility.cs" />
     <Compile Include="Utility\FileUtility.cs" />
     <Compile Include="Sql\QueryRow.cs" />
     <Compile Include="AppConfig\AppConfigManager.cs" />

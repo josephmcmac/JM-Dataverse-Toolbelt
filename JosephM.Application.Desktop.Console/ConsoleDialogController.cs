@@ -1,18 +1,14 @@
-﻿#region
-
-using JosephM.Application.Application;
+﻿using JosephM.Application.Application;
 using JosephM.Application.ViewModel;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Core.Utility;
+using JosephM.Spreadsheet;
 using System;
 using System.IO;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.Application.Desktop.Console
 {

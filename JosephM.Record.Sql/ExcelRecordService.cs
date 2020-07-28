@@ -5,6 +5,8 @@ using JosephM.Core.Sql;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
+using JosephM.Record.Query;
+using JosephM.Record.Service;
 using JosephM.Spreadsheet;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ using System.Linq;
 
 namespace JosephM.Record.Sql
 {
-    public class ExcelRecordService : SqlRecordServiceBase
+    public class ExcelRecordService : RecordServiceBase
     {
         private string ExcelFolder
         {
@@ -99,16 +101,6 @@ namespace JosephM.Record.Sql
             return new RecordMetadata() { SchemaName = recordType, DisplayName = label, CollectionName = label };
         }
 
-        protected override IEnumerable<QueryRow> ExecuteSelect(string selectQuery)
-        {
-            return ExcelUtility.SelectFromExcel(ExcelNameQualified, selectQuery);
-        }
-
-        public override void ExecuteSql(string sql)
-        {
-            ExcelUtility.SelectFromExcel(ExcelNameQualified, sql);
-        }
-
         private string GetRecordType()
         {
             return GetAllRecordTypes().First();
@@ -131,6 +123,45 @@ namespace JosephM.Record.Sql
                 response.AddInvalidReason("Error connecting to Excel file: " + ex.DisplayString());
             }
             return response;
+        }
+
+        public override IRecord NewRecord(string recordType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IRecord Get(string recordType, string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update(IRecord record, IEnumerable<string> fieldToCommit)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string Create(IRecord record, IEnumerable<string> fieldToSet)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Delete(string recordType, string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<IRecord> GetFirstX(string type, int x, IEnumerable<string> fields, IEnumerable<Condition> conditions, IEnumerable<SortExpression> sort)
+        {
+            if(conditions != null && conditions.Any())
+            {
+                throw new NotImplementedException("conditions are not implemented for excel service queries");
+            }
+            if (sort != null && sort.Any())
+            {
+                throw new NotImplementedException("sorts are not implemented for excel service queries");
+            }
+
+            return ExcelUtility.SelectPropertyBagsFromExcelTab(ExcelNameQualified, type).Select(qr => new SqlRecord(type, qr)).ToArray();
         }
     }
 }
