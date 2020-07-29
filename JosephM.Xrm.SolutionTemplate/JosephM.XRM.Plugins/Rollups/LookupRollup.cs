@@ -28,7 +28,7 @@ namespace $safeprojectname$.Rollups
             Filters = new ConditionExpression[] { };
             AddFilter("statecode", ConditionOperator.Equal, 0);
             LinkEntity = null;
-            if(ObjectType != null)
+            if (ObjectType != null)
             {
                 if (ObjectType == typeof(decimal))
                     NullAmount = (decimal)0;

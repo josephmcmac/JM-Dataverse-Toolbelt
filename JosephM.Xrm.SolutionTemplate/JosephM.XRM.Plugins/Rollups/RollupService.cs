@@ -26,9 +26,7 @@ namespace $safeprojectname$.Rollups
             if (plugin.MessageName == PluginMessage.Create
                 && plugin.Stage == PluginStage.PreOperationEvent)
             {
-                var RollupsToProcess = GetRollupsForRollupType(plugin.TargetType)
-                    .Where(a => AllowsDifferenceChange(a.RollupType))
-                    .ToArray();
+                var RollupsToProcess = GetRollupsForRollupType(plugin.TargetType);
                 foreach (var Rollup in RollupsToProcess)
                 {
                     if (Rollup.NullAmount != null)
@@ -38,6 +36,15 @@ namespace $safeprojectname$.Rollups
         }
 
         private void ExecuteDependencyPluginRefresh(XrmEntityPlugin plugin, LookupRollup rollup)
+        {
+            var idsRequireRefresh = GetIdsRequiringRefresh(plugin, rollup);
+            foreach (var id in idsRequireRefresh)
+            {
+                RefreshRollup(id, rollup);
+            }
+        }
+
+        public IEnumerable<Guid> GetIdsRequiringRefresh(XrmEntityPlugin plugin, LookupRollup rollup)
         {
             var idsRequireRefresh = new List<Guid>();
 
@@ -105,20 +112,22 @@ namespace $safeprojectname$.Rollups
                         idsRequireRefresh.Add((Guid)contextLookup);
                 }
             }
-            foreach (var id in idsRequireRefresh)
-            {
-                RefreshRollup(id, rollup);
-            }
+
+            return idsRequireRefresh;
         }
+
         public void RefreshRollup(Guid id, LookupRollup rollup)
         {
             var newValue = GetRollup(rollup, id);
             XrmService.SetFieldIfChanging(rollup.RecordTypeWithRollup, id, rollup.RollupField, newValue);
         }
 
-        private bool AllowsDifferenceChange(RollupType type)
+        private bool AllowsDifferenceChange(LookupRollup rollup)
         {
-            return new[] { RollupType.Count, RollupType.Sum }.Contains(type);
+            //todo implement diffs for links?
+            return
+                new[] { RollupType.Count, RollupType.Sum }.Contains(rollup.RollupType)
+                && rollup.LinkEntity == null;
         }
 
         private void ExecuteDependencyPluginRefreshForDifferenceNotSupported(XrmEntityPlugin plugin)
@@ -126,7 +135,7 @@ namespace $safeprojectname$.Rollups
             var dictionaryForDifferences = new Dictionary<string, Dictionary<Guid, List<KeyValuePair<string, object>>>>();
 
             var RollupsToProcess = GetRollupsForRolledupType(plugin.TargetType)
-                .Where(a => !AllowsDifferenceChange(a.RollupType))
+                .Where(a => !AllowsDifferenceChange(a))
                 .ToArray();
             foreach (var rollup in RollupsToProcess)
             {
@@ -150,7 +159,7 @@ namespace $safeprojectname$.Rollups
             var dictionaryForDifferences = new Dictionary<string, Dictionary<Guid, List<KeyValuePair<string, object>>>>();
 
             var rollupsToProcess = GetRollupsForRolledupType(plugin.TargetType)
-                .Where(a => AllowsDifferenceChange(a.RollupType))
+                .Where(a => AllowsDifferenceChange(a))
                 .ToArray();
 
             if (plugin.IsMessage(PluginMessage.Create, PluginMessage.Update, PluginMessage.Delete)
@@ -251,7 +260,7 @@ namespace $safeprojectname$.Rollups
                             }
                             else if (rollup.RollupType == RollupType.Count)
                             {
-                                addDifferenceToApply(rollup.RecordTypeWithRollup, linkedIdBefore.Value, rollup.RollupField, -1);
+                                addDifferenceToApply(rollup.RecordTypeWithRollup, linkedIdBefore.Value, rollup.RollupField, rollup.ObjectType == typeof(decimal) ? (decimal)-1 : (int)-1);
                             }
                         }
                         if (linkedIdAfter.HasValue && meetsConditionsAfter)
@@ -263,7 +272,7 @@ namespace $safeprojectname$.Rollups
                             }
                             else if (rollup.RollupType == RollupType.Count)
                             {
-                                addDifferenceToApply(rollup.RecordTypeWithRollup, linkedIdAfter.Value, rollup.RollupField, 1);
+                                addDifferenceToApply(rollup.RecordTypeWithRollup, linkedIdAfter.Value, rollup.RollupField, rollup.ObjectType == typeof(decimal) ? (decimal)1 : (int)1);
                             }
                         }
                     }
@@ -292,15 +301,15 @@ namespace $safeprojectname$.Rollups
                 {
                     var id = idUpdates.Key;
                     //lock the parent record then retreive it
-                    plugin.XrmService.SetField(targetType, id, "modifiedon", DateTime.UtcNow);
+                    plugin.Service.SetField(targetType, id, "modifiedon", DateTime.UtcNow);
                     var fieldsForUpdating = idUpdates.Value.Select(kv => kv.Key).ToArray();
-                    var targetRecord = plugin.XrmService.Retrieve(targetType, id, idUpdates.Value.Select(kv => kv.Key));
+                    var targetRecord = plugin.Service.Retrieve(targetType, id, idUpdates.Value.Select(kv => kv.Key));
                     //update the fields
                     foreach (var fieldUpdate in idUpdates.Value)
                     {
                         targetRecord.SetField(fieldUpdate.Key, XrmEntity.SumFields(new[] { fieldUpdate.Value, targetRecord.GetField(fieldUpdate.Key) }));
                     }
-                    plugin.XrmService.Update(targetRecord, fieldsForUpdating);
+                    plugin.Service.Update(targetRecord, fieldsForUpdating);
                 }
             }
         }
@@ -336,21 +345,21 @@ namespace $safeprojectname$.Rollups
                         var fetch = GetLookupFetch(rollup, id);
                         var result = XrmService.Fetch(fetch);
                         newValue = result.Any() &&
-                               XrmEntity.GetInt(result.First().GetField(FetchAlias)) > 0;
+                               XrmEntity.GetInt(result.First().GetFieldValue(FetchAlias)) > 0;
                         break;
                     }
                 case RollupType.Count:
                     {
                         var result = XrmService.Fetch(GetLookupFetch(rollup, id));
                         if (result.Any())
-                            newValue = result.ElementAt(0).GetField(FetchAlias);
+                            newValue = result.ElementAt(0).GetFieldValue(FetchAlias);
                         break;
                     }
                 case RollupType.Sum:
                     {
                         var result = XrmService.Fetch(GetLookupFetch(rollup, id));
                         if (result.Any())
-                            newValue = result.ElementAt(0).GetField(FetchAlias);
+                            newValue = result.ElementAt(0).GetFieldValue(FetchAlias);
                         break;
                     }
                 case RollupType.Min:
@@ -498,6 +507,11 @@ namespace $safeprojectname$.Rollups
                 case ConditionOperator.NotNull:
                     {
                         conditionOperatorString = "not-null";
+                        break;
+                    }
+                case ConditionOperator.LastXMonths:
+                    {
+                        conditionOperatorString = "last-x-months";
                         break;
                     }
             }

@@ -1,13 +1,9 @@
-﻿#region
-
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Schema;
-
-#endregion
 
 namespace $safeprojectname$.Xrm
 {
@@ -312,56 +308,72 @@ namespace $safeprojectname$.Xrm
         {
             if (field1 == null && field2 == null)
                 return true;
-            else if (field1 == null || field2 == null)
+            if (field1 == null || field2 == null)
             {
                 if (field1 is string || field2 is string)
                     return String.IsNullOrEmpty((string)field1) && String.IsNullOrEmpty((string)field2);
                 else
                     return false;
             }
-            else if (field1 is EntityReference)
+            if (field1 is EntityReference er1)
             {
-                if (field2 is EntityReference)
-                    return (((EntityReference)field1).Id).Equals(((EntityReference)field2).Id) &&
-                           (((EntityReference)field1).LogicalName).Equals(((EntityReference)field2).LogicalName);
-                if (field2 is Guid)
-                    return (((EntityReference)field1).Id).Equals((Guid)field2);
+                if (field2 is EntityReference er2)
+                {
+                    return er1.Id.Equals(er2.Id) &&
+                        er1.LogicalName.Equals(er2.LogicalName);
+                }
+                if (field2 is Guid erg2)
+                {
+                    return er1.Id.Equals(erg2);
+                }
             }
-            else if (field1 is DateTime && field2 is DateTime)
-                return ((DateTime)field1).Equals((DateTime)field2);
-            else if (field1 is OptionSetValue)
+            if (field1 is DateTime dt1 && field2 is DateTime dt2)
             {
-                if (field2 is OptionSetValue)
-                    return GetOptionSetValue(field1).Equals(GetOptionSetValue(field2));
-                else if (field2 is int)
-                    return GetOptionSetValue(field1).Equals(field2);
-                else
-                    throw new InvalidPluginExecutionException("Mismatched Types");
+                return (dt1).Equals(dt2);
             }
-            else if (field1 is int)
+            if (field1 is OptionSetValue osv1)
             {
-                if (field2 is int)
-                    return ((int)field1).Equals(((int)field2));
-                else if (field2 is OptionSetValue)
-                    return ((int)field1).Equals(GetOptionSetValue(field2));
-                else
-                    throw new InvalidPluginExecutionException("Mismatched Types");
+                if (field2 is OptionSetValue osv2)
+                    return osv1.Value.Equals(osv2.Value);
+                if (field2 is int i2)
+                    return osv1.Value.Equals(i2);
+                throw new InvalidPluginExecutionException("Mismatched Types");
             }
-            else if (field1 is bool && field2 is bool)
-                return ((bool)field1).Equals(((bool)field2));
-            else if (field1 is Guid && field2 is Guid)
-                return ((Guid)field1).Equals(((Guid)field2));
-            else if (field1 is Double && field2 is Double)
-                return ((Double)field1).Equals(((Double)field2));
-            else if (field1 is string && field2 is string)
-                return ((string)field1).Equals(((string)field2));
-            else if (field1 is Money && field2 is Money)
-                return (field1).Equals((field2));
-            else if (field1 is Decimal && field2 is Decimal)
-                return ((Decimal)field1).Equals(((Decimal)field2));
+            if (field1 is int i1)
+            {
+                if (field2 is int i2)
+                    return i1.Equals(i2);
+                if (field2 is OptionSetValue osv2)
+                    return i1.Equals(osv2.Value);
+                throw new InvalidPluginExecutionException("Mismatched Types");
+            }
+            if (field1 is bool b1 && field2 is bool b2)
+            {
+                return b1.Equals(b2);
+            }
+            if (field1 is Guid g1 && field2 is Guid g2)
+            {
+                return g1.Equals(g2);
+            }
+            if (field1 is Double d1 && field2 is Double d2)
+            {
+                return d1.Equals(d2);
+            }
+            if (field1 is string st1 && field2 is string st2)
+            {
+                return st1.Equals(st2);
+            }
+            if (field1 is Money m1 && field2 is Money m2)
+            {
+                return m1.Value.Equals(m2.Value);
+            }
+            if (field1 is Decimal dc1 && field2 is Decimal dc2)
+            {
+                return dc1.Equals(dc2);
+            }
             throw new InvalidPluginExecutionException(
-                    string.Concat("FieldsEqualCrmTarget type not implemented for types ", field1.GetType(), " and ",
-                        field2.GetType()));
+                        string.Concat("FieldsEqualCrmTarget type not implemented for types ", field1.GetType(), " and ",
+                            field2.GetType()));
         }
 
         /// <summary>
