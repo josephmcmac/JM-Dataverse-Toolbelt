@@ -60,8 +60,14 @@ namespace JosephM.Xrm
         {
             if (_service is OrganizationServiceProxy proxy)
                 proxy.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
-            else if (_service is CrmServiceClient client && client.OrganizationServiceProxy != null)
-                client.OrganizationServiceProxy.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
+            else if (_service is CrmServiceClient client)
+            {
+                CrmServiceClient.MaxConnectionTimeout = new TimeSpan(0, 0, TimeoutSeconds);
+                if (client.OrganizationServiceProxy != null)
+                {
+                    client.OrganizationServiceProxy.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
+                }
+            }
         }
 
         public static DateTime MinCrmDateTime = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc);

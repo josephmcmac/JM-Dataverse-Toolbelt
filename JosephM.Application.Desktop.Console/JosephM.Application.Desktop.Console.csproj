@@ -57,6 +57,7 @@
     <Compile Include="ConsoleApplicationModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="JosephM.snk" />
   </ItemGroup>
   <ItemGroup>
