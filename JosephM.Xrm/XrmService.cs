@@ -896,7 +896,12 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                 }
                                 else
                                 {
-                                    temp = int.Parse(intAsString.Replace(",", ""));
+                                    double output = 0;
+                                    if (!double.TryParse(intAsString, out output))
+                                    {
+                                        throw new Exception($"Could not parse int for value {intAsString} in field {fieldName}");
+                                    }
+                                    temp = Convert.ToInt32(output);
                                 }
                             }
                             if (!IntInRange(fieldName, entityType, temp))

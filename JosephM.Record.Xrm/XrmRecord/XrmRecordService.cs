@@ -451,18 +451,18 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 //Strings no map
             }
-            else if (temp is RecordType)
-                temp = ((RecordType)temp).Key;
-            else if (temp is PicklistOption)
-                temp = new OptionSetValue(int.Parse(((PicklistOption)temp).Key));
-            else if (temp is Lookup)
-                temp = _lookupMapper.Map((Lookup)temp);
-            else if (temp is Password)
-                temp = ((Password)temp).GetRawPassword();
-            else if (temp is IEnumerable<IRecord>)
-                temp = ToEntities((IEnumerable<IRecord>)temp).ToArray();
-            else if (temp is IEnumerable<PicklistOption>)
-                temp = new OptionSetValueCollection(((IEnumerable<PicklistOption>)temp).Select(p => new OptionSetValue(int.Parse(((PicklistOption)p).Key))).ToList());
+            else if (temp is RecordType rt)
+                temp = rt.Key;
+            else if (temp is PicklistOption po)
+                temp = new OptionSetValue(Convert.ToInt32(double.Parse(po.Key)));
+            else if (temp is Lookup lk)
+                temp = _lookupMapper.Map(lk);
+            else if (temp is Password pw)
+                temp = pw.GetRawPassword();
+            else if (temp is IEnumerable<IRecord> enr)
+                temp = ToEntities(enr).ToArray();
+            else if (temp is IEnumerable<PicklistOption> enp)
+                temp = new OptionSetValueCollection((enp).Select(p => new OptionSetValue(Convert.ToInt32(double.Parse(p.Key)))).ToList());
             return temp;
         }
 
@@ -620,7 +620,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                                 typedField.PicklistOptions.Select(
                                     p =>
                                         new KeyValuePair<int, string>(
-                                            int.Parse(p.Key), p.Value)), typedField.IsMultiSelect);
+                                            Convert.ToInt32(double.Parse(p.Key)), p.Value)), typedField.IsMultiSelect);
                         }
                         break;
                     }
@@ -917,7 +917,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 sharedOptionSet.DisplayName,
                 sharedOptionSet.PicklistOptions.Select(p =>
                     new KeyValuePair<int, string>(
-                        int.Parse(p.Key), p.Value))
+                        Convert.ToInt32(double.Parse(p.Key)), p.Value))
                 );
         }
 
@@ -926,7 +926,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             _xrmService.UpdatePicklistOptions(
                 fieldName,
                 entityType,
-                optionSet.PicklistOptions.Select(p => new KeyValuePair<int, string>(int.Parse(p.Key), p.Value))
+                optionSet.PicklistOptions.Select(p => new KeyValuePair<int, string>(Convert.ToInt32(double.Parse(p.Key)), p.Value))
                 );
         }
 

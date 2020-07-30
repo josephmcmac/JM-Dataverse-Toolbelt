@@ -114,7 +114,7 @@ namespace JosephM.Spreadsheet
                             else
                             {
                                 index =
-                                    (_alphabet.IndexOf(column[0]) * _alphabet.Length)
+                                    ((_alphabet.IndexOf(column[0]) + 1) * _alphabet.Length)
                                     + _alphabet.IndexOf(column[1]);
                             }
                             if (index > -1 && index < newRow.ItemArray.Count())
@@ -144,7 +144,7 @@ namespace JosephM.Spreadsheet
 
             if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
             {
-                return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
+                return stringTablePart.SharedStringTable.ChildElements[int.Parse(value)].InnerText;
             }
             else
             {

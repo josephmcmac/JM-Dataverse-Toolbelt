@@ -50,7 +50,15 @@ namespace JosephM.Core.Sql
         public int GetFieldAsInteger(string fieldName)
         {
             if (!IsDbNull(fieldName))
-                return Int32.Parse(GetFieldAsString(fieldName));
+            {
+                var rawValue = GetFieldAsString(fieldName);
+                double output = 0;
+                if (double.TryParse(GetFieldAsString(fieldName), out output))
+                {
+                    return Convert.ToInt32(output);
+                }
+                throw new Exception($"Could not parse int for value {rawValue} in field {fieldName}");
+            }
 
             throw new NotSupportedException("cannot parse integer from null: " + fieldName);
         }
