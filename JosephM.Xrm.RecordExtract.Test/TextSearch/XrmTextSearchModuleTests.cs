@@ -41,26 +41,26 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
 
             //run a search request
             var application = CreateAndLoadTestApplication<XrmTextSearchModule>();
-            var instance = new TextSearchRequest();
-            instance.SearchTerms = new[]
+            var request = new TextSearchRequest();
+            request.SearchTerms = new[]
             {
                 new TextSearchRequest.SearchTerm() { Text = searchString }
             };
-            instance.GenerateDocument = true;
-            instance.DocumentFormat = DocumentWriter.DocumentType.Pdf;
-            instance.SaveToFolder = new Folder(TestingFolder);
-            instance.SearchAllTypes = false;
-            instance.TypesToSearch = new[]
+            request.GenerateDocument = true;
+            request.DocumentFormat = DocumentWriter.DocumentType.Pdf;
+            request.SaveToFolder = new Folder(TestingFolder);
+            request.SearchAllTypes = false;
+            request.TypesToSearch = new[]
             {
                 new TextSearchRequest.TypeToSearch { RecordType = new RecordType(Entities.account, Entities.account) }
             };
-            instance.StripHtmlTagsPriorToSearch = true;
-            instance.CustomHtmlFields = new[]
+            request.StripHtmlTagsPriorToSearch = true;
+            request.CustomHtmlFields = new[]
             {
                 new RecordFieldSetting() { RecordType = new RecordType(Entities.account, Entities.account), RecordField = new RecordField(Fields.account_.description, Fields.account_.description) }
             };
 
-            var responseViewModel = application.NavigateAndProcessDialogGetResponseViewModel<XrmTextSearchModule, XrmTextSearchDialog>(instance);
+            var responseViewModel = application.NavigateAndProcessDialogGetResponseViewModel<XrmTextSearchModule, XrmTextSearchDialog>(request);
             var response = responseViewModel.GetObject() as TextSearchResponse;
             Assert.IsFalse(response.HasError);
 
@@ -93,7 +93,7 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
             Assert.IsFalse(responseViewModel.ChildForms.Any());
 
             //now we did the replace all lets just verify the name no longer matched in the text search reuslt
-            var responseViewModel2 = application.NavigateAndProcessDialogGetResponseViewModel<XrmTextSearchModule, XrmTextSearchDialog>(instance);
+            var responseViewModel2 = application.NavigateAndProcessDialogGetResponseViewModel<XrmTextSearchModule, XrmTextSearchDialog>(request);
             var response2 = responseViewModel2.GetObject() as TextSearchResponse;
             Assert.IsFalse(response2.HasError);
 
@@ -102,6 +102,11 @@ namespace JosephM.Xrm.RecordExtract.Test.TextSearch
             Assert.AreEqual(1, response2.Summary.First(s => s.RecordTypeSchemaName == Entities.account && s.MatchedFieldSchemaName == Fields.account_.description).NumberOfMatches);
             Assert.AreEqual(1, response2.Summary.First(s => s.RecordTypeSchemaName == Entities.account && s.MatchedFieldSchemaName == Fields.account_.fax).NumberOfMatches);
 
+            //search all types
+            request.SearchAllTypes = true;
+            responseViewModel = application.NavigateAndProcessDialogGetResponseViewModel<XrmTextSearchModule, XrmTextSearchDialog>(request);
+            response = responseViewModel.GetObject() as TextSearchResponse;
+            AssertFailIfError<TextSearchResponse, TextSearchResponseItem>(response);
         }
 
         private static void DoBulkReplace(EditResultsDialog parentDialog, string field, string oldValue, string newValue)

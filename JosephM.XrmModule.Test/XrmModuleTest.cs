@@ -6,6 +6,7 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.AppConfig;
 using JosephM.Core.FieldType;
+using JosephM.Core.Service;
 using JosephM.ObjectMapping;
 using JosephM.Record.Xrm.Test;
 using JosephM.Record.Xrm.XrmRecord;
@@ -440,6 +441,23 @@ namespace JosephM.XrmModule.Test
                 saveRequestForm.SaveButtonViewModel.Invoke();
                 Assert.IsFalse(entryViewmodel.ChildForms.Any());
                 Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
+            }
+        }
+
+        public static void AssertFailIfError<R, T>(R response)
+            where R : ServiceResponseBase<T>
+            where T : ServiceResponseItem
+        {
+            if (response.HasError)
+            {
+                if (response.Exception != null)
+                {
+                    Assert.Fail(response.FatalErrorDescription);
+                }
+                else
+                {
+                    Assert.Fail(response.GetResponseItemsWithError().First().ErrorDetails);
+                }
             }
         }
     }

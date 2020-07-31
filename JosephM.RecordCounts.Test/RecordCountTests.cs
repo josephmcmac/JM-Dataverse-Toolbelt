@@ -5,6 +5,7 @@ using JosephM.XrmModule.Test;
 using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using JosephM.Core.Service;
 
 namespace JosephM.RecordCounts.Test
 {
@@ -38,6 +39,8 @@ namespace JosephM.RecordCounts.Test
             Assert.AreEqual(1, response.RecordCounts.Count(r => r.RecordType == accountLabel));
             var accountCount = response.RecordCounts.First(r => r.RecordType == accountLabel);
             Assert.AreEqual(3, accountCount.Count);
+
+            AssertFailIfError<RecordCountsResponse, RecordCountsResponseItem>(response);
 
             request = new RecordCountsRequest();
             request.AllRecordTypes = true;
