@@ -1,4 +1,5 @@
 ﻿using System;
+using JosephM.Record.IService;
 using JosephM.Record.Query;
 
 namespace JosephM.Record.Attributes
@@ -11,10 +12,12 @@ namespace JosephM.Record.Attributes
         public string FieldName { get; set; }
         public ConditionType ConditionType { get; set; }
         public object Value { get; set; }
+        public bool ValueIsProperty { get; }
 
-        public LookupCondition(string fieldName, object value)
+        public LookupCondition(string fieldName, object value, bool valueIsProperty = false)
             : this(fieldName, ConditionType.Equal, value)
         {
+            ValueIsProperty = valueIsProperty;
         }
 
         public LookupCondition(string fieldName, ConditionType conditionType, object value)
@@ -24,9 +27,20 @@ namespace JosephM.Record.Attributes
             ConditionType = conditionType;
         }
 
-        public Condition ToCondition()
+        public Condition ToCondition(IRecord record = null)
         {
-            return new Condition(FieldName, ConditionType, Value);
+            if (ValueIsProperty)
+            {
+                if (record == null)
+                {
+                    throw new ArgumentNullException("record", $"Required when {nameof(ValueIsProperty)}");
+                }
+                return new Condition(FieldName, ConditionType, record.GetField(Value.ToString()));
+            }
+            else
+            {
+                return new Condition(FieldName, ConditionType, Value);
+            }
         }
     }
 }

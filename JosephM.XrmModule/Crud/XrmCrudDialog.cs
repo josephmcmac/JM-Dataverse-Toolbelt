@@ -2,9 +2,11 @@
 using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
+using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
+using JosephM.XrmModule.Crud.BulkWorkflow;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,30 +38,41 @@ namespace JosephM.XrmModule.Crud
             extraFunctions.Add(new CustomGridFunction("COPYQUERY", "Copy FetchXML", new[]
             {
                 new CustomGridFunction("RAWFETCHXML", "Raw FetchXML", (g) =>
-                                {
-                                    DoOnAsynchThread(() =>
-                                    {
-                                        var fetchXml = GetQueryFetchXml();
-                                        DoOnMainThread(() =>
-                                        {
-                                            Clipboard.SetText(fetchXml);
-                                            ApplicationController.UserMessage("Fetch Copied To Clipboard!");
-                                        });
-                                    });
-                                }, (g) => !QueryViewModel.IncludeNotIn),
+                    {
+                        DoOnAsynchThread(() =>
+                        {
+                            var fetchXml = GetQueryFetchXml();
+                            DoOnMainThread(() =>
+                            {
+                                Clipboard.SetText(fetchXml);
+                                ApplicationController.UserMessage("Fetch Copied To Clipboard!");
+                            });
+                        });
+                    }, (g) => !QueryViewModel.IncludeNotIn),
                 new CustomGridFunction("JSFETCHXML", "JavaScript FetchXML", (g) =>
-                                {
-                                    DoOnAsynchThread(() =>
-                                    {
-                                        var fetchXml = GetQueryFetchXml();
-                                        DoOnMainThread(() =>
-                                        {
-                                            Clipboard.SetText(WriteFetchToJavascript(fetchXml));
-                                            ApplicationController.UserMessage("JavaScript Copied To Clipboard!");
-                                        });
-                                    });
-                                }, (g) => !QueryViewModel.IncludeNotIn)
+                    {
+                        DoOnAsynchThread(() =>
+                        {
+                            var fetchXml = GetQueryFetchXml();
+                            DoOnMainThread(() =>
+                            {
+                                Clipboard.SetText(WriteFetchToJavascript(fetchXml));
+                                ApplicationController.UserMessage("JavaScript Copied To Clipboard!");
+                            });
+                        });
+                    }, (g) => !QueryViewModel.IncludeNotIn)
             }));
+            extraFunctions.Add(new CustomGridFunction("WORKFLOW", "Bulk Workflow", new[]
+                {
+                    new CustomGridFunction("BULKWORKFLOWSELECTED", "Selected Only", (g) =>
+                    {
+                        TriggerBulkWorkflow(true);
+                    }, (g) => g.SelectedRows.Any()),
+                    new CustomGridFunction("BULKWORKFLOWALL", "All Results", (g) =>
+                    {
+                        TriggerBulkWorkflow(false);
+                    }, (g) => g.GridRecords != null && g.GridRecords.Any()),
+                }));
             return extraFunctions;
         }
 
@@ -125,6 +138,18 @@ namespace JosephM.XrmModule.Crud
                     conversionList.Add(string.Format("{0} += {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
             }
             return string.Join(Environment.NewLine, conversionList);
+        }
+
+        private void TriggerBulkWorkflow(bool selectedOnly)
+        {
+            ApplicationController.DoOnAsyncThread(() =>
+            {
+                var recordsToUpdate = GetRecordsToProcess(selectedOnly);
+                var request = new BulkWorkflowRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
+                request.AllowExecuteMultiples = RecordService.SupportsExecuteMultiple;
+                var bulkDialog = new BulkWorkflowDialog(XrmRecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
+                LoadChildForm(bulkDialog);
+            });
         }
     }
 }

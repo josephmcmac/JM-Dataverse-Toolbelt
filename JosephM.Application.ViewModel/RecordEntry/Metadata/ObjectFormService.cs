@@ -904,7 +904,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             var attr = propertyInfo.GetCustomAttributes<LookupCondition>();
             var conditions = attr == null
                 ? new Condition[0].ToList()
-                : attr.Select(a => a.ToCondition()).ToList();
+                : attr.Select(a => a.ToCondition(record)).ToList();
             var otherCondition = ObjectRecordService.GetLookupConditionFors(fieldName, recordType, reference, record);
             if (otherCondition != null)
             {

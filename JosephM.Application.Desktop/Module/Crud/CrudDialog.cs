@@ -138,7 +138,7 @@ namespace JosephM.Application.Desktop.Module.Crud
             });
         }
 
-        private void CompleteChildDialogAndReload()
+        protected void CompleteChildDialogAndReload()
         {
             ClearChildForms();
             QueryViewModel.ClearNotInIds();
@@ -158,7 +158,7 @@ namespace JosephM.Application.Desktop.Module.Crud
             });
         }
 
-        private IEnumerable<IRecord> GetRecordsToProcess(bool selectedOnly)
+        protected IEnumerable<IRecord> GetRecordsToProcess(bool selectedOnly)
         {
             IEnumerable<IRecord> recordsToUpdate = null;
 
