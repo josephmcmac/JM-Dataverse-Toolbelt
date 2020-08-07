@@ -102,7 +102,20 @@ namespace JosephM.Deployment.CreatePackage
                 }
             }
 
-            response.Message = "The Deployment Package Has Been Generated" + (request.DeployPackageInto == null ? "" : " And Deployed");
+            response.Message = "The Deployment Package Has Been Generated";
+
+
+            if (request.DeployPackageInto != null)
+            {
+                if (response.FailedSolution != null)
+                {
+                    response.Message += " but there was an error deploying the solution";
+                }
+                else
+                {
+                    response.Message += " and Deployed";
+                }
+            }
         }
 
         private string GetDataExportFolder(string rootFolder)

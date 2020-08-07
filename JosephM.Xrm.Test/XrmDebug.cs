@@ -1,6 +1,7 @@
 ﻿using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
 using System;
 using System.Linq;
 

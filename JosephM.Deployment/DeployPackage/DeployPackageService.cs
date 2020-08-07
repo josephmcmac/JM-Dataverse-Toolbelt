@@ -35,25 +35,31 @@ namespace JosephM.Deployment.DeployPackage
                 .OrderBy(s => s)
                 .ToArray();
 
-            var importItems = ImportSolutions(solutionFiles, controller.Controller, xrmRecordService);
+            var importSolutionResponse = ImportSolutions(solutionFiles, controller.Controller, xrmRecordService);
             response.Connection = request.Connection;
-            response.AddResponseItems(importItems.Select(it => new DataImportResponseItem(it.Type, null, it.Name, null, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null, it.GetUrl())));
+            response.LoadImportSolutionsResponse(importSolutionResponse);
 
-            foreach (var childFolder in Directory.GetDirectories(packageFolder))
+            if (!importSolutionResponse.Success)
             {
-                if (new DirectoryInfo(childFolder).Name == "Data")
-                {
-                    var dataImportService = new ImportXmlService(xrmRecordService);
-                    var importResponse = new ImportXmlResponse();
-                    dataImportService.ImportXml(request, controller, importResponse, executeMultipleSetSize: 10, targetCacheLimit: 200);
-                    response.LoadImportxmlResponse(importResponse);
-                }
+                response.Message = $"There was an error importing the solution during deployment";
             }
-
-            response.Message = $"The Package Has Been Deployed Into {request.Connection}";
+            else
+            {
+                foreach (var childFolder in Directory.GetDirectories(packageFolder))
+                {
+                    if (new DirectoryInfo(childFolder).Name == "Data")
+                    {
+                        var dataImportService = new ImportXmlService(xrmRecordService);
+                        var importResponse = new ImportXmlResponse();
+                        dataImportService.ImportXml(request, controller, importResponse, executeMultipleSetSize: 10, targetCacheLimit: 200);
+                        response.LoadImportxmlResponse(importResponse);
+                    }
+                }
+                response.Message = $"The Package Has Been Deployed Into {request.Connection}";
+            }
         }
 
-        public IEnumerable<SolutionImportResult> ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
+        public ImportSolutionsResponse ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
         {
             var solutionFilesDictionary = new Dictionary<string, byte[]>();
             foreach(var item in solutionFiles)

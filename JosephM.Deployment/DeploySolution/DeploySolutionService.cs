@@ -60,7 +60,7 @@ namespace JosephM.Deployment.DeploySolution
             {
                 { uniqueName, exportResponse.ExportSolutionFile }
             }, controller);
-            response.AddResponseItems(importResponse.Select(i => new DeploySolutionResponseItem(i)).ToArray());
+            response.LoadImportSolutionsResponse(importResponse);
             response.ConnectionDeployedInto = request.TargetConnection;
 
             tasksDone++;

@@ -2396,6 +2396,14 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             }
         }
 
+        public bool SupportsExecuteAsynch
+        {
+            get
+            {
+                return VersionHelper.IsNewerVersion(OrganisationVersion, "8.9.9.9");
+            }
+        }
+
         /// <summary>
         ///     DOESN'T UPDATE PRIMARY FIELD - CALL THE CREATEORUPDATESTRING METHOD
         /// </summary>

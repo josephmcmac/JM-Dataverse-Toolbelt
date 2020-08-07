@@ -16,7 +16,19 @@ namespace JosephM.Deployment.DataImport
                 AddResponseItem(new DataImportResponseItem("Fatal Deploy Error", deployPackageResponse.Exception));
             AddResponseItems(deployPackageResponse.ResponseItems);
             _importedRecords.AddRange(deployPackageResponse.ImportSummary);
+            FailedSolution = deployPackageResponse.FailedSolution;
+            FailedSolutionXml = deployPackageResponse.FailedSolutionXml;
         }
+
+        [DisplayOrder(10)]
+        [Group(Sections.Summary)]
+        [PropertyInContextByPropertyNotNull(nameof(FailedSolution))]
+        public string FailedSolution { get; private set; }
+
+        [Group(Sections.Summary)]
+        [DisplayOrder(20)]
+        [PropertyInContextByPropertyNotNull(nameof(FailedSolutionXml))]
+        public string FailedSolutionXml { get; private set; }
 
         [Hidden]
         public bool IsImportSummary
@@ -25,6 +37,7 @@ namespace JosephM.Deployment.DataImport
         }
 
         [Group(Sections.Summary)]
+        [DisplayOrder(30)]
         [PropertyInContextByPropertyValue(nameof(IsImportSummary), true)]
         public IEnumerable<ImportedRecords> ImportSummary
         {
