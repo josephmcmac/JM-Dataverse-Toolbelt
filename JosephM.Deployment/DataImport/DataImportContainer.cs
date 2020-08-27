@@ -128,6 +128,11 @@ namespace JosephM.Deployment.DataImport
                 return true;
             if (fieldName == "transactioncurrencyid")
                 return true;
+            if (fieldName == "salesliteratureid")
+                return true;
+            if (entityType == Entities.productsubstitute &&
+                new [] { Fields.productsubstitute_.productid, Fields.productsubstitute_.substitutedproductid }.Contains(fieldName))
+                return true;
             if (fieldName == Fields.product_.productstructure)
                 return true;
             return
