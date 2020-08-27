@@ -83,7 +83,7 @@ namespace JosephM.Deployment.SpreadsheetImport
 
             var rowNumber = 0;
             foreach (var row in queryRows)
-            {
+            {           
                 rowNumber++;
                 var targetType = mapping.TargetType;
                 try
@@ -111,12 +111,27 @@ namespace JosephM.Deployment.SpreadsheetImport
                             {
                                 //for lookups am going to set to a empty guid and allow the import part to replace with a correct guid
                                 if (!stringValue.IsNullOrWhiteSpace())
-                                    entity.SetField(targetField,
-                                        new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
-                                            Guid.Empty)
-                                        {
-                                            Name = stringValue
-                                        });
+                                {
+                                    var isGuid = Guid.Empty;
+                                    if (Guid.TryParse(stringValue, out isGuid))
+                                    {
+                                        entity.SetField(targetField,
+                                            new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
+                                                isGuid)
+                                            {
+                                                Name = stringValue
+                                            });
+                                    }
+                                    else
+                                    {
+                                        entity.SetField(targetField,
+                                            new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
+                                                Guid.Empty)
+                                            {
+                                                Name = stringValue
+                                            });
+                                    }
+                                }
                             }
                             else
                             {
@@ -151,7 +166,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                             return XrmRecordService.FieldsEqual(fieldValue1, fieldValue2);
                     })))
                     {
-                        if(!duplicateLogged)
+                        if (!duplicateLogged)
                         {
                             response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, null, null, null, "At Least One Duplicate Removed", null));
                             duplicateLogged = true;
