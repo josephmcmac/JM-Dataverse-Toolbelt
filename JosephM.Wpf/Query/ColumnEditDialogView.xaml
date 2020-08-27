@@ -123,9 +123,11 @@
                         VerticalAlignment="Top"
                         MinWidth="150"
                         DisplayMemberPath="Value"
+                        Margin="8,3,12,4"
                         ItemsSource="{Binding LinkOptions}"
                         SelectedItem="{Binding SelectedLink, Mode=TwoWay}"
                         />
+                    <shared:XrmButton DataContext="{Binding AddAllColumnsViewModel}" />
                 </WrapPanel>
             </Grid>
             <Grid Grid.Row="5" Margin="8">

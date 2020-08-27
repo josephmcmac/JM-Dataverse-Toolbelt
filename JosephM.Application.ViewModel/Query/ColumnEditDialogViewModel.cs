@@ -53,8 +53,18 @@ namespace JosephM.Application.ViewModel.Query
 
             ApplyButtonViewModel = new XrmButtonViewModel("Apply Changes", ApplyChanges, ApplicationController, "Apply The Selection Changes");
             CancelButtonViewModel = new XrmButtonViewModel("Cancel Changes", onCancel, ApplicationController, "Cancel The Selection Changes And Return");
+            AddAllColumnsViewModel = new XrmButtonViewModel("Add All Columns", AddAllColumns, ApplicationController, "Cancel The Selection Changes And Return");
 
             RefreshIsFirstColumn();
+        }
+
+        private void AddAllColumns()
+        {
+            var selectedResults = SelectableColumns.ToArray();
+            foreach (var result in selectedResults)
+            {
+                AddCurrentItem(result);
+            }
         }
 
         private IEnumerable<SelectableColumn> GetSelectableColumnsFor(string thisType)
@@ -223,6 +233,7 @@ namespace JosephM.Application.ViewModel.Query
         public ObservableCollection<SelectableColumn> SelectableColumns { get; set; }
         public XrmButtonViewModel ApplyButtonViewModel { get; private set; }
         public XrmButtonViewModel CancelButtonViewModel { get; private set; }
+        public XrmButtonViewModel AddAllColumnsViewModel { get; private set; }
         public void ApplyChanges()
         {
             var newGridColumns = new List<GridFieldMetadata>();
