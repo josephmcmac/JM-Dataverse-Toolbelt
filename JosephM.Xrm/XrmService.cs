@@ -1074,7 +1074,10 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             else if (value is Decimal)
                                 temp = new Money((decimal)value);
                             else
-                                temp = new Money(decimal.Parse(value.ToString().Replace(",", "")));
+                            {
+                                var valueString = value.ToString().Replace(",", "").Trim(new[] { '$', '£', '€' });
+                                temp = new Money(decimal.Parse(valueString));
+                            }
                             if (!MoneyInRange(fieldName, entityType, temp))
                                 throw new ArgumentOutOfRangeException("Field " + fieldName +
                                                                       " outside permitted range of " +
