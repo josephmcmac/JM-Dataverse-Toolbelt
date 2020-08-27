@@ -22,6 +22,11 @@ namespace JosephM.Deployment.DataImport
             return _createdEntities;
         }
 
+        public bool HasBeenCreated(Guid id)
+        {
+            return _createdEntities.ContainsKey(id);
+        }
+
         public void AddedCreated(Entity entity)
         {
             lock (_lockObject)

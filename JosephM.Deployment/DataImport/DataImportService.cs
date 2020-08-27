@@ -492,9 +492,12 @@ namespace JosephM.Deployment.DataImport
                             var isUpdate = matchDictionary.ContainsKey(entity);
                             if (!isUpdate)
                             {
-                                if (entity.LogicalName == Entities.product || entity.GetOptionSetValue("statecode") > 0)
+                                if (dataImportContainer.Response.GetImportForType(entity.LogicalName).HasBeenCreated(entity.Id))
                                 {
-                                    checkStateForEntities.Add(entity);
+                                    if (entity.LogicalName == Entities.product || entity.GetOptionSetValue("statecode") > 0)
+                                    {
+                                        checkStateForEntities.Add(entity);
+                                    }
                                 }
                             }
                             else
