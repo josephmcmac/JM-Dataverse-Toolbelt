@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace JosephM.Spreadsheet
 
             using (var spreadSheetDocument = SpreadsheetDocument.Open(fileName, false))
             {
+                var indexedStringTable = IndexStringTable(spreadSheetDocument);
                 var workbookPart = spreadSheetDocument.WorkbookPart;
                 var sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
 
@@ -33,7 +35,7 @@ namespace JosephM.Spreadsheet
 
                         foreach (Cell cell in rows.ElementAt(0))
                         {
-                            var cellValue = GetCellValue(spreadSheetDocument, cell);
+                            var cellValue = GetCellValue(indexedStringTable, cell);
                             if (!string.IsNullOrWhiteSpace(cellValue))
                             {
                                 columns.Add(cellValue);
@@ -61,7 +63,7 @@ namespace JosephM.Spreadsheet
 
             using (var spreadSheetDocument = SpreadsheetDocument.Open(fileName, false))
             {
-
+                var indexedStringTable = IndexStringTable(spreadSheetDocument);
                 var workbookPart = spreadSheetDocument.WorkbookPart;
                 var sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
 
@@ -87,14 +89,14 @@ namespace JosephM.Spreadsheet
 
                 foreach (Cell cell in rows.ElementAt(0))
                 {
-                    var cellValue = GetCellValue(spreadSheetDocument, cell);
+                    var cellValue = GetCellValue(indexedStringTable, cell);
                     if (!string.IsNullOrWhiteSpace(cellValue))
                     {
                         dt.Columns.Add(cellValue);
                     }
                 }
 
-                foreach (var row in rows) //this will also include your header row...
+                foreach (var row in rows.ToArray()) //this will also include your header row...
                 {
                     var newRow = dt.NewRow();
 
@@ -119,7 +121,7 @@ namespace JosephM.Spreadsheet
                             }
                             if (index > -1 && index < newRow.ItemArray.Count())
                             {
-                                newRow[index] = GetCellValue(spreadSheetDocument, cell);
+                                newRow[index] = GetCellValue(indexedStringTable, cell);
                             }
                         }
                     }
@@ -137,19 +139,31 @@ namespace JosephM.Spreadsheet
 
         private static string _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        public static string GetCellValue(SpreadsheetDocument document, Cell cell)
+        public static string GetCellValue(IDictionary<int, string> stringTable, Cell cell)
         {
-            var stringTablePart = document.WorkbookPart.SharedStringTablePart;
+
             string value =  cell.CellValue?.InnerXml;
 
             if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
             {
-                return stringTablePart.SharedStringTable.ChildElements[int.Parse(value)].InnerText;
+                return stringTable[int.Parse(value)];
             }
             else
             {
                 return value;
             }
+        }
+
+        private static IDictionary<int, string> IndexStringTable(SpreadsheetDocument document)
+        {
+            var i = 0;
+            var stringTablePart = document.WorkbookPart.SharedStringTablePart;
+            var dictionary = new SortedDictionary<int, string>();
+            foreach (var item in stringTablePart.SharedStringTable.ChildElements)
+            {
+                dictionary.Add(i++, item.InnerText);
+            }
+            return dictionary;
         }
     }
 }
