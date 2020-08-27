@@ -29,6 +29,7 @@ namespace JosephM.Deployment.SpreadsheetImport
             _errors.AddRange(responseItems);
         }
 
+        [AllowDownload]
         public IEnumerable<ParseIntoEntitiesError> ResponseItems
         {
             get { return _errors; }
