@@ -435,7 +435,9 @@ namespace JosephM.Deployment.DataImport
                             {
                                 if (forCreate.Key.Contains("statuscode"))
                                 {
-                                    if (forCreate.Key.LogicalName == Entities.product || forCreate.Key.GetOptionSetValue("statecode") > 0)
+                                    if (forCreate.Key.GetOptionSetValue("statecode") > -1
+                                        && (forCreate.Key.GetOptionSetValue("statecode") > 0
+                                        || (forCreate.Key.LogicalName == Entities.product || forCreate.Key.GetOptionSetValue("statecode") != 2)))
                                     {
                                         forCreate.Key.RemoveFields(new[] { "statuscode" });
                                     }
@@ -494,7 +496,9 @@ namespace JosephM.Deployment.DataImport
                             {
                                 if (dataImportContainer.Response.GetImportForType(entity.LogicalName).HasBeenCreated(entity.Id))
                                 {
-                                    if (entity.LogicalName == Entities.product || entity.GetOptionSetValue("statecode") > 0)
+                                    if (entity.GetOptionSetValue("statecode") > -1
+                                        && (entity.GetOptionSetValue("statecode") > 0
+                                        || (entity.LogicalName == Entities.product || entity.GetOptionSetValue("statecode") != 2)))
                                     {
                                         checkStateForEntities.Add(entity);
                                     }
