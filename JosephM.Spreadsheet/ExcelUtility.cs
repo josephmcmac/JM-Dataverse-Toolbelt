@@ -101,13 +101,18 @@ namespace JosephM.Spreadsheet
 
         public static IEnumerable<QueryRow> SelectPropertyBagsFromExcelTab(string fileName, string tabName)
         {
-            var dTable = SpreadsheetReader.Read(fileName, tabName);
+            var dTable = SpreadsheetReader.ReadToDataTable(fileName, tabName);
             var itemsToAdd = new List<DataRow>();
             foreach (DataRow row in dTable.Rows)
             {
                 itemsToAdd.Add(row);
             }
             return itemsToAdd.Select(r => new QueryRow(r)).ToArray();
+        }
+
+        public static IEnumerable<IDictionary<string, object>> SelectRowsAsDictionariesFromExcelTab(string fileName, string tabName)
+        {
+            return SpreadsheetReader.ReadToDictionaries(fileName, tabName);
         }
 
         public static IDictionary<string, IEnumerable<string>> GetExcelColumnNames(string excelFile)

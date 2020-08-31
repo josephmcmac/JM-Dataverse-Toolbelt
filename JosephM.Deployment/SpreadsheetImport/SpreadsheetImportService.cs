@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Core.Extentions;
+using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using JosephM.Record.Extentions;
@@ -9,8 +10,10 @@ using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using Microsoft.Xrm.Sdk;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace JosephM.Deployment.SpreadsheetImport
 {
@@ -27,7 +30,7 @@ namespace JosephM.Deployment.SpreadsheetImport
         public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null)
         {
             var response = new SpreadsheetImportResponse();
-            var parseResponse = ParseIntoEntities(mappings, useAmericanDates: useAmericanDates);
+            var parseResponse = ParseIntoEntities(mappings, controller.Controller, useAmericanDates: useAmericanDates);
             response.LoadParseResponse(parseResponse);
             var dataImportService = new DataImportService(XrmRecordService);
             var matchKeyDictionary = new Dictionary<string, IEnumerable<string>>();
@@ -44,12 +47,12 @@ namespace JosephM.Deployment.SpreadsheetImport
             return response;
         }
 
-        public ParseIntoEntitiesResponse ParseIntoEntities(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool useAmericanDates = false)
+        public ParseIntoEntitiesResponse ParseIntoEntities(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, LogController logController, bool useAmericanDates = false)
         {
             var response = new ParseIntoEntitiesResponse();
             foreach (var mapping in mappings)
             {
-                response.AddEntities(MapToEntities(mapping.Value, mapping.Key, response, useAmericanDates));
+                response.AddEntities(MapToEntities(mapping.Value, mapping.Key, response, logController, useAmericanDates));
             }
             var entities = response.GetParsedEntities();
             PopulateEmptyNameFields(entities);
@@ -70,7 +73,7 @@ namespace JosephM.Deployment.SpreadsheetImport
             }
         }
 
-        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, ParseIntoEntitiesResponse response, bool useAmericanDates)
+        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, ParseIntoEntitiesResponse response, LogController logController, bool useAmericanDates)
         {
             var result = new List<Entity>();
 
@@ -79,20 +82,23 @@ namespace JosephM.Deployment.SpreadsheetImport
                 .Select(m => m.IntersectEntityName)
                 .ToArray();
 
-            var duplicateLogged = false;
-
             var rowNumber = 0;
+            var rowCount = queryRows.Count();
             foreach (var row in queryRows)
             {           
                 rowNumber++;
                 var targetType = mapping.TargetType;
+                logController.LogLiteral($"Mapping {targetType} Data Into Records {rowNumber}/{rowCount}");
                 try
                 {
                     var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
-                    var entity = new Entity(targetType);
-                    //this is used in the import to output the rownumber
+
+                    var hasFieldValue = false;
+                    var fieldValues = new ConcurrentDictionary<string, object>();
+                    //this is used in the import to output the row number
                     //if the import throws an error
-                    foreach (var fieldMapping in mapping.FieldMappings)
+                    Parallel.ForEach(mapping.FieldMappings, (fieldMapping) => 
+                    //foreach (var fieldMapping in mapping.FieldMappings)
                     {
                         var targetField = fieldMapping.TargetField;
                         if (fieldMapping.TargetField != null)
@@ -100,12 +106,17 @@ namespace JosephM.Deployment.SpreadsheetImport
                             var stringValue = row.GetStringField(fieldMapping.SourceField);
                             if (stringValue != null)
                                 stringValue = stringValue.Trim();
+
+                            if(!stringValue.IsNullOrWhiteSpace())
+                            {
+                                hasFieldValue = true;
+                            }
                             if (isNnRelation)
                             {
                                 //bit of hack
                                 //for csv relationships just set to a string and map it later
                                 //as the referenced record may not be created yet
-                                entity.SetField(targetField, stringValue);
+                                fieldValues[targetField] = stringValue;
                             }
                             else if (XrmRecordService.XrmService.IsLookup(targetField, targetType))
                             {
@@ -115,21 +126,21 @@ namespace JosephM.Deployment.SpreadsheetImport
                                     var isGuid = Guid.Empty;
                                     if (Guid.TryParse(stringValue, out isGuid))
                                     {
-                                        entity.SetField(targetField,
+                                        fieldValues[targetField] =
                                             new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
                                                 isGuid)
                                             {
                                                 Name = stringValue
-                                            });
+                                            };
                                     }
                                     else
                                     {
-                                        entity.SetField(targetField,
+                                        fieldValues[targetField] =
                                             new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
                                                 Guid.Empty)
                                             {
                                                 Name = stringValue
-                                            });
+                                            };
                                     }
                                 }
                             }
@@ -137,7 +148,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                             {
                                 try
                                 {
-                                    entity.SetField(targetField, XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates));
+                                    fieldValues[targetField] = XrmRecordService.XrmService.ParseField(targetField, targetType, stringValue, useAmericanDates);
                                 }
                                 catch (Exception ex)
                                 {
@@ -145,33 +156,37 @@ namespace JosephM.Deployment.SpreadsheetImport
                                 }
                             }
                         }
+                    });
+                    var entity = new Entity(targetType);
+                    foreach (var fieldValue in fieldValues)
+                    {
+                        entity[fieldValue.Key] = fieldValues[fieldValue.Key];
                     }
-                    if(entity.GetFieldsInEntity().All(f => XrmEntity.FieldsEqual(null, entity.GetField(f))))
+                    if(!hasFieldValue)
                     {
                         //ignore any where all fields emopty
                         continue;
                     }
-                    //okay any which are exact duplicates to previous ones lets ignore
-                    if (result.Any(r => r.GetFieldsInEntity().Except(new[] { "Sheet.RowNumber" }).All(f =>
+                    //okay if remove duplicates
+                    //any which are exact duplicates to previous ones lets ignore
+                    if (mapping.IgnoreDuplicates)
                     {
-                        //since for entity references we just load the name with empty guids
-                        //we check the dipslay name for them
+                        if (result.Any(r => r.GetFieldsInEntity().Except(new[] { "Sheet.RowNumber" }).All(f =>
+                        {
+                        //since for entity references we may load the name with empty guid
+                        //check the display name for them
                         var fieldValue1 = r.GetField(f);
-                        var fieldValue2 = entity.GetField(f);
-                        if (fieldValue1 is EntityReference && fieldValue2 is EntityReference)
+                            var fieldValue2 = entity.GetField(f);
+                            if (fieldValue1 is EntityReference && fieldValue2 is EntityReference)
+                            {
+                                return ((EntityReference)fieldValue1).Name == ((EntityReference)fieldValue2).Name;
+                            }
+                            else
+                                return XrmRecordService.FieldsEqual(fieldValue1, fieldValue2);
+                        })))
                         {
-                            return ((EntityReference)fieldValue1).Name == ((EntityReference)fieldValue2).Name;
+                            continue;
                         }
-                        else
-                            return XrmRecordService.FieldsEqual(fieldValue1, fieldValue2);
-                    })))
-                    {
-                        if (!duplicateLogged)
-                        {
-                            response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(rowNumber, targetType, null, null, null, "At Least One Duplicate Removed", null));
-                            duplicateLogged = true;
-                        }
-                        continue;
                     }
                     result.Add(entity);
                 }

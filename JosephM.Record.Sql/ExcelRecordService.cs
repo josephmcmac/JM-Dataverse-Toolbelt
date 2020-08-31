@@ -161,7 +161,9 @@ namespace JosephM.Record.Sql
                 throw new NotImplementedException("sorts are not implemented for excel service queries");
             }
 
-            return ExcelUtility.SelectPropertyBagsFromExcelTab(ExcelNameQualified, type).Select(qr => new SqlRecord(type, qr)).ToArray();
+            return ExcelUtility.SelectRowsAsDictionariesFromExcelTab(ExcelNameQualified, type)
+                .Select(d => new RecordObject(type, d))
+                .ToArray();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
+using JosephM.Core.Log;
 using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Linq;
@@ -29,10 +30,11 @@ namespace JosephM.Deployment.ImportExcel
             //okay lets load the spreadsheet
             //and if there are any error display them
             //else continue
-            var dictionary = ImportExcelService.LoadMappingDictionary(Request);
+            var logController = new LogController(LoadingViewModel);
+            var dictionary = ImportExcelService.LoadMappingDictionary(Request, logController);
 
             var importService = new SpreadsheetImportService(XrmRecordService);
-            var parseResponse = importService.ParseIntoEntities(dictionary);
+            var parseResponse = importService.ParseIntoEntities(dictionary, logController);
             if (parseResponse.ResponseItems.Any())
             {
                 AddObjectToUi(parseResponse

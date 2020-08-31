@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
+using JosephM.Core.Log;
 using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Linq;
@@ -29,10 +30,11 @@ namespace JosephM.Deployment.ImportCsvs
             //okay lets load the spreadsheet
             //and if there are any error display them
             //else continue
+            var logController = new LogController(LoadingViewModel);
             var dictionary = ImportCsvsService.LoadMappingDictionary(Request);
 
             var importService = new SpreadsheetImportService(XrmRecordService);
-            var parseResponse = importService.ParseIntoEntities(dictionary, useAmericanDates: Request.DateFormat == DateFormat.American);
+            var parseResponse = importService.ParseIntoEntities(dictionary, logController, useAmericanDates: Request.DateFormat == DateFormat.American);
             if (parseResponse.ResponseItems.Any())
             {
                 AddObjectToUi(parseResponse

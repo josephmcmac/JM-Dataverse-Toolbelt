@@ -74,6 +74,12 @@ namespace JosephM.Deployment.ImportCsvs
         [Group(Sections.Main, true, 10)]
         public class CsvToImport : IMapSpreadsheetImport
         {
+            [Group(Sections.Main)]
+            [DisplayOrder(5)]
+            [RequiredProperty]
+            [GridWidth(85)]
+            public bool IgnoreDuplicates { get; set; }
+
             [ConnectionFor(nameof(SourceType), typeof(CsvFileConnection))]
             [ConnectionFor(nameof(Mappings) + "." + nameof(CsvImportFieldMapping.SourceColumn), typeof(CsvFileConnection))]
             [RequiredProperty]

@@ -114,6 +114,12 @@ namespace JosephM.Deployment.ImportSql
         public class SqlImportTableMapping : IMapSpreadsheetImport
         {
             [Group(Sections.Main)]
+            [DisplayOrder(5)]
+            [RequiredProperty]
+            [GridWidth(85)]
+            public bool IgnoreDuplicates { get; set; }
+
+            [Group(Sections.Main)]
             [DisplayOrder(10)]
             [RequiredProperty]
             [RecordTypeFor(nameof(Mappings) + "." + nameof(SqlImportFieldMapping.SourceColumn))]

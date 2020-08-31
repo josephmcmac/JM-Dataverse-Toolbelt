@@ -331,6 +331,7 @@ namespace JosephM.Deployment.Test
             //add another map to create accounts for the parentcustomerid column
             mappingGrid.AddRow();
             var accountTarget = mappingGrid.GridRecords.First(r => r.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).Value == null);
+            accountTarget.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.IgnoreDuplicates)).Value = true;
             accountTarget.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).Value = accountTarget.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.SourceTab)).ItemsSource.First();
             accountTarget.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.TargetType)).Value = new RecordType(Entities.account, Entities.account);
             accountTarget.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings)).EditButton.Command.Execute();
@@ -349,11 +350,10 @@ namespace JosephM.Deployment.Test
 
             //since there are duplicates the validation is dsiplayed to the user so lets proceed through it
             var dialog = app.GetNavigatedDialog<ImportExcelDialog>();
-            var validationDisplay = dialog.Controller.UiItems.First() as ObjectDisplayViewModel;
-            Assert.IsNotNull(validationDisplay);
-            validationDisplay.SaveButtonViewModel.Invoke();
 
-            var completionScreen = dialog.CompletionItem as ImportExcelResponse;
+            var completionViewModel = app.GetCompletionViewModel(dialog);
+            Assert.IsNotNull(completionViewModel);
+            var completionScreen = completionViewModel.GetObject() as ImportExcelResponse;
             if (completionScreen.HasError)
                 Assert.Fail(completionScreen.GetResponseItemsWithError().First().Exception.XrmDisplayString());
 

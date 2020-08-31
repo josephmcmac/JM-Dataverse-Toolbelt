@@ -58,7 +58,7 @@ namespace JosephM.TestDesktopApplication
 
             public override void DialogCommand()
             {
-                var blah = SpreadsheetReader.Read(@"C:\Users\joseph.mcgregor-macd\Desktop\temp\Customisations Import Template V2.xlsx", "Fields");
+                var blah = SpreadsheetReader.ReadToDataTable(@"C:\Users\joseph.mcgregor-macd\Desktop\temp\Customisations Import Template V2.xlsx", "Fields");
             }
         }
 

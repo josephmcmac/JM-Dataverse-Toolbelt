@@ -1,4 +1,3 @@
-using JosephM.Application.Application;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
@@ -7,6 +6,7 @@ using JosephM.Record.IService;
 using JosephM.Record.Sql;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Deployment.ImportExcel
 {
@@ -24,7 +24,7 @@ namespace JosephM.Deployment.ImportExcel
             ServiceRequestController controller)
         {
             controller.Controller.UpdateProgress(0, 1, "Loading Records For Import");
-            var dictionary = LoadMappingDictionary(request);
+            var dictionary = LoadMappingDictionary(request, controller.Controller);
             var importService = new SpreadsheetImportService(XrmRecordService);
             var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
             response.Connection = XrmRecordService.XrmRecordConfiguration;
@@ -32,19 +32,20 @@ namespace JosephM.Deployment.ImportExcel
             response.Message = "The Import Process Has Completed";
         }
 
-        public Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportExcelRequest request)
+        public Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportExcelRequest request, LogController logController)
         {
             var excelService = new ExcelRecordService(request.ExcelFile);
 
             var dictionary = new Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>>();
 
-            foreach (var tabMapping in request.Mappings)
+            var toIterate = request.Mappings.Where(tm => tm.TargetType != null).ToArray();
+            var countToDo = toIterate.Count();
+            var countDone = 0;
+            foreach (var tabMapping in toIterate)
             {
-                if (tabMapping.TargetType != null)
-                {
-                    var queryRows = excelService.RetrieveAll(tabMapping.SourceTab.Key, null);
-                    dictionary.Add(tabMapping, queryRows);
-                }
+                logController.LogLiteral($"Reading Sheet {++countDone}/{countToDo} {tabMapping.SourceTab.Key}");
+                var queryRows = excelService.RetrieveAll(tabMapping.SourceTab.Key, null);
+                dictionary.Add(tabMapping, queryRows);
             }
 
             return dictionary;

@@ -8,10 +8,15 @@ namespace JosephM.Record.Service
     /// </summary>
     public class RecordObject : RecordBase
     {
-        private readonly SortedDictionary<string, object> _fields = new SortedDictionary<string, object>();
+        private IDictionary<string, object> _fields = new SortedDictionary<string, object>();
 
         public RecordObject(string entityType) : base(entityType)
         {
+        }
+
+        public RecordObject(string entityType, IDictionary<string, object> fieldValues) : this(entityType)
+        {
+            _fields = fieldValues;
         }
 
         public override void SetField(string field, object value, IRecordService service)
