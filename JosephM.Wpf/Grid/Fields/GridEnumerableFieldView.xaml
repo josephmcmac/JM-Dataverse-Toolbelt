@@ -39,7 +39,7 @@
         <Grid Grid.Column="2">
             <TextBox
                 VerticalScrollBarVisibility="Auto"
-                Style="{StaticResource StringFieldEntryStyleReadOnly}"
+                Style="{StaticResource GridStringFieldEntryStyleReadOnly}"
                 Text="{Binding StringDisplay, Mode=OneWay, NotifyOnValidationError=True}" />
         </Grid>
     </Grid>
