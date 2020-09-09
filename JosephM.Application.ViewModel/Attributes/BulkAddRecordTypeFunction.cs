@@ -30,7 +30,6 @@ namespace JosephM.Application.ViewModel.Attributes
             var gridRecords = gridField.GridRecords;
 
             var picklistOptions = recordForm.RecordService.GetPicklistKeyValues(targetPropertyname, gridField.RecordType, subGridReference, null);
-            var includeExplicit = new[] { "subject", "uom", "productpricelevel" };
             return picklistOptions
                 .Where(r => AllowTypeMultipleTimes || (!gridRecords?.Any(g => g.GetRecordTypeFieldViewModel(targetPropertyname).Value?.Key == r.Key) ?? true))
                 .OrderBy(r => r.Value)
