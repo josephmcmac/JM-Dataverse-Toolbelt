@@ -518,7 +518,7 @@ namespace JosephM.CustomisationExporter.Exporter
             try
             {
                 var query = new QueryDefinition(Entities.workflow);
-                query.Fields = new[]
+                var fields = new List<string>()
                 {
                     Fields.workflow_.statecode,
                     Fields.workflow_.category,
@@ -536,9 +536,13 @@ namespace JosephM.CustomisationExporter.Exporter
                     Fields.workflow_.deletestage,
                     Fields.workflow_.istransacted,
                     Fields.workflow_.syncworkflowlogonfailure,
-                    Fields.workflow_.asyncautodelete,
-                    Fields.workflow_.businessprocesstype
+                    Fields.workflow_.asyncautodelete
                 };
+                if(Service.FieldExists(Fields.workflow_.businessprocesstype, Entities.workflow))
+                {
+                    fields.Add(Fields.workflow_.businessprocesstype);
+                }
+                query.Fields = fields;
                 query.RootFilter = new Filter()
                 {
                     Conditions = new List<Condition>
