@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Extentions;
+﻿using JosephM.Application.ViewModel.Validation;
+using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
@@ -99,14 +100,18 @@ namespace JosephM.CustomisationExporter.Exporter
             try
             {
                 var query = new QueryDefinition(Entities.systemform);
-                query.Fields = new[]
+                var fields = new List<string>(new[]
                 {
                     Fields.systemform_.type,
                     Fields.systemform_.objecttypecode,
                     Fields.systemform_.name,
                     Fields.systemform_.description,
-                    Fields.systemform_.formactivationstate
-                };
+                });
+                if(Service.FieldExists(Fields.systemform_.formactivationstate, Entities.systemform))
+                {
+                    fields.Add(Fields.systemform_.formactivationstate);
+                }
+                query.Fields = fields;
                 query.Sorts = new List<SortExpression>
                     {
                         new SortExpression(Fields.systemform_.type, SortType.Ascending),
@@ -252,13 +257,16 @@ namespace JosephM.CustomisationExporter.Exporter
         {
             try
             {
+                var conditions = new List<Condition>();
+                if(Service.FieldExists(Fields.team_.teamtype, Entities.team))
+                {
+                    conditions.Add(new Condition(Fields.team_.teamtype, ConditionType.NotEqual, OptionSets.Team.TeamType.Access));
+                }
+
                 var query = new QueryDefinition(Entities.team);
                 query.RootFilter = new Filter()
                 {
-                    Conditions = new List<Condition>
-                         {
-                             new Condition(Fields.team_.teamtype, ConditionType.NotEqual, OptionSets.Team.TeamType.Access)
-                         }
+                    Conditions = conditions
                 };
                 query.Sorts = new List<SortExpression>
                     {
@@ -518,30 +526,35 @@ namespace JosephM.CustomisationExporter.Exporter
             try
             {
                 var query = new QueryDefinition(Entities.workflow);
-                var fields = new List<string>()
+                var fields = new List<string>();
+                foreach(var field in new []
+                    {
+                        Fields.workflow_.statecode,
+                        Fields.workflow_.category,
+                        Fields.workflow_.name,
+                        Fields.workflow_.primaryentity,
+                        Fields.workflow_.mode,
+                        Fields.workflow_.scope,
+                        Fields.workflow_.runas,
+                        Fields.workflow_.ondemand,
+                        Fields.workflow_.subprocess,
+                        Fields.workflow_.triggeroncreate,
+                        Fields.workflow_.triggeronupdateattributelist,
+                        Fields.workflow_.updatestage,
+                        Fields.workflow_.triggerondelete,
+                        Fields.workflow_.deletestage,
+                        Fields.workflow_.istransacted,
+                        Fields.workflow_.syncworkflowlogonfailure,
+                        Fields.workflow_.asyncautodelete,
+                        Fields.workflow_.businessprocesstype
+                    })
                 {
-                    Fields.workflow_.statecode,
-                    Fields.workflow_.category,
-                    Fields.workflow_.name,
-                    Fields.workflow_.primaryentity,
-                    Fields.workflow_.mode,
-                    Fields.workflow_.scope,
-                    Fields.workflow_.runas,
-                    Fields.workflow_.ondemand,
-                    Fields.workflow_.subprocess,
-                    Fields.workflow_.triggeroncreate,
-                    Fields.workflow_.triggeronupdateattributelist,
-                    Fields.workflow_.updatestage,
-                    Fields.workflow_.triggerondelete,
-                    Fields.workflow_.deletestage,
-                    Fields.workflow_.istransacted,
-                    Fields.workflow_.syncworkflowlogonfailure,
-                    Fields.workflow_.asyncautodelete
-                };
-                if(Service.FieldExists(Fields.workflow_.businessprocesstype, Entities.workflow))
-                {
-                    fields.Add(Fields.workflow_.businessprocesstype);
+                    if (Service.FieldExists(field, Entities.workflow))
+                    {
+                        fields.Add(field);
+                    }
                 }
+
                 query.Fields = fields;
                 query.RootFilter = new Filter()
                 {
