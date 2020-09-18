@@ -9,7 +9,7 @@
   },
   {
     "Key": "Name",
-    "Value": "CDX https:\/\/cdx.transform.microsoft.com"
+    "Value": "CDX"
   },
   {
     "Key": "UseXrmToolingConnector",
@@ -29,7 +29,7 @@
   },
   {
     "Key": "OrganizationUniqueName",
-    "Value": "org7ae45537"
+    "Value": "org6b7b22d7"
   },
   {
     "Key": "Domain",
@@ -37,10 +37,10 @@
   },
   {
     "Key": "Username",
-    "Value": "admin@CRM840007.onmicrosoft.com"
+    "Value": "admin@CRM748482.onmicrosoft.com"
   },
   {
     "Key": "Password",
-    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAqqxr+OiUaU6nPa5Z1GLhhgAAAAACAAAAAAADZgAAwAAAABAAAABfEmjMa+vjxJGX1l\/JwtKtAAAAAASAAACgAAAAEAAAAEp7PjhqD9mdXeqhSS7025QYAAAATRWyOBqRKhT2Mxk11Pi4XLZrYAOI7vvHFAAAAFdcoGSSA4K7nN1vJyEY3F199kfT"
+    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAl5mlp2cibkKtxRpVoUILQQAAAAACAAAAAAADZgAAwAAAABAAAAAAYaWVqlpiUEZBUxLzgUIvAAAAAASAAACgAAAAEAAAAP+P62lqwKt2qbPqm\/UQ5HEYAAAA\/WlS71m2Ow4xEFu0Y366x9hTHH\/oUxBjFAAAAPXMtMjBwEGP9by37ZAC+ytZ6haP"
   }
 ]

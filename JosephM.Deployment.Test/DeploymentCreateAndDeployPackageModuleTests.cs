@@ -24,7 +24,7 @@ namespace JosephM.Deployment.Test
             DeleteAll(Entities.contact);
 
             var account = CreateAccount();
-            var solution = XrmRecordService.GetFirst("solution", XrmRecordService.GetPrimaryField("solution"), "Test Components");
+            var solution = XrmRecordService.GetFirst(Entities.solution, Fields.solution_.uniquename, "TestComponents");
             Assert.IsNotNull(solution);
 
             FileUtility.DeleteFiles(TestingFolder);

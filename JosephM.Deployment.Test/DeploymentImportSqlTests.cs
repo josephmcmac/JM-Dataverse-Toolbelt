@@ -15,6 +15,7 @@ using JosephM.Record.Extentions;
 using JosephM.Record.Metadata;
 using JosephM.Record.Query;
 using JosephM.Record.Sql;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.XrmModule.Test;
@@ -37,14 +38,9 @@ namespace JosephM.Deployment.Test
             //it also fakes the process running in a console app
 
             //also verifies email sent with summary
-
-            var queues = XrmRecordService.RetrieveAllAndClauses(Entities.queue, new[]
-            {
-                new Condition(Fields.queue_.emailaddress, ConditionType.NotNull)
-            });
-            Assert.IsTrue(queues.Count() > 1);
-            var queueSendFrom = queues.ElementAt(0);
-            var queueSendTo = queues.ElementAt(1);
+            
+            var queueSendFrom = XrmRecordService.ToIRecord(TestQueue);
+            var queueSendTo = XrmRecordService.ToIRecord(TestQueue1);
 
             //script of basic database import
             PrepareTests();

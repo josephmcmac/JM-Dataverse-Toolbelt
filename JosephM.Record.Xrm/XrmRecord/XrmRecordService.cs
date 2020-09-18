@@ -340,7 +340,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             }
         }
 
-        private IRecord ToIRecord(Entity entity)
+        public IRecord ToIRecord(Entity entity)
         {
             var xrmRecord = new XrmRecord(entity.LogicalName);
             xrmRecord.Id = entity.Id == Guid.Empty ? null : entity.Id.ToString();

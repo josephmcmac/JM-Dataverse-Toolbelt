@@ -575,6 +575,48 @@ namespace JosephM.Xrm.Test
             }
         }
 
+        private Entity _testQueue;
+
+        public Entity TestQueue
+        {
+            get
+            {
+                if (_testQueue == null)
+                {
+                    _testQueue = XrmService.GetFirst(Entities.queue, Fields.queue_.name, "TESTQUEUE");
+                    if (_testQueue == null)
+                    {
+                        _testQueue = new Entity(Entities.queue);
+                        _testQueue.SetField(Fields.queue_.name, "TESTQUEUE");
+                        _testQueue.SetField(Fields.queue_.emailaddress, "testqueue@example.com");
+                        _testQueue = CreateAndRetrieve(_testQueue);
+                    }
+                }
+                return _testQueue;
+            }
+        }
+
+        private Entity _testQueue1;
+
+        public Entity TestQueue1
+        {
+            get
+            {
+                if (_testQueue1 == null)
+                {
+                    _testQueue1 = XrmService.GetFirst(Entities.queue, Fields.queue_.name, "TESTQUEUE1");
+                    if (_testQueue1 == null)
+                    {
+                        _testQueue1 = new Entity(Entities.queue);
+                        _testQueue1.SetField(Fields.queue_.name, "TESTQUEUE1");
+                        _testQueue1.SetField(Fields.queue_.emailaddress, "testqueue1@example.com");
+                        _testQueue1 = CreateAndRetrieve(_testQueue1);
+                    }
+                }
+                return _testQueue1;
+            }
+        }
+
         private Entity _testAccount;
 
         public Entity TestAccount
