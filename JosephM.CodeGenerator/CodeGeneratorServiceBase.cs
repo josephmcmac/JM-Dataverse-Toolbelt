@@ -29,7 +29,7 @@ namespace JosephM.CodeGenerator
 
         private static IEnumerable<string> KeyWords
         {
-            get { return new[] { "abstract", "event", "namespace", "Equals", "class", "string", "int" }; }
+            get { return new[] { "abstract", "event", "namespace", "Equals", "class", "string", "int", "object" }; }
         }
 
         protected static string CreateCodeLabel(string rawLabel)
