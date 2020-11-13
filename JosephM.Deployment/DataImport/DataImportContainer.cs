@@ -412,8 +412,24 @@ namespace JosephM.Deployment.DataImport
                 {
                     var matchKeyFieldDictionary = AltMatchKeyDictionary[thisEntity.LogicalName]
                         .Distinct().ToDictionary(f => f, f => thisEntity.GetField(f));
-                    matchQuery.Criteria.Conditions.AddRange(matchKeyFieldDictionary.Select(kv =>
-                        new ConditionExpression(kv.Key, ConditionOperator.Equal, XrmService.ConvertToQueryValue(kv.Key, thisEntity.LogicalName, kv.Value))));
+
+                    foreach(var matchKeyField in matchKeyFieldDictionary)
+                    {
+                        if (matchKeyField.Value is EntityReference er
+                            && er.Id == Guid.Empty
+                            && !string.IsNullOrWhiteSpace(er.Name)
+                            && !string.IsNullOrWhiteSpace(er.LogicalName)
+                            && XrmService.EntityExists(er.LogicalName))
+                        {
+                            var linkTo = matchQuery.AddLink(er.LogicalName, matchKeyField.Key, XrmService.GetPrimaryKeyField(er.LogicalName));
+                            linkTo.LinkCriteria.AddCondition(new ConditionExpression(XrmService.GetPrimaryNameField(er.LogicalName), ConditionOperator.Equal, er.Name));
+                        }
+                        else
+                        {
+                            matchQuery.Criteria.Conditions.Add(new ConditionExpression(matchKeyField.Key, ConditionOperator.Equal, XrmService.ConvertToQueryValue(matchKeyField.Key, thisEntity.LogicalName, matchKeyField.Value)));
+                        }
+                    }
+
                 }
                 else if (MatchOption == MatchOption.PrimaryKeyThenName || thisTypesConfig != null)
                 {
