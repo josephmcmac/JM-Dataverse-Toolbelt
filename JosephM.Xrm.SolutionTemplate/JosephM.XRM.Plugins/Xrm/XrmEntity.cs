@@ -641,5 +641,23 @@ namespace $safeprojectname$.Xrm
             parties.Add(partyEntity);
             SetField(entity, fieldName, parties.ToArray());
         }
+
+        public static IEnumerable<Entity> GetEntitiesField(this Entity entity, string fieldName)
+        {
+            var value = entity.GetField(fieldName);
+            if (value == null)
+                return new Entity[0];
+            if (value is EntityCollection)
+            {
+                var collection = (EntityCollection)value;
+                if (collection.Entities.Any())
+                {
+                    return collection.Entities.ToList();
+                }
+                return null;
+            }
+            throw new Exception(string.Format("Field {0} Of Unexpected Type For Method {1}", fieldName,
+                value.GetType().Name));
+        }
     }
 }
