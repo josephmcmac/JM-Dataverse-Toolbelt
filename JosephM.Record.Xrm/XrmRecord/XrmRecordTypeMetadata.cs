@@ -315,5 +315,10 @@ namespace JosephM.Record.Xrm.XrmRecord
                 return XrmService.GetEntityMetadata(SchemaName).EntityHelpUrl;
             }
         }
+
+        public bool AutoAddToQueue
+        {
+            get { return XrmService.AutoAddToQueue(SchemaName); }
+        }
     }
 }

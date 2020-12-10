@@ -3552,6 +3552,12 @@ string recordType)
             return mt.IsValidForQueue != null && mt.IsValidForQueue.Value;
         }
 
+        public bool AutoAddToQueue(string recordType)
+        {
+            var mt = GetEntityMetadata(recordType);
+            return mt.AutoRouteToOwnerQueue != null && mt.AutoRouteToOwnerQueue.Value;
+        }
+
         public string GetDescription(string recordType)
         {
 

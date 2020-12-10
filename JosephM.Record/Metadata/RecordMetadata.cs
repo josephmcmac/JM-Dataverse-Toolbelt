@@ -178,5 +178,7 @@ namespace JosephM.Record.Metadata
         public bool HelpUrlEnabled => false;
 
         public string HelpUrl => null;
+
+        public bool AutoAddToQueue => false;
     }
 }

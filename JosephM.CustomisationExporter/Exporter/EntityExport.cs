@@ -10,7 +10,7 @@ namespace JosephM.CustomisationExporter.Exporter
             string displayCollectionName, string description, bool audit, bool isActivityType, bool notes,
             bool activities
             , bool connections, bool mailMerge, bool queues, string metadataId, bool changeTracking, string entitySetName,
-            bool documentManagement, bool quickCreate)
+            bool documentManagement, bool quickCreate, bool autoAddToQueue)
         {
             RecordTypeLabel = recordTypeLabel;
             RecordTypeSchemaName = recordTypeSchemaName;
@@ -33,6 +33,7 @@ namespace JosephM.CustomisationExporter.Exporter
             EntitySetName = entitySetName;
             DocumentManagement = documentManagement;
             QuickCreate = quickCreate;
+            AutoAddToQueue = autoAddToQueue;
         }
 
         [DisplayName(Headings.RecordTypes.DisplayName)]
@@ -76,5 +77,6 @@ namespace JosephM.CustomisationExporter.Exporter
         public string EntitySetName { get; set; }
         public bool DocumentManagement { get; set; }
         public bool QuickCreate { get; set; }
+        public bool AutoAddToQueue { get; set; }
     }
 }

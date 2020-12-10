@@ -97,5 +97,7 @@ namespace JosephM.Record.IService
         bool HelpUrlEnabled { get; }
         [Hidden]
         string HelpUrl { get; }
+        [Hidden]
+        bool AutoAddToQueue { get; }
     }
 }

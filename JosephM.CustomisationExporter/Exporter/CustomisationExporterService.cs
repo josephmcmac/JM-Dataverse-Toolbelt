@@ -967,7 +967,8 @@ namespace JosephM.CustomisationExporter.Exporter
                             mt.ChangeTracking,
                             mt.EntitySetName,
                             mt.DocumentManagement,
-                            mt.QuickCreate
+                            mt.QuickCreate,
+                            mt.AutoAddToQueue
                             ));
                     }
                     catch (Exception ex)
