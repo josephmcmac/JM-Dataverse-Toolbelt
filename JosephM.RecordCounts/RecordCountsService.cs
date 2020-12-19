@@ -28,10 +28,12 @@ namespace JosephM.RecordCounts
         {
             controller.LogLiteral("Loading Types");
 
-            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission };
+            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, "msdyn_casesuggestion", "msdyn_knowledgearticlesuggestion", "virtualresourcegroupresource", "usermobileofflineprofilemembership", "teammobileofflineprofilemembership" };
+            var includeTheseTypes = new[] { Entities.incidentresolution };
 
             var recordTypes = request.AllRecordTypes
                 ? Service.GetAllRecordTypes()
+                .Union(includeTheseTypes)
                 .Except(excludeTheseTypes)
                 .Where(r => Service.GetRecordTypeMetadata(r).Searchable)
                 .OrderBy(n => Service.GetDisplayName(n))
