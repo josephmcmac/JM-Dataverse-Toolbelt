@@ -687,7 +687,7 @@ namespace JosephM.Xrm
 
         public string GetEntityDisplayName(string recordType)
         {
-            return GetLabelDisplay(GetEntityMetadata(recordType).DisplayName);
+            return GetLabelDisplay(GetEntityMetadata(recordType).DisplayName) ?? recordType;
         }
 
         public string GetEntityCollectionName(string recordType)

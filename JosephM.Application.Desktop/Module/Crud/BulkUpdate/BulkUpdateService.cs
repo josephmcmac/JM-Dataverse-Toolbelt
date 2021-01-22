@@ -87,7 +87,8 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
                     }
                     catch (Exception ex)
                     {
-                        response.AddResponseItem(new BulkUpdateResponseItem(record.Id, record.GetStringField(RecordService.GetPrimaryField(record.Type)), ex));
+                        var primaryField = RecordService.GetPrimaryField(record.Type);
+                        response.AddResponseItem(new BulkUpdateResponseItem(record.Id, primaryField == null ? record.Id : record.GetStringField(primaryField), ex));
                         errorsThisIteration++;
                     }
                 }
