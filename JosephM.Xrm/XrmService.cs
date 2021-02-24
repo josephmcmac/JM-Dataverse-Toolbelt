@@ -605,6 +605,10 @@ namespace JosephM.Xrm
                 var targets = ((LookupAttributeMetadata)metadata).Targets;
                 result = targets.Any() ? string.Join(",", targets) : null;
             }
+            else if (metadata.AttributeType == AttributeTypeCode.PartyList)
+            {
+                return $"{Entities.contact},{Entities.account},{Entities.queue},{Entities.systemuser}";
+            }
             return result;
         }
 
@@ -923,7 +927,8 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             }
                             else if (!String.IsNullOrWhiteSpace(value.ToString()))
                             {
-                                if (value.ToString().All(c => char.IsDigit(c)))
+                                if (value.ToString().All(c => char.IsDigit(c) || c == '.')
+                                    && value.ToString().Count(c => c == '.') <= 1)
                                 {
                                     temp = DateTime.FromOADate(double.Parse(value.ToString()));
                                 }
@@ -1150,6 +1155,13 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                         }
                     case AttributeTypeCode.PartyList:
                         {
+                            if (value is string)
+                            {
+                                return value.ToString().Split(';')
+                                    .Select(s => new EntityReference() { Name = s.Trim() })
+                                    .Select(XrmEntity.CreatePartyEntity)
+                                    .ToArray();
+                            }
                             if (value is IEnumerable<EntityReference>)
                             {
                                 return ((IEnumerable<EntityReference>)value).Select(XrmEntity.CreatePartyEntity).ToArray();

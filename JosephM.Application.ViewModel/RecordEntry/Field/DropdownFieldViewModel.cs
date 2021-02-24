@@ -32,6 +32,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         _itemsSource = new[] { Value };
                     }
                 }
+                if (Value == null && ItemsSource.Count() == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordType()) ?? false))
+                {
+                    Value = ItemsSource.First();
+                }
                 OnPropertyChanged(nameof(ItemsSource));
             }
         }

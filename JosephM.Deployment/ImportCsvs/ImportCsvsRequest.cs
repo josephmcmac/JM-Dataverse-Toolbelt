@@ -150,6 +150,12 @@ namespace JosephM.Deployment.ImportCsvs
 
                 string IMapSpreadsheetColumn.TargetField => TargetField?.Key;
 
+                bool IMapSpreadsheetColumn.UseAltMatchField => false;
+
+                string IMapSpreadsheetColumn.AltMatchFieldType => null;
+
+                string IMapSpreadsheetColumn.AltMatchField => null;
+
                 public override string ToString()
                 {
                     return (SourceColumn?.Value ?? "(None)") + " > " + (TargetField?.Value ?? "(None)");
@@ -164,6 +170,7 @@ namespace JosephM.Deployment.ImportCsvs
 
                 string IMapSpreadsheetMatchKey.TargetField => TargetField?.Key;
                 string IMapSpreadsheetMatchKey.TargetFieldLabel => TargetField?.Value;
+                bool IMapSpreadsheetMatchKey.CaseSensitive => false;
 
                 public override string ToString()
                 {

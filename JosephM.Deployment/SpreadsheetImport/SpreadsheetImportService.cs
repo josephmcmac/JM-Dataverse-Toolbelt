@@ -33,17 +33,41 @@ namespace JosephM.Deployment.SpreadsheetImport
             var parseResponse = ParseIntoEntities(mappings, controller.Controller, useAmericanDates: useAmericanDates);
             response.LoadParseResponse(parseResponse);
             var dataImportService = new DataImportService(XrmRecordService);
-            var matchKeyDictionary = new Dictionary<string, IEnumerable<string>>();
+            var matchKeyDictionary = new Dictionary<string, IEnumerable<KeyValuePair<string, bool>>>();
             foreach(var map in mappings.Keys)
             {
                 if(map.AltMatchKeys != null && map.AltMatchKeys.Any())
                 {
                     if (matchKeyDictionary.ContainsKey(map.TargetType))
+                    {
                         throw new NotSupportedException($"Error Type {map.TargetType} Is Defined With Multiple Match Keys");
-                    matchKeyDictionary.Add(map.TargetType, map.AltMatchKeys.Select(mk => mk.TargetField).ToArray());
+                    }
+                    matchKeyDictionary.Add(map.TargetType, map.AltMatchKeys.Select(mk => new  KeyValuePair<string, bool>(mk.TargetField, mk.CaseSensitive)).ToArray());
                 }
             }
-            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, updateOnly: updateOnly, includeOwner: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit));
+            var lookupKeyDictionary = new Dictionary<string, Dictionary<string, KeyValuePair<string, string>>>();
+            foreach (var map in mappings.Keys)
+            {
+                if (map.FieldMappings != null)
+                {
+                    foreach (var fieldMapping in map.FieldMappings)
+                    {
+                        if (fieldMapping.UseAltMatchField)
+                        {
+                            if(!lookupKeyDictionary.ContainsKey(map.TargetType))
+                            {
+                                lookupKeyDictionary.Add(map.TargetType, new Dictionary<string, KeyValuePair<string, string>>());
+                            }
+                            if(lookupKeyDictionary[map.TargetType].ContainsKey(fieldMapping.TargetField))
+                            {
+                                throw new NotSupportedException($"Error Type {map.TargetType} Field {fieldMapping.TargetField} Cannot Use Have {nameof(IMapSpreadsheetColumn.UseAltMatchField)} True When The Field Has Multiple Maps in The Import");
+                            }
+                            lookupKeyDictionary[map.TargetType].Add(fieldMapping.TargetField, new KeyValuePair<string, string>(fieldMapping.AltMatchFieldType, fieldMapping.AltMatchField));
+                        }
+                    }
+                }
+            }
+            response.LoadDataImport(dataImportService.DoImport(parseResponse.GetParsedEntities(), controller, maskEmails, matchOption: matchByName ? MatchOption.PrimaryKeyThenName : MatchOption.PrimaryKeyOnly, loadExistingErrorsIntoSummary: response.ResponseItems, altMatchKeyDictionary: matchKeyDictionary, altLookupMatchKeyDictionary: lookupKeyDictionary, updateOnly: updateOnly, includeOwner: true, containsExportedConfigFields: false, executeMultipleSetSize: executeMultipleSetSize, targetCacheLimit: targetCacheLimit));
             return response;
         }
 

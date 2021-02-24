@@ -18,11 +18,12 @@ namespace JosephM.Deployment.DataImport
     public class DataImportContainer
     {
         private Dictionary<Entity, List<string>> _fieldsToRetry = new Dictionary<Entity, List<string>>();
-        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<string>> altMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit)
+        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit)
         {
             Response = response;
             XrmRecordService = xrmRecordService;
             AltMatchKeyDictionary = altMatchKeyDictionary;
+            AltLookupMatchKeyDictionary = altLookupMatchKeyDictionary;
             Controller = controller;
             IncludeOwner = includeOwner;
             MaskEmails = maskEmails;
@@ -47,7 +48,8 @@ namespace JosephM.Deployment.DataImport
         public DataImportResponse Response { get; }
         public XrmRecordService XrmRecordService { get; }
         public XrmService XrmService { get { return XrmRecordService.XrmService; } }
-        public Dictionary<string, IEnumerable<string>> AltMatchKeyDictionary { get; }
+        public Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> AltMatchKeyDictionary { get; }
+        public Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> AltLookupMatchKeyDictionary { get; }
         public ServiceRequestController Controller { get; }
         public bool IncludeOwner { get; }
         public bool MaskEmails { get; }
@@ -74,7 +76,7 @@ namespace JosephM.Deployment.DataImport
                 ? string.Join("|", AltMatchKeyDictionary[entity.LogicalName])
                 : null;
             var value = AltMatchKeyDictionary.ContainsKey(entity.LogicalName)
-                ? string.Join("|", AltMatchKeyDictionary[entity.LogicalName].Select(k => XrmService.GetFieldAsDisplayString(entity.LogicalName, k, entity.GetField(k))))
+                ? string.Join("|", AltMatchKeyDictionary[entity.LogicalName].Select(k => XrmService.GetFieldAsDisplayString(entity.LogicalName, k.Key, entity.GetField(k.Key))))
                 : null;
             var rowNumber = entity.Contains("Sheet.RowNumber")
                 ? entity.GetInt("Sheet.RowNumber")
@@ -411,7 +413,7 @@ namespace JosephM.Deployment.DataImport
                 if (AltMatchKeyDictionary.ContainsKey(thisEntity.LogicalName))
                 {
                     var matchKeyFieldDictionary = AltMatchKeyDictionary[thisEntity.LogicalName]
-                        .Distinct().ToDictionary(f => f, f => thisEntity.GetField(f));
+                        .Distinct().ToDictionary(f => f.Key, f => thisEntity.GetField(f.Key));
 
                     foreach(var matchKeyField in matchKeyFieldDictionary)
                     {
@@ -449,12 +451,11 @@ namespace JosephM.Deployment.DataImport
             }
         }
 
-        public QueryExpression GetParseLookupQuery(Entity thisEntity, string field, string targetType)
+        public QueryExpression GetParseLookupQuery(Entity thisEntity, string field, string targetType, string matchField)
         {
-            var referencedName = thisEntity.GetLookupName(field) ?? "";
+            var referencedValue = thisEntity.GetLookupName(field) ?? "";
             var referencedId = thisEntity.GetLookupGuid(field) ?? Guid.Empty;
             var primaryKey = XrmService.GetPrimaryKeyField(targetType);
-            var primaryName = XrmService.GetPrimaryNameField(targetType);
             var configs = XrmRecordService.GetTypeConfigs();
             var thisTypeConfig = configs.GetFor(thisEntity.LogicalName);
             var targetTypeConfig = configs.GetFor(targetType);
@@ -462,7 +463,7 @@ namespace JosephM.Deployment.DataImport
             {
                 var matchQuery = XrmService.BuildQuery(targetType, null, new[]
                 {
-                    new ConditionExpression(primaryName, ConditionOperator.Equal, referencedName)
+                    new ConditionExpression(matchField, ConditionOperator.Equal, referencedValue)
                 }, null);
                 
                 var targetTypeParentOrUniqueFields = new List<string>();
@@ -489,9 +490,9 @@ namespace JosephM.Deployment.DataImport
                 matchQuery.Criteria.FilterOperator = LogicalOperator.Or;
                 matchQuery.Criteria.Conditions.Add(
                     new ConditionExpression(primaryKey, ConditionOperator.Equal, referencedId));
-                if (primaryName != null && referencedName != null)
+                if (matchField != null && referencedValue != null)
                     matchQuery.Criteria.Conditions.Add(
-                        new ConditionExpression(primaryName, ConditionOperator.Equal, referencedName));
+                        new ConditionExpression(matchField, ConditionOperator.Equal, referencedValue));
                 return matchQuery;
             }
         }

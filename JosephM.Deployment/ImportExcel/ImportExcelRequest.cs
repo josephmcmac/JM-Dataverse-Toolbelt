@@ -3,6 +3,8 @@ using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
+using JosephM.Record.Attributes;
+using JosephM.Record.Metadata;
 using JosephM.Record.Sql;
 using System.Collections.Generic;
 
@@ -137,13 +139,35 @@ namespace JosephM.Deployment.ImportExcel
                 [RequiredProperty]
                 public RecordField TargetField { get; set; }
 
+                [RequiredProperty]
+                [PropertyInContextByPropertyNotNull(nameof(TargetField))]
+                public bool UseAltMatchField { get; set; }
+
+                [RequiredProperty]
+                [PropertyInContextByPropertyValue(nameof(UseAltMatchField), true)]
+                [RecordTypeFor(nameof(AltMatchField))]
+                [InitialiseIfOneOption]
+                [TargetTypesFor(nameof(TargetField))]
+                public RecordType AltMatchFieldType { get; set; }
+
+                [RequiredProperty]
+                [PropertyInContextByPropertyNotNull(nameof(AltMatchFieldType))]
+                [PropertyInContextByPropertyValue(nameof(UseAltMatchField), true)]
+                public RecordField AltMatchField { get; set; }
+
                 string IMapSpreadsheetColumn.SourceField => SourceColumn?.Key;
 
                 string IMapSpreadsheetColumn.TargetField => TargetField?.Key;
 
+                bool IMapSpreadsheetColumn.UseAltMatchField => UseAltMatchField;
+
+                string IMapSpreadsheetColumn.AltMatchFieldType => AltMatchFieldType?.Key;
+
+                string IMapSpreadsheetColumn.AltMatchField => AltMatchField?.Key;
+
                 public override string ToString()
                 {
-                    return (SourceColumn?.Value ?? "(None)") + " > " + (TargetField?.Value ?? "(None)");
+                    return (SourceColumn?.Value ?? "(None)") + " > " + (TargetField?.Value ?? "(None)") + (UseAltMatchField ? $"{AltMatchFieldType?.Key}.{AltMatchField?.Key}" : null);
                 }
             }
 
@@ -153,12 +177,16 @@ namespace JosephM.Deployment.ImportExcel
                 [RequiredProperty]
                 public RecordField TargetField { get; set; }
 
+                [RequiredProperty]
+                public bool CaseSensitive { get; set; }
+
                 string IMapSpreadsheetMatchKey.TargetField => TargetField?.Key;
                 string IMapSpreadsheetMatchKey.TargetFieldLabel => TargetField?.Value;
+                bool IMapSpreadsheetMatchKey.CaseSensitive => CaseSensitive;
 
                 public override string ToString()
                 {
-                    return (TargetField?.Value ?? "(Empty)");
+                    return (TargetField?.Value ?? "(Empty)") + (CaseSensitive ? "{case sensitive)" : null);
                 }
             }
         }

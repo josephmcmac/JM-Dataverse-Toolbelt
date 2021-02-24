@@ -34,7 +34,7 @@ namespace JosephM.Deployment.DataImport
 
         private Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>> _cachedRecords = new Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>>();
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<string>> altMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null) 
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null) 
         {
             var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
@@ -43,7 +43,8 @@ namespace JosephM.Deployment.DataImport
                 controller.LogLiteral("Preparing Import");
                 var dataImportContainer = new DataImportContainer(response,
                     XrmRecordService,
-                    altMatchKeyDictionary ?? new Dictionary<string, IEnumerable<string>>(),
+                    altMatchKeyDictionary ?? new Dictionary<string, IEnumerable<KeyValuePair<string, bool>>>(),
+                    altLookupMatchKeyDictionary ?? new Dictionary<string, Dictionary<string, KeyValuePair<string, string>>>(),
                     entities,
                     controller,
                     includeOwner,
@@ -337,23 +338,29 @@ namespace JosephM.Deployment.DataImport
                             .Where(f => XrmService.IsActivityParty(f, recordType))
                             .ToArray();
 
-                        var dictionaryPartiesToParent = new Dictionary<Entity, Entity>();
-                        foreach (var entity in thisSetOfEntities.ToArray())
+                        foreach (var field in activityPartyFields)
                         {
-                            foreach (var field in activityPartyFields)
+                            string matchType = null;
+                            string matchField = null;
+                            if(dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(recordType)
+                                && dataImportContainer.AltLookupMatchKeyDictionary[recordType].ContainsKey(field))
+                            {
+                                matchType = dataImportContainer.AltLookupMatchKeyDictionary[recordType][field].Key;
+                                matchField = dataImportContainer.AltLookupMatchKeyDictionary[recordType][field].Value;
+                            }
+
+                            var dictionaryPartiesToParent = new Dictionary<Entity, Entity>();
+                            foreach (var entity in thisSetOfEntities.ToArray())
                             {
                                 var parties = entity.GetActivityParties(field);
-                                foreach(var party in parties)
+                                foreach (var party in parties)
                                 {
                                     if (!dictionaryPartiesToParent.ContainsKey(party))
                                         dictionaryPartiesToParent.Add(party, entity);
                                 }
                             }
+                            ParseLookupFields(dataImportContainer, dictionaryPartiesToParent.Keys.ToList(), new[] { Fields.activityparty_.partyid }, isRetry: false, allowAddForRetry: false, doWhenNotResolved: (e, f) => thisSetOfEntities.Remove(dictionaryPartiesToParent[e]), getPartyParent: (e) => dictionaryPartiesToParent[e], usetargetType: matchType, usetargetField: matchField);
                         }
-
-                        ParseLookupFields(dataImportContainer, dictionaryPartiesToParent.Keys.ToList(), new[] { Fields.activityparty_.partyid }, isRetry: false, allowAddForRetry: false,
-                                doWhenNotResolved: (e, f) => thisSetOfEntities.Remove(dictionaryPartiesToParent[e]),
-                                getPartyParent: (e) => dictionaryPartiesToParent[e]);
 
                         var forCreateEntitiesCopy = new Dictionary<Entity, Entity>();
                         var forUpdateEntitiesCopy = new Dictionary<Entity, Entity>();
@@ -554,7 +561,7 @@ namespace JosephM.Deployment.DataImport
 
         private void ParseLookupFields(DataImportContainer dataImportContainer, IEnumerable<Entity> thisSetOfEntities, IEnumerable<string> lookupFields, bool isRetry, bool allowAddForRetry, Action<Entity, string> doWhenResolved = null,
             Action<Entity, string> doWhenNotResolved = null,
-            Func<Entity, Entity> getPartyParent = null)
+            Func<Entity, Entity> getPartyParent = null, string usetargetType = null, string usetargetField = null)
         {
             if (thisSetOfEntities.Any())
             {
@@ -566,7 +573,18 @@ namespace JosephM.Deployment.DataImport
                         .Where(e => e.GetField(lookupField) != null)
                         .ToList();
 
-                    var targetTypes = XrmService.GetLookupTargetEntity(lookupField, recordType);
+                    string altMatchType = usetargetType;
+                    string altMatchField = usetargetField;
+
+                    if (dataImportContainer.AltLookupMatchKeyDictionary != null
+                        && dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(recordType)
+                        && dataImportContainer.AltLookupMatchKeyDictionary[recordType].ContainsKey(lookupField))
+                    {
+                        altMatchType = dataImportContainer.AltLookupMatchKeyDictionary[recordType][lookupField].Key;
+                        altMatchField = dataImportContainer.AltLookupMatchKeyDictionary[recordType][lookupField].Value;
+                    }
+                    
+                    var targetTypes = altMatchType ?? XrmService.GetLookupTargetEntity(lookupField, recordType);
                     if (targetTypes != null)
                     {
                         var targetTypeSplit = targetTypes.Split(',');
@@ -575,7 +593,7 @@ namespace JosephM.Deployment.DataImport
                             if (!recordsNotYetResolved.Any())
                                 break;
 
-                            var thisTargetPrimaryField = XrmService.GetPrimaryNameField(targetType);
+                            var thisTargetField = altMatchField ?? XrmService.GetPrimaryNameField(targetType);
                             var thisTargetPrimarykey = XrmService.GetPrimaryKeyField(targetType);
 
                             var recordsToTry = recordsNotYetResolved
@@ -595,7 +613,7 @@ namespace JosephM.Deployment.DataImport
                             //we will query the matches
                             var querySetResponses = targetTypesConfig != null || !isCached
                                 ? XrmService.ExecuteMultiple(recordsToTry
-                                    .Select(e => dataImportContainer.GetParseLookupQuery(e, lookupField, targetType))
+                                    .Select(e => dataImportContainer.GetParseLookupQuery(e, lookupField, targetType, thisTargetField))
                                     .Select(q => new RetrieveMultipleRequest() { Query = q })
                                     .ToArray())
                                 : new ExecuteMultipleResponseItem[0];
@@ -604,7 +622,7 @@ namespace JosephM.Deployment.DataImport
                             foreach (var entity in recordsToTry)
                             {
                                 var thisEntity = entity;
-                                var referencedName = thisEntity.GetLookupName(lookupField);
+                                var referencedValue = thisEntity.GetLookupName(lookupField);
                                 var referencedId = thisEntity.GetLookupGuid(lookupField) ?? Guid.Empty;
                                 try
                                 {
@@ -634,7 +652,7 @@ namespace JosephM.Deployment.DataImport
                                         {
                                             matchRecords = dataImportContainer.GetMatchingEntities(targetType, new Dictionary<string, object>
                                                     {
-                                                        { thisTargetPrimaryField, referencedName }
+                                                        { thisTargetField, referencedValue }
                                                     });
                                             matchRecords = dataImportContainer.FilterForNameMatch(matchRecords);
                                         }
@@ -642,12 +660,21 @@ namespace JosephM.Deployment.DataImport
 
                                     if (matchRecords.Count() > 1)
                                     {
-                                        throw new Exception($"Could Not Find Matching Target Record For The Field {lookupField} Named '{referencedName}'. This Field Is Configured As Required To Match In The Target Instance When Populated");
+                                        var caseMatch = matchRecords.Where(m => string.CompareOrdinal(referencedValue, m.GetStringField(thisTargetField)) == 0);
+                                        var notCaseMatch = matchRecords.Where(m => string.CompareOrdinal(referencedValue, m.GetStringField(thisTargetField)) != 0);
+                                        if (caseMatch.Count() == 1 && notCaseMatch.Count() > 0)
+                                        {
+                                            matchRecords = caseMatch.ToArray();
+                                        }
+                                        else
+                                        {
+                                            throw new Exception($"Could Not Find Matching Target Record For The Field {lookupField} Named '{referencedValue}'. This Field Is Configured As Required To Match In The Target Instance When Populated");
+                                        }
                                     }
                                     if (matchRecords.Count() == 1)
                                     {
                                         thisEntity.SetLookupField(lookupField, matchRecords.First());
-                                        ((EntityReference)(thisEntity.GetField(lookupField))).Name = matchRecords.First().GetStringField(thisTargetPrimaryField);
+                                        ((EntityReference)(thisEntity.GetField(lookupField))).Name = matchRecords.First().GetStringField(thisTargetField);
                                         recordsNotYetResolved.Remove(thisEntity);
                                         doWhenResolved?.Invoke(thisEntity, lookupField);
                                     }
@@ -790,7 +817,7 @@ namespace JosephM.Deployment.DataImport
                     else if (dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.LogicalName))
                     {
                         var matchKeyFieldDictionary = dataImportContainer.AltMatchKeyDictionary[thisEntity.LogicalName]
-                            .Distinct().ToDictionary(f => f, f => thisEntity.GetField(f));
+                            .Distinct().ToDictionary(f => f.Key, f => thisEntity.GetField(f.Key));
                         if (matchKeyFieldDictionary.Any(kv => XrmEntity.FieldsEqual(null, kv.Value)))
                         {
                             throw new Exception("Match Key Field Is Empty");
@@ -831,9 +858,37 @@ namespace JosephM.Deployment.DataImport
                     {
                         throw new Exception("Updates Only And No Matching Record Found");
                     }
+                    if(dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.LogicalName))
+                    {
+                        var caseSensitiveMatches = dataImportContainer.AltMatchKeyDictionary[thisEntity.LogicalName]
+                            .Where(kv => kv.Value).ToArray();
+                        if(caseSensitiveMatches.Any())
+                        {
+                            var notCaseMatches = matchRecords
+                                .Where(m => caseSensitiveMatches.Any(csm => string.CompareOrdinal(thisEntity.GetStringField(csm.Key), m.GetStringField(csm.Key)) != 0))
+                                .ToArray();
+                            matchRecords = matchRecords.Except(notCaseMatches).ToArray();
+                        }
+                    }
                     if (matchRecords.Count() > 1)
                     {
-                        throw new Exception("Multiple Matches Were Found In The Target");
+                        var matchStringFields = (dataImportContainer.AltMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                            ? dataImportContainer.AltMatchKeyDictionary[thisEntity.LogicalName].Select(kv => kv.Key)
+                            : new[] { primaryField })
+                            .Where(s => XrmRecordService.IsString(s, recordType)).ToArray();
+
+                        var caseMatch = matchRecords.Where(m => matchStringFields.All(ms => string.CompareOrdinal(thisEntity.GetStringField(ms), m.GetStringField(ms)) == 0));
+                        var notCaseMatch = matchRecords.Where(m => matchStringFields.All(ms => string.CompareOrdinal(thisEntity.GetStringField(ms), m.GetStringField(ms)) != 0));
+
+                        if (matchStringFields.Count() > 0 && caseMatch.Count() == 1 && notCaseMatch.Count() > 0)
+                        {
+                            matchRecords = caseMatch.ToArray();
+                        }
+                        else
+                        {
+                            throw new Exception("Multiple Matches Were Found In The Target");
+                        }
+                        
                     }
                     if (matchRecords.Any())
                     {

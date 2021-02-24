@@ -248,8 +248,49 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendLookupFieldCascadeChanges(fieldName, recordType, onChanges);
             AppendCascadeOnChanges(fieldName, recordType, onChanges);
             AppendFieldForChanges(fieldName, recordType, onChanges, clearValue: true);
+            AppendTargetTypesForChanges(fieldName, recordType, onChanges);
             AppendOnChangeFunctions(fieldName, recordType, onChanges, entryViewModel);
             return base.GetOnChanges(fieldName, recordType, entryViewModel).Union(onChanges);
+        }
+
+        private void AppendTargetTypesForChanges(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges)
+        {
+            foreach (var property in ObjectRecordService.GetFields(recordType))
+            {
+                var propertyInfo = ObjectRecordService.GetPropertyInfo(property, recordType);
+                var targetsForAttributes = propertyInfo
+                    .GetCustomAttributes<TargetTypesFor>()
+                    .Where(a => a.Property == fieldName)
+                    .Cast<TargetTypesFor>();
+                if (targetsForAttributes.Any())
+                {
+                    onChanges.Add((re) =>
+                    {
+                        var dependencyViewModel = re.GetRecordFieldFieldViewModel(fieldName);
+                        var dependantViewModel = re.GetRecordTypeFieldViewModel(propertyInfo.Name);
+                        var selectedField = dependencyViewModel.Value?.Key;
+                        var selectedFieldForType = GetDependantValue(dependencyViewModel.FieldName, dependencyViewModel.GetRecordType(), dependencyViewModel.RecordEntryViewModel);
+                        if (selectedField != null && ObjectRecordService.LookupService != null)
+                        {
+                            var targetTypes = ObjectRecordService.LookupService.GetLookupTargetType(selectedField, selectedFieldForType);
+                            foreach (var targetsForAttribute in targetsForAttributes)
+                            {
+                                if (!string.IsNullOrWhiteSpace(targetTypes))
+                                {
+                                    var splitThem = targetTypes.Split(',');
+                                    dependantViewModel.ItemsSource = splitThem
+                                    .Select(s => new RecordType(s, ObjectRecordService.LookupService.GetDisplayName(s)))
+                                    .ToArray();
+                                }
+                                else
+                                {
+                                    dependantViewModel.ItemsSource = new RecordType[0];
+                                }
+                            }
+                        }
+                    });
+                }
+            }
         }
 
         private void AppendOnChangeFunctions(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> onChanges, RecordEntryViewModelBase entryViewModel)

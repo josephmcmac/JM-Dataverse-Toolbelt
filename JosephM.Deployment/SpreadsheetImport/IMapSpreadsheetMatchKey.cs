@@ -4,5 +4,6 @@
     {
         string TargetField { get; }
         string TargetFieldLabel { get; }
+        bool CaseSensitive { get; }
     }
 }
