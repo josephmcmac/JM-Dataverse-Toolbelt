@@ -104,17 +104,34 @@ namespace JosephM.Deployment.DataImport
                     {
                         try
                         {
+
                             //bit of hack
                             //when importing from csv just set the fields to the string name of the referenced record
                             //so either string when csv or guid when xml import/export
+                            string matchType1 = relationship.Entity1IntersectAttribute;
+                            string matchField1 = XrmRecordService.GetPrimaryField(type1);
+                            if (dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName].ContainsKey(relationship.Entity1IntersectAttribute))
+                            {
+                                matchType1 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][relationship.Entity1IntersectAttribute].Key;
+                                matchField1 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][relationship.Entity1IntersectAttribute].Value;
+                            }
                             var value1 = thisEntity.GetField(relationship.Entity1IntersectAttribute);
                             var id1 = value1 is string
-                                ? dataImportContainer.GetUniqueMatchingEntity(type1, XrmRecordService.GetPrimaryField(type1), (string)value1).Id
+                                ? dataImportContainer.GetUniqueMatchingEntity(matchType1, matchField1, (string)value1).Id
                                 : thisEntity.GetGuidField(relationship.Entity1IntersectAttribute);
 
+                            string matchType2 = relationship.Entity2IntersectAttribute;
+                            string matchField2 = XrmRecordService.GetPrimaryField(type2);
+                            if (dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
+                                && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName].ContainsKey(relationship.Entity2IntersectAttribute))
+                            {
+                                matchType2 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][relationship.Entity2IntersectAttribute].Key;
+                                matchField2 = dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName][relationship.Entity2IntersectAttribute].Value;
+                            }
                             var value2 = thisEntity.GetField(relationship.Entity2IntersectAttribute);
                             var id2 = value2 is string
-                                ? dataImportContainer.GetUniqueMatchingEntity(type2, XrmRecordService.GetPrimaryField(type2), (string)value2).Id
+                                ? dataImportContainer.GetUniqueMatchingEntity(matchType2, matchField2, (string)value2).Id
                                 : thisEntity.GetGuidField(relationship.Entity2IntersectAttribute);
 
                             //add a where field lookup reference then look it up

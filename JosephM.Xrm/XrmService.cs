@@ -609,6 +609,25 @@ namespace JosephM.Xrm
             {
                 return $"{Entities.contact},{Entities.account},{Entities.queue},{Entities.systemuser}";
             }
+            else if (metadata.AttributeType == AttributeTypeCode.Uniqueidentifier)
+            {
+                var typeMetadata = GetEntityMetadata(entity);
+                if(typeMetadata.IsIntersect ?? false)
+                {
+                    var relationshipMetadata = GetRelationshipMetadataForEntityName(entity);
+                    if(relationshipMetadata != null)
+                    {
+                        if(relationshipMetadata.Entity1IntersectAttribute == field)
+                        {
+                            result = relationshipMetadata.Entity1LogicalName;
+                        }
+                        else if (relationshipMetadata.Entity2IntersectAttribute == field)
+                        {
+                            result = relationshipMetadata.Entity2LogicalName;
+                        }
+                    }
+                }
+            }
             return result;
         }
 

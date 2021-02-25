@@ -373,8 +373,19 @@ namespace JosephM.Deployment.DataImport
                 throw new NullReferenceException(string.Format("No Record Matched To The {0} Of {1} When Matching The Name",
                         "Name", value));
             if (matchingRecords.Count() > 1)
-                throw new Exception(string.Format("More Than One Record Match To The {0} Of {1} When Matching The Name",
-                    "Name", value));
+            {
+                var caseMatch = matchingRecords.Where(m => string.CompareOrdinal(value, m.GetStringField(field)) == 0);
+                var notCaseMatch = matchingRecords.Where(m => string.CompareOrdinal(value, m.GetStringField(field)) != 0);
+                if (caseMatch.Count() == 1 && notCaseMatch.Count() > 0)
+                {
+                    matchingRecords = caseMatch.ToArray();
+                }
+                else
+                {
+                    throw new Exception(string.Format("More Than One Record Match To The {0} Of {1} When Matching The Name",
+                        "Name", value));
+                }
+            }
             return matchingRecords.First();
         }
 

@@ -147,11 +147,14 @@ namespace JosephM.Deployment.SpreadsheetImport
                                 //for lookups am going to set to a empty guid and allow the import part to replace with a correct guid
                                 if (!stringValue.IsNullOrWhiteSpace())
                                 {
+                                    var lookupTargetType = fieldMapping.UseAltMatchField
+                                        ? fieldMapping.AltMatchFieldType
+                                        : XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType);
                                     var isGuid = Guid.Empty;
                                     if (Guid.TryParse(stringValue, out isGuid))
                                     {
                                         fieldValues[targetField] =
-                                            new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
+                                            new EntityReference(lookupTargetType,
                                                 isGuid)
                                             {
                                                 Name = stringValue
@@ -160,7 +163,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                                     else
                                     {
                                         fieldValues[targetField] =
-                                            new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
+                                            new EntityReference(lookupTargetType,
                                                 Guid.Empty)
                                             {
                                                 Name = stringValue
