@@ -1,5 +1,4 @@
 ﻿using $ext_safeprojectname$.Plugins.Services;
-using $ext_safeprojectname$.Plugins.Rollups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System;
