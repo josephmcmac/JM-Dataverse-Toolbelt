@@ -127,6 +127,7 @@
     <Compile Include="Module\Crud\BulkCopyFieldValue\BulkCopyFieldValueResponse.cs" />
     <Compile Include="Module\Crud\BulkCopyFieldValue\BulkCopyFieldValueResponseItem.cs" />
     <Compile Include="Module\Crud\BulkCopyFieldValue\BulkCopyFieldValueService.cs" />
+    <Compile Include="Module\OpenLink\OpenLinkModule.cs" />
     <Compile Include="Module\Settings\SettingsAggregatorDialog.cs" />
     <Compile Include="Module\Settings\SettingsAggregator.cs" />
     <Compile Include="Module\Settings\AppSettingDialog.cs" />

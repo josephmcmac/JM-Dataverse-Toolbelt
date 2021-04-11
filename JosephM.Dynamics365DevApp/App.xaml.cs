@@ -2,6 +2,7 @@
 using JosephM.Application.Desktop.Console;
 using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.ApplicationInsights;
+using JosephM.Application.Desktop.Module.OpenLink;
 using JosephM.Application.Desktop.Module.ReleaseCheckModule;
 using JosephM.Application.Desktop.Module.SavedRequests;
 using JosephM.Application.Desktop.Module.Themes;
@@ -51,6 +52,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<AutonumberModule>();
             app.AddModule<ThemeModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
+            app.AddModule<DonateModule>();
             app.Run();
         }
 
@@ -80,6 +82,13 @@ namespace JosephM.XrmDeveloperTool
         public class DevAppApplicationInsightsModule : ApplicationInsightsModule
         {
             public override string InstrumentationKey => "c4de0a87-25be-4678-8585-38caf2b1cfa0";
+        }
+
+        public class DonateModule : OpenLinkModule
+        {
+            public override int SettingsOrder => 9999999;
+            public override string MainOperationName => "Donate";
+            public override string UrlToOpen => "https://github.com/sponsors/josephmcmac?frequency=one-time";
         }
     }
 }

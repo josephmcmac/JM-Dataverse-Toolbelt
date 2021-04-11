@@ -308,7 +308,13 @@
           <ButtonText>Configure Autonumber</ButtonText>
         </Strings>
       </Button>
-    </Buttons>
+		<Button guid="guidXrmPackageCmdSet" id="DonateCommandId" priority="0x0102" type="Button">
+		<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+		<Strings>
+			<ButtonText>Donate</ButtonText>
+		</Strings>
+	</Button>
+	</Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -371,6 +377,7 @@
       <IDSymbol name="MigrateRecordsCommandId" value="0x011C" />
       <IDSymbol name="ConfigureAutoNumberCommandId" value="0x011D" />
       <IDSymbol name="ExtentionSettingsCommandId" value="0x011E" />
+		<IDSymbol name="DonateCommandId" value="0x0220" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

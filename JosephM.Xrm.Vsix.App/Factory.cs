@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.Desktop.Module.AboutModule;
 using JosephM.Application.Desktop.Module.ApplicationInsights;
+using JosephM.Application.Desktop.Module.OpenLink;
 using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.JavaScriptOptions;
@@ -68,13 +69,14 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<PackageSettingsAppConnectionModule>();
             app.AddModule<MigrateRecordsModule>(0x011C);
             app.AddModule<AutonumberModule>(0x011D);
+            app.AddModule<DonateModule>(0x0220);
             app.AddModule<ImportExcelModule>();
             app.AddModule<CustomisationExporterModule>();
             app.AddModule<RecordCountsModule>();
             app.AddModule<AddPortalDataModule>();
             app.AddModule<ThemeModule>();
             app.AddModule<XrmPackageApplicationInsightsModule>();
-            app.AddModule<ExportDataTypeUsabilitiesModule>(); 
+            app.AddModule<ExportDataTypeUsabilitiesModule>();
             return app;
         }
 
@@ -97,6 +99,13 @@ namespace JosephM.Xrm.Vsix.App
         public class XrmPackageApplicationInsightsModule : ApplicationInsightsModule
         {
             public override string InstrumentationKey => "c4de0a87-25be-4678-8585-38caf2b1cfa0";
+        }
+
+        public class DonateModule : OpenLinkModule
+        {
+            public override int SettingsOrder => 9999999;
+            public override string MainOperationName => "Donate";
+            public override string UrlToOpen => "https://github.com/sponsors/josephmcmac?frequency=one-time";
         }
     }
 }
