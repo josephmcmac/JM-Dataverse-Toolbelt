@@ -23,6 +23,7 @@ namespace JosephM.Xrm.Schema
 		public const string adx_alertsubscription = "adx_alertsubscription";
 		public const string adx_botconsumer = "adx_botconsumer";
 		public const string adx_bpf_c2857b638fa7473d8e2f112c232cebd8 = "adx_bpf_c2857b638fa7473d8e2f112c232cebd8";
+		public const string adx_contentaccesslevel = "adx_contentaccesslevel";
 		public const string adx_contentsnippet = "adx_contentsnippet";
 		public const string adx_entityform = "adx_entityform";
 		public const string adx_entityformmetadata = "adx_entityformmetadata";
@@ -1095,6 +1096,14 @@ namespace JosephM.Xrm.Schema
 				public const string EntityName = "adx_adplacement_ad";
 			}
 		}
+		public static class adx_contentaccesslevel_
+		{
+			public static class adx_WebRoleContentAccessLevel
+			{
+				public const string Name = "adx_WebRoleContentAccessLevel";
+				public const string EntityName = "adx_webrolecontentaccesslevel";
+			}
+		}
 		public static class adx_entitypermission_
 		{
 			public static class adx_entitypermission_webrole
@@ -1226,6 +1235,11 @@ namespace JosephM.Xrm.Schema
 			{
 				public const string Name = "adx_webrole_contact";
 				public const string EntityName = "adx_webrole_contact";
+			}
+			public static class adx_WebRoleContentAccessLevel
+			{
+				public const string Name = "adx_WebRoleContentAccessLevel";
+				public const string EntityName = "adx_webrolecontentaccesslevel";
 			}
 			public static class adx_webrole_systemuser
 			{
