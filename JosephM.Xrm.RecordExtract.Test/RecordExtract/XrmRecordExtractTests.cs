@@ -3,6 +3,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.Test;
+using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.RecordExtract.RecordExtract;
 using JosephM.Xrm.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,8 +19,11 @@ namespace JosephM.Xrm.RecordExtract.Test.RecordExtract
             PrepareTests();
 
             var testReportRecord = XrmRecordService.GetFirst(Entities.contact);
-            //script out a document from fake data
-            var recordService = FakeRecordService.Get();
+            if(testReportRecord == null)
+            {
+                CreateContact();
+                testReportRecord = XrmRecordService.GetFirst(Entities.contact);
+            }
 
             var request = new RecordExtractRequest();
             request.SaveToFolder = new Folder(TestingFolder);

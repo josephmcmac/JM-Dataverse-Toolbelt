@@ -1,5 +1,5 @@
 {
-  "AddToSolution": false,
+  "AddToSolution": true,
   "Connections": [
     {
       "AuthenticationProviderType": 3,
@@ -29,7 +29,7 @@
     }
   ],
   "Solution": {
-    "Id": "754f76af-1340-4264-91a8-d7e115e5c857",
+    "Id": "f65da3b2-9b9a-eb11-b1ac-000d3a80a77b",
     "Name": "TestComponents",
     "RecordType": "solution"
   },
