@@ -160,6 +160,12 @@
           <ButtonText>Manage Plugin Triggers</ButtonText>
         </Strings>
       </Button>
+		<Button guid="guidXrmPackageCmdSet" id="DonateCommandId" priority="0x0100" type="Button">
+			<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+			<Strings>
+				<ButtonText>Donate</ButtonText>
+			</Strings>
+		</Button>
       <Button guid="guidXrmPackageCmdSet" id="RefreshSettingsCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
@@ -308,12 +314,6 @@
           <ButtonText>Configure Autonumber</ButtonText>
         </Strings>
       </Button>
-		<Button guid="guidXrmPackageCmdSet" id="DonateCommandId" priority="0x0102" type="Button">
-		<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-		<Strings>
-			<ButtonText>Donate</ButtonText>
-		</Strings>
-	</Button>
 	</Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
