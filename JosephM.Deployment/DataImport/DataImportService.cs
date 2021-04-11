@@ -108,7 +108,7 @@ namespace JosephM.Deployment.DataImport
                             //bit of hack
                             //when importing from csv just set the fields to the string name of the referenced record
                             //so either string when csv or guid when xml import/export
-                            string matchType1 = relationship.Entity1IntersectAttribute;
+                            string matchType1 = type1;
                             string matchField1 = XrmRecordService.GetPrimaryField(type1);
                             if (dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
                                 && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName].ContainsKey(relationship.Entity1IntersectAttribute))
@@ -121,7 +121,7 @@ namespace JosephM.Deployment.DataImport
                                 ? dataImportContainer.GetUniqueMatchingEntity(matchType1, matchField1, (string)value1).Id
                                 : thisEntity.GetGuidField(relationship.Entity1IntersectAttribute);
 
-                            string matchType2 = relationship.Entity2IntersectAttribute;
+                            string matchType2 = type2;
                             string matchField2 = XrmRecordService.GetPrimaryField(type2);
                             if (dataImportContainer.AltLookupMatchKeyDictionary.ContainsKey(thisEntity.LogicalName)
                                 && dataImportContainer.AltLookupMatchKeyDictionary[thisEntity.LogicalName].ContainsKey(relationship.Entity2IntersectAttribute))

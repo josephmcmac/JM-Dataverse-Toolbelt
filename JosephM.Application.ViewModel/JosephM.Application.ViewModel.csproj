@@ -79,6 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationOptions\MenuGroupViewModel.cs" />
+    <Compile Include="Attributes\FieldInContext.cs" />
+    <Compile Include="Attributes\FieldInContextForPropertyTypes.cs" />
     <Compile Include="Attributes\GridOnlyEntry.cs" />
     <Compile Include="Attributes\RequiresConnection.cs" />
     <Compile Include="Attributes\SelectableObjectsFunction.cs" />

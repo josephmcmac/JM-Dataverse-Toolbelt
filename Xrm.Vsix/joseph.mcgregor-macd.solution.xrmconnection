@@ -25,11 +25,11 @@
   },
   {
     "Key": "DiscoveryServiceAddress",
-    "Value": "https:\/\/disco.crm.dynamics.com\/XRMServices\/2011\/Discovery.svc"
+    "Value": "https:\/\/disco.crm5.dynamics.com\/XRMServices\/2011\/Discovery.svc"
   },
   {
     "Key": "OrganizationUniqueName",
-    "Value": "org6b7b22d7"
+    "Value": "89abe26d8cda4b978d5b43b0bf012358"
   },
   {
     "Key": "Domain",
@@ -37,10 +37,10 @@
   },
   {
     "Key": "Username",
-    "Value": "admin@CRM748482.onmicrosoft.com"
+    "Value": "admin@CRM497134.onmicrosoft.com"
   },
   {
     "Key": "Password",
-    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAl5mlp2cibkKtxRpVoUILQQAAAAACAAAAAAADZgAAwAAAABAAAAAAYaWVqlpiUEZBUxLzgUIvAAAAAASAAACgAAAAEAAAAP+P62lqwKt2qbPqm\/UQ5HEYAAAA\/WlS71m2Ow4xEFu0Y366x9hTHH\/oUxBjFAAAAPXMtMjBwEGP9by37ZAC+ytZ6haP"
+    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAALZxpmi44Dk+yKW+NLcyTawAAAAACAAAAAAADZgAAwAAAABAAAABhGf0t1icGKM5IO+iBm0FeAAAAAASAAACgAAAAEAAAANiyE8YB9r6TDHZ\/wNZ+I2QYAAAAusFLqhfed\/1iMi0l3z7T+BORbvfdDdlzFAAAAC\/TXuACLy\/2C7c1uioJlAEElIvA"
   }
 ]

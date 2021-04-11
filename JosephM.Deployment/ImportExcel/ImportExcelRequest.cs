@@ -1,4 +1,5 @@
-﻿using JosephM.Core.Attributes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
@@ -140,6 +141,7 @@ namespace JosephM.Deployment.ImportExcel
                 public RecordField TargetField { get; set; }
 
                 [RequiredProperty]
+                [FieldInContextForPropertyTypes(nameof(TargetField), RecordFieldType.Lookup, RecordFieldType.Customer, RecordFieldType.Owner, IncludeAssociationReferences = true)]
                 [PropertyInContextByPropertyNotNull(nameof(TargetField))]
                 public bool UseAltMatchField { get; set; }
 

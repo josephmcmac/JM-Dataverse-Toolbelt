@@ -470,5 +470,103 @@ namespace JosephM.Deployment.Test
             associations = XrmService.RetrieveAllEntityType(Relationships.account_.jmcg_testentity_account.EntityName);
             Assert.AreEqual(3, associations.Count());
         }
+
+        [DeploymentItem(@"Files\TestExcelImportAltMatchKeys.xlsx")]
+        [TestMethod]
+        public void DeploymentImportExcelAltLookupsTest()
+        {
+            //imports an excel with accounts linked to test entities
+            PrepareTests();
+            DeleteAll(Entities.account);
+            DeleteAll(Entities.jmcg_testentity);
+
+            var workFolder = TestingFolder + @"\ExcelImportScript";
+            FileUtility.CheckCreateFolder(workFolder);
+            var sourceExcelFile = Path.Combine(workFolder, @"TestExcelImportAltMatchKeys.xlsx");
+            File.Copy(@"TestExcelImportAltMatchKeys.xlsx", sourceExcelFile);
+
+            var app = CreateAndLoadTestApplication<ImportExcelModule>();
+            app.AddModule<SavedRequestModule>();
+            ClearSavedRequests(app);
+
+            var entryViewmodel = app.NavigateToDialogModuleEntryForm<ImportExcelModule, ImportExcelDialog>();
+            //select the excel file
+            entryViewmodel.GetFieldViewModel(nameof(ImportExcelRequest.ExcelFile)).ValueObject = new FileReference(sourceExcelFile);
+
+            //okay on change trigger should have fired and populated all the required mappings
+
+            //set alt keys for test entity . account
+            var mappingsGrid = entryViewmodel.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.Mappings));
+
+            //get tab mappng for test entity
+            var testEntityMapping = mappingsGrid.GridRecords.First(m => m.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.TargetType)).Value.Key == Entities.jmcg_testentity);
+            //set edit its field mappings
+            testEntityMapping.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings)).EditButton.Invoke();
+            var childForm = entryViewmodel.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(childForm);
+            childForm.LoadFormSections();
+            var childTestEntityMappingFieldMappings = childForm.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings));
+            //get the account field mapping
+            var accountFieldMapping = childTestEntityMappingFieldMappings.GridRecords.First(f => f.GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.TargetField)).Value.Key == Fields.jmcg_testentity_.jmcg_account);
+
+            //set use alt match and type for match becomes visible
+            Assert.IsFalse(accountFieldMapping.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchFieldType)).IsVisible);
+            accountFieldMapping.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.UseAltMatchField)).Value = true;
+            Assert.IsTrue(accountFieldMapping.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchFieldType)).IsVisible);
+            //set type account
+            accountFieldMapping.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchFieldType)).Value = accountFieldMapping.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchFieldType)).ItemsSource.First(t => t.Key == Entities.account);
+            //set use account number for alt match field
+            Assert.IsTrue(accountFieldMapping.GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchField)).IsVisible);
+            accountFieldMapping.GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchField)).Value = accountFieldMapping.GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchField)).ItemsSource.First(f => f.Key == Fields.account_.accountnumber);
+            //save
+            childForm.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+
+            //get tab mappng for association
+            var associationMapping = mappingsGrid.GridRecords.First(m => m.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.TargetType)).Value.Key == Relationships.jmcg_testentity_.jmcg_testentity_account.EntityName);
+            //set edit its field mappings
+            associationMapping.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings)).EditButton.Invoke();
+            childForm = entryViewmodel.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(childForm);
+            childForm.LoadFormSections();
+            childTestEntityMappingFieldMappings = childForm.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.Mappings));
+            //get the account field mapping
+            var associationAccountFieldMapping = childTestEntityMappingFieldMappings.GridRecords.First(f => f.GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.TargetField)).Value.Key == Fields.account_.accountid);
+            //set use alt match and type for match becomes visible
+            Assert.IsFalse(associationAccountFieldMapping.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchFieldType)).IsVisible);
+            associationAccountFieldMapping.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.UseAltMatchField)).Value = true;
+            Assert.IsTrue(associationAccountFieldMapping.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchFieldType)).IsVisible);
+            //set type account
+            associationAccountFieldMapping.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchFieldType)).Value = associationAccountFieldMapping.GetRecordTypeFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchFieldType)).ItemsSource.First(t => t.Key == Entities.account);
+            //set use account number for alt match field
+            Assert.IsTrue(associationAccountFieldMapping.GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchField)).IsVisible);
+            associationAccountFieldMapping.GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchField)).Value = associationAccountFieldMapping.GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportFieldMapping.AltMatchField)).ItemsSource.First(f => f.Key == Fields.account_.accountnumber);
+            //save
+            childForm.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+
+            //so lets trigger the import
+            entryViewmodel.SaveButtonViewModel.Command.Execute();
+
+            var dialog = app.GetNavigatedDialog<ImportExcelDialog>();
+            var completionScreen = dialog.CompletionItem as ImportExcelResponse;
+            if (completionScreen.HasError)
+                Assert.Fail(completionScreen.GetResponseItemsWithError().First().Exception.XrmDisplayString());
+
+            //verify the account and contact created
+            var accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            var testEntities = XrmService.RetrieveAllEntityType(Entities.jmcg_testentity);
+            Assert.AreEqual(3, accounts.Count());
+            var account1 = accounts.First(a => a.GetStringField(Fields.account_.accountnumber) == "1");
+            var account2 = accounts.First(a => a.GetStringField(Fields.account_.accountnumber) == "2");
+            Assert.AreEqual(2, testEntities.Count());
+            Assert.AreEqual(1, testEntities.Count(t => t.GetLookupGuid(Fields.jmcg_testentity_.jmcg_account) == account1.Id));
+            Assert.AreEqual(1, testEntities.Count(t => t.GetLookupGuid(Fields.jmcg_testentity_.jmcg_account) == account2.Id));
+
+            var associations = XrmService.RetrieveAllEntityType(Relationships.account_.jmcg_testentity_account.EntityName);
+            Assert.AreEqual(3, associations.Count());
+            Assert.AreEqual(2, associations.Count(a => a.GetGuidField(Fields.account_.accountid) == account1.Id));
+            Assert.AreEqual(1, associations.Count(a => a.GetGuidField(Fields.account_.accountid) == account2.Id));
+        }
     }
 }

@@ -509,7 +509,7 @@ namespace JosephM.Record.Extentions
             }
         }
 
-        public static IRecord Get(this IRecordService service,string recordType, string id, IEnumerable<string> fields)
+        public static IRecord Get(this IRecordService service, string recordType, string id, IEnumerable<string> fields)
         {
             var queryResult = service.RetrieveAllAndClauses(recordType, new[]
             {
@@ -518,6 +518,11 @@ namespace JosephM.Record.Extentions
             return queryResult.Any()
                 ? queryResult.First()
                 : null;
+        }
+
+        public static bool IsManyToManyRelationship(this IRecordService service, string type)
+        {
+            return service.GetManyToManyRelationships().Any(m => m.IntersectEntityName == type);
         }
     }
 }

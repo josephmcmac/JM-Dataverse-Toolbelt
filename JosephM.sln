@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestModule", "TestModule", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0951EBD-01E1-465A-8CE4-4026FF36D400}"
 	ProjectSection(SolutionItems) = preProject
+		SolutionItems\Customisations - Old With Fake Portal Entities.xlsx = SolutionItems\Customisations - Old With Fake Portal Entities.xlsx
 		SolutionItems\Customisations.xlsx = SolutionItems\Customisations.xlsx
 		SolutionItems\DeviceRegistration.exe = SolutionItems\DeviceRegistration.exe
 		SolutionItems\JosephM.snk = SolutionItems\JosephM.snk
@@ -967,8 +968,8 @@ Global
 		{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

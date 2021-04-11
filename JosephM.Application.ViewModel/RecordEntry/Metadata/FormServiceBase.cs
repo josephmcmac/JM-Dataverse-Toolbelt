@@ -30,12 +30,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public abstract FormMetadata GetFormMetadata(string recordType, IRecordService recordService = null);
 
-        public virtual bool IsFieldInContext(string fieldName, IRecord record)
+        public virtual bool IsFieldInContext(string fieldName, RecordEntryViewModelBase formViewModel)
         {
             return true;
         }
 
-        public virtual bool IsSectionInContext(string sectionIdentifier, IRecord record)
+        public virtual bool IsSectionInContext(string sectionIdentifier, RecordEntryViewModelBase formViewModel)
         {
             return true;
         }

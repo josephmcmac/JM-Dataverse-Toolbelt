@@ -1,11 +1,6 @@
-﻿#region
-
-using System.Linq;
+﻿using System.Linq;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-using JosephM.Record.Extentions;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -22,7 +17,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 ValueObject = value;
-                OnPropertyChanged("Value");
+                OnPropertyChanged(nameof(Value));
             }
         }
         private string _recordTypeForField;

@@ -131,7 +131,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 _formSections = value;
                 foreach (var item in _formSections)
                 {
-                    item.IsVisible = FormService.IsSectionInContext(item.SectionIdentifier, GetRecord());
+                    item.IsVisible = FormService.IsSectionInContext(item.SectionIdentifier, this);
                 }
                 OnPropertyChanged(nameof(FormSectionsAsync));
                 OnPropertyChanged(nameof(PrimaryEnumerableFieldViewModel));
@@ -348,7 +348,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                             ffs,
                             this
                             );
-                        sectionVm.IsVisible = ffs.FormFields.Any(f => FormService.IsFieldInContext(f.FieldName, GetRecord()));
+                        sectionVm.IsVisible = ffs.FormFields.Any(f => FormService.IsFieldInContext(f.FieldName, this));
                         sectionViewModels.Add(sectionVm);
                     }
                 }
@@ -423,7 +423,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             {
                 foreach (var section in SubGrids)
                 {
-                    section.IsVisible = FormService.IsSectionInContext(section.ReferenceName, GetRecord());
+                    section.IsVisible = FormService.IsSectionInContext(section.ReferenceName, this);
                 }
                 foreach (var section in FieldSections)
                 {

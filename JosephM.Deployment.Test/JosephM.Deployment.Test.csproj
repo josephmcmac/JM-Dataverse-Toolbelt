@@ -124,6 +124,9 @@
     <None Include="Files\Team.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Files\TestExcelImportAltMatchKeys.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Files\TestImportMultiples.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -177,27 +177,42 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             return _formMetadata;
         }
 
-        public override bool IsFieldInContext(string fieldName, IRecord record)
+        public override bool IsFieldInContext(string fieldName, RecordEntryViewModelBase formViewModel)
         {
-            if (record is ObjectRecord)
-                return ((ObjectRecord)record).Instance.IsInContext(fieldName);
-            throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name,
-                typeof(ObjectRecord).Name));
+            var record = formViewModel.GetRecord();
+            if (record is ObjectRecord or)
+            {
+                var fieldInContextAttributes = or.Instance.GetType().GetProperty(fieldName).GetCustomAttributes<FieldInContext>();
+                if (fieldInContextAttributes.Any())
+                {
+                    return or.Instance.IsInContext(fieldName)
+                        && fieldInContextAttributes.All(a => a.IsInContext(formViewModel));
+                }
+                else
+                {
+                    return or.Instance.IsInContext(fieldName);
+                }
+            }
+            throw new NotSupportedException($"Expected {nameof(IRecord)} Of Type {nameof(ObjectRecord)}. Actual type is {record.GetType().Name}");
         }
 
-        public override bool IsSectionInContext(string sectionIdentifier, IRecord record)
+        public override bool IsSectionInContext(string sectionIdentifier, RecordEntryViewModelBase formViewModel)
         {
+            var record = formViewModel.GetRecord();
             //sections in these forms are for properties of type enumerable
             //so show ifr thaty property (field) is in context
-            if (record is ObjectRecord)
+            if (record is ObjectRecord or)
             {
                 if (ObjectType.GetProperty(sectionIdentifier) != null)
-                    return ((ObjectRecord)record).Instance.IsInContext(sectionIdentifier);
+                {
+                    return or.Instance.IsInContext(sectionIdentifier);
+                }
                 else
+                {
                     return true;
+                }
             }
-            throw new TypeLoadException(string.Format("Expected {0} Of Type {1}", typeof(IRecord).Name,
-                typeof(ObjectRecord).Name));
+            throw new NotSupportedException($"Expected {nameof(IRecord)} Of Type {nameof(ObjectRecord)}. Actual type is {record.GetType().Name}");
         }
 
         public override IEnumerable<ValidationRuleBase> GetValidationRules(string fieldName, string recordType)
