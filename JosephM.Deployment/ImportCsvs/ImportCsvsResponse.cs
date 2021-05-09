@@ -13,7 +13,7 @@ namespace JosephM.Deployment.ImportCsvs
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
 
-        public void LoadSpreadsheetImport(SpreadsheetImportResponse dataImportResponse)
+        public void LoadSpreadsheetImport(SourceImportResponse dataImportResponse)
         {
             AddResponseItems(dataImportResponse.ResponseItems.Select(r => new ImportCsvsResponseItem(r)));
             _importedRecords.AddRange(dataImportResponse.GetImportSummary());

@@ -82,7 +82,7 @@ namespace JosephM.Deployment.ImportExcel
 
         [DoNotAllowGridOpen]
         [Group(Sections.Main, true, 10)]
-        public class ExcelImportTabMapping : IMapSpreadsheetImport
+        public class ExcelImportTabMapping : IMapSourceImport
         {
             [Group(Sections.Main)]
             [DisplayOrder(5)]
@@ -115,11 +115,11 @@ namespace JosephM.Deployment.ImportExcel
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
             public IEnumerable<ExcelImportFieldMapping> Mappings { get; set; }
 
-            string IMapSpreadsheetImport.SourceType => SourceTab?.Key;
-            string IMapSpreadsheetImport.TargetType => TargetType?.Key;
-            string IMapSpreadsheetImport.TargetTypeLabel => TargetType?.Value;
-            IEnumerable<IMapSpreadsheetMatchKey> IMapSpreadsheetImport.AltMatchKeys => AltMatchKeys;
-            IEnumerable<IMapSpreadsheetColumn> IMapSpreadsheetImport.FieldMappings => Mappings;
+            string IMapSourceImport.SourceType => SourceTab?.Key;
+            string IMapSourceImport.TargetType => TargetType?.Key;
+            string IMapSourceImport.TargetTypeLabel => TargetType?.Value;
+            IEnumerable<IMapSourceMatchKey> IMapSourceImport.AltMatchKeys => AltMatchKeys;
+            IEnumerable<IMapSourceField> IMapSourceImport.FieldMappings => Mappings;
 
             public override string ToString()
             {
@@ -132,7 +132,7 @@ namespace JosephM.Deployment.ImportExcel
             }
 
             [DoNotAllowGridOpen]
-            public class ExcelImportFieldMapping : IMapSpreadsheetColumn
+            public class ExcelImportFieldMapping : IMapSourceField
             {
                 [RequiredProperty]
                 public RecordField SourceColumn { get; set; }
@@ -157,15 +157,15 @@ namespace JosephM.Deployment.ImportExcel
                 [PropertyInContextByPropertyValue(nameof(UseAltMatchField), true)]
                 public RecordField AltMatchField { get; set; }
 
-                string IMapSpreadsheetColumn.SourceField => SourceColumn?.Key;
+                string IMapSourceField.SourceField => SourceColumn?.Key;
 
-                string IMapSpreadsheetColumn.TargetField => TargetField?.Key;
+                string IMapSourceField.TargetField => TargetField?.Key;
 
-                bool IMapSpreadsheetColumn.UseAltMatchField => UseAltMatchField;
+                bool IMapSourceField.UseAltMatchField => UseAltMatchField;
 
-                string IMapSpreadsheetColumn.AltMatchFieldType => AltMatchFieldType?.Key;
+                string IMapSourceField.AltMatchFieldType => AltMatchFieldType?.Key;
 
-                string IMapSpreadsheetColumn.AltMatchField => AltMatchField?.Key;
+                string IMapSourceField.AltMatchField => AltMatchField?.Key;
 
                 public override string ToString()
                 {
@@ -174,7 +174,7 @@ namespace JosephM.Deployment.ImportExcel
             }
 
             [DoNotAllowGridOpen]
-            public class ExcelImportMatchKey : IMapSpreadsheetMatchKey
+            public class ExcelImportMatchKey : IMapSourceMatchKey
             {
                 [RequiredProperty]
                 public RecordField TargetField { get; set; }
@@ -182,9 +182,9 @@ namespace JosephM.Deployment.ImportExcel
                 [RequiredProperty]
                 public bool CaseSensitive { get; set; }
 
-                string IMapSpreadsheetMatchKey.TargetField => TargetField?.Key;
-                string IMapSpreadsheetMatchKey.TargetFieldLabel => TargetField?.Value;
-                bool IMapSpreadsheetMatchKey.CaseSensitive => CaseSensitive;
+                string IMapSourceMatchKey.TargetField => TargetField?.Key;
+                string IMapSourceMatchKey.TargetFieldLabel => TargetField?.Value;
+                bool IMapSourceMatchKey.CaseSensitive => CaseSensitive;
 
                 public override string ToString()
                 {

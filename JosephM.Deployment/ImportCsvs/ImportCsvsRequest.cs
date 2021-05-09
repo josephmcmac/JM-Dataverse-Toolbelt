@@ -72,7 +72,7 @@ namespace JosephM.Deployment.ImportCsvs
 
         [DoNotAllowGridOpen]
         [Group(Sections.Main, true, 10)]
-        public class CsvToImport : IMapSpreadsheetImport
+        public class CsvToImport : IMapSourceImport
         {
             [Group(Sections.Main)]
             [DisplayOrder(5)]
@@ -118,14 +118,14 @@ namespace JosephM.Deployment.ImportCsvs
             [PropertyInContextByPropertyNotNull(nameof(SourceCsv))]
             public IEnumerable<CsvImportFieldMapping> Mappings { get; set; }
 
-            string IMapSpreadsheetImport.SourceType => SourceType?.Key;
+            string IMapSourceImport.SourceType => SourceType?.Key;
 
-            string IMapSpreadsheetImport.TargetType => TargetType?.Key;
-            string IMapSpreadsheetImport.TargetTypeLabel => TargetType?.Value;
+            string IMapSourceImport.TargetType => TargetType?.Key;
+            string IMapSourceImport.TargetTypeLabel => TargetType?.Value;
 
-            IEnumerable<IMapSpreadsheetMatchKey> IMapSpreadsheetImport.AltMatchKeys => AltMatchKeys;
+            IEnumerable<IMapSourceMatchKey> IMapSourceImport.AltMatchKeys => AltMatchKeys;
 
-            IEnumerable<IMapSpreadsheetColumn> IMapSpreadsheetImport.FieldMappings => Mappings;
+            IEnumerable<IMapSourceField> IMapSourceImport.FieldMappings => Mappings;
 
             public override string ToString()
             {
@@ -138,7 +138,7 @@ namespace JosephM.Deployment.ImportCsvs
             }
 
             [DoNotAllowGridOpen]
-            public class CsvImportFieldMapping : IMapSpreadsheetColumn
+            public class CsvImportFieldMapping : IMapSourceField
             {
                 [RequiredProperty]
                 public RecordField SourceColumn { get; set; }
@@ -146,15 +146,15 @@ namespace JosephM.Deployment.ImportCsvs
                 [RequiredProperty]
                 public RecordField TargetField { get; set; }
 
-                string IMapSpreadsheetColumn.SourceField => SourceColumn?.Key;
+                string IMapSourceField.SourceField => SourceColumn?.Key;
 
-                string IMapSpreadsheetColumn.TargetField => TargetField?.Key;
+                string IMapSourceField.TargetField => TargetField?.Key;
 
-                bool IMapSpreadsheetColumn.UseAltMatchField => false;
+                bool IMapSourceField.UseAltMatchField => false;
 
-                string IMapSpreadsheetColumn.AltMatchFieldType => null;
+                string IMapSourceField.AltMatchFieldType => null;
 
-                string IMapSpreadsheetColumn.AltMatchField => null;
+                string IMapSourceField.AltMatchField => null;
 
                 public override string ToString()
                 {
@@ -163,14 +163,14 @@ namespace JosephM.Deployment.ImportCsvs
             }
 
             [DoNotAllowGridOpen]
-            public class CsvImportMatchKey : IMapSpreadsheetMatchKey
+            public class CsvImportMatchKey : IMapSourceMatchKey
             {
                 [RequiredProperty]
                 public RecordField TargetField { get; set; }
 
-                string IMapSpreadsheetMatchKey.TargetField => TargetField?.Key;
-                string IMapSpreadsheetMatchKey.TargetFieldLabel => TargetField?.Value;
-                bool IMapSpreadsheetMatchKey.CaseSensitive => false;
+                string IMapSourceMatchKey.TargetField => TargetField?.Key;
+                string IMapSourceMatchKey.TargetFieldLabel => TargetField?.Value;
+                bool IMapSourceMatchKey.CaseSensitive => false;
 
                 public override string ToString()
                 {

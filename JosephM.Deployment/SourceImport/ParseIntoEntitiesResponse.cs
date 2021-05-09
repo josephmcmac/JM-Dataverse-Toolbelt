@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace JosephM.Deployment.SpreadsheetImport
 {
-    [Instruction("Warning - Potential Errors Were Encountered Parsing The Spreadsheet Data. Please Review Before Proceeding With The Import")]
+    [Instruction("Warning - Potential Errors Were Encountered Parsing The Source Data. Please Review Before Proceeding With The Import")]
     public class ParseIntoEntitiesResponse
     {
         private List<Entity> _parsedEntities = new List<Entity>();

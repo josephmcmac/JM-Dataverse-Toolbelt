@@ -23,16 +23,16 @@ namespace JosephM.Deployment.ImportCsvs
             controller.Controller.UpdateProgress(0, 1, "Loading Records For Import");
             var dictionary = LoadMappingDictionary(request);
 
-            var importService = new SpreadsheetImportService(XrmRecordService);
+            var importService = new SourceImportService(XrmRecordService);
             var responseItem = importService.DoImport(dictionary, request.MaskEmails, request.MatchByName, request.UpdateOnly, controller, useAmericanDates: request.DateFormat == DateFormat.American, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
             response.Connection = XrmRecordService.XrmRecordConfiguration;
             response.LoadSpreadsheetImport(responseItem);
             response.Message = "The Import Process Has Completed";
         }
 
-        public Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportCsvsRequest request)
+        public Dictionary<IMapSourceImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportCsvsRequest request)
         {
-            var dictionary = new Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>>();
+            var dictionary = new Dictionary<IMapSourceImport, IEnumerable<IRecord>>();
 
             foreach (var csvMapping in request.CsvsToImport)
             {

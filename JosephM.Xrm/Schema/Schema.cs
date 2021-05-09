@@ -3449,6 +3449,11 @@ namespace JosephM.Xrm.Schema
 			public const string utcconversiontimezonecode = "utcconversiontimezonecode";
 			public const string versionnumber = "versionnumber";
 		}
+		public class adx_contentaccesslevel_
+        {
+			public const string adx_name = "adx_name";
+			public const string adx_contentaccesslevelid = "adx_contentaccesslevelid";
+		}
 		public static class adx_contentsnippet_
 		{
 			public const string adx_contentsnippetid = "adx_contentsnippetid";

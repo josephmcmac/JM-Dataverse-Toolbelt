@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace JosephM.Deployment.SpreadsheetImport
 {
-    public class SpreadsheetImportResponse : ServiceResponseBase<DataImportResponseItem>
+    public class SourceImportResponse : ServiceResponseBase<DataImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
-        public SpreadsheetImportResponse()
+        public SourceImportResponse()
         {
         }
 

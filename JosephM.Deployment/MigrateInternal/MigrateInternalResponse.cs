@@ -2,20 +2,19 @@
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using JosephM.Deployment.SpreadsheetImport;
-using JosephM.Record.Xrm.XrmRecord;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Deployment.ImportSql
+namespace JosephM.Deployment.MigrateInternal
 {
     [Group(Sections.Summary, false, 0)]
-    public class ImportSqlResponse : ServiceResponseBase<ImportSqlResponseItem>
+    public class MigrateInternalResponse : ServiceResponseBase<MigrateInternalResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
 
         public void LoadSpreadsheetImport(SourceImportResponse dataImportResponse)
         {
-            AddResponseItems(dataImportResponse.ResponseItems.Select(r => new ImportSqlResponseItem(r)));
+            AddResponseItems(dataImportResponse.ResponseItems.Select(r => new MigrateInternalResponseItem(r)));
             _importedRecords.AddRange(dataImportResponse.GetImportSummary());
         }
 
@@ -35,9 +34,6 @@ namespace JosephM.Deployment.ImportSql
                 return _importedRecords;
             }
         }
-
-        [Hidden]
-        public IXrmRecordConfiguration Connection { get; internal set; }
 
         private static class Sections
         {

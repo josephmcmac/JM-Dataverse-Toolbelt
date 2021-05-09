@@ -4,22 +4,22 @@ using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Xrm.XrmRecord;
 using System.Linq;
 
-namespace JosephM.Deployment.ImportExcel
+namespace JosephM.Deployment.MigrateInternal
 {
-    public class ImportExcelValidationDialog : DialogViewModel
+    public class MigrateInternalValidationDialog : DialogViewModel
     {
-        public ImportExcelValidationDialog(ImportExcelDialog parentDialog, ImportExcelRequest importRequest)
+        public MigrateInternalValidationDialog(MigrateInternalDialog parentDialog, MigrateInternalRequest importRequest)
             : base(parentDialog)
         {
-            ImportExcelService = parentDialog.Service;
+            MigrateInternalService = parentDialog.Service;
             XrmRecordService = parentDialog.Service.XrmRecordService;
             Request = importRequest;
         }
 
         public XrmRecordService XrmRecordService { get; private set; }
 
-        public ImportExcelService ImportExcelService { get; private set; }
-        public ImportExcelRequest Request { get; }
+        public MigrateInternalService MigrateInternalService { get; private set; }
+        public MigrateInternalRequest Request { get; }
 
         protected override void CompleteDialogExtention()
         {
@@ -31,7 +31,7 @@ namespace JosephM.Deployment.ImportExcel
             //and if there are any error display them
             //else continue
             var logController = new LogController(LoadingViewModel);
-            var dictionary = ImportExcelService.LoadMappingDictionary(Request, logController);
+            var dictionary = MigrateInternalService.LoadMappingDictionary(Request, logController);
 
             var importService = new SourceImportService(XrmRecordService);
             var parseResponse = importService.ParseIntoEntities(dictionary, logController);

@@ -2,13 +2,13 @@
 
 namespace JosephM.Deployment.SpreadsheetImport
 {
-    public interface IMapSpreadsheetImport
+    public interface IMapSourceImport
     {
         bool IgnoreDuplicates { get; }
         string SourceType { get; }
         string TargetType { get; }
         string TargetTypeLabel { get; }
-        IEnumerable<IMapSpreadsheetColumn> FieldMappings { get; }
-        IEnumerable<IMapSpreadsheetMatchKey> AltMatchKeys { get; }
+        IEnumerable<IMapSourceField> FieldMappings { get; }
+        IEnumerable<IMapSourceMatchKey> AltMatchKeys { get; }
     }
 }

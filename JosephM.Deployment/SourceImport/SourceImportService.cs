@@ -1,5 +1,6 @@
 ﻿using JosephM.Application.Application;
 using JosephM.Core.Extentions;
+using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
@@ -17,9 +18,9 @@ using System.Threading.Tasks;
 
 namespace JosephM.Deployment.SpreadsheetImport
 {
-    public class SpreadsheetImportService
+    public class SourceImportService
     {
-        public SpreadsheetImportService(XrmRecordService xrmRecordService)
+        public SourceImportService(XrmRecordService xrmRecordService)
         {
             XrmRecordService = xrmRecordService;
         }
@@ -27,9 +28,9 @@ namespace JosephM.Deployment.SpreadsheetImport
         public XrmRecordService XrmRecordService { get; }
         public IApplicationController ApplicationController { get; }
 
-        public SpreadsheetImportResponse DoImport(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null)
+        public SourceImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null)
         {
-            var response = new SpreadsheetImportResponse();
+            var response = new SourceImportResponse();
             var parseResponse = ParseIntoEntities(mappings, controller.Controller, useAmericanDates: useAmericanDates);
             response.LoadParseResponse(parseResponse);
             var dataImportService = new DataImportService(XrmRecordService);
@@ -60,7 +61,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                             }
                             if(lookupKeyDictionary[map.TargetType].ContainsKey(fieldMapping.TargetField))
                             {
-                                throw new NotSupportedException($"Error Type {map.TargetType} Field {fieldMapping.TargetField} Cannot Use Have {nameof(IMapSpreadsheetColumn.UseAltMatchField)} True When The Field Has Multiple Maps in The Import");
+                                throw new NotSupportedException($"Error Type {map.TargetType} Field {fieldMapping.TargetField} Cannot Use Have {nameof(IMapSourceField.UseAltMatchField)} True When The Field Has Multiple Maps in The Import");
                             }
                             lookupKeyDictionary[map.TargetType].Add(fieldMapping.TargetField, new KeyValuePair<string, string>(fieldMapping.AltMatchFieldType, fieldMapping.AltMatchField));
                         }
@@ -71,7 +72,7 @@ namespace JosephM.Deployment.SpreadsheetImport
             return response;
         }
 
-        public ParseIntoEntitiesResponse ParseIntoEntities(Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> mappings, LogController logController, bool useAmericanDates = false)
+        public ParseIntoEntitiesResponse ParseIntoEntities(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, LogController logController, bool useAmericanDates = false)
         {
             var response = new ParseIntoEntitiesResponse();
             foreach (var mapping in mappings)
@@ -97,7 +98,7 @@ namespace JosephM.Deployment.SpreadsheetImport
             }
         }
 
-        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSpreadsheetImport mapping, ParseIntoEntitiesResponse response, LogController logController, bool useAmericanDates)
+        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSourceImport mapping, ParseIntoEntitiesResponse response, LogController logController, bool useAmericanDates)
         {
             var result = new List<Entity>();
 
@@ -115,23 +116,26 @@ namespace JosephM.Deployment.SpreadsheetImport
                 logController.LogLiteral($"Mapping {targetType} Data Into Records {rowNumber}/{rowCount}");
                 try
                 {
+                    var rowAsXrmRecord = row as XrmRecord;
+
                     var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
 
                     var hasFieldValue = false;
                     var fieldValues = new ConcurrentDictionary<string, object>();
                     //this is used in the import to output the row number
                     //if the import throws an error
-                    Parallel.ForEach(mapping.FieldMappings, (fieldMapping) => 
+                    Parallel.ForEach(mapping.FieldMappings, (fieldMapping) =>
                     //foreach (var fieldMapping in mapping.FieldMappings)
                     {
                         var targetField = fieldMapping.TargetField;
                         if (fieldMapping.TargetField != null)
                         {
+                            var objectValue = row.GetField(fieldMapping.SourceField);
                             var stringValue = row.GetStringField(fieldMapping.SourceField);
                             if (stringValue != null)
                                 stringValue = stringValue.Trim();
 
-                            if(!stringValue.IsNullOrWhiteSpace())
+                            if (!stringValue.IsNullOrWhiteSpace())
                             {
                                 hasFieldValue = true;
                             }
@@ -145,7 +149,15 @@ namespace JosephM.Deployment.SpreadsheetImport
                             else if (XrmRecordService.XrmService.IsLookup(targetField, targetType))
                             {
                                 //for lookups am going to set to a empty guid and allow the import part to replace with a correct guid
-                                if (!stringValue.IsNullOrWhiteSpace())
+                                if(objectValue is Lookup lk)
+                                {
+                                    fieldValues[targetField] = new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
+                                                new Guid(lk.Id))
+                                    {
+                                        Name = stringValue
+                                    };
+                                }
+                                else if (!stringValue.IsNullOrWhiteSpace())
                                 {
                                     var lookupTargetType = fieldMapping.UseAltMatchField
                                         ? fieldMapping.AltMatchFieldType
@@ -185,6 +197,11 @@ namespace JosephM.Deployment.SpreadsheetImport
                         }
                     });
                     var entity = new Entity(targetType);
+                    if (rowAsXrmRecord != null && rowAsXrmRecord.Id != null)
+                    {
+                        entity.Id = new Guid(rowAsXrmRecord.Id);
+                    }
+
                     foreach (var fieldValue in fieldValues)
                     {
                         entity[fieldValue.Key] = fieldValues[fieldValue.Key];

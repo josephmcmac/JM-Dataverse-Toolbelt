@@ -292,7 +292,7 @@ namespace JosephM.XrmModule.Test
             {
                 { Fields.adx_entityform_.adx_name, null },
                 { Fields.adx_entityformmetadata_.adx_entityform, entityForm.ToEntityReference() },
-                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.EntityFormMetadata.Type.Attribute) },
+                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.BasicFormMetadata.Type.Attribute) },
                 { Fields.adx_entityformmetadata_.adx_attributelogicalname, "foo" },
             }, useService: useRecordService.XrmService);
 
@@ -300,7 +300,7 @@ namespace JosephM.XrmModule.Test
             {
                 { Fields.adx_entityform_.adx_name, null },
                 { Fields.adx_entityformmetadata_.adx_entityform, entityForm.ToEntityReference() },
-                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.EntityFormMetadata.Type.Attribute) },
+                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.BasicFormMetadata.Type.Attribute) },
                 { Fields.adx_entityformmetadata_.adx_attributelogicalname, "bar" },
             }, useService: useRecordService.XrmService);
 
@@ -308,7 +308,7 @@ namespace JosephM.XrmModule.Test
             {
                 { Fields.adx_entityform_.adx_name, null },
                 { Fields.adx_entityformmetadata_.adx_entityform, entityForm.ToEntityReference() },
-                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.EntityFormMetadata.Type.Notes) }
+                { Fields.adx_entityformmetadata_.adx_type, new OptionSetValue(OptionSets.BasicFormMetadata.Type.Notes) }
             }, useService: useRecordService.XrmService);
 
             var entityList = CreateTestRecord(Entities.adx_entitylist, new Dictionary<string, object>
@@ -341,14 +341,14 @@ namespace JosephM.XrmModule.Test
             var webFormMetadata1 = CreateTestRecord(Entities.adx_webformmetadata, new Dictionary<string, object>
             {
                 { Fields.adx_webformmetadata_.adx_webformstep, webFormStep.ToEntityReference() },
-                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Attribute) },
+                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.AdvancedFormMetadata.Type.Attribute) },
                 { Fields.adx_webformmetadata_.adx_attributelogicalname, "foo" },
             }, useService: useRecordService.XrmService);
 
             var webFormMetadata2 = CreateTestRecord(Entities.adx_webformmetadata, new Dictionary<string, object>
             {
                 { Fields.adx_webformmetadata_.adx_webformstep, webFormStep.ToEntityReference() },
-                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Attribute) },
+                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.AdvancedFormMetadata.Type.Attribute) },
                 { Fields.adx_webformmetadata_.adx_attributelogicalname, "bar" },
             }, useService: useRecordService.XrmService);
 
@@ -356,14 +356,14 @@ namespace JosephM.XrmModule.Test
             {
                 { Fields.adx_webformmetadata_.adx_attributelogicalname, null },
                 { Fields.adx_webformmetadata_.adx_webformstep, webFormStep.ToEntityReference() },
-                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Notes) }
+                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.AdvancedFormMetadata.Type.Notes) }
             }, useService: useRecordService.XrmService);
 
             var webFormMetadata4 = CreateTestRecord(Entities.adx_webformmetadata, new Dictionary<string, object>
             {
                 { Fields.adx_webformmetadata_.adx_attributelogicalname, null },
                 { Fields.adx_webformmetadata_.adx_webformstep, webFormStep2.ToEntityReference() },
-                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.WebFormMetadata.Type.Notes) }
+                { Fields.adx_webformmetadata_.adx_type, new OptionSetValue(OptionSets.AdvancedFormMetadata.Type.Notes) }
             }, useService: useRecordService.XrmService);
 
             var contentSnippet = CreateTestRecord(Entities.adx_contentsnippet, new Dictionary<string, object>

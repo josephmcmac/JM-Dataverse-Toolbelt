@@ -13,7 +13,7 @@ namespace JosephM.Deployment.ImportExcel
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
 
-        public void LoadSpreadsheetImport(SpreadsheetImportResponse dataImportResponse)
+        public void LoadSpreadsheetImport(SourceImportResponse dataImportResponse)
         {
             AddResponseItems(dataImportResponse.ResponseItems.Select(r => new ImportExcelResponseItem(r)));
             _importedRecords.AddRange(dataImportResponse.GetImportSummary());

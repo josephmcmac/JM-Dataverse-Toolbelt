@@ -32,7 +32,7 @@ namespace JosephM.Deployment.ImportSql
             {
                 controller.Controller.UpdateProgress(0, 1, "Loading Records For Import");
                 var dictionary = LoadMappingDictionary(request);
-                var importService = new SpreadsheetImportService(XrmRecordService);
+                var importService = new SourceImportService(XrmRecordService);
                 var responseItems = importService.DoImport(dictionary, request.MaskEmails, request.MatchRecordsByName, request.UpdateOnly, controller, executeMultipleSetSize: request.ExecuteMultipleSetSize, targetCacheLimit: request.TargetCacheLimit);
                 response.Connection = XrmRecordService.XrmRecordConfiguration;
                 response.LoadSpreadsheetImport(responseItems);
@@ -85,11 +85,11 @@ namespace JosephM.Deployment.ImportSql
             }
         }
 
-        public Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportSqlRequest request)
+        public Dictionary<IMapSourceImport, IEnumerable<IRecord>> LoadMappingDictionary(ImportSqlRequest request)
         {
             var excelService = new SqlRecordService(new SqlConnectionString(request.ConnectionString));
 
-            var dictionary = new Dictionary<IMapSpreadsheetImport, IEnumerable<IRecord>>();
+            var dictionary = new Dictionary<IMapSourceImport, IEnumerable<IRecord>>();
 
             foreach (var tabMapping in request.Mappings)
             {

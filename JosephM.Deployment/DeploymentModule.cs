@@ -7,6 +7,7 @@ using JosephM.Deployment.ImportCsvs;
 using JosephM.Deployment.ImportExcel;
 using JosephM.Deployment.ImportSql;
 using JosephM.Deployment.ImportXml;
+using JosephM.Deployment.MigrateInternal;
 using JosephM.Deployment.MigrateRecords;
 
 namespace JosephM.Deployment
@@ -19,6 +20,7 @@ namespace JosephM.Deployment
     [DependantModule(typeof(CreatePackageModule))]
     [DependantModule(typeof(DeployPackageModule))]
     [DependantModule(typeof(MigrateRecordsModule))]
+    [DependantModule(typeof(MigrateInternalModule))]
     [DependantModule(typeof(DeploySolutionModule))]
     [DependantModule(typeof(AddPortalDataModule))]
     [DependantModule(typeof(ExportDataTypeUsabilitiesModule))] 

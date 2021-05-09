@@ -134,6 +134,13 @@
     <Compile Include="DeploymentModule.cs" />
     <Compile Include="DeploySolution\DeploySolutionResponseItem.cs" />
     <Compile Include="ImportCsvs\ImportCsvsValidationDialog.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalDialog.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalModule.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalRequest.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalResponse.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalResponseItem.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalService.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalValidationDialog.cs" />
     <Compile Include="ImportSql\ImportSqlDialog.cs" />
     <Compile Include="ImportSql\ImportSqlModule.cs" />
     <Compile Include="ImportSql\ImportSqlRequest.cs" />
@@ -186,13 +193,13 @@
     <Compile Include="MigrateRecords\MigrateRecordsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataImport\DataImportResponseItem.cs" />
-    <Compile Include="SpreadsheetImport\Extensions.cs" />
-    <Compile Include="SpreadsheetImport\IMapSpreadsheetMatchKey.cs" />
-    <Compile Include="SpreadsheetImport\ParseIntoEntitiesResponse.cs" />
-    <Compile Include="SpreadsheetImport\SpreadsheetImportResponse.cs" />
-    <Compile Include="SpreadsheetImport\IMapSpreadsheetField.cs" />
-    <Compile Include="SpreadsheetImport\IMapSpreadsheetImport.cs" />
-    <Compile Include="SpreadsheetImport\SpreadsheetImportService.cs" />
+    <Compile Include="SourceImport\Extensions.cs" />
+    <Compile Include="SourceImport\IMapSourceMatchKey.cs" />
+    <Compile Include="SourceImport\ParseIntoEntitiesResponse.cs" />
+    <Compile Include="SourceImport\SourceImportResponse.cs" />
+    <Compile Include="SourceImport\IMapSourceField.cs" />
+    <Compile Include="SourceImport\IMapSourceImport.cs" />
+    <Compile Include="SourceImport\SourceImportService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

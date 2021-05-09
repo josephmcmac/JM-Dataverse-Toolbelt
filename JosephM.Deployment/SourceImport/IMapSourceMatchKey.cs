@@ -1,6 +1,6 @@
 ﻿namespace JosephM.Deployment.SpreadsheetImport
 {
-    public interface IMapSpreadsheetMatchKey
+    public interface IMapSourceMatchKey
     {
         string TargetField { get; }
         string TargetFieldLabel { get; }

@@ -33,7 +33,7 @@ namespace JosephM.Deployment.ImportCsvs
             var logController = new LogController(LoadingViewModel);
             var dictionary = ImportCsvsService.LoadMappingDictionary(Request);
 
-            var importService = new SpreadsheetImportService(XrmRecordService);
+            var importService = new SourceImportService(XrmRecordService);
             var parseResponse = importService.ParseIntoEntities(dictionary, logController, useAmericanDates: Request.DateFormat == DateFormat.American);
             if (parseResponse.ResponseItems.Any())
             {

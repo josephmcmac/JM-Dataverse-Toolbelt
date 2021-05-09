@@ -33,7 +33,7 @@ namespace JosephM.Deployment.ImportSql
             var logController = new LogController(LoadingViewModel);
             var dictionary = ImportSqlService.LoadMappingDictionary(Request);
 
-            var importService = new SpreadsheetImportService(XrmRecordService);
+            var importService = new SourceImportService(XrmRecordService);
             var parseResponse = importService.ParseIntoEntities(dictionary, logController);
             if (parseResponse.ResponseItems.Any())
             {
