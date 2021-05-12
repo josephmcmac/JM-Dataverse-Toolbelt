@@ -349,11 +349,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
+                var maxToList = 3;
+                var numberListed = 0;
+                bool maxDisplayExceeded = false;
                 var list = new List<string>();
                 if (Enumerable != null)
                 {
                     foreach (var item in Enumerable)
                     {
+                        if(numberListed >= maxToList)
+                        {
+                            maxDisplayExceeded = true;
+                            break;
+                        }
                         if (item is ISelectable)
                         {
                             if (((ISelectable)item).Selected)
@@ -362,10 +370,18 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                             }
                         }
                         else
+                        {
                             list.Add(item == null ? "" : item.ToString());
+                        }
+                        numberListed++;
                     }
                 }
-                return string.Join(Environment.NewLine, list.OrderBy(s => s).ToArray());
+                list.Sort();
+                if(maxDisplayExceeded)
+                {
+                    list.Add("...");
+                }
+                return string.Join(Environment.NewLine, list.ToArray());
             }
         }
 

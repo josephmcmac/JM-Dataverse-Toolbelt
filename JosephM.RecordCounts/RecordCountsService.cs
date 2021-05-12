@@ -28,7 +28,8 @@ namespace JosephM.RecordCounts
         {
             controller.LogLiteral("Loading Types");
 
-            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.principalobjectaccess, "msdyn_casesuggestion", "msdyn_knowledgearticlesuggestion", "virtualresourcegroupresource", "usermobileofflineprofilemembership", "teammobileofflineprofilemembership" };
+            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.principalobjectaccess, "msdyn_casesuggestion", "msdyn_knowledgearticlesuggestion", "virtualresourcegroupresource", "usermobileofflineprofilemembership", "teammobileofflineprofilemembership", "systemuserauthorizationchangetracker" };
+
             var includeTheseTypes = new[] { Entities.incidentresolution };
 
             var recordTypes = request.AllRecordTypes
