@@ -1,7 +1,9 @@
-﻿using JosephM.Core.Attributes;
+﻿using JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue;
+using JosephM.Core.Attributes;
 using JosephM.Core.Service;
 using JosephM.Deployment.DataImport;
 using JosephM.Deployment.SpreadsheetImport;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +13,7 @@ namespace JosephM.Deployment.MigrateInternal
     public class MigrateInternalResponse : ServiceResponseBase<MigrateInternalResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();
+        private List<MigratedLookupField> _migratedLookupFields = new List<MigratedLookupField>();
 
         public void LoadSpreadsheetImport(SourceImportResponse dataImportResponse)
         {
@@ -35,9 +38,32 @@ namespace JosephM.Deployment.MigrateInternal
             }
         }
 
+        [Hidden]
+        public bool IsMigratedLookupFields
+        {
+            get { return MigratedLookupFields != null && MigratedLookupFields.Any(); }
+        }
+
+        [AllowGridFullScreen]
+        [Group(Sections.Summary)]
+        [PropertyInContextByPropertyValue(nameof(IsMigratedLookupFields), true)]
+        public IEnumerable<MigratedLookupField> MigratedLookupFields
+        {
+            get
+            {
+                return _migratedLookupFields;
+            }
+        }
+
         private static class Sections
         {
             public const string Summary = "Summary";
+        }
+
+        public void LoadBulkCopy(MigratedLookupField migratedLookupField)
+        {
+            AddResponseItems(migratedLookupField.GetInternalResponse().ResponseItems.Select(r => new MigrateInternalResponseItem(migratedLookupField.EntityType, migratedLookupField.Field, r)));
+            _migratedLookupFields.Add(migratedLookupField);
         }
     }
 }

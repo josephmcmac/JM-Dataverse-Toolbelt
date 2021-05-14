@@ -134,11 +134,13 @@
     <Compile Include="DeploymentModule.cs" />
     <Compile Include="DeploySolution\DeploySolutionResponseItem.cs" />
     <Compile Include="ImportCsvs\ImportCsvsValidationDialog.cs" />
+    <Compile Include="MigrateInternal\MigratedLookupField.cs" />
     <Compile Include="MigrateInternal\MigrateInternalDialog.cs" />
     <Compile Include="MigrateInternal\MigrateInternalModule.cs" />
     <Compile Include="MigrateInternal\MigrateInternalRequest.cs" />
     <Compile Include="MigrateInternal\MigrateInternalResponse.cs" />
     <Compile Include="MigrateInternal\MigrateInternalResponseItem.cs" />
+    <Compile Include="MigrateInternal\MigratingLookupFields.cs" />
     <Compile Include="MigrateInternal\MigrateInternalService.cs" />
     <Compile Include="MigrateInternal\MigrateInternalValidationDialog.cs" />
     <Compile Include="ImportSql\ImportSqlDialog.cs" />

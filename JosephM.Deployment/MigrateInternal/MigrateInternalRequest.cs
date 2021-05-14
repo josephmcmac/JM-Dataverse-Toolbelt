@@ -2,6 +2,10 @@
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
+using JosephM.Record.Attributes;
+using JosephM.Record.IService;
+using JosephM.Record.Metadata;
+using JosephM.Record.Query;
 using System.Collections.Generic;
 
 namespace JosephM.Deployment.MigrateInternal
@@ -37,14 +41,44 @@ namespace JosephM.Deployment.MigrateInternal
         [MaximumIntValue(5000)]
         public int? TargetCacheLimit { get; set; }
 
+        [Group(Sections.Main)]
+        [DisplayOrder(1000)]
         [AllowGridFullScreen]
         [RequiredProperty]
         public IEnumerable<MigrateInternalTypeMapping> Mappings { get; set; }
+
+        [Group(Sections.Main)]
+        [DisplayOrder(1100)]
+        [AllowGridFullScreen]
+        public IEnumerable<ReferenceFieldsForCopy> ReferenceFieldsToCopy { get; set; }
 
         private static class Sections
         {
             public const string Main = "Main";
             public const string Options = "Options";
+        }
+
+        [DoNotAllowGridOpen]
+        [Group(Sections.Main, true, 20)]
+        public class ReferenceFieldsForCopy
+        {
+            [DisplayOrder(10)]
+            [RequiredProperty]
+            [RecordTypeFor(nameof(OldField))]
+            [RecordTypeFor(nameof(NewField))]
+            public RecordType SourceType { get; set; }
+
+            [DisplayOrder(20)]
+            [RequiredProperty]
+            [PropertyInContextByPropertyNotNull(nameof(SourceType))]
+            [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.In, new[] { RecordFieldType.Lookup })]
+            public RecordField OldField { get; set; }
+
+            [DisplayOrder(30)]
+            [RequiredProperty]
+            [PropertyInContextByPropertyNotNull(nameof(SourceType))]
+            [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.In, new[] { RecordFieldType.Lookup })]
+            public RecordField NewField { get; set; }
         }
 
         [DoNotAllowGridOpen]
@@ -67,7 +101,6 @@ namespace JosephM.Deployment.MigrateInternal
 
             [AllowNestedGridEdit]
             [RequiredProperty]
-            [GridWidth(800)]
             [PropertyInContextByPropertyNotNull(nameof(SourceType))]
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
             public IEnumerable<MigrateInternalFieldMapping> Mappings { get; set; }
