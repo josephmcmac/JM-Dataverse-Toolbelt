@@ -144,7 +144,15 @@ namespace JosephM.Deployment.SpreadsheetImport
                                 //bit of hack
                                 //for csv relationships just set to a string and map it later
                                 //as the referenced record may not be created yet
-                                fieldValues[targetField] = stringValue;
+                                Guid t;
+                                if (Guid.TryParse(stringValue, out t))
+                                {
+                                    fieldValues[targetField] = t;
+                                }
+                                else
+                                {
+                                    fieldValues[targetField] = stringValue;
+                                }
                             }
                             else if (XrmRecordService.XrmService.IsLookup(targetField, targetType))
                             {
