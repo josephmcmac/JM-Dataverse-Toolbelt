@@ -156,6 +156,22 @@
             </Grid>
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="labelledAboveFieldTemplate">
+        <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" ToolTip="{Binding Description}">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <field:FieldLabelView DataContext="{Binding}" />
+            </Grid>
+            <Grid Grid.Row="1">
+                <ContentControl
+                    Content="{Binding}"
+                    ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
+            </Grid>
+        </Grid>
+    </DataTemplate>
     <DataTemplate x:Key="unlabelledFieldTemplate">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -170,6 +186,7 @@
     </DataTemplate>
     <templateSelector:LabelledFieldTemplateSelector
         LabelledFieldTemplate="{StaticResource labelledFieldTemplate}"
+        LabelledAboveFieldTemplate="{StaticResource labelledAboveFieldTemplate}"
         UnlabelledFieldTemplate="{StaticResource unlabelledFieldTemplate}"
         x:Key="labelledFieldTemplateSelector" 
         />

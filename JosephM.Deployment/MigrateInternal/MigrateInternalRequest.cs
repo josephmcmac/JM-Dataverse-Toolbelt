@@ -12,8 +12,8 @@ namespace JosephM.Deployment.MigrateInternal
 {
     [DisplayName("Migrate Internal")]
     [AllowSaveAndLoad]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.Options, true, 20)]
+    [Group(Sections.Options, true, 10)]
+    [Group(Sections.Main, displayLayout: Group.DisplayLayoutEnum.HorizontalWrap, order: 20, displayLabel: false)]
     public class MigrateInternalRequest : ServiceRequestBase
     {
         public MigrateInternalRequest()
@@ -99,6 +99,7 @@ namespace JosephM.Deployment.MigrateInternal
             [RecordTypeFor(nameof(Mappings) + "." + nameof(MigrateInternalFieldMapping.TargetField))]
             public RecordType TargetType { get; set; }
 
+            [GridWidth(350)]
             [AllowNestedGridEdit]
             [RequiredProperty]
             [PropertyInContextByPropertyNotNull(nameof(SourceType))]

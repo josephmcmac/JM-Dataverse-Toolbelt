@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue;
+using JosephM.Core.Attributes;
 using System.ComponentModel;
 
 namespace JosephM.Deployment.MigrateInternal
@@ -22,6 +23,7 @@ namespace JosephM.Deployment.MigrateInternal
         private BulkCopyFieldValueResponse InternalResponse { get; }
 
         private string _entityType;
+        [DisplayOrder(5)]
         public string EntityType
         {
             get
@@ -35,21 +37,39 @@ namespace JosephM.Deployment.MigrateInternal
             }
         }
 
-        private string _field;
-        public string Field
+        private string _sourceField;
+        [DisplayOrder(10)]
+        public string SourceField
         {
             get
             {
-                return _field;
+                return _sourceField;
             }
             set
             {
-                _field = value;
-                OnPropertyChanged(nameof(Field));
+                _sourceField = value;
+                OnPropertyChanged(nameof(SourceField));
+            }
+        }
+
+        private string _targetField;
+        [DisplayOrder(10)]
+        public string TargetField
+        {
+            get
+            {
+                return _targetField;
+            }
+            set
+            {
+                _targetField = value;
+                OnPropertyChanged(nameof(TargetField));
             }
         }
 
         private int _countToProcess;
+        [DisplayOrder(15)]
+        [GridWidth(125)]
         public int CountToProcess
         {
             get
@@ -63,6 +83,8 @@ namespace JosephM.Deployment.MigrateInternal
             }
         }
 
+        [DisplayOrder(20)]
+        [GridWidth(125)]
         public int TotalRecordsProcessed
         {
             get
@@ -71,6 +93,8 @@ namespace JosephM.Deployment.MigrateInternal
             }
         }
 
+        [DisplayOrder(25)]
+        [GridWidth(125)]
         public int TotalRecordsUpdated
         {
             get
@@ -79,6 +103,8 @@ namespace JosephM.Deployment.MigrateInternal
             }
         }
 
+        [DisplayOrder(30)]
+        [GridWidth(125)]
         public int NumberOfErrors
         {
             get

@@ -27,6 +27,7 @@ namespace JosephM.Deployment.MigrateInternal
             get { return ImportSummary != null && ImportSummary.Any(); }
         }
 
+        [AllowDownload]
         [AllowGridFullScreen]
         [Group(Sections.Summary)]
         [PropertyInContextByPropertyValue(nameof(IsImportSummary), true)]
@@ -44,6 +45,7 @@ namespace JosephM.Deployment.MigrateInternal
             get { return MigratedLookupFields != null && MigratedLookupFields.Any(); }
         }
 
+        [AllowDownload]
         [AllowGridFullScreen]
         [Group(Sections.Summary)]
         [PropertyInContextByPropertyValue(nameof(IsMigratedLookupFields), true)]
@@ -62,7 +64,7 @@ namespace JosephM.Deployment.MigrateInternal
 
         public void LoadBulkCopy(MigratedLookupField migratedLookupField)
         {
-            AddResponseItems(migratedLookupField.GetInternalResponse().ResponseItems.Select(r => new MigrateInternalResponseItem(migratedLookupField.EntityType, migratedLookupField.Field, r)));
+            AddResponseItems(migratedLookupField.GetInternalResponse().ResponseItems.Select(r => new MigrateInternalResponseItem(migratedLookupField.EntityType, migratedLookupField.SourceField, r)));
             _migratedLookupFields.Add(migratedLookupField);
         }
     }

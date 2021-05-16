@@ -41,7 +41,8 @@ namespace JosephM.Deployment.MigrateInternal
                 {
                     var migratedLookupField = new MigratedLookupField(new BulkCopyFieldValueResponse());
                     migratedLookupField.EntityType = referenceFieldToCopy.SourceType.Value;
-                    migratedLookupField.Field = referenceFieldToCopy.OldField.Value;
+                    migratedLookupField.SourceField = referenceFieldToCopy.OldField.Value;
+                    migratedLookupField.TargetField = referenceFieldToCopy.NewField.Value;
                     dictionaryIt.Add(referenceFieldToCopy, migratedLookupField);
                 }
                 var migratingLookupFields = new MigratingLookupFields(dictionaryIt.Values);
