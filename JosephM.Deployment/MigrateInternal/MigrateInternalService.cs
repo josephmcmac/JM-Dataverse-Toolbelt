@@ -34,13 +34,13 @@ namespace JosephM.Deployment.MigrateInternal
             response.LoadSpreadsheetImport(responseItems);
 
             //copy lookup fields
-            if (request.ReferenceFieldsToCopy != null)
+            if (request.ReferenceFieldReplacements != null)
             {
                 var dictionaryIt = new Dictionary<MigrateInternalRequest.ReferenceFieldsForCopy, MigratedLookupField>();
-                foreach(var referenceFieldToCopy in request.ReferenceFieldsToCopy)
+                foreach(var referenceFieldToCopy in request.ReferenceFieldReplacements)
                 {
                     var migratedLookupField = new MigratedLookupField(new BulkCopyFieldValueResponse());
-                    migratedLookupField.EntityType = referenceFieldToCopy.SourceType.Value;
+                    migratedLookupField.EntityType = referenceFieldToCopy.ReferencingType.Value;
                     migratedLookupField.SourceField = referenceFieldToCopy.OldField.Value;
                     migratedLookupField.TargetField = referenceFieldToCopy.NewField.Value;
                     dictionaryIt.Add(referenceFieldToCopy, migratedLookupField);
@@ -49,18 +49,18 @@ namespace JosephM.Deployment.MigrateInternal
                 controller.AddObjectToUi(migratingLookupFields);
 
                 var bulkCopyService = new BulkCopyFieldValueService(XrmRecordService);
-                foreach(var referenceFieldToCopy in request.ReferenceFieldsToCopy)
+                foreach(var referenceFieldToCopy in request.ReferenceFieldReplacements)
                 {
-                    controller.LogLiteral($"Loading records for field {referenceFieldToCopy.OldField.Value} on type {referenceFieldToCopy.SourceType.Value}");
+                    controller.LogLiteral($"Loading records for field {referenceFieldToCopy.OldField.Value} on type {referenceFieldToCopy.ReferencingType.Value}");
 
-                    var records = XrmRecordService.RetrieveAllAndClauses(referenceFieldToCopy.SourceType.Key,
+                    var records = XrmRecordService.RetrieveAllAndClauses(referenceFieldToCopy.ReferencingType.Key,
                         new[]
                         {
                             new Condition(referenceFieldToCopy.OldField.Key, ConditionType.NotNull)
                         },
-                        new [] { referenceFieldToCopy.OldField.Key, referenceFieldToCopy.NewField.Key, XrmRecordService.GetPrimaryKey(referenceFieldToCopy.SourceType.Key) });
+                        new [] { referenceFieldToCopy.OldField.Key, referenceFieldToCopy.NewField.Key, XrmRecordService.GetPrimaryKey(referenceFieldToCopy.ReferencingType.Key) });
                     
-                    var bulkCopyRequest = new BulkCopyFieldValueRequest(referenceFieldToCopy.SourceType, records)
+                    var bulkCopyRequest = new BulkCopyFieldValueRequest(referenceFieldToCopy.ReferencingType, records)
                     {
                         SourceField = referenceFieldToCopy.OldField,
                         TargetField = referenceFieldToCopy.NewField,
@@ -83,7 +83,7 @@ namespace JosephM.Deployment.MigrateInternal
         {
             var dictionary = new Dictionary<IMapSourceImport, IEnumerable<IRecord>>();
 
-            var toIterate = request.Mappings.Where(tm => tm.TargetType != null).ToArray();
+            var toIterate = request.TypesToMigrate.Where(tm => tm.TargetType != null).ToArray();
             var countToDo = toIterate.Count();
             var countDone = 0;
             foreach (var sourceMapping in toIterate)

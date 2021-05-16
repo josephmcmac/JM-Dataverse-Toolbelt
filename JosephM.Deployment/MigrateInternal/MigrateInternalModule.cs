@@ -37,7 +37,7 @@ namespace JosephM.Deployment.MigrateInternal
                             if (revm.GetFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.SourceType)).ValueObject != null
                                 && revm.GetFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType)).ValueObject != null)
                             {
-                                var mappings = revm.GetEnumerableFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.Mappings));
+                                var mappings = revm.GetEnumerableFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.FieldMappings));
                                 if (mappings.Enumerable == null
                                     || !mappings.Enumerable.GetEnumerator().MoveNext())
                                 {
@@ -53,64 +53,65 @@ namespace JosephM.Deployment.MigrateInternal
 
         private void GenerateMappings(RecordEntryViewModelBase revm)
         {
-            if (revm is GridRowViewModel)
+            revm.ApplicationController.DoOnAsyncThread(() =>
             {
-                revm.ApplicationController.DoOnAsyncThread(() =>
+                try
                 {
+                    var r = revm.ParentForm;
+                    if (r == null)
+                        throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
+
+                    r.LoadingViewModel.LoadingMessage = "Please Wait While Generating Mappings";
+                    r.LoadingViewModel.IsLoading = true;
                     try
                     {
-                        var r = revm.ParentForm;
-                        if (r == null)
-                            throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
-
-                        r.LoadingViewModel.LoadingMessage = "Please Wait While Generating Mappings";
-                        r.LoadingViewModel.IsLoading = true;
-                        try
-                        {
                             //if the name matches with a target type then we will auto populate the target
                             var sourceType = revm.GetRecordTypeFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.SourceType)).Value?.Key;
-                            var targetType = revm.GetRecordTypeFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType)).Value?.Key;
+                        var targetType = revm.GetRecordTypeFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType)).Value?.Key;
 
-                            var targetLookupService = r.RecordService.GetLookupService(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType), nameof(MigrateInternalRequest.MigrateInternalTypeMapping), nameof(MigrateInternalRequest.MigrateInternalTypeMapping), revm.GetRecord());
+                        var targetLookupService = r.RecordService.GetLookupService(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.TargetType), nameof(MigrateInternalRequest.MigrateInternalTypeMapping), nameof(MigrateInternalRequest.MigrateInternalTypeMapping), revm.GetRecord());
 
-                            if (targetLookupService != null
-                                && sourceType != null
-                                && targetType != null)
-                            {
-                                var sourceTypeFields = targetLookupService.GetFields(sourceType);
-
-                                var fieldMappings = new List<MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping>();
-                                foreach (var field in sourceTypeFields)
-                                {
-                                    var sourceFieldLogicalName = field;
-                                    var sourceFieldLabel = targetLookupService.GetFieldLabel(sourceFieldLogicalName, sourceType);
-                                    var fieldMapping = new MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping();
-                                    fieldMapping.SourceField = new RecordField(field, sourceFieldLabel);
-                                    if (targetType != null)
-                                    {
-                                        var targetFieldResponse = GetTargetField(targetLookupService, sourceFieldLogicalName, sourceType, targetType);
-                                        if (targetFieldResponse.IsMatch)
-                                        {
-                                            fieldMapping.TargetField = new RecordField(targetFieldResponse.LogicalName, targetLookupService.GetFieldLabel(targetFieldResponse.LogicalName, targetType));
-                                        }
-                                    }
-                                    fieldMappings.Add(fieldMapping);
-                                }
-                                revm.GetEnumerableFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.Mappings)).Value = fieldMappings;
-                                revm.OnPropertyChanged(nameof(EnumerableFieldViewModel.StringDisplay));
-                            }
-                        }
-                        finally
+                        if (targetLookupService != null
+                            && sourceType != null
+                            && targetType != null)
                         {
-                            r.LoadingViewModel.IsLoading = false;
+                            var sourceTypeFields = targetLookupService.GetFields(sourceType);
+
+                            var fieldMappings = new List<MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping>();
+                            foreach (var field in sourceTypeFields)
+                            {
+                                var sourceFieldLogicalName = field;
+                                var sourceFieldLabel = targetLookupService.GetFieldLabel(sourceFieldLogicalName, sourceType);
+                                var fieldMapping = new MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping();
+                                fieldMapping.SourceField = new RecordField(field, sourceFieldLabel);
+                                if (targetType != null)
+                                {
+                                    var targetFieldResponse = GetTargetField(targetLookupService, sourceFieldLogicalName, sourceType, targetType);
+                                    if (targetFieldResponse.IsMatch)
+                                    {
+                                        fieldMapping.TargetField = new RecordField(targetFieldResponse.LogicalName, targetLookupService.GetFieldLabel(targetFieldResponse.LogicalName, targetType));
+                                    }
+                                }
+                                fieldMappings.Add(fieldMapping);
+                            }
+                            revm.GetEnumerableFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.FieldMappings)).Value = fieldMappings;
+                            if (revm is ObjectEntryViewModel oevm)
+                            {
+                                oevm.Reload();
+                            }
+                            revm.OnPropertyChanged(nameof(EnumerableFieldViewModel.StringDisplay));
                         }
                     }
-                    catch (Exception ex)
+                    finally
                     {
-                        revm.ApplicationController.ThrowException(ex);
+                        r.LoadingViewModel.IsLoading = false;
                     }
-                });
-            }
+                }
+                catch (Exception ex)
+                {
+                    revm.ApplicationController.ThrowException(ex);
+                }
+            });
         }
 
         private static GetTargetFieldResponse GetTargetField(IRecordService service, string sourceString, string sourceType, string targetType)

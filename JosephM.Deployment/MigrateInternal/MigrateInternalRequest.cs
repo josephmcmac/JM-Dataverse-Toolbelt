@@ -41,16 +41,18 @@ namespace JosephM.Deployment.MigrateInternal
         [MaximumIntValue(5000)]
         public int? TargetCacheLimit { get; set; }
 
+        [FormEntry]
         [Group(Sections.Main)]
         [DisplayOrder(1000)]
         [AllowGridFullScreen]
         [RequiredProperty]
-        public IEnumerable<MigrateInternalTypeMapping> Mappings { get; set; }
+        public IEnumerable<MigrateInternalTypeMapping> TypesToMigrate { get; set; }
 
+        [FormEntry]
         [Group(Sections.Main)]
         [DisplayOrder(1100)]
         [AllowGridFullScreen]
-        public IEnumerable<ReferenceFieldsForCopy> ReferenceFieldsToCopy { get; set; }
+        public IEnumerable<ReferenceFieldsForCopy> ReferenceFieldReplacements { get; set; }
 
         private static class Sections
         {
@@ -58,6 +60,7 @@ namespace JosephM.Deployment.MigrateInternal
             public const string Options = "Options";
         }
 
+        [DoNotAllowGridEdit]
         [DoNotAllowGridOpen]
         [Group(Sections.Main, true, 20)]
         public class ReferenceFieldsForCopy
@@ -66,22 +69,22 @@ namespace JosephM.Deployment.MigrateInternal
             [RequiredProperty]
             [RecordTypeFor(nameof(OldField))]
             [RecordTypeFor(nameof(NewField))]
-            public RecordType SourceType { get; set; }
+            public RecordType ReferencingType { get; set; }
 
             [DisplayOrder(20)]
             [RequiredProperty]
-            [PropertyInContextByPropertyNotNull(nameof(SourceType))]
+            [PropertyInContextByPropertyNotNull(nameof(ReferencingType))]
             [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.In, new[] { RecordFieldType.Lookup })]
             public RecordField OldField { get; set; }
 
             [DisplayOrder(30)]
             [RequiredProperty]
-            [PropertyInContextByPropertyNotNull(nameof(SourceType))]
+            [PropertyInContextByPropertyNotNull(nameof(ReferencingType))]
             [LookupCondition(nameof(IFieldMetadata.FieldType), ConditionType.In, new[] { RecordFieldType.Lookup })]
             public RecordField NewField { get; set; }
         }
 
-        [DoNotAllowGridOpen]
+        [DoNotAllowGridEdit]
         [Group(Sections.Main, true, 10)]
         public class MigrateInternalTypeMapping : IMapSourceImport
         {
@@ -89,14 +92,14 @@ namespace JosephM.Deployment.MigrateInternal
             [DisplayOrder(10)]
             [RequiredProperty]
             [IncludeManyToManyIntersects]
-            [RecordTypeFor(nameof(Mappings) + "." + nameof(MigrateInternalFieldMapping.SourceField))]
+            [RecordTypeFor(nameof(FieldMappings) + "." + nameof(MigrateInternalFieldMapping.SourceField))]
             public RecordType SourceType { get; set; }
 
             [Group(Sections.Main)]
             [DisplayOrder(20)]
             [RequiredProperty]
             [IncludeManyToManyIntersects]
-            [RecordTypeFor(nameof(Mappings) + "." + nameof(MigrateInternalFieldMapping.TargetField))]
+            [RecordTypeFor(nameof(FieldMappings) + "." + nameof(MigrateInternalFieldMapping.TargetField))]
             public RecordType TargetType { get; set; }
 
             [GridWidth(350)]
@@ -104,14 +107,14 @@ namespace JosephM.Deployment.MigrateInternal
             [RequiredProperty]
             [PropertyInContextByPropertyNotNull(nameof(SourceType))]
             [PropertyInContextByPropertyNotNull(nameof(TargetType))]
-            public IEnumerable<MigrateInternalFieldMapping> Mappings { get; set; }
+            public IEnumerable<MigrateInternalFieldMapping> FieldMappings { get; set; }
 
             string IMapSourceImport.SourceType => SourceType?.Key;
             string IMapSourceImport.TargetType => TargetType?.Key;
             string IMapSourceImport.TargetTypeLabel => TargetType?.Value;
             bool IMapSourceImport.IgnoreDuplicates => false;
             IEnumerable<IMapSourceMatchKey> IMapSourceImport.AltMatchKeys => null;
-            IEnumerable<IMapSourceField> IMapSourceImport.FieldMappings => Mappings;
+            IEnumerable<IMapSourceField> IMapSourceImport.FieldMappings => FieldMappings;
 
             public override string ToString()
             {
