@@ -345,15 +345,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             ApplicationController.DoOnMainThread(() => DynamicGridViewModel.GridRecords.Clear());
         }
 
-        private string _stringDisplay = null;
         public override string StringDisplay
         {
             get
             {
-                if(_stringDisplay != null)
-                {
-                    return _stringDisplay;
-                }
                 var maxToList = 3;
                 var numberListed = 0;
                 bool maxDisplayExceeded = false;
@@ -386,8 +381,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     list.Add("...");
                 }
-                _stringDisplay = string.Join(Environment.NewLine, list.ToArray());
-                return _stringDisplay;
+                return string.Join(Environment.NewLine, list.ToArray());
             }
         }
 

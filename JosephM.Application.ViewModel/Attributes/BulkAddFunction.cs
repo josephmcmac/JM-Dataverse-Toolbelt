@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Service;
@@ -74,10 +75,10 @@ namespace JosephM.Application.ViewModel.Attributes
                 }
                 items.Add(objectRecord.Instance);
                 enumerableField.Value = (IEnumerable)GetEnumeratedType(recordForm, subGridReference).ToNewTypedEnumerable(items);
+                enumerableField.OnPropertyChanged(nameof(EnumerableFieldViewModel.StringDisplay));
             }
             else
             {
-                var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
                 enumerableField.InsertRecord(recordToInsert, 0);
             }
         }

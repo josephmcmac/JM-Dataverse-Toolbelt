@@ -73,7 +73,6 @@ namespace JosephM.Application.ViewModel.Attributes
 
         public virtual void AddSelectedItems(IEnumerable<PicklistOption> selectedItems, RecordEntryViewModelBase recordForm, string subGridReference)
         {
-            var gridField = GetEntryViewModel(recordForm).GetEnumerableFieldViewModel(subGridReference);
             var targetPropertyname = GetTargetProperty(recordForm, subGridReference).Name;
 
             foreach (var item in selectedItems)
