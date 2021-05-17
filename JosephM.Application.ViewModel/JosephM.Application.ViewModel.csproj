@@ -112,7 +112,8 @@
     <Compile Include="Query\ConditionViewModel.cs" />
     <Compile Include="Query\FilterConditionsViewModel.cs" />
     <Compile Include="RecordEntry\Field\ActivityPartyFieldViewModel.cs" />
-    <Compile Include="RecordEntry\Field\StringAutocompleteViewModel.cs" />
+    <Compile Include="RecordEntry\Field\AutocompleteViewModel.cs" />
+    <Compile Include="RecordEntry\Field\IAutocompleteViewModel.cs" />
     <Compile Include="RecordEntry\Field\MultiSelectDialogViewModel.cs" />
     <Compile Include="RecordEntry\Field\MultiSelectFieldViewModel.cs" />
     <Compile Include="RecordEntry\Field\MoneyFieldViewModel.cs" />

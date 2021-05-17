@@ -845,18 +845,45 @@ namespace JosephM.Record.Service
                         continue;
                     if (areExplicitGridFields && gridFieldAttribute == null)
                         continue;
+                    var initialGridWidth = GetInitialGridWidth(propertyInfo);
                     //these initial values repeated
-                    var viewField = new ViewField(propertyInfo.Name,10000, 200);
+                    var viewField = new ViewField(propertyInfo.Name, 10000, initialGridWidth);
                     var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
                     if (orderAttribute != null)
                         viewField.Order = orderAttribute.Order;
-                    var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
-                    if (widthAttribute != null)
-                        viewField.Width = widthAttribute.Width;
                     viewFields.Add(viewField);
                 }
             }
             return new[] { new ViewMetadata(viewFields.OrderBy(o => o.Order).ToArray()) { ViewType = ViewType.LookupView } };
+        }
+
+        private int GetInitialGridWidth(PropertyInfo propertyInfo)
+        {
+            var width = 200;
+            var propertyType = propertyInfo.PropertyType;
+            var isNullableType = propertyType.Name == "Nullable`1";
+            if (isNullableType)
+            {
+                propertyType = propertyType.GetGenericArguments()[0];
+            }
+            if (propertyType == typeof(int) || propertyType == typeof(int?))
+            {
+                width = 75;
+            }
+            else if(propertyType == typeof(RecordType))
+            {
+                width = 300;
+            }
+            else if(propertyType.IsIEnumerableOfT())
+            {
+                width = 300;
+            }
+            var widthAttribute = propertyInfo.GetCustomAttribute<GridWidth>();
+            if (widthAttribute != null)
+            {
+                width = widthAttribute.Width;
+            }
+            return width;
         }
 
         private bool MeetsCondition(object instance, Condition condition)

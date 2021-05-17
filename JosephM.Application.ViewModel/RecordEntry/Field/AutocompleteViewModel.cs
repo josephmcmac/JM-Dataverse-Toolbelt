@@ -10,16 +10,15 @@ using JosephM.Core.Extentions;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    public class StringAutocompleteViewModel : ViewModelBase
+    public class AutocompleteViewModel : ViewModelBase
     {
         private bool _displayTypeAhead;
         private string _loadOptionsError;
 
-        public StringAutocompleteViewModel(StringFieldViewModel stringField, AutocompleteFunction autocompleteFunction)
-            : base(stringField.ApplicationController)
+        public AutocompleteViewModel(IAutocompleteViewModel fieldViewModel, AutocompleteFunction autocompleteFunction)
+            : base(fieldViewModel.ApplicationController)
         {
-            SearchText = stringField.Value;
-            StringField = stringField;
+            FieldViewModel = fieldViewModel;
             AutocompleteFunction = autocompleteFunction;
             var typeAheadOptions = new TypeAheadOptions();
 
@@ -31,11 +30,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 try
                 {
-                    autoCompleteStrings = autocompleteFunction.GetAutocompleteStrings(StringField.RecordEntryViewModel);
+                    autoCompleteStrings = autocompleteFunction.GetAutocompleteStrings(FieldViewModel.RecordEntryViewModel);
                 }
                 catch(Exception ex)
                 {
-                    StringField.AddError($"Error Loading Autocomplete {ex.Message}\n{ex.DisplayString()}");
+                    FieldViewModel.AddError($"Error Loading Autocomplete {ex.Message}\n{ex.DisplayString()}");
                 }
             }
 
@@ -47,7 +46,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         autoCompleteStrings = autoCompleteStrings != null && AutocompleteFunction.CacheAsStaticList
                             ? autoCompleteStrings
                             : autocompleteFunction
-                                .GetAutocompleteStrings(StringField.RecordEntryViewModel);
+                                .GetAutocompleteStrings(FieldViewModel.RecordEntryViewModel);
                         if (autoCompleteStrings == null)
                             return new GetGridRecordsResponse(new IRecord[0]);
                         var searchToLower = SearchText?.ToLower();
@@ -61,15 +60,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                             .Select(o => new ObjectRecord(o))
                             .Take(MaxRecordsForLookup)
                             .ToArray();
-                        if (stringField.DisplayAutocomplete
+                        if (fieldViewModel.DisplayAutocomplete
                             && (!records.Any()
                                 || (records.Count() == 1 && records.First().GetStringField(AutocompleteFunction.ValueField)?.ToLower() == searchToLower)))
                         {
-                            stringField.DisplayAutocomplete = false;
+                            fieldViewModel.DisplayAutocomplete = false;
                         }
                         else
                         {
-                            stringField.DisplayAutocomplete = true;
+                            fieldViewModel.DisplayAutocomplete = true;
                         }
                         return new GetGridRecordsResponse(records);
                     }
@@ -115,8 +114,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             if (DynamicGridViewModel.SelectedRow != null)
             {
-                StringField.Value = DynamicGridViewModel.SelectedRow.GetStringFieldFieldViewModel(AutocompleteFunction.ValueField).Value;
-                StringField.DisplayAutocomplete = false;
+                FieldViewModel.SetValue(DynamicGridViewModel.SelectedRow);
+                FieldViewModel.DisplayAutocomplete = false;
             }
         }
 
@@ -161,10 +160,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         }
 
         public DynamicGridViewModel DynamicGridViewModel { get; set; }
-        public StringFieldViewModel StringField { get; }
+        public IAutocompleteViewModel FieldViewModel { get; }
         private AutocompleteFunction AutocompleteFunction { get; }
         public bool AutoSearch => AutocompleteFunction.Autosearch;
-        public string SearchText { get; set; }
+        public string SearchText { get => FieldViewModel.SearchText; set => FieldViewModel.SearchText = value; }
 
         public class TypeAheadOptions
         {

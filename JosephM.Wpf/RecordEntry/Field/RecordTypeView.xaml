@@ -5,38 +5,87 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
+    xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
     mc:Ignorable="d" d:DesignHeight="40" d:DesignWidth="300">
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
+            <converters:BooleanToVisibilityHiddenConverter x:Key="BoolToHidden" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Converters.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Fields.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Buttons.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
     <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
-        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+        <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToHidden}}" >
             <TextBox
                 Style="{StaticResource  StringFieldEntryStyleReadOnly}"
                 TextWrapping="WrapWithOverflow"
+                AcceptsReturn="False"
+                MaxLines ="1"
                 VerticalScrollBarVisibility="Auto"
                 TabIndex="1"
-                Text="{Binding Mode=OneWay, Path=ValueObject}"
+                Text="{Binding Mode=OneWay, Path=SearchText}"
                 Height="Auto">
             </TextBox>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
-            <ComboBox
-                                MinWidth="100"
-            TabIndex="1"
-            Name="ComboBox"
-            Tag="Key"
-            DisplayMemberPath="Value"
-            ItemsSource="{Binding ItemsSource}"
-            SelectedItem="{Binding ValueObject, Mode=TwoWay, NotifyOnValidationError=True}"
-            IsEnabled="{Binding IsEditable}"
-             />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox 
+                MinWidth="140"
+                Grid.Column="0"
+                Style="{StaticResource  StringFieldEntryStyle}"
+                Name="TextBox"
+                AcceptsReturn="False"
+                TabIndex="1"
+                Text="{Binding Mode=TwoWay, Path=SearchText}"
+                DataContext="{Binding NotifyOnValidationError=True}"
+                TextChanged="TextBox_TextChanged"
+                PreviewKeyDown="OnPreviewKeyDown"
+                VerticalScrollBarVisibility="Auto"
+                IsReadOnly="False" />
+            <Grid
+                Style="{StaticResource FieldEntryButtonGridStyle}"
+                Grid.Column="1"
+                Row="0"
+                Visibility="{Binding SearchButton, Converter={StaticResource NullToHiddenConverter}}">
+                <Button DataContext="{Binding Path=SearchButton}"
+                        Style="{StaticResource SearchButton}"
+                            Command="{Binding Command}" ToolTip="Click To Search" />
+            </Grid>
+            <Grid>
+                <Popup
+                    Visibility="{Binding DisplayAutocomplete, Converter={StaticResource BoolToVis}}"
+                    PlacementTarget="{Binding ElementName=TextBox}"
+                    IsOpen="{Binding DisplayAutocomplete}"
+                    StaysOpen="False">
+                    <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" >
+                        <Grid Background="{DynamicResource BackgroundColor}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Background="{DynamicResource BackgroundColor}"
+                                Visibility="{Binding AutocompleteViewModel.LoadOptionsError,Converter={StaticResource NullToHiddenConverter}}"
+                                Grid.Row="0"
+                                Text="{Binding AutocompleteViewModel.LoadOptionsError}"
+                                Style="{StaticResource ValidationMessage}"  />
+                            <field:StringAutocompleteView
+                                Visibility="{Binding AutocompleteViewModel.LoadOptionsError,Converter={StaticResource NullToVisibilityConverter}}"
+                                Grid.Row="1"
+                                Background="{DynamicResource BackgroundColor}"
+                                DataContext="{Binding AutocompleteViewModel}"/>
+                        </Grid>
+                    </Border>
+                </Popup>
+            </Grid>
         </Grid>
     </Grid>
 </field:FieldControlBase>

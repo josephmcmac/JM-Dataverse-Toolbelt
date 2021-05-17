@@ -272,10 +272,21 @@ namespace JosephM.Wpf.Grid
                             }
                             else if (column.FieldType == RecordFieldType.RecordType)
                             {
-                                dataGridField = new GridPicklistColumn()
+                                if (gridSectionViewModel.FormController.FormService != null
+                                    && gridSectionViewModel.FormController.FormService.UsePicklist(column.FieldName, column.RecordType))
                                 {
-                                    Binding = cellBinding
-                                };
+                                    dataGridField = new GridRecordTypePicklistColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
+                                else
+                                {
+                                    dataGridField = new GridRecordTypeColumn()
+                                    {
+                                        Binding = cellBinding
+                                    };
+                                }
                             }
                             else if (column.FieldType == RecordFieldType.RecordField)
                             {

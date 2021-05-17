@@ -1,10 +1,6 @@
-﻿#region
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Record.IService;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {

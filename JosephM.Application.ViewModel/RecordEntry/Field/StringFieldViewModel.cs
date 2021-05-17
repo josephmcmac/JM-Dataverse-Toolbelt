@@ -4,17 +4,17 @@ using JosephM.Application.ViewModel.Shared;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
-    public class StringFieldViewModel : FieldViewModel<string>
+    public class StringFieldViewModel : FieldViewModel<string>, IAutocompleteViewModel
     {
         public StringFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            var autocomplete = FormService?.GetAutocompletesFunction(this);
-            if (autocomplete != null
-                && autocomplete.IsValidForForm(RecordEntryViewModel)
-                && (autocomplete.DisplayInGrid || !(RecordEntryViewModel is GridRowViewModel)))
+            AutocompleteFunction = FormService?.GetAutocompletesFunction(this);
+            if (AutocompleteFunction != null
+                && AutocompleteFunction.IsValidForForm(RecordEntryViewModel)
+                && (AutocompleteFunction.DisplayInGrid || !(RecordEntryViewModel is GridRowViewModel)))
             {
-                AutocompleteViewModel = new StringAutocompleteViewModel(this, autocomplete);
+                AutocompleteViewModel = new AutocompleteViewModel(this, AutocompleteFunction);
                 SearchButton = new XrmButtonViewModel("Search", () => { AutocompleteViewModel.SearchText = Value; Search(); }, ApplicationController);
             }
         }
@@ -57,7 +57,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
-        public StringAutocompleteViewModel AutocompleteViewModel { get; set; }
+        public AutocompleteViewModel AutocompleteViewModel { get; set; }
 
         public void SelectAutocompleteGrid()
         {
@@ -71,6 +71,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
+        void IAutocompleteViewModel.SetValue(GridRowViewModel selectedRow)
+        {
+            Value = selectedRow.GetStringFieldFieldViewModel(AutocompleteFunction.ValueField).Value;
+        }
+
+        string IAutocompleteViewModel.SearchText
+        {
+            get => Value;
+            set => Value = value;
+        }
+
         private XrmButtonViewModel _searchButton;
 
         public XrmButtonViewModel SearchButton
@@ -79,8 +90,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             set
             {
                 _searchButton = value;
-                OnPropertyChanged("SearchButton");
+                OnPropertyChanged(nameof(SearchButton));
             }
         }
+
+        public AutocompleteFunction AutocompleteFunction { get; }
     }
 }

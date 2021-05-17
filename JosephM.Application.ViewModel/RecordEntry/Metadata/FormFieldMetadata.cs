@@ -194,7 +194,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     case RecordFieldType.RecordType:
                     {
-                        fieldVm = new RecordTypeFieldViewModel(field, label, recordForm)
+                        var usePicklist = recordForm.FormService == null
+                                ? false
+                                : recordForm.FormService.UsePicklist(field, recordType);
+                        fieldVm = new RecordTypeFieldViewModel(field, label, recordForm, usePicklist)
                         {
                             IsRecordServiceField = isRecordServiceField
                         };

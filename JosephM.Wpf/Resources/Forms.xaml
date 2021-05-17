@@ -82,6 +82,9 @@
     <DataTemplate x:Key="RecordTypeFieldTemplate">
         <field:RecordTypeFieldView DataContext="{Binding}" />
     </DataTemplate>
+    <DataTemplate x:Key="RecordTypePicklistFieldTemplate">
+        <field:RecordTypePicklistFieldView DataContext="{Binding}" />
+    </DataTemplate>
     <DataTemplate x:Key="RecordFieldFieldTemplate">
         <field:RecordFieldFieldView DataContext="{Binding}" />
     </DataTemplate>
@@ -129,6 +132,7 @@
         FolderFieldTemplate="{StaticResource folderFieldTemplate}"
         StringEnumerableFieldTemplate="{StaticResource stringEnumerableFieldTemplate}"
         RecordTypeFieldTemplate="{StaticResource RecordTypeFieldTemplate}"
+        RecordTypePicklistFieldTemplate="{StaticResource RecordTypePicklistFieldTemplate}"
         RecordFieldFieldTemplate="{StaticResource RecordFieldFieldTemplate}"
         EnumerableFieldTemplate="{StaticResource EnumerableFieldTemplate}"
         EnumerableFieldTemplateUniform="{StaticResource EnumerableFieldTemplateUniform}"
@@ -159,8 +163,8 @@
     <DataTemplate x:Key="labelledAboveFieldTemplate">
         <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" ToolTip="{Binding Description}">
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <field:FieldLabelView DataContext="{Binding}" />

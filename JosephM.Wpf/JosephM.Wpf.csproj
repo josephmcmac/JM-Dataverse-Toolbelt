@@ -189,6 +189,14 @@
       <DependentUpon>GridIntPicklistFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Grid\Fields\GridIntPicklistColumn.cs" />
+    <Compile Include="Grid\Fields\GridRecordTypeColumn.cs" />
+    <Compile Include="Grid\Fields\GridRecordTypeFieldView.xaml.cs">
+      <DependentUpon>GridRecordTypeFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grid\Fields\GridRecordTypePicklistColumn.cs" />
+    <Compile Include="Grid\Fields\GridRecordTypePicklistFieldView.xaml.cs">
+      <DependentUpon>GridRecordTypePicklistFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Grid\Fields\GridMoneyFieldView.xaml.cs">
       <DependentUpon>GridMoneyFieldView.xaml</DependentUpon>
     </Compile>
@@ -295,6 +303,9 @@
     </Compile>
     <Compile Include="RecordEntry\Field\IntegerPicklistFieldView.xaml.cs">
       <DependentUpon>IntegerPicklistFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\RecordTypePicklistView.xaml.cs">
+      <DependentUpon>RecordTypePicklistView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\StringAutocompleteView.xaml.cs">
       <DependentUpon>StringAutocompleteView.xaml</DependentUpon>
@@ -457,6 +468,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Grid\Fields\GridRecordTypeFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grid\Fields\GridRecordTypePicklistFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Grid\Fields\GridMoneyFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -576,6 +595,10 @@
     <Page Include="RecordEntry\Field\IntegerPicklistFieldView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\RecordTypePicklistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RecordEntry\Field\StringAutocompleteView.xaml">
       <Generator>MSBuild:Compile</Generator>

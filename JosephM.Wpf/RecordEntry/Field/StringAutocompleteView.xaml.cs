@@ -16,9 +16,9 @@ namespace JosephM.Wpf.RecordEntry.Field
             DataGrid.SelectionMode = DataGridSelectionMode.Single;
         }
 
-        protected StringAutocompleteViewModel ViewModel
+        protected AutocompleteViewModel ViewModel
         {
-            get { return (StringAutocompleteViewModel) DataContext; }
+            get { return (AutocompleteViewModel) DataContext; }
         }
 
         protected DataGrid DataGrid

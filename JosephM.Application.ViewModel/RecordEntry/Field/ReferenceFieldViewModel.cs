@@ -1,19 +1,10 @@
-﻿#region
-
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Shared;
+using JosephM.Core.Extentions;
+using JosephM.Record.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using JosephM.Application.ViewModel.Grid;
-using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Application.ViewModel.Shared;
-using JosephM.Core.Extentions;
-using JosephM.Core.FieldType;
-using JosephM.Record.Extentions;
-using JosephM.Record.IService;
-using JosephM.Record.Query;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -237,7 +228,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             if (!SetEnteredText)
                 return;
             _enteredText = recordName;
-            OnPropertyChanged("EnteredText");
+            OnPropertyChanged(nameof(EnteredText));
         }
 
         public abstract IRecordService LookupService { get; }
@@ -251,7 +242,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             {
                 _enteredText = value;
                 SetValue(null);
-                OnPropertyChanged("EnteredText");
+                OnPropertyChanged(nameof(EnteredText));
             }
         }
 

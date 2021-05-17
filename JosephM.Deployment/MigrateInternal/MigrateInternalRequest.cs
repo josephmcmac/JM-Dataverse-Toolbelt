@@ -41,14 +41,12 @@ namespace JosephM.Deployment.MigrateInternal
         [MaximumIntValue(5000)]
         public int? TargetCacheLimit { get; set; }
 
-        [FormEntry]
         [Group(Sections.Main)]
         [DisplayOrder(1000)]
         [AllowGridFullScreen]
         [RequiredProperty]
         public IEnumerable<MigrateInternalTypeMapping> TypesToMigrate { get; set; }
 
-        [FormEntry]
         [Group(Sections.Main)]
         [DisplayOrder(1100)]
         [AllowGridFullScreen]
@@ -60,11 +58,11 @@ namespace JosephM.Deployment.MigrateInternal
             public const string Options = "Options";
         }
 
-        [DoNotAllowGridEdit]
         [DoNotAllowGridOpen]
         [Group(Sections.Main, true, 20)]
         public class ReferenceFieldsForCopy
         {
+            [GridWidth(300)]
             [DisplayOrder(10)]
             [RequiredProperty]
             [RecordTypeFor(nameof(OldField))]
@@ -84,7 +82,7 @@ namespace JosephM.Deployment.MigrateInternal
             public RecordField NewField { get; set; }
         }
 
-        [DoNotAllowGridEdit]
+        [DoNotAllowGridOpen]
         [Group(Sections.Main, true, 10)]
         public class MigrateInternalTypeMapping : IMapSourceImport
         {

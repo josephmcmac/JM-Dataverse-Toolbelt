@@ -90,6 +90,7 @@ namespace JosephM.Deployment.ImportExcel
             [GridWidth(85)]
             public bool IgnoreDuplicates { get; set; }
 
+            [UsePicklist]
             [Group(Sections.Main)]
             [DisplayOrder(10)]
             [RequiredProperty]

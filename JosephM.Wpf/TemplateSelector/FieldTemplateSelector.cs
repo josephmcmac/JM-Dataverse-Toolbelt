@@ -25,6 +25,7 @@ namespace JosephM.Wpf.TemplateSelector
         public DataTemplate FolderFieldTemplate { get; set; }
         public DataTemplate StringEnumerableFieldTemplate { get; set; }
         public DataTemplate RecordTypeFieldTemplate { get; set; }
+        public DataTemplate RecordTypePicklistFieldTemplate { get; set; }
         public DataTemplate RecordFieldFieldTemplate { get; set; }
         public DataTemplate FileRefFieldTemplate { get; set; }
         public DataTemplate EnumerableFieldTemplate { get; set; }
@@ -56,9 +57,13 @@ namespace JosephM.Wpf.TemplateSelector
             if (item is IntegerFieldViewModel ifvm)
             {
                 if (ifvm.UsePicklist)
+                {
                     return IntegerPicklistFieldTemplate;
+                }
                 else
+                {
                     return IntegerFieldTemplate;
+                }
             }
             if (item is BigIntFieldViewModel)
             {
@@ -77,8 +82,17 @@ namespace JosephM.Wpf.TemplateSelector
                 return FolderFieldTemplate;
             if (item is StringEnumerableFieldViewModel)
                 return StringEnumerableFieldTemplate;
-            if (item is RecordTypeFieldViewModel)
-                return RecordTypeFieldTemplate;
+            if (item is RecordTypeFieldViewModel rtfvm)
+            {
+                if (rtfvm.UsePicklist)
+                {
+                    return RecordTypePicklistFieldTemplate;
+                }
+                else
+                {
+                    return RecordTypeFieldTemplate;
+                }
+            }
             if (item is RecordFieldFieldViewModel)
                 return RecordFieldFieldTemplate;
             if (item is ObjectFieldViewModel)
