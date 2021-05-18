@@ -143,8 +143,10 @@ namespace JosephM.Xrm.Vsix.Application
                     fileName = item.FileName;
                 }
             }
-            if (fileName == null)
+            if (fileName == null || !File.Exists(fileName))
+            {
                 return null;
+            }
             return File.ReadAllText(fileName);
         }
 
