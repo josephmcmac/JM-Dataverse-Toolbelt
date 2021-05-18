@@ -1,21 +1,14 @@
-﻿#region
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using JosephM.Application.ViewModel.RecordEntry.Field;
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.RecordEntry.Metadata;
 using JosephM.Application.ViewModel.Shared;
-using JosephM.Application.ViewModel.TabArea;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
-
-#endregion
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Application.ViewModel.Grid
 {
@@ -51,6 +44,20 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
         public bool IsSelected { get; set; }
+
+        public bool IsVisible
+        {
+            get
+            {
+                return _isVisible;
+            }
+            set
+            {
+                _isVisible = value;
+                OnPropertyChanged(nameof(IsVisible));
+            }
+        }
+
 
         private void LoadFields()
         {
@@ -105,7 +112,8 @@ namespace JosephM.Application.ViewModel.Grid
 
         public bool CanDelete { get { return GridViewModel.CanDelete; } }
 
-        public bool CanOpenWeb {
+        public bool CanOpenWeb
+        {
             get
             {
                 return RecordService.GetRecordTypeMetadata(RecordType).Searchable
@@ -115,7 +123,7 @@ namespace JosephM.Application.ViewModel.Grid
 
         public void DeleteRow()
         {
-            if(GridViewModel.SelectedRows != null)
+            if (GridViewModel.SelectedRows != null)
             {
                 foreach (var item in GridViewModel.SelectedRows.ToArray())
                     if (item != this)
@@ -138,6 +146,7 @@ namespace JosephM.Application.ViewModel.Grid
         }
 
         private readonly List<FieldViewModelBase> _gridFields = new List<FieldViewModelBase>();
+        private bool _isVisible = true;
 
         public FieldViewModelBase this[string indexFieldName]
         {

@@ -603,5 +603,10 @@ namespace JosephM.Wpf.Grid
                 }
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            DynamicGridViewModel.NextPageButton.Command.Execute();
+        }
     }
 }

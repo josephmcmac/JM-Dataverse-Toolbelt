@@ -256,24 +256,5 @@ namespace JosephM.Deployment.Test
             Assert.AreEqual(3, emails.Count());
             Assert.IsTrue(emails.All(e => e.GetOptionKey(Fields.email_.statecode) == OptionSets.Email.ActivityStatus.Completed.ToString()));
         }
-        
-        private void ClearSavedRequests(TestApplication app, RecordEntryFormViewModel entryViewmodel)
-        {
-            if (entryViewmodel.CustomFunctions.Any(cb => cb.Id == "LOADREQUEST"))
-            {
-                var loadRequestButton = entryViewmodel.GetButton("LOADREQUEST");
-                loadRequestButton.Invoke();
-                //enter and save details
-                var saveRequestForm = app.GetSubObjectEntryViewModel(entryViewmodel);
-                var requestsGrid = saveRequestForm.GetEnumerableFieldViewModel(nameof(SavedSettings.SavedRequests));
-                foreach (var item in requestsGrid.GridRecords.ToArray())
-                {
-                    requestsGrid.DynamicGridViewModel.DeleteRow(item);
-                }
-                saveRequestForm.SaveButtonViewModel.Invoke();
-                Assert.IsFalse(entryViewmodel.ChildForms.Any());
-                Assert.IsFalse(entryViewmodel.LoadingViewModel.IsLoading);
-            }
-        }
     }
 }

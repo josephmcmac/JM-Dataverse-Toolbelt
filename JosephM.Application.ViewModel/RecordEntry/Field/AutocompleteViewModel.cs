@@ -26,58 +26,48 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             var formController = FormController.CreateForObject(typeAheadOptions, ApplicationController, null);
 
             IEnumerable<object> autoCompleteStrings = null;
-            if (AutocompleteFunction.CacheAsStaticList)
+            GetGridRecordsResponse getGridRecords(bool ignorePages)
             {
                 try
                 {
-                    autoCompleteStrings = autocompleteFunction.GetAutocompleteStrings(FieldViewModel.RecordEntryViewModel);
+                    LoadOptionsError = null;
+                    if (autoCompleteStrings == null || !AutocompleteFunction.CacheAsStaticList)
+                    {
+                        autoCompleteStrings = autocompleteFunction
+                            .GetAutocompleteStrings(FieldViewModel.RecordEntryViewModel);
+                    }
+                    if (autoCompleteStrings == null)
+                        return new GetGridRecordsResponse(new IRecord[0]);
+                    var searchToLower = SearchText?.ToLower();
+                    typeAheadOptions.Options = autoCompleteStrings
+                        .Where(ta => searchToLower == null || AutocompleteFunction.SearchFields.Any(sf => ta.GetPropertyValue(sf)?.ToString().ToLower().StartsWith(searchToLower) ?? false))
+                        .OrderBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.SortField))
+                        .ThenBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.ValueField));
+
+                    var records = typeAheadOptions
+                        .Options
+                        .Select(o => new ObjectRecord(o))
+                        .Skip(ignorePages ? 0 : DynamicGridViewModel.CurrentPageFloor)
+                        .Take(ignorePages ? typeAheadOptions.Options.Count() : MaxRecordsForLookup + 1)
+                        .ToArray();
+                    if (fieldViewModel.DisplayAutocomplete
+                        && (!records.Any()
+                            || (records.Count() == 1 && records.First().GetStringField(AutocompleteFunction.ValueField)?.ToLower() == searchToLower)))
+                    {
+                        fieldViewModel.DisplayAutocomplete = false;
+                    }
+                    else
+                    {
+                        fieldViewModel.DisplayAutocomplete = true;
+                    }
+                    return new GetGridRecordsResponse(records.Take(ignorePages ? records.Count() : MaxRecordsForLookup).ToArray()) { HasMoreRecords = records.Count() > MaxRecordsForLookup };
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    FieldViewModel.AddError($"Error Loading Autocomplete {ex.Message}\n{ex.DisplayString()}");
+                    LoadOptionsError = $"Autocomplete could not be loaded\n\n{ex.Message}{(ex.InnerException == null ? null : ("\n\n" + ex.InnerException.Message))}\n\n{ex.StackTrace}";
+                    return new GetGridRecordsResponse(new IRecord[0]);
                 }
             }
-
-            Func<bool, GetGridRecordsResponse> getGridRecords = (ignorePages) =>
-                {
-                    try
-                    {
-                        LoadOptionsError = null;
-                        autoCompleteStrings = autoCompleteStrings != null && AutocompleteFunction.CacheAsStaticList
-                            ? autoCompleteStrings
-                            : autocompleteFunction
-                                .GetAutocompleteStrings(FieldViewModel.RecordEntryViewModel);
-                        if (autoCompleteStrings == null)
-                            return new GetGridRecordsResponse(new IRecord[0]);
-                        var searchToLower = SearchText?.ToLower();
-                        typeAheadOptions.Options = autoCompleteStrings
-                            .Where(ta => searchToLower == null || AutocompleteFunction.SearchFields.Any(sf => ta.GetPropertyValue(sf)?.ToString().ToLower().StartsWith(searchToLower) ?? false))
-                            .OrderBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.SortField))
-                            .ThenBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.ValueField));
-
-                        var records = typeAheadOptions
-                            .Options
-                            .Select(o => new ObjectRecord(o))
-                            .Take(MaxRecordsForLookup)
-                            .ToArray();
-                        if (fieldViewModel.DisplayAutocomplete
-                            && (!records.Any()
-                                || (records.Count() == 1 && records.First().GetStringField(AutocompleteFunction.ValueField)?.ToLower() == searchToLower)))
-                        {
-                            fieldViewModel.DisplayAutocomplete = false;
-                        }
-                        else
-                        {
-                            fieldViewModel.DisplayAutocomplete = true;
-                        }
-                        return new GetGridRecordsResponse(records);
-                    }
-                    catch(Exception ex)
-                    {
-                        LoadOptionsError = $"Autocomplete could not be loaded\n\n{ex.Message}{(ex.InnerException == null ? null : ("\n\n" + ex.InnerException.Message))}\n\n{ex.StackTrace}";
-                        return new GetGridRecordsResponse(new IRecord[0]);
-                    }
-                };
 
             DynamicGridViewModel = new DynamicGridViewModel(ApplicationController)
             {
@@ -90,7 +80,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 IsReadOnly = true,
                 DisplayHeaders = false,
                 NoMargins = true,
-                FieldMetadata = AutocompleteFunction.GridFields
+                FieldMetadata = AutocompleteFunction.GridFields,
+                PageSize = MaxRecordsForLookup,
+                DisplayTotalCount = true,
+                GetTotalCount = () => getGridRecords(true).Records.Count()
             };
         }
 
@@ -163,7 +156,21 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public IAutocompleteViewModel FieldViewModel { get; }
         private AutocompleteFunction AutocompleteFunction { get; }
         public bool AutoSearch => AutocompleteFunction.Autosearch;
-        public string SearchText { get => FieldViewModel.SearchText; set => FieldViewModel.SearchText = value; }
+        public string SearchText
+        {
+            get
+            {
+                return FieldViewModel.SearchText;
+            }
+            set
+            {
+                FieldViewModel.SearchText = value;
+                if(DynamicGridViewModel != null)
+                {
+                    DynamicGridViewModel.CurrentPage = 1;
+                }
+            }
+        }
 
         public class TypeAheadOptions
         {

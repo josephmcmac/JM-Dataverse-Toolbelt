@@ -14,6 +14,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
         }
 
+        protected virtual void OnItemsLoaded()
+        {
+
+        }
+
         private IEnumerable<T> _itemsSource;
 
         public IEnumerable<T> ItemsSource

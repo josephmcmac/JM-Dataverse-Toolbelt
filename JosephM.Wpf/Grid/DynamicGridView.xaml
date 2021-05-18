@@ -143,19 +143,22 @@
                                     <Style TargetType="DataGridRow">
                                         <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
                                         <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
                                     </Style>
                                 </DataGrid.RowStyle>
                             </DataGrid>
                         </Grid>
-                        <Grid  Grid.Row="2" 
+                        <Grid  Grid.Row="2"
                                Visibility="{Binding HasPaging, Converter={StaticResource BoolToVis}}">
                             <WrapPanel Orientation="Horizontal">
                                 <Grid Visibility="{Binding IsNotFirstPage, Converter={StaticResource BoolToVis}}" >
                                     <Button DataContext="{Binding PreviousPageButton}" Style="{StaticResource PreviousButton}" Command="{Binding Command}" />
                                 </Grid>
                                 <TextBlock Name="PageDescriptionTextBlock" Text="{Binding PageDescription}"></TextBlock>
-                                <Grid Visibility="{Binding HasMoreRows, Converter={StaticResource BoolToVis}}" >
-                                    <Button DataContext="{Binding NextPageButton}" Style="{StaticResource NextButton}" Command="{Binding Command}" />
+                                <Grid Visibility="{Binding HasMoreRows, Converter={StaticResource BoolToVis}}"  >
+                                    <Grid Visibility="{Binding HasMoreRows, Converter={StaticResource BoolToVis}}" >
+                                        <Button DataContext="{Binding NextPageButton}" Style="{StaticResource NextButton}" Command="{Binding Command}" />
+                                    </Grid>
                                 </Grid>
                             </WrapPanel>
                         </Grid>

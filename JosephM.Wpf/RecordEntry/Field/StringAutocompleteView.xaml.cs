@@ -42,7 +42,14 @@ namespace JosephM.Wpf.RecordEntry.Field
             }
 
             else if (e.Key == Key.Enter)
+            {
                 ViewModel.SetToSelectedRow();
+            }
+        }
+
+        private void MyGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
         }
     }
 }
