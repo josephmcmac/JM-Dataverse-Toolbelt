@@ -12,8 +12,8 @@ using System.Linq;
 namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
 {
     [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalWrap, 10)]
-    [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalWrap, 20)]
-    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.HorizontalWrap, 30)]
+    [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalWrap, 30)]
+    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.HorizontalWrap, 20)]
     public class BulkReplaceRequest : ServiceRequestBase
     {
         private bool _allowExecuteMultiples = true;
