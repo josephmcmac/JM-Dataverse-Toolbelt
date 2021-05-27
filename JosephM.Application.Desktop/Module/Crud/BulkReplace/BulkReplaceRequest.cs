@@ -93,7 +93,12 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
 
             [DisplayOrder(20)]
             [RequiredProperty]
+            [PropertyInContextByPropertyValue(nameof(ReplaceWithEmptyString), false)]
             public string NewText { get; set; }
+
+            [DisplayOrder(30)]
+            [RequiredProperty]
+            public bool ReplaceWithEmptyString { get; set; }
         }
 
         private static class Sections

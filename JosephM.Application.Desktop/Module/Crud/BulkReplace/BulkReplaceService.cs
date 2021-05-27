@@ -58,7 +58,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
                             var newValue = previousValue;
                             foreach (var replacement in request.ReplacementTexts)
                             {
-                                newValue = newValue == null ? null : newValue.Replace(replacement.OldText, replacement.NewText);
+                                newValue = newValue == null ? null : newValue.Replace(replacement.OldText, replacement.ReplaceWithEmptyString ? string.Empty : replacement.NewText);
                             }
                             if (previousValue != newValue)
                             {
