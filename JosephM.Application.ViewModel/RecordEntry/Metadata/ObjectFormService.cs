@@ -655,10 +655,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                 if (lookupService != null)
                                 {
                                     //get the source field type
-                                    var fieldType = lookupService.GetFieldType(selectedFieldName, selectedFieldRecordType);
+                                    var fieldMetadata = lookupService.GetFieldMetadata(selectedFieldName, selectedFieldRecordType);
+                                    var fieldType = fieldMetadata.FieldType;
                                     //get the section the target field is in and its field metadata
                                     var metadata = re.FormService.GetFormMetadata(re.GetRecordType(), ObjectRecordService);
-                                    FormFieldMetadata fieldMetadata = null;
+                                    FormFieldMetadata formFieldMetadata = null;
                                     string sectionName = null;
                                     foreach (var sectionMetadata in metadata.FormSections.Cast<FormFieldSection>())
                                     {
@@ -667,7 +668,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                             if (field.FieldName == fieldViewModel.FieldName)
                                             {
                                                 sectionName = sectionMetadata.SectionLabel;
-                                                fieldMetadata = field;
+                                                formFieldMetadata = field;
                                             }
                                         }
                                     }
@@ -700,12 +701,15 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                         }
                                         else
                                         {
-                                            //otherwise is a field input dynamic for the field's tpye
+                                            //otherwise is a field input dynamic for the field's type
                                             //now we need to create the view model for the target field as the correct type
                                             //okay now we need to replace the old field view model for this field
                                             var explicitTargetType = fieldType == RecordFieldType.Lookup || fieldType == RecordFieldType.Customer || fieldType == RecordFieldType.Owner
                                                 ? lookupService.GetLookupTargetType(selectedFieldName, selectedFieldRecordType)
                                                 : null;
+                                            var explicitMultiline = fieldType == RecordFieldType.Memo
+                                            || fieldMetadata.TextFormat == TextFormat.TextArea
+                                            || (selectedFieldName == "configuration" && selectedFieldRecordType == "sdkmessageprocessingstep");
                                             var explicitPicklistOptions = fieldType == RecordFieldType.Picklist
                                                                         || fieldType == RecordFieldType.Status
                                                                         || fieldType == RecordFieldType.State
@@ -716,7 +720,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                                 : null;
                                             if (clearValue)
                                                 fieldViewModel.ValueObject = null;
-                                            var newFieldViewModel = fieldMetadata.CreateFieldViewModel(re.GetRecordType(), re.RecordService, re, re.ApplicationController, explicitFieldType: fieldType, explicitLookupTargetType: explicitTargetType, explicitPicklistOptions: explicitPicklistOptions);
+                                            var newFieldViewModel = formFieldMetadata.CreateFieldViewModel(re.GetRecordType(), re.RecordService, re, re.ApplicationController, explicitFieldType: fieldType, explicitLookupTargetType: explicitTargetType, explicitPicklistOptions: explicitPicklistOptions, explicitMultiline: explicitMultiline);
                                             var section = re.FieldSections.First(s => s.SectionLabel == sectionName);
                                             var index = section.Fields.Count;
                                             for (var i = 0; i < section.Fields.Count; i++)
