@@ -56,11 +56,11 @@ namespace JosephM.Application.Desktop.Console
                     string executableConsoleApp = Uri.UnescapeDataString(uri.Path);
 
                     var arguments = new Dictionary<string, string>
-                {
-                    { "SettingsFolderName", ApplicationController.ApplicationName },
-                    { "Request", name },
-                    { "LogPath", "Log" },
-                };
+                        {
+                            { "SettingsFolderName", ApplicationController.ApplicationName },
+                            { "Request", name },
+                            { "LogPath", "Log" },
+                        };
 
                     //get the module implementing the request type
                     var moduleController = ApplicationController.ResolveType(typeof(ModuleController)) as ModuleController;

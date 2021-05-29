@@ -1,0 +1,2058 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.VisualStudio.CoreUtility</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.VisualStudio.Utilities.AppliesToProjectAttribute">
+            <summary>
+            Adds AppliesTo metadata to a MEF export to indicate where this export should be applied.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.AppliesToProjectAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.Utilities.AppliesToProjectAttribute" /> class.
+            </summary>
+            <param name="projectCapabilityExpression">
+                An expression that indicates where this export should be applied.
+                For example
+                To declare an expression that supports (VisualC or Csharp)  AND (MSTest or Nunit) use the following syntax:
+                     (VisualC | CSharp) + (MSTest | NUnit)
+                
+                See the following URLs for expression syntax and supported operations
+               https://msdn.microsoft.com/en-us/library/microsoft.visualstudio.shell.interop.ivsbooleansymbolexpressionevaluator.evaluateexpression.aspx
+               https://github.com/Microsoft/VSProjectSystem/blob/master/doc/overview/about_project_capabilities.md
+            </param>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.AppliesToProjectAttribute.AppliesTo">
+            <summary>
+            Gets the expression that indicates where this export should be applied.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.BaseDefinitionAttribute">
+            <summary>
+            Represents a base definition of the current definition.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.BaseDefinitionAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.VisualStudio.Utilities.BaseDefinitionAttribute" />.
+            </summary>
+            <param name="name">The base definition name. Definition names are case-insensitive.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="name" />is null or an empty string.</exception>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.BaseDefinitionAttribute.BaseDefinition">
+            <summary>
+            Gets the base definition name.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.BaseProxyService`1">
+            <summary>
+            A proxy service for exposing best implementation to the MEF composition.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.BaseUtility.DefaultEditorOptionValueAttribute">
+            <summary>
+            Attribute to define a default value for an editor option. Only value types and strings are supported.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.BaseUtility.DefaultEditorOptionValueAttribute.#ctor(System.Object)">
+            <summary>
+            Attribute to define the default value of an editor option. 
+            </summary>
+            <param name="defaultEditorOptionValue">The default value that editor option should have before being set by a component. Should be of the same type of the editor option. Only value types and strings are supported</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="defaultEditorOptionValue" /> is null.</exception>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.BaseUtility.DefaultEditorOptionValueAttribute.DefaultEditorOptionValue">
+            <summary>
+            Default Value of the editor option
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.DefaultOrderings">
+            <summary>
+            Static class defining some default placeholders for the ordering attributes.
+            </summary>
+            <remarks>
+            <para>
+            Orderable items that do not explicitly indicate they are before <see cref="F:Microsoft.VisualStudio.Utilities.DefaultOrderings.Lowest" /> have an implicit constraint
+            that they are after <see cref="F:Microsoft.VisualStudio.Utilities.DefaultOrderings.Lowest" />.
+            </para>
+            <para>
+            Orderable items that do not explicitly indicate they are after <see cref="F:Microsoft.VisualStudio.Utilities.DefaultOrderings.Highest" /> have an implicit constraint
+            that they are before <see cref="F:Microsoft.VisualStudio.Utilities.DefaultOrderings.Highest" />.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.DisplayNameAttribute">
+            <summary>
+            Provides a display name for an editor component part.
+            </summary>    
+            <remarks>
+            This attribute should be localized wherever it is used.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.DisplayNameAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.VisualStudio.Utilities.DisplayNameAttribute" />.
+            </summary>
+            <param name="displayName">The display name of an editor component part.</param>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.DisplayNameAttribute.DisplayName">
+            <summary>
+            Gets the display name of an editor component part.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.DynamicVisibilityAttribute">
+            <summary>
+            A MEF attribute indicating an attributed object supports dynamic visibility.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ExportImplementationAttribute">
+             <summary>
+             Along with <see cref="T:Microsoft.VisualStudio.Utilities.ImportImplementationsAttribute" /> enables MEF proxy pattern where a single component export serves
+             as a proxy for the best implementation selected at run time. This pattern allows component consumers to just [Import] it,
+             hiding the complexity of selecting one of implementations.
+             </summary>
+             <example>
+             A typical sample:
+            
+             A component contract definition:
+             
+             <code>
+             interface IService {
+                 void Foo();
+             }
+             </code>
+            
+             Default implementation:
+             
+             <code>
+             [ExportImplementation(typeof(IService))]
+             [Name("default")]
+             class DefaultService : IService {...}
+             </code>
+            
+             Another implementation:
+             
+             <code>
+             [ExportImplementation(typeof(IService))]
+             [Name("A better implementation")]
+             [Order(Before = "default")]
+             class AdvancedService : IService {...}
+             </code>
+            
+             A proxy:
+            
+             <code>
+             [Export(typeof(IService))]
+             class ProxyService : IService {
+                [ImportImplementations(typeof(IService))]
+                IEnumerable&lt;Lazy&lt;IService, IOrderable&gt;&gt; _unorderedImplementations;
+                
+                public void Foo() {
+                    Orderer.Order(_unorderedImplementations).FirstOrDefault()?.Value.Foo();
+                }
+             }
+             </code>
+            
+             Consuming IService:
+             <code>
+             [Import]
+             IService service = null;
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ExportImplementationAttribute.#ctor(System.Type)">
+            <summary>
+            Creates new <see cref="T:Microsoft.VisualStudio.Utilities.ExportImplementationAttribute" /> instance.
+            </summary>
+            <param name="contractType">A contract type.</param>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IDecorated">
+            <summary>
+            Represents an object that provides a localized description text and an icon.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IDecorated.Icon">
+            <summary>
+            Gets the icon representing this object.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IDecorated.DescriptionText">
+            <summary>
+            Gets the localized description of this object.
+            While <see cref="P:Microsoft.VisualStudio.Utilities.INamed.DisplayName" /> is the primary representation of this object,
+            the description is not immediately visible and may conveys more detail.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFeatureFlagsAdapter">
+            <summary>
+            Facilitates access to Visual Studio's IVsFeatureFlags service
+            </summary>
+            <remarks>
+            <para>
+            This is a MEF part which should be imported as follows:
+            <code>
+            [Import]
+            private IFeatureFlagsAdapter featureFlags = null;
+            </code>
+            </para>
+            <para>
+            Host specific implementations of this service should be exported as follows:
+            <code>
+            [ExportImplementation(typeof(IFeatureFlagsAdapter))]
+            [Name("My Feature Flags Adapter")]
+            [Order(Before = "default")]
+            internal sealed class MyFeatureFlagsAdapter : IFeatureFlagsAdapter
+            </code>
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFeatureFlagsAdapter.IsFeatureEnabled(System.String,System.Boolean)">
+            <summary>
+            Queries the Feature Flags service to see whether <paramref name="featureName" /> is enabled.
+            </summary>
+            <param name="featureName">Name of feature to check</param>
+            <param name="defaultValue">Default value to use when request can't be made</param>
+            <returns>Whether the feature is enabled</returns>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IGuardedOperations">
+            <summary>
+            Operations that guard calls to extensions code, track performance and log errors.
+            </summary>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPoint(System.Action)">
+            <summary>
+            Makes a guarded call to an extension point.
+            </summary>
+            <param name="call">Delegate that calls the extension point.</param>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPoint(System.Object,System.Action)">
+            <summary>
+            Makes a guarded call to an extension point.
+            </summary>
+            <param name="errorSource">Reference to the extension object or event handler that may throw an exception.
+            Used for tracking performance and errors.</param>
+            <param name="call">Delegate that calls the extension point.</param>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPoint(System.Object,System.Action,System.Predicate{System.Exception})">
+            <summary>
+            Makes a guarded call to an extension point.
+            </summary>
+            <param name="errorSource">Reference to the extension object or event handler that may throw an exception.
+            Used for tracking performance and errors.</param>
+            <param name="call">Delegate that calls the extension point.</param>
+            <param name="exceptionGuardFilter">Determines which exceptions should be guarded against. 
+            An exception gets handled only if <paramref name="exceptionGuardFilter" /> returns <c>true</c>.</param>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPoint``1(System.Func{``0},``0)">
+            <summary>
+            Makes a guarded call to an extension point.
+            </summary>
+            <param name="call">Delegate that calls the extension point.</param>
+            <param name="valueOnThrow">The value returned if the delegate call failed.</param>
+            <returns>The result of the <paramref name="call" /> or <paramref name="valueOnThrow" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPoint``1(System.Object,System.Func{``0},``0)">
+            <summary>
+            Makes a guarded call to an extension point.
+            </summary>
+            <param name="errorSource">Reference to the extension object or event handler that may throw an exception.
+            Used for tracking performance and errors.</param>
+            <param name="call">Delegate that calls the extension point.</param>
+            <param name="valueOnThrow">The value returned if the delegate call failed.</param>
+            <returns>The result of the <paramref name="call" /> or <paramref name="valueOnThrow" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPointAsync(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Makes a guarded call to an async extension point.
+            </summary>
+            <param name="asyncCall">Delegate that calls the extension point.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" /> that asynchronously executes the <paramref name="asyncAction" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPointAsync(System.Object,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Makes a guarded call to an async extension point.
+            </summary>
+            <remarks>
+            The implementation in Visual Studio handles and ignores <see cref="T:System.OperationCanceledException" />.
+            </remarks>
+            <param name="errorSource">Reference to the extension object or event handler that may throw an exception.
+            Used for tracking performance and errors.</param>
+            <param name="asyncCall">Delegate that calls the extension point.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" /> that asynchronously executes the <paramref name="asyncAction" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPointAsync``1(System.Func{System.Threading.Tasks.Task{``0}},``0)">
+            <summary>
+            Makes a guarded call to an async extension point.
+            </summary>
+            <remarks>
+            The implementation in Visual Studio handles and ignores <see cref="T:System.OperationCanceledException" />.
+            </remarks>
+            <typeparam name="T">The type of the value returned from the <paramref name="asyncCall" />.</typeparam>
+            <param name="asyncCall">Delegate that calls the extension point.</param>
+            <param name="valueOnThrow">The value returned if the delegate call failed.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task`1" /> that asynchronously executes the <paramref name="asyncCall" /> or provides <paramref name="valueOnThrow" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.CallExtensionPointAsync``1(System.Object,System.Func{System.Threading.Tasks.Task{``0}},``0)">
+            <summary>
+            Makes a guarded call to an async extension point.
+            </summary>
+            <remarks>
+            The implementation in Visual Studio handles and ignores <see cref="T:System.OperationCanceledException" />.
+            </remarks>
+            <typeparam name="T">The type of the value returned from the <paramref name="asyncCall" />.</typeparam>
+            <param name="errorSource">Reference to the extension object or event handler that may throw an exception.
+            Used for tracking performance and errors.</param>
+            <param name="asyncCall">Delegate that calls the extension point.</param>
+            <param name="valueOnThrow">The value returned if the delegate call failed.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task`1" /> that asynchronously executes the <paramref name="asyncCall" /> or provides <paramref name="valueOnThrow" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.FindEligibleFactories``2(System.Collections.Generic.IEnumerable{System.Lazy{``0,``1}},Microsoft.VisualStudio.Utilities.IContentType,Microsoft.VisualStudio.Utilities.IContentTypeRegistryService)">
+            <summary>
+            Selects extension factories whose declared content type metadata
+            matches the provided target content type, taking into account that extension factory
+            may be disabled by a Replace attribute on another factory.
+            </summary>
+            <param name="lazyFactories">Lazy references that will be evaluated.</param>
+            <param name="dataContentType">Target content type.</param>
+            <param name="contentTypeRegistryService">Instance of <see cref="T:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService" /> which orders content types.</param>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.HandleException(System.Object,System.Exception)">
+            <summary>
+            Handles an exception occured in a call to an extension point.
+            </summary>
+            <param name="errorSource">Reference to the extension object or event handler that threw the exception</param>
+            <param name="e">Exception to handle</param>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.
+            In Visual Studio, this method logs the exception to ActivityLogs and the telemetry, and displays an error message to the user if possible.
+            This method can be invoked from any thread.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.InstantiateExtension``1(System.Object,System.Lazy{``0})">
+            <summary>
+            Safely instantiates an extension point.
+            </summary>
+            <param name="errorSource">Reference to the object that will be blamed for potential exceptions.</param>
+            <param name="provider">Lazy reference that will be initialized.</param>
+            <returns>Initialized instance stored in <paramref name="provider" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.InstantiateExtension``2(System.Object,System.Lazy{``0,``1})">
+            <summary>
+            Safely instantiates an extension point.
+            </summary>
+            <param name="errorSource">Reference to the object that will be blamed for potential exceptions.</param>
+            <param name="provider">Lazy reference that will be initialized.</param>
+            <returns>Initialized instance stored in <paramref name="provider" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.InstantiateExtension``3(System.Object,System.Lazy{``0,``1},System.Func{``0,``2})">
+            <summary>
+            Safely invokes a delegate on the extension point.
+            </summary>
+            <param name="errorSource">Reference to the object that will be blamed for potential exceptions.</param>
+            <param name="provider">Lazy reference that will be initialized.</param>
+            <param name="getter">Delegate which constructs an instance of the extension from its <paramref name="provider" />.</param>
+            <returns>The result of <paramref name="getter" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.InvokeBestMatchingFactory``2(System.Collections.Generic.IList{System.Lazy{``0,``1}},Microsoft.VisualStudio.Utilities.IContentType,Microsoft.VisualStudio.Utilities.IContentTypeRegistryService,System.Object)">
+            <summary>
+            Safely instantiates an extension point whose declared content type metadata
+            is the closest match to the provided target content type.
+            </summary>
+            <param name="providerHandles">Lazy references that will be evaluated.</param>
+            <param name="dataContentType">Target content type.</param>
+            <param name="contentTypeRegistryService">Instance of <see cref="T:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService" /> which orders content types.</param>
+            <param name="errorSource">Reference to the object that will be blamed for potential exceptions.</param>
+            <returns>The selected element of <paramref name="providerHandles" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.InvokeBestMatchingFactory``3(System.Collections.Generic.IList{System.Lazy{``0,``2}},Microsoft.VisualStudio.Utilities.IContentType,System.Func{``0,``1},Microsoft.VisualStudio.Utilities.IContentTypeRegistryService,System.Object)">
+            <summary>
+            Safely invokes a delegate on the extension factory whose declared content type metadata
+            is the best match to the provided target content type.
+            </summary>
+            <param name="providerHandles">Lazy references that will be evaluated.</param>
+            <param name="dataContentType">Target content type.</param>
+            <param name="getter">Delegate which constructs an instance of the extension from the best matching element of <paramref name="providerHandles" />.</param>
+            <param name="contentTypeRegistryService">Instance of <see cref="T:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService" /> which orders content types.</param>
+            <param name="errorSource">Reference to the object that will be blamed for potential exceptions.</param>
+            <returns>The result of <paramref name="getter" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.InvokeEligibleFactories``3(System.Collections.Generic.IEnumerable{System.Lazy{``1,``2}},System.Func{``1,``0},Microsoft.VisualStudio.Utilities.IContentType,Microsoft.VisualStudio.Utilities.IContentTypeRegistryService,System.Object)">
+            <summary>
+            Safely invokes a delegate on all extension factories whose declared content type metadata
+            matches the provided target content type, taking into account that extension factory
+            may be disabled by a Replace attribute on another factory.
+            </summary>
+            <param name="lazyFactories">Lazy references that will be evaluated.</param>
+            <param name="getter">Delegate which constructs an instance of the extension from each element of <paramref name="lazyFactories" />.</param>
+            <param name="dataContentType">Target content type.</param>
+            <param name="contentTypeRegistryService">Instance of <see cref="T:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService" /> which orders content types.</param>
+            <param name="errorSource">Reference to the object that will be blamed for potential exceptions.</param>
+            <returns>The list of results of <paramref name="getter" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.InvokeMatchingFactories``3(System.Collections.Generic.IEnumerable{System.Lazy{``1,``2}},System.Func{``1,``0},Microsoft.VisualStudio.Utilities.IContentType,System.Object)">
+            <summary>
+            Safely invokes a delegate on all extension factories whose declared content type metadata
+            matches the provided target content type.
+            </summary>
+            <param name="lazyFactories">Lazy references that will be evaluated.</param>
+            <param name="getter">Delegate which constructs an instance of the extension from each element of <paramref name="lazyFactories" />.</param>
+            <param name="dataContentType">Target content type.</param>
+            <param name="errorSource">Reference to the object that will be blamed for potential exceptions.</param>
+            <returns>The list of results of <paramref name="getter" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.RaiseEvent(System.Object,System.EventHandler)">
+            <summary>
+            Safely raises an event with empty <see cref="T:System.EventArgs" />.
+            Errors are tracked per sender, performance is tracked per handler.
+            </summary>
+            <param name="sender">Reference to the sender of the event. Tracks errors.</param>
+            <param name="eventHandlers">Event to raise. Each handler tracks performance.</param>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.RaiseEvent``1(System.Object,System.EventHandler{``0},``0)">
+            <summary>
+            Safely raises an event with specified <paramref name="args" />.
+            Errors are tracked per sender, performance is tracked per handler.
+            </summary>
+            <param name="sender">Reference to the sender of the event. Tracks errors.</param>
+            <param name="eventHandlers">Event to raise. Each handler tracks performance.</param>
+            <param name="args">Event data.</param>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.RaiseEventOnBackgroundAsync``1(System.Object,Microsoft.VisualStudio.Threading.AsyncEventHandler{``0},``0)">
+            <summary>
+            Safely raises an event on a background thread with specified <paramref name="args" />.
+            Errors are tracked per sender, performance is tracked per handler.
+            </summary>
+            <param name="sender">Reference to the sender of the event. Tracks errors.</param>
+            <param name="eventHandlers">Event to raise. Each handler tracks performance.</param>
+            <param name="args">Event data.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" /> that asynchronously executes the <paramref name="eventHandlers" />.</returns>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations.TryCastToType``1(System.Object,``0@)">
+            <summary>
+            Safely attempts to cast the given object to the given type.
+            </summary>
+            <typeparam name="TArgs">The type that should be casted to.</typeparam>
+            <param name="toCast">The object that should be casted.</param>
+            <param name="casted">Returns out the casted object or default(TArgs) if the cast failed.</param>
+            <returns>True if successful in casting, false otherwise.</returns>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IGuardedOperations2">
+            <summary>
+            Operations that guard calls to extensions code, track performance and log errors.
+            </summary>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IGuardedOperations2.LogException(System.Object,System.Exception)">
+            <summary>
+            Logs an exception silently, without notifying the user.
+            </summary>
+            <param name="errorSource">Reference to the extension object or event handler that threw the exception</param>
+            <param name="e">Exception to log</param>
+            <remarks>This method can be invoked from any thread.</remarks>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IGuardedOperationsInternal">
+            <summary>
+            Operations that guard calls to extensions code, track performance and log errors.
+            This interface contains method signatures which will be moved to <see cref="T:Microsoft.VisualStudio.Utilities.IGuardedOperations" />
+            in future releases of Visual Studio. Microsoft reserves the right to modify this interface.
+            </summary>
+            <remarks>This class supports the Visual Studio 
+            infrastructure and in general is not intended to be used directly from your code.</remarks>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Microsoft.VisualStudio.Utilities.IGuardedOperationsInternal.CallExtensionPoint``1(System.Object,System.Func{``0},``0,System.Predicate{System.Exception},System.Predicate{System.Exception})" -->
+        <!-- Badly formed XML comment ignored for member "T:Microsoft.VisualStudio.Utilities.IMemoryLeakTrackerService" -->
+        <member name="M:Microsoft.VisualStudio.Utilities.IMemoryLeakTrackerService.TrackObject``1(``0,System.String,Microsoft.VisualStudio.Utilities.ILivingObjectDiagnostics{``0})">
+            <summary>
+            Track object lifecycle in memory. Is free threaded. Called in product code. Does not throw.
+            </summary>
+            <param name="objectToTrack">Generic templated object type to track.</param>
+            <param name="identifier">Unique identifier for the object being tracked</param>
+            <param name="objectDiagnosticsHelper">A static object implementing <see cref="T:Microsoft.VisualStudio.Utilities.ILivingObjectDiagnostics`1"> to help clients of the service to get diagnostics support for the object being tracked</see>/&gt;</param>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IMemoryLeakTrackerService.GetLivingObjects``1">
+            <summary>
+            Get snapshot of all living object in memory. May require UI thread depending on the object being tracked. Only supposed to be called in Telemetry or Test code.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IMemoryLeakTrackerService.GetLivingObjects">
+            <summary>
+            Gets snapshot of all living objects currently. May require UI thread depending on the object being tracked. Only supposed to be called in Telemetry or Test code.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IMemoryLeakTrackerService.RefreshWeakRefrenceCache">
+            <summary>
+            Refreshes the cache to get rid of all weak references that are not alive. Usually called before taking a measurement.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IMemoryLeakTrackerService.ClearCache">
+            <summary>
+            Clears the cache of all entries. Not to be called from product code. Used by test code or extensions when they have to start off a clear list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IMemoryLeakTrackerService.WasCacheResettedBefore">
+            <summary>
+            A flag to indicate whether the cache has been resetted before.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IMemoryLeakTrackerService.IsTracking">
+            <summary>
+            Flag to start or stop the tracking service
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ILivingObjectDiagnostics`1">
+            <summary>
+            Helper class to check if an object of Type T is considered to be collected or not and to get a quick preview of the object.
+            Implementers of this class are not allowed to have state, otherwise they will cause a leak.
+            Only one static object per type T of the implementation should ever exist.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ILivingObjectDiagnostics`1.HasProbablyLeaked(`0)">
+            <summary>
+             This method may require UI thread access depending on the implementation
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ILivingObjectDiagnostics`1.GetPreview(`0)">
+             This method may require UI thread access depending on the implementation
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ILivingObjectDiagnostics`1.GetDescription(`0)">
+             This method may require UI thread access depending on the implementation
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ImportImplementationsAttribute">
+             <summary>
+             Along with <see cref="T:Microsoft.VisualStudio.Utilities.ExportImplementationAttribute" /> enables MEF proxy pattern where a single component export serves
+             as a proxy for the best implementation selected at run time. This pattern allows component consumers to just [Import] it,
+             hiding the complexity of selecting one of implementations.
+             </summary>
+             <example>
+             A typical sample:
+            
+             A component contract definition:
+            
+             <code>
+             interface IService {
+                 void Foo();
+             }
+             </code>
+            
+             Default implementation:
+            
+             <code>
+             [ExportImplementation(typeof(IService))]
+             [Name("default")]
+             class DefaultService : IService {...}
+             </code>
+            
+             Another implementation:
+            
+             <code>
+             [ExportImplementation(typeof(IService))]
+             [Name("A better implementation")]
+             [Order(Before = "default")]
+             class AdvancedService : IService {...}
+             </code>
+            
+             A proxy:
+            
+             <code>
+             [Export(typeof(IService))]
+             class ProxyService : IService {
+                [ImportImplementations(typeof(IService))]
+                IEnumerable&lt;Lazy&lt;IService, IOrderable&gt;&gt; _unorderedImplementations;
+                
+                public void Foo() {
+                    Orderer.Order(_unorderedImplementations).FirstOrDefault()?.Value.Foo();
+                }
+             }
+             </code>
+            
+             Consuming IService:
+            
+             <code>
+             [Import]
+             IService service = null;
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ImportImplementationsAttribute.#ctor(System.Type)">
+            <summary>
+            Creates new <see cref="T:Microsoft.VisualStudio.Utilities.ImportImplementationsAttribute" /> instance.
+            </summary>
+            <param name="contractType">A contract type.</param>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.INamed">
+            <summary>
+            Represents an object that provides a localized display name
+            to be used when it's being represented to the user, for
+            example when blaming for delays.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.INamed.DisplayName">
+            <summary>
+            Gets display name of an instance used to represent it to the user, for
+            example when blaming it for delays.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IOrderable">
+            <summary>
+            Associated with an orderable part. 
+            </summary>
+            <remarks>This interface is helpful when importing orderable parts.</remarks> 
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IOrderable.Name">
+            <summary>
+            Uniquely identifies a part with respect to parts of the same type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IOrderable.Before">
+            <summary>
+            The parts before which this part should appear in the list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IOrderable.After">
+            <summary>
+            The parts after which this part should appear in the list.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IPropertyOwner">
+            <summary>
+            Provides ownership of an arbitrary set of properties.
+            </summary>
+            <remarks>This interface should be implemented for classes that need to control the lifetimes of their properties.</remarks>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IPropertyOwner.Properties">
+            <summary>
+            The collection of properties controlled by the property owner.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ITelemetryIdProvider`1">
+            <summary>
+            Represents an object that can provide a unique ID for telemetry purposes.
+            <typeparam name="TId">Type of the telemetry ID.</typeparam>
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ITelemetryIdProvider`1.TryGetTelemetryId(`0@)">
+            <summary>
+            Tries to get a unique ID for telemetry purposes.
+            </summary>
+            <returns><c>true</c> if a unique telemetry ID was returned, <c>false</c> if this object refuses to participate in telemetry logging.</returns>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.LivingObjectRecord`1">
+            <summary>
+            Generic way to get diagnostic information about living objects of a specific type T
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.LivingObjectRecord`1.#ctor(`0,System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Constructor to create a record of the living object in memory. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.LivingObjectRecord`1.LivingObject">
+            <summary>
+            The object being leaked. Do not pass to telemetry directly as it may contain PII.  Not suitable for telemetry. Used by partners or tests.
+            Please note if the actual object represented by the weak reference should be held for a very short time for test or telemetry purposes only.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.LivingObjectRecord">
+            <summary>
+            Generic way to get diagnostic information about living objects wihtout a specific type T 
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.LivingObjectRecord.HasProbablyLeaked">
+            <summary>
+            Quick way to tell if the object thats alive is a leak or not.
+            If true and sufficient time for garbage collection is allowed then the object is most likely a memory leak
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.LivingObjectRecord.Identifier">
+            <summary>
+            Identifier for the current object. May contain PII. Not suitable for telemetry. Used by partners or tests.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.LivingObjectRecord.Preview">
+            <summary>
+            Preview for the object to help diagnose the leak quickly. May contain PII. Not suitable for telemetry. Used by partners or tests. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.LivingObjectRecord.Description">
+            <summary>
+            Description of the object being tracked so that can be displayed in human readable format apart from identifier. Usually shorter than a full preview. May contain PII. Not suitable for telemetry. Used by partners or tests. 
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.LocalizedNameAttribute">
+            <summary>
+            Represents an attribute which can provide a localized name as metadata for a MEF extension.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.LocalizedNameAttribute.localizedName">
+            <summary>
+            Note: the localized name is cached rather than the type to prevent
+            MEF from referencing the type in its cache.  Types exposed as metadata
+            cause MEF to load the assembly containing the type during composition.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.LocalizedNameAttribute.#ctor(System.Type,System.String)">
+            <summary>
+            Creates an instance of this attribute, which caches the localized name represented
+            by the given type and resource name.
+            </summary>
+            <param name="type">The type from which to load the localized resource.  This should
+            be a type created by the resource designer.</param>
+            <param name="resourceId">The name of the localized resource string contained the
+            resource type.</param>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.LocalizedNameAttribute.#ctor(System.Type,System.String,System.String)">
+            <summary>
+            Creates an instance of this attribute, which caches the localized name represented
+            by the given type and resource name.
+            </summary>
+            <param name="type">The type from which to load the localized resource.</param>
+            <param name="resourceStreamName">The base name of the resource stream containing the resource.</param>
+            <param name="resourceId">The name of the localized resource string contained the
+            resource type.</param>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.LocalizedNameAttribute.LocalizedName">
+            <summary>
+            Gets the localized name specified by the constructor.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.MultipleBaseMetadataAttribute">
+            <summary>
+            A base class for attributes that can appear multiple times on a single component part.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.NameAttribute">
+            <summary>
+            Associates a name with an editor extension part.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.NameAttribute.#ctor(System.String)">
+            <summary>
+            Constructs a new instance of the attribute.
+            </summary>
+            <param name="name">The name of the editor extension part.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="name" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="name" /> is an empty string.</exception>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.NameAttribute.Name">
+            <summary>
+            The name of the editor extension part.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.OptionUserModifiableAttribute">
+            <summary>
+            A MEF attribute determining if an option is user modifiable.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.OptionUserModifiableAttribute.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.Utilities.OptionUserModifiableAttribute" />.
+            </summary>
+            <param name="userModifiable"><c>true</c> if the option is user modifiable; otherwise <c>false</c>.</param>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.OptionUserModifiableAttribute.OptionUserModifiable">
+            <summary>
+            Determines whether the option is modifiable to the user.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.OptionUserVisibleAttribute">
+            <summary>
+            A MEF attribute determining if an option is visible to the user.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.OptionUserVisibleAttribute.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.Utilities.OptionUserVisibleAttribute" />.
+            </summary>
+            <param name="userVisible"><c>true</c> if the option is visible to the user; otherwise <c>false</c>.</param>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.OptionUserVisibleAttribute.OptionUserVisible">
+            <summary>
+            Determines whether the option is visible to the user.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.OrderAttribute">
+            <summary>
+            Orders multiple instances of an extension part.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.OrderAttribute.Before">
+            <summary>
+            The extension part to which this attribute is applied should be ordered before 
+            the extension part with the name specified.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">The value is null.</exception>
+            <exception cref="T:System.ArgumentException">The value is an empty string.</exception>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.OrderAttribute.After">
+            <summary>
+            The extension part to which this attribute is applied should be ordered after
+            the extension part with the name specified.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">The value is null.</exception>
+            <exception cref="T:System.ArgumentException">The value is an empty string.</exception>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.Orderer">
+            <summary>
+            Performs a topological sort of orderable extension parts.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.Orderer.Order``2(System.Collections.Generic.IEnumerable{System.Lazy{``0,``1}})">
+            <summary>
+            Orders a list of items that are all orderable, that is, items that implement the <see cref="T:Microsoft.VisualStudio.Utilities.IOrderable" /> interface. 
+            </summary>
+            <param name="itemsToOrder">The list of items to sort.</param>
+            <returns>The list of sorted items.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="itemsToOrder" /> is null.</exception>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.PriorityAttribute">
+            <summary>
+            Represents an attribute which assigns an integer priority to a MEF component part.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PriorityAttribute.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of this attribute, assigning it a priority value.
+            </summary>
+            <param name="priority">The priority for the MEF component part.  Lower integer
+            values represent higher precedence.</param>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.PriorityAttribute.Priority">
+            <summary>
+            Gets the priority for the attributed MEF extension.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.PropertyCollection">
+            <summary>
+            Allows property owners to control the lifetimes of the properties in the collection. 
+            </summary>
+            <remarks>This collection is synchronized in order to allow access by multiple threads.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.AddProperty(System.Object,System.Object)">
+            <summary>
+            Adds a new property to the collection.
+            </summary>
+            <param name="key">The key by which the property can be retrieved. Must be non-null.</param>
+            <param name="property">The property to associate with the key.</param>
+            <exception cref="T:System.ArgumentException">An element with the same key already exists in the PropertyCollection.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is null.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.RemoveProperty(System.Object)">
+            <summary>
+            Removes the property associated with the specified key.
+            </summary>
+            <param name="key">The key of the property to remove.</param>
+            <returns><c>true</c> if the property was found and removed, <c>false</c> if the property was not found.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is null.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.GetOrCreateSingletonProperty``1(System.Object,System.Func{``0})">
+            <summary>
+            Gets or creates a property of type <typeparamref name="T" /> from the property collection. If
+            there is already a property with the specified <paramref name="key" />, returns the existing property. Otherwise,
+            uses <paramref name="creator" /> to create an instance of that type and add it to the collection with the specified <paramref name="key" />.
+            </summary>
+            <typeparam name="T">The type of the property.</typeparam>
+            <param name="key">The key of the property to get or create.</param>
+            <param name="creator">The delegate used to create the property (if needed).</param>
+            <returns>The property that was requested.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.GetOrCreateSingletonProperty``1(System.Func{``0})">
+            <summary>
+            Gets or creates a property of type <typeparamref name="T" /> from the property collection. If
+            there is already a property of that type, it returns the existing property. Otherwise, it
+            uses <paramref name="creator" /> to create an instance of that type.
+            </summary>
+            <typeparam name="T">The type of the property.</typeparam>
+            <param name="creator">The delegate used to create the property (if needed).</param>
+            <returns>An instance of the property.</returns>
+            <remarks>The key used in the property collection will be typeof(T).</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.GetProperty``1(System.Object)">
+            <summary>
+            Gets the property associated with the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>The property value, or null if the property is not set.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is null.</exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException"><paramref name="key" /> does not exist in the property collection.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.GetProperty(System.Object)">
+            <summary>
+            Gets the property associated with the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>The property value, or null if the property is not set.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is null.</exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException"><paramref name="key" /> does not exist in the property collection.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.TryGetProperty``1(System.Object,``0@)">
+            <summary>
+            Gets the property associated with the specified key.
+            </summary>
+            <typeparam name="TProperty">The type of the property associated with the specified key.</typeparam>
+            <param name="key">The key.</param>
+            <param name="property">The retrieved property, or default(TValue) if there is
+            no property associated with the specified key.</param>
+            <returns><c>true</c> if the property was found, otherwise <c>false</c>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is null.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.ContainsProperty(System.Object)">
+            <summary>
+            Determines whether the property collection contains a property for the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns><c>true</c> if the property exists, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.PropertyCollection.Item(System.Object)">
+            <summary>
+            Gets or sets the <see cref="T:System.Object" /> with the specified key.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.PropertyCollection.PropertyList">
+            <summary>
+            Returns the property collection as a read-only collection.
+            </summary>
+            <value>The read-only collection.</value>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PropertyCollection.SetProperty(System.Object,System.Object)">
+            <summary>
+            Sets the property value for a given key.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="property">The property to set.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key" /> is null.</exception>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.SingletonBaseMetadataAttribute">
+            <summary>
+            A base class for attributes that can appear only once on a single component part.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.TelemetryTaskDuration">
+            <summary>
+            Represents the duration of a specified measured task.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.TelemetryTaskDuration.Duration">
+            <summary>
+            Gets the duration of the task.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.TelemetryTaskDuration.CreateAndStart">
+            <summary>
+            Creates and starts a new measure.
+            </summary>
+            <returns>Returns a new instance of the <see cref="T:Microsoft.VisualStudio.Utilities.TelemetryTaskDuration" /> class.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.TelemetryTaskDuration.Pause">
+            <summary>
+            Pause the measure.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.TelemetryTaskDuration.Continue">
+            <summary>
+            Continue the measure if it was paused.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.TelemetryTaskDuration.Dispose">
+            <summary>
+            Stops to measure the task and free the resources.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.TypeConversionAttribute">
+            <summary>
+            Marks a class exported with a MEF <see cref="T:System.ComponentModel.Composition.ExportAttribute" /> as a conversion from one type to another.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.TypeConversionAttribute.#ctor(System.Type,System.Type)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.VisualStudio.Utilities.TypeConversionAttribute" />.
+            </summary>
+            <param name="fromFullName">The <see cref="T:System.Type" /> being converted from.</param>
+            <param name="toFullName">The <see cref="T:System.Type" /> being converted to.</param>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.TypeConversionAttribute.FromFullName">
+            <summary>
+            The name of the type being converted from.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.TypeConversionAttribute.ToFullName">
+            <summary>
+            The name of the exact type being converted to.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ContentTypeAttribute">
+            <summary>
+            Declares an association between an extension part and a particular content type.
+            </summary>
+            <seealso cref="T:Microsoft.VisualStudio.Utilities.IContentType"></seealso>
+            <seealso cref="T:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService"></seealso>
+            <seealso cref="T:Microsoft.VisualStudio.Utilities.ContentTypeDefinition"></seealso>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ContentTypeAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.VisualStudio.Utilities.ContentTypeAttribute" />.
+            </summary>
+            <param name="name">The content type name. 
+            Content type names are case-insensitive.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="name" />is null or an empty string.</exception>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.ContentTypeAttribute.ContentTypes">
+            <summary>
+            The content type name.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ContentTypeDefinition">
+            <summary>
+            Defines a content type.
+            </summary>
+            <remarks> 
+            Because you cannot subclass this type, you can use the [Export] attribute with no type.
+            </remarks>
+            <example>
+            <code>
+            internal sealed class Components
+            {
+               [Export]
+               [Name("Example")]            // required
+               [BaseDefinition("text")]     // zero or more BaseDefinitions are allowed
+               internal ContentTypeDefinition exampleDefinition;
+               
+               { other components }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.FileExtensionAttribute">
+            <summary>
+            Identifies a file extension.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.FileExtensionAttribute.#ctor(System.String)">
+            <summary>
+            Constructs a new instance of the attribute.
+            </summary>
+            <param fileExtension="fileExtension">The file extension.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="fileExtension" /> is null or empty.</exception>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.FileExtensionAttribute.FileExtension">
+            <summary>
+            Gets the file extension.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.FileExtensionToContentTypeDefinition">
+             <summary>
+             Specifies a mapping between a content type and a file extension.
+             </summary>
+             <remarks>
+             <para>
+             Because you cannot subclass this type, you can use the [Export] attribute with no type.
+             </para>
+             <para>
+             Compound extensions, such as '.abc.def' are supported via the <see cref="T:Microsoft.VisualStudio.Utilities.FileExtensionAttribute" />,
+             however, if there is a mapping for a compound '.abc.def' and a simple extension 'def', the one that
+             is longer wins.
+             </para>
+             </remarks>
+             <example>
+             <code>
+             internal sealed class Components
+             {
+                [Export]
+                [FileExtension(".abc")]           // Any file with the extension "abc" will get the "alphabet" content type.
+                [ContentType("alphabet")]
+                internal FileExtensionToContentTypeDefinition abcFileExtensionDefinition;
+            
+                [Export]
+                [FileExtension(".abc.def")]       // Any file with the compound extension "abc.def" will get the "alphabet" content type.
+                [ContentType("alphabet")]
+                internal FileExtensionToContentTypeDefinition abcDefFileExtensionDefinition;
+                
+                [Export]
+                [FileName("readme")]           // Any file named "readme" will get the "alphabet" content type.
+                [ContentType("alphabet")]
+                internal FileExtensionToContentTypeDefinition readmeFileNameDefinition;
+                { other components }
+             }
+             </code>
+             </example>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.FileNameAttribute">
+            <summary>
+            Identifies a file name.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.FileNameAttribute.#ctor(System.String)">
+            <summary>
+            Constructs a new instance of the attribute.
+            </summary>
+            <param name="fileName">The file extension.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="fileName" /> is null or empty.</exception>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.FileNameAttribute.FileName">
+            <summary>
+            Gets the file name.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IContentType">
+            <summary>
+            The content type of an object.
+            </summary>
+            <remarks>All content types are identified by a unique name. 
+            The <see cref="T:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService"></see> can return an <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> object to allow clients to access additional information.</remarks>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentType.TypeName">
+            <summary>
+            The name of the content type.
+            </summary>
+            <value>This name must be unique, and must not be null.</value>
+            <remarks>Comparisons performed on this name are case-insensitive.</remarks>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentType.DisplayName">
+            <summary>
+            The display name of the content type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IContentType.IsOfType(System.String)">
+            <summary>
+            Returns <c>true</c> if this <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see>
+            equals or derives from the content type specified by <paramref name="type" />.
+            </summary>
+            <param name="type">The name of the base content type.</param>
+            <returns><c>true</c> if this content type equals or derives from the one specified by <paramref name="type" />otherwise <c>false</c>.</returns>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentType.BaseTypes">
+            <summary>
+            The set of all content types from which the current <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> is derived.
+            </summary>
+            <value>This value is never null, though it may be the empty set.</value>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IContentTypeDefinition">
+            <summary>
+            Describes a content type that is being introduced using <see cref="T:Microsoft.VisualStudio.Utilities.IContentTypeDefinitionSource" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentTypeDefinition.Name">
+            <summary>
+            The case-insensitive name of the content type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentTypeDefinition.BaseDefinitions">
+            <summary>
+            The case-insensitive names of the base types of the content type. May be of zero length.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IContentTypeDefinitionSource">
+            <summary>
+            Defines an alternate source for content type definitions that should be processed together
+            with content types introduced statically using <see cref="T:Microsoft.VisualStudio.Utilities.ContentTypeDefinition" />. This is intended
+            primarily for legacy VS content types.
+            This is a MEF contract type. There is no associated metadata.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentTypeDefinitionSource.Definitions">
+            <summary>
+            Content type definitions.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IContentTypeMetadata">
+            <summary>
+            Represents MEF metadata view corresponding to the <see cref="T:Microsoft.VisualStudio.Utilities.ContentTypeAttribute" />s.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentTypeMetadata.ContentTypes">
+            <summary>
+            List of declared content types.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService">
+            <summary>
+            The service that maintains the collection of content types.
+            </summary>
+            <remarks>This is a MEF component part, and should be exported with the following attribute:
+            [Export(typeof(IContentTypeRegistryService))]
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.GetContentType(System.String)">
+            <summary>
+            Gets the <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> object with the specified <paramref name="typeName" />.
+            </summary>
+            <param name="typeName">The name of the content type. Name comparisons are case-insensitive.</param>
+            <returns>The content type, or null if no content type is found.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.AddContentType(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates and adds a new content type.
+            </summary>
+            <param name="typeName">The name of the content type.</param>
+            <param name="baseTypeNames">The list of content type names to be used as base content types. Optional.</param>
+            <returns>The <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="typeName" /> is null or empty.</exception>
+            <exception cref="T:System.InvalidOperationException"><paramref name="typeName" /> or one of the <paramref name="baseTypeNames" /> 
+            is the name of <see cref="P:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.UnknownContentType" />, or the content type already exists, or one of the base types would
+            introduce a cyclic base type relationship.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.RemoveContentType(System.String)">
+            <summary>
+            Removes a content type.
+            </summary>
+            <remarks>The "unknown" content type cannot be removed. Any content type that is used for file extension 
+            mapping or as a base for other content types cannot be removed.</remarks>
+            <param name="typeName">The content type to be removed. </param>
+            <exception cref="T:System.InvalidOperationException">The specified content type cannot be removed.</exception>
+            <remarks>Has no effect if <paramref name="typeName" /> is not the name of a registered content type.</remarks>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.UnknownContentType">
+            <summary>
+            Gets the "unknown" content type.
+            </summary>
+            <remarks>The "unknown" content type indicates that the content type cannot be determined.</remarks>
+            <value>This value is never null.</value>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.ContentTypes">
+            <summary>Gets an enumeration of all content types, including the "unknown" content type.</summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService2.GetMimeType(Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Get the mime type associated with a content type.
+            </summary>
+            <remarks>Use the <see cref="T:Microsoft.VisualStudio.Utilities.MimeTypeAttribute" /> attribute on a <see cref="T:Microsoft.VisualStudio.Utilities.ContentTypeDefinition" /> to associate a mime type with a content type.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService2.GetContentTypeForMimeType(System.String)">
+            <summary>
+            Get the content type associated with a mime type.
+            </summary>
+            <remarks>Use the <see cref="T:Microsoft.VisualStudio.Utilities.MimeTypeAttribute" /> attribute on a <see cref="T:Microsoft.VisualStudio.Utilities.ContentTypeDefinition" /> to associate a mime type with a content type.</remarks>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService">
+            <summary>
+            The service that manages associations between file extensions and content types.
+            </summary>
+            <remarks>This is a MEF component part, and should be exported with the following attribute:
+            [Export(typeof(IFileExtensionRegistryService))]
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService.GetContentTypeForExtension(System.String)">
+            <summary>
+            Gets the content type associated with the given file extension.
+            </summary>
+            <param name="extension">The file extension.  It cannot be null, and it should not contain a period.</param>
+            <returns>The <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> associated with this extension. If no association exists, it returns the "unknown" content type. It never returns null.</returns>
+            <remarks>
+            This method attempts to determine the <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> of the file based on the information
+            available. For best results, use <see cref="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForFilePath(System.String)" />.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService.GetExtensionsForContentType(Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Gets the list of file extensions associated with the specified content type.
+            </summary>
+            <param name="contentType">The content type. It cannot be null.</param>
+            <returns>The list of file extensions associated with the content type.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService.AddFileExtension(System.String,Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Adds a new file extension to the registry.
+            </summary>
+            <param name="extension">The file extension (the period is optional).</param>
+            <param name="contentType">The content type for the file extension.</param>
+            <exception cref="T:System.InvalidOperationException"><see paramref="extension" /> is already present in the registry.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService.RemoveFileExtension(System.String)">
+            <summary>
+            Removes the specified file extension from the registry.
+            </summary>
+            <remarks>If the specified extension does not exist, then the method does nothing.</remarks>
+            <param name="extension">The file extension (the period is optional).</param>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService2">
+            <summary>
+            The service that manages associations between file names, extensions, and content types.
+            </summary>
+            <remarks>This is a MEF component part, and should be exported with the following attribute:
+            [Export(typeof(IFileExtensionRegistryService))]
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService2.GetContentTypeForFileName(System.String)">
+            <summary>
+            Gets the content type associated with the given file name.
+            </summary>
+            <param name="name">The file name. It cannot be null.</param>
+            <returns>The <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> associated with this name. If no association exists, it returns the "unknown" content type. It never returns null.</returns>
+            <remarks>
+            This method attempts to determine the <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> of the file based on the information
+            available. For best results, use <see cref="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForFilePath(System.String)" />.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService2.GetContentTypeForFileNameOrExtension(System.String)">
+            <summary>
+            Gets the content type associated with the given file name or its extension.
+            </summary>
+            <param name="name">The file name. It cannot be null.</param>
+            <returns>The <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> associated with this name. If no association exists, it returns the "unknown" content type. It never returns null.</returns>
+            <remarks>
+            This method attempts to determine the <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> of the file based on the information
+            available. For best results, use <see cref="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForFilePath(System.String)" />.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService2.GetFileNamesForContentType(Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Gets the list of file names associated with the specified content type.
+            </summary>
+            <param name="contentType">The content type. It cannot be null.</param>
+            <returns>The list of file names associated with the content type.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService2.AddFileName(System.String,Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Adds a new file name to the registry.
+            </summary>
+            <param name="name">The file name (the period is optional).</param>
+            <param name="contentType">The content type for the file name.</param>
+            <exception cref="T:System.InvalidOperationException"><see paramref="name" /> is already present in the registry.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService2.RemoveFileName(System.String)">
+            <summary>
+            Removes the specified file name from the registry.
+            </summary>
+            <remarks>If the specified name does not exist, then the method does nothing.</remarks>
+            <param name="name">The file name (the period is optional).</param>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFilePathToContentTypeProvider">
+             <summary>
+             MEF export to map full file names to a content type.
+             </summary>
+             <remarks>
+             <para>Instances of this class should define the following MEF attributes.
+             <code>
+                [Export(typeof(IFilePathToContentTypeProvider)]      -- Required
+                [Name("BamBam")]                                     -- Required
+                [Order(After = "Fred", Before="Barney")]             -- Optional, can have more than one.
+                [FileExtension(".abc")]                              -- Optional, but must have either a FileExtension or a FileName attribute. Can optionally be compound extension '.abc.def'.
+                [FileName("George")]                                 -- Optional, but must have either a FileExtension or a FileName attribute
+                [DeferCreation(OptionName = ...)]                    -- Optional, do not create this extension point unless OptionName is turned on.
+             </code>
+             You can use "*" as the FileExtension attribute to match any file extension.</para>
+            
+             <para>
+             The <see cref="T:Microsoft.VisualStudio.Utilities.IFilePathToContentTypeProvider" /> will be called in order (based on the <see cref="T:Microsoft.VisualStudio.Utilities.OrderAttribute" />) if their
+             <see cref="T:Microsoft.VisualStudio.Utilities.FileExtensionAttribute" /> matches the extension of the file in question (or is a "*") or the <see cref="T:Microsoft.VisualStudio.Utilities.FileNameAttribute" />
+             matches the name of the file in question.
+             </para>
+             <para>
+             Compound extensions, such as '.abc.def' are supported via the <see cref="T:Microsoft.VisualStudio.Utilities.FileExtensionAttribute" />,
+             however, if there is a mapping for a compound '.abc.def' and a simple extension 'def', the one that
+             is first via <see cref="T:Microsoft.VisualStudio.Utilities.OrderAttribute" /> wins.
+             </para>
+             </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFilePathToContentTypeProvider.TryGetContentTypeForFilePath(System.String,Microsoft.VisualStudio.Utilities.IContentType@)">
+            <summary>
+            Gets the content-type for the given <paramref name="filePath" />.
+            </summary>
+            <param name="filePath">The path of the file to assign a content-type to.</param>
+            <param name="contentType">The <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> of the file path.</param>
+            <returns><c>true</c> if content type is known for <paramref name="filePath" />.</returns>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFileToContentTypeService">
+            <summary>
+            Service for mapping files to the appropriate <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> for that file.
+            </summary>
+            <remarks>
+            <para>
+            Note that this interface duplicates the methods from <see cref="T:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService" /> and
+            <see cref="T:Microsoft.VisualStudio.Utilities.IFileExtensionRegistryService2" />. The eventual goal is to deprecate the other interfaces
+            and only use <see cref="T:Microsoft.VisualStudio.Utilities.IFileToContentTypeService" />.
+            </para></remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForFilePath(System.String)">
+            <summary>
+            Get the default <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> for a file located at <paramref name="filePath" />.
+            </summary>
+            <param name="filePath">Name of the file in question.</param>
+            <returns>Excpected content type or
+            <see cref="P:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.UnknownContentType" /> if no content type is found.</returns>
+            <remarks>If no <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> is found using declared <see cref="T:Microsoft.VisualStudio.Utilities.IFilePathToContentTypeProvider" />
+            assets, then the <see cref="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForFileNameOrExtension(System.String)" /> is used.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForFilePathOnly(System.String)">
+            <summary>
+            Get the default <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> for a file located at <paramref name="filePath" />.
+            </summary>
+            <param name="filePath">Name of the file in question.</param>
+            <returns>Excpected content type or
+            <see cref="P:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.UnknownContentType" /> if no content type is found.</returns>
+            <remarks>If no <see cref="T:Microsoft.VisualStudio.Utilities.IContentType" /> is found using declared <see cref="T:Microsoft.VisualStudio.Utilities.IFilePathToContentTypeProvider" />
+            assets, then <see cref="P:Microsoft.VisualStudio.Utilities.IContentTypeRegistryService.UnknownContentType" /> is returned.</remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForFileName(System.String)">
+            <summary>
+            Gets the content type associated with the given file name.
+            </summary>
+            <param name="name">The file name. It cannot be null.</param>
+            <returns>The <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> associated with this name. If no association exists, it returns the "unknown" content type. It never returns null.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForFileNameOrExtension(System.String)">
+            <summary>
+            Gets the content type associated with the given file name or its extension.
+            </summary>
+            <param name="name">The file name. It cannot be null.</param>
+            <returns>The <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> associated with this name. If no association exists, it returns the "unknown" content type. It never returns null.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetFileNamesForContentType(Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Gets the list of file names associated with the specified content type.
+            </summary>
+            <param name="contentType">The content type. It cannot be null.</param>
+            <returns>The list of file names associated with the content type.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.AddFileName(System.String,Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Adds a new file name to the registry.
+            </summary>
+            <param name="name">The file name (the period is optional).</param>
+            <param name="contentType">The content type for the file name.</param>
+            <exception cref="T:System.InvalidOperationException"><see paramref="name" /> is already present in the registry.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.RemoveFileName(System.String)">
+            <summary>
+            Removes the specified file name from the registry.
+            </summary>
+            <remarks>If the specified name does not exist, then the method does nothing.</remarks>
+            <param name="name">The file name (the period is optional).</param>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetContentTypeForExtension(System.String)">
+            <summary>
+            Gets the content type associated with the given file extension.
+            </summary>
+            <param name="extension">The file extension.  It cannot be null, and it should not contain a period.</param>
+            <returns>The <see cref="T:Microsoft.VisualStudio.Utilities.IContentType"></see> associated with this extension. If no association exists, it returns the "unknown" content type. It never returns null.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.GetExtensionsForContentType(Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Gets the list of file extensions associated with the specified content type.
+            </summary>
+            <param name="contentType">The content type. It cannot be null.</param>
+            <returns>The list of file extensions associated with the content type.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.AddFileExtension(System.String,Microsoft.VisualStudio.Utilities.IContentType)">
+            <summary>
+            Adds a new file extension to the registry.
+            </summary>
+            <param name="extension">The file extension (the period is optional).</param>
+            <param name="contentType">The content type for the file extension.</param>
+            <exception cref="T:System.InvalidOperationException"><see paramref="extension" /> is already present in the registry.</exception>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFileToContentTypeService.RemoveFileExtension(System.String)">
+            <summary>
+            Removes the specified file extension from the registry.
+            </summary>
+            <remarks>If the specified extension does not exist, then the method does nothing.</remarks>
+            <param name="extension">The file extension (the period is optional).</param>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.INameAndReplacesMetadata">
+            <summary>
+            Represents MEF metadata view corresponding to the <see cref="T:Microsoft.VisualStudio.Utilities.NameAttribute" /> and ReplacesAttributes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.INameAndReplacesMetadata.Name">
+            <summary>
+            Declared name value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.INameAndReplacesMetadata.Replaces">
+            <summary>
+            Declared Replaces values.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.INamedContentTypeMetadata">
+            <summary>
+            Represents MEF metadata view combining <see cref="T:Microsoft.VisualStudio.Utilities.IContentTypeMetadata" /> and <see cref="T:Microsoft.VisualStudio.Utilities.INameAndReplacesMetadata" /> views.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.MimeTypeAttribute">
+            <summary>
+            Declares an association between an extension part and a particular content type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.MimeTypeAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.VisualStudio.Utilities.MimeTypeAttribute" />.
+            </summary>
+            <param name="name">The Mime type to be associated with the content type.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="name" />is null or an empty string.</exception>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.MimeTypeAttribute.MimeType">
+            <summary>
+            The MimeType for the content type definition
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Any">
+            <summary>
+            Base content type of all contents types except for <see cref="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Inert" />.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Text">
+            <summary>
+            Base content type of any content type use for a document. Note that <see cref="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Projection" /> does not derive from <see cref="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Text" />.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Code">
+            <summary>
+            Base content type of any document containing code. Derives from <see cref="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Text" />.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Projection">
+            <summary>
+            Base content type for a projection of a document that contains a mix of distinct content types (e.g. a .aspx file containing
+            html and embedded c#).
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.StandardContentTypeNames.Inert">
+            <summary>
+            A content type for which no associated artifacts are automatically created.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.FeatureDefinition">
+            <summary>
+            Defines a feature which may be disabled using <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureService" /> and grouped using <see cref="T:Microsoft.VisualStudio.Utilities.BaseDefinitionAttribute" />
+            </summary>
+            <remarks> 
+            Because you cannot subclass this type, you can use the [Export] attribute with no type.
+            </remarks>
+            <example>
+            <code>
+            [Export]
+            [Name(nameof(MyFeature))]   // required
+            [BaseDefinition(PredefinedEditorFeatureNames.Popup)]   // zero or more BaseDefinitions are allowed
+            public FeatureDefinition MyFeature;
+            </code>
+            </example>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.FeatureUpdatedEventArgs">
+            <summary>
+            Notifies that a specific feature was updated and might have changed its state,
+            without computing the state value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.FeatureUpdatedEventArgs.FeatureName">
+            <summary>
+            Name of feature that was updated.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.FeatureUpdatedEventArgs.#ctor(System.String)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.VisualStudio.Utilities.FeatureUpdatedEventArgs" />.
+            </summary>
+            <param name="featureName">Name of feature that was updated</param>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.FeatureChangedEventArgs">
+            <summary>
+            Notifies that a specific feature changed state, and provides the new state value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.FeatureChangedEventArgs.FeatureName">
+            <summary>
+            Name of feature that was changed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.FeatureChangedEventArgs.IsEnabled">
+            <summary>
+            New value of the feature state.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.FeatureChangedEventArgs.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.VisualStudio.Utilities.FeatureChangedEventArgs" />.
+            </summary>
+            <param name="featureName">Name of feature that was changed</param>
+            <param name="isEnabled">New value of the feature state</param>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFeatureController">
+            <summary>
+            Keeps track of requests to disable a feature using <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureService" />.
+            Each <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureController" /> may re-enable a feature it disabled,
+            but may not re-enable a feature disabled by another <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureController" />.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFeatureCookie">
+            <summary>
+            Provides O(1) read only view on the state of the feature
+            in the <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureService" /> that created this <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureCookie" />.
+            Also exposes an event that provides notification when the state of the feature changes.
+            </summary>
+        </member>
+        <member name="E:Microsoft.VisualStudio.Utilities.IFeatureCookie.StateChanged">
+            <summary>
+            Provides notification when <see cref="P:Microsoft.VisualStudio.Utilities.IFeatureCookie.IsEnabled" /> value changes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IFeatureCookie.IsEnabled">
+            <summary>
+            Up to date state of the feature.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IFeatureCookie.FeatureName">
+            <summary>
+            Name of the tracked feature.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFeatureDisableToken">
+            <summary>
+            Keeps track of the request to disable the feature.
+            To restore the feature, 
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFeatureService">
+             <summary>
+             Service that keeps track of <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureController" />'s requests to disable a feature in given scope.
+             When multiple <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureController" />s disable a feature and one <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureController" />
+             enables it back, it will not interfere with other disable requests, and feature will ultimately remain disabled.
+            
+             While this service does have a thread affinity, its implementation does not guarantee thread safety.
+             It is advised to change feature state from UI thread, otherwise simultaneous changes may result in race conditions.
+             </summary>
+             <example>
+             In an exported MEF part:
+             <code>
+             [Import]
+             IFeatureServiceFactory FeatureServiceFactory;
+            
+             IFeatureService globalService = FeatureServiceFactory.GlobalFeatureService;
+             IFeatureService localService = FeatureServiceFactory.GetOrCreate(scope); // scope is an IPropertyOwner
+            
+             // Also have a reference to <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureController" />:
+             IFeatureController MyFeatureController;
+             // Interact with the <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureService" />:
+             globalService.Disable(PredefinedEditorFeatureNames.Popup, MyFeatureController);
+             localService.IsEnabled(PredefinedEditorFeatureNames.Completion); // returns false, because Popup is a base definition of Completion and because global scope is a superset of local scope.
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFeatureService.IsEnabled(System.String)">
+            <summary>
+            Checks if feature is enabled. By default, every feature is enabled.
+            </summary>
+            <param name="featureName">Name of the feature</param>
+            <returns>False if there are any disable requests. True otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFeatureService.Disable(System.String,Microsoft.VisualStudio.Utilities.IFeatureController)">
+            <summary>
+            Disables a feature.
+            </summary>
+            <param name="featureName">Name of the feature to disable</param>
+            <param name="controller">Object that uniquely identifies the caller.</param>
+        </member>
+        <member name="E:Microsoft.VisualStudio.Utilities.IFeatureService.StateUpdated">
+            <summary>
+            Provides a notification when this feature or its base feature was updated.
+            We use FeatureUpdatedEventArgs and not FeatureChangedEventArgs
+            because there are base features and disable requests from parent scopes that affect the factual state of given feature.
+            We use this event to let the interested parties (<see cref="T:Microsoft.VisualStudio.Utilities.IFeatureCookie" />) recalculate the actual state of the feature.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFeatureService.GetCookie(System.String)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureCookie" /> that provides O(1) access to the feature's value, in this service's scope.
+            The <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureCookie" /> is updated when the feature or its base is updated in this scope or in the global scope.
+            </summary>
+            <param name="featureName">Name of the feature</param>
+            <returns>New instance of <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureCookie" /></returns>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.IFeatureServiceFactory">
+             <summary>
+             Service that provides <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureService" />s used to track feature availability and to request feature to be disabled.
+             Feature may be tracked by scope, using <see cref="M:Microsoft.VisualStudio.Utilities.IFeatureServiceFactory.GetOrCreate(Microsoft.VisualStudio.Utilities.IPropertyOwner)" /> and passing <see cref="T:Microsoft.VisualStudio.Utilities.IPropertyOwner" /> e.g. a text view.
+             or throughout the application using <see cref="P:Microsoft.VisualStudio.Utilities.IFeatureServiceFactory.GlobalFeatureService" />.
+             
+             Features are implemented by exporting <see cref="T:Microsoft.VisualStudio.Utilities.FeatureDefinition" /> and grouped using <see cref="T:Microsoft.VisualStudio.Utilities.BaseDefinitionAttribute" />.
+             Grouping allows alike features to be disabling at once.
+             Grouping also relieves <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureController" /> from updating its code when new feature of appropriate category is introduced.
+             Standard editor feature names are available in <see cref="T:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames" />.
+             </summary>
+             <example>
+             In an exported MEF part:
+             <code>
+             [Import]
+             IFeatureServiceFactory FeatureServiceFactory;
+            
+             IFeatureService globalService = FeatureServiceFactory.GlobalFeatureService;
+             IFeatureService localService = FeatureServiceFactory.GetOrCreate(scope); // scope is an IPropertyOwner
+            
+             // Also have a reference to <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureController" />:
+             IFeatureController MyFeatureController;
+             // Interact with the <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureService" />:
+             globalService.Disable(PredefinedEditorFeatureNames.Popup, MyFeatureController);
+             localService.IsEnabled(PredefinedEditorFeatureNames.Completion); // returns false, because Popup is a base definition of Completion and because global scope is a superset of local scope.
+             </code>
+             </example>
+        </member>
+        <member name="P:Microsoft.VisualStudio.Utilities.IFeatureServiceFactory.GlobalFeatureService">
+            <summary>
+            Gets the global <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureService" />
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.IFeatureServiceFactory.GetOrCreate(Microsoft.VisualStudio.Utilities.IPropertyOwner)">
+            <summary>
+            Gets the <see cref="T:Microsoft.VisualStudio.Utilities.IFeatureService" /> for the specified scope.
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames">
+            <summary>
+            Contains definitions for known <see cref="T:Microsoft.VisualStudio.Utilities.FeatureDefinition" />s and their groupings.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.Editor">
+            <summary>
+            Definition of group of features that make up the core editor.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.Popup">
+            <summary>
+            Definition of group of features that appear in a popup.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.InteractivePopup">
+            <summary>
+            Definition of group of features that appear in an interactive popup.
+            Descends from <see cref="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.Popup" />
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.Completion">
+            <summary>
+            Definition of IntelliSense Completion.
+            Descends from <see cref="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.InteractivePopup" /> and <see cref="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.Editor" />
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.AsyncCompletion">
+            <summary>
+            Definition of IntelliSense Completion.
+            Descends from <see cref="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.InteractivePopup" /> and <see cref="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.Editor" />
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Utilities.PredefinedEditorFeatureNames.CodeCleanup">
+            <summary>
+            Definition of Code Cleanup feature.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ArrayBuilder`1.ToImmutable">
+            <summary>
+            Realizes the array.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ArrayBuilder`1.SetItem(System.Int32,`0)">
+            <summary>
+            Write <paramref name="value" /> to slot <paramref name="index" />. 
+            Fills in unallocated slots preceding the <paramref name="index" />, if any.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ArrayBuilder`1.ToImmutableOrNull">
+            <summary>
+            Realizes the array.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ArrayBuilder`1.ToDowncastedImmutable``1">
+            <summary>
+            Realizes the array, downcasting each element to a derived type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ArrayBuilder`1.ToImmutableAndFree">
+            <summary>
+            Realizes the array and disposes the builder in one operation.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ArrayBuilder`1.Enumerator">
+            <summary>
+            struct enumerator used in foreach.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ObjectPool`1">
+            <summary>
+            Generic implementation of object pooling pattern with predefined pool size limit. The main
+            purpose is that limited number of frequently used objects can be kept in the pool for
+            further recycling.
+            
+            Notes: 
+            1) it is not the goal to keep all returned objects. Pool is not meant for storage. If there
+               is no space in the pool, extra returned objects will be dropped.
+            
+            2) it is implied that if object was obtained from a pool, the caller will return it back in
+               a relatively short time. Keeping checked out objects for long durations is ok, but 
+               reduces usefulness of pooling. Just new up your own.
+            
+            Not returning objects to the pool in not detrimental to the pool's work, but is a bad practice. 
+            Rationale: 
+               If there is no intent for reusing the object, do not use pool - just use "new". 
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.ObjectPool`1.Factory">
+            <remarks>
+            Not using System.Func{T} because this file is linked into the (debugger) Formatter,
+            which does not have that type (since it compiles against .NET 2.0).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ObjectPool`1.Allocate">
+            <summary>
+            Produces an instance.
+            </summary>
+            <remarks>
+            Search strategy is a simple linear probing which is chosen for it cache-friendliness.
+            Note that Free will try to store recycled objects close to the start thus statistically 
+            reducing how far we will typically search.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ObjectPool`1.Free(`0)">
+            <summary>
+            Returns objects to the pool.
+            </summary>
+            <remarks>
+            Search strategy is a simple linear probing which is chosen for it cache-friendliness.
+            Note that Free will try to store recycled objects close to the start thus statistically 
+            reducing how far we will typically search in Allocate.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.ObjectPool`1.ForgetTrackedObject(`0,`0)">
+            <summary>
+            Removes an object from leak tracking.  
+            
+            This is called when an object is returned to the pool.  It may also be explicitly 
+            called if an object allocated from the pool is intentionally not being returned
+            to the pool.  This can be of use with pooled arrays if the consumer wants to 
+            return a larger array to the pool than was originally allocated.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Utilities.PooledStringBuilder">
+            <summary>
+            The usage is:
+                   var inst = PooledStringBuilder.GetInstance();
+                   var sb = inst.builder;
+                   ... Do Stuff...
+                   ... sb.ToString() ...
+                   inst.Free();
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Utilities.PooledStringBuilder.CreatePool(System.Int32)">
+            <summary>
+            If someone need to create a private pool
+            </summary>
+            <param name="size">The size of the pool.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Text.Utilities.ILoggingServiceInternal">
+            <summary>
+            Allows code in VS-Platform to log events.
+            </summary>
+            <remarks>
+            For example, the VS Provider of this inserts data points into the telemetry data stream.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Text.Utilities.ILoggingServiceInternal.PostEvent(System.String,System.Object[])">
+            <summary>
+            Post the event named <paramref name="key" /> to the telemetry stream. Additional properties can be appended as name/value pairs in <paramref name="namesAndProperties" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Text.Utilities.ILoggingServiceInternal.PostEvent(System.String,System.Collections.Generic.IReadOnlyList{System.Object})">
+            <summary>
+            Post the event named <paramref name="key" /> to the telemetry stream. Additional properties can be appended as name/value pairs in <paramref name="namesAndProperties" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Text.Utilities.ILoggingServiceInternal.PostFault(System.String,System.String,System.Exception,System.String,System.Nullable{System.Boolean},System.Object[])">
+            <summary>
+            Creates and posts a FaultEvent.
+            </summary>
+            <param name="eventName">
+            An event name following data model schema.
+            It requires that event name is a unique, not null or empty string.
+            It consists of 3 parts and must follows pattern [product]/[featureName]/[entityName]. FeatureName could be a one-level feature or feature hierarchy delimited by "/".
+            For examples,
+            vs/platform/opensolution;
+            vs/platform/editor/lightbulb/fixerror;
+            </param>
+            <param name="description">Fault description</param>
+            <param name="exceptionObject">Exception instance</param>
+            <param name="additionalErrorInfo">Additional information to be added to Watson's ErrorInformation.txt file.</param>
+            <param name="isIncludedInWatsonSample">
+            Gets or sets a value indicating whether we sample this event locally. Affects Watson only.
+            If false, will not send to Watson: only sends the telemetry event to AI and doesn't call callback.
+            Changing this will force the event to send to Watson. Be careful because it can have big perf impact.
+            If unchanged, it will be set according to the default sample rate.
+            </param>
+            <param name="correlations">TelemetryEventCorrelations which help correlate this fault to the scope it was executing within</param>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Text.Utilities.ILoggingServiceInternal.AdjustCounter(System.String,System.String,System.Int32)">
+            <summary>
+            Adjust the counter associated with <paramref name="key" /> and <paramref name="name" /> by <paramref name="delta" />.
+            </summary>
+            <remarks>
+            <para>Counters start at 0.</para>
+            <para>No information is sent over the wire until the <see cref="M:Microsoft.VisualStudio.Text.Utilities.ILoggingServiceInternal.PostCounters" /> is called.</para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Text.Utilities.ILoggingServiceInternal.PostCounters">
+            <summary>
+            Post all of the counters.
+            </summary>
+            <remarks>
+            <para>The counters are logged as if PostEvent had been called for each key with a list counter names and values.</para>
+            <para>The counters are cleared as a side-effect of this call.</para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Text.Utilities.ILoggingServiceInternal.RecordEventData``1(System.Object,System.String,``0)">
+            <summary>
+            Record data for an event that is owned and posted independenty by another component.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Text.Utilities.IPerformanceMarkerBlockProvider">
+            <summary>
+            Allows marking actions for performance logging.
+            </summary>
+            <remarks>
+            For example, the VS editor adapters return MeasurementBlock instances
+            that log ETW events.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Text.Utilities.TelemetryComplexProperty">
+            <summary>
+            Allows code in VS-Platform to use complex telemetry properties, which reduce boilerplate code.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Text.Utilities.TelemetryEventType">
+            <summary>
+            Supported telemetry event types.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryEventType.UserTask">
+            <summary>
+            User task event
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryEventType.Trace">
+            <summary>
+            Trace event
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryEventType.Operation">
+            <summary>
+            Operation event
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryEventType.Fault">
+            <summary>
+            Fault event
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryEventType.Asset">
+            <summary>
+            Asset event
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Text.Utilities.TelemetryResult">
+            <summary>
+            An enum to define the result from user task or operation.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryResult.None">
+            <summary>
+            Used for unknown or unavailable result.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryResult.Success">
+            <summary>
+            A result without any failure from product or user.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryResult.Failure">
+            <summary>
+            A result to indicate the action/operation failed because of product issue (not user faults)
+            Consider using FaultEvent to provide more details about the failure.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryResult.UserFault">
+            <summary>
+            A result to indicate the action/operation failed because of user fault (e.g., invalid input).
+            Consider using FaultEvent to provide more details.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Text.Utilities.TelemetryResult.UserCancel">
+            <summary>
+            A result to indicate the action/operation is cancelled by user.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Text.INonJoinableTaskTrackerInternal">
+            <summary>
+            Internal tracker for non-joinable tasks. Used to ensure that all pending tasks
+            have completed on editor host shutdown.
+            </summary>
+            <remarks>Methods of this interface can be called on any thread.</remarks>
+        </member>
+        <member name="T:Microsoft.VisualStudio.Core.Imaging.ImageId">
+            <summary>
+            Unique identifier for Visual Studio image asset.
+            </summary>
+            <remarks>
+            On Windows systems, <see cref="T:Microsoft.VisualStudio.Core.Imaging.ImageId" /> can be converted to and from
+            various other image representations via the ImageIdExtensions extension methods.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Core.Imaging.ImageId.Guid">
+            <summary>
+            The <see cref="F:Microsoft.VisualStudio.Core.Imaging.ImageId.Guid" /> identifying the group to which this image belongs.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.Core.Imaging.ImageId.Id">
+            <summary>
+            The <see cref="T:System.Int32" /> identifying the particular image from the group that this id maps to.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.Core.Imaging.ImageId.#ctor(System.Guid,System.Int32)">
+            <summary>
+            Creates a new instance of ImageId.
+            </summary>
+            <param name="guid">The <see cref="F:Microsoft.VisualStudio.Core.Imaging.ImageId.Guid" /> identifying the group to which this image belongs.</param>
+            <param name="id">The <see cref="T:System.Int32" /> identifying the particular image from the group that this id maps to.</param>
+        </member>
+    </members>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><DigestValue>UI+Pf8Ym2N453qsdJlXdZ1XxB/bHnoAm+GemModPmIg=</DigestValue></Reference></SignedInfo><SignatureValue>B3YSdDp4h44XdrvoNX9mP+/6i/2EaANQ+5o/fm2+QH+W00vodz4Swz4jRonPmVRJx8wSUhqgw2PHSATxKOMH15imKY9Rm9jbznkbJ0V8tnVVR/MUpeaUvZsz2sib5d4+SXh9j8OdPQ+MPosIFuXOLulXe+eKZhputXULe2Yb3uGPIZSEZ8yNT9KeXon0wGZUK3uCMMJx/2k/eQ5A/6AWUwrqemMS81a6wnhSatFvH7XsjqtbGp6R/7ppMYZvMLWjqnmNFOXG7Tdkitvq0EjH0wW5yjodvwBupxx+JdxEogte7DZ8FU0Q6g+GayCHjiwOYkrSh6OSnPewbRY0xABr8g==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>trsZWRAAo6nx5LhcqAsHy9uaHyPQ2VireMBI9yQUOPBj7dVLA7/N+AnKFFDzJ7P+grT6GkOE4cv5GzjoP8yQJ6yXojEKkXti7HW/zUiNoF11/ZWndf8j1Azl6OBjcD416tSWYvh2VfdW1K+mY83j49YPm3qbKnfxwtV0nI9H092gMS0cpCUsxMRAZlPXksrjsFLqvgq4rnULVhjHSVOudL/yps3zOOmOpaPzAp56b898xC+zzHVHcKo/52IRht1FSC8V+7QHTG8+yzfuljiKU9QONa8GqDlZ7/vFGveB8IY2ZrtUu98nle0WWTcaIRHoCYvWGLLF2u1GVFJAggPipw==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>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</X509Certificate><X509Certificate>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</X509Certificate><X509Certificate>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</X509Certificate></X509Data></KeyInfo><Object Id="ts-countersig"><X509Data><X509Certificate>MIIE+TCCA+GgAwIBAgITMwAAATdBj0PnWltvpwAAAAABNzANBgkqhkiG9w0BAQsFADB8MQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMSYwJAYDVQQDEx1NaWNyb3NvZnQgVGltZS1TdGFtcCBQQ0EgMjAxMDAeFw0yMDEwMTUxNzI4MTRaFw0yMjAxMTIxNzI4MTRaMIHSMQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMS0wKwYDVQQLEyRNaWNyb3NvZnQgSXJlbGFuZCBPcGVyYXRpb25zIExpbWl0ZWQxJjAkBgNVBAsTHVRoYWxlcyBUU1MgRVNOOkUwNDEtNEJFRS1GQTdFMSUwIwYDVQQDExxNaWNyb3NvZnQgVGltZS1TdGFtcCBTZXJ2aWNlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxBHuadElm3G5tikhTzjSDB0+9sXmUhUyDVRj0Y4vz9rZ9sykNobL5/6At5zOkeB2bl9IXvVdyS/ZJNZT373knzrQ347z30Mmw7++VU/CE+4x4w9kb5bqQHfSzbJQt6KmWsuMmJLzg4R5MeJs5MY5YdPLxoMoDRcTi//KoMFR0KzS1/324D2/4KkHD1Xt+s0xY0DICUOK1RbmJCKEgBP1/GDZjuZQBS9Di89yTnvLJV+Lr1QtriH4EqmRoAdmV3zJ0GJsr5vhGPmKfOPCRSk7Q8igX7goFnCLzpYcfHGCqoR/mw95gfQpwymVwxZB0PkGMrQw+LKVPa/FHP4C4KO+QQIDAQABo4IBGzCCARcwHQYDVR0OBBYEFA1gsHMM+udgY7rEne66OyzxlE9lMB8GA1UdIwQYMBaAFNVjOlyKMZDzQ3t8RhvFM2hahW1VMFYGA1UdHwRPME0wS6BJoEeGRWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9wa2kvY3JsL3Byb2R1Y3RzL01pY1RpbVN0YVBDQV8yMDEwLTA3LTAxLmNybDBaBggrBgEFBQcBAQROMEwwSgYIKwYBBQUHMAKGPmh0dHA6Ly93d3cubWljcm9zb2Z0LmNvbS9wa2kvY2VydHMvTWljVGltU3RhUENBXzIwMTAtMDctMDEuY3J0MAwGA1UdEwEB/wQCMAAwEwYDVR0lBAwwCgYIKwYBBQUHAwgwDQYJKoZIhvcNAQELBQADggEBAJ32U9d90RVuAUb9NsnXBG1K42qjhU+jHvwBdbipIcX4Wg7dH5ZduQZj3gWgKADZ5z+TehX7GnBbi265VI7xDRsFe2CjkTm4JIoisdKwYBDruS+YRRBG4B1ERuWi54XGwx+lSA+iQNrIi6Jm0CL/MfQLvwsqPJSGP69OEHCyaExos486+X3JTuGV11CBl/BO7r8UHbx/rE6fZrlZZYabIF6aeahvTL14LvZLV/bMzYSODsbjHHsTm9QaGm1ijhagCdbkAqr8+7HAgYEar8XPlzxUhVI4ShVB5ZGd9gZ2yBkwxdA0oFc745TdOPrbP79vd0ePqgvJDH5tkOhTRNI55XQ=</X509Certificate><X509Certificate>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</X509Certificate></X509Data><CounterSignature ts-format="cms-timestamp-message" xmlns="http://schemas.microsoft.com/xmldsig/timestamp/2003">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</CounterSignature></Object></Signature></doc>

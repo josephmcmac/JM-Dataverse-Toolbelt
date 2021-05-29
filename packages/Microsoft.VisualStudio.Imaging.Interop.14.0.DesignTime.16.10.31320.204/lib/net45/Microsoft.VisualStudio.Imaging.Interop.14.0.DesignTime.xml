@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime</name>
+  </assembly>
+  <members>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.Background">
+      <summary>[optional] The background color on which the image will be displayed.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.Dpi">
+      <summary>The DPI setting for the monitor on which the image will be displayed.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.Flags">
+      <summary>The flags indicating which fields of the structure are valid.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.Format">
+      <summary>The format of the image (WPF, WinForms, Win32).</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.GrayscaleBiasColor">
+      <summary>[optional] The bias color used to weight a grayscale image.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.HighContrast">
+      <summary>[optional] Determines whether the high-contrast version of the image is requested.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.ImageType">
+      <summary>The type of the image (bitmap, icon, or image list).</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.LogicalHeight">
+      <summary>The height of the image, in logical units (e.g. the height at 100% DPI).</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.LogicalWidth">
+      <summary>The width of the image, in logical units (e.g. the width at 100% DPI).</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes.StructSize">
+      <summary>The size of the struct.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageCompositionLayer.HorizontalAlignment">
+      <summary>The horizontal alignment of the image within the composite image.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageCompositionLayer.ImageMoniker">
+      <summary>The ImageMoniker rendered in this layer.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageCompositionLayer.VerticalAlignment">
+      <summary>The vertical alignment of the image within the composite image.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageCompositionLayer.VirtualHeight">
+      <summary>The virtual height of this layer.  The actual pixel dimensions of the image won't be computed until render time.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageCompositionLayer.VirtualWidth">
+      <summary>The virtual width of this layer.  The actual pixel dimensions of the image won't be computed until render time.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageCompositionLayer.VirtualXOffset">
+      <summary>The virtual X offset of the image. This offset is used together with the HorizontalAlignment to place the image within the composite image.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageCompositionLayer.VirtualYOffset">
+      <summary>The virtual Y offset of the image. This offset is used together with the VerticalAlignment to place the image within the composite image.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageMoniker.Guid">
+      <summary>The GUID of the moniker.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop.ImageMoniker.Id">
+      <summary>The ID of the moniker.</summary>
+    </member>
+    <member name="P:Microsoft.VisualStudio.Imaging.Interop.IImageHandle.Moniker">
+      <summary>Gets the ImageMoniker for this image handle.</summary>
+      <returns>The ImageMoniker for this image handle.</returns>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags">
+      <summary>Represents an RGBA color with the red channel in the low byte to the alpha channel in the high byte.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_Size">
+      <summary>The LogicalWidth and LogicalHeight fields are valid.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_Type">
+      <summary>The ImageType field is valid.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_Format">
+      <summary>The Format field is valid.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_Dpi">
+      <summary>The Dpi field is valid.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_Background">
+      <summary>The Background field is valid.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_Grayscale">
+      <summary>The returned image should be grayscaled.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_GrayscaleBiasColor">
+      <summary>The GrayscaleBiasColor field is valid.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_HighContrast">
+      <summary>The HighContrast field is valid.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_RequiredFlags">
+      <summary>The required flags are: IAF_Size | IAF_Type | IAF_Format | IAF_Dpi.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageAttributesFlags.IAF_OptionalFlags">
+      <summary>The optional flags are: IAF_Background | IAF_Grayscale | IAF_GrayscaleBiasColor | IAF_HighContrast.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop._ImageMonikerType">
+      <summary>Describes the type of the image moniker.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageMonikerType.IMT_Unknown">
+      <summary>The moniker is invalid or stale.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageMonikerType.IMT_LoadedFromManifest">
+      <summary>The moniker was loaded from a manifest.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageMonikerType.IMT_Custom">
+      <summary>The moniker was created as a result of a custom image being added.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._ImageMonikerType.IMT_System">
+      <summary />
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop._UIDataFormat">
+      <summary>Describes the data format (Win32, WinForms, WPF).</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIDataFormat.DF_Win32">
+      <summary>Matches VSDF_WIN32 for enumeration compatibility.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIDataFormat.DF_WinForms">
+      <summary>Matches VSDF_WINFORMS for enumeration compatibility.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIDataFormat.DF_WPF">
+      <summary>Matches VSDF_WPF for enumeration compatibility.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop._UIImageHorizontalAlignment">
+      <summary>Describes the horizontal alignment of the image.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageHorizontalAlignment.IHA_Left">
+      <summary>The image is left-aligned within its container.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageHorizontalAlignment.IHA_Center">
+      <summary>The image is centered horizontally within its container.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageHorizontalAlignment.IHA_Right">
+      <summary>The image is right-aligned within its container.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop._UIImageType">
+      <summary>Describes the type of the image.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageType.IT_Bitmap">
+      <summary>The image is a bitmap.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageType.IT_Icon">
+      <summary>The image is an icon.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageType.IT_ImageList">
+      <summary>The image is an image list (WinForms, Win32 formats only).</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop._UIImageVerticalAlignment">
+      <summary>Describes the vertical alignment of the image.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageVerticalAlignment.IVA_Top">
+      <summary>The image is top-aligned within its container.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageVerticalAlignment.IVA_Center">
+      <summary>Rhe image is centered vertically within its container.</summary>
+    </member>
+    <member name="F:Microsoft.VisualStudio.Imaging.Interop._UIImageVerticalAlignment.IVA_Bottom">
+      <summary>The image is bottom-aligned within its container.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop.IImageHandle">
+      <summary>Represents a handle which keeps a custom image stored in memory. Only keeping the IImageHandle strongly referenced in memory can guarantee that the image associated with the handle's moniker will be kept in memory in the ImageLibrary.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop.ImageAttributes">
+      <summary>Provides image attributes.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop.ImageCompositionLayer">
+      <summary>A layer used to compose multiple images into a single merged image.</summary>
+    </member>
+    <member name="T:Microsoft.VisualStudio.Imaging.Interop.ImageMoniker">
+      <summary>Contains the GUID and ID of the image.</summary>
+    </member>
+  </members>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><DigestValue>M/51HPW4fuCw/JVBup+kVOEJ7zxgFhYkZU2gQrsG4PE=</DigestValue></Reference></SignedInfo><SignatureValue>kawOV6mveA3OQIsGfXjwr/Tv6TC6JYL4fhy6ETTu4rxExt+CmvNcpzcVOqQNGhZ3mtW/uT6orG6dxeykkNMxifBOqXlhq5t50xH1IC1R5nMQl2PFTFzBYycN1iXWI4jYTKRb4U9pvotbRydrXLWN9rdqrWke7O69GQMFCXnOiX6wzO8xkM5ntYwOSRQdl0wBIFctLdnrKc9lVtZUb9yB82CACF/vIuswqNkiU1+EFeHOEj9E9iEj5DNDEOee5KO2lILMdxRWdP5jHBK9bi+GrB4hc5UWY4nKoJJpWviuARjBabqnfOBh2imGXBep/jBt5vUTBhs8fM3/6Mo/PT64xw==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>trsZWRAAo6nx5LhcqAsHy9uaHyPQ2VireMBI9yQUOPBj7dVLA7/N+AnKFFDzJ7P+grT6GkOE4cv5GzjoP8yQJ6yXojEKkXti7HW/zUiNoF11/ZWndf8j1Azl6OBjcD416tSWYvh2VfdW1K+mY83j49YPm3qbKnfxwtV0nI9H092gMS0cpCUsxMRAZlPXksrjsFLqvgq4rnULVhjHSVOudL/yps3zOOmOpaPzAp56b898xC+zzHVHcKo/52IRht1FSC8V+7QHTG8+yzfuljiKU9QONa8GqDlZ7/vFGveB8IY2ZrtUu98nle0WWTcaIRHoCYvWGLLF2u1GVFJAggPipw==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>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</X509Certificate><X509Certificate>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</X509Certificate><X509Certificate>MIIF7TCCA9WgAwIBAgIQP4vItfyfspZDtWnWbELhRDANBgkqhkiG9w0BAQsFADCBiDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1JlZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEyMDAGA1UEAxMpTWljcm9zb2Z0IFJvb3QgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IDIwMTEwHhcNMTEwMzIyMjIwNTI4WhcNMzYwMzIyMjIxMzA0WjCBiDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1JlZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEyMDAGA1UEAxMpTWljcm9zb2Z0IFJvb3QgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IDIwMTEwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCygEGqNThNE3IyaCJNuLLx/9VSvGzH9dJKjDbu0cJcfoyKrq8TKG/Ac+M6ztAlqFo6be+ouFmrEyNozQwph9FvgFyPRH9dkAFSWKxRxV8qh9zc2AodwQO5e7BW6KPeZGHCnvjzfLnsDbVU/ky2ZU+I8JxImQxCCwl8MVkXeQZ4KI2JOkwDJb5xalwL54RgpJki49KvhKSn+9GY7Qyp3pSJ4Q6g3MDOmT3qCFK7VnnkH4S6Hri0xElcTzFLh93dBWcmmYDgcRGjuKVB4qRTufcyKYMME782XgSzS0NHL2vikR7TmE/dQgfI6B0S/Jmpaz6SfsjWaTr8ZL22CZ3K/QwLopt3YEsDlKQwaRLWQi3BQUzK3Kr9j1uDRprZ/LHR47PJf0h6zSTwQY9cdNCssBAgBkm3xy0hyFfj0IbzA2j70M5xwYmZSmQBbP3sMJHPQTySx+W6hh1hhMdfgzlirrSSL0fzC/hV66AfWdC7dJse0Hbm8ukG1xDo+mTeacY1logC8Ea4PyeZb8txiSk190gWAjWP1Xl8TQLPX+uKg09FcYj5qQ1OcunCnAfPSRtOBA5jUYxe2ADBVSy2xuDCZU7JNDn1nLPEfuhhbhNfFcRf2X7tHc7uROzLLoax7Dj2cO2rXBPB2Q8Nx4CyVe0096yb5MPa50c8prWPMd/FS6/r8QIDAQABo1EwTzALBgNVHQ8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUci06AjGQQ7kUBU7h6qfHMdEjiTQwEAYJKwYBBAGCNxUBBAMCAQAwDQYJKoZIhvcNAQELBQADggIBAH9yzw+3xRXbm8BJyiZb/p4T5tPw0tuXX/JLP02zrhmu7deXoKzvqTqjwkGw5biRnhOBJAPmCf0/V0A5ISRW0RAvS0CpNoZLtFNXmvvxfomPEf4YbFGq6O0JlbXlccmh6Yd1phV/yX43VF50k8XDZ8wNT2uoFwxtCJJ+i92Bqi1wIcM9BhS7vyRep4TXPw8hIr1LAAbblxzYXtTFC1yHblCk6MM4pPvLLMWSZpuFXst6bJN8gClYW1e1QGm6CHmmZGIVnYeWRbVmIyADixxzoNOieTPgUFmG2y/lAiXqcyqfABTINseSO+lOAOzYVgm5M0kS0lQLAausR7aRKX1MtHWAUgHoyoL2n8ysnI8X6i8msKtyrAv+nlEex0NVZ09Rs1fWtuzuUrc66U7h14GIvE+OdbtLqPA1qibUZ2dJsnBMO5PcHd94kIZysjik0dySTclY6ysSXNQ7roxrsIPlAT/4CTL2kzU0Iq/dNw13CYArzUgA8YyZGUcFAenRv9FO0OYoQzeZpApKCNmacXPSqs0xE2N2oTdvkjgefRI8ZjLny23h/FKJ3crWZgWalmG+oijHHKOnNlA8OqTfSm7mhzvO6/DggTedEzxSjr25HTTGHdUKaj2YKXCMiSrRq4IQSB/c9O+lxbtVGjhjhE63bK2VVOxlIhBJF7jAHscPrFRH</X509Certificate></X509Data></KeyInfo><Object Id="ts-countersig"><X509Data><X509Certificate>MIIE8TCCA9mgAwIBAgITMwAAAUedj/Hm3jGDWQAAAAABRzANBgkqhkiG9w0BAQsFADB8MQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMSYwJAYDVQQDEx1NaWNyb3NvZnQgVGltZS1TdGFtcCBQQ0EgMjAxMDAeFw0yMDExMTIxODI1NTVaFw0yMjAyMTExODI1NTVaMIHKMQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMSUwIwYDVQQLExxNaWNyb3NvZnQgQW1lcmljYSBPcGVyYXRpb25zMSYwJAYDVQQLEx1UaGFsZXMgVFNTIEVTTjpFNUE2LUUyN0MtNTkyRTElMCMGA1UEAxMcTWljcm9zb2Z0IFRpbWUtU3RhbXAgU2VydmljZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAK0FA0zpffYoWT8Enxhqmt/MS3ouPfgb5UuPOB8SA4ZJV3Uy7ucKmErQrijI+vMi2A1GMHiBSIqrobODF0MeBk+BMS+bnvOxqxzIavJtaR/dVWvxup/Y8iAa/AoM0SBVzKCwRu5bBfP0uLozsA6gPhMHx+XgBOb4vtvj6VgNQwlgwvOmInMzvjlrRceKuJRo6lhZ+TA70fPq5/6TYervIbKC4fydo8sydh+Zgi3Y9cDBZW8bgwPhhuNcFVnXi56HtiWplMy5ref2RPUJkOwe/P6jnyeyhqZdHBEU5vssONVX75xkhks7b26yIjQfv21vd9K+H21TtALsKKs0IFhqA0kCAwEAAaOCARswggEXMB0GA1UdDgQWBBS0+Nxv3mShhlcbL0M/E3j11IKwujAfBgNVHSMEGDAWgBTVYzpcijGQ80N7fEYbxTNoWoVtVTBWBgNVHR8ETzBNMEugSaBHhkVodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vcGtpL2NybC9wcm9kdWN0cy9NaWNUaW1TdGFQQ0FfMjAxMC0wNy0wMS5jcmwwWgYIKwYBBQUHAQEETjBMMEoGCCsGAQUFBzAChj5odHRwOi8vd3d3Lm1pY3Jvc29mdC5jb20vcGtpL2NlcnRzL01pY1RpbVN0YVBDQV8yMDEwLTA3LTAxLmNydDAMBgNVHRMBAf8EAjAAMBMGA1UdJQQMMAoGCCsGAQUFBwMIMA0GCSqGSIb3DQEBCwUAA4IBAQBQxA7KNX55raQS1eoPRw58PZnY8VQjLmQuQZTndEMZx+GXMhH1CVOBkupMSGAsu4JLLqNyZr6c+Dt7leDWioJlxklHC1E/NLUXr8zphHfkfdus3SZpWc+uatD3WSR+w2oNO25YOIAgF+Q0SAKlBkJvg5Xccy7kvx5nODl1RontcT4sG6mElIsUm1pvFi3h+QJDGdMPbPnRjfZm5eI2YUWJrupWr7dhzeaZbTb78pYfw/Uc+KhskbxysZiBISTG2RRcZ2i63AZZbzwpH1FFwz/gYouq3Y5DwBYRBvuyGAzynE2+7fRPF6NEClrhYB84B6NMbj4rMGbrteNVnYiVcA+S</X509Certificate><X509Certificate>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</X509Certificate></X509Data><CounterSignature ts-format="cms-timestamp-message" xmlns="http://schemas.microsoft.com/xmldsig/timestamp/2003">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</CounterSignature></Object></Signature></doc>

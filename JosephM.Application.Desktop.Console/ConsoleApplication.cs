@@ -227,7 +227,8 @@ namespace JosephM.Application.Desktop.Console
                 "Microsoft.VisualStudio.Shell.Framework",
                 "Microsoft.VisualStudio.Utilities",
                 "Microsoft.VisualStudio.Telemetry",
-                "StreamJsonRpc"
+                "StreamJsonRpc",
+                "Microsoft.Rest.ClientRuntime"
             };
 
             foreach (string dll in Directory.GetFiles(path, "*.dll"))

@@ -92,7 +92,6 @@ namespace JosephM.Xrm.Vsix.Test
                     Assert.AreEqual(recordsOfType.Count() / 2, fileCountInDirectory);
                 }
             }
-
         }
     }
 }

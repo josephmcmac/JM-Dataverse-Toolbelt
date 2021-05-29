@@ -458,7 +458,6 @@ namespace JosephM.Deployment.Test
             var publishingStateRecords = XrmService.RetrieveAllEntityType(Entities.adx_publishingstate);
             var siteSettingRecords = XrmService.RetrieveAllEntityType(Entities.adx_sitesetting);
             var siteMarkerRecords = XrmService.RetrieveAllEntityType(Entities.adx_sitemarker);
-            var contentAccessLevelRecords = XrmService.RetrieveAllEntityType(Entities.adx_contentaccesslevel);
 
             //the records wont; have been updated as data the same - but we verify that the system matched
             //them and therefore didn't create duplicates or throw errors
@@ -484,7 +483,6 @@ namespace JosephM.Deployment.Test
             Assert.AreEqual(numberOfSites * 1, publishingStateRecords.Count());
             Assert.AreEqual(numberOfSites * 1, siteSettingRecords.Count());
             Assert.AreEqual(numberOfSites * 1, siteMarkerRecords.Count());
-            Assert.AreEqual(1, contentAccessLevelRecords.Count());
 
             //verify the access control rule is correctly linked to the child web page
             var rootChildWebPage = pageRecords.First(e => e.GetLookupGuid(Fields.adx_webpage_.adx_parentpageid).HasValue && !e.GetLookupGuid(Fields.adx_webpage_.adx_rootwebpageid).HasValue);

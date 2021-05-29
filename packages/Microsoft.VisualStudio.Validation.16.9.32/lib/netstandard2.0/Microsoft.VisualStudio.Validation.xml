@@ -1,0 +1,654 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.VisualStudio.Validation</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Assumes">
+            <summary>
+            Common runtime checks that throw <see cref="T:Microsoft.Assumes.InternalErrorException" /> exceptions upon failure.
+            </summary>
+            <content>
+            Contains the inner exception thrown by Assumes.
+            </content>
+        </member>
+        <member name="M:Microsoft.Assumes.NotNull``1(``0)">
+            <summary>
+            Throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> if the specified value is null.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+        </member>
+        <member name="M:Microsoft.Assumes.NotNull``1(System.Nullable{``0})">
+            <summary>
+            Throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> if the specified value is null.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+        </member>
+        <member name="M:Microsoft.Assumes.NotNullOrEmpty(System.String)">
+            <summary>
+            Throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> if the specified value is null or empty.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.NotNullOrEmpty``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> if the specified value is null or empty.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+        </member>
+        <member name="M:Microsoft.Assumes.NotNullOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> if the specified value is null or empty.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+        </member>
+        <member name="M:Microsoft.Assumes.Null``1(``0)">
+            <summary>
+            Throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> if the specified value is not null.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+        </member>
+        <member name="M:Microsoft.Assumes.Null``1(System.Nullable{``0})">
+            <summary>
+            Throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> if the specified value is not null.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+        </member>
+        <member name="M:Microsoft.Assumes.Is``1(System.Object)">
+            <summary>
+            Throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> if the specified object is not of a given type.
+            </summary>
+            <typeparam name="T">The type the value is expected to be.</typeparam>
+            <param name="value">The value to test.</param>
+        </member>
+        <member name="M:Microsoft.Assumes.False(System.Boolean,System.String)">
+            <summary>
+            Throws an public exception if a condition evaluates to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.False(System.Boolean,System.String,System.Object)">
+            <summary>
+            Throws an public exception if a condition evaluates to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.False(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Throws an public exception if a condition evaluates to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.True(System.Boolean,System.String)">
+            <summary>
+            Throws an public exception if a condition evaluates to false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.True(System.Boolean,System.String,System.Object)">
+            <summary>
+            Throws an public exception if a condition evaluates to false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.True(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Throws an public exception if a condition evaluates to false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.NotReachable">
+            <summary>
+            Unconditionally throws an <see cref="T:Microsoft.Assumes.InternalErrorException" />.
+            </summary>
+            <returns>Nothing. This method always throws.</returns>
+        </member>
+        <member name="M:Microsoft.Assumes.NotReachable``1">
+            <summary>
+            Unconditionally throws an <see cref="T:Microsoft.Assumes.InternalErrorException" />.
+            </summary>
+            <typeparam name="T">The type that the method should be typed to return (although it never returns anything).</typeparam>
+            <returns>Nothing. This method always throws.</returns>
+        </member>
+        <member name="M:Microsoft.Assumes.Present``1(``0)">
+            <summary>
+            Verifies that a value is not null, and throws <see cref="T:Microsoft.Assumes.InternalErrorException" /> about a missing service otherwise.
+            </summary>
+            <typeparam name="T">The interface of the imported part.</typeparam>
+        </member>
+        <member name="M:Microsoft.Assumes.Fail(System.String,System.Boolean)">
+            <summary>
+            Throws an public exception.
+            </summary>
+            <returns>Nothing, as this method always throws.  The signature allows for "throwing" Fail so C# knows execution will stop.</returns>
+        </member>
+        <member name="M:Microsoft.Assumes.Fail(System.String,System.Exception,System.Boolean)">
+            <summary>
+            Throws an public exception.
+            </summary>
+            <returns>Nothing, as this method always throws.  The signature allows for "throwing" Fail so C# knows execution will stop.</returns>
+        </member>
+        <member name="M:Microsoft.Assumes.Fail(System.String)">
+            <summary>
+            Throws an public exception.
+            </summary>
+            <returns>Nothing, as this method always throws.  The signature allows for "throwing" Fail so C# knows execution will stop.</returns>
+        </member>
+        <member name="M:Microsoft.Assumes.Fail(System.String,System.Exception)">
+            <summary>
+            Throws an public exception.
+            </summary>
+            <returns>Nothing, as this method always throws.  The signature allows for "throwing" Fail so C# knows execution will stop.</returns>
+        </member>
+        <member name="M:Microsoft.Assumes.Format(System.String,System.Object[])">
+            <summary>
+            Helper method that formats string arguments.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Assumes.InternalErrorException">
+            <summary>
+            The exception that is thrown when an internal assumption failed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.InternalErrorException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Assumes.InternalErrorException" /> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.InternalErrorException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Assumes.InternalErrorException" /> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Assumes.InternalErrorException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Assumes.InternalErrorException" /> class.
+            </summary>
+        </member>
+        <member name="T:Microsoft.EventHandlerExtensions">
+            <summary>
+            Extension methods to make it easier to safely invoke events.
+            </summary>
+        </member>
+        <member name="M:Microsoft.EventHandlerExtensions.Raise(System.Delegate,System.Object,System.EventArgs)">
+            <summary>
+            Invokes any event handlers that are hooked to the specified event.
+            </summary>
+            <param name="handler">The event.  Null is allowed.</param>
+            <param name="sender">The value to pass as the sender of the event.</param>
+            <param name="e">Event arguments to include.</param>
+        </member>
+        <member name="M:Microsoft.EventHandlerExtensions.Raise(System.EventHandler,System.Object,System.EventArgs)">
+            <summary>
+            Invokes any event handlers that are hooked to the specified event.
+            </summary>
+            <param name="handler">The event.  Null is allowed.</param>
+            <param name="sender">The value to pass as the sender of the event.</param>
+            <param name="e">Event arguments to include.</param>
+        </member>
+        <member name="M:Microsoft.EventHandlerExtensions.Raise``1(System.EventHandler{``0},System.Object,``0)">
+            <summary>
+            Invokes any event handlers that are hooked to the specified event.
+            </summary>
+            <typeparam name="T">The type of EventArgs.</typeparam>
+            <param name="handler">The event.  Null is allowed.</param>
+            <param name="sender">The value to pass as the sender of the event.</param>
+            <param name="e">Event arguments to include.</param>
+        </member>
+        <member name="T:Microsoft.ExceptionExtensions">
+            <summary>
+            Extension methods for exceptions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ExceptionExtensions.AddData``1(``0,System.String,System.Object[])">
+            <summary>
+            Adds data to the Data member of <paramref name="exception" /> before returning the modified exception.
+            </summary>
+            <typeparam name="T">The type of exception being modified.</typeparam>
+            <param name="exception">The exception to add data to.</param>
+            <param name="key">The key to use for the added data.</param>
+            <param name="values">The values to add with the given <paramref name="key" />.</param>
+            <returns>A reference to the same <paramref name="exception" />.</returns>
+            <remarks>
+            <para>This method should be used to add context (beyond the message and callstack we normally get) to the exception
+            that would be useful when debugging Watson crashes.</para>
+            <para>Do not use this method when you expect the exception to be handled.</para>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.IDisposableObservable">
+            <summary>
+            A disposable object that also provides a safe way to query its disposed status.
+            </summary>
+        </member>
+        <member name="P:Microsoft.IDisposableObservable.IsDisposed">
+            <summary>
+            Gets a value indicating whether this instance has been disposed.
+            </summary>
+            <value><see langword="true" /> if this instance has been disposed.</value>
+        </member>
+        <member name="T:Microsoft.PrivateErrorHelpers">
+            <summary>
+            Common utility methods used by the various error detection and reporting classes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PrivateErrorHelpers.TrimGenericWrapper(System.Type,System.Type)">
+            <summary>
+            Trims away a given surrounding type, returning just the generic type argument,
+            if the given type is in fact a generic type with just one type argument and
+            the generic type matches a given wrapper type.  Otherwise, it returns the original type.
+            </summary>
+            <param name="type">The type to trim, or return unmodified.</param>
+            <param name="wrapper">The SomeType&lt;&gt; generic type definition to trim away from <paramref name="type" /> if it is present.</param>
+            <returns><paramref name="type" />, if it is not a generic type instance of <paramref name="wrapper" />; otherwise the type argument.</returns>
+        </member>
+        <member name="M:Microsoft.PrivateErrorHelpers.Format(System.String,System.Object[])">
+            <summary>
+            Helper method that formats string arguments.
+            </summary>
+            <returns>The formatted string.</returns>
+        </member>
+        <member name="T:Microsoft.Report">
+            <summary>
+            Common runtime checks that trace messages and invoke an assertion failure,
+            but does *not* throw exceptions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Report.IfNotPresent``1(``0)">
+            <summary>
+            Verifies that a value is not null, and reports an error about a missing MEF component otherwise.
+            </summary>
+            <typeparam name="T">The interface of the imported part.</typeparam>
+        </member>
+        <member name="M:Microsoft.Report.If(System.Boolean,System.String)">
+            <summary>
+            Reports an error if a condition evaluates to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Report.IfNot(System.Boolean,System.String)">
+            <summary>
+            Reports an error if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Report.IfNot(System.Boolean,System.String,System.Object)">
+            <summary>
+            Reports an error if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Report.IfNot(System.Boolean,System.String,System.Object,System.Object)">
+            <summary>
+            Reports an error if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Report.IfNot(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Reports an error if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Report.Fail(System.String)">
+            <summary>
+            Reports a certain failure.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Report.Fail(System.String,System.Object[])">
+            <summary>
+            Reports a certain failure.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Requires">
+            <summary>
+            Common runtime checks that throw ArgumentExceptions upon failure.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Requires.NotNull``1(``0,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null.
+            </summary>
+            <typeparam name="T">The type of the parameter.</typeparam>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <returns>The value of the parameter.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.NotNull(System.IntPtr,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is IntPtr.Zero.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <returns>The value of the parameter.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value" /> is <see cref="F:System.IntPtr.Zero" />.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.NotNull(System.Threading.Tasks.Task,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value" /> is <c>null</c>.</exception>
+            <remarks>
+            This method allows async methods to use Requires.NotNull without having to assign the result
+            to local variables to avoid C# warnings.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Requires.NotNull``1(System.Threading.Tasks.Task{``0},System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null.
+            </summary>
+            <typeparam name="T">The type of the return value of the task.</typeparam>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value" /> is <c>null</c>.</exception>
+            <remarks>
+            This method allows async methods to use Requires.NotNull without having to assign the result
+            to local variables to avoid C# warnings.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Requires.NotNullAllowStructs``1(``0,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null.
+            </summary>
+            <typeparam name="T">The type of the parameter.</typeparam>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <returns>The value of the parameter.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value" /> is <c>null</c>.</exception>
+            <remarks>
+            This method exists for callers who themselves only know the type as a generic parameter which
+            may or may not be a class, but certainly cannot be null.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Requires.NotNullOrEmpty(System.String,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null or empty.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="value" /> is <c>null</c> or empty.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.NotNullOrWhiteSpace(System.String,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null, empty, or whitespace.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="value" /> is <c>null</c> or empty.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.NotNullOrEmpty(System.Collections.IEnumerable,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null,
+            has no elements.
+            </summary>
+            <param name="values">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.NotNullOrEmpty``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null,
+            has no elements.
+            </summary>
+            <typeparam name="T">The type produced by the enumeration.</typeparam>
+            <param name="values">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.NotNullEmptyOrNullElements``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null,
+            has no elements or has an element with a null value.
+            </summary>
+            <typeparam name="T">The type of the elements in the sequence.</typeparam>
+            <param name="values">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.NullOrNotNullElements``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is not null
+            <em>and</em> has an element with a null value.
+            </summary>
+            <typeparam name="T">The type of the elements in the sequence.</typeparam>
+            <param name="values">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.NotEmpty(System.Guid,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is <see cref="F:System.Guid.Empty" />.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="value" /> is an empty guid (<see cref="F:System.Guid.Empty" />.)</exception>
+        </member>
+        <member name="M:Microsoft.Requires.Range(System.Boolean,System.String,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ArgumentOutOfRangeException" /> if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Requires.FailRange(System.String,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ArgumentOutOfRangeException" /> if a condition does not evaluate to true.
+            </summary>
+            <returns>Nothing.  This method always throws.</returns>
+        </member>
+        <member name="M:Microsoft.Requires.Argument(System.Boolean,System.String,System.String)">
+            <summary>
+            Throws an ArgumentException if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Requires.Argument(System.Boolean,System.String,System.String,System.Object)">
+            <summary>
+            Throws an ArgumentException if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Requires.Argument(System.Boolean,System.String,System.String,System.Object,System.Object)">
+            <summary>
+            Throws an ArgumentException if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Requires.Argument(System.Boolean,System.String,System.String,System.Object[])">
+            <summary>
+            Throws an ArgumentException if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Requires.Fail(System.String)">
+            <summary>
+            Throws an ArgumentException.
+            </summary>
+            <returns>Nothing.  It always throws.</returns>
+        </member>
+        <member name="M:Microsoft.Requires.Fail(System.String,System.Object[])">
+            <summary>
+            Throws an ArgumentException.
+            </summary>
+            <returns>Nothing.  It always throws.</returns>
+        </member>
+        <member name="M:Microsoft.Requires.Fail(System.Exception,System.String,System.Object[])">
+            <summary>
+            Throws an ArgumentException.
+            </summary>
+            <returns>Nothing. This method always throws.</returns>
+        </member>
+        <member name="M:Microsoft.Requires.Defined``1(``0,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ComponentModel.InvalidEnumArgumentException" /> if a given value is not a named value of the enum type.
+            </summary>
+            <typeparam name="TEnum">The type of enum that may define the <paramref name="value" />.</typeparam>
+            <param name="value">The value that may be named by <typeparamref name="TEnum" />.</param>
+            <param name="parameterName">The name of the parameter to include in the exception, if thrown.</param>
+        </member>
+        <member name="M:Microsoft.Requires.NotDefault``1(``0,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ArgumentException" /> if the specified parameter's value is equal to the
+            default value of the <see cref="T:System.Type" /> <typeparamref name="T" />.
+            </summary>
+            <typeparam name="T">The type of the parameter.</typeparam>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="value" /> is <c>null</c> or empty.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.ValidElements``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0},System.String,System.String)">
+            <summary>
+            Throws an exception if <paramref name="values" /> is null,
+            <paramref name="predicate" /> is null, or if <paramref name="values" /> is not null
+            <em>and</em> has an element which does not match the given predicate.
+            </summary>
+            <typeparam name="T">The type of the elements in the sequence.</typeparam>
+            <param name="values">The value of the argument.</param>
+            <param name="predicate">The predicate used to test the elements.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <param name="message">A message to be used in the resulting exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="predicate" /> or <paramref name="values" /> is <see langword="null" />.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.ValidElements``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0},System.String,System.String,System.Object[])">
+            <summary>
+            Throws an exception if <paramref name="values" /> is null,
+            <paramref name="predicate" /> is null, or if <paramref name="values" /> is not null
+            <em>and</em> has an element which does not match the given predicate.
+            </summary>
+            <typeparam name="T">The type of the elements in the sequence.</typeparam>
+            <param name="values">The value of the argument.</param>
+            <param name="predicate">The predicate used to test the elements.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <param name="unformattedMessage">The unformatted message.</param>
+            <param name="args">Formatting arguments.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="predicate" /> is <see langword="null" />.</exception>
+        </member>
+        <member name="M:Microsoft.Requires.Format(System.String,System.Object[])">
+            <summary>
+            Helper method that formats string arguments.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Strings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.Argument_EmptyArray">
+            <summary>
+              Looks up a localized string similar to '{0}' must contain at least one element..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.Argument_EmptyGuid">
+            <summary>
+              Looks up a localized string similar to '{0}' cannot be an empty guid..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.Argument_EmptyString">
+            <summary>
+              Looks up a localized string similar to '{0}' cannot be an empty string ("") or start with the null character..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.Argument_NotEnum">
+            <summary>
+              Looks up a localized string similar to The value of argument '{0}' ({1}) is invalid for Enum type '{2}'..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.Argument_NullElement">
+            <summary>
+              Looks up a localized string similar to '{0}' cannot contain a null (Nothing in Visual Basic) element..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.Argument_StructIsDefault">
+            <summary>
+              Looks up a localized string similar to '{0}' cannot be the default value defined by '{1}'..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.Argument_Whitespace">
+            <summary>
+              Looks up a localized string similar to The argument cannot consist entirely of white space characters..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.InternalExceptionMessage">
+            <summary>
+              Looks up a localized string similar to An internal error occurred. Please contact Microsoft Support..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Strings.ServiceMissing">
+            <summary>
+              Looks up a localized string similar to Cannot find an instance of the {0} service..
+            </summary>
+        </member>
+        <member name="T:Microsoft.ValidatedNotNullAttribute">
+            <summary>
+            Indicates to Code Analysis that a method validates a particular parameter.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ValidatedNotNullAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ValidatedNotNullAttribute" /> class.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Verify">
+            <summary>
+            Common runtime checks that throw exceptions upon failure.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.Operation(System.Boolean,System.String)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException" /> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.Operation(System.Boolean,System.String,System.Object)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException" /> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.Operation(System.Boolean,System.String,System.Object,System.Object)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException" /> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.Operation(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException" /> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.OperationWithHelp(System.Boolean,System.String,System.String)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException" /> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.FailOperation(System.String,System.Object[])">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException" />.
+            </summary>
+            <returns>
+            Nothing.  This method always throws.
+            The signature claims to return an exception to allow callers to throw this method
+            to satisfy C# execution path constraints.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Verify.NotDisposed(Microsoft.IDisposableObservable,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ObjectDisposedException" /> if an object is disposed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.NotDisposed(System.Boolean,System.Object,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ObjectDisposedException" /> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.NotDisposed(System.Boolean,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ObjectDisposedException" /> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Verify.HResult(System.Int32,System.Boolean)">
+            <summary>
+            Throws an exception if the given value is negative.
+            </summary>
+            <param name="hresult">The HRESULT corresponding to the desired exception.</param>
+            <param name="ignorePreviousComCalls">If true, prevents <c>ThrowExceptionForHR</c> from returning an exception from a previous COM call and instead always use the HRESULT specified.</param>
+            <remarks>
+            No exception is thrown for S_FALSE.
+            </remarks>
+        </member>
+    </members>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><DigestValue>pT1bXmhp3NfgG85yf6OP2StsYgY/gxj5HP2L/0Q8dB4=</DigestValue></Reference></SignedInfo><SignatureValue>pc9bbLRyA2Cz7JlVK9ibnwPtDDjljUDEUl8URw1Ue5ybTFyNGinweAZRtX11f+WxDgfN7eGM5UstB1SVGwaj/18hkrSB70ftFG+YwDNgaL8/3qaCh7VIuIeaqcm1X3gXzbMwTvz7GnooVEEkB/Hj7crl0HdaEBGQAMi3LIarrEB8OuG8wsVeUvCTsN6stNdldkyK/zfP/vlYLYEfCwc6aBKhOKrbGym6Su/hhgN1d7olcUJsMf0HBXl82KqZWWPfwJHZ32ftpyw6lhhXtFgwhYPkxsC1iiDzKJ+iKLHWQaxoTUs2pgbZELA+92+cnY9pxujge5iqjbofEKsUpeQ+EQ==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>trsZWRAAo6nx5LhcqAsHy9uaHyPQ2VireMBI9yQUOPBj7dVLA7/N+AnKFFDzJ7P+grT6GkOE4cv5GzjoP8yQJ6yXojEKkXti7HW/zUiNoF11/ZWndf8j1Azl6OBjcD416tSWYvh2VfdW1K+mY83j49YPm3qbKnfxwtV0nI9H092gMS0cpCUsxMRAZlPXksrjsFLqvgq4rnULVhjHSVOudL/yps3zOOmOpaPzAp56b898xC+zzHVHcKo/52IRht1FSC8V+7QHTG8+yzfuljiKU9QONa8GqDlZ7/vFGveB8IY2ZrtUu98nle0WWTcaIRHoCYvWGLLF2u1GVFJAggPipw==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>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</X509Certificate><X509Certificate>MIIHejCCBWKgAwIBAgIKYQ6Q0gAAAAAAAzANBgkqhkiG9w0BAQsFADCBiDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1JlZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEyMDAGA1UEAxMpTWljcm9zb2Z0IFJvb3QgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IDIwMTEwHhcNMTEwNzA4MjA1OTA5WhcNMjYwNzA4MjEwOTA5WjB+MQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMSgwJgYDVQQDEx9NaWNyb3NvZnQgQ29kZSBTaWduaW5nIFBDQSAyMDExMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAq/D6chAcLq3YbqqCEE00uvK2WCGfQhsqa+laUKq4BjgaBEm6f8MMHt03a8YS2AvwOMKZBrDIOdUBFDFC04kNeWSHfpRgJGyvnkmc6Whe0t+bU7IKLMOv2akrrnoJr9eWWcpgGgXpZnboMlImEi/nqwhQz7NEt13YxC4Ddato88tt8zpcoRb0RrrgOGSsbmQ1eKagYw8t00CT+OPeBw3VXHmlSSnnDb6gE3e+lD3v++MrWhAfTVYoonpy4BI6t0le2O3tQ5GD2Xuye4Yb2T6xjF3oiU+EGvKhL1nkkDstrjNYxbc+/jLTswM9sbKvkjh+0p2ALPVOVpEhNSXDOW5kf1O6nA+tGSOEy/S6A4aN91/w0FK/jJSHvMAhdCVfGCi2zCcoOCWYOUo2z3yxkq4cI6epZuxhH2rhKEmdX4jiJV3TIUs+UsS1Vz8kA/DRelsv1SPjcF0PUUZ3s/gA4bysAoJf28AVs70b1FVL5zmhD+kjSbwYuER8ReTBw3J64HLnJN+/RpnF78IcV9uDjexNSTCnq47f7Fufr/zdsGbiwZeBe+3W7UvnSSmnEyimp31ngOaKYnhfsi+E11ecXL93KCjx7W3DKI8sj0A3T8HhhUSJxAlMxdSlQy90lfdu+HggWCwTXWCVmj5PM4TasIgX3p5O9JawvEagbJjS4NaIjAsCAwEAAaOCAe0wggHpMBAGCSsGAQQBgjcVAQQDAgEAMB0GA1UdDgQWBBRIbmTlUAXTgqoXNzcitW2oynUClTAZBgkrBgEEAYI3FAIEDB4KAFMAdQBiAEMAQTALBgNVHQ8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zAfBgNVHSMEGDAWgBRyLToCMZBDuRQFTuHqp8cx0SOJNDBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vcGtpL2NybC9wcm9kdWN0cy9NaWNSb29DZXJBdXQyMDExXzIwMTFfMDNfMjIuY3JsMF4GCCsGAQUFBwEBBFIwUDBOBggrBgEFBQcwAoZCaHR0cDovL3d3dy5taWNyb3NvZnQuY29tL3BraS9jZXJ0cy9NaWNSb29DZXJBdXQyMDExXzIwMTFfMDNfMjIuY3J0MIGfBgNVHSAEgZcwgZQwgZEGCSsGAQQBgjcuAzCBgzA/BggrBgEFBQcCARYzaHR0cDovL3d3dy5taWNyb3NvZnQuY29tL3BraW9wcy9kb2NzL3ByaW1hcnljcHMuaHRtMEAGCCsGAQUFBwICMDQeMiAdAEwAZQBnAGEAbABfAHAAbwBsAGkAYwB5AF8AcwB0AGEAdABlAG0AZQBuAHQALiAdMA0GCSqGSIb3DQEBCwUAA4ICAQBn8oalmOBUeRou09h0ZyKbC5YR4WOSmUKWfdJ5DJDBZV8uLD74w3LRbYP+vj/oCso7v0epo/Np22O/IjWll11lhJB9i0ZQVdgMknzSGksc8zxCi1LQsP1r4z4HLimb5j0bpdS1HXeUOeLpZMlEPXh6I/MTfaaQdION9MsmAkYqwooQu6SpBQyb7Wj6aC6VoCo/KmtYSWMfCWluWpiW5IP0wI/zRive/DvQvTXvbiWu5a8n7dDd8w6vmSiXmE0OPQvyCInWH8MyGOLwxS3OW560STkKxgrCxq2u5bLZ2xWIUUVYODJxJxp/sfQn+N4sOiBpmLJZiWhub6e3dMNABQamASooPoI/E01mC8CzTfXhj38cbxV9Rad25UAqZaPDXVJihsMdYzaXht/a8/jyFqGaJ+HNpZfQ7l1jQeNbB5yHPgZ3BtEGsXUfFL5hYbXw3MYbBL7fQccOKO7eZS/sl/ahXJbYANahRr1Z85elCUtIEJmAH9AAKcWxm6U/RXceNcbSoqKfenoi+kiVH6v7RyOA9Z74v2u3S5fi63V4GuzqN5l5GEv/1rMjaHXmr/r8i+sLgOppO6/8MO0ETI7f33VtY5E90Z1WTk+/gFcioXgRMiF670EKsT/7qMykXcGhiJtXcVZOSEXAQsmbdlsKgEhr/Xmfwb1tbWrJUnMTDXpQzQ==</X509Certificate><X509Certificate>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</X509Certificate></X509Data></KeyInfo><Object Id="ts-countersig"><X509Data><X509Certificate>MIIE9TCCA92gAwIBAgITMwAAAWAHIPCSSNq+6wAAAAABYDANBgkqhkiG9w0BAQsFADB8MQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMSYwJAYDVQQDEx1NaWNyb3NvZnQgVGltZS1TdGFtcCBQQ0EgMjAxMDAeFw0yMTAxMTQxOTAyMjBaFw0yMjA0MTExOTAyMjBaMIHOMQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMSkwJwYDVQQLEyBNaWNyb3NvZnQgT3BlcmF0aW9ucyBQdWVydG8gUmljbzEmMCQGA1UECxMdVGhhbGVzIFRTUyBFU046ODk3QS1FMzU2LTE3MDExJTAjBgNVBAMTHE1pY3Jvc29mdCBUaW1lLVN0YW1wIFNlcnZpY2UwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC0MYAc0PLGzPFSMz4JjfU1pFrNpPEtQmVMjefEi8y1t9efK2WfzuJevBm+EpBP4gVEpOMlXrASjlaJ2yy95wMCF5rGIZ+QUdEVzyPVy4s81arJVIBz80z0bTLWbvo7coAqYeTH6rgYmv0qdB44+5RA6zR0fwv9f8QmmckKYCEe5QESSGkVYecvlqm6pm1LBSKBeVB8MMyRSaTl8WLQNLlrq2iqXQlMwM4esJCmYDJEa1z9xP8OXLOFO3GImI2URpZtxq/ryYJMk7CltzgYk7ZGlv3o7aVvkuqbvzXs1xagM8Lkg43iCJjjnhGr5QPTvVaQnsaNc+lQqadBG9/dOLoTAgMBAAGjggEbMIIBFzAdBgNVHQ4EFgQUp5se+LeoF+Ca4XUyCXV80Ou+H2MwHwYDVR0jBBgwFoAU1WM6XIoxkPNDe3xGG8UzaFqFbVUwVgYDVR0fBE8wTTBLoEmgR4ZFaHR0cDovL2NybC5taWNyb3NvZnQuY29tL3BraS9jcmwvcHJvZHVjdHMvTWljVGltU3RhUENBXzIwMTAtMDctMDEuY3JsMFoGCCsGAQUFBwEBBE4wTDBKBggrBgEFBQcwAoY+aHR0cDovL3d3dy5taWNyb3NvZnQuY29tL3BraS9jZXJ0cy9NaWNUaW1TdGFQQ0FfMjAxMC0wNy0wMS5jcnQwDAYDVR0TAQH/BAIwADATBgNVHSUEDDAKBggrBgEFBQcDCDANBgkqhkiG9w0BAQsFAAOCAQEAFTSYCJs6BaaJUHVPJ2HXF+8kpShD9+faoOUP0hae3uI+XQNVfpLL5inWQdY4Y7AbNiJjTiLcjWNrtjcI2uCTcRX/tsvyk3D/BhPex/KIK/XPlW9bhxe4LZ3txfL579Am+/SuJm4YuktECIaj3CPHN+lKnj8CjC5t9ifrzvcLiltjSvL/WwOYELvdgI+rn+wBgLjWByIdImaJPm3LiaWDyimNZ70thGtYM5hfCf4qz2ODFvL+P4GnpCaLH5HOoG6JmuMNYBQxioCob+7ZU9fud7hxkdk0tajGHjcBnxrY4k8UNQZUBGYm5OzxXwnvikYU0Uwkbc1p0oNzRBNMtqi51A==</X509Certificate><X509Certificate>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</X509Certificate></X509Data><CounterSignature ts-format="cms-timestamp-message" xmlns="http://schemas.microsoft.com/xmldsig/timestamp/2003">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</CounterSignature></Object></Signature></doc>
