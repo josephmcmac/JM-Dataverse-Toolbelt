@@ -61,7 +61,7 @@ namespace JosephM.XrmModule.ToolingConnector
                             }
                         }
                         var service = _cachedToolingConnections[xrmConfiguration.ToolingConnectionId];
-                        var organisation = new Organisation(service.ConnectedOrgUniqueName, service.ConnectedOrgFriendlyName, service.ConnectedOrgVersion?.ToString(), service.ConnectedOrgPublishedEndpoints);
+                        var organisation = new Organisation(service);
                         result = new GetOrganisationConnectionResponse(service, organisation);
                     };
                     if (ApplicationController.CurrentThreadIsDispatcher())

@@ -10,6 +10,11 @@ namespace JosephM.Record.Xrm.XrmRecord
     [ServiceConnection(typeof(XrmRecordService))]
     public class XrmRecordConfiguration : IXrmRecordConfiguration, IValidatableObject
     {
+        public XrmRecordConfiguration()
+        {
+            AuthenticationProviderType = XrmRecordAuthenticationProviderType.LiveId;
+        }
+
         [RequiredProperty]
         [GridField]
         [GridWidth(150)]
@@ -44,6 +49,13 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         [GridField]
         [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
+        [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
+            new object[]
+            {
+                XrmRecordAuthenticationProviderType.ActiveDirectory, XrmRecordAuthenticationProviderType.Federation
+                , XrmRecordAuthenticationProviderType.OnlineFederation,
+                XrmRecordAuthenticationProviderType.None
+            })]
         [MyDescription("The Discovery Service Address For The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(30)]
         [RequiredProperty]
@@ -51,7 +63,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         public string DiscoveryServiceAddress { get; set; }
 
         [GridField]
-        [PropertyInContextByPropertyValue(nameof(AreDiscoveryDetailsEntered), true)]
+        [PropertyInContextByPropertyValue(nameof(AreDetailsForOrganisations), true)]
         [MyDescription("The Unique Name Of The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(80)]
         [RequiredProperty]
@@ -107,11 +119,11 @@ namespace JosephM.Record.Xrm.XrmRecord
         }
 
         [Hidden]
-        public bool AreDiscoveryDetailsEntered
+        public bool AreDetailsForOrganisations
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(DiscoveryServiceAddress)
+                return (!string.IsNullOrWhiteSpace(DiscoveryServiceAddress) || AuthenticationProviderType == XrmRecordAuthenticationProviderType.LiveId)
                     && (!this.IsInContext(nameof(Domain)) || !string.IsNullOrWhiteSpace(Domain))
                     && (!this.IsInContext(nameof(Username)) || !string.IsNullOrWhiteSpace(Username))
                     && (!this.IsInContext(nameof(Password)) || (Password != null && !string.IsNullOrWhiteSpace(Password.GetRawPassword())));

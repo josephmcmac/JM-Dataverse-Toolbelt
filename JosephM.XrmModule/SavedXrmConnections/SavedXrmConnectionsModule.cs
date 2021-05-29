@@ -238,7 +238,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
                 var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
                 var xrmConnection = new Xrm.XrmConnection(xrmConfiguration);
                 return xrmConnection
-                    .GetActiveOrganisations(); ;
+                    .GetActiveOrganisations();
             }, typeof(Xrm.Organisation), nameof(Xrm.Organisation.UniqueName), new[] { new GridFieldMetadata(nameof(Xrm.Organisation.UniqueName), 100), new GridFieldMetadata(nameof(Xrm.Organisation.FriendlyName), 400) }, sortField: nameof(Xrm.Organisation.FriendlyName), displayInGrid: false, autosearch: false), typeof(SavedXrmRecordConfiguration), nameof(SavedXrmRecordConfiguration.OrganizationUniqueName));
         }
 

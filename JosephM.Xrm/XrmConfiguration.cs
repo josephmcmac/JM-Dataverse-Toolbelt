@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xrm.Sdk.Client;
 
-// These namespaces are found in the Microsoft.Xrm.Sdk.dll assembly
-// located in the SDK\bin folder of the SDK download.
-
 namespace JosephM.Xrm
 {
     public class XrmConfiguration : IXrmConfiguration
