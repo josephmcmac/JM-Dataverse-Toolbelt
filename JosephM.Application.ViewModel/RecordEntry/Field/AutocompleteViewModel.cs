@@ -82,6 +82,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 NoMargins = true,
                 FieldMetadata = AutocompleteFunction.GridFields,
                 PageSize = MaxRecordsForLookup,
+                HidePageDescriptionIfOne = true,
                 DisplayTotalCount = true,
                 GetTotalCount = () => getGridRecords(true).Records.Count()
             };

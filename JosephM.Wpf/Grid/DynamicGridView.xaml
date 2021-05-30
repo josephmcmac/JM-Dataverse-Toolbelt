@@ -149,7 +149,7 @@
                             </DataGrid>
                         </Grid>
                         <Grid  Grid.Row="2"
-                               Visibility="{Binding HasPaging, Converter={StaticResource BoolToVis}}">
+                               Visibility="{Binding PageDescription, Converter={StaticResource NullToHiddenConverter}}">
                             <WrapPanel Orientation="Horizontal">
                                 <Grid Visibility="{Binding IsNotFirstPage, Converter={StaticResource BoolToVis}}" >
                                     <Button DataContext="{Binding PreviousPageButton}" Style="{StaticResource PreviousButton}" Command="{Binding Command}" />

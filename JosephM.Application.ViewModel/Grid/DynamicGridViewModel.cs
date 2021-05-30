@@ -167,11 +167,13 @@ namespace JosephM.Application.ViewModel.Grid
         public bool DisplayTotalCount { get; set; }
         public Func<int> GetTotalCount { get; set; }
 
+        public bool HidePageDescriptionIfOne { get; set; }
+
         public string PageDescription
         {
             get
             {
-                if (HasPaging)
+                if (HasPaging && (!HidePageDescriptionIfOne || (HasMoreRows || CurrentPage > 1)))
                 {
                     var description = new StringBuilder();
                     description.Append(string.Format("Page {0}: ", CurrentPage));
