@@ -63,6 +63,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         public string DiscoveryServiceAddress { get; set; }
 
         [GridField]
+        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [PropertyInContextByPropertyValue(nameof(AreDetailsForOrganisations), true)]
         [MyDescription("The Unique Name Of The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(80)]
@@ -76,6 +77,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [DisplayOrder(50)]
         [RequiredProperty]
         [GridWidth(100)]
+        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
             new object[]
             {
@@ -88,6 +90,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [MyDescription("The Username Used To Login To The Instance")]
         [DisplayOrder(60)]
         [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
             new object[]
             {
@@ -102,6 +105,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [MyDescription("The Password For Your User")]
         [DisplayOrder(70)]
         [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
             new object[]
             {
