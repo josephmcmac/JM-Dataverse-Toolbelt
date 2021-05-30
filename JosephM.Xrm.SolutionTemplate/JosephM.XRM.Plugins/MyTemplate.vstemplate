@@ -15,6 +15,7 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="JosephM.Xrm.Plugins.csproj" File="JosephM.Xrm.Plugins.csproj" ReplaceParameters="true">
+        <ProjectItem ReplaceParameters="true" TargetFileName="App.config">App.config</ProjectItem>
         <Folder Name="Localisation" TargetFolderName="Localisation">
           <ProjectItem ReplaceParameters="true" TargetFileName="ILocalisationSettings.cs">ILocalisationSettings.cs</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="LocalisationService.cs">LocalisationService.cs</ProjectItem>
@@ -63,14 +64,14 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="DeviceIdManager.cs">DeviceIdManager.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="ExceptionExtentions.cs">ExceptionExtentions.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="IXrmConfiguration.cs">IXrmConfiguration.cs</ProjectItem>
-		<ProjectItem ReplaceParameters="true" TargetFileName="ToolingConnectorForm.xaml">ToolingConnectorForm.xaml</ProjectItem>
-		<ProjectItem ReplaceParameters="true" TargetFileName="ToolingConnectorForm.xaml.cs">ToolingConnectorForm.xaml.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ToolingConnectorForm.xaml">ToolingConnectorForm.xaml</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ToolingConnectorForm.xaml.cs">ToolingConnectorForm.xaml.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConfiguration.cs">XrmConfiguration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConnection.cs">XrmConnection.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmEntity.cs">XrmEntity.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmEntityPlugin.cs">XrmEntityPlugin.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmNNPlugin.cs">XrmNNPlugin.cs</ProjectItem>
-		<ProjectItem ReplaceParameters="true" TargetFileName="XrmOrganizationServiceFactory.cs">XrmOrganizationServiceFactory.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="XrmOrganizationServiceFactory.cs">XrmOrganizationServiceFactory.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmPlugin.cs">XrmPlugin.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmPluginRegistration.cs">XrmPluginRegistration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmService.cs">XrmService.cs</ProjectItem>

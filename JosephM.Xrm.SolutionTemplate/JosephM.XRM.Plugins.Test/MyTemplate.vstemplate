@@ -15,6 +15,7 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="JosephM.Xrm.Plugins.Test.csproj" File="JosephM.Xrm.Plugins.Test.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.config">App.config</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Debug.cs">Debug.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="DebugUserInterface.cs">DebugUserInterface.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$XrmTest.cs">$ext_jmobjprefix$XrmTest.cs</ProjectItem>
