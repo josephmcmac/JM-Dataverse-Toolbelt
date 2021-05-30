@@ -1,14 +1,10 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Linq;
 using JosephM.Record.IService;
 using JosephM.Record.Metadata;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Test;
 using JosephM.Record.Extentions;
-
-#endregion
 
 namespace JosephM.Record.Xrm.Test
 {
