@@ -88,26 +88,28 @@
             PlacementTarget="{Binding ElementName=NotificationButton}"
             IsOpen="{Binding OpenActions}"
                 >
-                <ItemsControl
-                ItemsSource="{Binding Actions}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button
-                                BorderThickness="1,0,1,1"
-                                Style="{StaticResource NotificationButton}"
-                                MinWidth="{Binding ElementName=NotificationButton, Path=ActualWidth}"
-                                Margin="0,0,0,0"
-                                Content="{Binding Label}"
-                                Command="{Binding Command}"
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl
+                        ItemsSource="{Binding Actions}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button
+                                    BorderThickness="1,0,1,1"
+                                    Style="{StaticResource NotificationButton}"
+                                    MinWidth="{Binding ElementName=NotificationButton, Path=ActualWidth}"
+                                    Margin="0,0,0,0"
+                                    Content="{Binding Label}"
+                                    Command="{Binding Command}"
                                 />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Popup>
         </Grid>
     </DataTemplate>
