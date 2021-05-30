@@ -47,15 +47,17 @@ namespace JosephM.Deployment
                         Entities.adx_webpageaccesscontrolrule,
                         Entities.adx_webrole,
                         Entities.adx_website,
-                        Entities.adx_webtemplate
+                        Entities.adx_webtemplate,
+                        Entities.adx_contentaccesslevel,
                     };
 
             var associationsToAdd = new Dictionary<string, IEnumerable<string>>
             {
+                { Entities.adx_contentaccesslevel, new [] { Relationships.adx_contentaccesslevel_.adx_WebRoleContentAccessLevel.Name } },
                 { Entities.adx_entitypermission, new [] { Relationships.adx_entitypermission_.adx_entitypermission_webrole.Name } },
                 { Entities.adx_publishingstate, new [] { Relationships.adx_publishingstate_.adx_accesscontrolrule_publishingstate.Name } },
                 { Entities.adx_webpageaccesscontrolrule, new [] { Relationships.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolrule_webrole.Name, Relationships.adx_webpageaccesscontrolrule_.adx_accesscontrolrule_publishingstate.Name } },
-                { Entities.adx_webrole, new [] { Relationships.adx_webrole_.adx_entitypermission_webrole.Name, Relationships.adx_webrole_.adx_webpageaccesscontrolrule_webrole.Name } },
+                { Entities.adx_webrole, new [] { Relationships.adx_webrole_.adx_entitypermission_webrole.Name, Relationships.adx_webrole_.adx_webpageaccesscontrolrule_webrole.Name, Relationships.adx_webrole_.adx_WebRoleContentAccessLevel.Name } },
             };
 
             var childButtons = new List<CustomGridFunction>();

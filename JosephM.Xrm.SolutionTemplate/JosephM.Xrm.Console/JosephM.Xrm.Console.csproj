@@ -51,19 +51,19 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
+    <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JosephM.Xrm.Plugins\JosephM.Xrm.Plugins.csproj">
+      <Project>{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}</Project>
+      <Name>JosephM.Xrm.Plugins</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="XrmSetting.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JosephM.Xrm.Plugins\JosephM.Xrm.Plugins.csproj">
-      <Project>{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5}</Project>
-      <Name>XRM16.Plugins</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

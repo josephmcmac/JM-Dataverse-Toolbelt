@@ -75,7 +75,7 @@ namespace JosephM.XrmModule.Test
             var altOrgName = "CRMAuto";
             altConnection.OrganizationUniqueName = altOrgName;
             if (!altConnection.Validate().IsValid)
-                Assert.Inconclusive($"Could not connect to alt organisation named {altOrgName} for camparison ");
+                Assert.Fail($"Could not connect to alt organisation named {altOrgName} for camparison ");
             return altConnection;
         }
 
@@ -129,8 +129,6 @@ namespace JosephM.XrmModule.Test
 
         public void DeleteAllPortalData(IEnumerable<string> dontDeleteTypes = null, XrmRecordService useRecordService = null)
         {
-            var serviceToUse = useRecordService?.XrmService ?? XrmService;
-
             var typesToDelete = new[]
             {
                 Entities.adx_webrole,
@@ -152,7 +150,8 @@ namespace JosephM.XrmModule.Test
                 Entities.adx_pagetemplate,
                 Entities.adx_publishingstate,
                 Entities.adx_sitesetting,
-                Entities.adx_sitemarker
+                Entities.adx_sitemarker,
+                Entities.adx_contentaccesslevel,
             };
             if(dontDeleteTypes != null)
             {
@@ -160,7 +159,7 @@ namespace JosephM.XrmModule.Test
             }
             foreach(var type in typesToDelete)
             {
-                DeleteAll(type, serviceToUse: serviceToUse);
+                DeleteAll(type, serviceToUse: useRecordService?.XrmService);
             }
         }
 
@@ -403,6 +402,16 @@ namespace JosephM.XrmModule.Test
                 { Fields.adx_sitemarker_.adx_name, "ISiteMarker" },
             }, useService: useRecordService.XrmService);
 
+            var contentAccessLevel = useRecordService.XrmService.GetFirst(Entities.adx_contentaccesslevel, Fields.adx_contentaccesslevel_.adx_name, "IContentAccessLevel");
+            if (contentAccessLevel == null)
+            {
+                contentAccessLevel = CreateTestRecord(Entities.adx_contentaccesslevel, new Dictionary<string, object>
+                {
+                    { Fields.adx_contentaccesslevel_.adx_name, "IContentAccessLevel" },
+                }, useService: useRecordService.XrmService);
+            }
+
+            useRecordService.XrmService.Associate(Relationships.adx_contentaccesslevel_.adx_WebRoleContentAccessLevel.Name, Fields.adx_contentaccesslevel_.adx_contentaccesslevelid, contentAccessLevel.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
             useRecordService.XrmService.Associate(Relationships.adx_entitypermission_.adx_entitypermission_webrole.Name, Fields.adx_entitypermission_.adx_entitypermissionid, entityPermission.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);
             useRecordService.XrmService.Associate(Relationships.adx_publishingstate_.adx_accesscontrolrule_publishingstate.Name, Fields.adx_publishingstate_.adx_publishingstateid, publishingState.Id, Fields.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolruleid, webpageAccessControlRule.Id);
             useRecordService.XrmService.Associate(Relationships.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolrule_webrole.Name, Fields.adx_webpageaccesscontrolrule_.adx_webpageaccesscontrolruleid, webpageAccessControlRule.Id, Fields.adx_webrole_.adx_webroleid, webRole.Id);

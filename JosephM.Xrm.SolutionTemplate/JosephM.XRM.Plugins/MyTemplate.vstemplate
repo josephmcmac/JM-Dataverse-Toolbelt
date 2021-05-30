@@ -52,7 +52,6 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>
       <ProjectItem ReplaceParameters="true" TargetFileName="Schema.cs">Schema.cs</ProjectItem>
-	  <ProjectItem ReplaceParameters="true" TargetFileName="app.config">app.config</ProjectItem>
 	  <ProjectItem ReplaceParameters="true" TargetFileName="packages.config">packages.config</ProjectItem>
       <Folder Name="Services" TargetFolderName="Services">
         <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$Service.cs">$ext_jmobjprefix$Service.cs</ProjectItem>
