@@ -116,9 +116,6 @@ namespace $safeprojectname$.Xrm
 
         public virtual OrganizationResponse Execute(OrganizationRequest request)
         {
-            var requestDescription = GetRequestDescription(request);
-            _controller.LogDetail("Executing crm request - " + requestDescription);
-
             OrganizationResponse result;
             try
             {
@@ -146,13 +143,16 @@ namespace $safeprojectname$.Xrm
                 {
                     //Error was being thrown after service running overnight with no activity
                     //adding logic to reconnect when this error thrown
-                    _controller.LogLiteral("Received " + ex.GetType().Name + " checking for Crm config to reconnect..");
+                    _controller.LogLiteral("Received " + ex.GetType().Name + " checking for XrmConfiguration to reconnect");
                     if (XrmConfiguration != null)
                     {
-                        _controller.LogLiteral("Crm config found attempting to reconnect..");
-                        Service = XrmConnection.GetOrgServiceProxy(XrmConfiguration);
+                        _controller.LogLiteral("XrmConfiguration found attempting to reconnect");
+                        if (_serviceFactory == null)
+                            throw new NullReferenceException("Cannot create service as factory not populated");
+                        _service = _serviceFactory.GetOrganisationService(XrmConfiguration);
+                        UIController.LogLiteral("Dynamics Connection Created");
                         result = Service.Execute(request);
-                        _controller.LogLiteral("Reconnected..");
+                        _controller.LogLiteral("Reconnected");
                     }
                     else
                     {
@@ -161,9 +161,6 @@ namespace $safeprojectname$.Xrm
                     }
                 }
             }
-
-            requestDescription = GetRequestDescription(request);
-            _controller.LogDetail("Received crm response - " + requestDescription);
 
             return result;
         }
@@ -567,51 +564,6 @@ namespace $safeprojectname$.Xrm
         public object LookupField(string entityType, Guid id, string fieldName)
         {
             return XrmEntity.GetField(Retrieve(entityType, id, new[] { fieldName }), fieldName);
-        }
-
-        private static string GetRequestDescription(OrganizationRequest request)
-        {
-            var result = request.GetType().Name;
-            if (request is CreateRequest)
-            {
-                return result + " - Type = " + ((CreateRequest)request).Target.LogicalName;
-            }
-            else if (request is UpdateRequest)
-            {
-                var tRequest = ((UpdateRequest)request);
-                return result + " Type = " + tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id;
-            }
-            else if (request is RetrieveRequest)
-            {
-                var tRequest = ((RetrieveRequest)request);
-                return result + " Type = " + tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id;
-            }
-            else if (request is RetrieveMultipleRequest)
-            {
-                var tRequest = ((RetrieveMultipleRequest)request);
-                if (tRequest.Query is QueryExpression)
-                    return result + " Type = " + ((QueryExpression)tRequest.Query).EntityName;
-            }
-            else if (request is RetrieveEntityRequest)
-            {
-                var tRequest = ((RetrieveEntityRequest)request);
-                return result + " Type = " + tRequest.LogicalName + ", Filters = " + tRequest.EntityFilters;
-            }
-            else if (request is AssociateRequest)
-            {
-                var tRequest = ((AssociateRequest)request);
-                return result + " Relationship = " + tRequest.Relationship.SchemaName + ", Type = " +
-                       tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id + ", Related = " +
-                       String.Join<Guid?>(", ", tRequest.RelatedEntities.Select(XrmEntity.GetLookupGuid));
-            }
-            else if (request is DisassociateRequest)
-            {
-                var tRequest = ((DisassociateRequest)request);
-                return result + " Relationship = " + tRequest.Relationship.SchemaName + ", Type = " +
-                       tRequest.Target.LogicalName + ", Id = " + tRequest.Target.Id + ", Related = " +
-                       String.Join<Guid?>(", ", tRequest.RelatedEntities.Select(XrmEntity.GetLookupGuid));
-            }
-            return result;
         }
 
         public void Update(Entity entity, params string[] fieldsToSubmit)

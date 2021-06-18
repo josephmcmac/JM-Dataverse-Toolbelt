@@ -15,7 +15,7 @@ namespace $safeprojectname$.Xrm
         {
             if (!xrmConfiguration.UseXrmToolingConnector)
             {
-                return XrmConnection.GetOrgServiceProxy(xrmConfiguration);
+                return XrmConnection.GetOrganisationConnection(xrmConfiguration);
             }
             else
             {
