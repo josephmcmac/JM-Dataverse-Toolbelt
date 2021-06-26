@@ -710,17 +710,20 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                             var explicitMultiline = fieldType == RecordFieldType.Memo
                                             || fieldMetadata.TextFormat == TextFormat.TextArea
                                             || (selectedFieldName == "configuration" && selectedFieldRecordType == "sdkmessageprocessingstep");
+                                            var explicitMultiselect = fieldMetadata.IsMultiSelect;
                                             var explicitPicklistOptions = fieldType == RecordFieldType.Picklist
                                                                         || fieldType == RecordFieldType.Status
                                                                         || fieldType == RecordFieldType.State
                                                                         || fieldType == RecordFieldType.Integer
                                                                         || fieldType == RecordFieldType.RecordType
                                                                         || fieldType == RecordFieldType.Boolean
+                                                                        || explicitMultiselect
                                                 ? lookupService.GetPicklistKeyValues(selectedFieldName, selectedFieldRecordType)
                                                 : null;
+
                                             if (clearValue)
                                                 fieldViewModel.ValueObject = null;
-                                            var newFieldViewModel = formFieldMetadata.CreateFieldViewModel(re.GetRecordType(), re.RecordService, re, re.ApplicationController, explicitFieldType: fieldType, explicitLookupTargetType: explicitTargetType, explicitPicklistOptions: explicitPicklistOptions, explicitMultiline: explicitMultiline);
+                                            var newFieldViewModel = formFieldMetadata.CreateFieldViewModel(re.GetRecordType(), re.RecordService, re, re.ApplicationController, explicitFieldType: fieldType, explicitLookupTargetType: explicitTargetType, explicitPicklistOptions: explicitPicklistOptions, explicitMultiline: explicitMultiline, explicitMultiselect: explicitMultiselect);
                                             var section = re.FieldSections.First(s => s.SectionLabel == sectionName);
                                             var index = section.Fields.Count;
                                             for (var i = 0; i < section.Fields.Count; i++)

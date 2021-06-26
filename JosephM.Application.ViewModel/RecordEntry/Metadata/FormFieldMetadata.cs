@@ -41,7 +41,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         public bool DoNotLimitDisplayHeight { get; set; }
 
         public FieldViewModelBase CreateFieldViewModel(string recordType, IRecordService recordService,
-            RecordEntryViewModelBase recordForm, IApplicationController applicationController, RecordFieldType? explicitFieldType = null, string explicitLookupTargetType = null, IEnumerable<PicklistOption> explicitPicklistOptions = null, bool explicitMultiline = false)
+            RecordEntryViewModelBase recordForm, IApplicationController applicationController, RecordFieldType? explicitFieldType = null, string explicitLookupTargetType = null, IEnumerable<PicklistOption> explicitPicklistOptions = null, bool explicitMultiline = false, bool explicitMultiselect = false)
         {
             var field = FieldName;
             recordType = AltRecordType ?? recordType;
@@ -119,13 +119,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     case RecordFieldType.State:
                         {
                             var fieldMetadata = recordService.GetFieldMetadata(field, recordType);
-                            if (fieldMetadata.IsMultiSelect)
+                            if (explicitMultiselect || fieldMetadata.IsMultiSelect)
                             {
                                 fieldVm = new PicklistMultiSelectFieldViewModel(field, label, recordForm)
                                 {
                                     IsRecordServiceField = isRecordServiceField
                                 };
-                                ((PicklistMultiSelectFieldViewModel)fieldVm).SetItemsSource(recordService.GetPicklistKeyValues(field, recordType));
+                                ((PicklistMultiSelectFieldViewModel)fieldVm).SetItemsSource(explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType));
                             }
                             else
                             {
