@@ -40,7 +40,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         return new GetGridRecordsResponse(new IRecord[0]);
                     var searchToLower = SearchText?.ToLower();
                     typeAheadOptions.Options = autoCompleteStrings
-                        .Where(ta => searchToLower == null || AutocompleteFunction.SearchFields.Any(sf => ta.GetPropertyValue(sf)?.ToString().ToLower().StartsWith(searchToLower) ?? false))
+                        .Where(ta => searchToLower == null || AutocompleteFunction.SearchFields.Any(sf => ta.GetPropertyValue(sf)?.ToString().ToLower().Contains(searchToLower) ?? false))
                         .OrderBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.SortField))
                         .ThenBy(ta => (string)ta.GetPropertyValue(AutocompleteFunction.ValueField));
 

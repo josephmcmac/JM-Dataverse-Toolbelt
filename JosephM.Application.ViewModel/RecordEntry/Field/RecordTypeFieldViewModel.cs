@@ -79,7 +79,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 return new AutocompleteOption[0];
             }
             return ItemsSource
-                .Where(kv => (kv.Key?.Contains(SearchText ?? string.Empty) ?? false) || (kv.Value?.Contains(SearchText ?? string.Empty) ?? false))
                 .Select(kv => new RecordTypeAutocomplete(kv.Key, kv.Value))
                 .ToArray();
         }
