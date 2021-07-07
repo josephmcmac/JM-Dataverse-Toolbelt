@@ -1329,35 +1329,43 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         public bool DecimalInRange(string field, string entity, decimal value)
         {
+            var min = GetMinDecimalValue(field, entity);
+            var max = GetMaxDecimalValue(field, entity);
             return
-                value >= GetMinDecimalValue(field, entity)
-                && value <= GetMaxDecimalValue(field, entity);
+                (!min.HasValue || value >= min)
+                && (!max.HasValue || value <= max);
         }
 
         public bool MoneyInRange(string field, string entity, Money value)
         {
             if (value != null)
             {
+                var min = GetMinMoneyValue(field, entity);
+                var max = GetMaxMoneyValue(field, entity);
                 var amount = XrmEntity.GetMoneyValue(value);
                 return
-                    (double)amount >= GetMinMoneyValue(field, entity)
-                    && (double)amount <= GetMaxMoneyValue(field, entity);
+                    (!min.HasValue || (double)amount >= min.Value)
+                    && (!max.HasValue || (double)amount <= max.Value);
             }
             return true;
         }
 
         public bool IntInRange(string field, string entity, int value)
         {
+            var min = GetMinIntValue(field, entity);
+            var max = GetMaxIntValue(field, entity);
             return
-                value >= GetMinIntValue(field, entity)
-                && value <= GetMaxIntValue(field, entity);
+                (!min.HasValue || value >= min)
+                && (!max.HasValue || value <= max);
         }
 
         public bool DoubleInRange(string field, string entity, double value)
         {
+            var min = GetMinDoubleValue(field, entity);
+            var max = GetMaxDoubleValue(field, entity);
             return
-                value >= GetMinDoubleValue(field, entity)
-                && value <= GetMaxDoubleValue(field, entity);
+                (!min.HasValue || value >= min)
+                && (!max.HasValue || value <= max);
         }
 
         private object CreateOptionSetValue(int value)
