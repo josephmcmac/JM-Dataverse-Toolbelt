@@ -653,9 +653,13 @@ namespace JosephM.Deployment.DataImport
                                         {
                                             matchRecords = ((RetrieveMultipleResponse)thisOnesExecuteMultipleResponse.Response).EntityCollection.Entities;
                                             if (matchRecords.Any(e => e.Id == referencedId))
+                                            {
                                                 matchRecords = matchRecords.Where(e => e.Id == referencedId).ToArray();
+                                            }
                                             else
+                                            {
                                                 dataImportContainer.FilterForNameMatch(matchRecords).ToArray();
+                                            }
                                         }
                                     }
                                     //else the cache will be used
@@ -685,7 +689,15 @@ namespace JosephM.Deployment.DataImport
                                         }
                                         else
                                         {
-                                            throw new Exception($"Could Not Find Matching Target Record For The Field {lookupField} Named '{referencedValue}'. This Field Is Configured As Required To Match In The Target Instance When Populated");
+                                            var activeMatches = matchRecords.Where(m => m.GetOptionSetValue("statecode") == 0);
+                                            if (activeMatches.Count() == 1)
+                                            {
+                                                matchRecords = activeMatches.ToArray();
+                                            }
+                                            else
+                                            {
+                                                throw new Exception($"Multiple matches for  field {lookupField} named '{referencedValue}'. This field has not been set");
+                                            }
                                         }
                                     }
                                     if (matchRecords.Count() == 1)
@@ -698,6 +710,7 @@ namespace JosephM.Deployment.DataImport
                                 }
                                 catch (Exception ex)
                                 {
+                                    thisEntity.Attributes.Remove(lookupField);
                                     dataImportContainer.LogEntityError(thisEntity, ex);
                                     recordsNotYetResolved.Remove(thisEntity);
                                 }
