@@ -248,7 +248,9 @@ namespace JosephM.CodeGenerator.CSharp
                                                         {
                                                             //don't add a=target of global action type
                                                             if (!noTarget || argumentName != "Target")
+                                                            {
                                                                 inArguments.Add(argumentName);
+                                                            }
                                                         }
                                                         if (direction == "Output")
                                                         {
@@ -269,9 +271,9 @@ namespace JosephM.CodeGenerator.CSharp
                         {
                             stringBuilder.AppendLine("\t\t\tpublic static class In");
                             stringBuilder.AppendLine("\t\t\t{");
-                            foreach (var item in inArguments)
+                            foreach (var item in inArguments.Distinct())
                             {
-                                stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string {0} = \"{0}\";", item));
+                                stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string {0} = \"{0}\";", CreateCodeLabel(item), item));
                             }
                             stringBuilder.AppendLine("\t\t\t}");
                         }
@@ -279,9 +281,9 @@ namespace JosephM.CodeGenerator.CSharp
                         {
                             stringBuilder.AppendLine("\t\t\tpublic static class Out");
                             stringBuilder.AppendLine("\t\t\t{");
-                            foreach (var item in outArguments)
+                            foreach (var item in outArguments.Distinct())
                             {
-                                stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string {0} = \"{0}\";", item));
+                                stringBuilder.AppendLine(string.Format("\t\t\t\tpublic const string {0} = \"{0}\";", CreateCodeLabel(item), item));
                             }
                             stringBuilder.AppendLine("\t\t\t}");
 
