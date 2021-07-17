@@ -14,45 +14,60 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
     Constants
     ********************************/
     this.FormMode =
-        {
-            Create: 1,
-            Update: 2,
-            ReadOnly: 3,
-            Disabled: 4,
-            BulkEdit: 6,
-            QuickCreate: 5
-        };
+    {
+        Create: 1,
+        Update: 2,
+        ReadOnly: 3,
+        Disabled: 4,
+        BulkEdit: 6,
+        QuickCreate: 5
+    };
     this.SaveMode =
-        {
-            AutoSave: 70
-        };
+    {
+        AutoSave: 70
+    };
     this.NotificationLevel =
-        {
-            WARNING: "WARNING",
-            ERROR: "ERROR"
-        };
+    {
+        WARNING: "WARNING",
+        ERROR: "ERROR"
+    };
     this.FieldRequirementLevel =
-        {
-            Required: 'required',
-            None: 'none',
-            Recommended: 'recommended'
-        };
+    {
+        Required: 'required',
+        None: 'none',
+        Recommended: 'recommended'
+    };
     /********************************
     General form IO and behaviour
     ********************************/
+    this.GetOrgUrl = function () {
+        var globalContext = Xrm.Utility.getGlobalContext();
+        return globalContext.getClientUrl();
+    };
     this.GetRecordId = function () {
         return getFormContext().data.entity.getId();
     };
     this.GetRecordType = function () {
         return getFormContext().data.entity.getEntityName();
     };
-    this.OpenEntityForm = function (entityType, id) {
-        Xrm.Utility.openEntityForm(entityType, id);
+    this.OpenEntityForm = function (entityType, id, parameters) {
+        Xrm.Navigation.openForm({
+            entityName: entityType,
+            entityId: id
+        }, parameters);
+    };
+    this.OpenEntityList = function (entityType) {
+        Xrm.Navigation.navigateTo({
+            pageType: "entitylist",
+            entityName: entityType
+        });
     };
     /// <summary> Disables all the fields in a tab </summary>
     this.DisableTab = function (tabName) {
         var tab = getFormContext().ui.tabs.get(tabName);
-        tab.sections.forEach(function (section, index) { that.DisableSection(section); });
+        if (tab != null) {
+            tab.sections.forEach(function (section, index) { that.DisableSection(section); });
+        }
     };
     this.SaveRecord = function (onSuccess, onError) {
         if (onSuccess == null)
@@ -78,11 +93,12 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
         var allOptions = getFormContext().getAttribute(fieldName).getOptions();
         var control = getFormContext().getControl(fieldName);
         control.clearOptions();
-        var optionOrder = 0;
+        var optionOrder = 1;
         for (var i = 0; i < allOptions.length; i++) {
             var intValue = parseInt(allOptions[i].value);
             if (that.ArrayContains(options, intValue) || that.GetFieldValue(fieldName) == intValue) {
                 control.addOption(allOptions[i], optionOrder++);
+
             }
         }
     };
@@ -141,28 +157,30 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
     /// <summary>disables a field and if it has changed tells the form to still submit it on save</summary>
     this.SetFieldDisabled = function (fieldName, isDisabled, ignoreReadOnly) {
         var attribute = getFormContext().getAttribute(fieldName);
-        if (isDisabled == null)
-            isDisabled = true;
-        var isDirty = attribute.getIsDirty();
-        //only change the editability of fields if the user has permissions on it
-        if ((that.GetFormType() == that.FormMode.Create && attribute.getUserPrivilege().canCreate)
-            || (that.GetFormType() == that.FormMode.Update && attribute.getUserPrivilege().canUpdate)
-            || (ignoreReadOnly == true && that.GetFormType() == that.FormMode.ReadOnly && attribute.getUserPrivilege().canUpdate)) {
-            {
-                var fieldControl = getFormContext().getControl(fieldName);
-                if (fieldControl != null)
-                    fieldControl.setDisabled(isDisabled);
-                try {
-                    var headerField = getFormContext().getControl("header_process_" + fieldName);
-                    if (headerField != null)
-                        headerField.setDisabled(isDisabled);
-                } catch (e) {
+        if (attribute != null) {
+            if (isDisabled == null)
+                isDisabled = true;
+            var isDirty = attribute.getIsDirty();
+            //only change the editability of fields if the user has permissions on it
+            if ((that.GetFormType() == that.FormMode.Create && attribute.getUserPrivilege().canCreate)
+                || (that.GetFormType() == that.FormMode.Update && attribute.getUserPrivilege().canUpdate)
+                || (ignoreReadOnly == true && that.GetFormType() == that.FormMode.ReadOnly && attribute.getUserPrivilege().canUpdate)) {
+                {
+                    var fieldControl = getFormContext().getControl(fieldName);
+                    if (fieldControl != null)
+                        fieldControl.setDisabled(isDisabled);
+                    try {
+                        var headerField = getFormContext().getControl("header_process_" + fieldName);
+                        if (headerField != null)
+                            headerField.setDisabled(isDisabled);
+                    } catch (e) {
 
+                    }
                 }
             }
+            if (isDirty)
+                that.ForceSubmitField(fieldName);
         }
-        if (isDirty)
-            that.ForceSubmitField(fieldName);
     };
     /// <summary>returns if the user has read access for field</summary>
     this.CanReadField = function (fieldName) {
@@ -170,25 +188,37 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
     };
     /// <summary>returns if the field is currently set as mandatory</summary>
     this.GetFieldIsMandatory = function (fieldName, isMandatory) {
+        if (isDisabled == null)
+            isDisabled = true;
         return getFormContext().getAttribute(fieldName).getRequiredLevel() == 'required';
     };
     /// <summary>sets a field as mandatory (true) or no requirement level (false)</summary>
     this.SetFieldMandatory = function (fieldName, isMandatory) {
+        if (isMandatory == null)
+            isMandatory = true;
         if (isMandatory) {
             that.SetFieldVisibility(fieldName, true);
-            getFormContext().getAttribute(fieldName).setRequiredLevel('required');
-        } else
-            getFormContext().getAttribute(fieldName).setRequiredLevel('none');
+            that.SetFieldRequiredLevel(fieldName, 'required');
+        } else {
+            that.SetFieldRequiredLevel(fieldName, 'none');
+        }
     };
     /// <summary>sets a fields requirement level and if not none makes the field visible - can input a this.FieldRequirementLevel</summary>
     this.SetFieldRequiredLevel = function (fieldName, level) {
         if (level == that.FieldRequirementLevel.Required || level == that.FieldRequirementLevel.Recommended)
             that.SetFieldVisibility(fieldName, true);
-        getFormContext().getAttribute(fieldName).setRequiredLevel(level);
+        var attribute = getFormContext().getAttribute(fieldName);
+        if (attribute != null) {
+            attribute.setRequiredLevel(level);
+        }
     };
     /// <summary>returns the data value of a field</summary>
     this.GetFieldValue = function (fieldName) {
-        return getFormContext().getAttribute(fieldName).getValue();
+        var attribute = getFormContext().getAttribute(fieldName);
+        if (attribute != null) {
+            return attribute.getValue();
+        }
+        return null;
     };
     /// <summary>sets the data value of a field and if changing calls the fields RunOnChange method</summary>
     this.SetFieldValue = function (fieldName, value, dontSubmit, dontOnChange) {
@@ -242,16 +272,24 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
     /// <summary>returns the selected id value of the lookup field if it has a value else null</summary>
     this.GetLookupId = function (fieldName) {
         var result = null;
-        var lookupArray = getFormContext().getAttribute(fieldName).getValue();
-        if (lookupArray != null && lookupArray.length > 0)
-            result = lookupArray[0].id;
+        var attribute = getFormContext().getAttribute(fieldName);
+        if (attribute != null) {
+            var lookupArray = attribute.getValue();
+            if (lookupArray != null && lookupArray.length > 0) {
+                result = lookupArray[0].id;
+            }
+        }
         return result;
     };
     this.GetLookupType = function (fieldName) {
         var result = null;
-        var lookupArray = getFormContext().getAttribute(fieldName).getValue();
-        if (lookupArray != null && lookupArray.length > 0)
-            result = lookupArray[0].entityType;
+        var attribute = getFormContext().getAttribute(fieldName);
+        if (attribute != null) {
+            var lookupArray = attribute.getValue();
+            if (lookupArray != null && lookupArray.length > 0) {
+                result = lookupArray[0].entityType;
+            }
+        }
         return result;
     };
     /// <summary>if not currently selected removes the option for the specified value from the option set fields avilable values</summary>
@@ -264,10 +302,6 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
     /// <summary>sets a field to either visible or hidde</summary>
     this.SetFieldVisibility = function (fieldName, isVisible) {
         that.DoForControls(fieldName, function (c) { c.setVisible(isVisible) });
-        var control = getFormContext().getControl(fieldName);
-    };
-    this.AddCustomFilter = function (fieldName, filter) {
-        that.DoForControls(fieldName, function (control) { control.addPreSearch(filter); });
     };
     /// <summary>sets a section to either visible or hidden</summary>
     this.DoForControls = function (fieldName, controlFunction) {
@@ -289,7 +323,7 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
     };
     /// <summary>sets a section to either visible or hidden</summary>
     this.SetTabVisibility = function (tabName, isVisible) {
-        var tab = getFormContext.tabs.get(tabName);
+        var tab = getFormContext().ui.tabs.get(tabName);
         if (tab != null)
             tab.setVisible(isVisible);
     };
@@ -298,7 +332,10 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
         var visibilityFunction = function () {
             getFormContext().ui.tabs.get(dependantTab).setVisible(getFormContext().ui.tabs.get(tabName).getDisplayState() == 'expanded' && (additionalVisibilityFunction == null || additionalVisibilityFunction()));
         };
-        getFormContext().ui.tabs.get(tabName).add_tabStateChange(visibilityFunction);
+        var tab = getFormContext().ui.tabs.get(tabName);
+        if (tab != null) {
+            tab.addTabStateChange(visibilityFunction);
+        }
     };
     /// <summary>returns the selected name value of the lookup field if it has a value else null</summary>
     this.GetLookupName = function (fieldName) {
@@ -317,9 +354,39 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
         return getFormContext().getAttribute(fieldName).getAttributeType();
     };
     /// <summary>pops up an alert message</summary>
-    this.PopupMessage = function (message) {
-        var alertStrings = { text: message };
-        Xrm.Navigation.openAlertDialog(alertStrings);
+    this.PopupMessage = function (message, onClose) {
+        if (onClose == null) {
+            onClose = function () { };
+        }
+        var heightGuesstimate = 200;
+        var addLines = (message.length / 50) + 1;
+        if (addLines > 10)
+            addLines = 10;
+        heightGuesstimate = heightGuesstimate + (addLines * 25);
+
+        Xrm.Navigation.openAlertDialog({ text: message }, { width: 400, height: heightGuesstimate }).then(onClose);
+    };
+    /// <summary>pops up an alert message</summary>
+    this.ConfirmMessage = function (message, onConfirmed, notConfirmed) {
+        if (onConfirmed == null) {
+            onConfirmed = function () { };
+        }
+        if (notConfirmed == null) {
+            notConfirmed = function () { };
+        }
+        var heightGuesstimate = 200;
+        var addLines = (message.length / 50) + 1;
+        if (addLines > 10)
+            addLines = 10;
+        heightGuesstimate = heightGuesstimate + (addLines * 25);
+
+        Xrm.Navigation.openConfirmDialog({ text: message }, { width: 400, height: heightGuesstimate }).then(
+            function (success) {
+                if (success.confirmed)
+                    onConfirmed();
+                else
+                    notConfirmed();
+            }, notConfirmed);
     };
 
     this.GetFieldLabel = function (field) {
@@ -419,8 +486,8 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
     this.AddOnSave = function (functionOnSave) {
         getFormContext().data.entity.addOnSave(functionOnSave);
     };
-    this.AddNotification = function (message, notificatioLevel, id) {
-        getFormContext().ui.setFormNotification(message, notificatioLevel, id);
+    this.AddNotification = function (message, notificationLevel, id) {
+        getFormContext().ui.setFormNotification(message, notificationLevel, id);
     };
     this.RemoveNotification = function (id) {
         getFormContext().ui.clearFormNotification(id);
@@ -573,5 +640,68 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
 
     this.SetLookupEntityTypes = function (fieldName, entityTypes) {
         that.DoForControls(fieldName, function (c) { c.setEntityTypes(entityTypes); });
+    };
+
+    this.RefreshRibbon = function () {
+        getFormContext().ui.refreshRibbon();
+    };
+
+    this.SetControlVisibility = function (controlName, isVisible) {
+        var control = getFormContext().getControl(controlName);
+        if (control != null)
+            control.setVisible(isVisible);
+    };
+
+    this.SetControlSource = function (controlName, src) {
+        var control = getFormContext().getControl(controlName);
+        if (control != null)
+            control.setSrc(src);
+    };
+
+    this.SetSectionLabel = function (sectionName, label) {
+        getFormContext().ui.tabs.forEach(function (tab, index) {
+            tab.sections.forEach(function (section, index) {
+                if (section.getName() == sectionName) section.setLabel(label);
+            });
+        });
+    };
+
+    this.AddLookupFilter = function (fieldName, targetType, fetchFilter) {
+        that.DoForControls(fieldName, function (c) {
+            c.addPreSearch(function () {
+                if ((typeof fetchFilter) == "string") {
+                    c.addCustomFilter(fetchFilter, targetType);
+                }
+                else {
+                    c.addCustomFilter(fetchFilter(), targetType);
+                }
+            });
+        });
+    };
+
+    this.GetFormParameter = function (parameterName) {
+        var attribute = getFormContext().data.attributes.get(parameterName);
+        if (attribute != null) {
+            return attribute.getValue();
+        }
+    };
+
+    this.AddTabStateChange = function (tabName, onChangeFunction) {
+        var tab = getFormContext().ui.tabs.get(tabName);
+        if (tab != null) {
+            tab.addTabStateChange(tabName);
+        }
+    };
+
+    this.UserHasRole = function (roleId) {
+        var hasRole = false;
+        var securityRoles = Xrm.Utility.getGlobalContext().userSettings.securityRoles;
+        for (var i in securityRoles) {
+            var thisRoleId = securityRoles[i];
+            if (that.GuidsEqual(roleId, thisRoleId)) {
+                hasRole = true;
+            }
+        }
+        return hasRole;
     };
 };
