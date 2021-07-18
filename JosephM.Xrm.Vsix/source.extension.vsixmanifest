@@ -8,7 +8,7 @@
         <License>JosephM.Xrm.Vsix EULA.rtf</License>
     </Metadata>
     <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,17.0]" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,16.100]" />
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
