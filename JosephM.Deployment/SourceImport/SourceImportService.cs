@@ -106,19 +106,40 @@ namespace JosephM.Deployment.SpreadsheetImport
                 .GetManyToManyRelationships()
                 .Select(m => m.IntersectEntityName)
                 .ToArray();
+            var targetType = mapping.TargetType;
+            var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
 
+            var areMappingErrors = false;
+            if (!isNnRelation && !XrmRecordService.RecordTypeExists(targetType))
+            {
+                response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(null, targetType, null, null, null, "Record Type Does Not Exist", null));
+                areMappingErrors = true;
+            }
+            if (!areMappingErrors && !isNnRelation)
+            {
+                foreach (var fieldMapping in mapping.FieldMappings)
+                {
+                    var targetField = fieldMapping.TargetField;
+                    if (!XrmRecordService.FieldExists(targetField, targetType))
+                    {
+                        response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError(null, targetType, targetField, null, null, "Field Does Not Exist", null));
+                        areMappingErrors = true;
+                    }
+                }
+            }
+            if(areMappingErrors)
+            {
+                return result;
+            }
             var rowNumber = 0;
             var rowCount = queryRows.Count();
             foreach (var row in queryRows)
             {           
                 rowNumber++;
-                var targetType = mapping.TargetType;
                 logController.LogLiteral($"Mapping {targetType} Data Into Records {rowNumber}/{rowCount}");
                 try
                 {
                     var rowAsXrmRecord = row as XrmRecord;
-
-                    var isNnRelation = nNRelationshipEntityNames.Contains(targetType);
 
                     var hasFieldValue = false;
                     var fieldValues = new ConcurrentDictionary<string, object>();
@@ -157,7 +178,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                             else if (XrmRecordService.XrmService.IsLookup(targetField, targetType))
                             {
                                 //for lookups am going to set to a empty guid and allow the import part to replace with a correct guid
-                                if(objectValue is Lookup lk)
+                                if (objectValue is Lookup lk)
                                 {
                                     fieldValues[targetField] = new EntityReference(XrmRecordService.XrmService.GetLookupTargetEntity(targetField, targetType),
                                                 new Guid(lk.Id))
@@ -244,7 +265,7 @@ namespace JosephM.Deployment.SpreadsheetImport
                 }
                 catch (Exception ex)
                 {
-                    response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError("Mapping Error", ex));
+                    response.AddResponseItem(new ParseIntoEntitiesResponse.ParseIntoEntitiesError("Unknown Mapping Error", ex));
                 }
             }
             return result;
