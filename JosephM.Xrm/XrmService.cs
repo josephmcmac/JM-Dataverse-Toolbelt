@@ -640,7 +640,18 @@ namespace JosephM.Xrm
 
         private static string GetOptionLabel(OptionMetadata option)
         {
-            return option.Label.LocalizedLabels[0].Label;
+            if (option.Label != null && option.Label.UserLocalizedLabel != null && option.Label.UserLocalizedLabel.Label != null)
+            {
+                return option.Label.UserLocalizedLabel.Label;
+            }
+            else if (option.Label != null && option.Label.LocalizedLabels != null && option.Label.LocalizedLabels.Any())
+            {
+                return option.Label.LocalizedLabels[0].Label;
+            }
+            else
+            {
+                return option.Value.ToString();
+            }
         }
 
         public string GetRelationshipEntityName(string relationshipName)
