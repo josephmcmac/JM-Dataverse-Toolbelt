@@ -8,11 +8,15 @@ namespace JosephM.Wpf.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = (double) 100;
+            double result = 100;
             if (parameter == null)
+            {
                 parameter = "1";
-            if (value is double && parameter != null)
-                result = (double) value*double.Parse(parameter.ToString());
+            }
+            if (value is double d && parameter != null)
+            {
+                result = d * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture);
+            }
             return result;
         }
 
