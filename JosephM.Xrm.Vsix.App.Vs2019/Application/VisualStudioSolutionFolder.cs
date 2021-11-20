@@ -33,7 +33,7 @@ namespace JosephM.Xrm.Vsix.Application
                 var results = new List<VisualStudioSolutionFolder>();
                 foreach (ProjectItem item in Project?.ProjectItems)
                 {
-                    if(item.SubProject != null)
+                    if (item.SubProject != null)
                         results.Add(new VisualStudioSolutionFolder(item.SubProject));
                 }
                 return results;

@@ -27,8 +27,8 @@ namespace JosephM.Xrm.Vsix.Wizards
 
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
-            var directory = replacementsDictionary.ContainsKey("$solutiondirectory$")
-                ? replacementsDictionary["$solutiondirectory$"]
+            var directory = replacementsDictionary.ContainsKey(@"C:\Users\josep\source\Repos\XRM-Developer-Tool\")
+                ? replacementsDictionary[@"C:\Users\josep\source\Repos\XRM-Developer-Tool\"]
                 : null;
 
             DTE = automationObject as DTE2;
@@ -59,7 +59,7 @@ namespace JosephM.Xrm.Vsix.Wizards
 
         public virtual void RunStartedExtention(Dictionary<string, string> replacementsDictionary)
         {
-            
+
         }
 
         public virtual void RunFinishedExtention()

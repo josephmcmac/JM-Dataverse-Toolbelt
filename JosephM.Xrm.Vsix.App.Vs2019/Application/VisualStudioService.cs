@@ -33,7 +33,7 @@ namespace JosephM.Xrm.Vsix.Application
         {
             get
             {
-                if(!string.IsNullOrWhiteSpace(OverrideSolutionDirectory))
+                if (!string.IsNullOrWhiteSpace(OverrideSolutionDirectory))
                     return OverrideSolutionDirectory;
                 var fileInfo = new FileInfo(Solution.FullName);
                 return fileInfo.DirectoryName;
@@ -255,7 +255,7 @@ namespace JosephM.Xrm.Vsix.Application
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 //unloaded projects throw error when getting the FileName
                 //only used for autocomplete so lets just suppress

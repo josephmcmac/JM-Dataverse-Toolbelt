@@ -27,9 +27,9 @@ namespace JosephM.Xrm.Vsix.Application
         public void AddItem(string fileName, string fileContent, params string[] folderPath)
         {
             var projectItems = Project.ProjectItems;
-            if(folderPath != null)
+            if (folderPath != null)
             {
-                foreach(var path in folderPath)
+                foreach (var path in folderPath)
                 {
                     ProjectItem thisPartProjectItem = null;
                     foreach (ProjectItem item in projectItems)

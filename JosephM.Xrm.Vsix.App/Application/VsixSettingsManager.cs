@@ -1,12 +1,12 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Application;
 using JosephM.Core.Extentions;
 using JosephM.Core.Serialisation;
-using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Collections.Generic;
-using JosephM.Application.Desktop.Application;
 using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Application
@@ -31,9 +31,9 @@ namespace JosephM.Xrm.Vsix.Application
                 string readFileContents = null;
 
                 var fileName = savedFileSetting.FileName;
-                if(savedFileSetting.UsePersonalisedFile)
+                if (savedFileSetting.UsePersonalisedFile)
                     readFileContents = VisualStudioService.GetVsixSettingText(savedFileSetting.PersonalisedFileName);
-                if(readFileContents == null)
+                if (readFileContents == null)
                     readFileContents = VisualStudioService.GetVsixSettingText(fileName);
 
                 if (string.IsNullOrEmpty(readFileContents))
@@ -101,7 +101,7 @@ namespace JosephM.Xrm.Vsix.Application
         {
             get
             {
-                return new []
+                return new[]
                 {
                     new SaveSolutionFileSetting(typeof(XrmPackageSettings), "xrmpackage.xrmsettings", true),
                     new SaveSolutionFileSetting(typeof(XrmRecordConfiguration), "solution.xrmconnection", true)

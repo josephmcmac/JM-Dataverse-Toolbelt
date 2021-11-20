@@ -1,6 +1,5 @@
 ﻿using JosephM.Application.Application;
-using JosephM.Xrm.Vsix.Application;
-using Microsoft.VisualStudio.Shell;
+using JosephM.Xrm.Vsix.App.Application;
 using System;
 
 namespace JosephM.Xrm.Vsix.Module
@@ -10,14 +9,14 @@ namespace JosephM.Xrm.Vsix.Module
     {
         public abstract bool IsVisible(IApplicationController applicationController);
 
-        public void Process(IApplicationController applicationController, OleMenuCommand menuCommand)
+        public void Process(IApplicationController applicationController, IMenuCommand menuCommand)
         {
             SetHidden(menuCommand);
             if (IsVisible(applicationController))
                 SetVisible(menuCommand);
         }
 
-        private void SetVisible(OleMenuCommand menuCommand)
+        private void SetVisible(IMenuCommand menuCommand)
         {
             if (menuCommand != null)
             {
@@ -26,7 +25,7 @@ namespace JosephM.Xrm.Vsix.Module
             }
         }
 
-        private void SetHidden(OleMenuCommand menuCommand)
+        private void SetHidden(IMenuCommand menuCommand)
         {
             if (menuCommand != null)
             {

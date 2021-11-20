@@ -2,11 +2,14 @@
 using JosephM.Application;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
-using JosephM.XrmModule.Crud;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Vsix.App;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.Crud;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,10 +18,6 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Windows;
 using VSLangProj;
-using JosephM.Xrm.Vsix.App;
-using JosephM.Core.AppConfig;
-using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.Xrm;
 
 namespace JosephM.Xrm.Vsix.Wizards
 {
@@ -92,7 +91,7 @@ namespace JosephM.Xrm.Vsix.Wizards
 
             var serviceFactory = applicationController.ResolveType<IOrganizationConnectionFactory>();
             var recordService = new XrmRecordService(new XrmRecordConfiguration(), serviceFactory, formService: new XrmFormService());
-            var settingsDialog = new XrmPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, recordService, saveButtonLabel: "Next");
+            var settingsDialog = new SolutionWizardPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, recordService, saveButtonLabel: "Next");
             settingsDialog.SaveSettings = false;
             var uriQuery = new UriQuery();
             uriQuery.Add("Modal", true.ToString());
@@ -227,7 +226,7 @@ namespace JosephM.Xrm.Vsix.Wizards
         {
             if (Directory.Exists(directory))
             {
-                foreach(var subDirectory in Directory.GetDirectories(directory))
+                foreach (var subDirectory in Directory.GetDirectories(directory))
                 {
                     RemoveEmptyFolders(subDirectory);
                 }

@@ -1,18 +1,18 @@
 ﻿using JosephM.Application;
 using JosephM.Application.Application;
 using JosephM.Application.ViewModel.Dialog;
+using JosephM.Application.ViewModel.TabArea;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
 using JosephM.Core.Serialisation;
 using JosephM.ObjectMapping;
-using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.Wpf.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
-using JosephM.Application.ViewModel.TabArea;
 
 namespace JosephM.Xrm.Vsix.Application
 {
@@ -82,7 +82,7 @@ namespace JosephM.Xrm.Vsix.Application
         }
 
         public static void LoadDialogIntoWindow(TabAreaViewModelBase viewModel, bool showCompletionScreen = true, bool isModal = false)
-        { 
+        {
             var window = new WindowShellWindow
             {
                 Title = viewModel.TabLabel
@@ -165,7 +165,7 @@ namespace JosephM.Xrm.Vsix.Application
             throw new NotImplementedException();
         }
 
-        public override bool AllowSaveRequests {  get { return false; } }
+        public override bool AllowSaveRequests { get { return false; } }
 
         public override bool IsTabbedApplication { get { return false; } }
 

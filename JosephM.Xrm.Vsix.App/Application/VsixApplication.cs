@@ -5,13 +5,12 @@ using JosephM.Application.ViewModel.ApplicationOptions;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.Vsix.App.Application;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.XrmModule.SavedXrmConnections;
-using Microsoft.VisualStudio.Shell;
 using System;
-using System.ComponentModel.Design;
 using System.Reflection;
 
 namespace JosephM.Xrm.Vsix
@@ -44,11 +43,7 @@ namespace JosephM.Xrm.Vsix
 
             if (!IsNonSolutionExplorerContext)
             {
-                var commandService = Controller.ResolveType(typeof(IMenuCommandService)) as IMenuCommandService;
-                if (commandService == null)
-                    throw new NullReferenceException("commandService");
-
-                var menuCommandId = new CommandID(CommandSetId, commandId);
+                var xrmCommandService = Controller.ResolveType(typeof(IXrmMenuCommandService)) as IXrmMenuCommandService;
 
                 EventHandler menuItemCallback = (sender, e) =>
                 {
@@ -63,14 +58,13 @@ namespace JosephM.Xrm.Vsix
                     }
                 };
 
-                var menuItem = new OleMenuCommand(menuItemCallback, menuCommandId);
-                commandService.AddCommand(menuItem);
+                var menuItem = xrmCommandService.AddMenuCommand(CommandSetId, commandId, menuItemCallback);
 
                 var menuItemVisibleAttribute = typeof(T).GetCustomAttribute<MenuItemVisible>();
                 if (menuItemVisibleAttribute != null)
                 {
                     EventHandler clickHandler = (o, e) => menuItemVisibleAttribute.Process(Controller, menuItem);
-                    menuItem.BeforeQueryStatus += clickHandler;
+                    menuItem.AddBeforeQueryStatusHandler(clickHandler);
                 }
             }
         }

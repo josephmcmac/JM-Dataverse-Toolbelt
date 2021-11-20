@@ -45,7 +45,7 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         /// <summary>
         /// this one internal so the navigation resolver doesnt use it
         /// </summary>
-        internal XrmPackageSettingsDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, string saveButtonLabel)
+        protected XrmPackageSettingsDialog(IDialogController dialogController, XrmPackageSettings objectToEnter, IVisualStudioService visualStudioService, XrmRecordService xrmRecordService, string saveButtonLabel)
             : base(dialogController, xrmRecordService, objectToEnter, saveButtonLabel: saveButtonLabel)
         {
             XrmRecordService = xrmRecordService;

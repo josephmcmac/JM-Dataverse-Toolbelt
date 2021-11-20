@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{98D77F01-114B-4130-8C7C-2FF58425C34B}</ProjectGuid>
+    <ProjectGuid>{42FB3238-63DE-41B8-9752-86D60728E401}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JosephM.Xrm.Vsix.App</RootNamespace>
-    <AssemblyName>JosephM.Xrm.Vsix.App</AssemblyName>
+    <RootNamespace>JosephM.Xrm.Vsix.App.Vs2019</RootNamespace>
+    <AssemblyName>JosephM.Xrm.Vsix.App.Vs2019</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -39,6 +39,25 @@
     <AssemblyOriginatorKeyFile>JosephM.XRM.VSIX.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte100, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.TemplateWizardInterface.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -66,105 +85,19 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\IMenuCommand.cs" />
-    <Compile Include="Application\IProjectItem.cs" />
-    <Compile Include="Application\ISolutionFolder.cs" />
-    <Compile Include="Application\IVisualStudioItem.cs" />
-    <Compile Include="Application\IVisualStudioProject.cs" />
-    <Compile Include="Application\IXrmMenuCommandService.cs" />
-    <Compile Include="Application\VisualStudioServiceBase.cs" />
-    <Compile Include="Application\VsixApplication.cs" />
-    <Compile Include="Application\VsixApplicationController.cs" />
-    <Compile Include="Application\VsixDependencyContainer.cs" />
-    <Compile Include="Application\VsixManifest.cs" />
-    <Compile Include="Application\VsixSettingsManager.cs" />
-    <Compile Include="Factory.cs" />
-    <Compile Include="Module\AddPortalCode\AddPortalCodeDialog.cs" />
-    <Compile Include="Module\AddPortalCode\AddPortalCodeModule.cs" />
-    <Compile Include="Module\AddPortalCode\AddPortalCodeRequest.cs" />
-    <Compile Include="Module\AddPortalCode\AddPortalCodeResponse.cs" />
-    <Compile Include="Module\AddPortalCode\AddPortalCodeResponseItem.cs" />
-    <Compile Include="Module\AddPortalCode\AddPortalCodeService.cs" />
-    <Compile Include="Module\AddPortalCode\AddPortalCodeConfiguration.cs" />
-    <Compile Include="Module\AddPortalCode\MenuItemVisibleForDeployIntoFieldProject.cs" />
-    <Compile Include="Module\DeployAssembly\DeployAssemblyRequest.cs" />
-    <Compile Include="Module\DeployAssembly\DeployAssemblyResponse.cs" />
-    <Compile Include="Module\DeployAssembly\DeployAssemblyResponseItem.cs" />
-    <Compile Include="Module\DeployAssembly\DeployAssemblyService.cs" />
-    <Compile Include="Module\DeployAssembly\PluginType.cs" />
-    <Compile Include="Module\MenuItemVisibleForPluginProject.cs" />
-    <Compile Include="Module\PluginTriggers\ManagePluginTriggersRequest.cs" />
-    <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponse.cs" />
-    <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponseitem.cs" />
-    <Compile Include="Module\PluginTriggers\ManagePluginTriggersService.cs" />
-    <Compile Include="Module\PluginTriggers\PluginTrigger.cs" />
-    <Compile Include="Module\UpdateAssembly\UpdateAssemblyResponse.cs" />
-    <Compile Include="Module\Web\MenuItemVisibleSolutionConfigured.cs" />
-    <Compile Include="Module\Web\OpenAdvancedFindDialog.cs" />
-    <Compile Include="Module\Web\OpenDefaultSolutionDialog.cs" />
-    <Compile Include="Module\Web\OpenSolutionDialog.cs" />
-    <Compile Include="Module\Web\OpenDefaultSolutionModule.cs" />
-    <Compile Include="Module\Web\OpenWebDialog.cs" />
-    <Compile Include="Module\XrmPackageSettings\SettingsFolderMoving.cs" />
-    <Compile Include="Module\XrmPackageSettings\PackageSettingsAppConnectionModule.cs" />
-    <Compile Include="Module\ClearCacheModule.cs" />
-    <Compile Include="Module\Connection\ConnectionEntryDialog.cs" />
-    <Compile Include="Module\CreatePackage\VsixCreatePackageDialog.cs" />
-    <Compile Include="Module\CreatePackage\VsixCreatePackageModule.cs" />
-    <Compile Include="Module\CustomisationImport\MenuItemVisibleXlsx.cs" />
-    <Compile Include="Module\CustomisationImport\VsixCustomisationImportDialog.cs" />
-    <Compile Include="Module\CustomisationImport\VsixCustomisationImportModule.cs" />
-    <Compile Include="Module\DeployAssembly\DeployAssemblyDialog.cs" />
-    <Compile Include="Module\DeployAssembly\DeployAssemblyModule.cs" />
-    <Compile Include="Module\DeployPackage\MenuItemVisibleDeployPackage.cs" />
-    <Compile Include="Module\DeployPackage\VsixDeployPackageModule.cs" />
-    <Compile Include="Module\DeployIntoField\DeployIntoFieldDialog.cs" />
-    <Compile Include="Module\DeployIntoField\DeployIntoFieldMenuItemVisible.cs" />
-    <Compile Include="Module\DeployIntoField\DeployIntoFieldModule.cs" />
-    <Compile Include="Module\DeployIntoField\DeployIntoFieldRequest.cs" />
-    <Compile Include="Module\DeployIntoField\DeployIntoFieldResponse.cs" />
-    <Compile Include="Module\DeployIntoField\DeployIntoFieldResponseItem.cs" />
-    <Compile Include="Module\DeployIntoField\DeployIntoFieldService.cs" />
-    <Compile Include="Module\DeployWebResource\DeployWebResourceDialog.cs" />
-    <Compile Include="Module\DeployWebResource\DeployWebResourceMenuItemVisible.cs" />
-    <Compile Include="Module\DeployWebResource\DeployWebResourceModule.cs" />
-    <Compile Include="Module\DeployWebResource\DeployWebResourceRequest.cs" />
-    <Compile Include="Module\DeployWebResource\DeployWebResourceResponse.cs" />
-    <Compile Include="Module\DeployWebResource\DeployWebResourceResponseItem.cs" />
-    <Compile Include="Module\DeployWebResource\DeployWebResourceService.cs" />
-    <Compile Include="Module\ImportCsvs\MenuItemVisibleCsvs.cs" />
-    <Compile Include="Module\ImportCsvs\VsixImportCsvsModule.cs" />
-    <Compile Include="Module\ImportRecords\ImportRecordsDialog.cs" />
-    <Compile Include="Module\ImportRecords\ImportRecordsModule.cs" />
-    <Compile Include="Module\ImportRecords\ImportRecordsRequest.cs" />
-    <Compile Include="Module\ImportRecords\ImportRecordsResponse.cs" />
-    <Compile Include="Module\ImportRecords\ImportRecordsService.cs" />
-    <Compile Include="Module\ImportRecords\MenuItemVisibleImportRecords.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionDialog.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionModule.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionRequest.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionResponse.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionResponseItem.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionService.cs" />
-    <Compile Include="Module\ImportSolution\MenuItemVisibleZip.cs" />
-    <Compile Include="Module\MenuItemVisible.cs" />
-    <Compile Include="Module\MenuItemVisibleForFileTypes.cs" />
-    <Compile Include="Module\PluginTriggers\ManagePluginTriggersDialog.cs" />
-    <Compile Include="Module\PluginTriggers\ManagePluginTriggersModule.cs" />
-    <Compile Include="Module\RefreshSchema\MenuItemVisibleSchemaCs.cs" />
-    <Compile Include="Module\RefreshSchema\RefreshSchemaModule.cs" />
-    <Compile Include="Module\UpdateAssembly\UpdateAssemblyDialog.cs" />
-    <Compile Include="Module\UpdateAssembly\UpdateAssemblyModule.cs" />
-    <Compile Include="Module\Web\OpenAdvancedFindModule.cs" />
-    <Compile Include="Module\Web\OpenSolutionModule.cs" />
-    <Compile Include="Module\Web\OpenWebModule.cs" />
-    <Compile Include="Module\XrmPackageSettings\ClassPrefixValidation.cs" />
-    <Compile Include="Module\XrmPackageSettings\XrmPackageSettingsDialog.cs" />
-    <Compile Include="Module\XrmPackageSettings\XrmPackageSettingsModule.cs" />
-    <Compile Include="Module\DeployAssembly\AssemblyReader\PluginAssemblyReader.cs" />
+    <Compile Include="Application\MenuCommand.cs" />
+    <Compile Include="Application\XrmMenuCommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Application\IVisualStudioService.cs" />
-    <Compile Include="Module\XrmPackageSettings\XrmPackageSettings.cs" />
+    <Compile Include="Application\VisualStudioItem.cs" />
+    <Compile Include="Application\VisualStudioProject.cs" />
+    <Compile Include="Application\VisualStudioProjectBase.cs" />
+    <Compile Include="Application\VisualStudioProjectItem.cs" />
+    <Compile Include="Application\VisualStudioService.cs" />
+    <Compile Include="Application\VisualStudioServiceBase.cs" />
+    <Compile Include="Application\VisualStudioSolutionFolder.cs" />
+    <Compile Include="Wizards\MyWizardBase.cs" />
+    <Compile Include="Wizards\SolutionWizardPackageSettingsDialog.cs" />
+    <Compile Include="Wizards\XrmSolutionWizardBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
@@ -202,6 +135,10 @@
     <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.Vsix.App\JosephM.Xrm.Vsix.App.csproj">
+      <Project>{98d77f01-114b-4130-8c7c-2ff58425c34b}</Project>
+      <Name>JosephM.Xrm.Vsix.App</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
@@ -251,6 +188,26 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
       <Version>9.0.2.26</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.CoreUtility">
+      <Version>15.6.27740</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0">
+      <Version>15.6.27413</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0">
+      <Version>12.0.30111</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading">
+      <Version>15.6.46</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Validation">
+      <Version>15.3.32</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools">
+      <Version>15.6.170</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>6.0.8</Version>

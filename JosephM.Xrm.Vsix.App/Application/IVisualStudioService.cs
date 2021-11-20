@@ -22,34 +22,4 @@ namespace JosephM.Xrm.Vsix.Application
         string GetSolutionName();
         IEnumerable<IVisualStudioProject> GetProjects();
     }
-
-    public interface IVisualStudioProject
-    {
-        string Name { get; }
-        IProjectItem AddProjectItem(string file);
-        void AddItem(string fileName, string fileContent, params string[] folderPath);
-    }
-
-    public interface IProjectItem : IVisualStudioItem
-    {
-        void SetProperty(string propertyName, object value);
-        string FileFolder { get; }
-    }
-
-    public interface ISolutionFolder : IVisualStudioItem
-    {
-        string ParentProjectName { get; }
-        IEnumerable<IProjectItem> ProjectItems { get; }
-        IEnumerable<ISolutionFolder> SubFolders { get; }
-        IProjectItem AddProjectItem(string file);
-        ISolutionFolder AddSubFolder(string subFolder);
-        void CopyFilesIntoSolutionFolder(string folderDirectory);
-    }
-
-    public interface IVisualStudioItem
-    {
-        string Name { get; }
-        string NameOfContainingProject { get; }
-        string FileName { get; }
-    }
 }

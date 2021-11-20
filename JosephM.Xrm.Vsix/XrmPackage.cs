@@ -7,6 +7,8 @@
 using EnvDTE80;
 using JosephM.Application.Application;
 using JosephM.Xrm.Vsix.App;
+using JosephM.Xrm.Vsix.App.Application;
+using JosephM.Xrm.Vsix.App.Vs2019.Application;
 using JosephM.Xrm.Vsix.Application;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -38,8 +40,9 @@ namespace JosephM.XRM.VSIX
 
             var container = new DependencyContainer();
 
-            var commandService = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            container.RegisterInstance(typeof(IMenuCommandService), commandService);
+            var menuCommandService = await GetServiceAsync(typeof(IMenuCommandService)) as IMenuCommandService;
+            var xrmMenuCommandService = new XrmMenuCommandService(menuCommandService);
+            container.RegisterInstance(typeof(IXrmMenuCommandService), xrmMenuCommandService);
 
 
             var dte = await GetServiceAsync(typeof(SDTE)) as DTE2;
