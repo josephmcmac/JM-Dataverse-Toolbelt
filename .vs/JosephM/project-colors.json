@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "2e3789be-94e7-4b9f-a096-dc112f4fb84e": {
+      "ProjectGuid": "2e3789be-94e7-4b9f-a096-dc112f4fb84e",
+      "DisplayName": "JosephM.Xrm.Vsix",
+      "ColorIndex": 0
+    },
+    "c034f8d0-95c6-44dc-97d1-3647d9463149": {
+      "ProjectGuid": "c034f8d0-95c6-44dc-97d1-3647d9463149",
+      "DisplayName": "JosephM.Xrm.Vsix2019",
+      "ColorIndex": 1
+    },
+    "eb93ddcc-9ad4-436e-b4b6-7a288fb7a19a": {
+      "ProjectGuid": "eb93ddcc-9ad4-436e-b4b6-7a288fb7a19a",
+      "DisplayName": "JosephM.Xrm.Vsix.App2022",
+      "ColorIndex": 2
+    },
+    "e04d3d55-433e-4f9d-980f-b6413e034047": {
+      "ProjectGuid": "e04d3d55-433e-4f9d-980f-b6413e034047",
+      "DisplayName": "JosephM.Xrm.Vsix.App.Vs2022",
+      "ColorIndex": 3
+    },
+    "42fb3238-63de-41b8-9752-86d60728e401": {
+      "ProjectGuid": "42fb3238-63de-41b8-9752-86d60728e401",
+      "DisplayName": "JosephM.Xrm.Vsix.App.Vs2019",
+      "ColorIndex": 4
+    },
+    "d1ec0d8e-2041-404c-b275-5623fdc27a14": {
+      "ProjectGuid": "d1ec0d8e-2041-404c-b275-5623fdc27a14",
+      "DisplayName": "VsPlugin",
+      "ColorIndex": 5
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "1ffc6569-bbbd-478b-85ab-71dff5af6f03": {
+      "ProjectGuid": "1ffc6569-bbbd-478b-85ab-71dff5af6f03",
+      "DisplayName": "JosephM.Xrm.Vsix.App.Vs2022B",
+      "ColorIndex": 6
+    },
+    "98d77f01-114b-4130-8c7c-2ff58425c34b": {
+      "ProjectGuid": "98d77f01-114b-4130-8c7c-2ff58425c34b",
+      "DisplayName": "JosephM.Xrm.Vsix.App",
+      "ColorIndex": 7
+    },
+    "7bf3e622-67ca-4e67-a9ca-f3b334c954fd": {
+      "ProjectGuid": "7bf3e622-67ca-4e67-a9ca-f3b334c954fd",
+      "DisplayName": "JosephM.Application",
+      "ColorIndex": 8
+    },
+    "c29b8a9a-3831-41c2-a0c1-ea1b265d696f": {
+      "ProjectGuid": "c29b8a9a-3831-41c2-a0c1-ea1b265d696f",
+      "DisplayName": "JosephM.Core",
+      "ColorIndex": 9
+    },
+    "abcd2877-f084-4665-8931-e83c689e244d": {
+      "ProjectGuid": "abcd2877-f084-4665-8931-e83c689e244d",
+      "DisplayName": "JosephM.Xrm.Vsix.App.Vs2022",
+      "ColorIndex": 10
+    },
+    "2d932723-7578-4b9b-b063-07df1af32c87": {
+      "ProjectGuid": "2d932723-7578-4b9b-b063-07df1af32c87",
+      "DisplayName": "Xrm.Vsix",
+      "ColorIndex": 11
+    }
+  },
+  "NextColorIndex": 12
+}

@@ -1,0 +1,18 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <DefaultName>entity.js</DefaultName>
+    <Name>XRM Entity JavaScript</Name>
+    <Description>Template For An Entity JavaScript In XRM Solutioon </Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>10</SortOrder>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <References />
+    <ProjectItem SubType="" TargetFileName="$fileinputname$.js" ReplaceParameters="true">template_javascript.js</ProjectItem>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>JosephM.XRM.VSIX, Version=2.0.0.0, Culture=Neutral, PublicKeyToken=25a4b5603b9d4ed3</Assembly>
+    <FullClassName>JosephM.XRM.VSIX.Wizards.XrmEntityJavaScriptWizard</FullClassName>
+  </WizardExtension>
+</VSTemplate>

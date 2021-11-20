@@ -1,0 +1,392 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--  This is the file that defines the actual layout and type of the commands.
+        It is divided in different sections (e.g. command definition, command
+        placement, ...), with each defining a specific set of properties.
+        See the comment before each section for more details about how to
+        use it. -->
+
+  <!--  The VSCT compiler (the tool that translates this file into the binary
+        format that VisualStudio will consume) has the ability to run a preprocessor
+        on the vsct file; this preprocessor is (usually) the C++ preprocessor, so
+        it is possible to define includes and macros with the same syntax used
+        in C++ files. Using this ability of the compiler here, we include some files
+        defining some of the constants that we will use inside the file. -->
+
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h"/>
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h"/>
+
+  <!--The Commands section is where commands, menus, and menu groups are defined.
+      This section uses a Guid to identify the package that provides the command defined inside it. -->
+  <Commands package="guidXrmPackage">
+    <!-- Inside this section we have different sub-sections: one for the menus, another
+    for the menu groups, one for the buttons (the actual commands), one for the combos
+    and the last one for the bitmaps used. Each element is identified by a command id that
+    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually
+    called "command set" and is used to group different command inside a logically related
+    group; your package should define its own command set in order to avoid collisions
+    with command ids defined by other packages. -->
+
+    <!-- In this section you can define new menu groups. A menu group is a container for
+         other menus or buttons (commands); from a visual point of view you can see the
+         group as the part of a menu contained between two lines. The parent of a group
+         must be a menu. -->
+    <Groups>
+      <Group guid="guidXrmPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
+      <Groups>
+        <Group guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroup" priority="0x0001">
+          <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
+        </Group>
+        <Group guid="guidXrmPackageCmdSet" id="XrmItemMenuGroup" priority="0x0001">
+          <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
+        </Group>
+        <Group guid="guidXrmPackageCmdSet" id="XrmFolderMenuGroup" priority="0x0001">
+          <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE"/>
+        </Group>
+        <Group guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroup" priority="0x0001">
+          <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
+        </Group>
+        <Group guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroup" priority="0x0001">
+          <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNFOLDER"/>
+        </Group>
+      </Groups>
+    </Groups>
+
+    <Menus>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmProjectMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmSolutionMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmItemMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmFolderMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmFolderMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+      <Menu guid="guidXrmPackageCmdSet" id="xrmSolutionFolderMenu" type="Menu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroup" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>XRM</ButtonText>
+          <CommandName>XRM</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <Group guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmProjectMenu"/>
+      </Group>
+      <Group guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmSolutionMenu"/>
+      </Group>
+      <Group guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmItemMenu"/>
+      </Group>
+      <Group guid="guidXrmPackageCmdSet" id="XrmFolderMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmFolderMenu"/>
+      </Group>
+      <Group guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroupMenu" priority="0x1000">
+        <Parent guid="guidXrmPackageCmdSet" id="xrmSolutionFolderMenu"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidXrmPackageCmdSet" id="RefreshSchemaCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Refresh Schema.cs</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="DeployWebResourceCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Web Resource</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="DeployPluginAssemblyCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Plugin Assembly</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="UpdatePluginAssemblyCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Update Plugin Assembly (Assembly Only)</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ManagePluginTriggersCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Manage Plugin Triggers</ButtonText>
+        </Strings>
+      </Button>
+		<Button guid="guidXrmPackageCmdSet" id="DonateCommandId" priority="0x0100" type="Button">
+			<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+			<Strings>
+				<ButtonText>Donate</ButtonText>
+			</Strings>
+		</Button>
+      <Button guid="guidXrmPackageCmdSet" id="RefreshSettingsCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Package Settings</ButtonText>
+        </Strings>
+      </Button>
+      <!--<Button guid="guidXrmPackageCmdSet" id="ImportCsvsCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Import Csvs</ButtonText>
+        </Strings>
+      </Button>-->
+      <Button guid="guidXrmPackageCmdSet" id="ClearCacheCommandId" priority="0x0109" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Clear Cache</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ImportCustomisationsCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Import Customisations</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmWebCommandId" priority="0x0108" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Open Dynamics in Browser</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmSolutionCommandId" priority="0x0108" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Open Solution in Browser</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmDefaultSolutionCommandId" priority="0x0108" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Open Default Solution in Browser</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmAdvancedFindCommandId" priority="0x0108" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Open Advanced Find in Browser</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="CreateDeploymentPackageCommandId" priority="0x0101" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Create Deployment Package</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="DeployPackageCommandId" priority="0x0101" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Package</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="InstanceComparisonCommandId" priority="0x0103" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Instance Comparison</ButtonText>
+        </Strings>
+      </Button>
+          <Button guid="guidXrmPackageCmdSet" id="CrudCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Crud/Query Data</ButtonText>
+        </Strings>
+      </Button>
+       <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x0109" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>About</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ImportSolutionCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Solution</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ImportRecordsCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Records</ButtonText>
+        </Strings>
+      </Button>
+          <Button guid="guidXrmPackageCmdSet" id="TextSearchCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Text Search</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="DeployIntoFieldCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Deploy Into Record</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="GenerateJavascriptOptionsCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Generate JavaScript Options</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ExtentionSettingsCommandId" priority="0x0108" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Extention Settings</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="AddPortalCodeCommandId" priority="0x0105" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Add Portal Code</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="MigrateRecordsCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Migrate Records</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXrmPackageCmdSet" id="ConfigureAutoNumberCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Configure Autonumber</ButtonText>
+        </Strings>
+      </Button>
+	</Buttons>
+
+    <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
+    <Bitmaps>
+      <!--  The bitmap id is defined in a way that is a little bit different from the others:
+            the declaration starts with a guid for the bitmap strip, then there is the resource id of the
+            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
+            inside a button definition. An important aspect of this declaration is that the element id
+            must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
+      <Bitmap guid="guidImages" href="Resources\RefreshSettingsCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
+    </Bitmaps>
+  </Commands>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidXrmPackage" value="{e04baedb-126b-4840-91de-f9b159051606}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidXrmPackageCmdSet" value="{43816e6d-4db8-48d6-8bfa-75916cb080f0}">
+      <IDSymbol name="MyMenuGroup" value="0x1019" />
+      <IDSymbol name="XrmItemMenuGroup" value="0x1020" />
+      <IDSymbol name="XrmProjectMenuGroup" value="0x1021" />
+      <IDSymbol name="XrmMenuGroup" value="0x1022" />
+      <IDSymbol name="XrmSolutionMenuGroup" value="0x1023" />
+      <IDSymbol name="XrmProjectMenuGroupMenu" value="0x1024" />
+      <IDSymbol name="xrmProjectMenu" value="0x1025" />
+      <IDSymbol name="XrmSolutionMenuGroupMenu" value="0x1026" />
+      <IDSymbol name="xrmSolutionMenu" value="0x1027" />
+      <IDSymbol name="XrmItemMenuGroupMenu" value="0x1028" />
+      <IDSymbol name="xrmItemMenu" value="0x1029" />
+      <IDSymbol name="XrmFolderMenuGroupMenu" value="0x102A" />
+      <IDSymbol name="XrmFolderMenuGroup" value="0x102B" />
+      <IDSymbol name="xrmFolderMenu" value="0x102C" />
+      <IDSymbol name="XrmSolutionFolderMenuGroupMenu" value="0x102D" />
+      <IDSymbol name="XrmSolutionFolderMenuGroup" value="0x1030" />
+      <IDSymbol name="xrmSolutionFolderMenu" value="0x1031" />
+      <IDSymbol name="RefreshSchemaCommandId" value="0x0100" />
+      <IDSymbol name="DeployWebResourceCommandId" value="0x0102" />
+      <IDSymbol name="DeployPluginAssemblyCommandId" value="0x0103" />
+      <IDSymbol name="ManagePluginTriggersCommandId" value="0x0104" />
+      <IDSymbol name="UpdatePluginAssemblyCommandId" value="0x0105" />
+      <IDSymbol name="RefreshSettingsCommandId" value="0x0106" />
+      <!--<IDSymbol name="ImportCsvsCommandId" value="0x0108" />-->
+      <IDSymbol name="ClearCacheCommandId" value="0x0109" />
+      <IDSymbol name="ImportCustomisationsCommandId" value="0x010A" />
+      <IDSymbol name="OpenCrmWebCommandId" value="0x010B" />
+      <IDSymbol name="OpenCrmSolutionCommandId" value="0x010C" />
+      <IDSymbol name="OpenCrmAdvancedFindCommandId" value="0x010D" />
+      <IDSymbol name="CreateDeploymentPackageCommandId" value="0x010E" />
+      <IDSymbol name="DeployPackageCommandId" value="0x0110" />
+      <IDSymbol name="InstanceComparisonCommandId" value="0x0111" />
+      <IDSymbol name="CrudCommandId" value="0x0112" />
+      <IDSymbol name="AboutCommandId" value="0x0113" />
+      <IDSymbol name="ImportSolutionCommandId" value="0x0114" />
+      <IDSymbol name="ImportRecordsCommandId" value="0x0115" />
+      <IDSymbol name="TextSearchCommandId" value="0x0116" />
+      <IDSymbol name="DeployIntoFieldCommandId" value="0x0117" />
+      <IDSymbol name="GenerateJavascriptOptionsCommandId" value="0x0118" />
+      <IDSymbol name="OpenCrmDefaultSolutionCommandId" value="0x0119" />
+      <IDSymbol name="AddPortalCodeCommandId" value="0x011B" />
+      <IDSymbol name="MigrateRecordsCommandId" value="0x011C" />
+      <IDSymbol name="ConfigureAutoNumberCommandId" value="0x011D" />
+      <IDSymbol name="ExtentionSettingsCommandId" value="0x011E" />
+		<IDSymbol name="DonateCommandId" value="0x0220" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+      <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -149,8 +149,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.RecordCounts", "Jos
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.RecordCounts.Test", "JosephM.RecordCounts.Test\JosephM.RecordCounts.Test.csproj", "{5F2C8D8F-0475-4583-A4E9-40B5ACF6050C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix", "JosephM.Xrm.Vsix\JosephM.Xrm.Vsix.csproj", "{C034F8D0-95C6-44DC-97D1-3647D9463149}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.SolutionTemplate", "JosephM.Xrm.SolutionTemplate\JosephM.Xrm.SolutionTemplate.csproj", "{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix.Test", "JosephM.Xrm.Vsix.Test\JosephM.Xrm.Vsix.Test.csproj", "{F5EC8E25-2152-448D-9459-8F0EF9933B3B}"
@@ -210,6 +208,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB FILE", "WEB FILE", "{47
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xrm.Vsix", "Xrm.Vsix", "{2D932723-7578-4B9B-B063-07DF1AF32C87}"
 	ProjectSection(SolutionItems) = preProject
+		Xrm.Vsix\josep.solution.xrmconnection = Xrm.Vsix\josep.solution.xrmconnection
+		Xrm.Vsix\josep.xrmpackage.xrmsettings = Xrm.Vsix\josep.xrmpackage.xrmsettings
 		Xrm.Vsix\joseph.mcgregor-macd.solution.xrmconnection = Xrm.Vsix\joseph.mcgregor-macd.solution.xrmconnection
 		Xrm.Vsix\joseph.mcgregor-macd.xrmpackage.xrmsettings = Xrm.Vsix\joseph.mcgregor-macd.xrmpackage.xrmsettings
 	EndProjectSection
@@ -252,6 +252,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.TestConsoleApplication", "JosephM.TestConsoleApplication\JosephM.TestConsoleApplication.csproj", "{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix.App.Vs2019", "JosephM.Xrm.Vsix.App.Vs2019\JosephM.Xrm.Vsix.App.Vs2019.csproj", "{42FB3238-63DE-41B8-9752-86D60728E401}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix2022", "JosephM.Xrm.Vsix2022\JosephM.Xrm.Vsix2022.csproj", "{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix2019", "JosephM.Xrm.Vsix2019\JosephM.Xrm.Vsix2019.csproj", "{C034F8D0-95C6-44DC-97D1-3647D9463149}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -717,16 +721,6 @@ Global
 		{5F2C8D8F-0475-4583-A4E9-40B5ACF6050C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5F2C8D8F-0475-4583-A4E9-40B5ACF6050C}.Release|x86.ActiveCfg = Release|Any CPU
 		{5F2C8D8F-0475-4583-A4E9-40B5ACF6050C}.Release|x86.Build.0 = Release|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.Build.0 = Debug|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.ActiveCfg = Release|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.Build.0 = Release|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -898,6 +892,30 @@ Global
 		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|x86.ActiveCfg = Release|Any CPU
 		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|x86.Build.0 = Release|Any CPU
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|x86.ActiveCfg = Debug|x86
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|x86.Build.0 = Debug|x86
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Mixed Platforms.Build.0 = Release|x86
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|x86.ActiveCfg = Release|x86
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|x86.Build.0 = Release|x86
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.Build.0 = Debug|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.ActiveCfg = Release|Any CPU
+		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -955,7 +973,6 @@ Global
 		{00A16CAB-0153-43C0-BB0B-C1D07AE6B242} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{2B4C0363-133C-4A96-9D18-E3A90CA60F25} = {00A16CAB-0153-43C0-BB0B-C1D07AE6B242}
 		{5F2C8D8F-0475-4583-A4E9-40B5ACF6050C} = {00A16CAB-0153-43C0-BB0B-C1D07AE6B242}
-		{C034F8D0-95C6-44DC-97D1-3647D9463149} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 		{CF4B064A-6055-4A0C-B658-A2ADBBEA478E} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 		{F5EC8E25-2152-448D-9459-8F0EF9933B3B} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 		{2CC0419A-9CDF-46AF-8F7B-4839DD5F39B5} = {F54DAEB3-F26D-41A6-93E4-3A3B7921A621}
@@ -981,6 +998,8 @@ Global
 		{726A2A68-5E84-4874-B954-77B10F9038A8} = {B09D0DB0-7BD0-4DC9-848B-3D7E4B450390}
 		{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 		{42FB3238-63DE-41B8-9752-86D60728E401} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
+		{C034F8D0-95C6-44DC-97D1-3647D9463149} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35

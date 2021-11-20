@@ -1,0 +1,43 @@
+{
+  "AddToSolution": true,
+  "Connections": [
+    {
+      "AuthenticationProviderType": 3,
+      "DiscoveryServiceAddress": null,
+      "Domain": null,
+      "Name": "CDX",
+      "OrganizationUniqueName": "unq8bb48fed99c541268e00d63414afe",
+      "Password": {
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAhXiTm7sFjEaTHNuyrdrhAgAAAAACAAAAAAAQZgAAAAEAACAAAAD4pgr36bnNou6r3GYDB8+g+qzdaIg5JRSggV3DQjXZXwAAAAAOgAAAAAIAACAAAABddQFwRGFwIhcF8nv9vy3ppII\/qzNYMVGurFTpodw2AyAAAACaPS\/jLJm8SkG5t1FuVSeN2Dbv0xZbdhn6f1U8WxuG9EAAAABLCnCnESV9qO4KTtWuRn9ApTjE4fXUeuvsKXYvSGfSFQ9mw+9i\/qy+uxcKP5GF\/wYff4rSILUT9ZxojfDUJ7Na",
+        "<EncryptPassword>k__BackingField": true
+      },
+      "ToolingConnectionId": null,
+      "UseXrmToolingConnector": false,
+      "Username": "admin@CRM765146.onmicrosoft.com",
+      "Active": true,
+      "HideActive": false
+    }
+  ],
+  "DeployIntoFieldProjects": [
+    {
+      "ProjectName": "N\/A"
+    }
+  ],
+  "PluginProjects": [
+    {
+      "ProjectName": "N\/A"
+    }
+  ],
+  "Solution": {
+    "Id": "16c589eb-b449-ec11-8c62-00224816e6b5",
+    "Name": "TestVsixRebuild",
+    "RecordType": "solution"
+  },
+  "SolutionDynamicsCrmPrefix": "jmcg",
+  "SolutionObjectPrefix": "JosephM",
+  "WebResourceProjects": [
+    {
+      "ProjectName": "N\/A"
+    }
+  ]
+}
