@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{82118987-FB76-4E70-81A0-06D0B062D89C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JosephM.Deployment</RootNamespace>
+    <AssemblyName>JosephM.Deployment</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\LazyWeb\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LazyWeb|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\LazyWeb\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.26\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.26\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ExportDataTypeUsabilitiesModule.cs" />
+    <Compile Include="CreatePackage\CreatePackageResponse.cs" />
+    <Compile Include="DataImport\DataImportContainer.cs" />
+    <Compile Include="DataImport\DataImportResponse.cs" />
+    <Compile Include="DataImport\DataImportService.cs" />
+    <Compile Include="DataImport\MatchOption.cs" />
+    <Compile Include="DataImport\ImportedRecords.cs" />
+    <Compile Include="DataImport\ImportingRecords.cs" />
+    <Compile Include="AddPortalDataModule.cs" />
+    <Compile Include="DeploySolution\DeploySolutionDialog.cs" />
+    <Compile Include="DeploySolution\DeploySolutionModule.cs" />
+    <Compile Include="DeploySolution\DeploySolutionRequest.cs" />
+    <Compile Include="DeploySolution\DeploySolutionResponse.cs" />
+    <Compile Include="DeploySolution\DeploySolutionService.cs" />
+    <Compile Include="DeployPackage\DeployPackageResponse.cs" />
+    <Compile Include="DeployPackage\DeployPackageDialog.cs" />
+    <Compile Include="DeployPackage\DeployPackageModule.cs" />
+    <Compile Include="DeployPackage\DeployPackageRequest.cs" />
+    <Compile Include="DeployPackage\DeployPackageService.cs" />
+    <Compile Include="DeploymentModule.cs" />
+    <Compile Include="DeploySolution\DeploySolutionResponseItem.cs" />
+    <Compile Include="ImportCsvs\ImportCsvsValidationDialog.cs" />
+    <Compile Include="MigrateInternal\MigratedLookupField.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalDialog.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalModule.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalRequest.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalResponse.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalResponseItem.cs" />
+    <Compile Include="MigrateInternal\MigratingLookupFields.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalService.cs" />
+    <Compile Include="MigrateInternal\MigrateInternalValidationDialog.cs" />
+    <Compile Include="ImportSql\ImportSqlDialog.cs" />
+    <Compile Include="ImportSql\ImportSqlModule.cs" />
+    <Compile Include="ImportSql\ImportSqlRequest.cs" />
+    <Compile Include="ImportSql\ImportSqlResponse.cs" />
+    <Compile Include="ImportSql\ImportSqlResponseItem.cs" />
+    <Compile Include="ImportSql\ImportSqlService.cs" />
+    <Compile Include="ImportSql\ImportSqlValidationDialog.cs" />
+    <Compile Include="ImportExcel\ImportExcelValidationDialog.cs" />
+    <Compile Include="ImportXml\IImportXmlRequest.cs" />
+    <Compile Include="ImportXml\ImportXmlValidationDialog.cs" />
+    <Compile Include="SolutionImport\ImportSolutionsResponse.cs" />
+    <Compile Include="SolutionImport\SolutionImportService.cs" />
+    <Compile Include="SolutionImport\SolutionImportResult.cs" />
+    <Compile Include="ExportXml\ExportType.cs" />
+    <Compile Include="ExportXml\ExportRecordType.cs" />
+    <Compile Include="ImportExcel\ImportExcelDialog.cs" />
+    <Compile Include="ImportExcel\ImportExcelModule.cs" />
+    <Compile Include="ImportExcel\ImportExcelRequest.cs" />
+    <Compile Include="ImportExcel\ImportExcelResponse.cs" />
+    <Compile Include="ImportExcel\ImportExcelResponseItem.cs" />
+    <Compile Include="ImportExcel\ImportExcelService.cs" />
+    <Compile Include="ImportCsvs\DateFormat.cs" />
+    <Compile Include="ImportCsvs\GenerateTemplateConfiguration.cs" />
+    <Compile Include="ImportCsvs\GenerateTemplatesRequest.cs" />
+    <Compile Include="ImportCsvs\ImportCsvsDialog.cs" />
+    <Compile Include="ImportCsvs\ImportCsvsModule.cs" />
+    <Compile Include="ImportCsvs\ImportCsvsRequest.cs" />
+    <Compile Include="ImportCsvs\ImportCsvsResponse.cs" />
+    <Compile Include="ImportCsvs\ImportCsvsResponseItem.cs" />
+    <Compile Include="ImportCsvs\ImportCsvsService.cs" />
+    <Compile Include="ExportXml\ExportXmlDialog.cs" />
+    <Compile Include="ExportXml\ExportXmlModule.cs" />
+    <Compile Include="ExportXml\ExportXmlRequest.cs" />
+    <Compile Include="ExportXml\ExportXmlResponse.cs" />
+    <Compile Include="ExportXml\ExportXmlResponseItem.cs" />
+    <Compile Include="ExportXml\ExportXmlService.cs" />
+    <Compile Include="CreatePackage\CreatePackageDialog.cs" />
+    <Compile Include="CreatePackage\CreatePackageModule.cs" />
+    <Compile Include="CreatePackage\CreatePackageRequest.cs" />
+    <Compile Include="CreatePackage\CreatePackageService.cs" />
+    <Compile Include="ImportXml\ImportXmlDialog.cs" />
+    <Compile Include="ImportXml\ImportXmlModule.cs" />
+    <Compile Include="ImportXml\ImportXmlRequest.cs" />
+    <Compile Include="ImportXml\ImportXmlResponse.cs" />
+    <Compile Include="ImportXml\ImportXmlService.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsDialog.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsModule.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsRequest.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsResponse.cs" />
+    <Compile Include="MigrateRecords\MigrateRecordsService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DataImport\DataImportResponseItem.cs" />
+    <Compile Include="SourceImport\Extensions.cs" />
+    <Compile Include="SourceImport\IMapSourceMatchKey.cs" />
+    <Compile Include="SourceImport\ParseIntoEntitiesResponse.cs" />
+    <Compile Include="SourceImport\SourceImportResponse.cs" />
+    <Compile Include="SourceImport\IMapSourceField.cs" />
+    <Compile Include="SourceImport\IMapSourceImport.cs" />
+    <Compile Include="SourceImport\SourceImportService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="JosephM.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7BF3E622-67CA-4E67-A9CA-F3B334C954FD}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
+      <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
+      <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
+      <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
+      <Name>JosephM.XrmModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj">
+      <Project>{8529CC18-AFDC-4222-B7B4-5305E3C97772}</Project>
+      <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Sql\JosephM.Record.Sql.csproj">
+      <Project>{53651F05-D505-4D59-8FED-E723D26E491F}</Project>
+      <Name>JosephM.Record.Sql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850BB50C-D03D-4C6B-8FBB-6055936148C8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
+      <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
+      <Name>JosephM.Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7f69213d-3efb-4736-9962-0151f92fa7d4}</Project>
+      <Name>JosephM.Xrm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
