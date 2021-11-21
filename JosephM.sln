@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -944,8 +944,8 @@ Global
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|x86.Build.0 = Debug|x86
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Mixed Platforms.Build.0 = Release|x86
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|x86.ActiveCfg = Release|x86
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Release|x86.Build.0 = Release|x86
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -957,7 +957,6 @@ Global
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.ActiveCfg = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
@@ -1055,8 +1054,8 @@ Global
 		{BDC3539F-06BE-49A4-BE72-5501E3879BD5} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

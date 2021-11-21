@@ -695,6 +695,8 @@ namespace JosephM.Xrm.Schema
 		public const string msdyn_smsnumber = "msdyn_smsnumber";
 		public const string msdyn_solutioncomponentdatasource = "msdyn_solutioncomponentdatasource";
 		public const string msdyn_solutioncomponentsummary = "msdyn_solutioncomponentsummary";
+		public const string msdyn_solutioncomponentcountdatasource = "msdyn_solutioncomponentcountdatasource";
+		public const string msdyn_solutioncomponentcountsummary = "msdyn_solutioncomponentcountsummary";
 		public const string msdyn_solutionhealthrule = "msdyn_solutionhealthrule";
 		public const string msdyn_solutionhealthruleargument = "msdyn_solutionhealthruleargument";
 		public const string msdyn_solutionhealthruleset = "msdyn_solutionhealthruleset";
