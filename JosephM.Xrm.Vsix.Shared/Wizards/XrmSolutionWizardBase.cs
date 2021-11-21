@@ -1,14 +1,10 @@
 ﻿using EnvDTE;
-using JosephM.Application;
 using JosephM.Application.Application;
-using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
-using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Vsix.App;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.XrmModule.Crud;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Collections.Generic;
@@ -61,7 +57,7 @@ namespace JosephM.Xrm.Vsix.Wizards
                     ? replacementsDictionary["$specifiedsolutionname$"]
                     : null;
 
-                RunWizardSettingsEntry(XrmPackageSettings, app.VsixApplicationController, solutionName);
+                SolutionWizardPackageSettingsDialog.Run(XrmPackageSettings, app.VsixApplicationController, solutionName);
 
                 //add token replacements for the template projects
                 AddReplacements(replacementsDictionary, XrmPackageSettings);
@@ -75,27 +71,6 @@ namespace JosephM.Xrm.Vsix.Wizards
                 app.VsixApplicationController.LogEvent("Xrm Solution Template Wizard Fatal Error", new Dictionary<string, string> { { "Is Error", true.ToString() }, { "Error", ex.Message }, { "Error Trace", ex.DisplayString() } });
                 throw;
             }
-        }
-
-        public static void RunWizardSettingsEntry(XrmPackageSettings packageSettings, VsixApplicationController applicationController, string solutionName)
-        {
-            //ensure the package settings resolves when the app settings dialog runs
-            var resolvePackageSettings = applicationController.ResolveType(typeof(XrmPackageSettings));
-            if (resolvePackageSettings == null)
-                applicationController.RegisterInstance(typeof(XrmPackageSettings), new XrmPackageSettings());
-
-            if (solutionName != null && string.IsNullOrWhiteSpace(packageSettings.SolutionObjectPrefix))
-            {
-                packageSettings.SolutionObjectPrefix = solutionName.Split('.').First();
-            }
-
-            var serviceFactory = applicationController.ResolveType<IOrganizationConnectionFactory>();
-            var recordService = new XrmRecordService(new XrmRecordConfiguration(), serviceFactory, formService: new XrmFormService());
-            var settingsDialog = new SolutionWizardPackageSettingsDialog(new DialogController(applicationController), packageSettings, null, recordService, saveButtonLabel: "Next");
-            settingsDialog.SaveSettings = false;
-            var uriQuery = new UriQuery();
-            uriQuery.Add("Modal", true.ToString());
-            applicationController.NavigateTo(settingsDialog, uriQuery, showCompletionScreen: false, isModal: true);
         }
 
         public override void RunFinishedExtention()

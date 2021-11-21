@@ -20,7 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\XrmMenuCommandService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wizards\MyProjectItemWizard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wizards\MyWizardBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Wizards\SolutionWizardPackageSettingsDialog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmEntityJavaScriptWizard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmEntityPluginWizard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmSolutionWizard.cs" />

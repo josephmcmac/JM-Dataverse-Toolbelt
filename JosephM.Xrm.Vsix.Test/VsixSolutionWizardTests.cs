@@ -28,7 +28,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             //okay spawn the wizards entry method with a fake controller
             var applicationController = new FakeVsixApplicationController(container);
-            XrmSolutionWizardBase.RunWizardSettingsEntry(packageSettings, applicationController, "Fake.Name");
+            SolutionWizardPackageSettingsDialog.Run(packageSettings, applicationController, "Fake.Name");
 
             //okay so now we have navigated to the package entry
             //in our application controller via the wizard 
