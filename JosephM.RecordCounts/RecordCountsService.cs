@@ -28,7 +28,7 @@ namespace JosephM.RecordCounts
         {
             controller.LogLiteral("Loading Types");
 
-            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.principalobjectaccess, Entities.msdyn_casesuggestion, Entities.msdyn_knowledgearticlesuggestion, Entities.virtualresourcegroupresource, Entities.usermobileofflineprofilemembership, Entities.teammobileofflineprofilemembership, Entities.systemuserauthorizationchangetracker, Entities.searchtelemetry, Entities.appnotification, Entities.msdyn_solutioncomponentcountsummary };
+            var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.principalobjectaccess, Entities.msdyn_casesuggestion, Entities.msdyn_knowledgearticlesuggestion, Entities.virtualresourcegroupresource, Entities.usermobileofflineprofilemembership, Entities.teammobileofflineprofilemembership, Entities.systemuserauthorizationchangetracker, Entities.searchtelemetry, Entities.appnotification, Entities.msdyn_solutioncomponentcountsummary, Entities.msdyn_solutioncomponentcountdatasource };
 
             var includeTheseTypes = new[] { Entities.incidentresolution };
 
