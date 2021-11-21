@@ -51,47 +51,34 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Application\MenuCommand.cs" />
-    <Compile Include="Application\VisualStudioItem.cs" />
-    <Compile Include="Application\VisualStudioProject.cs" />
-    <Compile Include="Application\VisualStudioProjectBase.cs" />
-    <Compile Include="Application\VisualStudioProjectItem.cs" />
-    <Compile Include="Application\VisualStudioService.cs" />
-    <Compile Include="Application\VisualStudioServiceBase.cs" />
-    <Compile Include="Application\VisualStudioSolutionFolder.cs" />
-    <Compile Include="Application\XrmMenuCommandService.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wizards\MyProjectItemWizard.cs" />
-    <Compile Include="Wizards\MyWizardBase.cs" />
-    <Compile Include="Wizards\SolutionWizardPackageSettingsDialog.cs" />
-    <Compile Include="Wizards\XrmEntityJavaScriptWizard.cs" />
-    <Compile Include="Wizards\XrmEntityPluginWizard.cs" />
-    <Compile Include="Wizards\XrmSolutionWizard.cs" />
-    <Compile Include="Wizards\XrmSolutionWizardBase.cs" />
-    <Compile Include="Wizards\XrmTestWizard.cs" />
-    <Compile Include="Wizards\XrmWorkflowActivityWizard.cs" />
-    <Compile Include="XrmPackage.cs" />
+    <Compile Include="..\VsixFiles\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Entity JavaScript.zip">
+    <Content Include="..\TemplateItems\CSharp\XRM\JosephM XRM Entity JavaScript.zip">
+      <Link>ItemTemplates\CSharp\XRM\JosephM XRM Entity JavaScript.zip</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Entity Plugin.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM Test.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="ItemTemplates\CSharp\XRM\JosephM XRM WorkflowActivity.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <VSCTCompile Include="XrmPackage.vsct">
+    <VSCTCompile Include="..\VsixFiles\XrmPackage.vsct">
+      <Link>XrmPackage.vsct</Link>
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
+    <None Include="..\TemplateItems\CSharp\XRM\JosephM XRM Entity Plugin.zip">
+      <Link>ItemTemplates\CSharp\XRM\JosephM XRM Entity Plugin.zip</Link>
+    </None>
+    <None Include="..\TemplateItems\CSharp\XRM\JosephM XRM Test.zip">
+      <Link>ItemTemplates\CSharp\XRM\JosephM XRM Test.zip</Link>
+    </None>
+    <None Include="..\TemplateItems\CSharp\XRM\JosephM XRM WorkflowActivity.zip">
+      <Link>ItemTemplates\CSharp\XRM\JosephM XRM WorkflowActivity.zip</Link>
+    </None>
+    <Content Include="..\VsixFiles\JosephM.Xrm.Vsix EULA.rtf">
+      <Link>JosephM.Xrm.Vsix EULA.rtf</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="JosephM.XRM.VSIX.snk" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
@@ -152,15 +139,7 @@
       <Name>JosephM.Xrm</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\RefreshSettingsCommand.png" />
-    <Content Include="Resources\XrmPackage.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="VSPackage.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
+  <Import Project="..\JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

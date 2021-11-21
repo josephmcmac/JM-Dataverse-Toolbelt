@@ -1,12 +1,10 @@
 ﻿using JosephM.Application.Desktop.Test;
-using JosephM.XrmModule.SavedXrmConnections;
+using JosephM.Xrm.Vsix.App;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.Xrm.Vsix.Wizards;
+using JosephM.XrmModule.SavedXrmConnections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using JosephM.Xrm.Vsix.App;
-using JosephM.Core.Extentions;
 
 namespace JosephM.Xrm.Vsix.Test
 {

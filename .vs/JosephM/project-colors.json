@@ -65,7 +65,27 @@
       "ProjectGuid": "2d932723-7578-4b9b-b063-07df1af32c87",
       "DisplayName": "Xrm.Vsix",
       "ColorIndex": 11
+    },
+    "d9384831-76f5-4dbc-ae35-683c7067c8dd": {
+      "ProjectGuid": "d9384831-76f5-4dbc-ae35-683c7067c8dd",
+      "DisplayName": "JosephM.Xrm.Vsix.Shared",
+      "ColorIndex": 12
+    },
+    "f5ec8e25-2152-448d-9459-8f0ef9933b3b": {
+      "ProjectGuid": "f5ec8e25-2152-448d-9459-8f0ef9933b3b",
+      "DisplayName": "JosephM.Xrm.Vsix.Test",
+      "ColorIndex": 13
+    },
+    "f0ac2b36-7bdb-49a6-9e1b-af995f70871c": {
+      "ProjectGuid": "f0ac2b36-7bdb-49a6-9e1b-af995f70871c",
+      "DisplayName": "VsixFiles",
+      "ColorIndex": 14
+    },
+    "4818a2c5-60ef-4f10-8018-9e56b24b00c0": {
+      "ProjectGuid": "4818a2c5-60ef-4f10-8018-9e56b24b00c0",
+      "DisplayName": "Properties",
+      "ColorIndex": 15
     }
   },
-  "NextColorIndex": 12
+  "NextColorIndex": 0
 }

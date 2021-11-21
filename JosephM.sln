@@ -251,13 +251,69 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Version3", "Version3", "{72
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.TestConsoleApplication", "JosephM.TestConsoleApplication\JosephM.TestConsoleApplication.csproj", "{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix.App.Vs2019", "JosephM.Xrm.Vsix.App.Vs2019\JosephM.Xrm.Vsix.App.Vs2019.csproj", "{42FB3238-63DE-41B8-9752-86D60728E401}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix2022", "JosephM.Xrm.Vsix2022\JosephM.Xrm.Vsix2022.csproj", "{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.Vsix2019", "JosephM.Xrm.Vsix2019\JosephM.Xrm.Vsix2019.csproj", "{C034F8D0-95C6-44DC-97D1-3647D9463149}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "JosephM.Xrm.Vsix.Shared", "JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.shproj", "{D9384831-76F5-4DBC-AE35-683C7067C8DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TemplateItems", "TemplateItems", "{DEE14006-0561-4EF0-A1A7-94FB4572E42C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{2A874DE4-3419-4D2A-A7F8-B6DFD8203EDF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xrm", "Xrm", "{12DBD3A6-5FFF-4A79-B530-4F2BD41267B6}"
+	ProjectSection(SolutionItems) = preProject
+		TemplateItems\CSharp\XRM\JosephM XRM Entity JavaScript.zip = TemplateItems\CSharp\XRM\JosephM XRM Entity JavaScript.zip
+		TemplateItems\CSharp\XRM\JosephM XRM Entity Plugin.zip = TemplateItems\CSharp\XRM\JosephM XRM Entity Plugin.zip
+		TemplateItems\CSharp\XRM\JosephM XRM Test.zip = TemplateItems\CSharp\XRM\JosephM XRM Test.zip
+		TemplateItems\CSharp\XRM\JosephM XRM WorkflowActivity.zip = TemplateItems\CSharp\XRM\JosephM XRM WorkflowActivity.zip
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VsixFiles", "VsixFiles", "{F0AC2B36-7BDB-49A6-9E1B-AF995F70871C}"
+	ProjectSection(SolutionItems) = preProject
+		VsixFiles\JosephM.Xrm.Vsix EULA.rtf = VsixFiles\JosephM.Xrm.Vsix EULA.rtf
+		VsixFiles\XrmPackage.vsct = VsixFiles\XrmPackage.vsct
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", "{4818A2C5-60EF-4F10-8018-9E56B24B00C0}"
+	ProjectSection(SolutionItems) = preProject
+		VsixFiles\Properties\AssemblyInfo.cs = VsixFiles\Properties\AssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JosephM XRM Entity JavaScript", "JosephM XRM Entity JavaScript", "{DBA7FD42-2F77-402D-97FE-02B27B24DD8A}"
+	ProjectSection(SolutionItems) = preProject
+		TemplateItems\JosephM XRM Entity JavaScript\__TemplateIcon.ico = TemplateItems\JosephM XRM Entity JavaScript\__TemplateIcon.ico
+		TemplateItems\JosephM XRM Entity JavaScript\MyTemplate.vstemplate = TemplateItems\JosephM XRM Entity JavaScript\MyTemplate.vstemplate
+		TemplateItems\JosephM XRM Entity JavaScript\template_javascript.js = TemplateItems\JosephM XRM Entity JavaScript\template_javascript.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JosephM XRM Entity Plugin", "JosephM XRM Entity Plugin", "{EA2674D1-9511-4AD1-9B9A-5B4C27E03BCD}"
+	ProjectSection(SolutionItems) = preProject
+		TemplateItems\JosephM XRM Entity Plugin\__TemplateIcon.ico = TemplateItems\JosephM XRM Entity Plugin\__TemplateIcon.ico
+		TemplateItems\JosephM XRM Entity Plugin\MyTemplate.vstemplate = TemplateItems\JosephM XRM Entity Plugin\MyTemplate.vstemplate
+		TemplateItems\JosephM XRM Entity Plugin\Plugin.cs = TemplateItems\JosephM XRM Entity Plugin\Plugin.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JosephM XRM Test", "JosephM XRM Test", "{2D597E78-DC7D-405B-911D-C1B8227D32D2}"
+	ProjectSection(SolutionItems) = preProject
+		TemplateItems\JosephM XRM Test\__TemplateIcon.ico = TemplateItems\JosephM XRM Test\__TemplateIcon.ico
+		TemplateItems\JosephM XRM Test\MyTemplate.vstemplate = TemplateItems\JosephM XRM Test\MyTemplate.vstemplate
+		TemplateItems\JosephM XRM Test\XrmTest.cs = TemplateItems\JosephM XRM Test\XrmTest.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JosephM XRM WorkflowActivity", "JosephM XRM WorkflowActivity", "{BDC3539F-06BE-49A4-BE72-5501E3879BD5}"
+	ProjectSection(SolutionItems) = preProject
+		TemplateItems\JosephM XRM WorkflowActivity\__TemplateIcon.ico = TemplateItems\JosephM XRM WorkflowActivity\__TemplateIcon.ico
+		TemplateItems\JosephM XRM WorkflowActivity\MyTemplate.vstemplate = TemplateItems\JosephM XRM WorkflowActivity\MyTemplate.vstemplate
+		TemplateItems\JosephM XRM WorkflowActivity\WorkflowActivityTemplate.cs = TemplateItems\JosephM XRM WorkflowActivity\WorkflowActivityTemplate.cs
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{2e3789be-94e7-4b9f-a096-dc112f4fb84e}*SharedItemsImports = 4
+		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{c034f8d0-95c6-44dc-97d1-3647d9463149}*SharedItemsImports = 4
+		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{d9384831-76f5-4dbc-ae35-683c7067c8dd}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -880,18 +936,6 @@ Global
 		{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9}.Release|x86.ActiveCfg = Release|Any CPU
 		{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9}.Release|x86.Build.0 = Release|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Debug|x86.Build.0 = Debug|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|x86.ActiveCfg = Release|Any CPU
-		{42FB3238-63DE-41B8-9752-86D60728E401}.Release|x86.Build.0 = Release|Any CPU
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -997,9 +1041,18 @@ Global
 		{7C913B03-2A50-4461-868F-14C262E15492} = {B09D0DB0-7BD0-4DC9-848B-3D7E4B450390}
 		{726A2A68-5E84-4874-B954-77B10F9038A8} = {B09D0DB0-7BD0-4DC9-848B-3D7E4B450390}
 		{5C2DE11B-1460-42A2-AF37-57FB0BAF80F9} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
-		{42FB3238-63DE-41B8-9752-86D60728E401} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 		{2E3789BE-94E7-4B9F-A096-DC112F4FB84E} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
 		{C034F8D0-95C6-44DC-97D1-3647D9463149} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
+		{D9384831-76F5-4DBC-AE35-683C7067C8DD} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
+		{DEE14006-0561-4EF0-A1A7-94FB4572E42C} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
+		{2A874DE4-3419-4D2A-A7F8-B6DFD8203EDF} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
+		{12DBD3A6-5FFF-4A79-B530-4F2BD41267B6} = {2A874DE4-3419-4D2A-A7F8-B6DFD8203EDF}
+		{F0AC2B36-7BDB-49A6-9E1B-AF995F70871C} = {D1EC0D8E-2041-404C-B275-5623FDC27A14}
+		{4818A2C5-60EF-4F10-8018-9E56B24B00C0} = {F0AC2B36-7BDB-49A6-9E1B-AF995F70871C}
+		{DBA7FD42-2F77-402D-97FE-02B27B24DD8A} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
+		{EA2674D1-9511-4AD1-9B9A-5B4C27E03BCD} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
+		{2D597E78-DC7D-405B-911D-C1B8227D32D2} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
+		{BDC3539F-06BE-49A4-BE72-5501E3879BD5} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35

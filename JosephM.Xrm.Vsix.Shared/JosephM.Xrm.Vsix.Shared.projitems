@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>d9384831-76f5-4dbc-ae35-683c7067c8dd</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>JosephM.Xrm.Vsix.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Application\MenuCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioProjectBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioProjectItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioServiceBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\VisualStudioSolutionFolder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\XrmMenuCommandService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\MyProjectItemWizard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\MyWizardBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\SolutionWizardPackageSettingsDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmEntityJavaScriptWizard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmEntityPluginWizard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmSolutionWizard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmSolutionWizardBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmTestWizard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wizards\XrmWorkflowActivityWizard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)XrmPackage.cs" />
+  </ItemGroup>
+</Project>
