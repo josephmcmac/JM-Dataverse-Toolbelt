@@ -6,7 +6,6 @@ using System.Linq;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
 using $ext_safeprojectname$.Plugins.Xrm;
-using $ext_safeprojectname$.Plugins.SharePoint;
 using $ext_safeprojectname$.Plugins.Localisation;
 
 namespace $safeprojectname$
@@ -63,17 +62,6 @@ namespace $safeprojectname$
                 if (_service == null)
                     _service = new $ext_jmobjprefix$Service(XrmService, $ext_jmobjprefix$Settings);
                 return _service;
-            }
-        }
-
-        private $ext_jmobjprefix$SharepointService _sharePointService;
-        public $ext_jmobjprefix$SharepointService $ext_jmobjprefix$SharepointService
-        {
-            get
-            {
-                if (_sharePointService == null)
-                    _sharePointService = new $ext_jmobjprefix$SharepointService(XrmService, new $ext_jmobjprefix$SharePointSettings(XrmService));
-                return _sharePointService;
             }
         }
 

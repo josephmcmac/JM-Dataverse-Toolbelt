@@ -16,17 +16,13 @@
   <TemplateContent>
     <Project TargetFileName="JosephM.Xrm.Plugins.csproj" File="JosephM.Xrm.Plugins.csproj" ReplaceParameters="true">
         <ProjectItem ReplaceParameters="true" TargetFileName="App.config">App.config</ProjectItem>
+        <Folder Name="Action" TargetFolderName="Action">
+          <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$Action.cs">$ext_jmobjprefix$Action.cs</ProjectItem>
+        </Folder>
         <Folder Name="Localisation" TargetFolderName="Localisation">
           <ProjectItem ReplaceParameters="true" TargetFileName="ILocalisationSettings.cs">ILocalisationSettings.cs</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="LocalisationService.cs">LocalisationService.cs</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="LocalisationSettings.cs">LocalisationSettings.cs</ProjectItem>
-        </Folder>
-        <Folder Name="SharePoint" TargetFolderName="SharePoint">
-          <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$SpService.cs">$ext_jmobjprefix$SpService.cs</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="$ext_jmobjprefix$SpSettings.cs">$ext_jmobjprefix$SpSettings.cs</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="GetFolderResponse.cs">GetFolderResponse.cs</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="ISharePointSettings.cs">ISharePointSettings.cs</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="SharePointService.cs">SharePointService.cs</ProjectItem>
         </Folder>
       <Folder Name="Core" TargetFolderName="Core">
         <ProjectItem ReplaceParameters="true" TargetFileName="ConsoleSettings.cs">ConsoleSettings.cs</ProjectItem>
@@ -68,6 +64,7 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="ToolingConnectorForm.xaml.cs">ToolingConnectorForm.xaml.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConfiguration.cs">XrmConfiguration.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmConnection.cs">XrmConnection.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="XrmActionBase.cs">XrmActionBase.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmEntity.cs">XrmEntity.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmEntityPlugin.cs">XrmEntityPlugin.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="XrmNNPlugin.cs">XrmNNPlugin.cs</ProjectItem>

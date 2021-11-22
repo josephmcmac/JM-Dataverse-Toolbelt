@@ -59,18 +59,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\templateitems\csharp\xrm\JosephM XRM Entity JavaScript.zip">
+    <Content Include="..\templateitems\csharp\xrm\JosephM XRM Entity JavaScript.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM Entity JavaScript.zip</Link>
-    </None>
-    <None Include="..\templateitems\csharp\xrm\JosephM XRM Entity Plugin.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\templateitems\csharp\xrm\JosephM XRM Entity Plugin.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM Entity Plugin.zip</Link>
-    </None>
-    <None Include="..\templateitems\csharp\xrm\JosephM XRM Test.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\templateitems\csharp\xrm\JosephM XRM Test.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM Test.zip</Link>
-    </None>
-    <None Include="..\templateitems\csharp\xrm\JosephM XRM WorkflowActivity.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\templateitems\csharp\xrm\JosephM XRM WorkflowActivity.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM WorkflowActivity.zip</Link>
-    </None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\VsixFiles\JosephM.Xrm.Vsix EULA.rtf">
       <Link>JosephM.Xrm.Vsix EULA.rtf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -659,5 +659,29 @@ namespace $safeprojectname$.Xrm
             throw new Exception(string.Format("Field {0} Of Unexpected Type For Method {1}", fieldName,
                 value.GetType().Name));
         }
+
+        public static bool MeetsFilter(Func<string, object> getFieldDelegate, FilterExpression filter)
+        {
+            if (filter == null)
+            {
+                return true;
+            }
+            var result = true;
+            if (filter.FilterOperator == LogicalOperator.Or)
+            {
+                result =
+                    (!filter.Conditions.Any() && !filter.Filters.Any())
+                    || filter.Conditions.Any(c => MeetsCondition(getFieldDelegate(c.AttributeName), c))
+                    || filter.Filters.Any(f => MeetsFilter(getFieldDelegate, f));
+            }
+            else
+            {
+                result = MeetsConditions(getFieldDelegate, filter.Conditions)
+                    && filter.Filters.All(f => MeetsFilter(getFieldDelegate, f));
+            }
+
+            return result;
+
+        }
     }
 }

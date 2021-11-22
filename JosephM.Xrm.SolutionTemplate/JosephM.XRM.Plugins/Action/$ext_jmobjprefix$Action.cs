@@ -2,13 +2,9 @@
 using $safeprojectname$.Xrm;
 using $safeprojectname$.Localisation;
 
-namespace $safeprojectname$.Workflows
+namespace $safeprojectname$.Action
 {
-    /// <summary>
-    /// class for shared services or settings objects for workflow activities
-    /// </summary>
-    public abstract class $ext_jmobjprefix$WorkflowActivity<T> : XrmWorkflowActivityInstance<T>
-        where T : XrmWorkflowActivityRegistration
+    public abstract class $ext_jmobjprefix$ActionBase : XrmActionBase
     {
         private $ext_jmobjprefix$Settings _settings;
         public $ext_jmobjprefix$Settings $ext_jmobjprefix$Settings
