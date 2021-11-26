@@ -232,8 +232,8 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
         //if the value is not actually changing don't bother
         if (preValue == value)
             return;
-        //this horrible piece of code is to return if we are setting a lookup and the lookup is not actually changing we don't want to trigger unneccessary logic further down the track (e.g. a server call on change)
-        if (preValue != null && value != null && getFormContext().getControl(fieldName).getControlType() == 'lookup' && that.GuidsEqual(preValue[0].id, value[0].id) && preValue[0].entityType == value[0].entityType)
+        //ifl lookup is not actually changing don't bother
+        if (preValue != null && value != null && getFormContext().getControl(fieldName).getControlType() == 'lookup' && preValue.length > 0 && that.GuidsEqual(preValue[0].id, value[0].id) && preValue[0].entityType == value[0].entityType)
             return;
         //set the value then run the onchange method
         attribute.setValue(value);

@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$ext_jmxrmprefix$_pageutility.js" />
+    <Content Include="$ext_jmxrmprefix$_webapiutility.js" />
+    <Content Include="$ext_jmxrmprefix$_webresourceutility.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

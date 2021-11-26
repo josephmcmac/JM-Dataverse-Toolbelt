@@ -65,15 +65,21 @@
       <Link>XrmPackage.vsct</Link>
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
-    <None Include="..\TemplateItems\CSharp\XRM\JosephM XRM Entity Plugin.zip">
+    <Content Include="..\TemplateItems\CSharp\XRM\JosephM XRM Entity Plugin.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM Entity Plugin.zip</Link>
-    </None>
-    <None Include="..\TemplateItems\CSharp\XRM\JosephM XRM Test.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\TemplateItems\CSharp\XRM\JosephM XRM Test.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM Test.zip</Link>
-    </None>
-    <None Include="..\TemplateItems\CSharp\XRM\JosephM XRM WorkflowActivity.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\TemplateItems\CSharp\XRM\JosephM XRM WorkflowActivity.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM WorkflowActivity.zip</Link>
-    </None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\VsixFiles\JosephM.Xrm.Vsix EULA.rtf">
       <Link>JosephM.Xrm.Vsix EULA.rtf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -1,6 +1,5 @@
 ﻿using $safeprojectname$.Services;
 using $safeprojectname$.Xrm;
-using $safeprojectname$.SharePoint;
 using $safeprojectname$.Localisation;
 
 namespace $safeprojectname$.Plugins
@@ -29,17 +28,6 @@ namespace $safeprojectname$.Plugins
                 if (_service == null)
                     _service = new $ext_jmobjprefix$Service(XrmService, $ext_jmobjprefix$Settings);
                 return _service;
-            }
-        }
-
-        private $ext_jmobjprefix$SharepointService _sharePointService;
-        public $ext_jmobjprefix$SharepointService $ext_jmobjprefix$SharepointService
-        {
-            get
-            {
-                if (_sharePointService == null)
-                    _sharePointService = new $ext_jmobjprefix$SharepointService(XrmService, new $ext_jmobjprefix$SharePointSettings(XrmService));
-                return _sharePointService;
             }
         }
 
