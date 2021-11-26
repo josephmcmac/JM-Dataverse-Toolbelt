@@ -1225,6 +1225,24 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                 throw new ArgumentException("Parse EntityName not implemented for argument type: " +
                                                             value.GetType().Name);
                         }
+                    case AttributeTypeCode.Virtual:
+                        {
+                            var fieldMetadata = GetFieldMetadata(fieldName, entityType);
+                            if (fieldMetadata is MultiSelectPicklistAttributeMetadata ms)
+                            {
+                                if (value is string stringOptions && !string.IsNullOrWhiteSpace(stringOptions))
+                                {
+                                    var splitStringOptions = stringOptions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                                    var optionValueCollection = new OptionSetValueCollection();
+                                    foreach(var item in splitStringOptions)
+                                    {
+                                        optionValueCollection.Add(new OptionSetValue(GetMatchingOptionValue(item.Trim(), fieldName, entityType)));
+                                    }
+                                    return optionValueCollection;
+                                }
+                            }
+                            break;
+                        }
                 }
                 return value;
             }

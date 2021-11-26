@@ -158,7 +158,7 @@ namespace JosephM.Xrm
             {
                 return GetLookupType(GetField(entity, fieldName));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception($"Unexpected Error Getting Lookup Type For Field {fieldName} in type {entity?.LogicalName}", ex);
             }
@@ -334,21 +334,27 @@ namespace JosephM.Xrm
         public static bool FieldsEqual(object field1, object field2)
         {
             if (field1 == null && field2 == null)
+            {
                 return true;
+            }
             else if (field1 == null || field2 == null)
             {
                 if (field1 is string || field2 is string)
-                    return String.IsNullOrEmpty((string)field1) && String.IsNullOrEmpty((string)field2);
+                {
+                    return string.IsNullOrEmpty((string)field1) && String.IsNullOrEmpty((string)field2);
+                }
                 else
+                {
                     return false;
+                }
             }
-            else if (field1 is EntityReference && field2 is EntityReference)
-                return (((EntityReference)field1).Id).Equals(((EntityReference)field2).Id) &&
-                       (((EntityReference)field1).LogicalName).Equals(((EntityReference)field2).LogicalName);
-            else if (field1 is DateTime && field2 is DateTime)
+            else if (field1 is EntityReference er1 && field2 is EntityReference er2)
             {
-                var dt1 = (DateTime)field1;
-                var dt2 = (DateTime)field2;
+                return er1.Id.Equals(er2.Id) &&
+                       er1.LogicalName.Equals(er2.LogicalName);
+            }
+            else if (field1 is DateTime dt1 && field2 is DateTime dt2)
+            {
                 if (dt1.Kind == DateTimeKind.Utc && (dt2.Kind == DateTimeKind.Local || dt2.Kind == DateTimeKind.Unspecified))
                 {
                     dt2 = dt2.ToUniversalTime();
@@ -359,42 +365,74 @@ namespace JosephM.Xrm
                 }
                 return dt1.Equals(dt2);
             }
-            else if (field1 is OptionSetValue)
+            else if (field1 is OptionSetValue osv1)
             {
-                if (field2 is OptionSetValue)
-                    return GetOptionSetValue(field1).Equals(GetOptionSetValue(field2));
-                else if (field2 is int)
-                    return GetOptionSetValue(field1).Equals(field2);
+                if (field2 is OptionSetValue osv2)
+                {
+                    return osv1.Value.Equals(osv2.Value);
+                }
+                else if (field2 is int osvInt2)
+                {
+                    return osv1.Value.Equals(osvInt2);
+                }
                 else
-                    throw new InvalidPluginExecutionException("Mismatched Types");
+                {
+                    throw new InvalidPluginExecutionException($"Mismatched Types {field1.GetType().Name} & {field2.GetType().Name}");
+                }
             }
-            else if (field1 is int)
+            else if (field1 is int int1)
             {
-                if (field2 is int)
-                    return ((int)field1).Equals(((int)field2));
-                else if (field2 is OptionSetValue)
-                    return ((int)field1).Equals(GetOptionSetValue(field2));
+                if (field2 is int int2)
+                {
+                    return int1.Equals(int2);
+                }
+                else if (field2 is OptionSetValue intOsv2)
+                {
+                    return int1.Equals(intOsv2.Value);
+                }
                 else
-                    throw new InvalidPluginExecutionException("Mismatched Types");
+                {
+                    throw new InvalidPluginExecutionException($"Mismatched Types {field1.GetType().Name} & {field2.GetType().Name}");
+                }
             }
-            else if (field1 is bool && field2 is bool)
-                return ((bool)field1).Equals(((bool)field2));
-            else if (field1 is Guid && field2 is Guid)
-                return ((Guid)field1).Equals(((Guid)field2));
-            else if (field1 is Double && field2 is Double)
-                return ((Double)field1).Equals(((Double)field2));
-            else if (field1 is string && field2 is string)
-                return ((string)field1).Equals(((string)field2));
-            else if (field1 is Money && field2 is Money)
-                return (field1).Equals((field2));
-            else if (field1 is Decimal && field2 is Decimal)
-                return ((Decimal)field1).Equals(((Decimal)field2));
+            else if (field1 is bool b1 && field2 is bool b2)
+            {
+                return b1.Equals(b2);
+            }
+            else if (field1 is Guid g1 && field2 is Guid g2)
+            {
+                return g1.Equals(g2);
+            }
+            else if (field1 is double db1 && field2 is double db2)
+            {
+                return db1.Equals(db2);
+            }
+            else if (field1 is string s1 && field2 is string s2)
+            {
+                return s1.Equals(s2);
+            }
+            else if (field1 is Money m1 && field2 is Money m2)
+            {
+                return m1.Equals(m2);
+            }
+            else if (field1 is decimal dc1 && field2 is decimal dc2)
+            {
+                return dc1.Equals(dc2);
+            }
             else if (field1 is Entity[] || field1 is EntityCollection)
+            {
                 return EntityListFieldEqual(field1, field2);
+            }
+            else if (field1 is OptionSetValueCollection osvc1 && field1 is OptionSetValueCollection osvc2)
+            {
+                var ints1 = osvc1.Select(x => x.Value).OrderBy(i => i).ToArray();
+                var ints2 = osvc2.Select(x => x.Value).OrderBy(i => i).ToArray();
+                return ints1.SequenceEqual(ints2);
+            }
             else
-                throw new InvalidPluginExecutionException(
-                    string.Concat("FieldsEqualCrmTarget type not implemented for types ", field1.GetType(), " and ",
-                        field2.GetType()));
+            {
+                throw new InvalidPluginExecutionException($"Not implemented for types {field1.GetType().Name} & {field2.GetType().Name}");
+            }
         }
 
         private static bool EntityListFieldEqual(object field1, object field2)
