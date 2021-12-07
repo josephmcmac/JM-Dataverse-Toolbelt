@@ -3,6 +3,7 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
+using JosephM.Xrm.Vsix.App.Extensions;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using System;
@@ -41,7 +42,9 @@ namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
             CompletionItem = response;
             try
             {
-                var assemblyFile = VisualStudioService.BuildSelectedProjectAndGetAssemblyName();
+                var selectedProjectName = VisualStudioService.GetSelectedProjectName();
+                var addIlMergePath = PackageSettings.AddIlMergePathForProject(selectedProjectName);
+                var assemblyFile = VisualStudioService.BuildSelectedProjectAndGetAssemblyName(addIlMergePath);
                 if (string.IsNullOrWhiteSpace(assemblyFile))
                 {
                     response.CompletionMessage = "Could Not Find Built Assembly. Check The Build Results";

@@ -165,7 +165,7 @@ namespace JosephM.Xrm.Vsix.Application
             return results;
         }
 
-        public override string BuildSelectedProjectAndGetAssemblyName()
+        public override string BuildSelectedProjectAndGetAssemblyName(bool addIlMergePath)
         {
             var selectedProject = GetSelectedProject();
             var build = DTE.Solution.SolutionBuild;
@@ -181,6 +181,10 @@ namespace JosephM.Xrm.Vsix.Application
                 var fileInfo = new FileInfo(selectedProject.FullName);
                 var rootFolder = fileInfo.DirectoryName;
                 var outputFolder = Path.Combine(rootFolder ?? "", outputPath);
+                if(addIlMergePath)
+                {
+                    outputFolder = Path.Combine(outputFolder, "ILMerge");
+                }
                 var assemblyFile = Path.Combine(outputFolder, assemblyName) + ".dll";
                 return assemblyFile;
             }

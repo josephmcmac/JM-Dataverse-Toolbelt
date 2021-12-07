@@ -93,7 +93,7 @@ namespace JosephM.Xrm.Vsix.Application
             return fileQualified;
         }
 
-        public abstract string BuildSelectedProjectAndGetAssemblyName();
+        public abstract string BuildSelectedProjectAndGetAssemblyName(bool addIlMergePath);
 
         public abstract IEnumerable<string> GetSelectedFileNamesQualified();
 

@@ -7,6 +7,7 @@ using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Crud.Validations;
 using JosephM.XrmModule.SavedXrmConnections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.PackageSettings
 {
@@ -85,6 +86,13 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         [Group(Sections.ConnectionInstances)]
         public IEnumerable<SavedXrmRecordConfiguration> Connections { get; set; }
 
+        public bool AddIlMergePathForProject(string projectName)
+        {
+            return PluginProjects != null
+                && PluginProjects.Any(pp => pp.ProjectName?.ToLower() == projectName?.ToLower())
+                && PluginProjects.First(pp => pp.ProjectName?.ToLower() == projectName?.ToLower()).UsesILMergeMsBuildTask;
+        }
+
         [DoNotAllowGridOpen]
         public class PluginProject
         {
@@ -101,6 +109,12 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
             [GridWidth(330)]
             [RequiredProperty]
             public string ProjectName { get; set; }
+
+            [GridWidth(150)]
+            [RequiredProperty]
+            [DisplayName("Uses ILMerge-MSBuild-Task")]
+            [MyDescription("ILMerge-MSBuild-Task output will be used for this project if this flag is checked, but is only supported for the standard ILMerge output path and where an ILMergeConfig.json file is used to limit the dlls included (rather than the default CopyAll)")]
+            public bool UsesILMergeMsBuildTask { get; set; }
         }
 
         [DoNotAllowGridOpen]

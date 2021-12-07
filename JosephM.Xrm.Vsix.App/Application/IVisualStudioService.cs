@@ -12,7 +12,7 @@ namespace JosephM.Xrm.Vsix.Application
         void AddFolder(string folderDirectory);
         string GetVsixSettingText(string name);
         string GetItemText(string name, string folderName);
-        string BuildSelectedProjectAndGetAssemblyName();
+        string BuildSelectedProjectAndGetAssemblyName(bool addIlMergePath);
         string GetSelectedProjectAssemblyName();
         IEnumerable<string> GetSelectedFileNamesQualified();
         void SaveSelectedFiles();

@@ -78,6 +78,7 @@
     <Compile Include="Application\VsixDependencyContainer.cs" />
     <Compile Include="Application\VsixManifest.cs" />
     <Compile Include="Application\VsixSettingsManager.cs" />
+    <Compile Include="Extensions\VisualStudioServiceExtensions.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Module\AddPortalCode\AddPortalCodeDialog.cs" />
     <Compile Include="Module\AddPortalCode\AddPortalCodeModule.cs" />

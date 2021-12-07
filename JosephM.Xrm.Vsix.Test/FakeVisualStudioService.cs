@@ -25,7 +25,7 @@ namespace JosephM.Xrm.Vsix.Test
         private string _solutionDirectory;
         public override string SolutionDirectory { get { return _solutionDirectory; } }
 
-        public override string BuildSelectedProjectAndGetAssemblyName()
+        public override string BuildSelectedProjectAndGetAssemblyName(bool addIlMergePath)
         {
             return GetTestPluginAssemblyFile();
         }

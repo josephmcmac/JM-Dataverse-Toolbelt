@@ -7,6 +7,7 @@ using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
+using JosephM.Xrm.Vsix.App.Extensions;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.DeployAssembly.AssemblyReader;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
@@ -63,7 +64,9 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 
         private string LoadAssemblyDetails()
         {
-            AssemblyFile = VisualStudioService.BuildSelectedProjectAndGetAssemblyName();
+            var selectedProjectName = VisualStudioService.GetSelectedProjectName();
+            var addIlMergePath = PackageSettings.AddIlMergePathForProject(selectedProjectName);
+            AssemblyFile = VisualStudioService.BuildSelectedProjectAndGetAssemblyName(addIlMergePath);
             if (string.IsNullOrWhiteSpace(AssemblyFile))
                 return "Could Not Find Built Assembly. Check The Build Result For Errors";
 
@@ -91,7 +94,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
                     myDomain.CreateInstanceFrom(
                         Assembly.GetExecutingAssembly().Location,
                         typeof(PluginAssemblyReader).FullName).Unwrap();
-                var loadResponse = reader.LoadTypes(AssemblyFile);
+                var loadResponse = reader.LoadTypes(AssemblyFile, addIlMergePath);
                 isSigned = loadResponse.IsSigned;
                 var loadedPlugins = loadResponse.PluginTypes;
                 plugins =
