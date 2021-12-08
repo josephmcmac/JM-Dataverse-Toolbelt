@@ -13,7 +13,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public RecordTypeFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm, bool usePicklist)
             : base(fieldName, label, recordForm)
         {
-            var autocompleteFunction = new AutocompleteFunction(GetAutocomplete, typeof(RecordTypeAutocomplete), nameof(RecordTypeAutocomplete.LogicalName), new[] { new GridFieldMetadata(nameof(RecordTypeAutocomplete.LogicalName)), new GridFieldMetadata(nameof(RecordTypeAutocomplete.DisplayName)) })
+            var autocompleteFunction = new AutocompleteFunction(GetAutocomplete, typeof(RecordTypeAutocomplete), nameof(RecordTypeAutocomplete.LogicalName), new[] { new GridFieldMetadata(nameof(RecordTypeAutocomplete.LogicalName)), new GridFieldMetadata(nameof(RecordTypeAutocomplete.DisplayName)) }, autosearch: false)
             {
                 CacheAsStaticList = true
             };
