@@ -327,7 +327,7 @@ namespace JosephM.Deployment.DataImport
                     && _cachedRecords[type][fieldName].ContainsKey(matchString))
                     return _cachedRecords[type][fieldName][matchString];
             }
-            return XrmService.RetrieveAllAndClauses(type, conditions.Union(matchFilters).ToArray(), null);
+            return XrmService.RetrieveAllAndConditions(type, conditions.Union(matchFilters).ToArray(), null);
         }
 
         private IEnumerable<Entity> GetMatchesByNameForRootRecord(TypeConfigs.Config parentChildConfig, string name)
@@ -336,7 +336,7 @@ namespace JosephM.Deployment.DataImport
             //then match by name and where the parent reference is empty
             if (name == null)
                 throw new NullReferenceException("Name Is Null For Parent Record");
-            var matches = XrmService.RetrieveAllAndClauses(parentChildConfig.Type,
+            var matches = XrmService.RetrieveAllAndConditions(parentChildConfig.Type,
                         new[] {
                                 new ConditionExpression(parentChildConfig.ParentLookupField, ConditionOperator.Null),
                                 new ConditionExpression(XrmService.GetPrimaryNameField(parentChildConfig.Type), ConditionOperator.Equal, name) });

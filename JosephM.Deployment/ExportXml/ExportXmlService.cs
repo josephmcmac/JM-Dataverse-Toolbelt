@@ -85,7 +85,7 @@ namespace JosephM.Deployment.ExportXml
                 {
                     case ExportType.AllRecords:
                         {
-                            entities = XrmService.RetrieveAllAndClauses(type, conditions)
+                            entities = XrmService.RetrieveAllAndConditions(type, conditions)
                                 .Where(e => !CheckIgnoreForExport(exportType, e))
                                 .ToArray();
                             break;

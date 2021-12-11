@@ -142,8 +142,8 @@ namespace JosephM.Xrm.Test
             /*
              * Double field
              * */
-            var maxDoubleValue = (double) XrmService.GetMaxDoubleValue(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity);
-            var minDoubleValue = (double) XrmService.GetMinDoubleValue(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity);
+            var maxDoubleValue = XrmService.GetMaxDoubleValue(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity);
+            var minDoubleValue = XrmService.GetMinDoubleValue(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity);
             //Valid values
             Assert.IsTrue((double) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_float, Entities.jmcg_testentity, maxDoubleValue) ==
                           maxDoubleValue);
@@ -224,8 +224,8 @@ namespace JosephM.Xrm.Test
             /*
              * Money field
              * */
-            var maxMoneyValue = (double) XrmService.GetMaxMoneyValue(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity);
-            var minMoneyValue = (double) XrmService.GetMinMoneyValue(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity);
+            var maxMoneyValue = XrmService.GetMaxMoneyValue(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity);
+            var minMoneyValue =  XrmService.GetMinMoneyValue(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity);
             //Valid values
             Assert.IsTrue(
                 XrmEntity.GetMoneyValue(XrmService.ParseField(Fields.jmcg_testentity_.jmcg_money, Entities.jmcg_testentity, maxMoneyValue)) ==
@@ -269,8 +269,8 @@ namespace JosephM.Xrm.Test
             /*
              * Decimal field
              * */
-            var maxDecimalValue = (decimal) XrmService.GetMaxDecimalValue(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity);
-            var minDecimalValue = (decimal) XrmService.GetMinDecimalValue(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity);
+            var maxDecimalValue = XrmService.GetMaxDecimalValue(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity);
+            var minDecimalValue = XrmService.GetMinDecimalValue(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity);
             //Valid values
             Assert.IsTrue((decimal) XrmService.ParseField(Fields.jmcg_testentity_.jmcg_decimal, Entities.jmcg_testentity, maxDecimalValue) ==
                           maxDecimalValue);
@@ -419,17 +419,6 @@ namespace JosephM.Xrm.Test
             try
             {
                 var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, "BLAH");
-                Assert.Fail();
-            }
-            catch (Exception ex)
-            {
-                CheckException(ex);
-            }
-            //DateTime below minimum
-            var belowMin = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc).AddMilliseconds(-1);
-            try
-            {
-                var blah = XrmService.ParseField(Fields.jmcg_testentity_.jmcg_date, Entities.jmcg_testentity, belowMin);
                 Assert.Fail();
             }
             catch (Exception ex)

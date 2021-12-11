@@ -41,7 +41,7 @@ namespace JosephM.Xrm
             {
                 if(_languageCode == 0)
                 {
-                    var userSettings = RetrieveAllAndClauses(Entities.usersettings, new[]
+                    var userSettings = RetrieveAllAndConditions(Entities.usersettings, new[]
                     {
                         new ConditionExpression(Fields.usersettings_.systemuserid, ConditionOperator.EqualUserId)
                     }, new[] { Fields.usersettings_.uilanguageid });
@@ -76,8 +76,6 @@ namespace JosephM.Xrm
                 }
             }
         }
-
-        public static DateTime MinCrmDateTime = DateTime.SpecifyKind(new DateTime(1900, 1, 1), DateTimeKind.Utc);
 
         private readonly SortedDictionary<string, SortedDictionary<string, AttributeMetadata>>
             _entityFieldMetadata = new SortedDictionary<string, SortedDictionary<string, AttributeMetadata>>();
@@ -503,44 +501,44 @@ namespace JosephM.Xrm
             throw new ArgumentException("The field " + fieldName + " in entity " + entityType + " is not of string type");
         }
 
-        public decimal? GetMaxDecimalValue(string field, string entity)
+        public decimal GetMaxDecimalValue(string field, string entity)
         {
-            return ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue;
+            return ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue ?? decimal.MaxValue;
         }
 
-        public decimal? GetMinDecimalValue(string field, string entity)
+        public decimal GetMinDecimalValue(string field, string entity)
         {
-            return ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).MinValue;
+            return ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).MinValue ?? decimal.MinValue;
         }
 
-        public double? GetMaxMoneyValue(string field, string entity)
+        public double GetMaxMoneyValue(string field, string entity)
         {
-            return ((MoneyAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue;
+            return ((MoneyAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue ?? double.MaxValue;
         }
 
-        public double? GetMinMoneyValue(string field, string entity)
+        public double GetMinMoneyValue(string field, string entity)
         {
-            return ((MoneyAttributeMetadata)GetFieldMetadata(field, entity)).MinValue;
+            return ((MoneyAttributeMetadata)GetFieldMetadata(field, entity)).MinValue ?? double.MinValue;
         }
 
-        public int? GetMaxIntValue(string fieldName, string entityType)
+        public int GetMaxIntValue(string fieldName, string entityType)
         {
-            return ((IntegerAttributeMetadata)GetFieldMetadata(fieldName, entityType)).MaxValue;
+            return ((IntegerAttributeMetadata)GetFieldMetadata(fieldName, entityType)).MaxValue ?? int.MaxValue;
         }
 
-        public int? GetMinIntValue(string fieldName, string entityType)
+        public int GetMinIntValue(string fieldName, string entityType)
         {
-            return ((IntegerAttributeMetadata)GetFieldMetadata(fieldName, entityType)).MinValue;
+            return ((IntegerAttributeMetadata)GetFieldMetadata(fieldName, entityType)).MinValue ?? int.MinValue;
         }
 
-        public double? GetMaxDoubleValue(string field, string entity)
+        public double GetMaxDoubleValue(string field, string entity)
         {
-            return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue;
+            return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).MaxValue ?? double.MaxValue;
         }
 
-        public double? GetMinDoubleValue(string field, string entity)
+        public double GetMinDoubleValue(string field, string entity)
         {
-            return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).MinValue;
+            return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).MinValue ?? double.MinValue;
         }
 
         public bool IsString(string fieldName, string entityType)
@@ -567,13 +565,14 @@ namespace JosephM.Xrm
                 {
                     if (option.Value != null)
                     {
-                        return (int)option.Value;
+                        return option.Value ?? -1;
                     }
                 }
             }
-            if (!String.IsNullOrEmpty(value))
-                throw new Exception("Field " + field + " In Entity " + entity +
-                                                      " Has No Matching Picklist Option For Label " + value);
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                throw new Exception($"Field {field} in entity {entity} has no matching picklist option for label " + value);
+            }
             return -1;
         }
 
@@ -672,29 +671,19 @@ namespace JosephM.Xrm
 
         public int GetPrecision(string field, string entity)
         {
-            int? temp = null;
-            var internalType = GetFieldType(field, entity);
-            switch (internalType)
+            var fieldType = GetFieldType(field, entity);
+            switch (fieldType)
             {
                 case AttributeTypeCode.Decimal:
                     {
-                        temp = ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).Precision;
-                        break;
+                        return ((DecimalAttributeMetadata)GetFieldMetadata(field, entity)).Precision ?? 0;
                     }
                 case AttributeTypeCode.Double:
                     {
-                        temp = ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).Precision;
-                        break;
-                    }
-                default:
-                    {
-                        throw new NotImplementedException(string.Format("Get Precision Not Implemented For Field Of Type {0} ({1}.{2})"
-                            , internalType, entity, field));
+                        return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).Precision ?? 0;
                     }
             }
-            if (!temp.HasValue)
-                throw new NullReferenceException("Precision Is Null");
-            return temp.Value;
+            throw new NotImplementedException($"Get precision not implemented for field of type {fieldType}");
         }
 
         public string GetPrimaryNameField(string targetType)
@@ -903,30 +892,27 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 switch (fieldType)
                 {
                     case AttributeTypeCode.String:
-                        {
-                            var maxLength = GetMaxLength(fieldName, entityType);
-                            var temp = value.ToString();
-                            if (temp.Length > maxLength)
-                                throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                      " exceeded maximum length of " + maxLength);
-                            return temp;
-                        }
                     case AttributeTypeCode.Memo:
                         {
                             var maxLength = GetMaxLength(fieldName, entityType);
                             var temp = value.ToString();
                             if (temp.Length > maxLength)
-                                throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                      " exceeded maximum length of " + maxLength);
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Field {fieldName} exceeds maximum length of {maxLength}. Length is {temp.Length}");
+                            }
                             return temp;
                         }
                     case AttributeTypeCode.Integer:
                         {
                             int temp;
-                            if (value is int)
-                                temp = (int)value;
-                            else if (value is string && value.ToString().IsNullOrWhiteSpace())
+                            if (value is int i)
+                            {
+                                temp = i;
+                            }
+                            else if (value is string s && string.IsNullOrWhiteSpace(s))
+                            {
                                 return null;
+                            }
                             else
                             {
                                 var intAsString = value.ToString();
@@ -945,14 +931,12 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                     temp = Convert.ToInt32(output);
                                 }
                             }
-                            if (!IntInRange(fieldName, entityType, temp))
-                                throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                      " outside permitted range of " +
-                                                                      ((IntegerAttributeMetadata)
-                                                                          GetFieldMetadata(fieldName, entityType)).MinValue +
-                                                                      " to " +
-                                                                      ((IntegerAttributeMetadata)
-                                                                          GetFieldMetadata(fieldName, entityType)).MaxValue);
+                            var min = GetMinIntValue(fieldName, entityType);
+                            var max = GetMaxIntValue(fieldName, entityType);
+                            if(temp < min || temp > max)
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Field {fieldName} outside permitted range of {min} to {max}. Value is {temp}");
+                            }
                             return temp;
                         }
                     case AttributeTypeCode.DateTime:
@@ -962,7 +946,7 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                             {
                                 temp = dt;
                             }
-                            else if (!String.IsNullOrWhiteSpace(value.ToString()))
+                            else if (!string.IsNullOrWhiteSpace(value.ToString()))
                             {
                                 if (value.ToString().All(c => char.IsDigit(c) || c == '.')
                                     && value.ToString().Count(c => c == '.') <= 1)
@@ -977,16 +961,10 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                     }
                                     catch (Exception ex)
                                     {
-                                        throw new ArgumentException(
-                                            "Error Parsing Field " + fieldName + " in entity " + entityType + " value " +
-                                            value, ex);
+                                        throw new ArgumentException(nameof(value), $"Error parsing value {value} to date for field {fieldName}", ex);
                                     }
                                 }
                             }
-                            if (temp != null && temp < MinCrmDateTime)
-                                throw new ArgumentOutOfRangeException("Field " + fieldName + " in entity " + entityType +
-                                                                      " below lowest permitted value of " +
-                                                                      MinCrmDateTime);
                             //remove the second fractions as crm strips them out
                             if (temp.HasValue)
                             {
@@ -1003,19 +981,28 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                     case AttributeTypeCode.Owner:
                         {
                             if (value is EntityReference)
+                            {
                                 return value;
-                            if (value is Guid && fieldType == AttributeTypeCode.Lookup)
-                                return new EntityReference(GetLookupTargetEntity(fieldName, entityType), (Guid)value);
-                            else if (value is string)
+                            }
+                            if (value is Guid g && fieldType == AttributeTypeCode.Lookup)
+                            {
+                                return new EntityReference(GetLookupTargetEntity(fieldName, entityType), g);
+                            }
+                            else if (value is string s)
                             {
                                 var types = new List<string>();
                                 if (fieldType == AttributeTypeCode.Lookup)
+                                {
                                     types.Add(GetLookupTargetEntity(fieldName, entityType));
+                                }
                                 else if (fieldType == AttributeTypeCode.Owner)
+                                {
                                     types.AddRange(new[] { "team", "systemuser" });
+                                }
                                 else if (fieldType == AttributeTypeCode.Customer)
+                                {
                                     types.AddRange(new[] { "account", "contact" });
-
+                                }
                                 var matchingRecords = new List<EntityReference>();
                                 foreach (var type in types)
                                 {
@@ -1023,17 +1010,21 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                     if (Guid.TryParse(value.ToString(), out tryGetGuid))
                                     {
                                         if (types.Count() == 1)
+                                        {
                                             matchingRecords.Add(CreateLookup(type, tryGetGuid));
+                                        }
                                         else
                                         {
                                             var match = GetFirst(type, GetPrimaryKeyField(type), tryGetGuid);
                                             if (match != null)
+                                            {
                                                 matchingRecords.Add(match.ToEntityReference());
+                                            }
                                         }
                                     }
                                     else
                                     {
-                                        matchingRecords.AddRange(RetrieveAllAndClauses(type,
+                                        matchingRecords.AddRange(RetrieveAllAndConditions(type,
                                             new[]
                                         {
                                             new ConditionExpression(GetPrimaryNameField(type), ConditionOperator.Equal,
@@ -1043,98 +1034,104 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                     }
                                 }
                                 if (matchingRecords.Count() == 1)
+                                {
                                     return matchingRecords.First();
-                                throw new ArgumentOutOfRangeException(
-                                    string.Format(
-                                        "Error Parsing Field {0}. The String Value Was Not A Guid And Did Not Match To A Unique {1} Records Name. The value was {2}",
-                                        fieldName, string.Join(",", types), value));
+                                }
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Error parsing field {fieldName}. The value {value} does not match to a unique {types.JoinGrammarOr()} records name");
                             }
                             else
-                                throw new ArgumentException(
-                                    string.Format("Parse {0} not implemented for argument type of {1} ", fieldType,
-                                        value.GetType().Name));
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Error parsing field {fieldName}. Parsing {fieldType} is not implemented for argument type of {value.GetType().Name}");
+                            }
                         }
                     case AttributeTypeCode.Picklist:
+                    case AttributeTypeCode.Status:
+                    case AttributeTypeCode.State:
                         {
                             if (value is OptionSetValue)
                             {
                                 return value;
                             }
-                            if (value is string)
+                            if (value is string s)
                             {
-                                return
-                                    CreateOptionSetValue(GetMatchingOptionValue((string)value, fieldName, entityType));
+                                return CreateOptionSetValue(GetMatchingOptionValue(s, fieldName, entityType));
                             }
-                            else if (value is int)
+                            else if (value is int i)
                             {
-                                return CreateOptionSetValue((int)value);
+                                return CreateOptionSetValue(i);
                             }
                             else
-                                throw new ArgumentException("Parse picklist not implemented for argument type: " +
-                                                            value.GetType().Name);
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Error parsing field {fieldName}. Parsing {fieldType} is not implemented for argument type of {value.GetType().Name}");
+                            }
                         }
                     case AttributeTypeCode.Decimal:
                         {
-                            decimal newValue = 0;
-                            if (value is decimal)
-                                newValue = (decimal)value;
+                            decimal temp = 0;
+                            if (value is decimal d)
+                            {
+                                temp = d;
+                            }
                             else
-                                newValue = decimal.Parse(value.ToString().Replace(",", ""));
-                            newValue = decimal.Round(newValue, GetPrecision(fieldName, entityType));
-                            if (!DecimalInRange(fieldName, entityType, newValue))
-                                throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                      " outside permitted range of " +
-                                                                      ((DecimalAttributeMetadata)
-                                                                          GetFieldMetadata(fieldName, entityType)).MinValue +
-                                                                      " to " +
-                                                                      ((DecimalAttributeMetadata)
-                                                                          GetFieldMetadata(fieldName, entityType)).MaxValue);
-                            return newValue;
+                            {
+                                temp = decimal.Parse(value.ToString().Replace(",", ""));
+                            }
+                            temp = decimal.Round(temp, GetPrecision(fieldName, entityType));
+                            var min = GetMinDecimalValue(fieldName, entityType);
+                            var max = GetMaxDecimalValue(fieldName, entityType);
+                            if (temp < min || temp > max)
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Field {fieldName} outside permitted range of {min} to {max}. Value is {temp}");
+                            }
+                            return temp;
                         }
                     case AttributeTypeCode.Double:
                         {
                             double temp;
-                            if (value is double)
-                                temp = (double)value;
+                            if (value is double d)
+                                temp = d;
                             else
+                            {
                                 temp = double.Parse(value.ToString().Replace(",", ""));
-                            if (!DoubleInRange(fieldName, entityType, temp))
-                                throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                      " outside permitted range of " +
-                                                                      ((DoubleAttributeMetadata)
-                                                                          GetFieldMetadata(fieldName, entityType)).MinValue +
-                                                                      " to " +
-                                                                      ((DoubleAttributeMetadata)
-                                                                          GetFieldMetadata(fieldName, entityType)).MaxValue);
+                            }
+                            var min = GetMinDoubleValue(fieldName, entityType);
+                            var max = GetMaxDoubleValue(fieldName, entityType);
+                            if (temp < min || temp > max)
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Field {fieldName} outside permitted range of {min} to {max}. Value is {temp}");
+                            }
                             return temp;
                         }
                     case AttributeTypeCode.Money:
                         {
                             Money temp;
-                            if (value is Money)
-                                temp = (Money)value;
-                            else if (value is Decimal)
-                                temp = new Money((decimal)value);
+                            if (value is Money m)
+                            {
+                                temp = m;
+                            }
+                            else if (value is decimal d)
+                            {
+                                temp = new Money(d);
+                            }
                             else
                             {
                                 var valueString = value.ToString().Replace(",", "").Trim(new[] { '$', '£', '€' });
                                 temp = new Money(decimal.Parse(valueString));
                             }
-                            if (!MoneyInRange(fieldName, entityType, temp))
-                                throw new ArgumentOutOfRangeException("Field " + fieldName +
-                                                                      " outside permitted range of " +
-                                                                      ((MoneyAttributeMetadata)
-                                                                          GetFieldMetadata(fieldName, entityType)).MinValue +
-                                                                      " to " +
-                                                                      ((MoneyAttributeMetadata)
-                                                                          GetFieldMetadata(fieldName, entityType)).MaxValue);
+                            var min = GetMinMoneyValue(fieldName, entityType);
+                            var max = GetMaxMoneyValue(fieldName, entityType);
+                            var tempAmount = temp.Value;
+                            if ((double)tempAmount < min || (double)tempAmount > max)
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Field {fieldName} outside permitted range of {min} to {max}. Value is {temp}");
+                            }
                             return temp;
                         }
                     case AttributeTypeCode.Boolean:
                         {
                             if (value is bool)
                                 return value;
-                            else if (value is string)
+                            else if (value is string s)
                             {
                                 var picklist = GetPicklistKeyValues(entityType, fieldName);
                                 var trueLabel = picklist.Any(p => p.Key == 1)
@@ -1145,50 +1142,41 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                     : null;
                                 var valueToLower = value.ToString().ToLower();
                                 if (new string[] { trueLabel?.ToLower(), "1", true.ToString().ToLower() }.Contains(valueToLower))
+                                {
                                     return true;
+                                }
                                 if (new string[] { falseLabel?.ToLower(), "0", false.ToString().ToLower() }.Contains(valueToLower))
+                                {
                                     return false;
-                                throw new ArgumentException($"Could not parse matching boolean for string value of '{value}'");
+                                }
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Could not parse matching boolean for string value of '{value}'");
                             }
                             else
-                                throw new ArgumentException("Parse bool not implemented for argument type: " +
-                                                            value.GetType().Name);
-                        }
-                    case AttributeTypeCode.Status:
-                        {
-                            if (value is OptionSetValue)
-                                return value;
-                            else if (value is int)
-                                return CreateOptionSetValue((int)value);
-                            else if (value is string)
-                                return
-                                    CreateOptionSetValue(GetMatchingOptionValue((string)value, fieldName, entityType));
-                            else
-                                throw new ArgumentException("Parse status not implemented for argument type: " +
-                                                            value.GetType().Name);
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Error parsing field {fieldName}. Parsing {fieldType} is not implemented for argument type of {value.GetType().Name}");
+                            }
                         }
                     case AttributeTypeCode.Uniqueidentifier:
                         {
                             if (value is Guid)
+                            {
                                 return value;
-                            if (value is string)
-                                return new Guid((string)value);
+                            }
+                            if (value is string s)
+                            {
+                                try
+                                {
+                                    return Guid.Parse(value.ToString());
+                                }
+                                catch(Exception ex)
+                                {
+                                    throw new ArgumentOutOfRangeException($"Error parsing value {value} to Guid for field {fieldName}", ex);
+                                }
+                            }
                             else
-                                throw new ArgumentException(
-                                    "Parse UniqueIdentifier not implemented for argument type: " + value.GetType().Name);
-                        }
-                    case AttributeTypeCode.State:
-                        {
-                            if (value is OptionSetValue)
-                                return value;
-                            else if (value is int)
-                                return CreateOptionSetValue((int)value);
-                            else if (value is string)
-                                return
-                                    CreateOptionSetValue(GetMatchingOptionValue((string)value, fieldName, entityType));
-                            else
-                                throw new ArgumentException("Parse state not implemented for argument type: " +
-                                                            value.GetType().Name);
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Error parsing field {fieldName}. Parsing {fieldType} is not implemented for argument type of {value.GetType().Name}");
+                            }
                         }
                     case AttributeTypeCode.PartyList:
                         {
@@ -1199,35 +1187,41 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                     .Select(XrmEntity.CreatePartyEntity)
                                     .ToArray();
                             }
-                            if (value is IEnumerable<EntityReference>)
+                            if (value is IEnumerable<EntityReference> ienumEr)
                             {
-                                return ((IEnumerable<EntityReference>)value).Select(XrmEntity.CreatePartyEntity).ToArray();
+                                return ienumEr.Select(XrmEntity.CreatePartyEntity).ToArray();
                             }
                             if (value is IEnumerable<Entity> || value is EntityCollection)
                             {
                                 return value;
                             }
                             else
-                                throw new ArgumentException("Parse partylist not implemented for argument type: " +
-                                                            value.GetType().Name);
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Error parsing field {fieldName}. Parsing {fieldType} is not implemented for argument type of {value.GetType().Name}");
+                            }
                         }
                     case AttributeTypeCode.EntityName:
                         {
-                            if (value is Core.FieldType.RecordType)
+                            if (value is Core.FieldType.RecordType rt)
                             {
-                                value = ((Core.FieldType.RecordType)value).Key;
+                                value = rt.Key;
                             }
                             if (value is string)
                             {
                                 return value;
                             }
                             else
-                                throw new ArgumentException("Parse EntityName not implemented for argument type: " +
-                                                            value.GetType().Name);
+                            {
+                                throw new ArgumentOutOfRangeException(nameof(value), $"Error parsing field {fieldName}. Parsing {fieldType} is not implemented for argument type of {value.GetType().Name}");
+                            }
                         }
                     case AttributeTypeCode.Virtual:
                         {
                             var fieldMetadata = GetFieldMetadata(fieldName, entityType);
+                            if(value is OptionSetValueCollection)
+                            {
+                                return value;
+                            }
                             if (fieldMetadata is MultiSelectPicklistAttributeMetadata ms)
                             {
                                 if (value is string stringOptions && !string.IsNullOrWhiteSpace(stringOptions))
@@ -1356,47 +1350,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             return result;
         }
 
-        public bool DecimalInRange(string field, string entity, decimal value)
-        {
-            var min = GetMinDecimalValue(field, entity);
-            var max = GetMaxDecimalValue(field, entity);
-            return
-                (!min.HasValue || value >= min)
-                && (!max.HasValue || value <= max);
-        }
-
-        public bool MoneyInRange(string field, string entity, Money value)
-        {
-            if (value != null)
-            {
-                var min = GetMinMoneyValue(field, entity);
-                var max = GetMaxMoneyValue(field, entity);
-                var amount = XrmEntity.GetMoneyValue(value);
-                return
-                    (!min.HasValue || (double)amount >= min.Value)
-                    && (!max.HasValue || (double)amount <= max.Value);
-            }
-            return true;
-        }
-
-        public bool IntInRange(string field, string entity, int value)
-        {
-            var min = GetMinIntValue(field, entity);
-            var max = GetMaxIntValue(field, entity);
-            return
-                (!min.HasValue || value >= min)
-                && (!max.HasValue || value <= max);
-        }
-
-        public bool DoubleInRange(string field, string entity, double value)
-        {
-            var min = GetMinDoubleValue(field, entity);
-            var max = GetMaxDoubleValue(field, entity);
-            return
-                (!min.HasValue || value >= min)
-                && (!max.HasValue || value <= max);
-        }
-
         private object CreateOptionSetValue(int value)
         {
             return new OptionSetValue(value);
@@ -1439,41 +1392,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 return new ColumnSet(fields.ToArray());
             else
                 return new ColumnSet(true);
-        }
-
-        public SortedDictionary<string, Guid> IndexFirstGuidByFieldValue(string field, string entity)
-        {
-            // Retrieve the related opportunity products
-            var query = new QueryExpression
-            {
-                EntityName = entity,
-                ColumnSet = new ColumnSet(field),
-                Criteria = new FilterExpression
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression
-                        {
-                            AttributeName = field,
-                            Operator = ConditionOperator.NotNull
-                        }
-                    }
-                }
-            };
-
-            var entities = RetrieveAll(query);
-
-            var thisFieldIndexed = new SortedDictionary<string, Guid>();
-            //Query every instance of the entity with the field not null
-            foreach (var record in entities)
-            {
-                var fieldValue = GetFieldAsMatchString(entity, field, record.GetField(field));
-                if (!thisFieldIndexed.ContainsKey(fieldValue))
-                {
-                    thisFieldIndexed.Add(fieldValue, record.Id);
-                }
-            }
-            return thisFieldIndexed;
         }
 
         public Entity GetFirst(string entityType, string fieldName, object fieldValue)
@@ -1791,12 +1709,12 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             return RetrieveAllOrClauses(entityName, orFilters, null);
         }
 
-        public IEnumerable<Entity> RetrieveAllAndClauses(string entityName, IEnumerable<ConditionExpression> conditions)
+        public IEnumerable<Entity> RetrieveAllAndConditions(string entityName, IEnumerable<ConditionExpression> conditions)
         {
-            return RetrieveAllAndClauses(entityName, conditions, null);
+            return RetrieveAllAndConditions(entityName, conditions, null);
         }
 
-        public IEnumerable<Entity> RetrieveAllAndClauses(string entityName, IEnumerable<ConditionExpression> conditions,
+        public IEnumerable<Entity> RetrieveAllAndConditions(string entityName, IEnumerable<ConditionExpression> conditions,
             IEnumerable<string> fields)
         {
             var query = CreateQuery(entityName, fields);
@@ -3670,40 +3588,6 @@ string recordType)
             else if (parsedValue is Money)
                 parsedValue = ((Money)parsedValue).Value;
             return parsedValue;
-        }
-
-        public SortedDictionary<string, Entity> IndexMatchingEntities(string entityName, string matchField,
-    IEnumerable<object> matchValues, IEnumerable<string> fields)
-        {
-            var result = new SortedDictionary<string, Entity>();
-            if (matchValues != null && matchValues.Any())
-            {
-                var filterExpressions = new List<FilterExpression>();
-                foreach (var matchValue in matchValues)
-                {
-                    var parseValue = ConvertToQueryValue(matchField, entityName, matchValue);
-                    var filterExpression = new FilterExpression();
-                    filterExpression.AddCondition(new ConditionExpression(matchField, ConditionOperator.Equal,
-                        parseValue));
-                    filterExpressions.Add(filterExpression);
-                }
-                var entities = RetrieveAllOrClauses(entityName, filterExpressions,
-                    fields == null ? null : new[] { matchField }.Union(fields));
-
-                foreach (var entity in entities)
-                {
-                    var matchValue = GetFieldAsMatchString(entityName, matchField, entity.GetField(matchField));
-                    if (!result.ContainsKey(matchValue))
-                        result.Add(matchValue, entity);
-                }
-                foreach (var value in matchValues)
-                {
-                    var matchString = GetFieldAsMatchString(entityName, matchField, value);
-                    if (!result.ContainsKey(matchString))
-                        result.Add(matchString, null);
-                }
-            }
-            return result;
         }
 
         public void PopulateReferenceNames(IEnumerable<EntityReference> references)

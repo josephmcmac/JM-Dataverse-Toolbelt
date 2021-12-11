@@ -45,9 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SolutionItems\JosephM.snk = SolutionItems\JosephM.snk
 		SolutionItems\TestAccountWorkflowOnDemand_1_0_0_0.zip = SolutionItems\TestAccountWorkflowOnDemand_1_0_0_0.zip
 		SolutionItems\TestAssemblyDeploy\TestAssemblyDeploy.zip = SolutionItems\TestAssemblyDeploy\TestAssemblyDeploy.zip
-		SolutionItems\TestComponents_new_unmanaged.zip = SolutionItems\TestComponents_new_unmanaged.zip
-		SolutionItems\TestComponents_unmanaged.zip = SolutionItems\TestComponents_unmanaged.zip
-		SolutionItems\TestComponents_V9_fakeportal.zip = SolutionItems\TestComponents_V9_fakeportal.zip
+		SolutionItems\TestComponents_1_0_0_0.zip = SolutionItems\TestComponents_1_0_0_0.zip
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Read Me", "Read Me", "{01799AFC-0BD6-4BBB-8ABC-A6517B402D70}"
@@ -951,7 +949,6 @@ Global
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Debug|x86.Build.0 = Debug|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -1054,8 +1051,8 @@ Global
 		{BDC3539F-06BE-49A4-BE72-5501E3879BD5} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

@@ -13,6 +13,23 @@ namespace JosephM.Core.Extentions
 {
     public static class StringExtentions
     {
+        public static string JoinGrammarOr(this IEnumerable<string> strings)
+        {
+            var stringBuilder = new StringBuilder();
+            var n = strings.Count();
+            for (var i = 0; i < n; i++)
+            {
+                if (i == n - 1)
+                    stringBuilder.Append(strings.ElementAt(i));
+                else if (i < n - 2)
+                    stringBuilder.Append(strings.ElementAt(i) + ", ");
+                else
+                    stringBuilder.Append(strings.ElementAt(i) + " or ");
+            }
+            return stringBuilder.ToString();
+        }
+
+
         public static string JoinGrammarAnd(this IEnumerable<string> strings)
         {
             var stringBuilder = new StringBuilder();
@@ -67,7 +84,7 @@ namespace JosephM.Core.Extentions
 
         public static bool IsNullOrWhiteSpace(this string stringToCheck)
         {
-            return String.IsNullOrWhiteSpace(stringToCheck);
+            return string.IsNullOrWhiteSpace(stringToCheck);
         }
 
         public static string Left(this string text, int length)

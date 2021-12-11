@@ -104,7 +104,7 @@ namespace JosephM.Xrm.Vsix.Test
 
         private IEnumerable<Entity> GetRegardingNotes(Entity entity)
         {
-            return XrmService.RetrieveAllAndClauses(Entities.annotation, new[] { new ConditionExpression(Fields.annotation_.objectid, ConditionOperator.Equal, entity.Id) });
+            return XrmService.RetrieveAllAndConditions(Entities.annotation, new[] { new ConditionExpression(Fields.annotation_.objectid, ConditionOperator.Equal, entity.Id) });
         }
     }
 }

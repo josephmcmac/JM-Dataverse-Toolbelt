@@ -36,7 +36,7 @@ namespace JosephM.Deployment.SolutionImport
             bool asynch = xrmService.SupportsExecuteAsynch;
 
             controller.LogLiteral($"Loading Active {xrmService.GetEntityCollectionName(Entities.duplicaterule)}");
-            var duplicateRules = xrmService.RetrieveAllAndClauses(Entities.duplicaterule, new[] { new ConditionExpression(Fields.duplicaterule_.statecode, ConditionOperator.Equal, OptionSets.DuplicateDetectionRule.Status.Active) }, new string[0]);
+            var duplicateRules = xrmService.RetrieveAllAndConditions(Entities.duplicaterule, new[] { new ConditionExpression(Fields.duplicaterule_.statecode, ConditionOperator.Equal, OptionSets.DuplicateDetectionRule.Status.Active) }, new string[0]);
 
             foreach (var solutionFile in solutionFiles)
             {

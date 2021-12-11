@@ -149,10 +149,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 switch (FieldType)
                 {
-                    case RecordFieldType.Decimal: return XrmService.GetMinDecimalValue(FieldName, RecordType) ?? Decimal.MinValue;
-                    case RecordFieldType.Double: return Convert.ToDecimal(XrmService.GetMinDoubleValue(FieldName, RecordType) ?? double.MinValue);
-                    case RecordFieldType.Integer: return XrmService.GetMinIntValue(FieldName, RecordType) ?? int.MinValue;
-                    case RecordFieldType.Money: return Convert.ToDecimal(XrmService.GetMinMoneyValue(FieldName, RecordType) ?? double.MinValue);
+                    case RecordFieldType.Decimal: return XrmService.GetMinDecimalValue(FieldName, RecordType);
+                    case RecordFieldType.Double: return Convert.ToDecimal(XrmService.GetMinDoubleValue(FieldName, RecordType));
+                    case RecordFieldType.Integer: return XrmService.GetMinIntValue(FieldName, RecordType);
+                    case RecordFieldType.Money: return Convert.ToDecimal(XrmService.GetMinMoneyValue(FieldName, RecordType));
                 }
                 return 0;
             }
@@ -164,10 +164,10 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 switch (FieldType)
                 {
-                    case RecordFieldType.Decimal: return XrmService.GetMaxDecimalValue(FieldName, RecordType) ?? Decimal.MaxValue;
-                    case RecordFieldType.Double: return Convert.ToDecimal(XrmService.GetMaxDoubleValue(FieldName, RecordType) ?? double.MaxValue);
-                    case RecordFieldType.Integer: return XrmService.GetMaxIntValue(FieldName, RecordType) ?? int.MaxValue;
-                    case RecordFieldType.Money: return Convert.ToDecimal(XrmService.GetMaxMoneyValue(FieldName, RecordType) ?? double.MaxValue);
+                    case RecordFieldType.Decimal: return XrmService.GetMaxDecimalValue(FieldName, RecordType);
+                    case RecordFieldType.Double: return Convert.ToDecimal(XrmService.GetMaxDoubleValue(FieldName, RecordType));
+                    case RecordFieldType.Integer: return XrmService.GetMaxIntValue(FieldName, RecordType);
+                    case RecordFieldType.Money: return Convert.ToDecimal(XrmService.GetMaxMoneyValue(FieldName, RecordType));
                 }
                 return 0;
             }

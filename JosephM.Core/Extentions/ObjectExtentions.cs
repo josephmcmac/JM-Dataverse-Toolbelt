@@ -85,11 +85,13 @@ namespace JosephM.Core.Extentions
         /// </summary>
         public static bool IsEmpty(this object instance)
         {
-            if (instance is string)
-                return ((string)instance).IsNullOrWhiteSpace();
-            if (instance is IEnumerable)
+            if (instance is string s)
             {
-                var any = ((IEnumerable)instance).GetEnumerator().MoveNext();
+                return string.IsNullOrWhiteSpace(s);
+            }
+            if (instance is IEnumerable ienum)
+            {
+                var any = ienum.GetEnumerator().MoveNext();
                 return !any;
             }
             return instance == null;

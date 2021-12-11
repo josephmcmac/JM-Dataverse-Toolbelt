@@ -236,14 +236,14 @@ namespace JosephM.Record.Xrm.XrmRecord
         public IEnumerable<IRecord> RetrieveAllAndClauses(string recordType, IEnumerable<Condition> andConditions)
         {
             return
-                ToEnumerableIRecord(_xrmService.RetrieveAllAndClauses(recordType, ToConditionExpressions(andConditions, recordType)));
+                ToEnumerableIRecord(_xrmService.RetrieveAllAndConditions(recordType, ToConditionExpressions(andConditions, recordType)));
         }
 
         public IEnumerable<IRecord> RetrieveAllAndClauses(string recordType, IEnumerable<Condition> andConditions,
             IEnumerable<string> fields)
         {
             return
-                ToEnumerableIRecord(_xrmService.RetrieveAllAndClauses(recordType, ToConditionExpressions(andConditions, recordType),
+                ToEnumerableIRecord(_xrmService.RetrieveAllAndConditions(recordType, ToConditionExpressions(andConditions, recordType),
                     fields)).ToArray();
         }
 

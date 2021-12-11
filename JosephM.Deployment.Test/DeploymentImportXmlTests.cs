@@ -190,7 +190,7 @@ namespace JosephM.Deployment.Test
                 var loaded = Refresh(record);
                 if(createRecords[0].Id == loaded.Id)
                 {
-                    var notes = XrmService.RetrieveAllAndClauses(Entities.annotation, new[]
+                    var notes = XrmService.RetrieveAllAndConditions(Entities.annotation, new[]
                     {
                         new ConditionExpression(Fields.annotation_.objectid, ConditionOperator.Equal, loaded.Id)
                     });
@@ -338,7 +338,7 @@ namespace JosephM.Deployment.Test
 
             RecreatePortalData(createSecondDuplicateSite: true);
 
-            var parentWebPage = XrmService.RetrieveAllAndClauses(Entities.adx_webpage, new[]
+            var parentWebPage = XrmService.RetrieveAllAndConditions(Entities.adx_webpage, new[]
             {
                 new ConditionExpression(Fields.adx_webpage_.adx_rootwebpageid, ConditionOperator.Null)
             }).First();
@@ -763,7 +763,7 @@ namespace JosephM.Deployment.Test
                     { Fields.knowledgearticle_.articlepublicnumber, articleNumber }
                 });
 
-                var kaCount = XrmService.RetrieveAllAndClauses(type, new[]
+                var kaCount = XrmService.RetrieveAllAndConditions(type, new[]
                 {
                     new ConditionExpression(Fields.knowledgearticle_.isrootarticle, ConditionOperator.Equal, false)
                 }).Count();
@@ -777,7 +777,7 @@ namespace JosephM.Deployment.Test
                 var application = CreateAndLoadTestApplication<ImportXmlModule>();
                 var importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
                 Assert.IsFalse(importResponse.HasError);
-                Assert.AreEqual(kaCount, XrmService.RetrieveAllAndClauses(type, new[]
+                Assert.AreEqual(kaCount, XrmService.RetrieveAllAndConditions(type, new[]
                 {
                     new ConditionExpression(Fields.knowledgearticle_.isrootarticle, ConditionOperator.Equal, false)
                 }).Count());
@@ -792,7 +792,7 @@ namespace JosephM.Deployment.Test
                 application = CreateAndLoadTestApplication<ImportXmlModule>();
                 importResponse = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
                 Assert.IsFalse(importResponse.HasError);
-                Assert.AreEqual(kaCount, XrmService.RetrieveAllAndClauses(type, new[]
+                Assert.AreEqual(kaCount, XrmService.RetrieveAllAndConditions(type, new[]
                 {
                     new ConditionExpression(Fields.knowledgearticle_.isrootarticle, ConditionOperator.Equal, false)
                 }).Count());
