@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -34,9 +35,19 @@ namespace JosephM.Wpf.RecordEntry.Field
             {
                 return;
             }
-            ViewModel.AutocompleteViewModel.SearchText = TextBox.Text;
-            ViewModel.AutocompleteViewModel.DynamicGridViewModel.ReloadGrid();
-            ViewModel.DisplayAutocomplete = true;
+            var searchText = TextBox.Text;
+            ViewModel.AutocompleteViewModel.FieldViewModel.SearchText = searchText;
+            var viewModel = ViewModel;
+            ViewModel.DoOnAsynchThread(() =>
+            {
+                Thread.Sleep(250);
+                if (viewModel.AutocompleteViewModel.SearchText == searchText)
+                {
+                    viewModel.AutocompleteViewModel.SearchText = searchText;
+                    viewModel.AutocompleteViewModel.DynamicGridViewModel.CurrentPage = 1;
+                    viewModel.DisplayAutocomplete = true;
+                }
+            });
         }
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)

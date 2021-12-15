@@ -13,7 +13,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public RecordTypeFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm, bool usePicklist)
             : base(fieldName, label, recordForm)
         {
-            var autocompleteFunction = new AutocompleteFunction(GetAutocomplete, typeof(RecordTypeAutocomplete), nameof(RecordTypeAutocomplete.LogicalName), new[] { new GridFieldMetadata(nameof(RecordTypeAutocomplete.LogicalName)), new GridFieldMetadata(nameof(RecordTypeAutocomplete.DisplayName)) }, autosearch: false)
+            var autocompleteFunction = new AutocompleteFunction(GetAutocomplete, typeof(RecordTypeAutocomplete), nameof(RecordTypeAutocomplete.LogicalName), new[] { new GridFieldMetadata(nameof(RecordTypeAutocomplete.LogicalName)), new GridFieldMetadata(nameof(RecordTypeAutocomplete.DisplayName)) }, autosearch: true)
             {
                 CacheAsStaticList = true
             };
@@ -126,8 +126,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             if (DisplayAutocomplete && AutocompleteViewModel != null)
             {
-                //move logical and key foucs to the grid view
-                //have to add in the false focus first to ensire the ui properly processes the cvhange to focus on it
+                //move logical and key focus to the grid view
+                //have to add in the false focus first to ensure the ui properly processes the change to focus on it
                 AutocompleteViewModel.DynamicGridViewModel.IsFocused = false;
                 AutocompleteViewModel.MoveDown();
                 AutocompleteViewModel.DynamicGridViewModel.IsFocused = true;
