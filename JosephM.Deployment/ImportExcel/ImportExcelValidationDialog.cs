@@ -34,7 +34,7 @@ namespace JosephM.Deployment.ImportExcel
             var dictionary = ImportExcelService.LoadMappingDictionary(Request, logController);
 
             var importService = new SourceImportService(XrmRecordService);
-            var parseResponse = importService.ParseIntoEntities(dictionary, logController);
+            var parseResponse = importService.ParseIntoEntities(dictionary, logController, ignoreNullValues: Request.IgnoreEmptyCells);
             if (parseResponse.ResponseItems.Any())
             {
                 AddObjectToUi(parseResponse

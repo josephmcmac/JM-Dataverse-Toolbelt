@@ -80,6 +80,104 @@ namespace JosephM.Deployment.Test
             ClearSavedRequests(app, entryViewmodel);
         }
 
+        [DeploymentItem(@"Files\AccountsWithNullCells.xlsx")]
+        [TestMethod]
+        public void DeploymentImportExcelIgnoreNullValuesTest()
+        {
+            PrepareTests();
+            DeleteAll(Entities.account);
+
+            RunIgnoreNullExcelImport(false);
+
+            var accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            Assert.AreEqual(2, accounts.Count());
+
+            var theJoker = accounts.First(a => a.GetStringField(Fields.account_.accountnumber) == "1234567");
+            var theRiddler = accounts.First(a => a.GetStringField(Fields.account_.accountnumber) == "1234568");
+
+            Assert.IsNotNull(theJoker.GetStringField(Fields.account_.description));
+            Assert.IsNull(theJoker.GetStringField(Fields.account_.address1_city));
+
+            Assert.IsNull(theRiddler.GetStringField(Fields.account_.description));
+            Assert.IsNotNull(theRiddler.GetStringField(Fields.account_.address1_city));
+
+            foreach(var account in accounts)
+            {
+                account.SetField(Fields.account_.description, "I Updated");
+                account.SetField(Fields.account_.address1_city, "I Updated");
+                XrmService.Update(account, new[] { Fields.account_.description, Fields.account_.address1_city });
+            }
+
+            RunIgnoreNullExcelImport(true);
+
+            accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            Assert.AreEqual(2, accounts.Count());
+
+            theJoker = accounts.First(a => a.GetStringField(Fields.account_.accountnumber) == "1234567");
+            theRiddler = accounts.First(a => a.GetStringField(Fields.account_.accountnumber) == "1234568");
+
+            Assert.IsNotNull(theJoker.GetStringField(Fields.account_.description));
+            Assert.AreNotEqual("I Updated", theJoker.GetStringField(Fields.account_.description));
+            Assert.AreEqual("I Updated", theJoker.GetStringField(Fields.account_.address1_city));
+
+            Assert.AreEqual("I Updated", theRiddler.GetStringField(Fields.account_.description));
+            Assert.IsNotNull(theRiddler.GetStringField(Fields.account_.address1_city));
+            Assert.AreNotEqual("I Updated", theRiddler.GetStringField(Fields.account_.address1_city));
+
+            RunIgnoreNullExcelImport(false);
+
+            accounts = XrmService.RetrieveAllEntityType(Entities.account);
+            Assert.AreEqual(2, accounts.Count());
+
+            theJoker = accounts.First(a => a.GetStringField(Fields.account_.accountnumber) == "1234567");
+            theRiddler = accounts.First(a => a.GetStringField(Fields.account_.accountnumber) == "1234568");
+
+            Assert.IsNotNull(theJoker.GetStringField(Fields.account_.description));
+            Assert.IsNull(theJoker.GetStringField(Fields.account_.address1_city));
+
+            Assert.IsNull(theRiddler.GetStringField(Fields.account_.description));
+            Assert.IsNotNull(theRiddler.GetStringField(Fields.account_.address1_city));
+        }
+
+        private void RunIgnoreNullExcelImport(bool ignoreNulls)
+        {
+            var workFolder = TestingFolder + @"\ExcelImportScript";
+            FileUtility.CheckCreateFolder(workFolder);
+            var sourceExcelFile = Path.Combine(workFolder, @"AccountsWithNullCells.xlsx");
+            File.Copy(@"AccountsWithNullCells.xlsx", sourceExcelFile, overwrite: true);
+
+            var app = CreateAndLoadTestApplication<ImportExcelModule>();
+            var dialog = app.NavigateToDialog<ImportExcelModule, ImportExcelDialog>();
+            var entryViewmodel = app.GetSubObjectEntryViewModel(dialog);
+            entryViewmodel.GetBooleanFieldFieldViewModel(nameof(ImportExcelRequest.IgnoreEmptyCells)).Value = ignoreNulls;
+
+            //select the excel file
+            entryViewmodel.GetFieldViewModel(nameof(ImportExcelRequest.ExcelFile)).ValueObject = new FileReference(sourceExcelFile);
+
+            //okay on change trigger should have fired and populated mappings on contact
+            //now add match key for account number
+            var tabMappingsGrid = entryViewmodel.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.Mappings));
+            var accountMap = tabMappingsGrid.DynamicGridViewModel.GridRecords.First();
+            var keyMapsField = accountMap.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.AltMatchKeys));
+            keyMapsField.EditButton.Command.Execute();
+            var altMatchKeyEntryForm = entryViewmodel.ChildForms.First() as ObjectEntryViewModel;
+            Assert.IsNotNull(altMatchKeyEntryForm);
+            altMatchKeyEntryForm.LoadFormSections();
+            var mapsField = altMatchKeyEntryForm.GetEnumerableFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.AltMatchKeys));
+            mapsField.AddRow();
+            var matchKeyField = mapsField.DynamicGridViewModel.GridRecords.First().GetRecordFieldFieldViewModel(nameof(ImportExcelRequest.ExcelImportTabMapping.ExcelImportMatchKey.TargetField));
+            Assert.IsTrue(matchKeyField.ItemsSource.Any());
+            matchKeyField.Value = matchKeyField.ItemsSource.First(f => f.Key == Fields.account_.accountnumber);
+            altMatchKeyEntryForm.SaveButtonViewModel.Invoke();
+            Assert.IsFalse(entryViewmodel.ChildForms.Any());
+
+            //run the import and verify response and account count
+            entryViewmodel.SaveButtonViewModel.Invoke();
+            var response = app.GetCompletionViewModel(dialog).GetObject() as ImportExcelResponse;
+            Assert.IsNotNull(response);
+            Assert.AreEqual(0, response.GetResponseItemsWithError().Count());
+        }
+
         [DeploymentItem(@"Files\AccountsWithKeys.xlsx")]
         [TestMethod]
         public void DeploymentImportExcelMatchKeysTest()

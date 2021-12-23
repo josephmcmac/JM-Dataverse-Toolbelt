@@ -28,10 +28,10 @@ namespace JosephM.Deployment.SpreadsheetImport
         public XrmRecordService XrmRecordService { get; }
         public IApplicationController ApplicationController { get; }
 
-        public SourceImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null)
+        public SourceImportResponse DoImport(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, bool maskEmails, bool matchByName, bool updateOnly, ServiceRequestController controller, int? executeMultipleSetSize = null, bool useAmericanDates = false, int? targetCacheLimit = null, bool ignoreNullValues = false)
         {
             var response = new SourceImportResponse();
-            var parseResponse = ParseIntoEntities(mappings, controller.Controller, useAmericanDates: useAmericanDates);
+            var parseResponse = ParseIntoEntities(mappings, controller.Controller, useAmericanDates: useAmericanDates, ignoreNullValues: ignoreNullValues);
             response.LoadParseResponse(parseResponse);
             var dataImportService = new DataImportService(XrmRecordService);
             var matchKeyDictionary = new Dictionary<string, IEnumerable<KeyValuePair<string, bool>>>();
@@ -72,12 +72,12 @@ namespace JosephM.Deployment.SpreadsheetImport
             return response;
         }
 
-        public ParseIntoEntitiesResponse ParseIntoEntities(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, LogController logController, bool useAmericanDates = false)
+        public ParseIntoEntitiesResponse ParseIntoEntities(Dictionary<IMapSourceImport, IEnumerable<IRecord>> mappings, LogController logController, bool useAmericanDates = false, bool ignoreNullValues = false)
         {
             var response = new ParseIntoEntitiesResponse();
             foreach (var mapping in mappings)
             {
-                response.AddEntities(MapToEntities(mapping.Value, mapping.Key, response, logController, useAmericanDates));
+                response.AddEntities(MapToEntities(mapping.Value, mapping.Key, response, logController, useAmericanDates, ignoreNullValues: ignoreNullValues));
             }
             var entities = response.GetParsedEntities();
             PopulateEmptyNameFields(entities);
@@ -98,7 +98,7 @@ namespace JosephM.Deployment.SpreadsheetImport
             }
         }
 
-        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSourceImport mapping, ParseIntoEntitiesResponse response, LogController logController, bool useAmericanDates)
+        private IEnumerable<Entity> MapToEntities(IEnumerable<IRecord> queryRows, IMapSourceImport mapping, ParseIntoEntitiesResponse response, LogController logController, bool useAmericanDates, bool ignoreNullValues = false)
         {
             var result = new List<Entity>();
 
@@ -233,7 +233,10 @@ namespace JosephM.Deployment.SpreadsheetImport
 
                     foreach (var fieldValue in fieldValues)
                     {
-                        entity[fieldValue.Key] = fieldValues[fieldValue.Key];
+                        if (!ignoreNullValues || fieldValue.Value != null)
+                        {
+                            entity[fieldValue.Key] = fieldValue.Value;
+                        }
                     }
                     if(!hasFieldValue)
                     {

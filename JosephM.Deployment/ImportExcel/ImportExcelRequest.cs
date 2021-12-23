@@ -48,6 +48,11 @@ namespace JosephM.Deployment.ImportExcel
         public bool UpdateOnly { get; set; }
 
         [Group(Sections.Options)]
+        [DisplayOrder(417)]
+        [RequiredProperty]
+        public bool IgnoreEmptyCells { get; set; }
+
+        [Group(Sections.Options)]
         [DisplayOrder(420)]
         [RequiredProperty]
         [MinimumIntValue(1)]
