@@ -2703,28 +2703,44 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 }
                 else
                 {
+                    var referencedRecordTypes = referencedEntityType.Split(',');
+
                     var indexOf_ = schemaName.IndexOf("_");
                     if (indexOf_ == -1)
                         throw new Exception("Could not determine prefix of field for new relationship name");
                     var prefix = schemaName.Substring(0, indexOf_ + 1);
                     var usePrefix = !recordType.StartsWith(prefix);
-                    var request = new CreateOneToManyRequest
-                    {
 
-                    OneToManyRelationship = new OneToManyRelationshipMetadata
+
+                    Func<string, OneToManyRelationshipMetadata> createRelationship = (reffedType) =>
+                    {
+                        return new OneToManyRelationshipMetadata
                         {
-                            SchemaName = string.Format("{0}{1}_{2}_{3}", usePrefix ? prefix : "", recordType, referencedEntityType, schemaName),
+                            SchemaName = string.Format("{0}{1}_{2}_{3}", usePrefix ? prefix : "", recordType, reffedType, schemaName),
                             AssociatedMenuConfiguration = new AssociatedMenuConfiguration
                             {
                                 Behavior = displayInRelated ? AssociatedMenuBehavior.UseCollectionName : AssociatedMenuBehavior.DoNotDisplay
                             },
                             ReferencingEntity = recordType,
-                            ReferencedEntity = referencedEntityType
-                        },
-                        Lookup = metadata
+                            ReferencedEntity = reffedType
+                        };
                     };
-
-                    Execute(request);
+                    if (referencedRecordTypes.Count() == 1)
+                    {
+                        var request = new CreateOneToManyRequest
+                        {
+                            OneToManyRelationship = createRelationship(referencedEntityType),
+                            Lookup = metadata
+                        };
+                        Execute(request);
+                    }
+                    else
+                    {
+                        var createPolymorphicRequest = new OrganizationRequest("CreatePolymorphicLookupAttribute");
+                        createPolymorphicRequest["Lookup"] = metadata;
+                        createPolymorphicRequest["OneToManyRelationships"] = referencedRecordTypes.Select(s => createRelationship(s)).ToArray();
+                        Execute(createPolymorphicRequest);
+                    }
                 }
             }
         }

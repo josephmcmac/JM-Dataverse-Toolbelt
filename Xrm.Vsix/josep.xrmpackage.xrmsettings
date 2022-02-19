@@ -1,19 +1,19 @@
 {
-  "AddToSolution": true,
+  "AddToSolution": false,
   "Connections": [
     {
       "AuthenticationProviderType": 3,
       "DiscoveryServiceAddress": null,
       "Domain": null,
       "Name": "CDX",
-      "OrganizationUniqueName": "unq8bb48fed99c541268e00d63414afe",
+      "OrganizationUniqueName": "unq0557fe650dd940cdb0a195f25afde",
       "Password": {
-        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAhXiTm7sFjEaTHNuyrdrhAgAAAAACAAAAAAAQZgAAAAEAACAAAAD4pgr36bnNou6r3GYDB8+g+qzdaIg5JRSggV3DQjXZXwAAAAAOgAAAAAIAACAAAABddQFwRGFwIhcF8nv9vy3ppII\/qzNYMVGurFTpodw2AyAAAACaPS\/jLJm8SkG5t1FuVSeN2Dbv0xZbdhn6f1U8WxuG9EAAAABLCnCnESV9qO4KTtWuRn9ApTjE4fXUeuvsKXYvSGfSFQ9mw+9i\/qy+uxcKP5GF\/wYff4rSILUT9ZxojfDUJ7Na",
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAA9A6XyJGBbEmPrT1LyWlO5wAAAAACAAAAAAAQZgAAAAEAACAAAACFyQYoTZdZOCCJFbPdXhOp9TlvR5yTtj4XiDSg5E3P1wAAAAAOgAAAAAIAACAAAAClv3CRqStbeKPBBjsId0GUOdIawJr5BK3dt\/5T0g6dYyAAAADC3gxvA7UeNGLum891wHlYdSE0axwk4F0c0LAFUBTy+EAAAAAM+Cpy6z9YyIm8sCR3KsvNt2HiXsQoaR6I7mILggQrICrP1TTPN+WmlE7fQS6h0tGLO3g8Utvb8+r5+VaeDagK",
         "<EncryptPassword>k__BackingField": true
       },
       "ToolingConnectionId": null,
       "UseXrmToolingConnector": false,
-      "Username": "admin@CRM765146.onmicrosoft.com",
+      "Username": "admin@crm137858.onmicrosoft.com",
       "Active": true,
       "HideActive": false
     }
@@ -25,14 +25,11 @@
   ],
   "PluginProjects": [
     {
-      "ProjectName": "N\/A"
+      "ProjectName": "N\/A",
+      "UsesILMergeMsBuildTask": false
     }
   ],
-  "Solution": {
-    "Id": "16c589eb-b449-ec11-8c62-00224816e6b5",
-    "Name": "TestVsixRebuild",
-    "RecordType": "solution"
-  },
+  "Solution": null,
   "SolutionDynamicsCrmPrefix": "jmcg",
   "SolutionObjectPrefix": "JosephM",
   "WebResourceProjects": [

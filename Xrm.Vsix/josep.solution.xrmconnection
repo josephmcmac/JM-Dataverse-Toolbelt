@@ -4,6 +4,10 @@
     "Value": "True"
   },
   {
+    "Key": "HideActive",
+    "Value": "False"
+  },
+  {
     "Key": "Name",
     "Value": "CDX"
   },
@@ -12,35 +16,31 @@
     "Value": "False"
   },
   {
-    "Key": "AuthenticationProviderType",
-    "Value": "LiveId"
-  },
-  {
-    "Key": "Username",
-    "Value": "admin@CRM765146.onmicrosoft.com"
-  },
-  {
-    "Key": "Password",
-    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAAhXiTm7sFjEaTHNuyrdrhAgAAAAACAAAAAAAQZgAAAAEAACAAAAD4pgr36bnNou6r3GYDB8+g+qzdaIg5JRSggV3DQjXZXwAAAAAOgAAAAAIAACAAAABddQFwRGFwIhcF8nv9vy3ppII\/qzNYMVGurFTpodw2AyAAAACaPS\/jLJm8SkG5t1FuVSeN2Dbv0xZbdhn6f1U8WxuG9EAAAABLCnCnESV9qO4KTtWuRn9ApTjE4fXUeuvsKXYvSGfSFQ9mw+9i\/qy+uxcKP5GF\/wYff4rSILUT9ZxojfDUJ7Na"
-  },
-  {
-    "Key": "OrganizationUniqueName",
-    "Value": "unq8bb48fed99c541268e00d63414afe"
-  },
-  {
-    "Key": "HideActive",
-    "Value": "False"
-  },
-  {
     "Key": "ToolingConnectionId",
     "Value": null
+  },
+  {
+    "Key": "AuthenticationProviderType",
+    "Value": "LiveId"
   },
   {
     "Key": "DiscoveryServiceAddress",
     "Value": null
   },
   {
+    "Key": "OrganizationUniqueName",
+    "Value": "unq0557fe650dd940cdb0a195f25afde"
+  },
+  {
     "Key": "Domain",
     "Value": null
+  },
+  {
+    "Key": "Username",
+    "Value": "admin@crm137858.onmicrosoft.com"
+  },
+  {
+    "Key": "Password",
+    "Value": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAA9A6XyJGBbEmPrT1LyWlO5wAAAAACAAAAAAAQZgAAAAEAACAAAACFyQYoTZdZOCCJFbPdXhOp9TlvR5yTtj4XiDSg5E3P1wAAAAAOgAAAAAIAACAAAAClv3CRqStbeKPBBjsId0GUOdIawJr5BK3dt\/5T0g6dYyAAAADC3gxvA7UeNGLum891wHlYdSE0axwk4F0c0LAFUBTy+EAAAAAM+Cpy6z9YyIm8sCR3KsvNt2HiXsQoaR6I7mILggQrICrP1TTPN+WmlE7fQS6h0tGLO3g8Utvb8+r5+VaeDagK"
   }
 ]

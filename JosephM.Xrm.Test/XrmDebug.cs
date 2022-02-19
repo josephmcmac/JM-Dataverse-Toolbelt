@@ -14,7 +14,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            DeleteOnlineSampleData();
+            //DeleteOnlineSampleData();
 
             //var query = new Microsoft.Xrm.Sdk.Query.QueryExpression(Entities.activitymimeattachment);
             //var activityJoin = query.AddLink(Entities.email, Fields.activitymimeattachment_.activityid, Fields.emailhash_.activityid);

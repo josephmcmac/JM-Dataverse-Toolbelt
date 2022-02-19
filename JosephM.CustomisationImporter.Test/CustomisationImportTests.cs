@@ -360,6 +360,19 @@ namespace JosephM.CustomisationImporter.Test
                     Assert.IsTrue(XrmRecordService.GetFieldMetadata(field.SchemaName, field.RecordType).DecimalPrecision ==
               ((DoubleFieldMetadata)field).DecimalPrecision);
                 }
+                if (field.FieldType == RecordFieldType.Lookup)
+                {
+                    //order types alphabetically
+                    var types1 = ((LookupFieldMetadata)field).ReferencedRecordType;
+                    var types2 = XrmRecordService.GetLookupTargetType(field.SchemaName, field.RecordType);
+                    var reOrder1 = string.Join(",", types1
+                        .Split(',')
+                        .OrderBy(s => s));
+                    var reOrder2 = string.Join(",", types2
+                        .Split(',')
+                        .OrderBy(s => s));
+                    Assert.AreEqual(reOrder1, reOrder2);
+                }
             }
         }
 
@@ -368,7 +381,7 @@ namespace JosephM.CustomisationImporter.Test
         {
             Assert.IsTrue(actualOptions.Count() == expectedOption.Count());
             foreach (var option in expectedOption)
-                Assert.IsTrue(actualOptions.Any(o => o.Key == option.Key && o.Value == option.Value));
+                Assert.IsTrue(actualOptions.Any(o => decimal.Parse(o.Key) == decimal.Parse(option.Key) && o.Value == option.Value));
         }
 
         private void VerifyRecordTypes(CustomisationImportRequest request)
