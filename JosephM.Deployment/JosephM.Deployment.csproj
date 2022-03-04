@@ -128,6 +128,7 @@
     <Compile Include="DeploymentModule.cs" />
     <Compile Include="DeploySolution\DeploySolutionResponseItem.cs" />
     <Compile Include="ImportCsvs\ImportCsvsValidationDialog.cs" />
+    <Compile Include="MigrateInternal\SourceDatasetType.cs" />
     <Compile Include="MigrateInternal\MigratedLookupField.cs" />
     <Compile Include="MigrateInternal\MigrateInternalDialog.cs" />
     <Compile Include="MigrateInternal\MigrateInternalModule.cs" />

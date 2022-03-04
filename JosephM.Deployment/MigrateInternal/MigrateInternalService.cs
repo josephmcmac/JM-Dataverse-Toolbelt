@@ -1,4 +1,5 @@
 using JosephM.Application.Desktop.Module.Crud.BulkCopyFieldValue;
+using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Deployment.SpreadsheetImport;
@@ -7,8 +8,11 @@ using JosephM.Record.IService;
 using JosephM.Record.Query;
 using JosephM.Record.Sql;
 using JosephM.Record.Xrm.XrmRecord;
+using Microsoft.Xrm.Sdk.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using static JosephM.Xrm.Schema.OptionSets.PriceList;
 
 namespace JosephM.Deployment.MigrateInternal
 {
@@ -89,8 +93,54 @@ namespace JosephM.Deployment.MigrateInternal
             foreach (var sourceMapping in toIterate)
             {
                 logController.LogLiteral($"Reading Source Data {++countDone}/{countToDo} {sourceMapping.SourceType.Key}");
-                var queryRows = XrmRecordService.RetrieveAll(sourceMapping.SourceType.Key, null);
-                dictionary.Add(sourceMapping, queryRows);
+                IEnumerable<IRecord> records = new IRecord[0];
+                switch (sourceMapping.SourceDatasetType)
+                {
+                    case SourceDatasetType.AllRecords:
+                        {
+                            records = XrmRecordService.RetrieveAll(sourceMapping.SourceType.Key, null);
+                            break;
+                        }
+                    case SourceDatasetType.FetchXml:
+                        {
+                            var queryExpression = XrmRecordService.XrmService.ConvertFetchToQueryExpression(sourceMapping.FetchXml);
+                            queryExpression.ColumnSet = new ColumnSet(true);
+                            var temp = queryExpression.PageInfo != null && queryExpression.PageInfo.Count > 0
+                                ? XrmRecordService.XrmService.RetrieveFirstX(queryExpression, queryExpression.PageInfo.Count)
+                                : XrmRecordService.XrmService.RetrieveAll(queryExpression);
+                            records = XrmRecordService.ToIRecords(temp);
+                            break;
+                        }
+                    case SourceDatasetType.SpecificRecords:
+                        {
+                            var primaryKey = XrmRecordService.GetPrimaryKey(sourceMapping.SourceType.Key);
+                            var ids = sourceMapping.SpecificRecordsToExport == null
+                                ? new HashSet<string>()
+                                : new HashSet<string>(sourceMapping.SpecificRecordsToExport
+                                    .Select(r => r.Record == null ? null : r.Record.Id)
+                                    .Where(s => !s.IsNullOrWhiteSpace()).Distinct());
+                            records = ids.Any()
+                                ? XrmRecordService.RetrieveAllOrClauses(sourceMapping.SourceType.Key,
+                                    ids.Select(
+                                        i => new Condition(primaryKey, ConditionType.Equal, new Guid(i))))
+                                : new IRecord[0];
+                            records = records.Where(e => ids.Contains(e.Id.ToString())).ToArray();
+                            break;
+                        }
+                    default:
+                        {
+                            records = XrmRecordService.RetrieveAll(sourceMapping.SourceType.Key, null);
+                            break;
+                        }
+                }
+                if(!request.RetainPrimaryKey)
+                {
+                    foreach(var record in records)
+                    {
+                        record.Id = null;
+                    }
+                }
+                dictionary.Add(sourceMapping, records);
             }
 
             return dictionary;

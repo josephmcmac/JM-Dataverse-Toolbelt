@@ -23,6 +23,51 @@ namespace JosephM.Deployment.MigrateInternal
         {
             base.RegisterTypes();
             AddGenerateMappingsWhenTypesSelected();
+            AddFieldMapsButtons();
+        }
+
+        public void AddFieldMapsButtons()
+        {
+            Action<bool, DynamicGridViewModel> clearMaps = (onlyClearUnmapped, g) =>
+            {
+                try
+                {
+                    var r = g.ParentForm;
+                    if (r == null)
+                        throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
+
+                    var enumerableField = r.GetEnumerableFieldViewModel(g.ReferenceName);
+                    foreach (var row in enumerableField.GridRecords.ToArray())
+                    {
+                        var sourceField = row.GetFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping.SourceField));
+                        var targetField = row.GetFieldViewModel(nameof(MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping.TargetField));
+                        if (!onlyClearUnmapped
+                            || (sourceField.ValueObject == null || targetField.ValueObject == null))
+                        {
+                            row.DeleteRow();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    g.ApplicationController.ThrowException(ex);
+                }
+            };
+
+            this.AddCustomGridFunction(new CustomGridFunction("CLEARUNMAPPED", "Clear Unmapped", (g) =>
+            {
+                clearMaps(true, g);
+            }, (g) =>
+            {
+                return g.GridRecords != null && g.GridRecords.Any();
+            }), typeof(MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping));
+            this.AddCustomGridFunction(new CustomGridFunction("CLEARALLMAPSMAPPED", "Clear All Maps", (g) =>
+            {
+                clearMaps(false, g);
+            }, (g) =>
+            {
+                return g.GridRecords != null && g.GridRecords.Any();
+            }), typeof(MigrateInternalRequest.MigrateInternalTypeMapping.MigrateInternalFieldMapping));
         }
 
         private void AddGenerateMappingsWhenTypesSelected()

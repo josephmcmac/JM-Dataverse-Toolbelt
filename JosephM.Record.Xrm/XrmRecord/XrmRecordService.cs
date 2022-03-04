@@ -991,11 +991,6 @@ namespace JosephM.Record.Xrm.XrmRecord
             return entities == null ? null : entities.Select(ToIRecord).ToArray();
         }
 
-        public IEnumerable<IRecord> RetrieveAllFetch(string fetchQuery)
-        {
-            return ToIRecords(_xrmService.RetrieveAllFetch(fetchQuery));
-        }
-
         public IEnumerable<IRecord> RetrieveAllOrClauses(string recordType, IEnumerable<Filter> filters)
         {
             var crmFilters = filters
