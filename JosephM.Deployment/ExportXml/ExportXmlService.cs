@@ -387,6 +387,7 @@ namespace JosephM.Deployment.ExportXml
             }
             var fileName = string.Format(@"{0}_{1}_{2}", entity.LogicalName, entity.Id, namesToUse);
             fileName = fileName.Replace('-', '_');
+            fileName = fileName.Replace('’', '\'');
             //ensure dont exceed max filename length
             fileName = string.Format(@"{0}\{1}", folder, fileName).Left(240);
             fileName = fileName + ".xml";
