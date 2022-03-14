@@ -68,5 +68,7 @@ namespace JosephM.Record.IService
         string AutonumberFormat { get; }
         [Hidden]
         bool HasFieldSecurity { get; }
+        [Hidden]
+        string NavigationProperty { get; }
     }
 }

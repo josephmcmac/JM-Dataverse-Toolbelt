@@ -237,7 +237,9 @@ namespace JosephM.Record.Xrm.XrmRecord
             get
             {
                 if (!XrmService.IsLookup(FieldName, RecordType))
+                {
                     return false;
+                }
                 var relationships = XrmService.GetEntityManyToOneRelationships(RecordType);
                 var relationshipMatches = relationships.Where(r => r.ReferencingAttribute == FieldName && r.ReferencingEntity == RecordType).ToArray();
                 if (!relationshipMatches.Any())
@@ -320,6 +322,23 @@ namespace JosephM.Record.Xrm.XrmRecord
             {
                 var metadata = XrmService.GetFieldMetadata(FieldName, RecordType);
                 return metadata.IsSecured.HasValue && metadata.IsSecured.Value;
+            }
+        }
+
+        public string NavigationProperty
+        {
+            get
+            {
+                if (!XrmService.IsLookup(FieldName, RecordType))
+                {
+                    return null;
+                }
+                var relationships = XrmService.GetEntityManyToOneRelationships(RecordType);
+                var relationshipMatches = relationships.Where(r => r.ReferencingAttribute == FieldName && r.ReferencingEntity == RecordType).ToArray();
+                if (!relationshipMatches.Any())
+                    return null;
+                return string.Join(",", relationshipMatches.Select(r => r.ReferencingEntityNavigationPropertyName)
+                    .Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().OrderBy(s => s));
             }
         }
     }

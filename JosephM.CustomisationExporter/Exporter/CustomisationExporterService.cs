@@ -890,17 +890,17 @@ namespace JosephM.CustomisationExporter.Exporter
                                         Service.GetFieldMetadata(field, thisType)
                                             .MaxValue.ToString(CultureInfo.InvariantCulture);
                                 }
-
+                                var fieldMetadata = Service.GetFieldMetadata(field, thisType);
                                 var fieldExport = new FieldExport(thisTypeLabel, thisType,
                                     fieldLabel, field, Service.GetFieldType(field, thisType),
-                                    Service.GetFieldMetadata(field, thisType).IsCustomField,
-                                    Service.GetFieldMetadata(field, thisType).IsMandatory,
-                                    Service.GetFieldMetadata(field, thisType).Description, primaryField == field,
-                                    Service.GetFieldMetadata(field, thisType).Audit,
-                                    Service.GetFieldMetadata(field, thisType).Searchable
+                                    fieldMetadata.IsCustomField,
+                                    fieldMetadata.IsMandatory,
+                                    fieldMetadata.Description, primaryField == field,
+                                    fieldMetadata.Audit,
+                                    fieldMetadata.Searchable
                                     , displayRelated, referencedType, maxLength, textFormat, integerFormat, dateBehaviour, includeTime, minValue,
-                                    maxValue, precision, picklist, Service.GetFieldMetadata(field, thisType).MetadataId, Service.GetFieldMetadata(field, thisType).IsMultiSelect
-                                    , Service.GetFieldMetadata(field, thisType).HasFieldSecurity);
+                                    maxValue, precision, picklist, fieldMetadata.MetadataId, fieldMetadata.IsMultiSelect
+                                    , fieldMetadata.HasFieldSecurity, fieldMetadata.NavigationProperty);
                                 if (Service.IsString(field, thisType))
                                     fieldExport.MaxLength = Service.GetMaxLength(field, thisType);
                                 allFields.Add(fieldExport);
