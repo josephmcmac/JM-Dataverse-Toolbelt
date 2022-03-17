@@ -28,6 +28,13 @@ namespace JosephM.RecordCounts
         {
             controller.LogLiteral("Loading Types");
 
+            var ignoreErrorMessages = new[]
+            {
+                "FeatureFCBNotEnabled",
+                "'RetrieveMultiple' method does not support entities of type",
+                "https://graph.microsoft.com is not allowed"
+            };
+
             var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.principalobjectaccess, Entities.msdyn_casesuggestion, Entities.msdyn_knowledgearticlesuggestion, Entities.virtualresourcegroupresource, Entities.usermobileofflineprofilemembership, Entities.teammobileofflineprofilemembership, Entities.systemuserauthorizationchangetracker, Entities.searchtelemetry, Entities.appnotification, Entities.msdyn_solutioncomponentcountsummary, Entities.msdyn_solutioncomponentcountdatasource };
 
             var includeTheseTypes = new[] { Entities.incidentresolution };
@@ -105,7 +112,10 @@ namespace JosephM.RecordCounts
                 }
                 catch (Exception ex)
                 {
-                    response.AddResponseItem(new RecordCountsResponseItem(recordType, "Error Generating Counts", ex));
+                    if (ex.Message == null || !ignoreErrorMessages.Any(iem => ex.Message.Contains(iem)))
+                    {
+                        response.AddResponseItem(new RecordCountsResponseItem(recordType, "Error Generating Counts", ex));
+                    }
                 }
                 finally
                 {

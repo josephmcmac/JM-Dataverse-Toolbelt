@@ -24,6 +24,13 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             DocumentWriter = documentWriter;
         }
 
+        private string[] ignoreErrorMessages = new[]
+            {
+                "FeatureFCBNotEnabled",
+                "'RetrieveMultiple' method does not support entities of type",
+                "https://graph.microsoft.com is not allowed"
+            };
+
         private DocumentWriter.DocumentWriter DocumentWriter { get; set; }
 
         private IRecordService Service { get; set; }
@@ -82,7 +89,6 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 Service.LoadFieldsForAllEntities();
             }
 
-
             foreach (var recordType in recordTypes)
             {
                 var recordsToOutput = new Dictionary<string, IRecord>();
@@ -94,9 +100,12 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                 }
                 catch (Exception ex)
                 {
-                    container.Response.AddResponseItem(
+                    if (ex.Message == null || !ignoreErrorMessages.Any(iem => ex.Message.Contains(iem)))
+                    {
+                        container.Response.AddResponseItem(
                         new TextSearchResponseItem("Error Searching Entity Fields",
                             recordType, ex));
+                    }
                 }
                 done++;
             }
@@ -317,8 +326,11 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                             }
                             catch (Exception ex)
                             {
-                                container.Response.AddResponseItem(
+                                if (ex.Message == null || !ignoreErrorMessages.Any(iem => ex.Message.Contains(iem)))
+                                {
+                                    container.Response.AddResponseItem(
                                     new TextSearchResponseItem("Error Searching Html Fields", recordType, field, ex));
+                                }
                             }
                         }
                     }
@@ -347,8 +359,11 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                         }
                         catch (Exception ex)
                         {
-                            container.Response.AddResponseItem(
+                            if (ex.Message == null || !ignoreErrorMessages.Any(iem => ex.Message.Contains(iem)))
+                            {
+                                container.Response.AddResponseItem(
                                 new TextSearchResponseItem("Error Searching String Fields", recordType, field, ex));
+                            }
                         }
                     }
                     if (setSearchFields.Any())
@@ -400,8 +415,11 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
                             }
                             catch (Exception ex)
                             {
-                                container.Response.AddResponseItem(
+                                if (ex.Message == null || !ignoreErrorMessages.Any(iem => ex.Message.Contains(iem)))
+                                {
+                                    container.Response.AddResponseItem(
                                     new TextSearchResponseItem("Error Searching String Fields", recordType, field, ex));
+                                }
                             }
                         }
                     }
@@ -409,9 +427,12 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             }
             catch (Exception ex)
             {
-                container.Response.AddResponseItem(
+                if (ex.Message == null || !ignoreErrorMessages.Any(iem => ex.Message.Contains(iem)))
+                {
+                    container.Response.AddResponseItem(
                     new TextSearchResponseItem("Error Searching String Fields",
                         recordType, ex));
+                }
             }
         }
 
