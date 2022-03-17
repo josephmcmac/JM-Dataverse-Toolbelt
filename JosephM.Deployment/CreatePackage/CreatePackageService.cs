@@ -72,8 +72,7 @@ namespace JosephM.Deployment.CreatePackage
                 controller.UpdateProgress(tasksDone, totalTasks, "Exporting Data");
                 var dataExportService = new ExportXmlService(xrmRecordService);
                 dataExportService.ExportXml(request.DataToInclude,
-                    new Folder(GetDataExportFolder(folderPath)), request.IncludeNotes,
-                    request.IncludeNNRelationshipsBetweenEntities, controller.Controller);
+                    new Folder(GetDataExportFolder(folderPath)), request.IncludeNotes, request.IncludeFileAndImageFields, request.IncludeNNRelationshipsBetweenEntities, controller.Controller);
             }
             tasksDone++;
             if (solution.GetStringField(Fields.solution_.version) != request.SetVersionPostRelease)

@@ -26,7 +26,7 @@ namespace JosephM.Deployment.MigrateRecords
 
             var exportedEntities = new List<Entity>();
 
-            exportService.ProcessExport(request.RecordTypesToMigrate, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller.Controller
+            exportService.ProcessExport(request.RecordTypesToMigrate, request.IncludeNotes, request.IncludeFileAndImageFields, request.IncludeNNRelationshipsBetweenEntities, controller.Controller
                 , (entity) => exportedEntities.Add(entity)
                 , (entity) => exportedEntities.Add(entity));
 

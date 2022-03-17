@@ -14,16 +14,16 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
+            var entityMetadata = XrmService.GetEntityMetadata("aaduser");
+
+            var me = XrmService.WhoAmI();
+
             //DeleteOnlineSampleData();
 
             //var query = new Microsoft.Xrm.Sdk.Query.QueryExpression(Entities.activitymimeattachment);
             //var activityJoin = query.AddLink(Entities.email, Fields.activitymimeattachment_.activityid, Fields.emailhash_.activityid);
 
             //var top1 = XrmService.RetrieveFirst(query);
-
-            var blah = "? Fractures with plating ? at this point in time we haven?t undertaken any fracture work. Leanne would be keen to follow this up with the MAC, and we wonder if you could please send through some information on whether you routinely keep the patients in ov";
-
-            var lenght = blah.Length;
         }
 
         private void DeleteOnlineSampleData()

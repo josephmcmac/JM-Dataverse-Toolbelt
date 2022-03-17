@@ -29,7 +29,11 @@
       "UsesILMergeMsBuildTask": false
     }
   ],
-  "Solution": null,
+  "Solution": {
+    "Id": "6c244984-9ba5-ec11-983f-002248179917",
+    "Name": "TestComponents",
+    "RecordType": "solution"
+  },
   "SolutionDynamicsCrmPrefix": "jmcg",
   "SolutionObjectPrefix": "JosephM",
   "WebResourceProjects": [

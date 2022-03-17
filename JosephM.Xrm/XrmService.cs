@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
+using System.Text;
 using System.Threading;
 
 namespace JosephM.Xrm
@@ -2222,14 +2223,31 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
 
         private static AttributeMetadata[] FilterAttributeMetadata(AttributeMetadata[] attributeMetadata)
         {
-            return attributeMetadata.Where(f =>
+            var results = new List<AttributeMetadata>();
+            foreach(var attribute in attributeMetadata)
             {
-                if (!(f.IsValidForRead ?? false)
-                    || !f.AttributeOf.IsNullOrWhiteSpace())
-                    return false;
-                return (!(f is StringAttributeMetadata) ||
-                        ((StringAttributeMetadata)f).YomiOf.IsNullOrWhiteSpace());
-            }).ToArray();
+                if (attribute is ImageAttributeMetadata || attribute is FileAttributeMetadata)
+                {
+                    results.Add(attribute);
+                }
+                else if (!(attribute.IsValidForRead ?? true))
+                {
+                    continue;
+                }
+                else if (attribute is StringAttributeMetadata smt && !string.IsNullOrWhiteSpace(smt.YomiOf))
+                {
+                    continue;
+                }
+                else if (!string.IsNullOrWhiteSpace(attribute.AttributeOf) && !(attribute is ImageAttributeMetadata || attribute is FileAttributeMetadata))
+                {
+                    continue;
+                }
+                else
+                {
+                    results.Add(attribute);
+                }
+            }
+            return results.ToArray();
         }
 
         #endregion
@@ -3719,6 +3737,102 @@ string recordType)
                     }
                     _allRelationshipsLoaded = true;
                 }
+            }
+        }
+
+        private int fileChunkSize = 4095000;
+        public string GetFileFieldBase64(string entityType, Guid id, string fieldName)
+        {
+            string fileName;
+            return GetFileFieldBase64(entityType, id, fieldName, out fileName);
+        }
+
+        public string GetFileFieldBase64(string entityType, Guid id, string fieldName, out string fileName)
+        {
+            string fileString = null;
+            fileName = null;
+            var byteArray = (byte[])LookupField(entityType, id, fieldName);
+            if (byteArray != null && byteArray.Any())
+            {
+                var fieldMetadata = GetFieldMetadata(fieldName, entityType);
+                if (fieldMetadata is ImageAttributeMetadata imageMetadata && !(imageMetadata.CanStoreFullImage ?? false))
+                {
+                    fileString = Convert.ToBase64String(byteArray);
+                }
+                else
+                {
+                    var initialiseRequest = new InitializeFileBlocksDownloadRequest()
+                    {
+                        FileAttributeName = fieldName,
+                        Target = new EntityReference(entityType, id)
+                    };
+                    var initialiseResponse = (InitializeFileBlocksDownloadResponse)Execute(initialiseRequest);
+                    fileName = initialiseResponse.FileName;
+                    if (initialiseResponse.FileSizeInBytes > 0)
+                    {
+                        fileString = string.Empty;
+                        for (var offset = 0; offset < initialiseResponse.FileSizeInBytes; offset += fileChunkSize)
+                        {
+                            var downloadBlockRequest = new DownloadBlockRequest()
+                            {
+                                BlockLength = (offset + fileChunkSize) > initialiseResponse.FileSizeInBytes ? initialiseResponse.FileSizeInBytes % fileChunkSize : fileChunkSize,
+                                FileContinuationToken = initialiseResponse.FileContinuationToken,
+                                Offset = offset
+                            };
+                            var downloadBlockResponse = (DownloadBlockResponse)Execute(downloadBlockRequest);
+                            fileString += Convert.ToBase64String(downloadBlockResponse.Data);
+                        }
+                    }
+                }
+            }
+            return fileString;
+        }
+
+        public void SetFileFieldBase64(string entityType, Guid id, string fieldName, string fileName, string base64String)
+        {
+            var fieldMetadata = GetFieldMetadata(fieldName, entityType);
+            if (fieldMetadata is ImageAttributeMetadata imageMetadata && !(imageMetadata.CanStoreFullImage ?? false))
+            {
+                SetField(entityType, id, fieldName, Convert.FromBase64String(base64String));
+            }
+            else
+            {
+                var initialiseRequest = new InitializeFileBlocksUploadRequest()
+                {
+                    FileAttributeName = fieldName,
+                    Target = new EntityReference(entityType, id),
+                    FileName = fileName
+                };
+                var initialiseResponse = (InitializeFileBlocksUploadResponse)Execute(initialiseRequest);
+                var base64ChunkSize = fileChunkSize / 8;
+                var fileSizeInBytes = base64String.Length * 8;
+
+                var fileBlockIds = new List<string>();
+                for (var offset = 0; offset < fileSizeInBytes; offset += base64ChunkSize)
+                {
+                    var blockId = Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()));
+                    fileBlockIds.Add(blockId);
+                    var thisChunkSize = base64ChunkSize > base64String.Substring(offset).Length
+                        ? base64String.Substring(offset).Length
+                        : base64ChunkSize;
+                    var thisPart = base64String.Substring(offset, thisChunkSize);
+                    var uploadBlockRequest = new UploadBlockRequest()
+                    {
+                        BlockId = blockId,
+                        BlockData = Convert.FromBase64String(thisPart),
+                        FileContinuationToken = initialiseResponse.FileContinuationToken,
+                    };
+                    Execute(uploadBlockRequest);
+                }
+
+                var commitRequest = new CommitFileBlocksUploadRequest
+                {
+                    BlockList = fileBlockIds.ToArray(),
+                    FileName = fileName,
+                    FileContinuationToken = initialiseResponse.FileContinuationToken,
+                    MimeType = "application/octet-stream"
+                };
+                Execute(commitRequest);
             }
         }
     }

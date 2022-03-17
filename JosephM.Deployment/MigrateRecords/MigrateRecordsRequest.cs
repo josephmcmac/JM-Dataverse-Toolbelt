@@ -59,6 +59,13 @@ namespace JosephM.Deployment.MigrateRecords
         public bool IncludeNotes { get; set; }
 
         [GridWidth(110)]
+        [Group(Sections.ImportOptions)]
+        [DisplayOrder(207)]
+
+        [DisplayName("Include File & Image Fields")]
+        public bool IncludeFileAndImageFields { get; set; }
+
+        [GridWidth(110)]
         [MyDescription("If Set Any N:N Relationship Associations Between Records Being Migrated WIll Be Included In The Migration")]
         [DisplayOrder(210)]
         [Group(Sections.ImportOptions)]

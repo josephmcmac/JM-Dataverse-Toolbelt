@@ -527,6 +527,74 @@ namespace JosephM.Deployment.Test
             Assert.IsFalse(importResponse.HasError);
         }
 
+        [DeploymentItem(@"Files\mcgregor.jpg")]
+        [TestMethod]
+        public void DeploymentImportXmlWithFileFieldTest()
+        {
+            var fileBytes = File.ReadAllBytes("mcgregor.jpg");
+
+            PrepareTests();
+            var workFolder = ClearFilesAndData();
+
+            var contactWithImage1 = CreateContact();
+            XrmService.SetFileFieldBase64(contactWithImage1.LogicalName, contactWithImage1.Id, "entityimage", "macdonald.jpg", Convert.ToBase64String(fileBytes));
+            var convertedBase64 = XrmService.GetFileFieldBase64(contactWithImage1.LogicalName, contactWithImage1.Id, "entityimage");
+            var contactWithImage2 = CreateContact();
+            XrmService.SetFileFieldBase64(contactWithImage2.LogicalName, contactWithImage2.Id, "entityimage", "macdonald.jpg", Convert.ToBase64String(fileBytes));
+            var contactNoImage = CreateContact();
+
+            contactWithImage1 = Refresh(contactWithImage1);
+
+            var importService = new ImportXmlService(XrmRecordService);
+
+            var exportService = new ExportXmlService(XrmRecordService);
+            var exportRequest = new ExportXmlRequest
+            {
+                Folder = new Folder(workFolder),
+                IncludeFileAndImageFields = true,
+                RecordTypesToExport = new[] {
+                    new ExportRecordType() {
+                        RecordType = new RecordType(Entities.contact, Entities.contact),
+                        Type = ExportType.SpecificRecords,
+                        SpecificRecordsToExport = new []
+                        {
+                            new LookupSetting { Record = new Lookup(contactNoImage.LogicalName, contactNoImage.Id.ToString(), null)
+                            },
+                            new LookupSetting { Record = new Lookup(contactWithImage2.LogicalName, contactWithImage2.Id.ToString(), null) },
+                            new LookupSetting { Record = new Lookup(contactWithImage1.LogicalName, contactWithImage1.Id.ToString(), null) }
+                        }
+                    } },
+            };
+            var exportResponse = exportService.Execute(exportRequest, new ServiceRequestController(Controller));
+            Assert.IsTrue(exportResponse.Success);
+
+            XrmService.Delete(contactWithImage1);
+            XrmService.Delete(contactWithImage2);
+            XrmService.Delete(contactNoImage);
+
+            var application = CreateAndLoadTestApplication<ImportXmlModule>();
+
+            var importRequest = new ImportXmlRequest
+            {
+                Folder = new Folder(workFolder)
+            };
+
+            var response = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            Assert.IsFalse(response.HasError);
+
+            contactWithImage1 = Refresh(contactWithImage1);
+            var imageBase64 = XrmService.GetFileFieldBase64(contactWithImage1.LogicalName, contactWithImage1.Id, "entityimage");
+            Assert.IsNotNull(imageBase64);
+
+            contactWithImage2 = Refresh(contactWithImage2);
+            imageBase64 = XrmService.GetFileFieldBase64(contactWithImage2.LogicalName, contactWithImage2.Id, "entityimage");
+            Assert.IsNotNull(imageBase64);
+
+            contactNoImage = Refresh(contactNoImage);
+            imageBase64 = XrmService.GetFileFieldBase64(contactNoImage.LogicalName, contactNoImage.Id, "entityimage");
+            Assert.IsNull(imageBase64);
+        }
+
         [TestMethod]
         public void DeploymentImportXmlSimpleTest()
         {

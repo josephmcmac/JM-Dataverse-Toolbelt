@@ -235,6 +235,11 @@
       <Version>9.0.2.26</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Files\mcgregor.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

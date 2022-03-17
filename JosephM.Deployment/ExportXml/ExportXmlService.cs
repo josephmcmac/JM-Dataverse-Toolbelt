@@ -1,11 +1,8 @@
-#region
-
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Record.Extentions;
-using JosephM.Record.Query;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -18,8 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
-
-#endregion
 
 namespace JosephM.Deployment.ExportXml
 {
@@ -44,23 +39,23 @@ namespace JosephM.Deployment.ExportXml
         public override void ExecuteExtention(ExportXmlRequest request, ExportXmlResponse response,
             ServiceRequestController controller)
         {
-            ExportXml(request.RecordTypesToExport, request.Folder, request.IncludeNotes, request.IncludeNNRelationshipsBetweenEntities, controller.Controller);
+            ExportXml(request.RecordTypesToExport, request.Folder, request.IncludeNotes, request.IncludeFileAndImageFields, request.IncludeNNRelationshipsBetweenEntities, controller.Controller);
             response.Folder = request.Folder.FolderPath;
             response.Message = "The XML Files Have Been Created";
         }
 
 
-        public void ExportXml(IEnumerable<ExportRecordType> exports, Folder folder, bool includeNotes, bool includeNNBetweenEntities, LogController controller)
+        public void ExportXml(IEnumerable<ExportRecordType> exports, Folder folder, bool includeNotes, bool includeFileAndImageFields, bool includeNNBetweenEntities, LogController controller)
         {
             if (!Directory.Exists(folder.FolderPath))
                 Directory.CreateDirectory(folder.FolderPath);
 
-            ProcessExport(exports, includeNotes, includeNNBetweenEntities, controller
+            ProcessExport(exports, includeNotes, includeFileAndImageFields, includeNNBetweenEntities, controller
                 , (entity) => WriteToXml(entity, folder.FolderPath, false)
                 , (entity) => WriteToXml(entity, folder.FolderPath, true));
         }
 
-        public void ProcessExport(IEnumerable<ExportRecordType> exports, bool includeNotes, bool includeNNBetweenEntities, LogController controller
+        public void ProcessExport(IEnumerable<ExportRecordType> exports, bool includeNotes, bool includeFileAndImageFields, bool includeNNBetweenEntities, LogController controller
             , Action<Entity> processEntity, Action<Entity> processAssociation)
         {
             if (exports == null || !exports.Any())
@@ -186,6 +181,8 @@ namespace JosephM.Deployment.ExportXml
                 if (excludeFields.Contains(primaryField))
                     excludeFields = excludeFields.Except(new[] { primaryField }).ToArray();
 
+                //exclude fields which get filtered out as attribute of fields etc (e.g. image _timestamp _url)
+
                 if (exportType.ExplicitValuesToSet != null)
                 {
                     foreach (var field in exportType.ExplicitValuesToSet)
@@ -200,7 +197,7 @@ namespace JosephM.Deployment.ExportXml
                     }
                 }
 
-                var fieldsAlwaysExclude = new[] { "calendarrules" };
+                var fieldsAlwaysExclude = new[] { "calendarrules", "safedescription" };
                 excludeFields = excludeFields.Union(fieldsAlwaysExclude).ToArray();
 
                 var toDo = entities.Count();
@@ -215,15 +212,38 @@ namespace JosephM.Deployment.ExportXml
                     .ToArray()
                     : exportType.IncludeOnlyTheseFields.Select(f => f.RecordField.Key);
 
+                var fileFields = XrmService
+                    .GetEntityFieldMetadata(exportType.RecordType.Key)
+                    .Where(fmt => fmt.Value is ImageAttributeMetadata || fmt.Value is FileAttributeMetadata)
+                    .Select(fmt => fmt.Value)
+                    .ToArray();
+
                 foreach (var entity in entities)
                 {
                     controller.UpdateLevel2Progress(done++, toDo, string.Format("Processing {0} Records", type));
-                    entity.RemoveFields(excludeFields.Union(new[] { "safedescription" }));
+                    var removeFields = new List<string>(excludeFields);
+                    removeFields.AddRange(entity.GetFieldsInEntity().Where(f => !f.Contains(".") && !XrmService.FieldExists(f, entity.LogicalName)));
+                    entity.RemoveFields(removeFields);
                     var fieldsSetNull = fieldsPopulateIfNull
                         .Where(k => entity.GetField(k) == null)
                         .ToArray();
                     foreach (var setNull in fieldsSetNull)
                         entity.SetField(setNull, null);
+
+                    if (includeFileAndImageFields)
+                    {
+                        foreach (var fileField in fileFields)
+                        {
+                            string fileName = null;
+                            string fileBase64 = XrmService.GetFileFieldBase64(entity.LogicalName, entity.Id, fileField.LogicalName, out fileName);
+                            if (!string.IsNullOrWhiteSpace(fileBase64))
+                            {
+                                entity.SetField($"{fileField.LogicalName}.base64", fileBase64);
+                                entity.SetField($"{fileField.LogicalName}.filename", fileName);
+                            }
+                        }
+                    }
+
                     processEntity(entity);
                 }
                 controller.TurnOffLevel2();

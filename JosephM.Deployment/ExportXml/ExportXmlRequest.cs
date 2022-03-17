@@ -39,6 +39,12 @@ namespace JosephM.Deployment.ExportXml
         public bool IncludeNotes { get; set; }
 
         [GridWidth(110)]
+        [Group(Sections.RecordTypesOptions)]
+        [DisplayOrder(205)]
+        [DisplayName("Include File & Image Fields")]
+        public bool IncludeFileAndImageFields { get; set; }
+
+        [GridWidth(110)]
         [DisplayOrder(210)]
         [Group(Sections.RecordTypesOptions, true, 30)]
         [DisplayName("Include N:N Links Between Records")]

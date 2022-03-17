@@ -37,6 +37,7 @@ namespace JosephM.Deployment.CreatePackage
         {
             IncludeNNRelationshipsBetweenEntities = true;
             IncludeNotes = true;
+            IncludeFileAndImageFields = true;
         }
 
         public IsValidResponse Validate()
@@ -104,6 +105,12 @@ namespace JosephM.Deployment.CreatePackage
         [Group(Sections.DataIncluded)]
         [DisplayOrder(1050)]
         public bool IncludeNotes { get; set; }
+
+        [GridWidth(110)]
+        [Group(Sections.DataIncluded)]
+        [DisplayOrder(1055)]
+        [DisplayName("Include File & Image Fields")]
+        public bool IncludeFileAndImageFields { get; set; }
 
         [DisplayName("Include N:N Links Between Records")]
         [GridWidth(110)]

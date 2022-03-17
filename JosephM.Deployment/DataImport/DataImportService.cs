@@ -7,6 +7,7 @@ using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -382,6 +383,12 @@ namespace JosephM.Deployment.DataImport
                         var forCreateEntitiesCopy = new Dictionary<Entity, Entity>();
                         var forUpdateEntitiesCopy = new Dictionary<Entity, Entity>();
 
+                        var recordTypeFileFields = XrmService
+                            .GetEntityFieldMetadata(recordType)
+                            .Where(fmt => fmt.Value is ImageAttributeMetadata || fmt.Value is FileAttributeMetadata)
+                            .Select(kv => kv.Value)
+                            .ToArray();
+
                         foreach (var entity in thisSetOfEntities.ToArray())
                         {
                             var fieldsToSet = new List<string>();
@@ -447,7 +454,14 @@ namespace JosephM.Deployment.DataImport
                                 }
                                 else
                                 {
-                                    dataImportContainer.Response.AddSkippedNoChange(entity);
+                                    if(ImportFileFields(entity, recordTypeFileFields, dataImportContainer))
+                                    {
+                                        dataImportContainer.Response.AddUpdated(entity);
+                                    }
+                                    else
+                                    {
+                                        dataImportContainer.Response.AddSkippedNoChange(entity);
+                                    }
                                 }
                             }
                         }
@@ -480,6 +494,8 @@ namespace JosephM.Deployment.DataImport
                                 {
                                     originalEntity.Id = ((CreateResponse)createResponse.Response).id;
                                     dataImportContainer.AddCreated(originalEntity);
+
+                                    ImportFileFields(originalEntity, recordTypeFileFields, dataImportContainer);
                                 }
                                 i++;
                             }
@@ -507,6 +523,7 @@ namespace JosephM.Deployment.DataImport
                                 else
                                 {
                                     dataImportContainer.Response.AddUpdated(originalEntity);
+                                    ImportFileFields(originalEntity, recordTypeFileFields, dataImportContainer);
                                 }
                                 i++;
                             }
@@ -574,6 +591,37 @@ namespace JosephM.Deployment.DataImport
                     _cachedRecords.Remove(recordType);
             }
             dataImportContainer.Controller.TurnOffLevel2();
+        }
+
+        private bool ImportFileFields(Entity importEntity, IEnumerable<AttributeMetadata> recordTypeFileFields, DataImportContainer dataImportContainer)
+        {
+            var fileFieldUpdated = false;
+            foreach(var fileField in recordTypeFileFields)
+            {
+                var importBase64String = importEntity.GetStringField($"{fileField.LogicalName}.base64");
+                var importFileName = importEntity.GetStringField($"{fileField.LogicalName}.filename");
+                if (!string.IsNullOrWhiteSpace(importBase64String))
+                {
+                    try
+                    {
+                        string targetFileName = null;
+                            var targetBase64String = XrmService.GetFileFieldBase64(importEntity.LogicalName, importEntity.Id, fileField.LogicalName, out targetFileName);
+                        if (importBase64String != targetFileName || importBase64String != targetBase64String)
+                        {
+                            XrmService.SetFileFieldBase64(importEntity.LogicalName, importEntity.Id, fileField.LogicalName, importFileName, importBase64String);
+                            fileFieldUpdated = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        var recordName = importEntity.GetStringField(XrmService.GetPrimaryNameField(importEntity.LogicalName)) ?? importEntity.Id.ToString();
+                        dataImportContainer.Response.AddImportError(importEntity,
+                                 new DataImportResponseItem(importEntity.LogicalName,
+                                 fileField.LogicalName, recordName, importFileName, "Error setting file", ex));
+                    }
+                }
+            }
+            return fileFieldUpdated;
         }
 
         private void ParseLookupFields(DataImportContainer dataImportContainer, IEnumerable<Entity> thisSetOfEntities, IEnumerable<string> lookupFields, bool isRetry, bool allowAddForRetry, Action<Entity, string> doWhenResolved = null,
@@ -1093,102 +1141,6 @@ namespace JosephM.Deployment.DataImport
             }
 
             return orderedTypes;
-        }
-
-        private void ParseLookup(DataImportContainer dataImportContainer, Entity thisEntity, string field, bool allowAddForRetry, bool isRetry = false)
-        {
-            var idNullable = thisEntity.GetLookupGuid(field);
-            if (idNullable.HasValue)
-            {
-                var fieldResolved = false;
-                var targetTypesToTry = GetTargetTypesToTry(thisEntity, field);
-                var name = thisEntity.GetLookupName(field);
-                foreach (var lookupEntity in targetTypesToTry)
-                {
-                    var targetPrimaryKey = XrmRecordService.GetPrimaryKey(lookupEntity);
-                    var targetPrimaryField = XrmRecordService.GetPrimaryField(lookupEntity);
-                    var idMatches = dataImportContainer.GetMatchingEntities(lookupEntity,
-                            new Dictionary<string, object>
-                            {
-                                { targetPrimaryKey, idNullable.Value }
-                            });
-
-                    if (idMatches.Any())
-                    {
-                        ((EntityReference)(thisEntity.GetField(field))).Name = idMatches.First().GetStringField(targetPrimaryField);
-                        fieldResolved = true;
-                    }
-                    else
-                    {
-                        var typeConfigParentOrUniqueFields = new List<string>();
-                        var typeConfig = XrmRecordService.GetTypeConfigs().GetFor(thisEntity.LogicalName);
-                        if (typeConfig != null)
-                        {
-                            if (typeConfig.ParentLookupField != null)
-                                typeConfigParentOrUniqueFields.Add(typeConfig.ParentLookupField);
-                            if(typeConfig.UniqueChildFields != null)
-                                typeConfigParentOrUniqueFields.AddRange(typeConfig.UniqueChildFields);
-                        }
-                        if (dataImportContainer.ContainsExportedConfigFields && typeConfigParentOrUniqueFields.Contains(field))
-                        {
-                            //if the field is part of type config unique fields
-                            //then we need to match the target based on the type config rather than just the name
-                            //additionally if a lookup field in the config doesnt resolve then we should throw an error
-                            var targetType = thisEntity.GetLookupType(field);
-                            var targetName = thisEntity.GetLookupName(field);
-                            var targetTypeConfig = XrmRecordService.GetTypeConfigs().GetFor(targetType);
-                            var primaryField = XrmService.GetPrimaryNameField(targetType);
-                            var matchQuery = XrmService.BuildQuery(targetType, null, new[]
-                            {
-                                new ConditionExpression(primaryField, ConditionOperator.Equal, targetName)
-                            }, null);
-                            var targetTypeParentOrUniqueFields = new List<string>();
-                            if (targetTypeConfig != null)
-                            {
-                                if (targetTypeConfig.ParentLookupField != null)
-                                    targetTypeParentOrUniqueFields.Add(targetTypeConfig.ParentLookupField);
-                                if (targetTypeConfig.UniqueChildFields != null)
-                                    targetTypeParentOrUniqueFields.AddRange(targetTypeConfig.UniqueChildFields);
-                            }
-                            if (targetTypeParentOrUniqueFields.Any())
-                            {
-                                dataImportContainer.AddUniqueFieldConfigJoins(thisEntity, matchQuery, targetTypeParentOrUniqueFields, prefixFieldInEntity: field + ".");
-                            }
-                            var matches = XrmService.RetrieveAll(matchQuery);
-                            if (matches.Count() != 1)
-                            {
-                                throw new Exception($"Could Not Find Matching Target Record For The Field {field} Named '{targetName}'. This Field Is Configured As Required To Match In The Target Instance When Populated");
-                            }
-                            thisEntity.SetLookupField(field, matches.First());
-                            fieldResolved = true;
-                        }
-                        else
-                        {
-                            var matchRecords = string.IsNullOrWhiteSpace(name) ?
-                                new Entity[0] :
-                                dataImportContainer.GetMatchingEntities(lookupEntity,
-                                targetPrimaryField,
-                                name);
-                            matchRecords = dataImportContainer.FilterForNameMatch(matchRecords);
-                            if (matchRecords.Count() == 1)
-                            {
-                                thisEntity.SetLookupField(field, matchRecords.First());
-                                ((EntityReference)(thisEntity.GetField(field))).Name = name;
-                                fieldResolved = true;
-                            }
-                        }
-                    }
-                }
-                if (!fieldResolved)
-                {
-                    if (isRetry || !allowAddForRetry)
-                        throw new Exception($"Could Not Resolve {field} {name}");
-                    if (!dataImportContainer.FieldsToRetry.ContainsKey(thisEntity))
-                        dataImportContainer.FieldsToRetry.Add(thisEntity, new List<string>());
-                    dataImportContainer.FieldsToRetry[thisEntity].Add(field);
-                    dataImportContainer.Response.AddFieldForRetry(thisEntity, field);
-                }
-            }
         }
 
         private OrganizationRequest GetSetStateRequest(Entity thisEntity)
