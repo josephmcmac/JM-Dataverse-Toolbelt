@@ -28,8 +28,6 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
         public override void ExecuteExtention(DeployWebResourceRequest request, DeployWebResourceResponse response,
             ServiceRequestController controller)
         {
-            var records = new List<IRecord>();
-
             var publishIds = new List<string>();
 
             var totalTasks = request.Files.Count() + 1;
@@ -55,6 +53,15 @@ namespace JosephM.Xrm.Vsix.Module.DeployWebResource
                     if (match == null)
                     {
                         match = Service.GetFirst(Entities.webresource, Fields.webresource_.displayname, fileName);
+                    }
+                    if (match == null)
+                    {
+                        //one more try without extension
+                        var lastIndexOfDot = fileName.LastIndexOf(".");
+                        if (lastIndexOfDot > -1)
+                        {
+                            match = Service.GetFirst(Entities.webresource, Fields.webresource_.name, fileName.Substring(0, lastIndexOfDot));
+                        }
                     }
                     if (match != null)
                     {
