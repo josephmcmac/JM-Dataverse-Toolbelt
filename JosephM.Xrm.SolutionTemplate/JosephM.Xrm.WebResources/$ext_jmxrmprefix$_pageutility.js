@@ -107,9 +107,8 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
         var options = getFormContext().getAttribute(fieldName).getOptions();
         var control = getFormContext().getControl(fieldName);
         control.clearOptions();
-        var optionOrder = 0;
         for (var i = 0; i < options.length; i++)
-            control.addOption(options[i], optionOrder++);
+            control.addOption(options[i]);
     };
     /// <summary> Adds the given option to the end of the option set
     this.AddPicklistOption = function (fieldName, value) {
@@ -187,9 +186,7 @@ $ext_jmobjprefix$PageUtility = function (formContext) {
         return getFormContext().getAttribute(fieldName).getUserPrivilege().canRead;
     };
     /// <summary>returns if the field is currently set as mandatory</summary>
-    this.GetFieldIsMandatory = function (fieldName, isMandatory) {
-        if (isDisabled == null)
-            isDisabled = true;
+    this.GetFieldIsMandatory = function (fieldName) {
         return getFormContext().getAttribute(fieldName).getRequiredLevel() == 'required';
     };
     /// <summary>sets a field as mandatory (true) or no requirement level (false)</summary>

@@ -609,10 +609,24 @@ namespace $safeprojectname$.Xrm
         {
             var fieldValue = GetField(entity, fieldName);
             if (fieldValue == null)
+            {
                 return new Entity[] { };
+            }
+            else if (fieldValue is EntityCollection ec)
+            {
+                return ec.Entities;
+            }
+            else if (fieldValue is Entity[] ar)
+            {
+                return ar;
+            }
+            else if (fieldValue is IEnumerable<Entity> en)
+            {
+                return en;
+            }
             else
             {
-                return ((EntityCollection)fieldValue).Entities;
+                return new Entity[] { };
             }
         }
 

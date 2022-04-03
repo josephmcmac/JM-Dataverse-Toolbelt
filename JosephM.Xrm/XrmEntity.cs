@@ -707,16 +707,26 @@ namespace JosephM.Xrm
 
         public static IEnumerable<Entity> GetActivityParties(this Entity entity, string fieldName)
         {
-            var fieldValue = entity.GetField(fieldName);
+            var fieldValue = GetField(entity, fieldName);
             if (fieldValue == null)
-                return new Entity[] { };
-            else if(fieldValue is Entity[] array)
             {
-                return array;
+                return new Entity[] { };
+            }
+            else if (fieldValue is EntityCollection ec)
+            {
+                return ec.Entities;
+            }
+            else if (fieldValue is Entity[] ar)
+            {
+                return ar;
+            }
+            else if (fieldValue is IEnumerable<Entity> en)
+            {
+                return en;
             }
             else
             {
-                return ((EntityCollection)fieldValue).Entities;
+                return new Entity[] { };
             }
         }
 
