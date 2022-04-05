@@ -3461,7 +3461,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Xrm.Autonumber, Version=1.0.8027.24197, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Xrm.Autonumber, Version=1.0.8124.21829, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_0617A31CA1ADB87C07A89F11B40B1935"
@@ -4019,7 +4019,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.InstanceComparer, Version=2.0.8027.24197, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.InstanceComparer, Version=2.0.8124.21829, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_259E5BB307916F1ED7EB4492060B24E3"
@@ -4050,7 +4050,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Application.Desktop.Console, Version=2.0.8027.20627, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Application.Desktop.Console, Version=2.0.8124.21830, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_282936CE54899F546428DE83085B9A66"
@@ -4112,7 +4112,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Deployment, Version=2.0.8027.24239, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Deployment, Version=2.0.8124.21830, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_2CF118FFF218C69CF1AB9F652C913920"
@@ -4938,7 +4938,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Record.Xrm, Version=2.0.8027.20625, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Record.Xrm, Version=2.0.8124.21815, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_48BE52AC01AB77202576D7DE91B41C25"
@@ -5093,7 +5093,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Xrm.RecordExtract, Version=2.0.8027.24197, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Xrm.RecordExtract, Version=2.0.8124.21829, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_51DD8A7DC1AE28D5F89FA444E60C54B0"
@@ -5217,7 +5217,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Core, Version=2.0.8027.20624, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Core, Version=2.0.8124.21814, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_5596FBB48B48FFC8C862D015D3BE88F1"
@@ -6178,7 +6178,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.CodeGenerator, Version=2.0.8027.24197, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.CodeGenerator, Version=2.0.8124.21829, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_8A842EBE0CC4D6DC12C2C23D68C131EF"
@@ -6333,7 +6333,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.CustomisationExporter, Version=2.0.8027.24197, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.CustomisationExporter, Version=2.0.8124.21830, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_8D3D6A28C65097EAC5BA1BDFAF8FDDD3"
@@ -6426,7 +6426,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Xrm, Version=2.0.8027.20625, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Xrm, Version=2.0.8124.21815, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_930587B5CF5F16756B34789C29253863"
@@ -6612,7 +6612,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.ObjectMapping, Version=2.0.8027.20624, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.ObjectMapping, Version=2.0.8124.21815, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A0C6DEACD895AC5CE0B88F3BEBFF1302"
@@ -6705,7 +6705,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Spreadsheet, Version=2.0.8027.20625, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Spreadsheet, Version=2.0.8124.21814, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A8DC38A206529A2B931C870AEDBD5DBF"
@@ -6860,7 +6860,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Application.ViewModel, Version=2.0.8027.20625, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Application.ViewModel, Version=2.0.8124.21815, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_ACD1AB4E13E304B996B09C737A4E9803"
@@ -6984,7 +6984,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.RecordCounts, Version=2.0.8027.24197, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.RecordCounts, Version=2.0.8124.21829, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_B3D9D3F7E722527491EC5D6979640692"
@@ -7232,7 +7232,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Application.Desktop, Version=2.0.8027.20626, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Application.Desktop, Version=2.0.8124.21816, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C5FAB62BA4F2C666FA142F8A7D2F6C9C"
@@ -7418,7 +7418,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Record, Version=2.0.8027.20624, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Record, Version=2.0.8124.21815, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D2687B3A813E777D779A0FA88B1CA9EB"
@@ -7573,7 +7573,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Wpf, Version=2.0.8027.20626, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Wpf, Version=2.0.8124.21816, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_DA06CE6FEC17E854BA2A50CA5C808210"
@@ -7666,7 +7666,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Application, Version=2.0.8027.20624, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Application, Version=2.0.8124.21814, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_E3FB8717A484A4F255A27BA105EF3C9A"
@@ -7821,7 +7821,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.CustomisationImporter, Version=2.0.8027.24197, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.CustomisationImporter, Version=2.0.8124.21830, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_EB960AA62EA9FB6D1910DE78CD74158D"
@@ -7945,7 +7945,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.XrmModule, Version=2.0.8027.20626, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.XrmModule, Version=2.0.8124.21829, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_EEBED9BFC7F26CC299CF09D87C1B1FD1"
@@ -8100,7 +8100,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:JosephM.Record.Sql, Version=2.0.8027.20625, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:JosephM.Record.Sql, Version=2.0.8124.21815, Culture=neutral, PublicKeyToken=8ff8632955a46d8b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F7718367BE1BFBA1E4AB3FF94890A1E4"
@@ -8513,15 +8513,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:JosephM Dynamics 365 Dev App"
-        "ProductCode" = "8:{D8E024AC-28BD-4482-8A47-B42134D54D5A}"
-        "PackageCode" = "8:{9FEA6DFB-92D8-434B-B220-8BD2B9954E78}"
+        "ProductCode" = "8:{6AEAEA90-0572-47E9-B45C-BDCF9FB95E37}"
+        "PackageCode" = "8:{B3499D82-2D06-4410-9865-11C7FBF8A3A5}"
         "UpgradeCode" = "8:{5B07B391-967D-4C33-8FA6-5A94E167CA54}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.16.2"
+        "ProductVersion" = "8:2.17.0"
         "Manufacturer" = "8:Joseph McGregor"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/josephmcmac/XRM-Developer-Tool/issues/new"
@@ -9157,7 +9157,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0BBEACBB7D594F5BB523FAAC56B1F3DA"
             {
-            "SourcePath" = "8:..\\JosephM.Dynamics365DevApp\\obj\\Debug\\JosephM.Dynamics365DevApp.exe"
+            "SourcePath" = "8:..\\JosephM.Dynamics365DevApp\\obj\\Release\\JosephM.Dynamics365DevApp.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_86AEA7F7B7E242F1952AEFE6126F42F4"

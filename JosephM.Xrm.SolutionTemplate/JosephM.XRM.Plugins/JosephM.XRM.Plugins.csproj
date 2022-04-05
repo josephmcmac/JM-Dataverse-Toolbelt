@@ -132,8 +132,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$ext_jmobjprefix$PluginRegistration.cs" />
+    <Compile Include="$ext_jmobjprefix$ActionRegistration.cs" />
     <Compile Include="$ext_jmobjprefix$Settings.cs" />
-    <Compile Include="Action\$ext_jmobjprefix$Action.cs" />
+    <Compile Include="Action\$ext_jmobjprefix$ActionBase.cs" />
     <Compile Include="Core\ConsoleUserInterface.cs" />
     <Compile Include="Core\CsvUtility.cs" />
     <Compile Include="Core\ExceptionExtentions.cs" />
@@ -163,7 +164,8 @@
       <DependentUpon>ToolingConnectorForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xrm\XrmOrganizationServiceFactory.cs" />
-    <Compile Include="Xrm\XrmActionBase.cs" />
+    <Compile Include="Xrm\XrmAction.cs" />
+    <Compile Include="Xrm\XrmActionRegistration.cs" />
     <Compile Include="Xrm\XrmConfiguration.cs" />
     <Compile Include="Xrm\XrmConnection.cs" />
     <Compile Include="Xrm\XrmEntity.cs" />

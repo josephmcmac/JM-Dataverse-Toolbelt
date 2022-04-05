@@ -4,14 +4,8 @@ using System;
 
 namespace $safeprojectname$.Xrm
 {
-    public abstract class XrmActionBase : IPlugin
+    public abstract class XrmAction
     {
-        public void Execute(IServiceProvider serviceProvider)
-        {
-            ServiceProvider = serviceProvider;
-            PostActionSynch();
-        }
-
         private IPluginExecutionContext _context;
         private LogController _controller;
         private XrmService _xrmService;
@@ -60,6 +54,9 @@ namespace $safeprojectname$.Xrm
             set { _xrmService = value; }
         }
 
+        public string UnsecureConfig { get; internal set; }
+        public string SecureConfig { get; internal set; }
+
         public string GetStringInput(string inputName)
         {
             return Context.InputParameters.Contains(inputName)
@@ -79,7 +76,7 @@ namespace $safeprojectname$.Xrm
         public Guid? GetGuidFromInput(string inputName)
         {
             var stringInput = GetStringInput(inputName);
-            if(string.IsNullOrWhiteSpace(stringInput))
+            if (string.IsNullOrWhiteSpace(stringInput))
             {
                 return null;
             }

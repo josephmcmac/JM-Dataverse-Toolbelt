@@ -4,7 +4,7 @@ using $safeprojectname$.Localisation;
 
 namespace $safeprojectname$.Action
 {
-    public abstract class $ext_jmobjprefix$ActionBase : XrmActionBase
+    public abstract class $ext_jmobjprefix$ActionBase : XrmAction
     {
         private $ext_jmobjprefix$Settings _settings;
         public $ext_jmobjprefix$Settings $ext_jmobjprefix$Settings
