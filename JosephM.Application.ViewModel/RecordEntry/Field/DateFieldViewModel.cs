@@ -1,10 +1,5 @@
-﻿#region
-
-using System;
+﻿using System;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Record.Extentions;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -13,12 +8,20 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public DateFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            Format = "dd/MM/yyyy hh:mm:ss tt";
-            if (IsReadOnly && !recordForm.RecordService.GetFieldMetadata(FieldName, GetRecordType()).IncludeTime)
-                Format = "dd/MM/yyyy";
+
         }
 
-        public string Format { get; set; }
+        public string Format
+        {
+            get
+            {
+                return IncludeTime
+                    ? "dd/MM/yyyy hh:mm:ss tt"
+                    : "dd/MM/yyyy";
+            }
+        }
+
+        public bool IncludeTime { get; set; }
 
         public override string StringDisplay { get { return Value?.ToString(Format); } }
 

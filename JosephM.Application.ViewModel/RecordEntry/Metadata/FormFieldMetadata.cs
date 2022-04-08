@@ -141,7 +141,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     {
                         fieldVm = new DateFieldViewModel(field, label, recordForm)
                         {
-                            IsRecordServiceField = isRecordServiceField
+                            IncludeTime = !recordForm.IsReadOnly ||recordForm.RecordService.GetFieldMetadata(FieldName, recordType).IncludeTime,
+                                IsRecordServiceField = isRecordServiceField
                         };
                         break;
                     }
