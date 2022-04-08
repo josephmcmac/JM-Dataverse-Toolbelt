@@ -180,7 +180,7 @@
           <ButtonText>Import Csvs</ButtonText>
         </Strings>
       </Button>-->
-      <Button guid="guidXrmPackageCmdSet" id="ClearCacheCommandId" priority="0x0109" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="ClearCacheCommandId" priority="0x010A" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>Clear Cache</ButtonText>
@@ -220,6 +220,12 @@
           <ButtonText>Open Advanced Find in Browser</ButtonText>
         </Strings>
       </Button>
+		<Button guid="guidXrmPackageCmdSet" id="OpenCrmSettingsCommandId" priority="0x0108" type="Button">
+			<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+			<Strings>
+				<ButtonText>Open Settings in Browser</ButtonText>
+			</Strings>
+		</Button>
       <Button guid="guidXrmPackageCmdSet" id="CreateDeploymentPackageCommandId" priority="0x0101" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
@@ -246,7 +252,7 @@
           <ButtonText>Crud/Query Data</ButtonText>
         </Strings>
       </Button>
-       <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x0109" type="Button">
+       <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x010A" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>About</ButtonText>
@@ -288,7 +294,7 @@
           <ButtonText>Generate JavaScript Options</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="ExtentionSettingsCommandId" priority="0x0108" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="ExtentionSettingsCommandId" priority="0x0109" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>Extention Settings</ButtonText>
@@ -356,6 +362,7 @@
       <IDSymbol name="OpenCrmWebCommandId" value="0x010B" />
       <IDSymbol name="OpenCrmSolutionCommandId" value="0x010C" />
       <IDSymbol name="OpenCrmAdvancedFindCommandId" value="0x010D" />
+		<IDSymbol name="OpenCrmSettingsCommandId" value="0x0120" />
       <IDSymbol name="CreateDeploymentPackageCommandId" value="0x010E" />
       <IDSymbol name="DeployPackageCommandId" value="0x0110" />
       <IDSymbol name="InstanceComparisonCommandId" value="0x0111" />

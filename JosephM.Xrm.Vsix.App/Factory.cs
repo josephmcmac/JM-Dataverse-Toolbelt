@@ -64,6 +64,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<DeployIntoFieldModule>(0x0117);
             app.AddModule<JavaScriptOptionsModule>(0x0118);
             app.AddModule<OpenDefaultSolutionModule>(0x0119);
+            app.AddModule<OpenSettingsModule>(0x0120);
             app.AddModule<SettingsAggregatorModule>(0x011E);
             app.AddModule<AddPortalCodeModule>(0x011B);
             app.AddModule<PackageSettingsAppConnectionModule>();

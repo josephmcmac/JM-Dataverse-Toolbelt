@@ -101,7 +101,9 @@
     <Compile Include="Module\PluginTriggers\PluginTrigger.cs" />
     <Compile Include="Module\UpdateAssembly\UpdateAssemblyResponse.cs" />
     <Compile Include="Module\Web\MenuItemVisibleSolutionConfigured.cs" />
+    <Compile Include="Module\Web\OpenSettingsDialog.cs" />
     <Compile Include="Module\Web\OpenAdvancedFindDialog.cs" />
+    <Compile Include="Module\Web\OpenSettingsModule.cs" />
     <Compile Include="Module\Web\OpenDefaultSolutionDialog.cs" />
     <Compile Include="Module\Web\OpenSolutionDialog.cs" />
     <Compile Include="Module\Web\OpenDefaultSolutionModule.cs" />
