@@ -215,6 +215,24 @@ namespace JosephM.XrmModule.Crud
                                     });
                                     break;
                                 }
+                            case Fields.solution_.uniquename:
+                                {
+                                    onChanges.Add((rf) =>
+                                    {
+                                        var uniqueNameViewModel = rf.GetStringFieldFieldViewModel(Fields.solution_.uniquename);
+                                        var uniqueName = uniqueNameViewModel.Value;
+                                        var stripInvalidChars = uniqueNameViewModel;
+                                        var validNonLetterDigitsChars = "_";
+                                        var updatedUniqueName = uniqueName != null
+                                        ? new string(uniqueName.Where(c => char.IsLetterOrDigit(c) || validNonLetterDigitsChars.Contains(c)).ToArray())
+                                        : null;
+                                        if(updatedUniqueName != uniqueName)
+                                        {
+                                            uniqueNameViewModel.Value = updatedUniqueName;
+                                        }
+                                    });
+                                    break;
+                                }
                         }
                         break;
                     }
