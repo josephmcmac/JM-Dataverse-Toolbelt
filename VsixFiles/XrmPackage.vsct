@@ -100,7 +100,6 @@
         </Strings>
       </Menu>
     </Menus>
-
     <Groups>
       <Group guid="guidXrmPackageCmdSet" id="XrmProjectMenuGroupMenu" priority="0x1000">
         <Parent guid="guidXrmPackageCmdSet" id="xrmProjectMenu"/>
@@ -240,6 +239,14 @@
           <ButtonText>Deploy Package</ButtonText>
         </Strings>
       </Button>
+		<Button guid="guidXrmPackageCmdSet" id="AddReleaseDataCommandId" priority="0x0102" type="Button">
+			<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroupMenu" />
+			<CommandFlag>DefaultInvisible</CommandFlag>
+			<CommandFlag>DynamicVisibility</CommandFlag>
+			<Strings>
+				<ButtonText>Add Data</ButtonText>
+			</Strings>
+		</Button>
       <Button guid="guidXrmPackageCmdSet" id="InstanceComparisonCommandId" priority="0x0103" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
@@ -365,7 +372,8 @@
 		<IDSymbol name="OpenCrmSettingsCommandId" value="0x0120" />
       <IDSymbol name="CreateDeploymentPackageCommandId" value="0x010E" />
       <IDSymbol name="DeployPackageCommandId" value="0x0110" />
-      <IDSymbol name="InstanceComparisonCommandId" value="0x0111" />
+		<IDSymbol name="AddReleaseDataCommandId" value="0x0121" />
+		<IDSymbol name="InstanceComparisonCommandId" value="0x0111" />
       <IDSymbol name="CrudCommandId" value="0x0112" />
       <IDSymbol name="AboutCommandId" value="0x0113" />
       <IDSymbol name="ImportSolutionCommandId" value="0x0114" />

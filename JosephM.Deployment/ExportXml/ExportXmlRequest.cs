@@ -1,12 +1,7 @@
-﻿#region
-
-using JosephM.Core.Attributes;
-using JosephM.Core.Constants;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using System.Collections.Generic;
-
-#endregion
 
 namespace JosephM.Deployment.ExportXml
 {
@@ -18,16 +13,31 @@ namespace JosephM.Deployment.ExportXml
     [Group(Sections.RecordTypes, true, order: 35, displayLabel: false)]
     public class ExportXmlRequest : ServiceRequestBase
     {
+
+        public static ExportXmlRequest CreateForAddData(string folder)
+        {
+            return new ExportXmlRequest()
+            {
+                Folder = new Folder(folder),
+                HideFolder = true
+            };
+        }
+
         public ExportXmlRequest()
         {
             IncludeNNRelationshipsBetweenEntities = true;
             IncludeNotes = true;
         }
 
+        [Hidden]
+        public bool HideFolder { get; set; }
+
+
         [GridWidth(300)]
         [DisplayOrder(20)]
         [Group(Sections.Main)]
         [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(HideFolder), false)]
         [DisplayName("Select The Folder To Export The XML Files Into")]
         public Folder Folder { get; set; }
 

@@ -93,6 +93,9 @@
     <Compile Include="Module\DeployAssembly\DeployAssemblyResponseItem.cs" />
     <Compile Include="Module\DeployAssembly\DeployAssemblyService.cs" />
     <Compile Include="Module\DeployAssembly\PluginType.cs" />
+    <Compile Include="Module\AddReleaseData\AddReleaseDataDialog.cs" />
+    <Compile Include="Module\AddReleaseData\AddReleaseDataModule.cs" />
+    <Compile Include="Module\AddReleaseData\MenuItemVisibleAddData.cs" />
     <Compile Include="Module\MenuItemVisibleForPluginProject.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersRequest.cs" />
     <Compile Include="Module\PluginTriggers\ManagePluginTriggersResponse.cs" />
