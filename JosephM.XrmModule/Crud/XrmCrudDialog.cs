@@ -62,17 +62,6 @@ namespace JosephM.XrmModule.Crud
                         });
                     }, (g) => !QueryViewModel.IncludeNotIn)
             }));
-            extraFunctions.Add(new CustomGridFunction("WORKFLOW", "Bulk Workflow", new[]
-                {
-                    new CustomGridFunction("BULKWORKFLOWSELECTED", "Selected Only", (g) =>
-                    {
-                        TriggerBulkWorkflow(true);
-                    }, (g) => g.SelectedRows.Any()),
-                    new CustomGridFunction("BULKWORKFLOWALL", "All Results", (g) =>
-                    {
-                        TriggerBulkWorkflow(false);
-                    }, (g) => g.GridRecords != null && g.GridRecords.Any()),
-                }));
             return extraFunctions;
         }
 

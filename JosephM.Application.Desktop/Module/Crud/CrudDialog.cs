@@ -71,17 +71,6 @@ namespace JosephM.Application.Desktop.Module.Crud
                                     TriggerBulkReplace(false);
                                 }, (g) => g.GridRecords != null && g.GridRecords.Any()),
                             }),
-                            new CustomGridFunction("BULKCOPYFIELDVALUE", "Bulk Copy Field Value", new []
-                            {
-                                new CustomGridFunction("BULKCOPYFIELDVALUESELECTED", "Selected Only", (g) =>
-                                {
-                                    TriggerBulkCopyFieldValue(true);
-                                }, (g) => g.SelectedRows.Any()),
-                                new CustomGridFunction("BULKCOPYFIELDVALUEALL", "All Results", (g) =>
-                                {
-                                    TriggerBulkCopyFieldValue(false);
-                                }, (g) => g.GridRecords != null && g.GridRecords.Any()),
-                            }),
                             new CustomGridFunction("DELETE", "Bulk Delete", new []
                             {
                                 new CustomGridFunction("BULKDELETESELECTED", "Selected Only", (g) =>
@@ -200,18 +189,6 @@ namespace JosephM.Application.Desktop.Module.Crud
                 var request = new BulkDeleteRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
                 request.AllowExecuteMultiples = RecordService.SupportsExecuteMultiple;
                 var bulkUpdateDialog = new BulkDeleteDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
-                LoadChildForm(bulkUpdateDialog);
-            });
-        }
-
-        private void TriggerBulkCopyFieldValue(bool selectedOnly)
-        {
-            ApplicationController.DoOnAsyncThread(() =>
-            {
-                var recordsToUpdate = GetRecordsToProcess(selectedOnly);
-                var request = new BulkCopyFieldValueRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-                request.AllowExecuteMultiples = RecordService.SupportsExecuteMultiple;
-                var bulkUpdateDialog = new BulkCopyFieldValueDialog(RecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
                 LoadChildForm(bulkUpdateDialog);
             });
         }
