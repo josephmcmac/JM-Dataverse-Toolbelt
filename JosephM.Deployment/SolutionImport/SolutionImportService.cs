@@ -1,4 +1,5 @@
 using JosephM.Core.Log;
+using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -8,7 +9,6 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -47,7 +47,7 @@ namespace JosephM.Deployment.SolutionImport
                 try
                 {
                     controller.LogLiteral(
-                        $"Importing Solution {solutionFile.Key} Into {XrmRecordService.XrmRecordConfiguration?.ToString()}");
+                        $"Import Request for {solutionFile.Key} Submitted to {XrmRecordService.XrmRecordConfiguration?.ToString()}");
                     var importId = Guid.NewGuid();
                     var req = new ImportSolutionRequest();
                     req.ImportJobId = importId;
@@ -62,7 +62,7 @@ namespace JosephM.Deployment.SolutionImport
                         try
                         {
                             var extraService = new XrmService(xrmService.XrmConfiguration, new LogController(), xrmService.ServiceFactory);
-                            var monitoreProgressThread = new Thread(() => DoProgress(importId, controller.GetLevel2Controller(), finished, extraService, asynch, solutionFile.Key, response));
+                            var monitoreProgressThread = new Thread(() => DoProgress(importId, controller, finished, extraService, null, solutionFile.Key, response));
                             monitoreProgressThread.IsBackground = true;
                             monitoreProgressThread.Start();
                             xrmService.Execute(req);
@@ -80,25 +80,24 @@ namespace JosephM.Deployment.SolutionImport
                         {
                             Request = req
                         };
-                        xrmService.Execute(asynchRequest);
-                        DoProgress(importId, controller.GetLevel2Controller(), finished, xrmService, asynch, solutionFile.Key, response);
+                        var asynchResponse = (ExecuteAsyncResponse) xrmService.Execute(asynchRequest);
+                        DoProgress(importId, controller, finished, xrmService, asynchResponse.AsyncJobId, solutionFile.Key, response);
                     }
                 }
                 catch (FaultException<OrganizationServiceFault> ex)
                 {
                     if (ex.Detail != null && ex.Detail.InnerFault != null && ex.Detail.InnerFault.InnerFault != null)
                     {
-                        throw new Exception(string.Format("Error Importing Solution {0}\n{1}\n{2}", solutionFile, ex.Message, ex.Detail.InnerFault.InnerFault.Message), ex);
+                        throw new Exception($"Error Importing {solutionFile}: {ex.Message} - {ex.Detail.InnerFault.InnerFault.Message}", ex);
                     }
                     else
                     {
-                        throw new Exception(
-                            string.Format("Error Importing Solution {0}\n{1}", solutionFile, ex.Message), ex);
+                        throw new Exception($"Error Importing {solutionFile}: {ex.Message}", ex);
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(string.Format("Error Importing Solution {0}", solutionFile), ex);
+                    throw new Exception($"Error Importing {solutionFile}: {ex.Message}", ex);
                 }
             }
             controller.TurnOffLevel2();
@@ -154,17 +153,12 @@ namespace JosephM.Deployment.SolutionImport
             public bool Completed { get; set; }
         }
 
-        public void DoProgress(Guid importId, LogController controller, Processor finished, XrmService xrmService, bool asynch, string solutionFile, ImportSolutionsResponse response)
+        public void DoProgress(Guid importId, LogController controller, Processor finished, XrmService xrmService, Guid? asynchJobId, string solutionFile, ImportSolutionsResponse response)
         {
-            lock (_lockObject)
-            {
-                if (!finished.Completed)
-                    controller.UpdateProgress(0, 100, "Import Progress");
-            }
+            var systemJobFailure = false;
             while (true)
             {
                 Thread.Sleep(5000);
-                // connect to crm again, don't reuse the connection that's used to import
                 lock (_lockObject)
                 {
                     if (finished.Completed)
@@ -186,18 +180,43 @@ namespace JosephM.Deployment.SolutionImport
                             {
                                 break;
                             }
-                            controller.UpdateProgress(Convert.ToInt32(progress / 1), 100, "Import Progress");
+                            controller.LogLiteral($"Importing {solutionFile} to {XrmRecordService.XrmRecordConfiguration?.ToString()}");
+                            controller.GetLevel2Controller().UpdateProgress(Convert.ToInt32(progress / 1), 100, "Import Progress");
+                        }
+                    }
+                    else if(asynchJobId.HasValue)
+                    {
+                        var systemJobQuery = new QueryExpression(Entities.asyncoperation);
+                        systemJobQuery.NoLock = true;
+                        systemJobQuery.Criteria.AddCondition(new ConditionExpression(Fields.asyncoperation_.asyncoperationid, ConditionOperator.Equal, asynchJobId.Value));
+                        systemJobQuery.ColumnSet = new ColumnSet(Fields.asyncoperation_.statuscode, Fields.asyncoperation_.friendlymessage);
+                        var systemJob = xrmService.RetrieveFirst(systemJobQuery);
+                        if(systemJob != null)
+                        {
+                            if(systemJob.GetOptionSetValue(Fields.asyncoperation_.statuscode) == OptionSets.SystemJob.StatusReason.Failed)
+                            {
+                                systemJobFailure = true;
+                                throw new Exception($"{XrmRecordService.GetDisplayName(Entities.asyncoperation)} {XrmRecordService.GetPicklistLabel(Fields.asyncoperation_.statuscode, Entities.asyncoperation, OptionSets.SystemJob.StatusReason.Failed.ToString())} - {systemJob.GetStringField(Fields.asyncoperation_.friendlymessage)}");
+                            }
+                            else
+                            {
+                                controller.UpdateProgress(0, 100, $"{XrmRecordService.GetDisplayName(Entities.asyncoperation)} for import of {solutionFile} is {XrmRecordService.GetPicklistLabel(Fields.asyncoperation_.statuscode, Entities.asyncoperation, systemJob.GetOptionSetValue(Fields.asyncoperation_.statuscode).ToString())}");
+                            }
                         }
                     }
                 }
 
                 catch (Exception ex)
                 {
-                    controller.LogLiteral("Unexpected Error " + ex.Message);
+                    if(systemJobFailure)
+                    {
+                        throw ex;
+                    }
+                    controller.LogLiteral("Unexpected Error Skipped. Still Waiting For Import Job To Complete: " + ex.Message);
                 }
             }
 
-            if(asynch)
+            if(asynchJobId.HasValue)
             {
                 var completedJob = xrmService.GetFirst(Entities.importjob, Fields.importjob_.importjobid, importId);
                 var xml = completedJob.GetStringField(Fields.importjob_.data);
