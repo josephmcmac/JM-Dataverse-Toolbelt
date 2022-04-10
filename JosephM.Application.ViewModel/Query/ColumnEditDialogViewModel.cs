@@ -206,13 +206,22 @@ namespace JosephM.Application.ViewModel.Query
             else
             {
                 //if removed field active for the current selected link then add it as an option
-                if ((!fieldName.Contains(".") && SelectedLink.Key == RecordType)
-                    || (fieldName.Contains(".") && fieldName.Split('.')[0] == SelectedLink.Key))
+                var selectedResults = CurrentColumns.Where(c => c.FieldName == fieldName).ToArray();
+                foreach (var result in selectedResults)
                 {
-                    var selectedResults = CurrentColumns.Where(c => c.FieldName == fieldName).ToArray();
-                    foreach (var result in selectedResults)
+                    CurrentColumns.Remove(result);
+                    var addToSelectable = false;
+                    var isLinkSelected = SelectedLink.Key != RecordType;
+                    if(!isLinkSelected)
                     {
-                        CurrentColumns.Remove(result);
+                        addToSelectable = !fieldName.Contains(".");
+                    }
+                    else
+                    {
+                        addToSelectable = fieldName.StartsWith($"{SelectedLink.Key}.");
+                    }
+                    if (addToSelectable)
+                    {
                         foreach (var item in SelectableColumns)
                         {
                             if (item.FieldLabel != null && item.FieldLabel.CompareTo(result.FieldLabel) > 0)
@@ -222,7 +231,9 @@ namespace JosephM.Application.ViewModel.Query
                             }
                         }
                         if (!SelectableColumns.Contains(result))
+                        {
                             SelectableColumns.Add(result);
+                        }
                     }
                 }
             }
