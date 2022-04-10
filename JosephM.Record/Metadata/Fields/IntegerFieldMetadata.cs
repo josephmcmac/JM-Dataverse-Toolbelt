@@ -10,8 +10,8 @@ namespace JosephM.Record.Metadata
         public IntegerFieldMetadata(string internalName, string label)
             : base(internalName, label)
         {
-            MinValue = Int32.MinValue;
-            MaxValue = Int32.MaxValue;
+            MinValue = int.MinValue;
+            MaxValue = int.MaxValue;
         }
 
         public IntegerFieldMetadata(string internalName, string label, int minimumValue, int maximumValue)
@@ -24,8 +24,8 @@ namespace JosephM.Record.Metadata
         public IntegerFieldMetadata(string recordType, string internalName, string label)
             : base(recordType, internalName, label)
         {
-            MinValue = Int32.MinValue;
-            MaxValue = Int32.MaxValue;
+            MinValue = int.MinValue;
+            MaxValue = int.MaxValue;
         }
 
         public override RecordFieldType FieldType

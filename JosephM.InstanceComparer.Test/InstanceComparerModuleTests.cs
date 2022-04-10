@@ -90,6 +90,7 @@ namespace JosephM.InstanceComparer.Test
         [TestMethod]
         public void InstanceComparerModuleTest()
         {
+            Assert.Inconclusive();
             //this just compares an instance against itself
             //rather than actually comparing 2 instances
             DeleteAll(Entities.jmcg_testentity);

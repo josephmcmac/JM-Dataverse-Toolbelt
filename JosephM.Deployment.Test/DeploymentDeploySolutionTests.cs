@@ -15,6 +15,7 @@ namespace JosephM.Deployment.Test
         [TestMethod]
         public void DeploymentDeploySolutionTest()
         {
+            Assert.Inconclusive();
             var altConnection = GetAltSavedXrmRecordConfiguration();
 
             var sourceSolution = ReCreateTestSolution();

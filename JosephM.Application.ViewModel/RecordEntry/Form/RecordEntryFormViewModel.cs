@@ -223,9 +223,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         private void AddChangedField(FieldViewModelBase fieldViewModel)
         {
-            if (fieldViewModel.IsRecordServiceField)
-                if (!ChangedPersistentFields.Contains(fieldViewModel.FieldName))
-                    ChangedPersistentFields.Add(fieldViewModel.FieldName);
+            if (!ChangedPersistentFields.Contains(fieldViewModel.FieldName))
+            {
+                ChangedPersistentFields.Add(fieldViewModel.FieldName);
+            }
         }
 
         public Action OnCancel { get; set; }

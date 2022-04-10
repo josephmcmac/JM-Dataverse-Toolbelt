@@ -27,7 +27,7 @@ namespace JosephM.Record.Xrm.XrmRecord
     {
         private IFormService _formService;
         private XrmService _xrmService;
-        private readonly Object _lockObject = new object();
+        private readonly object _lockObject = new object();
 
         private readonly LookupMapper _lookupMapper = new LookupMapper();
 
@@ -935,14 +935,19 @@ namespace JosephM.Record.Xrm.XrmRecord
             return _xrmService.GetAllEntityTypes();
         }
 
-        public string GetFieldAsDisplayString(IRecord record, string fieldName)
+        public string GetFieldAsDisplayString(IRecord record, string fieldName, string currencyId = null)
         {
-            return GetFieldAsDisplayString(record.Type, fieldName, ToEntityValue(record.GetField(fieldName)));
+            return GetFieldAsDisplayString(record.Type, fieldName, ToEntityValue(record.GetField(fieldName)), currencyId: currencyId);
         }
 
-        public string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue)
+        public string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue, string currencyId = null)
         {
-            return _xrmService.GetFieldAsDisplayString(recordType, fieldName, ToEntityValue(fieldValue));
+            Guid? currencyGuid = null;
+            if(!string.IsNullOrWhiteSpace(currencyId))
+            {
+                currencyGuid = Guid.Parse(currencyId);
+            }
+            return _xrmService.GetFieldAsDisplayString(recordType, fieldName, ToEntityValue(fieldValue), LocalisationService.XrmLocalisationService, currencyId: currencyGuid);
         }
 
         public IRecordService LookupService
@@ -1666,7 +1671,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         public IEnumerable<string> GetQuickfindFields(string recordType)
         {
-            var results = new List<String>();
+            var results = new List<string>();
             var savedViews = GetViews(recordType);
             if (savedViews != null)
             {
@@ -1719,6 +1724,50 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             var temp = XrmService.IndexAssociatedEntities(relationshipEntityName, thisTypeId, otherSideId, otherType);
             return temp.ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.Select(v => ToIRecord(v)).ToList());
+        }
+
+        private XrmRecordLocalisationService _localisationService;
+        public XrmRecordLocalisationService LocalisationService
+        {
+            get
+            {
+                if (_localisationService == null)
+                {
+                    _localisationService = new XrmRecordLocalisationService(new XrmLocalisationService(XrmService, XrmService.WhoAmI()));
+                }
+                return _localisationService;
+            }
+        }
+
+        public IRecordLocalisationService GetLocalisationService()
+        {
+            return LocalisationService;
+        }
+
+        public string GetCurrencyId(IRecord record, string fieldName)
+        {
+            var splitFieldName = fieldName?.Split('.');
+            if(splitFieldName != null && !fieldName.EndsWith("_base"))
+            {
+                var relatedCurrencyFieldName = splitFieldName.Count() > 1
+                    ? $"{string.Join(".", splitFieldName.Take(splitFieldName.Count() - 1))}.transactioncurrencyid,"
+                    : "transactioncurrencyid";
+                return record.GetLookupId(relatedCurrencyFieldName);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public int GetCurrencyPrecision(string currencyId)
+        {
+            Guid? currencyGuid = null;
+            if (!string.IsNullOrWhiteSpace(currencyId))
+            {
+                currencyGuid = Guid.Parse(currencyId);
+            }
+            return XrmService.GetCurrencyPrecision(currencyGuid);
         }
 
         public class DeleteInCrmResponse

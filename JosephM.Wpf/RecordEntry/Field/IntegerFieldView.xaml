@@ -25,7 +25,7 @@
                 TextWrapping="WrapWithOverflow"
                 VerticalScrollBarVisibility="Auto"
                 TabIndex="1"
-                Text="{Binding Mode=OneWay, Path=ValueObject}"
+                Text="{Binding Mode=OneWay, Path=ValueString}"
                 Height="Auto">
             </TextBox>
         </Grid>
@@ -34,7 +34,7 @@
             TabIndex="1"
             x:Name="IntegerTextBox"
             DataContext="{Binding NotifyOnValidationError=True}"
-            Text="{Binding ValueObject, Mode=TwoWay}"
+            Text="{Binding ValueString, Mode=TwoWay}"
             Style="{StaticResource IntegerFieldEntryStyle}"
             IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
             Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />

@@ -5,6 +5,7 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Service;
 using JosephM.Core.Extentions;
 using JosephM.Record.Extentions;
+using System.Globalization;
 
 #endregion
 
@@ -15,29 +16,81 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public MoneyFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            MinValue = Decimal.MinValue;
-            MaxValue = Decimal.MaxValue;
+            MinValue = decimal.MinValue;
+            MaxValue = decimal.MaxValue;
         }
 
         public decimal MaxValue { get; set; }
         public decimal MinValue { get; set; }
 
+        private int DecimalPrecision
+        {
+            get
+            {
+                return RecordEntryViewModel.RecordService.GetCurrencyPrecision(CurrencyId);
+            }
+        }
+
+        private string CurrencyId
+        {
+            get
+            {
+                return RecordEntryViewModel.RecordService.GetCurrencyId(Record, FieldName); 
+            }
+        }
+
+        private NumberFormatInfo _numberFormatInfo;
+        private NumberFormatInfo NumberFormatInfo
+        {
+            get
+            {
+                if(_numberFormatInfo == null)
+                {
+                    _numberFormatInfo = (NumberFormatInfo)RecordEntryViewModel.RecordService.GetLocalisationService().NumberFormatInfo.Clone();
+                    _numberFormatInfo.NumberDecimalDigits = DecimalPrecision;
+                }
+                return _numberFormatInfo;
+            }
+        }
+
+        public override string StringDisplay
+        {
+            get
+            {
+                return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(Record, FieldName, currencyId: CurrencyId);
+            }
+        }
+
         public string ValueString
         {
             get
             {
-                if (ValueObject == null)
+                if (string.IsNullOrWhiteSpace(ValueObject?.ToString()))
                     return null;
                 return IsEditable
-                    ? Value.Value.ToString()
-                    : Value.Value.ToString(string.Format("0.00{0}", "#".ReplicateString(RecordEntryViewModel.RecordService.GetFieldMetadata(FieldName, GetRecordType()).DecimalPrecision - 2)));
+                    ? Value.Value.ToString($"n{DecimalPrecision}", NumberFormatInfo)
+                    : RecordEntryViewModel.RecordService.GetFieldAsDisplayString(Record, FieldName, currencyId: CurrencyId);
             }
             set
             {
-                if (value == null)
+                if (string.IsNullOrWhiteSpace(value))
+                {
                     ValueObject = null;
+                }
                 else
-                    ValueObject = decimal.Parse(value);
+                {
+                    decimal updatedDecimal = 0;
+                    if (decimal.TryParse(value, NumberStyles.Any, NumberFormatInfo, out updatedDecimal))
+                    {
+                        ValueObject = updatedDecimal;
+                        OnPropertyChanged(nameof(ValueString));
+                    }
+                    else
+                    {
+                        ApplicationController.UserMessage($"{value} could not be parsed to {nameof(Decimal)}");
+                        OnPropertyChanged(nameof(ValueString));
+                    }
+                }
             }
         }
 
@@ -49,18 +102,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 var decimalValue = decimal.Parse(value.ToString());
                 if (decimalValue > MaxValue)
                 {
-                    response.AddInvalidReason(
-                        string.Format("The entered value is greater than the maximum of {0}", MaxValue));
+                    response.AddInvalidReason($"The entered value is greater than the maximum of {MaxValue}");
                 }
                 if (decimalValue < MinValue)
                 {
-                    response.AddInvalidReason(
-                        string.Format("The entered value is less than the minimum of {0}", MinValue));
+                    response.AddInvalidReason($"The entered value is less than the minimum of {MinValue}");
                 }
             }
             else if (IsNotNullable && (value == null || string.IsNullOrWhiteSpace(value.ToString())))
             {
-                response.AddInvalidReason(string.Format("A Value Is Required"));
+                response.AddInvalidReason("A Value Is Required");
             }
             return response;
         }

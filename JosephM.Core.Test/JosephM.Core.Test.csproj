@@ -71,8 +71,6 @@
     <Compile Include="PropertyInContextByPropertyValuesTests.cs" />
     <Compile Include="PropertyInContextByPropertyValueTests.cs" />
     <Compile Include="RecordTypeForTests.cs" />
-    <Compile Include="StringFormatTests.cs" />
-    <Compile Include="RegularExpressionsTests.cs" />
     <Compile Include="ExceptionExtentionsTests.cs" />
     <Compile Include="EnumExtentionsTests.cs" />
     <Compile Include="PropertyValidatorTests.cs" />

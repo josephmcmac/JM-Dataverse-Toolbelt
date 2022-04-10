@@ -138,7 +138,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 {
                     errorMessage = verifyValueResponse.GetErrorString();
                 }
-                else if (IsRecordServiceField)
+                else
                 {
                     //verify and parse from the record service
                     var parseFieldResponse =
@@ -153,8 +153,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                         setValue = true;
                     }
                 }
-                else
-                    setValue = true;
                 if (setValue)
                 {
                     Record.SetField(FieldName, valueToSet, GetRecordService());
@@ -333,7 +331,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                return ValueObject?.ToString();
+                return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(Record, FieldName);
             }
         }
     }

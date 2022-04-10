@@ -137,7 +137,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         {
             get
             {
-                return FieldType == RecordFieldType.Decimal || FieldType == RecordFieldType.Double
+                return FieldType == RecordFieldType.Money || FieldType == RecordFieldType.Decimal || FieldType == RecordFieldType.Double
                     ? XrmService.GetPrecision(FieldName, RecordType)
                     : 0;
             }

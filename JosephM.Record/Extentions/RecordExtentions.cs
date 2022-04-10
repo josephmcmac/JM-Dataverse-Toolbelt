@@ -431,6 +431,11 @@ namespace JosephM.Record.Extentions
             return recordService.GetFieldMetadata(fieldName, recordType).IntegerFormat;
         }
 
+        public static int GetDecimalPrecision(this IRecordService recordService, string fieldName, string recordType)
+        {
+            return recordService.GetFieldMetadata(fieldName, recordType).DecimalPrecision;
+        }
+
         /// <summary>
         /// Returns list of key values giving the types and field name parsed for the given string of field joins
         /// key = type, value = field

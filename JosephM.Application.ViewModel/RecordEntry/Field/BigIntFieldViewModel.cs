@@ -13,8 +13,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public BigIntFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            MinValue = Int64.MinValue;
-            MaxValue = Int64.MaxValue;
+            MinValue = long.MinValue;
+            MaxValue = long.MaxValue;
         }
 
         public long MaxValue { get; set; }
@@ -29,17 +29,17 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 if (intValue > MaxValue)
                 {
                     response.AddInvalidReason(
-                        string.Format("The entered value is greater than the maximum of {0}", MaxValue));
+                        $"The entered value is greater than the maximum of {MaxValue}");
                 }
                 if (intValue < MinValue)
                 {
                     response.AddInvalidReason(
-                        string.Format("The entered value is less than the minimum of {0}", MinValue));
+                        $"The entered value is less than the minimum of {MinValue}");
                 }
             }
             else if (IsNotNullable && (value == null || string.IsNullOrWhiteSpace(value.ToString())))
             {
-                response.AddInvalidReason(string.Format("A Value Is Required"));
+                response.AddInvalidReason("A Value Is Required");
             }
             return response;
         }

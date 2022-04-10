@@ -1,5 +1,4 @@
-﻿using JosephM.Core.Constants;
-using JosephM.Core.Extentions;
+﻿using JosephM.Core.Extentions;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
@@ -54,6 +53,19 @@ namespace JosephM.Xrm
                         _languageCode = 1033;
                 }
                 return _languageCode;
+            }
+        }
+
+        private Dictionary<Guid, Entity> _currencies = new Dictionary<Guid, Entity>();
+        private Entity GetCurrency(Guid currencyId)
+        {
+            lock (_lockObject)
+            {
+                if (!_currencies.ContainsKey(currencyId))
+                {
+                    _currencies.Add(currencyId, Retrieve(Entities.transactioncurrency, currencyId));
+                }
+                return _currencies[currencyId];
             }
         }
 
@@ -226,6 +238,31 @@ namespace JosephM.Xrm
                     _defaultSolutionId = GetFirst(Entities.solution, Fields.solution_.uniquename, "default")?.Id ?? Guid.Empty;
                 }
                 return _defaultSolutionId.Value;
+            }
+        }
+        private Entity _organisationEntity;
+        private Entity OrganisationEntity
+        {
+            get
+            {
+                if (_organisationEntity == null)
+                {
+                    _organisationEntity = GetFirst(Entities.organization);
+                }
+                return _organisationEntity;
+            }
+        }
+
+        public Guid BaseCurrencyId
+        {
+            get
+            {
+                var value = OrganisationEntity.GetLookupGuid(Fields.organization_.basecurrencyid);
+                if (!value.HasValue)
+                {
+                    throw new NullReferenceException($"Error getting the {GetFieldLabel(Fields.organization_.basecurrencyid, Entities.organization)} from the {GetEntityLabel(Entities.organization)} record");
+                }
+                return value.Value;
             }
         }
 
@@ -682,6 +719,10 @@ namespace JosephM.Xrm
                 case AttributeTypeCode.Double:
                     {
                         return ((DoubleAttributeMetadata)GetFieldMetadata(field, entity)).Precision ?? 0;
+                    }
+                case AttributeTypeCode.Money:
+                    {
+                        return 2;
                     }
             }
             throw new NotImplementedException($"Get precision not implemented for field of type {fieldType}");
@@ -1778,6 +1819,11 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                 }
             }
             return results.Values;
+        }
+
+        public int GetCurrencyPrecision(Guid? currencyGuid)
+        {
+            return GetCurrency(currencyGuid ?? BaseCurrencyId).GetInt(Fields.transactioncurrency_.currencyprecision);
         }
 
         public IEnumerable<Entity> RetrieveMultiple(string entityType, string searchString, int maxCount)
@@ -3338,64 +3384,74 @@ string recordType)
             return request;
         }
 
-        public string GetFieldAsDisplayString(string recordType, string fieldName, object value)
+        public string GetFieldAsDisplayString(string recordType, string fieldName, object value, XrmLocalisationService localisationService, Guid? currencyId = null)
         {
             if (value == null)
-                return "";
-            else if (value is string)
-                return (string)value;
-            else if (value is bool boolean)
             {
-                var options = GetPicklistKeyValues(recordType, fieldName);
-                if (boolean && options.Any(p => p.Key == 1))
-                    return options.First(p => p.Key == 1).Value;
-                else if (!boolean && options.Any(p => p.Key == 0))
-                    return options.First(p => p.Key == 0).Value;
-                return boolean.ToString();
+                return string.Empty;
             }
-            else if (value is int integer)
+            else if (value is string stringValue)
             {
-                var options = GetPicklistKeyValues(recordType, fieldName);
-                if (options != null && options.Any(kv => kv.Key == integer))
-                    return options.First(kv => kv.Key == integer).Value;
-                return integer.ToString();
+                return stringValue;
             }
-            else if (IsLookup(fieldName, recordType))
+            else if (value is EntityReference entityReferenceValue)
             {
-                return XrmEntity.GetLookupName(value);
-                //if (name != null)
-                //    return name;
-                //else
-                //{
-                //    var lookup = (EntityReference) value;
-                //    return lookup.Id == Guid.Empty ? null : (string) LookupField(lookup.LogicalName, lookup.Id, GetPrimaryNameField(lookup.LogicalName));
-                //}
+                return entityReferenceValue.Name;
             }
-            else if (IsOptionSet(fieldName, recordType))
+            else if (value is OptionSetValue optionSetValue)
             {
-                if (value is OptionSetValue)
-                    return GetOptionLabel(((OptionSetValue)value).Value, fieldName, recordType);
-                throw new Exception("Value Type Not Matched For OptionSetValue " + value.GetType().Name);
+                return GetOptionLabel(optionSetValue.Value, fieldName, recordType);
             }
-            else if (IsMoney(fieldName, recordType))
+            else if (value is DateTime dateTimeValue)
             {
-                return XrmEntity.GetMoneyValue(value).ToString(StringFormats.MoneyFormat);
-            }
-            else if (IsDate(fieldName, recordType))
-            {
-                if (value is DateTime)
+                var dt = (DateTime)value;
+                if (dt.Kind == DateTimeKind.Utc)
                 {
-                    if (GetDateFormat(fieldName, recordType) == DateTimeFormat.DateAndTime)
-                        return ((DateTime)value).ToLocalTime().ToString(StringFormats.DateTimeFormat);
-                    return ((DateTime)value).ToLocalTime().Date.ToString(StringFormats.DateFormat);
+                    dt = localisationService.ConvertToTargetTime(dt);
                 }
+                if (GetDateFormat(fieldName, recordType) == DateTimeFormat.DateAndTime)
+                {
+                    return localisationService.ToDateTimeDisplayString(dt);
+                }
+                return localisationService.ToDateDisplayString(dt);
+            }
+            else if (value is int integerValue)
+            {
+                return integerValue.ToString("n0", localisationService.NumberFormatInfo);
+            }
+            else if (value is Money moneyValue)
+            {
+                var moneyNumberInfo = (NumberFormatInfo)localisationService.NumberFormatInfo.Clone();
+                var currencyEntity = GetCurrency(currencyId ?? BaseCurrencyId);
+                moneyNumberInfo.CurrencySymbol = GetCurrency(currencyId ?? BaseCurrencyId).GetStringField(Fields.transactioncurrency_.currencysymbol);
+                moneyNumberInfo.CurrencyDecimalDigits = GetCurrencyPrecision(currencyEntity.Id);
+                return moneyValue.Value.ToString("c", moneyNumberInfo);
+            }
+            else if (value is decimal decimalValue)
+            {
+                if (IsMoney(fieldName, recordType))
+                {
+                    var moneyNumberInfo = (NumberFormatInfo)localisationService.NumberFormatInfo.Clone();
+                    var currencyEntity = GetCurrency(currencyId ?? BaseCurrencyId);
+                    moneyNumberInfo.CurrencySymbol = GetCurrency(currencyId ?? BaseCurrencyId).GetStringField(Fields.transactioncurrency_.currencysymbol);
+                    moneyNumberInfo.CurrencyDecimalDigits = GetCurrencyPrecision(currencyEntity.Id);
+                    return decimalValue.ToString("c", moneyNumberInfo);
+                }
+                else
+                {
+                    return decimalValue.ToString($"n{GetPrecision(fieldName, recordType)}", localisationService.NumberFormatInfo);
+                }
+            }
+            else if (value is double doubleValue)
+            {
+                return doubleValue.ToString($"n{GetPrecision(fieldName, recordType)}", localisationService.NumberFormatInfo);
             }
             else if (IsActivityParty(fieldName, recordType))
             {
-                if (value is Entity[])
+                if (value is IEnumerable<Entity> entityEnumerableValue)
                 {
                     var namesToOutput = new List<string>();
-                    foreach (var party in (Entity[])value)
+                    foreach (var party in entityEnumerableValue)
                     {
                         var displayIt = party.GetLookupName(Fields.activityparty_.partyid);
                         displayIt = displayIt ?? party.GetStringField(Fields.activityparty_.addressused);
@@ -3403,6 +3459,27 @@ string recordType)
                     }
                     return string.Join("; ", namesToOutput.Where(f => !f.IsNullOrWhiteSpace()));
                 }
+            }
+            else if (value is bool booleanValue)
+            {
+                var metadata = GetFieldMetadata(fieldName, recordType) as BooleanAttributeMetadata;
+                if (metadata != null)
+                {
+                    if (booleanValue && metadata.OptionSet != null && metadata.OptionSet.TrueOption != null && metadata.OptionSet.TrueOption.Label != null)
+                    {
+                        return GetLabelDisplay(metadata.OptionSet.TrueOption.Label);
+                    }
+                    if (!booleanValue && metadata.OptionSet != null && metadata.OptionSet.FalseOption != null && metadata.OptionSet.FalseOption.Label != null)
+                    {
+                        return GetLabelDisplay(metadata.OptionSet.FalseOption.Label);
+                    }
+                    return value.ToString();
+                }
+                return booleanValue.ToString();
+            }
+            else if (value is byte[] byteValue)
+            {
+                return "File";
             }
             return value.ToString();
         }

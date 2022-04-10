@@ -50,7 +50,7 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             //insert title/summary
             firstSection.AddTitle("Text Search");
             var table = firstSection.Add2ColumnTable();
-            table.AddFieldToTable("Execution Time", DateTime.Now.ToString(StringFormats.DateTimeFormat));
+            table.AddFieldToTable("Execution Time", DateTime.Now.ToString(Service.GetLocalisationService().DateTimeFormatString));
             table.AddFieldToTable("Search Operator", request.Operator.ToString());
             table.AddFieldToTable("Search Terms", string.Join(", ", request.SearchTerms.Select(s => "\"" + s.Text + "\"")));
             firstSection.AddTableOfContents(container.Bookmarks);

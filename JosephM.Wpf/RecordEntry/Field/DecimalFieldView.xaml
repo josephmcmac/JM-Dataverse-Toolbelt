@@ -25,7 +25,7 @@
                 TextWrapping="WrapWithOverflow"
                 VerticalScrollBarVisibility="Auto"
                 TabIndex="1"
-                Text="{Binding Mode=OneWay, Path=ValueObject}"
+                Text="{Binding Mode=OneWay, Path=ValueString}"
                 Height="Auto">
             </TextBox>
         </Grid>

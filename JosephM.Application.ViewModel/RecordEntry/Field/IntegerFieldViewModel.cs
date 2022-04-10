@@ -3,6 +3,7 @@ using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
@@ -12,8 +13,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public IntegerFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm, IEnumerable<PicklistOption> picklist)
             : base(fieldName, label, recordForm)
         {
-            MinValue = Int32.MinValue;
-            MaxValue = Int32.MaxValue;
+            MinValue = int.MinValue;
+            MaxValue = int.MaxValue;
             PicklistOptions = picklist;
             UsePicklist = PicklistOptions != null && PicklistOptions.Any();
         }
@@ -61,20 +62,59 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 var intValue = int.Parse(value.ToString());
                 if (intValue > MaxValue)
                 {
-                    response.AddInvalidReason(
-                        string.Format("The entered value is greater than the maximum of {0}", MaxValue));
+                    response.AddInvalidReason($"The entered value is greater than the maximum of {MaxValue}");
                 }
                 if (intValue < MinValue)
                 {
-                    response.AddInvalidReason(
-                        string.Format("The entered value is less than the minimum of {0}", MinValue));
+                    response.AddInvalidReason($"The entered value is less than the minimum of {MinValue}");
                 }
             }
             else if (IsNotNullable && (value == null || string.IsNullOrWhiteSpace(value.ToString())))
             {
-                response.AddInvalidReason(string.Format("A Value Is Required"));
+                response.AddInvalidReason("A Value Is Required");
             }
             return response;
+        }
+
+        private NumberFormatInfo NumberFormatInfo
+        {
+            get
+            {
+                return RecordEntryViewModel.RecordService.GetLocalisationService().NumberFormatInfo;
+            }
+        }
+
+        public string ValueString
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(ValueObject?.ToString()))
+                    return null;
+                return IsEditable
+                    ? Value.Value.ToString($"n0", NumberFormatInfo)
+                    : RecordEntryViewModel.RecordService.GetFieldAsDisplayString(Record, FieldName);
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    ValueObject = null;
+                }
+                else
+                {
+                    int updatedInteger = 0;
+                    if (int.TryParse(value, NumberStyles.Any, NumberFormatInfo, out updatedInteger))
+                    {
+                        ValueObject = updatedInteger;
+                        OnPropertyChanged(nameof(ValueString));
+                    }
+                    else
+                    {
+                        ApplicationController.UserMessage($"{value} could not be parsed to Integer");
+                        OnPropertyChanged(nameof(ValueString));
+                    }
+                }
+            }
         }
 
         public override string StringDisplay
@@ -91,7 +131,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 else
                 {
-                    return Value.Value.ToString();
+                    return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(Record, FieldName);
                 }
             }
         }

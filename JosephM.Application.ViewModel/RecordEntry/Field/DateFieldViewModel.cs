@@ -16,10 +16,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get
             {
                 return IncludeTime
-                    ? "dd/MM/yyyy hh:mm:ss tt"
-                    : "dd/MM/yyyy";
+                    ? RecordEntryViewModel.RecordService.GetLocalisationService().DateTimeFormatString
+                    : RecordEntryViewModel.RecordService.GetLocalisationService().DateFormatString;
             }
         }
+
 
         public bool IncludeTime { get; set; }
 
@@ -30,19 +31,29 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get
             {
                 if (!base.Value.HasValue)
+                {
                     return null;
+                }
                 if (base.Value.Value.Kind == DateTimeKind.Utc)
-                    return base.Value?.ToLocalTime();
+                {
+                    return RecordEntryViewModel.RecordService.GetLocalisationService().ConvertUtcToLocalTime(base.Value.Value);
+                }
                 return base.Value;
             }
             set
             {
                 if (!value.HasValue)
+                {
                     base.Value = null;
+                }
                 else if (value.Value.Kind == DateTimeKind.Local)
+                {
                     base.Value = value.Value.ToUniversalTime();
+                }
                 else
+                {
                     base.Value = value;
+                }
             }
         }
     }

@@ -107,6 +107,7 @@
     <Compile Include="ExceptionExtentions.cs" />
     <Compile Include="GetOrganisationConnectionResponse.cs" />
     <Compile Include="IOrganizationConnectionFactory.cs" />
+    <Compile Include="XrmLocalisationService.cs" />
     <Compile Include="XrmOrganizationConnectionFactory.cs" />
     <Compile Include="IXrmConfiguration.cs" />
     <Compile Include="Organisation.cs" />

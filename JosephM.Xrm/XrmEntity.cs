@@ -254,32 +254,6 @@ namespace JosephM.Xrm
                 return 0;
         }
 
-        public static string GetFieldAsDisplayString(object fieldValue)
-        {
-            string displayString;
-            if (fieldValue == null)
-                displayString = "";
-            else if (fieldValue is decimal)
-            {
-                const string format = StringFormats.DecimalFormat;
-                displayString = (decimal.Parse(fieldValue.ToString())).ToString(format);
-            }
-            else if (fieldValue is Money)
-            {
-                var amount = GetMoneyValue(fieldValue);
-                displayString = amount.ToString(StringFormats.MoneyFormat);
-            }
-            else
-                displayString = fieldValue.ToString();
-
-            return displayString;
-        }
-
-        public static string GetFieldAsDisplayString(Entity entity, string fieldName)
-        {
-            return GetFieldAsDisplayString(GetField(entity, fieldName));
-        }
-
         /// <summary>
         ///     Sets the field in the entity
         /// </summary>

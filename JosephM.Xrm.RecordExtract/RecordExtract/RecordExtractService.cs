@@ -43,7 +43,7 @@ namespace JosephM.Xrm.RecordExtract.RecordExtract
             //insert title/summary
             firstSection.AddTitle("Record Extract");
             var table = firstSection.Add2ColumnTable();
-            table.AddFieldToTable("Execution Time", DateTime.Now.ToString(StringFormats.DateTimeFormat));
+            table.AddFieldToTable("Execution Time", DateTime.Now.ToString(Service.GetLocalisationService().DateTimeFormatString));
             table.AddFieldToTable("Record Type", Service.GetDisplayName(request.RecordLookup.RecordType));
             table.AddFieldToTable("Record Name",
                 extractResponse.Record.GetStringField(Service.GetPrimaryField(request.RecordLookup.RecordType)));

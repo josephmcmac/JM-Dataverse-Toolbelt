@@ -76,7 +76,7 @@ namespace JosephM.Deployment.DataImport
                 ? string.Join("|", AltMatchKeyDictionary[entity.LogicalName])
                 : null;
             var value = AltMatchKeyDictionary.ContainsKey(entity.LogicalName)
-                ? string.Join("|", AltMatchKeyDictionary[entity.LogicalName].Select(k => XrmService.GetFieldAsDisplayString(entity.LogicalName, k.Key, entity.GetField(k.Key))))
+                ? string.Join("|", AltMatchKeyDictionary[entity.LogicalName].Select(k => XrmService.GetFieldAsDisplayString(entity.LogicalName, k.Key, entity.GetField(k.Key), XrmRecordService.LocalisationService.XrmLocalisationService)))
                 : null;
             var rowNumber = entity.Contains("Sheet.RowNumber")
                 ? entity.GetInt("Sheet.RowNumber")

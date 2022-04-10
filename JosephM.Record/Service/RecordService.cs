@@ -224,7 +224,7 @@ namespace JosephM.Record.Service
             return cloneResults;
         }
 
-        public override string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue)
+        public override string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue, string currencyId = null)
         {
             if (fieldValue == null)
                 return null;

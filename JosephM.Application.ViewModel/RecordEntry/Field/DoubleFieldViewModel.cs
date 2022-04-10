@@ -5,6 +5,7 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Service;
 using JosephM.Core.Extentions;
 using JosephM.Record.Extentions;
+using System.Globalization;
 
 #endregion
 
@@ -15,29 +16,65 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public DoubleFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
-            MinValue = Double.MinValue;
-            MaxValue = Double.MaxValue;
+            MinValue = double.MinValue;
+            MaxValue = double.MaxValue;
         }
 
         public double MaxValue { get; set; }
         public double MinValue { get; set; }
 
+        private int DecimalPrecision
+        {
+            get
+            {
+                return RecordEntryViewModel.RecordService.GetDecimalPrecision(FieldName, GetRecordType());
+            }
+        }
+
+        private NumberFormatInfo _numberFormatInfo;
+        private NumberFormatInfo NumberFormatInfo
+        {
+            get
+            {
+                if (_numberFormatInfo == null)
+                {
+                    _numberFormatInfo = (NumberFormatInfo)RecordEntryViewModel.RecordService.GetLocalisationService().NumberFormatInfo.Clone();
+                    _numberFormatInfo.NumberDecimalDigits = DecimalPrecision;
+                }
+                return _numberFormatInfo;
+            }
+        }
+
         public string ValueString
         {
             get
             {
-                if (ValueObject == null)
+                if (string.IsNullOrWhiteSpace(ValueObject?.ToString()))
                     return null;
                 return IsEditable
-                    ? Value.Value.ToString()
-                    : Value.Value.ToString(string.Format("0.{0}", "#".ReplicateString(RecordEntryViewModel.RecordService.GetFieldMetadata(FieldName, GetRecordType()).DecimalPrecision)));
+                    ? Value.Value.ToString($"n{DecimalPrecision}", NumberFormatInfo)
+                    : RecordEntryViewModel.RecordService.GetFieldAsDisplayString(Record, FieldName);
             }
             set
             {
-                if (value == null)
+                if (string.IsNullOrWhiteSpace(value))
+                {
                     ValueObject = null;
+                }
                 else
-                    ValueObject = double.Parse(value);
+                {
+                    double updatedDouble = 0;
+                    if (double.TryParse(value, NumberStyles.Any, NumberFormatInfo, out updatedDouble))
+                    {
+                        ValueObject = updatedDouble;
+                        OnPropertyChanged(nameof(ValueString));
+                    }
+                    else
+                    {
+                        ApplicationController.UserMessage($"{value} could not be parsed to {nameof(Double)}");
+                        OnPropertyChanged(nameof(ValueString));
+                    }
+                }
             }
         }
 
@@ -49,18 +86,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 var doubleValue = double.Parse(value.ToString());
                 if (doubleValue > MaxValue)
                 {
-                    response.AddInvalidReason(
-                        string.Format("The entered value is greater than the maximum of {0}", MaxValue));
+                    response.AddInvalidReason($"The entered value is greater than the maximum of {MaxValue}");
                 }
                 if (doubleValue < MinValue)
                 {
-                    response.AddInvalidReason(
-                        string.Format("The entered value is less than the minimum of {0}", MinValue));
+                    response.AddInvalidReason($"The entered value is less than the minimum of {MinValue}");
                 }
             }
             else if (IsNotNullable && (value == null || string.IsNullOrWhiteSpace(value.ToString())))
             {
-                response.AddInvalidReason(string.Format("A Value Is Required"));
+                response.AddInvalidReason("A Value Is Required");
             }
             return response;
         }

@@ -187,7 +187,6 @@
     <Compile Include="RecordEntry\Metadata\FormSection.cs" />
     <Compile Include="RecordEntry\Metadata\FormServiceBase.cs" />
     <Compile Include="RecordEntry\Metadata\GridFieldMetadata.cs" />
-    <Compile Include="RecordEntry\Metadata\NonPersistentFormField.cs" />
     <Compile Include="RecordEntry\Metadata\ObjectFormService.cs" />
     <Compile Include="RecordEntry\Metadata\PersistentFormField.cs" />
     <Compile Include="Validation\PropertyAtttributeValidationRule.cs" />

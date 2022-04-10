@@ -22,11 +22,14 @@ namespace JosephM.Record.IService
         ///     Gets All One To Many Relationships To Records Of The Type In The Data Store
         /// </summary>
         IEnumerable<IOne2ManyRelationshipMetadata> GetOneToManyRelationships(string recordType);
+        int GetCurrencyPrecision(string currencyId);
 
         /// <summary>
         ///     Gets All Many To Many Relationships To Records Of The Type In The Data Store
         /// </summary>
         IEnumerable<IMany2ManyRelationshipMetadata> GetManyToManyRelationships(string recordType = null);
+
+        string GetCurrencyId(IRecord record, string fieldName);
 
         /// <summary>
         ///     Gets The Picklist Options For A Picklist Field Filtered By The Dependant Values
@@ -152,12 +155,12 @@ namespace JosephM.Record.IService
         /// <summary>
         ///     Returns A Human Readable String For The Value In The Field Of The Record
         /// </summary>
-        string GetFieldAsDisplayString(IRecord record, string fieldName);
+        string GetFieldAsDisplayString(IRecord record, string fieldName, string currencyId = null);
 
         /// <summary>
         ///     Returns A Human Readable String For The Value In The Field Of The Record
         /// </summary>
-        string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue);
+        string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue, string currencyId = null);
 
         /// <summary>
         ///     Service To Get Data For Lookup Fields In The Data Store
@@ -202,5 +205,7 @@ namespace JosephM.Record.IService
         bool SupportsExecuteMultiple { get; }
 
         QueryDefinition GetViewAsQueryDefinition(string viewId);
+
+        IRecordLocalisationService GetLocalisationService();
     }
 }

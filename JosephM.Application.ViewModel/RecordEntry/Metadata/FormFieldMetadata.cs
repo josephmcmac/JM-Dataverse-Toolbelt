@@ -50,23 +50,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 RecordFieldType? fieldType = explicitFieldType;
                 string label;
                 var thisFieldEditable = true;
-                //this not quite right haven't needed to change yet though
-                var isNonPersistent = this is NonPersistentFormField;
-                var isRecordServiceField = !isNonPersistent;
-                if (isNonPersistent)
-                {
-                    if (!explicitFieldType.HasValue)
-                        fieldType = ((NonPersistentFormField)this).RecordFieldType;
-                    label = ((NonPersistentFormField) this).Label;
-                    thisFieldEditable = false;
-                }
-                else
-                {
-                    if (!explicitFieldType.HasValue)
-                        fieldType = recordService.GetFieldType(field, recordType);
-                    label = recordService.GetFieldLabel(field, recordType);
-                    thisFieldEditable = string.IsNullOrWhiteSpace(recordForm.GetRecord().Id) ? recordService.GetFieldMetadata(field, recordType).Createable : recordService.GetFieldMetadata(field, recordType).Writeable;
-                }
+
+                if (!explicitFieldType.HasValue)
+                    fieldType = recordService.GetFieldType(field, recordType);
+                label = recordService.GetFieldLabel(field, recordType);
+                thisFieldEditable = string.IsNullOrWhiteSpace(recordForm.GetRecord().Id) ? recordService.GetFieldMetadata(field, recordType).Createable : recordService.GetFieldMetadata(field, recordType).Writeable;
+
                 FieldViewModelBase fieldVm = null;
                 switch (fieldType)
                 {
@@ -74,19 +63,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     case RecordFieldType.ManagedProperty:
                         {
                             var picklist = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType);
-                            fieldVm = new BooleanFieldViewModel(field, label, recordForm, picklist)
-                            {
-                                IsRecordServiceField = isRecordServiceField
-                            };
+                            fieldVm = new BooleanFieldViewModel(field, label, recordForm, picklist);
                             break;
                         }
                     case RecordFieldType.Integer:
                     {
                         var picklist = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType);
-                        fieldVm = new IntegerFieldViewModel(field, label, recordForm, picklist)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
+                        fieldVm = new IntegerFieldViewModel(field, label, recordForm, picklist);
                         if (this is PersistentFormField && !explicitFieldType.HasValue)
                         {
                             ((IntegerFieldViewModel) fieldVm).MinValue =
@@ -104,7 +87,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     {
                         fieldVm = new StringFieldViewModel(field, label, recordForm)
                         {
-                            IsRecordServiceField = isRecordServiceField,
                             IsMultiline = explicitMultiline || recordService.GetFieldMetadata(field, recordType).IsMultiline(),
                             DoNotLimitDisplayHeight = DoNotLimitDisplayHeight
                         };
@@ -121,18 +103,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             var fieldMetadata = recordService.GetFieldMetadata(field, recordType);
                             if (explicitMultiselect || fieldMetadata.IsMultiSelect)
                             {
-                                fieldVm = new PicklistMultiSelectFieldViewModel(field, label, recordForm)
-                                {
-                                    IsRecordServiceField = isRecordServiceField
-                                };
+                                fieldVm = new PicklistMultiSelectFieldViewModel(field, label, recordForm);
                                 ((PicklistMultiSelectFieldViewModel)fieldVm).SetItemsSource(explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType));
                             }
                             else
                             {
                                 fieldVm = new PicklistFieldViewModel(field, label, recordForm)
                                 {
-                                    ItemsSource = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType),
-                                    IsRecordServiceField = isRecordServiceField
+                                    ItemsSource = explicitPicklistOptions ?? recordService.GetPicklistKeyValues(field, recordType)
                                 };
                             }
                             break;
@@ -141,8 +119,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     {
                         fieldVm = new DateFieldViewModel(field, label, recordForm)
                         {
-                            IncludeTime = !recordForm.IsReadOnly ||recordForm.RecordService.GetFieldMetadata(FieldName, recordType).IncludeTime,
-                                IsRecordServiceField = isRecordServiceField
+                            IncludeTime = !recordForm.IsReadOnly ||recordForm.RecordService.GetFieldMetadata(FieldName, recordType).IncludeTime
                         };
                         break;
                     }
@@ -163,34 +140,22 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                     ? false
                                     : recordForm.FormService.UsePicklist(field, recordType);
                             thisFieldEditable = thisFieldEditable && recordForm.FormService != null && recordForm.FormService.AllowLookupFunctions;
-                            fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType, usePicklist, thisFieldEditable)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
+                            fieldVm = new LookupFieldViewModel(field, label, recordForm, targetType, usePicklist, thisFieldEditable);
                         break;
                     }
                     case RecordFieldType.Password:
                     {
-                        fieldVm = new PasswordFieldViewModel(field, label, recordForm)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
+                        fieldVm = new PasswordFieldViewModel(field, label, recordForm);
                         break;
                     }
                     case RecordFieldType.Folder:
                     {
-                        fieldVm = new FolderFieldViewModel(field, label, recordForm)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
+                        fieldVm = new FolderFieldViewModel(field, label, recordForm);
                         break;
                     }
                     case RecordFieldType.StringEnumerable:
                     {
-                        fieldVm = new StringEnumerableFieldViewModel(field, label, recordForm)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
+                        fieldVm = new StringEnumerableFieldViewModel(field, label, recordForm);
                         break;
                     }
                     case RecordFieldType.RecordType:
@@ -198,10 +163,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         var usePicklist = recordForm.FormService == null
                                 ? false
                                 : recordForm.FormService.UsePicklist(field, recordType);
-                        fieldVm = new RecordTypeFieldViewModel(field, label, recordForm, usePicklist)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
+                        fieldVm = new RecordTypeFieldViewModel(field, label, recordForm, usePicklist);
                         try
                         {
                             ((RecordTypeFieldViewModel)fieldVm).ItemsSource =
@@ -232,17 +194,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                                 .ToArray();
                             if (fieldMetadata.IsMultiSelect)
                             {
-                                fieldVm = new RecordFieldMultiSelectFieldViewModel(field, label, recordForm)
-                                {
-                                    IsRecordServiceField = isRecordServiceField
-                                };
+                                fieldVm = new RecordFieldMultiSelectFieldViewModel(field, label, recordForm);
                                 ((RecordFieldMultiSelectFieldViewModel)fieldVm).SetItemsSource(itemsSource);
                             }
                             else
                             {
                                 fieldVm = new RecordFieldFieldViewModel(field, label, recordForm)
                                 {
-                                    IsRecordServiceField = isRecordServiceField,
                                     ItemsSource = itemsSource
                                 };
                             }
@@ -252,10 +210,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     {
                         //need grid fields
                         //need linked record type
-                        fieldVm = new EnumerableFieldViewModel(field, label, recordForm, OtherType)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
+                        fieldVm = new EnumerableFieldViewModel(field, label, recordForm, OtherType);
                         break;
                     }
                     case RecordFieldType.Object:
@@ -276,10 +231,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     case RecordFieldType.BigInt:
                     {
-                        fieldVm = new BigIntFieldViewModel(field, label, recordForm)
-                        {
-                            IsRecordServiceField = isRecordServiceField
-                        };
+                        fieldVm = new BigIntFieldViewModel(field, label, recordForm);
                         if (this is PersistentFormField && !explicitFieldType.HasValue)
                         {
                             ((BigIntFieldViewModel) fieldVm).MinValue =
@@ -294,10 +246,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                     }
                     case RecordFieldType.Decimal:
                         {
-                            fieldVm = new DecimalFieldViewModel(field, label, recordForm)
-                            {
-                                IsRecordServiceField = isRecordServiceField
-                            };
+                            fieldVm = new DecimalFieldViewModel(field, label, recordForm);
                             if (this is PersistentFormField && !explicitFieldType.HasValue)
                             {
                                 ((DecimalFieldViewModel)fieldVm).MinValue =
@@ -310,10 +259,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }
                     case RecordFieldType.Double:
                         {
-                            fieldVm = new DoubleFieldViewModel(field, label, recordForm)
-                            {
-                                IsRecordServiceField = isRecordServiceField
-                            };
+                            fieldVm = new DoubleFieldViewModel(field, label, recordForm);
                             if (this is PersistentFormField && !explicitFieldType.HasValue)
                             {
                                 ((DoubleFieldViewModel)fieldVm).MinValue =
@@ -326,10 +272,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }
                     case RecordFieldType.Money:
                         {
-                            fieldVm = new MoneyFieldViewModel(field, label, recordForm)
-                            {
-                                IsRecordServiceField = isRecordServiceField
-                            };
+                            fieldVm = new MoneyFieldViewModel(field, label, recordForm);
                             if (this is PersistentFormField && !explicitFieldType.HasValue)
                             {
                                 ((MoneyFieldViewModel)fieldVm).MinValue =
@@ -342,35 +285,23 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         }
                     case RecordFieldType.Url:
                         {
-                            fieldVm = new UrlFieldViewModel(field, label, recordForm)
-                            {
-                                IsRecordServiceField = isRecordServiceField
-                            };
+                            fieldVm = new UrlFieldViewModel(field, label, recordForm);
                             break;
                         }
                     case RecordFieldType.ActivityParty:
                         {
-                            fieldVm = new ActivityPartyFieldViewModel(field, label, recordForm)
-                            {
-                                IsRecordServiceField = isRecordServiceField
-                            };
+                            fieldVm = new ActivityPartyFieldViewModel(field, label, recordForm);
                             break;
                         }
                     case RecordFieldType.Uniqueidentifier:
                         {
-                            fieldVm = new UniqueIdentifierFieldViewModel(field, label, recordForm)
-                            {
-                                IsRecordServiceField = isRecordServiceField
-                            };
+                            fieldVm = new UniqueIdentifierFieldViewModel(field, label, recordForm);
                             break;
                         }
                 }
                 if (fieldVm == null)
                 {
-                    fieldVm = new UnmatchedFieldViewModel(field, label, recordForm)
-                    {
-                        IsRecordServiceField = isRecordServiceField
-                    };
+                    fieldVm = new UnmatchedFieldViewModel(field, label, recordForm);
                 }
                 fieldVm.IsEditable = thisFieldEditable;
                 fieldVm.DisplayLabel = DisplayLabel;

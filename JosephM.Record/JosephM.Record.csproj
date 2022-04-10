@@ -103,6 +103,7 @@
     <Compile Include="Extentions\TypeLoader.cs" />
     <Compile Include="IService\IFieldMetadata.cs" />
     <Compile Include="IService\IFormService.cs" />
+    <Compile Include="IService\IRecordLocalisationService.cs" />
     <Compile Include="IService\IRecordTypeMetadata.cs" />
     <Compile Include="Metadata\Fields\AggregateFieldMetadata.cs" />
     <Compile Include="Metadata\Fields\AnyFieldMetadata.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="IService\ParseFieldRequest.cs" />
     <Compile Include="IService\ParseFieldResponse.cs" />
     <Compile Include="Service\RecordComparer.cs" />
+    <Compile Include="Service\RecordLocalisationServiceBase.cs" />
     <Compile Include="Service\RecordServiceBase.cs" />
     <Compile Include="Service\ObjectRecord.cs" />
     <Compile Include="Service\ObjectRecordService.cs" />

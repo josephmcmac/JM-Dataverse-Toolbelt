@@ -1,17 +1,8 @@
-﻿#region
-
-using System.Text.RegularExpressions;
-using JosephM.Core.Constants;
-
-#endregion
+﻿using System.Windows.Controls;
 
 namespace JosephM.Wpf.Controls
 {
-    public class IntegerTextBox : MaskedTextBox
+    public class IntegerTextBox : TextBox
     {
-        protected override Regex Regex
-        {
-            get { return new Regex(RegularExpressions.IntegerOrEmpty); }
-        }
     }
 }

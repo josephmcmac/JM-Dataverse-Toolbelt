@@ -111,6 +111,7 @@
     <Compile Include="XrmRecord\IXrmRecordConfiguration.cs" />
     <Compile Include="XrmRecord\XrmRecord.cs" />
     <Compile Include="XrmRecord\XrmRecordAuthenticationProviderType.cs" />
+    <Compile Include="XrmRecord\XrmRecordLocalisationService.cs" />
     <Compile Include="XrmRecord\XrmRecordService.cs" />
     <Compile Include="XrmRecord\XrmRecordTypeMetadata.cs" />
     <Compile Include="XrmRecord\XrmConfigurationBase.cs" />

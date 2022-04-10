@@ -1,10 +1,5 @@
-﻿#region
-
-using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows.Controls;
-
-#endregion
 
 namespace JosephM.Wpf.Controls
 {
@@ -22,7 +17,7 @@ namespace JosephM.Wpf.Controls
         private void OnTextChanged(object sender, TextChangedEventArgs args)
         {
             var tempCaretIndex = CaretIndex;
-            if (!String.IsNullOrEmpty(Text) && Text != "-")
+            if (!string.IsNullOrEmpty(Text) && Text != "-")
             {
                 if (!Regex.IsMatch(Text))
                 {

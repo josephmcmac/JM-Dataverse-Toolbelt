@@ -139,7 +139,6 @@
     <Compile Include="Attributes\PropertyInContextByPropertyValue.cs" />
     <Compile Include="Attributes\PropertyInContextByPropertyValues.cs" />
     <Compile Include="Attributes\UsePicklist.cs" />
-    <Compile Include="Constants\RegularExpressions.cs" />
     <Compile Include="Extentions\ByteExtentions.cs" />
     <Compile Include="Extentions\DateTimeExtentions.cs" />
     <Compile Include="Extentions\StreamExtentions.cs" />
@@ -169,7 +168,6 @@
     <Compile Include="Constants\FileMasks.cs" />
     <Compile Include="Log\LogConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Constants\StringFormats.cs" />
     <Compile Include="Attributes\PropertyInContext.cs" />
     <Compile Include="Security\StringEncryptor.cs" />
     <Compile Include="Service\ServiceRequestBase.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
@@ -159,13 +160,13 @@ namespace JosephM.Record.Service
             return parsedValue;
         }
 
-        public string GetFieldAsDisplayString(IRecord record, string fieldName)
+        public string GetFieldAsDisplayString(IRecord record, string fieldName, string currencyId = null)
         {
             var fieldValue = record.GetField(fieldName);
-            return GetFieldAsDisplayString(record.Type, fieldName, fieldValue);
+            return GetFieldAsDisplayString(record.Type, fieldName, fieldValue, currencyId: currencyId);
         }
 
-        public virtual string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue)
+        public virtual string GetFieldAsDisplayString(string recordType, string fieldName, object fieldValue, string currencyId = null)
         {
             return fieldValue == null ? "" : fieldValue.ToString();
         }
@@ -402,6 +403,26 @@ namespace JosephM.Record.Service
         public QueryDefinition GetViewAsQueryDefinition(string viewId)
         {
             return null;
+        }
+
+        private IRecordLocalisationService _localisationService;
+        public IRecordLocalisationService GetLocalisationService()
+        {
+            if (_localisationService == null)
+            {
+                _localisationService = new RecordLocalisationServiceBase();
+            }
+            return _localisationService;
+        }
+
+        public string GetCurrencyId(IRecord record, string fieldName)
+        {
+            return null;
+        }
+
+        public int GetCurrencyPrecision(string currencyId)
+        {
+            return CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalDigits;
         }
 
         public virtual bool SupportsExecuteMultiple { get { return false; } }
