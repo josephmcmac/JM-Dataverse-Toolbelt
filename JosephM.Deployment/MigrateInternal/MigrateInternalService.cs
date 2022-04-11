@@ -6,13 +6,11 @@ using JosephM.Deployment.SpreadsheetImport;
 using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
-using JosephM.Record.Sql;
 using JosephM.Record.Xrm.XrmRecord;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static JosephM.Xrm.Schema.OptionSets.PriceList;
 
 namespace JosephM.Deployment.MigrateInternal
 {

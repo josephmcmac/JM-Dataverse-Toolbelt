@@ -750,8 +750,19 @@ namespace JosephM.Deployment.DataImport
                                     }
                                     if (matchRecords.Count() == 1)
                                     {
-                                        thisEntity.SetLookupField(lookupField, matchRecords.First());
-                                        ((EntityReference)(thisEntity.GetField(lookupField))).Name = matchRecords.First().GetStringField(thisTargetField);
+                                        var matchedRecord = matchRecords.First();
+                                        var matchedRecordEntityReference = matchedRecord.ToEntityReference();
+                                        thisEntity.SetField(lookupField, matchedRecordEntityReference);
+                                        string name = null;
+                                        if(XrmService.IsString(thisTargetField, matchedRecord.LogicalName))
+                                        {
+                                            name = matchedRecord.GetStringField(thisTargetField);
+                                        }
+                                        else
+                                        {
+                                            name = matchedRecord.GetStringField(XrmService.GetPrimaryNameField(matchedRecordEntityReference.LogicalName));
+                                        }
+                                        matchedRecordEntityReference.Name = name;
                                         recordsNotYetResolved.Remove(thisEntity);
                                         doWhenResolved?.Invoke(thisEntity, lookupField);
                                     }

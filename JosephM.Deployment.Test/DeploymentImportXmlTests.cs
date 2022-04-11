@@ -1,6 +1,7 @@
 ﻿using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.SettingTypes;
+using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
@@ -629,6 +630,8 @@ namespace JosephM.Deployment.Test
             };
 
             var response = application.NavigateAndProcessDialog<ImportXmlModule, ImportXmlDialog, ImportXmlResponse>(importRequest);
+            if(response.HasError)
+                Assert.Fail(response.GetResponseItemsWithError().First().Exception.DisplayString());
             Assert.IsFalse(response.HasError);
 
             var createdRecord = XrmService.Retrieve(type, createdEntity.Id);

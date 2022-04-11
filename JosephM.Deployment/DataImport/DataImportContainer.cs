@@ -501,9 +501,11 @@ namespace JosephM.Deployment.DataImport
                 matchQuery.Criteria.FilterOperator = LogicalOperator.Or;
                 matchQuery.Criteria.Conditions.Add(
                     new ConditionExpression(primaryKey, ConditionOperator.Equal, referencedId));
-                if (matchField != null && referencedValue != null)
+                if (matchField != null && matchField != primaryKey && referencedValue != null)
+                {
                     matchQuery.Criteria.Conditions.Add(
                         new ConditionExpression(matchField, ConditionOperator.Equal, referencedValue));
+                }
                 return matchQuery;
             }
         }

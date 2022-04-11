@@ -1,4 +1,5 @@
-﻿using JosephM.Application.ViewModel.SettingTypes;
+﻿using JosephM.Application.ViewModel.Attributes;
+using JosephM.Application.ViewModel.SettingTypes;
 using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
@@ -174,15 +175,32 @@ namespace JosephM.Deployment.MigrateInternal
                 [RequiredProperty]
                 public RecordField TargetField { get; set; }
 
+                [RequiredProperty]
+                [FieldInContextForPropertyTypes(nameof(TargetField), RecordFieldType.Lookup, RecordFieldType.Customer, RecordFieldType.Owner)]
+                [PropertyInContextByPropertyNotNull(nameof(TargetField))]
+                public bool UseAltMatchField { get; set; }
+
+                [RequiredProperty]
+                [PropertyInContextByPropertyValue(nameof(UseAltMatchField), true)]
+                [RecordTypeFor(nameof(AltMatchField))]
+                [InitialiseIfOneOption]
+                [TargetTypesFor(nameof(TargetField))]
+                public RecordType AltMatchFieldType { get; set; }
+
+                [RequiredProperty]
+                [PropertyInContextByPropertyNotNull(nameof(AltMatchFieldType))]
+                [PropertyInContextByPropertyValue(nameof(UseAltMatchField), true)]
+                public RecordField AltMatchField { get; set; }
+
                 string IMapSourceField.SourceField => SourceField?.Key;
 
                 string IMapSourceField.TargetField => TargetField?.Key;
 
-                bool IMapSourceField.UseAltMatchField => false;
+                bool IMapSourceField.UseAltMatchField => UseAltMatchField;
 
-                string IMapSourceField.AltMatchFieldType => null;
+                string IMapSourceField.AltMatchFieldType => AltMatchFieldType?.Key;
 
-                string IMapSourceField.AltMatchField => null;
+                string IMapSourceField.AltMatchField => AltMatchField?.Key;
 
                 public override string ToString()
                 {

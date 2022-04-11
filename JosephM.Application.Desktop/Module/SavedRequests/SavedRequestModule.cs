@@ -291,7 +291,7 @@ namespace JosephM.Application.Desktop.Module.SavedRequests
                         //reload the form and notify
                         viewModel.ClearChildForms();
                         viewModel.LoadCustomFunctions();
-                        viewModel.ApplicationController.UserMessage($"You Input Has Been Saved. To Load A Saved Input Or Generate A Bat Executable Click The '{LoadButtonLabel}' Button");
+                        viewModel.ApplicationController.UserMessage($"You input has been saved. To load or edit a saved inoput click the '{LoadButtonLabel}' button");
                     };
 
                     //load the entry form
