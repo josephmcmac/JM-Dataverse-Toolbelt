@@ -84,6 +84,12 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
+        public override void CallOnPropertyChangeEvents()
+        {
+            OnPropertyChanged(nameof(ValueString));
+            base.CallOnPropertyChangeEvents();
+        }
+
         public string ValueString
         {
             get
