@@ -35,7 +35,7 @@ namespace JosephM.Deployment.DataImport
 
         private Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>> _cachedRecords = new Dictionary<string, Dictionary<string, Dictionary<string, List<Entity>>>>();
 
-        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null) 
+        public DataImportResponse DoImport(IEnumerable<Entity> entities, ServiceRequestController controller, bool maskEmails, MatchOption matchOption = MatchOption.PrimaryKeyThenName, IEnumerable<DataImportResponseItem> loadExistingErrorsIntoSummary = null, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary = null, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary = null, bool updateOnly = false, bool includeOwner = false, bool includeOverrideCreatedOn = false, bool containsExportedConfigFields = true, int? executeMultipleSetSize = null, int? targetCacheLimit = null) 
         {
             var response = new DataImportResponse(entities, loadExistingErrorsIntoSummary);
             controller.AddObjectToUi(response);
@@ -49,6 +49,7 @@ namespace JosephM.Deployment.DataImport
                     entities,
                     controller,
                     includeOwner,
+                    includeOverrideCreatedOn,
                     maskEmails,
                     matchOption,
                     updateOnly,

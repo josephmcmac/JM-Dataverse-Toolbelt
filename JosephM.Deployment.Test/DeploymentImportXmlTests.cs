@@ -894,14 +894,14 @@ namespace JosephM.Deployment.Test
         {
             var fields = XrmService
                 .GetFields(type)
-                .Where(f => DataImportContainer.IsIncludeField(f, type, importService.XrmRecordService, false));
+                .Where(f => DataImportContainer.IsIncludeField(f, type, importService.XrmRecordService, false, false));
             fields = fields.Except(new[] { "statecode", "statuscode" }).ToArray();
             return fields;
         }
 
         private IEnumerable<string> GetUpdateFields(string type, ImportXmlService importService)
         {
-            var updateFields = XrmService.GetFields(type).Where(f => DataImportContainer.IsIncludeField(f, type, importService.XrmRecordService, false));
+            var updateFields = XrmService.GetFields(type).Where(f => DataImportContainer.IsIncludeField(f, type, importService.XrmRecordService, false, false));
             return updateFields;
         }
 

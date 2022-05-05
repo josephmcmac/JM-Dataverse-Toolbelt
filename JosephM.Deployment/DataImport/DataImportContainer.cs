@@ -18,7 +18,7 @@ namespace JosephM.Deployment.DataImport
     public class DataImportContainer
     {
         private Dictionary<Entity, List<string>> _fieldsToRetry = new Dictionary<Entity, List<string>>();
-        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit)
+        public DataImportContainer(DataImportResponse response, XrmRecordService xrmRecordService, Dictionary<string, IEnumerable<KeyValuePair<string, bool>>> altMatchKeyDictionary, Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> altLookupMatchKeyDictionary, IEnumerable<Entity> entities, ServiceRequestController controller, bool includeOwner, bool includeOverrideCreatedOn,bool maskEmails, MatchOption matchOption, bool updateOnly, bool containsExportedConfigFields, int executeMultipleSetSize, int targetCacheLimit)
         {
             Response = response;
             XrmRecordService = xrmRecordService;
@@ -26,6 +26,7 @@ namespace JosephM.Deployment.DataImport
             AltLookupMatchKeyDictionary = altLookupMatchKeyDictionary;
             Controller = controller;
             IncludeOwner = includeOwner;
+            IncludeOverrideCreatedOn = includeOverrideCreatedOn;
             MaskEmails = maskEmails;
             MatchOption = matchOption;
             UpdateOnly = updateOnly;
@@ -52,6 +53,7 @@ namespace JosephM.Deployment.DataImport
         public Dictionary<string, Dictionary<string, KeyValuePair<string, string>>> AltLookupMatchKeyDictionary { get; }
         public ServiceRequestController Controller { get; }
         public bool IncludeOwner { get; }
+        public bool IncludeOverrideCreatedOn { get; }
         public bool MaskEmails { get; }
         public MatchOption MatchOption { get; }
         public bool UpdateOnly { get; }
@@ -108,15 +110,15 @@ namespace JosephM.Deployment.DataImport
         public IEnumerable<string> GetFieldsToImport(IEnumerable<Entity> thisTypeEntities, string type)
         {
             var fields = GetFieldsInEntities(thisTypeEntities)
-                .Where(f => IsIncludeField(f, type, XrmRecordService, IncludeOwner))
+                .Where(f => IsIncludeField(f, type, XrmRecordService, IncludeOwner, IncludeOverrideCreatedOn))
                 .Distinct()
                 .ToList();
             return fields;
         }
 
-        public static bool IsIncludeField(string fieldName, string entityType, XrmRecordService xrmRecordService, bool includeOwner)
+        public static bool IsIncludeField(string fieldName, string entityType, XrmRecordService xrmRecordService, bool includeOwner, bool includeOverrideCreatedOn)
         {
-            var hardcodeInvalidFields = GetIgnoreFields(entityType, includeOwner);
+            var hardcodeInvalidFields = GetIgnoreFields(entityType, includeOwner, includeOverrideCreatedOn);
             if (hardcodeInvalidFields.Contains(fieldName))
                 return false;
             //these are just hack since they are not updateable fields (IsWriteable)
@@ -137,27 +139,37 @@ namespace JosephM.Deployment.DataImport
                 return true;
             if (fieldName == Fields.product_.productstructure)
                 return true;
+            if (fieldName == "overriddencreatedon")
+                return true;
             return
                 xrmRecordService.FieldExists(fieldName, entityType) && xrmRecordService.GetFieldMetadata(fieldName, entityType).Writeable;
         }
 
         public IEnumerable<string> GetIgnoreFields(string recordType)
         {
-            return GetIgnoreFields(recordType, IncludeOwner);
+            return GetIgnoreFields(recordType, IncludeOwner, IncludeOverrideCreatedOn);
         }
 
-        public static IEnumerable<string> GetIgnoreFields(string recordType, bool includeOwner)
+        public static IEnumerable<string> GetIgnoreFields(string recordType, bool includeOwner, bool includeOverrideCreatedOn)
         {
             var fields = new[]
             {
                 "yomifullname", "administratorid", "owneridtype", "timezoneruleversionnumber", "utcconversiontimezonecode", "organizationid", "owninguser", "owningbusinessunit","owningteam",
-                "overriddencreatedon", "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid"
+                "createdby", "createdon", "modifiedby", "modifiedon", "modifiedon", "jmcg_currentnumberposition", "calendarrules", "parentarticlecontentid", "rootarticleid", "previousarticlecontentid"
                 , "address1_addressid", "address2_addressid", "address3_addressid", "processid", Fields.incident_.slaid, Fields.incident_.firstresponsebykpiid, Fields.incident_.resolvebykpiid, "entityimage_url", "entityimage_timestamp", "safedescription", "attachmentid", "jmcg_clonedfrom"
             };
+            if (!includeOverrideCreatedOn)
+            {
+                fields = fields.Union(new[] { "overriddencreatedon" }).ToArray();
+            }
             if (!includeOwner)
+            {
                 fields = fields.Union(new[] { "ownerid" }).ToArray();
-            if(recordType == Entities.activitymimeattachment)
+            }
+            if (recordType == Entities.activitymimeattachment)
+            {
                 fields = fields.Union(new[] { "objectid" }).ToArray();
+            }
             return fields;
         }
 
