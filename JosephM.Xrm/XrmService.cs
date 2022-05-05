@@ -22,6 +22,7 @@ namespace JosephM.Xrm
 {
     public class XrmService : IOrganizationService
     {
+        private static DateTime MinimumDateTime = new DateTime(1753, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
         private int _timeoutSeconds = 600;
 
         public int TimeoutSeconds
@@ -1016,6 +1017,11 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                                     temp = temp.Value.ToUniversalTime();
                                 }
                             }
+                            if(temp.HasValue && temp.Value < MinimumDateTime)
+                            {
+                                throw new ArgumentException(nameof(value), $"Date is less than the minumum value supported by CrmDateTime. Actual value: {temp.Value.ToString("d")}, Minimum value supported: {MinimumDateTime.ToString("d")}");
+                            }
+                            
                             return temp;
                         }
                     case AttributeTypeCode.Lookup:
