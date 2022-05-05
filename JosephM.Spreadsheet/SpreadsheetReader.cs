@@ -35,12 +35,15 @@ namespace JosephM.Spreadsheet
                         var sheetData = workSheet.GetFirstChild<SheetData>();
                         var rows = sheetData.Descendants<Row>();
 
-                        foreach (Cell cell in rows.ElementAt(0))
+                        if (rows.Any())
                         {
-                            var cellValue = GetCellValue(indexedStringTable, cell);
-                            if (!string.IsNullOrWhiteSpace(cellValue))
+                            foreach (Cell cell in rows.ElementAt(0))
                             {
-                                columns.Add(cellValue);
+                                var cellValue = GetCellValue(indexedStringTable, cell);
+                                if (!string.IsNullOrWhiteSpace(cellValue))
+                                {
+                                    columns.Add(cellValue);
+                                }
                             }
                         }
                     }
