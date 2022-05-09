@@ -320,21 +320,28 @@ namespace JosephM.Deployment.DataImport
                 {
                     dataImportContainer.LoadTargetsToCache(recordType);
 
-                    var thisTypeEntities = dataImportContainer.EntitiesToImport.Where(e => e.LogicalName == recordType).ToList();
+                    var thisTypeEntities = new List<Entity>();
+                    foreach(var entity in dataImportContainer.EntitiesToImport)
+                    {
+                        if(entity.LogicalName == recordType)
+                        {
+                            thisTypeEntities.Add(entity);
+                        }
+                    }
                     var importFieldsForEntity = dataImportContainer.GetFieldsToImport(thisTypeEntities, recordType).ToArray();
 
-                    var orderedEntitiesForImport = OrderEntitiesForImport(dataImportContainer, thisTypeEntities, importFieldsForEntity);
+                    thisTypeEntities = OrderEntitiesForImport(dataImportContainer, thisTypeEntities, importFieldsForEntity);
 
-                    var countRecordsToImport = orderedEntitiesForImport.Count;
+                    var countRecordsToImport = thisTypeEntities.Count;
                     var countRecordsImported = 0;
                     estimator = new TaskEstimator(countRecordsToImport);
 
                     var thisTypeCreatedDictionary = dataImportContainer.Response.GetImportForType(recordType).GetCreatedEntities();
 
                     //process create and updates for this type in sets
-                    while (orderedEntitiesForImport.Any())
+                    while (thisTypeEntities.Any())
                     {
-                        var thisSetOfEntities = LoadNextSetToProcess(dataImportContainer, orderedEntitiesForImport);
+                        var thisSetOfEntities = LoadNextSetToProcess(dataImportContainer, thisTypeEntities);
 
                         var countThisSet = thisSetOfEntities.Count;
                         var matchDictionary = new Dictionary<Entity, Entity>();
@@ -1046,19 +1053,39 @@ namespace JosephM.Deployment.DataImport
                             f =>
                                 XrmService.IsLookup(f, recordType) &&
                                 XrmService.GetLookupTargetEntity(f, recordType) == recordType).ToArray();
-
-                foreach (var entity in thisTypeEntities)
+                if (!selfReferenceFields.Any())
                 {
-                    foreach (var entity2 in orderedEntities)
+                    orderedEntities = thisTypeEntities.ToList();
+                }
+                else
+                {
+                    foreach (var entity in thisTypeEntities)
                     {
-                        if (selfReferenceFields.Any(f => entity2.GetLookupGuid(f) == entity.Id || (entity2.GetLookupGuid(f) == Guid.Empty && entity2.GetLookupName(f) == entity.GetStringField(primaryField))))
+                        var isAdded = false;
+                        foreach (var entity2 in orderedEntities)
                         {
-                            orderedEntities.Insert(orderedEntities.IndexOf(entity2), entity);
-                            break;
+                            foreach (var selfReferenceField in selfReferenceFields)
+                            {
+                                var id = entity2.GetLookupGuid(selfReferenceField);
+                                var name = entity2.GetLookupName(selfReferenceField);
+                                if (id == entity.Id || (id == Guid.Empty && name == entity.GetStringField(primaryField)))
+                                {
+                                    orderedEntities.Insert(orderedEntities.IndexOf(entity2), entity);
+                                    isAdded = true;
+                                    break;
+                                }
+                            }
+                            if (isAdded)
+                            {
+                                break;
+                            }
                         }
+                        if (!isAdded)
+                        {
+                            orderedEntities.Add(entity);
+                        }
+                        dataImportContainer.Controller.UpdateLevel2Progress(0, 1, $"Sorting for import {orderedEntities.Count}/{thisTypeEntities.Count}");
                     }
-                    if (!orderedEntities.Contains(entity))
-                        orderedEntities.Add(entity);
                 }
             }
             return orderedEntities;
