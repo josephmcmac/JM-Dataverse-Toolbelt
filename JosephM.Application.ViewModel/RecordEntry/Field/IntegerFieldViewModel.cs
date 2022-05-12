@@ -137,7 +137,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 }
                 else
                 {
-                    return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(Record, FieldName);
+                    return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(GetThisFieldsRecordType
+                    (), IndexFieldName, ValueObject);
                 }
             }
         }

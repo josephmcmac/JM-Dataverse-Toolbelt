@@ -9,13 +9,5 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             : base(fieldName, label, recordForm)
         {
         }
-
-        public override string StringDisplay
-        {
-            get
-            {
-                return GetRecordService().GetFieldAsDisplayString(Record, FieldName);
-            }
-        }
     }
 }
