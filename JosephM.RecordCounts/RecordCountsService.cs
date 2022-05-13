@@ -32,7 +32,8 @@ namespace JosephM.RecordCounts
             {
                 "FeatureFCBNotEnabled",
                 "'RetrieveMultiple' method does not support entities of type",
-                "https://graph.microsoft.com is not allowed"
+                "https://graph.microsoft.com is not allowed",
+                "Unauthorized to get shared workspace connection string"
             };
 
             var excludeTheseTypes = new[] { Entities.msdyn_componentlayer, Entities.msdyn_solutioncomponentsummary, Entities.msdyn_nonrelationalds, Entities.datalakeworkspace, Entities.datalakeworkspacepermission, Entities.principalobjectaccess, Entities.msdyn_casesuggestion, Entities.msdyn_knowledgearticlesuggestion, Entities.virtualresourcegroupresource, Entities.usermobileofflineprofilemembership, Entities.teammobileofflineprofilemembership, Entities.systemuserauthorizationchangetracker, Entities.searchtelemetry, Entities.appnotification, Entities.msdyn_solutioncomponentcountsummary, Entities.msdyn_solutioncomponentcountdatasource };

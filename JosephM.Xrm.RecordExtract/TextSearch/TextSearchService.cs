@@ -28,7 +28,8 @@ namespace JosephM.Xrm.RecordExtract.TextSearch
             {
                 "FeatureFCBNotEnabled",
                 "'RetrieveMultiple' method does not support entities of type",
-                "https://graph.microsoft.com is not allowed"
+                "https://graph.microsoft.com is not allowed",
+                "Unauthorized to get shared workspace connection string"
             };
 
         private DocumentWriter.DocumentWriter DocumentWriter { get; set; }
