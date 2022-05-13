@@ -283,7 +283,7 @@ namespace JosephM.Xrm.Test
                                 var typesToExlcude = new[]
                                 {
                                     "equipment", "transactioncurrency", "pricelevel", "service", "systemuser", "incident",
-                                    "campaign", "territory", "sla", "bookableresource", "msdyn_taxcode", "languagelocale"
+                                    "campaign", "territory", "sla", "bookableresource", "msdyn_taxcode", "languagelocale", "msdyn_salesaccelerationinsight"
                                 };
                                 if (!typesToExlcude.Contains(target))
                                     entity.SetField(field, CreateTestRecord(target).ToEntityReference());
