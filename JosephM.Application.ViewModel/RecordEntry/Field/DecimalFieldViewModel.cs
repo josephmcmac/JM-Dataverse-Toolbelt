@@ -27,7 +27,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                return RecordEntryViewModel.RecordService.GetDecimalPrecision(FieldName, GetRecordType());
+                return RecordEntryViewModel.RecordService.GetDecimalPrecision(FieldName, GetRecordTypeOfThisField());
             }
         }
 

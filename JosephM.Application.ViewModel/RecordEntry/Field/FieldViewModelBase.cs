@@ -46,13 +46,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                return RecordEntryViewModel.GetHorizontalJustify(GetRecordService().GetFieldType(FieldName, GetThisFieldsRecordType()));
+                return RecordEntryViewModel.GetHorizontalJustify(GetRecordService().GetFieldType(FieldName, GetRecordTypeOfThisField()));
             }
         }
 
-        public string GetThisFieldsRecordType()
+        public string GetRecordTypeOfThisField()
         {
-            return AltRecordType ?? GetRecordType();
+            return AltRecordType ?? Record.Type;
         }
 
         public bool IsNotNullable { get; set; }
@@ -62,11 +62,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected IRecord Record
         {
             get { return GetRecordForm().GetRecord(); }
-        }
-
-        public string GetRecordType()
-        {
-            return Record.Type;
         }
 
         private Action<FieldViewModelBase> OnChangeDelegate
@@ -331,7 +326,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(GetThisFieldsRecordType
+                return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(GetRecordTypeOfThisField
                     (), IndexFieldName, ValueObject);
             }
         }

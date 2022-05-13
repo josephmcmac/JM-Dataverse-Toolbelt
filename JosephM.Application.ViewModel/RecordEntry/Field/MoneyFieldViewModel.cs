@@ -57,7 +57,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         {
             get
             {
-                return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(GetThisFieldsRecordType
+                return RecordEntryViewModel.RecordService.GetFieldAsDisplayString(GetRecordTypeOfThisField
                     (), IndexFieldName, ValueObject, currencyId: CurrencyId);
             }
         }

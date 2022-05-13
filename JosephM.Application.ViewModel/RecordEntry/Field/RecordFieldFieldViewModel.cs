@@ -38,7 +38,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     try
                     {
                         ItemsSource = GetRecordService()
-                            .GetPicklistKeyValues(FieldName, GetRecordType(), reference, RecordEntryViewModel.GetRecord())
+                            .GetPicklistKeyValues(FieldName, GetRecordTypeOfThisField(), reference, RecordEntryViewModel.GetRecord())
                             .Select(p => new RecordField(p.Key, p.Value));
                     }
                     finally

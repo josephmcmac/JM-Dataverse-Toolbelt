@@ -61,7 +61,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
 
         private void SetNewAction()
         {
-            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null && LookupFormService.GetFormMetadata(RecordTypeToLookup, LookupService) != null && FormService!= null && FormService.AllowAddNew(FieldName, GetRecordType()))
+            if (RecordEntryViewModel.AllowNewLookup && LookupFormService != null && LookupFormService.GetFormMetadata(RecordTypeToLookup, LookupService) != null && FormService!= null && FormService.AllowAddNew(FieldName, GetRecordTypeOfThisField()))
             {
                 NewAction = () =>
                 {
@@ -198,7 +198,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected override IEnumerable<ReferencePicklistItem> GetPicklistOptions()
         {
             return GetSearchResults()
-                .Select(r => new ReferencePicklistItem(r, r.GetStringField(FormService.GetPicklistDisplayField(FieldName, GetRecordType(), LookupService, RecordTypeToLookup))))
+                .Select(r => new ReferencePicklistItem(r, r.GetStringField(FormService.GetPicklistDisplayField(FieldName, GetRecordTypeOfThisField(), LookupService, RecordTypeToLookup))))
                 .Union(new[] { new ReferencePicklistItem(null, null) })
                 .ToArray();
         }

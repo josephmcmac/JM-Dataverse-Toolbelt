@@ -284,7 +284,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         var dependencyViewModel = re.GetRecordFieldFieldViewModel(fieldName);
                         var dependantViewModel = re.GetRecordTypeFieldViewModel(propertyInfo.Name);
                         var selectedField = dependencyViewModel.Value?.Key;
-                        var selectedFieldForType = GetDependantValue(dependencyViewModel.FieldName, dependencyViewModel.GetRecordType(), dependencyViewModel.RecordEntryViewModel);
+                        var selectedFieldForType = GetDependantValue(dependencyViewModel.FieldName, dependencyViewModel.GetRecordTypeOfThisField(), dependencyViewModel.RecordEntryViewModel);
                         if (selectedField != null && ObjectRecordService.LookupService != null)
                         {
                             var targetTypes = ObjectRecordService.LookupService.GetLookupTargetType(selectedField, selectedFieldForType);
@@ -406,7 +406,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                                     typedViewModel.ItemsSource = ObjectRecordService
                                         .GetPicklistKeyValues(fieldViewModel.FieldName,
-                                            fieldViewModel.GetRecordType(), fieldViewModel.RecordEntryViewModel.ParentFormReference, fieldViewModel.RecordEntryViewModel.GetRecord())
+                                            fieldViewModel.GetRecordTypeOfThisField(), fieldViewModel.RecordEntryViewModel.ParentFormReference, fieldViewModel.RecordEntryViewModel.GetRecord())
                                         .Select(p => new RecordType(p.Key, p.Value))
                                         .Where(rt => !rt.Value.IsNullOrWhiteSpace())
                                         .OrderBy(rt => rt.Value)
@@ -651,7 +651,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                             {
                                 var selectedFieldName = recordFieldViewModel.Value.Key;
                                 var selectedFieldRecordType = GetRecordTypeFor(recordFieldViewModel.FieldName, re);
-                                var lookupService = re.RecordService.GetLookupService(recordFieldViewModel.FieldName, recordFieldViewModel.GetRecordType(), null, recordFieldViewModel.RecordEntryViewModel.GetRecord());
+                                var lookupService = re.RecordService.GetLookupService(recordFieldViewModel.FieldName, recordFieldViewModel.GetRecordTypeOfThisField(), null, recordFieldViewModel.RecordEntryViewModel.GetRecord());
                                 if (lookupService != null)
                                 {
                                     //get the source field type
@@ -694,7 +694,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                                             {
                                                 dependencyString += "|" + lookupService.GetIntegerFormat(selectedFieldName, selectedFieldRecordType);
                                             }
-                                            var picklistOptions = ObjectRecordService.GetPicklistKeyValues(picklistFieldViewModel.FieldName, picklistFieldViewModel.GetRecordType(), dependencyString, picklistFieldViewModel.RecordEntryViewModel.GetRecord());
+                                            var picklistOptions = ObjectRecordService.GetPicklistKeyValues(picklistFieldViewModel.FieldName, picklistFieldViewModel.GetRecordTypeOfThisField(), dependencyString, picklistFieldViewModel.RecordEntryViewModel.GetRecord());
                                             if (clearValue)
                                                 picklistFieldViewModel.Value = null;
                                             picklistFieldViewModel.ItemsSource = picklistOptions;
@@ -1095,7 +1095,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public override AutocompleteFunction GetAutocompletesFunction(StringFieldViewModel stringFieldViewModel)
         {
-            var autocompletes = (AutocompleteFunctions)stringFieldViewModel.ApplicationController.ResolveInstance(typeof(AutocompleteFunctions), stringFieldViewModel.GetRecordType());
+            var autocompletes = (AutocompleteFunctions)stringFieldViewModel.ApplicationController.ResolveInstance(typeof(AutocompleteFunctions), stringFieldViewModel.GetRecordTypeOfThisField());
             return autocompletes
                 .GetAutocompleteFunction(stringFieldViewModel.FieldName);
         }

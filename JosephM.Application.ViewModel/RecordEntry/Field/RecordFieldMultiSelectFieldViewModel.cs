@@ -27,7 +27,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     ? _recordTypeForField
                     : _recordTypeForField + ":" + GetRecordForm().ParentFormReference;
                 SetItemsSource(GetRecordService()
-                    .GetPicklistKeyValues(FieldName, GetRecordType(), reference, RecordEntryViewModel.GetRecord())
+                    .GetPicklistKeyValues(FieldName, GetRecordTypeOfThisField(), reference, RecordEntryViewModel.GetRecord())
                     .Select(p => new RecordField(p.Key, p.Value)).ToArray());
             }
         }

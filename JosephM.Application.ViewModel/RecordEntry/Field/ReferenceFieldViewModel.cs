@@ -81,8 +81,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 _itemsSource = new ReferencePicklistItem[0];
                 if (LookupService != null)
                 {
-                    ItemsSource = (FormService?.OrderPicklistItems(FieldName, GetRecordType(), GetPicklistOptions()) ?? GetPicklistOptions().OrderBy(p => p.Name)).ToArray();
-                    if (Value == null && ItemsSource.Count(i => i.Record != null) == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordType()) ?? false))
+                    ItemsSource = (FormService?.OrderPicklistItems(FieldName, GetRecordTypeOfThisField(), GetPicklistOptions()) ?? GetPicklistOptions().OrderBy(p => p.Name)).ToArray();
+                    if (Value == null && ItemsSource.Count(i => i.Record != null) == 1 && (FormService?.InitialisePicklistIfOneOption(FieldName, GetRecordTypeOfThisField()) ?? false))
                         SelectedItem = ItemsSource.First(i => i.Record != null);
                 }
                 var matchingItem = MatchSelectedItemInItemsSourceToValue();
@@ -102,7 +102,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                 ApplicationController.LogEvent("Error Loading Picklist Options", new Dictionary<string, string>
                 {
                     { "Is Error", true.ToString() },
-                    { "Record Type", GetRecordType() },
+                    { "Record Type", Record.Type },
                     { "Field", FieldName },
                     { "ReferencedType", RecordTypeToLookup },
                     { "Error Trace", ex.DisplayString() }
