@@ -38,7 +38,28 @@ namespace JosephM.Xrm.Vsix.Application
         {
             get
             {
-                return HasFile ? ProjectItem.FileNames[1] : null;
+                string fileName = null;
+                if (HasFile)
+                {
+                    try
+                    {
+                        fileName = ProjectItem.FileNames[1];
+                    }
+                    catch (Exception) { }
+                    if (fileName == null)
+                    {
+                        try
+                        {
+                            fileName = ProjectItem.FileNames[0];
+                        }
+                        catch (Exception) { }
+                    }
+                    if (fileName == null)
+                    {
+                        throw new Exception($"Could not extract file name for ProjectItem {Name}");
+                    }
+                }
+                return fileName;
             }
         }
 

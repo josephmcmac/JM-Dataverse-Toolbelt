@@ -121,13 +121,17 @@ namespace JosephM.Xrm.Vsix.Application
                     }
                     catch (Exception) { }
                     if (fileName == null)
+                    {
                         try
                         {
                             fileName = item.ProjectItem.FileNames[1];
                         }
                         catch (Exception) { }
+                    }
                     if (fileName == null)
+                    {
                         throw new Exception("Could not extract file name for ProjectItem " + item.Name);
+                    }
                     fileNames.Add(fileName);
                 }
             }

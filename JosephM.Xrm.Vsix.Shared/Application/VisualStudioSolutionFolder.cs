@@ -55,10 +55,33 @@ namespace JosephM.Xrm.Vsix.Application
         public void CopyFilesIntoSolutionFolder(string folderDirectory)
         {
             var parent = SolutionFolder.Parent;
-            var name = parent.Name;
             foreach (var file in Directory.GetFiles(folderDirectory))
             {
-                parent.ProjectItems.AddFromFile(file);
+                string existingFileName = string.Empty;
+                var projectItemName = string.Empty;
+                var fileCount = 0;
+                try
+                {
+                    var alreadyExists = false;
+                    foreach(ProjectItem projectItem in parent.ProjectItems)
+                    {
+                        var visualStudioProjectItem = new VisualStudioProjectItem(projectItem);
+                        existingFileName = visualStudioProjectItem.FileName;
+                        if (existingFileName != null && existingFileName.ToLower() == file.ToLower())
+                        {
+                            alreadyExists = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyExists)
+                    {
+                        parent.ProjectItems.AddFromFile(file);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error adding file '{file}' to solution folder. projectItemName={projectItemName}. existingFileName={existingFileName}. fileCount={fileCount}. {ex.Message}", ex);
+                }
             }
             foreach (var childFolder in Directory.GetDirectories(folderDirectory))
             {

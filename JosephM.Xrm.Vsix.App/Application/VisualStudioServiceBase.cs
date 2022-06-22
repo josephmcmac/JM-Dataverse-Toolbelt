@@ -21,7 +21,9 @@ namespace JosephM.Xrm.Vsix.Application
             var solutionDirectory = SolutionDirectory;
 
             if (!folderDirectory.StartsWith(solutionDirectory))
+            {
                 throw new ArgumentOutOfRangeException(nameof(folderDirectory), "Required to be in solution directory - " + solutionDirectory);
+            }
 
             var subPath = folderDirectory.Substring(solutionDirectory.Length);
 
@@ -39,7 +41,14 @@ namespace JosephM.Xrm.Vsix.Application
                     carryProject = carryProject.AddSubFolder(subFolder);
                 }
             }
-            carryProject.CopyFilesIntoSolutionFolder(folderDirectory);
+            try
+            {
+                carryProject.CopyFilesIntoSolutionFolder(folderDirectory);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"Error adding folder '{folderDirectory}' to solution. {ex.Message}", ex);
+            }
         }
 
         public string AddVsixSetting(string name, string serialised)
