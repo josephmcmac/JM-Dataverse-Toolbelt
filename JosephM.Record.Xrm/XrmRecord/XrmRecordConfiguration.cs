@@ -17,7 +17,7 @@ namespace JosephM.Record.Xrm.XrmRecord
 
         [RequiredProperty]
         [GridField]
-        [GridWidth(150)]
+        [GridWidth(300)]
         [MyDescription("Name For Your Connection")]
         [DisplayOrder(2)]
         public string Name { get; set; }
@@ -28,6 +28,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         }
 
         [GridField]
+        [GridReadOnly]
         [GridWidth(85)]
         [DisplayOrder(15)]
         [MyDescription("This Option Will Use The Connection Controls Provided By Assemblies Within The SDK. This Option Supports MFA And Stored Connections Will Be Managed By The SDK Assemblies")]
@@ -38,16 +39,13 @@ namespace JosephM.Record.Xrm.XrmRecord
         [ReadOnlyWhenSet]
         public string ToolingConnectionId { get; set; }
 
-        [GridField]
         [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
-        [GridWidth(160)]
         [MyDescription("The User Authentication Type For The CRM Instance")]
         [DisplayOrder(20)]
         [RequiredProperty]
         [DisplayName("Authentication Type")]
         public XrmRecordAuthenticationProviderType AuthenticationProviderType { get; set; }
 
-        [GridField]
         [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
             new object[]
@@ -59,24 +57,22 @@ namespace JosephM.Record.Xrm.XrmRecord
         [MyDescription("The Discovery Service Address For The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(30)]
         [RequiredProperty]
-        [GridWidth(400)]
         public string DiscoveryServiceAddress { get; set; }
 
         [GridField]
+        [GridReadOnly]
         [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [PropertyInContextByPropertyValue(nameof(AreDetailsForOrganisations), true)]
         [MyDescription("The Unique Name Of The Instance. Accessible At Settings -> Customizations -> Developer Resources")]
         [DisplayOrder(80)]
         [RequiredProperty]
-        [GridWidth(160)]
+        [GridWidth(300)]
         [DisplayName("Org Unique Name")]
         public string OrganizationUniqueName { get; set; }
 
-        [GridField]
         [MyDescription("If Active Directory Authentication The Domain For Your Login")]
         [DisplayOrder(50)]
         [RequiredProperty]
-        [GridWidth(100)]
         [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [PropertyInContextByPropertyValues(nameof(AuthenticationProviderType),
             new object[]
@@ -86,7 +82,8 @@ namespace JosephM.Record.Xrm.XrmRecord
         public string Domain { get; set; }
 
         [GridField]
-        [GridWidth(300)]
+        [GridReadOnly]
+        [GridWidth(400)]
         [MyDescription("The Username Used To Login To The Instance")]
         [DisplayOrder(60)]
         [RequiredProperty]
@@ -100,8 +97,6 @@ namespace JosephM.Record.Xrm.XrmRecord
             })]
         public string Username { get; set; }
 
-        [GridField]
-        [GridWidth(150)]
         [MyDescription("The Password For Your User")]
         [DisplayOrder(70)]
         [RequiredProperty]

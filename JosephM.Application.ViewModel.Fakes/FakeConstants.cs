@@ -64,7 +64,7 @@ namespace JosephM.Application.ViewModel.Fakes
                 return new[]
                 {
                     new GridFieldMetadata(Id),
-                    new GridFieldMetadata(StringField) {WidthPart = 3, IsEditable = true},
+                    new GridFieldMetadata(StringField) {WidthPart = 3},
                     new GridFieldMetadata(IntegerField),
                     new GridFieldMetadata(BooleanField),
                     new GridFieldMetadata(EnumerableField)

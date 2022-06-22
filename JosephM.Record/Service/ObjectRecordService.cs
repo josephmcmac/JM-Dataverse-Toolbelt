@@ -850,7 +850,10 @@ namespace JosephM.Record.Service
                     var viewField = new ViewField(propertyInfo.Name, 10000, initialGridWidth);
                     var orderAttribute = propertyInfo.GetCustomAttribute<DisplayOrder>();
                     if (orderAttribute != null)
+                    {
                         viewField.Order = orderAttribute.Order;
+                    }
+                    viewField.ReadOnly = propertyInfo.GetCustomAttribute<GridReadOnly>() != null;
                     viewFields.Add(viewField);
                 }
             }

@@ -220,7 +220,7 @@ namespace JosephM.Wpf.Grid
                         {
                             var fieldMetadata = gridSectionViewModel.RecordService.GetFieldMetadata(fieldName, thisRecordType);
                             var thisColumn = new ColumnMetadata(thisRecordType, fieldName, gridField.OverrideLabel ?? fieldMetadata.DisplayName ?? fieldName, fieldMetadata.FieldType, gridField.WidthPart,
-                                gridField.IsEditable, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType), gridSectionViewModel.DisplayHeaders, gridField.AliasedFieldName);
+                                gridField.IsReadOnly, fieldMetadata.Description, gridSectionViewModel.GetHorizontalJustify(fieldMetadata.FieldType), gridSectionViewModel.DisplayHeaders, gridField.AliasedFieldName);
                             columnMetadata.Add(thisColumn);
                         }
                     }
@@ -453,7 +453,7 @@ namespace JosephM.Wpf.Grid
                             var isFormReadonly = gridSectionViewModel.IsReadOnly;
                             var isWriteable = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, column.RecordType).Createable == true
                                 || gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, column.RecordType).Writeable == true;
-                            dataGridField.IsReadOnly = isFormReadonly || !isWriteable;
+                            dataGridField.IsReadOnly = isFormReadonly || column.IsReadOnly || !isWriteable;
                             var description = gridSectionViewModel?.RecordService?.GetFieldMetadata(column.FieldName, column.RecordType).Description;
                             dynamicDataGrid.Columns.Add(dataGridField);
                         }
@@ -491,7 +491,7 @@ namespace JosephM.Wpf.Grid
         public class ColumnMetadata
         {
             public ColumnMetadata(string recordType, string fieldName, string fieldLabel, RecordFieldType fieldType, double widthPart,
-                bool isEditable, string tooltip, HorizontalJustify justify, bool displayColumnHeader, string aliasedFieldName)
+                bool isReadOnly, string tooltip, HorizontalJustify justify, bool displayColumnHeader, string aliasedFieldName)
             {
                 RecordType = recordType;
                 AliasedFieldName = aliasedFieldName;
@@ -500,7 +500,7 @@ namespace JosephM.Wpf.Grid
                 FieldLabel = fieldLabel;
                 FieldType = fieldType;
                 WidthPart = widthPart;
-                IsEditable = isEditable;
+                IsReadOnly = isReadOnly;
                 Tooltip = tooltip;
                 HorizontalJustify = justify;
             }
@@ -518,7 +518,7 @@ namespace JosephM.Wpf.Grid
             public string FieldLabel { get; private set; }
             public RecordFieldType FieldType { get; private set; }
             public double WidthPart { get; private set; }
-            public bool IsEditable { get; private set; }
+            public bool IsReadOnly { get; private set; }
             public string Tooltip { get; }
             public HorizontalJustify HorizontalJustify { get; private set; }
         }

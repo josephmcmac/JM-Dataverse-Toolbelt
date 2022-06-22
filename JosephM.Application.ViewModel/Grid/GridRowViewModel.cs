@@ -73,6 +73,7 @@ namespace JosephM.Application.ViewModel.Grid
 
                         viewModel.IsEditable = !IsReadOnly
                             && isWriteable
+                            && !field.IsReadOnly
                             && FormService != null
                             && FormService.AllowGridFieldEditEdit(ParentFormReference)
                             && (!(viewModel is LookupFieldViewModel) || FormService.AllowLookupFunctions);

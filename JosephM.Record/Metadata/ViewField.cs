@@ -12,5 +12,6 @@
         public string FieldName { get; private set; }
         public int Width { get; set; }
         public int Order { get; set; }
+        public bool ReadOnly { get; set; }
     }
 }

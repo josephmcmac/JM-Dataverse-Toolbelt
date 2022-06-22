@@ -14,11 +14,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             : this(viewField.FieldName)
         {
             WidthPart = viewField.Width;
+            IsReadOnly = viewField.ReadOnly;
         }
 
         public double WidthPart { get; set; }
-
-        public bool IsEditable { get; set; }
+        public bool IsReadOnly { get; set; }
         public string OverrideLabel { get; internal set; }
     }
 }
