@@ -443,6 +443,10 @@ namespace JosephM.Deployment.DataImport
                                 var existingRecord = matchDictionary[entity];
                                 var fieldsToSetWhichAreChanged = fieldsToSet.Where(f =>
                                 {
+                                    if(f == "overriddencreatedon")
+                                    {
+                                        return false;
+                                    }
                                     var oldValue = entity.GetField(f);
                                     var newValue = existingRecord.GetField(f);
                                     if (oldValue is EntityReference er
