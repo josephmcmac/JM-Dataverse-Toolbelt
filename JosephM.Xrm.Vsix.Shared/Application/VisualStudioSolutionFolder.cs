@@ -58,13 +58,13 @@ namespace JosephM.Xrm.Vsix.Application
             foreach (var file in Directory.GetFiles(folderDirectory))
             {
                 string existingFileName = string.Empty;
-                var projectItemName = string.Empty;
-                var fileCount = 0;
+                ProjectItem thisProjectItem = null;
                 try
                 {
                     var alreadyExists = false;
                     foreach(ProjectItem projectItem in parent.ProjectItems)
                     {
+                        thisProjectItem = projectItem;
                         var visualStudioProjectItem = new VisualStudioProjectItem(projectItem);
                         existingFileName = visualStudioProjectItem.FileName;
                         if (existingFileName != null && existingFileName.ToLower() == file.ToLower())
@@ -80,7 +80,7 @@ namespace JosephM.Xrm.Vsix.Application
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"Error adding file '{file}' to solution folder. projectItemName={projectItemName}. existingFileName={existingFileName}. fileCount={fileCount}. {ex.Message}", ex);
+                    throw new Exception($"Error adding file '{file}' to solution folder. existingFileName={existingFileName}. projectItem={thisProjectItem}. {ex.Message}", ex);
                 }
             }
             foreach (var childFolder in Directory.GetDirectories(folderDirectory))

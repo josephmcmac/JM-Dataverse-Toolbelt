@@ -30,7 +30,7 @@ namespace JosephM.Xrm.Vsix.Application
         {
             get
             {
-                return ProjectItem.FileCount > 0;
+                return ProjectItem?.FileCount > 0;
             }
         }
 
