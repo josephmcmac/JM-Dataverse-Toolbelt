@@ -26,38 +26,25 @@ namespace JosephM.Xrm.Vsix.Application
             throw new NullReferenceException(string.Format("Could not find property {0}", propertyName));
         }
 
-        public bool HasFile
-        {
-            get
-            {
-                return ProjectItem?.FileCount > 0;
-            }
-        }
-
         public string FileName
         {
             get
             {
+                //the com api has been found too inconsistent and not reliable in terms of what would normally be expected
+                //so here I'll just check if the 0 or 1 index returns a file name
                 string fileName = null;
-                if (HasFile)
+                try
+                {
+                    fileName = ProjectItem.FileNames[1];
+                }
+                catch (Exception) { }
+                if (fileName == null)
                 {
                     try
                     {
-                        fileName = ProjectItem.FileNames[1];
+                        fileName = ProjectItem.FileNames[0];
                     }
                     catch (Exception) { }
-                    if (fileName == null)
-                    {
-                        try
-                        {
-                            fileName = ProjectItem.FileNames[0];
-                        }
-                        catch (Exception) { }
-                    }
-                    if (fileName == null)
-                    {
-                        throw new Exception($"Could not extract file name for ProjectItem {Name}");
-                    }
                 }
                 return fileName;
             }
