@@ -3,7 +3,7 @@
 namespace JosephM.Core.Attributes
 {
     /// <summary>
-    ///     Attribute To Define An Alternative Display Name For A Class Type Through The TypeEntentions.GetDisplayName Method
+    /// Alternative display name for a class or property
     /// </summary>
     [AttributeUsage(
         AttributeTargets.Class | AttributeTargets.Property,

@@ -2,7 +2,7 @@
 
 namespace JosephM.Application.Desktop.Module.ApplicationInsights
 {
-    [Instruction("This setting is for feature use and errors being submitted to application insights. Some location information is automatically captured but unless you opt in your user and machine name is not included in the data submitted\n\nThe logged data is used by the author to improve functionality, count feature use, and identify unknown errors being thrown by the application\n\nIf you do not want any of your use logged set the flag to false. To allow your username to be included in the information please set this option. This will assist with reporting on numbers of users")]
+    [Instruction("This setting allows feature use, errors, and geographic information to be submitted to application insights.\n\nThe logged data is used by the publisher to improve features, count feature use, and identify errors being thrown by the application.\n\nTo opt out and prevent any information being logged uncheck 'Allow Logging'.")]
     [Group(Sections.Main, wrapHorizontal:true, displayLabel: false)]
     public class ApplicationInsightsSettings
     {
@@ -11,14 +11,10 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             AllowUseLogging = true;
         }
 
+        [DisplayName("Allow Logging")]
         [Group(Sections.Main)]
         [DisplayOrder(10)]
         public bool AllowUseLogging { get; set; }
-
-        [Group(Sections.Main)]
-        [DisplayOrder(20)]
-        [PropertyInContextByPropertyValue(nameof(AllowUseLogging), true)]
-        public bool AllowCaptureUsername { get; set; }
 
         public class Sections
         {

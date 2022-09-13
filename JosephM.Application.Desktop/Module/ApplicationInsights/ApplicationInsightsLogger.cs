@@ -61,7 +61,6 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
 
         public void LogEvent(string eventName, IDictionary<string, string> properties = null)
         {
-
             var settings = ApplicationController.ResolveType<ApplicationInsightsSettings>();
             if (!IsDebugMode && settings.AllowUseLogging)
             {
@@ -76,15 +75,12 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
                 addProperty("App", ApplicationController.ApplicationName);
                 addProperty("App Version", ApplicationController.Version);
 
-                if (!settings.AllowCaptureUsername)
+                foreach (var property in properties.ToArray())
                 {
-                    foreach (var property in properties.ToArray())
-                    {
-                        properties[property.Key] = property.Value.ReplaceIgnoreCase(UserName, "{UserName}");
-                    }
+                    properties[property.Key] = property.Value.ReplaceIgnoreCase(UserName, "{UserName}");
                 }
 
-                TelemetryClient.Context.User.Id = settings.AllowCaptureUsername ? UserName : AnonymousString;
+                TelemetryClient.Context.User.Id = AnonymousString;
                 TelemetryClient.TrackEvent(eventName, properties);
             }
         }
