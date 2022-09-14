@@ -122,11 +122,6 @@
     <Compile Include="CSharp\CSharpRequest.cs" />
     <Compile Include="CSharp\CSharpResponse.cs" />
     <Compile Include="CSharp\CSharpService.cs" />
-    <Compile Include="FetchToJavaScript\FetchToJavascriptDialog.cs" />
-    <Compile Include="FetchToJavaScript\FetchToJavascriptModule.cs" />
-    <Compile Include="FetchToJavaScript\FetchToJavascriptRequest.cs" />
-    <Compile Include="FetchToJavaScript\FetchToJavascriptResponse.cs" />
-    <Compile Include="FetchToJavaScript\FetchToJavascriptService.cs" />
     <Compile Include="JavaScriptOptions\JavaScriptOptionsDialog.cs" />
     <Compile Include="JavaScriptOptions\JavaScriptOptionsModule.cs" />
     <Compile Include="JavaScriptOptions\JavaScriptOptionsRequest.cs" />
