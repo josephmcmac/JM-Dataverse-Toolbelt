@@ -1,5 +1,4 @@
 ﻿using JosephM.Application.Desktop.Module.Settings;
-using JosephM.Application.Modules;
 
 namespace JosephM.Application.Desktop.Module.ApplicationInsights
 {
