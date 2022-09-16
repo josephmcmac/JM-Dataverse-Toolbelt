@@ -12,11 +12,11 @@ using JosephM.Deployment.MigrateRecords;
 using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
 using JosephM.Xrm.Autonumber;
-using JosephM.Xrm.RecordExtract.TextSearch;
+using JosephM.Xrm.TextSearch;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
-using JosephM.Xrm.Vsix.Module.AddReleaseData;
 using JosephM.Xrm.Vsix.Module.AddPortalCode;
+using JosephM.Xrm.Vsix.Module.AddReleaseData;
 using JosephM.Xrm.Vsix.Module.CreatePackage;
 using JosephM.Xrm.Vsix.Module.CustomisationImport;
 using JosephM.Xrm.Vsix.Module.DeployAssembly;
@@ -31,7 +31,6 @@ using JosephM.Xrm.Vsix.Module.RefreshSchema;
 using JosephM.Xrm.Vsix.Module.UpdateAssembly;
 using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.XrmModule.Crud;
-using JosephM.XrmModule.ToolingConnector;
 using System;
 
 namespace JosephM.Xrm.Vsix.App
@@ -56,7 +55,6 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<VsixCreatePackageModule>(0x010E);
             app.AddModule<RefreshSchemaModule>(0x0100);
             app.AddModule<DeployWebResourceModule>(0x0102);
-            //app.AddModule<VsixImportCsvsModule>(0x0108);
             app.AddModule<VsixDeployPackageModule>(0x0110);
             app.AddModule<AddReleaseDataModule>(0x0121);
             app.AddModule<XrmTextSearchModule>(0x0116);

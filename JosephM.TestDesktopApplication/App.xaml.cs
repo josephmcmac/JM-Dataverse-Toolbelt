@@ -13,7 +13,6 @@ using JosephM.TestModule.TestDialog;
 using JosephM.TestModule.TestGridEdit;
 using JosephM.TestModule.TestGridOnly;
 using JosephM.TestModule.TestSettings;
-using JosephM.Xrm.RecordExtract.Test.TextSearch;
 using JosephM.XrmModule.SavedXrmConnections;
 using JosephM.XrmTestModule.DebugModule;
 using System.Windows;
@@ -30,13 +29,10 @@ namespace JosephM.TestDesktopApplication
             base.OnStartup(e);
 
             var app = DesktopApplication.Create("Test Desktop Application");
-            //app.AddModule<SavedXrmConnectionsModule>();
-            app.AddModule<TestTextSearchModule>();
             app.AddModule<TestDialogModule>();
             app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<DebugDialogModule>();
             app.AddModule<TestGridOnlyModule>();
-            //app.AddModule<XrmSettingsModule>();
             app.AddModule<TestSettingsModule>();
             app.AddModule<TestCrudModule>();
             app.AddModule<SavedRequestModule>();

@@ -200,14 +200,6 @@
       <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
       <Name>JosephM.Application.ViewModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.RecordExtract.Test\JosephM.Xrm.RecordExtract.Test.csproj">
-      <Project>{75C8A29D-5745-42B4-B48F-15EA035CA1CF}</Project>
-      <Name>JosephM.Xrm.RecordExtract.Test</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj">
-      <Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>
-      <Name>JosephM.Xrm.RecordExtract</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="mscrm.ico" />

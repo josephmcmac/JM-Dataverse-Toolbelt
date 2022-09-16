@@ -6,11 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
 		Lib\DocumentFormat.OpenXml.dll = Lib\DocumentFormat.OpenXml.dll
-		Lib\MigraDoc.DocumentObjectModel-WPF.dll = Lib\MigraDoc.DocumentObjectModel-WPF.dll
-		Lib\MigraDoc.Rendering-WPF.dll = Lib\MigraDoc.Rendering-WPF.dll
-		Lib\MigraDoc.RtfRendering-WPF.dll = Lib\MigraDoc.RtfRendering-WPF.dll
-		Lib\PdfSharp-WPF.dll = Lib\PdfSharp-WPF.dll
-		Lib\PdfSharp.Charting-WPF.dll = Lib\PdfSharp.Charting-WPF.dll
 		Lib\Unity.Wcf.dll = Lib\Unity.Wcf.dll
 		Lib\Xceed.Wpf.Toolkit.dll = Lib\Xceed.Wpf.Toolkit.dll
 	EndProjectSection
@@ -30,8 +25,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{2C7C4899-144F-4DC5-93AD-06FF09B8DF82}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xrm", "Xrm", "{0A157D67-BF3B-4EAB-A6E3-F8C4C63C4CE3}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RecordExtract", "RecordExtract", "{DBB5831C-8FD8-4126-8A9C-565848A82E06}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeGenerator", "CodeGenerator", "{F9B7BDB4-5B16-499F-830C-36BE12EC665E}"
 EndProject
@@ -96,10 +89,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.CustomisationImporter", "JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj", "{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.CustomisationImporter.Test", "JosephM.CustomisationImporter.Test\JosephM.CustomisationImporter.Test.csproj", "{7CA06456-17EA-4A13-8E1F-CF8533E8A4F7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.RecordExtract", "JosephM.Xrm.RecordExtract\JosephM.Xrm.RecordExtract.csproj", "{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.RecordExtract.Test", "JosephM.Xrm.RecordExtract.Test\JosephM.Xrm.RecordExtract.Test.csproj", "{75C8A29D-5745-42B4-B48F-15EA035CA1CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.TestModule", "JosephM.TestModule\JosephM.TestModule.csproj", "{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}"
 EndProject
@@ -280,38 +269,39 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JosephM XRM Entity JavaScript", "JosephM XRM Entity JavaScript", "{DBA7FD42-2F77-402D-97FE-02B27B24DD8A}"
 	ProjectSection(SolutionItems) = preProject
-		TemplateItems\JosephM XRM Entity JavaScript\__TemplateIcon.ico = TemplateItems\JosephM XRM Entity JavaScript\__TemplateIcon.ico
 		TemplateItems\JosephM XRM Entity JavaScript\MyTemplate.vstemplate = TemplateItems\JosephM XRM Entity JavaScript\MyTemplate.vstemplate
 		TemplateItems\JosephM XRM Entity JavaScript\template_javascript.js = TemplateItems\JosephM XRM Entity JavaScript\template_javascript.js
+		TemplateItems\JosephM XRM Entity JavaScript\__TemplateIcon.ico = TemplateItems\JosephM XRM Entity JavaScript\__TemplateIcon.ico
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JosephM XRM Entity Plugin", "JosephM XRM Entity Plugin", "{EA2674D1-9511-4AD1-9B9A-5B4C27E03BCD}"
 	ProjectSection(SolutionItems) = preProject
-		TemplateItems\JosephM XRM Entity Plugin\__TemplateIcon.ico = TemplateItems\JosephM XRM Entity Plugin\__TemplateIcon.ico
 		TemplateItems\JosephM XRM Entity Plugin\MyTemplate.vstemplate = TemplateItems\JosephM XRM Entity Plugin\MyTemplate.vstemplate
 		TemplateItems\JosephM XRM Entity Plugin\Plugin.cs = TemplateItems\JosephM XRM Entity Plugin\Plugin.cs
+		TemplateItems\JosephM XRM Entity Plugin\__TemplateIcon.ico = TemplateItems\JosephM XRM Entity Plugin\__TemplateIcon.ico
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JosephM XRM Test", "JosephM XRM Test", "{2D597E78-DC7D-405B-911D-C1B8227D32D2}"
 	ProjectSection(SolutionItems) = preProject
-		TemplateItems\JosephM XRM Test\__TemplateIcon.ico = TemplateItems\JosephM XRM Test\__TemplateIcon.ico
 		TemplateItems\JosephM XRM Test\MyTemplate.vstemplate = TemplateItems\JosephM XRM Test\MyTemplate.vstemplate
 		TemplateItems\JosephM XRM Test\XrmTest.cs = TemplateItems\JosephM XRM Test\XrmTest.cs
+		TemplateItems\JosephM XRM Test\__TemplateIcon.ico = TemplateItems\JosephM XRM Test\__TemplateIcon.ico
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JosephM XRM WorkflowActivity", "JosephM XRM WorkflowActivity", "{BDC3539F-06BE-49A4-BE72-5501E3879BD5}"
 	ProjectSection(SolutionItems) = preProject
-		TemplateItems\JosephM XRM WorkflowActivity\__TemplateIcon.ico = TemplateItems\JosephM XRM WorkflowActivity\__TemplateIcon.ico
 		TemplateItems\JosephM XRM WorkflowActivity\MyTemplate.vstemplate = TemplateItems\JosephM XRM WorkflowActivity\MyTemplate.vstemplate
 		TemplateItems\JosephM XRM WorkflowActivity\WorkflowActivityTemplate.cs = TemplateItems\JosephM XRM WorkflowActivity\WorkflowActivityTemplate.cs
+		TemplateItems\JosephM XRM WorkflowActivity\__TemplateIcon.ico = TemplateItems\JosephM XRM WorkflowActivity\__TemplateIcon.ico
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextSearch", "TextSearch", "{9EA461EF-7F2D-48A8-9C99-9021297A82CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.TextSearch", "JosephM.Xrm.TextSearch\JosephM.Xrm.TextSearch.csproj", "{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JosephM.Xrm.TextSearch.Test", "JosephM.Xrm.TextSearch.Test\JosephM.Xrm.TextSearch.Test.csproj", "{75C8A29D-5745-42B4-B48F-15EA035CA1CF}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{2e3789be-94e7-4b9f-a096-dc112f4fb84e}*SharedItemsImports = 4
-		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{c034f8d0-95c6-44dc-97d1-3647d9463149}*SharedItemsImports = 4
-		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{d9384831-76f5-4dbc-ae35-683c7067c8dd}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -551,28 +541,6 @@ Global
 		{7CA06456-17EA-4A13-8E1F-CF8533E8A4F7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7CA06456-17EA-4A13-8E1F-CF8533E8A4F7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7CA06456-17EA-4A13-8E1F-CF8533E8A4F7}.Release|x86.ActiveCfg = Release|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|x86.Build.0 = Debug|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|x86.ActiveCfg = Release|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|x86.Build.0 = Debug|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|x86.ActiveCfg = Release|Any CPU
 		{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -956,6 +924,30 @@ Global
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.ActiveCfg = Release|Any CPU
 		{C034F8D0-95C6-44DC-97D1-3647D9463149}.Release|x86.Build.0 = Release|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Debug|x86.Build.0 = Debug|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|x86.ActiveCfg = Release|Any CPU
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}.Release|x86.Build.0 = Release|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Debug|x86.Build.0 = Debug|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|x86.ActiveCfg = Release|Any CPU
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -964,7 +956,6 @@ Global
 		{36C82670-022D-4446-A1B6-FA03688A3E5E} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{B4EC23AA-5796-4C36-BAD7-7D82411E5027} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{0A157D67-BF3B-4EAB-A6E3-F8C4C63C4CE3} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
-		{DBB5831C-8FD8-4126-8A9C-565848A82E06} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{F9B7BDB4-5B16-499F-830C-36BE12EC665E} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{472650C0-A212-4FA5-9015-576734061227} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{8E90EB5E-EA6B-4CBC-B45F-1EB2790D00CC} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
@@ -989,8 +980,6 @@ Global
 		{6F4FE9AC-38A1-4C1D-AEEB-0F4E034F13ED} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
 		{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E} = {36C82670-022D-4446-A1B6-FA03688A3E5E}
 		{7CA06456-17EA-4A13-8E1F-CF8533E8A4F7} = {36C82670-022D-4446-A1B6-FA03688A3E5E}
-		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA} = {DBB5831C-8FD8-4126-8A9C-565848A82E06}
-		{75C8A29D-5745-42B4-B48F-15EA035CA1CF} = {DBB5831C-8FD8-4126-8A9C-565848A82E06}
 		{4322B728-AAA7-45F0-9BDE-8F227FA8C73D} = {472650C0-A212-4FA5-9015-576734061227}
 		{82C502F7-067E-414B-ABCA-3C5856F96EDA} = {A2553310-F07E-4CD8-BCED-4075404A8C37}
 		{BB5BB40F-282B-4CF0-A165-533AB810D61D} = {472650C0-A212-4FA5-9015-576734061227}
@@ -1049,10 +1038,18 @@ Global
 		{EA2674D1-9511-4AD1-9B9A-5B4C27E03BCD} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
 		{2D597E78-DC7D-405B-911D-C1B8227D32D2} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
 		{BDC3539F-06BE-49A4-BE72-5501E3879BD5} = {DEE14006-0561-4EF0-A1A7-94FB4572E42C}
+		{9EA461EF-7F2D-48A8-9C99-9021297A82CF} = {2C7C4899-144F-4DC5-93AD-06FF09B8DF82}
+		{E9EF8691-923F-4738-AFA7-AF460BEDCCDA} = {9EA461EF-7F2D-48A8-9C99-9021297A82CF}
+		{75C8A29D-5745-42B4-B48F-15EA035CA1CF} = {9EA461EF-7F2D-48A8-9C99-9021297A82CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{2e3789be-94e7-4b9f-a096-dc112f4fb84e}*SharedItemsImports = 4
+		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{c034f8d0-95c6-44dc-97d1-3647d9463149}*SharedItemsImports = 4
+		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{d9384831-76f5-4dbc-ae35-683c7067c8dd}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
