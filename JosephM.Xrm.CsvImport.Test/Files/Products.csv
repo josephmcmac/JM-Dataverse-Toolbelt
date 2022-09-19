@@ -1,0 +1,4 @@
+Name,Product ID,Unit Group,Default Unit,Status,Status Reason,Decimals Supported
+Test Product 1,Test Product 1,Test Group 1,Test Unit 1a,Active,Active,0
+Test Product 2,Test Product 2,Test Group 1,Test Unit 1b,Active,Active,0
+Test Product 3,Test Product 3,Test Group 2,Test Unit 2a,Active,Active,0

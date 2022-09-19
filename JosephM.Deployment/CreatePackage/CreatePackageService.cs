@@ -1,12 +1,11 @@
 using JosephM.Core.FieldType;
-using JosephM.Core.Log;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
-using JosephM.Deployment.DataImport;
 using JosephM.Deployment.DeployPackage;
-using JosephM.Deployment.ExportXml;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
+using JosephM.Xrm.DataImportExport.Import;
+using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
 using System;

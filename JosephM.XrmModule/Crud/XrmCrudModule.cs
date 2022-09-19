@@ -13,7 +13,7 @@ using JosephM.Core.AppConfig;
 
 namespace JosephM.XrmModule.Crud
 {
-    [MyDescription("Query And Create Or Update Records In The CRM Instance")]
+    [MyDescription("Query and create or update data")]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class XrmCrudModule : CrudModule<XrmCrudDialog>
     {
@@ -25,16 +25,16 @@ namespace JosephM.XrmModule.Crud
 
         public override string MainOperationName
         {
-            get { return "Crud/Query Data"; }
+            get { return "Query & Update Data"; }
         }
 
         private void AddBrowseButtonToSavedConnectionsGrid()
         {
-            var customGridFunction = new CustomGridFunction("CRUD", "Crud/Query", (g) =>
+            var customGridFunction = new CustomGridFunction("CRUD", MainOperationName, (g) =>
             {
                 if (g.SelectedRows.Count() != 1)
                 {
-                    g.ApplicationController.UserMessage("Please Select One Row To Run This Function");
+                    g.ApplicationController.UserMessage("Please select one row to run this function");
                 }
                 else
                 {

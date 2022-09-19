@@ -1,5 +1,4 @@
-﻿using JosephM.Deployment.DataImport;
-using JosephM.Deployment.DeploySolution;
+﻿using JosephM.Deployment.SolutionTransfer;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
@@ -19,7 +18,7 @@ namespace JosephM.Deployment.Test
             var altConnection = GetAltSavedXrmRecordConfiguration();
 
             var sourceSolution = ReCreateTestSolution();
-            var request = new DeploySolutionRequest();
+            var request = new SolutionTransferRequest();
             request.SourceConnection = GetSavedXrmRecordConfiguration();
             request.TargetConnection = GetAltSavedXrmRecordConfiguration();
             request.Solution = sourceSolution.ToLookup();
@@ -31,8 +30,8 @@ namespace JosephM.Deployment.Test
             if (targetSolution != null)
                 altService.Delete(targetSolution);
 
-            var createApplication = CreateAndLoadTestApplication<DeploySolutionModule>();
-            var response = createApplication.NavigateAndProcessDialog<DeploySolutionModule, DeploySolutionDialog, DeploySolutionResponse>(request);
+            var createApplication = CreateAndLoadTestApplication<SolutionTransferModule>();
+            var response = createApplication.NavigateAndProcessDialog<SolutionTransferModule, SolutionTransferDialog, SolutionTransferResponse>(request);
             Assert.IsFalse(response.HasError);
 
             targetSolution = altService.GetFirst(Entities.solution, Fields.solution_.uniquename, sourceSolution.GetStringField(Fields.solution_.uniquename));

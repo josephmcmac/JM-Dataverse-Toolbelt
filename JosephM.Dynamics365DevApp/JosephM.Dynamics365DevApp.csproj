@@ -209,6 +209,26 @@
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.DataImportExport\JosephM.Xrm.DataImportExport.csproj">
+      <Project>{c64aa535-0e02-4849-a660-bde3982782ad}</Project>
+      <Name>JosephM.Xrm.DataImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.ExcelImport\JosephM.Xrm.ExcelImport.csproj">
+      <Project>{381c931f-bd6e-4c04-9655-03578c5f250d}</Project>
+      <Name>JosephM.Xrm.ExcelImport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.MigrateInternal\JosephM.Xrm.MigrateInternal.csproj">
+      <Project>{b72cc779-89a3-47ea-91be-9db2714daef6}</Project>
+      <Name>JosephM.Xrm.MigrateInternal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.MigrateRecords\JosephM.Xrm.MigrateRecords.csproj">
+      <Project>{d189f19d-e5cb-4bd7-83f5-41e72464127b}</Project>
+      <Name>JosephM.Xrm.MigrateRecords</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.SqlImport\JosephM.Xrm.SqlImport.csproj">
+      <Project>{c7395f2b-3476-42f0-84ea-5d7bf2b55ea7}</Project>
+      <Name>JosephM.Xrm.SqlImport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.TextSearch\JosephM.Xrm.TextSearch.csproj">
       <Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>
       <Name>JosephM.Xrm.TextSearch</Name>
@@ -263,7 +283,7 @@
       <Version>4.3.4</Version>
     </PackageReference>
     <PackageReference Include="System.Private.Uri">
-      <Version>4.3.1</Version>
+      <Version>4.3.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

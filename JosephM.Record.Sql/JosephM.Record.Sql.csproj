@@ -48,10 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SqlConnectionString.cs" />
-    <Compile Include="ExcelFileConnection.cs" />
-    <Compile Include="CsvFileConnection.cs" />
-    <Compile Include="ExcelRecordService.cs" />
-    <Compile Include="CsvRecordService.cs" />
     <Compile Include="Extentions.cs" />
     <Compile Include="ISqlRecordMetadataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

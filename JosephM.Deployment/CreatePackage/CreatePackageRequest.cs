@@ -3,8 +3,8 @@ using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
 using JosephM.Core.Utility;
-using JosephM.Deployment.ExportXml;
 using JosephM.Record.Attributes;
+using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.SavedXrmConnections;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Linq;
 namespace JosephM.Deployment.CreatePackage
 {
     [DisplayName("Create Deployment Package")]
-    [Instruction("A Folder Will Be Created Containing The Solution Zip And Xml Files For The Data To Be Included In The Deployment Package. The Deploy Package Process May Then Be Run On That Folder To Install The Package Into Another Dynamics Instance")]
+    [Instruction("A folder will be created containing the solution Zip and Xml files for the data. The deploy package process may then be run to import the package into another instance")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Connection, true, 20)]

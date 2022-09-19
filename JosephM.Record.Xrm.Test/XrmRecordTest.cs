@@ -5,6 +5,7 @@ using JosephM.Record.Metadata;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Test;
 using JosephM.Record.Extentions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JosephM.Record.Xrm.Test
 {
@@ -41,6 +42,10 @@ namespace JosephM.Record.Xrm.Test
                 XrmRecordService.Delete(testSolution);
 
             var publisher = XrmRecordService.GetFirst(JosephM.Xrm.Schema.Entities.publisher, JosephM.Xrm.Schema.Fields.publisher_.uniquename, "josephmcgregor");
+            if (publisher == null)
+            {
+                Assert.Fail($"Couldn't find josephmcgregor publiher");
+            }
 
             testSolution = XrmRecordService.NewRecord(JosephM.Xrm.Schema.Entities.solution);
             testSolution.SetField(JosephM.Xrm.Schema.Fields.solution_.publisherid, publisher.ToLookup(), XrmRecordService);

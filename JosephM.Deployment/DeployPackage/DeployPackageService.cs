@@ -1,10 +1,10 @@
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Deployment.DataImport;
-using JosephM.Deployment.ImportXml;
 using JosephM.Deployment.SolutionImport;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
+using JosephM.Xrm.DataImportExport.Import;
+using JosephM.Xrm.DataImportExport.XmlExport;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,7 +52,7 @@ namespace JosephM.Deployment.DeployPackage
                         var dataImportService = new ImportXmlService(xrmRecordService);
                         var importResponse = new ImportXmlResponse();
                         dataImportService.ImportXml(request, controller, importResponse, executeMultipleSetSize: 10, targetCacheLimit: 200);
-                        response.LoadImportxmlResponse(importResponse);
+                        response.LoadImportXmlResponse(importResponse);
                     }
                 }
                 response.Message = $"The Package Has Been Deployed Into {request.Connection}";

@@ -17,16 +17,14 @@ using System.Threading;
 
 namespace JosephM.InstanceComparer
 {
-    [MyDescription("Compare The State Of Customisations And Data Between 2 CRM Instances. Note This Is Not A Complete Comparison")]
+    [MyDescription("Compare customisations and data between instances. This is not a complete comparison")]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class InstanceComparerModule :
         ServiceRequestModule
             <InstanceComparerDialog, InstanceComparerService, InstanceComparerRequest, InstanceComparerResponse, InstanceComparerResponseItem>
     {
-        public override string MainOperationName
-        {
-            get { return "Instance Compare"; }
-        }
+        public override string MenuGroup => "Customisations";
+        public override string MainOperationName => "Compare Instances";
 
         public override void InitialiseModule()
         {

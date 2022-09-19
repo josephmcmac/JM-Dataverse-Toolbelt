@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C64AA535-0E02-4849-A660-BDE3982782AD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JosephM.Xrm.DataImportExport</RootNamespace>
+    <AssemblyName>JosephM.Xrm.DataImportExport</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.34\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.34\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Modules\AddPortalDataModule.cs" />
+    <Compile Include="Modules\ExportDataTypeUsabilitiesModule.cs" />
+    <Compile Include="Modules\ExportDataUsabilityModule.cs" />
+    <Compile Include="XmlExport\ExportRecordType.cs" />
+    <Compile Include="XmlExport\ExportType.cs" />
+    <Compile Include="XmlExport\ExportXmlDialog.cs" />
+    <Compile Include="XmlExport\ExportXmlModule.cs" />
+    <Compile Include="XmlExport\ExportXmlRequest.cs" />
+    <Compile Include="XmlExport\ExportXmlResponse.cs" />
+    <Compile Include="XmlExport\ExportXmlResponseItem.cs" />
+    <Compile Include="XmlExport\ExportXmlService.cs" />
+    <Compile Include="Import\DataImportContainer.cs" />
+    <Compile Include="Import\DataImportResponse.cs" />
+    <Compile Include="Import\DataImportResponseItem.cs" />
+    <Compile Include="Import\DataImportService.cs" />
+    <Compile Include="Import\ImportedRecords.cs" />
+    <Compile Include="Import\ImportingRecords.cs" />
+    <Compile Include="Import\MatchOption.cs" />
+    <Compile Include="MappedImport\Extensions.cs" />
+    <Compile Include="MappedImport\IMapSourceField.cs" />
+    <Compile Include="MappedImport\IMapSourceImport.cs" />
+    <Compile Include="MappedImport\IMapSourceMatchKey.cs" />
+    <Compile Include="MappedImport\ParseIntoEntitiesResponse.cs" />
+    <Compile Include="MappedImport\MappedImportResponse.cs" />
+    <Compile Include="MappedImport\MappedImportService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlImport\IImportXmlRequest.cs" />
+    <Compile Include="XmlImport\ImportXmlDialog.cs" />
+    <Compile Include="XmlImport\ImportXmlModule.cs" />
+    <Compile Include="XmlImport\ImportXmlRequest.cs" />
+    <Compile Include="XmlImport\ImportXmlResponse.cs" />
+    <Compile Include="XmlImport\ImportXmlService.cs" />
+    <Compile Include="XmlImport\ImportXmlValidationDialog.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="JosephM.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
+      <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
+      <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Application.ViewModel\JosephM.Application.ViewModel.csproj">
+      <Project>{8529cc18-afdc-4222-b7b4-5305e3c97772}</Project>
+      <Name>JosephM.Application.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">
+      <Project>{7bf3e622-67ca-4e67-a9ca-f3b334c954fd}</Project>
+      <Name>JosephM.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Core\JosephM.Core.csproj">
+      <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
+      <Name>JosephM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Xrm\JosephM.Record.Xrm.csproj">
+      <Project>{850bb50c-d03d-4c6b-8fbb-6055936148c8}</Project>
+      <Name>JosephM.Record.Xrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record\JosephM.Record.csproj">
+      <Project>{59cac082-c1a8-474c-b73c-bc79267c9b51}</Project>
+      <Name>JosephM.Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
+      <Project>{ca2bb834-77fa-43db-8ddc-b0d1b5f519b9}</Project>
+      <Name>JosephM.XrmModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm\JosephM.Xrm.csproj">
+      <Project>{7f69213d-3efb-4736-9962-0151f92fa7d4}</Project>
+      <Name>JosephM.Xrm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

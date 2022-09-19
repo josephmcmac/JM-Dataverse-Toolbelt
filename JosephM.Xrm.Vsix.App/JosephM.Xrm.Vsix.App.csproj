@@ -138,8 +138,6 @@
     <Compile Include="Module\DeployWebResource\DeployWebResourceResponse.cs" />
     <Compile Include="Module\DeployWebResource\DeployWebResourceResponseItem.cs" />
     <Compile Include="Module\DeployWebResource\DeployWebResourceService.cs" />
-    <Compile Include="Module\ImportCsvs\MenuItemVisibleCsvs.cs" />
-    <Compile Include="Module\ImportCsvs\VsixImportCsvsModule.cs" />
     <Compile Include="Module\ImportRecords\ImportRecordsDialog.cs" />
     <Compile Include="Module\ImportRecords\ImportRecordsModule.cs" />
     <Compile Include="Module\ImportRecords\ImportRecordsRequest.cs" />
@@ -186,21 +184,13 @@
       <Project>{C29B8A9A-3831-41C2-A0C1-EA1B265D696F}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.CustomisationExporter\JosephM.CustomisationExporter.csproj">
-      <Project>{0A84403C-046E-48FF-967C-30CDDA6AF07A}</Project>
-      <Name>JosephM.CustomisationExporter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj">
-      <Project>{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}</Project>
+      <Project>{1a1cfba7-3bc0-4598-bdf0-cde9634c506e}</Project>
       <Name>JosephM.CustomisationImporter</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Deployment\JosephM.Deployment.csproj">
       <Project>{82118987-FB76-4E70-81A0-06D0B062D89C}</Project>
       <Name>JosephM.Deployment</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.InstanceComparer\JosephM.InstanceComparer.csproj">
-      <Project>{9D2F8F1B-CB77-46F2-A32B-AA7D7959A1D0}</Project>
-      <Name>JosephM.InstanceComparer</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
       <Project>{EB4443BD-DEAD-4546-9C8C-BFC2A807AF3A}</Project>
@@ -209,6 +199,10 @@
     <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.DataImportExport\JosephM.Xrm.DataImportExport.csproj">
+      <Project>{c64aa535-0e02-4849-a660-bde3982782ad}</Project>
+      <Name>JosephM.Xrm.DataImportExport</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.TextSearch\JosephM.Xrm.TextSearch.csproj">
       <Project>{E9EF8691-923F-4738-AFA7-AF460BEDCCDA}</Project>

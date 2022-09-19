@@ -159,10 +159,6 @@
       <Project>{c29b8a9a-3831-41c2-a0c1-ea1b265d696f}</Project>
       <Name>JosephM.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JosephM.CustomisationExporter\JosephM.CustomisationExporter.csproj">
-      <Project>{0a84403c-046e-48ff-967c-30cdda6af07a}</Project>
-      <Name>JosephM.CustomisationExporter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JosephM.CustomisationImporter\JosephM.CustomisationImporter.csproj">
       <Project>{1A1CFBA7-3BC0-4598-BDF0-CDE9634C506E}</Project>
       <Name>JosephM.CustomisationImporter</Name>
@@ -170,10 +166,6 @@
     <ProjectReference Include="..\JosephM.Deployment\JosephM.Deployment.csproj">
       <Project>{82118987-fb76-4e70-81a0-06d0b062d89c}</Project>
       <Name>JosephM.Deployment</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JosephM.InstanceComparer\JosephM.InstanceComparer.csproj">
-      <Project>{9D2F8F1B-CB77-46F2-A32B-AA7D7959A1D0}</Project>
-      <Name>JosephM.InstanceComparer</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.ObjectMapping\JosephM.ObjectMapping.csproj">
       <Project>{eb4443bd-dead-4546-9c8c-bfc2a807af3a}</Project>
@@ -259,7 +251,7 @@
       <Version>4.3.4</Version>
     </PackageReference>
     <PackageReference Include="System.Private.Uri">
-      <Version>4.3.1</Version>
+      <Version>4.3.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

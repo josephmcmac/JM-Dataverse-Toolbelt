@@ -1,7 +1,7 @@
 ﻿using JosephM.Application;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.Modules;
-using JosephM.Deployment.ExportXml;
-using JosephM.Deployment.ImportXml;
+using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
@@ -11,7 +11,7 @@ namespace JosephM.Xrm.Vsix.Module.AddReleaseData
 {
     [MenuItemVisibleAddData]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
-    public class AddReleaseDataModule : ImportXmlModule
+    public class AddReleaseDataModule : ServiceRequestModule<AddReleaseDataDialog, ExportXmlService, ExportXmlRequest, ExportXmlResponse, ExportXmlResponseItem>
     {
         public override void DialogCommand()
         {

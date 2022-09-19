@@ -22,12 +22,12 @@ namespace JosephM.Xrm.TextSearch
         TextSearchModuleBase
             <XrmTextSearchDialog, XrmTextSearchService>
     {
+        public override string MenuGroup => "Text Search & Record Counts";
+
         public override string MainOperationName
         {
-            get { return "Text Search"; }
+            get { return "Text Field Search"; }
         }
-
-        public override string MenuGroup => "Reports";
 
         public override void InitialiseModule()
         {
@@ -43,7 +43,7 @@ namespace JosephM.Xrm.TextSearch
 
         private void AddTextSearchButtonToSavedConnectionsGrid()
         {
-            var customGridFunction = new CustomGridFunction("TEXTSEARCH", "Text Search", (g) =>
+            var customGridFunction = new CustomGridFunction("TEXTSEARCH", MainOperationName, (g) =>
             {
                 if (g.SelectedRows.Count() != 1)
                 {

@@ -72,8 +72,7 @@ namespace JosephM.Application.Desktop.Application
             var text = File.ReadAllText(settingsFilename);
             foreach(var nameSpaceChange in _nameSpaceReplacements)
             {
-                var nameSpacePrefix = "xmlns=\"http://schemas.datacontract.org/2004/07/";
-                text = text.Replace(nameSpacePrefix + nameSpaceChange.Key + "\"", nameSpacePrefix + nameSpaceChange.Value + "\"");
+                text = text.Replace(nameSpaceChange.Key, nameSpaceChange.Value);
             }
 
             using (var textStream = new MemoryStream(Encoding.Default.GetBytes(text)))
@@ -123,7 +122,7 @@ namespace JosephM.Application.Desktop.Application
 
         void ISettingsManager.ProcessNamespaceChange(string newNamespace, string oldNamespace)
         {
-            if (_nameSpaceReplacements.ContainsKey(newNamespace))
+            if (_nameSpaceReplacements.ContainsKey(oldNamespace))
                 throw new Exception($"{oldNamespace} has already been loaded as a changed namespace");
 
             _nameSpaceReplacements.Add(oldNamespace, newNamespace);

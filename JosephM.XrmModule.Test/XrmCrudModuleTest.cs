@@ -15,7 +15,6 @@ using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using JosephM.XrmModule.Crud;
-using JosephM.XrmModule.Crud.BulkWorkflow;
 using JosephM.XrmModule.SavedXrmConnections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -702,34 +701,6 @@ namespace JosephM.XrmModule.Test
             Assert.IsNotNull(completionScreen);
             completionScreen.CompletionDetails.LoadFormSections();
             Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkCopyFieldValueResponse.ResponseItems)).GetGridRecords(false).Records.Any());
-            completionScreen.CompletionDetails.CancelButtonViewModel.Invoke();
-            Assert.IsFalse(crudDialog.ChildForms.Any());
-        }
-
-        private static void DoBulkWorkflow(XrmCrudDialog crudDialog, bool doExecuteMultiples = false)
-        {
-            var bulkDialog = crudDialog.ChildForms.First() as BulkWorkflowDialog;
-            Assert.IsNotNull(bulkDialog);
-            bulkDialog.LoadDialog();
-            var bulkEntry = bulkDialog.Controller.UiItems.First() as ObjectEntryViewModel;
-            Assert.IsNotNull(bulkEntry);
-            var setSizeField = bulkEntry.GetIntegerFieldFieldViewModel(nameof(BulkWorkflowRequest.ExecuteMultipleSetSize));
-            setSizeField.Value = doExecuteMultiples ? 2 : 1;
-            var waitField = bulkEntry.GetIntegerFieldFieldViewModel(nameof(BulkWorkflowRequest.WaitPerMessage));
-            waitField.Value = 2;
-            var workflowField = bulkEntry.GetLookupFieldFieldViewModel(nameof(BulkWorkflowRequest.Workflow));
-            if(!workflowField.ItemsSource.Any(p => p.Name == "Test Account Workflow On Demand"))
-            {
-                throw new NullReferenceException("Couldn't select workflow 'Test Account Workflow On Demand'");
-            }
-            workflowField.Value = workflowField.ItemsSource.First(p => p.Name == "Test Account Workflow On Demand").Record.ToLookup();
-            if (!bulkEntry.Validate())
-                Assert.Fail(bulkEntry.GetValidationSummary());
-            bulkEntry.SaveButtonViewModel.Invoke();
-            var completionScreen = bulkDialog.Controller.UiItems.First() as CompletionScreenViewModel;
-            Assert.IsNotNull(completionScreen);
-            completionScreen.CompletionDetails.LoadFormSections();
-            Assert.IsFalse(completionScreen.CompletionDetails.GetEnumerableFieldViewModel(nameof(BulkDeleteResponse.ResponseItems)).GetGridRecords(false).Records.Any());
             completionScreen.CompletionDetails.CancelButtonViewModel.Invoke();
             Assert.IsFalse(crudDialog.ChildForms.Any());
         }

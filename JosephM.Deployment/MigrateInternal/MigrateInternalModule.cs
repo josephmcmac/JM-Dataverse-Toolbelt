@@ -13,11 +13,11 @@ using System.Linq;
 
 namespace JosephM.Deployment.MigrateInternal
 {
-    [MyDescription("Migrate Records From One Record Type To Another In A Dynamics CRM Instance")]
+    [MyDescription("Migrate data inside instance to other fields or record types")]
     public class MigrateInternalModule
         : ServiceRequestModule<MigrateInternalDialog, MigrateInternalService, MigrateInternalRequest, MigrateInternalResponse, MigrateInternalResponseItem>
     {
-        public override string MenuGroup => "Data Import/Export";
+        public override string MenuGroup => "Import & Migrate Data";
 
         public override void RegisterTypes()
         {

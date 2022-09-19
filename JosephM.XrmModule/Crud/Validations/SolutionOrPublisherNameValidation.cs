@@ -5,7 +5,7 @@ using System.Linq;
 namespace JosephM.XrmModule.Crud.Validations
 {
     /// <summary>
-    ///     Attribute To Define A Property As Required To Be Non-Empty To Be Valid
+    /// Validate publisher or solution name
     /// </summary>
     [AttributeUsage(
         AttributeTargets.Property,

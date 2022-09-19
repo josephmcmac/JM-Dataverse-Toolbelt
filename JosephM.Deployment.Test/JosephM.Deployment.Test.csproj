@@ -68,14 +68,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DeploymentCreateAndDeployPackageModuleTests.cs" />
-    <Compile Include="DeploymentImportSqlTests.cs" />
-    <Compile Include="DeploymentImportExcelTests.cs" />
-    <Compile Include="DeploymentAddPortalDataModuleTests.cs" />
-    <Compile Include="DeploymentImportGeneralTests.cs" />
-    <Compile Include="DeploymentMigrateRecordsModuleTests.cs" />
-    <Compile Include="DeploymentExportXmlModuleTests.cs" />
-    <Compile Include="DeploymentImportCsvsTests.cs" />
-    <Compile Include="DeploymentImportXmlTests.cs" />
     <Compile Include="DeploymentDeploySolutionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -185,6 +177,10 @@
       <Project>{CAFB2299-A90B-4FAA-AAFA-9BB958742D45}</Project>
       <Name>JosephM.Spreadsheet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.DataImportExport\JosephM.Xrm.DataImportExport.csproj">
+      <Project>{c64aa535-0e02-4849-a660-bde3982782ad}</Project>
+      <Name>JosephM.Xrm.DataImportExport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.XrmModule.Test\JosephM.XrmModule.Test.csproj">
       <Project>{D4C2FA43-D7F4-45EE-93EA-34706F2007D5}</Project>
       <Name>JosephM.XrmModule.Test</Name>
@@ -233,6 +229,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
       <Version>9.0.2.26</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestAdapter">
+      <Version>2.2.10</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestFramework">
+      <Version>2.2.10</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

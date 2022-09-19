@@ -171,6 +171,10 @@
       <Project>{9D3EB2D4-EC55-4080-938F-EA409162171D}</Project>
       <Name>JosephM.Application.ViewModel.Fakes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.Record.Excel\JosephM.Record.Excel.csproj">
+      <Project>{61f75757-900e-474a-905a-d849678a44e6}</Project>
+      <Name>JosephM.Record.Excel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Record.Sql\JosephM.Record.Sql.csproj">
       <Project>{53651F05-D505-4D59-8FED-E723D26E491F}</Project>
       <Name>JosephM.Record.Sql</Name>

@@ -5,7 +5,7 @@ using System.Linq;
 namespace JosephM.XrmModule.Crud.Validations
 {
     /// <summary>
-    ///     Attribute To Define A Property As Required To Be Non-Empty To Be Valid
+    /// Validates publiher prefix field
     /// </summary>
     [AttributeUsage(
         AttributeTargets.Property,

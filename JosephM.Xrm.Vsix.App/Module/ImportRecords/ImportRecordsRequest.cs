@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using JosephM.Core.Service;
-using JosephM.Core.Attributes;
-using JosephM.XrmModule.SavedXrmConnections;
-using JosephM.Core.FieldType;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
-using JosephM.Deployment.ImportXml;
-using Microsoft.Xrm.Sdk;
+using JosephM.Core.FieldType;
 using JosephM.Core.Log;
+using JosephM.Core.Service;
+using JosephM.Xrm.DataImportExport.XmlExport;
+using JosephM.XrmModule.SavedXrmConnections;
+using Microsoft.Xrm.Sdk;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords

@@ -2,11 +2,9 @@
 using JosephM.Application.ViewModel.Attributes;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Grid;
-using JosephM.Core.FieldType;
 using JosephM.Record.Extentions;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm.Schema;
-using JosephM.XrmModule.Crud.BulkWorkflow;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -127,18 +125,6 @@ namespace JosephM.XrmModule.Crud
                     conversionList.Add(string.Format("{0} += {1}{2}{1};", variableName, stringCharacter, splitLines[i]));
             }
             return string.Join(Environment.NewLine, conversionList);
-        }
-
-        private void TriggerBulkWorkflow(bool selectedOnly)
-        {
-            ApplicationController.DoOnAsyncThread(() =>
-            {
-                var recordsToUpdate = GetRecordsToProcess(selectedOnly);
-                var request = new BulkWorkflowRequest(new RecordType(QueryViewModel.RecordType, RecordService.GetDisplayName(QueryViewModel.RecordType)), recordsToUpdate);
-                request.AllowExecuteMultiples = RecordService.SupportsExecuteMultiple;
-                var bulkDialog = new BulkWorkflowDialog(XrmRecordService, (IDialogController)ApplicationController.ResolveType(typeof(IDialogController)), request, CompleteChildDialogAndReload);
-                LoadChildForm(bulkDialog);
-            });
         }
     }
 }

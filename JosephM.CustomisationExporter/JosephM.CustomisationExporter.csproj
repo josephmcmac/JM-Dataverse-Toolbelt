@@ -50,29 +50,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exporter\FormOrDashboardExport.cs" />
-    <Compile Include="Exporter\PluginTriggerExport.cs" />
-    <Compile Include="Exporter\PluginAssemblyExport.cs" />
-    <Compile Include="Exporter\FieldSecurityProfileExport.cs" />
-    <Compile Include="Exporter\WebResourcesExport.cs" />
-    <Compile Include="Exporter\ReportExport.cs" />
-    <Compile Include="Exporter\SecurityRoleExport.cs" />
-    <Compile Include="Exporter\UserExport.cs" />
-    <Compile Include="Exporter\TeamExport.cs" />
-    <Compile Include="Exporter\WorkflowExport.cs" />
-    <Compile Include="Exporter\OptionExport.cs" />
-    <Compile Include="Exporter\RelationshipExport.cs" />
-    <Compile Include="Exporter\EntityExport.cs" />
-    <Compile Include="Exporter\CustomisationExporterModule.cs" />
-    <Compile Include="Exporter\FieldExport.cs" />
+    <Compile Include="Type\FormOrDashboardExport.cs" />
+    <Compile Include="Type\PluginTriggerExport.cs" />
+    <Compile Include="Type\PluginAssemblyExport.cs" />
+    <Compile Include="Type\FieldSecurityProfileExport.cs" />
+    <Compile Include="Type\WebResourcesExport.cs" />
+    <Compile Include="Type\ReportExport.cs" />
+    <Compile Include="Type\SecurityRoleExport.cs" />
+    <Compile Include="Type\UserExport.cs" />
+    <Compile Include="Type\TeamExport.cs" />
+    <Compile Include="Type\WorkflowExport.cs" />
+    <Compile Include="Type\OptionExport.cs" />
+    <Compile Include="Type\RelationshipExport.cs" />
+    <Compile Include="Type\EntityExport.cs" />
+    <Compile Include="CustomisationExporterModule.cs" />
+    <Compile Include="Type\FieldExport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Exporter\CustomisationExporterDialog.cs" />
-    <Compile Include="Exporter\CustomisationExporterRequest.cs" />
-    <Compile Include="Exporter\CustomisationExporterResponse.cs" />
-    <Compile Include="Exporter\CustomisationExporterResponseItem.cs" />
-    <Compile Include="Exporter\CustomisationExporterService.cs" />
-    <Compile Include="Exporter\SolutionExport.cs" />
-    <Compile Include="Exporter\PrivilegeExport.cs" />
+    <Compile Include="CustomisationExporterDialog.cs" />
+    <Compile Include="CustomisationExporterRequest.cs" />
+    <Compile Include="CustomisationExporterResponse.cs" />
+    <Compile Include="CustomisationExporterResponseItem.cs" />
+    <Compile Include="CustomisationExporterService.cs" />
+    <Compile Include="Type\SolutionExport.cs" />
+    <Compile Include="Type\PrivilegeExport.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JosephM.Application\JosephM.Application.csproj">

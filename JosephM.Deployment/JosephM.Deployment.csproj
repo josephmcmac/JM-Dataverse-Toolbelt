@@ -106,97 +106,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExportDataTypeUsabilitiesModule.cs" />
     <Compile Include="CreatePackage\CreatePackageResponse.cs" />
-    <Compile Include="DataImport\DataImportContainer.cs" />
-    <Compile Include="DataImport\DataImportResponse.cs" />
-    <Compile Include="DataImport\DataImportService.cs" />
-    <Compile Include="DataImport\MatchOption.cs" />
-    <Compile Include="DataImport\ImportedRecords.cs" />
-    <Compile Include="DataImport\ImportingRecords.cs" />
-    <Compile Include="AddPortalDataModule.cs" />
-    <Compile Include="DeploySolution\DeploySolutionDialog.cs" />
-    <Compile Include="DeploySolution\DeploySolutionModule.cs" />
-    <Compile Include="DeploySolution\DeploySolutionRequest.cs" />
-    <Compile Include="DeploySolution\DeploySolutionResponse.cs" />
-    <Compile Include="DeploySolution\DeploySolutionService.cs" />
+    <Compile Include="SolutionTransfer\SolutionTransferDialog.cs" />
+    <Compile Include="SolutionTransfer\SolutionTransferModule.cs" />
+    <Compile Include="SolutionTransfer\SolutionTransferRequest.cs" />
+    <Compile Include="SolutionTransfer\SolutionTransferResponse.cs" />
+    <Compile Include="SolutionTransfer\SolutionTransferService.cs" />
     <Compile Include="DeployPackage\DeployPackageResponse.cs" />
     <Compile Include="DeployPackage\DeployPackageDialog.cs" />
     <Compile Include="DeployPackage\DeployPackageModule.cs" />
     <Compile Include="DeployPackage\DeployPackageRequest.cs" />
     <Compile Include="DeployPackage\DeployPackageService.cs" />
     <Compile Include="DeploymentModule.cs" />
-    <Compile Include="DeploySolution\DeploySolutionResponseItem.cs" />
-    <Compile Include="ImportCsvs\ImportCsvsValidationDialog.cs" />
-    <Compile Include="MigrateInternal\SourceDatasetType.cs" />
-    <Compile Include="MigrateInternal\MigratedLookupField.cs" />
-    <Compile Include="MigrateInternal\MigrateInternalDialog.cs" />
-    <Compile Include="MigrateInternal\MigrateInternalModule.cs" />
-    <Compile Include="MigrateInternal\MigrateInternalRequest.cs" />
-    <Compile Include="MigrateInternal\MigrateInternalResponse.cs" />
-    <Compile Include="MigrateInternal\MigrateInternalResponseItem.cs" />
-    <Compile Include="MigrateInternal\MigratingLookupFields.cs" />
-    <Compile Include="MigrateInternal\MigrateInternalService.cs" />
-    <Compile Include="MigrateInternal\MigrateInternalValidationDialog.cs" />
-    <Compile Include="ImportSql\ImportSqlDialog.cs" />
-    <Compile Include="ImportSql\ImportSqlModule.cs" />
-    <Compile Include="ImportSql\ImportSqlRequest.cs" />
-    <Compile Include="ImportSql\ImportSqlResponse.cs" />
-    <Compile Include="ImportSql\ImportSqlResponseItem.cs" />
-    <Compile Include="ImportSql\ImportSqlService.cs" />
-    <Compile Include="ImportSql\ImportSqlValidationDialog.cs" />
-    <Compile Include="ImportExcel\ImportExcelValidationDialog.cs" />
-    <Compile Include="ImportXml\IImportXmlRequest.cs" />
-    <Compile Include="ImportXml\ImportXmlValidationDialog.cs" />
+    <Compile Include="SolutionTransfer\SolutionTransferResponseItem.cs" />
     <Compile Include="SolutionImport\ImportSolutionsResponse.cs" />
     <Compile Include="SolutionImport\SolutionImportService.cs" />
     <Compile Include="SolutionImport\SolutionImportResult.cs" />
-    <Compile Include="ExportXml\ExportType.cs" />
-    <Compile Include="ExportXml\ExportRecordType.cs" />
-    <Compile Include="ImportExcel\ImportExcelDialog.cs" />
-    <Compile Include="ImportExcel\ImportExcelModule.cs" />
-    <Compile Include="ImportExcel\ImportExcelRequest.cs" />
-    <Compile Include="ImportExcel\ImportExcelResponse.cs" />
-    <Compile Include="ImportExcel\ImportExcelResponseItem.cs" />
-    <Compile Include="ImportExcel\ImportExcelService.cs" />
-    <Compile Include="ImportCsvs\DateFormat.cs" />
-    <Compile Include="ImportCsvs\GenerateTemplateConfiguration.cs" />
-    <Compile Include="ImportCsvs\GenerateTemplatesRequest.cs" />
-    <Compile Include="ImportCsvs\ImportCsvsDialog.cs" />
-    <Compile Include="ImportCsvs\ImportCsvsModule.cs" />
-    <Compile Include="ImportCsvs\ImportCsvsRequest.cs" />
-    <Compile Include="ImportCsvs\ImportCsvsResponse.cs" />
-    <Compile Include="ImportCsvs\ImportCsvsResponseItem.cs" />
-    <Compile Include="ImportCsvs\ImportCsvsService.cs" />
-    <Compile Include="ExportXml\ExportXmlDialog.cs" />
-    <Compile Include="ExportXml\ExportXmlModule.cs" />
-    <Compile Include="ExportXml\ExportXmlRequest.cs" />
-    <Compile Include="ExportXml\ExportXmlResponse.cs" />
-    <Compile Include="ExportXml\ExportXmlResponseItem.cs" />
-    <Compile Include="ExportXml\ExportXmlService.cs" />
     <Compile Include="CreatePackage\CreatePackageDialog.cs" />
     <Compile Include="CreatePackage\CreatePackageModule.cs" />
     <Compile Include="CreatePackage\CreatePackageRequest.cs" />
     <Compile Include="CreatePackage\CreatePackageService.cs" />
-    <Compile Include="ImportXml\ImportXmlDialog.cs" />
-    <Compile Include="ImportXml\ImportXmlModule.cs" />
-    <Compile Include="ImportXml\ImportXmlRequest.cs" />
-    <Compile Include="ImportXml\ImportXmlResponse.cs" />
-    <Compile Include="ImportXml\ImportXmlService.cs" />
-    <Compile Include="MigrateRecords\MigrateRecordsDialog.cs" />
-    <Compile Include="MigrateRecords\MigrateRecordsModule.cs" />
-    <Compile Include="MigrateRecords\MigrateRecordsRequest.cs" />
-    <Compile Include="MigrateRecords\MigrateRecordsResponse.cs" />
-    <Compile Include="MigrateRecords\MigrateRecordsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataImport\DataImportResponseItem.cs" />
-    <Compile Include="SourceImport\Extensions.cs" />
-    <Compile Include="SourceImport\IMapSourceMatchKey.cs" />
-    <Compile Include="SourceImport\ParseIntoEntitiesResponse.cs" />
-    <Compile Include="SourceImport\SourceImportResponse.cs" />
-    <Compile Include="SourceImport\IMapSourceField.cs" />
-    <Compile Include="SourceImport\IMapSourceImport.cs" />
-    <Compile Include="SourceImport\SourceImportService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -214,6 +144,10 @@
     <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.Xrm.DataImportExport\JosephM.Xrm.DataImportExport.csproj">
+      <Project>{c64aa535-0e02-4849-a660-bde3982782ad}</Project>
+      <Name>JosephM.Xrm.DataImportExport</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>

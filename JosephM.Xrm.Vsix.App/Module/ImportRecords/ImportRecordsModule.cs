@@ -2,7 +2,7 @@
 using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
-using JosephM.Deployment.DataImport;
+using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module.PackageSettings;
 using JosephM.XrmModule.SavedXrmConnections;

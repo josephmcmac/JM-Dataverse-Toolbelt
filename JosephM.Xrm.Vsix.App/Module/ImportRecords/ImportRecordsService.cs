@@ -1,7 +1,7 @@
 ﻿using JosephM.Core.Service;
-using JosephM.Deployment.DataImport;
-using JosephM.Deployment.ImportXml;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.DataImportExport.Import;
+using JosephM.Xrm.DataImportExport.XmlExport;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {

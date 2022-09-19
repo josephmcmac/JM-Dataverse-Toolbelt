@@ -14,7 +14,7 @@ namespace JosephM.Xrm.Test
         [TestMethod]
         public void XrmDebug()
         {
-            var entityMetadata = XrmService.GetEntityMetadata("aaduser");
+            //var entityMetadata = XrmService.GetEntityMetadata("aaduser");
 
             var me = XrmService.WhoAmI();
 

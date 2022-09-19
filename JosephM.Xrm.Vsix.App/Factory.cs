@@ -5,13 +5,9 @@ using JosephM.Application.Desktop.Module.Settings;
 using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.Core.AppConfig;
-using JosephM.CustomisationExporter.Exporter;
-using JosephM.Deployment;
-using JosephM.Deployment.ImportExcel;
-using JosephM.Deployment.MigrateRecords;
-using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
 using JosephM.Xrm.Autonumber;
+using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.TextSearch;
 using JosephM.Xrm.Vsix.Application;
 using JosephM.Xrm.Vsix.Module;
@@ -46,7 +42,6 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<OpenAdvancedFindModule>(0x010D);
             app.AddModule<ClearCacheModule>(0x0109);
             app.AddModule<XrmCrudModule>(0x0112);
-            app.AddModule<InstanceComparerModule>(0x0111);
             app.AddModule<UpdateAssemblyModule>(0x0105);
             app.AddModule<XrmPackageSettingsModule>(0x0106);
             app.AddModule<DeployAssemblyModule>(0x0103);
@@ -68,16 +63,12 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<SettingsAggregatorModule>(0x011E);
             app.AddModule<AddPortalCodeModule>(0x011B);
             app.AddModule<PackageSettingsAppConnectionModule>();
-            app.AddModule<MigrateRecordsModule>(0x011C);
             app.AddModule<AutonumberModule>(0x011D);
             app.AddModule<DonateModule>(0x0220);
-            app.AddModule<ImportExcelModule>();
-            app.AddModule<CustomisationExporterModule>();
             app.AddModule<RecordCountsModule>();
-            app.AddModule<AddPortalDataModule>();
             app.AddModule<ThemeModule>();
             app.AddModule<XrmPackageApplicationInsightsModule>();
-            app.AddModule<ExportDataTypeUsabilitiesModule>();
+            app.AddModule<ExportDataUsabilityModule>();
             return app;
         }
 

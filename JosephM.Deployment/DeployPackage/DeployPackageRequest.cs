@@ -2,7 +2,7 @@
 using JosephM.Core.FieldType;
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Deployment.ImportXml;
+using JosephM.Xrm.DataImportExport.XmlExport;
 using JosephM.XrmModule.SavedXrmConnections;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -11,7 +11,7 @@ using System.IO;
 
 namespace JosephM.Deployment.DeployPackage
 {
-    [Instruction("The Solution In The Package Will Be Installed And Published In The Target Instance. Any Data Included In The Package Will Also Be Imported Matching By Either Id, Then Name, Or If No Match Is Found A New Record Created")]
+    [Instruction("Select the package folder and instance to import into")]
     [AllowSaveAndLoad]
     [Group(Sections.Main, true, 10)]
     [Group(Sections.Connection, true, 20)]

@@ -1,8 +1,8 @@
 ﻿using JosephM.Application.ViewModel.Dialog;
 using JosephM.Core.FieldType;
 using JosephM.Core.Utility;
-using JosephM.Deployment.ExportXml;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Vsix.Application;
 
 namespace JosephM.Xrm.Vsix.Module.AddReleaseData

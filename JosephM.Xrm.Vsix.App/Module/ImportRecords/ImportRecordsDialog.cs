@@ -1,7 +1,7 @@
 ﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Dialog;
-using JosephM.Deployment.DataImport;
-using JosephM.Deployment.ImportXml;
+using JosephM.Xrm.DataImportExport.Import;
+using JosephM.Xrm.DataImportExport.XmlExport;
 using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords

@@ -1,7 +1,7 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
-using JosephM.Deployment.DataImport;
-using JosephM.Deployment.ImportXml;
+using JosephM.Xrm.DataImportExport.Import;
+using JosephM.Xrm.DataImportExport.XmlExport;
 using System.Collections.Generic;
 using System.Linq;
 

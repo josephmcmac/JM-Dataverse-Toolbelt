@@ -1,19 +1,19 @@
 {
-  "AddToSolution": false,
+  "AddToSolution": true,
   "Connections": [
     {
       "AuthenticationProviderType": 3,
       "DiscoveryServiceAddress": null,
       "Domain": null,
       "Name": "CDX",
-      "OrganizationUniqueName": "unq0557fe650dd940cdb0a195f25afde",
+      "OrganizationUniqueName": "unqb818b5504734424f99db66cccc021",
       "Password": {
-        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAA9A6XyJGBbEmPrT1LyWlO5wAAAAACAAAAAAAQZgAAAAEAACAAAACFyQYoTZdZOCCJFbPdXhOp9TlvR5yTtj4XiDSg5E3P1wAAAAAOgAAAAAIAACAAAAClv3CRqStbeKPBBjsId0GUOdIawJr5BK3dt\/5T0g6dYyAAAADC3gxvA7UeNGLum891wHlYdSE0axwk4F0c0LAFUBTy+EAAAAAM+Cpy6z9YyIm8sCR3KsvNt2HiXsQoaR6I7mILggQrICrP1TTPN+WmlE7fQS6h0tGLO3g8Utvb8+r5+VaeDagK",
+        "_password": "AQAAANCMnd8BFdERjHoAwE\/Cl+sBAAAA76nXVQmt0E+H4LNWUDgf3QAAAAACAAAAAAAQZgAAAAEAACAAAADTzOcUZBZcXHZMXfvB6wHeVDMeANGfHw55wixoEaL1LQAAAAAOgAAAAAIAACAAAABFRkLOJmGoTgHHfOJlFQfA9qiQucgY4Ve6f1x\/bq7N3CAAAAB+6dFECF7ySVrCf6VfnpviuCINvbDUfpGHUkYscOfQikAAAAA6wEot6gAMOBBnl0n3CtgzupDs1MaQIUb+Gx0TRpBDnfh0dwGueoMyGsGZPQx\/Bts0K9S3vIoviX8c1q15+WRh",
         "<EncryptPassword>k__BackingField": true
       },
       "ToolingConnectionId": null,
       "UseXrmToolingConnector": false,
-      "Username": "admin@crm137858.onmicrosoft.com",
+      "Username": "admin@CRM610662.onmicrosoft.com",
       "Active": true,
       "HideActive": false
     }
@@ -30,7 +30,7 @@
     }
   ],
   "Solution": {
-    "Id": "6c244984-9ba5-ec11-983f-002248179917",
+    "Id": "4592b91b-1e37-ed11-9db0-000d3a8565ca",
     "Name": "TestComponents",
     "RecordType": "solution"
   },

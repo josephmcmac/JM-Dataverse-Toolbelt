@@ -13,13 +13,13 @@ using System.Linq;
 
 namespace JosephM.RecordCounts
 {
-    [MyDescription("Generate Counts Of Records In The CRM Instance Either Globally Or Per User/Owner")]
+    [MyDescription("Get total number of records by type")]
     public class RecordCountsModule :
         ServiceRequestModule
             <RecordCountsDialog, RecordCountsService, RecordCountsRequest,
                 RecordCountsResponse, RecordCountsResponseItem>
     {
-        public override string MenuGroup => "Reports";
+        public override string MenuGroup => "Text Search & Record Counts";
 
         public override void RegisterTypes()
         {

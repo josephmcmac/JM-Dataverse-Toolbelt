@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JosephM.Core.Test
 {
@@ -35,18 +34,6 @@ namespace JosephM.Core.Test
             }
 
             CsvUtility.CreateCsv(TestingFolder, "CsvObjects" + DateTime.Now.ToFileTime() + "", objects);
-        }
-
-        [DeploymentItem("TestCsv.csv")]
-        [TestMethod]
-        public void CsvUtilityReadCsvTest()
-        {
-            var rows = CsvUtility.SelectAllRows("TestCsv.csv");
-            Assert.IsTrue(rows.Count() == 4);
-            var textString = rows.Last().GetFieldAsString("TextStringField");
-            Assert.IsTrue(textString.Length >= 300);
-            var phoneString = rows.Last().GetFieldAsString("PhoneNumber");
-            Assert.IsTrue(phoneString.StartsWith("0"));
         }
     }
 }

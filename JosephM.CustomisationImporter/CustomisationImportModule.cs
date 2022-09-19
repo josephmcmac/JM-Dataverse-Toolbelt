@@ -10,12 +10,12 @@ using JosephM.Application.ViewModel.RecordEntry.Form;
 
 namespace JosephM.CustomisationImporter
 {
-    [MyDescription("Import Customisations Defined In An Excel Spreadsheet Into A CRM Instance (Create or Update)")]
+    [MyDescription("Import table and field customisations from an Excel file")]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class CustomisationImportModule
         : ServiceRequestModule<CustomisationImportDialog, XrmCustomisationImportService, CustomisationImportRequest, CustomisationImportResponse, CustomisationImportResponseItem>
     {
-        public override string MainOperationName { get { return "Import"; } }
+        public override string MainOperationName { get { return "Import Customisations"; } }
 
         public override string MenuGroup => "Customisations";
 

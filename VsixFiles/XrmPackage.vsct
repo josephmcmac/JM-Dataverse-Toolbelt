@@ -159,26 +159,18 @@
           <ButtonText>Manage Plugin Triggers</ButtonText>
         </Strings>
       </Button>
-		<Button guid="guidXrmPackageCmdSet" id="DonateCommandId" priority="0x0100" type="Button">
-			<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-			<Strings>
-				<ButtonText>Donate</ButtonText>
-			</Strings>
-		</Button>
+      <Button guid="guidXrmPackageCmdSet" id="DonateCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Donate</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidXrmPackageCmdSet" id="RefreshSettingsCommandId" priority="0x0100" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>Package Settings</ButtonText>
         </Strings>
       </Button>
-      <!--<Button guid="guidXrmPackageCmdSet" id="ImportCsvsCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmItemMenuGroupMenu" />
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <Strings>
-          <ButtonText>Import Csvs</ButtonText>
-        </Strings>
-      </Button>-->
       <Button guid="guidXrmPackageCmdSet" id="ClearCacheCommandId" priority="0x010A" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
@@ -219,12 +211,12 @@
           <ButtonText>Open Advanced Find in Browser</ButtonText>
         </Strings>
       </Button>
-		<Button guid="guidXrmPackageCmdSet" id="OpenCrmSettingsCommandId" priority="0x0108" type="Button">
-			<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-			<Strings>
-				<ButtonText>Open Settings in Browser</ButtonText>
-			</Strings>
-		</Button>
+      <Button guid="guidXrmPackageCmdSet" id="OpenCrmSettingsCommandId" priority="0x0108" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+        <Strings>
+          <ButtonText>Open Settings in Browser</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidXrmPackageCmdSet" id="CreateDeploymentPackageCommandId" priority="0x0101" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
@@ -239,27 +231,21 @@
           <ButtonText>Deploy Package</ButtonText>
         </Strings>
       </Button>
-		<Button guid="guidXrmPackageCmdSet" id="AddReleaseDataCommandId" priority="0x0102" type="Button">
-			<Parent guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroupMenu" />
-			<CommandFlag>DefaultInvisible</CommandFlag>
-			<CommandFlag>DynamicVisibility</CommandFlag>
-			<Strings>
-				<ButtonText>Add Data</ButtonText>
-			</Strings>
-		</Button>
-      <Button guid="guidXrmPackageCmdSet" id="InstanceComparisonCommandId" priority="0x0103" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
+      <Button guid="guidXrmPackageCmdSet" id="AddReleaseDataCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionFolderMenuGroupMenu" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
-          <ButtonText>Instance Comparison</ButtonText>
+          <ButtonText>Add Data</ButtonText>
         </Strings>
       </Button>
-          <Button guid="guidXrmPackageCmdSet" id="CrudCommandId" priority="0x0102" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="CrudCommandId" priority="0x0102" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>Crud/Query Data</ButtonText>
         </Strings>
       </Button>
-       <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x010A" type="Button">
+      <Button guid="guidXrmPackageCmdSet" id="AboutCommandId" priority="0x010A" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>About</ButtonText>
@@ -279,12 +265,6 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Deploy Records</ButtonText>
-        </Strings>
-      </Button>
-          <Button guid="guidXrmPackageCmdSet" id="TextSearchCommandId" priority="0x0102" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <Strings>
-          <ButtonText>Text Search</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidXrmPackageCmdSet" id="DeployIntoFieldCommandId" priority="0x0100" type="Button">
@@ -315,19 +295,13 @@
           <ButtonText>Add Portal Code</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidXrmPackageCmdSet" id="MigrateRecordsCommandId" priority="0x0102" type="Button">
-        <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
-        <Strings>
-          <ButtonText>Migrate Records</ButtonText>
-        </Strings>
-      </Button>
       <Button guid="guidXrmPackageCmdSet" id="ConfigureAutoNumberCommandId" priority="0x0102" type="Button">
         <Parent guid="guidXrmPackageCmdSet" id="XrmSolutionMenuGroupMenu" />
         <Strings>
           <ButtonText>Configure Autonumber</ButtonText>
         </Strings>
       </Button>
-	</Buttons>
+    </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -363,30 +337,26 @@
       <IDSymbol name="ManagePluginTriggersCommandId" value="0x0104" />
       <IDSymbol name="UpdatePluginAssemblyCommandId" value="0x0105" />
       <IDSymbol name="RefreshSettingsCommandId" value="0x0106" />
-      <!--<IDSymbol name="ImportCsvsCommandId" value="0x0108" />-->
       <IDSymbol name="ClearCacheCommandId" value="0x0109" />
       <IDSymbol name="ImportCustomisationsCommandId" value="0x010A" />
       <IDSymbol name="OpenCrmWebCommandId" value="0x010B" />
       <IDSymbol name="OpenCrmSolutionCommandId" value="0x010C" />
       <IDSymbol name="OpenCrmAdvancedFindCommandId" value="0x010D" />
-		<IDSymbol name="OpenCrmSettingsCommandId" value="0x0120" />
+      <IDSymbol name="OpenCrmSettingsCommandId" value="0x0120" />
       <IDSymbol name="CreateDeploymentPackageCommandId" value="0x010E" />
       <IDSymbol name="DeployPackageCommandId" value="0x0110" />
-		<IDSymbol name="AddReleaseDataCommandId" value="0x0121" />
-		<IDSymbol name="InstanceComparisonCommandId" value="0x0111" />
+      <IDSymbol name="AddReleaseDataCommandId" value="0x0121" />
       <IDSymbol name="CrudCommandId" value="0x0112" />
       <IDSymbol name="AboutCommandId" value="0x0113" />
       <IDSymbol name="ImportSolutionCommandId" value="0x0114" />
       <IDSymbol name="ImportRecordsCommandId" value="0x0115" />
-      <IDSymbol name="TextSearchCommandId" value="0x0116" />
       <IDSymbol name="DeployIntoFieldCommandId" value="0x0117" />
       <IDSymbol name="GenerateJavascriptOptionsCommandId" value="0x0118" />
       <IDSymbol name="OpenCrmDefaultSolutionCommandId" value="0x0119" />
       <IDSymbol name="AddPortalCodeCommandId" value="0x011B" />
-      <IDSymbol name="MigrateRecordsCommandId" value="0x011C" />
       <IDSymbol name="ConfigureAutoNumberCommandId" value="0x011D" />
       <IDSymbol name="ExtentionSettingsCommandId" value="0x011E" />
-		<IDSymbol name="DonateCommandId" value="0x0220" />
+      <IDSymbol name="DonateCommandId" value="0x0220" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0ffc84a8-7e82-4192-8298-0774b6163391}" >

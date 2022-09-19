@@ -1,9 +1,11 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
+using JosephM.Deployment.DeployPackage;
+using JosephM.Xrm.DataImportExport.Import;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JosephM.Deployment.DataImport
+namespace JosephM.Deployment.CreatePackage
 {
     [Group(Sections.Summary, false, 0)]
     public class CreatePackageResponse : ServiceResponseBase<DataImportResponseItem>
@@ -13,7 +15,7 @@ namespace JosephM.Deployment.DataImport
         public void LoadDeployPackageResponse(DeployPackageResponse deployPackageResponse)
         {
             if (deployPackageResponse.Exception != null)
-                AddResponseItem(new DataImportResponseItem("Fatal Deploy Error", deployPackageResponse.Exception));
+                AddResponseItem(new DataImportResponseItem("Fatal deploy error", deployPackageResponse.Exception));
             AddResponseItems(deployPackageResponse.ResponseItems);
             _importedRecords.AddRange(deployPackageResponse.ImportSummary);
             FailedSolution = deployPackageResponse.FailedSolution;

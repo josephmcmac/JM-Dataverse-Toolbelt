@@ -1,7 +1,5 @@
 ﻿using JosephM.Core.Extentions;
 using JosephM.Core.Log;
-using JosephM.Core.Sql;
-using LumenWorks.Framework.IO.Csv;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -95,55 +93,6 @@ namespace JosephM.Spreadsheet
         private static string GetCsvFileName(string name)
         {
             return name.ToLower().EndsWith(".csv") ? name : name + ".csv";
-        }
-
-        public static IEnumerable<string> GetColumns(string fileNameQualified)
-        {
-            var result = SelectAllRows(fileNameQualified);
-            if (!result.Any())
-                throw new NullReferenceException(string.Format("Error examining CSV. There were no rows returned in the csv {0}", fileNameQualified));
-            var row = result.First();
-            return row.GetColumnNames();
-        }
-
-        public static IEnumerable<QueryRow> SelectRows(string fileNameQualified, string sql)
-        {
-            return SelectAllRows(fileNameQualified);
-        }
-
-        public static IEnumerable<QueryRow> SelectRows(string folder, string fileName, string sql)
-        {
-            return SelectAllRows(Path.Combine(folder, fileName));
-        }
-
-        public static IEnumerable<QueryRow> SelectAllRows(string fileNameQualified)
-        {
-            var dt = new DataTable();
-            using (var csv = new CsvReader(new StreamReader(fileNameQualified), true))
-            {
-                dt.Load(csv);
-            }
-            var itemsToAdd = new List<DataRow>();
-            foreach (DataRow row in dt.Rows)
-            {
-                itemsToAdd.Add(row);
-            }
-            return itemsToAdd.Select(r => new QueryRow(r)).ToArray();
-        }
-
-        private static string GetFolder(string fileNameQualified)
-        {
-            return Path.GetDirectoryName(fileNameQualified);
-        }
-
-        private static string GetFileName(string fileNameQualified)
-        {
-            return Path.GetFileName(fileNameQualified);
-        }
-
-        public static string GetTableName(string fileNameQualified)
-        {
-            return Path.GetFileName(fileNameQualified);
         }
     }
 }

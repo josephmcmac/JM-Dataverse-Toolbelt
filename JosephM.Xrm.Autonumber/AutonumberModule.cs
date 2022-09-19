@@ -18,7 +18,7 @@ using JosephM.XrmModule.SavedXrmConnections;
 namespace JosephM.Xrm.Autonumber
 {
     [DependantModule(typeof(SavedXrmConnectionsModule))]
-    [MyDescription("Configure Autonumber Fields Using The Native Dynamics Autonumbering")]
+    [MyDescription("Configure autonumber fields and set current seed poition")]
     public class AutonumberModule : DialogModule<AutonumberDialog>
     {
         public override string MenuGroup => "Customisations";
