@@ -30,7 +30,14 @@
     </Style>
     <Style x:Key="FieldEntryButtonGridStyle" TargetType="Grid">
         <Setter Property="VerticalAlignment" Value="Top" />
-
+    </Style>
+    <Style x:Key="DatePickerFieldEntryStyle" TargetType="{x:Type DatePicker}" BasedOn="{StaticResource FieldEntryStyle}" >
+        <Style.Resources>
+            <Style TargetType="DatePickerTextBox">
+                <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+                <Setter Property="Background" Value="{DynamicResource FieldEntryBackgroundColor}"/>
+            </Style>
+        </Style.Resources>
     </Style>
     <Style x:Key="StringFieldEntryStyle" TargetType="TextBox" BasedOn="{StaticResource FieldEntryStyle}" >
         <Setter Property="TextWrapping" Value="Wrap" />

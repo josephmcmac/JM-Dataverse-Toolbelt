@@ -10,7 +10,7 @@ namespace JosephM.Application.ViewModel.Test
     {
         public long BigIntField { get; set; }
         public bool BooleanField { get; set; }
-        public DateTime DateField { get; set; }
+        public DateTime? DateField { get; set; }
         public decimal DecimalField { get; set; }
         public double DoubleField { get; set; }
         public IEnumerable<TestAllFieldTypes> EnumerableField { get; set; }

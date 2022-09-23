@@ -1,5 +1,4 @@
-﻿using JosephM.Application.Application;
-using JosephM.Application.ViewModel.Fakes;
+﻿using JosephM.Application.ViewModel.Fakes;
 using JosephM.Application.ViewModel.RecordEntry;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -77,6 +76,64 @@ namespace JosephM.Application.ViewModel.Test
             Assert.IsFalse(viewModel.ChildForms.Any());
 
             Assert.IsTrue(viewModel.Validate(), viewModel.GetValidationSummary());
+        }
+
+        /// <summary>
+        /// this script verifies view model part for a date field view model
+        /// </summary>
+        [TestMethod]
+        public void RecordEntryViewModelTestDateParts()
+        {
+            var testObject = new TestDatePropertyViewModel();
+            var viewModel = LoadToObjectEntryViewModel(testObject);
+            var dateViewmodel = viewModel.GetFieldViewModel<DateFieldViewModel>(nameof(TestDatePropertyViewModel.DateProperty));
+            Assert.IsNull(dateViewmodel.ValueObject);
+            Assert.IsFalse(dateViewmodel.Value.HasValue);
+            Assert.IsFalse(dateViewmodel.SelectedDate.HasValue);
+            Assert.IsNull(dateViewmodel.SelectedHour);
+            Assert.IsNull(dateViewmodel.SelectedMinute);
+            Assert.IsNull(dateViewmodel.SelectedAmPm);
+
+            var dayZero = new DateTime(1980, 11, 15, 0, 0, 0, DateTimeKind.Unspecified);
+            dateViewmodel.SelectedDate = dayZero;
+            Assert.IsTrue(dateViewmodel.ValueObject is DateTime);
+            Assert.AreEqual(dayZero, (DateTime)dateViewmodel.ValueObject);
+            Assert.IsTrue(dateViewmodel.SelectedDate.HasValue);
+            Assert.AreEqual(dayZero, (DateTime)dateViewmodel.SelectedDate);
+            Assert.AreEqual("12", dateViewmodel.SelectedHour?.Key);
+            Assert.AreEqual("0", dateViewmodel.SelectedMinute?.Key);
+            Assert.AreEqual("AM", dateViewmodel.SelectedAmPm?.Key);
+
+            dateViewmodel.SelectedAmPm = dateViewmodel.AmPmOptions.First(p => p.Key == "PM");
+            Assert.AreEqual(new DateTime(1980, 11, 15, 12, 0, 0, DateTimeKind.Unspecified), (DateTime)dateViewmodel.ValueObject);
+
+            dateViewmodel.SelectedMinute = dateViewmodel.MinuteOptions.First(p => p.Key == "30");
+            Assert.AreEqual(new DateTime(1980, 11, 15, 12, 30, 0, DateTimeKind.Unspecified), (DateTime)dateViewmodel.ValueObject);
+
+            dateViewmodel.SelectedHour = dateViewmodel.HourOptions.First(p => p.Key == "1");
+            Assert.AreEqual(new DateTime(1980, 11, 15, 13, 30, 0, DateTimeKind.Unspecified), (DateTime)dateViewmodel.ValueObject);
+
+            dateViewmodel.SelectedAmPm = dateViewmodel.AmPmOptions.First(p => p.Key == "AM");
+            Assert.AreEqual(new DateTime(1980, 11, 15, 1, 30, 0, DateTimeKind.Unspecified), (DateTime)dateViewmodel.ValueObject);
+
+            dateViewmodel.SelectedDate = null;
+            Assert.IsNull(dateViewmodel.ValueObject);
+            Assert.IsFalse(dateViewmodel.Value.HasValue);
+            Assert.IsFalse(dateViewmodel.SelectedDate.HasValue);
+            Assert.IsNull(dateViewmodel.SelectedHour);
+            Assert.IsNull(dateViewmodel.SelectedMinute);
+            Assert.IsNull(dateViewmodel.SelectedAmPm);
+
+            testObject = new TestDatePropertyViewModel();
+            var utcTime = DateTime.UtcNow;
+            var localTime = utcTime.ToLocalTime();
+            testObject.DateProperty = utcTime;
+            viewModel = LoadToObjectEntryViewModel(testObject);
+            dateViewmodel = viewModel.GetFieldViewModel<DateFieldViewModel>(nameof(TestDatePropertyViewModel.DateProperty));
+            Assert.IsTrue(dateViewmodel.Value.HasValue);
+            Assert.AreNotEqual(utcTime, dateViewmodel.Value.Value);
+            Assert.AreEqual(localTime, dateViewmodel.Value.Value);
+            Assert.AreEqual(localTime, (DateTime)dateViewmodel.SelectedDate);
         }
 
         /// <summary>

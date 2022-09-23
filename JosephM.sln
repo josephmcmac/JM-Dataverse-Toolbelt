@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A59
 	ProjectSection(SolutionItems) = preProject
 		Lib\DocumentFormat.OpenXml.dll = Lib\DocumentFormat.OpenXml.dll
 		Lib\Unity.Wcf.dll = Lib\Unity.Wcf.dll
-		Lib\Xceed.Wpf.Toolkit.dll = Lib\Xceed.Wpf.Toolkit.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomisationImporter", "CustomisationImporter", "{36C82670-022D-4446-A1B6-FA03688A3E5E}"
@@ -1205,8 +1204,8 @@ Global
 		{032819D8-64D0-4FCE-B5AF-573A6296934E} = {6F4FE9AC-38A1-4C1D-AEEB-0F4E034F13ED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{2e3789be-94e7-4b9f-a096-dc112f4fb84e}*SharedItemsImports = 4

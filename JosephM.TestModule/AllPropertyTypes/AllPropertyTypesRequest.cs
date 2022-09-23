@@ -55,7 +55,7 @@ namespace JosephM.TestModule.AllPropertyTypesModule
 
         public bool Boolean { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         [ReferencedType(FakeConstants.RecordType)]
         public Lookup LookupField { get; set; }
