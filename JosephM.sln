@@ -6,7 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{C099CC03-A595-4822-9E2F-2AABB4872E9A}"
 	ProjectSection(SolutionItems) = preProject
 		Lib\DocumentFormat.OpenXml.dll = Lib\DocumentFormat.OpenXml.dll
-		Lib\Unity.Wcf.dll = Lib\Unity.Wcf.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomisationImporter", "CustomisationImporter", "{36C82670-022D-4446-A1B6-FA03688A3E5E}"

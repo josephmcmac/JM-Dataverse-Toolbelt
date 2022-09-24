@@ -40,7 +40,7 @@ namespace $safeprojectname$.Xrm
         /// </summary>
         private IOrganizationService _service;
 
-        internal XrmService(IOrganizationService actualService, LogController uiController)
+        public XrmService(IOrganizationService actualService, LogController uiController)
         {
             _service = actualService;
             _controller = uiController;

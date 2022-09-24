@@ -5,6 +5,19 @@
       "AuthenticationProviderType": 3,
       "DiscoveryServiceAddress": null,
       "Domain": null,
+      "Name": "CDX SDK",
+      "OrganizationUniqueName": null,
+      "Password": null,
+      "ToolingConnectionId": "JosephM.Xrm.Vsix_b0b24008-0c92-4bea-9e41-a26a85c8c266",
+      "UseXrmToolingConnector": true,
+      "Username": null,
+      "Active": false,
+      "HideActive": false
+    },
+    {
+      "AuthenticationProviderType": 3,
+      "DiscoveryServiceAddress": null,
+      "Domain": null,
       "Name": "CDX",
       "OrganizationUniqueName": "unqb818b5504734424f99db66cccc021",
       "Password": {

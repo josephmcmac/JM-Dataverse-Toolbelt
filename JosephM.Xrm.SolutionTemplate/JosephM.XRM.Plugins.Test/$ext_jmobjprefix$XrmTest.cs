@@ -1,39 +1,14 @@
-﻿using $ext_safeprojectname$.Plugins.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using System;
-using System.Linq;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Metadata;
-using $ext_safeprojectname$.Plugins.Xrm;
 using $ext_safeprojectname$.Plugins.Localisation;
+using $ext_safeprojectname$.Plugins.Services;
 
 namespace $safeprojectname$
 {
     [TestClass]
     public class $ext_jmobjprefix$XrmTest : XrmTest
     {
-        //USE THIS IF NEED TO VERIFY SCRIPTS FOR A PARTICULAR SECURITY ROLE
-        //private XrmService _xrmService;
-        //public override XrmService XrmService
-        //{
-        //    get
-        //    {
-        //        if (_xrmService == null)
-        //        {
-        //            var xrmConnection = new XrmConfiguration()
-        //            {
-        //                AuthenticationProviderType = XrmConfiguration.AuthenticationProviderType,
-        //                DiscoveryServiceAddress = XrmConfiguration.DiscoveryServiceAddress,
-        //                OrganizationUniqueName = XrmConfiguration.OrganizationUniqueName,
-        //                Username = "",
-        //                Password = ""
-        //            };
-        //            _xrmService = new XrmService(xrmConnection);
-        //        }
-        //        return _xrmService;
-        //    }
-        //}
+        //public override Guid? TestUserId => new Guid("00000000-0000-0000-0000-000000000000");
 
         protected override IEnumerable<string> EntitiesToDelete
         {

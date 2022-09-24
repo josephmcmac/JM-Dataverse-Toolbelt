@@ -1,11 +1,11 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Core.AppConfig;
+using JosephM.Core.Extentions;
+using JosephM.Core.Security;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
-using JosephM.Core.AppConfig;
 using System.Collections.Generic;
-using JosephM.Core.Extentions;
-using JosephM.Core.Security;
 using System.Linq;
 
 namespace JosephM.Application.Desktop.Module.ApplicationInsights
@@ -19,13 +19,12 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             SessionId = Guid.NewGuid().ToString();
             AnonymousString = "Anonymous " + StringEncryptor.HashString(UserName);
 
-            TelemetryConfiguration.Active.InstrumentationKey = InstrumentationKey;
-
             #if DEBUG
                 IsDebugMode = true;
             #endif
 
-            var telemetryConfiguration = new TelemetryConfiguration(InstrumentationKey);
+            var telemetryConfiguration = new TelemetryConfiguration();
+            telemetryConfiguration.ConnectionString = $"InstrumentationKey={InstrumentationKey}";
 
             //this tells to promptly send data if debugging
             telemetryConfiguration.TelemetryChannel.DeveloperMode = IsDebugMode;
@@ -33,7 +32,6 @@ namespace JosephM.Application.Desktop.Module.ApplicationInsights
             //IsDebugMode = false;
 
             var tc = new TelemetryClient(telemetryConfiguration);
-            tc.InstrumentationKey = InstrumentationKey;
             tc.Context.Cloud.RoleInstance = ApplicationController.ApplicationName;
             tc.Context.User.UserAgent = $"{ApplicationController.ApplicationName} {ApplicationController.Version}";
             tc.Context.User.Id = string.Empty;
