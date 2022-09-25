@@ -1,4 +1,5 @@
-﻿using JosephM.Application.Desktop.Module.ServiceRequest;
+﻿using JosephM.Application.Application;
+using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Form;
@@ -22,6 +23,9 @@ namespace JosephM.Xrm.ExcelImport
         {
             base.RegisterTypes();
             AddGenerateMappingsWhenExcelFileSelected();
+
+            var configManager = Resolve<ISettingsManager>();
+            configManager.ProcessNamespaceChange(GetType().Namespace, "JosephM.Deployment.ImportExcel");
         }
 
         private void AddGenerateMappingsWhenExcelFileSelected()
