@@ -253,9 +253,6 @@
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
       <Version>9.0.2.26</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>6.0.8</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

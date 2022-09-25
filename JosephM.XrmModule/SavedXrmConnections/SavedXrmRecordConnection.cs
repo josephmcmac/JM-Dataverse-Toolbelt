@@ -4,11 +4,11 @@ using JosephM.Record.Xrm.XrmRecord;
 
 namespace JosephM.XrmModule.SavedXrmConnections
 {
-    [Instruction("Enter Details For Connecting To The Dynamics Instance\n\nIf The Connection Requires Multi Factor Authentication Then The Xrm Tooling Connector Option Must Be Used\n\nOtherwise If Not Using The Xrm Tooling Connector Option, Connection Details Are Stored By This App And Passed Through Using The SDKs AuthenticationCredentials Class. Using This Method Authentication Will Fail If Multi Factor Authentication is Required For The User")]
+    [Instruction("Direct form entry for you login will fail if authentication requires MFA. If your connection requires multi factor authentication click 'Use XRM Tooling Connector' and login using the Microsoft SDK connection dialog\n\nIf not using the XRM tooling option, connection is done with an SDK connection string. Your password is encrypted by .NET assemblies protected at local user scope")]
     public class SavedXrmRecordConfiguration : XrmRecordConfiguration
     {
         [PropertyInContextByPropertyValue(nameof(HideActive), false)]
-        [MyDescription("Set This Connection As Active")]
+        [MyDescription("Set this connection active")]
         [DisplayOrder(1)]
         [UniqueOn]
         [GridWidth(65)]
