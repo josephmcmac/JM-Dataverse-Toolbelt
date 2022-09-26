@@ -35,7 +35,7 @@ namespace JosephM.XrmDeveloperTool
         {
             base.OnStartup(e);
 
-            var app = DesktopApplication.Create("JosephM Dynamics 365 Dev App");
+            var app = DesktopApplication.Create("JosephM Dataverse Dev App");
             app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
             app.AddModule<DeploymentModule>();
