@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="JosephM.Xrm.Vsix.Joseph McGregor-Macdonald.fe02367b-50f8-4595-b855-3a2380a09e08" Version="3.0.0.0" Language="en-US" Publisher="Joseph McGregor-MacDonald" />
+        <Identity Id="JosephM.Xrm.Vsix.Joseph McGregor-Macdonald.fe02367b-50f8-4595-b855-3a2380a09e08" Version="3.0.1.0" Language="en-US" Publisher="Joseph McGregor-MacDonald" />
         <DisplayName>JosephM.Xrm.Vsix</DisplayName>
         <Description xml:space="preserve">Visual studio extension for Microsoft Dynamics for CE and the dataverse platform</Description>
         <MoreInfo>https://josephmcmac.wordpress.com/2017/12/20/dynamics-365-visual-studio-extention-josephm-xrm-vsix</MoreInfo>

@@ -3755,29 +3755,45 @@ string recordType)
             {
                 if (!_allFieldsLoaded)
                 {
-                    var request = new RetrieveAllEntitiesRequest()
+                    var allEntityTypes = GetAllEntityMetadata()
+                        .Where(e => e.Value.IsValidForAdvancedFind ?? false)
+                        .Select(e => e.Value.LogicalName)
+                        .ToList();
+                    while(allEntityTypes.Any())
                     {
-                        EntityFilters = EntityFilters.Attributes
-                    };
-                    var response = (RetrieveAllEntitiesResponse)Execute(request);
-                    EntityFieldMetadata.Clear();
-                    foreach (var item in response.EntityMetadata)
-                    {
-                        if (item.Attributes != null && !EntityFieldMetadata.ContainsKey(item.LogicalName))
-                        {
-                            var dictionary = new SortedDictionary<string, AttributeMetadata>();
-                            if (item.Attributes != null)
+                        var top50 = allEntityTypes.Take(200);
+                        allEntityTypes.RemoveRange(0, top50.Count());
+                        var requests = top50
+                            .Select(e => new RetrieveEntityRequest
                             {
-                                var filteredFields = FilterAttributeMetadata(item.Attributes);
-                                foreach (var field in filteredFields)
+                                EntityFilters = EntityFilters.Attributes,
+                                LogicalName = e
+                            })
+                            .ToArray();
+                        var responses = ExecuteMultiple(requests);
+                        foreach(var response in responses)
+                        {
+                            if (response.Fault == null && response.Response is RetrieveEntityResponse entityMetadataResponse)
+                            {
+                                if (entityMetadataResponse.EntityMetadata != null
+                                    && entityMetadataResponse.EntityMetadata.Attributes != null
+                                    && !EntityFieldMetadata.ContainsKey(entityMetadataResponse.EntityMetadata.LogicalName))
                                 {
-                                    if (!dictionary.ContainsKey(field.LogicalName))
+                                    var dictionary = new SortedDictionary<string, AttributeMetadata>();
+                                    if (entityMetadataResponse.EntityMetadata.Attributes != null)
                                     {
-                                        dictionary.Add(field.LogicalName, field);
+                                        var filteredFields = FilterAttributeMetadata(entityMetadataResponse.EntityMetadata.Attributes);
+                                        foreach (var field in filteredFields)
+                                        {
+                                            if (!dictionary.ContainsKey(field.LogicalName))
+                                            {
+                                                dictionary.Add(field.LogicalName, field);
+                                            }
+                                        }
                                     }
+                                    EntityFieldMetadata.Add(entityMetadataResponse.EntityMetadata.LogicalName, dictionary);
                                 }
                             }
-                            EntityFieldMetadata.Add(item.LogicalName, dictionary);
                         }
                     }
                     _allFieldsLoaded = true;

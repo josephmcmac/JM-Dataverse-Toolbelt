@@ -37,8 +37,8 @@ namespace JosephM.Application.Desktop.Module.Crud
             try
             {
                 //this bit messy because may take a while to load the record types
-                //so spawn on async thread, then back to the main thread for th ui objects
-                LoadingViewModel.LoadingMessage = "Loading Types";
+                //so spawn on async thread, then back to the main thread for the ui objects
+                LoadingViewModel.LoadingMessage = "Loading types - this may take a while";
                 Thread.Sleep(100);
                 var recordTypesForBrowsing = Task.Run<IEnumerable<string>>(() => RecordService.GetAllRecordTypes()
                     .Where(r =>
@@ -87,8 +87,12 @@ namespace JosephM.Application.Desktop.Module.Crud
                 QueryViewModel = new QueryViewModel(recordTypesForBrowsing, RecordService, ApplicationController, allowQuery: true, customFunctions: customFunctionList);
                 Controller.LoadToUi(QueryViewModel);
 
-                RecordService.LoadFieldsForAllEntities();
-                RecordService.LoadRelationshipsForAllEntities();
+                Task.Run(() =>
+                {
+                    RecordService.LoadFieldsForAllEntities();
+                    RecordService.LoadRelationshipsForAllEntities();
+                });
+
             }
             catch (Exception ex)
             {
