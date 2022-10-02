@@ -25,7 +25,7 @@ namespace JosephM.Application.Desktop.Module.Crud
         public CrudDialog(IDialogController dialogController, IRecordService recordService)
             : base(dialogController)
         {
-            SetTabLabel("Crud/Query Data");
+            SetTabLabel("Query & Update Data");
             RecordService = recordService;
             //this is so that the completion screen isnt loaded when the dialog completes
             //this dialog just loads the query into the ui and does not have a 'completion'

@@ -3756,14 +3756,14 @@ string recordType)
                 if (!_allFieldsLoaded)
                 {
                     var allEntityTypes = GetAllEntityMetadata()
-                        .Where(e => e.Value.IsValidForAdvancedFind ?? false)
+                        //.Where(e => e.Value.IsValidForAdvancedFind ?? false)
                         .Select(e => e.Value.LogicalName)
                         .ToList();
                     while(allEntityTypes.Any())
                     {
-                        var top50 = allEntityTypes.Take(200);
-                        allEntityTypes.RemoveRange(0, top50.Count());
-                        var requests = top50
+                        var topX = allEntityTypes.Take(200).ToArray();
+                        allEntityTypes.RemoveRange(0, topX.Count());
+                        var requests = topX
                             .Select(e => new RetrieveEntityRequest
                             {
                                 EntityFilters = EntityFilters.Attributes,
@@ -3776,23 +3776,24 @@ string recordType)
                             if (response.Fault == null && response.Response is RetrieveEntityResponse entityMetadataResponse)
                             {
                                 if (entityMetadataResponse.EntityMetadata != null
-                                    && entityMetadataResponse.EntityMetadata.Attributes != null
-                                    && !EntityFieldMetadata.ContainsKey(entityMetadataResponse.EntityMetadata.LogicalName))
+                                    && !EntityFieldMetadata.ContainsKey(entityMetadataResponse.EntityMetadata.LogicalName)
+                                    && entityMetadataResponse.EntityMetadata.Attributes != null)
                                 {
                                     var dictionary = new SortedDictionary<string, AttributeMetadata>();
-                                    if (entityMetadataResponse.EntityMetadata.Attributes != null)
+                                    var filteredFields = FilterAttributeMetadata(entityMetadataResponse.EntityMetadata.Attributes);
+                                    foreach (var field in filteredFields)
                                     {
-                                        var filteredFields = FilterAttributeMetadata(entityMetadataResponse.EntityMetadata.Attributes);
-                                        foreach (var field in filteredFields)
+                                        if (!dictionary.ContainsKey(field.LogicalName))
                                         {
-                                            if (!dictionary.ContainsKey(field.LogicalName))
-                                            {
-                                                dictionary.Add(field.LogicalName, field);
-                                            }
+                                            dictionary.Add(field.LogicalName, field);
                                         }
                                     }
                                     EntityFieldMetadata.Add(entityMetadataResponse.EntityMetadata.LogicalName, dictionary);
                                 }
+                            }
+                            else
+                            {
+                                //wtf
                             }
                         }
                     }

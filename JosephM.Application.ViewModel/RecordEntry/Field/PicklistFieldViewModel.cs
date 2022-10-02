@@ -1,6 +1,7 @@
 ﻿using System;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
+using Microsoft.SqlServer.Server;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {
@@ -23,5 +24,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
             set { ValueObject = value; }
         }
+
+        public override string StringDisplay { get { return Value?.Value; } }
     }
 }

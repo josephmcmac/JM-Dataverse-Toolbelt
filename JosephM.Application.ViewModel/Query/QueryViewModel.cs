@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -572,7 +573,10 @@ namespace JosephM.Application.ViewModel.Query
             if (!isValid)
                 return new GetGridRecordsResponse(new IRecord[0]);
             var query = GenerateQuery();
-            query.Fields = fields;
+            if (fields != null)
+            {
+                query.Fields = fields;
+            }
 
             var notInList = new HashSet<string>();
             if (IncludeNotIn)
@@ -674,7 +678,20 @@ namespace JosephM.Application.ViewModel.Query
                 }
             }
             if (!includeAll)
-                query.Fields = fieldsRequiredInQuery.Where(f => f.AltRecordType == null).Select(f => f.FieldName).ToArray();
+            {
+                var fieldsList = new List<string>(fieldsRequiredInQuery.Where(f => f.AltRecordType == null).Select(f => f.FieldName).ToArray());
+                var primaryKey = RecordService.GetPrimaryKey(RecordType);
+                if (!string.IsNullOrWhiteSpace(primaryKey))
+                {
+                    fieldsList.Add(primaryKey);
+                }
+                var primaryField = RecordService.GetPrimaryField(RecordType);
+                if (!string.IsNullOrWhiteSpace(primaryField))
+                {
+                    fieldsList.Add(primaryField);
+                }
+                query.Fields = fieldsList.Distinct().ToArray();
+            }
 
             return query;
         }
