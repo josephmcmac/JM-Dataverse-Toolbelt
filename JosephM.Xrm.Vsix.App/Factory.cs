@@ -6,6 +6,7 @@ using JosephM.Application.Desktop.Module.Themes;
 using JosephM.CodeGenerator.JavaScriptOptions;
 using JosephM.Core.AppConfig;
 using JosephM.RecordCounts;
+using JosephM.ToolbeltTheme;
 using JosephM.Xrm.Autonumber;
 using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.TextSearch;
@@ -35,8 +36,9 @@ namespace JosephM.Xrm.Vsix.App
     {
         public static VsixApplication CreateJosephMXrmVsixApp(IVisualStudioService visualStudioService, IDependencyResolver container, bool isNonSolutionExplorerContext = false, string appName = null)
         {
-            var app = VsixApplication.Create(visualStudioService, container, appName ?? "JosephM.Xrm.Vsix", new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"), isNonSolutionExplorerContext: isNonSolutionExplorerContext);
+            var app = VsixApplication.Create(visualStudioService, container, appName ?? "JM Dataverse Toolbelt Dev Kit", new Guid("43816e6d-4db8-48d6-8bfa-75916cb080f0"), isNonSolutionExplorerContext: isNonSolutionExplorerContext);
 
+            app.AddModule<ToolbeltThemeModule>();
             app.AddModule<OpenWebModule>(0x010B);
             app.AddModule<OpenSolutionModule>(0x010C);
             app.AddModule<OpenAdvancedFindModule>(0x010D);
@@ -66,7 +68,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<AutonumberModule>(0x011D);
             app.AddModule<DonateModule>(0x0220);
             app.AddModule<RecordCountsModule>();
-            app.AddModule<ThemeModule>();
+            app.AddModule<ColourThemeModule>();
             app.AddModule<XrmPackageApplicationInsightsModule>();
             app.AddModule<ExportDataUsabilityModule>();
             return app;
@@ -81,11 +83,11 @@ namespace JosephM.Xrm.Vsix.App
             public override Core.FieldType.Url OtherLink => new Core.FieldType.Url("https://github.com/josephmcmac/XRM-Developer-Tool/releases/latest", "Download Desktop App");
 
             public override string AboutDetail =>
-                "This extension has been created to improve productivity developing, customising, and deploying solutions in Microsoft Dynamics for CE and PowerApps Common Data Service\n" +
+                "This extension is used to improve productivity deploying custom code to the Microsoft Dynamics for CE and Dataverse platform\n" +
                 "\n" +
-                "My desktop application shares many of these features, as well as includes others. It can be download at the link shown below\n" +
+                "My desktop app has additional features for building and administering solutions on the platform and can be download at the link shown below\n" +
                 "\n" +
-                "If you use this extension and experience issues, or have suggestions for improvement, create an issue in github with the link shown below and I will look into it when I get a chance";
+                "If you experience issues or have suggestions for improvement, create an issue in github with the link shown below";
         }
 
         public class XrmPackageApplicationInsightsModule : ApplicationInsightsModule

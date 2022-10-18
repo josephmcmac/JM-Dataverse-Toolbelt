@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("JosephM.Xrm.Vsix")]
+[assembly: AssemblyTitle("JM Dataverse Toolbelt Dev Kit")]
 [assembly: AssemblyCompany("JosephM")]
-[assembly: AssemblyProduct("JosephM.Xrm.Vsix")]
+[assembly: AssemblyProduct("JM Dataverse Toolbelt Dev Kit")]
 
 
 //WARNING!! DON:T CHANGE THIS UNLESS ALSO CHANGING THE REFERENCING .vstemplate files

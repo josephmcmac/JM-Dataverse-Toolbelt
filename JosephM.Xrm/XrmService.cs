@@ -3756,7 +3756,7 @@ string recordType)
                 if (!_allFieldsLoaded)
                 {
                     var allEntityTypes = GetAllEntityMetadata()
-                        //.Where(e => e.Value.IsValidForAdvancedFind ?? false)
+                        .Where(e => e.Value.IsValidForAdvancedFind ?? false)
                         .Select(e => e.Value.LogicalName)
                         .ToList();
                     while(allEntityTypes.Any())
@@ -3790,10 +3790,6 @@ string recordType)
                                     }
                                     EntityFieldMetadata.Add(entityMetadataResponse.EntityMetadata.LogicalName, dictionary);
                                 }
-                            }
-                            else
-                            {
-                                //wtf
                             }
                         }
                     }

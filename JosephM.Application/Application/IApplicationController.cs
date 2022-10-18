@@ -80,6 +80,8 @@ namespace JosephM.Application.Application
 
         object ActiveTabItem { get; set; }
 
+        Type AppImageType { get; set; }
+
         void AddLogger(IApplicationLogger applicationLogger);
 
         void LogEvent(string eventame, IDictionary<string, string> properties = null);

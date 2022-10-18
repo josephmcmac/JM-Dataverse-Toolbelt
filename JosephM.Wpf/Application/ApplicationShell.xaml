@@ -4,12 +4,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:application="clr-namespace:JosephM.Wpf.Application"
-             xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
+             xmlns:converters="clr-namespace:JosephM.Wpf.Converters" xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="700">
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:SumConverter x:Key="SumConverter" />
             <converters:TabbedApplicationHeightConverter x:Key="TabbedApplicationHeightConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Tabs.xaml" />
@@ -23,15 +24,44 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" MaxHeight="40">
-            <application:ApplicationHeadingView   />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Left"
+              Visibility="{Binding HasAppImage, Converter={StaticResource NullToHiddenConverter}}">
+            <ItemsControl Name="AppIconItemsControl" >
+                <ItemsControl.Height>
+                    <MultiBinding Converter="{StaticResource SumConverter}">
+                        <Binding Path="ActualHeight" ElementName="NameGrid" />
+                        <Binding Path="ActualHeight" ElementName="OptionsGrid" />
+                    </MultiBinding>
+                </ItemsControl.Height>
+            </ItemsControl>
         </Grid>
-        <Grid Grid.Row="1" MaxHeight="190" >
+        <Grid Grid.Column="1" Name="NameGrid">
+            <TextBlock Text="{Binding ApplicationName}" Style="{StaticResource ApplicationTitle}"  ></TextBlock>
+        </Grid>
+        <Grid Grid.Column="2" HorizontalAlignment="Right">
+            <ItemsControl
+                ItemsSource="{Binding Notifications.Notifications}"
+                ItemTemplate="{StaticResource NotificationTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" MaxHeight="190"  Name="OptionsGrid">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <application:ApplicationOptionsView DataContext="{Binding ApplicationOptions}" />
             </ScrollViewer>
         </Grid>
         <Grid Grid.Row="2"
+              Grid.Column="0"
+              Grid.ColumnSpan="3"
                Name="MyMainContent"
               >
             <TabControl

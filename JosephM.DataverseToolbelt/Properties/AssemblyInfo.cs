@@ -10,9 +10,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("JosephM.DataverseDevApp")]
+[assembly: AssemblyTitle("JosephM.DataverseToolbelt")]
 [assembly: AssemblyCompany("JosephM")]
-[assembly: AssemblyProduct("JosephM.DataverseDevApp")]
+[assembly: AssemblyProduct("JosephM.DataverseToolbelt")]
 [assembly: AssemblyVersion("2.0.*")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

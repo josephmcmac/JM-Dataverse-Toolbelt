@@ -38,7 +38,7 @@ namespace JosephM.TestDesktopApplication
             app.AddModule<SavedRequestModule>();
             app.AddModule<ConsoleApplicationModule>();
             app.AddModule<TestGridEditModule>();
-            app.AddModule<ThemeModule>();
+            app.AddModule<ColourThemeModule>();
             app.AddModule<AllPropertyTypesDialogModule>();
             app.AddModule<AllPropertyTypesCompactModule>();
             app.AddModule<TestAppAboutModule>();

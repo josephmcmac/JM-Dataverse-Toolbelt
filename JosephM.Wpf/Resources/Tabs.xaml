@@ -33,9 +33,9 @@
     <DataTemplate x:Key="applicationMenuViewTemplate">
         <application:ApplicationOptionsView DataContext="{Binding}" />
     </DataTemplate>
-    <DataTemplate x:Key="applicationHeadingTemplate">
+    <!--<DataTemplate x:Key="applicationHeadingTemplate">
         <application:ApplicationHeadingView DataContext="{Binding}" />
-    </DataTemplate>
+    </DataTemplate>-->
     <DataTemplate x:Key="QueryViewTemplateTabSize">
         <Grid Style="{StaticResource TabGridStyle}">
             <query:GridQueryView DataContext="{Binding}" />

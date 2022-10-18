@@ -139,6 +139,10 @@
       <Project>{4322B728-AAA7-45F0-9BDE-8F227FA8C73D}</Project>
       <Name>JosephM.TestModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.ToolbeltTheme\JosephM.ToolbeltTheme.csproj">
+      <Project>{cae31f05-459b-473d-8584-625605c134fe}</Project>
+      <Name>JosephM.ToolbeltTheme</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.XrmModule\JosephM.XrmModule.csproj">
       <Project>{CA2BB834-77FA-43DB-8DDC-B0D1B5F519B9}</Project>
       <Name>JosephM.XrmModule</Name>

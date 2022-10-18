@@ -23,7 +23,8 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Grid Column="0">
+        <Grid Column="0"
+              HorizontalAlignment="Center">
             <ItemsControl
                 ItemsSource="{Binding Options}"
                 ItemTemplate="{StaticResource OptionTemplate}">

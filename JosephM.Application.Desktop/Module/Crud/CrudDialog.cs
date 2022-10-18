@@ -38,7 +38,7 @@ namespace JosephM.Application.Desktop.Module.Crud
             {
                 //this bit messy because may take a while to load the record types
                 //so spawn on async thread, then back to the main thread for the ui objects
-                LoadingViewModel.LoadingMessage = "Loading types - this may take a while";
+                LoadingViewModel.LoadingMessage = "Loading metadata - this may take a while";
                 Thread.Sleep(100);
                 var recordTypesForBrowsing = Task.Run<IEnumerable<string>>(() => RecordService.GetAllRecordTypes()
                     .Where(r =>

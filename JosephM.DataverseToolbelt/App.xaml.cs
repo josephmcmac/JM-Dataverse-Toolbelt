@@ -12,6 +12,7 @@ using JosephM.CustomisationImporter;
 using JosephM.Deployment;
 using JosephM.InstanceComparer;
 using JosephM.RecordCounts;
+using JosephM.ToolbeltTheme;
 using JosephM.Xrm.Autonumber;
 using JosephM.Xrm.DataImportExport.Modules;
 using JosephM.Xrm.ExcelImport;
@@ -35,7 +36,8 @@ namespace JosephM.XrmDeveloperTool
         {
             base.OnStartup(e);
 
-            var app = DesktopApplication.Create("JosephM Dataverse Dev App");
+            var app = DesktopApplication.Create("JM Dataverse Toolbelt");
+            app.AddModule<ToolbeltThemeModule>();
             app.AddModule<SavedXrmConnectionsModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
             app.AddModule<DeploymentModule>();
@@ -56,7 +58,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<DevAppReleaseCheckModule>();
             app.AddModule<SavedConnectionAppConnectionModule>();
             app.AddModule<AutonumberModule>();
-            app.AddModule<ThemeModule>();
+            app.AddModule<ColourThemeModule>();
             app.AddModule<DevAppApplicationInsightsModule>();
             app.AddModule<DonateModule>();
             app.Run();
@@ -71,11 +73,11 @@ namespace JosephM.XrmDeveloperTool
             public override Url OtherLink => new Url("https://visualstudiogallery.msdn.microsoft.com/28fb85a8-70d8-4621-96c7-54151eac11cf", "Visual Studio Extention");
 
             public override string AboutDetail =>
-                "This application has been created to improve productivity developing, customising, and deploying solutions in Microsoft Dynamics for CE and PowerApps Common Data Service\n" +
+                "This app is used to improve productivity building and administering solutions on the Microsoft Dynamics for CE and Dataverse platforms\n" +
                 "\n" +
-                "My visual studio extension JosephM.Xrm.Vsix shares many of these features, as well as includes others for deploying code into the platform. It can be download at the link shown below\n" +
+                "My visual studio extension has additional features for deploying custom code to the platform and can be download at the link shown below\n" +
                 "\n" +
-                "If you use this app and experience issues, or have suggestions for improvement, create an issue in github with the link shown below and I will look into it when I get a chance";
+                "If you experience issues or have suggestions for improvement, create an issue in github with the link shown below";
         }
 
         public class DevAppReleaseCheckModule : GitHubReleaseCheckModule

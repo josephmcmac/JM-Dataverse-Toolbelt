@@ -200,6 +200,10 @@
       <Project>{18E53D06-7B26-4314-8B4E-454F78E53F8B}</Project>
       <Name>JosephM.Application.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JosephM.ToolbeltTheme\JosephM.ToolbeltTheme.csproj">
+      <Project>{cae31f05-459b-473d-8584-625605c134fe}</Project>
+      <Name>JosephM.ToolbeltTheme</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.DataImportExport\JosephM.Xrm.DataImportExport.csproj">
       <Project>{c64aa535-0e02-4849-a660-bde3982782ad}</Project>
       <Name>JosephM.Xrm.DataImportExport</Name>

@@ -137,7 +137,8 @@
     <Compile Include="Module\Settings\SettingsModule.cs" />
     <Compile Include="Application\DesktopApplication.cs" />
     <Compile Include="Application\DesktopApplicationController.cs" />
-    <Compile Include="Module\Themes\ThemeModule.cs" />
+    <Compile Include="Module\Themes\ColourThemeModule.cs" />
+    <Compile Include="Module\Themes\AppThemeModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Module\ServiceRequest\ServiceRequestDialog.cs" />
     <Compile Include="Module\ServiceRequest\ServiceRequestModule.cs" />

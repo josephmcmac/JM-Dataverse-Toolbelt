@@ -1,19 +1,7 @@
-﻿using JosephM.Application.Desktop.Module.Themes;
-using JosephM.Deployment;
-using JosephM.InstanceComparer;
-using JosephM.TestModule.TestDialog;
+﻿using JosephM.ToolbeltTheme;
 using JosephM.Xrm.Vsix.App;
 using JosephM.Xrm.Vsix.Application;
-using JosephM.Xrm.Vsix.Module.AddPortalCode;
-using JosephM.Xrm.Vsix.Module.DeployAssembly;
-using JosephM.Xrm.Vsix.Module.DeployWebResource;
-using JosephM.Xrm.Vsix.Module.PackageSettings;
-using JosephM.Xrm.Vsix.Module.PluginTriggers;
-using JosephM.Xrm.Vsix.Module.UpdateAssembly;
-using JosephM.Xrm.Vsix.Module.Web;
 using JosephM.Xrm.Vsix.Test;
-using JosephM.XrmModule.Crud;
-using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.IO;
 using System.Windows;
@@ -58,6 +46,7 @@ namespace JosephM.Xrm.Vsix.TestShell
             //VsixApplication.AddModule<AddPortalCodeModule>();
             //VsixApplication.AddModule<DeployWebResourceModule>();
 
+            VsixApplication.AddModule<ToolbeltThemeModule>();
             VsixApplication.AddModule<SetSelectedItemsModule>();
             VsixApplication.AddModule<SetSelectedProjectAssemblyModule>();
             VsixApplication.AddModule<SetSelectedSolutionFolderModule>(); 

@@ -7,8 +7,8 @@
     <ProjectGuid>{F303560E-2FD6-4198-BE27-3EAC2446103C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JosephM.DataverseDevApp</RootNamespace>
-    <AssemblyName>JosephM.DataverseDevApp</AssemblyName>
+    <RootNamespace>JosephM.DataverseToolbelt</RootNamespace>
+    <AssemblyName>JosephM.DataverseToolbelt</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -103,7 +103,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>mscrm.ico</ApplicationIcon>
+    <ApplicationIcon>..\JosephM.ToolbeltTheme\jmdataversetoolbelt.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -111,6 +111,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>JosephM.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -163,7 +166,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="JosephM Dataverse Dev App EULA.rtf" />
+    <Resource Include="JosephM Dataverse Toolbelt EULA.rtf" />
     <None Include="app.config" />
     <None Include="JosephM.snk" />
     <None Include="Properties\Settings.settings">
@@ -208,6 +211,10 @@
     <ProjectReference Include="..\JosephM.Application.Desktop\JosephM.Application.Desktop.csproj">
       <Project>{18e53d06-7b26-4314-8b4e-454f78e53f8b}</Project>
       <Name>JosephM.Application.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JosephM.ToolbeltTheme\JosephM.ToolbeltTheme.csproj">
+      <Project>{cae31f05-459b-473d-8584-625605c134fe}</Project>
+      <Name>JosephM.ToolbeltTheme</Name>
     </ProjectReference>
     <ProjectReference Include="..\JosephM.Xrm.DataImportExport\JosephM.Xrm.DataImportExport.csproj">
       <Project>{c64aa535-0e02-4849-a660-bde3982782ad}</Project>
@@ -276,15 +283,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="mscrm.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>
     </PackageReference>
     <PackageReference Include="System.Private.Uri">
       <Version>4.3.2</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\JosephM.ToolbeltTheme\jmdataversetoolbelt.ico">
+      <Link>jmdataversetoolbelt.ico</Link>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

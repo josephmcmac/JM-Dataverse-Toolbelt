@@ -155,6 +155,7 @@
     </Compile>
     <Compile Include="Controls\DecimalTextBox.cs" />
     <Compile Include="Converters\AlignHorizontalConverter.cs" />
+    <Compile Include="Converters\SumConverter.cs" />
     <Compile Include="Converters\TextHorizontalJustifyConverter.cs" />
     <Compile Include="Converters\BooleanToMultiSelectConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenNotCollapsedConverter.cs" />

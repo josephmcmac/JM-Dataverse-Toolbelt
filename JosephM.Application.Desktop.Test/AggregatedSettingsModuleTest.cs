@@ -21,7 +21,7 @@ namespace JosephM.Application.Desktop.Test
 
             var app = CreateAndLoadTestApplication<TestReleaseCheckModule>();
             app.AddModule<TestApplicationInsightsModule>();
-            app.AddModule<ThemeModule>();
+            app.AddModule<ColourThemeModule>();
 
             //verify navigate to the settings form
             app.GetModule<SettingsAggregatorModule>().DialogCommand();

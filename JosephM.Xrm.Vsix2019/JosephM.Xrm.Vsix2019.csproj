@@ -24,7 +24,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JosephM.Xrm.Vsix</RootNamespace>
-    <AssemblyName>JosephM.Xrm.Vsix</AssemblyName>
+    <AssemblyName>JM Dataverse Toolbelt Dev Kit</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
@@ -59,6 +59,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\JosephM.ToolbeltTheme\jmdataversetoolbelt.png">
+      <Link>jmdataversetoolbelt.png</Link>
+    </Content>
     <Content Include="..\templateitems\csharp\xrm\JosephM XRM Entity JavaScript.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM Entity JavaScript.zip</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

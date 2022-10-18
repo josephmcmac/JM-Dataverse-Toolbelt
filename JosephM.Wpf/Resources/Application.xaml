@@ -16,6 +16,7 @@
         <Setter Property="Margin" Value="13,13,13,13" />
     </Style>
     <Style  x:Key="ApplicationTitle" TargetType="{x:Type TextBlock}" >
+        <Setter Property="HorizontalAlignment" Value="Center"  />
         <Setter Property="Margin" Value="8,4,8,4"  />
         <Setter Property="FontWeight" Value="Bold"></Setter>
         <Setter Property="FontStyle" Value="Italic"></Setter>
@@ -54,9 +55,9 @@
                 Command="{Binding DelegateCommand}" Style="{StaticResource MainMenuButton}" 
                 ToolTip="{Binding Description}" />
     </DataTemplate>
-    <DataTemplate x:Key="applicationHeadingTemplate">
+    <!--<DataTemplate x:Key="applicationHeadingTemplate">
         <application:ApplicationHeadingView DataContext="{Binding ApplicationController}" />
-    </DataTemplate>
+    </DataTemplate>-->
     <DataTemplate x:Key="applicationMenuViewTemplate">
         <application:ApplicationOptionsView DataContext="{Binding ApplicationOptions}" />
     </DataTemplate>

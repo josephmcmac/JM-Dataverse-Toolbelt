@@ -79,7 +79,7 @@ namespace JosephM.Application.Application
             else
             {
                 Dispatcher.BeginInvoke(
-                    DispatcherPriority.Background,
+                    DispatcherPriority.Send,
                     (SendOrPostCallback)
                         delegate
                         {
@@ -244,5 +244,7 @@ namespace JosephM.Application.Application
             foreach (var eventAction in navigationEvents.EventActions)
                 eventAction(objectNavigatedTo);
         }
+
+        public Type AppImageType { get; set; }
     }
 }
