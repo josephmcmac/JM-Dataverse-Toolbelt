@@ -31,9 +31,9 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
                 throw new Exception($"Field {fieldName} In {recordType} Is Not Of Type {nameof(StringAttributeMetadata)}");
 
             //apparently if null doesnt apply the clear so lets set as empty string if null
-            request.AutonumberFormat = request.AutonumberFormat ?? string.Empty;
+            request.Format = request.Format ?? string.Empty;
 
-            if (stringFieldMetadata.AutoNumberFormat != request.AutonumberFormat)
+            if (stringFieldMetadata.AutoNumberFormat != request.Format)
             {
                 //okay I have noted that the autonumber does not seem to always apply immediatelly
                 //that is when querying the metadata after setting the autonumber config
@@ -48,7 +48,7 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
                 while (true)
                 {
                     controller.UpdateProgress(2, 5, "Setting Format");
-                    stringFieldMetadata.AutoNumberFormat = request.AutonumberFormat;
+                    stringFieldMetadata.AutoNumberFormat = request.Format;
                     xrmService.CreateOrUpdateAttribute(fieldName, recordType, stringFieldMetadata);
                     controller.UpdateProgress(3, 5, "Publishing");
                     var publishXml = $"<importexportxml><entities><entity>{recordType}</entity></entities></importexportxml>";
@@ -62,7 +62,7 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
                             LogicalName = request.Field.Key
                         });
                         var stringAttributeMetadata = getAttributeResponse.AttributeMetadata as StringAttributeMetadata;
-                        if (stringAttributeMetadata.AutoNumberFormat == request.AutonumberFormat)
+                        if (stringAttributeMetadata.AutoNumberFormat == request.Format)
                         {
                             isUpdated = true;
                             response.FormatUpdated = true;

@@ -17,8 +17,8 @@
     </UserControl.Resources>
     <Grid Name="MainGrid" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*"  />
+            <RowDefinition Height="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToStar}, Mode=OneWay}" />
+            <RowDefinition Height="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToZeroOrStar}, Mode=OneWay}"  />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToVis}, Mode=OneWay}" >
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
@@ -26,15 +26,10 @@
         <Grid Grid.Row="1"
               Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BoolToStar}, Mode=OneWay}" />
                 <RowDefinition Height="{Binding MainFormInContext, Converter={StaticResource BooleanToZeroOrStar}, Mode=OneWay}" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Visibility="{Binding ShowProgressControlViewModel, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
-                <shared:ProgressControl
-                DataContext="{Binding ProgressControlViewModel}" />
-            </Grid>
-            <Grid Grid.Row="1"  Visibility="{Binding MainFormInContext, Converter={StaticResource BoolToVis}, Mode=OneWay}">
+            <Grid Grid.Row="0"  Visibility="{Binding MainFormInContext, Converter={StaticResource BoolToVis}, Mode=OneWay}">
                 <ScrollViewer VerticalScrollBarVisibility="{Binding Controller.UiItems.Count, Converter={StaticResource ScrollWhereGreaterThanOneConverter}}">
                     <ItemsControl
                         Name="DialogPanel"
@@ -42,7 +37,7 @@
                         ItemsSource="{Binding Controller.UiItems}" />
                 </ScrollViewer>
             </Grid>
-            <Grid Grid.Row="2"  Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}" >
+            <Grid Grid.Row="1"  Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}" >
                 <ItemsControl
                 Name="ChildrenPanel"
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"

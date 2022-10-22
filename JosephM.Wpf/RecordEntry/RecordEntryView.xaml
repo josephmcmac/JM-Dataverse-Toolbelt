@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Base.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Forms.xaml" />
                 <ResourceDictionary Source="/JosephM.Wpf;component/Resources/Dialogs.xaml" />
+                <ResourceDictionary Source="/JosephM.Wpf;component/Resources/ModernProgressRing.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -26,7 +27,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
-            <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                <TextBlock Style="{StaticResource HeadingStyle}" Text="{Binding LoadingViewModel.LoadingMessage}" />
+                <shared:ModernProgressRing IsActive="{Binding LoadingViewModel.IsLoading}"
+                                       Style="{StaticResource CircleProgressRingStyle}" />
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="1"
               Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
@@ -36,28 +41,26 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
               Visibility="{Binding MainFormInContext, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="0" Style="{StaticResource ButtonsGrid}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Center" >
+                            <Grid Style="{StaticResource ButtonsGrid}">
                                 <ItemsControl
-                                    ItemsSource="{Binding CustomFunctions}">
+                                    ItemsSource="{Binding CustomFunctions}" >
                                     <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel Orientation="Horizontal" />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Grid  Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
@@ -67,71 +70,59 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
+                                </ItemsControl>
                             </Grid>
-                            <Grid Grid.Column="1" Visibility="{Binding DisplayRightEdgeButtons, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid Visibility="{Binding DisplayTopButtons, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <StackPanel 
                                     Orientation="Horizontal"
                                     VerticalAlignment="Top"
-                                    HorizontalAlignment="Right">
-                                                <shared:XrmButton
-                                                    Style="{StaticResource FormActionButton}"
-                                                    DataContext="{Binding BackButtonViewModel}" />
-                                                <shared:XrmButton
-                                                    Style="{StaticResource FormActionButton}"
-                                                    DataContext="{Binding SaveButtonViewModel}" />
-                                                <shared:XrmButton
+                                    HorizontalAlignment="Center">
+                                    <shared:XrmButton
                                                     Style="{StaticResource FormActionButton}"
                                                     DataContext="{Binding CancelButtonViewModel}" />
+                                    <shared:XrmButton
+                                                    Style="{StaticResource FormActionButton}"
+                                                    DataContext="{Binding BackButtonViewModel}" />
+                                    <shared:XrmButton
+                                                    Style="{StaticResource FormActionButton}"
+                                                    DataContext="{Binding SaveButtonViewModel}" />
                                 </StackPanel>
                             </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid Grid.Row="1" Visibility="{Binding Instruction, Converter={StaticResource NullToHiddenConverter}}">
-                        <TextBox Style="{StaticResource HeadingStyleTextBox}"  Text="{Binding Mode=OneWay, Path=Instruction}"></TextBox>
-                    </Grid>
-                    <Grid MaxHeight="250"  Grid.Row="2"  Visibility="{Binding ValidationPrompt, Converter={StaticResource NullToHiddenConverter}}">
-                        <ScrollViewer  VerticalScrollBarVisibility="Auto">
-                            <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
-                        </ScrollViewer>
-                    </Grid>
-                    <Grid Name="FormSections" Grid.Row="3" Style="{StaticResource FormSectionsGrid}">
-                        <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource FormBodyTemplateSelector}"></ContentControl>
-                    </Grid>
-                    <Grid Margin="21,0,0,15" Grid.Row="4" Style="{StaticResource ButtonsGrid}">
-                    <StackPanel
-                        Orientation="Horizontal"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left">
-                            <shared:XrmButton
-                                Style="{StaticResource FormActionButton}"
-                                DataContext="{Binding BackButtonViewModel}" />
-                            <shared:XrmButton
-                                Style="{StaticResource FormActionButton}"
-                                DataContext="{Binding SaveButtonViewModel}" />
-                        <shared:XrmButton
-                            Style="{StaticResource FormActionButton}"
-                                DataContext="{Binding CancelButtonViewModel}" />
                         </StackPanel>
-                        <StackPanel
-                            Visibility="{Binding DisplayRightEdgeButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    </Grid>
+                    <Grid Grid.Row="1"
+                          HorizontalAlignment="Center"
+                          Visibility="{Binding Instruction, Converter={StaticResource NullToHiddenConverter}}">
+                        <TextBox HorizontalContentAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource HeadingStyleTextBox}"  Text="{Binding Mode=OneWay, Path=Instruction}"></TextBox>
+                    </Grid>
+                    <Grid MaxHeight="250"
+                          HorizontalAlignment="Center" Grid.Row="2" Visibility="{Binding ValidationPrompt, Converter={StaticResource NullToHiddenConverter}}">
+                        <TextBlock Style="{StaticResource ValidationMessage}"  Text="{Binding ValidationPrompt}"></TextBlock>
+                    </Grid>
+                    <Grid Name="FormSections"  Grid.Row="3" Style="{StaticResource FormSectionsGrid}">
+                        <ContentControl Name="FormSectionsControl" VerticalAlignment="Top"
+                            Content="{Binding}" ContentTemplateSelector="{StaticResource FormBodyTemplateSelector}"></ContentControl>
+                    </Grid>
+                    <Grid Margin="0,0,0,15" Grid.Row="4" Style="{StaticResource ButtonsGrid}" >
+                            <StackPanel 
+                            Visibility="{Binding DisplayBottomButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
                             Orientation="Horizontal"
                             VerticalAlignment="Top"
-                            HorizontalAlignment="Right">
-                            <shared:XrmButton
-                                Style="{StaticResource FormActionButton}"
-                                DataContext="{Binding BackButtonViewModel}" />
-                            <shared:XrmButton
-                                Style="{StaticResource FormActionButton}"
-                                DataContext="{Binding SaveButtonViewModel}" />
-                            <shared:XrmButton
+                            HorizontalAlignment="Center">
+                                <shared:XrmButton
                                 Style="{StaticResource FormActionButton}"
                                 DataContext="{Binding CancelButtonViewModel}" />
-                        </StackPanel>
-                    </Grid>
+                                <shared:XrmButton
+                                Style="{StaticResource FormActionButton}"
+                                DataContext="{Binding BackButtonViewModel}" />
+                                <shared:XrmButton
+                                Style="{StaticResource FormActionButton}"
+                                DataContext="{Binding SaveButtonViewModel}" />
+                            </StackPanel>
+                        </Grid>
+                </Grid>
             </Grid>
-        </Grid>
-        <Grid Grid.Row="1" >
+            <Grid Grid.Row="1" >
             <ItemsControl
                 Name="DialogPanel"
                 ItemTemplateSelector="{StaticResource DialogTemplateSelector}"

@@ -14,8 +14,8 @@ namespace JosephM.Xrm.MigrateInternal
 {
     [DisplayName("Migrate Internal")]
     [AllowSaveAndLoad]
-    [Group(Sections.Options, true, 10)]
-    [Group(Sections.Main, displayLayout: Group.DisplayLayoutEnum.HorizontalWrap, order: 20, displayLabel: false)]
+
+    [Group(Sections.ImportOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
     public class MigrateInternalRequest : ServiceRequestBase
     {
         public MigrateInternalRequest()
@@ -24,49 +24,45 @@ namespace JosephM.Xrm.MigrateInternal
             TargetCacheLimit = 1000;
         }
 
-        [Group(Sections.Options)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(410)]
         [RequiredProperty]
         public bool MatchRecordsByName { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(415)]
         [RequiredProperty]
         public bool RetainPrimaryKey { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(420)]
         [RequiredProperty]
         [MinimumIntValue(1)]
         [MaximumIntValue(1000)]
         public int? ExecuteMultipleSetSize { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(425)]
         [RequiredProperty]
         [MinimumIntValue(1)]
         [MaximumIntValue(5000)]
         public int? TargetCacheLimit { get; set; }
 
-        [Group(Sections.Main)]
         [DisplayOrder(1000)]
         [AllowGridFullScreen]
         [RequiredProperty]
         public IEnumerable<MigrateInternalTypeMapping> TypesToMigrate { get; set; }
 
-        [Group(Sections.Main)]
         [DisplayOrder(1100)]
         [AllowGridFullScreen]
         public IEnumerable<ReferenceFieldsForCopy> ReferenceFieldReplacements { get; set; }
 
         private static class Sections
         {
-            public const string Main = "Main";
-            public const string Options = "Options";
+            public const string ImportOptions = "Import Options";
         }
 
         [DoNotAllowGridOpen]
-        [Group(Sections.Main, true, 20)]
         public class ReferenceFieldsForCopy
         {
             [GridWidth(300)]

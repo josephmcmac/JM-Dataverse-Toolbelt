@@ -107,6 +107,7 @@ namespace JosephM.Application.ViewModel.Dialog
 
         protected void StartNextAction()
         {
+            LoadingViewModel.IsLoading = true;
             if (SubDialogs.Any() && _currentSubDialogIndex < SubDialogs.Count())
             {
                 _currentSubDialogIndex++;

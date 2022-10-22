@@ -46,7 +46,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             ChangedPersistentFields = new List<string>();
             LoadingViewModel.IsLoading = true;
             LoadingViewModel.LoadingMessage = "Please Wait While Loading";
-            DisplayRightEdgeButtons = true;
+            DisplayTopButtons = true;
+            DisplayBottomButtons = true;
         }
 
         public XrmButtonViewModel GetButton(string id)
@@ -550,6 +551,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        public bool DisplayRightEdgeButtons { get; set; }
+        public bool DisplayBottomButtons { get; set; }
+
+        public bool DisplayTopButtons { get; set; }
     }
 }

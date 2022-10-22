@@ -51,7 +51,7 @@ namespace JosephM.Xrm.Test
             get
             {
                 if(_xrmService == null)
-                    _xrmService = new XrmService(XrmConfiguration, Controller, null);
+                    _xrmService = new XrmService(XrmConfiguration, null);
                 return _xrmService;
             }
         }

@@ -45,7 +45,7 @@
                         <RowDefinition Height="*"  />
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0"  Visibility="{Binding MultipleRecordTypes, Converter={StaticResource BoolToVis}}">
-                        <WrapPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock
                                 Text="Select Record Type"
                                 Style="{StaticResource FieldLabelStyle}"
@@ -60,7 +60,7 @@
                                     ItemsSource="{Binding RecordTypeItemsSource}"
                                     SelectedItem="{Binding SelectedRecordType, Mode=TwoWay, IsAsync=True}"
                                      />
-                        </WrapPanel>
+                        </StackPanel>
                     </Grid>
                     <Grid Grid.Row="1" Visibility="{Binding RecordTypeSelected, Converter={StaticResource BoolToVis}}">
                         <Grid.RowDefinitions>
@@ -74,20 +74,19 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Grid Grid.Row="0" Visibility="{Binding QuickFindOrNotQueryRun, Converter={StaticResource BoolToVis}}" >
+                            <Grid Grid.Row="0"
+                                  HorizontalAlignment="Center"
+                                  Visibility="{Binding QuickFindOrNotQueryRun, Converter={StaticResource BoolToVis}}" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0">
+                                <Grid Grid.Column="0" >
                                     <WrapPanel Orientation="Horizontal">
                                         <Grid Visibility="{Binding ReturnButton, Converter={StaticResource NullToHiddenConverter}}">
                                             <shared:XrmButton DataContext="{Binding ReturnButton}" />
                                         </Grid>
                                         <shared:XrmButton DataContext="{Binding QueryTypeButton}" />
-                                        <!--<Grid Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
-                                            <shared:XrmButton DataContext="{Binding LoadSavedViewButton}" />
-                                        </Grid>-->
                                         <Grid Visibility="{Binding IsQuickFind, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
                                             <shared:XrmButton DataContext="{Binding DeleteSelectedConditionsButton}" />
                                         </Grid>
@@ -120,7 +119,9 @@
                                     </WrapPanel>
                                 </Grid>
                             </Grid>
-                            <Grid Grid.Row="1" Visibility="{Binding IsQuickFind, Converter={StaticResource BoolToVis}}">
+                            <Grid Grid.Row="1"
+                                  HorizontalAlignment="Center"
+                                  Visibility="{Binding IsQuickFind, Converter={StaticResource BoolToVis}}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition  />
@@ -129,7 +130,11 @@
                                     <TextBlock Text="Enter Search Text" Style="{StaticResource FieldLabelStyle}" />
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <TextBox Style="{StaticResource FieldEntryStyle}" Text="{Binding QuickFindText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="OnQuickFindKeyDown" >
+                                    <TextBox
+                                        MinWidth="200"
+                                        Style="{StaticResource FieldEntryStyle}"
+                                        Text="{Binding QuickFindText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        PreviewKeyDown="OnQuickFindKeyDown" >
                                     </TextBox>
                                 </Grid>
                             </Grid>
@@ -143,7 +148,7 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="{Binding IncludeNotIn, Converter={StaticResource BoolToStar}}" />
                                     </Grid.ColumnDefinitions>
-                                    <Grid Grid.Column="0">
+                                    <Grid Grid.Column="0" HorizontalAlignment="Center">
                                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                                             <Border>
                                                 <StackPanel Orientation="Vertical">
@@ -153,8 +158,10 @@
                                             </Border>
                                         </ScrollViewer>
                                     </Grid>
-                                    <Grid Grid.Column="1" Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <Grid Grid.Column="1"
+                                          HorizontalAlignment="Center"
+                                          Visibility="{Binding IncludeNotIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" >
                                             <Border>
                                                 <StackPanel Orientation="Vertical">
                                                     <WrapPanel>
@@ -168,13 +175,15 @@
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid Grid.Row="3" >
+                            <Grid Grid.Row="3" HorizontalAlignment="Center">
                                 <WrapPanel Orientation="Horizontal"  Visibility="{Binding QueryRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
                                     <shared:XrmButton DataContext="{Binding RunQueryButton}" />
                                 </WrapPanel>
                             </Grid>
                         </Grid>
-                        <Grid Grid.Row="4" Visibility="{Binding QueryAndNotRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
+                        <Grid Grid.Row="4"
+                              HorizontalAlignment="Center"
+                              Visibility="{Binding QueryAndNotRun, Converter={StaticResource BooleanToVisibilityHiddenConverter}}" >
                             <grid:DynamicGridView DataContext="{Binding DynamicGridViewModel}"></grid:DynamicGridView>
                         </Grid>
                     </Grid>

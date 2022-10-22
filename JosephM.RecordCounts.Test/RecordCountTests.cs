@@ -61,7 +61,7 @@ namespace JosephM.RecordCounts.Test
             Assert.IsFalse(FileUtility.GetFiles(TestingFolder).Any());
 
             request.AllRecordTypes = false;
-            request.RecordTypes = new[] { new RecordTypeSetting(Entities.account, Entities.account) };
+            request.RecordTypesToInclude = new[] { new RecordTypeSetting(Entities.account, Entities.account) };
             //verify dialog processes
             response = testApplication.NavigateAndProcessDialog<RecordCountsModule, RecordCountsDialog, RecordCountsResponse>(request);
             //verify response counts

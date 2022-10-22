@@ -84,8 +84,13 @@
         <Setter Property="Margin" Value="12,12,12,12" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+        <Setter Property="TextDecorations" Value="Underline" />
         <Setter Property="MinHeight" Value="20" />
         <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+    </Style>
+    <Style x:Key="FieldLabelAboveStyle" TargetType="TextBlock" BasedOn="{StaticResource FieldLabelStyle}">
+        <Setter Property="Margin" Value="12,6,12,6" />
+        <Setter Property="MinHeight" Value="10" />
     </Style>
     <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
         <Grid>

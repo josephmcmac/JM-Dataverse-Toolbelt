@@ -74,7 +74,13 @@ namespace JosephM.XrmModule.Crud
             }
             //consider virtual owner (display as name not loaded)
             if (recordService != null)
-                return new FormMetadata(recordService.GetFields(recordType).OrderBy(f => recordService.GetFieldLabel(f, recordType)).ToArray());
+            {
+                var fields = recordService
+                    .GetFields(recordType)
+                    .OrderBy(f => recordService.GetFieldLabel(f, recordType))
+                    .ToArray();
+                return new FormMetadata(fields, recordService.GetDisplayName(recordType));
+            }
             return null;
         }
 

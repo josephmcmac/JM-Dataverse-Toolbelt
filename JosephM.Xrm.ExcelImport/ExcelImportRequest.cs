@@ -12,8 +12,9 @@ namespace JosephM.Xrm.ExcelImport
 {
     [DisplayName("Import Excel")]
     [AllowSaveAndLoad]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.Options, true, 20)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10, displayLabel: false)]
+    [Group(Sections.ImportOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
+    [Group(Sections.CacheOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
     public class ExcelImportRequest : ServiceRequestBase, IValidatableObject
     {
         public ExcelImportRequest()
@@ -31,34 +32,34 @@ namespace JosephM.Xrm.ExcelImport
         [ConnectionFor(nameof(Mappings) + "." + nameof(ExcelImportTabMapping.Mappings) + "." + nameof(ExcelImportTabMapping.ExcelImportFieldMapping.SourceColumn), typeof(ExcelFileConnection))]
         public FileReference ExcelFile { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(400)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(410)]
         [RequiredProperty]
         public bool MatchRecordsByName { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(415)]
         [RequiredProperty]
         public bool UpdateOnly { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(417)]
         [RequiredProperty]
         public bool IgnoreEmptyCells { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.CacheOptions)]
         [DisplayOrder(420)]
         [RequiredProperty]
         [MinimumIntValue(1)]
         [MaximumIntValue(1000)]
         public int? ExecuteMultipleSetSize { get; set; }
 
-        [Group(Sections.Options)]
+        [Group(Sections.CacheOptions)]
         [DisplayOrder(425)]
         [RequiredProperty]
         [MinimumIntValue(1)]
@@ -81,7 +82,8 @@ namespace JosephM.Xrm.ExcelImport
         private static class Sections
         {
             public const string Main = "Main";
-            public const string Options = "Options";
+            public const string ImportOptions = "Import Options";
+            public const string CacheOptions = "Cache Options";
         }
 
         [DoNotAllowGridOpen]

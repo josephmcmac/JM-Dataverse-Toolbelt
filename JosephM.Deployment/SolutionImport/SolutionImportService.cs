@@ -61,7 +61,7 @@ namespace JosephM.Deployment.SolutionImport
                     {
                         try
                         {
-                            var extraService = new XrmService(xrmService.XrmConfiguration, new LogController(), xrmService.ServiceFactory);
+                            var extraService = new XrmService(xrmService.XrmConfiguration, xrmService.ServiceFactory);
                             var monitoreProgressThread = new Thread(() => DoProgress(importId, controller, finished, extraService, null, solutionFile.Key, response));
                             monitoreProgressThread.IsBackground = true;
                             monitoreProgressThread.Start();
@@ -180,8 +180,7 @@ namespace JosephM.Deployment.SolutionImport
                             {
                                 break;
                             }
-                            controller.LogLiteral($"Importing {solutionFile} to {XrmRecordService.XrmRecordConfiguration?.ToString()}");
-                            controller.GetLevel2Controller().UpdateProgress(Convert.ToInt32(progress / 1), 100, "Import Progress");
+                            controller.LogLiteral($"Importing {solutionFile} to {XrmRecordService.XrmRecordConfiguration?.ToString()}\n\n{Convert.ToInt32(progress / 1).ToString("##0")}%");
                         }
                     }
                     else if(asynchJobId.HasValue)

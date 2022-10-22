@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:shared="clr-namespace:JosephM.Wpf.Shared"
-             xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes"
+             xmlns:fakes="clr-namespace:JosephM.Application.ViewModel.Fakes;assembly=JosephM.Application.ViewModel.Fakes" xmlns:recordentry="clr-namespace:JosephM.Wpf.RecordEntry"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="400"
@@ -24,14 +24,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Row="0" Visibility="{Binding LoadingMessage, Converter={StaticResource NullToHiddenConverter}}">
-            <TextBlock Style="{StaticResource HeadingStyle}" Text="{Binding LoadingMessage}" />
+            <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource HeadingStyle}" Text="{Binding LoadingMessage}" />
         </Grid>
-        <Grid Row="1" Margin="0,10,0,0">
+        <Grid Row="1" Margin="0,10,0,10">
             <shared:ModernProgressRing IsActive="{Binding IsLoading}"
                                        Style="{StaticResource CircleProgressRingStyle}" />
         </Grid>
-
+        <Grid Grid.Row="4" Visibility="{Binding DetailObjectViewModel, Converter={StaticResource NullToHiddenConverter}}">
+            <recordentry:RecordEntryView DataContext="{Binding DetailObjectViewModel}" />
+        </Grid>
     </Grid>
 </UserControl>

@@ -10,6 +10,7 @@
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
     <Style x:Key="SectionHeadingStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadingStyle}" >
         <Setter Property="TextDecorations" Value="Underline" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
     <Style x:Key="SectionContainer" TargetType="Grid" >
         <Setter Property="Margin" Value="0,0,0,0" />
@@ -25,6 +26,11 @@
             <recordEntry:FieldSectionView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="FieldSectionCenteredTemplate">
+        <Grid Grid.Row="1">
+            <recordEntry:FieldSectionCenteredView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <DataTemplate x:Key="FieldSectionCompactTemplate">
         <Grid Grid.Row="1">
             <recordEntry:FieldSectionCompactView DataContext="{Binding}" />
@@ -35,10 +41,23 @@
             <recordEntry:FieldSectionInputOnlyView DataContext="{Binding}" />
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="FieldSectionHorozontalLabelAboveTemplate">
+        <Grid Grid.Row="1">
+            <recordEntry:FieldSectionHorizontalLabelAboveView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="FieldSectionHorizontalCenteredInputOnlyTemplate">
+        <Grid Grid.Row="1">
+            <recordEntry:FieldSectionHorizontalCenteredInputOnlyView DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
     <templateSelector:FormSectionTemplateSelector
         FieldSectionTemplate="{StaticResource FieldSectionTemplate}"
+        FieldSectionCenteredTemplate="{StaticResource FieldSectionCenteredTemplate}"
         FieldSectionCompactTemplate="{StaticResource FieldSectionCompactTemplate}"
         FieldSectionInputOnlyTemplate="{StaticResource FieldSectionInputOnlyTemplate}"
+        FieldSectionHorozontalLabelAboveTemplate="{StaticResource FieldSectionHorozontalLabelAboveTemplate}"
+        FieldSectionHorizontalCenteredInputOnlyTemplate="{StaticResource FieldSectionHorizontalCenteredInputOnlyTemplate}"
         x:Key="FormSectionTemplateSelector" />
     <DataTemplate x:Key="booleanFieldTemplate">
         <field:BooleanFieldView DataContext="{Binding}" />
@@ -153,7 +172,7 @@
             <Grid Grid.Column="0">
                 <field:FieldLabelView DataContext="{Binding}" />
             </Grid>
-            <Grid Grid.Column="1" Grid.ColumnSpan="3">
+            <Grid Grid.Column="1" Grid.ColumnSpan="3" >
                 <ContentControl
                     Content="{Binding}"
                     ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
@@ -166,10 +185,12 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <field:FieldLabelView DataContext="{Binding}" />
+            <Grid Grid.Row="0"
+                  HorizontalAlignment="Center">
+                <field:FieldLabelAboveView DataContext="{Binding}" />
             </Grid>
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1"
+                  HorizontalAlignment="Center">
                 <ContentControl
                     Content="{Binding}"
                     ContentTemplateSelector="{StaticResource fieldTemplateSelector}" />
@@ -194,14 +215,23 @@
         UnlabelledFieldTemplate="{StaticResource unlabelledFieldTemplate}"
         x:Key="labelledFieldTemplateSelector" 
         />
+    <templateSelector:LabelledAboveFieldTemplateSelector
+        LabelledAboveFieldTemplate="{StaticResource labelledAboveFieldTemplate}"
+        UnlabelledFieldTemplate="{StaticResource unlabelledFieldTemplate}"
+        x:Key="labelledAboveFieldTemplateSelector" 
+        />
     <DataTemplate x:Key="GridOnlyBodyTemplate">
-        <field:EnumerableFieldView DataContext="{Binding PrimaryEnumerableFieldViewModel}" />
+        <Grid HorizontalAlignment="Center">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <field:EnumerableFieldView DataContext="{Binding PrimaryEnumerableFieldViewModel}" />
+            </ScrollViewer>
+        </Grid>
     </DataTemplate>
     <DataTemplate x:Key="SectionsBodyTemplate">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" >
             <ItemsControl
-                                ItemsSource="{Binding FormSectionsAsync}"
-                                ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
+                ItemsSource="{Binding FormSectionsAsync}"
+                ItemTemplateSelector="{StaticResource FormSectionTemplateSelector}" />
         </ScrollViewer>
     </DataTemplate>
     <templateSelector:FormBodyTemplateSelector

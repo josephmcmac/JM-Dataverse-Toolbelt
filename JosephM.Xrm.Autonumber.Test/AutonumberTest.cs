@@ -43,7 +43,7 @@ namespace JosephM.CustomisationImporter.Test
                 var configureDialogT = autonumbersViewModel.ChildForms.First() as ConfigureAutonumberDialog;
                 var configureEntryT = testApplication.GetSubObjectEntryViewModel(configureDialogT);
                 Assert.IsNotNull(configureEntryT.GetRecordFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Field)).Value);
-                configureEntryT.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value = null;
+                configureEntryT.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Format)).Value = null;
                 configureEntryT.SaveButtonViewModel.Invoke();
                 Assert.IsFalse(autonumbersViewModel.ChildForms.Any());
             }
@@ -54,7 +54,7 @@ namespace JosephM.CustomisationImporter.Test
             var addEntry = testApplication.GetSubObjectEntryViewModel(addDialog);
             var fieldViewModel = addEntry.GetRecordFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Field));
             fieldViewModel.Value = fieldViewModel.ItemsSource.First(f => f.Key == Fields.account_.accountnumber);
-            addEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value = "ACC-{SEQNUM:6}";
+            addEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Format)).Value = "ACC-{SEQNUM:6}";
             addEntry.GetBigIntFieldViewModel(nameof(ConfigureAutonumberRequest.SetSeed)).Value = 1234;
             addEntry.SaveButtonViewModel.Invoke();
             Assert.IsFalse(autonumbersViewModel.ChildForms.Any());
@@ -71,7 +71,7 @@ namespace JosephM.CustomisationImporter.Test
             var configureDialog = autonumbersViewModel.ChildForms.First() as ConfigureAutonumberDialog;
             var configureEntry = testApplication.GetSubObjectEntryViewModel(configureDialog);
             Assert.IsNotNull(configureEntry.GetRecordFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Field)).Value);
-            Assert.AreEqual("ACC-{SEQNUM:6}", configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value);
+            Assert.AreEqual("ACC-{SEQNUM:6}", configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Format)).Value);
             configureEntry.GetBigIntFieldViewModel(nameof(ConfigureAutonumberRequest.SetSeed)).Value = 2345;
             configureEntry.SaveButtonViewModel.Invoke();
             Assert.AreEqual(1, fieldsViewModel.DynamicGridViewModel.GridRecords.Count);
@@ -85,7 +85,7 @@ namespace JosephM.CustomisationImporter.Test
             configureDialog = autonumbersViewModel.ChildForms.First() as ConfigureAutonumberDialog;
             configureEntry = testApplication.GetSubObjectEntryViewModel(configureDialog);
             Assert.IsNotNull(configureEntry.GetRecordFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Field)).Value);
-            configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value = "ACC-{SEQNUM:5}";
+            configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Format)).Value = "ACC-{SEQNUM:5}";
             configureEntry.SaveButtonViewModel.Invoke();
             Assert.AreEqual(1, fieldsViewModel.DynamicGridViewModel.GridRecords.Count);
 
@@ -98,8 +98,8 @@ namespace JosephM.CustomisationImporter.Test
             configureDialog = autonumbersViewModel.ChildForms.First() as ConfigureAutonumberDialog;
             configureEntry = testApplication.GetSubObjectEntryViewModel(configureDialog);
             Assert.IsNotNull(configureEntry.GetRecordFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Field)).Value);
-            Assert.AreEqual("ACC-{SEQNUM:5}", configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value);
-            configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.AutonumberFormat)).Value = null;
+            Assert.AreEqual("ACC-{SEQNUM:5}", configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Format)).Value);
+            configureEntry.GetStringFieldFieldViewModel(nameof(ConfigureAutonumberRequest.Format)).Value = null;
             configureEntry.SaveButtonViewModel.Invoke();
             Assert.IsFalse(autonumbersViewModel.ChildForms.Any());
 

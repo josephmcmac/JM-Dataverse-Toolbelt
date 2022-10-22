@@ -3,16 +3,18 @@ using JosephM.Core.FieldType;
 
 namespace JosephM.Application.Desktop.Module.AboutModule
 {
-    [Group(Sections.Application, Group.DisplayLayoutEnum.HorizontalInputOnly, 10)]
-    [Group(Sections.Links, Group.DisplayLayoutEnum.HorizontalInputOnly, 40)]
-    [Group(Sections.Detail, Group.DisplayLayoutEnum.HorizontalInputOnly, 30)]
+    [Group(Sections.Application, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, order: 10)]
+    [Group(Sections.Version, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, order: 20)]
+    [Group(Sections.Detail, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, order: 30)]
+    [Group(Sections.Links, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, order: 40)]
     public class About
     {
         [Group(Sections.Application)]
         [DisplayOrder(10)]
         public string Application { get; set; }
 
-        [Group(Sections.Application)]
+        [PropertyInContextByPropertyNotNull(nameof(Version))]
+        [Group(Sections.Version)]
         [DisplayOrder(20)]
         public string Version { get; set; }
 
@@ -36,6 +38,7 @@ namespace JosephM.Application.Desktop.Module.AboutModule
         public class Sections
         {
             public const string Application = "Application";
+            public const string Version = "Version";
             public const string Links = "Links";
             public const string Detail = "Detail";
         }

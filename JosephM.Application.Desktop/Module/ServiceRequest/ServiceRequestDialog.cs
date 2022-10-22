@@ -1,4 +1,5 @@
 ﻿using JosephM.Application.Application;
+using JosephM.Application.ViewModel;
 using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Shared;
 using JosephM.Core.AppConfig;
@@ -10,6 +11,7 @@ using JosephM.Record.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace JosephM.Application.Desktop.Module.ServiceRequest
 {
@@ -86,7 +88,7 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
                     mapper.Map(autoLoads.First(), Request);
                 }
             }
-            if(SkipObjectEntry)
+            if (SkipObjectEntry)
             {
                 var subDialogs = new List<DialogViewModel>(SubDialogs);
                 subDialogs.Remove(ConfigEntryDialog);
@@ -95,30 +97,51 @@ namespace JosephM.Application.Desktop.Module.ServiceRequest
             StartNextAction();
         }
 
+        protected virtual bool UseProgressControlUi => false;
+
+
         protected override void CompleteDialogExtention()
         {
-            LoadingViewModel.IsLoading = false;
+            LoadingViewModel.IsLoading = true;
             IsProcessing = true;
-
-            var progressControlViewModel = new ProgressControlViewModel(ApplicationController);
-
             Response = new TResponse();
             Response.HideResponseItems = true;
-            if (DisplayResponseDuringServiceRequestExecution)
-                progressControlViewModel.SetDetailObject(Response);
 
-
-            Controller.LoadToUi(progressControlViewModel);
-            LogController = progressControlViewModel.CreateLogControllerFor();
-            var serviceRequestController = new ServiceRequestController(LogController, (o) => progressControlViewModel.SetDetailObject(o), (o) => progressControlViewModel.ClearDetailObject());
+            ProgressControlViewModel progressControlViewModel = null;
+            ServiceRequestController serviceRequestController = null;
+            if (UseProgressControlUi)
+            {
+                LoadingViewModel.IsLoading = false;
+                progressControlViewModel = new ProgressControlViewModel(ApplicationController);
+                if (DisplayResponseDuringServiceRequestExecution)
+                {
+                    progressControlViewModel.SetDetailObject(Response);
+                }
+                Controller.LoadToUi(progressControlViewModel);
+                LogController = progressControlViewModel.CreateLogControllerFor();
+                
+                serviceRequestController = new ServiceRequestController(LogController, (o) => progressControlViewModel.SetDetailObject(o), (o) => progressControlViewModel.ClearDetailObject());
+            }
+            else
+            {
+                if (DisplayResponseDuringServiceRequestExecution)
+                {
+                    LoadingViewModel.SetDetailObject(Response);
+                }
+                LogController = new LogController(LoadingViewModel);
+                serviceRequestController = new ServiceRequestController(LogController, (o) => LoadingViewModel.SetDetailObject(o), (o) => LoadingViewModel.ClearDetailObject());
+            }
             Response = Service.Execute(Request, serviceRequestController, response: Response);
-
             CompletionItem = Response;
 
             if (Response.Success)
+            {
                 ProcessCompletionExtention();
-
-            Controller.RemoveFromUi(progressControlViewModel);
+            }
+            if (progressControlViewModel != null)
+            {
+                Controller.RemoveFromUi(progressControlViewModel);
+            }
             Response.HideResponseItems = false;
 
             IsProcessing = false;

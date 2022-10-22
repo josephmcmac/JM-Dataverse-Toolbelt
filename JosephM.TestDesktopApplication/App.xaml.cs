@@ -6,6 +6,7 @@ using JosephM.Application.Desktop.Module.Themes;
 using JosephM.Application.Modules;
 using JosephM.Core.FieldType;
 using JosephM.Spreadsheet;
+using JosephM.TestModule.AllPropertyTypesCentered;
 using JosephM.TestModule.AllPropertyTypesCompact;
 using JosephM.TestModule.AllPropertyTypesModule;
 using JosephM.TestModule.TestCrud;
@@ -41,6 +42,7 @@ namespace JosephM.TestDesktopApplication
             app.AddModule<ColourThemeModule>();
             app.AddModule<AllPropertyTypesDialogModule>();
             app.AddModule<AllPropertyTypesCompactModule>();
+            app.AddModule<AllPropertyTypesCenteredModule>();
             app.AddModule<TestAppAboutModule>();
             app.AddModule<TestReadExcelModule>(); 
             app.Run();

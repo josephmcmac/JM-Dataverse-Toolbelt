@@ -13,6 +13,8 @@ namespace JosephM.Xrm.TextSearch
         {
         }
 
+        protected override bool UseProgressControlUi => true;
+
         public bool LoadedFromConnection { get; set; }
     }
 }

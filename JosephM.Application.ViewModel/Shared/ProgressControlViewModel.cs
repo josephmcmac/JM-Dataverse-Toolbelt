@@ -30,6 +30,7 @@ namespace JosephM.Application.ViewModel.Shared
                 OnPropertyChanged(nameof(DetailObjectViewModel));
             });
         }
+
         public void ClearDetailObject()
         {
             DetailObjectViewModel = null;

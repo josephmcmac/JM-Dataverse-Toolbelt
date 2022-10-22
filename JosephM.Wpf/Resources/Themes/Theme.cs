@@ -2,7 +2,7 @@
 
 namespace JosephM.Wpf.Resources.Themes
 {
-    [Group(Sections.Theme, true, displayLabel: false)]
+    [Group(Sections.Theme, Group.DisplayLayoutEnum.VerticalCentered, displayLabel: false)]
     public class Theme
     {
         [DisplayName("Colour Theme")]

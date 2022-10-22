@@ -59,7 +59,7 @@ namespace JosephM.Xrm.TextSearch
 
             if(container.Request.SearchAllTypes)
             {
-                container.Controller.LogLiteral("Loading Field Metadata");
+                container.Controller.LogLiteral("Loading metadata - this may take a while");
                 Service.LoadFieldsForAllEntities();
             }
 
@@ -75,7 +75,7 @@ namespace JosephM.Xrm.TextSearch
                     if (ex.Message == null || !ignoreErrorMessages.Any(iem => ex.Message.Contains(iem)))
                     {
                         container.Response.AddResponseItem(
-                        new TextSearchResponseItem("Error Searching Entity Fields",
+                        new TextSearchResponseItem("Error searching entity fields",
                             recordType, ex));
                     }
                 }

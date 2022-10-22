@@ -6,11 +6,12 @@ using System.Collections.Generic;
 
 namespace JosephM.Xrm.MigrateRecords
 {
-    [Instruction("Records will be queried from the source intance, then imported into the target intance")]
+    [Instruction("Records will be queried from the source instance, then upserted into the target intance")]
     [AllowSaveAndLoad]
-    [Group(Sections.Connections, true, 10)]
-    [Group(Sections.ImportOptions, true, 30)]
-    [Group(Sections.RecordTypes, true, order: 35, displayLabel: false)]
+    [Group(Sections.Connections, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.RecordTypes, Group.DisplayLayoutEnum.VerticalList, order: 20)]
+    [Group(Sections.ImportOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
+    [Group(Sections.CacheOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 40)]
     public class MigrateRecordsRequest : ServiceRequestBase
     {
         public MigrateRecordsRequest()
@@ -54,7 +55,7 @@ namespace JosephM.Xrm.MigrateRecords
         [MyDescription("If set any notes or attachments for records in the migration will alo be migrated")]
         [DisplayOrder(205)]
         [Group(Sections.ImportOptions)]
-        [DisplayName("Include Notes & Attachments")]
+        [DisplayName("Include notes & attachments")]
         [RequiredProperty]
         public bool IncludeNotes { get; set; }
 
@@ -62,14 +63,14 @@ namespace JosephM.Xrm.MigrateRecords
         [Group(Sections.ImportOptions)]
         [DisplayOrder(207)]
 
-        [DisplayName("Include File & Image Fields")]
+        [DisplayName("Include file & image fields")]
         public bool IncludeFileAndImageFields { get; set; }
 
         [GridWidth(110)]
-        [MyDescription("If et an N to N asociations between record included in the migration will also be migrated")]
+        [MyDescription("If et an N to N associations between record included in the migration will also be migrated")]
         [DisplayOrder(210)]
         [Group(Sections.ImportOptions)]
-        [DisplayName("Include N:N Links Between Records")]
+        [DisplayName("Include n:n links between records")]
         [RequiredProperty]
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }
 
@@ -79,14 +80,14 @@ namespace JosephM.Xrm.MigrateRecords
         [RequiredProperty]
         public bool MatchByName { get; set; }
 
-        [Group(Sections.ImportOptions)]
+        [Group(Sections.CacheOptions)]
         [DisplayOrder(222)]
         [RequiredProperty]
         [MinimumIntValue(1)]
         [MaximumIntValue(1000)]
         public int? ExecuteMultipleSetSize { get; set; }
 
-        [Group(Sections.ImportOptions)]
+        [Group(Sections.CacheOptions)]
         [DisplayOrder(225)]
         [RequiredProperty]
         [MinimumIntValue(1)]
@@ -95,7 +96,7 @@ namespace JosephM.Xrm.MigrateRecords
 
         [Group(Sections.RecordTypes)]
         [GridWidth(500)]
-        [MyDescription("The specific records to mograte")]
+        [MyDescription("The specific records to migrate")]
         [PropertyInContextByPropertyNotNull(nameof(SourceConnection))]
         [DisplayOrder(300)]
         [RequiredProperty]
@@ -105,8 +106,9 @@ namespace JosephM.Xrm.MigrateRecords
         private static class Sections
         {
             public const string Connections = "Connections";
-            public const string ImportOptions = "ImportOptions";
-            public const string RecordTypes = "Record Types";
+            public const string RecordTypes = "Records to Migrate";
+            public const string ImportOptions = "Import Options";
+            public const string CacheOptions = "Cache Options";
         }
     }
 }

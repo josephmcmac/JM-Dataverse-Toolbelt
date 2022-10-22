@@ -149,6 +149,7 @@
                             </DataGrid>
                         </Grid>
                         <Grid  Grid.Row="2"
+                               HorizontalAlignment="Center"
                                Visibility="{Binding PageDescription, Converter={StaticResource NullToHiddenConverter}}">
                             <WrapPanel Orientation="Horizontal">
                                 <Grid Visibility="{Binding IsNotFirstPage, Converter={StaticResource BoolToVis}}" >

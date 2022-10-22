@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {
-    [Group(Sections.Summary, false, 0)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.VerticalCentered, order: 0)]
     public class ImportRecordsResponse : ServiceResponseBase<DataImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();

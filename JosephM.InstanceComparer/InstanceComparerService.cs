@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using static JosephM.InstanceComparer.Extensions;
 
 namespace JosephM.InstanceComparer
 {
@@ -49,10 +48,6 @@ namespace JosephM.InstanceComparer
             AppendDashboards(processContainer);
             AppendEmailTemplates(processContainer);
             AppendReports(processContainer);
-            AppendCaseCreationRules(processContainer);
-            AppendSlas(processContainer);
-            AppendRoutingRules(processContainer);
-            AppendApps(processContainer);
             AppendOrganisationSettings(processContainer);
             AppendData(processContainer);
 
@@ -154,27 +149,6 @@ namespace JosephM.InstanceComparer
             processContainer.Comparisons.Add(fieldSecurityCompareParams);
         }
 
-        private void AppendApps(ProcessContainer processContainer)
-        {
-            if (!processContainer.Request.Apps)
-                return;
-            var processCompareParams = new ProcessCompareParams("App",
-                Entities.appmodule, Fields.appmodule_.name, Fields.appmodule_.name, null, null)
-            {
-                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.appmodule_.appmoduleid, 80)
-            };
-
-            var appComponentCompareParams = new ProcessCompareParams("App Component", typeof(AppComponent),
-                (s, r) => r.GetAppComponents(s).ToArray(),
-                nameof(AppComponent.CompareString), new[] { nameof(AppComponent.CompareString), nameof(AppComponent.SiteMapXml) });
-            
-            processCompareParams.ChildCompares = new[] { appComponentCompareParams };
-
-            if (processContainer.ServiceOne.RecordTypeExists(processCompareParams.RecordType))
-                processContainer.Comparisons.Add(processCompareParams);
-        }
-
-
         private void CompareAssociations(ProcessContainer processContainer)
         {
             //in this method for all data we compared
@@ -273,56 +247,6 @@ namespace JosephM.InstanceComparer
             }
         }
 
-        private void AppendRoutingRules(ProcessContainer processContainer)
-        {
-            if (!processContainer.Request.RoutingRules)
-                return;
-            var processCompareParams = new ProcessCompareParams("Routing Rule",
-                Entities.routingrule, Fields.routingrule_.name, Fields.routingrule_.name,
-                null,
-                new[] {Fields.routingrule_.description,
-                    Fields.routingrule_.statuscode }
-                )
-            {
-                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.routingrule_.routingruleid, OptionSets.SolutionComponent.ObjectTypeCode.RoutingRule)
-            };
-
-            var itemCompareParams = new ProcessCompareParams("Routing Rule Item",
-                Entities.routingruleitem, Fields.routingruleitem_.name, Fields.routingruleitem_.name, null,
-                new[] { Fields.routingruleitem_.name, Fields.routingruleitem_.conditionxml, Fields.routingruleitem_.routedqueueid, Fields.routingruleitem_.assignobjectid },
-                Fields.routingruleitem_.routingruleid, ParentLinkType.Lookup);
-
-            processCompareParams.ChildCompares = new[] { itemCompareParams };
-
-            if (processContainer.ServiceOne.RecordTypeExists(processCompareParams.RecordType))
-                processContainer.Comparisons.Add(processCompareParams);
-        }
-
-        private void AppendSlas(ProcessContainer processContainer)
-        {
-            if (!processContainer.Request.SLAs)
-                return;
-
-            var slaCompareParams = new ProcessCompareParams("SLAs",
-                Entities.sla,
-                Fields.sla_.name,
-                Fields.sla_.name,
-                null,
-                new[]
-                {
-                    Fields.sla_.description, Fields.sla_.applicablefrom, Fields.sla_.businesshoursid, Fields.sla_.statuscode, Fields.sla_.slatype, Fields.sla_.allowpauseresume, Fields.sla_.isdefault
-                });
-
-            var slaItemCompareParams = new ProcessCompareParams("SLA Items",
-                Entities.slaitem, Fields.slaitem_.name, Fields.slaitem_.name, null,
-                new[] { Fields.slaitem_.description, Fields.slaitem_.warnafter, Fields.slaitem_.failureafter, Fields.slaitem_.applicablewhenxml, Fields.slaitem_.relatedfield, Fields.slaitem_.sequencenumber, Fields.slaitem_.successconditionsxml },
-                Fields.slaitem_.slaid, ParentLinkType.Lookup);
-
-            slaCompareParams.ChildCompares = new[] { slaItemCompareParams };
-
-            processContainer.Comparisons.Add(slaCompareParams);
-        }
-
         private void AppendEmailTemplates(ProcessContainer processContainer)
         {
             if (!processContainer.Request.EmailTemplates)
@@ -389,33 +313,6 @@ namespace JosephM.InstanceComparer
         public int GetProcessCount(ProcessCompareParams compare)
         {
             return 1 + (compare.ChildCompares == null ? 0 : compare.ChildCompares.Sum(GetProcessCount));
-        }
-
-        private void AppendCaseCreationRules(ProcessContainer processContainer)
-        {
-            if (!processContainer.Request.CaseCreationRules)
-                return;
-            var processCompareParams = new ProcessCompareParams("Case Creation Rule",
-                Entities.convertrule, Fields.convertrule_.name, Fields.convertrule_.name,
-                null,
-                new[] {Fields.convertrule_.statecode,
-                    Fields.convertrule_.statuscode,
-                    Fields.convertrule_.sourcetypecode,
-                    Fields.convertrule_.allowunknownsender,
-                    Fields.convertrule_.checkactiveentitlement,
-                    Fields.convertrule_.checkifresolved,
-                    Fields.convertrule_.resolvedsince,
-                    Fields.convertrule_.sendautomaticresponse,
-                    Fields.convertrule_.responsetemplateid,
-                    Fields.convertrule_.checkblockedsocialprofile,
-                    Fields.convertrule_.checkdirectmessages}
-                )
-            {
-                SolutionComponentConfiguration = new ProcessCompareParams.SolutionComponentConfig(Fields.convertrule_.convertruleid, OptionSets.SolutionComponent.ObjectTypeCode.ConvertRule)
-            };
-
-            if (processContainer.ServiceOne.RecordTypeExists(processCompareParams.RecordType))
-                processContainer.Comparisons.Add(processCompareParams);
         }
 
         private void AppendData(ProcessContainer processContainer)

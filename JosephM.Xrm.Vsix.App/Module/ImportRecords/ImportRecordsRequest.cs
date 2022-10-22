@@ -12,11 +12,11 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportRecords
 {
-    [Group(Sections.Connection, true, 20)]
+    [Group(Sections.Connection, Group.DisplayLayoutEnum.VerticalCentered, order: 20, displayLabel: false)]
     public class ImportRecordsRequest : ServiceRequestBase, IImportXmlRequest
     {
         [Group(Sections.Connection)]
-        [DisplayName("Saved Connection To Import Into")]
+        [DisplayName("Connection for the instance to import into")]
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration Connection { get; set; }

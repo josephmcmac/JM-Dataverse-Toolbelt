@@ -66,7 +66,7 @@ namespace JosephM.Xrm.Autonumber
         {
             this.AddCustomFormFunction(new CustomFormFunction("OPENSDOCUMENTATION", "Microsoft Article", (g) =>
             {
-                ApplicationController.StartProcess("https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/create-auto-number-attributes");
+                ApplicationController.StartProcess("https://learn.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/create-auto-number-attributes?WT.mc_id=DX-MVP-5004940#autonumberformat-options");
             }), typeof(AutonumberNavigator));
         }
 
@@ -137,7 +137,7 @@ namespace JosephM.Xrm.Autonumber
                     {
                         RecordType = recordType.Value,
                         Field = new RecordField(selectedFieldName, selectedFieldName),
-                        AutonumberFormat = selectedFieldFormat
+                        Format = selectedFieldFormat
                     };
                     var dialogcontroller = (IDialogController)ApplicationController.ResolveType(typeof(IDialogController));
                     Action closeChildDialog = () => { parentForm.ClearChildForms(); RefreshFieldGrid(parentForm); };

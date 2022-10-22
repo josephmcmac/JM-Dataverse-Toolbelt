@@ -31,9 +31,12 @@ namespace JosephM.Core.Attributes
 
         public enum DisplayLayoutEnum
         {
+            VerticalCentered,
             VerticalList,
+            HorizontalLabelAbove,
             HorizontalWrap,
-            HorizontalInputOnly
+            HorizontalInputOnly,
+            HorizontalCenteredInputOnly,
         }
     }
 }

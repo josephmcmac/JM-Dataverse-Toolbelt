@@ -13,6 +13,8 @@ namespace JosephM.InstanceComparer
         {
         }
 
+        protected override bool UseProgressControlUi => true;
+
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
             var dictionary = base.GetPropertiesForCompletedLog();

@@ -21,6 +21,8 @@ namespace JosephM.CustomisationImporter
             SubDialogs = SubDialogs.Union(new[] { validationDialog }).ToArray();
         }
 
+        protected override bool UseProgressControlUi => true;
+
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()
         {
             var dictionary = base.GetPropertiesForCompletedLog();

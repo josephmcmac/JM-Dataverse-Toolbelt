@@ -5,8 +5,8 @@ using JosephM.Record.IService;
 
 namespace JosephM.Xrm.Vsix.Module.DeployAssembly
 {
-    [Group(Sections.PluginAssembly, true, 10)]
-    [Group(Sections.DeployOptions, true, order: 20, displayLabel: false)]
+    [Group(Sections.PluginAssembly, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, order: 10)]
+    [Group(Sections.DeployOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, displayLabel: false)]
     public class DeployAssemblyRequest : ServiceRequestBase
     {
         public DeployAssemblyRequest()
@@ -33,8 +33,8 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
         [RequiredProperty]
         [DisplayOrder(30)]
         [Group(Sections.DeployOptions)]
-        [DisplayName("Refresh Workflow Activity Input & Output Arguments")]
-        [MyDescription("If Set The Deploy Process Sets A Field On Each Custom Workflow Activity Intended To Refresh It's Input & Output Arguments")]
+        [DisplayName("Refresh Workflow Arguments")]
+        [MyDescription("If set the deploy process sets a field on each custom workflow activity intended to refresh it's input & output arguments")]
         public bool TriggerWorkflowActivityRefreshes { get; set; }
 
         [DoNotAllowAdd]

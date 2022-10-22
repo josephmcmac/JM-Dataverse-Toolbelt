@@ -69,7 +69,7 @@ namespace JosephM.Record.Xrm.XrmRecord
                 {
                     var xrmRecordConfiguration = new XrmRecordConfigurationInterfaceMapper().Map(_xrmRecordConfiguration);
                     var xrmConfiguration = new XrmConfigurationMapper().Map(xrmRecordConfiguration);
-                    _xrmService = new XrmService(xrmConfiguration, Controller, ServiceFactory);
+                    _xrmService = new XrmService(xrmConfiguration, ServiceFactory);
                 }
             }
         }

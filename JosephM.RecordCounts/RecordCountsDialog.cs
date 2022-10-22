@@ -19,6 +19,7 @@ namespace JosephM.RecordCounts
         {
         }
 
+        protected override bool UseProgressControlUi => true;
         public bool LoadedFromConnection { get; set; }
 
         protected override IDictionary<string, string> GetPropertiesForCompletedLog()

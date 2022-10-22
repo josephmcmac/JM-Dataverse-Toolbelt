@@ -56,11 +56,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\JosephM.ToolbeltTheme\jmdataversetoolbelt.png">
-      <Link>jmdataversetoolbelt.png</Link>
-    </Content>
     <Content Include="..\TemplateItems\CSharp\XRM\JosephM XRM Entity JavaScript.zip">
       <Link>ItemTemplates\CSharp\XRM\JosephM XRM Entity JavaScript.zip</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="jmdataversetoolbelt.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

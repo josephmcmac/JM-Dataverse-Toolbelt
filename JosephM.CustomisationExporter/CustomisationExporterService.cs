@@ -34,12 +34,12 @@ namespace JosephM.CustomisationExporter
 
             ProcessForEntities(request, response, controller.Controller);
 
-            if ((request.Fields || request.FieldOptionSets) && request.IncludeAllRecordTypes)
+            if ((request.Fields || request.FieldOptionSets))
             {
                 controller.UpdateProgress(0, 1, "Loading All Fields.....");
                 Service.LoadFieldsForAllEntities();
             }
-            if ((request.Fields || request.Relationships) && request.IncludeAllRecordTypes)
+            if ((request.Fields || request.Relationships))
             {
                 controller.UpdateProgress(0, 1, "Loading All Relationships.....");
                 Service.LoadRelationshipsForAllEntities();
@@ -58,7 +58,7 @@ namespace JosephM.CustomisationExporter
                 { nameof(CustomisationExporterRequest.PluginAssemblies), ProcessForPluginAssemblies },
                 { nameof(CustomisationExporterRequest.PluginTriggers), ProcessForPluginTriggers },
                 { nameof(CustomisationExporterRequest.SecurityRoles), ProcessForSecurityRoles },
-                { nameof(CustomisationExporterRequest.RolesPrivileges), ProcessForRolePrivileges },
+                { nameof(CustomisationExporterRequest.SecurityRolesPrivileges), ProcessForRolePrivileges },
                 { nameof(CustomisationExporterRequest.FieldSecurityProfiles), ProcessForFieldSecurityProfiles },
                 { nameof(CustomisationExporterRequest.Users), ProcessForUsers },
                 { nameof(CustomisationExporterRequest.Teams), ProcessForTeams },
@@ -76,20 +76,9 @@ namespace JosephM.CustomisationExporter
 
             response.Folder = request.SaveToFolder.FolderPath;
 
-            if (request.Format == CustomisationExporterRequest.FileFormat.Xlsx)
-            {
-                var excelFileName = "Customisation Export " + DateTime.Now.ToFileTime() + ".xlsx";
-                ExcelUtility.CreateXlsx(request.SaveToFolder.FolderPath, excelFileName, response.GetListsToOutput());
-                response.ExcelFileName = excelFileName;
-            }
-            else
-            {
-                foreach (var item in response.GetListsToOutput())
-                {
-                    var csvName = item.Key + " " + DateTime.Now.ToFileTime() + ".csv";
-                    CsvUtility.CreateCsv(request.SaveToFolder.FolderPath, csvName, item.Value);
-                }
-            }
+            var excelFileName = "Customisation Export " + DateTime.Now.ToFileTime() + ".xlsx";
+            ExcelUtility.CreateXlsx(request.SaveToFolder.FolderPath, excelFileName, response.GetListsToOutput());
+            response.ExcelFileName = excelFileName;
 
             response.Message = "The Export is Complete";
         }
@@ -985,10 +974,9 @@ namespace JosephM.CustomisationExporter
 
         private IEnumerable<string> GetRecordTypesToExport(CustomisationExporterRequest request)
         {
-            var recordTypes = request.IncludeAllRecordTypes
-                ? Service.GetAllRecordTypes()
-                : request.RecordTypes.Select(r => r.RecordType.Key);
-            return recordTypes.Where(r => !Service.GetDisplayName(r).IsNullOrWhiteSpace()).ToArray();
+            return Service.GetAllRecordTypes()
+                .Where(r => !Service.GetDisplayName(r).IsNullOrWhiteSpace())
+                .ToArray();
         }
     }
 }

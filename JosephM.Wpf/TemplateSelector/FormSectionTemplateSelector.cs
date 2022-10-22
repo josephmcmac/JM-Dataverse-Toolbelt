@@ -12,8 +12,11 @@ namespace JosephM.Wpf.TemplateSelector
     public class FormSectionTemplateSelector : DataTemplateSelector
     {
         public DataTemplate FieldSectionTemplate { get; set; }
+        public DataTemplate FieldSectionHorozontalLabelAboveTemplate { get; set; }
+        public DataTemplate FieldSectionCenteredTemplate { get; set; }
         public DataTemplate FieldSectionCompactTemplate { get; set; }
         public DataTemplate FieldSectionInputOnlyTemplate { get; set; }
+        public DataTemplate FieldSectionHorizontalCenteredInputOnlyTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item,
             DependencyObject container)
@@ -31,11 +34,24 @@ namespace JosephM.Wpf.TemplateSelector
                         {
                             return FieldSectionCompactTemplate;
                         }
-                    default:
+                    case Core.Attributes.Group.DisplayLayoutEnum.VerticalCentered:
+                        {
+                            return FieldSectionCenteredTemplate;
+                        }
+                    case Core.Attributes.Group.DisplayLayoutEnum.HorizontalLabelAbove:
+                        {
+                            return FieldSectionHorozontalLabelAboveTemplate;
+                        }
+                    case Core.Attributes.Group.DisplayLayoutEnum.HorizontalCenteredInputOnly:
+                        {
+                            return FieldSectionHorizontalCenteredInputOnlyTemplate;
+                        }
+                    case Core.Attributes.Group.DisplayLayoutEnum.VerticalList:
                         {
                             return FieldSectionTemplate;
                         }
                 }
+                return FieldSectionCenteredTemplate;
             }
             throw new ArgumentOutOfRangeException(string.Concat("No template defined for the type",
                 item == null ? "null" : item.GetType().FullName));

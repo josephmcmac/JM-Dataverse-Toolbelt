@@ -55,61 +55,6 @@ namespace JosephM.Deployment.Test
 
             solution = XrmRecordService.Get(solution.Type, solution.Id);
             Assert.AreEqual("4.0.0.0", solution.GetStringField(Fields.solution_.version));
-
-            //delete for recreation
-            XrmService.Delete(account);
-
-            //Okay now lets deploy it
-            var deployRequest = new DeployPackageRequest();
-            deployRequest.FolderContainingPackage = new Folder(TestingFolder);
-            deployRequest.Connection = GetSavedXrmRecordConfiguration();
-
-            var deployApplication = CreateAndLoadTestApplication<DeployPackageModule>();
-            response = deployApplication.NavigateAndProcessDialog<DeployPackageModule, DeployPackageDialog, ServiceResponseBase<DataImportResponseItem>>(deployRequest);
-            Assert.IsFalse(response.HasError);
-
-            solution = XrmRecordService.Get(solution.Type, solution.Id);
-            Assert.AreEqual("3.0.0.0", solution.GetStringField(Fields.solution_.version));
-
-            //should be recreated
-            account = Refresh(account);
-
-            createDeploymentPackageRequest = new CreatePackageRequest();
-            createDeploymentPackageRequest.FolderPath = new Folder(TestingFolder);
-            createDeploymentPackageRequest.Solution = solution.ToLookup();
-            createDeploymentPackageRequest.ThisReleaseVersion = "3.0.0.0";
-            createDeploymentPackageRequest.SetVersionPostRelease = "4.0.0.0";
-            createDeploymentPackageRequest.DeployPackageInto = GetSavedXrmRecordConfiguration();
-            createDeploymentPackageRequest.DataToInclude = new[]
-            {
-                new ExportRecordType()
-                {
-                     RecordType = new RecordType(Entities.account, Entities.account), Type = ExportType.AllRecords
-                },
-                new ExportRecordType()
-                {
-                     RecordType = new RecordType(Entities.contact, Entities.contact), Type = ExportType.AllRecords
-                }
-            };
-            //error if already .zips on the folder
-            FileUtility.WriteToFile(TestingFolder, "Fake.zip", "FakeContent");
-            createApplication = CreateAndLoadTestApplication<CreatePackageModule>();
-            try
-            {
-                createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog, ServiceResponseBase<DataImportResponseItem>>(createDeploymentPackageRequest);
-                Assert.Fail();
-            }
-            catch(Exception ex)
-            {
-                Assert.IsFalse(ex is AssertFailedException);
-            }
-            FileUtility.DeleteFiles(TestingFolder);
-            FileUtility.DeleteSubFolders(TestingFolder);
-            response = createApplication.NavigateAndProcessDialog<CreatePackageModule, CreatePackageDialog, ServiceResponseBase<DataImportResponseItem>>(createDeploymentPackageRequest);
-            Assert.IsFalse(response.HasError);
-
-            solution = XrmRecordService.Get(solution.Type, solution.Id);
-            Assert.AreEqual("3.0.0.0", solution.GetStringField(Fields.solution_.version));
         }
     }
 }

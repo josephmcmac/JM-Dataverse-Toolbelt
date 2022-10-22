@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 namespace JosephM.Xrm.Autonumber
 {
-    [Instruction("If your dynamics instance is version 9+ this feature allows navigating, editing & creating new autonumbers using the dynamics platforms autonumber feature\n\nNote earlier versions of dynamics do not support native autonumbering so it will not work for them\n\nFor more information and formatting options see the Microsoft article")]
-    [Group(Sections.Main, true, 10)]
+    [Instruction("Open the Microsoft article above for numbering options")]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.VerticalCentered, displayLabel: false)]
     public class AutonumberNavigator
     {
         [Group(Sections.Main)]
+        [DisplayName("Select a record type to display its autonumber fields")]
         public RecordType RecordType { get; set; }
 
         [DoNotAllowDelete]
@@ -26,7 +27,7 @@ namespace JosephM.Xrm.Autonumber
 
         private static class Sections
         {
-            public const string Main = "Select A Record Type To Display It's Autonumber Fields";
+            public const string Main = "Select a record type to display its autonumber fields";
         }
     }
 }

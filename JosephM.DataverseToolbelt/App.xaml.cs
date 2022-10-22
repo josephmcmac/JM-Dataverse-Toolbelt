@@ -55,7 +55,7 @@ namespace JosephM.XrmDeveloperTool
             app.AddModule<SavedRequestModule>();
             app.AddModule<ConsoleApplicationModule>();
             app.AddModule<XrmDeveloperToolAboutModule>();
-            app.AddModule<DevAppReleaseCheckModule>();
+            //app.AddModule<DevAppReleaseCheckModule>();
             app.AddModule<SavedConnectionAppConnectionModule>();
             app.AddModule<AutonumberModule>();
             app.AddModule<ColourThemeModule>();

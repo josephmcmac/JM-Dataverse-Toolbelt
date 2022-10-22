@@ -9,8 +9,9 @@ namespace JosephM.Deployment.SolutionTransfer
 {
     [Instruction("The solution will be exported from the source connection and imported into the target")]
     [AllowSaveAndLoad]
-    [Group(Sections.Solution, true, 30)]
-    [Group(Sections.Connection, true, 20)]
+    [Group(Sections.Connection, Group.DisplayLayoutEnum.HorizontalLabelAbove, 10, displayLabel: false)]
+    [Group(Sections.Solution, Group.DisplayLayoutEnum.VerticalCentered, 20, displayLabel: false)]
+    [Group(Sections.ExportDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, 30, displayLabel: false)]
     public class SolutionTransferRequest : ServiceRequestBase
     {
         [GridWidth(250)]
@@ -44,12 +45,12 @@ namespace JosephM.Deployment.SolutionTransfer
 
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [GridWidth(110)]
-        [Group(Sections.Solution)]
+        [Group(Sections.ExportDetails)]
         [DisplayOrder(500)]
         public bool ExportAsManaged { get; set; }
 
         [GridWidth(110)]
-        [Group(Sections.Solution)]
+        [Group(Sections.ExportDetails)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [CascadeOnChange(nameof(SetVersionPostRelease))]
         [DisplayOrder(520)]
@@ -57,7 +58,7 @@ namespace JosephM.Deployment.SolutionTransfer
         public string ThisReleaseVersion { get; set; }
 
         [GridWidth(110)]
-        [Group(Sections.Solution)]
+        [Group(Sections.ExportDetails)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [DisplayOrder(530)]
         [RequiredProperty]
@@ -67,6 +68,7 @@ namespace JosephM.Deployment.SolutionTransfer
         {
             public const string Solution = "Main";
             public const string Connection = "Connection";
+            public const string ExportDetails = "Export Details";
         }
     }
 }

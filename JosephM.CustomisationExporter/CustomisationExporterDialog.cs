@@ -29,9 +29,6 @@ namespace JosephM.CustomisationExporter
                 if (!dictionary.ContainsKey(name))
                     dictionary.Add(name, value);
             }
-            addProperty("All Types", Request.IncludeAllRecordTypes.ToString());
-            if(!Request.IncludeAllRecordTypes && Request.RecordTypes != null)
-                addProperty("Selected Type Count", Request.RecordTypes.Count().ToString());
             addProperty("Entities", Request.Entities.ToString());
             addProperty("Fields", Request.Fields.ToString());
             addProperty("Relationships", Request.Relationships.ToString());

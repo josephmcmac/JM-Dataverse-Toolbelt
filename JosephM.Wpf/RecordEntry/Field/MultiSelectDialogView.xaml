@@ -27,18 +27,19 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0"
+              HorizontalAlignment="Center">
             <TextBlock
-                            Text="Select Options"
-                            Style="{StaticResource HeadingStyle}" />
+                Text="Select desired items then click the 'apply changes' button"
+                Style="{StaticResource HeadingStyle}" />
         </Grid>
         <Grid Grid.Row="1">
-            <WrapPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <shared:XrmButton DataContext="{Binding CancelButtonViewModel}" />
                 <shared:XrmButton DataContext="{Binding ApplyButtonViewModel}" />
-            </WrapPanel>
+            </StackPanel>
         </Grid>
-        <Grid Grid.Row="2" Margin="8,8,8,8" >
+        <Grid Grid.Row="2" Margin="8,8,8,8" HorizontalAlignment="Center">
             <ScrollViewer
                 VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Auto"

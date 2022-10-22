@@ -37,21 +37,18 @@ namespace JosephM.Deployment.CreatePackage
         {
             var folderPath = request.FolderPath.FolderPath;
 
-            var tasksDone = 0;
-            var totalTasks = 4;
-
             var xrmRecordService = XrmRecordService;
             var service = xrmRecordService.XrmService;
             var solution = service.Retrieve(Entities.solution, new Guid(request.Solution.Id));
-            tasksDone++;
             var solutionUniqueName = solution.GetStringField(Fields.solution_.uniquename);
+
             if (solution.GetStringField(Fields.solution_.version) != request.ThisReleaseVersion)
             {
-                controller.UpdateProgress(tasksDone, totalTasks, "Setting Release Version " + request.ThisReleaseVersion);
+                controller.LogLiteral("Setting Release Version " + request.ThisReleaseVersion);
                 solution.SetField(Fields.solution_.version, request.ThisReleaseVersion);
                 service.Update(solution, new[] { Fields.solution_.version });
             }
-            controller.UpdateProgress(tasksDone, totalTasks, "Exporting Solution " + solutionUniqueName);
+            controller.LogLiteral("Exporting Solution " + solutionUniqueName);
 
             var req = new ExportSolutionRequest();
             req.Managed = request.ExportAsManaged;
@@ -65,55 +62,20 @@ namespace JosephM.Deployment.CreatePackage
                 request.ExportAsManaged ? "_managed" : null);
 
             FileUtility.WriteToFile(folderPath, fileName, exportResponse.ExportSolutionFile);
-            ++tasksDone;
             if (request.DataToInclude != null && request.DataToInclude.Any())
             {
-                controller.UpdateProgress(tasksDone, totalTasks, "Exporting Data");
+                controller.LogLiteral("Setting Release Version " + request.ThisReleaseVersion);
                 var dataExportService = new ExportXmlService(xrmRecordService);
                 dataExportService.ExportXml(request.DataToInclude,
                     new Folder(GetDataExportFolder(folderPath)), request.IncludeNotes, request.IncludeFileAndImageFields, request.IncludeNNRelationshipsBetweenEntities, controller.Controller);
             }
-            tasksDone++;
             if (solution.GetStringField(Fields.solution_.version) != request.SetVersionPostRelease)
             {
-                controller.UpdateProgress(tasksDone, totalTasks, "Setting New Solution Version " + request.SetVersionPostRelease);
+                controller.LogLiteral("Setting New Solution Version " + request.SetVersionPostRelease);
                 solution.SetField(Fields.solution_.version, request.SetVersionPostRelease);
                 service.Update(solution, new[] { Fields.solution_.version });
             }
-            if (request.DeployPackageInto != null)
-            {
-                if (response.HasError)
-                {
-                    throw new Exception("Package Deployment Aborted Due To Errors During Creating");
-                }
-                else
-                {
-                    var deployRequest = new DeployPackageRequest
-                    {
-                        FolderContainingPackage = request.FolderPath,
-                        Connection = request.DeployPackageInto
-                    };
-                    var deployService = new DeployPackageService(OrganizationConnectionFactory);
-                    var deployPackageResponse = new DeployPackageResponse();
-                    deployService.ExecuteExtention(deployRequest, deployPackageResponse, controller);
-                    response.LoadDeployPackageResponse(deployPackageResponse);
-                }
-            }
-
             response.Message = "The Deployment Package Has Been Generated";
-
-
-            if (request.DeployPackageInto != null)
-            {
-                if (response.FailedSolution != null)
-                {
-                    response.Message += " but there was an error deploying the solution";
-                }
-                else
-                {
-                    response.Message += " and Deployed";
-                }
-            }
         }
 
         private string GetDataExportFolder(string rootFolder)

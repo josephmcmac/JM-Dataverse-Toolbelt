@@ -247,7 +247,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xrm", "Xrm", "{12DBD3A6-5FF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VsixFiles", "VsixFiles", "{F0AC2B36-7BDB-49A6-9E1B-AF995F70871C}"
 	ProjectSection(SolutionItems) = preProject
-		VsixFiles\jmdataversedevkit.png = VsixFiles\jmdataversedevkit.png
+		VsixFiles\jmdataversetoolbelt.png = VsixFiles\jmdataversetoolbelt.png
 		VsixFiles\JosephM.Xrm.Vsix EULA.rtf = VsixFiles\JosephM.Xrm.Vsix EULA.rtf
 		VsixFiles\XrmPackage.vsct = VsixFiles\XrmPackage.vsct
 	EndProjectSection
@@ -2452,8 +2452,8 @@ Global
 		{CAE31F05-459B-473D-8584-625605C134FE} = {F67A5E77-92E7-4614-A05E-FBC2F7B0E443}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {F9F33F8A-F9FB-4257-BBDD-9CB5074EFD84}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		JosephM.Xrm.Vsix.Shared\JosephM.Xrm.Vsix.Shared.projitems*{2e3789be-94e7-4b9f-a096-dc112f4fb84e}*SharedItemsImports = 4

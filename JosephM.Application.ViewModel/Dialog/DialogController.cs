@@ -46,7 +46,10 @@ namespace JosephM.Application.ViewModel.Dialog
 
         public virtual void LoadToUi(ViewModelBase viewModel)
         {
-            ApplicationController.DoOnMainThread(() => UiItems.Add(viewModel));
+            ApplicationController.DoOnMainThread(() =>
+            {
+                UiItems.Add(viewModel);
+            });
         }
 
         public virtual void RemoveFromUi(ViewModelBase viewModel)

@@ -13,8 +13,7 @@ namespace JosephM.Deployment.DeployPackage
 {
     [Instruction("Select the package folder and instance to import into")]
     [AllowSaveAndLoad]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.Connection, true, 20)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.VerticalCentered, order: 10, displayLabel: false)]
     public class DeployPackageRequest : ServiceRequestBase, IImportXmlRequest
     {
         public static DeployPackageRequest CreateForDeployPackage(string folder)
@@ -27,9 +26,9 @@ namespace JosephM.Deployment.DeployPackage
         }
 
         [GridWidth(250)]
-        [Group(Sections.Connection)]
+        [Group(Sections.Main)]
         [DisplayOrder(100)]
-        [DisplayName("Saved Connection To Import Into")]
+        [DisplayName("Saved Connection Instance To Import Into")]
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration Connection { get; set; }

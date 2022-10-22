@@ -49,7 +49,7 @@ namespace JosephM.RecordCounts
                 .Where(r => Service.GetRecordTypeMetadata(r).Searchable)
                 .OrderBy(n => Service.GetDisplayName(n))
                 .ToArray()
-                : request.RecordTypes.Select(p => p.RecordType.Key).ToArray();
+                : request.RecordTypesToInclude.Select(p => p.RecordType.Key).ToArray();
 
             if (request.OnlyIncludeSelectedOwner)
                 recordTypes = recordTypes.Where(r => Service.GetRecordTypeMetadata(r).HasOwner).ToArray();
@@ -77,12 +77,12 @@ namespace JosephM.RecordCounts
                         ? ((records) =>
                        {
                            totalThisIteration += records.Count();
-                           controller.UpdateProgress(numberOfTypesCompleted, numberOfTypes, string.Format("Counting {0} ({1})", recordType, totalThisIteration));
+                           controller.UpdateProgress(numberOfTypesCompleted, numberOfTypes, $"Counting {Service.GetCollectionName(recordType)} ({totalThisIteration})");
                            foreach (var record in records)
                            {
                                var ownerType = record.GetLookupType("ownerid");
                                var ownerId = record.GetLookupId("ownerid");
-                               var format = string.Format("{0}:{1}", ownerType, ownerId);
+                               var format = $"{ownerType}:{ownerId}";
                                if (!thisDictionary.ContainsKey(format))
                                    thisDictionary.Add(format, 0);
                                thisDictionary[format]++;
@@ -92,7 +92,7 @@ namespace JosephM.RecordCounts
                         : (Action<IEnumerable<IRecord>>)((records) =>
                        {
                            totalThisIteration += records.Count();
-                           controller.UpdateProgress(numberOfTypesCompleted, numberOfTypes, string.Format("Counting {0} ({1})", recordType, totalThisIteration));
+                           controller.UpdateProgress(numberOfTypesCompleted, numberOfTypes, $"{Service.GetCollectionName(recordType)} ({totalThisIteration})");
                            foreach (var record in records)
                            {
                                thisDictionary[noOwnerIndex]++;
@@ -117,7 +117,7 @@ namespace JosephM.RecordCounts
                 {
                     if (ex.Message == null || !ignoreErrorMessages.Any(iem => ex.Message.Contains(iem)))
                     {
-                        response.AddResponseItem(new RecordCountsResponseItem(recordType, "Error Generating Counts", ex));
+                        response.AddResponseItem(new RecordCountsResponseItem(recordType, "Error generating counts", ex));
                     }
                 }
                 finally

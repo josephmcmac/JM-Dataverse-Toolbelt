@@ -6,11 +6,11 @@ using JosephM.XrmModule.SavedXrmConnections;
 
 namespace JosephM.Xrm.Vsix.Module.ImportSolution
 {
-    [Group(Sections.Connection, true, 20)]
+    [Group(Sections.Connection, Group.DisplayLayoutEnum.VerticalCentered)]
     public class ImportSolutionRequest : ServiceRequestBase
     {
         [Group(Sections.Connection)]
-        [DisplayName("Saved Connection To Import Into")]
+        [DisplayName("Saved connection instance to import into")]
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration Connection { get; set; }

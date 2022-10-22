@@ -28,7 +28,9 @@
         <Grid Grid.Row="0" Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BoolToVis}, Mode=OneWay}">
             <shared:LoadingView DataContext="{Binding LoadingViewModel}" />
         </Grid>
-        <Grid Grid.Row="1"  Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Center"
+              Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -38,23 +40,23 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
                 <TextBlock
                     Text="Edit View Columns"
                     Style="{StaticResource HeadingStyle}" />
             </Grid>
             <Grid Grid.Row="1">
-                <WrapPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <shared:XrmButton DataContext="{Binding CancelButtonViewModel}" />
                     <shared:XrmButton DataContext="{Binding ApplyButtonViewModel}" />
-                </WrapPanel>
+                </StackPanel>
             </Grid>
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
                 <TextBlock
-                    Text="Current Columns - Click And Drag To Reorder"
+                    Text="Current columns - click and drag to reorder"
                     Style="{StaticResource HeadingStyle}" />
             </Grid>
-            <Grid Grid.Row="3" Margin="8">
+            <Grid Grid.Row="3" Margin="8" HorizontalAlignment="Center">
                 <ScrollViewer
                     VerticalScrollBarVisibility="Disabled"
                               HorizontalScrollBarVisibility="Auto"
@@ -113,9 +115,9 @@
                 </ScrollViewer>
             </Grid>
             <Grid Grid.Row="4">
-                <WrapPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock
-                        Text="Available Columns - Click + Icon Or Drag Into The Current Columns To Add To The View"
+                        Text="Available columns - click + icon or drag into the current columns to add to the view"
                         Style="{StaticResource HeadingStyle}" 
                         />
                     <ComboBox
@@ -128,9 +130,9 @@
                         SelectedItem="{Binding SelectedLink, Mode=TwoWay}"
                         />
                     <shared:XrmButton DataContext="{Binding AddAllColumnsViewModel}" />
-                </WrapPanel>
+                </StackPanel>
             </Grid>
-            <Grid Grid.Row="5" Margin="8">
+            <Grid Grid.Row="5" Margin="8" HorizontalAlignment="Center">
                 <ScrollViewer
                     VerticalScrollBarVisibility="Disabled"
                               HorizontalScrollBarVisibility="Auto"

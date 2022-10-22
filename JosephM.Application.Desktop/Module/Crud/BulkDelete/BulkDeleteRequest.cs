@@ -7,8 +7,8 @@ using System.Linq;
 
 namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 {
-    [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalWrap, 10)]
-    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.HorizontalWrap, 30)]
+    [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.VerticalCentered, order: 30, displayLabel: false)]
     public class BulkDeleteRequest : ServiceRequestBase
     {
         private bool _allowExecuteMultiples = true;
@@ -61,7 +61,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 
         private static class Sections
         {
-            public const string RecordDetails = "Selected Deletion Details";
+            public const string RecordDetails = "Bulk Delete";
             public const string FieldUpdate = "Field Value To Update";
             public const string AdditionalOptions = "Additional Options";
         }

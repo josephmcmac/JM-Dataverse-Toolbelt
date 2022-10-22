@@ -19,6 +19,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
 
         public IEnumerable<CustomFormFunction> CustomFunctions { get; private set; }
-        public bool DisplayLabel { get; }
+        public bool DisplayLabel { get; set; }
     }
 }

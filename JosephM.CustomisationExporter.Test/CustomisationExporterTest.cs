@@ -29,7 +29,6 @@ namespace JosephM.CustomisationExporter.Test
             //first script generation of C# entities and fields
             var request = new CustomisationExporterRequest
             {
-                IncludeAllRecordTypes = true,
                 DuplicateManyToManyRelationshipSides = true,
                 Entities = true,
                 Fields = true,
@@ -43,7 +42,7 @@ namespace JosephM.CustomisationExporter.Test
                 PluginAssemblies = true,
                 PluginTriggers = true,
                 SecurityRoles = true,
-                RolesPrivileges = true,
+                SecurityRolesPrivileges = true,
                 FieldSecurityProfiles = true,
                 Users = true,
                 Teams = true,
@@ -58,7 +57,6 @@ namespace JosephM.CustomisationExporter.Test
             Assert.IsFalse(response.HasError);
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
 
-            request.IncludeAllRecordTypes = true;
             request.DuplicateManyToManyRelationshipSides = false;
             request.Entities = true;
             request.Fields = false;
@@ -71,7 +69,7 @@ namespace JosephM.CustomisationExporter.Test
             request.Workflows = false;
             request.PluginAssemblies = false;
             request.PluginTriggers = false;
-            request.RolesPrivileges = false;
+            request.SecurityRolesPrivileges = false;
             request.SecurityRoles = false;
             request.FieldSecurityProfiles = false;
             request.Users = false;
@@ -83,62 +81,6 @@ namespace JosephM.CustomisationExporter.Test
             Thread.Sleep(1000);
             FileUtility.DeleteFiles(TestingFolder);
             
-            response = testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog, CustomisationExporterResponse>(request);
-            Assert.IsFalse(response.HasError);
-            Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
-
-            request.IncludeAllRecordTypes = false;
-            request.DuplicateManyToManyRelationshipSides = true;
-            request.Entities = true;
-            request.Fields = true;
-            request.FieldOptionSets = true;
-            request.Relationships = true;
-            request.SharedOptionSets = true;
-            request.IncludeOneToManyRelationships = true;
-            request.RecordTypes = new[]
-            {
-                new RecordTypeSetting(Entities.account, Entities.account),
-                new RecordTypeSetting(Entities.contact, Entities.contact)
-            };
-
-            Thread.Sleep(1000);
-            FileUtility.DeleteFiles(TestingFolder);
-
-            response = testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog, CustomisationExporterResponse>(request);
-            Assert.IsFalse(response.HasError);
-            Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());
-
-            request = new CustomisationExporterRequest
-            {
-                Format = CustomisationExporterRequest.FileFormat.Csv,
-                IncludeAllRecordTypes = true,
-                DuplicateManyToManyRelationshipSides = true,
-                Entities = true,
-                Fields = true,
-                FieldOptionSets = true,
-                Relationships = true,
-                SharedOptionSets = true,
-                IncludeOneToManyRelationships = true,
-
-                Solutions = true,
-                Workflows = true,
-                PluginAssemblies = true,
-                PluginTriggers = true,
-                SecurityRoles = true,
-                RolesPrivileges = true,
-                FieldSecurityProfiles = true,
-                Users = true,
-                Teams = true,
-                Reports = true,
-                WebResources = true,
-                FormsAndDashboards = true,
-
-                SaveToFolder = new Folder(TestingFolder)
-            };
-
-            Thread.Sleep(1000);
-            FileUtility.DeleteFiles(TestingFolder);
-
             response = testApplication.NavigateAndProcessDialog<CustomisationExporterModule, CustomisationExporterDialog, CustomisationExporterResponse>(request);
             Assert.IsFalse(response.HasError);
             Assert.IsTrue(FileUtility.GetFiles(TestingFolder).Any());

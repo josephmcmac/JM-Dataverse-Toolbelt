@@ -25,33 +25,31 @@
         >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" Visibility="{Binding DisplayLabel, Converter={StaticResource BoolToVis}}">
-                    <TextBlock
+        <Grid Grid.Row="0"
+                      HorizontalAlignment="Center"
+                      Visibility="{Binding DisplayLabel, Converter={StaticResource BoolToVis}}">
+            <TextBlock
+                      HorizontalAlignment="Center"
                             Text="{Binding SectionLabel}"
                             Style="{StaticResource SectionHeadingStyle}" />
-                </Grid>
-                <Grid Grid.Column="1" VerticalAlignment="Center">
-                    <ItemsControl
+        </Grid>
+        <Grid Grid.Row="1" HorizontalAlignment="Center">
+            <ItemsControl
                             ItemsSource="{Binding CustomFunctions}"
                             ItemTemplate="{StaticResource XrmButtonTemplate}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>
-            </Grid>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <ItemsControl 
                     x:Name="sectionControl"
                     ItemsSource="{Binding Fields}"

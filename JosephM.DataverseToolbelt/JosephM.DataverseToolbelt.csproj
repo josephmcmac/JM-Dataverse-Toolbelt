@@ -103,7 +103,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>..\JosephM.ToolbeltTheme\jmdataversetoolbelt.ico</ApplicationIcon>
+    <ApplicationIcon>jmdataversetoolbelt.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -291,9 +291,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\JosephM.ToolbeltTheme\jmdataversetoolbelt.ico">
-      <Link>jmdataversetoolbelt.ico</Link>
-    </Resource>
+    <Resource Include="jmdataversetoolbelt.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

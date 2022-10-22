@@ -1,6 +1,4 @@
-﻿#region
-
-using JosephM.Core.Attributes;
+﻿using JosephM.Core.Attributes;
 using JosephM.Core.Constants;
 using JosephM.Core.Extentions;
 using JosephM.Core.FieldType;
@@ -9,21 +7,18 @@ using JosephM.Record.Attributes;
 using JosephM.Record.Query;
 using System.Linq;
 
-#endregion
-
 namespace JosephM.CustomisationImporter.Service
 {
-    [Instruction("Customisations Defined In The Excel File Will Be Imported Into The Dynamics Instance And Published. For Each Item If A Match Exists For The Schema Name It Will Be Updated, Otherwise A New Customisation Item Will Be Created")]
+    [Instruction("To download the import template click the button above. Customisations in the imported excel file will be upserted into the instance and published.\n\nIf a match exists for the schema name of each customisation it will be updated, otherwise a new customisation item will be created")]
     [AllowSaveAndLoad]
-    [DisplayName("Import Customisations")]
-    [Group(Sections.File, true, 10)]
-    [Group(Sections.Solution, true, 20)]
-    [Group(Sections.Include, true, order: 30, selectAll: true)]
+    [DisplayName("Customisation Import")]
+    [Group(Sections.ImportFileAndSolution, Group.DisplayLayoutEnum.VerticalCentered, order: 10, displayLabel: false)]
+    [Group(Sections.ItemsToInclude, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30, selectAll: true)]
     public class CustomisationImportRequest : ServiceRequestBase, IValidatableObject
     {
         [GridWidth(400)]
         [DisplayOrder(10)]
-        [Group(Sections.File)]
+        [Group(Sections.ImportFileAndSolution)]
         [RequiredProperty]
         [FileMask(FileMasks.ExcelFile)]
         [PropertyInContextByPropertyValue("HideExcelFile", false)]
@@ -36,14 +31,14 @@ namespace JosephM.CustomisationImporter.Service
         public bool HideSolutionOptions { get; set; }
         [GridWidth(120)]
         [DisplayOrder(100)]
-        [Group(Sections.Solution)]
+        [Group(Sections.ImportFileAndSolution)]
         [PropertyInContextByPropertyValue("HideSolutionOptions", false)]
         [DisplayName("Add Components To Solution")]
         public bool AddToSolution { get; set; }
 
         [DisplayOrder(110)]
         [RequiredProperty]
-        [Group(Sections.Solution)]
+        [Group(Sections.ImportFileAndSolution)]
         [ReferencedType(Xrm.Schema.Entities.solution)]
         [UsePicklist(Xrm.Schema.Fields.solution_.uniquename)]
         [LookupCondition(Xrm.Schema.Fields.solution_.ismanaged, false)]
@@ -54,27 +49,27 @@ namespace JosephM.CustomisationImporter.Service
         public Lookup Solution { get; set; }
         [GridWidth(110)]
         [DisplayOrder(200)]
-        [Group(Sections.Include)]
+        [Group(Sections.ItemsToInclude)]
         public bool Entities { get; set; }
         [GridWidth(110)]
         [DisplayOrder(210)]
-        [Group(Sections.Include)]
+        [Group(Sections.ItemsToInclude)]
         public bool Fields { get; set; }
         [GridWidth(110)]
         [DisplayOrder(220)]
-        [Group(Sections.Include)]
+        [Group(Sections.ItemsToInclude)]
         public bool Relationships { get; set; }
         [GridWidth(110)]
         [DisplayOrder(230)]
-        [Group(Sections.Include)]
+        [Group(Sections.ItemsToInclude)]
         public bool FieldOptionSets { get; set; }
         [GridWidth(110)]
         [DisplayOrder(240)]
-        [Group(Sections.Include)]
+        [Group(Sections.ItemsToInclude)]
         public bool SharedOptionSets { get; set; }
         [GridWidth(110)]
         [DisplayOrder(250)]
-        [Group(Sections.Include)]
+        [Group(Sections.ItemsToInclude)]
         public bool Views { get; set; }
 
         public IsValidResponse Validate()
@@ -93,9 +88,8 @@ namespace JosephM.CustomisationImporter.Service
 
         private static class Sections
         {
-            public const string File = "File";
-            public const string Include = "Include These Items In Import";
-            public const string Solution = "Solution";
+            public const string ImportFileAndSolution = "Import File & Solution";
+            public const string ItemsToInclude = "Items To Include In Import";
         }
     }
 }

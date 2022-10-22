@@ -31,7 +31,6 @@ namespace JosephM.Deployment.CreatePackage
             addProperty("Include NN", Request.IncludeNNRelationshipsBetweenEntities.ToString());
             addProperty("Include Notes", Request.IncludeNotes.ToString());
             addProperty("Managed Solution", Request.ExportAsManaged.ToString());
-            addProperty("Include Deploy", (Request.DeployPackageInto != null).ToString());
             if (Request.DataToInclude != null)
             {
                 foreach (var data in Request.DataToInclude)

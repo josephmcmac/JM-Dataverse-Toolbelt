@@ -456,7 +456,7 @@ namespace JosephM.Application.ViewModel.Query
         private void ChangeQueryType()
         {
             IsQuickFind = !IsQuickFind;
-            QueryTypeButton.Label = IsQuickFind ? "Use Query" : "Use Quick Find";
+            QueryTypeButton.Label = IsQuickFind ? "Switch to Query" : "Switch to Quick Find";
             IncludeNotInButton.IsVisible = !IsQuickFind;
             if (!IsQuickFind)
             {

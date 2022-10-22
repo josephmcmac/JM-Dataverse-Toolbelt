@@ -281,11 +281,23 @@
     <Compile Include="Query\FilterConditionsView.xaml.cs">
       <DependentUpon>FilterConditionsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordEntry\FieldSectionHorizontalLabelAboveView.xaml.cs">
+      <DependentUpon>FieldSectionHorizontalLabelAboveView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\FieldSectionCenteredView.xaml.cs">
+      <DependentUpon>FieldSectionCenteredView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\FieldSectionHorizontalCenteredInputOnlyView.xaml.cs">
+      <DependentUpon>FieldSectionHorizontalCenteredInputOnlyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecordEntry\FieldSectionInputOnlyView.xaml.cs">
       <DependentUpon>FieldSectionInputOnlyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\FieldSectionCompactView.xaml.cs">
       <DependentUpon>FieldSectionCompactView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecordEntry\Field\FieldLabelAboveView.xaml.cs">
+      <DependentUpon>FieldLabelAboveView.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecordEntry\Field\FileRefView.xaml.cs">
       <DependentUpon>FileRefView.xaml</DependentUpon>
@@ -432,6 +444,7 @@
     <Compile Include="TemplateSelector\FieldTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FormBodyTemplateSelector.cs" />
     <Compile Include="TemplateSelector\FormSectionTemplateSelector.cs" />
+    <Compile Include="TemplateSelector\LabelledAboveFieldTemplateSelector.cs" />
     <Compile Include="TemplateSelector\LabelledFieldTemplateSelector.cs" />
     <Compile Include="TemplateSelector\MainTabRegionDataTemplateSelector.cs" />
     <Page Include="Application\ApplicationHeadingView.xaml">
@@ -566,11 +579,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="RecordEntry\FieldSectionHorizontalLabelAboveView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\FieldSectionCenteredView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\FieldSectionHorizontalCenteredInputOnlyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="RecordEntry\FieldSectionInputOnlyView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="RecordEntry\FieldSectionCompactView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecordEntry\Field\FieldLabelAboveView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

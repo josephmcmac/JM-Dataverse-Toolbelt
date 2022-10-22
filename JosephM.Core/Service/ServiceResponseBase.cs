@@ -7,8 +7,9 @@ using System.Linq;
 
 namespace JosephM.Core.Service
 {
-    [Group(Sections.Message, Group.DisplayLayoutEnum.HorizontalInputOnly, order: -1, displayLabel: false)]
-    [Group(Sections.ResponseItems, true, 1, displayLabel: false)]
+    [Group(Sections.Message, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, order: -2, displayLabel: false)]
+    [Group(Sections.Exception, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, order: -1, displayLabel: false)]
+    [Group(Sections.ResponseItems, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, 1, displayLabel: false)]
     public class ServiceResponseBase<TResponseItem> : IProcessCompletion
         where TResponseItem : ServiceResponseItem
     {
@@ -49,7 +50,7 @@ namespace JosephM.Core.Service
         public string Message { get; set; }
 
         [DoNotLimitDisplayHeight]
-        [Group(Sections.Message)]
+        [Group(Sections.Exception)]
         [DisplayOrder(-1)]
         [PropertyInContextByPropertyNotNull(nameof(Exception))]
         public string FatalErrorDescription
@@ -116,6 +117,7 @@ namespace JosephM.Core.Service
         private static class Sections
         {
             public const string Message = "Message";
+            public const string Exception = "Exception";
             public const string ResponseItems = "Response Items";
         }
 

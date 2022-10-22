@@ -1,7 +1,6 @@
 ﻿using JosephM.Core.Service;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Record.Xrm.XrmRecord;
-using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.ImportSolution
 {

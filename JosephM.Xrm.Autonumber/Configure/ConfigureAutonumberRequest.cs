@@ -20,6 +20,7 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
 
         }
 
+        [Hidden]
         [DisplayOrder(10)]
         [ReadOnlyWhenSet]
         [RequiredProperty]
@@ -33,7 +34,7 @@ namespace JosephM.Application.Desktop.Module.Crud.ConfigureAutonumber
         public RecordField Field { get; set; }
 
         [DisplayOrder(30)]
-        public string AutonumberFormat { get; set; }
+        public string Format { get; set; }
 
         [DisplayOrder(40)]
         [DisplayName("Set Seed (Optional)")]

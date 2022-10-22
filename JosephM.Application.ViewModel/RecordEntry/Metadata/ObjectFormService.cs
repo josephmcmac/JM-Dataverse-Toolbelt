@@ -137,12 +137,16 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                     var displayLayout = groupAttribute != null
                         ? groupAttribute.DisplayLayout
-                        : Group.DisplayLayoutEnum.VerticalList;
+                        : Group.DisplayLayoutEnum.VerticalCentered;
 
                     if (!otherSections.ContainsKey(sectionName))
                     {
                         otherSections[sectionName] = new List<FormFieldMetadata>();
                         var newSection = new FormFieldSection(sectionName, otherSections[sectionName], displayLayout, order);
+                        if(groupAttribute == null)
+                        {
+                            newSection.DisplayLabel = false;
+                        }
                         formSections.Add(newSection);
                     }
                     otherSections[sectionName].Add(fieldMetadata);
@@ -150,7 +154,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 foreach (var section in formSections)
                 {
                     var fields = section.FormFields;
-                    if (section.DisplayLayout == Group.DisplayLayoutEnum.HorizontalInputOnly)
+                    if (section.DisplayLayout == Group.DisplayLayoutEnum.HorizontalInputOnly
+                        || section.DisplayLayout == Group.DisplayLayoutEnum.HorizontalCenteredInputOnly)
                     {
                         foreach (var field in fields)
                         {

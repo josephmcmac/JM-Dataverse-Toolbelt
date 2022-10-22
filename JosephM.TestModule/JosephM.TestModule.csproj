@@ -84,6 +84,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllPropertyTypesCentered\AllPropertyTypesCenteredDialog.cs" />
+    <Compile Include="AllPropertyTypesCentered\AllPropertyTypesCenteredModule.cs" />
+    <Compile Include="AllPropertyTypesCentered\AllPropertyTypesCenteredRequest.cs" />
+    <Compile Include="AllPropertyTypesCentered\AllPropertyTypesCenteredResponse.cs" />
+    <Compile Include="AllPropertyTypesCentered\AllPropertyTypesCenteredResponseItem.cs" />
+    <Compile Include="AllPropertyTypesCentered\AllPropertyTypesCenteredService.cs" />
+    <Compile Include="AllPropertyTypesCentered\TestSettingsTypeCentered.cs" />
+    <Compile Include="AllPropertyTypesCentered\TestSettingsTypeCenteredEnumerated.cs" />
     <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactDialog.cs" />
     <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactModule.cs" />
     <Compile Include="AllPropertyTypesCompact\AllPropertyTypesCompactRequest.cs" />

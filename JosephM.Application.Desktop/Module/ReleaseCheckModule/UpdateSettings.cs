@@ -2,7 +2,7 @@
 
 namespace JosephM.Application.Desktop.Module.ReleaseCheckModule
 {
-    [Group(Sections.Main, wrapHorizontal: true, displayLabel: false)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.VerticalCentered, displayLabel: false)]
     public class UpdateSettings
     {
         public UpdateSettings()

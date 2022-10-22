@@ -108,8 +108,6 @@ namespace JosephM.Xrm
 
         private Dictionary<IntegerFormat, Dictionary<int, string>> _intPicklistCache = new Dictionary<IntegerFormat, Dictionary<int, string>>();
 
-        protected LogController Controller;
-
         public void SendEmail(Guid emailId)
         {
             var request = new SendEmailRequest()
@@ -127,10 +125,9 @@ namespace JosephM.Xrm
         /// </summary>
         private IOrganizationService _service;
 
-        public XrmService(IXrmConfiguration crmConfig, LogController controller, IOrganizationConnectionFactory serviceFactory)
+        public XrmService(IXrmConfiguration crmConfig, IOrganizationConnectionFactory serviceFactory)
         {
             XrmConfiguration = crmConfig;
-            Controller = controller;
             ServiceFactory = serviceFactory ?? new XrmOrganizationConnectionFactory();
         }
 
@@ -157,12 +154,6 @@ namespace JosephM.Xrm
         private SortedDictionary<string, RelationshipMetadataBase[]> EntityRelationships
         {
             get { return _entityRelationships; }
-        }
-
-        protected LogController UIController
-        {
-            get { return Controller; }
-            set { Controller = value; }
         }
 
         public IXrmConfiguration XrmConfiguration { get; set; }
@@ -275,7 +266,6 @@ namespace JosephM.Xrm
         public virtual OrganizationResponse Execute(OrganizationRequest request, bool retry)
         {
             var requestDescription = GetRequestDescription(request);
-            Controller.LogDetail("Executing crm request - " + requestDescription);
 
             OrganizationResponse result;
             try
@@ -291,11 +281,8 @@ namespace JosephM.Xrm
                 lock (_lockObject)
                 {
                     //I have seen this error thrown when the sand box server is busy, and subsequent calls are successful. Going to add a retry
-                    Controller.LogLiteral("Received FaultException<OrganizationServiceFault> retrying.. Details:" +
-                                          ex.DisplayString());
                     Thread.Sleep(50);
                     result = Service.Execute(request);
-                    Controller.LogLiteral("Successful retry");
                 }
             }
             catch (CommunicationException ex)
@@ -308,22 +295,17 @@ namespace JosephM.Xrm
                     //adding logic to reconnect when this error thrown
                     if (XrmConfiguration != null)
                     {
-                        Controller.LogLiteral("Attempting to reconnect..");
                         _service = null;
                         result = Service.Execute(request);
-                        Controller.LogLiteral("Reconnected..");
                     }
                     else
                     {
-                        Controller.LogLiteral("No Crm config found unable to reconnect..");
                         throw;
                     }
                 }
             }
 
             requestDescription = GetRequestDescription(request);
-            Controller.LogDetail("Received crm response - " + requestDescription);
-
             return result;
         }
 
@@ -360,14 +342,12 @@ namespace JosephM.Xrm
             {
                 if (!EntityMetadata.ContainsKey(entity))
                 {
-                    Controller.LogLiteral("Retrieving " + entity + " entity metadata");
                     var request = new RetrieveEntityRequest
                     {
                         EntityFilters = EntityFilters.Default,
                         LogicalName = entity
                     };
                     var response = (RetrieveEntityResponse)Execute(request);
-                    Controller.LogLiteral("Retrieved " + entity + " entity metadata");
                     EntityMetadata.Add(entity, response.EntityMetadata);
                 }
             }
@@ -2178,14 +2158,12 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             {
                 if (!EntityRelationships.ContainsKey(entity))
                 {
-                    Controller.LogLiteral("Retrieving " + entity + " relationship metadata");
                     var request = new RetrieveEntityRequest
                     {
                         EntityFilters = EntityFilters.Relationships,
                         LogicalName = entity
                     };
                     var response = (RetrieveEntityResponse)Execute(request);
-                    Controller.LogLiteral("Retrieved " + entity + " relationship metadata");
                     EntityRelationships.Add(entity,
                         response.EntityMetadata.OneToManyRelationships
                             .Cast<RelationshipMetadataBase>()
@@ -2245,7 +2223,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
             {
                 if (!EntityFieldMetadata.ContainsKey(entity))
                 {
-                    Controller.LogLiteral("Retrieving " + entity + " field metadata");
                     // Create the request
                     var request = new RetrieveEntityRequest
                     {
@@ -2253,7 +2230,6 @@ IEnumerable<ConditionExpression> filters, IEnumerable<string> sortFields)
                         LogicalName = entity
                     };
                     var response = (RetrieveEntityResponse)Execute(request);
-                    Controller.LogLiteral("Retrieved " + entity + " field metadata");
                     var attributeMetadata = response.EntityMetadata.Attributes;
                     AttributeMetadata[] fieldMetadata = FilterAttributeMetadata(attributeMetadata);
                     var dictionary = new SortedDictionary<string, AttributeMetadata>();

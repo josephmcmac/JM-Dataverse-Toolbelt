@@ -6,6 +6,10 @@ using JosephM.Xrm.Schema;
 
 namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 {
+    [Group(Sections.Plugin, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10, displayLabel: false)]
+    [Group(Sections.MessagePipeline, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
+    [Group(Sections.PreImage, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
+    [Group(Sections.OtherOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 40)]
     [DoNotAllowGridEdit]
     public class PluginTrigger
     {
@@ -19,6 +23,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [Hidden]
         public string Id { get; set; }
 
+        [Group(Sections.Plugin)]
         [DisplayOrder(10)]
         [GridWidth(300)]
         [RequiredProperty]
@@ -28,7 +33,14 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [LookupCondition(Fields.plugintype_.isworkflowactivity, false)]
         public Lookup Plugin { get; set; }
 
+        [Group(Sections.MessagePipeline)]
         [DisplayOrder(20)]
+        [RequiredProperty]
+        [GridWidth(150)]
+        public PluginStage? Stage { get; set; }
+
+        [Group(Sections.MessagePipeline)]
+        [DisplayOrder(30)]
         [GridWidth(150)]
         [RequiredProperty]
         [ReferencedType(Entities.sdkmessage)]
@@ -37,28 +49,27 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [OrderPriority("Create", "Update", "Delete")]
         public Lookup Message { get; set; }
 
-        [DisplayOrder(30)]
+        [Group(Sections.MessagePipeline)]
+        [DisplayOrder(40)]
         [GridWidth(150)]
         [RecordTypeFor(nameof(FilteringFields))]
         [RecordTypeFor(nameof(PreImageFields))]
         public RecordType RecordType { get; set; }
 
-        [DisplayOrder(40)]
-        [RequiredProperty]
-        [GridWidth(150)]
-        public PluginStage? Stage { get; set; }
-
+        [Group(Sections.MessagePipeline)]
         [DisplayOrder(50)]
         [RequiredProperty]
         [GridWidth(100)]
         [PropertyInContextByPropertyValue(nameof(Stage), PluginStage.PostEvent)]
         public PluginMode? Mode { get; set; }
 
-        [DisplayOrder(52)]
+        [Group(Sections.MessagePipeline)]
+        [DisplayOrder(60)]
         [GridWidth(75)]
         [RequiredProperty]
         public int Rank { get; set; }
 
+        [Group(Sections.OtherOptions)]
         [GridWidth(150)]
         [DisplayName("Run In User Context (Optional)")]
         [ReferencedType(Entities.systemuser)]
@@ -67,31 +78,35 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
         [DoNotAllowAdd]
         public Lookup SpecificUserContext { get; set; }
 
+        [Group(Sections.OtherOptions)]
         [DisplayOrder(65)]
         [GridWidth(225)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         [PropertyInContextByPropertyValue(nameof(Message), "Update")]
         public IEnumerable<RecordField> FilteringFields { get; set; }
 
+        [Group(Sections.PreImage)]
+        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
+        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
+        [RequiredProperty]
         [DisplayOrder(70)]
+        [GridWidth(100)]
+        public string PreImageName { get; set; }
+
+        [Group(Sections.PreImage)]
+        [DisplayOrder(80)]
         [GridWidth(125)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
         public bool PreImageAllFields { get; set; }
 
-        [DisplayOrder(75)]
+        [Group(Sections.PreImage)]
+        [DisplayOrder(90)]
         [GridWidth(225)]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
         [PropertyInContextByPropertyValue(nameof(PreImageAllFields), false)]
         public IEnumerable<RecordField> PreImageFields { get; set; }
-
-        [PropertyInContextByPropertyNotNull(nameof(RecordType))]
-        [PropertyInContextByPropertyValues(nameof(Message), "Update", "Delete")]
-        [RequiredProperty]
-        [DisplayOrder(80)]
-        [GridWidth(100)]
-        public string PreImageName { get; set; }
 
 
         [Hidden]
@@ -99,6 +114,14 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
         [Hidden]
         public string PreImageIdUnique { get; set; }
+
+        private static class Sections
+        {
+            public const string Plugin = "Plugin";
+            public const string MessagePipeline = "Message Pipeline";
+            public const string PreImage = "Pre Image";
+            public const string OtherOptions = "Other Options";
+        }
 
         public enum PluginStage
         {

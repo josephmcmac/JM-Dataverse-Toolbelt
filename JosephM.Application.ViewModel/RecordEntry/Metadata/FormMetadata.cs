@@ -1,10 +1,5 @@
-﻿#region
-
-using JosephM.Record.IService;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
@@ -15,9 +10,9 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             FormSections = formSections;
         }
 
-        public FormMetadata(IEnumerable<string> fields)
+        public FormMetadata(IEnumerable<string> fields, string heading = null)
         {
-            FormSections = new[] {new FormFieldSection("Fields", fields.Select(s => new PersistentFormField(s)))};
+            FormSections = new[] {new FormFieldSection(heading ?? "Fields", fields.Select(s => new PersistentFormField(s)))};
         }
 
         public FormMetadata(FormSection formSection)

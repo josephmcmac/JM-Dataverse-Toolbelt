@@ -13,9 +13,11 @@ namespace JosephM.Xrm.SqlImport
         "Also note being a standalone application this implementation is not designed for high volumes of data. All imported data is loaded into the applications runtime and if the volume is excessive out of memory errors will occur")]
     [DisplayName("Import SQL")]
     [AllowSaveAndLoad]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.Misc, true, 20)]
-    [Group(Sections.SchedulingOptions, true, 20)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, 10, displayLabel: false)]
+    [Group(Sections.ImportOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
+    [Group(Sections.CacheOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
+    [Group(Sections.SchedulingOptionsOn, Group.DisplayLayoutEnum.VerticalCentered, order: 40)]
+    [Group(Sections.SchedulingOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 50)]
     public class SqlImportRequest : ServiceRequestBase, IValidatableObject
     {
         public SqlImportRequest()
@@ -33,7 +35,7 @@ namespace JosephM.Xrm.SqlImport
         [ConnectionFor(nameof(Mappings) + "." + nameof(SqlImportTableMapping.Mappings) + "." + nameof(SqlImportTableMapping.SqlImportFieldMapping.SourceColumn), typeof(SqlConnectionString))]
         public string ConnectionString { get; set; }
 
-        [Group(Sections.SchedulingOptions)]
+        [Group(Sections.SchedulingOptionsOn)]
         [DisplayOrder(500)]
         [RequiredProperty]
         public bool SendNotificationAtCompletion { get; set; }
@@ -60,29 +62,29 @@ namespace JosephM.Xrm.SqlImport
         [UsePicklist]
         public Lookup SendNotificationToQueue { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(400)]
         [RequiredProperty]
         public bool MaskEmails { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(410)]
         [RequiredProperty]
         public bool MatchRecordsByName { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.ImportOptions)]
         [DisplayOrder(415)]
         [RequiredProperty]
         public bool UpdateOnly { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.CacheOptions)]
         [DisplayOrder(420)]
         [RequiredProperty]
         [MinimumIntValue(1)]
         [MaximumIntValue(1000)]
         public int? ExecuteMultipleSetSize { get; set; }
 
-        [Group(Sections.Misc)]
+        [Group(Sections.CacheOptions)]
         [DisplayOrder(425)]
         [RequiredProperty]
         [MinimumIntValue(1)]
@@ -105,8 +107,10 @@ namespace JosephM.Xrm.SqlImport
         private static class Sections
         {
             public const string Main = "Main";
-            public const string Misc = "Misc";
-            public const string SchedulingOptions = "Scheduling Options - Selected Queues Should Have Email Addresses Populated And The From Queue Approved For Sending Emails";
+            public const string ImportOptions = "Import Options";
+            public const string CacheOptions = "Cache Options";
+            public const string SchedulingOptionsOn = "Scheduling Options - Selected Queues Should Have Email Addresses Populated And The From Queue Approved For Sending Emails";
+            public const string SchedulingOptions = "Scheduling Options";
         }
 
         [DoNotAllowGridOpen]

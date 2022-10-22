@@ -14,13 +14,12 @@ using System.Linq;
 namespace JosephM.Deployment.CreatePackage
 {
     [DisplayName("Create Deployment Package")]
-    [Instruction("A folder will be created containing the solution Zip and Xml files for the data. The deploy package process may then be run to import the package into another instance")]
+    [Instruction("A folder will be created containing the solution zip and xml files for the data. The deploy package process may then be run to import the package into another instance")]
     [AllowSaveAndLoad]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.Connection, true, 20)]
-    [Group(Sections.PackageSolution, true, 25)]
-    [Group(Sections.DataIncluded, true, 30)]
-    [Group(Sections.DataIncludedRecordTypes, true, order: 35, displayLabel: false)]
+    [Group(Sections.PackageSolution, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10, displayLabel: false)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.VerticalCentered, order: 20, displayLabel: false)]
+    [Group(Sections.DataIncluded, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
+    [Group(Sections.DataIncludedRecordTypes, Group.DisplayLayoutEnum.VerticalCentered, order: 35, displayLabel: false)]
     public class CreatePackageRequest : ServiceRequestBase, IValidatableObject
     {
         public static CreatePackageRequest CreateForCreatePackage(string folder, Lookup solution)
@@ -59,14 +58,6 @@ namespace JosephM.Deployment.CreatePackage
         [RequiredProperty]
         [PropertyInContextByPropertyValue(nameof(HideTypeAndFolder), false)]
         public Folder FolderPath { get; set; }
-
-        [GridWidth(150)]
-        [Group(Sections.Main)]
-        [DisplayOrder(40)]
-        [DisplayName("Deploy Package Into (Optional)")]
-        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
-        [PropertyInContextByPropertyValue(nameof(HideTypeAndFolder), false)]
-        public SavedXrmRecordConfiguration DeployPackageInto { get; set; }
 
         [DisplayOrder(510)]
         [RequiredProperty]
@@ -132,7 +123,6 @@ namespace JosephM.Deployment.CreatePackage
         {
             public const string Main = "Main";
             public const string PackageSolution = "Solution";
-            public const string Connection = "Connection";
             public const string DataIncluded = "Data Included";
             public const string DataIncludedRecordTypes = "Record Types";
         }

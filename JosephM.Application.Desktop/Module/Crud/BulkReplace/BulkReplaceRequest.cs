@@ -11,9 +11,9 @@ using System.Linq;
 
 namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
 {
-    [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalWrap, 10)]
-    [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalWrap, 30)]
-    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.HorizontalWrap, 20)]
+    [Group(Sections.RecordDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.AdditionalOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, displayLabel: false)]
+    [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.VerticalCentered, order: 30, displayLabel: false)]
     public class BulkReplaceRequest : ServiceRequestBase
     {
         private bool _allowExecuteMultiples = true;
@@ -103,7 +103,7 @@ namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
 
         private static class Sections
         {
-            public const string RecordDetails = "Selected Replace Details";
+            public const string RecordDetails = "Bulk Replace Field Text";
             public const string FieldUpdate = "Field Value To Replace";
             public const string AdditionalOptions = "Additional Options";
         }

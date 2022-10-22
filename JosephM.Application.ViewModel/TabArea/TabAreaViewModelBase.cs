@@ -1,8 +1,12 @@
 ﻿#region
 
 using JosephM.Application.Application;
+using JosephM.Application.ViewModel.Dialog;
 using JosephM.Application.ViewModel.Shared;
+using JosephM.Core.AppConfig;
 using JosephM.Core.Extentions;
+using JosephM.ObjectMapping;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 

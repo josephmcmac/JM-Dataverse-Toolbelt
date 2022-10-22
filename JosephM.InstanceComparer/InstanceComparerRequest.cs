@@ -8,12 +8,12 @@ using System.Collections.Generic;
 namespace JosephM.InstanceComparer
 {
     [DisplayName("Instance Comparison")]
-    [Instruction("The System Will Query And Compare The Components Across The 2 Dynamics Instances. After Completion A Detailed Report Will Output Of Differences Identified. The Report Will Include Hyperlinks To Open Items, As Well As A Feature To Add Some, Or All, Of The Components Into A Solution For Correcting The Different Components \n\nNote The Comparison Does Not Include Every Property Of The Components \n\nIf Comparing Data Matches Are Done By The Name Of The Record. Some Types Also Have Additional Fields Configured To Match (Mainly Microsoft Portal Types) Due To The Potential For Multiple Records With The Same Name")]
+    [Instruction("This process compares customisations across 2 instances and outputs a report of differences. Note only limited customisation types are compared")]
     [AllowSaveAndLoad]
-    [Group(Sections.Connections, true, 10)]
-    [Group(Sections.CompareOptions, true, order: 20, selectAll: true)]
-    [Group(Sections.GeneralOptions, true, order: 25)]
-    [Group(Sections.TypesToInclude, true, order: 30)]
+    [Group(Sections.InstancesToCompare, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.CompareOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, selectAll: true)]
+    [Group(Sections.GeneralOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30, displayLabel: false)]
+    [Group(Sections.TypesToInclude, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 40, displayLabel: false)]
     public class InstanceComparerRequest : ServiceRequestBase
     {
         public InstanceComparerRequest()
@@ -24,7 +24,7 @@ namespace JosephM.InstanceComparer
         }
 
         [DisplayOrder(5)]
-        [Group(Sections.Connections)]
+        [Group(Sections.InstancesToCompare)]
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         [ConnectionFor(nameof(DataComparisons))]
@@ -32,7 +32,7 @@ namespace JosephM.InstanceComparer
         public SavedXrmRecordConfiguration ConnectionOne { get; set; }
 
         [DisplayOrder(10)]
-        [Group(Sections.Connections)]
+        [Group(Sections.InstancesToCompare)]
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
         public SavedXrmRecordConfiguration ConnectionTwo { get; set; }
@@ -100,25 +100,6 @@ namespace JosephM.InstanceComparer
         [Group(Sections.CompareOptions)]
         [DisplayOrder(87)]
         public bool Reports { get; set; }
-        [GridWidth(110)]
-        [Group(Sections.CompareOptions)]
-        [DisplayOrder(88)]
-        public bool CaseCreationRules { get; set; }
-        [GridWidth(110)]
-        [Group(Sections.CompareOptions)]
-        [DisplayName("SLAs")]
-        [DisplayOrder(89)]
-        public bool SLAs { get; set; }
-
-        [GridWidth(110)]
-        [Group(Sections.CompareOptions)]
-        [DisplayOrder(100)]
-        public bool RoutingRules { get; set; }
-
-        [GridWidth(110)]
-        [Group(Sections.CompareOptions)]
-        [DisplayOrder(110)]
-        public bool Apps { get; set; }
 
         [GridWidth(110)]
         [Group(Sections.CompareOptions)]
@@ -186,10 +167,10 @@ namespace JosephM.InstanceComparer
 
         private static class Sections
         {
-            public const string Connections = "Select The Saved Connections For The CRM Instances To Compare";
+            public const string InstancesToCompare = "Instances to Compare";
             public const string CompareOptions = "Compare Options";
-            public const string GeneralOptions = "General Options";
-            public const string TypesToInclude = "Types to Include";
+            public const string GeneralOptions = "Other Options";
+            public const string TypesToInclude = "Types to Compare";
         }
     }
 }

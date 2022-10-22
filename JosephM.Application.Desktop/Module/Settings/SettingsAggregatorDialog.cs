@@ -28,7 +28,7 @@ namespace JosephM.Application.Desktop.Module.Settings
                 var instance = mapper.Map(ApplicationController.ResolveType(type));
 
                 var viewModel = new ObjectEntryViewModel(null, null, instance, FormController.CreateForObject(instance, ApplicationController, null));
-                viewModel.DisplayRightEdgeButtons = false;
+                viewModel.DisplayTopButtons = false;
                 viewModel.OnSave = () =>
                 {
                     ApplicationController.ResolveType<ISettingsManager>().SaveSettingsObject(instance);
