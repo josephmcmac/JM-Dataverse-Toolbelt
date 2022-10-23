@@ -1,10 +1,10 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
-using JosephM.Deployment.SolutionImport;
+using JosephM.Deployment.SolutionsImport;
 using JosephM.XrmModule.SavedXrmConnections;
 using System.Linq;
 
-namespace JosephM.Xrm.Vsix.Module.ImportSolution
+namespace JosephM.Deployment.ImportSolution
 {
     [Group(Sections.Summary, false, 0)]
     public class ImportSolutionResponse : ServiceResponseBase<ImportSolutionResponseItem>
@@ -21,7 +21,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
         [PropertyInContextByPropertyNotNull(nameof(FailedSolutionXml))]
         public string FailedSolutionXml { get; private set; }
 
-        public void LoadImportSolutionsResponse(ImportSolutionsResponse importSolutionsResponse)
+        public void LoadImportSolutionsResponse(SolutionsImportResponse importSolutionsResponse)
         {
             AddResponseItems(importSolutionsResponse.ImportedSolutionResults.Select(si => new ImportSolutionResponseItem(si)));
             FailedSolution = importSolutionsResponse.FailedSolution;

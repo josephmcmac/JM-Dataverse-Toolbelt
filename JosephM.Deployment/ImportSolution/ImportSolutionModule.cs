@@ -3,19 +3,16 @@ using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
-using JosephM.Core.FieldType;
 using JosephM.Core.AppConfig;
+using JosephM.Core.FieldType;
 using JosephM.Record.Xrm.XrmRecord;
-using JosephM.Xrm.Vsix.Application;
-using JosephM.Xrm.Vsix.Module.PackageSettings;
+using JosephM.Xrm;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
 using System.Linq;
 
-namespace JosephM.Xrm.Vsix.Module.ImportSolution
+namespace JosephM.Deployment.ImportSolution
 {
-    [MenuItemVisibleZip]
-    [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
     public class ImportSolutionModule : ServiceRequestModule<ImportSolutionDialog, ImportSolutionService, ImportSolutionRequest, ImportSolutionResponse, ImportSolutionResponseItem>
     {
@@ -25,6 +22,8 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
 
             AddDialogCompletionLinks();
         }
+
+        public override string MenuGroup => "Solution Deployment";
 
         private void AddDialogCompletionLinks()
         {
@@ -45,27 +44,6 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
                 }
                 , (r) => r.GetRecord().GetField(nameof(ImportSolutionResponse.Connection)) != null)
                 , typeof(ImportSolutionResponse));
-        }
-
-        public override void DialogCommand()
-        {
-            var visualStudioService = ApplicationController.ResolveType(typeof(IVisualStudioService)) as IVisualStudioService;
-            if (visualStudioService == null)
-                throw new NullReferenceException("visualStudioService");
-            var selectedItems = visualStudioService.GetSelectedFileNamesQualified();
-            if (selectedItems.Count() != 1)
-            {
-                ApplicationController.UserMessage("Only one file may be selected to import");
-                return;
-            }
-
-            var request = new ImportSolutionRequest()
-            {
-                SolutionZip = new FileReference(selectedItems.First())
-            };
-            var uri = new UriQuery();
-            uri.AddObject(nameof(ImportSolutionDialog.Request), request);
-            ApplicationController.NavigateTo(typeof(ImportSolutionDialog), uri);
         }
     }
 }

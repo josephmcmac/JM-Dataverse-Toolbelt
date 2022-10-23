@@ -1,7 +1,7 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.FieldType;
 using JosephM.Core.Service;
-using JosephM.Deployment.SolutionImport;
+using JosephM.Deployment.SolutionsImport;
 
 namespace JosephM.Deployment.SolutionTransfer
 {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace JosephM.Deployment.SolutionImport
+namespace JosephM.Deployment.SolutionsImport
 {
-    public class ImportSolutionsResponse
+    public class SolutionsImportResponse
     {
         public bool Success { get { return FailedSolution == null; } }
         public string FailedSolution { get; set; }

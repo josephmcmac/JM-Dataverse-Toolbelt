@@ -1,6 +1,6 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
-using JosephM.Deployment.SolutionImport;
+using JosephM.Deployment.SolutionsImport;
 using JosephM.Xrm.DataImportExport.Import;
 using JosephM.Xrm.DataImportExport.XmlExport;
 using JosephM.XrmModule.SavedXrmConnections;
@@ -22,7 +22,7 @@ namespace JosephM.Deployment.DeployPackage
             _importedRecords.AddRange(dataImportResponse.ImportSummary);
         }
 
-        public void LoadImportSolutionsResponse(ImportSolutionsResponse importSolutionsResponse)
+        public void LoadImportSolutionsResponse(SolutionsImportResponse importSolutionsResponse)
         {
             AddResponseItems(importSolutionsResponse.ImportedSolutionResults.Select(it => new DataImportResponseItem(it.Type, null, it.Name, null, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null, it.GetUrl())));
             FailedSolution = importSolutionsResponse.FailedSolution;

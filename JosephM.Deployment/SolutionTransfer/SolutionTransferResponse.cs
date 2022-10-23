@@ -1,6 +1,6 @@
 ﻿using JosephM.Core.Attributes;
 using JosephM.Core.Service;
-using JosephM.Deployment.SolutionImport;
+using JosephM.Deployment.SolutionsImport;
 using JosephM.XrmModule.SavedXrmConnections;
 using System.Linq;
 
@@ -21,7 +21,7 @@ namespace JosephM.Deployment.SolutionTransfer
         [PropertyInContextByPropertyNotNull(nameof(FailedSolutionXml))]
         public string FailedSolutionXml { get; private set; }
 
-        public void LoadImportSolutionsResponse(ImportSolutionsResponse importSolutionResponse)
+        public void LoadImportSolutionsResponse(SolutionsImportResponse importSolutionResponse)
         {
             AddResponseItems(importSolutionResponse.ImportedSolutionResults.Select(i => new SolutionTransferResponseItem(i)).ToArray());
             FailedSolution = importSolutionResponse.FailedSolution;

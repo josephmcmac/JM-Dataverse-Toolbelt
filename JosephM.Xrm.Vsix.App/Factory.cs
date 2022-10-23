@@ -56,7 +56,7 @@ namespace JosephM.Xrm.Vsix.App
             app.AddModule<AddReleaseDataModule>(0x0121);
             app.AddModule<XrmTextSearchModule>(0x0116);
             app.AddModule<XrmPackageAboutModule>(0x0113);
-            app.AddModule<ImportSolutionModule>(0x0114);
+            app.AddModule<VsixImportSolutionModule>(0x0114);
             app.AddModule<ImportRecordsModule>(0x0115);
             app.AddModule<DeployIntoFieldModule>(0x0117);
             app.AddModule<JavaScriptOptionsModule>(0x0118);

@@ -5,7 +5,7 @@ using JosephM.Xrm.Schema;
 using System.Linq;
 using System.Xml;
 
-namespace JosephM.Deployment.SolutionImport
+namespace JosephM.Deployment.SolutionsImport
 {
     public class SolutionImportResult
     {

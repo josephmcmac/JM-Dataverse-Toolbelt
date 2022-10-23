@@ -107,6 +107,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreatePackage\CreatePackageResponse.cs" />
+    <Compile Include="ImportSolution\ImportSolutionDialog.cs" />
+    <Compile Include="ImportSolution\ImportSolutionModule.cs" />
+    <Compile Include="ImportSolution\ImportSolutionRequest.cs" />
+    <Compile Include="ImportSolution\ImportSolutionResponse.cs" />
+    <Compile Include="ImportSolution\ImportSolutionResponseItem.cs" />
+    <Compile Include="ImportSolution\ImportSolutionService.cs" />
     <Compile Include="SolutionTransfer\SolutionTransferDialog.cs" />
     <Compile Include="SolutionTransfer\SolutionTransferModule.cs" />
     <Compile Include="SolutionTransfer\SolutionTransferRequest.cs" />
@@ -119,9 +125,9 @@
     <Compile Include="DeployPackage\DeployPackageService.cs" />
     <Compile Include="DeploymentModule.cs" />
     <Compile Include="SolutionTransfer\SolutionTransferResponseItem.cs" />
-    <Compile Include="SolutionImport\ImportSolutionsResponse.cs" />
-    <Compile Include="SolutionImport\SolutionImportService.cs" />
-    <Compile Include="SolutionImport\SolutionImportResult.cs" />
+    <Compile Include="SolutionsImport\SolutionsImportResponse.cs" />
+    <Compile Include="SolutionsImport\SolutionsImportService.cs" />
+    <Compile Include="SolutionsImport\SolutionImportResult.cs" />
     <Compile Include="CreatePackage\CreatePackageDialog.cs" />
     <Compile Include="CreatePackage\CreatePackageModule.cs" />
     <Compile Include="CreatePackage\CreatePackageRequest.cs" />

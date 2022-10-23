@@ -1,6 +1,6 @@
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Deployment.SolutionImport;
+using JosephM.Deployment.SolutionsImport;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.DataImportExport.Import;
@@ -59,14 +59,14 @@ namespace JosephM.Deployment.DeployPackage
             }
         }
 
-        public ImportSolutionsResponse ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
+        public SolutionsImportResponse ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
         {
             var solutionFilesDictionary = new Dictionary<string, byte[]>();
             foreach(var item in solutionFiles)
             {
                 solutionFilesDictionary.Add(new FileInfo(item).Name, File.ReadAllBytes(item));
             }
-            var solutionImportService = new SolutionImportService(xrmRecordService);
+            var solutionImportService = new SolutionsImportService(xrmRecordService);
             return solutionImportService.ImportSolutions(solutionFilesDictionary, controller);
         }
     }

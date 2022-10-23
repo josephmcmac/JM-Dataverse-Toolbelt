@@ -15,11 +15,11 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 
-namespace JosephM.Deployment.SolutionImport
+namespace JosephM.Deployment.SolutionsImport
 {
-    public class SolutionImportService
+    public class SolutionsImportService
     {
-        public SolutionImportService(XrmRecordService xrmRecordService)
+        public SolutionsImportService(XrmRecordService xrmRecordService)
         {
             XrmRecordService = xrmRecordService;
         }
@@ -28,9 +28,9 @@ namespace JosephM.Deployment.SolutionImport
 
         public XrmRecordService XrmRecordService { get; }
 
-        public ImportSolutionsResponse ImportSolutions(Dictionary<string, byte[]> solutionFiles, LogController controller)
+        public SolutionsImportResponse ImportSolutions(Dictionary<string, byte[]> solutionFiles, LogController controller)
         {
-            var response = new ImportSolutionsResponse();
+            var response = new SolutionsImportResponse();
 
             var xrmService = XrmRecordService.XrmService;
             bool asynch = xrmService.SupportsExecuteAsynch;
@@ -124,7 +124,7 @@ namespace JosephM.Deployment.SolutionImport
             return response;
         }
 
-        private void ProcessCompletedSolutionImportJob(ImportSolutionsResponse response, XrmService xrmService, Guid importId)
+        private void ProcessCompletedSolutionImportJob(SolutionsImportResponse response, XrmService xrmService, Guid importId)
         {
             var job = xrmService.GetFirst(Entities.importjob, Fields.importjob_.importjobid, importId);
             if (job != null)
@@ -153,7 +153,7 @@ namespace JosephM.Deployment.SolutionImport
             public bool Completed { get; set; }
         }
 
-        public void DoProgress(Guid importId, LogController controller, Processor finished, XrmService xrmService, Guid? asynchJobId, string solutionFile, ImportSolutionsResponse response)
+        public void DoProgress(Guid importId, LogController controller, Processor finished, XrmService xrmService, Guid? asynchJobId, string solutionFile, SolutionsImportResponse response)
         {
             var systemJobFailure = false;
             while (true)

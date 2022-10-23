@@ -1,8 +1,9 @@
 ﻿using JosephM.Core.Service;
 using JosephM.Deployment.DeployPackage;
 using JosephM.Record.Xrm.XrmRecord;
+using JosephM.Xrm;
 
-namespace JosephM.Xrm.Vsix.Module.ImportSolution
+namespace JosephM.Deployment.ImportSolution
 {
     public class ImportSolutionService :
         ServiceBase<ImportSolutionRequest, ImportSolutionResponse, ImportSolutionResponseItem>

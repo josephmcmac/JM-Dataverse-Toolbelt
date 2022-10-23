@@ -144,12 +144,7 @@
     <Compile Include="Module\ImportRecords\ImportRecordsResponse.cs" />
     <Compile Include="Module\ImportRecords\ImportRecordsService.cs" />
     <Compile Include="Module\ImportRecords\MenuItemVisibleImportRecords.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionDialog.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionModule.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionRequest.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionResponse.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionResponseItem.cs" />
-    <Compile Include="Module\ImportSolution\ImportSolutionService.cs" />
+    <Compile Include="Module\ImportSolution\VsixImportSolutionModule.cs" />
     <Compile Include="Module\ImportSolution\MenuItemVisibleZip.cs" />
     <Compile Include="Module\MenuItemVisible.cs" />
     <Compile Include="Module\MenuItemVisibleForFileTypes.cs" />

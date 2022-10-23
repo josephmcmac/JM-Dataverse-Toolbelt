@@ -3,7 +3,7 @@ using JosephM.Application.ViewModel.Dialog;
 using JosephM.Record.Xrm.XrmRecord;
 using System;
 
-namespace JosephM.Xrm.Vsix.Module.ImportSolution
+namespace JosephM.Deployment.ImportSolution
 {
     public class ImportSolutionDialog
         : ServiceRequestDialog<ImportSolutionService, ImportSolutionRequest, ImportSolutionResponse, ImportSolutionResponseItem>

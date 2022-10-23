@@ -1,6 +1,6 @@
 using JosephM.Core.Log;
 using JosephM.Core.Service;
-using JosephM.Deployment.SolutionImport;
+using JosephM.Deployment.SolutionsImport;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.Xrm.Schema;
@@ -53,7 +53,7 @@ namespace JosephM.Deployment.SolutionTransfer
             tasksDone++;
             controller.UpdateProgress(tasksDone, totalTasks, "Exporting Solution " + request.Solution.Name);
             var targetXrmRecordService = new XrmRecordService(request.TargetConnection, ConnectionFactory);
-            var importSolutionService = new SolutionImportService(targetXrmRecordService);
+            var importSolutionService = new SolutionsImportService(targetXrmRecordService);
             var importResponse = importSolutionService.ImportSolutions(new Dictionary<string, byte[]>
             {
                 { uniqueName, exportResponse.ExportSolutionFile }
