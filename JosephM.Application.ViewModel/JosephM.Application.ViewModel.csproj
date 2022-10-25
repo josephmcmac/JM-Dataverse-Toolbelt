@@ -135,8 +135,10 @@
     <Compile Include="RecordEntry\Form\AutocompleteFunctions.cs" />
     <Compile Include="RecordEntry\Form\CreateOrUpdateViewModel.cs" />
     <Compile Include="RecordEntry\Form\AutocompleteFunction.cs" />
+    <Compile Include="RecordEntry\Form\FormLoadedFunction.cs" />
     <Compile Include="RecordEntry\Form\OnChangeFunction.cs" />
     <Compile Include="RecordEntry\Form\CustomFormFunction.cs" />
+    <Compile Include="RecordEntry\Form\FormLoadedFunctions.cs" />
     <Compile Include="RecordEntry\Form\OnChangeFunctions.cs" />
     <Compile Include="RecordEntry\Form\CustomFormFunctions.cs" />
     <Compile Include="RecordEntry\Form\ObjectDisplayViewModel.cs" />

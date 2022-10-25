@@ -43,6 +43,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
         private ObservableCollection<FieldViewModelBase> CreateFieldViewModels(IEnumerable<FormFieldMetadata> formFields)
         {
             var fieldViewModels = new ObservableCollection<FieldViewModelBase>();
+            var centreAlign = new[] {
+                Group.DisplayLayoutEnum.HorizontalCenteredInputOnly,
+                Group.DisplayLayoutEnum.HorizontalInputOnly,
+                Group.DisplayLayoutEnum.VerticalCentered
+                }.Contains(DisplayLayout);
             foreach (var formField in formFields.OrderBy(f => f.Order))
             {
                 try
@@ -50,7 +55,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                     var fieldVm = formField.CreateFieldViewModel(RecordType, RecordService, RecordForm,
                         ApplicationController);
                     if (IsReadOnly)
+                    {
                         fieldVm.IsEditable = false;
+                    }
+                    fieldVm.CentreAlign = centreAlign;
                     fieldViewModels.Add(fieldVm);
                 }
                 catch (Exception ex)

@@ -12,13 +12,14 @@ namespace JosephM.CustomisationImporter.Service
     [Instruction("To download the import template click the button above. Customisations in the imported excel file will be upserted into the instance and published.\n\nIf a match exists for the schema name of each customisation it will be updated, otherwise a new customisation item will be created")]
     [AllowSaveAndLoad]
     [DisplayName("Customisation Import")]
-    [Group(Sections.ImportFileAndSolution, Group.DisplayLayoutEnum.VerticalCentered, order: 10, displayLabel: false)]
-    [Group(Sections.ItemsToInclude, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30, selectAll: true)]
+    [Group(Sections.ImportFile, Group.DisplayLayoutEnum.VerticalCentered, order: 10, displayLabel: false)]
+    [Group(Sections.ItemsToInclude, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, selectAll: true)]
+    [Group(Sections.Solution, Group.DisplayLayoutEnum.VerticalCentered, order: 30, displayLabel: false)]
     public class CustomisationImportRequest : ServiceRequestBase, IValidatableObject
     {
         [GridWidth(400)]
         [DisplayOrder(10)]
-        [Group(Sections.ImportFileAndSolution)]
+        [Group(Sections.ImportFile)]
         [RequiredProperty]
         [FileMask(FileMasks.ExcelFile)]
         [PropertyInContextByPropertyValue("HideExcelFile", false)]
@@ -31,14 +32,14 @@ namespace JosephM.CustomisationImporter.Service
         public bool HideSolutionOptions { get; set; }
         [GridWidth(120)]
         [DisplayOrder(100)]
-        [Group(Sections.ImportFileAndSolution)]
+        [Group(Sections.Solution)]
         [PropertyInContextByPropertyValue("HideSolutionOptions", false)]
         [DisplayName("Add Components To Solution")]
         public bool AddToSolution { get; set; }
 
         [DisplayOrder(110)]
         [RequiredProperty]
-        [Group(Sections.ImportFileAndSolution)]
+        [Group(Sections.Solution)]
         [ReferencedType(Xrm.Schema.Entities.solution)]
         [UsePicklist(Xrm.Schema.Fields.solution_.uniquename)]
         [LookupCondition(Xrm.Schema.Fields.solution_.ismanaged, false)]
@@ -47,26 +48,32 @@ namespace JosephM.CustomisationImporter.Service
         [PropertyInContextByPropertyValue("AddToSolution", true)]
         [PropertyInContextByPropertyValue("HideSolutionOptions", false)]
         public Lookup Solution { get; set; }
+
         [GridWidth(110)]
         [DisplayOrder(200)]
         [Group(Sections.ItemsToInclude)]
         public bool Entities { get; set; }
+
         [GridWidth(110)]
         [DisplayOrder(210)]
         [Group(Sections.ItemsToInclude)]
         public bool Fields { get; set; }
+
         [GridWidth(110)]
         [DisplayOrder(220)]
         [Group(Sections.ItemsToInclude)]
         public bool Relationships { get; set; }
+
         [GridWidth(110)]
         [DisplayOrder(230)]
         [Group(Sections.ItemsToInclude)]
         public bool FieldOptionSets { get; set; }
+
         [GridWidth(110)]
         [DisplayOrder(240)]
         [Group(Sections.ItemsToInclude)]
         public bool SharedOptionSets { get; set; }
+
         [GridWidth(110)]
         [DisplayOrder(250)]
         [Group(Sections.ItemsToInclude)]
@@ -88,8 +95,9 @@ namespace JosephM.CustomisationImporter.Service
 
         private static class Sections
         {
-            public const string ImportFileAndSolution = "Import File & Solution";
+            public const string ImportFile = "Import File";
             public const string ItemsToInclude = "Items To Include In Import";
+            public const string Solution = "Solution";
         }
     }
 }

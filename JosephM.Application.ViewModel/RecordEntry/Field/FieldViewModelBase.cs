@@ -96,6 +96,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             get { return FieldName; }
         }
 
+        public bool CentreAlign { get; set; }
+
         public string FieldName { get; private set; }
 
         private string _label;

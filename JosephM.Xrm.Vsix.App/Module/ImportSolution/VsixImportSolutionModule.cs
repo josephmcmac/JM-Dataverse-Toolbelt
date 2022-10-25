@@ -13,7 +13,7 @@ namespace JosephM.Xrm.Vsix.Module.ImportSolution
     [MenuItemVisibleZip]
     [DependantModule(typeof(XrmPackageSettingsModule))]
     [DependantModule(typeof(SavedXrmConnectionsModule))]
-    public class VsixImportSolutionModule : ServiceRequestModule<ImportSolutionDialog, ImportSolutionService, ImportSolutionRequest, ImportSolutionResponse, ImportSolutionResponseItem>
+    public class VsixImportSolutionModule : ImportSolutionModule
     {
         public override void DialogCommand()
         {

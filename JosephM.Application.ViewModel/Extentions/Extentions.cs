@@ -45,6 +45,15 @@ namespace JosephM.Application.ViewModel.Extentions
             module.ApplicationController.RegisterInstance(typeof(CustomGridFunctions), type.AssemblyQualifiedName, customGridFunctions);
         }
 
+        public static void AddFormLoadedFunction(this ModuleBase module, FormLoadedFunction onLoadFunction, Type type)
+        {
+            //okay this one is autmatically created by the unity container 
+            //but iteratively add and resolve 2 items and verify they are retained in the resolved list
+            var loadFunctions = (FormLoadedFunctions)module.ApplicationController.ResolveInstance(typeof(FormLoadedFunctions), type.AssemblyQualifiedName);
+            loadFunctions.AddFunction(onLoadFunction);
+            module.ApplicationController.RegisterInstance(typeof(FormLoadedFunctions), type.AssemblyQualifiedName, loadFunctions);
+        }
+
         public static void AddOnChangeFunction(this ModuleBase module, OnChangeFunction onChangeFunction, Type type)
         {
             //okay this one is autmatically created by the unity container 

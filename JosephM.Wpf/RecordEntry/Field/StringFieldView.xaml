@@ -24,6 +24,7 @@
             <TextBox
                 Style="{StaticResource  StringFieldEntryStyleReadOnly}"
                 TextWrapping="WrapWithOverflow"
+                TextAlignment="{Binding CentreAlign, Converter={StaticResource BooleanToCenterAlignConverter}}"
                 AcceptsReturn="{Binding IsMultiline}"
                 MinLines ="{Binding NumberOfLines}"
                 MaxLines ="{Binding NumberOfLines}"

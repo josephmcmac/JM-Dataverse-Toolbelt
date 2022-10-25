@@ -1,15 +1,14 @@
-﻿using JosephM.Application;
-using JosephM.Application.Desktop.Module.ServiceRequest;
+﻿using JosephM.Application.Desktop.Module.ServiceRequest;
 using JosephM.Application.Modules;
 using JosephM.Application.ViewModel.Extentions;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.AppConfig;
 using JosephM.Core.FieldType;
+using JosephM.Deployment.SolutionsImport;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using JosephM.XrmModule.SavedXrmConnections;
 using System;
-using System.Linq;
 
 namespace JosephM.Deployment.ImportSolution
 {
@@ -21,9 +20,19 @@ namespace JosephM.Deployment.ImportSolution
             base.RegisterTypes();
 
             AddDialogCompletionLinks();
+
+            this.AddSolutionDetailsFormEvent(typeof(ImportSolutionRequest), nameof(ImportSolutionRequest.SolutionZip), getSourceSolutionMetadata: (revm) =>
+            {
+                var solutionFileReference = revm.GetFieldViewModel(nameof(ImportSolutionRequest.SolutionZip)).ValueObject as FileReference;
+                return solutionFileReference == null
+                ? null
+                : SolutionZipUtility.LoadSolutionZipMetadata(solutionFileReference.FileName);
+            });
         }
 
         public override string MenuGroup => "Solution Deployment";
+
+
 
         private void AddDialogCompletionLinks()
         {

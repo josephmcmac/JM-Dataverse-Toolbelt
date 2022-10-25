@@ -114,9 +114,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
 
         protected override void PostLoading()
         {
-            foreach(var field in FieldViewModels)
+            var onLoadMethods = FormService.GetFormLoadedTriggers(RecordType, this);
+            foreach(var onLoadMethod in onLoadMethods)
             {
-                var prop = GetObjectRecordService().GetPropertyInfo(field.FieldName, RecordType);
+                onLoadMethod(this);
             }
         }
 

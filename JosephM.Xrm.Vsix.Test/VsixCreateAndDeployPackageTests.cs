@@ -119,7 +119,7 @@ namespace JosephM.Xrm.Vsix.Test
 
             //run the dialog
             var importSolutionRequest = new ImportSolutionRequest();
-            importSolutionRequest.Connection = packageSettings.Connections.First();
+            importSolutionRequest.TargetConnection = packageSettings.Connections.First();
 
             var importSolutionApplication = CreateAndLoadTestApplication<ImportSolutionModule>();
             var importSolutionResponse = importSolutionApplication.NavigateAndProcessDialog<ImportSolutionModule, ImportSolutionDialog, ImportSolutionResponse>(importSolutionRequest);

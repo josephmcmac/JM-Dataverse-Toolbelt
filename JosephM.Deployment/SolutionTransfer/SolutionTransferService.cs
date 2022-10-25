@@ -6,7 +6,6 @@ using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using Microsoft.Crm.Sdk.Messages;
 using System;
-using System.Collections.Generic;
 
 namespace JosephM.Deployment.SolutionTransfer
 {
@@ -46,17 +45,18 @@ namespace JosephM.Deployment.SolutionTransfer
 
             var uniqueName = (string)solution.GetStringField(Fields.solution_.uniquename);
             var req = new ExportSolutionRequest();
-            req.Managed = request.ExportAsManaged;
+            req.Managed = request.InstallAsManaged;
             req.SolutionName = uniqueName;
             var exportResponse = (ExportSolutionResponse)service.Execute(req);
+            request.SetSolutionZipContent(exportResponse.ExportSolutionFile);
 
             tasksDone++;
             controller.UpdateProgress(tasksDone, totalTasks, "Exporting Solution " + request.Solution.Name);
             var targetXrmRecordService = new XrmRecordService(request.TargetConnection, ConnectionFactory);
-            var importSolutionService = new SolutionsImportService(targetXrmRecordService);
-            var importResponse = importSolutionService.ImportSolutions(new Dictionary<string, byte[]>
+            var importSolutionService = new ImportSolutionsService(targetXrmRecordService);
+            var importResponse = importSolutionService.ImportSolutions(new SolutionsImport.ImportSolutionsRequest
             {
-                { uniqueName, exportResponse.ExportSolutionFile }
+                 Items = new[] { request }
             }, controller);
             response.LoadImportSolutionsResponse(importResponse);
             response.ConnectionDeployedInto = request.TargetConnection;

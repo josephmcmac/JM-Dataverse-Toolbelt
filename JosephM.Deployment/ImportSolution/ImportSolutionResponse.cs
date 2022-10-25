@@ -21,7 +21,7 @@ namespace JosephM.Deployment.ImportSolution
         [PropertyInContextByPropertyNotNull(nameof(FailedSolutionXml))]
         public string FailedSolutionXml { get; private set; }
 
-        public void LoadImportSolutionsResponse(SolutionsImportResponse importSolutionsResponse)
+        public void LoadImportSolutionsResponse(ImportSolutionsResponse importSolutionsResponse)
         {
             AddResponseItems(importSolutionsResponse.ImportedSolutionResults.Select(si => new ImportSolutionResponseItem(si)));
             FailedSolution = importSolutionsResponse.FailedSolution;

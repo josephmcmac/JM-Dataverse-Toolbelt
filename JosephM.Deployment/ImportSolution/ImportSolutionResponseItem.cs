@@ -7,12 +7,12 @@ namespace JosephM.Deployment.ImportSolution
 {
     public class ImportSolutionResponseItem : ServiceResponseItem
     {
-        public ImportSolutionResponseItem(SolutionImportResult solutionImportResult)
+        public ImportSolutionResponseItem(ImportSolutionResult solutionImportResult)
         {
             SolutionImportResult = solutionImportResult;
         }
 
-        private SolutionImportResult SolutionImportResult { get; }
+        private ImportSolutionResult SolutionImportResult { get; }
         [DisplayOrder(10)]
         public string Type => SolutionImportResult.Type;
         [DisplayOrder(20)]

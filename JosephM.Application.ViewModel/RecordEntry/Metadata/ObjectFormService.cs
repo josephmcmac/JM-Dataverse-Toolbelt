@@ -2,6 +2,7 @@
 using JosephM.Application.ViewModel.Grid;
 using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
+using JosephM.Application.ViewModel.Shared;
 using JosephM.Application.ViewModel.Validation;
 using JosephM.Core.Attributes;
 using JosephM.Core.Extentions;
@@ -433,6 +434,19 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             AppendSubGridButtons(fieldName, recordType, methods);
             AppendFieldForChanges(fieldName, recordType, methods);
             return methods;
+        }
+
+        public override IEnumerable<Action<RecordEntryViewModelBase>> GetFormLoadedTriggers(string recordType, RecordEntryViewModelBase entryViewModel)
+        {
+            var onLoadTriggers = new List<Action<RecordEntryViewModelBase>>();
+            var type = ObjectRecordService.GetClassType(recordType);
+            var injectedFunctions = entryViewModel.ApplicationController.ResolveInstance(typeof(FormLoadedFunctions), recordType) as FormLoadedFunctions;
+            foreach (var func in injectedFunctions.CustomFunctions)
+            {
+                Action<RecordEntryViewModelBase> onChange = (revm) => func.Execute(revm);
+                onLoadTriggers.Add(onChange);
+            }
+            return onLoadTriggers;
         }
 
         private void AppendSubGridButtons(string fieldName, string recordType, List<Action<RecordEntryViewModelBase>> methods)

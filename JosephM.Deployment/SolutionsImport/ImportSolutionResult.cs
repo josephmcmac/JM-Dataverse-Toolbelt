@@ -7,9 +7,9 @@ using System.Xml;
 
 namespace JosephM.Deployment.SolutionsImport
 {
-    public class SolutionImportResult
+    public class ImportSolutionResult
     {
-        public SolutionImportResult(XmlNode xmlNode, XrmRecordService xrmRecordService)
+        public ImportSolutionResult(XmlNode xmlNode, XrmRecordService xrmRecordService)
         {
             XmlNode = xmlNode;
             XrmRecordService = xrmRecordService;

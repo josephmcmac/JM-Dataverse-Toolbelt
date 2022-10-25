@@ -27,7 +27,7 @@ namespace JosephM.Xrm.MigrateRecords
         [Group(Sections.Connections)]
         [DisplayOrder(10)]
         [RequiredProperty]
-        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
+        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections), allowAddNew: false)]
         [ConnectionFor(nameof(RecordTypesToMigrate))]
         public SavedXrmRecordConfiguration SourceConnection { get; set; }
 
@@ -35,7 +35,7 @@ namespace JosephM.Xrm.MigrateRecords
         [Group(Sections.Connections)]
         [DisplayOrder(20)]
         [RequiredProperty]
-        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
+        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections), allowAddNew: false)]
         public SavedXrmRecordConfiguration TargetConnection { get; set; }
 
         [GridWidth(110)]

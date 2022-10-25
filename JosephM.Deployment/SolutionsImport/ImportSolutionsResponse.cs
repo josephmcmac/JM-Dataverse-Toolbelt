@@ -2,7 +2,7 @@
 
 namespace JosephM.Deployment.SolutionsImport
 {
-    public class SolutionsImportResponse
+    public class ImportSolutionsResponse
     {
         public bool Success { get { return FailedSolution == null; } }
         public string FailedSolution { get; set; }
@@ -11,15 +11,15 @@ namespace JosephM.Deployment.SolutionsImport
         private List<string> _importedSolutions = new List<string>();
         public IEnumerable<string> ImportedSolutions { get { return _importedSolutions; } }
 
-        private List<SolutionImportResult> _importedSolutionResults = new List<SolutionImportResult>();
-        public IEnumerable<SolutionImportResult> ImportedSolutionResults { get { return _importedSolutionResults; } }
+        private List<ImportSolutionResult> _importedSolutionResults = new List<ImportSolutionResult>();
+        public IEnumerable<ImportSolutionResult> ImportedSolutionResults { get { return _importedSolutionResults; } }
 
         public void AddImported(string solution)
         {
             _importedSolutions.Add(solution);
         }
 
-        public void AddResult(SolutionImportResult result)
+        public void AddResult(ImportSolutionResult result)
         {
             _importedSolutionResults.Add(result);
         }

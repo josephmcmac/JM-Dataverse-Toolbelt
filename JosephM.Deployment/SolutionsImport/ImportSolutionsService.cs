@@ -17,9 +17,9 @@ using System.Xml;
 
 namespace JosephM.Deployment.SolutionsImport
 {
-    public class SolutionsImportService
+    public class ImportSolutionsService
     {
-        public SolutionsImportService(XrmRecordService xrmRecordService)
+        public ImportSolutionsService(XrmRecordService xrmRecordService)
         {
             XrmRecordService = xrmRecordService;
         }
@@ -28,9 +28,19 @@ namespace JosephM.Deployment.SolutionsImport
 
         public XrmRecordService XrmRecordService { get; }
 
-        public SolutionsImportResponse ImportSolutions(Dictionary<string, byte[]> solutionFiles, LogController controller)
+        public ImportSolutionsResponse ImportSolutions(Dictionary<string, byte[]> solutionFiles, LogController controller)
         {
-            var response = new SolutionsImportResponse();
+            return ImportSolutions(new ImportSolutionsRequest
+            {
+                Items = solutionFiles
+                .Select(kv => new ImportSolutionsRequestItem(kv.Value))
+                .ToArray()
+            }, controller);
+        }
+
+        public ImportSolutionsResponse ImportSolutions(ImportSolutionsRequest request, LogController controller)
+        {
+            var response = new ImportSolutionsResponse();
 
             var xrmService = XrmRecordService.XrmService;
             bool asynch = xrmService.SupportsExecuteAsynch;
@@ -38,7 +48,9 @@ namespace JosephM.Deployment.SolutionsImport
             controller.LogLiteral($"Loading Active {xrmService.GetEntityCollectionName(Entities.duplicaterule)}");
             var duplicateRules = xrmService.RetrieveAllAndConditions(Entities.duplicaterule, new[] { new ConditionExpression(Fields.duplicaterule_.statecode, ConditionOperator.Equal, OptionSets.DuplicateDetectionRule.Status.Active) }, new string[0]);
 
-            foreach (var solutionFile in solutionFiles)
+            var unmanagedSolutionImported = false;
+
+            foreach (var solutionsImportItem in request.Items)
             {
                 if(!response.Success)
                 {
@@ -46,14 +58,28 @@ namespace JosephM.Deployment.SolutionsImport
                 }
                 try
                 {
+                    var solutionZipMetadata = SolutionZipUtility.LoadSolutionZipMetadata(solutionsImportItem.GetSolutionZipContent());
                     controller.LogLiteral(
-                        $"Import Request for {solutionFile.Key} Submitted to {XrmRecordService.XrmRecordConfiguration?.ToString()}");
+                        $"Import Request for {solutionZipMetadata.FriendlyName} Submitted to {XrmRecordService.XrmRecordConfiguration?.ToString()}");
                     var importId = Guid.NewGuid();
-                    var req = new ImportSolutionRequest();
-                    req.ImportJobId = importId;
-                    req.CustomizationFile = solutionFile.Value;
-                    req.PublishWorkflows = true;
-                    req.OverwriteUnmanagedCustomizations = true;
+
+                    //todo add deletion monitor & check the asycnh ribbon install process
+                    var req = solutionsImportItem.InstallAsUpgrade
+                        ? new StageAndUpgradeRequest
+                        {
+                             
+                            ImportJobId = importId,
+                            CustomizationFile = solutionsImportItem.GetSolutionZipContent(),
+                            PublishWorkflows = true,
+                            OverwriteUnmanagedCustomizations = solutionsImportItem.OverwriteCustomisations
+                        }
+                        : (OrganizationRequest)new ImportSolutionRequest
+                        {
+                            ImportJobId = importId,
+                            CustomizationFile = solutionsImportItem.GetSolutionZipContent(),
+                            PublishWorkflows = true,
+                            OverwriteUnmanagedCustomizations =  solutionsImportItem.OverwriteCustomisations
+                        };
 
                     var finished = new Processor();
 
@@ -62,7 +88,7 @@ namespace JosephM.Deployment.SolutionsImport
                         try
                         {
                             var extraService = new XrmService(xrmService.XrmConfiguration, xrmService.ServiceFactory);
-                            var monitoreProgressThread = new Thread(() => DoProgress(importId, controller, finished, extraService, null, solutionFile.Key, response));
+                            var monitoreProgressThread = new Thread(() => DoProgress(importId, controller, finished, extraService, null, solutionZipMetadata, solutionsImportItem, response));
                             monitoreProgressThread.IsBackground = true;
                             monitoreProgressThread.Start();
                             xrmService.Execute(req);
@@ -81,28 +107,31 @@ namespace JosephM.Deployment.SolutionsImport
                             Request = req
                         };
                         var asynchResponse = (ExecuteAsyncResponse) xrmService.Execute(asynchRequest);
-                        DoProgress(importId, controller, finished, xrmService, asynchResponse.AsyncJobId, solutionFile.Key, response);
+                        DoProgress(importId, controller, finished, xrmService, asynchResponse.AsyncJobId, solutionZipMetadata, solutionsImportItem, response);
+                    }
+                    if (!solutionZipMetadata.Managed)
+                    {
+                        unmanagedSolutionImported = true;
                     }
                 }
                 catch (FaultException<OrganizationServiceFault> ex)
                 {
                     if (ex.Detail != null && ex.Detail.InnerFault != null && ex.Detail.InnerFault.InnerFault != null)
                     {
-                        throw new Exception($"Error Importing {solutionFile}: {ex.Message} - {ex.Detail.InnerFault.InnerFault.Message}", ex);
+                        throw new Exception($"Error Importing {solutionsImportItem}: {ex.Message} - {ex.Detail.InnerFault.InnerFault.Message}", ex);
                     }
                     else
                     {
-                        throw new Exception($"Error Importing {solutionFile}: {ex.Message}", ex);
+                        throw new Exception($"Error Importing {solutionsImportItem}: {ex.Message}", ex);
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"Error Importing {solutionFile}: {ex.Message}", ex);
+                    throw new Exception($"Error Importing {solutionsImportItem}: {ex.Message}", ex);
                 }
             }
-            controller.TurnOffLevel2();
 
-            if (response.Success)
+            if (unmanagedSolutionImported && response.Success)
             {
                 controller.LogLiteral("Publishing Customisations");
                 xrmService.Publish();
@@ -124,7 +153,7 @@ namespace JosephM.Deployment.SolutionsImport
             return response;
         }
 
-        private void ProcessCompletedSolutionImportJob(SolutionsImportResponse response, XrmService xrmService, Guid importId)
+        private void ProcessCompletedSolutionImportJob(ImportSolutionsResponse response, XrmService xrmService, Guid importId)
         {
             var job = xrmService.GetFirst(Entities.importjob, Fields.importjob_.importjobid, importId);
             if (job != null)
@@ -141,7 +170,7 @@ namespace JosephM.Deployment.SolutionsImport
                 var resultNodes = xmlDocument.GetElementsByTagName("result");
                 foreach (XmlNode node in resultNodes)
                 {
-                    var importResult = new SolutionImportResult(node, XrmRecordService);
+                    var importResult = new ImportSolutionResult(node, XrmRecordService);
                     if (!importResult.IsSuccess && (importResult.ErrorCode == null || !ignoreTheseErrorCodes.Contains(importResult.ErrorCode)))
                         response.AddResult(importResult);
                 }
@@ -153,7 +182,7 @@ namespace JosephM.Deployment.SolutionsImport
             public bool Completed { get; set; }
         }
 
-        public void DoProgress(Guid importId, LogController controller, Processor finished, XrmService xrmService, Guid? asynchJobId, string solutionFile, SolutionsImportResponse response)
+        public void DoProgress(Guid importId, LogController controller, Processor finished, XrmService xrmService, Guid? asynchJobId, SolutionZipMetadata solutionMetadata, IImportSolutionsRequestItem importRequest, ImportSolutionsResponse response)
         {
             var systemJobFailure = false;
             while (true)
@@ -180,7 +209,7 @@ namespace JosephM.Deployment.SolutionsImport
                             {
                                 break;
                             }
-                            controller.LogLiteral($"Importing {solutionFile} to {XrmRecordService.XrmRecordConfiguration?.ToString()}\n\n{Convert.ToInt32(progress / 1).ToString("##0")}%");
+                            controller.LogLiteral($"Importing {solutionMetadata.FriendlyName} version {solutionMetadata.Version} to {XrmRecordService.XrmRecordConfiguration?.ToString()}\n\n{Convert.ToInt32(progress / 1).ToString("##0")}%");
                         }
                     }
                     else if(asynchJobId.HasValue)
@@ -199,7 +228,7 @@ namespace JosephM.Deployment.SolutionsImport
                             }
                             else
                             {
-                                controller.UpdateProgress(0, 100, $"{XrmRecordService.GetDisplayName(Entities.asyncoperation)} for import of {solutionFile} is {XrmRecordService.GetPicklistLabel(Fields.asyncoperation_.statuscode, Entities.asyncoperation, systemJob.GetOptionSetValue(Fields.asyncoperation_.statuscode).ToString())}");
+                                controller.UpdateProgress(0, 100, $"{XrmRecordService.GetDisplayName(Entities.asyncoperation)} for import of {solutionMetadata.FriendlyName} is {XrmRecordService.GetPicklistLabel(Fields.asyncoperation_.statuscode, Entities.asyncoperation, systemJob.GetOptionSetValue(Fields.asyncoperation_.statuscode).ToString())}");
                             }
                         }
                     }
@@ -223,7 +252,7 @@ namespace JosephM.Deployment.SolutionsImport
                 {
                     var xmlDocument = new XmlDocument();
                     xmlDocument.LoadXml(xml);
-                    var percentCompleted = Double.Parse(xmlDocument.GetElementsByTagName("importexportxml")[0].Attributes["progress"].Value);
+                    var percentCompleted = double.Parse(xmlDocument.GetElementsByTagName("importexportxml")[0].Attributes["progress"].Value);
                     if(percentCompleted < 100)
                     {
                         var settings = new XmlWriterSettings { Indent = true };
@@ -233,12 +262,58 @@ namespace JosephM.Deployment.SolutionsImport
                             xmlDocument.WriteTo(xmlTextWriter);
                             xmlTextWriter.Flush();
                         }
-                        response.FailedSolution = solutionFile;
+                        response.FailedSolution = solutionMetadata.FriendlyName;
                         response.FailedSolutionXml = xmlStringBuilder.ToString();
                     }
                     else
                     {
                         ProcessCompletedSolutionImportJob(response, xrmService, importId);
+                    }
+                }
+                if (response.Success && solutionMetadata.Managed && importRequest.InstallAsUpgrade)
+                {
+                    Entity uninstallSolutionHistory = null;
+                    while (true)
+                    {
+                        Thread.Sleep(5000);
+                        if (uninstallSolutionHistory != null)
+                        {
+                            uninstallSolutionHistory = xrmService.Retrieve(uninstallSolutionHistory.LogicalName, uninstallSolutionHistory.Id, new[] { Fields.msdyn_solutionhistory_.msdyn_status, Fields.msdyn_solutionhistory_.msdyn_result, Fields.msdyn_solutionhistory_.msdyn_solutionversion });
+                            var status = uninstallSolutionHistory.GetOptionSetValue(Fields.msdyn_solutionhistory_.msdyn_status);
+                            if (status == OptionSets.SolutionHistory.Status.Completed)
+                            {
+                                if (!uninstallSolutionHistory.GetBoolean(Fields.msdyn_solutionhistory_.msdyn_result))
+                                {
+                                    throw new Exception($"Error uninstalling {solutionMetadata.UniqueName} version {solutionMetadata.Version}: {uninstallSolutionHistory.GetStringField(Fields.msdyn_solutionhistory_.msdyn_exceptionmessage)}");
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                controller.LogDetail($"Uninstall process running on previous {solutionMetadata.UniqueName} solution version {uninstallSolutionHistory.GetStringField(Fields.msdyn_solutionhistory_.msdyn_solutionversion)}");
+                            }
+                        }
+                        else
+                        {
+                            var solutionHistoryQuery = new QueryExpression(Entities.msdyn_solutionhistory);
+                            solutionHistoryQuery.TopCount = 2;
+                            solutionHistoryQuery.ColumnSet = new ColumnSet(true);
+                            solutionHistoryQuery.Criteria.AddCondition(new ConditionExpression(Fields.msdyn_solutionhistory_.msdyn_name, ConditionOperator.Equal, solutionMetadata.UniqueName));
+                            solutionHistoryQuery.Orders.Add(new OrderExpression(Fields.msdyn_solutionhistory_.msdyn_starttime, OrderType.Descending));
+                            var checkForSolutionHistory = xrmService.RetrieveFirst(solutionHistoryQuery);
+                            if (checkForSolutionHistory.GetOptionSetValue(Fields.msdyn_solutionhistory_.msdyn_operation) == OptionSets.SolutionHistory.Operation.Uninstall
+                                && checkForSolutionHistory.GetStringField(Fields.msdyn_solutionhistory_.msdyn_solutionversion) != solutionMetadata.Version)
+                            {
+                                uninstallSolutionHistory = checkForSolutionHistory;
+                            }
+                            else
+                            {
+                                controller.LogDetail($"Waiting for uninstall process on previous solution version");
+                            }
+                        }
                     }
                 }
             }

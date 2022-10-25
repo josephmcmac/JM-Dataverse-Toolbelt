@@ -5,6 +5,7 @@
     <converters:TextHorizontalJustifyConverter x:Key="TextHorizontalJustifyConverter" />
     <converters:AlignHorizontalConverter x:Key="AlignHorizontalConverter" />
     <converters:BooleanToFalseConverter x:Key="BooleanToFalseConverter" />
+    <converters:BooleanToCenterAlignConverter x:Key="BooleanToCenterAlignConverter" />
     <converters:BooleanToFontWeightConverter x:Key="BooleanToFontWeightConverter" />
     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />

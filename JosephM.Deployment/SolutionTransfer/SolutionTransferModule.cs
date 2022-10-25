@@ -6,6 +6,10 @@ using JosephM.Core.AppConfig;
 using JosephM.Record.Xrm.XrmRecord;
 using JosephM.Xrm;
 using System;
+using JosephM.Deployment.SolutionsImport;
+using JosephM.Record.Extentions;
+using JosephM.Record.IService;
+using JosephM.Xrm.Schema;
 
 namespace JosephM.Deployment.SolutionTransfer
 {
@@ -20,6 +24,8 @@ namespace JosephM.Deployment.SolutionTransfer
             base.RegisterTypes();
 
             AddDialogCompletionLinks();
+
+            this.AddSolutionDetailsFormEvent(typeof(SolutionTransferRequest), nameof(SolutionTransferRequest.Solution));
         }
 
         private void AddDialogCompletionLinks()

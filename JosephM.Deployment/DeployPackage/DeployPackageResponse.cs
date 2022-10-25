@@ -22,7 +22,7 @@ namespace JosephM.Deployment.DeployPackage
             _importedRecords.AddRange(dataImportResponse.ImportSummary);
         }
 
-        public void LoadImportSolutionsResponse(SolutionsImportResponse importSolutionsResponse)
+        public void LoadImportSolutionsResponse(ImportSolutionsResponse importSolutionsResponse)
         {
             AddResponseItems(importSolutionsResponse.ImportedSolutionResults.Select(it => new DataImportResponseItem(it.Type, null, it.Name, null, $"{it.Result} - {it.ErrorCode} - {it.ErrorText}", null, it.GetUrl())));
             FailedSolution = importSolutionsResponse.FailedSolution;

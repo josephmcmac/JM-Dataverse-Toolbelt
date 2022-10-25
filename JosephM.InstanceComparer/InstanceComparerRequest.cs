@@ -26,7 +26,7 @@ namespace JosephM.InstanceComparer
         [DisplayOrder(5)]
         [Group(Sections.InstancesToCompare)]
         [RequiredProperty]
-        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
+        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections), allowAddNew: false)]
         [ConnectionFor(nameof(DataComparisons))]
         [ConnectionFor(nameof(EntityTypeComparisons))]
         public SavedXrmRecordConfiguration ConnectionOne { get; set; }
@@ -34,7 +34,7 @@ namespace JosephM.InstanceComparer
         [DisplayOrder(10)]
         [Group(Sections.InstancesToCompare)]
         [RequiredProperty]
-        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
+        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections), allowAddNew: false)]
         public SavedXrmRecordConfiguration ConnectionTwo { get; set; }
 
         [GridWidth(110)]

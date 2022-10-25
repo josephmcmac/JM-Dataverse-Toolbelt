@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using JosephM.Application.ViewModel.Grid;
+﻿using JosephM.Application.ViewModel.Grid;
+using JosephM.Application.ViewModel.RecordEntry.Field;
 using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Application.ViewModel.Validation;
+using JosephM.Record.Extentions;
 using JosephM.Record.IService;
 using JosephM.Record.Query;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using JosephM.Application.ViewModel.RecordEntry.Field;
-using JosephM.Record.Extentions;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {
@@ -103,6 +103,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
         }
 
         public virtual IEnumerable<Action<RecordEntryViewModelBase>> GetOnLoadTriggers(string fieldName, string recordType)
+        {
+            return new Action<RecordEntryViewModelBase>[0];
+        }
+
+        public virtual IEnumerable<Action<RecordEntryViewModelBase>> GetFormLoadedTriggers(string recordType, RecordEntryViewModelBase entryViewModel)
         {
             return new Action<RecordEntryViewModelBase>[0];
         }

@@ -59,14 +59,14 @@ namespace JosephM.Deployment.DeployPackage
             }
         }
 
-        public SolutionsImportResponse ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
+        public ImportSolutionsResponse ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
         {
             var solutionFilesDictionary = new Dictionary<string, byte[]>();
             foreach(var item in solutionFiles)
             {
                 solutionFilesDictionary.Add(new FileInfo(item).Name, File.ReadAllBytes(item));
             }
-            var solutionImportService = new SolutionsImportService(xrmRecordService);
+            var solutionImportService = new ImportSolutionsService(xrmRecordService);
             return solutionImportService.ImportSolutions(solutionFilesDictionary, controller);
         }
     }

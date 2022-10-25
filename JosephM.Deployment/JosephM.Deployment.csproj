@@ -94,6 +94,8 @@
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
@@ -113,6 +115,13 @@
     <Compile Include="ImportSolution\ImportSolutionResponse.cs" />
     <Compile Include="ImportSolution\ImportSolutionResponseItem.cs" />
     <Compile Include="ImportSolution\ImportSolutionService.cs" />
+    <Compile Include="SolutionsImport\IImportSolutionsRequestItem.cs" />
+    <Compile Include="SolutionsImport\ILoadSolutionForImport.cs" />
+    <Compile Include="SolutionsImport\ImportSolutionsRequestItem.cs" />
+    <Compile Include="SolutionsImport\ImportSolutionsRequest.cs" />
+    <Compile Include="SolutionsImport\ModuleExtensions.cs" />
+    <Compile Include="SolutionsImport\SolutionZipMetadata.cs" />
+    <Compile Include="SolutionsImport\SolutionZipUtility.cs" />
     <Compile Include="SolutionTransfer\SolutionTransferDialog.cs" />
     <Compile Include="SolutionTransfer\SolutionTransferModule.cs" />
     <Compile Include="SolutionTransfer\SolutionTransferRequest.cs" />
@@ -125,9 +134,9 @@
     <Compile Include="DeployPackage\DeployPackageService.cs" />
     <Compile Include="DeploymentModule.cs" />
     <Compile Include="SolutionTransfer\SolutionTransferResponseItem.cs" />
-    <Compile Include="SolutionsImport\SolutionsImportResponse.cs" />
-    <Compile Include="SolutionsImport\SolutionsImportService.cs" />
-    <Compile Include="SolutionsImport\SolutionImportResult.cs" />
+    <Compile Include="SolutionsImport\ImportSolutionsResponse.cs" />
+    <Compile Include="SolutionsImport\ImportSolutionsService.cs" />
+    <Compile Include="SolutionsImport\ImportSolutionResult.cs" />
     <Compile Include="CreatePackage\CreatePackageDialog.cs" />
     <Compile Include="CreatePackage\CreatePackageModule.cs" />
     <Compile Include="CreatePackage\CreatePackageRequest.cs" />
