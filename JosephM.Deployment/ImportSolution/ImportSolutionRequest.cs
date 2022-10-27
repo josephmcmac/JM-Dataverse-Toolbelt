@@ -93,7 +93,7 @@ namespace JosephM.Deployment.ImportSolution
         public bool? CurrentTargetVersionManaged { get; set; }
 
         [Hidden]
-        public bool CurrentIsEarlierVersion
+        public bool IsInstallingNewerVersion
         {
             get
             {
@@ -109,7 +109,7 @@ namespace JosephM.Deployment.ImportSolution
 
         [Group(Sections.InstallOptions)]
         [DisplayOrder(310)]
-        [PropertyInContextByPropertyValue(nameof(CurrentIsEarlierVersion), true)]
+        [PropertyInContextByPropertyValue(nameof(IsInstallingNewerVersion), true)]
         [PropertyInContextByPropertyValue(nameof(CurrentTargetVersionManaged), true)]
         [PropertyInContextByPropertyValue(nameof(IsManaged), true)]
         public bool InstallAsUpgrade { get; set; }

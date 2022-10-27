@@ -12,5 +12,7 @@ namespace JosephM.Deployment.SolutionsImport
         bool? IsCurrentlyInstalledInTarget { get; set; }
         bool? CurrentTargetVersionManaged { get; set; }
         string CurrentTargetVersion { get; set; }
+        bool InstallAsUpgrade { get; set; }
+        bool IsInstallingNewerVersion { get; }
     }
 }

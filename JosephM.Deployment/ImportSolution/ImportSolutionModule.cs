@@ -21,7 +21,7 @@ namespace JosephM.Deployment.ImportSolution
 
             AddDialogCompletionLinks();
 
-            this.AddSolutionDetailsFormEvent(typeof(ImportSolutionRequest), nameof(ImportSolutionRequest.SolutionZip), getSourceSolutionMetadata: (revm) =>
+            this.AddSolutionDetailsFormEvent(typeof(ImportSolutionRequest), nameof(ImportSolutionRequest.SolutionZip), nameof(ImportSolutionRequest.IsManaged), nameof(ImportSolutionRequest.Version), getSourceSolutionMetadata: (revm) =>
             {
                 var solutionFileReference = revm.GetFieldViewModel(nameof(ImportSolutionRequest.SolutionZip)).ValueObject as FileReference;
                 return solutionFileReference == null

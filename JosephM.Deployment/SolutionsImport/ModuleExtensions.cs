@@ -13,7 +13,7 @@ namespace JosephM.Deployment.SolutionsImport
 {
     public static class ModuleExtensions
     {
-        public static void AddSolutionDetailsFormEvent(this ModuleBase solutionsImportModule, Type requestType, string sourceSolutionPropertyName, Func<RecordEntryViewModelBase, SolutionZipMetadata> getSourceSolutionMetadata = null)
+        public static void AddSolutionDetailsFormEvent(this ModuleBase solutionsImportModule, Type requestType, string sourceSolutionPropertyName, string importingManagedPropertyName, string sourceVersionPropertyName, Func<RecordEntryViewModelBase, SolutionZipMetadata> getSourceSolutionMetadata = null)
         {
             Action<RecordEntryViewModelBase> loadSolutionDetails = (revm) =>
             {
@@ -91,6 +91,25 @@ namespace JosephM.Deployment.SolutionsImport
                             }
                             break;
                         }
+                }
+                if (changedField == importingManagedPropertyName
+                    || changedField == sourceVersionPropertyName
+                    || changedField == nameof(ILoadSolutionForImport.CurrentTargetVersion))
+                {
+                    if (revm.GetBooleanFieldFieldViewModel(importingManagedPropertyName).Value == true && revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.IsInstallingNewerVersion)).Value == true)
+                    {
+                        if (revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.InstallAsUpgrade)).Value != true)
+                        {
+                            revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.InstallAsUpgrade)).Value = true;
+                        }
+                    }
+                    else
+                    {
+                        if (revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.InstallAsUpgrade)).Value == true)
+                        {
+                            revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.InstallAsUpgrade)).Value = false;
+                        }
+                    }
                 }
             });
             solutionsImportModule.AddOnChangeFunction(changeFunction, requestType);

@@ -113,7 +113,7 @@ namespace JosephM.Deployment.SolutionTransfer
         public bool? CurrentTargetVersionManaged { get; set; }
 
         [Hidden]
-        public bool CurrentIsEarlierVersion
+        public bool IsInstallingNewerVersion
         {
             get
             {
@@ -138,7 +138,7 @@ namespace JosephM.Deployment.SolutionTransfer
 
         [Group(Sections.InstallOptions)]
         [DisplayOrder(320)]
-        [PropertyInContextByPropertyValue(nameof(CurrentIsEarlierVersion), true)]
+        [PropertyInContextByPropertyValue(nameof(IsInstallingNewerVersion), true)]
         [PropertyInContextByPropertyValue(nameof(CurrentTargetVersionManaged), true)]
         [PropertyInContextByPropertyValue(nameof(InstallAsManaged), true)]
         [PropertyInContextByPropertyNotNull(nameof(SourceConnection))]

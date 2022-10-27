@@ -25,7 +25,7 @@ namespace JosephM.Deployment.SolutionTransfer
 
             AddDialogCompletionLinks();
 
-            this.AddSolutionDetailsFormEvent(typeof(SolutionTransferRequest), nameof(SolutionTransferRequest.Solution));
+            this.AddSolutionDetailsFormEvent(typeof(SolutionTransferRequest), nameof(SolutionTransferRequest.Solution), nameof(SolutionTransferRequest.InstallAsManaged), nameof(SolutionTransferRequest.SourceVersionForRelease));
         }
 
         private void AddDialogCompletionLinks()
