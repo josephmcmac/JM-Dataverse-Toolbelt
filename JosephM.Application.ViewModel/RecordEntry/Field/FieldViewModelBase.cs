@@ -26,6 +26,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected FieldViewModelBase(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(recordForm.ApplicationController)
         {
+            EditableFormWidth = 184;
             LoadingViewModel = new LoadingViewModel(recordForm.ApplicationController);
             LoadingViewModel.LoadingMessage = null;
             RecordEntryViewModel = recordForm;
@@ -41,6 +42,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
             }
         }
 
+        public int EditableFormWidth { get; set; }
 
         public HorizontalJustify HorizontalJustify
         {

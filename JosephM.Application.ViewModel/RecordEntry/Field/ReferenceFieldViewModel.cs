@@ -13,6 +13,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         protected ReferenceFieldViewModel(string fieldName, string fieldLabel, RecordEntryViewModelBase recordForm, bool usePicklist)
             : base(fieldName, fieldLabel, recordForm)
         {
+            EditableFormWidth = 125;
             UsePicklist = usePicklist;
             if (Value != null)
                 SetEnteredTestWithoutClearingValue(GetValueName());

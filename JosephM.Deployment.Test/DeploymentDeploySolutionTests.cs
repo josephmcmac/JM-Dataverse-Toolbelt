@@ -22,8 +22,8 @@ namespace JosephM.Deployment.Test
             request.SourceConnection = GetSavedXrmRecordConfiguration();
             request.TargetConnection = GetAltSavedXrmRecordConfiguration();
             request.Solution = sourceSolution.ToLookup();
-            request.ThisReleaseVersion = "3.0.0.0";
-            request.SetVersionPostRelease = "4.0.0.0";
+            request.SourceVersionForRelease = "3.0.0.0";
+            request.SetSourceVersionPostRelease = "4.0.0.0";
 
             var altService = new XrmRecordService(altConnection, ServiceFactory);
             var targetSolution = altService.GetFirst(Entities.solution, Fields.solution_.uniquename, sourceSolution.GetStringField(Fields.solution_.uniquename));

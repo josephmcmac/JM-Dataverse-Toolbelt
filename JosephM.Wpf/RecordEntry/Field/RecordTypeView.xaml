@@ -37,19 +37,29 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox 
-                MinWidth="140"
-                Grid.Column="0"
-                Style="{StaticResource  StringFieldEntryStyle}"
-                Name="TextBox"
-                AcceptsReturn="False"
-                TabIndex="1"
-                Text="{Binding Mode=TwoWay, Path=SearchText}"
-                DataContext="{Binding NotifyOnValidationError=True}"
-                TextChanged="TextBox_TextChanged"
-                PreviewKeyDown="OnPreviewKeyDown"
-                VerticalScrollBarVisibility="Auto"
-                IsReadOnly="False" />
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="1">
+                    <TextBox 
+                    MinWidth="{Binding EditableFormWidth}"
+                    Grid.Column="0"
+                    Style="{StaticResource  StringFieldEntryStyle}"
+                    Name="TextBox"
+                    AcceptsReturn="False"
+                    TabIndex="1"
+                    Text="{Binding Mode=TwoWay, Path=SearchText}"
+                    DataContext="{Binding NotifyOnValidationError=True}"
+                    TextChanged="TextBox_TextChanged"
+                    PreviewKeyDown="OnPreviewKeyDown"
+                    VerticalScrollBarVisibility="Auto"
+                    IsReadOnly="False">
+                    </TextBox>
+                </WrapPanel>
+            </Grid>
             <Grid
                 Style="{StaticResource FieldEntryButtonGridStyle}"
                 Grid.Column="1"

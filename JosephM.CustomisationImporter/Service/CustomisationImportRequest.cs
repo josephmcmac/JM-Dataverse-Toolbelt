@@ -49,31 +49,37 @@ namespace JosephM.CustomisationImporter.Service
         [PropertyInContextByPropertyValue("HideSolutionOptions", false)]
         public Lookup Solution { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(200)]
         [Group(Sections.ItemsToInclude)]
         public bool Entities { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(210)]
         [Group(Sections.ItemsToInclude)]
         public bool Fields { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(220)]
         [Group(Sections.ItemsToInclude)]
         public bool Relationships { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(230)]
         [Group(Sections.ItemsToInclude)]
         public bool FieldOptionSets { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(240)]
         [Group(Sections.ItemsToInclude)]
         public bool SharedOptionSets { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(250)]
         [Group(Sections.ItemsToInclude)]

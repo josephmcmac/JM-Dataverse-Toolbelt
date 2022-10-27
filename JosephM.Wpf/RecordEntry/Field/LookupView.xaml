@@ -36,33 +36,39 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition MinWidth="150" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" Row="0" Visibility="{Binding DisplayTypeSelection, Converter={StaticResource BoolToVis}}">
-                <ComboBox
-                MinWidth="150"
-                VerticalAlignment="Top"
-                TabIndex="1"
-                Name="ComboBox"
-                Tag="Key"
-                DisplayMemberPath="Value"
-                ItemsSource="{Binding RecordTypeItemsSource}"
-                SelectedItem="{Binding SelectedRecordType, Mode=TwoWay}"
-                IsEnabled="{Binding IsEditable}"
-             />
+                <WrapPanel>
+                    <ComboBox
+                        MinWidth="{Binding EditableFormWidth}"
+                        VerticalAlignment="Top"
+                        TabIndex="1"
+                        Name="ComboBox"
+                        Tag="Key"
+                        DisplayMemberPath="Value"
+                        ItemsSource="{Binding RecordTypeItemsSource}"
+                        SelectedItem="{Binding SelectedRecordType, Mode=TwoWay}"
+                        IsEnabled="{Binding IsEditable}"
+                    />
+                </WrapPanel>
             </Grid>
             <Grid Grid.Column="1" Row="0" Visibility="{Binding TypePopulatedOrReadOnly, Converter={StaticResource BoolToVis}}">
-                <TextBox
-                TabIndex="1"
-                DataContext="{Binding NotifyOnValidationError=True}"
-                Text="{Binding Path=EnteredText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Name="EnteredTextBox"
-                LostKeyboardFocus="EnteredTextBox_OnLostKeyboardFocus"
-                Style="{StaticResource LookupFieldEntryStyle}"
-                IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
-                PreviewKeyDown="OnPreviewKeyDown" />
+                <WrapPanel>
+                    <TextBox
+                        MinWidth="{Binding EditableFormWidth}"
+                        TabIndex="1"
+                        DataContext="{Binding NotifyOnValidationError=True}"
+                        Text="{Binding Path=EnteredText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Name="EnteredTextBox"
+                        LostKeyboardFocus="EnteredTextBox_OnLostKeyboardFocus"
+                        Style="{StaticResource LookupFieldEntryStyle}"
+                        IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
+                        PreviewKeyDown="OnPreviewKeyDown" />
+                </WrapPanel>
             </Grid>
             <Grid
             Style="{StaticResource FieldEntryButtonGridStyle}"

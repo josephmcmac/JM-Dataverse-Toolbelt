@@ -34,10 +34,10 @@ namespace JosephM.Deployment.SolutionTransfer
             var service = sourceXrmRecordService.XrmService;
             var solution = service.Retrieve(Entities.solution, new Guid(request.Solution.Id));
             tasksDone++;
-            if (solution.GetStringField(Fields.solution_.version) != request.ThisReleaseVersion)
+            if (solution.GetStringField(Fields.solution_.version) != request.SourceVersionForRelease)
             {
-                controller.UpdateProgress(tasksDone, totalTasks, "Setting Release Version " + request.ThisReleaseVersion);
-                solution.SetField(Fields.solution_.version, request.ThisReleaseVersion);
+                controller.UpdateProgress(tasksDone, totalTasks, "Setting Release Version " + request.SourceVersionForRelease);
+                solution.SetField(Fields.solution_.version, request.SourceVersionForRelease);
                 service.Update(solution, new[] { Fields.solution_.version });
             }
             tasksDone++;
@@ -62,10 +62,10 @@ namespace JosephM.Deployment.SolutionTransfer
             response.ConnectionDeployedInto = request.TargetConnection;
 
             tasksDone++;
-            if (solution.GetStringField(Fields.solution_.version) != request.SetVersionPostRelease)
+            if (solution.GetStringField(Fields.solution_.version) != request.SetSourceVersionPostRelease)
             {
-                controller.UpdateProgress(tasksDone, totalTasks, "Setting New Solution Version " + request.SetVersionPostRelease);
-                solution.SetField(Fields.solution_.version, request.SetVersionPostRelease);
+                controller.UpdateProgress(tasksDone, totalTasks, "Setting New Solution Version " + request.SetSourceVersionPostRelease);
+                solution.SetField(Fields.solution_.version, request.SetSourceVersionPostRelease);
                 service.Update(solution, new[] { Fields.solution_.version });
             }
 

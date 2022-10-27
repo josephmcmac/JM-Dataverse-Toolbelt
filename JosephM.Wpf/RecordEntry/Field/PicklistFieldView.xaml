@@ -34,13 +34,15 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
                   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
-            <ComboBox
-                Name="ComboBox"
-                TabIndex="1"
-                DisplayMemberPath="Value"
-                ItemsSource="{Binding ItemsSource}"
-                IsEnabled="{Binding IsEditable}"
-                SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}" />
+                <WrapPanel><ComboBox
+                    MinWidth="{Binding EditableFormWidth}"
+                    Name="ComboBox"
+                    TabIndex="1"
+                    DisplayMemberPath="Value"
+                    ItemsSource="{Binding ItemsSource}"
+                    IsEnabled="{Binding IsEditable}"
+                    SelectedItem="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True}" />
+                </WrapPanel>
             </Grid>
             <Grid Grid.Row="1"
                   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">

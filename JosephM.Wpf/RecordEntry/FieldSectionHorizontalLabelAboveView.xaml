@@ -7,7 +7,6 @@
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="400"
-             
              d:DataContext="{d:DesignInstance Type=fakes:FakeFieldSectionViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -37,17 +36,19 @@
                             Style="{StaticResource SectionHeadingStyle}" />
         </Grid>
         <Grid Grid.Row="1" HorizontalAlignment="Center">
-            <ItemsControl
+            <Grid>
+                <ItemsControl
+                    Grid.Column="1"
                             ItemsSource="{Binding CustomFunctions}"
                             ItemTemplate="{StaticResource XrmButtonTemplate}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel
-                            HorizontalAlignment="Center"
-                            Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel  HorizontalAlignment="Center"
+                                Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
         </Grid>
         <Grid Grid.Row="2">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -57,7 +58,7 @@
                     ItemTemplateSelector="{StaticResource labelledAboveFieldTemplateSelector}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  />
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"  />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>

@@ -42,9 +42,9 @@ namespace JosephM.Deployment.SolutionsImport
                             var recordService = new XrmRecordService(connection, serviceFactory);
                             installedSolution = recordService.GetFirst(Entities.solution, Fields.solution_.uniquename, solutionuniqueName);
                         }
-                        revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.IsCurrentlyInstalled)).Value = installedSolution != null;
-                        revm.GetStringFieldFieldViewModel(nameof(ILoadSolutionForImport.CurrentVersion)).Value = installedSolution?.GetStringField(Fields.solution_.version);
-                        revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.CurrentVersionManaged)).Value = installedSolution == null
+                        revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.IsCurrentlyInstalledInTarget)).Value = installedSolution != null;
+                        revm.GetStringFieldFieldViewModel(nameof(ILoadSolutionForImport.CurrentTargetVersion)).Value = installedSolution?.GetStringField(Fields.solution_.version);
+                        revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.CurrentTargetVersionManaged)).Value = installedSolution == null
                             ? null
                             : (bool?)installedSolution.GetBoolField(Fields.solution_.ismanaged);
                     }

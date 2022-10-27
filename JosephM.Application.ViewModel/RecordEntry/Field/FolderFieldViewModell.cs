@@ -10,6 +10,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public FolderFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm)
             : base(fieldName, label, recordForm)
         {
+            EditableFormWidth = 234;
         }
 
         public bool IsDragOver

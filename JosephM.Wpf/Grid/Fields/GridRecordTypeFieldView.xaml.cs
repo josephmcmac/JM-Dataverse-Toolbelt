@@ -1,19 +1,87 @@
-﻿#region
-
+﻿using JosephM.Application.ViewModel.RecordEntry.Field;
+using JosephM.Wpf.RecordEntry.Field;
+using System.Threading;
 using System.Windows.Controls;
-
-#endregion
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace JosephM.Wpf.Grid
 {
-    /// <summary>
-    ///     Interaction logic for SubGrid.xaml
-    /// </summary>
-    public partial class GridRecordTypeFieldView : UserControl
+    public partial class GridRecordTypeFieldView : FieldControlBase
     {
         public GridRecordTypeFieldView()
         {
             InitializeComponent();
+        }
+
+        protected override Binding GetValidationBinding()
+        {
+            return BindingOperations.GetBinding(TextBox, TextBox.TextProperty);
+        }
+
+        public RecordTypeFieldViewModel ViewModel
+        {
+            get { return DataContext as RecordTypeFieldViewModel; }
+            set { DataContext = value; }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (
+                !TextBox.IsKeyboardFocusWithin
+                || ViewModel == null
+                || !ViewModel.IsEditable
+                || ViewModel.AutocompleteViewModel == null
+                || !ViewModel.AutocompleteViewModel.AutoSearch)
+            {
+                return;
+            }
+            var searchText = TextBox.Text;
+            ViewModel.AutocompleteViewModel.FieldViewModel.SearchText = searchText;
+            var viewModel = ViewModel;
+            ViewModel.DoOnAsynchThread(() =>
+            {
+                Thread.Sleep(250);
+                if (viewModel.AutocompleteViewModel.SearchText == searchText)
+                {
+                    viewModel.AutocompleteViewModel.SearchText = searchText;
+                    viewModel.AutocompleteViewModel.DynamicGridViewModel.CurrentPage = 1;
+                    viewModel.DisplayAutocomplete = true;
+                }
+            });
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (ViewModel == null || !ViewModel.IsEditable)
+            {
+                return;
+            }
+            if (e.Key == Key.Down)
+            {
+                ViewModel.SelectAutocompleteGrid();
+            }
+            if (e.Key == Key.Tab || e.Key == Key.Escape)
+            {
+                ViewModel.DisplayAutocomplete = false;
+            }
+            if (e.Key == Key.Enter)
+            {
+                if (ViewModel.AutocompleteViewModel != null)
+                {
+                    ViewModel.AutocompleteViewModel.SearchText = TextBox.Text;
+                }
+                ViewModel.Search();
+            }
+            else if (e.Key == Key.K &&
+                     (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)))
+            {
+                if (ViewModel.AutocompleteViewModel != null)
+                {
+                    ViewModel.AutocompleteViewModel.SearchText = TextBox.Text;
+                }
+                ViewModel.Search();
+            }
         }
     }
 }

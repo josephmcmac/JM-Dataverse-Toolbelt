@@ -35,14 +35,14 @@
             <Grid Grid.Row="0"
                   Visibility="{Binding LoadingViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay}">
                 <ComboBox
-            MinWidth="100"
-            TabIndex="1"
-            Name="ComboBox"
-            Tag="Key"
-            DisplayMemberPath="Value"
-            ItemsSource="{Binding ItemsSource}"
-            SelectedItem="{Binding ValueObject, Mode=TwoWay, NotifyOnValidationError=True}"
-            IsEnabled="{Binding IsEditable}"
+                    MinWidth="100"
+                    TabIndex="1"
+                    Name="ComboBox"
+                    Tag="Key"
+                    DisplayMemberPath="Value"
+                    ItemsSource="{Binding ItemsSource}"
+                    SelectedItem="{Binding ValueObject, Mode=TwoWay, NotifyOnValidationError=True}"
+                    IsEnabled="{Binding IsEditable}"
              />
             </Grid>
             <Grid Grid.Row="1"

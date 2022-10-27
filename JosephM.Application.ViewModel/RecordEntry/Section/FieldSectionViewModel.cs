@@ -44,6 +44,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
         {
             var fieldViewModels = new ObservableCollection<FieldViewModelBase>();
             var centreAlign = new[] {
+                Group.DisplayLayoutEnum.HorizontalLabelAbove,
                 Group.DisplayLayoutEnum.HorizontalCenteredInputOnly,
                 Group.DisplayLayoutEnum.HorizontalInputOnly,
                 Group.DisplayLayoutEnum.VerticalCentered

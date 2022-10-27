@@ -6,7 +6,6 @@ using JosephM.Core.Utility;
 using JosephM.Record.Attributes;
 using JosephM.Xrm.DataImportExport.XmlImport;
 using JosephM.Xrm.Schema;
-using JosephM.XrmModule.SavedXrmConnections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -59,6 +58,8 @@ namespace JosephM.Deployment.CreatePackage
         [PropertyInContextByPropertyValue(nameof(HideTypeAndFolder), false)]
         public Folder FolderPath { get; set; }
 
+        [EditableFormWidth(175)]
+        [DoNotAllowAdd]
         [DisplayOrder(510)]
         [RequiredProperty]
         [Group(Sections.PackageSolution)]

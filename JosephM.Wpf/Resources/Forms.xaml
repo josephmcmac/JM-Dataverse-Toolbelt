@@ -72,7 +72,7 @@
         <field:DateFieldView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="stringFieldTemplate">
-        <field:StringFieldView DataContext="{Binding}" MinWidth="200" />
+        <field:StringFieldView DataContext="{Binding}" />
     </DataTemplate>
     <DataTemplate x:Key="passwordFieldTemplate">
         <field:PasswordFieldView DataContext="{Binding}" />
@@ -180,7 +180,7 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="labelledAboveFieldTemplate">
-        <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" ToolTip="{Binding Description}">
+        <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" ToolTip="{Binding Description}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />

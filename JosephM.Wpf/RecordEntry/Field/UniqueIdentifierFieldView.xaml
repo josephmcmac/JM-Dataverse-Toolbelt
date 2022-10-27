@@ -35,7 +35,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox 
+            <WrapPanel>
+                <TextBox 
+                MinWidth="{Binding EditableFormWidth}"
                 Grid.Column="0"
                 Style="{StaticResource  StringFieldEntryStyle}"
                 Name="TextBox"
@@ -43,6 +45,9 @@
                 Text="{Binding Mode=TwoWay, Path=ValueObject}"
                 DataContext="{Binding NotifyOnValidationError=True}"
                 IsReadOnly="False" />
+
+
+            </WrapPanel>
         </Grid>
     </Grid>
 </field:FieldControlBase>

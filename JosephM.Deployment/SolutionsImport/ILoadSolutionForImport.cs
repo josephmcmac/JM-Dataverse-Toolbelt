@@ -9,8 +9,8 @@ namespace JosephM.Deployment.SolutionsImport
         string Version { get; set; }
         string UniqueName { get; set; }
         string FriendlyName { get; set; }
-        bool? IsCurrentlyInstalled { get; set; }
-        bool? CurrentVersionManaged { get; set; }
-        string CurrentVersion { get; set; }
+        bool? IsCurrentlyInstalledInTarget { get; set; }
+        bool? CurrentTargetVersionManaged { get; set; }
+        string CurrentTargetVersion { get; set; }
     }
 }

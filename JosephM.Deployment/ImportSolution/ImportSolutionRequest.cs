@@ -35,7 +35,7 @@ namespace JosephM.Deployment.ImportSolution
         [Group(Sections.Connection)]
         [DisplayName("Saved connection instance to import into")]
         [RequiredProperty]
-        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
+        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections), allowAddNew: false)]
         public SavedXrmRecordConfiguration TargetConnection { get; set; }
 
         [Hidden]
@@ -74,30 +74,30 @@ namespace JosephM.Deployment.ImportSolution
         [ReadOnlyWhenSet]
         [PropertyInContextByPropertyNotNull(nameof(TargetConnection))]
         [PropertyInContextByPropertyValue(nameof(IsManaged), true)]
-        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalled), false)]
-        public bool? IsCurrentlyInstalled { get; set; }
+        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalledInTarget), false)]
+        public bool? IsCurrentlyInstalledInTarget { get; set; }
 
         [Group(Sections.CurrentSolutionDetails)]
         [DisplayOrder(210)]
         [ReadOnlyWhenSet]
-        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalled), true)]
-        public string CurrentVersion { get; set; }
+        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalledInTarget), true)]
+        public string CurrentTargetVersion { get; set; }
 
         [Group(Sections.CurrentSolutionDetails)]
         [DisplayOrder(220)]
         [ReadOnlyWhenSet]
         [PropertyInContextByPropertyValue(nameof(IsManaged), true)]
-        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalled), true)]
-        [PropertyInContextByPropertyValue(nameof(CurrentVersionManaged), false)]
+        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalledInTarget), true)]
+        [PropertyInContextByPropertyValue(nameof(CurrentTargetVersionManaged), false)]
         [RequiredPropertyValue(true, "A managed solution cannot be installed into an instance where that solution is already unmanaged. Delete the solution from the target instance and try again")]
-        public bool? CurrentVersionManaged { get; set; }
+        public bool? CurrentTargetVersionManaged { get; set; }
 
         [Hidden]
         public bool CurrentIsEarlierVersion
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(CurrentVersion) && !string.IsNullOrWhiteSpace(Version) && VersionHelper.IsNewerVersion(Version, CurrentVersion);
+                return !string.IsNullOrWhiteSpace(CurrentTargetVersion) && !string.IsNullOrWhiteSpace(Version) && VersionHelper.IsNewerVersion(Version, CurrentTargetVersion);
             }
         }
 
@@ -110,7 +110,7 @@ namespace JosephM.Deployment.ImportSolution
         [Group(Sections.InstallOptions)]
         [DisplayOrder(310)]
         [PropertyInContextByPropertyValue(nameof(CurrentIsEarlierVersion), true)]
-        [PropertyInContextByPropertyValue(nameof(CurrentVersionManaged), true)]
+        [PropertyInContextByPropertyValue(nameof(CurrentTargetVersionManaged), true)]
         [PropertyInContextByPropertyValue(nameof(IsManaged), true)]
         public bool InstallAsUpgrade { get; set; }
 

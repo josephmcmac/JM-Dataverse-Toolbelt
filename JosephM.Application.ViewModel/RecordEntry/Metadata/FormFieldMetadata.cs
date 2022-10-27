@@ -40,6 +40,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public bool DoNotLimitDisplayHeight { get; set; }
 
+        public int? EditableFormWidth { get; set; }
+
         public FieldViewModelBase CreateFieldViewModel(string recordType, IRecordService recordService,
             RecordEntryViewModelBase recordForm, IApplicationController applicationController, RecordFieldType? explicitFieldType = null, string explicitLookupTargetType = null, IEnumerable<PicklistOption> explicitPicklistOptions = null, bool explicitMultiline = false, bool explicitMultiselect = false)
         {
@@ -307,6 +309,10 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                 fieldVm.DisplayLabel = DisplayLabel;
                 fieldVm.AltRecordType = AltRecordType;
                 fieldVm.AliasedFieldName = AliasedFieldName;
+                if (EditableFormWidth.HasValue)
+                {
+                    fieldVm.EditableFormWidth = EditableFormWidth.Value;
+                }
                 if (!explicitFieldType.HasValue)
                 {
                     var metadata = recordService.GetFieldMetadata(field, recordType);
@@ -316,7 +322,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
             }
             catch (Exception ex)
             {
-                throw new Exception(String.Format("Error creating view model for field {0} in type {1}: {2}", field, recordType, ex.Message), ex);
+                throw new Exception(string.Format("Error creating view model for field {0} in type {1}: {2}", field, recordType, ex.Message), ex);
             }
         }
     }

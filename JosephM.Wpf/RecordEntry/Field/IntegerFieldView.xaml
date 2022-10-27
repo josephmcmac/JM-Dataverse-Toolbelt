@@ -30,14 +30,19 @@
             </TextBox>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
-            <controls:IntegerTextBox
-            TabIndex="1"
-            x:Name="IntegerTextBox"
-            DataContext="{Binding NotifyOnValidationError=True}"
-            Text="{Binding ValueString, Mode=TwoWay}"
-            Style="{StaticResource IntegerFieldEntryStyle}"
-            IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
-            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+            <WrapPanel>
+                <controls:IntegerTextBox
+                    TextAlignment="Center"
+                    MinWidth="{Binding EditableFormWidth}"
+                    TabIndex="1"
+                    x:Name="IntegerTextBox"
+                    DataContext="{Binding NotifyOnValidationError=True}"
+                    Text="{Binding ValueString, Mode=TwoWay}"
+                    Style="{StaticResource IntegerFieldEntryStyle}"
+                    IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
+                    Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" 
+                    />
+            </WrapPanel>
         </Grid>
     </Grid>
 </field:FieldControlBase>

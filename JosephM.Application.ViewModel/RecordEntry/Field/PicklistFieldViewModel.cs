@@ -1,7 +1,6 @@
-﻿using System;
-using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.FieldType;
-using Microsoft.SqlServer.Server;
+using System;
 
 namespace JosephM.Application.ViewModel.RecordEntry.Field
 {

@@ -12,6 +12,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public FileRefFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm, string fileMask)
             : base(fieldName, label, recordForm)
         {
+            EditableFormWidth = 284;
             FileMask = fileMask;
         }
 

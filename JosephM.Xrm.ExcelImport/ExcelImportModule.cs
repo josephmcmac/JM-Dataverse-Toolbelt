@@ -83,7 +83,7 @@ namespace JosephM.Xrm.ExcelImport
                     if (r == null)
                         throw new NullReferenceException("Could Not Load The Form. The ParentForm Is Null");
 
-                    r.LoadingViewModel.LoadingMessage = "Please Wait While Generating Mappings";
+                    r.LoadingViewModel.LoadingMessage = "Please wait while generating mappings";
                     r.LoadingViewModel.IsLoading = true;
                     try
                     {

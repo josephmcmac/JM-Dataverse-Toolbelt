@@ -36,15 +36,18 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox 
-                Grid.Column="0"
-                Style="{StaticResource  StringFieldEntryStyle}"
-                Name="TextBox"
-                TabIndex="1"
-                Text="{Binding Mode=TwoWay, Path=ValueObject}"
-                DataContext="{Binding NotifyOnValidationError=True}"
-                VerticalScrollBarVisibility="Auto"
-                IsReadOnly="False" />
+            <WrapPanel>
+                <TextBox 
+                    MinWidth="{Binding EditableFormWidth}"
+                    Grid.Column="0"
+                    Style="{StaticResource  StringFieldEntryStyle}"
+                    Name="TextBox"
+                    TabIndex="1"
+                    Text="{Binding Mode=TwoWay, Path=ValueObject}"
+                    DataContext="{Binding NotifyOnValidationError=True}"
+                    VerticalScrollBarVisibility="Auto"
+                    IsReadOnly="False" />
+            </WrapPanel>
         </Grid>
     </Grid>
 </field:FieldControlBase>

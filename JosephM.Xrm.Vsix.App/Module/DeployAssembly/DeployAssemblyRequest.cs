@@ -26,6 +26,7 @@ namespace JosephM.Xrm.Vsix.Module.DeployAssembly
         public string AssemblyName { get; set; }
 
         [RequiredProperty]
+        [EditableFormWidth(85)]
         [DisplayOrder(20)]
         [Group(Sections.DeployOptions)]
         public IsolationMode_ IsolationMode { get; set; }

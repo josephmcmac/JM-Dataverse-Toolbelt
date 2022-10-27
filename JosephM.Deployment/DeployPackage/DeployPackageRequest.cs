@@ -30,7 +30,7 @@ namespace JosephM.Deployment.DeployPackage
         [DisplayOrder(100)]
         [DisplayName("Saved Connection Instance To Import Into")]
         [RequiredProperty]
-        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections))]
+        [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections), allowAddNew: false)]
         public SavedXrmRecordConfiguration Connection { get; set; }
 
         [GridWidth(300)]

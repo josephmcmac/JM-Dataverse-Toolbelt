@@ -13,6 +13,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public IntegerFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm, IEnumerable<PicklistOption> picklist)
             : base(fieldName, label, recordForm)
         {
+            EditableFormWidth = 75;
             MinValue = int.MinValue;
             MaxValue = int.MaxValue;
             PicklistOptions = picklist;

@@ -41,16 +41,19 @@
                         AllowDrop="True"
                         Drop="DropFile" 
                         Style="{StaticResource FieldDropZone}">
-                        <TextBox
-                            AllowDrop="True"
-                            PreviewDragOver="TextBoxDragOver"
-                            Drop="DropFile"
-                            TabIndex="1"
-                            DataContext="{Binding NotifyOnValidationError=True}"
-                            Text="{Binding Path=ValueObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FolderToString}}"
-                            Name="FileNameTextBox"
-                            Style="{StaticResource FieldEntryStyle}"
-                            IsReadOnly="False" />
+                        <WrapPanel>
+                            <TextBox
+                                MinWidth="{Binding EditableFormWidth}"
+                                AllowDrop="True"
+                                PreviewDragOver="TextBoxDragOver"
+                                Drop="DropFile"
+                                TabIndex="1"
+                                DataContext="{Binding NotifyOnValidationError=True}"
+                                Text="{Binding Path=ValueObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FolderToString}}"
+                                Name="FileNameTextBox"
+                                Style="{StaticResource FieldEntryStyle}"
+                                IsReadOnly="False" />
+                        </WrapPanel>
                     </GroupBox>
                 </Border>
             </Grid>

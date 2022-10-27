@@ -10,6 +10,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
         public BooleanFieldViewModel(string fieldName, string label, RecordEntryViewModelBase recordForm, IEnumerable<PicklistOption> picklist)
             : base(fieldName, label, recordForm)
         {
+            EditableFormWidth = 50;
             PicklistOptions = picklist;
             UsePicklist = PicklistOptions != null && PicklistOptions.Any();
         }

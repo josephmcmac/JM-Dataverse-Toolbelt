@@ -27,12 +27,19 @@
             </TextBox>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
-            <CheckBox
-            Style="{StaticResource BooleanFieldEntryStyle}"
-            TabIndex="1"
-            Name="CheckBox"
-            IsEnabled="{Binding IsEditable}"
-            IsChecked="{Binding ValueObject, Mode=TwoWay}" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                <ColumnDefinition Width="{Binding EditableFormWidth}" />
+                <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                <CheckBox
+                    Style="{StaticResource BooleanFieldEntryStyle}"
+                    TabIndex="1"
+                    Name="CheckBox"
+                    IsEnabled="{Binding IsEditable}"
+                    IsChecked="{Binding ValueObject, Mode=TwoWay}" />
+            </StackPanel>
         </Grid>
     </Grid>
 </field:FieldControlBase>

@@ -56,6 +56,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
         [GridWidth(300)]
         [DisplayOrder(45)]
         [FormEntry]
+        [AllowNestedGridEdit]
         [PropertyInContextByPropertyNotNull(nameof(RecordType))]
         public IEnumerable<ExplicitFieldValues> ExplicitValuesToSet { get; set; }
 
@@ -95,7 +96,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
             public const string Fetch = "Fetch XML - Note Attributes in The Entered XML Will Be Ignored. All fields Will Be Included Apart From Those Selected For Exclusion";
         }
 
-        [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.HorizontalWrap, 20)]
+        [Group(Sections.FieldUpdate, Group.DisplayLayoutEnum.VerticalCentered, 20)]
         [DoNotAllowGridEdit]
         public class ExplicitFieldValues
         {
@@ -107,22 +108,23 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
                     : FieldToSet.Value + " = " + (ClearValue ? "(null)" : ValueToSet?.ToString());
             }
 
-            [MyDescription("Field To Set The Explicit Value In")]
+            [MyDescription("Field to set the explicit value in")]
             [Group(Sections.FieldUpdate)]
             [DisplayOrder(10)]
             [RequiredProperty]
             [RecordFieldFor(nameof(ValueToSet))]
             public RecordField FieldToSet { get; set; }
 
-            [MyDescription("If Set The Value Will Be Cleared Rather Than Populated With A Specific Value")]
+            [MyDescription("If set the field will be cleared rather than populated with a specific value")]
             [GridWidth(100)]
             [Group(Sections.FieldUpdate)]
             [DisplayOrder(20)]
             [RequiredProperty]
             [PropertyInContextByPropertyNotNull(nameof(FieldToSet))]
+            [DisplayName("Set Value Null")]
             public bool ClearValue { get; set; }
 
-            [MyDescription("The Value To Set In The Field")]
+            [MyDescription("The value to be set in the field")]
             [GridWidth(300)]
             [Group(Sections.FieldUpdate)]
             [DisplayOrder(30)]

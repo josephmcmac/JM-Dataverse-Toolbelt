@@ -30,14 +30,17 @@
             </TextBox>
         </Grid>
         <Grid MinWidth="100" Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
-            <controls:DecimalTextBox
-            TabIndex="1"
-            x:Name="DecimalTextBox"
-            DataContext="{Binding NotifyOnValidationError=True}"
-            Text="{Binding ValueString, Mode=TwoWay}"
-            Style="{StaticResource FieldEntryStyle}"
-            IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
-            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+            <WrapPanel>
+                <controls:DecimalTextBox
+                MinWidth="{Binding EditableFormWidth}"
+                TabIndex="1"
+                x:Name="DecimalTextBox"
+                DataContext="{Binding NotifyOnValidationError=True}"
+                Text="{Binding ValueString, Mode=TwoWay}"
+                Style="{StaticResource FieldEntryStyle}"
+                IsReadOnly="{Binding IsEditable, Converter={StaticResource BooleanToFalseConverter}}"
+                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+            </WrapPanel>
         </Grid>
     </Grid>
 </field:FieldControlBase>

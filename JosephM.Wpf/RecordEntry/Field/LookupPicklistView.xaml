@@ -43,16 +43,18 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <ComboBox
-                    MinWidth="100"
-                    TabIndex="1"
-                    Name="ComboBox"
-                    Tag="Key"
-                    DisplayMemberPath="Name"
-                    ItemsSource="{Binding ItemsSourceAsync}"
-                    SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}"
-                    IsEnabled="{Binding IsEditable}"
-                    Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+                    <WrapPanel>
+                        <ComboBox
+                            MinWidth="{Binding EditableFormWidth}"
+                            TabIndex="1"
+                            Name="ComboBox"
+                            Tag="Key"
+                            DisplayMemberPath="Name"
+                            ItemsSource="{Binding ItemsSourceAsync}"
+                            SelectedItem="{Binding SelectedItem, Mode=TwoWay, NotifyOnValidationError=True}"
+                            IsEnabled="{Binding IsEditable}"
+                            Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+                    </WrapPanel>
                 </Grid>
                 <Grid Grid.Column="1" Visibility="{Binding AllowNew, Converter={StaticResource BoolToVis}}" Style="{StaticResource FieldEntryButtonGridStyle}">
                     <Button DataContext="{Binding Path=NewButton}" Style="{StaticResource AddNewButton}"

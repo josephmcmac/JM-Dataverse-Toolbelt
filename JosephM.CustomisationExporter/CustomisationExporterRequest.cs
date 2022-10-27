@@ -23,31 +23,37 @@ namespace JosephM.CustomisationExporter
         [RequiredProperty]
         public Folder SaveToFolder { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(100)]
         [Group(Sections.TableAndFieldOptions)]
         public bool Entities { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(110)]
         [Group(Sections.TableAndFieldOptions)]
         public bool Fields { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(120)]
         [Group(Sections.TableAndFieldOptions)]
         public bool FieldOptionSets { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(130)]
         [Group(Sections.TableAndFieldOptions)]
         public bool SharedOptionSets { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(200)]
         [Group(Sections.TableAndFieldOptions)]
         public bool Relationships { get; set; }
 
+        [EditableFormWidth(110)]
         [DisplayName("Duplicate N:N Relationship Sides")]
         [GridWidth(110)]
         [DisplayOrder(210)]
@@ -55,6 +61,7 @@ namespace JosephM.CustomisationExporter
         [PropertyInContextByPropertyValue("Relationships", true)]
         public bool DuplicateManyToManyRelationshipSides { get; set; }
 
+        [EditableFormWidth(110)]
         [GridWidth(110)]
         [DisplayOrder(220)]
         [Group(Sections.TableAndFieldOptions)]
@@ -62,61 +69,73 @@ namespace JosephM.CustomisationExporter
         [PropertyInContextByPropertyValue("Relationships", true)]
         public bool IncludeOneToManyRelationships { get; set; }
 
+        [EditableFormWidth(125)]
         [GridWidth(110)]
         [DisplayOrder(180)]
         [Group(Sections.CustomisationOptions)]
         public bool FormsAndDashboards { get; set; }
 
+        [EditableFormWidth(125)]
         [GridWidth(110)]
         [DisplayOrder(175)]
         [Group(Sections.CustomisationOptions)]
         public bool Reports { get; set; }
 
+        [EditableFormWidth(125)]
         [GridWidth(110)]
         [DisplayOrder(140)]
         [Group(Sections.CustomisationOptions)]
         public bool Solutions { get; set; }
 
+        [EditableFormWidth(125)]
         [GridWidth(110)]
         [DisplayOrder(150)]
         [Group(Sections.CustomisationOptions)]
         public bool PluginAssemblies { get; set; }
 
+        [EditableFormWidth(125)]
         [GridWidth(110)]
         [DisplayOrder(151)]
         [Group(Sections.CustomisationOptions)]
         public bool PluginTriggers { get; set; }
 
+        [EditableFormWidth(125)]
         [GridWidth(110)]
         [DisplayOrder(175)]
         [Group(Sections.CustomisationOptions)]
         public bool WebResources { get; set; }
 
+        [EditableFormWidth(125)]
         [GridWidth(110)]
         [DisplayOrder(145)]
         [Group(Sections.CustomisationOptions)]
         public bool Workflows { get; set; }
 
+        [EditableFormWidth(115)]
         [GridWidth(110)]
         [DisplayOrder(160)]
         [Group(Sections.UsersAndRoleOptions)]
         public bool FieldSecurityProfiles { get; set; }
 
+        [EditableFormWidth(115)]
         [GridWidth(110)]
         [DisplayOrder(155)]
         [Group(Sections.UsersAndRoleOptions)]
         public bool SecurityRoles { get; set; }
 
+        [EditableFormWidth(115)]
         [GridWidth(110)]
         [DisplayOrder(156)]
         [Group(Sections.UsersAndRoleOptions)]
         public bool SecurityRolesPrivileges { get; set; }
 
+        [EditableFormWidth(115)]
         [GridWidth(110)]
         [DisplayOrder(170)]
         [Group(Sections.UsersAndRoleOptions)]
         public bool Teams { get; set; }
 
+        [EditableFormWidth(115)]
         [GridWidth(110)]
         [DisplayOrder(165)]
         [Group(Sections.UsersAndRoleOptions)]

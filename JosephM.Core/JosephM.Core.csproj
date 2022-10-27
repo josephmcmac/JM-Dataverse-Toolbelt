@@ -98,6 +98,7 @@
     <Compile Include="Attributes\DoNotLimitDisplayHeight.cs" />
     <Compile Include="Attributes\DoNotAllowGridOpen.cs" />
     <Compile Include="Attributes\GridReadOnly.cs" />
+    <Compile Include="Attributes\EditableFormWidth.cs" />
     <Compile Include="Attributes\IncludeManyToManyIntersects.cs" />
     <Compile Include="Attributes\ISelectable.cs" />
     <Compile Include="Attributes\Instruction.cs" />

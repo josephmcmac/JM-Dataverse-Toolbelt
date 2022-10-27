@@ -1,9 +1,5 @@
-﻿#region
-
-using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-
-#endregion
 
 namespace JosephM.Wpf.RecordEntry.Field
 {

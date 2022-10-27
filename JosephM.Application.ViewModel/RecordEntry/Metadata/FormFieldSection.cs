@@ -1,10 +1,6 @@
-﻿#region
-
-using JosephM.Application.ViewModel.RecordEntry.Form;
+﻿using JosephM.Application.ViewModel.RecordEntry.Form;
 using JosephM.Core.Attributes;
 using System.Collections.Generic;
-
-#endregion
 
 namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 {

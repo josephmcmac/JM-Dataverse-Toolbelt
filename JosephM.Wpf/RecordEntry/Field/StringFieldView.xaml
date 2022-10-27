@@ -6,7 +6,7 @@
                         xmlns:field="clr-namespace:JosephM.Wpf.RecordEntry.Field"
                         xmlns:converters="clr-namespace:JosephM.Wpf.Converters"
                         mc:Ignorable="d"
-                        d:DesignHeight="40" d:DesignWidth="300">
+                        d:DesignHeight="40" d:DesignWidth="300" >
     <field:FieldControlBase.Resources>
         <ResourceDictionary>
             <converters:BooleanToVisibilityHiddenConverter x:Key="BoolToHidden" />
@@ -19,39 +19,59 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </field:FieldControlBase.Resources>
-    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+    <Grid Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}" >
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToHidden}}" >
-            <TextBox
-                Style="{StaticResource  StringFieldEntryStyleReadOnly}"
-                TextWrapping="WrapWithOverflow"
-                TextAlignment="{Binding CentreAlign, Converter={StaticResource BooleanToCenterAlignConverter}}"
-                AcceptsReturn="{Binding IsMultiline}"
-                MinLines ="{Binding NumberOfLines}"
-                MaxLines ="{Binding NumberOfLines}"
-                VerticalScrollBarVisibility="Auto"
-                TabIndex="1"
-                Text="{Binding Mode=OneWay, Path=ValueObject}"
-                Height="Auto">
-            </TextBox>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+            </Grid.ColumnDefinitions>
+            <WrapPanel Grid.Column="1" >
+                <TextBox
+                    MinWidth="100"
+                    Style="{StaticResource  StringFieldEntryStyleReadOnly}"
+                    TextWrapping="WrapWithOverflow"
+                    TextAlignment="{Binding CentreAlign, Converter={StaticResource BooleanToCenterAlignConverter}}"
+                    AcceptsReturn="{Binding IsMultiline}"
+                    MinLines ="{Binding NumberOfLines}"
+                    MaxLines ="{Binding NumberOfLines}"
+                    VerticalScrollBarVisibility="Auto"
+                    TabIndex="1"
+                    Text="{Binding Mode=OneWay, Path=ValueObject}"
+                    Height="Auto">
+                </TextBox>
+            </WrapPanel>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox 
-                Grid.Column="0"
-                Style="{StaticResource  StringFieldEntryStyle}"
-                Name="TextBox"
-                AcceptsReturn="{Binding IsMultiline}"
-                MinLines ="{Binding NumberOfLines}"
-                TabIndex="1"
-                Text="{Binding Mode=TwoWay, Path=ValueObject}"
-                DataContext="{Binding NotifyOnValidationError=True}"
-                TextChanged="TextBox_TextChanged"
-                PreviewKeyDown="OnPreviewKeyDown"
-                VerticalScrollBarVisibility="Auto"
-                IsReadOnly="False" />
+            <Grid>
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="{Binding CentreAlign, Converter={StaticResource BoolToStar}}" />
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Column="1" >
+                        <TextBox
+                            MinWidth="{Binding EditableFormWidth}"
+                            Grid.Column="0"
+                            Style="{StaticResource  StringFieldEntryStyle}"
+                            Name="TextBox"
+                            AcceptsReturn="{Binding IsMultiline}"
+                            MinLines ="{Binding NumberOfLines}"
+                            TabIndex="1"
+                            Text="{Binding Mode=TwoWay, Path=ValueObject}"
+                            DataContext="{Binding NotifyOnValidationError=True}"
+                            TextChanged="TextBox_TextChanged"
+                            PreviewKeyDown="OnPreviewKeyDown"
+                            VerticalScrollBarVisibility="Auto"
+                            IsReadOnly="False" />
+                    </WrapPanel>
+                </Grid>
+            </Grid>
             <Grid
                 Style="{StaticResource FieldEntryButtonGridStyle}"
                 Grid.Column="1"

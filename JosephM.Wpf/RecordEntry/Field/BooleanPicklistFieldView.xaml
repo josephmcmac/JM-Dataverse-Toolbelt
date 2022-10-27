@@ -27,13 +27,16 @@
             </TextBox>
         </Grid>
         <Grid Visibility="{Binding IsEditable, Converter={StaticResource BoolToVis}}" >
-            <ComboBox
-                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}"
-                Name="ComboBox"
-                DisplayMemberPath="Value"
-                ItemsSource="{Binding PicklistOptions}"
-                IsEnabled="{Binding IsEditable}"
-                SelectedItem="{Binding SelectedOption, Mode=TwoWay, NotifyOnValidationError=True}" />
+            <WrapPanel>
+                <ComboBox
+                    MinWidth="{Binding EditableFormWidth}"
+                    Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}"
+                    Name="ComboBox"
+                    DisplayMemberPath="Value"
+                    ItemsSource="{Binding PicklistOptions}"
+                    IsEnabled="{Binding IsEditable}"
+                    SelectedItem="{Binding SelectedOption, Mode=TwoWay, NotifyOnValidationError=True}" />
+            </WrapPanel>
         </Grid>
     </Grid>
     

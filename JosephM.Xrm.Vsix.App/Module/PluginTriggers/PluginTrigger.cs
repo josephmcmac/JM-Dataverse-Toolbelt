@@ -25,6 +25,7 @@ namespace JosephM.Xrm.Vsix.Module.PluginTriggers
 
         [Group(Sections.Plugin)]
         [DisplayOrder(10)]
+        [EditableFormWidth(250)]
         [GridWidth(300)]
         [RequiredProperty]
         [ReferencedType(Entities.plugintype)]

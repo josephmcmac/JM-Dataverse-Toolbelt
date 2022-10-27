@@ -12,7 +12,7 @@ namespace JosephM.Deployment.SolutionTransfer
     [Instruction("The solution will be exported from the source connection and imported into the target")]
     [AllowSaveAndLoad]
     [Group(Sections.Connection, Group.DisplayLayoutEnum.HorizontalLabelAbove, 10, displayLabel: false)]
-    [Group(Sections.Solution, Group.DisplayLayoutEnum.VerticalCentered, 20, displayLabel: false)]
+    [Group(Sections.Solution, Group.DisplayLayoutEnum.HorizontalLabelAbove, 20, displayLabel: false)]
     [Group(Sections.ExportDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, 30, displayLabel: false)]
     [Group(Sections.CurrentSolutionDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 50, displayLabel: false)]
     [Group(Sections.InstallOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 60)]
@@ -41,6 +41,7 @@ namespace JosephM.Deployment.SolutionTransfer
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections), allowAddNew: false)]
         public SavedXrmRecordConfiguration TargetConnection { get; set; }
 
+        [EditableFormWidth(175)]
         [PropertyInContextByPropertyNotNull(nameof(SourceConnection))]
         [DisplayOrder(510)]
         [RequiredProperty]
@@ -49,26 +50,28 @@ namespace JosephM.Deployment.SolutionTransfer
         [ReferencedType(Entities.solution)]
         [LookupCondition(Fields.solution_.ismanaged, false)]
         [LookupCondition(Fields.solution_.isvisible, true)]
-        [LookupFieldCascade(nameof(ThisReleaseVersion), Fields.solution_.version)]
+        [LookupFieldCascade(nameof(SourceVersionForRelease), Fields.solution_.version)]
         [LookupFieldCascade(nameof(UniqueName), Fields.solution_.uniquename)]
         [LookupFieldCascade(nameof(FriendlyName), Fields.solution_.friendlyname)]
         [UsePicklist(Fields.solution_.uniquename)]
         public Lookup Solution { get; set; }
 
+        [EditableFormWidth(60)]
         [GridWidth(110)]
         [Group(Sections.ExportDetails)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
-        [CascadeOnChange(nameof(SetVersionPostRelease))]
+        [CascadeOnChange(nameof(SetSourceVersionPostRelease))]
         [DisplayOrder(520)]
         [RequiredProperty]
-        public string ThisReleaseVersion { get; set; }
+        public string SourceVersionForRelease { get; set; }
 
+        [EditableFormWidth(60)]
         [GridWidth(110)]
         [Group(Sections.ExportDetails)]
         [PropertyInContextByPropertyNotNull(nameof(Solution))]
         [DisplayOrder(530)]
         [RequiredProperty]
-        public string SetVersionPostRelease { get; set; }
+        public string SetSourceVersionPostRelease { get; set; }
 
         [Hidden]
         public bool? IsManaged { get; set; }
@@ -82,8 +85,7 @@ namespace JosephM.Deployment.SolutionTransfer
         [Group(Sections.CurrentSolutionDetails)]
         [DisplayOrder(200)]
         [ReadOnlyWhenSet]
-        [PropertyInContextByPropertyNotNull(nameof(FriendlyName))]
-        [DisplayName("Solution Name")]
+        [Hidden]
         public string FriendlyName { get; set; }
 
         [Group(Sections.CurrentSolutionDetails)]
@@ -91,31 +93,31 @@ namespace JosephM.Deployment.SolutionTransfer
         [ReadOnlyWhenSet]
         [PropertyInContextByPropertyNotNull(nameof(TargetConnection))]
         [PropertyInContextByPropertyNotNull(nameof(UniqueName))]
-        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalled), false)]
-        public bool? IsCurrentlyInstalled { get; set; }
+        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalledInTarget), false)]
+        public bool? IsCurrentlyInstalledInTarget { get; set; }
 
         [Group(Sections.CurrentSolutionDetails)]
         [DisplayOrder(220)]
         [ReadOnlyWhenSet]
-        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalled), true)]
-        public string CurrentVersion { get; set; }
+        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalledInTarget), true)]
+        public string CurrentTargetVersion { get; set; }
 
 
         [Group(Sections.CurrentSolutionDetails)]
         [DisplayOrder(230)]
         [ReadOnlyWhenSet]
         [PropertyInContextByPropertyValue(nameof(InstallAsManaged), true)]
-        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalled), true)]
-        [PropertyInContextByPropertyValue(nameof(CurrentVersionManaged), false)]
+        [PropertyInContextByPropertyValue(nameof(IsCurrentlyInstalledInTarget), true)]
+        [PropertyInContextByPropertyValue(nameof(CurrentTargetVersionManaged), false)]
         [RequiredPropertyValue(true, "A managed solution cannot be installed into an instance where that solution is already unmanaged. Delete the solution from the target instance and try again")]
-        public bool? CurrentVersionManaged { get; set; }
+        public bool? CurrentTargetVersionManaged { get; set; }
 
         [Hidden]
         public bool CurrentIsEarlierVersion
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(CurrentVersion) && !string.IsNullOrWhiteSpace(ThisReleaseVersion) && VersionHelper.IsNewerVersion(ThisReleaseVersion, CurrentVersion);
+                return !string.IsNullOrWhiteSpace(CurrentTargetVersion) && !string.IsNullOrWhiteSpace(SourceVersionForRelease) && VersionHelper.IsNewerVersion(SourceVersionForRelease, CurrentTargetVersion);
             }
         }
 
@@ -137,7 +139,7 @@ namespace JosephM.Deployment.SolutionTransfer
         [Group(Sections.InstallOptions)]
         [DisplayOrder(320)]
         [PropertyInContextByPropertyValue(nameof(CurrentIsEarlierVersion), true)]
-        [PropertyInContextByPropertyValue(nameof(CurrentVersionManaged), true)]
+        [PropertyInContextByPropertyValue(nameof(CurrentTargetVersionManaged), true)]
         [PropertyInContextByPropertyValue(nameof(InstallAsManaged), true)]
         [PropertyInContextByPropertyNotNull(nameof(SourceConnection))]
         [PropertyInContextByPropertyNotNull(nameof(TargetConnection))]

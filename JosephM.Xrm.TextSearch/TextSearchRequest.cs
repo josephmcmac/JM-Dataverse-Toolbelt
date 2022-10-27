@@ -32,6 +32,7 @@ namespace JosephM.Xrm.TextSearch
         [RequiredProperty]
         public IEnumerable<SearchTerm> SearchTerms { get; set; }
 
+        [EditableFormWidth(65)]
         [GridWidth(75)]
         [DisplayOrder(20)]
         [Group(Sections.SearchOptions)]
@@ -106,6 +107,7 @@ namespace JosephM.Xrm.TextSearch
         [DoNotAllowGridOpen]
         public class SearchTerm
         {
+            [EditableFormWidth(384)]
             [GridWidth(400)]
             [RequiredProperty]
             public string Text { get; set; }
