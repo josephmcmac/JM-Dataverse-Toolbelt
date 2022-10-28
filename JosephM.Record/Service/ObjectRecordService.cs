@@ -768,6 +768,16 @@ namespace JosephM.Record.Service
 
         public override object ParseField(string fieldName, string recordType, object value)
         {
+            var propertyValidators = GetValidatorAttributes(fieldName, recordType)
+                .Where(p => p.PreventSettingProperty)
+                .ToArray();
+            foreach(var propertyValidator in propertyValidators)
+            {
+                if(!propertyValidator.IsValid(value))
+                {
+                    throw new Exception(propertyValidator.GetErrorMessage(this.GetFieldLabel(fieldName, recordType)));
+                }
+            }
             var fieldType = this.GetFieldType(fieldName, recordType);
             if (fieldType == RecordFieldType.Picklist)
             {

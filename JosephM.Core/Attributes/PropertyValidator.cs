@@ -13,5 +13,7 @@ namespace JosephM.Core.Attributes
         public abstract bool IsValid(object value);
 
         public abstract string GetErrorMessage(string propertyLabel);
+
+        public virtual bool PreventSettingProperty { get { return false; } }
     }
 }

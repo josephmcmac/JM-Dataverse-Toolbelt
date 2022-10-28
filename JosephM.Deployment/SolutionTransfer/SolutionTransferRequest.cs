@@ -56,6 +56,7 @@ namespace JosephM.Deployment.SolutionTransfer
         [UsePicklist(Fields.solution_.uniquename)]
         public Lookup Solution { get; set; }
 
+        [VersionPropertyValidator]
         [EditableFormWidth(60)]
         [GridWidth(110)]
         [Group(Sections.ExportDetails)]
@@ -65,6 +66,7 @@ namespace JosephM.Deployment.SolutionTransfer
         [RequiredProperty]
         public string SourceVersionForRelease { get; set; }
 
+        [VersionPropertyValidator]
         [EditableFormWidth(60)]
         [GridWidth(110)]
         [Group(Sections.ExportDetails)]

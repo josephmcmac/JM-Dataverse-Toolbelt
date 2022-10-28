@@ -117,6 +117,7 @@
     <Compile Include="Attributes\Key.cs" />
     <Compile Include="Attributes\Hidden.cs" />
     <Compile Include="Attributes\Multiline.cs" />
+    <Compile Include="Attributes\VersionPropertyValidator.cs" />
     <Compile Include="Attributes\PropertyInContextForAny.cs" />
     <Compile Include="Attributes\RecordFieldFor.cs" />
     <Compile Include="Attributes\RecordTypeExclusions.cs" />
