@@ -53,8 +53,8 @@ namespace JosephM.Core.Utility
 
         public string GetProgressString(int countUpdated, string taskName = null)
         {
-            var estimateRemainingString = countUpdated == 0 ? "" : $" - Estimated Time {GetEstimateRemainingDisplayString(countUpdated)}";
-            return $"{(string.IsNullOrWhiteSpace(taskName) ? null : (taskName + " - "))}{ToDo - countUpdated} Remaining{estimateRemainingString}";
+            var estimateRemainingString = countUpdated == 0 ? "" : $"Estimated Time {GetEstimateRemainingDisplayString(countUpdated)}";
+            return $"{(string.IsNullOrWhiteSpace(taskName) ? null : (taskName + "\n\n"))}{ToDo - countUpdated} Remaining\n\n{estimateRemainingString}";
         }
     }
 }
