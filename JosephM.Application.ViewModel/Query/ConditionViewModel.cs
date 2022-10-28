@@ -198,6 +198,7 @@ namespace JosephM.Application.ViewModel.Query
                 }
             }
 
+            [EditableFormWidth(100)]
             [RequiredProperty]
             [DisplayOrder(20)]
             [Group(Sections.Main)]

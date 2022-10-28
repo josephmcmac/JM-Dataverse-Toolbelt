@@ -72,7 +72,7 @@ namespace JosephM.XrmModule.SavedXrmConnections
                 CompletionItem = new CompletedMessage();
         }
 
-        [Group(Sections.Detail, Group.DisplayLayoutEnum.HorizontalInputOnly, 30)]
+        [Group(Sections.Detail, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, 30)]
         public class CompletedMessage
         {
             [Group(Sections.Detail)]

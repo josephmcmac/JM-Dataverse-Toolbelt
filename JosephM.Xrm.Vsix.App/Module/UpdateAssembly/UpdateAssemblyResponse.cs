@@ -2,7 +2,7 @@
 
 namespace JosephM.Xrm.Vsix.Module.UpdateAssembly
 {
-    [Group(Sections.Message, Group.DisplayLayoutEnum.HorizontalInputOnly, order: -1, displayLabel: false)]
+    [Group(Sections.Message, Group.DisplayLayoutEnum.HorizontalCenteredInputOnly, order: -1, displayLabel: false)]
     public class UpdateAssemblyResponse
     {
         [Group(Sections.Message)]

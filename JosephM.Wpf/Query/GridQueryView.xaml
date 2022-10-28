@@ -148,7 +148,7 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="{Binding IncludeNotIn, Converter={StaticResource BoolToStar}}" />
                                     </Grid.ColumnDefinitions>
-                                    <Grid Grid.Column="0" HorizontalAlignment="Center">
+                                    <Grid Grid.Column="0" HorizontalAlignment="Center" MinWidth="700">
                                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                                             <Border>
                                                 <StackPanel Orientation="Vertical">

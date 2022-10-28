@@ -17,15 +17,14 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid HorizontalAlignment="Center" >
+    <Grid>
         <ItemsControl 
             x:Name="sectionControl"
             ItemsSource="{Binding Fields}"
-            HorizontalContentAlignment="Stretch"
             ItemTemplateSelector="{StaticResource labelledAboveFieldTemplateSelector}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
