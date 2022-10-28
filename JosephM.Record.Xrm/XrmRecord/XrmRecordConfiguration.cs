@@ -40,6 +40,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [ReadOnlyWhenSet]
         public string ToolingConnectionId { get; set; }
 
+        [EditableFormWidth(150)]
         [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
         [MyDescription("Identity provider type")]
         [DisplayOrder(20)]
@@ -60,6 +61,7 @@ namespace JosephM.Record.Xrm.XrmRecord
         [RequiredProperty]
         public string DiscoveryServiceAddress { get; set; }
 
+        [EditableFormWidth(250)]
         [GridField]
         [GridReadOnly]
         [PropertyInContextByPropertyValue(nameof(UseXrmToolingConnector), false)]
@@ -82,6 +84,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             })]
         public string Domain { get; set; }
 
+        [EditableFormWidth(250)]
         [GridField]
         [GridReadOnly]
         [GridWidth(400)]
@@ -98,6 +101,7 @@ namespace JosephM.Record.Xrm.XrmRecord
             })]
         public string Username { get; set; }
 
+        [EditableFormWidth(285)]
         [MyDescription("Password for your login")]
         [DisplayOrder(70)]
         [RequiredProperty]

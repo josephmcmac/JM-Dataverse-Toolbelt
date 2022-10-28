@@ -839,9 +839,9 @@ namespace JosephM.Record.Service
             foreach (var propertyInfo in GetPropertyInfos(recordType))
             {
                 var hiddenAttribute = propertyInfo.GetCustomAttribute<HiddenAttribute>();
-                if (propertyInfo.CanRead && hiddenAttribute == null)
+                var gridFieldAttribute = propertyInfo.GetCustomAttribute<GridField>();
+                if (propertyInfo.CanRead && (gridFieldAttribute != null || hiddenAttribute == null))
                 {
-                    var gridFieldAttribute = propertyInfo.GetCustomAttribute<GridField>();
                     if(gridFieldAttribute != null && !areExplicitGridFields)
                     {
                         areExplicitGridFields = true;
