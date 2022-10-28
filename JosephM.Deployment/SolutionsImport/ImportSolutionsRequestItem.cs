@@ -20,8 +20,8 @@
             solutionZipContent = value;
         }
 
-        public bool InstallAsUpgrade { get; set; }
         public bool OverwriteCustomisations { get; set; }
-        public bool ConvertToManaged { get; }
+
+        public bool InstallAsUpgrade { get; set; }
     }
 }

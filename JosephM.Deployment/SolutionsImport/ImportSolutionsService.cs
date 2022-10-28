@@ -28,16 +28,6 @@ namespace JosephM.Deployment.SolutionsImport
 
         public XrmRecordService XrmRecordService { get; }
 
-        public ImportSolutionsResponse ImportSolutions(Dictionary<string, byte[]> solutionFiles, LogController controller)
-        {
-            return ImportSolutions(new ImportSolutionsRequest
-            {
-                Items = solutionFiles
-                .Select(kv => new ImportSolutionsRequestItem(kv.Value))
-                .ToArray()
-            }, controller);
-        }
-
         public ImportSolutionsResponse ImportSolutions(ImportSolutionsRequest request, LogController controller)
         {
             var response = new ImportSolutionsResponse();

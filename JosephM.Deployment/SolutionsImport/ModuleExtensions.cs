@@ -8,6 +8,7 @@ using JosephM.Xrm;
 using JosephM.Xrm.Schema;
 using System;
 using JosephM.Record.IService;
+using JosephM.Application.ViewModel.Shared;
 
 namespace JosephM.Deployment.SolutionsImport
 {
@@ -15,6 +16,13 @@ namespace JosephM.Deployment.SolutionsImport
     {
         public static void AddSolutionDetailsFormEvent(this ModuleBase solutionsImportModule, Type requestType, string sourceSolutionPropertyName, string importingManagedPropertyName, string sourceVersionPropertyName, Func<RecordEntryViewModelBase, SolutionZipMetadata> getSourceSolutionMetadata = null)
         {
+            Func<RecordEntryViewModelBase, LoadingViewModel> getLoadingViewModel = (revm) =>
+                {
+                    return revm.ParentForm == null
+                    ? revm.LoadingViewModel
+                    : revm.ParentForm.LoadingViewModel;
+                };
+
             Action<RecordEntryViewModelBase> loadSolutionDetails = (revm) =>
             {
                 if (getSourceSolutionMetadata != null)
@@ -22,14 +30,13 @@ namespace JosephM.Deployment.SolutionsImport
                     var solutionMetadata = getSourceSolutionMetadata(revm);
                     revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.IsManaged)).Value = solutionMetadata?.Managed;
                     revm.GetStringFieldFieldViewModel(nameof(ILoadSolutionForImport.Version)).Value = solutionMetadata?.Version;
-                    revm.GetStringFieldFieldViewModel(nameof(ILoadSolutionForImport.UniqueName)).Value = solutionMetadata?.UniqueName;
+                    revm.GetRecord().SetField(nameof(ILoadSolutionForImport.UniqueName), solutionMetadata?.UniqueName, revm.RecordService);
                     revm.GetStringFieldFieldViewModel(nameof(ILoadSolutionForImport.FriendlyName)).Value = solutionMetadata?.FriendlyName;
                 }
             };
             Action<RecordEntryViewModelBase> loadCurrentSolutionVersionDetails = (revm) => {
                 var connection = revm.GetRecord().GetField(nameof(ILoadSolutionForImport.TargetConnection)) as IXrmRecordConfiguration;
-                var solutionuniqueName = revm.GetStringFieldFieldViewModel(nameof(ILoadSolutionForImport.UniqueName)).Value;
-                var solutionVersion = revm.GetStringFieldFieldViewModel(nameof(ILoadSolutionForImport.UniqueName)).Value;
+                var solutionuniqueName = revm.GetRecord().GetStringField(nameof(ILoadSolutionForImport.UniqueName));
 
                 revm.ApplicationController.DoOnAsyncThread(() =>
                 {
@@ -54,7 +61,7 @@ namespace JosephM.Deployment.SolutionsImport
                     }
                     finally
                     {
-                        revm.LoadingViewModel.IsLoading = false;
+                        getLoadingViewModel(revm).IsLoading = false;
                     }
                 });
             };
@@ -64,13 +71,13 @@ namespace JosephM.Deployment.SolutionsImport
                 {
                     try
                     {
-                        revm.LoadingViewModel.IsLoading = true;
+                        getLoadingViewModel(revm).IsLoading = true;
                         loadSolutionDetails(revm);
                         loadCurrentSolutionVersionDetails(revm);
                     }
                     catch (Exception)
                     {
-                        revm.LoadingViewModel.IsLoading = false;
+                        getLoadingViewModel(revm).IsLoading = false;
                         throw;
                     }
                 }
@@ -80,13 +87,13 @@ namespace JosephM.Deployment.SolutionsImport
                         {
                             try
                             {
-                                revm.LoadingViewModel.IsLoading = true;
+                                getLoadingViewModel(revm).IsLoading = true;
                                 loadSolutionDetails(revm);
                                 loadCurrentSolutionVersionDetails(revm);
                             }
                             catch (Exception)
                             {
-                                revm.LoadingViewModel.IsLoading = false;
+                                getLoadingViewModel(revm).IsLoading = false;
                                 throw;
                             }
                             break;
@@ -96,7 +103,7 @@ namespace JosephM.Deployment.SolutionsImport
                     || changedField == sourceVersionPropertyName
                     || changedField == nameof(ILoadSolutionForImport.CurrentTargetVersion))
                 {
-                    if (revm.GetBooleanFieldFieldViewModel(importingManagedPropertyName).Value == true && revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.IsInstallingNewerVersion)).Value == true)
+                    if (revm.GetBooleanFieldFieldViewModel(importingManagedPropertyName).Value == true && revm.GetRecord().GetBoolField(nameof(ILoadSolutionForImport.IsInstallingNewerVersion)))
                     {
                         if (revm.GetBooleanFieldFieldViewModel(nameof(ILoadSolutionForImport.InstallAsUpgrade)).Value != true)
                         {
@@ -115,7 +122,9 @@ namespace JosephM.Deployment.SolutionsImport
             solutionsImportModule.AddOnChangeFunction(changeFunction, requestType);
             var formLoadedFunction = new FormLoadedFunction((RecordEntryViewModelBase revm) =>
             {
+                getLoadingViewModel(revm).IsLoading = true;
                 loadSolutionDetails(revm);
+                loadCurrentSolutionVersionDetails(revm);
             });
             solutionsImportModule.AddFormLoadedFunction(formLoadedFunction, requestType);
         }

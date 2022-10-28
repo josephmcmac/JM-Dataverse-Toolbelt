@@ -58,6 +58,14 @@ namespace JosephM.Application.ViewModel.Grid
             }
         }
 
+        public override void PostLoading()
+        {
+            var onLoadMethods = FormService.GetFormLoadedTriggers(RecordType, this);
+            foreach (var onLoadMethod in onLoadMethods)
+            {
+                onLoadMethod(this);
+            }
+        }
 
         private void LoadFields()
         {

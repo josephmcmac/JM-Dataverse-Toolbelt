@@ -469,11 +469,6 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             }
         }
 
-        protected virtual void PostLoading()
-        {
-            return;
-        }
-
         public virtual string Instruction
         {
             get

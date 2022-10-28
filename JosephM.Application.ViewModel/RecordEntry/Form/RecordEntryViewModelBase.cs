@@ -77,6 +77,11 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             ApplicationController.DoOnAsyncThread(action);
         }
 
+        public virtual void PostLoading()
+        {
+            return;
+        }
+
         public FieldViewModelBase GetFieldViewModel(string fieldName)
         {
             if (FieldViewModels.Any(f => f.FieldName == fieldName))

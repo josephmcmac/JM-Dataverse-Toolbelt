@@ -54,6 +54,13 @@ namespace JosephM.Application.ViewModel.RecordEntry.Field
                     {
                         _isLoaded = true;
                         RecordForm.OnSectionLoaded();
+                        if(GridRecords != null)
+                        {
+                            foreach(var gridRecord in GridRecords)
+                            {
+                                gridRecord.PostLoading();
+                            }
+                        }
                     },
                     OnlyValidate = recordForm.OnlyValidate,
                     MaxHeight = 600,

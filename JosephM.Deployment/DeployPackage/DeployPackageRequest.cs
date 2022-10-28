@@ -8,13 +8,13 @@ using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace JosephM.Deployment.DeployPackage
 {
     [Instruction("Select the package folder and instance to import into")]
-    [AllowSaveAndLoad]
     [Group(Sections.Main, Group.DisplayLayoutEnum.VerticalCentered, order: 10, displayLabel: false)]
-    public class DeployPackageRequest : ServiceRequestBase, IImportXmlRequest
+    public class DeployPackageRequest : ServiceRequestBase, IImportXmlRequest, IValidatableObject
     {
         public static DeployPackageRequest CreateForDeployPackage(string folder)
         {
@@ -25,20 +25,30 @@ namespace JosephM.Deployment.DeployPackage
             };
         }
 
+        [GridWidth(300)]
+        [Group(Sections.Main)]
+        [DisplayOrder(10)]
+        [RequiredProperty]
+        [PropertyInContextByPropertyValue(nameof(HideTypeAndFolder), false)]
+        public Folder FolderContainingPackage { get; set; }
+
         [GridWidth(250)]
         [Group(Sections.Main)]
-        [DisplayOrder(100)]
+        [DisplayOrder(20)]
         [DisplayName("Saved Connection Instance To Import Into")]
         [RequiredProperty]
         [SettingsLookup(typeof(ISavedXrmConnections), nameof(ISavedXrmConnections.Connections), allowAddNew: false)]
         public SavedXrmRecordConfiguration Connection { get; set; }
 
-        [GridWidth(300)]
         [Group(Sections.Main)]
-        [DisplayOrder(20)]
         [RequiredProperty]
-        [PropertyInContextByPropertyValue(nameof(HideTypeAndFolder), false)]
-        public Folder FolderContainingPackage { get; set; }
+        [DoNotAllowGridOpen]
+        [DoNotAllowAdd]
+        [DoNotAllowDelete]
+        [DisplayOrder(30)]
+        [PropertyInContextByPropertyNotNull(nameof(Connection))]
+        [PropertyInContextByPropertyNotNull(nameof(FolderContainingPackage))]
+        public IEnumerable<DeployPackageSolutionImportItem> SolutionsForDeployment { get; set; }
 
         [Hidden]
         public bool HideTypeAndFolder { get; set; }
@@ -68,6 +78,19 @@ namespace JosephM.Deployment.DeployPackage
                 _loadedEntities = new Dictionary<string, Entity>();
             }
             return _loadedEntities;
+        }
+
+        public IsValidResponse Validate()
+        {
+            var response = new IsValidResponse();
+            if(SolutionsForDeployment != null
+                && SolutionsForDeployment.Any(s => s.IsManaged == true
+                    && s.IsCurrentlyInstalledInTarget == true
+                    && s.CurrentTargetVersionManaged == false))
+            {
+                response.AddInvalidReason("A managed solution cannot be installed into an instance where that solution is already unmanaged. Delete the solution from the target instance and try again");
+            }
+            return response;
         }
 
         private static class Sections

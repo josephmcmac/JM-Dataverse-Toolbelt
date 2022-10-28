@@ -112,7 +112,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
             return new IsValidResponse();
         }
 
-        protected override void PostLoading()
+        public override void PostLoading()
         {
             var onLoadMethods = FormService.GetFormLoadedTriggers(RecordType, this);
             foreach(var onLoadMethod in onLoadMethods)

@@ -11,6 +11,7 @@ using JosephM.Xrm.Schema;
 using JosephM.Xrm.Vsix.Module.CreatePackage;
 using JosephM.Xrm.Vsix.Module.DeployPackage;
 using JosephM.Xrm.Vsix.Module.ImportRecords;
+using JosephM.Xrm.Vsix.Module.ImportSolution;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
@@ -121,8 +122,8 @@ namespace JosephM.Xrm.Vsix.Test
             var importSolutionRequest = new ImportSolutionRequest();
             importSolutionRequest.TargetConnection = packageSettings.Connections.First();
 
-            var importSolutionApplication = CreateAndLoadTestApplication<ImportSolutionModule>();
-            var importSolutionResponse = importSolutionApplication.NavigateAndProcessDialog<ImportSolutionModule, ImportSolutionDialog, ImportSolutionResponse>(importSolutionRequest);
+            var importSolutionApplication = CreateAndLoadTestApplication<VsixImportSolutionModule>();
+            var importSolutionResponse = importSolutionApplication.NavigateAndProcessDialog<VsixImportSolutionModule, ImportSolutionDialog, ImportSolutionResponse>(importSolutionRequest);
             Assert.IsFalse(importSolutionResponse.HasError);
 
             //verify the solution dpeloyed with updated version

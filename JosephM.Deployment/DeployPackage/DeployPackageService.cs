@@ -35,7 +35,11 @@ namespace JosephM.Deployment.DeployPackage
                 .OrderBy(s => s)
                 .ToArray();
 
-            var importSolutionResponse = ImportSolutions(solutionFiles, controller.Controller, xrmRecordService);
+            var solutionImportService = new ImportSolutionsService(xrmRecordService);
+            var importSolutionResponse = solutionImportService.ImportSolutions(new ImportSolutionsRequest
+            {
+                Items = request.SolutionsForDeployment
+            }, controller.Controller);
             response.Connection = request.Connection;
             response.LoadImportSolutionsResponse(importSolutionResponse);
 
@@ -57,17 +61,6 @@ namespace JosephM.Deployment.DeployPackage
                 }
                 response.Message = $"The Package Has Been Deployed Into {request.Connection}";
             }
-        }
-
-        public ImportSolutionsResponse ImportSolutions(IEnumerable<string> solutionFiles, LogController controller, XrmRecordService xrmRecordService)
-        {
-            var solutionFilesDictionary = new Dictionary<string, byte[]>();
-            foreach(var item in solutionFiles)
-            {
-                solutionFilesDictionary.Add(new FileInfo(item).Name, File.ReadAllBytes(item));
-            }
-            var solutionImportService = new ImportSolutionsService(xrmRecordService);
-            return solutionImportService.ImportSolutions(solutionFilesDictionary, controller);
         }
     }
 }

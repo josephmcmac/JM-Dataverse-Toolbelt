@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreatePackage\CreatePackageResponse.cs" />
+    <Compile Include="DeployPackage\DeployPackageSolutionImportItem.cs" />
     <Compile Include="ImportSolution\ImportSolutionDialog.cs" />
     <Compile Include="ImportSolution\ImportSolutionModule.cs" />
     <Compile Include="ImportSolution\ImportSolutionRequest.cs" />
