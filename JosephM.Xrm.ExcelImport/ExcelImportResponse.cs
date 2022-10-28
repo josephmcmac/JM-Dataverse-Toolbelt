@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.ExcelImport
 {
-    [Group(Sections.Summary, false, 0)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0)]
     public class ExcelImportResponse : ServiceResponseBase<ExcelImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();

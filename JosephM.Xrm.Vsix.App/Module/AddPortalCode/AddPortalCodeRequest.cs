@@ -10,10 +10,10 @@ using System.Linq;
 
 namespace JosephM.Xrm.Vsix.Module.AddPortalCode
 {
-    [Group(Sections.Main, true, order: 10)]
-    [Group(Sections.Options, true, order: 20)]
-    [Group(Sections.TypesToInclude, true, order: 25, selectAll: true)]
-    [Group(Sections.RecordsToInclude, true, order: 30, selectAll: true)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.Options, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
+    [Group(Sections.TypesToInclude, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 25, selectAll: true)]
+    [Group(Sections.RecordsToInclude, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30, selectAll: true)]
     [Instruction("This process will export html, javascript and css configured in portal records into files in the visual studio project\n\nOnce exported the code may be deployed into the dynamics instance by right clicking the file, then selecting the 'Deploy Into Record' option")]
     public class AddPortalCodeRequest : ServiceRequestBase, IValidatableObject
     {

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.SolutionTransfer
 {
-    [Group(Sections.Summary, false, 0)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0)]
     public class SolutionTransferResponse : ServiceResponseBase<SolutionTransferResponseItem>
     {
         [Hidden]

@@ -114,7 +114,7 @@ namespace JosephM.Xrm.SqlImport
         }
 
         [DoNotAllowGridOpen]
-        [Group(Sections.Main, true, 10)]
+        [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
         public class SqlImportTableMapping : IMapSourceImport
         {
             [Group(Sections.Main)]

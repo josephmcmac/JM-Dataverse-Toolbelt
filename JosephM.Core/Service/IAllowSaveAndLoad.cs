@@ -11,7 +11,7 @@ namespace JosephM.Core.Service
         bool DisplaySavedSettingFields { get; set; }
     }
 
-    [Group(Sections.Main, true)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.VerticalCentered)]
     [Instruction("Enter A Name For Your Saved Input And Optionally Elect To Autoload The Input When This Process Is Run")]
     public class SaveAndLoadFields : IAllowSaveAndLoad
     {

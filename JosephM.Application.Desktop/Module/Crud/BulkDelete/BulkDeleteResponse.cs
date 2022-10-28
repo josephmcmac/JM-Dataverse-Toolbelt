@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace JosephM.Application.Desktop.Module.Crud.BulkDelete
 {
-    [Group(Sections.Counts, true, 0, displayLabel: false)]
+    [Group(Sections.Counts, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0, displayLabel: false)]
     public class BulkDeleteResponse : ServiceResponseBase<BulkDeleteResponseItem>, INotifyPropertyChanged
     {
         private int _totalRecordsProcessed;

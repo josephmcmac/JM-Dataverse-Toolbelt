@@ -13,8 +13,8 @@ using System.Linq;
 
 namespace JosephM.InstanceComparer.AddToSolution
 {
-    [Group(Sections.Solution, true, 10)]
-    [Group(Sections.Types, true, order: 20, selectAll: true)]
+    [Group(Sections.Solution, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.Types, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, selectAll: true)]
     public class AddToSolutionRequest : ServiceRequestBase
     {
         public AddToSolutionRequest(IEnumerable<AddToSolutionItem> items, XrmRecordService xrmRecordService)
@@ -58,8 +58,8 @@ namespace JosephM.InstanceComparer.AddToSolution
         }
 
         [DoNotAllowGridOpen]
-        [Group(Sections.Main, true, order: 10)]
-        [Group(Sections.SelectedItems, true, order: 20, selectAll: true)]
+        [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+        [Group(Sections.SelectedItems, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, selectAll: true)]
         public class AddToSolutionComponent : ISelectable
         {
             [GridField]

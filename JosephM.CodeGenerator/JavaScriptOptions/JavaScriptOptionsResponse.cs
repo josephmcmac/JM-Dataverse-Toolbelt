@@ -3,7 +3,7 @@ using JosephM.Core.Service;
 
 namespace JosephM.CodeGenerator.JavaScriptOptions
 {
-    [Group(Sections.JavaScript, true)]
+    [Group(Sections.JavaScript, Group.DisplayLayoutEnum.HorizontalLabelAbove)]
     public class JavaScriptOptionsResponse : ServiceResponseBase<ServiceResponseItem>
     {
         [Group(Sections.JavaScript)]

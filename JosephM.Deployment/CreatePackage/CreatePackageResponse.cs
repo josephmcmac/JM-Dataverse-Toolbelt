@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.CreatePackage
 {
-    [Group(Sections.Summary, false, 0)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0)]
     public class CreatePackageResponse : ServiceResponseBase<DataImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace JosephM.InstanceComparer
 {
-    [Group(Sections.Summary, true)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.HorizontalLabelAbove)]
     public class InstanceComparerTypeSummary
     {
         public static IEnumerable<InstanceComparerTypeSummary> CreateSummaries(IEnumerable<InstanceComparerDifference> differences)

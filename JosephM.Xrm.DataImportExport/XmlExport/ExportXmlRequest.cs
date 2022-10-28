@@ -8,9 +8,9 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
     [DisplayName("Export XML")]
     [Instruction("A Folder Will Be Created Containing An Xml File For Each Record Included. The Import XML Process May Then Be Run On That Folder To Import The Data Into A Dynamics Instance")]
     [AllowSaveAndLoad]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.RecordTypesOptions, true, 30)]
-    [Group(Sections.RecordTypes, true, order: 35, displayLabel: false)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.RecordTypesOptions, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
+    [Group(Sections.RecordTypes, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 35, displayLabel: false)]
     public class ExportXmlRequest : ServiceRequestBase
     {
 
@@ -56,7 +56,7 @@ namespace JosephM.Xrm.DataImportExport.XmlImport
 
         [GridWidth(110)]
         [DisplayOrder(210)]
-        [Group(Sections.RecordTypesOptions, true, 30)]
+        [Group(Sections.RecordTypesOptions)]
         [DisplayName("Include N:N Links Between Records")]
         [RequiredProperty]
         public bool IncludeNNRelationshipsBetweenEntities { get; set; }

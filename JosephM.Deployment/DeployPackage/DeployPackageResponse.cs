@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.DeployPackage
 {
-    [Group(Sections.Summary, false, 0)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0)]
     public class DeployPackageResponse : ServiceResponseBase<DataImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();

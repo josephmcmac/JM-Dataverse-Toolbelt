@@ -12,12 +12,12 @@ namespace JosephM.TestModule.TestDialog
 {
     [GridOnlyEntry(nameof(Items))]
     [AllowSaveAndLoad]
-    [Group(Sections.DisplayFirst, true, 5)]
-    [Group(Sections.DisplaySecond, true, 5)]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.SelectAll, true, order: 20, selectAll: true)]
-    [Group(Sections.TypesAndLookups, true, order: 30)]
-    [Group(Sections.Setting, true, order: 40)]
+    [Group(Sections.DisplayFirst, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 5)]
+    [Group(Sections.DisplaySecond, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 5)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.SelectAll, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20, selectAll: true)]
+    [Group(Sections.TypesAndLookups, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30)]
+    [Group(Sections.Setting, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 40)]
     [DisplayName("Test Dialog")]
     public class TestDialogRequest : ServiceRequestBase
     {

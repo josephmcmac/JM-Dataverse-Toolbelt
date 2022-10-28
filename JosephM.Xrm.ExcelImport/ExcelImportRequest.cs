@@ -87,7 +87,7 @@ namespace JosephM.Xrm.ExcelImport
         }
 
         [DoNotAllowGridOpen]
-        [Group(Sections.Main, true, 10)]
+        [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
         public class ExcelImportTabMapping : IMapSourceImport
         {
             [Group(Sections.Main)]

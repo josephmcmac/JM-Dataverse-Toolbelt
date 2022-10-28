@@ -124,8 +124,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         {
             if (SaveSettings)
             {
-                var isMovingFolder = VisualStudioService.GetSolutionFolder(VisualStudioService.ItemFolderName) == null
-                    && VisualStudioService.GetItemText("solution.xrmconnection", "SolutionItems") != null;
                 base.CompleteDialogExtention();
                 //set the active connection to the connection selected as active
                 if (SettingsObject.Connections != null)
@@ -141,16 +139,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
 
                         SavedXrmConnectionsModule.RefreshXrmServices(activeConnection, ApplicationController, xrmRecordService: (RefreshActiveServiceConnection ? XrmRecordService : null));
                         LookupService = (XrmRecordService)ApplicationController.ResolveType(typeof(XrmRecordService));
-                    }
-                }
-                if (isMovingFolder)
-                {
-                    var openIt = ApplicationController.UserConfirmation("This Visual Studio extention is changing the way saved settings are stored. Click yes to open a window outlining the changes, and detailing code changes required if you use instances of the Xrm Solution Template");
-                    if (openIt)
-                    {
-                        var blah = new SettingsFolderMoving();
-                        var displaySomething = new ObjectDisplayViewModel(blah, FormController.CreateForObject(blah, ApplicationController, null));
-                        ApplicationController.NavigateTo(displaySomething);
                     }
                 }
             }

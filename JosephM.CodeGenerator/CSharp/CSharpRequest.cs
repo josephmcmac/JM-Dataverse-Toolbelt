@@ -10,10 +10,10 @@ namespace JosephM.CodeGenerator.CSharp
 {
     [Instruction("A .CS File Will Be Output Containing Code Constants For The Customisations In The Dynamics Instance")]
     [DisplayName("Generate C# Constants")]
-    [Group(Sections.Type, true, 10)]
-    [Group(Sections.FileDetails, true, 20)]
-    [Group(Sections.IncludeConstantsForTheseItems, true, order: 30, selectAll: true)]
-    [Group(Sections.RecordTypes, true, 40)]
+    [Group(Sections.Type, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.FileDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
+    [Group(Sections.IncludeConstantsForTheseItems, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 30, selectAll: true)]
+    [Group(Sections.RecordTypes, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 40)]
     public class CSharpRequest : ServiceRequestBase, IValidatableObject
     {
         public CSharpRequest()

@@ -86,7 +86,7 @@ namespace JosephM.Xrm.MigrateInternal
         }
 
         [DoNotAllowGridOpen]
-        [Group(Sections.Main, true, 10)]
+        [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
         public class MigrateInternalTypeMapping : IMapSourceImport
         {
             [MyDescription("Type Of Query For Identifying Records To Be Included")]

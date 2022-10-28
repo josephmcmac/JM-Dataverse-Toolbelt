@@ -11,8 +11,8 @@ namespace JosephM.Xrm.DataImportExport.XmlExport
     [DisplayName("Import XML")]
     [Instruction("All XML Files In The Folder Will Be Imported Into The Target Instance. Matches To Update Records In The Target Will By Done By Either Primary Key, Then Name, Else If No Match Is Found A New Record Will Be Created")]
     [AllowSaveAndLoad]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.Misc, true, 40)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.Misc, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 40)]
     public class ImportXmlRequest : ServiceRequestBase, IImportXmlRequest
     {
         public ImportXmlRequest()

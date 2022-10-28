@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace JosephM.TestModule.AllPropertyTypesCentered
 {
-    [Group(Sections.Main, true, 10)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
     public class AllPropertyTypesCenteredResponse : ServiceResponseBase<AllPropertyTypesCenteredResponseItem>
     {
         public AllPropertyTypesCenteredResponse()

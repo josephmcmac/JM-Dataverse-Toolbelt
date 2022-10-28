@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace JosephM.TestModule.AllPropertyTypesCompact
 {
-    [Group(Sections.Main, true, 10)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
     [AllowSaveAndLoad]
     public class AllPropertyTypesCompactRequest : ServiceRequestBase
     {

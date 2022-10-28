@@ -19,7 +19,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         public override void RegisterTypes()
         {
             base.RegisterTypes();
-            AddCopyNewCodeButton();
             InitialisePrefixFields();
             AddProjectAutocomplete();
         }
@@ -75,22 +74,6 @@ namespace JosephM.Xrm.Vsix.Module.PackageSettings
         public override void DialogCommand()
         {
             ApplicationController.NavigateTo(typeof(XrmPackageSettingsDialog), null);
-        }
-
-        private void AddCopyNewCodeButton()
-        {
-            this.AddCustomFormFunction(new CustomFormFunction("CopyCode", "Copy C# To Clipboard", (r) =>
-            {
-                try
-                {
-                    Clipboard.SetText(r.GetStringFieldFieldViewModel(nameof(SettingsFolderMoving.WithTheseLines)).Value);
-                    ApplicationController.UserMessage("Code Copied To Clipboard!");
-                }
-                catch(Exception ex)
-                {
-                    r.ApplicationController.ThrowException(ex);
-                }
-            }), typeof(SettingsFolderMoving));
         }
     }
 }

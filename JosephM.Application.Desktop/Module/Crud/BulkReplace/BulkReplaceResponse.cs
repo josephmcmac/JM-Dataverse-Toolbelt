@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace JosephM.Application.Desktop.Module.Crud.BulkReplace
 {
-    [Group(Sections.Counts, true, 0, displayLabel: false)]
+    [Group(Sections.Counts, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0, displayLabel: false)]
     public class BulkReplaceResponse : ServiceResponseBase<BulkReplaceResponseItem>, INotifyPropertyChanged
     {
         private int _totalRecordsProcessed;

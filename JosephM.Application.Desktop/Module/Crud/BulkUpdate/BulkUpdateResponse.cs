@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace JosephM.Application.Desktop.Module.Crud.BulkUpdate
 {
-    [Group(Sections.Counts, true, 0, displayLabel: false)]
+    [Group(Sections.Counts, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0, displayLabel: false)]
     public class BulkUpdateResponse : ServiceResponseBase<BulkUpdateResponseItem>, INotifyPropertyChanged
     {
         private int _totalRecordsProcessed;

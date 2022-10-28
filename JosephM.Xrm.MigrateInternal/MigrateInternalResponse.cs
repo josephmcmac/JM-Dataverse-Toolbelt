@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.MigrateInternal
 {
-    [Group(Sections.Summary, false, 0)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0)]
     public class MigrateInternalResponse : ServiceResponseBase<MigrateInternalResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();

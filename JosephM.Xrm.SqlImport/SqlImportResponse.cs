@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace JosephM.Xrm.SqlImport
 {
-    [Group(Sections.Summary, false, 0)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0)]
     public class SqlImportResponse : ServiceResponseBase<SqlImportResponseItem>
     {
         private List<ImportedRecords> _importedRecords = new List<ImportedRecords>();

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace JosephM.Deployment.ImportSolution
 {
-    [Group(Sections.Summary, false, 0)]
+    [Group(Sections.Summary, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0)]
     public class ImportSolutionResponse : ServiceResponseBase<ImportSolutionResponseItem>
     {
         [Hidden]

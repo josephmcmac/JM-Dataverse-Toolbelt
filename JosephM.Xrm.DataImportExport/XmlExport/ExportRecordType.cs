@@ -8,9 +8,9 @@ using System.Collections.Generic;
 namespace JosephM.Xrm.DataImportExport.XmlImport
 {
     [BulkAddRecordTypeFunction(true)]
-    [Group(Sections.Main, true, 10)]
-    [Group(Sections.Fields, true, 15)]
-    [Group(Sections.Fetch, false, 20)]
+    [Group(Sections.Main, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 10)]
+    [Group(Sections.Fields, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 15)]
+    [Group(Sections.Fetch, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 20)]
     public class ExportRecordType
     {
         public ExportRecordType()

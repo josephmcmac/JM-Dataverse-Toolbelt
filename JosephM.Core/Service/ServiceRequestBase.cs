@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace JosephM.Core.Service
 {
-    [Group(Sections.SavedRequestDetails, true, 0)]
+    [Group(Sections.SavedRequestDetails, Group.DisplayLayoutEnum.HorizontalLabelAbove, order: 0)]
     [DataContract]
     public class ServiceRequestBase : IAllowSaveAndLoad
     {

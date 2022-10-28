@@ -24,11 +24,6 @@ namespace JosephM.Core.Attributes
             DisplayLabel = displayLabel;
         }
 
-        public Group(string name, bool wrapHorizontal, int order = 10000, bool selectAll = false, bool displayLabel = true)
-            : this(name, displayLayout: wrapHorizontal ? DisplayLayoutEnum.HorizontalWrap : DisplayLayoutEnum.VerticalList, order: order, selectAll: selectAll, displayLabel: displayLabel)
-        {
-        }
-
         public enum DisplayLayoutEnum
         {
             VerticalCentered,
