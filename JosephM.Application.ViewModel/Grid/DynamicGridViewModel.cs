@@ -402,7 +402,7 @@ namespace JosephM.Application.ViewModel.Grid
                                 sortString1 = ((Enum)value1).GetDisplayString();
                             if (value2 is Enum)
                                 sortString2 = ((Enum)value2).GetDisplayString();
-                            if (String.Compare(sortString1, sortString2, StringComparison.Ordinal) < 0)
+                            if (string.Compare(sortString1, sortString2, StringComparison.Ordinal) < 0)
                             {
                                 newList.Insert(newList.IndexOf(item2), item);
                                 break;

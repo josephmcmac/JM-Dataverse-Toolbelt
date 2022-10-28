@@ -48,7 +48,29 @@ namespace JosephM.Deployment.DeployPackage
         [DisplayOrder(30)]
         [PropertyInContextByPropertyNotNull(nameof(Connection))]
         [PropertyInContextByPropertyNotNull(nameof(FolderContainingPackage))]
+
         public IEnumerable<DeployPackageSolutionImportItem> SolutionsForDeployment { get; set; }
+
+        [Hidden]
+        public bool HasRecordsForImport
+        {
+            get
+            {
+                return RecordsForImport != null && RecordsForImport.Any();
+            }
+        }
+
+        [Group(Sections.Main)]
+        [DoNotAllowGridEdit]
+        [DoNotAllowGridOpen]
+        [DoNotAllowAdd]
+        [DoNotAllowDelete]
+        [DisplayOrder(40)]
+        [PropertyInContextByPropertyNotNull(nameof(Connection))]
+        [PropertyInContextByPropertyNotNull(nameof(FolderContainingPackage))]
+        [PropertyInContextByPropertyValue(nameof(HasRecordsForImport), true)]
+
+        public IEnumerable<DeployPackageRecordTypeImport> RecordsForImport { get; set; }
 
         [Hidden]
         public bool HideTypeAndFolder { get; set; }
