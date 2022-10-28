@@ -51,8 +51,10 @@ namespace JosephM.Deployment.SolutionTransfer
         [LookupCondition(Fields.solution_.ismanaged, false)]
         [LookupCondition(Fields.solution_.isvisible, true)]
         [LookupFieldCascade(nameof(SourceVersionForRelease), Fields.solution_.version)]
+        [LookupFieldCascade(nameof(Version), Fields.solution_.version)]
         [LookupFieldCascade(nameof(UniqueName), Fields.solution_.uniquename)]
         [LookupFieldCascade(nameof(FriendlyName), Fields.solution_.friendlyname)]
+        [LookupFieldCascade(nameof(IsManaged), Fields.solution_.ismanaged)]
         [UsePicklist(Fields.solution_.uniquename)]
         public Lookup Solution { get; set; }
 

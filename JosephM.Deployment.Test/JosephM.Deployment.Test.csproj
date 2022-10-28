@@ -69,7 +69,7 @@
   <ItemGroup>
     <Compile Include="DeploymentCreateAndDeployPackageModuleTests.cs" />
     <Compile Include="DeploymentImportSolutionTests.cs" />
-    <Compile Include="DeploymentDeploySolutionTests.cs" />
+    <Compile Include="DeploymentSolutionTransferTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
