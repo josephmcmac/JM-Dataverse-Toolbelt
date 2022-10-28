@@ -29,7 +29,6 @@ namespace JosephM.Deployment.DeployPackage
         [GridReadOnly]
         [Group(Sections.SolutionDetails)]
         [DisplayOrder(100)]
-        [ReadOnlyWhenSet]
         [DisplayName("Solution Name")]
         public string FriendlyName { get; set; }
 
@@ -38,7 +37,6 @@ namespace JosephM.Deployment.DeployPackage
         [GridReadOnly]
         [Group(Sections.SolutionDetails)]
         [DisplayOrder(110)]
-        [ReadOnlyWhenSet]
         public string Version { get; set; }
 
         [GridWidth(110)]
@@ -46,7 +44,6 @@ namespace JosephM.Deployment.DeployPackage
         [GridReadOnly]
         [Group(Sections.SolutionDetails)]
         [DisplayOrder(120)]
-        [ReadOnlyWhenSet]
         public bool? IsManaged { get; set; }
 
         [Hidden]
@@ -57,7 +54,6 @@ namespace JosephM.Deployment.DeployPackage
         [GridReadOnly]
         [Group(Sections.CurrentSolutionDetails)]
         [DisplayOrder(200)]
-        [ReadOnlyWhenSet]
         public bool? IsCurrentlyInstalledInTarget { get; set; }
 
         [GridWidth(110)]
@@ -65,7 +61,6 @@ namespace JosephM.Deployment.DeployPackage
         [GridReadOnly]
         [Group(Sections.CurrentSolutionDetails)]
         [DisplayOrder(210)]
-        [ReadOnlyWhenSet]
         public string CurrentTargetVersion { get; set; }
 
         [GridWidth(110)]
@@ -73,7 +68,6 @@ namespace JosephM.Deployment.DeployPackage
         [GridReadOnly]
         [Group(Sections.CurrentSolutionDetails)]
         [DisplayOrder(220)]
-        [ReadOnlyWhenSet]
         public bool? CurrentTargetVersionManaged { get; set; }
 
         [Hidden]
