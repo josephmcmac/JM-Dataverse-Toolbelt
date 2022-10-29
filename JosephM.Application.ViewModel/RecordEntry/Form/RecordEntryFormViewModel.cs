@@ -429,7 +429,14 @@ namespace JosephM.Application.ViewModel.RecordEntry.Form
                 }
                 foreach (var section in FieldSections)
                 {
-                    section.IsVisible = section.Fields.Any(f => f.IsVisible);
+                    if (section.FormSection != null && section.FormSection.IsHiddenSection)
+                    {
+                        section.IsVisible = false;
+                    }
+                    else
+                    {
+                        section.IsVisible = section.Fields.Any(f => f.IsVisible);
+                    }
                 }
             }
         }

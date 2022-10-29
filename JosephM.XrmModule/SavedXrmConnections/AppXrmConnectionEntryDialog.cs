@@ -37,13 +37,11 @@ namespace JosephM.XrmModule.SavedXrmConnections
 
         protected override void LoadDialogExtention()
         {
-            ObjectToEnter.HideActive = true;
             StartNextAction();
         }
 
         protected override void CompleteDialogExtention()
         {
-            ObjectToEnter.HideActive = false;
             //uh huh - okay now
             ObjectToEnter.Active = true;
             //lets set the connection in the service our parent dialog is using

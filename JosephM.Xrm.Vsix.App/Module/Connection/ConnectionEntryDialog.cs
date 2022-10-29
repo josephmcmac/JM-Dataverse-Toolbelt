@@ -36,13 +36,11 @@ namespace JosephM.Xrm.Vsix.Module.Connection
 
         protected override void LoadDialogExtention()
         {
-            ObjectToEnter.HideActive = true;
             StartNextAction();
         }
 
         protected override void CompleteDialogExtention()
         {
-            ObjectToEnter.HideActive = false;
             if (AddToSolution)
             {
                 var settingsManager = ApplicationController.ResolveType(typeof(ISettingsManager)) as ISettingsManager;

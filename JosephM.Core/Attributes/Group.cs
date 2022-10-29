@@ -14,14 +14,18 @@ namespace JosephM.Core.Attributes
         public int Order { get; private set; }
         public bool SelectAll { get; private set; }
         public bool DisplayLabel { get; private set; }
+        public bool IsHiddenSection { get; private set; }
 
-        public Group(string name, DisplayLayoutEnum displayLayout = DisplayLayoutEnum.VerticalList, int order = 0, bool selectAll = false, bool displayLabel = true)
+
+
+        public Group(string name, DisplayLayoutEnum displayLayout = DisplayLayoutEnum.VerticalList, int order = 0, bool selectAll = false, bool displayLabel = true, bool isHiddenSection = false)
         {
             Name = name;
             DisplayLayout = displayLayout;
             Order = order;
             SelectAll = selectAll;
             DisplayLabel = displayLabel;
+            IsHiddenSection = isHiddenSection;
         }
 
         public enum DisplayLayoutEnum
