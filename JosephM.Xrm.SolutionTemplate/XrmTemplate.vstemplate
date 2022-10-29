@@ -29,7 +29,7 @@
     </ProjectCollection>
   </TemplateContent>
   <WizardExtension>
-    <Assembly>JosephM.Xrm.Vsix, Version=2.0.0.0, Culture=Neutral, PublicKeyToken=25a4b5603b9d4ed3</Assembly>
+    <Assembly>JM Dataverse Toolbelt Dev Kit, Version=3.0.0.0, Culture=Neutral, PublicKeyToken=25a4b5603b9d4ed3</Assembly>
     <FullClassName>JosephM.XRM.VSIX.Wizards.XrmSolutionWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>
