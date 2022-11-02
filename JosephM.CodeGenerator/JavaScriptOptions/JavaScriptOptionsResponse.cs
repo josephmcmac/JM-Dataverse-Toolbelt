@@ -7,6 +7,7 @@ namespace JosephM.CodeGenerator.JavaScriptOptions
     public class JavaScriptOptionsResponse : ServiceResponseBase<ServiceResponseItem>
     {
         [Group(Sections.JavaScript)]
+        [AlwaysLeftAlign]
         [Multiline]
         [DoNotLimitDisplayHeight]
         public string Javascript { get; set; }

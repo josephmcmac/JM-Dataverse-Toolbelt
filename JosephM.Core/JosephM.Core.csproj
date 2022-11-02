@@ -90,6 +90,7 @@
     <Compile Include="AppConfig\Extentions.cs" />
     <Compile Include="AppConfig\IResolveObject.cs" />
     <Compile Include="AppConfig\IDependencyResolver.cs" />
+    <Compile Include="Attributes\AlwaysLeftAlign.cs" />
     <Compile Include="Attributes\AllowGridFullScreen.cs" />
     <Compile Include="Attributes\AllowNestedGridEdit.cs" />
     <Compile Include="Attributes\CascadeOnChange.cs" />

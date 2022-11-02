@@ -59,7 +59,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Section
                     {
                         fieldVm.IsEditable = false;
                     }
-                    fieldVm.CentreAlign = centreAlign;
+                    fieldVm.CentreAlign = !formField.AlwaysLeftAlign && centreAlign;
                     fieldViewModels.Add(fieldVm);
                 }
                 catch (Exception ex)

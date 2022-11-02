@@ -40,6 +40,8 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
         public bool DoNotLimitDisplayHeight { get; set; }
 
+        public bool AlwaysLeftAlign { get; set; }
+
         public int? EditableFormWidth { get; set; }
 
         public FieldViewModelBase CreateFieldViewModel(string recordType, IRecordService recordService,
@@ -90,7 +92,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
                         fieldVm = new StringFieldViewModel(field, label, recordForm)
                         {
                             IsMultiline = explicitMultiline || recordService.GetFieldMetadata(field, recordType).IsMultiline(),
-                            DoNotLimitDisplayHeight = DoNotLimitDisplayHeight
+                            DoNotLimitDisplayHeight = DoNotLimitDisplayHeight,
                         };
                         if (!explicitFieldType.HasValue)
                         {

@@ -118,6 +118,7 @@ namespace JosephM.Application.ViewModel.RecordEntry.Metadata
 
                     var fieldMetadata = new PersistentFormField(property.SchemaName, enumerableType, displayLabel);
                     fieldMetadata.DoNotLimitDisplayHeight = propinfo.GetCustomAttribute<DoNotLimitDisplayHeight>() != null;
+                    fieldMetadata.AlwaysLeftAlign = propinfo.GetCustomAttribute<AlwaysLeftAlign>() != null;
                     fieldMetadata.Order = property.Order;
                     var editableWidthAttribue = propinfo.GetCustomAttribute<EditableFormWidth>();
                     if(editableWidthAttribue != null)
