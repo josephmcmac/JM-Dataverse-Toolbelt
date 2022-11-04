@@ -231,10 +231,14 @@ namespace JosephM.Application.ViewModel.Dialog
                         else
                             ProcessError(ex);
                     }
-                    LoadingViewModel.IsLoading = false;
-                }
-                );
+                    if (!CompleteDialogExtentionAsync)
+                    {
+                        LoadingViewModel.IsLoading = false;
+                    }
+                });
         }
+
+        public virtual bool CompleteDialogExtentionAsync => false;
 
         protected abstract void CompleteDialogExtention();
 
